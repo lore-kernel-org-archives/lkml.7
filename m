@@ -2,153 +2,417 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C61C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9753C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0D521726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C054233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G8clkpoA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+Ml0Sdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfH2RGK (ORCPT
+        id S1727736AbfH2RHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:06:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39647 "EHLO
+        Thu, 29 Aug 2019 13:07:24 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33445 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727675AbfH2RGJ (ORCPT
+        with ESMTP id S1726893AbfH2RHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:06:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y200so2478948pfb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:06:08 -0700 (PDT)
+        Thu, 29 Aug 2019 13:07:24 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so2503685pfq.0;
+        Thu, 29 Aug 2019 10:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=i1DJmvd8voYWLbxEBUB8nLGj+ccKrfRNfMLOZPulnv0=;
-        b=G8clkpoAG2wM7TmydjOjIMm7fNWG8ep55osvEJVVhpQe84OPg7U+DYdiZtLW5h+LER
-         LVxlkBUao1QISYfuzi3UJEEIP+SH7ZlQj3OLcVbDv5XUxkhWXectWPf0MLd3w+TAdwvU
-         Ugs/jNHjuICUeUS519629+GrUHSoAHF7v/aUg=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gzYY4eM1IPxC7lB77c02vRvvAN64KenUFpKc/ct/ToM=;
+        b=B+Ml0SdptNNDfk8AfZddVib03vkpDQ6hAjis/DkPImXMs+D7WwnU9hVSQ8STkmYl+a
+         FWJU+fWNc7VE5CPElMjxLpJ+u0mRjZ5jjlfbauNt9vvLUYv8gpYE9r5/m4QazITvpek0
+         NXejgXoDQS+/pFV1ZN+w6IVTPsGheYTXARQIPDDxgy81IaFyo6YUQXO9bLvS3A7JYL8C
+         ZDe+afBUhIjNp5MlTtlW3EaU+mtLRGJuuI6lANfbUpNmqOKJVOr2hWJPhFkNOIKI74zK
+         O8NRH1P90KLu+ImX2F5FqHnjSHn48VGJnHDq9HGQLtXt06oMlL2nQ8O6Gw6j/TMLjqlj
+         KHPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=i1DJmvd8voYWLbxEBUB8nLGj+ccKrfRNfMLOZPulnv0=;
-        b=M4SPjdxbUfZROpxEbO5pqzJGZXXYJ49UlAE4Kmb25B4s3TaL+fTPaOApTSSjkIhi1V
-         sQl/f4TaQu5JU1jBQMqOrsm66e/FdalhlVZTlN3t/apQOOMkAtCWYMHKuYRsmHJGN/VG
-         d2xIIPv/Sq+kix3dtgdkLsuWirBlHnMhlNyeQPcPvUXROancUgMfu63X7DkZ0eRrNcdi
-         xkUldPRoNHPreZIUZKNNQyqrP6x2Ngl//jY1y+6eo0/UxgeGAQj1a6wYwHAGJHzapz2w
-         He76BKHSVO1dSrfZQt/w0ilJB1e5Arpt2Fs6fZua9LD2Grx2nbn9jDzRAXSo573BF+ag
-         qjTw==
-X-Gm-Message-State: APjAAAX3zZoWxcmk15cIEQhCd0bGukWT1bVp23V2rFz9SVkfgVWnQFJv
-        2Hl3RtGYFABPRo0AEBN87Z49og==
-X-Google-Smtp-Source: APXvYqz0wp9mb9x5mvRK0pA6+zC9B0EAIvxqn7uz8Hh6S3XZ5PoeZHkueVVQ/55Ag8IPJDeVG6h46w==
-X-Received: by 2002:a63:2157:: with SMTP id s23mr9520562pgm.167.1567098368482;
-        Thu, 29 Aug 2019 10:06:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v15sm3687506pfn.69.2019.08.29.10.06.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gzYY4eM1IPxC7lB77c02vRvvAN64KenUFpKc/ct/ToM=;
+        b=aQnLpDKIEvJisXgBQvzaEcTemguibyIL07d9TQhpCPjG6yc0j5zcE5H/cb97ELR85q
+         PvQcbMioBerUV40mKHuFs3+pFLo8X6rHvhPFtvBujThxmaselW50Q3Qe7g4Gxwp6I9Zx
+         nTGgZCmJNBagwZyCQ5EZDExAFYOj5BsnsNTboDHJwh1pdqqNJWOr/yoe8rM/u5X6KOkT
+         6SY4SNp1qzTbjuTMA0maDNRa88ACqFwY4CIB6qFST9EJuoBzXFgQbljc69UIRPGW7gHm
+         P4eCtauDWzrwBhP3JIyRbegzWw5o90gQ1Iolm/1td8ftobjLaoDM9xtKPkEfdgX+SaS1
+         7xkQ==
+X-Gm-Message-State: APjAAAVfQF8lxIYb05Txt0N+nLOUnKybOnXYc4PNjnqPvW4HAawy5kY0
+        DshOUw7KfIRaAp9kJCPySvo=
+X-Google-Smtp-Source: APXvYqzyon9oB41UJCoT6/V76r61iEPK0Hlo1gBsNvoMIec6OeAP8371RUBwC2yp0ufuDGUm6s8mCA==
+X-Received: by 2002:aa7:97aa:: with SMTP id d10mr12831562pfq.176.1567098443324;
+        Thu, 29 Aug 2019 10:07:23 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id r12sm2527110pgb.73.2019.08.29.10.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 10:06:07 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 10:06:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Tycho Andersen <tycho@tycho.ws>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alakesh Haloi <alakesh.haloi@gmail.com>
-Subject: Re: [PATCH] selftests/seccomp: fix build on older kernels
-Message-ID: <201908291003.005EB96606@keescook>
-References: <20190826144302.7745-1-tycho@tycho.ws>
+        Thu, 29 Aug 2019 10:07:22 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 08/10] drm/msm: async commit support
+Date:   Thu, 29 Aug 2019 09:45:16 -0700
+Message-Id: <20190829164601.11615-9-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190829164601.11615-1-robdclark@gmail.com>
+References: <20190829164601.11615-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190826144302.7745-1-tycho@tycho.ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 08:43:02AM -0600, Tycho Andersen wrote:
-> The seccomp selftest goes to some length to build against older kernel
-> headers, viz. all the #ifdefs at the beginning of the file. 201766a20e30
-> ("ptrace: add PTRACE_GET_SYSCALL_INFO request") introduces some additional
-> macros, but doesn't do the #ifdef dance. Let's add that dance here to
-> avoid:
-> 
-> gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
-> In file included from seccomp_bpf.c:51:
-> seccomp_bpf.c: In function ‘tracer_ptrace’:
-> seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_CLONE’?
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->   __typeof__(_expected) __exp = (_expected); \
->              ^~~~~~~~~
-> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->   ^~~~~~~~~
-> seccomp_bpf.c:1787:20: note: each undeclared identifier is reported only once for each function it appears in
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->   __typeof__(_expected) __exp = (_expected); \
->              ^~~~~~~~~
-> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->   ^~~~~~~~~
-> seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_EXIT’?
->     : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
->       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->   __typeof__(_expected) __exp = (_expected); \
->              ^~~~~~~~~
-> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->   ^~~~~~~~~
-> make: *** [Makefile:12: seccomp_bpf] Error 1
-> 
-> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-> Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+From: Rob Clark <robdclark@chromium.org>
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Now that flush/wait/complete is decoupled from the "synchronous" part of
+atomic commit_tail(), add support to defer flush to a timer that expires
+shortly before vblank for async commits.  In this way, multiple atomic
+commits (for example, cursor updates) can be coalesced into a single
+flush at the end of the frame.
 
-Alakesh Haloi also sent a fix[1] for this. I prefer Tycho's solution
-(one #ifndef and a Fixes line). Shuah, can you please apply this?
+v2: don't hold lock over ->wait_flush(), to avoid locking interaction
+    that was causing fps drop when combining page flips or non-async
+    atomic commits and lots of legacy cursor updates
 
-Thanks!
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/msm_atomic.c | 156 ++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/msm_drv.c    |   1 +
+ drivers/gpu/drm/msm/msm_drv.h    |   4 +
+ drivers/gpu/drm/msm/msm_kms.h    |  50 ++++++++++
+ 4 files changed, 210 insertions(+), 1 deletion(-)
 
--Kees
-
-[1] https://lore.kernel.org/lkml/20190822215823.GA11292@ip-172-31-44-144.us-west-2.compute.internal
-
-> ---
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index 6ef7f16c4cf5..7f8b5c8982e3 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -199,6 +199,11 @@ struct seccomp_notif_sizes {
->  };
->  #endif
->  
-> +#ifndef PTRACE_EVENTMSG_SYSCALL_ENTRY
-> +#define PTRACE_EVENTMSG_SYSCALL_ENTRY	1
-> +#define PTRACE_EVENTMSG_SYSCALL_EXIT	2
-> +#endif
-> +
->  #ifndef seccomp
->  int seccomp(unsigned int op, unsigned int flags, void *args)
->  {
-> -- 
-> 2.20.1
-> 
-
+diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
+index 614fb9c5bb58..8f8f74337cb4 100644
+--- a/drivers/gpu/drm/msm/msm_atomic.c
++++ b/drivers/gpu/drm/msm/msm_atomic.c
+@@ -29,6 +29,95 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
+ 	return msm_framebuffer_prepare(new_state->fb, kms->aspace);
+ }
+ 
++static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
++{
++	unsigned crtc_mask = BIT(crtc_idx);
++
++	mutex_lock(&kms->commit_lock);
++
++	if (!(kms->pending_crtc_mask & crtc_mask)) {
++		mutex_unlock(&kms->commit_lock);
++		return;
++	}
++
++	kms->pending_crtc_mask &= ~crtc_mask;
++
++	kms->funcs->enable_commit(kms);
++
++	/*
++	 * Flush hardware updates:
++	 */
++	DRM_DEBUG_ATOMIC("triggering async commit\n");
++	kms->funcs->flush_commit(kms, crtc_mask);
++	mutex_unlock(&kms->commit_lock);
++
++	/*
++	 * Wait for flush to complete:
++	 */
++	kms->funcs->wait_flush(kms, crtc_mask);
++
++	mutex_lock(&kms->commit_lock);
++	kms->funcs->complete_commit(kms, crtc_mask);
++	mutex_unlock(&kms->commit_lock);
++	kms->funcs->disable_commit(kms);
++}
++
++static enum hrtimer_restart msm_atomic_pending_timer(struct hrtimer *t)
++{
++	struct msm_pending_timer *timer = container_of(t,
++			struct msm_pending_timer, timer);
++	struct msm_drm_private *priv = timer->kms->dev->dev_private;
++
++	queue_work(priv->wq, &timer->work);
++
++	return HRTIMER_NORESTART;
++}
++
++static void msm_atomic_pending_work(struct work_struct *work)
++{
++	struct msm_pending_timer *timer = container_of(work,
++			struct msm_pending_timer, work);
++
++	msm_atomic_async_commit(timer->kms, timer->crtc_idx);
++}
++
++void msm_atomic_init_pending_timer(struct msm_pending_timer *timer,
++		struct msm_kms *kms, int crtc_idx)
++{
++	timer->kms = kms;
++	timer->crtc_idx = crtc_idx;
++	hrtimer_init(&timer->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
++	timer->timer.function = msm_atomic_pending_timer;
++	INIT_WORK(&timer->work, msm_atomic_pending_work);
++}
++
++static bool can_do_async(struct drm_atomic_state *state,
++		struct drm_crtc **async_crtc)
++{
++	struct drm_connector_state *connector_state;
++	struct drm_connector *connector;
++	struct drm_crtc_state *crtc_state;
++	struct drm_crtc *crtc;
++	int i, num_crtcs = 0;
++
++	if (!(state->legacy_cursor_update || state->async_update))
++		return false;
++
++	/* any connector change, means slow path: */
++	for_each_new_connector_in_state(state, connector, connector_state, i)
++		return false;
++
++	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
++		if (drm_atomic_crtc_needs_modeset(crtc_state))
++			return false;
++		if (++num_crtcs > 1)
++			return false;
++		*async_crtc = crtc;
++	}
++
++	return true;
++}
++
+ /* Get bitmask of crtcs that will need to be flushed.  The bitmask
+  * can be used with for_each_crtc_mask() iterator, to iterate
+  * effected crtcs without needing to preserve the atomic state.
+@@ -50,9 +139,25 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	struct drm_device *dev = state->dev;
+ 	struct msm_drm_private *priv = dev->dev_private;
+ 	struct msm_kms *kms = priv->kms;
++	struct drm_crtc *async_crtc = NULL;
+ 	unsigned crtc_mask = get_crtc_mask(state);
++	bool async = kms->funcs->vsync_time &&
++			can_do_async(state, &async_crtc);
+ 
+ 	kms->funcs->enable_commit(kms);
++
++	/*
++	 * Ensure any previous (potentially async) commit has
++	 * completed:
++	 */
++	kms->funcs->wait_flush(kms, crtc_mask);
++
++	mutex_lock(&kms->commit_lock);
++
++	/*
++	 * Now that there is no in-progress flush is complete,
++	 * prepare the current update:
++	 */
+ 	kms->funcs->prepare_commit(kms, state);
+ 
+ 	/*
+@@ -62,6 +167,49 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	drm_atomic_helper_commit_planes(dev, state, 0);
+ 	drm_atomic_helper_commit_modeset_enables(dev, state);
+ 
++	if (async) {
++		struct msm_pending_timer *timer =
++			&kms->pending_timers[drm_crtc_index(async_crtc)];
++
++		/* async updates are limited to single-crtc updates: */
++		WARN_ON(crtc_mask != drm_crtc_mask(async_crtc));
++
++		/*
++		 * Start timer if we don't already have an update pending
++		 * on this crtc:
++		 */
++		if (!(kms->pending_crtc_mask & crtc_mask)) {
++			ktime_t vsync_time, wakeup_time;
++
++			kms->pending_crtc_mask |= crtc_mask;
++
++			vsync_time = kms->funcs->vsync_time(kms, async_crtc);
++			wakeup_time = ktime_sub(vsync_time, ms_to_ktime(1));
++
++			hrtimer_start(&timer->timer, wakeup_time,
++					HRTIMER_MODE_ABS);
++		}
++
++		kms->funcs->disable_commit(kms);
++		mutex_unlock(&kms->commit_lock);
++
++		/*
++		 * At this point, from drm core's perspective, we
++		 * are done with the atomic update, so we can just
++		 * go ahead and signal that it is done:
++		 */
++		drm_atomic_helper_commit_hw_done(state);
++		drm_atomic_helper_cleanup_planes(dev, state);
++
++		return;
++	}
++
++	/*
++	 * If there is any async flush pending on updated crtcs, fold
++	 * them into the current flush.
++	 */
++	kms->pending_crtc_mask &= ~crtc_mask;
++
+ 	/*
+ 	 * Flush hardware updates:
+ 	 */
+@@ -70,12 +218,18 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 		kms->funcs->commit(kms, state);
+ 	}
+ 	kms->funcs->flush_commit(kms, crtc_mask);
++	mutex_unlock(&kms->commit_lock);
+ 
++	/*
++	 * Wait for flush to complete:
++	 */
+ 	kms->funcs->wait_flush(kms, crtc_mask);
++
++	mutex_lock(&kms->commit_lock);
+ 	kms->funcs->complete_commit(kms, crtc_mask);
++	mutex_unlock(&kms->commit_lock);
+ 	kms->funcs->disable_commit(kms);
+ 
+ 	drm_atomic_helper_commit_hw_done(state);
+-
+ 	drm_atomic_helper_cleanup_planes(dev, state);
+ }
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 336a6d0a4cd3..65262a993440 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -532,6 +532,7 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+ 	ddev->mode_config.normalize_zpos = true;
+ 
+ 	if (kms) {
++		kms->dev = ddev;
+ 		ret = kms->funcs->hw_init(kms);
+ 		if (ret) {
+ 			DRM_DEV_ERROR(dev, "kms hw init failed: %d\n", ret);
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index 79d480a7d97d..7d164d5c18b4 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -222,8 +222,12 @@ struct msm_format {
+ 	uint32_t pixel_format;
+ };
+ 
++struct msm_pending_timer;
++
+ int msm_atomic_prepare_fb(struct drm_plane *plane,
+ 			  struct drm_plane_state *new_state);
++void msm_atomic_init_pending_timer(struct msm_pending_timer *timer,
++		struct msm_kms *kms, int crtc_idx);
+ void msm_atomic_commit_tail(struct drm_atomic_state *state);
+ struct drm_atomic_state *msm_atomic_state_alloc(struct drm_device *dev);
+ void msm_atomic_state_clear(struct drm_atomic_state *state);
+diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
+index 811f5e2c2405..5eafc9686d29 100644
+--- a/drivers/gpu/drm/msm/msm_kms.h
++++ b/drivers/gpu/drm/msm/msm_kms.h
+@@ -33,6 +33,20 @@ struct msm_kms_funcs {
+ 
+ 	/*
+ 	 * Atomic commit handling:
++	 *
++	 * Note that in the case of async commits, the funcs which take
++	 * a crtc_mask (ie. ->flush_commit(), and ->complete_commit())
++	 * might not be evenly balanced with ->prepare_commit(), however
++	 * each crtc that effected by a ->perpare_commit() (potentially
++	 * multiple times) will eventually (at end of vsync period) be
++	 * flushed and completed.
++	 *
++	 * This has some implications about tracking of cleanup state,
++	 * for example SMP blocks to release after commit completes.  Ie.
++	 * cleanup state should be also duplicated in the various
++	 * duplicate_state() methods, as the current cleanup state at
++	 * ->complete_commit() time may have accumulated cleanup work
++	 * from multiple commits.
+ 	 */
+ 
+ 	/**
+@@ -45,6 +59,14 @@ struct msm_kms_funcs {
+ 	void (*enable_commit)(struct msm_kms *kms);
+ 	void (*disable_commit)(struct msm_kms *kms);
+ 
++	/**
++	 * If the kms backend supports async commit, it should implement
++	 * this method to return the time of the next vsync.  This is
++	 * used to determine a time slightly before vsync, for the async
++	 * commit timer to run and complete an async commit.
++	 */
++	ktime_t (*vsync_time)(struct msm_kms *kms, struct drm_crtc *crtc);
++
+ 	/**
+ 	 * Prepare for atomic commit.  This is called after any previous
+ 	 * (async or otherwise) commit has completed.
+@@ -109,20 +131,48 @@ struct msm_kms_funcs {
+ #endif
+ };
+ 
++struct msm_kms;
++
++/*
++ * A per-crtc timer for pending async atomic flushes.  Scheduled to expire
++ * shortly before vblank to flush pending async updates.
++ */
++struct msm_pending_timer {
++	struct hrtimer timer;
++	struct work_struct work;
++	struct msm_kms *kms;
++	unsigned crtc_idx;
++};
++
+ struct msm_kms {
+ 	const struct msm_kms_funcs *funcs;
++	struct drm_device *dev;
+ 
+ 	/* irq number to be passed on to drm_irq_install */
+ 	int irq;
+ 
+ 	/* mapper-id used to request GEM buffer mapped for scanout: */
+ 	struct msm_gem_address_space *aspace;
++
++	/*
++	 * For async commit, where ->flush_commit() and later happens
++	 * from the crtc's pending_timer close to end of the frame:
++	 */
++	struct mutex commit_lock;
++	unsigned pending_crtc_mask;
++	struct msm_pending_timer pending_timers[MAX_CRTCS];
+ };
+ 
+ static inline void msm_kms_init(struct msm_kms *kms,
+ 		const struct msm_kms_funcs *funcs)
+ {
++	unsigned i;
++
++	mutex_init(&kms->commit_lock);
+ 	kms->funcs = funcs;
++
++	for (i = 0; i < ARRAY_SIZE(kms->pending_timers); i++)
++		msm_atomic_init_pending_timer(&kms->pending_timers[i], kms, i);
+ }
+ 
+ struct msm_kms *mdp4_kms_init(struct drm_device *dev);
 -- 
-Kees Cook
+2.21.0
+
