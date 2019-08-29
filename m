@@ -2,101 +2,137 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33260C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC1BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07884233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dLorAy/D"
+	by mail.kernel.org (Postfix) with ESMTP id 5A16A23407
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfH2PX6 (ORCPT
+        id S1728295AbfH2PYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 29 Aug 2019 11:24:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45016 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727978AbfH2PX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 11:23:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46073 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbfH2PXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:23:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so3821929wrj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:23:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HDNcnLq+b6mBPqMQqj1uI4ke3syAlfKCQSY799vo0LM=;
-        b=dLorAy/DgPWHgQKpS9UzHskRBhT6WrHSkOcR0GwM8nusl4Jg4sN2daFt6AE5GcvhMO
-         2RtioBnQxvK5m1Nt4mmURPkw0nsjew196jBud9NnF9Or+MzKApgoqbZtongSNtejaPCg
-         13e4P/O0DFPCAAOvUqo4DJApwVJB2UiAQFzU7oR3ZjMhGoJBUCfhuwA5POL7vA/G/8it
-         3c+qXohLp81m2Ku1T+PKJ7ngGADw09iRR5nVqp8tz1dFtKr2+az9yHm8QhAwe5HA3yL/
-         bSr+SKNFvvj75dZge/2ZqhhidNdFhgcUMkHBlSBqPmcIc0swIE47G2B5cdv0VV/rUI9j
-         fnxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HDNcnLq+b6mBPqMQqj1uI4ke3syAlfKCQSY799vo0LM=;
-        b=TFzY/YDt5aCQym+PcqgNZ/qk0GPJv1AzBbkBd7Zz9XWkiL0CaemPMgf3Mz8Z1WLznJ
-         jx5jusSfUXHz5xS8PHY63p8++hzFynUDyo9KHJzBEu8odnwVGlyihFyMBZB1NVs2pojZ
-         1RLEXJY2x3WvkGUyAgd3Xg9tXonva5pevVjQJ4JE8S8+LEmE3uBCGJ85YqnXhj8Cil/7
-         zKdHeiQ8Jxk4XyR9sFQlAfEiwDiujSYEqjjPNvGHlSdDu4nY3TU/knzNqyBavNhPMPCs
-         TOCGtI9hoyCcSmEQtZ8aFDB1mfWh0MMghUEuvJZIMsbFUh6dUQmH2rmC46TQ6cg009Ex
-         tejQ==
-X-Gm-Message-State: APjAAAX6Qy4si+QiPc/qvzo846E0QwAVfs5nnsyYy02AEoC1AtmxlAJT
-        fQV5Fj03qTOsNAZT1/I3Xg5m1SPx8nJPtw==
-X-Google-Smtp-Source: APXvYqyTy4p5gj4PxVF79IC7zf/oN42FSf8AQ/YXD/PbaxsDqieMtxf5MdKlVyNt9EAxAJmJzZ9Mdg==
-X-Received: by 2002:adf:8541:: with SMTP id 59mr12256907wrh.298.1567092230520;
-        Thu, 29 Aug 2019 08:23:50 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d17sm4866871wre.27.2019.08.29.08.23.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 08:23:50 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 08/15] arm64: dts: meson-gxbb-vega-s95: add keep-power-in-suspend property in SDIO node
-Date:   Thu, 29 Aug 2019 17:23:35 +0200
-Message-Id: <20190829152342.27794-9-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829152342.27794-1-narmstrong@baylibre.com>
-References: <20190829152342.27794-1-narmstrong@baylibre.com>
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 903CA767FA50CD1B8FE2;
+        Thu, 29 Aug 2019 23:23:54 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 29 Aug
+ 2019 23:23:43 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>, <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 2/2] erofs: some marcos are much more readable as a function
+Date:   Thu, 29 Aug 2019 23:22:55 +0800
+Message-ID: <20190829152255.123594-2-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190829152255.123594-1-gaoxiang25@huawei.com>
+References: <20190829152255.123594-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WiFi firmware requires that the power is kept enabled while in
-suspend mode. Add the keep-power-in-suspend property in the SDIO node
-to specify that the power must be kept when entering in a system wide
-suspend state.
+As Christoph suggested [1], these marcos are much
+more readable as a function.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+[1] https://lore.kernel.org/r/20190829095954.GB20598@infradead.org/
+Reported-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/erofs/erofs_fs.h | 24 ++++++++++++++++--------
+ fs/erofs/inode.c    |  4 ++--
+ fs/erofs/xattr.c    |  2 +-
+ 3 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 43b11e3dfe11..d2ee2577d479 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -183,6 +183,9 @@
- 	non-removable;
- 	disable-wp;
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 2447ad4d0920..41e53b49a11b 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -168,16 +168,24 @@ struct erofs_xattr_entry {
+ 	char   e_name[0];       /* attribute name */
+ } __packed;
  
-+	/* WiFi firmware requires power to be kept while in suspend */
-+	keep-power-in-suspend;
+-#define ondisk_xattr_ibody_size(count)	({\
+-	u32 __count = le16_to_cpu(count); \
+-	((__count) == 0) ? 0 : \
+-	sizeof(struct erofs_xattr_ibody_header) + \
+-		sizeof(__u32) * ((__count) - 1); })
++static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
++{
++	unsigned int icount = le16_to_cpu(d_icount);
 +
- 	mmc-pwrseq = <&sdio_pwrseq>;
++	if (!icount)
++		return 0;
++
++	return sizeof(struct erofs_xattr_ibody_header) +
++		sizeof(__u32) * (icount - 1);
++}
  
- 	vmmc-supply = <&vddao_3v3>;
+ #define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
+-#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
+-	sizeof(struct erofs_xattr_entry) + \
+-	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
++
++static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
++{
++	return EROFS_XATTR_ALIGN(sizeof(struct erofs_xattr_entry) +
++				 e->e_name_len + le16_to_cpu(e->e_value_size));
++}
+ 
+ /* available compression algorithm types */
+ enum {
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 80f4fe919ee7..cf31554075c9 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -29,7 +29,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		struct erofs_inode_v2 *v2 = data;
+ 
+ 		vi->inode_isize = sizeof(struct erofs_inode_v2);
+-		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
++		vi->xattr_isize = erofs_xattr_ibody_size(v2->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v2->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+@@ -62,7 +62,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+ 
+ 		vi->inode_isize = sizeof(struct erofs_inode_v1);
+-		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
++		vi->xattr_isize = erofs_xattr_ibody_size(v1->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v1->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index a8286998a079..7ef8d4bb45cd 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -231,7 +231,7 @@ static int xattr_foreach(struct xattr_iter *it,
+ 	 */
+ 	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
+ 	if (tlimit) {
+-		unsigned int entry_sz = EROFS_XATTR_ENTRY_SIZE(&entry);
++		unsigned int entry_sz = erofs_xattr_entry_size(&entry);
+ 
+ 		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
+ 		if (unlikely(*tlimit < entry_sz)) {
 -- 
-2.22.0
+2.17.1
 
