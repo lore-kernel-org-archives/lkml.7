@@ -2,157 +2,284 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6E0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E130EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2F12173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70F42189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567080809;
+	bh=AFQuEm5j/88hnPHuIBzauyUThuB0LpyoGrOwRmqq/UM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s+SbR0TVjZ3IuQjXd/2MfB2YXpaBjf92tlTtxQEjWgJ+U4yeD/3A4jebTyegkc51t
+	 c/F/zzimti4EcvWxGODmc0t7vxMM5SvGItwmjqyi4rc4wsqXyDDbcSWOpqbpl2B74K
+	 PBNPw1+uEGa3XzDW5wLM/qS8156V/Yxi0ynqKa/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfH2MKJ (ORCPT
+        id S1727257AbfH2MN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:10:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:33635 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbfH2MKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:10:09 -0400
-Received: by mail-io1-f71.google.com with SMTP id 5so3792392ion.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 05:10:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=P1PYtGhR+nPJP5/MoLNmKeczOItoTzGhqMoW1iD5Ejg=;
-        b=XePPnoodOD9ZjXuTr0W2ejP+iamxzakfOq+Pc+AbvcmNShnQQZ0y1WzoBtlmWYh3+5
-         J6qkS4wDO4kKIV0EVay9DSxVsxGagO4QFV/bFojr9BP4TOf7gkZZA3hwmIs2T+xpnabP
-         rt/c5SNzEs0J/QXMUWf2hIKtk1Y02GjVFocYv5nd3YCgd7l3/olipPqgWnv3V9Z4P+CD
-         NPuYB5B0WsaURRmgU7enlhaVtEpAKKl+OcxUJLl+FEiHeebYdMsp4fEGKRjC6kqqVcel
-         u5sPPDRFyPSDXUoYyPco4D+Jt5v4CTuoNh/T0Jr5Wry1rtmaLDiE0jFcSHoNmuqXfpOI
-         j5cQ==
-X-Gm-Message-State: APjAAAUesftVTANTAmKovXJ0ptP4OL/6DI/IzmKm8EblTUfe88hSBSMR
-        vslWoluVXQWv+awy1FxKmVBjvBC6Jo6TGkqMekvwMbK9Xwsd
-X-Google-Smtp-Source: APXvYqwKU0LnZmIscAtx+UWMsJ2X0GkN2Gmiz6Fv5gvajQ/lXxMcFNyhnkq6T4Et/BCqZAl0Akxpp4e/5LYmXb+Ygua1x6iMp0Ju
+        Thu, 29 Aug 2019 08:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726416AbfH2MN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:13:28 -0400
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF5B2080F;
+        Thu, 29 Aug 2019 12:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567080806;
+        bh=AFQuEm5j/88hnPHuIBzauyUThuB0LpyoGrOwRmqq/UM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gNTXG/edNoXU8t/0AGmHHS/MbwWXy/p733THVI1wX6vUc2g4V91b9UU+NWDZrM3G5
+         FUdElaGJ1/1w0yYJrYmtE5P3LcdmFJ7arOcsXQrzrO+Q10hzB2GGJJ56QXm+ftbV0s
+         hRsXe40WnRTZtF0yu4v5kCaAlk/mv5zrBCHPw+M4=
+Date:   Thu, 29 Aug 2019 14:13:17 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        hpa@zytor.com, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@android.com, maco@google.com, michal.lkml@markovi.net,
+        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
+        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH v3 08/11] scripts: Coccinelle script for namespace
+ dependencies.
+Message-ID: <20190829121317.GA22914@linux-8ccs>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-9-maennich@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:81cc:: with SMTP id t12mr10935890iol.157.1567080608044;
- Thu, 29 Aug 2019 05:10:08 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 05:10:08 -0700
-In-Reply-To: <000000000000e695c1058fb26925@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fa1d4a0591406266@google.com>
-Subject: Re: KASAN: use-after-free Read in rxrpc_send_keepalive
-From:   syzbot <syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190821114955.12788-9-maennich@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
++++ Matthias Maennich [21/08/19 12:49 +0100]:
+>A script that uses the '<module>.ns_deps' files generated by modpost to
+>automatically add the required symbol namespace dependencies to each
+>module.
+>
+>Usage:
+>1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
+>   DEFAULT_SYMBOL_NAMESPACE
+>2) Run 'make' (or 'make modules') and get warnings about modules not
+>   importing that namespace.
+>3) Run 'make nsdeps' to automatically add required import statements
+>   to said modules.
+>
+>This makes it easer for subsystem maintainers to introduce and maintain
+>symbol namespaces into their codebase.
+>
+>Co-developed-by: Martijn Coenen <maco@android.com>
+>Signed-off-by: Martijn Coenen <maco@android.com>
+>Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Signed-off-by: Matthias Maennich <maennich@google.com>
+>---
+> MAINTAINERS                                 |  5 ++
+> Makefile                                    | 12 +++++
+> scripts/Makefile.modpost                    |  4 +-
+> scripts/coccinelle/misc/add_namespace.cocci | 23 +++++++++
+> scripts/nsdeps                              | 56 +++++++++++++++++++++
+> 5 files changed, 99 insertions(+), 1 deletion(-)
+> create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
+> create mode 100644 scripts/nsdeps
+>
+>diff --git a/MAINTAINERS b/MAINTAINERS
+>index 08176d64eed5..dd5b37b49a07 100644
+>--- a/MAINTAINERS
+>+++ b/MAINTAINERS
+>@@ -11428,6 +11428,11 @@ S:	Maintained
+> T:	git git://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/nolibc.git
+> F:	tools/include/nolibc/
+>
+>+NSDEPS
+>+M:	Matthias Maennich <maennich@google.com>
+>+S:	Maintained
+>+F:	scripts/nsdeps
+>+
+> NTB AMD DRIVER
+> M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> L:	linux-ntb@googlegroups.com
+>diff --git a/Makefile b/Makefile
+>index a89870188c09..40311f583ee1 100644
+>--- a/Makefile
+>+++ b/Makefile
+>@@ -1500,6 +1500,9 @@ help:
+> 	@echo  '  headerdep       - Detect inclusion cycles in headers'
+> 	@echo  '  coccicheck      - Check with Coccinelle'
+> 	@echo  ''
+>+	@echo  'Tools:'
+>+	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+>+	@echo  ''
+> 	@echo  'Kernel selftest:'
+> 	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
+> 	@echo  '                    Build, install, and boot kernel before'
+>@@ -1687,6 +1690,15 @@ quiet_cmd_tags = GEN     $@
+> tags TAGS cscope gtags: FORCE
+> 	$(call cmd,tags)
+>
+>+# Script to generate missing namespace dependencies
+>+# ---------------------------------------------------------------------------
+>+
+>+PHONY += nsdeps
+>+
+>+nsdeps:
+>+	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost nsdeps
+>+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
+>+
+> # Scripts to check various things for consistency
+> # ---------------------------------------------------------------------------
+>
+>diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>index 26e6574ecd08..743fe3a2e885 100644
+>--- a/scripts/Makefile.modpost
+>+++ b/scripts/Makefile.modpost
+>@@ -56,7 +56,8 @@ MODPOST = scripts/mod/modpost						\
+> 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+> 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+> 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
+>-	$(if $(KBUILD_MODPOST_WARN),-w)
+>+	$(if $(KBUILD_MODPOST_WARN),-w)					\
+>+	$(if $(filter nsdeps,$(MAKECMDGOALS)),-d)
+>
+> ifdef MODPOST_VMLINUX
+>
+>@@ -134,6 +135,7 @@ $(modules): %.ko :%.o %.mod.o FORCE
+>
+> targets += $(modules)
+>
+>+nsdeps: __modpost
+>
+> # Add FORCE to the prequisites of a target to force it to be always rebuilt.
+> # ---------------------------------------------------------------------------
+>diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+>new file mode 100644
+>index 000000000000..c832bb6445a8
+>--- /dev/null
+>+++ b/scripts/coccinelle/misc/add_namespace.cocci
+>@@ -0,0 +1,23 @@
+>+// SPDX-License-Identifier: GPL-2.0-only
+>+//
+>+/// Adds missing MODULE_IMPORT_NS statements to source files
+>+///
+>+/// This script is usually called from scripts/nsdeps with -D ns=<namespace> to
+>+/// add a missing namespace tag to a module source file.
+>+///
+>+
+>+@has_ns_import@
+>+declarer name MODULE_IMPORT_NS;
+>+identifier virtual.ns;
+>+@@
+>+MODULE_IMPORT_NS(ns);
+>+
+>+// Add missing imports, but only adjacent to a MODULE_LICENSE statement.
+>+// That ensures we are adding it only to the main module source file.
+>+@do_import depends on !has_ns_import@
+>+declarer name MODULE_LICENSE;
+>+expression license;
+>+identifier virtual.ns;
+>+@@
+>+MODULE_LICENSE(license);
+>++ MODULE_IMPORT_NS(ns);
+>diff --git a/scripts/nsdeps b/scripts/nsdeps
+>new file mode 100644
+>index 000000000000..3b5995a61e65
+>--- /dev/null
+>+++ b/scripts/nsdeps
+>@@ -0,0 +1,56 @@
+>+#!/bin/bash
+>+# SPDX-License-Identifier: GPL-2.0
+>+# Linux kernel symbol namespace import generator
+>+#
+>+# This script requires a minimum spatch version.
+>+SPATCH_REQ_VERSION="1.0.4"
+>+
+>+DIR="$(dirname $(readlink -f $0))/.."
+>+SPATCH="`which ${SPATCH:=spatch}`"
+>+if [ ! -x "$SPATCH" ]; then
+>+	echo 'spatch is part of the Coccinelle project and is available at http://coccinelle.lip6.fr/'
+>+	exit 1
+>+fi
+>+
+>+SPATCH_REQ_VERSION_NUM=$(echo $SPATCH_REQ_VERSION | ${DIR}/scripts/ld-version.sh)
+>+SPATCH_VERSION=$($SPATCH --version | head -1 | awk '{print $3}')
+>+SPATCH_VERSION_NUM=$(echo $SPATCH_VERSION | ${DIR}/scripts/ld-version.sh)
+>+
+>+if [ "$SPATCH_VERSION_NUM" -lt "$SPATCH_REQ_VERSION_NUM" ] ; then
+>+	echo "spatch needs to be version $SPATCH_REQ_VERSION or higher"
+>+	exit 1
+>+fi
+>+
+>+generate_deps_for_ns() {
+>+	$SPATCH --very-quiet --in-place --sp-file \
+>+		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
+>+}
+>+
+>+generate_deps() {
+>+	local mod_name=`basename $@ .ko`
+>+	local mod_file=`echo $@ | sed -e 's/\.ko/\.mod/'`
+>+	local ns_deps_file=`echo $@ | sed -e 's/\.ko/\.ns_deps/'`
+>+	if [ ! -f "$ns_deps_file" ]; then return; fi
+>+	local mod_source_files=`cat $mod_file | sed -n 1p | sed -e 's/\.o/\.c/g'`
+>+	for ns in `cat $ns_deps_file`; do
+>+		echo "Adding namespace $ns to module $mod_name (if needed)."
+>+		generate_deps_for_ns $ns $mod_source_files
+>+		# sort the imports
+>+		for source_file in $mod_source_files; do
+>+			sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
+>+			offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
+>+			cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
+>+			tail -n +$((offset +1)) ${source_file} | grep -v MODULE_IMPORT_NS >> ${source_file}.tmp
+>+			if ! diff -q ${source_file} ${source_file}.tmp; then
+>+				mv ${source_file}.tmp ${source_file}
+>+			else
+>+				rm ${source_file}.tmp
+>+			fi
+>+		done
+>+	done
+>+}
+>+
+>+for f in `cat $srctree/modules.order`; do
+>+	generate_deps $f
+>+done
 
-HEAD commit:    ed2393ca Add linux-next specific files for 20190827
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=156adb1e600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2ef5940a07ed45f4
-dashboard link: https://syzkaller.appspot.com/bug?extid=d850c266e3df14da1d31
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167ab582600000
+Hi Matthias!
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
+I normally build outside of the source tree (make O=..) and I think
+that choked up the nsdeps script a bit. For example when I run
+'make nsdeps O=/tmp/linux' I get:
 
-IPv6: ADDRCONF(NETDEV_CHANGE): hsr0: link becomes ready
-==================================================================
-BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940  
-net/rxrpc/output.c:634
-Read of size 8 at addr ffff888086b01218 by task kworker/0:1/12
+   cat: /home/jeyu/linux/modules.order: No such file or directory
 
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc6-next-20190827 #74
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: krxrpcd rxrpc_peer_keepalive_worker
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  rxrpc_send_keepalive+0x8a2/0x940 net/rxrpc/output.c:634
-  rxrpc_peer_keepalive_dispatch net/rxrpc/peer_event.c:369 [inline]
-  rxrpc_peer_keepalive_worker+0x7be/0xd02 net/rxrpc/peer_event.c:430
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+I just changed $srctree/modules.order to $objtree/modules.order and
+that fixed it for me. Also, I had to prefix $source_file in the script
+with $srctree so that it'd find the right file to modify.
 
-Allocated by task 8741:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  __do_kmalloc mm/slab.c:3655 [inline]
-  __kmalloc+0x163/0x770 mm/slab.c:3664
-  kmalloc_array include/linux/slab.h:614 [inline]
-  kcalloc include/linux/slab.h:625 [inline]
-  alloc_pipe_info+0x199/0x420 fs/pipe.c:676
-  get_pipe_inode fs/pipe.c:738 [inline]
-  create_pipe_files+0x8e/0x730 fs/pipe.c:770
-  __do_pipe_flags+0x48/0x250 fs/pipe.c:807
-  do_pipe2+0x84/0x160 fs/pipe.c:855
-  __do_sys_pipe2 fs/pipe.c:873 [inline]
-  __se_sys_pipe2 fs/pipe.c:871 [inline]
-  __x64_sys_pipe2+0x54/0x80 fs/pipe.c:871
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Thanks!
 
-Freed by task 8741:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  free_pipe_info+0x243/0x300 fs/pipe.c:709
-  put_pipe_info+0xd0/0xf0 fs/pipe.c:582
-  pipe_release+0x1e6/0x280 fs/pipe.c:603
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff888086b01200
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 24 bytes inside of
-  1024-byte region [ffff888086b01200, ffff888086b01600)
-The buggy address belongs to the page:
-page:ffffea00021ac000 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
-index:0xffff888086b00480 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea00027b5588 ffffea00028e3808 ffff8880aa400c40
-raw: ffff888086b00480 ffff888086b00000 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888086b01100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888086b01180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff888086b01200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                             ^
-  ffff888086b01280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888086b01300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
+Jessica
