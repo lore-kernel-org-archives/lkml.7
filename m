@@ -2,236 +2,105 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263D1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39084C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084F822CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35D523404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567074078;
+	bh=g1Vo69At6c1xR0l7nlKwcgX9mVRHSUIsRWGGsUzYoAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y6c8rL5auMnxWu8p0FfJ8YgMQbyFVhoYWi/0YsytRybbvTciGMUjmZ6F/Q+9zMBoN
+	 eum5hJKcORBKgHneclj+jXJ9mt3csukereK0UB7eEjy+dG46RZUX8SK3/It9R277y0
+	 M5ZjzDoFoseVvjcG5UZy4+dJFXB25zkCAuEA1jYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfH2KVA (ORCPT
+        id S1727270AbfH2KVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:21:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57672 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 06:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfH2KU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:20:59 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727139AbfH2KVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:21:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 015E785536;
-        Thu, 29 Aug 2019 10:20:59 +0000 (UTC)
-Received: from thuth.com (ovpn-116-53.ams2.redhat.com [10.36.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AB011001284;
-        Thu, 29 Aug 2019 10:20:54 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH] KVM: selftests: Add a test for the KVM_S390_MEM_OP ioctl
-Date:   Thu, 29 Aug 2019 12:20:50 +0200
-Message-Id: <20190829102050.26703-1-thuth@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 29 Aug 2019 10:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A1E922CF5;
+        Thu, 29 Aug 2019 10:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567074076;
+        bh=g1Vo69At6c1xR0l7nlKwcgX9mVRHSUIsRWGGsUzYoAY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DYIm9hOxhnnU9A/2IiunPz+jZr1vZXI9Ept0UHjkqAmu6KeVq1+6W2m+6DBLD3slu
+         kKBtsuMIemVcKV92CVvNBmzhiRL3WAIcnC3rJ1YgrCMh5VoDR6zA5y+Y/YDMyabdn1
+         WF47KVgyK3xnhjMp9V9j01KxWHuxNTNF8EKJmH7U=
+Date:   Thu, 29 Aug 2019 12:21:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jochen Sprickerhof <jochen@sprickerhof.de>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v2 1/2 RESEND] usb: core: phy: add support for PHY
+ calibration
+Message-ID: <20190829102113.GA20823@kroah.com>
+References: <20190808094128.27213-1-m.szyprowski@samsung.com>
+ <CGME20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5@eucas1p2.samsung.com>
+ <20190808094128.27213-2-m.szyprowski@samsung.com>
+ <a380a635-e036-1a18-bc0f-947931f8735c@samsung.com>
+ <20190828204146.GA21235@kroah.com>
+ <e801e7a4-f525-baae-4c02-d271db308b5f@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e801e7a4-f525-baae-4c02-d271db308b5f@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that we can write and read the guest memory with this s390x
-ioctl, and that some error cases are handled correctly.
+On Thu, Aug 29, 2019 at 07:26:50AM +0200, Marek Szyprowski wrote:
+> Hi Greg,
+> 
+> On 2019-08-28 22:41, Greg Kroah-Hartman wrote:
+> > On Mon, Aug 26, 2019 at 10:55:33AM +0200, Marek Szyprowski wrote:
+> >> Hi Greg
+> >>
+> >> On 2019-08-08 11:41, Marek Szyprowski wrote:
+> >>> Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
+> >>> done after every USB HCD reset. Generic PHY framework has been already
+> >>> extended with phy_calibrate() function in commit 36914111e682 ("drivers:
+> >>> phy: add calibrate method"). This patch adds support for it to generic
+> >>> PHY handling code in USB HCD core.
+> >>>
+> >>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> >>> Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
+> >> Greg: any chance to give it this a try in -next? If not, maybe You can
+> >> point someone whose review will help?
+> > Ah crap, this is me, not the PHY maintainer :(
+> >
+> > Can you resend this and I will be glad to review it.  But it would also
+> > be good to get Felipe's review as well.
+> 
+> No problem, I will resend it again in a few minutes. Felipe already 
+> acked it: https://lkml.org/lkml/2019/8/8/460
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- This test uses the ucall() interface, so this patch needs to be applied
- on top of my "Implement ucall() for s390x" patch (which is not merged to
- master yet)
+I don't see the resend, did I miss it?
 
- tools/testing/selftests/kvm/Makefile      |   1 +
- tools/testing/selftests/kvm/s390x/memop.c | 155 ++++++++++++++++++++++
- 2 files changed, 156 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/s390x/memop.c
+And can you add Felipe's ack to it?
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 1b48a94b4350..62c591f87dab 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -32,6 +32,7 @@ TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
- TEST_GEN_PROGS_aarch64 += dirty_log_test
- TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
- 
-+TEST_GEN_PROGS_s390x = s390x/memop
- TEST_GEN_PROGS_s390x += s390x/sync_regs_test
- TEST_GEN_PROGS_s390x += dirty_log_test
- TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
-diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
-new file mode 100644
-index 000000000000..25b100d9fdda
---- /dev/null
-+++ b/tools/testing/selftests/kvm/s390x/memop.c
-@@ -0,0 +1,155 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Test for s390x KVM_S390_MEM_OP
-+ *
-+ * Copyright (C) 2019, Red Hat, Inc.
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+
-+#define VCPU_ID 1
-+
-+static uint8_t mem1[65536];
-+static uint8_t mem2[65536];
-+
-+static void guest_code(void)
-+{
-+	int i;
-+
-+	for (;;) {
-+		for (i = 0; i < sizeof(mem2); i++)
-+			mem2[i] = mem1[i];
-+		GUEST_SYNC(0);
-+	}
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct kvm_vm *vm;
-+	struct kvm_run *run;
-+	struct kvm_s390_mem_op ksmo;
-+	int rv, i, maxsize;
-+
-+	setbuf(stdout, NULL);	/* Tell stdout not to buffer its content */
-+
-+	maxsize = kvm_check_cap(KVM_CAP_S390_MEM_OP);
-+	if (!maxsize) {
-+		fprintf(stderr, "CAP_S390_MEM_OP not supported -> skip test\n");
-+		exit(KSFT_SKIP);
-+	}
-+	if (maxsize > sizeof(mem1))
-+		maxsize = sizeof(mem1);
-+
-+	/* Create VM */
-+	vm = vm_create_default(VCPU_ID, 0, guest_code);
-+	run = vcpu_state(vm, VCPU_ID);
-+
-+	for (i = 0; i < sizeof(mem1); i++)
-+		mem1[i] = i * i + i;
-+
-+	/* Set the first array */
-+	ksmo.gaddr = addr_gva2gpa(vm, (uintptr_t)mem1);
-+	ksmo.flags = 0;
-+	ksmo.size = maxsize;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-+	ksmo.buf = (uintptr_t)mem1;
-+	ksmo.ar = 0;
-+	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+
-+	/* Let the guest code copy the first array to the second */
-+	vcpu_run(vm, VCPU_ID);
-+	TEST_ASSERT(run->exit_reason == KVM_EXIT_S390_SIEIC,
-+		    "Unexpected exit reason: %u (%s)\n",
-+		    run->exit_reason,
-+		    exit_reason_str(run->exit_reason));
-+
-+	memset(mem2, 0xaa, sizeof(mem2));
-+
-+	/* Get the second array */
-+	ksmo.gaddr = (uintptr_t)mem2;
-+	ksmo.flags = 0;
-+	ksmo.size = maxsize;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_READ;
-+	ksmo.buf = (uintptr_t)mem2;
-+	ksmo.ar = 0;
-+	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+
-+	TEST_ASSERT(!memcmp(mem1, mem2, maxsize),
-+		    "Memory contents do not match!");
-+
-+	/* Check error conditions - first bad size: */
-+	ksmo.gaddr = (uintptr_t)mem1;
-+	ksmo.flags = 0;
-+	ksmo.size = -1;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-+	ksmo.buf = (uintptr_t)mem1;
-+	ksmo.ar = 0;
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+	TEST_ASSERT(rv == -1 && errno == E2BIG, "ioctl allows insane sizes");
-+
-+	/* Bad flags: */
-+	ksmo.gaddr = (uintptr_t)mem1;
-+	ksmo.flags = -1;
-+	ksmo.size = maxsize;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-+	ksmo.buf = (uintptr_t)mem1;
-+	ksmo.ar = 0;
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags?");
-+
-+	/* Bad operation: */
-+	ksmo.gaddr = (uintptr_t)mem1;
-+	ksmo.flags = 0;
-+	ksmo.size = maxsize;
-+	ksmo.op = -1;
-+	ksmo.buf = (uintptr_t)mem1;
-+	ksmo.ar = 0;
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags?");
-+
-+	/* Bad guest address: */
-+	ksmo.gaddr = ~0xfffUL;
-+	ksmo.flags = KVM_S390_MEMOP_F_CHECK_ONLY;
-+	ksmo.size = maxsize;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-+	ksmo.buf = (uintptr_t)mem1;
-+	ksmo.ar = 0;
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory access");
-+
-+	/* Bad host address: */
-+	ksmo.gaddr = (uintptr_t)mem1;
-+	ksmo.flags = 0;
-+	ksmo.size = maxsize;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-+	ksmo.buf = 0;
-+	ksmo.ar = 0;
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+	TEST_ASSERT(rv == -1 && errno == EFAULT,
-+		    "ioctl does not report bad host memory address");
-+
-+	/* Bad access register: */
-+	run->psw_mask &= ~(3UL << (63 - 17));
-+	run->psw_mask |= 1UL << (63 - 17);  /* Enable AR mode */
-+	vcpu_run(vm, VCPU_ID);              /* To sync new state to SIE block */
-+	ksmo.gaddr = (uintptr_t)mem1;
-+	ksmo.flags = 0;
-+	ksmo.size = maxsize;
-+	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-+	ksmo.buf = (uintptr_t)mem1;
-+	ksmo.ar = 17;
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-+	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows ARs > 15");
-+	run->psw_mask &= ~(3UL << (63 - 17));   /* Disable AR mode */
-+	vcpu_run(vm, VCPU_ID);                  /* Run to sync new state */
-+
-+	kvm_vm_free(vm);
-+
-+	return 0;
-+}
--- 
-2.18.1
+thanks,
 
+greg k-h
