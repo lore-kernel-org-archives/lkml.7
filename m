@@ -2,64 +2,100 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C77C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DF6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481762189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dk56+zO/"
+	by mail.kernel.org (Postfix) with ESMTP id 03270233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfH2GXl (ORCPT
+        id S1727454AbfH2GYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 02:23:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2GXl (ORCPT
+        Thu, 29 Aug 2019 02:24:46 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:29503 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725782AbfH2GYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 02:23:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Pnilb35Nyis35kILCtEZc4I5Fc543LaqAnG843dbBy8=; b=dk56+zO//nXBQQbjht/htHClI
-        TMTs0VFQIU6jekV/YQ1dUzCP5SBy7nW3gmVc8b7NH7GRAwfwJvhz/jhrE3DkFGyKTeyD0v4Zbutox
-        3wWHhcPePqmFoqNiv6KKjgg28GrJ9iZC81N8kZQGjueCucTfndbxggKNEI2N4iyM1xJaKLRIL8iB5
-        pdHBEP//K+StFX3bZNedh4q+vL0DYHc7lTrXUgH3VWji8372/ZtvYeBLEW3/j2KUSg2ouxlKJ/XDl
-        S2+9AaAwRPhjHhcwK3o//a7PQCq2pjL4RvAC9NSTyoiQ3jlvRe9ASOFD0H+a102Cvc9ohUeWBsnLr
-        WZ92GXE+g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3DqO-0002Sx-AL; Thu, 29 Aug 2019 06:23:40 +0000
-Date:   Wed, 28 Aug 2019 23:23:40 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829062340.GB3047@infradead.org>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190828170022.GA7873@kroah.com>
+        Thu, 29 Aug 2019 02:24:45 -0400
+X-UUID: a196583a8332455382dc647d0c53f3f3-20190829
+X-UUID: a196583a8332455382dc647d0c53f3f3-20190829
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1898947706; Thu, 29 Aug 2019 14:24:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 29 Aug 2019 14:24:42 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 29 Aug 2019 14:24:42 +0800
+Message-ID: <1567059876.15320.3.camel@mtksdaap41>
+Subject: Re: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related
+ code from core driver
+From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Frank Wunderlich <frank-w@public-files.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-mediatek@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "=?ISO-8859-1?Q?=22Ren=E9?= van Dorst\"" <opensource@vdorst.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        <linux-rtc@vger.kernel.org>
+Date:   Thu, 29 Aug 2019 14:24:36 +0800
+In-Reply-To: <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+         <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
+         <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
+         <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
+         <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828170022.GA7873@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can we please just review the damn thing and get it into the proper
-tree?  That whole concept of staging file systems just has been one
-fricking disaster, including Greg just moving not fully reviewed ones
-over like erofs just because he feels like it.  I'm getting sick and
-tired of this scheme.
+Hi Frank/Matthias,
+
+On Fri, 2019-08-23 at 19:16 +0200, Frank Wunderlich wrote:
+> > Gesendet: Freitag, 23. August 2019 um 17:42 Uhr
+> > Von: "Matthias Brugger" <matthias.bgg@gmail.com>
+> 
+> > I suppose that's because 3/10 has code that should be in 2/10 and for some
+> > reason 3/10 was not pushed for linux-next inclusion. Although it has the same
+> > Acked-for-mfd-by tag.
+> >
+> > @Frank, can you test if adding 3/10 to your code base fixes the issue?
+> 
+> adding part 3 [1] seems to fix the issue too
+> 
+> [    4.960051] mt6323-regulator mt6323-regulator: Chip ID = 0x2023
+> 
+> thanks
+> 
+> [1] https://patchwork.kernel.org/patch/11110509/
+Thanks for your comments.
+The root cause seems I didn't split the code well.
+I will fix it in the next version.
+
