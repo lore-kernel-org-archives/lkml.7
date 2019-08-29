@@ -2,80 +2,352 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF5EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E92C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12B823426
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4712073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567069762;
+	bh=GcUOQ8Sb64d/h2WAZUGd23qBfwuUYjgw/kAkWRtpnDQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=msoz5Hdgo3DKbrsvC7fbviXhkRnSasjykrUJlv/rOnVmkCl5vRwybumFosgNfvqRa
+	 EqxAEvZnSaZRkoyemZ2c9t4I1brQyEYR60M46RttEF3ORjOVh6FWm5SnLISk1xq7ji
+	 euSvNc3T3oCZFvlfNb+viFgb7nCVnRi+jcIHAoU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfH2JIq (ORCPT
+        id S1727188AbfH2JJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:08:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:46679 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfH2JIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:08:46 -0400
-Received: from [192.168.1.110] ([77.7.44.18]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N3bjH-1iBChO0vnX-010c52; Thu, 29 Aug 2019 11:08:41 +0200
-Subject: Re: leds: apu: drop obsolete support for apu>=2
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     pavel@ucw.cz, dmurphy@ti.com, linux-leds@vger.kernel.org
-References: <1563202653-20994-1-git-send-email-info@metux.net>
- <bb7a338b-d86d-5016-7ae2-e893e1934d96@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <12d2e12f-4157-eb64-6734-db7f1908200c@metux.net>
-Date:   Thu, 29 Aug 2019 11:08:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 29 Aug 2019 05:09:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:40998 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfH2JJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:09:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E89628;
+        Thu, 29 Aug 2019 02:09:19 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C799D3F246;
+        Thu, 29 Aug 2019 02:09:14 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/3] reorganize ptp_kvm modules to make it
+ arch-independent.
+To:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        richardcochran@gmail.com, Mark.Rutland@arm.com,
+        Will.Deacon@arm.com, suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
+        Kaly.Xin@arm.com, justin.he@arm.com
+References: <20190829063952.18470-1-jianyong.wu@arm.com>
+ <20190829063952.18470-3-jianyong.wu@arm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <4c6038f5-1da4-0b43-d8b7-541379321bf1@kernel.org>
+Date:   Thu, 29 Aug 2019 10:09:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <bb7a338b-d86d-5016-7ae2-e893e1934d96@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190829063952.18470-3-jianyong.wu@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:bk46UKSSJSsY5ewyTBOd84ZGPF1MXRbTg+pz0HEYQB8R+Bkc5yS
- iScwJHPY8xCXrPCp8bLdsO9kD6JFQ/jYoWNvRoOH2/AKrxt5IePtaLfLHadluCEYBFbhbnP
- cDyKKf6NYKKng80DD4VzIR/4U37rSgYOq+xACZUZnE1J4OYbYIq1cQ4ZDC5LypJGSyEELqw
- d/WVgF+HfDyB+A+Yz5fYg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZlS4e7wBA8c=:OPAMx9dodqVC8qHmOWnBDp
- zTmhTBsTxYlfQ2BZfEVAIYxIidEQjp9SxVeFqNPgvjmU2Ga73t1VKrjbRI1rjJjQtNglgo/sa
- KFLS7/AROFkIgnBo0t/HQfWhUdBXRBy7MGttdAlOWQy9WJBQinQwiLZbsToNyPRzOVT6SEzFK
- agTPY18wJqVOD5OBz3nYoE9gZby/CtKNesLQfm656uC3CYEjkRohhwfcpsKu0aHiC2DZTFVrr
- woYcQMjUvU1IAGsgQoVJdPoQ7t1hBP7czcDMKRAQlF9ESoJuxOOigqfdSOnNGf6oB8m0orHcn
- JDwTy2klifp4TXdSZEdXcezsSKrfD6xrEnncJbEng5YKbu8UdDc8n/WzGTwwaF7hTTWHRhEuN
- 5segvubd10V+G3Jh4wHJE9GUHUls/LEUvrDuqPXSA26M/66bcLeyhpjGDf+XQHhD4uaHK7VXK
- ZM2iHCU94BUcCYkHXrQdMP/FybCll+TohCBI4K/7D/9KykdlpO2q+I4A5eW/h7bLqafo1G+Uo
- sNusOySRzL5IFunCnpx9iqYVPTpIThXFLwwfT3sI+Rl7K5j2sB2Xa9e0/YXk5MXT8H+quMcZg
- 0KVx0MYOEV+lxHeXK8D82nQ9SnIQgiX506FbPIglHAb3smr1EBf8yJJV7iycBJBuU4eJCE4/X
- wBT31lxuWFd+jiepQShHgAcdyWZA9N0Tl6H1AIni9eA4AMPhTKogEyqEYgUCt9wADvTKmwyh4
- TvWtPi0cR940o+x1UJ+S10/7VYwfAe8eVG7cqnZaqHu1LMhawpMdyHRVkTa5LlVIR0+pkRPah
- S6j3LH9aSoSWlbhIP8j/JNt6nABgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.07.19 22:12, Jacek Anaszewski wrote:
+On 29/08/2019 07:39, Jianyong Wu wrote:
+> Currently, ptp_kvm modules implementation is only for x86 which includs
+> large part of arch-specific code.  This patch move all of those code
+> into related arch directory.
+> 
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> ---
+>  arch/x86/kvm/arch_ptp_kvm.c          | 92 ++++++++++++++++++++++++++++
+>  drivers/ptp/Makefile                 |  1 +
+>  drivers/ptp/{ptp_kvm.c => kvm_ptp.c} | 77 ++++++-----------------
+>  include/asm-generic/ptp_kvm.h        | 12 ++++
+>  4 files changed, 123 insertions(+), 59 deletions(-)
+>  create mode 100644 arch/x86/kvm/arch_ptp_kvm.c
+>  rename drivers/ptp/{ptp_kvm.c => kvm_ptp.c} (63%)
+>  create mode 100644 include/asm-generic/ptp_kvm.h
+> 
+> diff --git a/arch/x86/kvm/arch_ptp_kvm.c b/arch/x86/kvm/arch_ptp_kvm.c
+> new file mode 100644
+> index 000000000000..56ea84a86da2
+> --- /dev/null
+> +++ b/arch/x86/kvm/arch_ptp_kvm.c
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + *  Virtual PTP 1588 clock for use with KVM guests
+> + *
+> + *  Copyright (C) 2019 ARM Ltd.
+> + *  All Rights Reserved
 
-Hi,
+No. This isn't ARM's code, not by a million mile. You've simply
+refactored existing code. Please keep the correct attribution (i.e. that
+of the original code).
 
-> Patch set applied along with the update for the patch 5/6.
+> + */
+> +
+> +#include <asm/pvclock.h>
+> +#include <asm/kvmclock.h>
+> +#include <linux/module.h>
+> +#include <uapi/asm/kvm_para.h>
+> +#include <uapi/linux/kvm_para.h>
+> +#include <linux/ptp_clock_kernel.h>
+> +
+> +phys_addr_t clock_pair_gpa;
+> +struct kvm_clock_pairing clock_pair;
+> +struct pvclock_vsyscall_time_info *hv_clock;
+> +
+> +int kvm_arch_ptp_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (!kvm_para_available())
+> +		return -ENODEV;
+> +
+> +	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
+> +	hv_clock = pvclock_get_pvti_cpu0_va();
+> +	if (!hv_clock)
+> +		return -ENODEV;
+> +
+> +	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
+> +			     KVM_CLOCK_PAIRING_WALLCLOCK);
+> +	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +int kvm_arch_ptp_get_clock(struct timespec64 *ts)
+> +{
+> +	long ret;
+> +
+> +	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+> +			     clock_pair_gpa,
+> +			     KVM_CLOCK_PAIRING_WALLCLOCK);
+> +	if (ret != 0)
+> +		return -EOPNOTSUPP;
+> +
+> +	ts->tv_sec = clock_pair.sec;
+> +	ts->tv_nsec = clock_pair.nsec;
+> +
+> +	return 0;
+> +}
+> +
+> +int kvm_arch_ptp_get_clock_fn(long *cycle, struct timespec64 *tspec,
+> +			      struct clocksource **cs)
+> +{
+> +	unsigned long ret;
+> +	unsigned int version;
+> +	int cpu;
+> +	struct pvclock_vcpu_time_info *src;
+> +
+> +	cpu = smp_processor_id();
+> +	src = &hv_clock[cpu].pvti;
+> +
+> +	do {
+> +		/*
+> +		 * We are using a TSC value read in the hosts
+> +		 * kvm_hc_clock_pairing handling.
+> +		 * So any changes to tsc_to_system_mul
+> +		 * and tsc_shift or any other pvclock
+> +		 * data invalidate that measurement.
+> +		 */
+> +		version = pvclock_read_begin(src);
+> +
+> +		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+> +				     clock_pair_gpa,
+> +				     KVM_CLOCK_PAIRING_WALLCLOCK);
+> +		tspec->tv_sec = clock_pair.sec;
+> +		tspec->tv_nsec = clock_pair.nsec;
+> +		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
+> +	} while (pvclock_read_retry(src, version));
+> +
+> +	*cs = &kvm_clock;
+> +
+> +	return 0;
+> +}
+> +
+> +MODULE_AUTHOR("Marcelo Tosatti <mtosatti@redhat.com>");
+> +MODULE_DESCRIPTION("PTP clock using KVMCLOCK");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+> index 677d1d178a3e..5a8c6462fc0f 100644
+> --- a/drivers/ptp/Makefile
+> +++ b/drivers/ptp/Makefile
+> @@ -4,6 +4,7 @@
+>  #
+>  
+>  ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o
+> +ptp_kvm-y				:= ../../arch/$(ARCH)/kvm/arch_ptp_kvm.o kvm_ptp.o
+>  obj-$(CONFIG_PTP_1588_CLOCK)		+= ptp.o
+>  obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
+>  obj-$(CONFIG_PTP_1588_CLOCK_IXP46X)	+= ptp_ixp46x.o
+> diff --git a/drivers/ptp/ptp_kvm.c b/drivers/ptp/kvm_ptp.c
+> similarity index 63%
+> rename from drivers/ptp/ptp_kvm.c
+> rename to drivers/ptp/kvm_ptp.c
+> index fc7d0b77e118..9d07cf872be7 100644
+> --- a/drivers/ptp/ptp_kvm.c
+> +++ b/drivers/ptp/kvm_ptp.c
+> @@ -8,12 +8,12 @@
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> +#include <linux/slab.h>
+>  #include <linux/module.h>
+>  #include <uapi/linux/kvm_para.h>
+>  #include <asm/kvm_para.h>
+> -#include <asm/pvclock.h>
+> -#include <asm/kvmclock.h>
+>  #include <uapi/asm/kvm_para.h>
+> +#include <asm-generic/ptp_kvm.h>
+>  
+>  #include <linux/ptp_clock_kernel.h>
+>  
+> @@ -24,56 +24,29 @@ struct kvm_ptp_clock {
+>  
+>  DEFINE_SPINLOCK(kvm_ptp_lock);
+>  
+> -static struct pvclock_vsyscall_time_info *hv_clock;
+> -
+> -static struct kvm_clock_pairing clock_pair;
+> -static phys_addr_t clock_pair_gpa;
+> -
+>  static int ptp_kvm_get_time_fn(ktime_t *device_time,
+>  			       struct system_counterval_t *system_counter,
+>  			       void *ctx)
+>  {
+> -	unsigned long ret;
+> +	unsigned long ret, cycle;
+>  	struct timespec64 tspec;
+> -	unsigned version;
+> -	int cpu;
+> -	struct pvclock_vcpu_time_info *src;
+> +	struct clocksource *cs;
+>  
+>  	spin_lock(&kvm_ptp_lock);
+>  
+>  	preempt_disable_notrace();
+> -	cpu = smp_processor_id();
+> -	src = &hv_clock[cpu].pvti;
+> -
+> -	do {
+> -		/*
+> -		 * We are using a TSC value read in the hosts
+> -		 * kvm_hc_clock_pairing handling.
+> -		 * So any changes to tsc_to_system_mul
+> -		 * and tsc_shift or any other pvclock
+> -		 * data invalidate that measurement.
+> -		 */
+> -		version = pvclock_read_begin(src);
+> -
+> -		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+> -				     clock_pair_gpa,
+> -				     KVM_CLOCK_PAIRING_WALLCLOCK);
+> -		if (ret != 0) {
+> -			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
+> -			spin_unlock(&kvm_ptp_lock);
+> -			preempt_enable_notrace();
+> -			return -EOPNOTSUPP;
+> -		}
+> -
+> -		tspec.tv_sec = clock_pair.sec;
+> -		tspec.tv_nsec = clock_pair.nsec;
+> -		ret = __pvclock_read_cycles(src, clock_pair.tsc);
+> -	} while (pvclock_read_retry(src, version));
+> +	ret = kvm_arch_ptp_get_clock_fn(&cycle, &tspec, &cs);
+> +	if (ret != 0) {
+> +		pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
+> +		spin_unlock(&kvm_ptp_lock);
+> +		preempt_enable_notrace();
+> +		return -EOPNOTSUPP;
+> +	}
+>  
+>  	preempt_enable_notrace();
+>  
+> -	system_counter->cycles = ret;
+> -	system_counter->cs = &kvm_clock;
+> +	system_counter->cycles = cycle;
+> +	system_counter->cs = cs;
+>  
+>  	*device_time = timespec64_to_ktime(tspec);
+>  
+> @@ -116,17 +89,13 @@ static int ptp_kvm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+>  
+>  	spin_lock(&kvm_ptp_lock);
+>  
+> -	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+> -			     clock_pair_gpa,
+> -			     KVM_CLOCK_PAIRING_WALLCLOCK);
+> +	ret = kvm_arch_ptp_get_clock(&tspec);
+>  	if (ret != 0) {
+>  		pr_err_ratelimited("clock offset hypercall ret %lu\n", ret);
+>  		spin_unlock(&kvm_ptp_lock);
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> -	tspec.tv_sec = clock_pair.sec;
+> -	tspec.tv_nsec = clock_pair.nsec;
+>  	spin_unlock(&kvm_ptp_lock);
+>  
+>  	memcpy(ts, &tspec, sizeof(struct timespec64));
+> @@ -166,21 +135,11 @@ static void __exit ptp_kvm_exit(void)
+>  
+>  static int __init ptp_kvm_init(void)
+>  {
+> -	long ret;
+> -
+> -	if (!kvm_para_available())
+> -		return -ENODEV;
+> -
+> -	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
+> -	hv_clock = pvclock_get_pvti_cpu0_va();
+> -
+> -	if (!hv_clock)
+> -		return -ENODEV;
+> +	int ret;
+>  
+> -	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
+> -			KVM_CLOCK_PAIRING_WALLCLOCK);
+> -	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
+> -		return -ENODEV;
+> +	ret = kvm_arch_ptp_init();
+> +	if (IS_ERR(ret))
+> +		return ret;
+>  
+>  	kvm_ptp_clock.caps = ptp_kvm_caps;
+>  
+> diff --git a/include/asm-generic/ptp_kvm.h b/include/asm-generic/ptp_kvm.h
+> new file mode 100644
+> index 000000000000..128a9d7af161
+> --- /dev/null
+> +++ b/include/asm-generic/ptp_kvm.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + *  Virtual PTP 1588 clock for use with KVM guests
+> + *
+> + *  Copyright (C) 2019 ARM Ltd.
+> + *  All Rights Reserved
 
-What's the status of this patch set ?
-Doesn't seem to have landed in Torvalds tree yet.
+Same here.
 
+> + */
+> +
+> +static int kvm_arch_ptp_init(void);
+> +static int kvm_arch_ptp_get_clock(struct timespec64 *ts);
+> +static int kvm_arch_ptp_get_clock_fn(long *cycle,
+> +		struct timespec64 *tspec, void *cs);
+> 
 
---mtx
-
+	M.
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Jazz is not dead, it just smells funny...
