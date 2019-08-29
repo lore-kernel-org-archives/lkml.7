@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344DBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4280CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDFF2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CF422CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075922;
-	bh=i68YAx0D+iihBuR6c+tSkqoQfrPainAO2vDNRhzakUg=;
+	s=default; t=1567075931;
+	bh=LUbZq5RNgQvDztv0DBqWpD+rrSm6QAldMQFxXL2DynQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/avEuVjB+EDbb7QsZPdXPuoZJUKIQqkO4mOv4GtriYqLgfzK9lH0ksx1haxgaFo+
-	 OsA75wulsKFuzR9N1K9sj1EFhGFUPSK6/C6T6ojuC1zzW2tIyC0qRCe83bLgOEWuI7
-	 VYtbu7mqd0SjQIQnAY7iuUFlUEaiv/eZox1dsJG4=
+	b=qYJpU/bF8reyZHeM9cqJRTO3tcG6nuKaCPu/iNtp8MLElhvXB+fyuOluAEvJNywrI
+	 g1l3C1m2+Tz+pHLXTNvg6nPXSIslMxOBNBvuxNwCaBGUuc4tfkeS8aOO/jfuqAS4UW
+	 nEwCUet1F5kp4Au6P23+4Ao0u713YySWEkyUq5jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfH2Kva (ORCPT
+        id S1728026AbfH2KwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:52:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbfH2KvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:04 -0400
+        id S1728579AbfH2KvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:51:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D9123403;
-        Thu, 29 Aug 2019 10:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B85C723427;
+        Thu, 29 Aug 2019 10:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075863;
-        bh=i68YAx0D+iihBuR6c+tSkqoQfrPainAO2vDNRhzakUg=;
+        s=default; t=1567075877;
+        bh=LUbZq5RNgQvDztv0DBqWpD+rrSm6QAldMQFxXL2DynQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SJfSvbMdLDxqoQaiVOlRd3BimC9Ia+C2zKQuq/GDGn/+OD9SeDyVPgc3ueXMQ95Vm
-         vBEL4U5NKcYoSXpxvYHs4m2fcDpNg1I1+1etbCexamdRhNak1UQkLs/p6c+nU9Auww
-         j2xjxV/Vnno97HM9hVF9aEp2hO9n4Jt1rEJkO8OQ=
+        b=Y/F3+Ys8Zu3e5HDY6eVsmMMWyv4g6ksGcW1goytWpkTel3CpViG+frfyQfjJCUCrW
+         yrWgZVnhKbvhSmnwALgLP4wr0IhR/CN7Id96w60FOUY35vdwfK5xhj2FBVaZR7Gqk9
+         EOeU/V6OBvb1lVe4zEhR/NoV9NhmfxfZsb05fMLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 2/8] ALSA: line6: Fix memory leak at line6_init_pcm() error path
-Date:   Thu, 29 Aug 2019 06:50:54 -0400
-Message-Id: <20190829105100.2649-2-sashal@kernel.org>
+Cc:     Andrew Jones <drjones@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 5/6] KVM: arm/arm64: Only skip MMIO insn once
+Date:   Thu, 29 Aug 2019 06:51:09 -0400
+Message-Id: <20190829105110.2748-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829105100.2649-1-sashal@kernel.org>
-References: <20190829105100.2649-1-sashal@kernel.org>
+In-Reply-To: <20190829105110.2748-1-sashal@kernel.org>
+References: <20190829105110.2748-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,59 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Andrew Jones <drjones@redhat.com>
 
-[ Upstream commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 ]
+[ Upstream commit 2113c5f62b7423e4a72b890bd479704aa85c81ba ]
 
-I forgot to release the allocated object at the early error path in
-line6_init_pcm().  For addressing it, slightly shuffle the code so
-that the PCM destructor (pcm->private_free) is assigned properly
-before all error paths.
+If after an MMIO exit to userspace a VCPU is immediately run with an
+immediate_exit request, such as when a signal is delivered or an MMIO
+emulation completion is needed, then the VCPU completes the MMIO
+emulation and immediately returns to userspace. As the exit_reason
+does not get changed from KVM_EXIT_MMIO in these cases we have to
+be careful not to complete the MMIO emulation again, when the VCPU is
+eventually run again, because the emulation does an instruction skip
+(and doing too many skips would be a waste of guest code :-) We need
+to use additional VCPU state to track if the emulation is complete.
+As luck would have it, we already have 'mmio_needed', which even
+appears to be used in this way by other architectures already.
 
-Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 0d640732dbeb ("arm64: KVM: Skip MMIO insn after emulation")
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/line6/pcm.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm/kvm/mmio.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/usb/line6/pcm.c b/sound/usb/line6/pcm.c
-index a9f99a6c39095..74b399372e0b4 100644
---- a/sound/usb/line6/pcm.c
-+++ b/sound/usb/line6/pcm.c
-@@ -552,6 +552,15 @@ int line6_init_pcm(struct usb_line6 *line6,
- 	line6pcm->volume_monitor = 255;
- 	line6pcm->line6 = line6;
+diff --git a/arch/arm/kvm/mmio.c b/arch/arm/kvm/mmio.c
+index ae61e2ea7255b..d2efc033ef8b4 100644
+--- a/arch/arm/kvm/mmio.c
++++ b/arch/arm/kvm/mmio.c
+@@ -98,6 +98,12 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 	unsigned int len;
+ 	int mask;
  
-+	spin_lock_init(&line6pcm->out.lock);
-+	spin_lock_init(&line6pcm->in.lock);
-+	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
++	/* Detect an already handled MMIO return */
++	if (unlikely(!vcpu->mmio_needed))
++		return 0;
 +
-+	line6->line6pcm = line6pcm;
++	vcpu->mmio_needed = 0;
 +
-+	pcm->private_data = line6pcm;
-+	pcm->private_free = line6_cleanup_pcm;
-+
- 	line6pcm->max_packet_size_in =
- 		usb_maxpacket(line6->usbdev,
- 			usb_rcvisocpipe(line6->usbdev, ep_read), 0);
-@@ -564,15 +573,6 @@ int line6_init_pcm(struct usb_line6 *line6,
- 		return -EINVAL;
- 	}
+ 	if (!run->mmio.is_write) {
+ 		len = run->mmio.len;
+ 		if (len > sizeof(unsigned long))
+@@ -206,6 +212,7 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 	run->mmio.is_write	= is_write;
+ 	run->mmio.phys_addr	= fault_ipa;
+ 	run->mmio.len		= len;
++	vcpu->mmio_needed	= 1;
  
--	spin_lock_init(&line6pcm->out.lock);
--	spin_lock_init(&line6pcm->in.lock);
--	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
--
--	line6->line6pcm = line6pcm;
--
--	pcm->private_data = line6pcm;
--	pcm->private_free = line6_cleanup_pcm;
--
- 	err = line6_create_audio_out_urbs(line6pcm);
- 	if (err < 0)
- 		return err;
+ 	if (!ret) {
+ 		/* We handled the access successfully in the kernel. */
 -- 
 2.20.1
 
