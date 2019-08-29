@@ -2,86 +2,131 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711A1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C39C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CCB2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB2C2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATLRDHWe"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vGtZwdNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfH2OEx (ORCPT
+        id S1728061AbfH2OE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:04:53 -0400
-Received: from mail-ed1-f49.google.com ([209.85.208.49]:43972 "EHLO
-        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfH2OEw (ORCPT
+        Thu, 29 Aug 2019 10:04:58 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:31526 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfH2OE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:04:52 -0400
-Received: by mail-ed1-f49.google.com with SMTP id h13so4185198edq.10;
-        Thu, 29 Aug 2019 07:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5XrYpbZokJ0uFDtRrg4QMHh8QMmoNf0yygZI19dOceA=;
-        b=ATLRDHWe3jUWrX5jam+pWx349PMbQEJL2dVu+BdsFcYVO4VEdlv6wayE3oNcHZ8/7K
-         CxoKPuyCxWUtmlQwTC7XAsQz+4zrH/sDqeiR3xJ9coRomyOJP5ng9m1CtZgbdVm6RkWk
-         xMexcFibvPGyONCsKwAFfhEr2GgBkKLTl5ylI8IFWOtoCclIiDBWV/gS4qPRDIFE3k0Q
-         veYEi32Zf4DDlPWuw5wTDRjxwFY2wRVKYkuLUDIS8XEQIFbf+Z7qsIw3p5wYUOechUvl
-         tttaMO89K8Vrb8HEWfIRSzAnz1S9yjLarTGKOMqZpJHH8GVgzZnYO/q3ts052VUqBrM+
-         U/ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5XrYpbZokJ0uFDtRrg4QMHh8QMmoNf0yygZI19dOceA=;
-        b=IIjCH7Lt1ui+5KeimvJhVxBgkD2ME5UNNbDuGsj6PNlzpd+2dCRGdrkJP+L5kCcEBH
-         CBYIHyhbEgUKQ4gojIA1JiKwxAEsBQz1pfCbNsGQQrpd7ayps+8mXYOFBJJ6Zo0Gdx6Q
-         dDjwRypQ9RTO9Goy/K11PffhpkGkpOJnGAt1sht4Coyv6sLOPao4VUWDH+beIFlp3ZgR
-         yJ/3bFplFohExyCKC8vJN89j4nR2GCQnDWlI0551+re3uUdPLBecj2ebkDRXwBwj/UwC
-         gtORAZ2WhKnZncbZ5Ilp1c44JH2G50qmT99zGc4iV6KfXV7jv2woTdPMP9lw5P+NYDay
-         RE2g==
-X-Gm-Message-State: APjAAAVQY06O/9gYK1w7IvgubbqFrVQiqvxRQpPEHWqnTByqGhaCFoO7
-        uGMgior8WVPclN7W3l2MfwLqKOuXaFwb4z0pkuI=
-X-Google-Smtp-Source: APXvYqzh64P93+HzWnZXGWHngmQqqqEecdRf/S2FlEbcebA+hFxcs869D+rDpSAc9shQvzVrqhLajNWsRk2+3jjVqmY=
-X-Received: by 2002:a17:906:e294:: with SMTP id gg20mr8059700ejb.76.1567087490938;
- Thu, 29 Aug 2019 07:04:50 -0700 (PDT)
+        Thu, 29 Aug 2019 10:04:57 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x7TE4hMT005980;
+        Thu, 29 Aug 2019 23:04:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7TE4hMT005980
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567087484;
+        bh=V+lbFxqlT+wd+YZgxlyNRbBDlB7GpYlOVv7o2hTS5yQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vGtZwdNqugs7ZwQdGDWOMDjdUeOubga9J2nO4YdJJ91bdf3rSAcky03Ezi4jo3Fp0
+         uN3tOrkq03IXkzNnX14lsNN1FGd8Jh2MCgc4GmWa/WHELUDbPOBV4WSTgt1UsI3hUe
+         ZjsuSIa088Tmzezv9iAARNvhKXyAkzy2xEnbpT5V3miPAAggqxSsAVwiFiwjeQVQmo
+         XNRkqd+TyqilT9A5gU2MctK8FVDKDXjbcOECNFbDWC9od5ivUzhc6xf8aYMCFKYQ9C
+         UfxbdYB9TOT1v2Ip7USxXsciKX/YpPWfjHOquUHU8O22hwFtHUdb1ZnFX91a5xf/Yu
+         Y7I5w3IXZwpow==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id k7so1192145uao.6;
+        Thu, 29 Aug 2019 07:04:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAWKY2xiJgszPCeGssTO2T/9OSDQ07n8AZBFgzHQ07UE3RsbNZvN
+        mQpgC5pnG8+cSSC/XKYS+S7qsxZAbj+BjFtWum8=
+X-Google-Smtp-Source: APXvYqyRDUJ3u5oUv/jHQhqE0k0YskLGM9awy7Nq6OtAJ1WmuhqZBF7BDBVIdGwEa3ued2ZdUIlx3DiF2CP1PVL3RXY=
+X-Received: by 2002:ab0:4261:: with SMTP id i88mr4930502uai.95.1567087482413;
+ Thu, 29 Aug 2019 07:04:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190823124553.19364-1-yuehaibing@huawei.com> <20190823140513.GB9844@piout.net>
- <36720fae-ef20-61d4-1d9d-421e7199a0eb@infradead.org>
-In-Reply-To: <36720fae-ef20-61d4-1d9d-421e7199a0eb@infradead.org>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Thu, 29 Aug 2019 16:04:34 +0200
-Message-ID: <CAH+2xPAGe0H=WRtebd52yE6_Tpjoc+vgTnuJrGHt=K4NutYCNQ@mail.gmail.com>
-Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without CONFIG_WATCHDOG_CORE
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        YueHaibing <yuehaibing@huawei.com>, a.zummo@towertech.it,
-        Guenter Roeck <linux@roeck-us.net>, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
+ <CAPDyKFooFQgBgK3N1Ob9rsT_7-5kqC9i7PeMxkkeAbnDP+Fwnw@mail.gmail.com>
+ <CAK7LNASDfJQrMq4jjwDjrQF-4E9A_BZtgh+K-duTAo8zRVZA0g@mail.gmail.com> <CAPDyKFpnRbtVpYkpM7CDYfxvdBjqybB4SVWyuSrS1jpYduTbCw@mail.gmail.com>
+In-Reply-To: <CAPDyKFpnRbtVpYkpM7CDYfxvdBjqybB4SVWyuSrS1jpYduTbCw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 29 Aug 2019 23:04:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARC_Y968UtXE3v72Dw=69-6jutFTVy54K=iT5o52udXSg@mail.gmail.com>
+Message-ID: <CAK7LNARC_Y968UtXE3v72Dw=69-6jutFTVy54K=iT5o52udXSg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] mmc: sdhci-cadence: enable v4_mode to fix ADMA 64-bit addressing
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den ons. 28. aug. 2019 kl. 19.19 skrev Randy Dunlap <rdunlap@infradead.org>:
-> > Definitively not, I fixed it that way:
-> > +       select WATCHDOG_CORE if WATCHDOG
-> >
+Hi Ulf,
+
+On Thu, Aug 29, 2019 at 10:27 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
 >
-> No, that's not a fix.  The build error still happens with that patch applied.
+> On Thu, 29 Aug 2019 at 14:05, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > On Thu, Aug 29, 2019 at 8:48 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > >
+> > > On Thu, 29 Aug 2019 at 12:49, Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > > >
+> > > > The IP datasheet says this controller is compatible with SD Host
+> > > > Specification Version v4.00.
+> > > >
+> > > > As it turned out, the ADMA of this IP does not work with 64-bit mode
+> > > > when it is in the Version 3.00 compatible mode; it understands the
+> > > > old 64-bit descriptor table (as defined in SDHCI v2), but the ADMA
+> > > > System Address Register (SDHCI_ADMA_ADDRESS) cannot point to the
+> > > > 64-bit address.
+> > > >
+> > > > I noticed this issue only after commit bd2e75633c80 ("dma-contiguous:
+> > > > use fallback alloc_pages for single pages"). Prior to that commit,
+> > > > dma_set_mask_and_coherent() returned the dma address that fits in
+> > > > 32-bit range, at least for the default arm64 configuration
+> > > > (arch/arm64/configs/defconfig). Now the host->adma_addr exceeds the
+> > > > 32-bit limit, causing the real problem for the Socionext SoCs.
+> > > > (As a side-note, I was also able to reproduce the issue for older
+> > > > kernels by turning off CONFIG_DMA_CMA.)
+> > > >
+> > > > Call sdhci_enable_v4_mode() to fix this.
+> > > >
+> > > > I think it is better to back-port this, but only possible for v4.20+.
+> > > >
+> > > > When this driver was merged (v4.10), the v4 mode support did not exist.
+> > > > It was added by commit b3f80b434f72 ("mmc: sdhci: Add sd host v4 mode")
+> > > > i.e. v4.20.
+> > > >
+> > > > Cc: <stable@vger.kernel.org> # v4.20+
+> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > >
+> > > Applied for fixes, by adding below tag, thanks!
+> > >
+> > > Fixes: b3f80b434f72 ("mmc: sdhci: Add sd host v4 mode")
+> >
+> > This is not a bug commit.
+>
+> Right, but it can't be applied before this commit, hence why I added
+> it. Not sure that it matters, but I can remove the tag if you
+> insists!?
 
-Hi Randy,
+I hesitate to add Fixes to the commit that
+did nothing wrong.
 
-A bugfix has been created[1] and applied to the rtc tree.
 
-Bruno
+I added "Cc: <stable@vger.kernel.org> # v4.20+"
+so this is enough for the stable kernel maintainers.
 
-[1] https://lkml.org/lkml/2019/8/27/1018
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
