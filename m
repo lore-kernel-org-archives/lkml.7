@@ -2,57 +2,51 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B36BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BB6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715B221874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B045721874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103064;
-	bh=VkLcKxus2piQ7+tKe7x1UHvTz40zStRHNSgPH/Ho+Nc=;
+	s=default; t=1567103076;
+	bh=wqUIqAOQdZDZwLQhc3zJBFZ+4LlvNbuhEy1DRGKsDUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJVl2xE0+xiPCxyeh+9po1hy87vQYZ9G55QgjV7skBLj7UCIrWYHB16vobjpzougV
-	 6FogTlZZo8OXVTleqA6b1TX7J9qpJskPIIaQ28mU/FCZVL21TiVlpv7JBfsuwK93i4
-	 Y6PCNamaAO0sI29xNdsMjnc9T9IwYXTp0oCoGXSQ=
+	b=l7DsqFiaRYoCLHq4fQs9qSPGFb6EF25S5uiuOsIZXi9P1veAhDBD3485x1vdgMYNL
+	 Ht7RvOWLUh8kGCQmBgyDDBYOwinttVDNntKG5utI6yeuKjHZ1UICbjIrfGql//WPKP
+	 Ipi6VAdfp+MGk1moYBb6xhXZugSWngUfuKMzBkk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfH2SYX (ORCPT
+        id S1729224AbfH2SYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:24:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbfH2SQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:32 -0400
+        id S1729746AbfH2SQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F3E233FF;
-        Thu, 29 Aug 2019 18:16:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2357B2189D;
+        Thu, 29 Aug 2019 18:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102591;
-        bh=VkLcKxus2piQ7+tKe7x1UHvTz40zStRHNSgPH/Ho+Nc=;
+        s=default; t=1567102585;
+        bh=wqUIqAOQdZDZwLQhc3zJBFZ+4LlvNbuhEy1DRGKsDUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uzSy6YiTVkIKE5bqxsXhEVm5yWjKI5L24rA+fyC2edEoQ+NfEdmI9mc6BK+5Wkyqa
-         BcHojUFkr8Q0esnT0ozNHw1dKUYA0l276G4xfdVXGH7P3izxV783zHDGQwBvHT9/c0
-         bVsHUzSRfoobFPOdfwgG1LgM2xaU1Gy03Ipz0nxM=
+        b=cO46U0SVioCJUqlIVdNO0qoNuIQ9xV82RfYLGxzWZt6TPM2rhWLOarb1dg8Poeo1h
+         LpFkKAbFrho5HTk00buaITMEMLqR/9xAzvGgmiDcYaUFzhJzuU9u2cDSJiRpRJygUZ
+         0kyBrnWgiF+UwUpjit7fKcXAj44xGDg49xdtK+Rs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
         "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 29/45] kprobes: Fix potential deadlock in kprobe_optimizer()
-Date:   Thu, 29 Aug 2019 14:15:29 -0400
-Message-Id: <20190829181547.8280-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/45] net: cavium: fix driver name
+Date:   Thu, 29 Aug 2019 14:15:26 -0400
+Message-Id: <20190829181547.8280-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -65,159 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit f1c6ece23729257fb46562ff9224cf5f61b818da ]
+[ Upstream commit 3434341004a380f4e47c3a03d4320d43982162a0 ]
 
-lockdep reports the following deadlock scenario:
+The driver name gets exposed in sysfs under /sys/bus/pci/drivers
+so it should look like other devices. Change it to be common
+format (instead of "Cavium PTP").
 
- WARNING: possible circular locking dependency detected
+This is a trivial fix that was observed by accident because
+Debian kernels were building this driver into kernel (bug).
 
- kworker/1:1/48 is trying to acquire lock:
- 000000008d7a62b2 (text_mutex){+.+.}, at: kprobe_optimizer+0x163/0x290
-
- but task is already holding lock:
- 00000000850b5e2d (module_mutex){+.+.}, at: kprobe_optimizer+0x31/0x290
-
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #1 (module_mutex){+.+.}:
-        __mutex_lock+0xac/0x9f0
-        mutex_lock_nested+0x1b/0x20
-        set_all_modules_text_rw+0x22/0x90
-        ftrace_arch_code_modify_prepare+0x1c/0x20
-        ftrace_run_update_code+0xe/0x30
-        ftrace_startup_enable+0x2e/0x50
-        ftrace_startup+0xa7/0x100
-        register_ftrace_function+0x27/0x70
-        arm_kprobe+0xb3/0x130
-        enable_kprobe+0x83/0xa0
-        enable_trace_kprobe.part.0+0x2e/0x80
-        kprobe_register+0x6f/0xc0
-        perf_trace_event_init+0x16b/0x270
-        perf_kprobe_init+0xa7/0xe0
-        perf_kprobe_event_init+0x3e/0x70
-        perf_try_init_event+0x4a/0x140
-        perf_event_alloc+0x93a/0xde0
-        __do_sys_perf_event_open+0x19f/0xf30
-        __x64_sys_perf_event_open+0x20/0x30
-        do_syscall_64+0x65/0x1d0
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- -> #0 (text_mutex){+.+.}:
-        __lock_acquire+0xfcb/0x1b60
-        lock_acquire+0xca/0x1d0
-        __mutex_lock+0xac/0x9f0
-        mutex_lock_nested+0x1b/0x20
-        kprobe_optimizer+0x163/0x290
-        process_one_work+0x22b/0x560
-        worker_thread+0x50/0x3c0
-        kthread+0x112/0x150
-        ret_from_fork+0x3a/0x50
-
- other info that might help us debug this:
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(module_mutex);
-                                lock(text_mutex);
-                                lock(module_mutex);
-   lock(text_mutex);
-
-  *** DEADLOCK ***
-
-As a reproducer I've been using bcc's funccount.py
-(https://github.com/iovisor/bcc/blob/master/tools/funccount.py),
-for example:
-
- # ./funccount.py '*interrupt*'
-
-That immediately triggers the lockdep splat.
-
-Fix by acquiring text_mutex before module_mutex in kprobe_optimizer().
-
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: d5b844a2cf50 ("ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()")
-Link: http://lkml.kernel.org/r/20190812184302.GA7010@xps-13
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/cavium/common/cavium_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 29ff6635d2597..714d63f60460b 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -483,6 +483,7 @@ static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
-  */
- static void do_optimize_kprobes(void)
- {
-+	lockdep_assert_held(&text_mutex);
- 	/*
- 	 * The optimization/unoptimization refers online_cpus via
- 	 * stop_machine() and cpu-hotplug modifies online_cpus.
-@@ -500,9 +501,7 @@ static void do_optimize_kprobes(void)
- 	    list_empty(&optimizing_list))
- 		return;
+diff --git a/drivers/net/ethernet/cavium/common/cavium_ptp.c b/drivers/net/ethernet/cavium/common/cavium_ptp.c
+index 6aeb1045c302a..1ab40c97403ba 100644
+--- a/drivers/net/ethernet/cavium/common/cavium_ptp.c
++++ b/drivers/net/ethernet/cavium/common/cavium_ptp.c
+@@ -10,7 +10,7 @@
  
--	mutex_lock(&text_mutex);
- 	arch_optimize_kprobes(&optimizing_list);
--	mutex_unlock(&text_mutex);
- }
+ #include "cavium_ptp.h"
  
- /*
-@@ -513,6 +512,7 @@ static void do_unoptimize_kprobes(void)
- {
- 	struct optimized_kprobe *op, *tmp;
+-#define DRV_NAME	"Cavium PTP Driver"
++#define DRV_NAME "cavium_ptp"
  
-+	lockdep_assert_held(&text_mutex);
- 	/* See comment in do_optimize_kprobes() */
- 	lockdep_assert_cpus_held();
- 
-@@ -520,7 +520,6 @@ static void do_unoptimize_kprobes(void)
- 	if (list_empty(&unoptimizing_list))
- 		return;
- 
--	mutex_lock(&text_mutex);
- 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
- 	/* Loop free_list for disarming */
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
-@@ -537,7 +536,6 @@ static void do_unoptimize_kprobes(void)
- 		} else
- 			list_del_init(&op->list);
- 	}
--	mutex_unlock(&text_mutex);
- }
- 
- /* Reclaim all kprobes on the free_list */
-@@ -563,6 +561,7 @@ static void kprobe_optimizer(struct work_struct *work)
- {
- 	mutex_lock(&kprobe_mutex);
- 	cpus_read_lock();
-+	mutex_lock(&text_mutex);
- 	/* Lock modules while optimizing kprobes */
- 	mutex_lock(&module_mutex);
- 
-@@ -590,6 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
- 	do_free_cleaned_kprobes();
- 
- 	mutex_unlock(&module_mutex);
-+	mutex_unlock(&text_mutex);
- 	cpus_read_unlock();
- 	mutex_unlock(&kprobe_mutex);
- 
+ #define PCI_DEVICE_ID_CAVIUM_PTP	0xA00C
+ #define PCI_DEVICE_ID_CAVIUM_RST	0xA00E
 -- 
 2.20.1
 
