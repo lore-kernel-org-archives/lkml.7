@@ -2,113 +2,98 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57197C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7D7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AED92189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ny1BJU7z"
+	by mail.kernel.org (Postfix) with ESMTP id E70722339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567086284;
+	bh=mR7GA3c4mGRbLwLDIK+jRuWdNT4gDXNkRRI6mT85V6w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YA56mOSA2Joe78yMrm9TBzsA/PQCulJWciUdgAos372K6H/9KKZgA4hY0TxtaE9l8
+	 1nImm+7o7dBaAfcRbxg+NCSJYUWgMRS5uUMbGV8vpKpWBlk1DyW4JwXxyUksC90vSa
+	 sfbzn65QiU9CMhgtpDsBsJxjDNgn2kmdOs/4NlDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfH2Nnh (ORCPT
+        id S1727559AbfH2Non (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:43:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39782 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2Nng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:43:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y200so2080821pfb.6;
-        Thu, 29 Aug 2019 06:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8zPNbZDUiMhdq/ieedCuYewAeGQ+edqxjj6irK3rFuk=;
-        b=ny1BJU7zHymSjrJnVno3H/+nPslnl3iVcEUY5179US9gDUYOyLuRNAjYuQGBGrRbdz
-         l6GaK7U8gzf/eNTky7FvG4KCJeuTL2DuAFVVXeSCC6YCrX2v74Sg+oegZLOPn3OzZlZ2
-         D5NyAOxMPjx/prwMNsL6bH1+O4sDRi/P3/K9jCwezfp14ZnPDl6sHvA5RYGYLdeaMvqT
-         BUvDIh3lvVkC/yR3hCUhGHj+HQC8QzqX0kEwWpd6BRYnEuxdjBCj+lZfggxx7WT8O6DV
-         oXC1MUGfOsEHujAL+drJYZqE+JiGuSPIri1oB2E6fXwWFpnxm0p7end0wbsy89dD4qda
-         VLhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8zPNbZDUiMhdq/ieedCuYewAeGQ+edqxjj6irK3rFuk=;
-        b=iAYkpAkDfZ1F1uZg98x9qamljIufpsY0mfDO43Qxawp1QWxMOuc+QCXpVtsdlVpUGw
-         Bi/0+SLwsQIU+7g2a6t4P45qUbt/jtQy5HdUbPOAHZYwsaciessLGQvdodR8GmcvXiPY
-         f3CXeGvhiSyzOgox9pKrJc0XoE/0o4lnKdTHuC0QbjybWiOrjhqxxYdfqS6+TM+l4i/l
-         J4/AYp/VBfV6yaoA9a2d4P1VqFy+fdETzCj6I7M6LCZlSvgbGlVB6BXv/6ssnDuLbXkX
-         shRBs/MG1cXnh5ULcAwW///J8KGsOUVR0lSujpfIPohIlc3IkdOst4G7YJevq4jABqnh
-         DJwQ==
-X-Gm-Message-State: APjAAAXztKgPnwJrezifbakybt9I6QLpj4dxtz88YpAaLGtveigllWGF
-        o11PbPUXg9H1dmxhpDA1E+3xGH73X4fkPMsxlQY=
-X-Google-Smtp-Source: APXvYqxBEzf1LYRCXKjSqfC3G4XRdlGyv3ix/Ro7ebl58PTSdhxOhn+Rmk9ARuIu9ZzwXYUK2aPiBTZDBQEnefAnMoU=
-X-Received: by 2002:a63:1020:: with SMTP id f32mr8694066pgl.203.1567086215455;
- Thu, 29 Aug 2019 06:43:35 -0700 (PDT)
+        Thu, 29 Aug 2019 09:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbfH2Nom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:44:42 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404E92341B;
+        Thu, 29 Aug 2019 13:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567086281;
+        bh=mR7GA3c4mGRbLwLDIK+jRuWdNT4gDXNkRRI6mT85V6w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nO/aoVqieSJBIcG8Q1+Ukaxbr8aB1UPguFn1lMmZhsf/sbrqA+r7ZtvKoOxFOXt6R
+         P6+qGYTzBPWW8jXYLcKpzu2eVYVOPYH4+olE+9leQGrL7R+7OJCID9RsHoB8rEp683
+         srC9yYQYiwILMQRhyzllWwssMBKCbzaeQERBmKGI=
+Received: by mail-qk1-f180.google.com with SMTP id p13so2896557qkg.13;
+        Thu, 29 Aug 2019 06:44:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4BKnLNRmqCiKkKnMdJl6ASPZQomiL5Zj0WGH0w16EBhhNwE0s
+        mcQ+QWprhyHJNkM4Doojw1/mBS0Tx9dQ5iKYrA==
+X-Google-Smtp-Source: APXvYqxSE0YabCZbTGJEMY6IRxRqXQltQGwtj+w4DSTunRzVOnwmn8VB0XQkhKwOYkeqn97wvdZAYXR3bCf8AGd6bR0=
+X-Received: by 2002:a37:4941:: with SMTP id w62mr8752360qka.119.1567086280340;
+ Thu, 29 Aug 2019 06:44:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829043716.5223-1-uwe@kleine-koenig.org>
-In-Reply-To: <20190829043716.5223-1-uwe@kleine-koenig.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 29 Aug 2019 16:43:24 +0300
-Message-ID: <CAHp75VeV8jDP1uP3HtkJ+j7+SbkB50cs4V9tJ+j9tS6icO95FQ@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] tty/serial: imx: make use of format specifier %dE
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Enrico Weigelt <lkml@metux.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com> <1567078713-29361-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1567078713-29361-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 29 Aug 2019 08:44:28 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLikohkWAq7exzCuGfg2yVE1Wx6h7GZFP8-jaL31PLpmA@mail.gmail.com>
+Message-ID: <CAL_JsqLikohkWAq7exzCuGfg2yVE1Wx6h7GZFP8-jaL31PLpmA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: Add idk-1110wr binding
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 7:40 AM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.or=
-g> wrote:
+On Thu, Aug 29, 2019 at 6:38 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
 >
-> I created a patch that teaches printk et al to emit a symbolic error
-> name for an error valued integer[1]. With that applied
+> Add binding for the idk-1110wr LVDS panel from Advantech.
 >
->         dev_err(&pdev->dev, "failed to get ipg clk: %dE\n", ret);
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-LCD-Kit-Modules/model-IDK-1110WR-55WSA1E.htm
 >
-> emits
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+> v1->v2:
+> * no change
 >
->         ... failed to get ipg clk: EPROBE_DEFER
->
-> if ret is -EPROBE_DEFER. Petr Mladek (i.e. one of the printk
-> maintainers) had concerns if this would be well received and worth the
-> effort. He asked to present it to a few subsystems. So for now, this
-> patch converting the imx UART driver shouldn't be applied yet but it
-> would be great to get some feedback about if you think that being able
-> to easily printk (for example) "EIO" instead of "-5" is a good idea.
+>  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
 
-> Would it help you? Do you think it helps your users?
-
-No, it makes sense only for debug where the user is supposed to be
-developer and thus needs anyway to know code base better than average.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Rob Herring <robh@kernel.org>
