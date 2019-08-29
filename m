@@ -2,146 +2,103 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B56C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6C9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8757A2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="krpulTwV"
+	by mail.kernel.org (Postfix) with ESMTP id 655302073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfH2Q00 (ORCPT
+        id S1727746AbfH2Q0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:26:26 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:55684 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfH2Q00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:26:26 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x7TGQM8L007451;
-        Fri, 30 Aug 2019 01:26:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7TGQM8L007451
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567095982;
-        bh=djapCPPU6dehPlWydqfVQgD2+TU/sE2npWhyfpxVb70=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=krpulTwVUrkoRWArUbDmwgoo3AvvUUSr8RKCDtDyC0l3Jc3qScpxQC6YYZ2v3USY2
-         zDWHCwvcqTuNEs68k2QGx6h3LWhKKBaG6u7b3tW/zKQssCgKnZnPd+nfmz7Pumks5k
-         s10q0ADmRkFlDGsJY4BrDsnNYKNNe9oPAnD+G23wMlV8IBDd0ZwGFF2N3ogG+vcTGu
-         3F2bPVQ36iXcqQaJeWeJ6hiKEpo6FEVfok6vEt6iEsBQCejdQYrZBvh/qLyNoECvHV
-         1c5MrKa0DR7mQ49KJ6qfqMgKZFnAbZBSC+d058BW5PE/7QuKND8G08MvnQ98oUe0Jy
-         WUKJVlUsCNDnQ==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id q188so2831892vsa.4;
-        Thu, 29 Aug 2019 09:26:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAVGsg9+fBCSQIfNQWPOtFwhHmZ1BNWN0a5e1YI5eQQHKG3YjYOT
-        8J3/nvGSFxTTw+yV8VVIoPPfJCwyAY7+/ft22nc=
-X-Google-Smtp-Source: APXvYqxAdCjYklHJZCG1FJ3ieEjgNtUJjLw70cPOhZdOEsa4NyMaSSnoVKX7JLMdEixfJbANInXzaLCDU556Q7TzM+w=
-X-Received: by 2002:a67:fd97:: with SMTP id k23mr6035069vsq.179.1567095980891;
- Thu, 29 Aug 2019 09:26:20 -0700 (PDT)
+        Thu, 29 Aug 2019 12:26:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51194 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726973AbfH2Q0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:26:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C48A8AB9B;
+        Thu, 29 Aug 2019 16:26:47 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 18:26:41 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/11] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP
+ ioctl
+Message-ID: <20190829162641.GB2132@zn.tnic>
+References: <20190710201244.25195-1-brijesh.singh@amd.com>
+ <20190710201244.25195-10-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <20190822044613.5349-1-yamada.masahiro@socionext.com> <20190822044613.5349-6-yamada.masahiro@socionext.com>
-In-Reply-To: <20190822044613.5349-6-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 30 Aug 2019 01:25:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQLnOa6f5jDLochYyFdctzUuMvk4ETGga-f2v-EP6hqnw@mail.gmail.com>
-Message-ID: <CAK7LNAQLnOa6f5jDLochYyFdctzUuMvk4ETGga-f2v-EP6hqnw@mail.gmail.com>
-Subject: Re: [PATCH 6/6] kbuild: check clean srctree even earlier
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190710201244.25195-10-brijesh.singh@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 1:46 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Move the outputmakefile target to the leftmost in the prerequisite list
-> so that this is checked first. There is no guarantee that Make runs the
-> prerequisites from left to right,
+On Wed, Jul 10, 2019 at 08:13:10PM +0000, Singh, Brijesh wrote:
+> @@ -7767,7 +7808,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  
+>  	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+>  
+> -	.page_enc_status_hc = svm_page_enc_status_hc
+> +	.page_enc_status_hc = svm_page_enc_status_hc,
+> +	.get_page_enc_bitmap = svm_get_page_enc_bitmap
+>  };
+>  
+>  static int __init svm_init(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 6baf48ec0ed4..59ae49b1b914 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4927,6 +4927,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>  		r = kvm_vm_ioctl_hv_eventfd(kvm, &hvevfd);
+>  		break;
+>  	}
+> +	case KVM_GET_PAGE_ENC_BITMAP: {
+> +		struct kvm_page_enc_bitmap bitmap;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
+> +			goto out;
+> +
+> +		r = -ENOTTY;
+> +		if (kvm_x86_ops->get_page_enc_bitmap)
+> +			r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
 
-Looks like this is guaranteed.
+I don't know what tree you've done those patches against but against -rc6+, the
+first argument above needs to be vcpu->kvm:
 
-I did not know POSIX defined this.
-
-
-I will reword the commit log as follows:
-
-
-"
-kbuild: check clean srctree even earlier
-
-Move the outputmakefile target to the leftmost in the prerequisite list
-so that this is checked first. GNU Make processes the prerequisites
-left to right.
-
-GNU Make will keep to stick to this behavior, and it seems even
-POSIX standard, according to this:
-https://lists.gnu.org/archive/html/bug-make/2019-08/msg00030.html
-
-The POSIX standard of make is available here:
-https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html
-
-Of course, when the parallel option -j given, other targets will be run
-simultaneously but it is nice to show the error as early as possible.
-"
-
-
-
-
-> but at least the released versions of
-> GNU Make work like that when the parallel build option is not given.
->
-> Of course, when the parallel option -j given, other targets will be run
-> simultaneously but it is nice to show the error as early as possible.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  Makefile | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 960df4d35b15..089983a8a028 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -581,10 +581,10 @@ ifdef config-build
->  include arch/$(SRCARCH)/Makefile
->  export KBUILD_DEFCONFIG KBUILD_KCONFIG CC_VERSION_TEXT
->
-> -config: scripts_basic outputmakefile FORCE
-> +config: outputmakefile scripts_basic FORCE
->         $(Q)$(MAKE) $(build)=scripts/kconfig $@
->
-> -%config: scripts_basic outputmakefile FORCE
-> +%config: outputmakefile scripts_basic FORCE
->         $(Q)$(MAKE) $(build)=scripts/kconfig $@
->
->  else #!config-build
-> @@ -1123,7 +1123,7 @@ scripts: scripts_basic scripts_dtc
->
->  PHONY += prepare archprepare
->
-> -archprepare: archheaders archscripts scripts include/config/kernel.release outputmakefile \
-> +archprepare: outputmakefile archheaders archscripts scripts include/config/kernel.release \
->         asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h
->
->  prepare0: archprepare
-> --
-> 2.17.1
->
-
+arch/x86/kvm/x86.c: In function ‘kvm_arch_vcpu_ioctl’:
+arch/x86/kvm/x86.c:4343:41: error: ‘kvm’ undeclared (first use in this function)
+    r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
+                                         ^~~
+arch/x86/kvm/x86.c:4343:41: note: each undeclared identifier is reported only once for each function it appears in
+make[2]: *** [scripts/Makefile.build:280: arch/x86/kvm/x86.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [scripts/Makefile.build:497: arch/x86/kvm] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1083: arch/x86] Error 2
+make: *** Waiting for unfinished jobs....
 
 -- 
-Best Regards
-Masahiro Yamada
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
