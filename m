@@ -2,340 +2,166 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4B4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4721C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C043C233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0812339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfH2HyL (ORCPT
+        id S1726526AbfH2H4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:54:11 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51627 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfH2HyL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:54:11 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1i3FFw-0006JE-5t; Thu, 29 Aug 2019 09:54:08 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1i3FFt-0008Rm-NH; Thu, 29 Aug 2019 09:54:05 +0200
-Date:   Thu, 29 Aug 2019 09:54:05 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     shawnguo@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, narmstrong@baylibre.com,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv5 2/2] ARM: dts: Add support for i.MX6 UltraLite DART
- Variscite Customboard
-Message-ID: <20190829075405.j7av4aojvzddlfz3@pengutronix.de>
-References: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
- <1567009160-21965-3-git-send-email-oliver.graute@gmail.com>
+        Thu, 29 Aug 2019 03:56:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50842 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfH2H4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:56:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2F228AC8E;
+        Thu, 29 Aug 2019 07:56:14 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+To:     Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-btrfs@vger.kernel.org
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
+ <20190828194607.GB6590@bombadil.infradead.org>
+ <20190828222422.GL1119@dread.disaster.area>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <be70bf94-a63f-cc19-4958-0e7eed10859b@suse.cz>
+Date:   Thu, 29 Aug 2019 09:56:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567009160-21965-3-git-send-email-oliver.graute@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:39:09 up 103 days, 13:57, 63 users,  load average: 0.00, 0.05,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190828222422.GL1119@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oliver,
-
-On 19-08-28 18:19, Oliver Graute wrote:
-> This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
+On 8/29/19 12:24 AM, Dave Chinner wrote:
+> On Wed, Aug 28, 2019 at 12:46:08PM -0700, Matthew Wilcox wrote:
+>> On Wed, Aug 28, 2019 at 06:45:07PM +0000, Christopher Lameter wrote:
+>>> I still think implicit exceptions to alignments are a bad idea. Those need
+>>> to be explicity specified and that is possible using kmem_cache_create().
+>>
+>> I swear we covered this last time the topic came up, but XFS would need
+>> to create special slab caches for each size between 512 and PAGE_SIZE.
+>> Potentially larger, depending on whether the MM developers are willing to
+>> guarantee that kmalloc(PAGE_SIZE * 2, GFP_KERNEL) will return a PAGE_SIZE
+>> aligned block of memory indefinitely.
 > 
-> Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  arch/arm/boot/dts/Makefile                      |   1 +
->  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 196 ++++++++++++++++++++++++
->  2 files changed, 197 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> Page size alignment of multi-page heap allocations is ncessary. The
+> current behaviour w/ KASAN is to offset so a 8KB allocation spans 3
+> pages and is not page aligned. That causes just as much in way
+> of alignment problems as unaligned objects in multi-object-per-page
+> slabs.
+
+Ugh, multi-page (power of two) allocations *at the page allocator level*
+simply have to be aligned, as that's how the buddy allocator has always
+worked, and it would be madness to try relax that guarantee and require
+an explicit flag at this point. The kmalloc wrapper with SLUB will pass
+everything above 8KB directly to the page allocator, so that's fine too.
+4k and 8k are the only (multi-)page sizes still managed as SLUB objects.
+I would say that these sizes are the most striking example that it's
+wrong not to align them without extra flags or special API variant.
+
+> As I said in the lastest discussion of this problem on XFS (pmem
+> devices w/ KASAN enabled), all we -need- is a GFP flag that tells the
+> slab allocator to give us naturally aligned object or fail if it
+> can't. I don't care how that gets implemented (e.g. another set of
+> heap slabs like the -rcl slabs), I just don't want every high level
+
+Given alignment is orthogonal to -rcl and dma-, would that be another
+three sets? Or we assume that dma- would want it always, and complicate
+the rules further? Funilly enough, SLOB would be the simplest case here.
+
+> subsystem that allocates heap memory for IO buffers to have to
+> implement their own aligned slab caches.
+
+Definitely agree. I still hope we can do that even without a new flag/API.
+
+> Cheers,
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a24a6a1..a2a69e4 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
->  	imx6ul-tx6ul-0010.dtb \
->  	imx6ul-tx6ul-0011.dtb \
->  	imx6ul-tx6ul-mainboard.dtb \
-> +	imx6ul-var-6ulcustomboard.dtb \
->  	imx6ull-14x14-evk.dtb \
->  	imx6ull-colibri-eval-v3.dtb \
->  	imx6ull-colibri-wifi-eval-v3.dtb \
-> diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> new file mode 100644
-> index 00000000..1861b34
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> @@ -0,0 +1,196 @@
-> +// SPDX-License-Identifier: (GPL-2.0)
-> +/*
-> + * Support for Variscite DART-6UL Module
-> + *
-> + * Copyright (C) 2015 Freescale Semiconductor, Inc.
-> + * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-> + * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include "imx6ul-imx6ull-var-dart-common.dtsi"
-> +
-> +/ {
-> +	model = "Variscite i.MX6 UltraLite Carrier-board";
-> +	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
-> +
-> +	backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm1 0 20000>;
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <6>;
-> +		status = "okay";
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		user {
-> +			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-
-Please mux the gpios where you need them. In this case mux it within the
-gpio-keys node.
-
-> +			linux,code = <KEY_BACK>;
-> +			gpio-key,wakeup;
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +
-> +		d16-led {
-> +			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-
-The same applies here.
-
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "wm8731audio";
-> +		simple-audio-card,widgets =
-> +			"Headphone", "Headphone Jack",
-> +			"Line", "Line Jack",
-> +			"Microphone", "Mic Jack";
-> +		simple-audio-card,routing =
-> +			"Headphone Jack", "RHPOUT",
-> +			"Headphone Jack", "LHPOUT",
-> +			"LLINEIN", "Line Jack",
-> +			"RLINEIN", "Line Jack",
-> +			"MICIN", "Mic Bias",
-> +			"Mic Bias", "Mic Jack";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&sound_master>;
-> +		simple-audio-card,frame-master = <&sound_master>;
-> +
-> +		sound_master: simple-audio-card,cpu {
-> +				sound-dai = <&sai2>;
-> +		};
-
-Where is the codec node?
-
-> +	};
-> +};
-> +
-> +&can1 {
-> +	status = "okay";
-
-We need to move the complete muxing from the SoM dtsi to the baseboard
-for all baseboard related nodes.. I tought that the Dart 6UL layout
-follows a specific standard but that isn't the case.
-
-> +};
-> +
-> +&can2 {
-> +	status = "okay";
-> +};
-> +
-> +&fec1 {
-> +	phy-mode = "rgmii";
-
-This avoid such re-assigning here too. Also the imx6ul only support
-10/100 Mbit/s. So rgmii makes no sense here.
-
-> +	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> +	phy-handle = <&ethphy0>;
-> +	status = "okay";
-> +};
-> +
-> +&fec2 {
-> +	phy-mode = "rgmii";
-> +	phy-reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-> +	phy-handle = <&ethphy1>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	clock_frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +
-> +	wm8731: audio-codec@1a {
-> +		#sound-dai-cells = <0>;
-
-Please move #sound-dai-cells below compatible and reg property.
-
-> +		compatible = "wlf,wm8731";
-> +		reg = <0x1a>;
-> +		clocks = <&clks IMX6UL_CLK_SAI2>;
-> +		clock-names = "mclk";
-> +	};
-> +
-> +	touchscreen@38 {
-> +		compatible = "edt,edt-ft5x06";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <4 0>;
-
-Make use of IRQ_TYPE_*
-
-> +		touchscreen-size-x = <800>;
-> +		touchscreen-size-y = <480>;
-> +		touchscreen-inverted-x;
-> +		touchscreen-inverted-y;
-> +		wakeup-source;
-> +	};
-> +
-> +	rtc@68 {
-> +		compatible = "dallas,ds1337";
-> +		reg = <0x68>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_rtc>;
-> +		interrupt-parent = <&gpio5>;
-> +		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-> +	};
-> +};
-> +
-> +&lcdif {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_lcdif>;
-> +	display = <&display0>;
-> +	status = "okay";
-> +
-> +	display0: display0 {
-> +		bits-per-pixel = <16>;
-> +		bus-width = <24>;
-> +
-> +		display-timings {
-> +			native-mode = <&timing0>;
-> +			timing0: timing0 {
-> +				clock-frequency =<35000000>;
-> +				hactive = <800>;
-> +				vactive = <480>;
-> +				hfront-porch = <40>;
-> +				hback-porch = <40>;
-> +				hsync-len = <48>;
-> +				vback-porch = <29>;
-> +				vfront-porch = <13>;
-> +				vsync-len = <3>;
-> +				hsync-active = <0>;
-> +				vsync-active = <0>;
-> +				de-active = <1>;
-> +				pixelclk-active = <0>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&pwm1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&uart3 {
-> +	status = "okay";
-> +};
-> +
-> +&usbotg1 {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usbotg2 {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_rtc: rtcgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-> +		>;
-> +	};
-
-As I said above, move the complete muxing pwm/usb/i2c/lcd/... from the
-som dtsi to the baseboard dts because it is only valid for this
-baseboard. Another baseboard using this som can have a complete
-different mux option.
-
-Regards,
-  Marco
-
-
-> +};
-> -- 
-> 2.7.4
-> 
-> 
+> Dave.
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
