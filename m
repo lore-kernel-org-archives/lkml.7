@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FF0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215AAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4A92339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF86021874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102395;
-	bh=eF5DfDYj7vzJJwsDctZbpjiYwWB/aovBZTyRp1T5PMk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=efBpajB+ufXLmJGK26n6+RLi9yh23UJUJjI+x5qqEeR/0XEe6hfX7DaQaGjhKczoK
-	 sY3RIEr+JDD1lCieJBguljmf+PoVL9GlB6n4LX2l9ImJ8mQSchsCVgz93dqhpCf1Oa
-	 zDEgLdoT7NH+6fFUBdw1yps7FGiBoqkVNnVpJFTs=
+	s=default; t=1567102404;
+	bh=qx5FyH+qCOmLk8ayVVq6fVEn6qvhREhtmNVzQ1RfpQ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ix5b+oVG9VUlbIWNX2uVSdcEan9cTB7GHzJt++1AFV7KRchP9fkKOpvXvmH3bw8Ad
+	 1Q9ZaNzedLkFl/rHQq/zkykdzye5wlss78DKFJkXhudbcjOmfO7xyG3xq0VzypyVoJ
+	 d3w5pvFsu1NzumOXx6N/4jY18xb/67EmusTRi5rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfH2SNO (ORCPT
+        id S1728178AbfH2SNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:13:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:13:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfH2SNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:14 -0400
+        id S1726661AbfH2SNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 307E521874;
-        Thu, 29 Aug 2019 18:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F7C22CF5;
+        Thu, 29 Aug 2019 18:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102393;
-        bh=eF5DfDYj7vzJJwsDctZbpjiYwWB/aovBZTyRp1T5PMk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VqD7Uf5BeVR8hNnKS695qezuXsuaSrUwMnGxFsCigvfuoI87La7FAStI9fabVdBSH
-         Abeqlci+iYFB1ZHBJsHvccFSxs3p4up/AUw6eYL5fACmNPINSn3HZlX3SzBSV1STLe
-         UPKWJq/LNgtZQO/tD8N0Kuc8axs+d/iXW88Ro7vQ=
+        s=default; t=1567102395;
+        bh=qx5FyH+qCOmLk8ayVVq6fVEn6qvhREhtmNVzQ1RfpQ8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0BfqQvxBlOilp5K2g5vfuPX/dhEroln8AUEaIQBbieGHYBWiCoiw77sDD1BUpCiS6
+         2KvoFLo8qPO2UPNZDnw4Q43vuwcjDitoHN5vWO4yYN7Cq4Km5Mz9hpPUGm65dLC4pd
+         KLGZgP4lLg5SJIFf/w0PCDJan8ndq1ruoGWUoSiM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 01/76] batman-adv: Fix netlink dumping of all mcast_flags buckets
-Date:   Thu, 29 Aug 2019 14:11:56 -0400
-Message-Id: <20190829181311.7562-1-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>, Andrey Ignatov <rdna@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 02/76] libbpf: fix erroneous multi-closing of BTF FD
+Date:   Thu, 29 Aug 2019 14:11:57 -0400
+Message-Id: <20190829181311.7562-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,38 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit fa3a03da549a889fc9dbc0d3c5908eb7882cac8f ]
+[ Upstream commit 5d01ab7bac467edfc530e6ccf953921def935c62 ]
 
-The bucket variable is only updated outside the loop over the mcast_flags
-buckets. It will only be updated during a dumping run when the dumping has
-to be interrupted and a new message has to be started.
+Libbpf stores associated BTF FD per each instance of bpf_program. When
+program is unloaded, that FD is closed. This is wrong, because leads to
+a race and possibly closing of unrelated files, if application
+simultaneously opens new files while bpf_programs are unloaded.
 
-This could result in repeated or missing entries when the multicast flags
-are dumped to userspace.
+It's also unnecessary, because struct btf "owns" that FD, and
+btf__free(), called from bpf_object__close() will close it. Thus the fix
+is to never have per-program BTF FD and fetch it from obj->btf, when
+necessary.
 
-Fixes: d2d489b7d851 ("batman-adv: Add inconsistent multicast netlink dump detection")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 2993e0515bb4 ("tools/bpf: add support to read .BTF.ext sections")
+Reported-by: Andrey Ignatov <rdna@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/multicast.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/bpf/libbpf.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/net/batman-adv/multicast.c b/net/batman-adv/multicast.c
-index ec54e236e3454..50fe9dfb088b6 100644
---- a/net/batman-adv/multicast.c
-+++ b/net/batman-adv/multicast.c
-@@ -1653,7 +1653,7 @@ __batadv_mcast_flags_dump(struct sk_buff *msg, u32 portid,
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 3865a5d272514..e308fcf16cdd0 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -178,7 +178,6 @@ struct bpf_program {
+ 	bpf_program_clear_priv_t clear_priv;
  
- 	while (bucket_tmp < hash->size) {
- 		if (batadv_mcast_flags_dump_bucket(msg, portid, cb, hash,
--						   *bucket, &idx_tmp))
-+						   bucket_tmp, &idx_tmp))
- 			break;
+ 	enum bpf_attach_type expected_attach_type;
+-	int btf_fd;
+ 	void *func_info;
+ 	__u32 func_info_rec_size;
+ 	__u32 func_info_cnt;
+@@ -305,7 +304,6 @@ void bpf_program__unload(struct bpf_program *prog)
+ 	prog->instances.nr = -1;
+ 	zfree(&prog->instances.fds);
  
- 		bucket_tmp++;
+-	zclose(prog->btf_fd);
+ 	zfree(&prog->func_info);
+ 	zfree(&prog->line_info);
+ }
+@@ -382,7 +380,6 @@ bpf_program__init(void *data, size_t size, char *section_name, int idx,
+ 	prog->instances.fds = NULL;
+ 	prog->instances.nr = -1;
+ 	prog->type = BPF_PROG_TYPE_UNSPEC;
+-	prog->btf_fd = -1;
+ 
+ 	return 0;
+ errout:
+@@ -1883,9 +1880,6 @@ bpf_program_reloc_btf_ext(struct bpf_program *prog, struct bpf_object *obj,
+ 		prog->line_info_rec_size = btf_ext__line_info_rec_size(obj->btf_ext);
+ 	}
+ 
+-	if (!insn_offset)
+-		prog->btf_fd = btf__fd(obj->btf);
+-
+ 	return 0;
+ }
+ 
+@@ -2060,7 +2054,7 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+ 	char *cp, errmsg[STRERR_BUFSIZE];
+ 	int log_buf_size = BPF_LOG_BUF_SIZE;
+ 	char *log_buf;
+-	int ret;
++	int btf_fd, ret;
+ 
+ 	memset(&load_attr, 0, sizeof(struct bpf_load_program_attr));
+ 	load_attr.prog_type = prog->type;
+@@ -2072,7 +2066,8 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+ 	load_attr.license = license;
+ 	load_attr.kern_version = kern_version;
+ 	load_attr.prog_ifindex = prog->prog_ifindex;
+-	load_attr.prog_btf_fd = prog->btf_fd >= 0 ? prog->btf_fd : 0;
++	btf_fd = bpf_object__btf_fd(prog->obj);
++	load_attr.prog_btf_fd = btf_fd >= 0 ? btf_fd : 0;
+ 	load_attr.func_info = prog->func_info;
+ 	load_attr.func_info_rec_size = prog->func_info_rec_size;
+ 	load_attr.func_info_cnt = prog->func_info_cnt;
 -- 
 2.20.1
 
