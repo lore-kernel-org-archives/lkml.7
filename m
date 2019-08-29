@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B7FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F77C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D5123405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19C52189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102630;
-	bh=D+8zjNwZ8CrhkbgQn80DEiwKxkuOAmXsZZc/8oApyLs=;
+	s=default; t=1567102639;
+	bh=vxxTMYOAipxyhjvy5hgAYfi9s+xgn6FeHoUk5/8duwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTKshfYblH41MfFxZQ8kNKg4sR8cQJ0IhfFlXFeIE0gAeYb46r9QWoOpofCbkQgUb
-	 DWpOg6RN7S7GZUREjptHzqqdeoZ9P3YvQxf52X8iG7u7wSiPscJkDwe7ETvcm2hxux
-	 anGHLWopg1NxZriwxNqjQQn1A/nQ8U7GSI2kyi3s=
+	b=pal/r8QpsjQbfFY7WVK7fOXTq/lNY3L/8FmzPl055dm2bPn7WPaqBBe1KJYZs4qkF
+	 pV3s0lnewKxKLEQR9QA3kMUrDnO+OWAUYw/XSfDhqo5Zlx49FqHWS6QIQ/PRmKAw6Y
+	 2hA3kbjNIYYZ+hJ3ys2y+TSBBgtBCKj+ZjK6wZm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbfH2SRJ (ORCPT
+        id S1728706AbfH2SRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59088 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbfH2SQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:59 -0400
+        id S1729966AbfH2SRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63E0423403;
-        Thu, 29 Aug 2019 18:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 066D823403;
+        Thu, 29 Aug 2019 18:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102618;
-        bh=D+8zjNwZ8CrhkbgQn80DEiwKxkuOAmXsZZc/8oApyLs=;
+        s=default; t=1567102627;
+        bh=vxxTMYOAipxyhjvy5hgAYfi9s+xgn6FeHoUk5/8duwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qg+FCSZ5qx4Ax/MUUknRBG+s2FtfvaCwNkJDUF25kSi9sWA+F5xlbD3wlxFSHQkp+
-         OaGhH8qBpO60vLqu/RsJ77DYMV+atztU55vCCatudQkDL5IpwlMZdsQhu4sF7D2Dp0
-         iSIlHhfAXm8BrfcwEQ3BhPLpg8OyfR+25K0fIGn8=
+        b=onW38VN1YjfxRHObzdTwnQ6NEOKNGmJV0EnAnMS2ZW/EUQ14l4Vv4JXyC4jLjF2Zk
+         GztWz/1m7VxfgZ6SKzD/51Dt9itTBujfIqiW9LWy4erYKT7vNVAkoXrXwnK0vWCLGu
+         +ne4K9zarwFmDqcnS8jvk7qZR1S/K+hjhB96KggQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/27] hv_netvsc: Fix a warning of suspicious RCU usage
-Date:   Thu, 29 Aug 2019 14:16:28 -0400
-Message-Id: <20190829181655.8741-2-sashal@kernel.org>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 08/27] drm/mediatek: use correct device to import PRIME buffers
+Date:   Thu, 29 Aug 2019 14:16:34 -0400
+Message-Id: <20190829181655.8741-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
 References: <20190829181655.8741-1-sashal@kernel.org>
@@ -60,52 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Alexandre Courbot <acourbot@chromium.org>
 
-[ Upstream commit 6d0d779dca73cd5acb649c54f81401f93098b298 ]
+[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
 
-This fixes a warning of "suspicious rcu_dereference_check() usage"
-when nload runs.
+PRIME buffers should be imported using the DMA device. To this end, use
+a custom import function that mimics drm_gem_prime_import_dev(), but
+passes the correct device.
 
-Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index eb92720dd1c4a..33c1f6548fb79 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1170,12 +1170,15 @@ static void netvsc_get_stats64(struct net_device *net,
- 			       struct rtnl_link_stats64 *t)
- {
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
--	struct netvsc_device *nvdev = rcu_dereference_rtnl(ndev_ctx->nvdev);
-+	struct netvsc_device *nvdev;
- 	struct netvsc_vf_pcpu_stats vf_tot;
- 	int i;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index cada1c75c41cd..4a89cd2e4f1c5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -287,6 +287,18 @@ static const struct file_operations mtk_drm_fops = {
+ 	.compat_ioctl = drm_compat_ioctl,
+ };
  
-+	rcu_read_lock();
++/*
++ * We need to override this because the device used to import the memory is
++ * not dev->dev, as drm_gem_prime_import() expects.
++ */
++struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
++						struct dma_buf *dma_buf)
++{
++	struct mtk_drm_private *private = dev->dev_private;
 +
-+	nvdev = rcu_dereference(ndev_ctx->nvdev);
- 	if (!nvdev)
--		return;
-+		goto out;
- 
- 	netdev_stats_to_stats64(t, &net->stats);
- 
-@@ -1214,6 +1217,8 @@ static void netvsc_get_stats64(struct net_device *net,
- 		t->rx_packets	+= packets;
- 		t->multicast	+= multicast;
- 	}
-+out:
-+	rcu_read_unlock();
- }
- 
- static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
++	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
++}
++
+ static struct drm_driver mtk_drm_driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
+ 			   DRIVER_ATOMIC,
+@@ -298,7 +310,7 @@ static struct drm_driver mtk_drm_driver = {
+ 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+ 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+ 	.gem_prime_export = drm_gem_prime_export,
+-	.gem_prime_import = drm_gem_prime_import,
++	.gem_prime_import = mtk_drm_gem_prime_import,
+ 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
+ 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
+ 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
 -- 
 2.20.1
 
