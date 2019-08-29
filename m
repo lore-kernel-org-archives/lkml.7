@@ -2,81 +2,103 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592D6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA88CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A1322CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D97215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="e45AO9Np"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsjSJvpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfH2APa (ORCPT
+        id S1726975AbfH2A1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 20:15:30 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44335 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfH2APa (ORCPT
+        Wed, 28 Aug 2019 20:27:54 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45289 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfH2A1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 20:15:30 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a21so1930888edt.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 17:15:29 -0700 (PDT)
+        Wed, 28 Aug 2019 20:27:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w26so815423pfq.12;
+        Wed, 28 Aug 2019 17:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=HXiTUrgTpySDqJ2z0IlxRdwN/AdZPM9PRJWDyYhpIx4=;
-        b=e45AO9NpuZXfOGepMifc4AUPa3t0G9HNLJF47YLc7KvpKfDYlLUXsWbDH+Ox2bJk6K
-         VYy4b4AsZ1P8MUQAX9P+ezN47AUeq4yQEIO8yWmcoZ5roCARG2MvUVt3rD5qpLpuo4PI
-         Rb7wyAGeBjWQaPMW9syxyBJdgbrXVULFUPptgKkOwB7lcJ21Mf1mBowRdOBTTtNivoLA
-         nvjyehZPuY3TxuXV0xG+lYuwG3uMhwkGteIC1vedzAobSccRI73X3BexTK1oY22C4Hm5
-         CYDDVXMYV99y0ImBhz0mhyOktBWHEl8PPOep3vvSJZliHZfT0ZJkCJ4T5+r7kcW4L9Gy
-         o10A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+FnKt6T+ltE8w3yLy1h9tF886M9S45rP25oiOveKiPQ=;
+        b=GsjSJvpfeS5lqXKDFc6FVuaL98JD5Wymo3Lbqr26yCOctql4nM8K7m43/YzFJ25tCa
+         XRnIlBVTgCCa7GpBgbs+0vYz5kuwLZ6NUe0LA7qEMv4qb2oMzH5HXMD6VVt5NjV1Wnlk
+         SF+xwwb5UnvhqkeLyaOO8Azi7QTOhGGcRlLl3CVViQ3OBSbm2voGPbH0uNafLXI9pN8k
+         p1HSPtbGO/pc8153DuNXTJILp9RTNuHZJx0zs4hpwXRAdcEswrqj9donhrTYrefBB7RQ
+         VFRNjEXtXq5OzGO0oRupaFTzDFO8s8r9sMDRv9+5B24znf0uA0hCtuuoAUtT7CAyvz4t
+         CDSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=HXiTUrgTpySDqJ2z0IlxRdwN/AdZPM9PRJWDyYhpIx4=;
-        b=ntRZfYI4eaZHHkoKv4NVfsLfCYw3RG8Iog60VoDOZJud1298JDNeMPouiJ+dKwi+pC
-         Typ8yR0tesiRCajK/3FIAtrcDIHxtnP2hUuaEwTXr/oNjQm06kHPvGLtPTTQrzb4NBMW
-         b5rYgTaqgcAt4A+6zbARMxJFrHwP7ONsgys5xFYi+fW29PpqP/uM9lCJrDnNyD66pVlT
-         feqIF7A5o/b9qHzN2CibA7BVRZ3Kju0I9qWj47M/eOAHngXHxYbyYkyGve+RyykYIHAz
-         7r18hIY7W9OR3bMn9Z4qybc/gkTsoG1zyrJch4RhvJcZ1AT8O7Vck+423ZBJs60IpeD4
-         q4Ng==
-X-Gm-Message-State: APjAAAX2IYiTqqVTaIeb8pDkceX/mN/BLcVZUiKdYK9C3IrIbTr/Gwc8
-        /2rRbVkM4as9byNx3PD1eS2FTA==
-X-Google-Smtp-Source: APXvYqz4W1FQHE5dUOt5X8/Pj/tl8Yb2m0qydnOk+JGjbcp4O6ydKYlpMp4kKWu4l3Teq2GOsVaL/g==
-X-Received: by 2002:aa7:da4a:: with SMTP id w10mr6942046eds.74.1567037728472;
-        Wed, 28 Aug 2019 17:15:28 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id sa25sm124124ejb.37.2019.08.28.17.15.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+FnKt6T+ltE8w3yLy1h9tF886M9S45rP25oiOveKiPQ=;
+        b=d7tKff4vTT4kQv8lEQ0J7ZvN+kwGjZEB+2np7f/Ye8lGC4ytXBgCLgiDIC7+bSQJG7
+         XxQncgwhzZD0pGQUWhnJWviyGAgj8MapmqLE+7ztALsoz5dzY78YFRuyKlRp31P80FJY
+         Cs/cJhAqx9uaX+cThi5eiN+DpXuyKjpDCoGwW8bCKrncgf96zlCbtvKmSYPwJS7hyCVz
+         l0AdH4LpEnEqE+DbyN+37520T4z+XAb+2Hdo+INizLcevZK59NyA9a5IyJwI9d+ToAdL
+         9lQy49Va5JDR8ZyHp5CfNWRcEf8bJSGNBjdf8xVgXvD5NQxlVhi1wV2sPCxIUBUMq7LT
+         FOIw==
+X-Gm-Message-State: APjAAAWZLpz2xit3+87Vji2KzPpeMfiMbVnpGhOgvC3XYB5CgkkgfJNl
+        ivy/JtwIeJEs9TOZ7UzB8pg=
+X-Google-Smtp-Source: APXvYqw2OlfA6jZmJSpwaH818/I+5awEkLLuXP4oPnTJM9FuiV5ShzYywDl2G+kuK0f0/O2haKhnxQ==
+X-Received: by 2002:aa7:8808:: with SMTP id c8mr7648608pfo.67.1567038473241;
+        Wed, 28 Aug 2019 17:27:53 -0700 (PDT)
+Received: from localhost ([39.7.51.95])
+        by smtp.gmail.com with ESMTPSA id 65sm574401pff.148.2019.08.28.17.27.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 17:15:27 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 17:15:05 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Masanari Iida <standby24x7@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com
-Subject: Re: [PATCH] selftests/bpf: Fix a typo in test_offload.py
-Message-ID: <20190828171505.105c2cf7@cakuba.netronome.com>
-In-Reply-To: <20190829000130.7845-1-standby24x7@gmail.com>
-References: <20190829000130.7845-1-standby24x7@gmail.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 28 Aug 2019 17:27:52 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:27:49 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+Message-ID: <20190829002749.GA530@jagdpanzerIV>
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
+ <87o9097bff.fsf@intel.com>
+ <20190828120246.GA31416@jagdpanzerIV>
+ <087e8e18-8044-27ef-b0bd-8a1093f53b32@rasmusvillemoes.dk>
+ <20190828125951.GA12653@jagdpanzerIV>
+ <61cd079f-d41b-75ec-9a1e-ef80f9d1f8fd@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <61cd079f-d41b-75ec-9a1e-ef80f9d1f8fd@kleine-koenig.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 09:01:30 +0900, Masanari Iida wrote:
-> This patch fix a spelling typo in test_offload.py
+On (08/28/19 18:22), Uwe Kleine-König wrote:
+> That is wrong. When you do
 > 
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+> 	pr_err("There are no round tuits to give out: %dE\n", -ENOENT);
+> 
+> in a kernel that doesn't support %dE you get:
+> 
+> 	There are no round tuits to give out: -2E
 
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+OK. Good point.
+
+	-ss
