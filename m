@@ -2,87 +2,68 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE36C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41306C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F60B2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195382339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfH2Mrz (ORCPT
+        id S1727474AbfH2MsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:47:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53560 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfH2Mry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:47:54 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4759C8980F3;
-        Thu, 29 Aug 2019 12:47:54 +0000 (UTC)
-Received: from localhost (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B1125C1D6;
-        Thu, 29 Aug 2019 12:47:51 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH] KVM: s390: improve documentation for S390_MEM_OP
-Date:   Thu, 29 Aug 2019 14:47:46 +0200
-Message-Id: <20190829124746.28665-1-cohuck@redhat.com>
+        Thu, 29 Aug 2019 08:48:04 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36347 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2MsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:48:04 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 6B6A0FF806;
+        Thu, 29 Aug 2019 12:47:57 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Claire Lin <claire.lin@broadcom.com>,
+        linux-mtd@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH] mtd: rawnand: brcmnand: Fix ecc chunk calculation for erased page bitfips
+Date:   Thu, 29 Aug 2019 14:47:55 +0200
+Message-Id: <20190829124755.30831-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1566849476-41546-1-git-send-email-kdasu.kdev@gmail.com>
+References: 
 MIME-Version: 1.0
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: 7f852cc1579297fd763789f8cd370639d0c654b6
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 29 Aug 2019 12:47:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly specify the valid ranges for size and ar, and reword
-buf requirements a bit.
+On Mon, 2019-08-26 at 19:57:56 UTC, Kamal Dasu wrote:
+> From: Claire Lin <claire.lin@broadcom.com>
+> 
+> In brcmstb_nand_verify_erased_page(), fix ecc chunk pointer calculation
+> while correcting erased page bitflip.
+> 
+> Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitflips")
+> Signed-off-by: Claire Lin <claire.lin@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
-supposed to go on top of "KVM: s390: Test for bad access register and
-size at the start of S390_MEM_OP" (<20190829122517.31042-1-thuth@redhat.com>)
----
- Documentation/virt/kvm/api.txt | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-index 2d067767b617..76c9d6fdbfdb 100644
---- a/Documentation/virt/kvm/api.txt
-+++ b/Documentation/virt/kvm/api.txt
-@@ -3079,12 +3079,14 @@ This exception is also raised directly at the corresponding VCPU if the
- flag KVM_S390_MEMOP_F_INJECT_EXCEPTION is set in the "flags" field.
- 
- The start address of the memory region has to be specified in the "gaddr"
--field, and the length of the region in the "size" field. "buf" is the buffer
--supplied by the userspace application where the read data should be written
--to for KVM_S390_MEMOP_LOGICAL_READ, or where the data that should be written
--is stored for a KVM_S390_MEMOP_LOGICAL_WRITE. "buf" is unused and can be NULL
--when KVM_S390_MEMOP_F_CHECK_ONLY is specified. "ar" designates the access
--register number to be used.
-+field, and the length of the region in the "size" field (which must not
-+be 0). The maximum value for "size" can be obtained by checking the
-+KVM_CAP_S390_MEM_OP capability. "buf" is the buffer supplied by the
-+userspace application where the read data should be written to for
-+KVM_S390_MEMOP_LOGICAL_READ, or where the data that should be written is
-+stored for a KVM_S390_MEMOP_LOGICAL_WRITE. When KVM_S390_MEMOP_F_CHECK_ONLY
-+is specified, "buf" is unused and can be NULL. "ar" designates the access
-+register number to be used; the valid range is 0..15.
- 
- The "reserved" field is meant for future extensions. It is not used by
- KVM with the currently defined set of flags.
--- 
-2.20.1
-
+Miquel
