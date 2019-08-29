@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D11BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4BCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51492339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEE123403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102489;
-	bh=G/rydemY/se9oRI2oc9ftz0a3FwIJOnjndeX+QAiB20=;
+	s=default; t=1567102492;
+	bh=qml2xfq2Vm0bbYh1zjkEGVJTy8eTz1McNIzEeQePNaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2IecDnmmey3kxaX8NQEicA52F2jYTorVXKEzok+7M99rTJ5N0BWKWeYssEns5Yjm
-	 CphgxK8sOQkohcOY1L6/KnSpy8oG86dWKne1pzfVWS+XfmykZTWL5Mksy7SgUQjqsy
-	 JrnSYvvdQ71We+Ury4cFJZ6m1ncLqWBsxtODcUSA=
+	b=mr/lxKKuvSqjC11O0dRq7RUJz6HPGGW0ao20XDtXD/dt6yKEydRwAEaeimnPC2Ppc
+	 vSacd96eBCOqtiXwdUSMaUUy5J77hNi6ELFGhk/x0RzEiLgwt5y6Js2J5Zj2K0Ke0r
+	 ajcyUX6ryKoJQsrR29oyfF04yKkltyKMoIryHNn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfH2SOs (ORCPT
+        id S1729026AbfH2SOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56352 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:14:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbfH2SOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728959AbfH2SOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 14:14:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 860152339E;
-        Thu, 29 Aug 2019 18:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C8523403;
+        Thu, 29 Aug 2019 18:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102483;
-        bh=G/rydemY/se9oRI2oc9ftz0a3FwIJOnjndeX+QAiB20=;
+        s=default; t=1567102482;
+        bh=qml2xfq2Vm0bbYh1zjkEGVJTy8eTz1McNIzEeQePNaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gOCbRoOsMZEqosza4vZyH+k1uR4tVJF0Wz5YCD3fYYJ66giH9WGCRK5mojF6iOLXC
-         AlVAvd1AzfZQ7wkJPIf98YZOFK2U7oR+aqDSO9qpAfdb0KPfySx9Nwg0mLa35tY8gE
-         NKCmF6sDYyj4c6rBNoIgmbsd9pn1RR3gXaa+q03A=
+        b=j5xapk0u44rpB/F/JfNaWJpWSwhgQNoqzC0J/M6CgCgsuHecgI73GLvMGWkLiL06K
+         u4VQNvVeyMvS/wALYinN9jKVT5xNo847hFh4Cq5ACDm3HHaRAiLQix46wtoz3bV9Av
+         eBPxfeRd6u+Al0CurVacwf8zEVil5Aw76pDNgB5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        "Devesh K . Singh" <devesh_singh@in.ibm.com>,
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 43/76] ibmvnic: Unmap DMA address of TX descriptor buffers after use
-Date:   Thu, 29 Aug 2019 14:12:38 -0400
-Message-Id: <20190829181311.7562-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 42/76] net: kalmia: fix memory leaks
+Date:   Thu, 29 Aug 2019 14:12:37 -0400
+Message-Id: <20190829181311.7562-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -62,61 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 80f0fe0934cd3daa13a5e4d48a103f469115b160 ]
+[ Upstream commit f1472cb09f11ddb41d4be84f0650835cb65a9073 ]
 
-There's no need to wait until a completion is received to unmap
-TX descriptor buffers that have been passed to the hypervisor.
-Instead unmap it when the hypervisor call has completed. This patch
-avoids the possibility that a buffer will not be unmapped because
-a TX completion is lost or mishandled.
+In kalmia_init_and_get_ethernet_addr(), 'usb_buf' is allocated through
+kmalloc(). In the following execution, if the 'status' returned by
+kalmia_send_init_packet() is not 0, 'usb_buf' is not deallocated, leading
+to memory leaks. To fix this issue, add the 'out' label to free 'usb_buf'.
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Tested-by: Devesh K. Singh <devesh_singh@in.ibm.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/net/usb/kalmia.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3da6800732656..cebd20f3128d4 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1568,6 +1568,8 @@ static netdev_tx_t ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		lpar_rc = send_subcrq_indirect(adapter, handle_array[queue_num],
- 					       (u64)tx_buff->indir_dma,
- 					       (u64)num_entries);
-+		dma_unmap_single(dev, tx_buff->indir_dma,
-+				 sizeof(tx_buff->indir_arr), DMA_TO_DEVICE);
- 	} else {
- 		tx_buff->num_entries = num_entries;
- 		lpar_rc = send_subcrq(adapter, handle_array[queue_num],
-@@ -2788,7 +2790,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
- 	union sub_crq *next;
- 	int index;
- 	int i, j;
--	u8 *first;
+diff --git a/drivers/net/usb/kalmia.c b/drivers/net/usb/kalmia.c
+index d62b6706a5376..fc5895f85cee2 100644
+--- a/drivers/net/usb/kalmia.c
++++ b/drivers/net/usb/kalmia.c
+@@ -113,16 +113,16 @@ kalmia_init_and_get_ethernet_addr(struct usbnet *dev, u8 *ethernet_addr)
+ 	status = kalmia_send_init_packet(dev, usb_buf, ARRAY_SIZE(init_msg_1),
+ 					 usb_buf, 24);
+ 	if (status != 0)
+-		return status;
++		goto out;
  
- restart_loop:
- 	while (pending_scrq(adapter, scrq)) {
-@@ -2818,14 +2819,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
+ 	memcpy(usb_buf, init_msg_2, 12);
+ 	status = kalmia_send_init_packet(dev, usb_buf, ARRAY_SIZE(init_msg_2),
+ 					 usb_buf, 28);
+ 	if (status != 0)
+-		return status;
++		goto out;
  
- 				txbuff->data_dma[j] = 0;
- 			}
--			/* if sub_crq was sent indirectly */
--			first = &txbuff->indir_arr[0].generic.first;
--			if (*first == IBMVNIC_CRQ_CMD) {
--				dma_unmap_single(dev, txbuff->indir_dma,
--						 sizeof(txbuff->indir_arr),
--						 DMA_TO_DEVICE);
--				*first = 0;
--			}
- 
- 			if (txbuff->last_frag) {
- 				dev_kfree_skb_any(txbuff->skb);
+ 	memcpy(ethernet_addr, usb_buf + 10, ETH_ALEN);
+-
++out:
+ 	kfree(usb_buf);
+ 	return status;
+ }
 -- 
 2.20.1
 
