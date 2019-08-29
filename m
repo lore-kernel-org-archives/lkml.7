@@ -2,101 +2,148 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D9DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D69DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA67E23430
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024E023405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IY0+mtQk"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="e3V0pJgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfH2NFA (ORCPT
+        id S1727495AbfH2NFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:05:00 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58280 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2NE7 (ORCPT
+        Thu, 29 Aug 2019 09:05:03 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:41847 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbfH2NFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:04:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AErEWstWk9AqOWm/GPKA3AadpNtUjz4m9BVSetCYmeU=; b=IY0+mtQkGxyw/kjhqsb4hVAjI
-        JflNvdzMQBcyyvehFneIEhId0CPFnnqLuQOaBP1BsWnEHR1hH190fTN7T7otVOjtjLTiCy0iWaBa8
-        Xzwt1m5fX11ndKtEqI+tH6nhuGaBHHetbvVi3gvPlwkLf+bwiLLmbO2ylU00ddMhcE74yYHjwbmPY
-        CrMOnNusfu0V3Do0XLgogo6NblYyZ7DzdeRj4DcR5+/NoKZgZ4vgK06vBg1MxAQnjULrjYY7JbuKB
-        W+20GqOZ93ysPtKj2mZdl5Va1gu/v31Q8grDG0ATwxjmvmVCEhXTnShkU8kQai+1GiwxONcVURGdI
-        5MmDbmgDA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3K6Z-0002iw-IF; Thu, 29 Aug 2019 13:04:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F33B6301176;
-        Thu, 29 Aug 2019 15:04:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B586A20CB9FE3; Thu, 29 Aug 2019 15:04:45 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 15:04:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mac Chiang <mac.chiang@intel.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20190829130445.GT2369@hirez.programming.kicks-ass.net>
-References: <20190829162012.36ac9d7c@canb.auug.org.au>
- <20190829074644.GL2369@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1908291422520.1938@nanos.tec.linutronix.de>
+        Thu, 29 Aug 2019 09:05:00 -0400
+Received: by mail-yb1-f194.google.com with SMTP id 1so1145604ybj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6VBkLsvXlERJnhRJgH+r5GK4buSUTKmrRtT/NOyzDgs=;
+        b=e3V0pJgx+4fsz6xIVRJ7LtRBzZ7Zb4YZnP+PLxk2w4+Z3Oll/LrQit2zb0/uy6o4GW
+         Jb9sCNXWKrPdpi9zGAmgIDW8YPCN+AnJId8e4Ls8ShKj/CK0lxUSsy5U8Zqqh9rZnfmF
+         DLnUr2/opNiDROP0SOrpLr46bvqRAW4Sl2ZgaAF+F14c1vBlQbY9dITPLgAfRx+hPBp3
+         XHwk3h1qVFzYRfOTOaYwUVjQMY4SdWFqN9xQ9mziYgchFqHpEnX+loi73E9p9xOKc+/N
+         WO91wXBImaSiBPgclAHy/bDsXBaMt831Dkw9tsHze7zljHmCOMmTdR8ZBB2ZIS7YTyfC
+         FNHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6VBkLsvXlERJnhRJgH+r5GK4buSUTKmrRtT/NOyzDgs=;
+        b=alrsD/0dlBrwtmwheUcAev13jaK9wecNRr+1+2blvCGW4uhpdVLgVPIXZ8c+qv7Glu
+         5e5Qz55Wsox7B/qhJCVuhxKb4z8rzjpCrDOkHmDxnxUVqEQD88egUtf400kuUKye6mR1
+         F3GLuvRWh0zdx0Aepa/7F1FAzSmmT3GHDNtqJOPWQt4v7ZhTmxj3xKeFjzVZmV2tqU0Y
+         SZ68kNRg1QiItfYoeptzY1pqjFjsvuqHBoOfr4NDzF0B9wwtJjxr699Iz7DMlQK/aAUj
+         aGLDA6Dmoa+OtnTNvUpnvFIcJ4hknsztzvntMEOIFglUFutJAsFkVgpkCiFOFwL0qDCu
+         Bmgg==
+X-Gm-Message-State: APjAAAUtwcUuz3ozgRR3ZZos6N9rihiuLa/WcZfZWoXxRuOL4guv/odS
+        zZqOs3Qq043klbQMh/q3svf9o6N3Rp8=
+X-Google-Smtp-Source: APXvYqxnB7BRqeZ9zmDLaGZIodEN/tUWqtSFo1zTN5kxmpvBGBVy36rbhkJzx5Gc/Ud2V5aPDCW2kA==
+X-Received: by 2002:a25:3441:: with SMTP id b62mr7142632yba.224.1567083900064;
+        Thu, 29 Aug 2019 06:05:00 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id t5sm455533ywi.33.2019.08.29.06.04.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 06:04:59 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:04:59 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Allison Randal <allison@lohutok.net>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/9] drm/msm/dpu: add real wait_for_commit_done()
+Message-ID: <20190829130459.GG218215@art_vandelay>
+References: <20190827213421.21917-1-robdclark@gmail.com>
+ <20190827213421.21917-3-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908291422520.1938@nanos.tec.linutronix.de>
+In-Reply-To: <20190827213421.21917-3-robdclark@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 02:24:24PM +0200, Thomas Gleixner wrote:
-> On Thu, 29 Aug 2019, Peter Zijlstra wrote:
-> > On Thu, Aug 29, 2019 at 04:20:12PM +1000, Stephen Rothwell wrote:
-> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Date: Thu, 29 Aug 2019 16:08:49 +1000
-> > > Subject: [PATCH] ASoC: Intel: boards: merge fix for INTEL_FAM6_KABYLAKE_MOBILE -> INTEL_FAM6_KABYLAKE_L change
-> > > 
-> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > ---
-> > >  sound/soc/intel/common/soc-intel-quirks.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/sound/soc/intel/common/soc-intel-quirks.h b/sound/soc/intel/common/soc-intel-quirks.h
-> > > index e6357d306cb8..863a477d3405 100644
-> > > --- a/sound/soc/intel/common/soc-intel-quirks.h
-> > > +++ b/sound/soc/intel/common/soc-intel-quirks.h
-> > > @@ -36,7 +36,7 @@ SOC_INTEL_IS_CPU(byt, INTEL_FAM6_ATOM_SILVERMONT);
-> > >  SOC_INTEL_IS_CPU(cht, INTEL_FAM6_ATOM_AIRMONT);
-> > >  SOC_INTEL_IS_CPU(apl, INTEL_FAM6_ATOM_GOLDMONT);
-> > >  SOC_INTEL_IS_CPU(glk, INTEL_FAM6_ATOM_GOLDMONT_PLUS);
-> > > -SOC_INTEL_IS_CPU(cml, INTEL_FAM6_KABYLAKE_MOBILE);
-> > > +SOC_INTEL_IS_CPU(cml, INTEL_FAM6_KABYLAKE_L);
-> > 
-> > ARGHH... rebase again?
+On Tue, Aug 27, 2019 at 02:33:32PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> No. This is a conflict with the sound tree which added the MOBILE
-> thingy. So what you could do for now is
+> Just waiting for next vblank isn't ideal.. we should really be looking
+> at the hw FLUSH register value to know if there is still an in-progress
+> flush without stalling unnecessarily when there is no pending flush.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Yes, SFR clarified that. This is a case of me doing email before waking
-up.
+Reviewed-by: Sean Paul <sean@poorly.run>
+
+> ---
+>  .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 22 ++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> index 737fe963a490..7c73b09894f0 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> @@ -526,6 +526,26 @@ static int dpu_encoder_phys_vid_wait_for_vblank(
+>  	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
+>  }
+>  
+> +static int dpu_encoder_phys_vid_wait_for_commit_done(
+> +		struct dpu_encoder_phys *phys_enc)
+> +{
+> +	struct dpu_hw_ctl *hw_ctl = phys_enc->hw_ctl;
+> +	int ret;
+> +
+> +	if (!hw_ctl)
+> +		return 0;
+> +
+> +	ret = wait_event_timeout(phys_enc->pending_kickoff_wq,
+> +		(hw_ctl->ops.get_flush_register(hw_ctl) == 0),
+> +		msecs_to_jiffies(50));
+> +	if (ret <= 0) {
+> +		DPU_ERROR("vblank timeout\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void dpu_encoder_phys_vid_prepare_for_kickoff(
+>  		struct dpu_encoder_phys *phys_enc)
+>  {
+> @@ -676,7 +696,7 @@ static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
+>  	ops->destroy = dpu_encoder_phys_vid_destroy;
+>  	ops->get_hw_resources = dpu_encoder_phys_vid_get_hw_resources;
+>  	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
+> -	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_vblank;
+> +	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_commit_done;
+>  	ops->wait_for_vblank = dpu_encoder_phys_vid_wait_for_vblank;
+>  	ops->wait_for_tx_complete = dpu_encoder_phys_vid_wait_for_vblank;
+>  	ops->irq_control = dpu_encoder_phys_vid_irq_control;
+> -- 
+> 2.21.0
+> 
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
