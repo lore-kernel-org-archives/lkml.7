@@ -2,114 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B04C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66842C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C42D23404
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076118;
-	bh=eYpZNX+vviP0iqdloe8IdyPbr4uR78Nhm3OiA3AA1LM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lEr2OxZ/Tp1qYIXEqNE5T4wDtYXRJqNVea81jRrx+kQijb0clV1xrW4RXezDqKUs5
-	 Ir//upc2UBYxEa9Iu9ipxI2JclHUhA+lXsysvBuSiXBB/2LhDBCAs0Kt/bBNGH96+B
-	 9iNOhXxYyax8SCuj7qjCvvVWQMfxZtrTSRIc0LO4=
+	by mail.kernel.org (Postfix) with ESMTP id 337582053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TidcLSDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfH2KzR (ORCPT
+        id S1727328AbfH2KuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbfH2KuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D2D92173E;
-        Thu, 29 Aug 2019 10:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075815;
-        bh=eYpZNX+vviP0iqdloe8IdyPbr4uR78Nhm3OiA3AA1LM=;
+        Thu, 29 Aug 2019 06:50:10 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:17271 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbfH2KuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:09 -0400
+X-Greylist: delayed 84862 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 06:50:08 EDT
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7TAnTog013730;
+        Thu, 29 Aug 2019 19:49:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TAnTog013730
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567075772;
+        bh=mN61Fbu00XTQIXCA2V1aTp6gNwYlWshj6x9afbCTh5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSLxpaZ81qPZ8jJZhc46n46cyCzLM7fckQo8mK1EqZOXGFYzVzX4c+MBIsalbUXDi
-         Mv16ntS1L31umzey/AdrgasB2gN7JxlAg26phOefruPvQuP2Q1UWgRu/a7WYiAeNLs
-         PomekSYfFUcEaZdf52dslIu0aXNzhjekKUceS7Xc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 04/29] ALSA: line6: Fix memory leak at line6_init_pcm() error path
-Date:   Thu, 29 Aug 2019 06:49:44 -0400
-Message-Id: <20190829105009.2265-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
-References: <20190829105009.2265-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        b=TidcLSDRKzOZkpVzOluSTBv43i57lTHVfDqOFA489hXt/kuWoCqcLidLjb/E9E81e
+         sUGEb9yFmWosleb2DfiSz+xxg1S3Ui33G3YcqDa7YgH2/Dp3FdxfCd4cn5704BPOMK
+         qixixQSItz0KKtDyPKWUzgQ70Cu9q/V7zOHMBd+FLllBc8plMnL3N8Qiq9UnpB8OgB
+         uWL5V2iGrODcG06Mh5+y/FC2zBSngvKGinmlFrmMkKJDWLfoZiSMQrmNbcDY4H4V6j
+         57Evyga/0JSItxsH6E3JTriBJ+Oz1TbnVh8xZK4B+HmRnwhMUt0xSrFTSnPWOZ8c0o
+         /ru1uFXAqb/ag==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Piotr Sroka <piotrs@cadence.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] mmc: sdhci: constify references of parameters to __sdhci_read_caps()
+Date:   Thu, 29 Aug 2019 19:49:27 +0900
+Message-Id: <20190829104928.27404-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190829104928.27404-1-yamada.masahiro@socionext.com>
+References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+__sdhci_read_caps() does not modify *ver, *caps, or *caps1.
 
-[ Upstream commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 ]
+Probably, the caller of this function will want to constifythe
+parameters passed in.
 
-I forgot to release the allocated object at the early error path in
-line6_init_pcm().  For addressing it, slightly shuffle the code so
-that the PCM destructor (pcm->private_free) is assigned properly
-before all error paths.
-
-Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- sound/usb/line6/pcm.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/sound/usb/line6/pcm.c b/sound/usb/line6/pcm.c
-index 78c2d6cab3b52..531564269444e 100644
---- a/sound/usb/line6/pcm.c
-+++ b/sound/usb/line6/pcm.c
-@@ -554,6 +554,15 @@ int line6_init_pcm(struct usb_line6 *line6,
- 	line6pcm->volume_monitor = 255;
- 	line6pcm->line6 = line6;
+ drivers/mmc/host/sdhci.c | 3 ++-
+ drivers/mmc/host/sdhci.h | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index a5dc5aae973e..08cc0792c174 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3565,7 +3565,8 @@ static int sdhci_set_dma_mask(struct sdhci_host *host)
+ 	return ret;
+ }
  
-+	spin_lock_init(&line6pcm->out.lock);
-+	spin_lock_init(&line6pcm->in.lock);
-+	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
-+
-+	line6->line6pcm = line6pcm;
-+
-+	pcm->private_data = line6pcm;
-+	pcm->private_free = line6_cleanup_pcm;
-+
- 	line6pcm->max_packet_size_in =
- 		usb_maxpacket(line6->usbdev,
- 			usb_rcvisocpipe(line6->usbdev, ep_read), 0);
-@@ -566,15 +575,6 @@ int line6_init_pcm(struct usb_line6 *line6,
- 		return -EINVAL;
- 	}
+-void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
++void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
++		       const u32 *caps, const u32 *caps1)
+ {
+ 	u16 v;
+ 	u64 dt_caps_mask = 0;
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 902f855efe8f..81e23784475a 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -738,8 +738,8 @@ static inline void *sdhci_priv(struct sdhci_host *host)
+ }
  
--	spin_lock_init(&line6pcm->out.lock);
--	spin_lock_init(&line6pcm->in.lock);
--	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
--
--	line6->line6pcm = line6pcm;
--
--	pcm->private_data = line6pcm;
--	pcm->private_free = line6_cleanup_pcm;
--
- 	err = line6_create_audio_out_urbs(line6pcm);
- 	if (err < 0)
- 		return err;
+ void sdhci_card_detect(struct sdhci_host *host);
+-void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps,
+-		       u32 *caps1);
++void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
++		       const u32 *caps, const u32 *caps1);
+ int sdhci_setup_host(struct sdhci_host *host);
+ void sdhci_cleanup_host(struct sdhci_host *host);
+ int __sdhci_add_host(struct sdhci_host *host);
 -- 
-2.20.1
+2.17.1
 
