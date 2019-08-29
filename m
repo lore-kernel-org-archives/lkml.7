@@ -2,105 +2,156 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCEBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE90233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567072224;
-	bh=YDdsum+qhuDxQlXkQh1jgcwFqVQTWLCuOHt3KTVyJKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0GLjj+dI3oUfcEa/VqEZ/roaCzszYj3jJASelBVD2cbXRlCIl3U/jEFpv0nxYR/PQ
-	 Ip6cjj+Iw+h4Nb9T+12GDitGNUW3HYzS736ZSvqsWEtwaZTPhc3CwyMrXAfAMbDTjf
-	 6VvK1QzIgsqX/RqnCTJUGaA2vjk3xljgIp3iMR0I=
+	by mail.kernel.org (Postfix) with ESMTP id BA855233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="cXcxxBTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfH2JuX (ORCPT
+        id S1727046AbfH2JvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfH2JuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:50:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FB47233A1;
-        Thu, 29 Aug 2019 09:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567072222;
-        bh=YDdsum+qhuDxQlXkQh1jgcwFqVQTWLCuOHt3KTVyJKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fe3cYth+gCYjtMMhkM4ZXG9SjtEc2qsZhNaJdn+1iJ4QonaeJAtVwsOOkTavtNzBW
-         559hW6GeJdnBDp8i8kXno7t/3PFHqDrV7SxzDEBEwu/WWJ12aEf7LTcsS0epSNYvHu
-         uZRfd9v+PUCrGHh4n7uh6uEGyD8VLidiSH0temrQ=
-Date:   Thu, 29 Aug 2019 11:50:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     devel@driverdev.osuosl.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829095019.GA13557@kroah.com>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190828170022.GA7873@kroah.com>
- <20190829062340.GB3047@infradead.org>
- <20190829063955.GA30193@kroah.com>
- <20190829094136.GA28643@infradead.org>
+        Thu, 29 Aug 2019 05:51:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36414 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfH2JvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:51:04 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so2760650wrd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QpWY7e5HA7D/+8ZJsDVBlHpT/6GIeAsAxtRUNzDzcSE=;
+        b=cXcxxBTVIk7eLydhgcft8pgMip4aYKEcyi8SiJzuzGlPVYp0QMJBC6ieBdQRSN8IFo
+         yGD5Q+D02QFGpsaK4iMK7dMs6MbSYG4gjb4pQZ08BIfTTaLMvzoEDBPl8ckOQDe+lG0x
+         vtBYc7H/M9CcgfT5ldxd3a82X16+H0Or+iSRPscWoZ/LuHBgOandGh0QiKul5X1jfUwC
+         46Xrrosf9jiMNaPKUan72OOc3X4JtULkwIZLTQHsI8Dis7SDE5nkLNlu6gt5VNFwkJG3
+         yKSxXvhgfalOI8R4ocMDQ6NBLn47k+HWafTG5tN5aTcEHUhDWcqDW68ozc7wiYzARF6e
+         51oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QpWY7e5HA7D/+8ZJsDVBlHpT/6GIeAsAxtRUNzDzcSE=;
+        b=bac/TdW5mSjs/phBgLRePFjZ53nONDDbLi1T+MjcE1ih7DqE4kAL8za5xpqHKGu1LW
+         P0zYmkRTOvu8U9knO+U0EUWPGXrrvuYDZ07mOxEfMuLA8XjQtod5ZDVAWaDVmvJxya/d
+         b2N1DHXs/+4kFYaAl6VqSM2NQTJ7sFHtA/1YsbGpMfaAqpAbJqm/BZ31tsw5/wdg7xwH
+         R5QXpK7E6YSW/CgUnIRN8gugjRt4ebVCySkt31fN4LdWjaNDOJwCKK3aMNkOSNLqK9pb
+         3l3i/4i5NCt7ujVXJ8iflGhNkkWXGcI1Py/h9kvKBmS8Yfiv7ox4zSdFqE3JsfVPZQfc
+         s83g==
+X-Gm-Message-State: APjAAAU4S5zE81zrw/zScyJbjWabWITgoYzYu8hFPISQLw5SvNyolRNU
+        VrThR1r3TjST3bryJZYSClooxg==
+X-Google-Smtp-Source: APXvYqxL6jG6QBSSyhTL7CBwnilVDkqWY5B33svIqaWC8sMhj1IrifAWVl9tzmM/DENruIJtNT1Pjg==
+X-Received: by 2002:adf:f812:: with SMTP id s18mr10970097wrp.32.1567072261456;
+        Thu, 29 Aug 2019 02:51:01 -0700 (PDT)
+Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
+        by smtp.gmail.com with ESMTPSA id w8sm13161464wmc.1.2019.08.29.02.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 02:51:01 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 11:51:00 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, andrew@lunn.ch, allan.nielsen@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190829095100.GH2312@nanopsycho>
+References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
+ <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829094136.GA28643@infradead.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 02:41:36AM -0700, Christoph Hellwig wrote:
-> On Thu, Aug 29, 2019 at 08:39:55AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Aug 28, 2019 at 11:23:40PM -0700, Christoph Hellwig wrote:
-> > > Can we please just review the damn thing and get it into the proper
-> > > tree?  That whole concept of staging file systems just has been one
-> > > fricking disaster, including Greg just moving not fully reviewed ones
-> > > over like erofs just because he feels like it.  I'm getting sick and
-> > > tired of this scheme.
-> > 
-> > For this filesystem, it's going to be a _lot_ of work before that can
-> > happen, and I'd really like to have lots of people help out with it
-> > instead of it living in random github trees for long periods of time.
+Thu, Aug 29, 2019 at 11:22:28AM CEST, horatiu.vultur@microchip.com wrote:
+>Add the SWITCHDEV_ATTR_ID_PORT_PROMISCUITY switchdev notification type,
+>used to indicate whenever the dev promiscuity counter is changed.
+>
+>The notification doesn't use any switchdev_attr attribute because in the
+>notifier callbacks is it possible to get the dev and read directly
+>the promiscuity value.
+>
+>Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+>---
+> include/net/switchdev.h | 1 +
+> net/core/dev.c          | 9 +++++++++
+> 2 files changed, 10 insertions(+)
+>
+>diff --git a/include/net/switchdev.h b/include/net/switchdev.h
+>index aee86a1..14b1617 100644
+>--- a/include/net/switchdev.h
+>+++ b/include/net/switchdev.h
+>@@ -40,6 +40,7 @@ enum switchdev_attr_id {
+> 	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING,
+> 	SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED,
+> 	SWITCHDEV_ATTR_ID_BRIDGE_MROUTER,
+>+	SWITCHDEV_ATTR_ID_PORT_PROMISCUITY,
+> };
 > 
-> Did you actually look at the thing instead of blindly applying some
-> pile of crap?
+> struct switchdev_attr {
+>diff --git a/net/core/dev.c b/net/core/dev.c
+>index 49589ed..40c74f2 100644
+>--- a/net/core/dev.c
+>+++ b/net/core/dev.c
+>@@ -142,6 +142,7 @@
+> #include <linux/net_namespace.h>
+> #include <linux/indirect_call_wrapper.h>
+> #include <net/devlink.h>
+>+#include <net/switchdev.h>
 > 
-> It basically is a reimplementation of fs/fat/ not up to kernel standards
-> with a few indirections thrown in to also support exfat.  So no amount
-> of work on this codebase is really going to bring us forward.  Instead
-> someone how can spend a couple days on this and actually has file
-> systems to test it just needs to bring the low-level format bits over
-> to our well tested fs/fat codebase instead of duplicating it.
+> #include "net-sysfs.h"
+> 
+>@@ -7377,6 +7378,11 @@ static void dev_change_rx_flags(struct net_device *dev, int flags)
+> static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
+> {
+> 	unsigned int old_flags = dev->flags;
+>+	struct switchdev_attr attr = {
+>+		.orig_dev = dev,
+>+		.id = SWITCHDEV_ATTR_ID_PORT_PROMISCUITY,
+>+		.flags = SWITCHDEV_F_DEFER,
 
-I did try just that, a few years ago, and gave up on it.  I don't think
-it can be added to the existing vfat code base but I am willing to be
-proven wrong.
+NACK
 
-Now that we have the specs, it might be easier, and the vfat spec is a
-subset of the exfat spec, but to get stuff working today, for users,
-it's good to have it in staging.  We can do the normal, "keep it in
-stable, get a clean-room implementation merged like usual, and then
-delete the staging version" three step process like we have done a
-number of times already as well.
+This is invalid usecase for switchdev infra. Switchdev is there for
+bridge offload purposes only.
 
-I know the code is horrible, but I will gladly take horrible code into
-staging.  If it bothers you, just please ignore it.  That's what staging
-is there for :)
+For promiscuity changes, the infrastructure is already present in the
+code. See __dev_notify_flags(). it calls:
+call_netdevice_notifiers_info(NETDEV_CHANGE, &change_info.info)
+and you can actually see the changed flag in ".flags_changed".
 
-thanks,
+You just have to register netdev notifier block in your driver. Grep
+for: register_netdevice_notifier
 
-greg k-h
+
+>+	};
+> 	kuid_t uid;
+> 	kgid_t gid;
+> 
+>@@ -7419,6 +7425,9 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
+> 	}
+> 	if (notify)
+> 		__dev_notify_flags(dev, old_flags, IFF_PROMISC);
+>+
+>+	switchdev_port_attr_set(dev, &attr);
+>+
+> 	return 0;
+> }
+> 
+>-- 
+>2.7.4
+>
