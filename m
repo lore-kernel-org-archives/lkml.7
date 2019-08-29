@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0556FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FCCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5AF2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69352339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102578;
-	bh=YaV+f0950vjRD5TeumxAXpgg2lCSSecBsPFAdte19FQ=;
+	s=default; t=1567102580;
+	bh=/mxg7Hm5UecwTIbCO8OMxcZhGZ67/RLs3uhwn1SB7hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkVAjL2M+U3sc/6reImKKbPN3zsoE/3Tw82uOEQqcWv7hsde1x9j/r7BJnN9I0Auj
-	 z866GRpCS+zGJDP06aChPSFpuo/a9OLOumO2fcjqP3xQ5yaMjETQeNfT5k7vJGZg2u
-	 KKwX7HrwncQfap2JELH14kk6LXAFlS0Harj+o7Nw=
+	b=Fy+hc1fFDUpqh2+Fgq4Utu2fis4i4FUZYSw24wTImrRT63gjNYy5gQz9cNNZhAn2x
+	 F3q6zJ8nNNLqHeds7EY957PpD4YqmRdsHFj2hPp8WQJGZqlr6NkSingkfkfDDwxcWp
+	 /bemIZC78wL7BcAzoHCU34NQw6knz5Fk6vmBFwzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbfH2SQR (ORCPT
+        id S1729714AbfH2SQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728236AbfH2SQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:11 -0400
+        id S1728700AbfH2SQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6228F23404;
-        Thu, 29 Aug 2019 18:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C310223403;
+        Thu, 29 Aug 2019 18:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102570;
-        bh=YaV+f0950vjRD5TeumxAXpgg2lCSSecBsPFAdte19FQ=;
+        s=default; t=1567102565;
+        bh=/mxg7Hm5UecwTIbCO8OMxcZhGZ67/RLs3uhwn1SB7hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQPmj9J474XRAC57GsCmWTPer88hbCdzU0vS0+HGGCulwmEOUUsNwjsMvq5tcPfmF
-         hnNxwt2yQt5y2QVS2PvmLEmjIR6R6dr9TwKF5KIBo0bEZKGVBFb6TVvxVIVjyg2p7e
-         LELgrXkkyRX+8uMt0ffdhBjlUczJtYRMniD8vA2g=
+        b=WFsc8UD5tXaIBUrRV47+cRgWu9qCUaXjdyeWuviXchFkH8rQt3tMkX1lDWzxVYbQs
+         UkNrDFmWGF4W7ZkBWyijJdFDb2YsM06VB4lRQlmeKvw23iFZ4sb1rqo/ZJ0dIzo8l5
+         OuOE7hdTyR7ulKjzUhN/CvY3ZtYEqCW9S9VtHwQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bill Kuzeja <William.Kuzeja@stratus.com>,
-        Bill Kuzeja <william.kuzeja@stratus.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/45] scsi: qla2xxx: Fix gnl.l memory leak on adapter init failure
-Date:   Thu, 29 Aug 2019 14:15:16 -0400
-Message-Id: <20190829181547.8280-16-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/45] rxrpc: Fix local endpoint replacement
+Date:   Thu, 29 Aug 2019 14:15:12 -0400
+Message-Id: <20190829181547.8280-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -61,80 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bill Kuzeja <William.Kuzeja@stratus.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 26fa656e9a0cbccddf7db132ea020d2169dbe46e ]
+[ Upstream commit b00df840fb4004b7087940ac5f68801562d0d2de ]
 
-If HBA initialization fails unexpectedly (exiting via probe_failed:), we
-may fail to free vha->gnl.l. So that we don't attempt to double free, set
-this pointer to NULL after a free and check for NULL at probe_failed: so we
-know whether or not to call dma_free_coherent.
+When a local endpoint (struct rxrpc_local) ceases to be in use by any
+AF_RXRPC sockets, it starts the process of being destroyed, but this
+doesn't cause it to be removed from the namespace endpoint list immediately
+as tearing it down isn't trivial and can't be done in softirq context, so
+it gets deferred.
 
-Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+If a new socket comes along that wants to bind to the same endpoint, a new
+rxrpc_local object will be allocated and rxrpc_lookup_local() will use
+list_replace() to substitute the new one for the old.
+
+Then, when the dying object gets to rxrpc_local_destroyer(), it is removed
+unconditionally from whatever list it is on by calling list_del_init().
+
+However, list_replace() doesn't reset the pointers in the replaced
+list_head and so the list_del_init() will likely corrupt the local
+endpoints list.
+
+Fix this by using list_replace_init() instead.
+
+Fixes: 730c5fd42c1e ("rxrpc: Fix local endpoint refcounting")
+Reported-by: syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c |  2 ++
- drivers/scsi/qla2xxx/qla_os.c   | 11 ++++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ net/rxrpc/local_object.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index f8f4d3ea67f3f..15d493f30810f 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -2191,6 +2191,8 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
- 	dma_free_coherent(&ha->pdev->dev, vha->gnl.size, vha->gnl.l,
- 	    vha->gnl.ldma);
+diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+index 2182ebfc7df4c..7f82c4e19bd1e 100644
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -287,7 +287,7 @@ struct rxrpc_local *rxrpc_lookup_local(struct net *net,
+ 		goto sock_error;
  
-+	vha->gnl.l = NULL;
-+
- 	vfree(vha->scan.l);
- 
- 	if (vha->qpair && vha->qpair->vp_idx == vha->vp_idx) {
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 42b8f0d3e580d..02fa81f122c22 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3395,6 +3395,12 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return 0;
- 
- probe_failed:
-+	if (base_vha->gnl.l) {
-+		dma_free_coherent(&ha->pdev->dev, base_vha->gnl.size,
-+				base_vha->gnl.l, base_vha->gnl.ldma);
-+		base_vha->gnl.l = NULL;
-+	}
-+
- 	if (base_vha->timer_active)
- 		qla2x00_stop_timer(base_vha);
- 	base_vha->flags.online = 0;
-@@ -3624,7 +3630,7 @@ qla2x00_remove_one(struct pci_dev *pdev)
- 	if (!atomic_read(&pdev->enable_cnt)) {
- 		dma_free_coherent(&ha->pdev->dev, base_vha->gnl.size,
- 		    base_vha->gnl.l, base_vha->gnl.ldma);
--
-+		base_vha->gnl.l = NULL;
- 		scsi_host_put(base_vha->host);
- 		kfree(ha);
- 		pci_set_drvdata(pdev, NULL);
-@@ -3663,6 +3669,8 @@ qla2x00_remove_one(struct pci_dev *pdev)
- 	dma_free_coherent(&ha->pdev->dev,
- 		base_vha->gnl.size, base_vha->gnl.l, base_vha->gnl.ldma);
- 
-+	base_vha->gnl.l = NULL;
-+
- 	vfree(base_vha->scan.l);
- 
- 	if (IS_QLAFX00(ha))
-@@ -4602,6 +4610,7 @@ struct scsi_qla_host *qla2x00_create_host(struct scsi_host_template *sht,
- 		    "Alloc failed for scan database.\n");
- 		dma_free_coherent(&ha->pdev->dev, vha->gnl.size,
- 		    vha->gnl.l, vha->gnl.ldma);
-+		vha->gnl.l = NULL;
- 		scsi_remove_host(vha->host);
- 		return NULL;
- 	}
+ 	if (cursor != &rxnet->local_endpoints)
+-		list_replace(cursor, &local->link);
++		list_replace_init(cursor, &local->link);
+ 	else
+ 		list_add_tail(&local->link, cursor);
+ 	age = "new";
 -- 
 2.20.1
 
