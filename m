@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CCBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1BCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B4E21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B04F21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfH2OwG (ORCPT
+        id S1728694AbfH2OwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:52:06 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4450 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728528AbfH2Ovs (ORCPT
+        Thu, 29 Aug 2019 10:52:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:40703 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728512AbfH2Ovs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 10:51:48 -0400
-X-UUID: 1995da472f0c4038a56e76ec16161743-20190829
-X-UUID: 1995da472f0c4038a56e76ec16161743-20190829
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+X-UUID: d82e0857806041a09bc42d05df8a9dac-20190829
+X-UUID: d82e0857806041a09bc42d05df8a9dac-20190829
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2134901890; Thu, 29 Aug 2019 22:51:41 +0800
+        with ESMTP id 1593532237; Thu, 29 Aug 2019 22:51:43 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 29 Aug 2019 22:51:46 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 29 Aug 2019 22:51:47 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 29 Aug 2019 22:51:45 +0800
+ Transport; Thu, 29 Aug 2019 22:51:46 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,14 +44,15 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 29/32] drm/mediatek: add connection from OVL_2L1 to RDMA1
-Date:   Thu, 29 Aug 2019 22:50:51 +0800
-Message-ID: <1567090254-15566-30-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 30/32] drm/mediatek: add connection from DITHER0 to DSI0
+Date:   Thu, 29 Aug 2019 22:50:52 +0800
+Message-ID: <1567090254-15566-31-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 07DD8AE2514D3D31AD74B3F4672ABE9F70E8D0B41FDA91903211C6785465914E2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,37 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add connection from OVL_2L1 to RDMA1
+This patch add connection from DITHER0 to DSI0
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 943e114..237824f 100644
+index 237824f..fd38658 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -34,9 +34,11 @@
- #define DISP_REG_CONFIG_DPI_SEL			0x064
+@@ -35,10 +35,12 @@
  
  #define MT8183_DISP_OVL0_2L_MOUT_EN		0xf04
-+#define MT8183_DISP_OVL1_2L_MOUT_EN		0xf08
+ #define MT8183_DISP_OVL1_2L_MOUT_EN		0xf08
++#define MT8183_DISP_DITHER0_MOUT_EN		0xf0c
  #define MT8183_DISP_PATH0_SEL_IN		0xf24
  
  #define OVL0_2L_MOUT_EN_DISP_PATH0			BIT(0)
-+#define OVL1_2L_MOUT_EN_RDMA1				BIT(4)
+ #define OVL1_2L_MOUT_EN_RDMA1				BIT(4)
++#define DITHER0_MOUT_IN_DSI0				BIT(0)
  #define DISP_PATH0_SEL_IN_OVL0_2L			0x1
  
  #define MT2701_DISP_MUTEX0_MOD0			0x2c
-@@ -317,6 +319,10 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
- 		   next == DDP_COMPONENT_RDMA0) {
- 		*addr = MT8183_DISP_OVL0_2L_MOUT_EN;
- 		value = OVL0_2L_MOUT_EN_DISP_PATH0;
-+	} else if (cur == DDP_COMPONENT_OVL_2L1 &&
-+		   next == DDP_COMPONENT_RDMA1) {
-+		*addr = MT8183_DISP_OVL1_2L_MOUT_EN;
-+		value = OVL1_2L_MOUT_EN_RDMA1;
+@@ -323,6 +325,9 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
+ 		   next == DDP_COMPONENT_RDMA1) {
+ 		*addr = MT8183_DISP_OVL1_2L_MOUT_EN;
+ 		value = OVL1_2L_MOUT_EN_RDMA1;
++	} else if (cur == DDP_COMPONENT_DITHER && next == DDP_COMPONENT_DSI0) {
++		*addr = MT8183_DISP_DITHER0_MOUT_EN;
++		value = DITHER0_MOUT_IN_DSI0;
  	} else {
  		value = 0;
  	}
