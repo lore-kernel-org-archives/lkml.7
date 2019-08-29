@@ -2,147 +2,301 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6FBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12D82173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3072173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Or/9/iBr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="je3kftSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfH2RRD (ORCPT
+        id S1727707AbfH2RRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:17:03 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.97]:20602 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726973AbfH2RRC (ORCPT
+        Thu, 29 Aug 2019 13:17:46 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53804 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbfH2RRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:17:02 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 7F7FC7639AE
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:16:59 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3O2diQoWI90on3O2diCg9w; Thu, 29 Aug 2019 12:16:59 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MOSc5GBHUs5PIGML2+f2XXQt+oLYxzpaPEYOGylzKSM=; b=Or/9/iBroqiVy5TUVe76myUerB
-        eegJNPXRJmLFR9ef8RtXYgFJ9VB4EBUYUuorF3wlgegSpe7dcjYmxE2RmNBgEs7tfx7+R66Zj0bnf
-        N+tCZMg4cjTl2ArSI2jEpEQgLBkihrEz08y6X1M1Dx1B/UiOPDBUmM1uN3js/rMwUZ5sz4ra+R1BS
-        ngNBOhRCLmoa9cqbFQTQzQ72YdhPNG2HebiMaj7Q+qMAe+HgnV+JhCVjpzpTqeH+LYPJloNpNIet9
-        jqEF7OuycxqUF2HR3T4g7KwphMVW8OK5Y70CrsWYQs2dIhZRtvkIGcRYYCEqmEVHAMv01oM1cP3Vo
-        oU9Jw1CQ==;
-Received: from [189.152.216.116] (port=46000 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3O2c-000nC0-JW; Thu, 29 Aug 2019 12:16:58 -0500
-Subject: Re: [PATCH] ima: use struct_size() in kzalloc()
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190529165343.GA2584@embeddedor>
- <671185b9-5c91-5235-b5ea-96d3449bf716@embeddedor.com>
- <1567050355.11493.3.camel@linux.ibm.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <cb5743ed-aca0-8546-74bf-a8903e0dd518@embeddedor.com>
-Date:   Thu, 29 Aug 2019 12:16:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 13:17:46 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THDj1p103579;
+        Thu, 29 Aug 2019 17:16:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=ZdWf5nAKch2sAxvuPQKTnzRVXVUZevXhS0HZrqLFMAc=;
+ b=je3kftSxptgJIpWxFn1l6IvYKMirQ/nXSXbrQHs6R3kHlwtm5+htT8dzIn438Mu61l0C
+ R2lNW+mFAeEbTjlghAY5KYqB8Q4vQEZF+e61obUOe0G0vuW3a59mLvizN1vkFjCZH2zp
+ LEtaLf+mC85Lit0Pb5qZ5tbqhzsgcZtOWkGUFd1PPPIjRQAf+emvrP/UIRRNhNw/k/i+
+ uvLTtICXl5eSwVFvAeqMVuxekjTIJpuikYxzc5LJQnhFzjDXCcS8tpY00WK4sGRNbDuY
+ RqL2vbh00Tv1O695LxqY8Di+BLhqqdF9l58QEuwUZd+GIxwU9udXk575AXkXK//4EUjV eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2upjss82qt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 17:16:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THCw8M145631;
+        Thu, 29 Aug 2019 17:16:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2unvu0aarh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 17:16:13 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7THGBkE006501;
+        Thu, 29 Aug 2019 17:16:11 GMT
+Received: from [10.175.160.184] (/10.175.160.184)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Aug 2019 10:16:10 -0700
+Subject: Is: Default governor regardless of cpuidle driver Was: [PATCH v2]
+ cpuidle-haltpoll: vcpu hotplug support
+To:     Marcelo Tosatti <mtosatti@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <20190829151027.9930-1-joao.m.martins@oracle.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <c8cf8dcc-76a3-3e15-f514-2cb9df1bbbdc@oracle.com>
+Date:   Thu, 29 Aug 2019 18:16:05 +0100
 MIME-Version: 1.0
-In-Reply-To: <1567050355.11493.3.camel@linux.ibm.com>
+In-Reply-To: <20190829151027.9930-1-joao.m.martins@oracle.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3O2c-000nC0-JW
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:46000
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908290182
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908290183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mimi,
-
-On 8/28/19 10:45 PM, Mimi Zohar wrote:
-
+On 8/29/19 4:10 PM, Joao Martins wrote:
+> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
+> past the online ones and thus fail to register the idle driver.
+> This is because cpuidle_add_sysfs() will return with -ENODEV as a
+> consequence from get_cpu_device() return no device for a non-existing
+> CPU.
 > 
-> The same usage exists in ima_api.c: ima_alloc_init_template().  Did
-> you want to make the change there as well?
+> Instead switch to cpuidle_register_driver() and manually register each
+> of the present cpus through cpuhp_setup_state() callback and future
+> ones that get onlined. This mimmics similar logic that intel_idle does.
 > 
+> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
+> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> ---
 
-Yep. I'll write a patch for that one too.
+While testing the above, I found out another issue on the haltpoll series.
+But I am not sure what is best suited to cpuidle framework, hence requesting
+some advise if below is a reasonable solution or something else is preferred.
 
-Thanks
---
-Gustavo
+Essentially after haltpoll governor got introduced and regardless of the cpuidle
+driver the default governor is gonna be haltpoll for a guest (given haltpoll
+governor doesn't get registered for baremetal). Right now, for a KVM guest, the
+idle governors have these ratings:
+
+ * ladder            -> 10
+ * teo               -> 19
+ * menu              -> 20
+ * haltpoll          -> 21
+ * ladder + nohz=off -> 25
+
+When a guest is booted with MWAIT and intel_idle is probed and sucessfully
+registered, we will end up with a haltpoll governor being used as opposed to
+'menu' (which used to be the default case). This would prevent IIUC that other
+C-states get used other than poll_state (state 0) and state 1.
+
+Given that haltpoll governor is largely only useful with a cpuidle-haltpoll
+it doesn't look reasonable to be the default? What about using haltpoll governor
+as default when haltpoll idle driver registers or modloads.
+
+My idea to achieve the above would be to decrease the rating to 9 (before the
+lowest rated governor) and retain old defaults before haltpoll. Then we would
+allow a cpuidle driver to define a preferred governor to switch on idle driver
+registration. Naturally all of would be ignored if overidden by
+cpuidle.governor=.
+
+The diff below the scissors line is an example of that.
+
+Thoughts?
+
+---------------------------------- >8 --------------------------------
+
+From: Joao Martins <joao.m.martins@oracle.com>
+Subject: [PATCH] cpuidle: switch to prefered governor on registration
+
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+ drivers/cpuidle/cpuidle-haltpoll.c   |  1 +
+ drivers/cpuidle/cpuidle.h            |  1 +
+ drivers/cpuidle/driver.c             | 26 ++++++++++++++++++++++++++
+ drivers/cpuidle/governor.c           |  6 +++---
+ drivers/cpuidle/governors/haltpoll.c |  2 +-
+ include/linux/cpuidle.h              |  3 +++
+ 6 files changed, 35 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index 8baade23f8d0..88a38c3c35e4 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -33,6 +33,7 @@ static int default_enter_idle(struct cpuidle_device *dev,
+
+ static struct cpuidle_driver haltpoll_driver = {
+ 	.name = "haltpoll",
++	.governor = "haltpoll",
+ 	.owner = THIS_MODULE,
+ 	.states = {
+ 		{ /* entry 0 is for polling */ },
+diff --git a/drivers/cpuidle/cpuidle.h b/drivers/cpuidle/cpuidle.h
+index d6613101af92..c046f49c1920 100644
+--- a/drivers/cpuidle/cpuidle.h
++++ b/drivers/cpuidle/cpuidle.h
+@@ -22,6 +22,7 @@ extern void cpuidle_install_idle_handler(void);
+ extern void cpuidle_uninstall_idle_handler(void);
+
+ /* governors */
++extern struct cpuidle_governor *cpuidle_find_governor(const char *str);
+ extern int cpuidle_switch_governor(struct cpuidle_governor *gov);
+
+ /* sysfs */
+diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
+index dc32f34e68d9..8b8b9d89ce58 100644
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -87,6 +87,7 @@ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ #else
+
+ static struct cpuidle_driver *cpuidle_curr_driver;
++static struct cpuidle_governor *cpuidle_default_governor = NULL;
+
+ /**
+  * __cpuidle_get_cpu_driver - return the global cpuidle driver pointer.
+@@ -254,12 +255,25 @@ static void __cpuidle_unregister_driver(struct
+cpuidle_driver *drv)
+  */
+ int cpuidle_register_driver(struct cpuidle_driver *drv)
+ {
++	struct cpuidle_governor *gov;
+ 	int ret;
+
+ 	spin_lock(&cpuidle_driver_lock);
+ 	ret = __cpuidle_register_driver(drv);
+ 	spin_unlock(&cpuidle_driver_lock);
+
++	if (!ret && !strlen(param_governor) && drv->governor &&
++	    (cpuidle_get_driver() == drv)) {
++		mutex_lock(&cpuidle_lock);
++		gov = cpuidle_find_governor(drv->governor);
++		if (gov) {
++			cpuidle_default_governor = cpuidle_curr_governor;
++			if (cpuidle_switch_governor(gov) < 0)
++				cpuidle_default_governor = NULL;
++		}
++		mutex_unlock(&cpuidle_lock);
++	}
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(cpuidle_register_driver);
+@@ -274,9 +288,21 @@ EXPORT_SYMBOL_GPL(cpuidle_register_driver);
+  */
+ void cpuidle_unregister_driver(struct cpuidle_driver *drv)
+ {
++	bool enabled = (cpuidle_get_driver() == drv);
++
+ 	spin_lock(&cpuidle_driver_lock);
+ 	__cpuidle_unregister_driver(drv);
+ 	spin_unlock(&cpuidle_driver_lock);
++
++	if (!enabled)
++		return;
++
++	mutex_lock(&cpuidle_lock);
++	if (cpuidle_default_governor) {
++		if (!cpuidle_switch_governor(cpuidle_default_governor))
++			cpuidle_default_governor = NULL;
++	}
++	mutex_unlock(&cpuidle_lock);
+ }
+ EXPORT_SYMBOL_GPL(cpuidle_unregister_driver);
+
+diff --git a/drivers/cpuidle/governor.c b/drivers/cpuidle/governor.c
+index 2e3e14192bee..e93c11dc8304 100644
+--- a/drivers/cpuidle/governor.c
++++ b/drivers/cpuidle/governor.c
+@@ -22,12 +22,12 @@ LIST_HEAD(cpuidle_governors);
+ struct cpuidle_governor *cpuidle_curr_governor;
+
+ /**
+- * __cpuidle_find_governor - finds a governor of the specified name
++ * cpuidle_find_governor - finds a governor of the specified name
+  * @str: the name
+  *
+  * Must be called with cpuidle_lock acquired.
+  */
+-static struct cpuidle_governor * __cpuidle_find_governor(const char *str)
++struct cpuidle_governor * cpuidle_find_governor(const char *str)
+ {
+ 	struct cpuidle_governor *gov;
+
+@@ -87,7 +87,7 @@ int cpuidle_register_governor(struct cpuidle_governor *gov)
+ 		return -ENODEV;
+
+ 	mutex_lock(&cpuidle_lock);
+-	if (__cpuidle_find_governor(gov->name) == NULL) {
++	if (cpuidle_find_governor(gov->name) == NULL) {
+ 		ret = 0;
+ 		list_add_tail(&gov->governor_list, &cpuidle_governors);
+ 		if (!cpuidle_curr_governor ||
+diff --git a/drivers/cpuidle/governors/haltpoll.c
+b/drivers/cpuidle/governors/haltpoll.c
+index 797477bda486..7a703d2e0064 100644
+--- a/drivers/cpuidle/governors/haltpoll.c
++++ b/drivers/cpuidle/governors/haltpoll.c
+@@ -133,7 +133,7 @@ static int haltpoll_enable_device(struct cpuidle_driver *drv,
+
+ static struct cpuidle_governor haltpoll_governor = {
+ 	.name =			"haltpoll",
+-	.rating =		21,
++	.rating =		9,
+ 	.enable =		haltpoll_enable_device,
+ 	.select =		haltpoll_select,
+ 	.reflect =		haltpoll_reflect,
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 1a9f54eb3aa1..2dc4c6b19c25 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -121,6 +121,9 @@ struct cpuidle_driver {
+
+ 	/* the driver handles the cpus in cpumask */
+ 	struct cpumask		*cpumask;
++
++	/* preferred governor to switch at register time */
++	const char		*governor;
+ };
+
+ #ifdef CONFIG_CPU_IDLE
+-- 
+2.17.1
