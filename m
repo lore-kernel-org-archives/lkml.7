@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDBDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2FEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7E12077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211EA2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfH2Qve (ORCPT
+        id S1728176AbfH2Qvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:51:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37453 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfH2Qvb (ORCPT
+        Thu, 29 Aug 2019 12:51:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35748 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbfH2Qvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:51:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d16so4551708wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:51:30 -0700 (PDT)
+        Thu, 29 Aug 2019 12:51:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l2so4564453wmg.0;
+        Thu, 29 Aug 2019 09:51:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SKsJY57Vd8P380yZjRTYqZ29aNOB3lqsM0XLQ0UvZ90=;
-        b=dcPwbEzWsuDtrypRbAhxp57pQuc10tpytIBhz00FrsBqbK9fZHXIgTpVnVKGLNI4IC
-         CtyObWAoa5XzYcTBoegEMxY8kVC67ZxJmsuhd08Y8FuqTJxvTCEhEzWJ0pZV4p1QLT4A
-         8WHRPFrfbX3ne3AinoVNimqpuw3oYpF+yAtqvZRf1ITvK+BuIyost+lz3LYliBuly1sR
-         bWHH/MeUL3m/84CD5JHfprVt6RYo1tBuNdqUaJuSUl5IF9xvBqI4QsPn1Ee81GdpcWiI
-         BXvbY5xknp3PdOCfOgxYKrlS92wBM5HCiorWZ+WFSkuqx/9PAesBQTIl4aiW0yRXgtGf
-         gtuw==
-X-Gm-Message-State: APjAAAWZVH4IH1CQdf6h2z6bLMk1ixGWlVtAoFeptKPR+iPwXECBHicI
-        03QxfTvcNPZ4LEprXqpiWDbSPWWRNok=
-X-Google-Smtp-Source: APXvYqzXt0ZDuhoHOdja5D35iM9SDovMAdmyvo7iE8zCgrVqpSk9sdKplvVrsmD5u13Eqz0eyLlQDw==
-X-Received: by 2002:a1c:be15:: with SMTP id o21mr12560738wmf.140.1567097489839;
-        Thu, 29 Aug 2019 09:51:29 -0700 (PDT)
+        bh=ROs74LHAAGb3AWiHq6/1CR6l2I0sb4RXNCxoGizOtu0=;
+        b=OQexBvmKcQJh1mOOo/yLi69MnMVqYp237omrwKSC7XANirKosrG6sajmraWbdTzanI
+         h5tzP2KiP8XycP+46XMar0s9fIh7q35oBu6XHl0HS2Pr0BIhLio+QubhORwe/aESbsr8
+         CRaZGMGWttIfTQicr4A/MKs0gIrJhihtF+xC8B8QeV+IzpnXRtq67qNQUe8iDHijok9R
+         FNsAWXxcFi/19sQtw4Q+5oPBKNZQ+oXnUd8vAzZ6m/PxrDj3eH2D0soCPOkQDnxPumhp
+         vurlIaqQfvtdzAsjiFI/H5IEn0SKTdxjur3Fo6BbKgwE3dd67fwtZWrNko5sBDCXHYCK
+         /aVQ==
+X-Gm-Message-State: APjAAAW32ylzlNVaCzBlEvquoWbNunihiv7cTjvFCWgNqFJKVebwrN0S
+        FF4tLBwnHXj/e93rs9MRcAMJwqaaq5A=
+X-Google-Smtp-Source: APXvYqx1hGa8eiE1n5Y6dWRDwVmlUhfIhlVLSABr36xRlgMq0/LqySvRcvZj2+1+YFB9w8Tb7sKdMg==
+X-Received: by 2002:a1c:6a0f:: with SMTP id f15mr523220wmc.147.1567097493996;
+        Thu, 29 Aug 2019 09:51:33 -0700 (PDT)
 Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id o14sm8340770wrg.64.2019.08.29.09.51.29
+        by smtp.googlemail.com with ESMTPSA id o14sm8340770wrg.64.2019.08.29.09.51.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:51:29 -0700 (PDT)
+        Thu, 29 Aug 2019 09:51:33 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Denis Efremov <efremov@linux.com>,
-        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Joe Perches <joe@perches.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-wimax@intel.com
-Subject: [PATCH v3 06/11] wimax/i2400m: remove unlikely() from WARN*() condition
-Date:   Thu, 29 Aug 2019 19:50:20 +0300
-Message-Id: <20190829165025.15750-6-efremov@linux.com>
+        linux-rdma@vger.kernel.org
+Subject: [PATCH v3 08/11] IB/hfi1: Remove unlikely() from IS_ERR*() condition
+Date:   Thu, 29 Aug 2019 19:50:22 +0300
+Message-Id: <20190829165025.15750-8-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190829165025.15750-1-efremov@linux.com>
 References: <20190829165025.15750-1-efremov@linux.com>
@@ -62,32 +64,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"unlikely(WARN_ON(x))" is excessive. WARN_ON() already uses unlikely()
-internally.
+"unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
+unlikely() internally.
 
 Signed-off-by: Denis Efremov <efremov@linux.com>
-Cc: Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Cc: Joe Perches <joe@perches.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-wimax@intel.com
+Cc: linux-rdma@vger.kernel.org
 ---
- drivers/net/wimax/i2400m/tx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/infiniband/hw/hfi1/verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wimax/i2400m/tx.c b/drivers/net/wimax/i2400m/tx.c
-index ebd64e083726..1255302e251e 100644
---- a/drivers/net/wimax/i2400m/tx.c
-+++ b/drivers/net/wimax/i2400m/tx.c
-@@ -654,8 +654,7 @@ void i2400m_tx_close(struct i2400m *i2400m)
- 	padding = aligned_size - tx_msg_moved->size;
- 	if (padding > 0) {
- 		pad_buf = i2400m_tx_fifo_push(i2400m, padding, 0, 0);
--		if (unlikely(WARN_ON(pad_buf == NULL
--				     || pad_buf == TAIL_FULL))) {
-+		if (WARN_ON(pad_buf == NULL || pad_buf == TAIL_FULL)) {
- 			/* This should not happen -- append should verify
- 			 * there is always space left at least to append
- 			 * tx_block_size */
+diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+index 646f61545ed6..1c52b19dd0f8 100644
+--- a/drivers/infiniband/hw/hfi1/verbs.c
++++ b/drivers/infiniband/hw/hfi1/verbs.c
+@@ -1040,7 +1040,7 @@ int hfi1_verbs_send_pio(struct rvt_qp *qp, struct hfi1_pkt_state *ps,
+ 	if (cb)
+ 		iowait_pio_inc(&priv->s_iowait);
+ 	pbuf = sc_buffer_alloc(sc, plen, cb, qp);
+-	if (unlikely(IS_ERR_OR_NULL(pbuf))) {
++	if (IS_ERR_OR_NULL(pbuf)) {
+ 		if (cb)
+ 			verbs_pio_complete(qp, 0);
+ 		if (IS_ERR(pbuf)) {
 -- 
 2.21.0
 
