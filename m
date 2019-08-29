@@ -2,57 +2,57 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54042C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD8CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245BD21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D65F21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:41:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HiTUd/SA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="liZn92iR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfH2WlO (ORCPT
+        id S1728150AbfH2WlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:41:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44873 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfH2WlN (ORCPT
+        Thu, 29 Aug 2019 18:41:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34562 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfH2WlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:41:13 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so2358735pgl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:41:12 -0700 (PDT)
+        Thu, 29 Aug 2019 18:41:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so2385303pgc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:41:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x6nJOSi4D9t11ZjLGLX1URk37n+Py9rDA9nyBNP0uqE=;
-        b=HiTUd/SAL/dMFGev5Pow+VRZ9ogeTuj6uSem+jheeDsY8X00m4GPx9dtJteiRJ5ftV
-         N1JEqDZN357B7twtttg+p2lqZTrax6Armpdc0727nQz/JwW4ZbBGuMo6DKFkfNNrB3K9
-         1sWt3mInRrjx/9Czgqo/HKnpJktuc6mskEUIU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=C+xDpWo2oT08ou9fvGrkptCYBMIqSmZRdTRAyh6265I=;
+        b=liZn92iRtCafxnm52qeNdExgcny6TU1u8BfzV5SbncebW9Zp7PAUMB5kNXXd5NoEoR
+         jk7PiECiUIWyLE/c1wwmK0muZVCqomh7tYbdyt2O4PbJDy8zvaWa/NPUbG9y6zvcxE8U
+         r4G/RzPwc8GWBR6EqDGPEkTWhV/qVgllKnP1I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x6nJOSi4D9t11ZjLGLX1URk37n+Py9rDA9nyBNP0uqE=;
-        b=dE/OOApHT+1qPaG5UGBfUSNbfFbaUUsI+TbpGlO88USHWGIdTX7YAUdrSqwnMBM5aK
-         fATyKbWt7C5pRn8nTrNSH7yjdxRx6xkic1JcPw7Itet9fTU/DGJnHXk82ACNXwX7H7De
-         T02Stz+kaltmYxLAkJsL1RikHPA02+rumHOOjTydoXbjG1PEnmDF2Lj3hecvbnQwCeIJ
-         fjHkiYJxhjlfIFe5qnpRosSFzYlCq88qHsIkyUKiKwg0Vv6epWyqSMPxSG3WwbLXAsX0
-         wO/4QKEwyJpTJt/O5b/mpEvrKsw0rwQ86TtjrzPYMn0HVLJ9lI5uBaAw3zB6CIrGVAZX
-         LEag==
-X-Gm-Message-State: APjAAAUev0Q8aSyLg6caSZ48EbJxSulYceNyLm4e5e/UurEVK8u5UZ2P
-        ThMBGnw9SaWoxCHHOTfLAoiJhjofNZhZnQ==
-X-Google-Smtp-Source: APXvYqzFZVgQNBqCAAUglNY8AFSmHQvLxrgGkto0HqXqXUOxgYjee1fTFryzutevntEo79cvpRevvw==
-X-Received: by 2002:a17:90a:b908:: with SMTP id p8mr12311011pjr.65.1567118472392;
-        Thu, 29 Aug 2019 15:41:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=C+xDpWo2oT08ou9fvGrkptCYBMIqSmZRdTRAyh6265I=;
+        b=C937reWd9E79u5Xqk8aSyhHM0SGuPLebQZeOHaQFzO6BLYBXR0Eu8lPMAhRFeU+3Ln
+         7YDZ+SHp2t7jkKcPebHO9GetcbMaYUIQMGToljze4fc8WBULWpOH8JA/CLG1RFslFBV8
+         abTRbBV2dor0egBSdzOuE8vwl9FAU+Jg2lODc/ic/TzmdMYzQG+gD+qofOItDelV5DfP
+         W1fWD9JsBO2A7hiEMhDGt1kLSas7VWLggn8mm4R9Cc/42f66B7iDe5wyBF+fwDGYXO2X
+         SAvh6mX9wTZ373dcVvfzFTW2xuqQxJ47EkdyYin55YL036nzL/BgWSpa7aUj7LIXa3Nv
+         xX6g==
+X-Gm-Message-State: APjAAAXeaHYFQP05kak5/wmJzs3HELW/h845SUe+cUnINopbEEIHgnh0
+        lGgn5XY0L7R54/UXKWfGuygmHA==
+X-Google-Smtp-Source: APXvYqzrKxvRLxvbIrIWsf50Jck3LzdfxBPMdj+2uiy/N+MiCUddlCmdimSUnGa5yNW5HutPMZJyEQ==
+X-Received: by 2002:a17:90b:8c1:: with SMTP id ds1mr12669187pjb.114.1567118474204;
+        Thu, 29 Aug 2019 15:41:14 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q8sm3882531pjd.28.2019.08.29.15.41.11
+        by smtp.gmail.com with ESMTPSA id q8sm3882531pjd.28.2019.08.29.15.41.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 15:41:11 -0700 (PDT)
+        Thu, 29 Aug 2019 15:41:13 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Peter Huewe <peterhuewe@gmx.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
@@ -64,10 +64,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
         Guenter Roeck <groeck@chromium.org>,
         Alexander Steffen <Alexander.Steffen@infineon.com>,
         Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v6 0/4] tpm: Add driver for cr50
-Date:   Thu, 29 Aug 2019 15:41:06 -0700
-Message-Id: <20190829224110.91103-1-swboyd@chromium.org>
+Subject: [PATCH v6 2/4] tpm: Add a flag to indicate TPM power is managed by firmware
+Date:   Thu, 29 Aug 2019 15:41:08 -0700
+Message-Id: <20190829224110.91103-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+In-Reply-To: <20190829224110.91103-1-swboyd@chromium.org>
+References: <20190829224110.91103-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,67 +77,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for the the H1 secure microcontroller
-running cr50 firmware found on various recent Chromebooks. This driver
-is necessary to boot into a ChromeOS userspace environment. It
-implements support for several functions, including TPM-like
-functionality over a SPI interface.
-
-The last time this was series sent looks to be [1]. I've looked over the
-patches and review comments and tried to address any feedback that
-Andrey didn't address (really minor things like newlines). I've reworked
-the patches from the last version to layer on top of the existing TPM
-TIS SPI implementation in tpm_tis_spi.c. Hopefully this is more
-palatable than combining the two drivers together into one file.
-
-Please review so we can get the approach to supporting this device
-sorted out.
-
-[1] https://lkml.kernel.org/r/1469757314-116169-1-git-send-email-apronin@chromium.org
-
-TODO:
- * Add a patch to spit out WARN_ON() when TPM is suspended and some
-   kernel code attempts to use it
- * Rework the i2c driver per Alexander's comments on v2
-
-Changes from v5 (https://lkml.kernel.org/r/20190828082150.42194-1-swboyd@chromium.org):
- * Picked up Jarkko's ack/review tags
- * Fixed bug with irqs happening before completion is initialized
- * Dropped is_cr50 bool
- * Moved wake_after to tpm_tis_spi struct
- * Changed authorship of main cr50 patch to Andrey as I'm just shuffling
-   code here
-
-Changes from v4 (https://lkml.kernel.org/r/20190812223622.73297-1-swboyd@chromium.org):
- * Dropped the 'pre-transfer' hook patch and added a 'ready' member instead
- * Combined cr50_spi and tpm_tis_spi into one kernel module
- * Introduced a swizzle in tpm_tis_spi probe routine to jump to cr50
-   probe path
- * Moved binding to start of the thread
- * Picked up Jarkko reviewed-by tag on new flag for suspend/resume
- * Added a comment to flow control patch indicating what it's all about
-
-Changes from v3:
- * Split out hooks into separate patches
- * Update commit text to not say "libify"
- * Collapse if statement into one for first patch
- * Update commit text on first patch to mention flag
- * Drop TIS_IS_CR50 as it's unused
-
-Changes from v2:
- * Sent khwrng thread patch separately
- * New patch to expose TPM SPI functionality from tpm_tis_spi.c
- * Usage of that new patch in cr50 SPI driver
- * Drop i2c version of cr50 SPI driver for now (will resend later)
- * New patch to add a TPM chip flag indicating TPM shouldn't be reset
-   over suspend. Allows us to get rid of the cr50 suspend/resume functions
-   that are mostly generic
-
-Changes from v1:
- * Dropped symlink and sysfs patches
- * Removed 'is_suspended' bits
- * Added new patch to freeze khwrng thread
- * Moved binding to google,cr50.txt and added Reviewed-by tag from Rob
+On some platforms, the TPM power is managed by firmware and therefore we
+don't need to stop the TPM on suspend when going to a light version of
+suspend such as S0ix ("freeze" suspend state). Add a chip flag,
+TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
+platforms can probe for the usage of this light suspend and avoid
+touching the TPM state across suspend/resume.
 
 Cc: Andrey Pronin <apronin@chromium.org>
 Cc: Duncan Laurie <dlaurie@chromium.org>
@@ -145,29 +92,58 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Guenter Roeck <groeck@chromium.org>
 Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
 Cc: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/char/tpm/tpm-interface.c | 8 +++++++-
+ drivers/char/tpm/tpm.h           | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-Andrey Pronin (2):
-  dt-bindings: tpm: document properties for cr50
-  tpm: tpm_tis_spi: Support cr50 devices
-
-Stephen Boyd (2):
-  tpm: Add a flag to indicate TPM power is managed by firmware
-  tpm: tpm_tis_spi: Introduce a flow control callback
-
- .../bindings/security/tpm/google,cr50.txt     |  19 ++
- drivers/char/tpm/Makefile                     |   2 +-
- drivers/char/tpm/cr50_spi.c                   | 321 ++++++++++++++++++
- drivers/char/tpm/tpm-interface.c              |   8 +-
- drivers/char/tpm/tpm.h                        |   1 +
- drivers/char/tpm/tpm_tis_spi.c                | 130 ++++---
- drivers/char/tpm/tpm_tis_spi.h                |  46 +++
- 7 files changed, 478 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
- create mode 100644 drivers/char/tpm/cr50_spi.c
- create mode 100644 drivers/char/tpm/tpm_tis_spi.h
-
-
-base-commit: 0ecfebd2b52404ae0c54a878c872bb93363ada36
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index 1b4f95c13e00..0b3def8e8186 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -23,6 +23,7 @@
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
+ #include <linux/spinlock.h>
++#include <linux/suspend.h>
+ #include <linux/freezer.h>
+ #include <linux/tpm_eventlog.h>
+ 
+@@ -395,7 +396,11 @@ int tpm_pm_suspend(struct device *dev)
+ 		return -ENODEV;
+ 
+ 	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
+-		return 0;
++		goto suspended;
++
++	if ((chip->flags & TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED) &&
++	    !pm_suspend_via_firmware())
++		goto suspended;
+ 
+ 	if (!tpm_chip_start(chip)) {
+ 		if (chip->flags & TPM_CHIP_FLAG_TPM2)
+@@ -406,6 +411,7 @@ int tpm_pm_suspend(struct device *dev)
+ 		tpm_chip_stop(chip);
+ 	}
+ 
++suspended:
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(tpm_pm_suspend);
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index e503ffc3aa39..28f73331aa2e 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -162,6 +162,7 @@ enum tpm_chip_flags {
+ 	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
+ 	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
+ 	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
++	TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED	= BIT(6),
+ };
+ 
+ #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
 -- 
 Sent by a computer through tubes
 
