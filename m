@@ -2,56 +2,52 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E92C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036B0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4712073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567069762;
-	bh=GcUOQ8Sb64d/h2WAZUGd23qBfwuUYjgw/kAkWRtpnDQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=msoz5Hdgo3DKbrsvC7fbviXhkRnSasjykrUJlv/rOnVmkCl5vRwybumFosgNfvqRa
-	 EqxAEvZnSaZRkoyemZ2c9t4I1brQyEYR60M46RttEF3ORjOVh6FWm5SnLISk1xq7ji
-	 euSvNc3T3oCZFvlfNb+viFgb7nCVnRi+jcIHAoU8=
+	by mail.kernel.org (Postfix) with ESMTP id D4B552073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfH2JJU (ORCPT
+        id S1727228AbfH2JJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:09:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:40998 "EHLO foss.arm.com"
+        Thu, 29 Aug 2019 05:09:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1913 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfH2JJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:09:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E89628;
-        Thu, 29 Aug 2019 02:09:19 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C799D3F246;
-        Thu, 29 Aug 2019 02:09:14 -0700 (PDT)
-Subject: Re: [RFC PATCH 2/3] reorganize ptp_kvm modules to make it
- arch-independent.
-To:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        richardcochran@gmail.com, Mark.Rutland@arm.com,
-        Will.Deacon@arm.com, suzuki.poulose@arm.com
-Cc:     linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
-        Kaly.Xin@arm.com, justin.he@arm.com
-References: <20190829063952.18470-1-jianyong.wu@arm.com>
- <20190829063952.18470-3-jianyong.wu@arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <4c6038f5-1da4-0b43-d8b7-541379321bf1@kernel.org>
-Date:   Thu, 29 Aug 2019 10:09:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        id S1726038AbfH2JJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:09:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 02:09:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="380707285"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2019 02:09:36 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Micha=c5=82_Wajdeczko?= <michal.wajdeczko@intel.com>
+Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device
+ hot re-plug
+To:     Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
+ <3275480.HMaYE7B3nd@jkrzyszt-desk.ger.corp.intel.com>
+ <0cf4e930-1132-1e7f-815b-57a08a1fe5de@linux.intel.com>
+ <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
+Date:   Thu, 29 Aug 2019 17:08:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190829063952.18470-3-jianyong.wu@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,295 +55,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 07:39, Jianyong Wu wrote:
-> Currently, ptp_kvm modules implementation is only for x86 which includs
-> large part of arch-specific code.  This patch move all of those code
-> into related arch directory.
+Hi,
+
+On 8/29/19 3:58 PM, Janusz Krzysztofik wrote:
+> Hi Baolu,
 > 
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  arch/x86/kvm/arch_ptp_kvm.c          | 92 ++++++++++++++++++++++++++++
->  drivers/ptp/Makefile                 |  1 +
->  drivers/ptp/{ptp_kvm.c => kvm_ptp.c} | 77 ++++++-----------------
->  include/asm-generic/ptp_kvm.h        | 12 ++++
->  4 files changed, 123 insertions(+), 59 deletions(-)
->  create mode 100644 arch/x86/kvm/arch_ptp_kvm.c
->  rename drivers/ptp/{ptp_kvm.c => kvm_ptp.c} (63%)
->  create mode 100644 include/asm-generic/ptp_kvm.h
+> On Thursday, August 29, 2019 3:43:31 AM CEST Lu Baolu wrote:
+>> Hi Janusz,
+>>
+>> On 8/28/19 10:17 PM, Janusz Krzysztofik wrote:
+>>>> We should avoid kernel panic when a intel_unmap() is called against
+>>>> a non-existent domain.
+>>> Does that mean you suggest to replace
+>>> 	BUG_ON(!domain);
+>>> with something like
+>>> 	if (WARN_ON(!domain))
+>>> 		return;
+>>> and to not care of orphaned mappings left allocated?  Is there a way to
+> inform
+>>> users that their active DMA mappings are no longer valid and they
+> shouldn't
+>>> call dma_unmap_*()?
+>>>
+>>>> But we shouldn't expect the IOMMU driver not
+>>>> cleaning up the domain info when a device remove notification comes and
+>>>> wait until all file descriptors being closed, right?
+>>> Shouldn't then the IOMMU driver take care of cleaning up resources still
+>>> allocated on device remove before it invalidates and forgets their
+> pointers?
+>>>
+>>
+>> You are right. We need to wait until all allocated resources (iova and
+>> mappings) to be released.
+>>
+>> How about registering a callback for BUS_NOTIFY_UNBOUND_DRIVER, and
+>> removing the domain info when the driver detachment completes?
 > 
-> diff --git a/arch/x86/kvm/arch_ptp_kvm.c b/arch/x86/kvm/arch_ptp_kvm.c
-> new file mode 100644
-> index 000000000000..56ea84a86da2
-> --- /dev/null
-> +++ b/arch/x86/kvm/arch_ptp_kvm.c
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + *  Virtual PTP 1588 clock for use with KVM guests
-> + *
-> + *  Copyright (C) 2019 ARM Ltd.
-> + *  All Rights Reserved
+> Device core calls BUS_NOTIFY_UNBOUND_DRIVER on each driver unbind, regardless
+> of a device being removed or not.  As long as the device is not unplugged and
+> the BUS_NOTIFY_REMOVED_DEVICE notification not generated, an unbound driver is
+> not a problem here.
+> Morever, BUS_NOTIFY_UNBOUND_DRIVER  is called even before
+> BUS_NOTIFY_REMOVED_DEVICE so that wouldn't help anyway.
+> Last but not least, bus events are independent of the IOMMU driver use via
+> DMA-API it exposes.
 
-No. This isn't ARM's code, not by a million mile. You've simply
-refactored existing code. Please keep the correct attribution (i.e. that
-of the original code).
+Fair enough.
 
-> + */
-> +
-> +#include <asm/pvclock.h>
-> +#include <asm/kvmclock.h>
-> +#include <linux/module.h>
-> +#include <uapi/asm/kvm_para.h>
-> +#include <uapi/linux/kvm_para.h>
-> +#include <linux/ptp_clock_kernel.h>
-> +
-> +phys_addr_t clock_pair_gpa;
-> +struct kvm_clock_pairing clock_pair;
-> +struct pvclock_vsyscall_time_info *hv_clock;
-> +
-> +int kvm_arch_ptp_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (!kvm_para_available())
-> +		return -ENODEV;
-> +
-> +	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
-> +	hv_clock = pvclock_get_pvti_cpu0_va();
-> +	if (!hv_clock)
-> +		return -ENODEV;
-> +
-> +	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
-> +			     KVM_CLOCK_PAIRING_WALLCLOCK);
-> +	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
-> +
-> +int kvm_arch_ptp_get_clock(struct timespec64 *ts)
-> +{
-> +	long ret;
-> +
-> +	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
-> +			     clock_pair_gpa,
-> +			     KVM_CLOCK_PAIRING_WALLCLOCK);
-> +	if (ret != 0)
-> +		return -EOPNOTSUPP;
-> +
-> +	ts->tv_sec = clock_pair.sec;
-> +	ts->tv_nsec = clock_pair.nsec;
-> +
-> +	return 0;
-> +}
-> +
-> +int kvm_arch_ptp_get_clock_fn(long *cycle, struct timespec64 *tspec,
-> +			      struct clocksource **cs)
-> +{
-> +	unsigned long ret;
-> +	unsigned int version;
-> +	int cpu;
-> +	struct pvclock_vcpu_time_info *src;
-> +
-> +	cpu = smp_processor_id();
-> +	src = &hv_clock[cpu].pvti;
-> +
-> +	do {
-> +		/*
-> +		 * We are using a TSC value read in the hosts
-> +		 * kvm_hc_clock_pairing handling.
-> +		 * So any changes to tsc_to_system_mul
-> +		 * and tsc_shift or any other pvclock
-> +		 * data invalidate that measurement.
-> +		 */
-> +		version = pvclock_read_begin(src);
-> +
-> +		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
-> +				     clock_pair_gpa,
-> +				     KVM_CLOCK_PAIRING_WALLCLOCK);
-> +		tspec->tv_sec = clock_pair.sec;
-> +		tspec->tv_nsec = clock_pair.nsec;
-> +		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
-> +	} while (pvclock_read_retry(src, version));
-> +
-> +	*cs = &kvm_clock;
-> +
-> +	return 0;
-> +}
-> +
-> +MODULE_AUTHOR("Marcelo Tosatti <mtosatti@redhat.com>");
-> +MODULE_DESCRIPTION("PTP clock using KVMCLOCK");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
-> index 677d1d178a3e..5a8c6462fc0f 100644
-> --- a/drivers/ptp/Makefile
-> +++ b/drivers/ptp/Makefile
-> @@ -4,6 +4,7 @@
->  #
->  
->  ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o
-> +ptp_kvm-y				:= ../../arch/$(ARCH)/kvm/arch_ptp_kvm.o kvm_ptp.o
->  obj-$(CONFIG_PTP_1588_CLOCK)		+= ptp.o
->  obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
->  obj-$(CONFIG_PTP_1588_CLOCK_IXP46X)	+= ptp_ixp46x.o
-> diff --git a/drivers/ptp/ptp_kvm.c b/drivers/ptp/kvm_ptp.c
-> similarity index 63%
-> rename from drivers/ptp/ptp_kvm.c
-> rename to drivers/ptp/kvm_ptp.c
-> index fc7d0b77e118..9d07cf872be7 100644
-> --- a/drivers/ptp/ptp_kvm.c
-> +++ b/drivers/ptp/kvm_ptp.c
-> @@ -8,12 +8,12 @@
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
-> +#include <linux/slab.h>
->  #include <linux/module.h>
->  #include <uapi/linux/kvm_para.h>
->  #include <asm/kvm_para.h>
-> -#include <asm/pvclock.h>
-> -#include <asm/kvmclock.h>
->  #include <uapi/asm/kvm_para.h>
-> +#include <asm-generic/ptp_kvm.h>
->  
->  #include <linux/ptp_clock_kernel.h>
->  
-> @@ -24,56 +24,29 @@ struct kvm_ptp_clock {
->  
->  DEFINE_SPINLOCK(kvm_ptp_lock);
->  
-> -static struct pvclock_vsyscall_time_info *hv_clock;
-> -
-> -static struct kvm_clock_pairing clock_pair;
-> -static phys_addr_t clock_pair_gpa;
-> -
->  static int ptp_kvm_get_time_fn(ktime_t *device_time,
->  			       struct system_counterval_t *system_counter,
->  			       void *ctx)
->  {
-> -	unsigned long ret;
-> +	unsigned long ret, cycle;
->  	struct timespec64 tspec;
-> -	unsigned version;
-> -	int cpu;
-> -	struct pvclock_vcpu_time_info *src;
-> +	struct clocksource *cs;
->  
->  	spin_lock(&kvm_ptp_lock);
->  
->  	preempt_disable_notrace();
-> -	cpu = smp_processor_id();
-> -	src = &hv_clock[cpu].pvti;
-> -
-> -	do {
-> -		/*
-> -		 * We are using a TSC value read in the hosts
-> -		 * kvm_hc_clock_pairing handling.
-> -		 * So any changes to tsc_to_system_mul
-> -		 * and tsc_shift or any other pvclock
-> -		 * data invalidate that measurement.
-> -		 */
-> -		version = pvclock_read_begin(src);
-> -
-> -		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
-> -				     clock_pair_gpa,
-> -				     KVM_CLOCK_PAIRING_WALLCLOCK);
-> -		if (ret != 0) {
-> -			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
-> -			spin_unlock(&kvm_ptp_lock);
-> -			preempt_enable_notrace();
-> -			return -EOPNOTSUPP;
-> -		}
-> -
-> -		tspec.tv_sec = clock_pair.sec;
-> -		tspec.tv_nsec = clock_pair.nsec;
-> -		ret = __pvclock_read_cycles(src, clock_pair.tsc);
-> -	} while (pvclock_read_retry(src, version));
-> +	ret = kvm_arch_ptp_get_clock_fn(&cycle, &tspec, &cs);
-> +	if (ret != 0) {
-> +		pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
-> +		spin_unlock(&kvm_ptp_lock);
-> +		preempt_enable_notrace();
-> +		return -EOPNOTSUPP;
-> +	}
->  
->  	preempt_enable_notrace();
->  
-> -	system_counter->cycles = ret;
-> -	system_counter->cs = &kvm_clock;
-> +	system_counter->cycles = cycle;
-> +	system_counter->cs = cs;
->  
->  	*device_time = timespec64_to_ktime(tspec);
->  
-> @@ -116,17 +89,13 @@ static int ptp_kvm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
->  
->  	spin_lock(&kvm_ptp_lock);
->  
-> -	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
-> -			     clock_pair_gpa,
-> -			     KVM_CLOCK_PAIRING_WALLCLOCK);
-> +	ret = kvm_arch_ptp_get_clock(&tspec);
->  	if (ret != 0) {
->  		pr_err_ratelimited("clock offset hypercall ret %lu\n", ret);
->  		spin_unlock(&kvm_ptp_lock);
->  		return -EOPNOTSUPP;
->  	}
->  
-> -	tspec.tv_sec = clock_pair.sec;
-> -	tspec.tv_nsec = clock_pair.nsec;
->  	spin_unlock(&kvm_ptp_lock);
->  
->  	memcpy(ts, &tspec, sizeof(struct timespec64));
-> @@ -166,21 +135,11 @@ static void __exit ptp_kvm_exit(void)
->  
->  static int __init ptp_kvm_init(void)
->  {
-> -	long ret;
-> -
-> -	if (!kvm_para_available())
-> -		return -ENODEV;
-> -
-> -	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
-> -	hv_clock = pvclock_get_pvti_cpu0_va();
-> -
-> -	if (!hv_clock)
-> -		return -ENODEV;
-> +	int ret;
->  
-> -	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
-> -			KVM_CLOCK_PAIRING_WALLCLOCK);
-> -	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
-> -		return -ENODEV;
-> +	ret = kvm_arch_ptp_init();
-> +	if (IS_ERR(ret))
-> +		return ret;
->  
->  	kvm_ptp_clock.caps = ptp_kvm_caps;
->  
-> diff --git a/include/asm-generic/ptp_kvm.h b/include/asm-generic/ptp_kvm.h
-> new file mode 100644
-> index 000000000000..128a9d7af161
-> --- /dev/null
-> +++ b/include/asm-generic/ptp_kvm.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + *  Virtual PTP 1588 clock for use with KVM guests
-> + *
-> + *  Copyright (C) 2019 ARM Ltd.
-> + *  All Rights Reserved
-
-Same here.
-
-> + */
-> +
-> +static int kvm_arch_ptp_init(void);
-> +static int kvm_arch_ptp_get_clock(struct timespec64 *ts);
-> +static int kvm_arch_ptp_get_clock_fn(long *cycle,
-> +		struct timespec64 *tspec, void *cs);
 > 
+> If keeping data for unplugged devices and reusing it on device re-plug is not
+> acceptable then maybe the IOMMU driver should perform reference counting of
+> its internal resources occupied by DMA-API users and perform cleanups on last
+> release?
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+I am not saying that keeping data is not acceptable. I just want to
+check whether there are any other solutions.
+
+Best regards,
+Baolu
