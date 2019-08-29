@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AAFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A7A205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D3D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103354;
-	bh=kCo6rtnN3uj+HRkVKB54selVGg42JXeQR2KTGbXdhjw=;
+	s=default; t=1567103362;
+	bh=RWqFe7Un65rshSuXKt6U5B/SGrXFu6/jZLaCmJW8e9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=grYiAlaVCQjeFoPgMUZGwctLBeDYYD7gg6HS1XnluEXgi3Q2UYoym0aitJHZYymB+
-	 0qF4lnP242Mo03ujx+1DfKp97CJZ2WGVcavTKiqFhnR5b9b99xrvuGveYAnQDXPL+y
-	 j3e2M9N9KIRa2QXtjOQYsrKYMI6XqpBlkfkFxu3o=
+	b=TeCNEvFmU4xCcPRNRunKhQQ/Pudq5qVoSlkN7i5YobLlDF37QYTu+qafSNYHBHeCv
+	 ptBVrJu24P4kK9zmaOmJBl/0bWYQHKX/4QfTuMjVWMt8D2FXCF9GSNrBcTdpNdF1Kz
+	 cqhNJjWW4v7aPZ+X+rXDoqJ049sh9EY6OU3J5ynY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbfH2S3N (ORCPT
+        id S1729320AbfH2S3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56778 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbfH2SPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:06 -0400
+        id S1729073AbfH2SPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D2E23404;
-        Thu, 29 Aug 2019 18:15:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2C262339E;
+        Thu, 29 Aug 2019 18:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102506;
-        bh=kCo6rtnN3uj+HRkVKB54selVGg42JXeQR2KTGbXdhjw=;
+        s=default; t=1567102501;
+        bh=RWqFe7Un65rshSuXKt6U5B/SGrXFu6/jZLaCmJW8e9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=am750hGKWqVrVOhuAO9brEHIGWEjdqh2tg+xQMeAoMKjGjSdRHU/uBYB6eOcKFtg5
-         pPmYC85rNYYwM1pdym3jHrAmeceM7rFHwG7d1+7g1gaFUns9hlTKOuaQG2Rj9nqEco
-         5YKq6uxFzX+oM6hg/mSECmIY8uxaog/XysxmAyco=
+        b=qk3i03lW1cYcoDti60XM9YYZEygzcx01Sak7eCqBSAwwpGucPxWffdMhdfucol5gH
+         qLHWGAh+f0paJEEfmV5jbTqqxOIl4AhI0YbwXwudAlv9RXyaeSbGO8GADBDPj5sGLm
+         5VX0C4dmK6aecMIxFOfHIhMGCKYLVn5qes1vmRQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Eidelman <anton@lightbitslabs.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 56/76] nvme-multipath: fix possible I/O hang when paths are updated
-Date:   Thu, 29 Aug 2019 14:12:51 -0400
-Message-Id: <20190829181311.7562-56-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Ewan D . Milne" <emilne@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 52/76] scsi: lpfc: Mitigate high memory pre-allocation by SCSI-MQ
+Date:   Thu, 29 Aug 2019 14:12:47 -0400
+Message-Id: <20190829181311.7562-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,49 +62,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 504db087aaccdb32af61539916409f7dca31ceb5 ]
+[ Upstream commit 77ffd3465ba837e9dc714e17b014e77b2eae765a ]
 
-nvme_state_set_live() making a path available triggers requeue_work
-in order to resubmit requests that ended up on requeue_list when no
-paths were available.
+When SCSI-MQ is enabled, the SCSI-MQ layers will do pre-allocation of MQ
+resources based on shost values set by the driver. In newer cases of the
+driver, which attempts to set nr_hw_queues to the cpu count, the
+multipliers become excessive, with a single shost having SCSI-MQ
+pre-allocation reaching into the multiple GBytes range.  NPIV, which
+creates additional shosts, only multiply this overhead. On lower-memory
+systems, this can exhaust system memory very quickly, resulting in a system
+crash or failures in the driver or elsewhere due to low memory conditions.
 
-This requeue_work may race with concurrent nvme_ns_head_make_request()
-that do not observe the live path yet.
-Such concurrent requests may by made by either:
-- New IO submission.
-- Requeue_work triggered by nvme_failover_req() or another ana_work.
+After testing several scenarios, the situation can be mitigated by limiting
+the value set in shost->nr_hw_queues to 4. Although the shost values were
+changed, the driver still had per-cpu hardware queues of its own that
+allowed parallelization per-cpu.  Testing revealed that even with the
+smallish number for nr_hw_queues for SCSI-MQ, performance levels remained
+near maximum with the within-driver affiinitization.
 
-A race may cause requeue_work capture the state of requeue_list before
-more requests get onto the list. These requests will stay on the list
-forever unless requeue_work is triggered again.
+A module parameter was created to allow the value set for the nr_hw_queues
+to be tunable.
 
-In order to prevent such race, nvme_state_set_live() should
-synchronize_srcu(&head->srcu) before triggering the requeue_work and
-prevent nvme_ns_head_make_request referencing an old snapshot of the
-path list.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc.h      |  1 +
+ drivers/scsi/lpfc/lpfc_attr.c | 15 +++++++++++++++
+ drivers/scsi/lpfc/lpfc_init.c | 10 ++++++----
+ drivers/scsi/lpfc/lpfc_sli4.h |  5 +++++
+ 4 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index e942b3e840687..4f599366bc5ae 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -356,6 +356,7 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 		srcu_read_unlock(&head->srcu, srcu_idx);
- 	}
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index aafcffaa25f71..4604e1bc334c0 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -822,6 +822,7 @@ struct lpfc_hba {
+ 	uint32_t cfg_cq_poll_threshold;
+ 	uint32_t cfg_cq_max_proc_limit;
+ 	uint32_t cfg_fcp_cpu_map;
++	uint32_t cfg_fcp_mq_threshold;
+ 	uint32_t cfg_hdw_queue;
+ 	uint32_t cfg_irq_chann;
+ 	uint32_t cfg_suppress_rsp;
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index d4c65e2109e2f..353da12d797ba 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -5640,6 +5640,19 @@ LPFC_ATTR_RW(nvme_oas, 0, 0, 1,
+ LPFC_ATTR_RW(nvme_embed_cmd, 1, 0, 2,
+ 	     "Embed NVME Command in WQE");
  
-+	synchronize_srcu(&ns->head->srcu);
- 	kblockd_schedule_work(&ns->head->requeue_work);
- }
++/*
++ * lpfc_fcp_mq_threshold: Set the maximum number of Hardware Queues
++ * the driver will advertise it supports to the SCSI layer.
++ *
++ *      0    = Set nr_hw_queues by the number of CPUs or HW queues.
++ *      1,128 = Manually specify the maximum nr_hw_queue value to be set,
++ *
++ * Value range is [0,128]. Default value is 8.
++ */
++LPFC_ATTR_R(fcp_mq_threshold, LPFC_FCP_MQ_THRESHOLD_DEF,
++	    LPFC_FCP_MQ_THRESHOLD_MIN, LPFC_FCP_MQ_THRESHOLD_MAX,
++	    "Set the number of SCSI Queues advertised");
++
+ /*
+  * lpfc_hdw_queue: Set the number of Hardware Queues the driver
+  * will advertise it supports to the NVME and  SCSI layers. This also
+@@ -5961,6 +5974,7 @@ struct device_attribute *lpfc_hba_attrs[] = {
+ 	&dev_attr_lpfc_cq_poll_threshold,
+ 	&dev_attr_lpfc_cq_max_proc_limit,
+ 	&dev_attr_lpfc_fcp_cpu_map,
++	&dev_attr_lpfc_fcp_mq_threshold,
+ 	&dev_attr_lpfc_hdw_queue,
+ 	&dev_attr_lpfc_irq_chann,
+ 	&dev_attr_lpfc_suppress_rsp,
+@@ -7042,6 +7056,7 @@ lpfc_get_cfgparam(struct lpfc_hba *phba)
+ 	/* Initialize first burst. Target vs Initiator are different. */
+ 	lpfc_nvme_enable_fb_init(phba, lpfc_nvme_enable_fb);
+ 	lpfc_nvmet_fb_size_init(phba, lpfc_nvmet_fb_size);
++	lpfc_fcp_mq_threshold_init(phba, lpfc_fcp_mq_threshold);
+ 	lpfc_hdw_queue_init(phba, lpfc_hdw_queue);
+ 	lpfc_irq_chann_init(phba, lpfc_irq_chann);
+ 	lpfc_enable_bbcr_init(phba, lpfc_enable_bbcr);
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index eaaef682de251..2fd8f15f99975 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -4308,10 +4308,12 @@ lpfc_create_port(struct lpfc_hba *phba, int instance, struct device *dev)
+ 	shost->max_cmd_len = 16;
+ 
+ 	if (phba->sli_rev == LPFC_SLI_REV4) {
+-		if (phba->cfg_fcp_io_sched == LPFC_FCP_SCHED_BY_HDWQ)
+-			shost->nr_hw_queues = phba->cfg_hdw_queue;
+-		else
+-			shost->nr_hw_queues = phba->sli4_hba.num_present_cpu;
++		if (!phba->cfg_fcp_mq_threshold ||
++		    phba->cfg_fcp_mq_threshold > phba->cfg_hdw_queue)
++			phba->cfg_fcp_mq_threshold = phba->cfg_hdw_queue;
++
++		shost->nr_hw_queues = min_t(int, 2 * num_possible_nodes(),
++					    phba->cfg_fcp_mq_threshold);
+ 
+ 		shost->dma_boundary =
+ 			phba->sli4_hba.pc_sli4_params.sge_supp_len-1;
+diff --git a/drivers/scsi/lpfc/lpfc_sli4.h b/drivers/scsi/lpfc/lpfc_sli4.h
+index 8e4fd1a98023c..986594ec40e2a 100644
+--- a/drivers/scsi/lpfc/lpfc_sli4.h
++++ b/drivers/scsi/lpfc/lpfc_sli4.h
+@@ -44,6 +44,11 @@
+ #define LPFC_HBA_HDWQ_MAX	128
+ #define LPFC_HBA_HDWQ_DEF	0
+ 
++/* FCP MQ queue count limiting */
++#define LPFC_FCP_MQ_THRESHOLD_MIN	0
++#define LPFC_FCP_MQ_THRESHOLD_MAX	128
++#define LPFC_FCP_MQ_THRESHOLD_DEF	8
++
+ /* Common buffer size to accomidate SCSI and NVME IO buffers */
+ #define LPFC_COMMON_IO_BUF_SZ	768
  
 -- 
 2.20.1
