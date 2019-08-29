@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA613C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CA0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9DB20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE9B2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103095;
-	bh=xVe0SO2iGzckCruoLW2k9E9IGcjFTpDGhy4yyzlE/XU=;
+	s=default; t=1567103101;
+	bh=SiranW8BmD8p0xcVsmm5TH1u4jivQdyNf4ld76TzPxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ljgo0G2MISBlnVqqgl7LAxMSiz+G25R7P+vxNRzx/GnIgZ7nC2NZUZBQyZjzfe9Ke
-	 VedwIDLOmLj/DqAupFsJLfJ3aYSGfPwN8If3J2EkhTX5+2AW2Jn9mVUaDhW1N/ftgm
-	 6C5qexh9lfWh35Vgxr0GBkJKxK/RSOf3QzkAqqP4=
+	b=FYwgN7GXpS3x6hZ3GZ8Om1yH8mCvLny5GIoAAfcdsO24/XQ0/vtUiP345TcwJ2wxm
+	 9LA2lRq0d5mxCRT2lg+7m8T2ZjppGPlVXdZA+QEhR4XO0YDFsGUmhXQHU+V/eUi0fu
+	 AbckohtFdw+PXd+SqSOh8mRORQg22dNSGia+uMqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfH2SYy (ORCPT
+        id S1730021AbfH2SZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58312 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbfH2SQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:17 -0400
+        id S1729537AbfH2SQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1415923404;
-        Thu, 29 Aug 2019 18:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECEAC23403;
+        Thu, 29 Aug 2019 18:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102576;
-        bh=xVe0SO2iGzckCruoLW2k9E9IGcjFTpDGhy4yyzlE/XU=;
+        s=default; t=1567102575;
+        bh=SiranW8BmD8p0xcVsmm5TH1u4jivQdyNf4ld76TzPxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1XkF2vLtqt1hVdrVrYx2V/YcotWXlPn83DJ+uxyZmedyU8oAwUWxhQC1hp/eOKC3
-         wBUTWr1vXzaCQ+WxQ+Cz1KzBzRDtkfmoU6x31GV/P659In2WjG4Altal7QlUoQ8Axb
-         FzOWLr7KTixc69Fjka9aNN7UBmH6KaTYDyAx8G3M=
+        b=kID1kuwT//hUlSB1mkSlkFhoCdYGVSf68OlRnqHRlCLZScVehw+ay8H1/XeCBRrNi
+         xmRj6DzFjqvOFOhtQtgh3RcMRyn253IT75zW3rRrnBBHrj2DcUMvq+/oJrCtvak3JX
+         4EqSbQK7FvWZXTNjgpLLramWbedhl5OE/bmO3xHc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill O'Donnell <billodo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/45] vfs: fix page locking deadlocks when deduping files
-Date:   Thu, 29 Aug 2019 14:15:22 -0400
-Message-Id: <20190829181547.8280-22-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/45] lan78xx: Fix memory leaks
+Date:   Thu, 29 Aug 2019 14:15:21 -0400
+Message-Id: <20190829181547.8280-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,114 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit edc58dd0123b552453a74369bd0c8d890b497b4b ]
+[ Upstream commit b9cbf8a64865b50fd0f4a3915fa00ac7365cdf8f ]
 
-When dedupe wants to use the page cache to compare parts of two files
-for dedupe, we must be very careful to handle locking correctly.  The
-current code doesn't do this.  It must lock and unlock the page only
-once if the two pages are the same, since the overlapping range check
-doesn't catch this when blocksize < pagesize.  If the pages are distinct
-but from the same file, we must observe page locking order and lock them
-in order of increasing offset to avoid clashing with writeback locking.
+In lan78xx_probe(), a new urb is allocated through usb_alloc_urb() and
+saved to 'dev->urb_intr'. However, in the following execution, if an error
+occurs, 'dev->urb_intr' is not deallocated, leading to memory leaks. To fix
+this issue, invoke usb_free_urb() to free the allocated urb before
+returning from the function.
 
-Fixes: 876bec6f9bbfcb3 ("vfs: refactor clone/dedupe_file_range common functions")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ drivers/net/usb/lan78xx.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 85fd7a8ee29eb..5fb5ee5b8cd70 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1888,10 +1888,7 @@ int vfs_clone_file_range(struct file *file_in, loff_t pos_in,
- }
- EXPORT_SYMBOL(vfs_clone_file_range);
- 
--/*
-- * Read a page's worth of file data into the page cache.  Return the page
-- * locked.
-- */
-+/* Read a page's worth of file data into the page cache. */
- static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
- {
- 	struct address_space *mapping;
-@@ -1907,10 +1904,32 @@ static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
- 		put_page(page);
- 		return ERR_PTR(-EIO);
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 8d140495da79d..e20266bd209e2 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3799,7 +3799,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 	ret = register_netdev(netdev);
+ 	if (ret != 0) {
+ 		netif_err(dev, probe, netdev, "couldn't register the device\n");
+-		goto out3;
++		goto out4;
  	}
--	lock_page(page);
- 	return page;
- }
  
-+/*
-+ * Lock two pages, ensuring that we lock in offset order if the pages are from
-+ * the same file.
-+ */
-+static void vfs_lock_two_pages(struct page *page1, struct page *page2)
-+{
-+	/* Always lock in order of increasing index. */
-+	if (page1->index > page2->index)
-+		swap(page1, page2);
-+
-+	lock_page(page1);
-+	if (page1 != page2)
-+		lock_page(page2);
-+}
-+
-+/* Unlock two pages, being careful not to unlock the same page twice. */
-+static void vfs_unlock_two_pages(struct page *page1, struct page *page2)
-+{
-+	unlock_page(page1);
-+	if (page1 != page2)
-+		unlock_page(page2);
-+}
-+
- /*
-  * Compare extents of two files to see if they are the same.
-  * Caller must have locked both inodes to prevent write races.
-@@ -1948,10 +1967,24 @@ int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
- 		dest_page = vfs_dedupe_get_page(dest, destoff);
- 		if (IS_ERR(dest_page)) {
- 			error = PTR_ERR(dest_page);
--			unlock_page(src_page);
- 			put_page(src_page);
- 			goto out_error;
- 		}
-+
-+		vfs_lock_two_pages(src_page, dest_page);
-+
-+		/*
-+		 * Now that we've locked both pages, make sure they're still
-+		 * mapped to the file data we're interested in.  If not,
-+		 * someone is invalidating pages on us and we lose.
-+		 */
-+		if (!PageUptodate(src_page) || !PageUptodate(dest_page) ||
-+		    src_page->mapping != src->i_mapping ||
-+		    dest_page->mapping != dest->i_mapping) {
-+			same = false;
-+			goto unlock;
-+		}
-+
- 		src_addr = kmap_atomic(src_page);
- 		dest_addr = kmap_atomic(dest_page);
+ 	usb_set_intfdata(intf, dev);
+@@ -3814,12 +3814,14 @@ static int lan78xx_probe(struct usb_interface *intf,
  
-@@ -1963,8 +1996,8 @@ int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+ 	ret = lan78xx_phy_init(dev);
+ 	if (ret < 0)
+-		goto out4;
++		goto out5;
  
- 		kunmap_atomic(dest_addr);
- 		kunmap_atomic(src_addr);
--		unlock_page(dest_page);
--		unlock_page(src_page);
-+unlock:
-+		vfs_unlock_two_pages(src_page, dest_page);
- 		put_page(dest_page);
- 		put_page(src_page);
+ 	return 0;
  
+-out4:
++out5:
+ 	unregister_netdev(netdev);
++out4:
++	usb_free_urb(dev->urb_intr);
+ out3:
+ 	lan78xx_unbind(dev, intf);
+ out2:
 -- 
 2.20.1
 
