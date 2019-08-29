@@ -2,103 +2,96 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6CFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7894CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6D3233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567077521;
-	bh=JQtNUh7qNDLWcxdyjDm3BBzByZeQKwMS+SSkLoxQodM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ygGSJ7q2fBCfVHiVJp+VfEXYNN+bwSwIarJ9qBhXGN3tiCZWnA+rhsHwwMBHqLTpl
-	 2qrC8iKFIw347WWGpKSPKStGRNQb74nGIfTP2v56E5w/sRvqIFiTCEhzhjBHzgQF8J
-	 f7fS1xoBFNCapVrRtIm1esYxSlLnsv1FjOhcp8Uk=
+	by mail.kernel.org (Postfix) with ESMTP id 4DDA122CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfH2LSl (ORCPT
+        id S1727978AbfH2LSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 07:18:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54710 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH2LSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:18:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726232AbfH2LSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:18:52 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE292189D;
-        Thu, 29 Aug 2019 11:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567077519;
-        bh=JQtNUh7qNDLWcxdyjDm3BBzByZeQKwMS+SSkLoxQodM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yqtbZ88ABfdZ9RN4GuefAC+ALscE6vMxl+0MPD59YrtSAr9Du5eDjuO1E162mutBg
-         7q8+OtpqhfroNvAuGOqGE2xjytsVqA6JFYCBJtekwFOfqDsUImnd8GylDlgZcSM4Yl
-         YptKdYXQFKDVvuJLdhpL/dStQIy55eTjOUKom9gI=
-Date:   Thu, 29 Aug 2019 13:18:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, devel@driverdev.osuosl.org,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829111837.GB23393@kroah.com>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190828170022.GA7873@kroah.com>
- <20190829062340.GB3047@infradead.org>
- <20190829063955.GA30193@kroah.com>
- <20190829094136.GA28643@infradead.org>
- <20190829095019.GA13557@kroah.com>
- <20190829103749.GA13661@infradead.org>
- <20190829110443.GD64893@architecture4>
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C72B18C426B;
+        Thu, 29 Aug 2019 11:18:52 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3898D600C1;
+        Thu, 29 Aug 2019 11:18:48 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 13:18:45 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: s390: Test for bad access register at the start of
+ S390_MEM_OP
+Message-ID: <20190829131845.5a72231a.cohuck@redhat.com>
+In-Reply-To: <20190829105356.27805-1-thuth@redhat.com>
+References: <20190829105356.27805-1-thuth@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829110443.GD64893@architecture4>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 29 Aug 2019 11:18:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:04:43PM +0800, Gao Xiang wrote:
-> On Thu, Aug 29, 2019 at 03:37:49AM -0700, Christoph Hellwig wrote:
-> > On Thu, Aug 29, 2019 at 11:50:19AM +0200, Greg Kroah-Hartman wrote:
-> > > I did try just that, a few years ago, and gave up on it.  I don't think
-> > > it can be added to the existing vfat code base but I am willing to be
-> > > proven wrong.
-> > 
-> > And what exactly was the problem?
-> > 
-> > > 
-> > > Now that we have the specs, it might be easier, and the vfat spec is a
-> > > subset of the exfat spec, but to get stuff working today, for users,
-> > > it's good to have it in staging.  We can do the normal, "keep it in
-> > > stable, get a clean-room implementation merged like usual, and then
-> > > delete the staging version" three step process like we have done a
-> > > number of times already as well.
-> > > 
-> > > I know the code is horrible, but I will gladly take horrible code into
-> > > staging.  If it bothers you, just please ignore it.  That's what staging
-> > > is there for :)
-> > 
-> > And then after a while you decide it's been long enough and force move
-> > it out of staging like the POS erofs code?
-> 
-> The problem is that EROFS has been there for a year and
-> I sent v1-v8 patches here, You didn't review or reply it
-> once until now.
-> 
-> And I have no idea what is the relationship between EROFS
-> and the current exfat implementation.
+On Thu, 29 Aug 2019 12:53:56 +0200
+Thomas Huth <thuth@redhat.com> wrote:
 
-There isn't any, other than it too is a filesystem that was in the
-staging directory :)
+> If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
+> then there is certainly a bug in the calling userspace application.
+> We check for wrong access registers, but only if the vCPU was already
+> in the access register mode before (i.e. the SIE block has recorded
+> it). The check is also buried somewhere deep in the calling chain (in
+> the function ar_translation()), so this is somewhat hard to find.
+> 
+> It's better to always report an error to the userspace in case this
+> field is set wrong, and it's safer in the KVM code if we block wrong
+> values here early instead of relying on a check somewhere deep down
+> the calling chain, so let's add another check to kvm_s390_guest_mem_op()
+> directly.
+> 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index f329dcb3f44c..725690853cbd 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4255,7 +4255,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
+>  	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
+>  				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+>  
+> -	if (mop->flags & ~supported_flags)
+> +	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS)
+>  		return -EINVAL;
 
-greg k-h
+This also matches the value that ar_translation would return, so seems
+sane.
+
+>  
+>  	if (mop->size > MEM_OP_MAX_SIZE)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
+Btw: should Documentation/virt/kvm/api.txt spell out the valid range
+for ar explicitly?
