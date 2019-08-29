@@ -2,85 +2,85 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A69C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD9B23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vDJbpzPt"
+	by mail.kernel.org (Postfix) with ESMTP id 0A6E6208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfH2Khx (ORCPT
+        id S1727528AbfH2Kia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:37:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58196 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfH2Khx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:37:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZZ9awTrmHwspxJUBC4pTryA35oCVUvGKerbRnjNApsQ=; b=vDJbpzPth5LsCcTimIYNmCOAx
-        9P8D58bdWIRa8Cbv9sybzMwbtGcbIucr5MmCaN8i3tNRUPtRZ3E8T5q/IFWuyKleJzq/Sjiv/VdyJ
-        y8UnWm2ppWl48mjgcnnnqTK6h6vcmao5kJukOXJdLX3yXqcqzeysdhYJlVBd4Tx89PpUjIhxM8tNG
-        vxw44VH3Lv2ize116mKLnIiMi3bLor8Hvt+PZT9sRv/oSDK0osK4Ai5SZcL3AOj+dpG/pnT9X3QUs
-        XW0u59pXRTdm40spaY0NorGhLTNMOesNexRPq1dB1N6SXcTXLW8y2fGELfy9BdUS2x75F1oOxC2op
-        aLLKKDg4w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3HoL-0003aB-FW; Thu, 29 Aug 2019 10:37:49 +0000
-Date:   Thu, 29 Aug 2019 03:37:49 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, devel@driverdev.osuosl.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829103749.GA13661@infradead.org>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190828170022.GA7873@kroah.com>
- <20190829062340.GB3047@infradead.org>
- <20190829063955.GA30193@kroah.com>
- <20190829094136.GA28643@infradead.org>
- <20190829095019.GA13557@kroah.com>
+        Thu, 29 Aug 2019 06:38:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfH2Ki3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:38:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D896B360;
+        Thu, 29 Aug 2019 03:38:28 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE9F53F59C;
+        Thu, 29 Aug 2019 03:38:27 -0700 (PDT)
+Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
+To:     Jing-Ting Wu <jing-ting.wu@mediatek.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Qais Yousef <qais.yousef@arm.com>
+References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
+Date:   Thu, 29 Aug 2019 11:38:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829095019.GA13557@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 11:50:19AM +0200, Greg Kroah-Hartman wrote:
-> I did try just that, a few years ago, and gave up on it.  I don't think
-> it can be added to the existing vfat code base but I am willing to be
-> proven wrong.
-
-And what exactly was the problem?
-
+On 29/08/2019 04:15, Jing-Ting Wu wrote:
+> At original linux design, RT & CFS scheduler are independent.
+> Current RT task placement policy will select the first cpu in
+> lowest_mask, even if the first CPU is running a CFS task.
+> This may put RT task to a running cpu and let CFS task runnable.
 > 
-> Now that we have the specs, it might be easier, and the vfat spec is a
-> subset of the exfat spec, but to get stuff working today, for users,
-> it's good to have it in staging.  We can do the normal, "keep it in
-> stable, get a clean-room implementation merged like usual, and then
-> delete the staging version" three step process like we have done a
-> number of times already as well.
+> So we select idle cpu in lowest_mask first to avoid preempting
+> CFS task.
 > 
-> I know the code is horrible, but I will gladly take horrible code into
-> staging.  If it bothers you, just please ignore it.  That's what staging
-> is there for :)
 
-And then after a while you decide it's been long enough and force move
-it out of staging like the POS erofs code?
+Regarding the RT & CFS thing, that's working as intended. RT is a whole
+class above CFS, it shouldn't have to worry about CFS.
+
+On the other side of things, CFS does worry about RT. We have the concept
+of RT-pressure in the CFS scheduler, where RT tasks will reduce a CPU's
+capacity (see fair.c::scale_rt_capacity()).
+
+CPU capacity is looked at on CFS wakeup (see wake_cap() and
+find_idlest_cpu()), and the periodic load balancer tries to spread load
+over capacity, so it'll tend to put less things on CPUs that are also
+running RT tasks.
+
+If RT were to start avoiding rqs with CFS tasks, we'd end up with a nasty
+situation were both are avoiding each other. It's even more striking when
+you see that RT pressure is done with a rq-wide RT util_avg, which
+*doesn't* get migrated when a RT task migrates. So if you decide to move
+a RT task to an idle CPU "B" because CPU "A" had runnable CFS tasks, the
+CFS scheduler will keep seeing CPU "B" as not significantly RT-pressured
+while that util_avg signal ramps up, whereas it would correctly see CPU
+"A" as RT-pressured if the RT task previously ran there.
+
+So overall I think this is the wrong approach.
+
+> Signed-off-by: Jing-Ting Wu <jing-ting.wu@mediatek.com>
+> ---
