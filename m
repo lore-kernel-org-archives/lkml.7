@@ -2,142 +2,164 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC4DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C2BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA8223427
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD0022CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eqh8mS8v"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qD3OIyS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfH2PTS (ORCPT
+        id S1727763AbfH2PTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:19:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56147 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfH2PTR (ORCPT
+        Thu, 29 Aug 2019 11:19:25 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13794 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfH2PTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:19:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g207so176690wmg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VjZT57U4eqLLUOf/A7kG5jLpXDrO5TRWQ0yRpD8+fs8=;
-        b=Eqh8mS8v9XFVZ4L8xgv9ExhhsT0fgxAjX1hIEZxB8Rg7zNCs97lpY237Q+w73u7zLZ
-         dXE/Rwe6XWeUcyzNF5a+A+kNvg/eAwA6XbGGE8wz9+OrfL5caU8gLPhydUXFrOGfsgH/
-         3E7mX5pwq8TGpL8OKdgQHnZDXvfzDH8CnL12HXRQYlMRAnkUQxu7ttR2zq2AC9seDhIS
-         S1i7XZrkJL7QSnCU8J8BQ9Ms9l2TuTAzKm4Z0bwVHjg/iZZgjUuueYwVSbxneRQQjC75
-         xZhi4WdAUKxKG72Lz2/0qBNxiWWUKrpJF+2QoLAR+Vm4aZ3HQVZ8vuypd55dYE6Lv7N/
-         gGbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjZT57U4eqLLUOf/A7kG5jLpXDrO5TRWQ0yRpD8+fs8=;
-        b=aqJQdawuNrlg2lHckbrBW/SlmiLemnsZj4sYshebWBfZuJQKV5PpANCP8XXl0kOvfB
-         H4Pa/ynnexkzdAvz9UoSakgfszoRN+iA5SPBtZnPbRAq80+idmfheR72vXIDY+82leEY
-         MLC88IJR0VmPIvwrVDlfT4OJV4PnmJSqokkLQqTwvVyg70TAUBDdukkaIIYbbDXUs7K2
-         ky5fb27I1I0tjOt0y56+wrIOVzR8GyUfUTi72CYSI6onTGD5R3IXbf8QAxGBvWrz69iF
-         4Yz1VRUuxpjX/QcMujtCJBqxaYvus0sA60WSFm5ZvFsTGiszbvsLFWBlAKx/n9fMjJ6G
-         ohgA==
-X-Gm-Message-State: APjAAAXm9T+8nbtAgwpuHWrcxmI793Oy1e7B/NaPdfa5MVxa3epsft9e
-        frLDzlSw0MoQD1gTq24H6uGv2A==
-X-Google-Smtp-Source: APXvYqwjLRGIPfD6SOWXoHRWgA6GNXhEP7OSzuJKtFyCsIFoaLCx5RijlvfOELg6ciGpMbCkcjUjYA==
-X-Received: by 2002:a1c:2582:: with SMTP id l124mr13029673wml.153.1567091955236;
-        Thu, 29 Aug 2019 08:19:15 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id b15sm4253465wmb.28.2019.08.29.08.19.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 08:19:14 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 16:19:12 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v2 03/15] drivers: thermal: tsens: Add __func__
- identifier to debug statements
-Message-ID: <20190829151912.z6cflsaox2qnmqxw@holly.lan>
-References: <cover.1566907161.git.amit.kucheria@linaro.org>
- <93fa782bde9c66845993ff883532b3f1f02d99e4.1566907161.git.amit.kucheria@linaro.org>
- <20190829140459.szauzhennltrwvg4@holly.lan>
- <CAHLCerNuycWTLmCvdffM0=GdG7UZ7zNoj0Jb0CeLTULzVmfSJw@mail.gmail.com>
+        Thu, 29 Aug 2019 11:19:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d67ecfb0003>; Thu, 29 Aug 2019 08:19:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 29 Aug 2019 08:19:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 29 Aug 2019 08:19:22 -0700
+Received: from [10.25.75.254] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 29 Aug
+ 2019 15:18:42 +0000
+Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
+ regulator entries
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <jonathanh@nvidia.com>,
+        <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-3-vidyas@nvidia.com> <20190829120329.GC13187@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
+Date:   Thu, 29 Aug 2019 20:48:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNuycWTLmCvdffM0=GdG7UZ7zNoj0Jb0CeLTULzVmfSJw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190829120329.GC13187@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567091963; bh=26NeoQlEq36/bfgv16BwS5qeIh/4BBTWDJHJLCUv198=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qD3OIyS/DUj7JJzCiNQrZXALOWvZUrW3IkW+LfcC2aBJi0hVvJ3ybkjO1QZletTa5
+         xcoKk0bpSfnPkFNO6IKr/dXJlIV3ps1koC/7QqHqRnrEHH9+BMysNvxl0Ih2whZZF6
+         bBsSdXcsH8DBcqgFjTJa8vgzjk5j2BVI9QHD1BVwGNWrcFT0XYIBhw4sWqnFmWsYAt
+         ef+UmZetjTLW4UtCeAlGagfbpPDGf/Jsr8p7oEYFxhvvR56mE7wmWDDhOzjbKCJJcQ
+         FY75nqBB+CZyocyU8VDhJQRb3gO7kZiBVmNPqmUZ9jC8ubUYGZEe9imw4xU5bj0OyQ
+         RRwrhWYzA9KPQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:58:45PM +0530, Amit Kucheria wrote:
-> On Thu, Aug 29, 2019 at 7:35 PM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Tue, Aug 27, 2019 at 05:43:59PM +0530, Amit Kucheria wrote:
-> > > Printing the function name when enabling debugging makes logs easier to
-> > > read.
-> > >
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >
-> > This should need to be manually added at each call site; it is already
-> > built into the logging system (the f flag for dynamic debug)?
+On 8/29/2019 5:33 PM, Thierry Reding wrote:
+> On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
+>> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
+>> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
+>> is designed to have regulator controlled slot supplies.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> V3:
+>> * None
+>>
+>> V2:
+>> * None
+>>
+>>   .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> index 0ac1b867ac24..b739f92da58e 100644
+>> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> @@ -104,6 +104,12 @@ Optional properties:
+>>      specified in microseconds
+>>   - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
+>>      specified in microseconds
+>> +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3V to the slot
+>> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controller
+>> +  in p2972-0000 platform).
+>> +- vpcie12v-supply: A phandle to the regulator node that supplies 12V to the slot
+>> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controller
+>> +  in p2972-0000 platform).
 > 
-> I assume you meant "shouldn't".
+> There's an ongoing discussion regarding the use of optional power
+> supplies and I'm wondering if we're not abusing this here. Why exactly
+> are these regulators optional?
+I made them optional because, the number and type of supplies typically depend on the
+kind of slot the controller is owning. If it is a CEM slot, then, it needs 3.3V & 12V
+supplies and if it is an M.2 Key-E/M slot, it needs only 3.3V supply. Also, if there are
+on-board PCIe endpoint devices, supplies may vary again from vendor to vendor.
+Considering all these, I made them optional instead of mandatory.
+Also, I agree that regulator framework supplies a dummy regulator if we make them mandatory
+but doesn't supply one, but it does so with a warning print in the log which I feel is
+an unwanted alert and to avoid that one has to supply dummy/fixed regulators which again
+seems an overkill when all of this can be addressed by making slot regulators optional.
 
-Quite so. Sorry about that.
-
-
-> I haven't yet integrated dynamic debug into my daily workflow.
 > 
-> Last time I looked at it, it was a bit bothersome to use because I
-> needed to lookup exact line numbers to trigger useful information. And
-> those line numbers constantly keep changing as I work on the driver,
-> so it was a bit painful to script. Not to mention the syntax to frob
-> the correct files in debugfs to enable this functionality.
+> The distinction is somewhat subtle, but the other way to look at
+> modelling this in DT is that the supplies are in fact required, but may
+> be connected to an always-on regulator with a fixed voltage. Or in some
+> cases they may also be shorted to ground. In both cases the PCI
+> controller, or rather the slot that the controller connects to, actually
+> "requires" the supplies, it's just that we can get away without
+> describing them because they can't be controlled anyway.
 > 
-> As opposed to this, adding the following to the makefile is so easy. :-)
+> Looking at the PCI connector pinout for PCI Express, I do see a bunch of
+> +3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
+> supplies are indeed required for PCI slots. I'm not sure about devices
+> that are directly connected to the PCI controller, though. I'll need to
+> go look at some schematics to get a better understanding of these.
 > 
-> CFLAGS_tsens-common.o          := -DDEBUG
+> Bottom line: I'm wondering if we shouldn't really make these supplies
+> mandatory and in case where we don't care either just leave them away
+> (the regulator framework will supply a dummy regulator in that case) or
+> hook them up to a fixed regulator if that matches the hardware design.
 > 
-> Perhaps I am using it all wrong? How would I go about using dynamic
-> debug instead of this patch?
+> Any thoughts?
+> 
+> Thierry
+> 
+>>   
+>>   Examples:
+>>   =========
+>> @@ -156,6 +162,8 @@ Tegra194:
+>>   			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
+>>   
+>>   		vddio-pex-ctl-supply = <&vdd_1v8ao>;
+>> +		vpcie3v3-supply = <&vdd_3v3_pcie>;
+>> +		vpcie12v-supply = <&vdd_12v_pcie>;
+>>   
+>>   		phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
+>>   		       <&p2u_hsio_5>;
+>> -- 
+>> 2.17.1
+>>
 
-Throwing dyndbg="file <fname>.c +pf" onto the kernel command line is a
-good start (+p enables debug level prints, +f causes messages to include
-the function name).
-
-When the C files map to module names (whether the modules are actually
-built-in or not) then <module>.dyndbg=+pf is a bit cleaner and allows
-you to debug the whole of a driver without how it is decomposed into
-files.
-
-There are (many) other controls to play with[1] but the above should be
-sufficient to simulate -DDEBUG .
-
-
-Daniel.
-
-[1]
-https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
