@@ -2,140 +2,152 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3495EC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8B6C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA4820828
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:53:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umYgseE/"
+	by mail.kernel.org (Postfix) with ESMTP id B136A23426
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567097682;
+	bh=3h/WyQSu6URhwDtlLtxlEXd0hLY3+geOeRJpdV765vQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=AyAJN55CT3mIDOdI/0NpeAiARJaL0mSPq/SZglmeY/Z9hD7pU0ngDOev9pj1m2pC0
+	 MxmZdOYMeEazlFqaUydowQIj7SEvy1H0XLjBrhvko7qQOhZjEzh+B2N1pYasrlOfz+
+	 XS0iA9ouHSrjLzO09pZ6UH0ZNc+A/2kyOLVOlfpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfH2Qxl (ORCPT
+        id S1728017AbfH2Qym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:53:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46666 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727248AbfH2Qxl (ORCPT
+        Thu, 29 Aug 2019 12:54:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19772 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727483AbfH2Qyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:53:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q139so2433706pfc.13;
-        Thu, 29 Aug 2019 09:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ROI1h6BX8pjgc4LOx6piYuvxJZlEcDiZCUSCssETQu4=;
-        b=umYgseE/IeMY4l4arKqAwbmSODhJ/VeVn3EFJswXmJNpSbkJchJgfXvHIH83VVwJwQ
-         yCYvK9ytBhP3BHxuqQXyy64qEhljg2MbEZqVhv7m3uTWL0rIYAbCQU7cB3vajV6YMyIz
-         f0wsG2c3x1lA+FuGW7YqfjYH48X5zEum+NEeUWe+n2JssQoyWaiLWOx/CpnYNr4IsApP
-         UJwvlIpYGojqAitsRIASDdMQQLpsodbzAn8qLnH0+MKRNFOtpH3dq0xz6GHXv5xR/d04
-         AejDSYGqxUmobdlfF2OSWPGeCZbcsH6oHZam0QtDtHfL/sph99u5kUEFnv0/3vALqX7Q
-         9RtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ROI1h6BX8pjgc4LOx6piYuvxJZlEcDiZCUSCssETQu4=;
-        b=oSsMEGAJ7E+BRe9B3P2mGb+nNlF1fetPeIyKoyNiYjEQ+ax0xkYab9KclpbZPiD5/M
-         18Qx1NuDD4FYAj/mmJOVGEatn/mbjdig7nxucq/Q3HM1ClawoUh2wf90F4l+6/VWnSGU
-         ER0tr+MfvsO/VI0WxJwaJ4dR+nTKJDYVkjYzORGeRYiCfIhprInxpov+Db4qkkPrN0+m
-         RhPSzeO/ZkPdCehoRJQXxCzjc8E4Q3RxHTYXA6sObL1H7Y6JY8hmiRGd9rCLAjjfnp7a
-         kMBeHimMEVfKKBXKdwFs60rj8NPf9KZ7CcEHgYb8ozlXgVD8NQu+z+uPxW/TGkDfAkCA
-         w1UA==
-X-Gm-Message-State: APjAAAXow/m5Gr3jkso0Ez1zbAHGgwfjAcj+pumqKDkl1nZylJLoB8hO
-        cpOWEvaKJKxz2ijFEZ8cjto=
-X-Google-Smtp-Source: APXvYqzs2mYLo/bTNzZZh5PG+LuBi+qAUwwV5VKV77PeHu8CnzLx7ZZPeu0/rN7i/RfGRdaixrXBhw==
-X-Received: by 2002:a65:64c6:: with SMTP id t6mr9421160pgv.323.1567097620246;
-        Thu, 29 Aug 2019 09:53:40 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id w2sm3023576pjr.27.2019.08.29.09.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:53:39 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bruce Wang <bzwang@chromium.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 02/10] drm/msm/dpu: add real wait_for_commit_done()
-Date:   Thu, 29 Aug 2019 09:45:10 -0700
-Message-Id: <20190829164601.11615-3-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829164601.11615-1-robdclark@gmail.com>
-References: <20190829164601.11615-1-robdclark@gmail.com>
+        Thu, 29 Aug 2019 12:54:41 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TGrDRS033344;
+        Thu, 29 Aug 2019 12:54:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uphbyue43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 12:54:09 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7TGs82j036591;
+        Thu, 29 Aug 2019 12:54:08 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uphbyue3r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 12:54:08 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7TGqJr0006466;
+        Thu, 29 Aug 2019 16:54:07 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 2unb3t6vbm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 16:54:07 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TGs7hb55378288
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 16:54:07 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8A83B2067;
+        Thu, 29 Aug 2019 16:54:06 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6F79B2065;
+        Thu, 29 Aug 2019 16:54:06 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.151.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Aug 2019 16:54:06 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 71A0816C12C2; Thu, 29 Aug 2019 09:54:07 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:54:07 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
+Message-ID: <20190829165407.GT4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190828211904.GX26530@linux.ibm.com>
+ <20190828214241.GD75931@google.com>
+ <20190828220108.GC26530@linux.ibm.com>
+ <20190828221444.GA100789@google.com>
+ <20190828231247.GE26530@linux.ibm.com>
+ <20190829015155.GB100789@google.com>
+ <20190829034336.GD4125@linux.ibm.com>
+ <20190829144355.GE63638@google.com>
+ <20190829160946.GP4125@linux.ibm.com>
+ <CALCETrWNPOOdTrFabTDd=H7+wc6xJ9rJceg6OL1S0rTV5pfSsA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWNPOOdTrFabTDd=H7+wc6xJ9rJceg6OL1S0rTV5pfSsA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=973 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908290179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Thu, Aug 29, 2019 at 09:21:46AM -0700, Andy Lutomirski wrote:
+> On Thu, Aug 29, 2019 at 9:10 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Thu, Aug 29, 2019 at 10:43:55AM -0400, Joel Fernandes wrote:
+> >
+> > [ . . . ]
+> >
+> > > Paul, do we also nuke rcu_eqs_special_set()?  Currently I don't see anyone
+> > > using it. And also remove the bottom most bit of dynticks?
+> > >
+> > > Also what happens if a TLB flush broadcast is needed? Do we IPI nohz or idle
+> > > CPUs are the moment?
+> > >
+> > > All of this was introduced in:
+> > > b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
+> >
+> > Adding Andy Lutomirski on CC.
+> >
+> > Andy, is this going to be used in the near term, or should we just get
+> > rid of it?
+> 
+> Let's get rid of it.  I'm not actually convinced it *can* be used as designed.
+> 
+> For those who forgot the history or weren't cc'd on all of it: I had
+> this clever idea about how we could reduce TLB flushes.  I implemented
+> some of it (but not the part that would have used this RCU feature),
+> and it exploded in nasty and subtle ways.  This caused me to learn
+> that speculative TLB fills were a problem that I had entirely failed
+> to account for.  Then PTI happened and thoroughly muddied the water.
 
-Just waiting for next vblank isn't ideal.. we should really be looking
-at the hw FLUSH register value to know if there is still an in-progress
-flush without stalling unnecessarily when there is no pending flush.
+Yeah, PTI was quite annoying.  Still is, from what I can see.  :-/
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Sean Paul <sean@poorly.run>
----
- .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+> So I think we should just drop this :(
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 737fe963a490..7c73b09894f0 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -526,6 +526,26 @@ static int dpu_encoder_phys_vid_wait_for_vblank(
- 	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
- }
- 
-+static int dpu_encoder_phys_vid_wait_for_commit_done(
-+		struct dpu_encoder_phys *phys_enc)
-+{
-+	struct dpu_hw_ctl *hw_ctl = phys_enc->hw_ctl;
-+	int ret;
-+
-+	if (!hw_ctl)
-+		return 0;
-+
-+	ret = wait_event_timeout(phys_enc->pending_kickoff_wq,
-+		(hw_ctl->ops.get_flush_register(hw_ctl) == 0),
-+		msecs_to_jiffies(50));
-+	if (ret <= 0) {
-+		DPU_ERROR("vblank timeout\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
- static void dpu_encoder_phys_vid_prepare_for_kickoff(
- 		struct dpu_encoder_phys *phys_enc)
- {
-@@ -676,7 +696,7 @@ static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
- 	ops->destroy = dpu_encoder_phys_vid_destroy;
- 	ops->get_hw_resources = dpu_encoder_phys_vid_get_hw_resources;
- 	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
--	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_vblank;
-+	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_commit_done;
- 	ops->wait_for_vblank = dpu_encoder_phys_vid_wait_for_vblank;
- 	ops->wait_for_tx_complete = dpu_encoder_phys_vid_wait_for_vblank;
- 	ops->irq_control = dpu_encoder_phys_vid_irq_control;
--- 
-2.21.0
+OK, thank you!  I will put a tag into -rcu marking its removal in case
+it should prove useful whenever for whatever.
 
+Joel, would you like to remove this, or would you rather that I did?
+It is in code you are working with right now, so if I do it, I need to
+wait until yours is finalized.  Which wouldn't be a problem.
+
+						Thanx, Paul
