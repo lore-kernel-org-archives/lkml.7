@@ -2,150 +2,110 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E363C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B44C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1994D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458D820828
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfH2Lis (ORCPT
+        id S1727417AbfH2Ljj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:38:48 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:5115 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727736AbfH2Lir (ORCPT
+        Thu, 29 Aug 2019 07:39:39 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:48315 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727026AbfH2Lji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:38:47 -0400
-X-IronPort-AV: E=Sophos;i="5.64,442,1559487600"; 
-   d="scan'208";a="25249618"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 29 Aug 2019 20:38:45 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2BD6B400C423;
-        Thu, 29 Aug 2019 20:38:40 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
-Subject: [PATCH v2 1/2] dt-bindings: display: Add idk-1110wr binding
-Date:   Thu, 29 Aug 2019 12:38:32 +0100
-Message-Id: <1567078713-29361-2-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 29 Aug 2019 07:39:38 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3Im4iRJpeDqPe3Im8iNmv5; Thu, 29 Aug 2019 13:39:36 +0200
+Subject: Re: [PATCH] media: staging: tegra-vde: Disable building with
+ COMPILE_TEST
+To:     YueHaibing <yuehaibing@huawei.com>, digetx@gmail.com,
+        mchehab@kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        robin.murphy@arm.com
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+References: <20190826133140.13456-1-yuehaibing@huawei.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <7f73bcac-f52d-f1b3-324c-e9b551c5378b@xs4all.nl>
+Date:   Thu, 29 Aug 2019 13:39:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190826133140.13456-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPiBAm9/CVG2yl/RYcmSeabFSsF5/VsS8tiz/yGOIjYSnJaD/MkFj3fN12HeAtoQBMQlQLOy1rQ4hH9Pk3PGKlkkJ9Zl8plyc55GSSz4G1+ppVvvtxVa
+ cgqxOaIHdmGI6Lir3V57kld0PdyIGCK03wiHOkje13kc0gv/PhnX5+C3LrfxdHi2CMNt74bKZcw6PfwDuhW1UOnvKmy1QH8JUr++Y9Auceu48WZ6AknahDMp
+ y+nvVNlAWPrJV2LqEleB77la5ICht/YcDItL8/YHiyeJqDySBIvEVXGwJL4Xi9NZpZ9Wxt1uH4KbBobOQixOSOlTcNw+jzMsIe+bJEk17cuyRCrooBbp13+w
+ rAVl2YjzGamD7FhK930GFNdNmk8AkL+TW8oiCNcUOr/eA3es3KvvOT/pXVSQjB8VA9jwGGPoUNhHSHDpq4csgibDV9Sq8D6Biv12lEVTn+0Gyp3CGn8lifj1
+ NQ04G6sIObCBPw4TuYqOc3L6nn1zCZs6e0K9+DpBNqD0AuyfSDTX/sC8t2V3/1Ij0sv2jB60jtfqjR0cWtBhZHW6dO+mED2Z2qpLMcnRImy9u654a5b4EY9U
+ 8oU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding for the idk-1110wr LVDS panel from Advantech.
+On 8/26/19 3:31 PM, YueHaibing wrote:
+> If COMPILE_TEST is y and IOMMU_SUPPORT is n, selecting TEGRA_VDE
+> to m will set IOMMU_IOVA to m, this fails the building of
+> TEGRA_HOST1X and DRM_TEGRA which is y like this:
+> 
+> drivers/gpu/host1x/cdma.o: In function `host1x_cdma_init':
+> cdma.c:(.text+0x66c): undefined reference to `alloc_iova'
+> cdma.c:(.text+0x698): undefined reference to `__free_iova'
+> 
+> drivers/gpu/drm/tegra/drm.o: In function `tegra_drm_unload':
+> drm.c:(.text+0xeb0): undefined reference to `put_iova_domain'
+> drm.c:(.text+0xeb4): undefined reference to `iova_cache_put'
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 6b2265975239 ("media: staging: tegra-vde: Fix build error")
+> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/staging/media/tegra-vde/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
+> index ba49ea5..a41d30c 100644
+> --- a/drivers/staging/media/tegra-vde/Kconfig
+> +++ b/drivers/staging/media/tegra-vde/Kconfig
+> @@ -1,9 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config TEGRA_VDE
+>  	tristate "NVIDIA Tegra Video Decoder Engine driver"
+> -	depends on ARCH_TEGRA || COMPILE_TEST
+> +	depends on ARCH_TEGRA
 
-Some panel-specific documentation can be found here:
-https://buy.advantech.eu/Displays/Embedded-LCD-Kits-LCD-Kit-Modules/model-IDK-1110WR-55WSA1E.htm
+What happens if you drop this change,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
-v1->v2:
-* no change
+>  	select DMA_SHARED_BUFFER
+> -	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
+> +	select IOMMU_IOVA if IOMMU_SUPPORT
 
- .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+but keep this change?
 
-diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-new file mode 100644
-index 0000000..e5fdaa0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/advantech,idk-1110wr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Advantech IDK-1110WR 10.1" WSVGA LVDS Display Panel
-+
-+maintainers:
-+  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+allOf:
-+  - $ref: lvds.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: advantech,idk-1110wr
-+      - {} # panel-lvds, but not listed here to avoid false select
-+
-+  data-mapping:
-+    const: jeida-24
-+
-+  width-mm:
-+    const: 223
-+
-+  height-mm:
-+    const: 125
-+
-+  panel-timing: true
-+  port: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |+
-+    panel {
-+      compatible = "advantech,idk-1110wr", "panel-lvds";
-+
-+      width-mm = <223>;
-+      height-mm = <125>;
-+
-+      data-mapping = "jeida-24";
-+
-+      panel-timing {
-+        /* 1024x600 @60Hz */
-+        clock-frequency = <51200000>;
-+        hactive = <1024>;
-+        vactive = <600>;
-+        hsync-len = <240>;
-+        hfront-porch = <40>;
-+        hback-porch = <40>;
-+        vsync-len = <10>;
-+        vfront-porch = <15>;
-+        vback-porch = <10>;
-+      };
-+
-+      port {
-+        panel_in: endpoint {
-+          remote-endpoint = <&lvds_encoder>;
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.7.4
+iova.h has stubs that are used if IOMMU_IOVA is not set, so it should
+work when compile testing this tegra-vde driver.
+
+Haven't tried it, but making sure that compile testing keep working is
+really important.
+
+Regards,
+
+	Hans
+
+>  	select SRAM
+>  	help
+>  	    Say Y here to enable support for the NVIDIA Tegra video decoder
+> 
 
