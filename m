@@ -2,220 +2,113 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1400EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C29DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06312166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E29D215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfH2L6f (ORCPT
+        id S1727086AbfH2MAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:58:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47754 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbfH2L6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:58:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 352E28553A;
-        Thu, 29 Aug 2019 11:58:34 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B5FC5D9C9;
-        Thu, 29 Aug 2019 11:58:33 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id A518310513F;
-        Thu, 29 Aug 2019 08:56:37 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x7TBuZvW009438;
-        Thu, 29 Aug 2019 08:56:35 -0300
-Date:   Thu, 29 Aug 2019 08:56:34 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: Re: [PATCH v1] cpuidle-haltpoll: vcpu hotplug support
-Message-ID: <20190829115634.GA4949@amt.cnet>
-References: <20190828185650.16923-1-joao.m.martins@oracle.com>
+        Thu, 29 Aug 2019 08:00:22 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:34016 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726379AbfH2MAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:00:21 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 1F79FF69D7A4173BC632;
+        Thu, 29 Aug 2019 20:00:11 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 29 Aug 2019 20:00:10 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 29 Aug 2019 20:00:09 +0800
+Date:   Thu, 29 Aug 2019 19:59:22 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 05/24] erofs: add inode operations
+Message-ID: <20190829115922.GG64893@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-6-gaoxiang25@huawei.com>
+ <20190829102426.GE20598@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190828185650.16923-1-joao.m.martins@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 29 Aug 2019 11:58:34 +0000 (UTC)
+In-Reply-To: <20190829102426.GE20598@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joao,
+On Thu, Aug 29, 2019 at 03:24:26AM -0700, Christoph Hellwig wrote:
 
-On Wed, Aug 28, 2019 at 07:56:50PM +0100, Joao Martins wrote:
-> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
-> past the online ones and thus fail to register the idle driver.
-> This is because cpuidle_add_sysfs() will return with -ENODEV as a
-> consequence from get_cpu_device() return no device for a non-existing
-> CPU.
+[]
+
 > 
-> Instead switch to cpuidle_register_driver() and manually register each
-> of the present cpus through cpuhp_setup_state() and future ones that
-> get onlined. This mimics similar logic as intel_idle.
+> > +
+> > +		/* fill last page if inline data is available */
+> > +		err = fill_inline_data(inode, data, ofs);
 > 
-> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
-> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> ---
->  arch/x86/include/asm/cpuidle_haltpoll.h |  4 +-
->  arch/x86/kernel/kvm.c                   | 18 +++----
->  drivers/cpuidle/cpuidle-haltpoll.c      | 65 +++++++++++++++++++++++--
->  include/linux/cpuidle_haltpoll.h        |  4 +-
->  4 files changed, 70 insertions(+), 21 deletions(-)
+> Well, I think you should move the is_inode_flat_inline and
+> (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) checks from that
+> helper here, as otherwise you make everyone wonder why you'd always
+> fill out the inline data.
+
+Currently, fill_inline_data() only fills for fast symlink,
+later we can fill any tail-end block (such as dir block)
+for our requirements.
+
+And I think that is minor.
+
 > 
-> diff --git a/arch/x86/include/asm/cpuidle_haltpoll.h b/arch/x86/include/asm/cpuidle_haltpoll.h
-> index ff8607d81526..c8b39c6716ff 100644
-> --- a/arch/x86/include/asm/cpuidle_haltpoll.h
-> +++ b/arch/x86/include/asm/cpuidle_haltpoll.h
-> @@ -2,7 +2,7 @@
->  #ifndef _ARCH_HALTPOLL_H
->  #define _ARCH_HALTPOLL_H
->  
-> -void arch_haltpoll_enable(void);
-> -void arch_haltpoll_disable(void);
-> +void arch_haltpoll_enable(unsigned int cpu);
-> +void arch_haltpoll_disable(unsigned int cpu);
->  
->  #endif
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 8d150e3732d9..a9b6c4e2446d 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -880,32 +880,26 @@ static void kvm_enable_host_haltpoll(void *i)
->  	wrmsrl(MSR_KVM_POLL_CONTROL, 1);
->  }
->  
-> -void arch_haltpoll_enable(void)
-> +void arch_haltpoll_enable(unsigned int cpu)
->  {
->  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
-> -		printk(KERN_ERR "kvm: host does not support poll control\n");
-> -		printk(KERN_ERR "kvm: host upgrade recommended\n");
-> +		pr_err_once("kvm: host does not support poll control\n");
-> +		pr_err_once("kvm: host upgrade recommended\n");
->  		return;
->  	}
->  
-> -	preempt_disable();
->  	/* Enable guest halt poll disables host halt poll */
-> -	kvm_disable_host_haltpoll(NULL);
-> -	smp_call_function(kvm_disable_host_haltpoll, NULL, 1);
-> -	preempt_enable();
-> +	smp_call_function_single(cpu, kvm_disable_host_haltpoll, NULL, 1);
->  }
->  EXPORT_SYMBOL_GPL(arch_haltpoll_enable);
->  
-> -void arch_haltpoll_disable(void)
-> +void arch_haltpoll_disable(unsigned int cpu)
->  {
->  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL))
->  		return;
->  
-> -	preempt_disable();
->  	/* Enable guest halt poll disables host halt poll */
-> -	kvm_enable_host_haltpoll(NULL);
-> -	smp_call_function(kvm_enable_host_haltpoll, NULL, 1);
-> -	preempt_enable();
-> +	smp_call_function_single(cpu, kvm_enable_host_haltpoll, NULL, 1);
->  }
->  EXPORT_SYMBOL_GPL(arch_haltpoll_disable);
->  #endif
-> diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> index 9ac093dcbb01..0d1853a7185e 100644
-> --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> @@ -11,12 +11,15 @@
->   */
->  
->  #include <linux/init.h>
-> +#include <linux/cpu.h>
->  #include <linux/cpuidle.h>
->  #include <linux/module.h>
->  #include <linux/sched/idle.h>
->  #include <linux/kvm_para.h>
->  #include <linux/cpuidle_haltpoll.h>
->  
-> +static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> +
->  static int default_enter_idle(struct cpuidle_device *dev,
->  			      struct cpuidle_driver *drv, int index)
->  {
-> @@ -46,6 +49,48 @@ static struct cpuidle_driver haltpoll_driver = {
->  	.state_count = 2,
->  };
->  
-> +static int haltpoll_cpu_online(unsigned int cpu)
-> +{
-> +	struct cpuidle_device *dev;
-> +
-> +	dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-> +	if (!dev->registered) {
-> +		dev->cpu = cpu;
-> +		if (cpuidle_register_device(dev)) {
-> +			pr_notice("cpuidle_register_device %d failed!\n", cpu);
-> +			return -EIO;
-> +		}
-> +		arch_haltpoll_enable(cpu);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void haltpoll_uninit(void)
-> +{
-> +	unsigned int cpu;
-> +
-> +	cpus_read_lock();
-> +
-> +	for_each_online_cpu(cpu) {
-> +		struct cpuidle_device *dev =
-> +			per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-> +
-> +		if (!dev->registered)
-> +			continue;
-> +
-> +		arch_haltpoll_disable(cpu);
-> +		cpuidle_unregister_device(dev);
-> +	}
+> > +static inline struct inode *erofs_iget_locked(struct super_block *sb,
+> > +					      erofs_nid_t nid)
+> > +{
+> > +	const unsigned long hashval = erofs_inode_hash(nid);
+> > +
+> > +#if BITS_PER_LONG >= 64
+> > +	/* it is safe to use iget_locked for >= 64-bit platform */
+> > +	return iget_locked(sb, hashval);
+> > +#else
+> > +	return iget5_locked(sb, hashval, erofs_ilookup_test_actor,
+> > +		erofs_iget_set_actor, &nid);
+> > +#endif
+> 
+> Just use the slightly more complicated 32-bit version everywhere so that
+> you have a single actually tested code path.  And then remove this
+> helper.
 
-1)
+The consideration is simply because iget_locked performs better
+than iget5_locked.
 
-> +
-> +	cpuidle_unregister(&haltpoll_driver);
-
-cpuidle_unregister_driver.
-
-> +	free_percpu(haltpoll_cpuidle_devices);
-> +	haltpoll_cpuidle_devices = NULL;
-> +
-> +	cpus_read_unlock();
-
-Any reason you can't cpus_read_unlock() at 1) ?
-
-Looks good otherwise.
-
-Thanks!
+Thanks,
+Gao Xiang
 
