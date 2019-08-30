@@ -2,139 +2,201 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D74C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22CCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1368921726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:41:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UVEbVzrO"
+	by mail.kernel.org (Postfix) with ESMTP id 7883F21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfH3Glc (ORCPT
+        id S1728006AbfH3Gma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:41:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46173 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfH3Glc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:41:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n19so4437097lfe.13
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 23:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vWBOF7L/DOCaXKkeBfa9bHcFotH7VO/yMH6MWg+pOs8=;
-        b=UVEbVzrOcyBD9t7iur7XNpIk4mk114Y4yd9S55ZNizwKYZfTBQNFqi9/kxI4iOMh1N
-         s464ZhcarWv02wag88TJuDsrPO/ok09wjh8jzTCwfmDfFTzv5crFcAe+2vkO2HKxEVmq
-         B2HkuBxjKYxYKB0cDOgKuZwEpapCrkBCjcUX8GJCiL/ElHWHK0bBCkhxZqNDxuFRSJDn
-         r7URIldThRjLe1sur+3KZMAOJhkXEbaZXfhvRAElPNoHVjAl3DCK0G6dCvfnzbIT0m+B
-         ZeqHagY989QX/AyingVkSlTx5c6mTyld7f8MFBciKvQkiBWhHTp28/TdIQA0JsPr3XA2
-         OWBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vWBOF7L/DOCaXKkeBfa9bHcFotH7VO/yMH6MWg+pOs8=;
-        b=JzdIWKek6/r3k/yGvKbdjnfTPpEbqZIyh9Mw2kAXyxZ4OojnT0R3aJdO1JsFyOO2e0
-         X7JHB3ju4YtW8wajzrbf7CLVKMZ/s/y+SDjt1qcNn/dpcD4+ELpuWUsdc6AZwzSLoSNm
-         veqA4H6r2/H4F35Nupyl96PSZqWJ3bLxZB6NPsorwgdUoa4hjAIapRl0vT66jpWmuEsF
-         DaMsfXdL06mb1YQAhCBmvIUXE8+I+kDvw91NGUT5d8BdkYrv/yGBCTgn6fqJz2I2+Sgz
-         YeyIffZsKTaOf9GhwXyqS1+sC2EjK31IxL2lI/kuJdlpz0TDkAK0FpQm0JsY8DmIsohE
-         GcIA==
-X-Gm-Message-State: APjAAAWhX+xfoaINLOA+spgD/yUDoN6Z2s+Zm8Jf1gOVScT9k99eHAwb
-        suQeqoupW0c+4Jncr3fvwkMc8kCnHBMU6rcNvkhxgQ==
-X-Google-Smtp-Source: APXvYqzNHkk48QdykrCa7nUQ5bgYkDthjxlYnNFho7YV8cxx+XVNa82Ph7h5UpeTPzzpIjWNGcYD+TNoX7vdies4qYY=
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr7672532lfp.125.1567147289641;
- Thu, 29 Aug 2019 23:41:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-9-riel@surriel.com>
- <CAKfTPtDxHijR3PCOFfxA-r02rf2hVP4LpB=y-9emHS7znTPxTA@mail.gmail.com>
- <d703071084dadb477b8248b041d0d1aa730d65cd.camel@surriel.com>
- <CAKfTPtDX+keNfNxf78yMoF3QaXSG_fZHJ_nqCFKYDMYGa84A6Q@mail.gmail.com> <2a87463e8a51c34733e9c1fcf63380f9caa7afc4.camel@surriel.com>
-In-Reply-To: <2a87463e8a51c34733e9c1fcf63380f9caa7afc4.camel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 30 Aug 2019 08:41:17 +0200
-Message-ID: <CAKfTPtCAU7bT3sJ_FPexqKrfFzd8Yk0hVTEB5Da=+VbqPViXpA@mail.gmail.com>
-Subject: Re: [PATCH 08/15] sched,fair: simplify timeslice length code
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Fri, 30 Aug 2019 02:42:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46754 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727156AbfH3Gma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:42:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 832E8ACC5;
+        Fri, 30 Aug 2019 06:42:27 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 08:42:25 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Breno Leitao <leitao@debian.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Nicolai Stange <nstange@suse.de>,
+        Michael Neuling <mikey@neuling.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] powerpc/perf: split callchain.c by bitness
+Message-ID: <20190830084225.527f4265@naga>
+In-Reply-To: <4d996b0a225ca5b7d287ae46825d7da4a1d6e509.1567146554.git.christophe.leroy@c-s.fr>
+References: <c77eec3d99fd0251edf725a3d9e1b79f396eba6e.1567117050.git.msuchanek@suse.de>
+        <4d996b0a225ca5b7d287ae46825d7da4a1d6e509.1567146554.git.christophe.leroy@c-s.fr>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 at 18:00, Rik van Riel <riel@surriel.com> wrote:
->
-> On Thu, 2019-08-29 at 16:02 +0200, Vincent Guittot wrote:
-> > On Thu, 29 Aug 2019 at 01:19, Rik van Riel <riel@surriel.com> wrote:
-> >
-> > > What am I overlooking?
-> >
-> > My point is more for task that runs several ticks in a row. Their
-> > sched_slice will be shorter in some cases with your changes so they
-> > can be preempted earlier by other runnable tasks with a lower
-> > vruntime
-> > and there will be more context switch
->
-> I can think of exactly one case where the time slice
-> will be shorter with my new code than with the old code,
-> and that is the case where:
-> - A CPU has nr_running > sched_nr_latency
+On Fri, 30 Aug 2019 06:35:11 +0000 (UTC)
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-yes nr_running must be higher than  sched_nr_latency
+> On 08/29/2019 10:28 PM, Michal Suchanek wrote:
+> > Building callchain.c with !COMPAT proved quite ugly with all the
+> > defines. Splitting out the 32bit and 64bit parts looks better.
+> > 
+> > Also rewrite current_is_64bit as common function. No other code change
+> > intended.  
+> 
+> Nice result.
+> 
+> Could look even better by merging both read_user_stack_32(), see below.
+> 
+> Also a possible cosmetic change to Makefile.
+> 
+> ---
+>  arch/powerpc/perf/Makefile       |  7 ++---
+>  arch/powerpc/perf/callchain_32.c | 65 ++++++++++++++++------------------------
+>  2 files changed, 29 insertions(+), 43 deletions(-)
+> 
+> diff --git a/arch/powerpc/perf/Makefile b/arch/powerpc/perf/Makefile
+> index e9f3202251d0..53d614e98537 100644
+> --- a/arch/powerpc/perf/Makefile
+> +++ b/arch/powerpc/perf/Makefile
+> @@ -1,9 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> -obj-$(CONFIG_PERF_EVENTS)	+= callchain.o perf_regs.o
+> -ifdef CONFIG_PERF_EVENTS
+> -obj-y				+= callchain_$(BITS).o
+> -obj-$(CONFIG_COMPAT)		+= callchain_32.o
+> +obj-$(CONFIG_PERF_EVENTS)	+= callchain.o callchain_$(BITS).o perf_regs.o
+> +ifdef CONFIG_COMPAT
+> +obj-$(CONFIG_PERF_EVENTS)	+= callchain_32.o
+>  endif
+>  
+That looks good.
+>  obj-$(CONFIG_PPC_PERF_CTRS)	+= core-book3s.o bhrb.o
+> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
+> index 0bd4484eddaa..17c43ae03084 100644
+> --- a/arch/powerpc/perf/callchain_32.c
+> +++ b/arch/powerpc/perf/callchain_32.c
+> @@ -15,50 +15,13 @@
+>  #include <asm/sigcontext.h>
+>  #include <asm/ucontext.h>
+>  #include <asm/vdso.h>
+> -#ifdef CONFIG_PPC64
+> -#include "../kernel/ppc32.h"
+> -#endif
+>  #include <asm/pte-walk.h>
+>  
+>  #include "callchain.h"
+>  
+>  #ifdef CONFIG_PPC64
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> -{
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+> -
+> -	pagefault_disable();
+> -	if (!__get_user_inatomic(*ret, ptr)) {
+> -		pagefault_enable();
+> -		return 0;
+> -	}
+> -	pagefault_enable();
+> -
+> -	return read_user_stack_slow(ptr, ret, 4);
+> -}
+> -#else /* CONFIG_PPC64 */
+> -/*
+> - * On 32-bit we just access the address and let hash_page create a
+> - * HPTE if necessary, so there is no need to fall back to reading
+> - * the page tables.  Since this is called at interrupt level,
+> - * do_page_fault() won't treat a DSI as a page fault.
+> - */
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> -{
+> -	int rc;
+> -
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+> -
+> -	pagefault_disable();
+> -	rc = __get_user_inatomic(*ret, ptr);
+> -	pagefault_enable();
+> -
+> -	return rc;
+> -}
+> +#include "../kernel/ppc32.h"
+> +#else
+>  
+>  #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
+>  #define sigcontext32		sigcontext
+> @@ -95,6 +58,30 @@ struct rt_signal_frame_32 {
+>  	int			abigap[56];
+>  };
+>  
+> +/*
+> + * On 32-bit we just access the address and let hash_page create a
+> + * HPTE if necessary, so there is no need to fall back to reading
+> + * the page tables.  Since this is called at interrupt level,
+> + * do_page_fault() won't treat a DSI as a page fault.
+> + */
+> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> +{
+> +	int rc;
+> +
+> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> +	    ((unsigned long)ptr & 3))
+> +		return -EFAULT;
+> +
+> +	pagefault_disable();
+> +	rc = __get_user_inatomic(*ret, ptr);
+> +	pagefault_enable();
+> +
+> +	if (IS_ENABLED(CONFIG_PPC32) || !rc)
+> +		return rc;
+> +
+> +	return read_user_stack_slow(ptr, ret, 4);
+> +}
+> +
+>  static int is_sigreturn_32_address(unsigned int nip, unsigned int fp)
+>  {
+>  	if (nip == fp + offsetof(struct signal_frame_32, mctx.mc_pad))
 
-> - __sched_period returns a value larger than sysctl_sched_latency
-> - one of the tasks is much higher priority than the others
+I will leave consolidating this function to somebody who knows what the
+desired semantic is. With a short ifdef section at the top of the file
+it is a low-hanging fruit.
 
-it's not only one, that can be several. It depends of the number of
-running tasks
+Thanks
 
-> - that one task alone gets a timeslice larger than sysctl_sched_latency
->
-> With the new code, that high priority task will get a time
-> slice that is a (large) fraction of sysctl_sched_latency,
-
-yes
-
-> while the other (lower priority) tasks get their time slices
-> rounded up to sysctl_sched_min_granularity.
-
-yes and if the jify period is higher than sysctl_sched_min_granularity
-they will get a full jiffy period
-
->
-> When tasks get their timeslice rounded up, that will increase
-> the total sched period in a similar way the old code did by
-> returning a longer period from __sched_period.
-
-sched_slice is not a strict value and scheduler will not schedule out
-the task after the sched_slice (unless you enable HRTICK which is
-disable by default). Instead it will wait for next tick to change the
-running task
-
-sched_slice is mainly use to ensure a minimum running time in a row.
-With this change, the running time of the high priority task will most
-probably be split in several slice instead of one
-
->
-> If a CPU is faced with a large number of equal priority tasks,
-> both the old code and the new code would end up giving each
-> task a timeslice length of sysctl_sched_min_granularity.
->
-> What am I missing?
->
-> --
-> All Rights Reversed.
+Michal
