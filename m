@@ -2,112 +2,58 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04FCC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945A1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753AB2341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6F923407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfH3OQx (ORCPT
+        id S1727891AbfH3OVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:16:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:32928 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 10:21:34 -0400
+Received: from 8bytes.org ([81.169.241.247]:52516 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfH3OQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:16:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BC1B344;
-        Fri, 30 Aug 2019 07:16:52 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B4383F703;
-        Fri, 30 Aug 2019 07:16:49 -0700 (PDT)
-Subject: Re: [PATCH v2 5/8] lib: vdso: Remove checks on return value for 32
- bit vDSO
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     catalin.marinas@arm.com, 0x7f454c46@gmail.com, salyzyn@android.com,
-        paul.burton@mips.com, luto@kernel.org, tglx@linutronix.de,
-        will@kernel.org
-References: <20190830135902.20861-1-vincenzo.frascino@arm.com>
- <20190830135902.20861-6-vincenzo.frascino@arm.com>
-Message-ID: <ffbbd289-b282-53e6-03c2-14563bd8ebf3@arm.com>
-Date:   Fri, 30 Aug 2019 15:16:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727754AbfH3OVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:21:34 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4E5E7246; Fri, 30 Aug 2019 16:21:32 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 16:21:32 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com,
+        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+Subject: Re: [PATCH v11 00/23] MT8183 IOMMU SUPPORT
+Message-ID: <20190830142132.GC29382@8bytes.org>
+References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190830135902.20861-6-vincenzo.frascino@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 14:58, Vincenzo Frascino wrote:
-> Since all the architectures that support the generic vDSO library have
-> been converted to support the 32 bit fallbacks it is not required
-> anymore to check the return value of __cvdso_clock_get*time32_common()
-> before updating the old_timespec fields.
-> 
-> Remove the related checks from the generic vdso library.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> CC: Andy Lutomirski <luto@kernel.org>
+On Sat, Aug 24, 2019 at 11:01:45AM +0800, Yong Wu wrote:
+> Change notes:
+> v11:
+>    1) Adjust a bit code for mtk quirk in v7s.
+>    2) Collect ack from will and Matthias of the last patch.
 
-Forgot to add to this patch:
-
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-
-> References: c60a32ea4f45 ("lib/vdso/32: Provide legacy syscall fallbacks")
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  lib/vdso/gettimeofday.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-> index 2c4b311c226d..d5bc16748f81 100644
-> --- a/lib/vdso/gettimeofday.c
-> +++ b/lib/vdso/gettimeofday.c
-> @@ -129,10 +129,10 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
->  	if (unlikely(ret))
->  		return clock_gettime32_fallback(clock, res);
->  
-> -	if (likely(!ret)) {
-> -		res->tv_sec = ts.tv_sec;
-> -		res->tv_nsec = ts.tv_nsec;
-> -	}
-> +	/* For ret == 0 */
-> +	res->tv_sec = ts.tv_sec;
-> +	res->tv_nsec = ts.tv_nsec;
-> +
->  	return ret;
->  }
->  #endif /* BUILD_VDSO32 */
-> @@ -238,10 +238,10 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
->  	if (unlikely(ret))
->  		return clock_getres32_fallback(clock, res);
->  
-> -	if (likely(!ret)) {
-> -		res->tv_sec = ts.tv_sec;
-> -		res->tv_nsec = ts.tv_nsec;
-> -	}
-> +	/* For ret == 0 */
-> +	res->tv_sec = ts.tv_sec;
-> +	res->tv_nsec = ts.tv_nsec;
-> +
->  	return ret;
->  }
->  #endif /* BUILD_VDSO32 */
-> 
-
--- 
-Regards,
-Vincenzo
+Applied to arm/mediatek, thanks.
