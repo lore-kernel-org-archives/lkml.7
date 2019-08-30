@@ -2,125 +2,102 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8649C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EADC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768F422CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:36:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="XMw5Gvvc"
+	by mail.kernel.org (Postfix) with ESMTP id 80AB322CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfH3Gg2 (ORCPT
+        id S1728179AbfH3Ggl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:36:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33704 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfH3Gg2 (ORCPT
+        Fri, 30 Aug 2019 02:36:41 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:21551 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726023AbfH3Ggl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:36:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r17so5737126wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 23:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z/RSED/kwcwsGToB/IOepXNrOYTyt6uJncdAwRBYdjo=;
-        b=XMw5GvvcyFz6hKnb3g+bk0+pbstWXkiSyCADKHoTh3zlMEFIyiCXKa4BrU0T2EqEiC
-         jdVUua2mRyM9Kd4VNIxg+lTOC1X5DRlyTlWaVRCE2kxDN233jhmCmGVIkeHj+BZB9MCW
-         6bfDwNIhhWM44XSJUBbEACF3ZD0s+QX0FLFxyzCd8BZK68FsQzMw24b27bbq+FZZL91H
-         ytJu99yu8qFHrxQxPCYmSalSyZW0q63no8GqEKnZCaZXkehjHJuP8sGiApccW4npnuou
-         Sp2x0ctVznRD2OkBv2YZD/Vz+ZzjAyl7u2L3mD8mGj9JfwP3Vu5CYJQz5fS9Cg02LVnL
-         jTVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z/RSED/kwcwsGToB/IOepXNrOYTyt6uJncdAwRBYdjo=;
-        b=C6GwSdDAPTS0xX7bU29OSF7VcYwh5C2Ji7DupLuWcfoWcWyIa3Ztcz7ppHjLSuKiEC
-         NVSXmq3EX0L23kkTRWos2CZkm3jjbpzyHRyzQN+z4oZqayV1+AycxNg70zsv5QJUMfxX
-         5rH+vzU5bBkvZtWcNFgNnwB38dVtNcL5nVOyn531FdS2uZIzb7f6Zxjd/RW8B2avg49f
-         u7YnuIz0yG6Egx3f8GW7Bc3j8UVCm1P9S6go7XT1I0qY7jampaFGNpEfe22lCWwOwTu/
-         spt1alyITy+KL5zCyIGUeivCGHlGA8YDIkeLD+k1KBB5KASudhcUIVjd0dfEUerbuFjN
-         agMQ==
-X-Gm-Message-State: APjAAAXLY5qpFRWSn7OxnT4n/m3AB7ZwVXBcVMFnfAWx707wFlZScaOR
-        YiTcoNPBXgwT3ih1Y+clqCeS/Q==
-X-Google-Smtp-Source: APXvYqxmg5jjVOXpHumS2I7fv4DxCRMZGOdvC7Rfvplq9fotOrwEDyJD0G4rrenXgM9QnvWo+Cw4jA==
-X-Received: by 2002:a7b:c84e:: with SMTP id c14mr16153146wml.46.1567146985762;
-        Thu, 29 Aug 2019 23:36:25 -0700 (PDT)
-Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
-        by smtp.gmail.com with ESMTPSA id q124sm3873372wma.33.2019.08.29.23.36.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 23:36:25 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 08:36:24 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     David Miller <davem@davemloft.net>
-Cc:     idosch@idosch.org, andrew@lunn.ch, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        allan.nielsen@microchip.com, ivecera@redhat.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190830063624.GN2312@nanopsycho>
-References: <20190829193613.GA23259@splinter>
- <20190829.151201.940681219080864052.davem@davemloft.net>
- <20190830053940.GL2312@nanopsycho>
- <20190829.230233.287975311556641534.davem@davemloft.net>
+        Fri, 30 Aug 2019 02:36:41 -0400
+X-UUID: f87a23ab6bbe4b4194fdb629b252278d-20190830
+X-UUID: f87a23ab6bbe4b4194fdb629b252278d-20190830
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1604358296; Fri, 30 Aug 2019 14:36:33 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 14:36:31 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 14:36:31 +0800
+Message-ID: <1567146985.5942.22.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 31/32] drm/mediatek: add connection from RDMA0 to
+ DSI0
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 30 Aug 2019 14:36:25 +0800
+In-Reply-To: <1567090254-15566-32-git-send-email-yongqiang.niu@mediatek.com>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-32-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829.230233.287975311556641534.davem@davemloft.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 50A5F5C4F5D72EB5221C973FC30EC94B6C7215BA6C5A3B2CA8C5D11468BADDBA2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Aug 30, 2019 at 08:02:33AM CEST, davem@davemloft.net wrote:
->From: Jiri Pirko <jiri@resnulli.us>
->Date: Fri, 30 Aug 2019 07:39:40 +0200
->
->> Because the "promisc mode" would gain another meaning. Now how the
->> driver should guess which meaning the user ment when he setted it?
->> filter or trap?
->> 
->> That is very confusing. If the flag is the way to do this, let's
->> introduce another flag, like IFF_TRAPPING indicating that user wants
->> exactly this.
->
->I don't understand how the meaning of promiscuous mode for a
->networking device has suddenly become ambiguous, when did this start
->happening?
+Hi, Yongqiang:
 
-The promiscuity is a way to setup the rx filter. So promics == rx filter
-off. For normal nics, where there is no hw fwd datapath,
-this coincidentally means all received packets go to cpu.
-But if there is hw fwd datapath, rx filter is still off, all rxed packets
-are processed. But that does not mean they should be trapped to cpu.
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add connection from RDMA0 to DSI0
 
-Simple example:
-I need to see slowpath packets, for example arps/stp/bgp/... that
-are going to cpu, I do:
-tcpdump -i swp1
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-I don't want to get all the traffic running over hw running this cmd.
-This is a valid usecase.
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index fd38658..6a7cb15 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -42,6 +42,7 @@
+>  #define OVL1_2L_MOUT_EN_RDMA1				BIT(4)
+>  #define DITHER0_MOUT_IN_DSI0				BIT(0)
+>  #define DISP_PATH0_SEL_IN_OVL0_2L			0x1
+> +#define DSI0_SEL_IN_RDMA0				0x1
+>  
+>  #define MT2701_DISP_MUTEX0_MOD0			0x2c
+>  #define MT2701_DISP_MUTEX0_SOF0			0x30
+> @@ -391,6 +392,9 @@ static unsigned int mtk_ddp_sel_in(const struct mtk_mmsys_reg_data *data,
+>  		   next == DDP_COMPONENT_RDMA0) {
+>  		*addr = MT8183_DISP_PATH0_SEL_IN;
+>  		value = DISP_PATH0_SEL_IN_OVL0_2L;
+> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI0) {
+> +		*addr = data->dsi0_sel_in;
+> +		value = DSI0_SEL_IN_RDMA0;
+>  	} else {
+>  		value = 0;
+>  	}
 
-To cope with hw fwd datapath devices, I believe that tcpdump has to have
-notion of that. Something like:
 
-tcpdump -i swp1 --hw-trapping-mode
-
-The logic can be inverse:
-tcpdump -i swp1
-tcpdump -i swp1 --no-hw-trapping-mode
-
-However, that would provide inconsistent behaviour between existing and
-patched tcpdump/kernel.
-
-All I'm trying to say, there are 2 flags
-needed (if we don't use tc trap).
