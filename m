@@ -4,113 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B73C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C004C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C327D21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0C3233FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfH3NZi (ORCPT
+        id S1728017AbfH3Nba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:25:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6147 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727135AbfH3NZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:25:38 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 14283D940CB8D64295D9;
-        Fri, 30 Aug 2019 21:25:33 +0800 (CST)
-Received: from RH5885H-V3.huawei.com (10.90.53.225) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 30 Aug 2019 21:25:24 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <linux@armlinux.org.uk>, <ebiederm@xmission.com>,
-        <kstewart@linuxfoundation.org>, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <bhelgaas@google.com>,
-        <jingxiangfeng@huawei.com>, <tglx@linutronix.de>,
-        <sakari.ailus@linux.intel.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH] arm: fix page faults in do_alignment
-Date:   Fri, 30 Aug 2019 21:31:17 +0800
-Message-ID: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 30 Aug 2019 09:31:30 -0400
+Received: from sauhun.de ([88.99.104.3]:54416 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727780AbfH3Nb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:31:29 -0400
+Received: from localhost (p54B335BE.dip0.t-ipconnect.de [84.179.53.190])
+        by pokefinder.org (Postfix) with ESMTPSA id D3E512C00A0;
+        Fri, 30 Aug 2019 15:31:26 +0200 (CEST)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-rtc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] rtc: max77686: convert to devm_i2c_new_dummy_device()
+Date:   Fri, 30 Aug 2019 15:31:23 +0200
+Message-Id: <20190830133124.21633-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190830133124.21633-1-wsa+renesas@sang-engineering.com>
+References: <20190830133124.21633-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function do_alignment can handle misaligned address for user and
-kernel space. If it is a userspace access, do_alignment may fail on
-a low-memory situation, because page faults are disabled in
-probe_kernel_address.
+I was about to simplify the call to i2c_unregister_device() when I
+realized that converting to devm_i2c_new_dummy_device() will simplify
+the driver a lot. So I took this approach.
 
-Fix this by using __copy_from_user stead of probe_kernel_address.
-
-Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- arch/arm/mm/alignment.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-max77686.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index 04b3643..2ccabd3 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -774,6 +774,7 @@ static ssize_t alignment_proc_write(struct file *file, const char __user *buffer
- 	unsigned long instr = 0, instrptr;
- 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
- 	unsigned int type;
-+	mm_segment_t fs;
- 	unsigned int fault;
- 	u16 tinstr = 0;
- 	int isize = 4;
-@@ -784,16 +785,22 @@ static ssize_t alignment_proc_write(struct file *file, const char __user *buffer
- 
- 	instrptr = instruction_pointer(regs);
- 
-+	fs = get_fs();
-+	set_fs(KERNEL_DS);
- 	if (thumb_mode(regs)) {
- 		u16 *ptr = (u16 *)(instrptr & ~1);
--		fault = probe_kernel_address(ptr, tinstr);
-+		fault = __copy_from_user(tinstr,
-+				(__force const void __user *)ptr,
-+				sizeof(tinstr));
- 		tinstr = __mem_to_opcode_thumb16(tinstr);
- 		if (!fault) {
- 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
- 			    IS_T32(tinstr)) {
- 				/* Thumb-2 32-bit */
- 				u16 tinst2 = 0;
--				fault = probe_kernel_address(ptr + 1, tinst2);
-+				fault = __copy_from_user(tinst2,
-+						(__force const void __user *)(ptr+1),
-+						sizeof(tinst2));
- 				tinst2 = __mem_to_opcode_thumb16(tinst2);
- 				instr = __opcode_thumb32_compose(tinstr, tinst2);
- 				thumb2_32b = 1;
-@@ -803,10 +810,13 @@ static ssize_t alignment_proc_write(struct file *file, const char __user *buffer
- 			}
- 		}
- 	} else {
--		fault = probe_kernel_address((void *)instrptr, instr);
-+		fault = __copy_from_user(instr,
-+				(__force const void __user *)instrptr,
-+				sizeof(instr));
- 		instr = __mem_to_opcode_arm(instr);
+diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+index 7a98e0744878..d5a0e27dd0a0 100644
+--- a/drivers/rtc/rtc-max77686.c
++++ b/drivers/rtc/rtc-max77686.c
+@@ -690,8 +690,8 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ 		goto add_rtc_irq;
  	}
  
-+	set_fs(fs);
- 	if (fault) {
- 		type = TYPE_FAULT;
- 		goto bad_or_fault;
+-	info->rtc = i2c_new_dummy_device(parent_i2c->adapter,
+-					 info->drv_data->rtc_i2c_addr);
++	info->rtc = devm_i2c_new_dummy_device(info->dev, parent_i2c->adapter,
++					      info->drv_data->rtc_i2c_addr);
+ 	if (IS_ERR(info->rtc)) {
+ 		dev_err(info->dev, "Failed to allocate I2C device for RTC\n");
+ 		return PTR_ERR(info->rtc);
+@@ -702,7 +702,7 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ 	if (IS_ERR(info->rtc_regmap)) {
+ 		ret = PTR_ERR(info->rtc_regmap);
+ 		dev_err(info->dev, "Failed to allocate RTC regmap: %d\n", ret);
+-		goto err_unregister_i2c;
++		return ret;
+ 	}
+ 
+ add_rtc_irq:
+@@ -712,15 +712,10 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ 				  &info->rtc_irq_data);
+ 	if (ret < 0) {
+ 		dev_err(info->dev, "Failed to add RTC irq chip: %d\n", ret);
+-		goto err_unregister_i2c;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_unregister_i2c:
+-	if (info->rtc)
+-		i2c_unregister_device(info->rtc);
+-	return ret;
+ }
+ 
+ static int max77686_rtc_probe(struct platform_device *pdev)
+@@ -783,8 +778,6 @@ static int max77686_rtc_probe(struct platform_device *pdev)
+ 
+ err_rtc:
+ 	regmap_del_irq_chip(info->rtc_irq, info->rtc_irq_data);
+-	if (info->rtc)
+-		i2c_unregister_device(info->rtc);
+ 
+ 	return ret;
+ }
+@@ -795,8 +788,6 @@ static int max77686_rtc_remove(struct platform_device *pdev)
+ 
+ 	free_irq(info->virq, info);
+ 	regmap_del_irq_chip(info->rtc_irq, info->rtc_irq_data);
+-	if (info->rtc)
+-		i2c_unregister_device(info->rtc);
+ 
+ 	return 0;
+ }
 -- 
-1.8.3.1
+2.20.1
 
