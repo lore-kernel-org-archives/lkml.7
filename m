@@ -2,152 +2,305 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F86C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C7C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560CA21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E7021670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfH3JpD (ORCPT
+        id S1728042AbfH3JpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:45:03 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:55717 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726653AbfH3JpD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:45:03 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 3dShiYEL4DqPe3dSkiRS9z; Fri, 30 Aug 2019 11:45:00 +0200
-Subject: Re: [PATCH 2/8] videodev2.h: add V4L2_DEC_CMD_FLUSH
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        mripard@kernel.org, Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, Chen-Yu Tsai <wens@csie.org>,
-        gregkh@linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>, jonas@kwiboo.se
-References: <20190822194500.2071-1-jernej.skrabec@siol.net>
- <20190822194500.2071-3-jernej.skrabec@siol.net>
- <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <907f3c43-b994-f1c7-a15b-116566e19003@xs4all.nl>
-Date:   Fri, 30 Aug 2019 11:44:54 +0200
+        Fri, 30 Aug 2019 05:45:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727326AbfH3JpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:45:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C72385545;
+        Fri, 30 Aug 2019 09:45:08 +0000 (UTC)
+Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 554E660872;
+        Fri, 30 Aug 2019 09:45:05 +0000 (UTC)
+Subject: Re: [PATCH v2] KVM: selftests: Add a test for the KVM_S390_MEM_OP
+ ioctl
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190829121412.30194-1-thuth@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <c015592c-34f9-b940-b10d-56e4b201c7ae@redhat.com>
+Date:   Fri, 30 Aug 2019 11:45:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
+In-Reply-To: <20190829121412.30194-1-thuth@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfB4Iwpuxa4ZWt3WM5IScwN1zIREASBWnbgJamG02lqSTKf0f6j1jls/icFEBpt/+ljEr/9Y5Sq5Zd9sZVR6ANFlk/wmVSJVnMrssJpDPeJBWRqvn+U/p
- LVEEMt39B1UHj6sOC490LO9wF2NWibQ78kCPGnUAWmwR3oWf++lVNsd1bmDFh4tBqyCG4RjLtz+vPkfOYhbPEeoOa7+xOnaCdbl4H7IhWoAAXXIgl9IflOxH
- cc1PFgWU6u4fVCy3OJoqsgnYEWRFujH3WodDTFiTFlKM51XUi7nVSeigAS14/3E1BU4EqYrOkJlGmcgQzLN8XJmQ52J74mkYg7qSyzrmKWZ/4ZC2CEjeWQJZ
- XJk0wPWGnvRKw2bb+tiHbwkRY6r6CgAGmm8bu2mUaN/SZrqw4TVAHQuJtb8WvnSsKaijD5bREj07kRg4iflyy8L5MAAme/LpzwT2IMXyRsoSyuqOu3NBP1Z3
- tzjcdWh2vLp/fcnK+DOELBvNwrvpRn6J6U4UKgf4j0MER/dsnK8hbKKzzMDwaQcSsCCZC1cHXRbDbrgZEY7hKCb/jdU5vyAdLncmCfmQDUGUajlV4vm07AF6
- 1RitpU4Y+gnyKJ6XOCngTKZ91X4yTPrdGy//Ui2pdXkitnE+yvdwRjlIcSjHYCwjGNoXohLW8KGcEHXZslxfljBBeBnZoRiHWZhS3dzUqz9aQkvfaq3E2a8N
- p4F05ydyvQwCdZKvYLxrSfrlWaxEa7nP
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 30 Aug 2019 09:45:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 11:38 AM, Alexandre Courbot wrote:
-> On Fri, Aug 23, 2019 at 4:45 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
->>
->> From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->>
->> Add this new V4L2_DEC_CMD_FLUSH decoder command and document it.
->>
->> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->> ---
->>  Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst | 11 ++++++++++-
->>  Documentation/media/videodev2.h.rst.exceptions      |  1 +
->>  include/uapi/linux/videodev2.h                      |  1 +
->>  3 files changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
->> index 57f0066f4cff..0bffef6058f7 100644
->> --- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
->> +++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
->> @@ -208,7 +208,16 @@ introduced in Linux 3.3. They are, however, mandatory for stateful mem2mem decod
->>         been started yet, the driver will return an ``EPERM`` error code. When
->>         the decoder is already running, this command does nothing. No
->>         flags are defined for this command.
->> -
->> +    * - ``V4L2_DEC_CMD_FLUSH``
->> +      - 4
->> +      - Flush any held capture buffers. Only valid for stateless decoders,
->> +        and only if ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` was set.
->> +       This command is typically used when the application reached the
->> +       end of the stream and the last output buffer had the
->> +       ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
->> +       dequeueing the last capture buffer containing the last decoded frame.
->> +       So this command can be used to explicitly flush that last decoded
->> +       frame.
+On 29.08.19 14:14, Thomas Huth wrote:
+> Check that we can write and read the guest memory with this s390x
+> ioctl, and that some error cases are handled correctly.
 > 
-> Just for safety, can we also specify that it is valid to call this
-> command even if no buffer was held (in which case it is a no-op), as
-> this can help make user-space code simpler?
-
-Ah yes, thanks for the reminder.
-
-Jernej, when you post the next version of this series, can you change the text
-above to:
-
-- Flush any held capture buffers. Only valid for stateless decoders.
-  This command is typically used when the application reached the
-  end of the stream and the last output buffer had the
-  ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
-  dequeueing the capture buffer containing the last decoded frame.
-  So this command can be used to explicitly flush that final decoded
-  frame. This command does nothing if there are no held capture buffers.
-
-Regards,
-
-	Hans
-
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  v2: Check the ioctl also with "size" set to 0
 > 
->>
->>  Return Value
->>  ============
->> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
->> index adeb6b7a15cb..a79028e4d929 100644
->> --- a/Documentation/media/videodev2.h.rst.exceptions
->> +++ b/Documentation/media/videodev2.h.rst.exceptions
->> @@ -434,6 +434,7 @@ replace define V4L2_DEC_CMD_START decoder-cmds
->>  replace define V4L2_DEC_CMD_STOP decoder-cmds
->>  replace define V4L2_DEC_CMD_PAUSE decoder-cmds
->>  replace define V4L2_DEC_CMD_RESUME decoder-cmds
->> +replace define V4L2_DEC_CMD_FLUSH decoder-cmds
->>
->>  replace define V4L2_DEC_CMD_START_MUTE_AUDIO decoder-cmds
->>  replace define V4L2_DEC_CMD_PAUSE_TO_BLACK decoder-cmds
->> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->> index 4fa9f543742d..91a79e16089c 100644
->> --- a/include/uapi/linux/videodev2.h
->> +++ b/include/uapi/linux/videodev2.h
->> @@ -1978,6 +1978,7 @@ struct v4l2_encoder_cmd {
->>  #define V4L2_DEC_CMD_STOP        (1)
->>  #define V4L2_DEC_CMD_PAUSE       (2)
->>  #define V4L2_DEC_CMD_RESUME      (3)
->> +#define V4L2_DEC_CMD_FLUSH       (4)
->>
->>  /* Flags for V4L2_DEC_CMD_START */
->>  #define V4L2_DEC_CMD_START_MUTE_AUDIO  (1 << 0)
->> --
->> 2.22.1
->>
+>  tools/testing/selftests/kvm/Makefile      |   1 +
+>  tools/testing/selftests/kvm/s390x/memop.c | 165 ++++++++++++++++++++++
+>  2 files changed, 166 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/s390x/memop.c
+> 
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 1b48a94b4350..62c591f87dab 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -32,6 +32,7 @@ TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+>  
+> +TEST_GEN_PROGS_s390x = s390x/memop
+>  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+>  TEST_GEN_PROGS_s390x += dirty_log_test
+>  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+> diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
+> new file mode 100644
+> index 000000000000..e6a65f9e48ca
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/s390x/memop.c
+> @@ -0,0 +1,165 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Test for s390x KVM_S390_MEM_OP
+> + *
+> + * Copyright (C) 2019, Red Hat, Inc.
+> + */
+> +
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +
+> +#include "test_util.h"
+> +#include "kvm_util.h"
+> +
+> +#define VCPU_ID 1
+> +
+> +static uint8_t mem1[65536];
+> +static uint8_t mem2[65536];
+> +
+> +static void guest_code(void)
+> +{
+> +	int i;
+> +
+> +	for (;;) {
+> +		for (i = 0; i < sizeof(mem2); i++)
+> +			mem2[i] = mem1[i];
+> +		GUEST_SYNC(0);
+> +	}
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	struct kvm_vm *vm;
+> +	struct kvm_run *run;
+> +	struct kvm_s390_mem_op ksmo;
+> +	int rv, i, maxsize;
+> +
+> +	setbuf(stdout, NULL);	/* Tell stdout not to buffer its content */
+> +
+> +	maxsize = kvm_check_cap(KVM_CAP_S390_MEM_OP);
+> +	if (!maxsize) {
+> +		fprintf(stderr, "CAP_S390_MEM_OP not supported -> skip test\n");
+> +		exit(KSFT_SKIP);
+> +	}
+> +	if (maxsize > sizeof(mem1))
+> +		maxsize = sizeof(mem1);
+> +
+> +	/* Create VM */
+> +	vm = vm_create_default(VCPU_ID, 0, guest_code);
+> +	run = vcpu_state(vm, VCPU_ID);
+> +
+> +	for (i = 0; i < sizeof(mem1); i++)
+> +		mem1[i] = i * i + i;
+> +
+> +	/* Set the first array */
+> +	ksmo.gaddr = addr_gva2gpa(vm, (uintptr_t)mem1);
+> +	ksmo.flags = 0;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 0;
+> +	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +
+> +	/* Let the guest code copy the first array to the second */
+> +	vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(run->exit_reason == KVM_EXIT_S390_SIEIC,
+> +		    "Unexpected exit reason: %u (%s)\n",
+> +		    run->exit_reason,
+> +		    exit_reason_str(run->exit_reason));
+> +
+> +	memset(mem2, 0xaa, sizeof(mem2));
+> +
+> +	/* Get the second array */
+> +	ksmo.gaddr = (uintptr_t)mem2;
+> +	ksmo.flags = 0;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_READ;
+> +	ksmo.buf = (uintptr_t)mem2;
+> +	ksmo.ar = 0;
+> +	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +
+> +	TEST_ASSERT(!memcmp(mem1, mem2, maxsize),
+> +		    "Memory contents do not match!");
+> +
+> +	/* Check error conditions - first bad size: */
+> +	ksmo.gaddr = (uintptr_t)mem1;
+> +	ksmo.flags = 0;
+> +	ksmo.size = -1;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 0;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv == -1 && errno == E2BIG, "ioctl allows insane sizes");
+> +
+> +	/* Zero size: */
+> +	ksmo.gaddr = (uintptr_t)mem1;
+> +	ksmo.flags = 0;
+> +	ksmo.size = 0;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 0;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv == -1, "ioctl allows 0 as size");
+> +
+> +	/* Bad flags: */
+> +	ksmo.gaddr = (uintptr_t)mem1;
+> +	ksmo.flags = -1;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 0;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags?");
+> +
+> +	/* Bad operation: */
+> +	ksmo.gaddr = (uintptr_t)mem1;
+> +	ksmo.flags = 0;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = -1;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 0;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags?");
+> +
+> +	/* Bad guest address: */
+> +	ksmo.gaddr = ~0xfffUL;
+> +	ksmo.flags = KVM_S390_MEMOP_F_CHECK_ONLY;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 0;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory access");
+> +
+> +	/* Bad host address: */
+> +	ksmo.gaddr = (uintptr_t)mem1;
+> +	ksmo.flags = 0;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = 0;
+> +	ksmo.ar = 0;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv == -1 && errno == EFAULT,
+> +		    "ioctl does not report bad host memory address");
+> +
+> +	/* Bad access register: */
+> +	run->psw_mask &= ~(3UL << (63 - 17));
+> +	run->psw_mask |= 1UL << (63 - 17);  /* Enable AR mode */
+> +	vcpu_run(vm, VCPU_ID);              /* To sync new state to SIE block */
+> +	ksmo.gaddr = (uintptr_t)mem1;
+> +	ksmo.flags = 0;
+> +	ksmo.size = maxsize;
+> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
+> +	ksmo.buf = (uintptr_t)mem1;
+> +	ksmo.ar = 17;
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
+> +	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows ARs > 15");
+> +	run->psw_mask &= ~(3UL << (63 - 17));   /* Disable AR mode */
+> +	vcpu_run(vm, VCPU_ID);                  /* Run to sync new state */
+> +
+> +	kvm_vm_free(vm);
+> +
+> +	return 0;
+> +}
+> 
 
+Had a quick glimpse and besides the two things Janosch mentioned,
+nothing jumped at me.
+
+-- 
+
+Thanks,
+
+David / dhildenb
