@@ -2,160 +2,127 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0497AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC870C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D330F23429
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC8621670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l2LwR+WZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfH3JpJ (ORCPT
+        id S1728098AbfH3Jpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:45:09 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:58203 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfH3JpI (ORCPT
+        Fri, 30 Aug 2019 05:45:30 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49392 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbfH3Jpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:45:08 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id BEBA1E000E;
-        Fri, 30 Aug 2019 09:45:04 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 11:44:56 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
-        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Martin Fuzzey <mfuzzey@parkeon.com>
-Subject: Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-Message-ID: <20190830094456.GO21922@piout.net>
-References: <20190830091720.41156-1-biwen.li@nxp.com>
+        Fri, 30 Aug 2019 05:45:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sRzfMxg/wb0LZA+yxxNDj+QkDWg9yL2CpESWkv5XC/w=; b=l2LwR+WZLkNuEzUTAdmtkXcm3
+        oa334e4Rqs8Yq0Nq0CkLdOVet4f+H8YYMmJl5clWcQPgJMbRjzcpWXQ6/knfmZGiAbW+iUnLpPM86
+        Tpciv6IJKV3YWiNZ3Fao3+MXOt0npZRncrUeki+/Wi0i4AisF5qYv5mxoiFq5bCpO19dWGPkXBwFU
+        QTY7D5N0yj38gVn+oYJnJFElg/HqbY6ZYY+s1gFnZBlynLvagoR2ZoAqY0wxJDTPC0XUvNeBWsDgh
+        PDFR5latRRys33U67/D7R7baHn1Jz23RMdDtFJgbiytvOTchW1XXcDTFwFJA4qsyVcWRG/Ed21htd
+        26cnQEJDQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3dSu-0000tZ-1d; Fri, 30 Aug 2019 09:45:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B6A93035D7;
+        Fri, 30 Aug 2019 11:44:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 290FF29AD350F; Fri, 30 Aug 2019 11:45:05 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 11:45:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, cgroups@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>, Michal Koutny <mkoutny@suse.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v14 1/6] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190830094505.GA2369@hirez.programming.kicks-ass.net>
+References: <20190822132811.31294-1-patrick.bellasi@arm.com>
+ <20190822132811.31294-2-patrick.bellasi@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830091720.41156-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190822132811.31294-2-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 17:17:19+0800, Biwen Li wrote:
-> Add some properties for pcf85263/pcf85363 as follows:
->   - interrupt-output-pin: string type
->   - quartz-load-capacitance: integer type
->   - quartz-drive-strength: integer type
->   - quartz-low-jitter: bool type
->   - wakeup-source: bool type
-> 
-> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  .../devicetree/bindings/rtc/pcf85363.txt      | 31 +++++++++++++++++++
->  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 include/dt-bindings/rtc/pcf85363.h
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..d83359990bd7 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,41 @@ Required properties:
->  Optional properties:
->  - interrupts: IRQ line for the RTC (not implemented).
->  
-> +- interrupt-output-pin: The interrupt output pin must be
-> +  "NONE", "INTA" or "INTB", default value is "NONE"
+On Thu, Aug 22, 2019 at 02:28:06PM +0100, Patrick Bellasi wrote:
+> +#define _POW10(exp) ((unsigned int)1e##exp)
+> +#define POW10(exp) _POW10(exp)
+
+What is this magic? You're forcing a float literal into an integer.
+Surely that deserves a comment!
+
+> +struct uclamp_request {
+> +#define UCLAMP_PERCENT_SHIFT	2
+> +#define UCLAMP_PERCENT_SCALE	(100 * POW10(UCLAMP_PERCENT_SHIFT))
+> +	s64 percent;
+> +	u64 util;
+> +	int ret;
+> +};
 > +
-
-default value can't be none if there is an interrupts property. Also,
-both pins can be enabled at the same time and this binding would prevent
-that.
-Finally, it may also be desirable to have some interrupts on one pin and
-other interrupts on another pin e.g. alarms and timestamping on INTA
-going to the SoC and only alarms on INTB going to a PMIC.
-
-> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
-> +	PCF85263_QUARTZCAP_7pF		[0]
-> +	PCF85263_QUARTZCAP_6pF		[1]
-> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
+> +static inline struct uclamp_request
+> +capacity_from_percent(char *buf)
+> +{
+> +	struct uclamp_request req = {
+> +		.percent = UCLAMP_PERCENT_SCALE,
+> +		.util = SCHED_CAPACITY_SCALE,
+> +		.ret = 0,
+> +	};
 > +
+> +	buf = strim(buf);
+> +	if (strncmp("max", buf, 4)) {
 
-The correct generic property is quartz-load-femtofarads.
+That is either a bug, and you meant to write: strncmp(buf, "max", 3), or
+it is not, and then you could've written: strcmp(buf, "max")
 
-> +- quartz-drive-strength: Drive strength for the quartz:
-> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
-> +	PCF85263_QUARTZDRIVE_LOW	[1]
-> +	PCF85263_QUARTZDRIVE_HIGH	[2]
+But as written it doesn't make sense.
+
+> +		req.ret = cgroup_parse_float(buf, UCLAMP_PERCENT_SHIFT,
+> +					     &req.percent);
+> +		if (req.ret)
+> +			return req;
+> +		if (req.percent > UCLAMP_PERCENT_SCALE) {
+> +			req.ret = -ERANGE;
+> +			return req;
+> +		}
 > +
-
-This has to take a value in ohm to be generic and then you don't need
-the include file.
-
-> +- quartz-low-jitter: Boolean property, if present enables low jitter mode
-> +  which reduces jitter at the cost of increased power consumption.
+> +		req.util = req.percent << SCHED_CAPACITY_SHIFT;
+> +		req.util = DIV_ROUND_CLOSEST_ULL(req.util, UCLAMP_PERCENT_SCALE);
+> +	}
 > +
+> +	return req;
+> +}
 
-I think that property needs to be nxp specific.
-
-> +- wakeup-source: Boolean property, mark the chip as a wakeup source,
-> +  independently of the availability of an IRQ line connected to the SoC.
-> +  This is useful if the IRQ line is connected to a PMIC or other circuit
-> +  that can power up the device rather than to a normal SOC interrupt.
-> +
-
-This is already defined in bindings/power/wakeup-source.txt I guess you
-can simply refer to it.
-
->  Example:
->  
->  pcf85363: pcf85363@51 {
->  	compatible = "nxp,pcf85363";
->  	reg = <0x51>;
-> +
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +	#include <dt-bindings/rtc/pcf85363.h>
-> +	wakeup-source;
-> +	interrupt-output-pin = "INTA";
-> +	quartz-load-capacitance = <PCF85363_QUARTZCAP_12p5pF>;
-> +	quartz-drive-strength = <PCF85363_QUARTZDRIVE_LOW>;
-> +	quartz-low-jitter;
->  };
->  
-> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
-> new file mode 100644
-> index 000000000000..2c06c28eb5ff
-> --- /dev/null
-> +++ b/include/dt-bindings/rtc/pcf85363.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
-> +#define _DT_BINDINGS_RTC_PCF85363_H
-> +
-> +/* Quartz capacitance */
-> +#define PCF85363_QUARTZCAP_7pF		0
-> +#define PCF85363_QUARTZCAP_6pF		1
-> +#define PCF85363_QUARTZCAP_12p5pF	2
-> +
-> +/* Quartz drive strength */
-> +#define PCF85363_QUARTZDRIVE_NORMAL	0
-> +#define PCF85363_QUARTZDRIVE_LOW	1
-> +#define PCF85363_QUARTZDRIVE_HIGH	2
-> +
-> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
-> -- 
-> 2.17.1
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
