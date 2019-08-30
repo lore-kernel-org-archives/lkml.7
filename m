@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC98C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4124BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E972341C
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B9120659
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="etH4jWeZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="olmX6PFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfH3G3p (ORCPT
+        id S1728169AbfH3G3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:29:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57540 "EHLO
+        Fri, 30 Aug 2019 02:29:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57744 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfH3G3m (ORCPT
+        with ESMTP id S1728146AbfH3G3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:29:42 -0400
+        Fri, 30 Aug 2019 02:29:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=M4cTuDqudRk4cLlZfby65NiDWkJ9VRA0uOLkwFgPTxQ=; b=etH4jWeZy6AeQgqWzmG5BrZDhi
-        jYPypaOfhZpJy/YPY4YX1tXmOLUAsXlQ8qgf9naUicz/VZvwaXN1KiJj8Yl3DPrmqH08BMO3Du24F
-        wUNUdx9yCE0LKb1eB/rE277qpdivLaPM1Dq00UPX0pfJUSpTZnof6F93GLg8tyREgyHBuqeowH4AU
-        JeYjkpufkOgL7A9b6jQsbLDPLrEfYWBvXogtKqlKF3PYqRRn8OCBhsldW2LWGEbqu4XnOKx5ksTmB
-        y+giWSJmd3to7tVjw1bP5pfIDKU13C+McUprzmH26PZ1bEpGNw8JaqyvpREtdbaF2XkUlNdzHAM8p
-        hJUt3vpg==;
+        bh=Sn/QnlX0rzEihI8HOssDpQ+pS1nF5+oT1o59+Mon2VE=; b=olmX6PFWaRCNDeJRTc5ka9YH2y
+        XXCmdUKALA1NTuT0dtoXbnlJ9dNkn8+by+C49GsXU2agUVxgZTgTL5dBH5BUGJo4qfQO4B8Zk9XUs
+        TWMm4gqIDq9p9UJBw15uS9ptf7dFIVbdr+4Pvt5Snzx+WsH6r63jHfo7i9baTeQewLbKKmq6hJOnh
+        tX5bIp8RCcwLgTfStdgPphKMtoW8aHnE2ontZr3OHksEtjKVniMgTBrCIhLbmxz6/3+MEuduEv7AY
+        dhsPK6CrhXLDXjEv3lEJ3GndzUttSUc5u3IV8AsMTI8tfuwFy0HZXHxKm/RTkO3j5fgqgDGrfxJqs
+        iKZMjMuQ==;
 Received: from [93.83.86.253] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3aPa-0002p0-Os; Fri, 30 Aug 2019 06:29:31 +0000
+        id 1i3aPj-0002vk-8g; Fri, 30 Aug 2019 06:29:40 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org
 Cc:     Russell King <linux@armlinux.org.uk>,
@@ -45,9 +45,9 @@ Cc:     Russell King <linux@armlinux.org.uk>,
         linux-arm-kernel@lists.infradead.org,
         linux-xtensa@linux-xtensa.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] vmalloc: lift the arm flag for coherent mappings to common code
-Date:   Fri, 30 Aug 2019 08:29:21 +0200
-Message-Id: <20190830062924.21714-2-hch@lst.de>
+Subject: [PATCH 4/4] arm: remove wrappers for the generic dma remap helpers
+Date:   Fri, 30 Aug 2019 08:29:24 +0200
+Message-Id: <20190830062924.21714-5-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190830062924.21714-1-hch@lst.de>
 References: <20190830062924.21714-1-hch@lst.de>
@@ -59,137 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arm architecture had a VM_ARM_DMA_CONSISTENT flag to mark DMA
-coherent remapping for a while.  Lift this flag to common code so
-that we can use it generically.  We also check it in the only place
-VM_USERMAP is directly check so that we can entirely replace that
-flag as well (although I'm not even sure why we'd want to allow
-remapping DMA appings, but I'd rather not change behavior).
+Remove a few tiny wrappers around the generic dma remap code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/arm/mm/dma-mapping.c | 22 +++++++---------------
- arch/arm/mm/mm.h          |  3 ---
- include/linux/vmalloc.h   |  2 ++
- mm/vmalloc.c              |  5 ++++-
- 4 files changed, 13 insertions(+), 19 deletions(-)
+ arch/arm/mm/dma-mapping.c | 32 +++++---------------------------
+ 1 file changed, 5 insertions(+), 27 deletions(-)
 
 diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index d42557ee69c2..5c0af4a2faa7 100644
+index d07e5c865557..8cb57f1664b2 100644
 --- a/arch/arm/mm/dma-mapping.c
 +++ b/arch/arm/mm/dma-mapping.c
-@@ -340,19 +340,13 @@ static void *
- __dma_alloc_remap(struct page *page, size_t size, gfp_t gfp, pgprot_t prot,
- 	const void *caller)
- {
--	/*
--	 * DMA allocation can be mapped to user space, so lets
--	 * set VM_USERMAP flags too.
--	 */
--	return dma_common_contiguous_remap(page, size,
--			VM_ARM_DMA_CONSISTENT | VM_USERMAP,
-+	return dma_common_contiguous_remap(page, size, VM_DMA_COHERENT,
- 			prot, caller);
- }
+@@ -336,18 +336,6 @@ static void *__alloc_remap_buffer(struct device *dev, size_t size, gfp_t gfp,
+ 				 pgprot_t prot, struct page **ret_page,
+ 				 const void *caller, bool want_vaddr);
  
- static void __dma_free_remap(void *cpu_addr, size_t size)
- {
--	dma_common_free_remap(cpu_addr, size,
--			VM_ARM_DMA_CONSISTENT | VM_USERMAP);
-+	dma_common_free_remap(cpu_addr, size, VM_DMA_COHERENT);
- }
- 
- #define DEFAULT_DMA_COHERENT_POOL_SIZE	SZ_256K
-@@ -1379,8 +1373,8 @@ static void *
- __iommu_alloc_remap(struct page **pages, size_t size, gfp_t gfp, pgprot_t prot,
- 		    const void *caller)
- {
--	return dma_common_pages_remap(pages, size,
--			VM_ARM_DMA_CONSISTENT | VM_USERMAP, prot, caller);
-+	return dma_common_pages_remap(pages, size, VM_DMA_COHERENT, prot,
-+			caller);
- }
- 
- /*
-@@ -1464,7 +1458,7 @@ static struct page **__iommu_get_pages(void *cpu_addr, unsigned long attrs)
- 		return cpu_addr;
- 
- 	area = find_vm_area(cpu_addr);
--	if (area && (area->flags & VM_ARM_DMA_CONSISTENT))
-+	if (area && (area->flags & VM_DMA_COHERENT))
- 		return area->pages;
- 	return NULL;
- }
-@@ -1622,10 +1616,8 @@ void __arm_iommu_free_attrs(struct device *dev, size_t size, void *cpu_addr,
- 		return;
- 	}
- 
--	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) == 0) {
--		dma_common_free_remap(cpu_addr, size,
--			VM_ARM_DMA_CONSISTENT | VM_USERMAP);
--	}
-+	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) == 0)
-+		dma_common_free_remap(cpu_addr, size, VM_DMA_COHERENT);
- 
- 	__iommu_remove_mapping(dev, handle, size);
- 	__iommu_free_buffer(dev, pages, size, attrs);
-diff --git a/arch/arm/mm/mm.h b/arch/arm/mm/mm.h
-index 941356d95a67..88c121ac14b3 100644
---- a/arch/arm/mm/mm.h
-+++ b/arch/arm/mm/mm.h
-@@ -70,9 +70,6 @@ extern void __flush_dcache_page(struct address_space *mapping, struct page *page
- #define VM_ARM_MTYPE(mt)		((mt) << 20)
- #define VM_ARM_MTYPE_MASK	(0x1f << 20)
- 
--/* consistent regions used by dma_alloc_attrs() */
--#define VM_ARM_DMA_CONSISTENT	0x20000000
+-static void *
+-__dma_alloc_remap(struct page *page, size_t size, gfp_t gfp, pgprot_t prot,
+-	const void *caller)
+-{
+-	return dma_common_contiguous_remap(page, size, prot, caller);
+-}
 -
+-static void __dma_free_remap(void *cpu_addr, size_t size)
+-{
+-	dma_common_free_remap(cpu_addr, size);
+-}
+-
+ #define DEFAULT_DMA_COHERENT_POOL_SIZE	SZ_256K
+ static struct gen_pool *atomic_pool __ro_after_init;
  
- struct static_vm {
- 	struct vm_struct vm;
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 9b21d0047710..dfa718ffdd4f 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -18,6 +18,7 @@ struct notifier_block;		/* in notifier.h */
- #define VM_ALLOC		0x00000002	/* vmalloc() */
- #define VM_MAP			0x00000004	/* vmap()ed pages */
- #define VM_USERMAP		0x00000008	/* suitable for remap_vmalloc_range */
-+#define VM_DMA_COHERENT		0x00000010	/* dma_alloc_coherent */
- #define VM_UNINITIALIZED	0x00000020	/* vm_struct is not fully initialized */
- #define VM_NO_GUARD		0x00000040      /* don't add guard page */
- #define VM_KASAN		0x00000080      /* has allocated kasan shadow memory */
-@@ -26,6 +27,7 @@ struct notifier_block;		/* in notifier.h */
-  * vfree_atomic().
-  */
- #define VM_FLUSH_RESET_PERMS	0x00000100      /* Reset direct map and flush TLB on unmap */
-+
- /* bits [20..32] reserved for arch specific ioremap internals */
+@@ -503,7 +491,7 @@ static void *__alloc_remap_buffer(struct device *dev, size_t size, gfp_t gfp,
+ 	if (!want_vaddr)
+ 		goto out;
  
+-	ptr = __dma_alloc_remap(page, size, gfp, prot, caller);
++	ptr = dma_common_contiguous_remap(page, size, prot, caller);
+ 	if (!ptr) {
+ 		__dma_free_buffer(page, size);
+ 		return NULL;
+@@ -570,7 +558,7 @@ static void *__alloc_from_contiguous(struct device *dev, size_t size,
+ 		goto out;
+ 
+ 	if (PageHighMem(page)) {
+-		ptr = __dma_alloc_remap(page, size, GFP_KERNEL, prot, caller);
++		ptr = dma_common_contiguous_remap(page, size, prot, caller);
+ 		if (!ptr) {
+ 			dma_release_from_contiguous(dev, page, count);
+ 			return NULL;
+@@ -590,7 +578,7 @@ static void __free_from_contiguous(struct device *dev, struct page *page,
+ {
+ 	if (want_vaddr) {
+ 		if (PageHighMem(page))
+-			__dma_free_remap(cpu_addr, size);
++			dma_common_free_remap(cpu_addr, size);
+ 		else
+ 			__dma_remap(page, size, PAGE_KERNEL);
+ 	}
+@@ -682,7 +670,7 @@ static void *remap_allocator_alloc(struct arm_dma_alloc_args *args,
+ static void remap_allocator_free(struct arm_dma_free_args *args)
+ {
+ 	if (args->want_vaddr)
+-		__dma_free_remap(args->cpu_addr, args->size);
++		dma_common_free_remap(args->cpu_addr, args->size);
+ 
+ 	__dma_free_buffer(args->page, args->size);
+ }
+@@ -1365,16 +1353,6 @@ static int __iommu_free_buffer(struct device *dev, struct page **pages,
+ 	return 0;
+ }
+ 
+-/*
+- * Create a CPU mapping for a specified pages
+- */
+-static void *
+-__iommu_alloc_remap(struct page **pages, size_t size, gfp_t gfp, pgprot_t prot,
+-		    const void *caller)
+-{
+-	return dma_common_pages_remap(pages, size, prot, caller);
+-}
+-
  /*
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 7ba11e12a11f..c1246d77cf75 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2993,7 +2993,7 @@ int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
- 	if (!area)
- 		return -EINVAL;
+  * Create a mapping in device IO address space for specified pages
+  */
+@@ -1526,7 +1504,7 @@ static void *__arm_iommu_alloc_attrs(struct device *dev, size_t size,
+ 	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING)
+ 		return pages;
  
--	if (!(area->flags & VM_USERMAP))
-+	if (!(area->flags & (VM_USERMAP | VM_DMA_COHERENT)))
- 		return -EINVAL;
- 
- 	if (kaddr + size > area->addr + get_vm_area_size(area))
-@@ -3496,6 +3496,9 @@ static int s_show(struct seq_file *m, void *p)
- 	if (v->flags & VM_USERMAP)
- 		seq_puts(m, " user");
- 
-+	if (v->flags & VM_DMA_COHERENT)
-+		seq_puts(m, " dma-coherent");
-+
- 	if (is_vmalloc_addr(v->pages))
- 		seq_puts(m, " vpages");
- 
+-	addr = __iommu_alloc_remap(pages, size, gfp, prot,
++	addr = dma_common_pages_remap(pages, size, prot,
+ 				   __builtin_return_address(0));
+ 	if (!addr)
+ 		goto err_mapping;
 -- 
 2.20.1
 
