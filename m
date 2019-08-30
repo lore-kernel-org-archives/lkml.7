@@ -2,68 +2,93 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A7BC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5533C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03B72173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567183219;
-	bh=bIcxhqZxKQbXUfLLcCayl7DeVujt/jXc7X7NoYLsUwM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Z5JixhE9PX/X5U7yD7rLg/F98528jYNsIlulX5wh2k+LQlW+lUmfUnAyii+VIcfeA
-	 VBwgP21P9NqB95bRe2XXJqhnTSE3v4lSjQTZsZz2WHZw/fbQpTyRdj3isw+Qk41Q5a
-	 UjKSuAkOydKRlEk97cccsWkBaZcYH8m1ZNNhLODc=
+	by mail.kernel.org (Postfix) with ESMTP id 79E2C208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XKxQMKVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfH3QkS (ORCPT
+        id S1728397AbfH3Qk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbfH3QkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:40:09 -0400
-Subject: Re: [GIT PULL] Ceph fixes for 5.3-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567183208;
-        bh=bIcxhqZxKQbXUfLLcCayl7DeVujt/jXc7X7NoYLsUwM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=VY/AXX9Rlu6vaJ6NaHr4rObXErAuOUhrnU0IT6ev6VeVKj2tAnS6ClkDUkcPpyWEw
-         bOBI/rs6aUjUnppvNRcafL4AzGJ2e/C3lM6/qVzy3z6SVPhtbempOU5mK7bTaWIFpk
-         J9LPlsizIOe04eKpiUamfhQZzFZnLgy9TUttUvsc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190830141115.8049-1-idryomov@gmail.com>
-References: <20190830141115.8049-1-idryomov@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190830141115.8049-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
- tags/ceph-for-5.3-rc7
-X-PR-Tracked-Commit-Id: d435c9a7b85be1e820668d2f3718c2d9f24d5548
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fbcb0b4feb5c3f5431a2ed9f0211653864cf2104
-Message-Id: <156718320888.32023.5337613688472185467.pr-tracker-bot@kernel.org>
-Date:   Fri, 30 Aug 2019 16:40:08 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 30 Aug 2019 12:40:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48524 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbfH3QkY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 12:40:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AT7c8Uf6oRKSCvH0T7rxwpH4EoIuzd5Fl8xv/gJGnw4=; b=XKxQMKVi9kAdTU+vbb0Unuz1w
+        1OC04HlMkxRWKs69JYntBAUF4Vq2rS9l2rajiJty/VLSOfmjDMy+0igRW96PttjZ1sVU4ZpTv/387
+        URunnMETnkxIuM82Rxm4Ch3c6EgKekyOk6PUM01SL5x0M70Gwdlqg/fz3lOS1cSnIsj0jJQEAQopu
+        LkT2Rihs462KZRs+vsR+k/TmnMtkm28eZgXiXoUJwS2Ll1xhYkJN1fpn+44WyZolCVtFv+DYTc6JK
+        F7IsP1hyzpQH9I9Ix7oOpfg+bKAuiOZusNnDVQsLRBCmrqavz6liyImmftILLHQIWu8d4n01QmuYH
+        J05OeGxHA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3jwb-0002a3-O7; Fri, 30 Aug 2019 16:40:13 +0000
+Date:   Fri, 30 Aug 2019 09:40:13 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 04/24] erofs: add raw address_space operations
+Message-ID: <20190830164013.GC29603@infradead.org>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-5-gaoxiang25@huawei.com>
+ <20190829101721.GD20598@infradead.org>
+ <20190829114610.GF64893@architecture4>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829114610.GF64893@architecture4>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 30 Aug 2019 16:11:15 +0200:
+On Thu, Aug 29, 2019 at 07:46:11PM +0800, Gao Xiang wrote:
+> Hi Christoph,
+> 
+> On Thu, Aug 29, 2019 at 03:17:21AM -0700, Christoph Hellwig wrote:
+> > The actual address_space operations seem to largely duplicate
+> > the iomap versions.  Please use those instead.  Also I don't think
+> > any new file system should write up ->bmap these days.
+> 
+> iomap doesn't support tail-end packing inline data till now,
+> I think Chao and I told you and Andreas before [1].
+> 
+> Since EROFS keeps a self-contained driver for now, we will use
+> iomap if it supports tail-end packing inline data later.
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-5.3-rc7
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fbcb0b4feb5c3f5431a2ed9f0211653864cf2104
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Well, so work with the maintainers to enhance the core kernel.  That
+is how Linux development works.  We've added various iomap enhancements
+for gfs in the last merge windows, and we've added more for the brand
+new zonefs file system we plan to merge for 5.4.
