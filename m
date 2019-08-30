@@ -2,94 +2,95 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075E8C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDE4C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D162186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403C62173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5LKAoNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfH3J4n (ORCPT
+        id S1727884AbfH3J5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:56:43 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53541 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726653AbfH3J4m (ORCPT
+        Fri, 30 Aug 2019 05:57:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41642 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfH3J5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:56:42 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-130-P6GY7liWP8u9PLRWlkmegQ-1; Fri, 30 Aug 2019 10:56:39 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 10:56:39 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 30 Aug 2019 10:56:39 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>
-CC:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Subject: RE: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-Thread-Topic: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-Thread-Index: AQHVV6Op4hc1jesckEO2Njx8G6LSv6cHrBeAgAC6ywCAAHvDAIABi1YAgAAYGYCAAC0oAIAACaQAgAi0npA=
-Date:   Fri, 30 Aug 2019 09:56:38 +0000
-Message-ID: <0eb1d644d233432b8e62d87bd470d7d5@AcuMS.aculab.com>
-References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
- <20190823091636.GA10064@gmail.com>
- <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
- <20190824161432.GA25950@gmail.com>
- <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
- <20190824202224.GA5286@gmail.com>
- <CAHk-=wjD5MMbAm0OkbKadzerwG3yGr9SvE7mrsCnhmiqRRdxMw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjD5MMbAm0OkbKadzerwG3yGr9SvE7mrsCnhmiqRRdxMw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 30 Aug 2019 05:57:00 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 196so4318231pfz.8;
+        Fri, 30 Aug 2019 02:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b6Jx4LeznDroJv1V+MqGkH6wNyfdO6arDu3vh6OGwO4=;
+        b=P5LKAoNydxCLwtKPaKlmm7sBYONkLrbXlHqGeby2MQ2qjUeH1kDN3RHregechZ7LWZ
+         MNczFl/OgDe2P7FfBdABcIydjZu5zcYZILY96v0w+Q4X+FfdB54nZF+RnZZ5+ok4QkyJ
+         /wH3hsODHOExIQhlI1Vm5DdvMb5y+1XLuCu4vo64nK34T0lMNKIzWiB3NKD1uRfbieHU
+         4T9MPEQuu5va2i3u/X9B2erEG1w5YSUuAMfPY/ZpabnMzDgOZmaWapp4hv0KhmUruMc7
+         +g0uriOnfxwTl6QJmJDv8xUiRMqUlJSlJqnM6iW3beSkMhI8rA1dZIJJxfPKciaExPeh
+         x5pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b6Jx4LeznDroJv1V+MqGkH6wNyfdO6arDu3vh6OGwO4=;
+        b=YQ8y5NVESEFLxhwGg6n6/O8BGJscv4vwoTn1NYYAnG0SWZcDWrWOU/w4gQGmXKXYoA
+         hEXSnDi4eje023exWWynX4tvfLOpgeRAWS5bdvMeYEQ3mfmB9tbrLn/afSJZjlJs+Um8
+         OuPu3cCuJMEkfdak+aNuitMBib+2GFURclqd1y7x/d2s36Lqt0Sr9eD2wsl4AUm/Sy9X
+         Bk0BgFbFEr06cp2Ge1N06OKSS9jCyHurJ3Az0i7i0almWgJbq4J12qTgMtfDOAcL13EV
+         amyNt2p3M7tJ+aqYZvgbB6WJGMLd0xVkWhW29o5YHYkHu72/tfTWU4JnewR+sAY8e2t0
+         R2vg==
+X-Gm-Message-State: APjAAAXPP305BlEg1IPYDK1xQBZM9a7EoyzCaFVUKJsdT3dI5fK7QSs8
+        0PbIp7HwUNL0lknTB0YZJsc=
+X-Google-Smtp-Source: APXvYqxyXu8ZJM7570mg2e1+B9zCrvxJQmX/n5HI+hvj/AuetrcdvC78kRTlj9/wupB0AsWm6fhikw==
+X-Received: by 2002:a65:6859:: with SMTP id q25mr12086276pgt.181.1567159019466;
+        Fri, 30 Aug 2019 02:56:59 -0700 (PDT)
+Received: from localhost.localdomain ([175.203.71.146])
+        by smtp.googlemail.com with ESMTPSA id k64sm8329447pge.65.2019.08.30.02.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 02:56:59 -0700 (PDT)
+From:   Seunghun Han <kkamagui@gmail.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        linux-integrity@vger.kernel.org (open list:TPM DEVICE DRIVER),
+        linux-kernel@vger.kernel.org, Seunghun Han <kkamagui@gmail.com>
+Subject: [PATCH 0/2] Enhance support for the AMD's fTPM
+Date:   Fri, 30 Aug 2019 18:56:37 +0900
+Message-Id: <20190830095639.4562-1-kkamagui@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MC-Unique: P6GY7liWP8u9PLRWlkmegQ-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjQgQXVndXN0IDIwMTkgMjE6NTcNCj4gT24g
-U2F0LCBBdWcgMjQsIDIwMTkgYXQgMToyMiBQTSBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9y
-Zz4gd3JvdGU6DQo+ID4NCj4gPiBUaGF0IG1ha2VzIHNlbnNlOiBJIG1lYXN1cmVkIDE3IHNlY29u
-ZHMgcGVyIDEwMCBNQiBvZiBkYXRhLCB3aGljaCBpcyBpcw0KPiA+IDAuMTYgdXNlY3MgcGVyIGJ5
-dGUuIFRoZSBpbnN0cnVjdGlvbiB1c2VkIGJ5DQo+ID4gY29weV91c2VyX2VuaGFuY2VkX2Zhc3Rf
-c3RyaW5nKCkgaXMgUkVQIE1PVlNCIC0gd2hpY2ggc3VwcG9zZWRseSBnb2VzIGFzDQo+ID4gaGln
-aCBhcyBjYWNoZWxpbmUgc2l6ZSBhY2Nlc3NlcyAtIGJ1dCBwZXJoYXBzIHRob3NlIGdldCBicm9r
-ZW4gZG93biBmb3INCj4gPiBwaHlzaWNhbCBtZW1vcnkgdGhhdCBoYXMgbm8gZGV2aWNlIGNsYWlt
-aW5nIGl0Pw0KPiANCj4gQWxsIHRoZSAicmVwIHN0cmluZyIgb3B0aW1pemF0aW9ucyBhcmUgX29u
-bHlfIGRvbmUgZm9yIHJlZ3VsYXIgbWVtb3J5Lg0KDQpNb3JlIGxpa2VseSBmb3IgcGFnZXMgdGhh
-dCB1c2VzIHRoZSBkYXRhIGNhY2hlLg0KSXQgb3VnaHQgdG8gYmUgcG9zc2libGUgdG8gbWFwIFBD
-SWUgbWVtb3J5IHRocm91Z2ggdGhlIGRhdGEgY2FjaGUuDQpXaXRoIGNhcmUgdGhhdCB3b3VsZCBh
-bGxvdyBsb25nZXIgVExQcyAoZXNwZWNpYWxseSByZWFkIFRMUCkgZm9yDQpjcHUgJ3BpbycgYnVm
-ZmVyIHRyYW5zZmVycy4NCg0KPiBXaGVuIGl0IGhpdHMgYW55IElPIGFjY2Vzc2VzLCBpdCB3aWxs
-IGRvIHRoZSBhY2Nlc3NlcyBhdCB0aGUgc3BlY2lmaWVkDQo+IHNpemUgKHNvICJtb3ZzYiIgd2ls
-bCBkbyBpdCBhIGJ5dGUgYXQgYSB0aW1lKS4NCj4gDQo+IDAuMTYgdXNlYyBwZXIgYnl0ZSBpcyBm
-YXN0ZXIgdGhhbiB0aGUgdHJhZGl0aW9uYWwgSVNBICdpbmInLCBidXQgbm90DQo+IGJ5IGEgaHVn
-ZSBmYWN0b3IuDQoNClRoYXQgc3BlZWQgZGVwZW5kcyBvbiB0aGUgdGFyZ2V0LCBJSVJDIG91ciBm
-cGdhIHRhcmdldCB0YWtlcyAxMjggY2xvY2tzDQphdCA2Mi41TUh6IHRvIHByb2Nlc3MgYSBQQ0ll
-IHJlYWQgcmVxdWVzdC4NCk5vbmUgb2YgdGhlIGN1cnJlbnQgSW50ZWwgeDg2IGNwdXMgd2lsbCBp
-c3N1ZSBtdWx0aXBsZSByZWFkIFRMUCBmcm9tDQphIHNpbmdsZSBjb3JlLCBzbyByZWFkcyBuZXZl
-ciBnZXQgYW55IG92ZXJsYXBwaW5nIGFuZCBzdWZmZXIgdGhlDQpmdWxsIGxhdGVuY3kuDQoNCglE
-YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
-bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
-NzM4NiAoV2FsZXMpDQo=
+This patch series enhances the support for the AMD's fTPM. 
+The AMD system assigned a command buffer and response buffer 
+independently in ACPI NVS region. ACPI NVS region allowed nothing to 
+assign a resource in it. 
+
+For supporting AMD's fTPM, I made a patch to enhance the code of command 
+and response buffer size calculation. I also made a patch to detect TPM 
+regions in ACPI NVS and work around it. 
+
+Seunghun Han (2):
+  tpm: tpm_crb: enhance command and response buffer size calculation
+    code
+  tpm: tpm_crb: enhance resource mapping mechanism for supporting AMD's
+    fTPM
+
+ drivers/char/tpm/tpm_crb.c | 69 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 59 insertions(+), 10 deletions(-)
+
+-- 
+2.21.0
 
