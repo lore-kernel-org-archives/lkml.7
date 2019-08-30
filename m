@@ -2,131 +2,107 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C732C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FF6C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C26820659
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567178419;
-	bh=qyV0RCZJt0JTNnsp/PHNLEf674aXY77Jj6dQJAqmFmg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N2CflFySrub+5T+oiwH/DGlk4NiufJt94I768aONfgT+Sg6dySD15eOXsqzYJaobL
-	 fcvTaUg996YxJiZsZ4kNFJfSsf5QmqJk2JlWyeWnbqe2ZYsXSEzp7eU6rviWJ304QJ
-	 oIiHsEedWRtY3YrABnnxnwGHXf/sXZWtuUMQh4nE=
+	by mail.kernel.org (Postfix) with ESMTP id 313EE20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfH3PUS (ORCPT
+        id S1728111AbfH3PVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 11:21:54 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57755 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfH3PUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:20:18 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B70523407;
-        Fri, 30 Aug 2019 15:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567178416;
-        bh=qyV0RCZJt0JTNnsp/PHNLEf674aXY77Jj6dQJAqmFmg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kqYiYTxN/HlygbqB9rmptMSjs8Z8Y58lJfAEwgaYbn/xMzQuZki1khG63g3bmX9yx
-         UD9FCjQOdMUd+uccyJiPFHj0+T0D5IzBrlQolLucmUX2zoYvWXpEjitzo/VROlC2sN
-         4qsfJtWmDyhWQkS2Hq9QlPdFubWuV3zg4S5SzzFI=
-Date:   Sat, 31 Aug 2019 00:20:04 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 0/4] objtool,perf: Use shared x86 insn decoder
-Message-Id: <20190831002004.d570fcb7b611860e025dbdb2@kernel.org>
-In-Reply-To: <cover.1567118001.git.jpoimboe@redhat.com>
-References: <cover.1567118001.git.jpoimboe@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727135AbfH3PVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:21:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 08:21:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="186329765"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by orsmga006.jf.intel.com with ESMTP; 30 Aug 2019 08:21:50 -0700
+Date:   Fri, 30 Aug 2019 23:26:15 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
+ backdoor call with support for new instructions
+Message-ID: <20190830152615.GA13754@intel.com>
+References: <201908292325.aLXyyzEx%lkp@intel.com>
+ <20190829163353.GC2132@zn.tnic>
+ <20190830010349.GD857@intel.com>
+ <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
+ <20190830062053.GA2598@intel.com>
+ <20190830080650.GA30413@zn.tnic>
+ <20190830143645.GA4784@intel.com>
+ <20190830144628.GC30413@zn.tnic>
+ <20190830150002.GA6931@intel.com>
+ <20190830150653.GD30413@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830150653.GD30413@zn.tnic>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 17:41:17 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-
-> It's kind of silly that we have *three* identical copies of the x86 insn
-> decoder in the kernel tree.  Make it approximately 50% less silly by
-> reducing that number to two.
+On Fri, Aug 30, 2019 at 05:06:53PM +0200, Borislav Petkov wrote:
+> On Fri, Aug 30, 2019 at 11:00:02PM +0800, Philip Li wrote:
+> > Early on, there's requirement to blacklist a few branches, which is configured
+> > as below
+> > 	blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
 > 
-
-Sounds good to me ;)
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thanks,
-
-> Josh Poimboeuf (4):
->   objtool: Move x86 insn decoder to a common location
->   perf: Update .gitignore file
->   perf intel-pt: Remove inat.c from build dependency list
->   perf intel-pt: Use shared x86 insn decoder
+> Looks about right.
 > 
->  .../{objtool => }/arch/x86/include/asm/inat.h |    0
->  .../arch/x86/include/asm/inat_types.h         |    0
->  .../{objtool => }/arch/x86/include/asm/insn.h |    0
->  .../arch/x86/include/asm/orc_types.h          |    0
->  tools/{objtool => }/arch/x86/lib/inat.c       |    0
->  tools/{objtool => }/arch/x86/lib/insn.c       |    0
->  .../arch/x86/lib/x86-opcode-map.txt           |    0
->  .../arch/x86/tools/gen-insn-attr-x86.awk      |    0
->  tools/objtool/Makefile                        |    4 +-
->  tools/objtool/arch/x86/Build                  |    4 +-
->  tools/objtool/arch/x86/decode.c               |    4 +-
->  tools/objtool/sync-check.sh                   |   12 +-
->  tools/perf/.gitignore                         |    3 +
->  tools/perf/arch/x86/tests/insn-x86.c          |    2 +-
->  tools/perf/arch/x86/util/archinsn.c           |    2 +-
->  tools/perf/check-headers.sh                   |   11 +-
->  tools/perf/util/intel-pt-decoder/Build        |   22 +-
->  .../intel-pt-decoder/gen-insn-attr-x86.awk    |  392 ------
->  tools/perf/util/intel-pt-decoder/inat.c       |   82 --
->  tools/perf/util/intel-pt-decoder/inat.h       |  230 ----
->  tools/perf/util/intel-pt-decoder/inat_types.h |   15 -
->  tools/perf/util/intel-pt-decoder/insn.c       |  593 ---------
->  tools/perf/util/intel-pt-decoder/insn.h       |  216 ----
->  .../intel-pt-decoder/intel-pt-insn-decoder.c  |   10 +-
->  .../util/intel-pt-decoder/x86-opcode-map.txt  | 1072 -----------------
->  25 files changed, 34 insertions(+), 2640 deletions(-)
->  rename tools/{objtool => }/arch/x86/include/asm/inat.h (100%)
->  rename tools/{objtool => }/arch/x86/include/asm/inat_types.h (100%)
->  rename tools/{objtool => }/arch/x86/include/asm/insn.h (100%)
->  rename tools/{objtool => }/arch/x86/include/asm/orc_types.h (100%)
->  rename tools/{objtool => }/arch/x86/lib/inat.c (100%)
->  rename tools/{objtool => }/arch/x86/lib/insn.c (100%)
->  rename tools/{objtool => }/arch/x86/lib/x86-opcode-map.txt (100%)
->  rename tools/{objtool => }/arch/x86/tools/gen-insn-attr-x86.awk (100%)
->  delete mode 100644 tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
->  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.c
->  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.h
->  delete mode 100644 tools/perf/util/intel-pt-decoder/inat_types.h
->  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.c
->  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.h
->  delete mode 100644 tools/perf/util/intel-pt-decoder/x86-opcode-map.txt
+> > Except the blacklist branches, we will monitor all other branches.
+> 
+> Ok, good to know. Just as an optimization to your workflow, in case
+> you're interested: the tip/master branch merges all tip branches so if
+> you're trying to prioritize which branches to test first due to resource
+> constraints, I'd go with tip/master first and then, when I have free
+> cycles, I'd do the topic branches.
+thanks a lot for the advice. Meanwhile, the internal logic merges branches
+to test once to speed up, most of time, more branches will not increase the
+build testing workload. Of course, for the non merged branches, we need
+test individually, and we will take this information into consideration
+to add to our TODO.
+
+> 
+> Just as an idea...
+> 
+> > We also support pull request to update the
+> > configuration or email us to update. Refer to
+> > https://github.com/intel/lkp-tests/blob/master/repo/linux/tip.
+> 
+> Ok, cool. I'll talk to tglx about it and might even send you a pull
+> request.
+> 
+> Thx.
 > 
 > -- 
-> 2.20.1
+> Regards/Gruss,
+>     Boris.
 > 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
