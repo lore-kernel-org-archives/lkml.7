@@ -2,82 +2,82 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A38C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B2EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0797B2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CFE2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Q0hLb42e"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ALInY0Cu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfH3Efl (ORCPT
+        id S1727736AbfH3Egf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 00:35:41 -0400
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:42402 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725648AbfH3Efl (ORCPT
+        Fri, 30 Aug 2019 00:36:35 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44802 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfH3Ege (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 00:35:41 -0400
-Received: from mxback30j.mail.yandex.net (mxback30j.mail.yandex.net [IPv6:2a02:6b8:0:1619::230])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id E5D5D6741178;
-        Fri, 30 Aug 2019 07:35:38 +0300 (MSK)
-Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
-        by mxback30j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 32U7f9lBw7-Zcri6gdt;
-        Fri, 30 Aug 2019 07:35:38 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567139738;
-        bh=vrMkaB9xn2ZE/mMPhncAwnoH2UZZVYCo5x0BeJ38aIs=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=Q0hLb42eEIAgd3tuXr+Ysh9mGKETNBAamYbgahhoX534I1WvSgPi/GbolwJaMyjLJ
-         y934WyjHDo7olFddOMSZraquQ9GMTx/GmDaKFp89Y0P0ZfLi+H/GzLPbItXfvez1iY
-         bcW9zXpyaN8n2Nn6b5QS74PbqEcDP9KlPuOQVWMQ=
-Authentication-Results: mxback30j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id vFuwVxmDwr-ZUDG4Ds5;
-        Fri, 30 Aug 2019 07:35:36 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v1 18/18] MAINTAINERS: Add myself as maintainer of LOONGSON64
-Date:   Fri, 30 Aug 2019 12:32:32 +0800
-Message-Id: <20190830043232.20191-13-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
-References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+        Fri, 30 Aug 2019 00:36:34 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e24so5136435ljg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 21:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pB+rGb0tWqsHi1eIDIKoLqLIFW12dRXmfWgM+te26nw=;
+        b=ALInY0Cuh6sE9r14N2IRVle5WxABFqoqToXOgwRGgsjOcKV9iCprY1zwD8lAAxu0Zo
+         iOK7DFOkXPvHfFzJmhm9G6YDncNSgtjCFXjAvEmxbvbZPT0MW7lazGTy29LAg290UvSP
+         MlUlLBl6no5f/mWsgwMcDHcS0EGQNzyUBrziA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pB+rGb0tWqsHi1eIDIKoLqLIFW12dRXmfWgM+te26nw=;
+        b=di4H3Xh53BpFLdcJJDEFVNJjmcR/vTCh7UAHqiU9P8CNnsUL3a21oAMiheqIWCxRQE
+         oHUdoLvcuja/4J6PdUwuuDKxosdXq1qVGMl4t9uma29rDTpY1/VNKFQZnchUZASTzcBc
+         Yt9OgMivqSvVEJr0QJJmm7VwebMZ8cYJowjcfZgsbcrJosVL6KQOXYiHyPj1jFFtUZVK
+         YGKiaAM89HdWFJYmZ64EwALuQs75IjjQVOojn7/X8TjvJSi2bv0d9qDJwyRUhwMdbyB/
+         lqvIhe9O5nWvi90rJtw/olOlKZ2FovSMWS8S9BdmWOem2Ce+1hAHubqYAO9qwgezBl5S
+         9/bQ==
+X-Gm-Message-State: APjAAAVDqIXjfMQtgLBwJfGxL/ay9TYtOrBjGTPEQYN8A6McuilAaSww
+        BGyI+WIDaOVUuQryUS8otLJ0iHi0+Ycx12PS3kIkNA==
+X-Google-Smtp-Source: APXvYqwBfehU7rkS2AIu4PFjA/1cfoTtyS5T5ZZilgxRzlBBqm02HIlVTCKIxRfILwMZrrJM2pFl66UjPKKhl0Hlmkk=
+X-Received: by 2002:a05:651c:104a:: with SMTP id x10mr7062558ljm.238.1567139792623;
+ Thu, 29 Aug 2019 21:36:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1567052173-10256-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190829095907.GB4118@sirena.co.uk>
+In-Reply-To: <20190829095907.GB4118@sirena.co.uk>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Fri, 30 Aug 2019 10:06:21 +0530
+Message-ID: <CAHO=5PG_rtONCLgOJCvUX7B=DENhow627xwXr3cQX_oOgmMmMw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/1] spi: bcm-qspi: Make BSPI default mode
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm going to help with LOONGSON64 maintainance as well.
+On Thu, Aug 29, 2019 at 3:29 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Aug 29, 2019 at 09:46:13AM +0530, Rayagonda Kokatanur wrote:
+> > The spi-nor controller defaults to BSPI mode, hence switch back
+> > to its default mode after MSPI operations (write or erase)
+> > are completed.
+> >
+> > Changes from V1:
+> >  - Address code review comment from Mark Brown.
+>
+> As covered in submitting-patches.rst inter-version changelogs should go
+> after the --- so they don't end up in git.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 242970af939c..e14edf51ee15 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10758,6 +10758,7 @@ F:	drivers/*/*/*loongson2*
- 
- MIPS/LOONGSON64 ARCHITECTURE
- M:	Huacai Chen <chenhc@lemote.com>
-+M:	Jiaxun Yang <jiaxun.yang@flygoat.com>
- L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/loongson/
--- 
-2.22.0
-
+Thank you, I fixed it and sent patch v3 for review.
