@@ -2,111 +2,282 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB5EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506FEC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F3A2087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1149F21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imBf2A2S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqARl1b8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfH3IDH (ORCPT
+        id S1727940AbfH3IFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:03:07 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55336 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbfH3IDG (ORCPT
+        Fri, 30 Aug 2019 04:05:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38596 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfH3IFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:03:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g207so2307325wmg.5;
-        Fri, 30 Aug 2019 01:03:04 -0700 (PDT)
+        Fri, 30 Aug 2019 04:05:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e16so5998243wro.5
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Vqg4+0qE9By32oVPvkVXl8z2qAEWRTcGM4ZUpT4P/yk=;
-        b=imBf2A2SylOOCpkSfnUaZ0Yr/PohhWOJK7LTChewnYLurpeh9mvz6IYcdodAxfuIKb
-         bqhyCO7siqbspw7/pOGRSjEpj6Jk6md0R2SCnRG4eAaS3YgJhk+axN9a3XTABiiBcZeX
-         KDR/w2ZkkrE3AgMfZY+9ZcTokdTuS8lYk/cqZBAU4OV691WP8tZMDsVELuLJhvQlhvIx
-         +ra1xGjptsW58EOHcWm5JNThztUTmjC38krTntvd2nP5XH+LN2Wc3DazKOvLijy1Jwr/
-         Uxs4I4IAgtE18dlJtrk4UiNoWyVgZzwzkMPplSz67lxnR9dm9a9impUuwW4o6fCHIsbE
-         /aFg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ljpav7cp0jQCcXvbtu+znGOpg/cjpMnD8tVzcIJZM3U=;
+        b=cqARl1b8o1qWpahsIaOF3U049kFqLEgTCiSqSir1tjOVGr12xcRjsf3fLLdFFzPahH
+         /c2+z82jmorUf+NUTiTTMdcAwc7XojOAlTCA2zEg/+ioO9jEBu5Yifhq8pm/grtMxxxS
+         vp029MRA0gVO8xvPQmGyX5Xec3c3losomUo9DIE+sYzKSd0/sxvTXI0kI6ItuCv8lPa4
+         79FqueXiTnc33GKkIYg6I03vvVhEfKIjoeU9S1iiBuAYtE+jyKHrRpWJWZHoiwCotB7/
+         hc12QzIrcdHkNjQtX14XrE2LT+VujJlyhb00rKG9oQNRbemqmtA/3l/XNlp/iO/oJwuP
+         1gkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Vqg4+0qE9By32oVPvkVXl8z2qAEWRTcGM4ZUpT4P/yk=;
-        b=n0wEfkh5g6Ne995WWjYbs7S4/mFINcrSr/NI80RiSoXPyytIbgQ3MucynZ47PxzUZB
-         6o3RwYuxJrFB6OkFV8vqozZTTdw2DjdcGxOW0WlCrh1jwllS5LNsLvZVd+77znLFrLGB
-         mavA373k3FyTFqqAQeTB0adLbYMt21llvc4CNPYrbOQjfv1AsgmF/JaC+ntwWiJAR2Va
-         n4/riUqLBS4lASJizs6m7kiAoCH4HmBFMk5E9qQedELod3yRHqAVwwanJW/ESiKoXlIJ
-         fLjJXYdeykyKaJXaL/SJaQrDUSWMFyQ/+nto+uuLzXIk9fBOKNjAPjzyO9yZGk6h3dA5
-         v3/g==
-X-Gm-Message-State: APjAAAU9DJnLfW2O5KH4jAmApJIK4N632vS6Ms9PkPPInuFRcOFu4ouy
-        tmy5iHUfCmJ6xEOGF8au34OLuRycSiM=
-X-Google-Smtp-Source: APXvYqwptRw3grP98+iqcnu6j4w/z5h5jfty0Wj43zUc4O/9bA/1UWI/YKZI5QQqy5pg3XziQtS/8Q==
-X-Received: by 2002:a7b:cb81:: with SMTP id m1mr16420917wmi.124.1567152184350;
-        Fri, 30 Aug 2019 01:03:04 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id w125sm10551497wmg.32.2019.08.30.01.03.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 30 Aug 2019 01:03:03 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 10:03:02 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190830080302.bgfosew4rzc4og67@pali>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ljpav7cp0jQCcXvbtu+znGOpg/cjpMnD8tVzcIJZM3U=;
+        b=t3ZOnFD6blLDaxwYj2PTjPwajBsY1srkqpMjbCWkyiW46uFWG3BdVBVbeMfc3Ep7Qv
+         TVDiCcsXfXxbnmu4H6NuyCJNHCZ/nTe0PQU2n6R9wDCzikg0SEQ4OKA0aKJ/sY8IzAZM
+         ca35zoZJLVdcAgBGXqn1Z3vVRUl8hnwqofczdkMT0VbGTonSCf0bCo2H31YoMVNh1da0
+         9IWJ1Gh14Q9fpGLRBhRF9eKPPkjHCYNvsp4Glrvb9+cLv19VxZxmGdj+B4VUEs1STK+V
+         Fbb7kU+gRtOwjz/qQpCSA5APmdydQ9wbcxWsf/4/6439DK6KS8+n6DBdu9HN+rNHCLSp
+         gOxw==
+X-Gm-Message-State: APjAAAVNuDpzLyYyGkWHNr1uwnqYK8FipIHGhajHTi9jVV962tYLnTXz
+        IB3UFI9E4uHlhHl7bdIG2o9nPA==
+X-Google-Smtp-Source: APXvYqxTJNG20RJIdTPA3YfkECo8o2rMaAsKPaXHCnjnxBnsTCuivMK2A/r9MzNhLc6cP34/tDa1Pw==
+X-Received: by 2002:adf:db03:: with SMTP id s3mr17762359wri.214.1567152346692;
+        Fri, 30 Aug 2019 01:05:46 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id t8sm11299633wra.73.2019.08.30.01.05.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 01:05:45 -0700 (PDT)
+Subject: Re: [PATCH v2 4/5] dt-bindings: soundwire: add bindings for Qcom
+ controller
+To:     Vinod Koul <vkoul@kernel.org>, robh+dt@kernel.org
+Cc:     broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org,
+        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-5-srinivas.kandagatla@linaro.org>
+ <20190823072831.GE2672@vkoul-mobl>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <2bf2d158-4028-8a5f-2c13-cab12ac165eb@linaro.org>
+Date:   Fri, 30 Aug 2019 09:05:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <184209.1567120696@turing-police>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190823072831.GE2672@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 29 August 2019 19:18:16 Valdis Klētnieks wrote:
-> On Thu, 29 Aug 2019 22:56:31 +0200, Pali Roh?r said:
+Hi Rob,
+
+On 23/08/2019 08:28, Vinod Koul wrote:
+> On 13-08-19, 09:35, Srinivas Kandagatla wrote:
+>> This patch adds bindings for Qualcomm soundwire controller.
+>>
+>> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+>> either integrated as part of WCD audio codecs via slimbus or
+>> as part of SOC I/O.
 > 
-> > I'm not really sure if this exfat implementation is fully suitable for
-> > mainline linux kernel.
-> >
-> > In my opinion, proper way should be to implement exFAT support into
-> > existing fs/fat/ code instead of replacing whole vfat/msdosfs by this
-> > new (now staging) fat implementation.
+> Rob.. ?
 > 
-> > In linux kernel we really do not need two different implementation of
-> > VFAT32.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
+>>   1 file changed, 167 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+
+Do you see any issues with the these bindings?
+
+--srini
+>> new file mode 100644
+>> index 000000000000..436547f3b155
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+>> @@ -0,0 +1,167 @@
+>> +Qualcomm SoundWire Controller Bindings
+>> +
+>> +
+>> +This binding describes the Qualcomm SoundWire Controller along with its
+>> +board specific bus parameters.
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
+>> +		    Example:
+>> +			"qcom,soundwire-v1.3.0"
+>> +			"qcom,soundwire-v1.5.0"
+>> +			"qcom,soundwire-v1.6.0"
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: the base address and size of SoundWire controller
+>> +		    address space.
+>> +
+>> +- interrupts:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should specify the SoundWire Controller IRQ
+>> +
+>> +- clock-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: should be "iface" for SoundWire Controller interface clock
+>> +
+>> +- clocks:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should specify the SoundWire Controller interface clock
+>> +
+>> +- #sound-dai-cells:
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: must be 1 for digital audio interfaces on the controller.
+>> +
+>> +- qcom,dout-ports:
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: must be count of data out ports
+>> +
+>> +- qcom,din-ports:
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: must be count of data in ports
+>> +
+>> +- qcom,ports-offset1:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should specify payload transport window offset1 of each
+>> +		    data port. Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-offset2:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should specify payload transport window offset2 of each
+>> +		    data port. Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-sinterval-low:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be sample interval low of each data port.
+>> +		    Out ports followed by In ports. Used for Sample Interval
+>> +		    calculation.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-word-length:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be size of payload channel sample.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-block-pack-mode:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be 0 or 1 to indicate the block packing mode.
+>> +		    0 to indicate Blocks are per Channel
+>> +		    1 to indicate Blocks are per Port.
+>> +		    Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-block-group-count:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be in range 1 to 4 to indicate how many sample
+>> +		    intervals are combined into a payload.
+>> +		    Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-lane-control:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be in range 0 to 7 to identify which	data lane
+>> +		    the data port uses.
+>> +		    Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-hstart:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be number identifying lowerst numbered coloum in
+>> +		    SoundWire Frame, i.e. left edge of the Transport sub-frame
+>> +		    for each port. Values between 0 and 15 are valid.
+>> +		    Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,ports-hstop:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be number identifying highest numbered coloum in
+>> +		    SoundWire Frame, i.e. the right edge of the Transport
+>> +		    sub-frame for each port. Values between 0 and 15 are valid.
+>> +		    Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +- qcom,dports-type:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: should be one of the following types
+>> +		    0 for reduced port
+>> +		    1 for simple ports
+>> +		    2 for full port
+>> +		    Out ports followed by In ports.
+>> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> +Note:
+>> +	More Information on detail of encoding of these fields can be
+>> +found in MIPI Alliance SoundWire 1.0 Specifications.
+>> +
+>> += SoundWire devices
+>> +Each subnode of the bus represents SoundWire device attached to it.
+>> +The properties of these nodes are defined by the individual bindings.
+>> +
+>> += EXAMPLE
+>> +The following example represents a SoundWire controller on DB845c board
+>> +which has controller integrated inside WCD934x codec on SDM845 SoC.
+>> +
+>> +soundwire: soundwire@c85 {
+>> +	compatible = "qcom,soundwire-v1.3.0";
+>> +	reg = <0xc85 0x20>;
+>> +	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+>> +	clocks = <&wcc>;
+>> +	clock-names = "iface";
+>> +	#sound-dai-cells = <1>;
+>> +	qcom,dports-type = <0>;
+>> +	qcom,dout-ports	= <6>;
+>> +	qcom,din-ports	= <2>;
+>> +	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
+>> +	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
+>> +	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
+>> +
+>> +	/* Left Speaker */
+>> +	left{
+>> +		....
+>> +	};
+>> +
+>> +	/* Right Speaker */
+>> +	right{
+>> +		....
+>> +	};
+>> +};
+>> -- 
+>> 2.21.0
 > 
-> This patch however does have one major advantage over "patch vfat to
-> support exfat" - which is that the patch exists.
-
-I understand that this is advantage...
-
-> If somebody comes forward with an actual "extend vfat to do exfat" patch,
-> we should at that point have a discussion about relative merits....
-
-... but is this advantage such big that it should be merged even due to
-"horrible" code quality and lot of code/functionality duplication?
-In similar way there should be discussion about these pros and cons.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
