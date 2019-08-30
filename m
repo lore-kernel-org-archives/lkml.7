@@ -2,119 +2,121 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DD6C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF04EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FD723430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:36:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ikb0+wyU"
+	by mail.kernel.org (Postfix) with ESMTP id 87F0D23428
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfH3Sg2 (ORCPT
+        id S1728154AbfH3SiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:36:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39981 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbfH3Sg1 (ORCPT
+        Fri, 30 Aug 2019 14:38:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37394 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfH3SiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:36:27 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so3946987pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 11:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=zFvchfg+nfsCoDewMw9H5TfKo6aLBXeRTQaXaNc+Pts=;
-        b=Ikb0+wyUjuqA7LjN6wXC6fetcE3CYhjhVggxBoUqWIpS3f08zNmc+cwRrqE75xzKUg
-         So2TGRiXjGmmNCCWM5iJKYZx51m0qm8+s6IUPUnrY8F33/4rjK144u8SHUjzsgDkiNBI
-         D7CNJAba/FabcETkoXXQZ6Tum/wUwrvC8CWe8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zFvchfg+nfsCoDewMw9H5TfKo6aLBXeRTQaXaNc+Pts=;
-        b=VuvcDqDZIMD1PbXqZWUB81XR1v+oqHFYIquVBzMmkS1P2nHLREUyIekFcPBc5AM8ej
-         19B942Qf9fsSL7NY+G4GDM29wMm5ON+TjL1PG8ub1qNgmZhLI53E05feECBuef6CeSH9
-         BA8TFffB+6YZigOQgz5tA7AADOJUqbadUYeRebffPui6ipBipGSs/mj9MKc4TDlk2Dlw
-         /20DGwzyf8DR1nqls/XiZnbccAsudacn827bXcFWXsSmUVVVVYWoibv3k0BhYA8dz5XA
-         aW93E1uo4V0woLZS8OLxNT1ek/y+4VCg4Ufy0rkGqJIoux4AEfSJGIIZJvsgkD5iHWXg
-         6V7g==
-X-Gm-Message-State: APjAAAXWRYhSzoprnjhWtGW3rqhOPJzy7/dcvPf+iq9iY8PlfpoaAuhA
-        B1vJZoqR+1tKwnlboYV52tDbxA==
-X-Google-Smtp-Source: APXvYqz7wDu3v2tbCoIivOmmuJtFFKphufCRZ2DZv86SqQDUSFVc6anUX0NIHVQafi2EOjbtvdkhtA==
-X-Received: by 2002:aa7:8a98:: with SMTP id a24mr16690672pfc.101.1567190187123;
-        Fri, 30 Aug 2019 11:36:27 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l7sm6635079pff.35.2019.08.30.11.36.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 11:36:26 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
- userspace
-To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-References: <20190712180211.26333-1-sagi@grimberg.me>
- <20190712180211.26333-4-sagi@grimberg.me> <20190822002328.GP9511@lst.de>
- <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
- <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
- <20190826065639.GA11036@lst.de> <20190826075916.GA30396@kroah.com>
- <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
- <20190830055514.GC8492@lst.de>
- <4555a281-3cbc-0890-ce85-385c06ca912b@grimberg.me>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <3c58613f-9380-6887-434a-0db31136e7aa@broadcom.com>
-Date:   Fri, 30 Aug 2019 11:36:25 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Fri, 30 Aug 2019 14:38:02 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i3lma-000312-Ky; Fri, 30 Aug 2019 18:38:00 +0000
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: staging: exfat: issue with FFS_MEDIAERR error return assignment
+Message-ID: <c569b04c-2959-c8eb-0d38-628e8c5ff7ac@canonical.com>
+Date:   Fri, 30 Aug 2019 19:38:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <4555a281-3cbc-0890-ce85-385c06ca912b@grimberg.me>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/2019 11:08 AM, Sagi Grimberg wrote:
->
->>>> Yes we do, userspace should use it to order events.  Does udev not
->>>> handle that properly today?
->>>
->>> The problem is not ordering of events, its really about the fact that
->>> the chardev can be removed and reallocated for a different controller
->>> (could be a completely different discovery controller) by the time
->>> that userspace handles the event.
->>
->> The same is generally true for lot of kernel devices.  We could reduce
->> the chance by using the idr cyclic allocator.
->
-> Well, it was raised by Hannes and James, so I'll ask them respond here
-> because I don't mind having it this way. I personally think that this
-> is a better approach than having a cyclic idr allocator. In general, I
-> don't necessarily think that this is a good idea to have cyclic
-> controller enumerations if we don't absolutely have to...
+Hi,
 
-We hit it right and left without the cyclic allocator, but that won't 
-necessarily remove it.
+Static analysis on exfat with Coverity has picked up an assignment of
+FFS_MEDIAERR that gets over-written:
 
-Perhaps we should have had a unique token assigned to the controller, 
-and have the event pass the name and the token.  The cli would then, if 
-the token is present, validate it via an ioctl before proceeding with 
-other ioctls.
 
-Where all the connection arguments were added we due to the reuse issue 
-and then solving the question of how to verify and/or lookup the desired 
-controller, by using the shotgun approach rather than being very 
-pointed, which is what the name/token would do.
+1750        if (is_dir) {
+1751                if ((fid->dir.dir == p_fs->root_dir) &&
+1752                    (fid->entry == -1)) {
+1753                        if (p_fs->dev_ejected)
 
--- james
+    CID 85797 (#1 of 1): Unused value (UNUSED_VALUE)
+Assigning value 1 to ret here, but that stored value is overwritten
+before it can be used.
 
+1754                                ret = FFS_MEDIAERR;
+
+    value_overwrite: Overwriting previous write to ret with value 0.
+
+1755                        ret = FFS_SUCCESS;
+1756                        goto out;
+1757                }
+1758        }
+
+I doubt that's intentional, should it be instead the following?
+
+				if (p_fs->dev_ejected)
+					ret = FFS_MEDIAERR;
+				else
+					ret = FFS_SUCCESS;
+				goto out;
+
+Colin
