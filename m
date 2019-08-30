@@ -2,74 +2,65 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3230C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194FBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE47D2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E5F21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfH3HvP (ORCPT
+        id S1728072AbfH3Hv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:51:15 -0400
-Received: from ml01.weidahitech.com ([61.222.87.235]:1674 "EHLO
-        ml01.weidahitech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfH3HvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:51:14 -0400
-Received: from mail02.WHT.local (mail02.wht.local [192.168.10.16])
-        by ml01.weidahitech.com (8.13.8/8.13.8) with ESMTP id x7U7opML018847;
-        Fri, 30 Aug 2019 15:50:51 +0800
-Received: from x-Veriton-M4620G.WHT.local (192.168.10.88) by MAIL02.WHT.local
- (192.168.10.16) with Microsoft SMTP Server id 14.2.347.0; Fri, 30 Aug 2019
- 15:50:52 +0800
-From:   <hn.chen@weidahitech.com>
-To:     <linux-input@vger.kernel.org>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <dmitry.torokhov@gmail.com>,
-        <hn.chen@weidahitech.com>
-Subject: [PATCH] HID: modify quirks of i2c-hid driver for weida's devices
-Date:   Fri, 30 Aug 2019 15:58:30 +0800
-Message-ID: <1567151910-3819-1-git-send-email-hn.chen@weidahitech.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 30 Aug 2019 03:51:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24311 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbfH3Hv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:51:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 00:51:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
+   d="scan'208";a="197983246"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Aug 2019 00:51:57 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] software nodes: Fix use of potentially uninitialized variable
+Date:   Fri, 30 Aug 2019 10:51:54 +0300
+Message-Id: <20190830075156.76873-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: HungNien Chen <hn.chen@weidahitech.com>
+Hi,
 
-This 'SET_PWR_WAKEUP_DEV' quirk only works for weida's devices with pid
-0xC300 & 0xC301. Some weida's devices with other pids also need this quirk
-now. Use 'HID_ANY_ID' instead of 0xC300 to make all of weida's devices can be
-fixed on the power on issue. This modification should be safe since devices
-without power on issue will send the power on command only once.
+The patches now have a bit better commit messages (hopefully).
 
-Signed-off-by: HungNien Chen <hn.chen@weidahitech.com>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Rafael should take these since the patches that these fix are
+in his tree.
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 90164fe..2a7c6e3 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -169,9 +169,7 @@ struct i2c_hid {
- 	__u16 idProduct;
- 	__u32 quirks;
- } i2c_hid_quirks[] = {
--	{ USB_VENDOR_ID_WEIDA, USB_DEVICE_ID_WEIDA_8752,
--		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
--	{ USB_VENDOR_ID_WEIDA, USB_DEVICE_ID_WEIDA_8755,
-+	{ USB_VENDOR_ID_WEIDA, HID_ANY_ID,
- 		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
- 	{ I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
- 		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET |
+thanks,
+
+Heikki Krogerus (2):
+  software node: Initialize the return value in
+    software_node_to_swnode()
+  software node: Initialize the return value in
+    software_node_find_by_name()
+
+ drivers/base/swnode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 -- 
-1.9.1
+2.23.0.rc1
 
