@@ -2,75 +2,116 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E886C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F84C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D563721670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B8C21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfH3Kbx (ORCPT
+        id S1727923AbfH3KcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:31:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:52432 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfH3Kbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:31:52 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 21EFB1D5; Fri, 30 Aug 2019 12:31:51 +0200 (CEST)
-Date:   Fri, 30 Aug 2019 12:31:51 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v7 1/7] iommu/vt-d: Don't switch off swiotlb if use
- direct dma
-Message-ID: <20190830103150.GB29382@8bytes.org>
-References: <20190823071735.30264-1-baolu.lu@linux.intel.com>
- <20190823071735.30264-2-baolu.lu@linux.intel.com>
- <20190823083956.GB24194@8bytes.org>
- <8fb96c3b-c535-6d90-e1e1-c635aec6f178@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8fb96c3b-c535-6d90-e1e1-c635aec6f178@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 30 Aug 2019 06:32:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43128 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726660AbfH3KcN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 06:32:13 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UAVi2K118838
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 06:32:12 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2upyk9e3dw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 06:32:12 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sachinp@linux.vnet.ibm.com>;
+        Fri, 30 Aug 2019 11:32:10 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 30 Aug 2019 11:32:06 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UAW5bT51904560
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 10:32:06 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D22E8A4053;
+        Fri, 30 Aug 2019 10:32:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9AB8DA4040;
+        Fri, 30 Aug 2019 10:32:04 +0000 (GMT)
+Received: from [9.199.196.167] (unknown [9.199.196.167])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 10:32:04 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Oops (request_key_auth_describe) while running cve-2016-7042 from
+ LTP
+From:   Sachin Sant <sachinp@linux.vnet.ibm.com>
+In-Reply-To: <20190830085646.14740-1-hdanton@sina.com>
+Date:   Fri, 30 Aug 2019 16:02:03 +0530
+Cc:     dhowells@redhat.com, linuxppc-dev@ozlabs.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+References: <20190830085646.14740-1-hdanton@sina.com>
+To:     Hillf Danton <hdanton@sina.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-TM-AS-GCONF: 00
+x-cbid: 19083010-0012-0000-0000-000003449A8B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19083010-0013-0000-0000-0000217EDE26
+Message-Id: <C41D3A16-835C-421C-9059-AABB7273E664@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 10:17:30AM +0800, Lu Baolu wrote:
-> If a system has any external port, through which an untrusted device
-> might be connected, the external port itself should be marked as an
-> untrusted device, and all devices beneath it just inherit this
-> attribution.
-
-Okay, makes sense.
-
-> So during iommu driver initialization, we can easily know whether the
-> system has (or potentially has) untrusted devices by iterating the
-> device tree. I will add such check in the next version if no objections.
-
-Sounds good, thanks Baolu.
 
 
-	Joerg
+> On 30-Aug-2019, at 2:26 PM, Hillf Danton <hdanton@sina.com> wrote:
+> 
+> 
+> On Fri, 30 Aug 2019 12:18:07 +0530 Sachin Sant wrote:
+>> 
+>> [ 8074.351033] BUG: Kernel NULL pointer dereference at 0x00000038
+>> [ 8074.351046] Faulting instruction address: 0xc0000000004ddf30
+>> [ 8074.351052] Oops: Kernel access of bad area, sig: 11 [#1]
+>> [ 8074.351056] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> 
+> Add rcu gp.
+> 
+> --- a/security/keys/request_key_auth.c
+> +++ b/security/keys/request_key_auth.c
+> @@ -64,12 +64,19 @@ static int request_key_auth_instantiate(
+> static void request_key_auth_describe(const struct key *key,
+> 				      struct seq_file *m)
+> {
+> -	struct request_key_auth *rka = dereference_key_rcu(key);
+> +	struct request_key_auth *rka;
+> +
+> +	rcu_read_lock();
+> +	rka = dereference_key_rcu(key);
+> +	if (!rka)
+> +		goto out;
+> 
+
+Thanks for the patch. Works for me. Test ran fine without any problems.
+
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+
+Thanks
+-Sachin
+
