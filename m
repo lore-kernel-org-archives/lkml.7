@@ -2,94 +2,137 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679A2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30441C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A006208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E394821874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VWX1ckyK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="d+jv1H0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfH3AZ7 (ORCPT
+        id S1727176AbfH3A3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:25:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48675 "EHLO ozlabs.org"
+        Thu, 29 Aug 2019 20:29:19 -0400
+Received: from mx1.ucr.edu ([138.23.248.2]:1322 "EHLO mx1.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfH3AZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:25:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KKyW3GnNz9sNC;
-        Fri, 30 Aug 2019 10:25:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567124756;
-        bh=vTWsfu1z/Zldg29nCHdodXHx5wD3TBHhT6EeGtP28ng=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VWX1ckyKQXcHmNP4JteBl6TE/gmuxrP5sqQPj0Vjx0kHFlpd6bjBrIREQoWvZyQDK
-         8lYSkDpUpFkz/UKdFCQk9jTOS7FT4qMpIPyMpWXVA26IATpca1q2/boOcZ6yEcPqca
-         3Pr4j7IWzat7tEiQ26Jr1TJMwCNVBJONka0Mvt+9K2dQ6VlSaIx2d78BtKoug/C7we
-         GzXtMHQRUBNNTd2a40E7O/2D360R8y5Q8ppaQjbKxI9dXl03BUDBQwP8Z/sEIqT+Wi
-         /sbRYdc5rAbtjf8tB0GZMeS6C0xrmQe9CZbIToU2aVs6wWyWdHGn2a3RJ/2C4/0ipQ
-         9fk6g+xlv3U+w==
-Date:   Fri, 30 Aug 2019 10:25:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning from Linus' tree
-Message-ID: <20190830102553.38fd43f2@canb.auug.org.au>
-In-Reply-To: <alpine.DEB.2.21.1908300028360.1938@nanos.tec.linutronix.de>
-References: <20190830082357.4650d243@canb.auug.org.au>
-        <alpine.DEB.2.21.1908300028360.1938@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/53o8or2.LpQF327peWRQAaa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1726014AbfH3A3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:29:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567124985; x=1598660985;
+  h=from:to:cc:subject:date:message-id;
+  bh=q+D0SryHYPNUN1CJ5QZseBsJ9Xc6ghplBypiNCp7NwQ=;
+  b=d+jv1H0MPQyO9vF/wMph5nhrBx7TwZ+y4Q7u9mJlwn3uVIHxI3aUUbrq
+   kJXZanm0DkmvzKH7Kisfkg1KT/zHb08bdUJ7O3EG8lS2ipt6aCQL17npq
+   sYHIV9+s3v5XXXDB+AjfBdyBNNeGROZdXqMewYcjByMeG8YPYwoYDHPVV
+   97z9woracg6ktWizYQn5rozovXq6vRBDLSLBl0+ZIHl5zGrX7YMgJVqAi
+   aJEVZlaARffh567X4MbysZv9wIDv2wpICYs0x1sZE/iWcC95CnYddj42e
+   HNSa+kwrQEDYKE6mhymCM1ouhToyeB9+B1Zj58w+XVD4dzvU3lexBmNrK
+   g==;
+IronPort-SDR: PD9N1aSsqXVm71ljO7JCEI3+PvSq8JWLd48KFtlEE+Un9tuXX6agTe44tLHrE1Rcq1a0wmUvv/
+ GVPqL4HbqxqRGABt6g8lmx4M5dKj/mLzLcrVMj3ASpz42SAii5KsV6nfYdIUB7sXYs4kx+Kp8n
+ ucReEMg7ZbDwY31xkgeR/vZjUk3gFVgDEgLzJrHZ1j8zmNHga3WidUupGspGso9zCSiBoMdOz0
+ GIsP3x9yKjEdIZeP6RB6IO5QU0RmCFTsLV22umN0QDiMLrt+GplWRyCwEJGYlT9ilYcED+ExFr
+ h7M=
+IronPort-PHdr: =?us-ascii?q?9a23=3Aoq3w+BCcSRjV3vzbY8iLUyQJP3N1i/DPJgcQr6?=
+ =?us-ascii?q?AfoPdwSPv+pMbcNUDSrc9gkEXOFd2Cra4d0ayP7furAjVIyK3CmUhKSIZLWR?=
+ =?us-ascii?q?4BhJdetC0bK+nBN3fGKuX3ZTcxBsVIWQwt1Xi6NU9IBJS2PAWK8TW94jEIBx?=
+ =?us-ascii?q?rwKxd+KPjrFY7OlcS30P2594HObwlSizexfK1+IA+roQjQuMQajoVvJrsswR?=
+ =?us-ascii?q?bVv3VEfPhby3l1LlyJhRb84cmw/J9n8ytOvv8q6tBNX6bncakmVLJUFDspPX?=
+ =?us-ascii?q?w7683trhnDUBCA5mAAXWUMkxpHGBbK4RfnVZrsqCT6t+592C6HPc3qSL0/RD?=
+ =?us-ascii?q?qv47t3RBLulSwHMj858HrMisxxiqJbrw+qqQJmzYXJboGVNeRxfqfActgHQW?=
+ =?us-ascii?q?ZMUNpdWylHD4ihbYUAEvABMP5YoYfjulUAoxiwCw63Ce/z1jNFnGP60Lcm3+?=
+ =?us-ascii?q?g9FwzNwQwuH8gJsHTRtNj6NqYSUOG1zKnVyjXIcvRb2Df86YjIaB8hoO2AUa?=
+ =?us-ascii?q?5+fMfK1EkgCxnFgk+OpoP4IjOYz+IAuHWY4ep4Te+jlXIrpgVrrjWsxsogkJ?=
+ =?us-ascii?q?fFip8Jxlze6Cl0xII4KcWlREN6ZdOoCoVcui+aOodsXM8vQntktSQ1x7AApJ?=
+ =?us-ascii?q?W1ZjIFyI49yB7ac/GHdo+I7Q/9W+uJOjd4gW5leKq4hxav7Uis0u38Wdew0F?=
+ =?us-ascii?q?ZNtidFl8PDtnEJ1xDK8siHROZx8l6v2TqS0w3e7vtIIU8zlarcJJ4hxqA/mo?=
+ =?us-ascii?q?APvkTEGy/6gET2jKmIeUU44uWk9fjrb7H8qpKfN4J4kB/yPrkylsClHOg1Ng?=
+ =?us-ascii?q?wDU3Ce+eum1b3j+UP5QK9Njv0ziqTYsJHbJcQBqa64HwNZzogu5g2iDzi6yt?=
+ =?us-ascii?q?QUh2cII09YeB6flYjmJ0nOIOzkDfe4m1mslDZrx/bbPrzuG5nNLWbMkK3nfb?=
+ =?us-ascii?q?lj705R0xQzzd9B6JJOEL0BI+z8WlX3tNPGCh81KQu0w/zoCIY1+JkZXDe+A7?=
+ =?us-ascii?q?2ZLaSa5U6a5usue7HXTJIeonDwJ+VztK2mtmMwhVJIJfrh5pAQcn3tRaxr?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EwAQCqgmddgMfSVdFlHgEGBwaBVgY?=
+ =?us-ascii?q?LAYNXTBCNHYZcAQEBBosfGHGFeYooAQgBAQEMAQEtAgEBhD+CWyM3Bg4CAwg?=
+ =?us-ascii?q?BAQUBAQEBAQYEAQECEAEBCQ0JCCeFQ4I6DBmCZAsWZ4EVAQUBNSI5gkcBgXY?=
+ =?us-ascii?q?UnTyBAzyMVoVKgx8BCAyBSQkBCIEihx6EWYEQgQeDbnOEDRGDRYJEBIEuAQE?=
+ =?us-ascii?q?BlE6WBQEGAgGCDBSBcpJTJ4QwiRmLEwEtpXcCCgcGDyGBRYF7TSWBbAqBRJE?=
+ =?us-ascii?q?nHzOBCIwBASWCLgE?=
+X-IPAS-Result: =?us-ascii?q?A2EwAQCqgmddgMfSVdFlHgEGBwaBVgYLAYNXTBCNHYZcA?=
+ =?us-ascii?q?QEBBosfGHGFeYooAQgBAQEMAQEtAgEBhD+CWyM3Bg4CAwgBAQUBAQEBAQYEA?=
+ =?us-ascii?q?QECEAEBCQ0JCCeFQ4I6DBmCZAsWZ4EVAQUBNSI5gkcBgXYUnTyBAzyMVoVKg?=
+ =?us-ascii?q?x8BCAyBSQkBCIEihx6EWYEQgQeDbnOEDRGDRYJEBIEuAQEBlE6WBQEGAgGCD?=
+ =?us-ascii?q?BSBcpJTJ4QwiRmLEwEtpXcCCgcGDyGBRYF7TSWBbAqBRJEnHzOBCIwBASWCL?=
+ =?us-ascii?q?gE?=
+X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
+   d="scan'208";a="4934158"
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:29:44 -0700
+Received: by mail-pf1-f199.google.com with SMTP id 191so3855155pfy.20
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 17:29:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7nToAqjv4OEYbMmpARgQ1FCOKtHR4Z4q4zwJrXuyKdU=;
+        b=YykqIFNtCpZZXuLzWajpwYDd9pajHzTgb5oPT0iLtLTK0i0lillkQSrr4wBrFp6WJa
+         Ol+y75TgE6PZVH9d2wO6rJSSoS8RAF7oa+Fc9+lp0OxXaub0Uz7eChS43EWjtEm1ep7i
+         8XjFmaBTEvSpQF/8RRw0aRooUJqgEcH1FH0oGdruD1aZJxieBnnD6v0D9R8KZKyLWQpN
+         M4APRUGjuAPI7XFJvFIF/NMuOFn8OJjpPSM9Fu1fZ0qIW7r7ErSl1VqLWNQHEdQKE0o2
+         6BqteeXH7Ahu6R1kDv+dZsaj9QZQNOdFWGsHut7Xv4tideVJb2FXuvxAcku2CtnfAJ3z
+         Cb1g==
+X-Gm-Message-State: APjAAAVSjangrJwIZ4+bGZyMWmy/dsxw1JbKgpjF8HBSFujYHLKh7Wdn
+        pklfK+va9mosN13IiO6a3IXk886ZvjGBqbanU5prffr3y+UQwjwH3XojeRo1zzynuT/O/YjJOse
+        CesJ6PMUjZMG6XgEEOf6248fMlw==
+X-Received: by 2002:a65:5348:: with SMTP id w8mr10679733pgr.176.1567124956189;
+        Thu, 29 Aug 2019 17:29:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwajsnQB5LSVw3bqtjQWdgVGe2PtIJ/iVC/Riptn+9pLXUos1Ww553JZXmJ7hEKGpBj+zPcnw==
+X-Received: by 2002:a65:5348:: with SMTP id w8mr10679715pgr.176.1567124955849;
+        Thu, 29 Aug 2019 17:29:15 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id l31sm3613812pgm.63.2019.08.29.17.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 17:29:15 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel/smp: Variable nr_cpus is uninitialized if get_option() returns 0
+Date:   Thu, 29 Aug 2019 17:29:50 -0700
+Message-Id: <20190830002950.22458-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/53o8or2.LpQF327peWRQAaa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Inside function nrcpus(), variable nr_cpus is uninitialized if
+get_option() returns 0. However, the value will be used in the
+if statement, which is potentially unsafe.
 
-Hi Thomas,
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, 30 Aug 2019 00:29:21 +0200 (CEST) Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->
-> On Fri, 30 Aug 2019, Stephen Rothwell wrote:
->=20
-> Yes. We have a fix queued which should hit next tomorrow.
+diff --git a/kernel/smp.c b/kernel/smp.c
+index c94dd85c8d41..4bf24d4dc041 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -527,7 +527,7 @@ early_param("nosmp", nosmp);
+ /* this is hard limit */
+ static int __init nrcpus(char *str)
+ {
+-	int nr_cpus;
++	int nr_cpus = 0;
+ 
+ 	get_option(&str, &nr_cpus);
+ 	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+-- 
+2.17.1
 
-Excellent, thanks.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/53o8or2.LpQF327peWRQAaa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1obREACgkQAVBC80lX
-0GxVBgf9Eszs4ByVn6CUMr+KfbGwM9GZSjXLty5Y9Y089gZ+CJbxFbt5FY3QxZo4
-IIYPuhhj3OOecNnhF+zE0/IHO/GDE0zmo8bXe+dl+R5X68yeJYyQzaH1ObUJ79qV
-LqudJNie1ESyM7N3tuwPgY/q1q+QnPsZ8L6DrD62MB485bJbQvndN/O5Fxr6SREz
-ToQ+GA0soVx5HOZB2691GFiYnx2YJgUy94nasyV7cqjAd1kJJ/c/eHKJJSYVAHrb
-G+rM9MIJX1fctzZgiNcyObyQridE3U5cwKjCs4/BqwfM/BPesMBq332SPdSv5DTj
-J44mIWADk3VxC++e2/W479YNMPXEjw==
-=OPga
------END PGP SIGNATURE-----
-
---Sig_/53o8or2.LpQF327peWRQAaa--
