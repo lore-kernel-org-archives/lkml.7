@@ -2,111 +2,144 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1610C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D508C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5F721670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756DA21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfH3DiX (ORCPT
+        id S1727899AbfH3Djd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:38:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52001 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfH3DiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:38:22 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9BEAB307D88C;
-        Fri, 30 Aug 2019 03:38:22 +0000 (UTC)
-Received: from [10.72.12.92] (ovpn-12-92.pek2.redhat.com [10.72.12.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A065A5C1D6;
-        Fri, 30 Aug 2019 03:38:17 +0000 (UTC)
-Subject: Re: [PATCH 2/2] vhost/test: fix build for vhost test
-To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20190828053700.26022-1-tiwei.bie@intel.com>
- <20190828053700.26022-2-tiwei.bie@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f74bb96c-b439-7272-bb2f-d2a842dc41a2@redhat.com>
-Date:   Fri, 30 Aug 2019 11:38:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 23:39:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5250 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727410AbfH3Djd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 23:39:33 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1E80C5E287575E30FBF5;
+        Fri, 30 Aug 2019 11:39:28 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
+ 2019 11:39:21 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v4 2/7] erofs: some macros are much more readable as a function
+Date:   Fri, 30 Aug 2019 11:38:32 +0800
+Message-ID: <20190830033832.53652-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190830033643.51019-2-gaoxiang25@huawei.com>
+References: <20190830033643.51019-2-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190828053700.26022-2-tiwei.bie@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 30 Aug 2019 03:38:22 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As Christoph suggested [1], these macros are much
+more readable as a function.
 
-On 2019/8/28 下午1:37, Tiwei Bie wrote:
-> Since vhost_exceeds_weight() was introduced, callers need to specify
-> the packet weight and byte weight in vhost_dev_init(). Note that, the
-> packet weight isn't counted in this patch to keep the original behavior
-> unchanged.
->
-> Fixes: e82b9b0727ff ("vhost: introduce vhost_exceeds_weight()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-> ---
->  drivers/vhost/test.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-> index ac4f762c4f65..7804869c6a31 100644
-> --- a/drivers/vhost/test.c
-> +++ b/drivers/vhost/test.c
-> @@ -22,6 +22,12 @@
->   * Using this limit prevents one virtqueue from starving others. */
->  #define VHOST_TEST_WEIGHT 0x80000
->  
-> +/* Max number of packets transferred before requeueing the job.
-> + * Using this limit prevents one virtqueue from starving others with
-> + * pkts.
-> + */
-> +#define VHOST_TEST_PKT_WEIGHT 256
-> +
->  enum {
->  	VHOST_TEST_VQ = 0,
->  	VHOST_TEST_VQ_MAX = 1,
-> @@ -80,10 +86,8 @@ static void handle_vq(struct vhost_test *n)
->  		}
->  		vhost_add_used_and_signal(&n->dev, vq, head, 0);
->  		total_len += len;
-> -		if (unlikely(total_len >= VHOST_TEST_WEIGHT)) {
-> -			vhost_poll_queue(&vq->poll);
-> +		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
->  			break;
-> -		}
->  	}
->  
->  	mutex_unlock(&vq->mutex);
-> @@ -115,7 +119,8 @@ static int vhost_test_open(struct inode *inode, struct file *f)
->  	dev = &n->dev;
->  	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
->  	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
-> -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV);
-> +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
-> +		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
->  
->  	f->private_data = n;
->  
+[1] https://lore.kernel.org/r/20190829095954.GB20598@infradead.org/
+Reported-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+v4: a type fix in commit message.
+v3: change as Joe suggested,
+ https://lore.kernel.org/r/5b2ecf5cec1a6aa3834e9af41886a7fcb18ae86a.camel@perches.com/
 
+ fs/erofs/erofs_fs.h | 24 ++++++++++++++++--------
+ fs/erofs/inode.c    |  4 ++--
+ fs/erofs/xattr.c    |  2 +-
+ 3 files changed, 19 insertions(+), 11 deletions(-)
 
-Acked-by: Jason Wang <jasowang@redhat.com>
-
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 2447ad4d0920..0782ba9da623 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -168,16 +168,24 @@ struct erofs_xattr_entry {
+ 	char   e_name[0];       /* attribute name */
+ } __packed;
+ 
+-#define ondisk_xattr_ibody_size(count)	({\
+-	u32 __count = le16_to_cpu(count); \
+-	((__count) == 0) ? 0 : \
+-	sizeof(struct erofs_xattr_ibody_header) + \
+-		sizeof(__u32) * ((__count) - 1); })
++static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
++{
++	struct erofs_xattr_ibody_header *ibh;
++	unsigned int icount = le16_to_cpu(d_icount);
++
++	if (!icount)
++		return 0;
++
++	return struct_size(ibh, h_shared_xattrs, icount - 1);
++}
+ 
+ #define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
+-#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
+-	sizeof(struct erofs_xattr_entry) + \
+-	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
++
++static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
++{
++	return EROFS_XATTR_ALIGN(sizeof(struct erofs_xattr_entry) +
++				 e->e_name_len + le16_to_cpu(e->e_value_size));
++}
+ 
+ /* available compression algorithm types */
+ enum {
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 80f4fe919ee7..cf31554075c9 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -29,7 +29,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		struct erofs_inode_v2 *v2 = data;
+ 
+ 		vi->inode_isize = sizeof(struct erofs_inode_v2);
+-		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
++		vi->xattr_isize = erofs_xattr_ibody_size(v2->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v2->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+@@ -62,7 +62,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+ 
+ 		vi->inode_isize = sizeof(struct erofs_inode_v1);
+-		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
++		vi->xattr_isize = erofs_xattr_ibody_size(v1->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v1->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index a8286998a079..7ef8d4bb45cd 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -231,7 +231,7 @@ static int xattr_foreach(struct xattr_iter *it,
+ 	 */
+ 	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
+ 	if (tlimit) {
+-		unsigned int entry_sz = EROFS_XATTR_ENTRY_SIZE(&entry);
++		unsigned int entry_sz = erofs_xattr_entry_size(&entry);
+ 
+ 		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
+ 		if (unlikely(*tlimit < entry_sz)) {
+-- 
+2.17.1
 
