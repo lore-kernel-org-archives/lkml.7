@@ -2,181 +2,145 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE899C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE1DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63A52342B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500EE22CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjmOueDS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=typeblog-net.20150623.gappssmtp.com header.i=@typeblog-net.20150623.gappssmtp.com header.b="jA2jg3EM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfH3Pbw (ORCPT
+        id S1728247AbfH3Pc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:31:52 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35418 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfH3Pbv (ORCPT
+        Fri, 30 Aug 2019 11:32:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47081 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfH3Pc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:31:51 -0400
-Received: by mail-io1-f66.google.com with SMTP id b10so14883280ioj.2;
-        Fri, 30 Aug 2019 08:31:50 -0700 (PDT)
+        Fri, 30 Aug 2019 11:32:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m3so3704106pgv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=THCArD2ULmPuj5QcIigwJss+eQryCDYx05ZAa455hr0=;
-        b=QjmOueDSY9WLliOZMMAHB0fDBqWfU6V3IJtVE7RffkU6PaY9cNvMH/RwwajIyHploo
-         GLVXcXkfYk5QmB3kgoULdqr9mePnbgwtEa78r+GduWjNms79dNF91rrCC2Cr0y8TzMWh
-         sydHYrVQ5oxL5P1pySl8JkR+KqnyE4HXmYdpCTtvom59g3NPZKXEr99VrWRZeWn1U0zX
-         RuZhQnoR3yX3jbIz2lFkqJgs/wVD4XJ0zf4CfLpL+ube2PMTOGmZvNbEJ2aJx1HnzMNE
-         O28lQprjbGBHFTf2SFLIJjUduGK9isdAugfVDHZuwNBvwWirxWE7vrPO1bmFi54BVK73
-         sXcg==
+        d=typeblog-net.20150623.gappssmtp.com; s=20150623;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=akL/vzGq+lNV9YkALeJQ4aXXX3G8w5n79bs7dYEdyvc=;
+        b=jA2jg3EMAc+Z03EJefu2AjTGWyurMgUv5WPaiMUdJetx9G66cfmRCPao9YkhUXW5n9
+         n2XKm2WJJbb97jOllhEGi7VRlR7QnwJ1xq37V9tFvUZx4fdikRK9fPInZWbh9G7Vo6C3
+         xWkaoZyMRnrop1UzkWtTJi2icL4lA7W/HlkCHVZ1NaKVVgwdyLUE1k683xiNtTOW8sCu
+         LCHVIQ7wJRWo0enwCii8AJSZn/OmXumOkwFLbmfhc9pJJgivF6tCRiapM5rbB3vpwkkY
+         O+PnsETVQc9vtlYmmgqdUTogb3AWHgj+Ol9L6TdOaDaJme/1KvKrzSsREjcIzMqDMOaB
+         pRAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=THCArD2ULmPuj5QcIigwJss+eQryCDYx05ZAa455hr0=;
-        b=DFfQkQnIL1D6USxPnGbJ8+Y6uMH9Rzlynk3R8xzVC2sLGoQ7KiUKnX8MTnlC8TWPbS
-         EjApBcgK1WAkqtZYvlARH5uRTy6uizLNYJKPNhEkfu1XkFswKoBtuBKuwohp8htNzCjP
-         zz01Ogmx/hx2bu897mR8mgrXkZGjCpiJ67T0PB7MKlKZzl4Fhw/WR9t31Zsem7VpsLo2
-         AOjBU60oLxJejliMMXqVOJplLdcbThvGYVS1QazUUvf6JpNbdFD45NGvXEEw9uVm/tbM
-         wAt9HzFeKsK4HGwZrq6lcneBMrBG4CfKOOv5CDiBsVFilKmTQCmEw8sX7u3DiH7xoKdS
-         Qgmg==
-X-Gm-Message-State: APjAAAVTi8dDPrIwV2KqCfWX/yoAirBDuwyjzXbgAMmrvhb8I5HD3bZX
-        JQOLZ37hdf+MRV3YIKTatbYb18a0OWATOYYwQ2M=
-X-Google-Smtp-Source: APXvYqyY3L0jvSK597WWk0YMjyVG3pjCsfGwJ0Lib4smaB/iEuiSlgT0Vz9Ha8BL6n2yWDcUPd/WIjG+iob2z6VyRS8=
-X-Received: by 2002:a02:7a52:: with SMTP id z18mr12285314jad.121.1567179110074;
- Fri, 30 Aug 2019 08:31:50 -0700 (PDT)
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=akL/vzGq+lNV9YkALeJQ4aXXX3G8w5n79bs7dYEdyvc=;
+        b=sqWQhwR2wzQfQlW0i/g5ewHAP6/UhQVA69ERZXKlMTBE590PJl+1ZAxK9E8WoxZxPS
+         5RjdjJzcsT6ibOll4L7XbN0qiyJUs/IPXbnyXBNn+UP+lHnXoNpp8Vnbn3YYFVqovSW6
+         FYPyY6uuNjeLnl601YU1cBTDIt0MjkGWF7mBxt4m65cEEejyPPOl5g08/xtPjMg8vO6d
+         d8wvx/edLHCczmWZXaHaIq9qoBLHjVqrfazzuimjlNufp2oquGTiq8nZMEYmra/0U1Wg
+         axwgMnm5LfdUtcQ2QpNFhlIemxuuKmkmeu68pGoeAiYCjzRAp8RvuDMTyWKcQWhgZ6vK
+         ZEHg==
+X-Gm-Message-State: APjAAAUJw9HN7ZA6E/NimqGr85HTIbGO6iOi7Yn3ain1kRr5Ws59g4CQ
+        mfv47IPsSXAZdfsqzuKyRrOOEw==
+X-Google-Smtp-Source: APXvYqwCk3b/JUPn4IzgflSH3AD53+n85ervNpkFp1wYSX70ki280dLNL7xph+UzpG0nQUx7mcn6Yg==
+X-Received: by 2002:a62:640e:: with SMTP id y14mr18441295pfb.222.1567179178862;
+        Fri, 30 Aug 2019 08:32:58 -0700 (PDT)
+Received: from [172.19.0.1] ([91.207.174.229])
+        by smtp.gmail.com with ESMTPSA id a13sm6572268pfn.104.2019.08.30.08.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 08:32:58 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 23:32:53 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190830115505.GX2680@smile.fi.intel.com>
+References: <20190830000024.20384-1-peter@typeblog.net> <20190830000024.20384-2-peter@typeblog.net> <20190830115505.GX2680@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20190812131235.27244-1-nitesh@redhat.com> <20190812131235.27244-2-nitesh@redhat.com>
- <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com> <df82bc99-a212-4f5c-dc2e-28665060acb2@redhat.com>
-In-Reply-To: <df82bc99-a212-4f5c-dc2e-28665060acb2@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 30 Aug 2019 08:31:38 -0700
-Message-ID: <CAKgT0Ueqok+bxANVtB1DdYorcEHN7+Grzb8MAxTzSk8uS81pRA@mail.gmail.com>
-Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Pankaj Gupta <pagupta@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2 Max
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+From:   Peter Cai <peter@typeblog.net>
+Message-ID: <D5227099-6120-446B-A39D-6AE437F5E11E@typeblog.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 8:15 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+On August 30, 2019 7:55:05 PM GMT+08:00, Andy Shevchenko <andriy=2Eshevchen=
+ko@linux=2Eintel=2Ecom> wrote:
+>On Fri, Aug 30, 2019 at 08:00:24AM +0800, Peter Cai wrote:
+>> The firmware of GPD P2 Max could not handle panel resets although
+>code
+>> is present in DSDT=2E The kernel needs to take on this job instead, but
+>> the DSDT does not provide _DSD, rendering kernel helpless when trying
+>to
+>> find the respective GPIO pins=2E
+>>=20
+>> Fortunately, this time GPD has proper DMI vendor / product strings
+>that
+>> we could match against=2E We simply apply an acpi_gpio_mapping table
+>when
+>> GPD P2 Max is matched=2E
+>>=20
+>> Additionally, the DSDT definition of the irq pin specifies a wrong
+>> polarity=2E The new quirk introduced in the previous patch
+>> (ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this=2E
 >
+>> +#ifdef CONFIG_ACPI
 >
-> On 8/12/19 2:47 PM, Alexander Duyck wrote:
-> > On Mon, Aug 12, 2019 at 6:13 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >> This patch introduces the core infrastructure for free page reporting in
-> >> virtual environments. It enables the kernel to track the free pages which
-> >> can be reported to its hypervisor so that the hypervisor could
-> >> free and reuse that memory as per its requirement.
-> >>
-> >> While the pages are getting processed in the hypervisor (e.g.,
-> >> via MADV_DONTNEED), the guest must not use them, otherwise, data loss
-> >> would be possible. To avoid such a situation, these pages are
-> >> temporarily removed from the buddy. The amount of pages removed
-> >> temporarily from the buddy is governed by the backend(virtio-balloon
-> >> in our case).
-> >>
-> >> To efficiently identify free pages that can to be reported to the
-> >> hypervisor, bitmaps in a coarse granularity are used. Only fairly big
-> >> chunks are reported to the hypervisor - especially, to not break up THP
-> >> in the hypervisor - "MAX_ORDER - 2" on x86, and to save space. The bits
-> >> in the bitmap are an indication whether a page *might* be free, not a
-> >> guarantee. A new hook after buddy merging sets the bits.
-> >>
-> >> Bitmaps are stored per zone, protected by the zone lock. A workqueue
-> >> asynchronously processes the bitmaps, trying to isolate and report pages
-> >> that are still free. The backend (virtio-balloon) is responsible for
-> >> reporting these batched pages to the host synchronously. Once reporting/
-> >> freeing is complete, isolated pages are returned back to the buddy.
-> >>
-> >> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> [...]
-> >> +static void scan_zone_bitmap(struct page_reporting_config *phconf,
-> >> +                            struct zone *zone)
-> >> +{
-> >> +       unsigned long setbit;
-> >> +       struct page *page;
-> >> +       int count = 0;
-> >> +
-> >> +       sg_init_table(phconf->sg, phconf->max_pages);
-> >> +
-> >> +       for_each_set_bit(setbit, zone->bitmap, zone->nbits) {
-> >> +               /* Process only if the page is still online */
-> >> +               page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
-> >> +                                         zone->base_pfn);
-> >> +               if (!page)
-> >> +                       continue;
-> >> +
-> > Shouldn't you be clearing the bit and dropping the reference to
-> > free_pages before you move on to the next bit? Otherwise you are going
-> > to be stuck with those aren't you?
-> >
-> >> +               spin_lock(&zone->lock);
-> >> +
-> >> +               /* Ensure page is still free and can be processed */
-> >> +               if (PageBuddy(page) && page_private(page) >=
-> >> +                   PAGE_REPORTING_MIN_ORDER)
-> >> +                       count = process_free_page(page, phconf, count);
-> >> +
-> >> +               spin_unlock(&zone->lock);
-> > So I kind of wonder just how much overhead you are taking for bouncing
-> > the zone lock once per page here. Especially since it can result in
-> > you not actually making any progress since the page may have already
-> > been reallocated.
-> >
+>I guess most of these #ifdef:s makes code less readable for exchange of
+>saving
+>few bytes in the module footprint=2E
 >
-> I am wondering if there is a way to measure this overhead?
-> After thinking about this, I do understand your point.
-> One possible way which I can think of to address this is by having a
-> page_reporting_dequeue() hook somewhere in the allocation path.
-
-Really in order to stress this you probably need to have a lot of
-CPUs, a lot of memory, and something that forces a lot of pages to get
-hit such as the memory shuffling feature.
-
-> For some reason, I am not seeing this work as I would have expected
-> but I don't have solid reasoning to share yet. It could be simply
-> because I am putting my hook at the wrong place. I will continue
-> investigating this.
+>> +	{ "irq-gpios", &irq_gpios_default, 1,
+>> +		ACPI_GPIO_QUIRK_OVERRIDE_POLARITY },
 >
-> In any case, I may be over complicating things here, so please let me
-> if there is a better way to do this.
+>One line?
+>
+>> +		=2Ematches =3D {
+>> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "P2 MAX")
+>
+>Comma at the end?
+>
+>> +		},
+>> +		=2Edriver_data =3D &gpio_mapping_force_irq_active_high
+>
+>Ditto=2E
 
-I have already been demonstrating the "better way" I think there is to
-do this. I will push v7 of it early next week unless there is some
-other feedback. By putting the bit in the page and controlling what
-comes into and out of the lists it makes most of this quite a bit
-easier. The only limitation is you have to modify where things get
-placed in the lists so you don't create a "vapor lock" that would
-stall the feed of pages into the reporting engine.
+> I guess most of these #ifdef:s makes code less readable for exchange of =
+saving
+few bytes in the module footprint=2E
 
-> If this overhead is not significant we can probably live with it.
+Since they can only be used when ACPI is supported (devm_acpi_dev_add_driv=
+er_gpios does not exist without ACPI defined, thus the last guard must exis=
+t), if they were not guarded then we would be left with a bunch of unused v=
+ariables warnings when building without ACPI which doesn't seem good=2E
 
-You have bigger issues you still have to overcome as I recall. Didn't
-you still need to sort out hotplug and a sparse map with a wide span
-in a zone? Without those resolved the bitmap approach is still a no-go
-regardless of performance.
+Should we use __maybe_unused here instead of #ifdef guards?
 
-- Alex
+> Comma at the end?
+
+I was trying to follow the style of this driver but it doesn't seem to be =
+really consistent within itself=2E Another dmi_system_id definition in the =
+same file mixed both styles so I was kind of confused=2E
+
+--=20
+Regards,
+Xiyu Cai
