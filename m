@@ -2,144 +2,141 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25BFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BF421721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630552186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hnMZlylC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfH3Fki (ORCPT
+        id S1728174AbfH3Fkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:40:38 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:45816 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725902AbfH3Fki (ORCPT
+        Fri, 30 Aug 2019 01:40:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40899 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfH3Fko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:40:38 -0400
-X-UUID: e3765b949a904a1ea0e241e9a73b7c84-20190830
-X-UUID: e3765b949a904a1ea0e241e9a73b7c84-20190830
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 92452426; Fri, 30 Aug 2019 13:40:34 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 13:40:32 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 13:40:32 +0800
-Message-ID: <1567143627.5942.10.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 12/32] drm/mediatek: add mmsys private data for ddp
- path config
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 13:40:27 +0800
-In-Reply-To: <1567142858.5942.6.camel@mtksdaap41>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-13-git-send-email-yongqiang.niu@mediatek.com>
-         <1567142858.5942.6.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 01:40:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w16so3850428pfn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 22:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eVvtzN7Igkuh4Imleg3djnnr5OtlI8MGXuQLQiEidZU=;
+        b=hnMZlylCor+dZUvWVSWYiA8UIOvAlApi2I0f+Ywdk+k9sW5KnRJJeMF1IJd3tX7vkU
+         oaZHglBJbWbFB/jvIbYVjQaAnporW/L9dZx1dWJmGIbQMgt5u8KzMnu0pZMZ3WsDg/DF
+         ut4lcjfTVbUwEvfyvTQgRkFXWxUnAhD0nSlEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eVvtzN7Igkuh4Imleg3djnnr5OtlI8MGXuQLQiEidZU=;
+        b=HSwr2YnuqcEBNynd0uU2zZFikJL/RXyPwzqkezlqk2JW1kQiDAZFQWDnWUF9kARgyv
+         t5vfuTTkVK6dOolB6NxbJ9EO4V3qQjQj+fsxeDSZExU+RsTXEqrn1Fh3uFFjXphdHYfB
+         FGvV4rSYxd5MXWnfgacE5f5oNZiGruH8aCAFfL00fO4Urh1+MWgEud/NpaommrT0a3Va
+         ZgBqfu6xvMc7Ty6GbylNLy4bS0WbLnkN48CebRRGSs+m8b2bhJBAwL7Ra42btA/KyqeU
+         AfL8st+xdCoslqd25C2qzLBE25KiymhK4IxZnMyqCgv2PH6DOf9nF3wmrgC+QTa7OlCs
+         eldA==
+X-Gm-Message-State: APjAAAVhPVU4+2OvspxyxD72+4MX5xu4hL4VodZ1JAzFQwEtl9UpQCmg
+        1xMdFNLsj0v24l5yQB/Ieerx30la9Ko=
+X-Google-Smtp-Source: APXvYqw+F5l2dLUHf4clL+wuN5FTwsCCkJfTv4z/xD76/v2pwtskdDaZ43oFaBVsm56JgOyDMxNNfQ==
+X-Received: by 2002:a17:90a:a40e:: with SMTP id y14mr13342365pjp.83.1567143643954;
+        Thu, 29 Aug 2019 22:40:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u4sm4937379pfh.186.2019.08.29.22.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 22:40:43 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 22:40:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] leds: pwm: Use struct_size() helper
+Message-ID: <201908292240.E0C345D884@keescook>
+References: <20190830005320.GA15267@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 63705600795A02F27505757BDD9CBCADFD9382BB26651453F850F28E9B4B8EDE2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830005320.GA15267@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+On Thu, Aug 29, 2019 at 07:53:20PM -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct led_pwm_priv {
+> 	...
+>         struct led_pwm_data leds[0];
+> };
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following function:
+> 
+> static inline size_t sizeof_pwm_leds_priv(int num_leds)
+> {
+>        return sizeof(struct led_pwm_priv) +
+>                      (sizeof(struct led_pwm_data) * num_leds);
+> }
+> 
+> with:
+> 
+> struct_size(priv, leds, count)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-On Fri, 2019-08-30 at 13:27 +0800, CK Hu wrote:
-> Hi, Yongqiang:
-> 
-> On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > 
-> > This patch add mmsys private data for ddp path config
-> > all these register offset and value will be different in future SOC
-> > add these define into mmsys private data
-> > 	u32 ovl0_mout_en;
-> > 	u32 rdma1_sout_sel_in;
-> > 	u32 rdma1_sout_dsi0;
-> > 	u32 dpi0_sel_in;
-> > 	u32 dpi0_sel_in_rdma1;
-> > 	u32 dsi0_sel_in;
-> > 	u32 dsi0_sel_in_rdma1;
-> > 
-> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  4 ++
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 86 +++++++++++++++++++++++----------
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  5 ++
-> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c  |  3 ++
-> >  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  3 ++
-> >  5 files changed, 76 insertions(+), 25 deletions(-)
-> > 
-> 
-> [snip]
-> 
-> >  
-> >  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-> > +			      const struct mtk_mmsys_reg_data *reg_data,
-> >  			      enum mtk_ddp_comp_id cur,
-> >  			      enum mtk_ddp_comp_id next)
-> >  {
-> >  	unsigned int addr, value, reg;
-> >  
-> > -	value = mtk_ddp_mout_en(cur, next, &addr);
-> > +	value = mtk_ddp_mout_en(reg_data, cur, next, &addr);
-> >  	if (value) {
-> >  		reg = readl_relaxed(config_regs + addr) | value;
-> >  		writel_relaxed(reg, config_regs + addr);
-> >  	}
-> >  
-> > -	mtk_ddp_sout_sel(config_regs, cur, next);
-> > +	value = mtk_ddp_sout_sel(reg_data, cur, next, &addr);
-> > +	if (value)
-> > +		writel_relaxed(value, config_regs + addr);
-> 
-> I think the register could be written inside mtk_ddp_sout_sel(), why do
-> you move out of that function?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-OK, after review other patch, I understand what you do here.
-You want to align the method of mtk_ddp_mout_en(), mtk_ddp_sout_sel(),
-and mtk_ddp_sel_in(). so modification in these three function would be
-the same style. So I think this alignment should be an independent patch
-before this patch.
+-Kees
 
-Regards,
-CK
-
+> ---
+>  drivers/leds/leds-pwm.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
 > 
-> Regards,
-> CK
-> 
-> >  
-> > -	value = mtk_ddp_sel_in(cur, next, &addr);
-> > +	value = mtk_ddp_sel_in(reg_data, cur, next, &addr);
-> >  	if (value) {
-> >  		reg = readl_relaxed(config_regs + addr) | value;
-> >  		writel_relaxed(reg, config_regs + addr);
-> > @@ -420,18 +455,19 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-> >  }
-> >  
-> >  
-> >  
+> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+> index d0e1f2710351..8b6965a563e9 100644
+> --- a/drivers/leds/leds-pwm.c
+> +++ b/drivers/leds/leds-pwm.c
+> @@ -65,12 +65,6 @@ static int led_pwm_set(struct led_classdev *led_cdev,
+>  	return 0;
+>  }
+>  
+> -static inline size_t sizeof_pwm_leds_priv(int num_leds)
+> -{
+> -	return sizeof(struct led_pwm_priv) +
+> -		      (sizeof(struct led_pwm_data) * num_leds);
+> -}
+> -
+>  static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+>  		       struct led_pwm *led, struct fwnode_handle *fwnode)
+>  {
+> @@ -174,7 +168,7 @@ static int led_pwm_probe(struct platform_device *pdev)
+>  	if (!count)
+>  		return -EINVAL;
+>  
+> -	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(count),
+> +	priv = devm_kzalloc(&pdev->dev, struct_size(priv, leds, count),
+>  			    GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+> -- 
+> 2.23.0
 > 
 
-
+-- 
+Kees Cook
