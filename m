@@ -2,165 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D4C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F27C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6522343B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFA32342E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pAliF8TG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vydb4Dle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfH3QO1 (ORCPT
+        id S1728251AbfH3QP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:14:27 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.38]:22871 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727884AbfH3QO1 (ORCPT
+        Fri, 30 Aug 2019 12:15:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52439 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3QP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:14:27 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 01502129053
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 11:14:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3jXdijU3790on3jXdiVAdq; Fri, 30 Aug 2019 11:14:25 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aGYr2FM4QQtcTWRAHMFf23E34Ywi1aRTuyHCXd6kje0=; b=pAliF8TGvjsDz5WSKpj+xjc670
-        wG3SdMnDpV0CMTt6RY56y+kj5QAhp2VlSc66xWk513X6/TkKw8+aHdNS5DlJCWj2wigHMxromxRDb
-        iPMa3sVurbFOI1x6bHYrFu01Ip3EMiC/12ms7poxNoi/ph1lIjLU6lXhk48DXileLCfFVsD9pJ4vq
-        cfz7hSg96NYDOrSLiAHa4CBH656OaB0m3kdO7QTCtTdurZlwthlR6Lqs+ZfQFij4WWCpJIx0nA2ZY
-        4AgSPWtE4OGElW/r2HR+6Kfro853MmI01eRtd1Emp6UirKMojcshO4o8s21IWNAPiR/Gc3CBsE8U+
-        0+f630WA==;
-Received: from [189.152.216.116] (port=34988 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3jXc-000lDa-Le; Fri, 30 Aug 2019 11:14:24 -0500
-Date:   Fri, 30 Aug 2019 11:14:23 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] dmaengine: stm32-dma: Use struct_size() helper
-Message-ID: <20190830161423.GA3483@embeddedor>
+        Fri, 30 Aug 2019 12:15:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t17so7947516wmi.2;
+        Fri, 30 Aug 2019 09:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RvULTbglvsEpSUEl2PMG0UwvBIgjs3k2jzK9oMeOf/g=;
+        b=Vydb4Dle1to+M1trUotpf7b+sETb6evWQuAc+mqP6Se10ww7Uj5Z2OJh4a8WeQKK4H
+         JcelOy8LVyJLrAbl57+7h7YSZwdGEUW62VBWmClF2upOMUUN3h3BNuXNF4FrHNOlBCXo
+         uZASVSphcFVKqsCYib4AhC+ffQNc6MqSbc8ktNejdbKsj9mZMpaTSwlfkfKWjDH/A9Uz
+         EsbQF8GGUnD5U3KS+q/BQGAyagegoMcvkELq9KT+kIorskpg8butTUZMU0cT6wkmOObY
+         VSFnKRNz9DXKENkvJeVh/8+KPTJcJ5ORccvuKcueZ3sjeLF0Igst+bup83+efeb5zDGZ
+         07Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RvULTbglvsEpSUEl2PMG0UwvBIgjs3k2jzK9oMeOf/g=;
+        b=MXERSTTnhJG29ttns79tNwIG+XAUFBMJw/RUYSn9GdYxGTthAaVaRT1QpRYf/iOV+q
+         CnL9OttS2CB902RNDoE4Dz2GKfNl0B6XP8HCfyx8lDx2/VRCxUUgcffwfzCsEOJi9Rp8
+         ytLfdKX14v9wnDbkJo4F4RdwRfLWhIVk9/BpmH9vH9Hdeo3HY1BgJQqusJFrQXIoRFXD
+         7VQ/MNXYs5L0EClcaZWasyXO7CqVhA6iNASEVAYjOvCmo/YVHOqSXJZKZEVgpMy36NhU
+         NQnGgirSnFPMkhuen24+TuMlwZhoEaEcEhl1qb1fmqHcTtXS8NIkL7zDYzOAIkZgtxk+
+         cyBQ==
+X-Gm-Message-State: APjAAAWARsZl1SKV6sSQcp7ntdDWK9sPkvAaoeVPZimwpnSRjnP5mfqB
+        nJHbY+a5sWysFXRu5evopVaQpWiU
+X-Google-Smtp-Source: APXvYqwRC7VjVdR0nKtT76M4w3gVjPwIDRv5e5ONZ1A8loK1XrViNO6i2f2wuGBdd7VkCTp3RNgyew==
+X-Received: by 2002:a7b:c954:: with SMTP id i20mr16685029wml.169.1567181724174;
+        Fri, 30 Aug 2019 09:15:24 -0700 (PDT)
+Received: from [192.168.8.147] (95.168.185.81.rev.sfr.net. [81.185.168.95])
+        by smtp.gmail.com with ESMTPSA id f6sm15241274wrh.30.2019.08.30.09.15.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 09:15:23 -0700 (PDT)
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+To:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1567177025-11016-1-git-send-email-cai@lca.pw>
+ <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
+ <1567178728.5576.32.camel@lca.pw>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
+Date:   Fri, 30 Aug 2019 18:15:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3jXc-000lDa-Le
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:34988
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <1567178728.5576.32.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
-
-struct stm32_dma_desc {
-	...
-        struct stm32_dma_sg_req sg_req[];
-};
 
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+On 8/30/19 5:25 PM, Qian Cai wrote:
+> On Fri, 2019-08-30 at 17:11 +0200, Eric Dumazet wrote:
+>>
+>> On 8/30/19 4:57 PM, Qian Cai wrote:
+>>> When running heavy memory pressure workloads, the system is throwing
+>>> endless warnings below due to the allocation could fail from
+>>> __build_skb(), and the volume of this call could be huge which may
+>>> generate a lot of serial console output and cosumes all CPUs as
+>>> warn_alloc() could be expensive by calling dump_stack() and then
+>>> show_mem().
+>>>
+>>> Fix it by silencing the warning in this call site. Also, it seems
+>>> unnecessary to even print a warning at all if the allocation failed in
+>>> __build_skb(), as it may just retransmit the packet and retry.
+>>>
+>>
+>> Same patches are showing up there and there from time to time.
+>>
+>> Why is this particular spot interesting, against all others not adding
+>> __GFP_NOWARN ?
+>>
+>> Are we going to have hundred of patches adding __GFP_NOWARN at various points,
+>> or should we get something generic to not flood the syslog in case of memory
+>> pressure ?
+>>
+> 
+> From my testing which uses LTP oom* tests. There are only 3 places need to be
+> patched. The other two are in IOMMU code for both Intel and AMD. The place is
+> particular interesting because it could cause the system with floating serial
+> console output for days without making progress in OOM. I suppose it ends up in
+> a looping condition that warn_alloc() would end up generating more calls into
+> __build_skb() via ksoftirqd.
+> 
 
-So, replace the following function:
+Yes, but what about other tests done by other people ?
 
-static struct stm32_dma_desc *stm32_dma_alloc_desc(u32 num_sgs)
-{
-       return kzalloc(sizeof(struct stm32_dma_desc) +
-                      sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_NOWAIT);
-}
+You do not really answer my last question, which was really the point I tried
+to make.
 
-with:
+If there is a risk of flooding the syslog, we should fix this generically
+in mm layer, not adding hundred of __GFP_NOWARN all over the places.
 
-kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/dma/stm32-dma.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index e4cbe38d1b83..5989b0893521 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -243,12 +243,6 @@ static void stm32_dma_write(struct stm32_dma_device *dmadev, u32 reg, u32 val)
- 	writel_relaxed(val, dmadev->base + reg);
- }
- 
--static struct stm32_dma_desc *stm32_dma_alloc_desc(u32 num_sgs)
--{
--	return kzalloc(sizeof(struct stm32_dma_desc) +
--		       sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_NOWAIT);
--}
--
- static int stm32_dma_get_width(struct stm32_dma_chan *chan,
- 			       enum dma_slave_buswidth width)
- {
-@@ -853,7 +847,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
- 		return NULL;
- 	}
- 
--	desc = stm32_dma_alloc_desc(sg_len);
-+	desc = kzalloc(struct_size(desc, sg_req, sg_len), GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
- 
-@@ -954,7 +948,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
- 
- 	num_periods = buf_len / period_len;
- 
--	desc = stm32_dma_alloc_desc(num_periods);
-+	desc = kzalloc(struct_size(desc, sg_req, num_periods), GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
- 
-@@ -989,7 +983,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
- 	int i;
- 
- 	num_sgs = DIV_ROUND_UP(len, STM32_DMA_ALIGNED_MAX_DATA_ITEMS);
--	desc = stm32_dma_alloc_desc(num_sgs);
-+	desc = kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
- 
--- 
-2.23.0
-
+Maybe just make __GFP_NOWARN the default, I dunno.
