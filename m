@@ -2,110 +2,107 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAD2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4E6C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8192341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567174174;
-	bh=p5AjW3xVDRxCRokQLJsTqv+1lmdRB2z4uTAo1OGwa4Q=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=nbZlC5OiVBwByjdPynpmhP16Qe3c3h3GcrxSgYfWeWI5ianvOwNVIEsJZbdiv1Fko
-	 9XCLUrFFv2pYd6gB1/hTzrrRryQ59JSGE2mb2tGKOMD6YKyS2K98VT2yj42uyOMyXE
-	 Y7sTT6cBocRC82vN9Gxptg+jA/rDrxtp7ct0dlpk=
+	by mail.kernel.org (Postfix) with ESMTP id 837BB22CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="F9omnknw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfH3OJd (ORCPT
+        id S1727896AbfH3OMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46668 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 10:12:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42520 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfH3OJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:09:31 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727718AbfH3OMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:12:03 -0400
+Received: from zn.tnic (p200300EC2F0AAA0001D832AAA778AB1D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:aa00:1d8:32aa:a778:ab1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DBD22CE9;
-        Fri, 30 Aug 2019 14:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567174170;
-        bh=p5AjW3xVDRxCRokQLJsTqv+1lmdRB2z4uTAo1OGwa4Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=E/heTaWMHie+f9aeljhO/1yfl9cSU7vcNF/AqUhGNPWL/KPpd7dNvx0UyWaxDk1k2
-         VFXySM1rPovDrqpfURtsc0Qw49mjuDC3qFcbeYuFqQRddu0yUujxGnbUUQ6uBdz0AY
-         Fg6wPEqFXmdOf/n5IqZABnc7lopIyAgMoMkspmt4=
-Subject: Re: [PATCH] seccomp: fix compilation errors in seccomp-bpf kselftest
-To:     Alakesh Haloi <alakesh.haloi@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Cc:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190822215823.GA11292@ip-172-31-44-144.us-west-2.compute.internal>
-From:   shuah <shuah@kernel.org>
-Message-ID: <30e993fe-de76-9831-7ecc-61fcbcd51ae0@kernel.org>
-Date:   Fri, 30 Aug 2019 08:09:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 46BA91EC0819;
+        Fri, 30 Aug 2019 16:12:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567174321;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=k4VwADrPCi5rLm3iNeYNw+tyHrRu79BZjudlrKpekYg=;
+        b=F9omnknwKNcQNRrUDkeHN2K/2FZScCUieMKsW8X5Inwuq2W/fDvYXPwDsBSAdxwOstRlzC
+        8U6TG6sJPO6WpQPvHdR0KYb3zwr06JuN73UjCV1R+66Fs3EI/KRXWNBr3zor+fQJmHNfqi
+        d5ZALOPEaIeYtYTyEDITLpB5nK2kYlw=
+Date:   Fri, 30 Aug 2019 16:11:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>,
+        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Drake <drake@endlessm.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>,
+        Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org
+Subject: Re: [PATCHv2 0/4] x86/mce: protect nr_cpus from rebooting by
+ broadcast mce
+Message-ID: <20190830141156.GB30413@zn.tnic>
+References: <1566874943-4449-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822215823.GA11292@ip-172-31-44-144.us-west-2.compute.internal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1566874943-4449-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 3:58 PM, Alakesh Haloi wrote:
-> Without this patch we see following error while building and kselftest
-> for secccomp_bpf fails.
+On Tue, Aug 27, 2019 at 11:02:19AM +0800, Pingfan Liu wrote:
+> v1 -> v2: fix compile warning and error on x86_32
 > 
-> seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function);
-> seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function);
 > 
-> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
-> ---
->   tools/testing/selftests/seccomp/seccomp_bpf.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
+> This series include two related groups:
+> [1-3/4]: protect nr_cpus from rebooting by broadcast mce
+> [4/4]: improve "kexec -l" robustness against broadcast mce
 > 
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index 6ef7f16c4cf5..2e619760fc3e 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -1353,6 +1353,14 @@ TEST_F(precedence, log_is_fifth_in_any_order)
->   #define PTRACE_EVENT_SECCOMP 7
->   #endif
->   
-> +#ifndef PTRACE_EVENTMSG_SYSCALL_ENTRY
-> +#define PTRACE_EVENTMSG_SYSCALL_ENTRY 1
-> +#endif
-> +
-> +#ifndef PTRACE_EVENTMSG_SYSCALL_EXIT
-> +#define PTRACE_EVENTMSG_SYSCALL_EXIT 2
-> +#endif
-> +
->   #define IS_SECCOMP_EVENT(status) ((status >> 16) == PTRACE_EVENT_SECCOMP)
->   bool tracer_running;
->   void tracer_stop(int sig)
+> When I tried to fix [1], Thomas raised concern about the nr_cpus' vulnerability
+> to unexpected rebooting by broadcast mce. After analysis, I think only the
+> following first case suffers from the rebooting by broadcast mce. [1-3/4] aims
+> to fix that issue.
 > 
+> *** Back ground ***
+> 
+> On x86 it's required to have all logical CPUs set CR4.MCE=1. Otherwise, a
+> broadcast MCE observing CR4.MCE=0b on any core will shutdown the machine.
+> 
+> The option 'nosmt' has already complied with the above rule by Thomas's patch.
+> For detail, refer to 506a66f3748 (Revert "x86/apic: Ignore secondary threads if
+> nosmt=force")
+> 
+> But for nr_cpus option, the exposure to broadcast MCE is a little complicated,
+> and can be categorized into three cases.
 
-Hi Kees,
+One thing is not clear to me: are you "fixing" a hypothetical case here
+or have you *actually* experienced an MCE happening while kdumping with
+nr_cpus < num_online_cpus()?
 
-Okay to apply this one for 5.4-rc1. Or is this going through bpf tree?
-If it is going through bpf tree:
+Btw, pls do not use lkml.org to refer to previous mails but
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+http://lkml.kernel.org/r/<Message-ID>
 
-thanks,
--- Shuah
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
