@@ -2,92 +2,200 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FBCC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C61C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CF023407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4710B23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:19:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="vhE/pRy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfH3RRc (ORCPT
+        id S1728086AbfH3RTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:17:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:29746 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727922AbfH3RRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:17:32 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 10:17:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="332917307"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga004.jf.intel.com with ESMTP; 30 Aug 2019 10:17:31 -0700
-Date:   Fri, 30 Aug 2019 10:17:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] checkpatch: Remove obsolete period from "ambiguous SHA1"
- query
-Message-ID: <20190830171731.GB15405@linux.intel.com>
-References: <20190830163103.15914-1-sean.j.christopherson@intel.com>
- <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
+        Fri, 30 Aug 2019 13:19:51 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37910 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbfH3RTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:19:50 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u190so6817961qkh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 10:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=Lv7F7XfXtTfsXJ4fsL2rJKslKTnu6PBtRjHrGo9jnJc=;
+        b=vhE/pRy0Rqd3VBQJA5AOWcACzc014lyGB4mWKq6KKlKsiZYlKftqO2Nt8QRZnyj4SB
+         XgH0ppxgYw2ebO+hAXlpMeL3tBwYbT1ckNr2kR5sta3R6QVhaBsq/2k4rXkcA3W1JXf9
+         c7+NWxG0azeMGQ9waD084P8ygY1qHdiHZBfo34hgS2atU4V2jscUlJ88KkNw2wkiabt3
+         tTvesrhPc9OOwARdzWh2y3OS8Ueo7LmIX67GwQDmVgXQ16t1ElTttGbYxAYFsLFty2/C
+         SS/yYlHVUEgb7YJs4n/thMT7LIclenx2VyhO6A3/c4qb1zH3Dzp1POGnHwbgFY+aX+Ib
+         hHpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=Lv7F7XfXtTfsXJ4fsL2rJKslKTnu6PBtRjHrGo9jnJc=;
+        b=Oi1RkudbBzDWvyQs5stf7GFcqkaTwL/+OLrTjRhTAPG+vyy417vJ18HNvuF/hHpGBa
+         RFCcUY2LS010nbttWGv7fjmPx3dlBz0anccwRKIbiZUOB06ibSkbjDV1ay/u2xCdMjqW
+         I0m4CNd3yWNrD4+DDvuwAmGZzSDKC5TDJ8SxDexjucUquu+qVJJL4AyziF7fV+PkDZxX
+         2EWNRVgSDk5E47ecmjOwFel31Rq7WBDEtRvMMDufvn6V4zToSZloIgKBdZY2oC5EIi17
+         UUIAD4mg4KXKy50wt56JGRqPx/RpmldC/DibL1FeMPYMl0MFEGRtTFpElxl8gqggNkWK
+         VtAQ==
+X-Gm-Message-State: APjAAAX4JwpcyQH6hpw3s3JGtntTPwK5GQAsbx6EFupgw1OwDiSQL3gk
+        wQ+ahYfVlutxCoH1SUgmqeNNpA==
+X-Google-Smtp-Source: APXvYqzFCIDQ4rnTVqgs8xMi2NAdoI5wuK0m/PpbK+c/0M2O94L/SiDiAMj2ybLbsAwNMNggOuV7Dw==
+X-Received: by 2002:a37:92c6:: with SMTP id u189mr15710250qkd.69.1567185589116;
+        Fri, 30 Aug 2019 10:19:49 -0700 (PDT)
+Received: from tpx230-nicolas (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
+        by smtp.gmail.com with ESMTPSA id z187sm3372624qke.99.2019.08.30.10.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 10:19:46 -0700 (PDT)
+Message-ID: <3580d4f1549c405173f061c5e2ece3c8f2cfa7e4.camel@ndufresne.ca>
+Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        paul.kocialkowski@bootlin.com, mripard@kernel.org,
+        pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        acourbot@chromium.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+Date:   Fri, 30 Aug 2019 13:19:42 -0400
+In-Reply-To: <20190830074806.78a2b8b4@collabora.com>
+References: <20190822194500.2071-1-jernej.skrabec@siol.net>
+         <20190822194500.2071-6-jernej.skrabec@siol.net>
+         <20190826202831.311c7c20@collabora.com> <3132748.mYbjOY1tKM@jernej-laptop>
+         <20190830074806.78a2b8b4@collabora.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-0LtRcsKKEiURq7JtFoDE"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:37:51AM -0700, Joe Perches wrote:
-> On Fri, 2019-08-30 at 09:31 -0700, Sean Christopherson wrote:
-> > Git dropped the period from its "ambiguous SHA1" error message in commit
-> > 0c99171ad2 ("get_short_sha1: mark ambiguity error for translation"),
-> > circa 2016.  Drop the period from checkpatch's associated query so as to
-> > match both the old and new error messages.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  scripts/checkpatch.pl | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index 93a7edfe0f05..ef3642c53100 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -962,7 +962,7 @@ sub git_commit_info {
-> >  
-> >  	return ($id, $desc) if ($#lines < 0);
-> >  
-> > -	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous\./) {
-> > +	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous/) {
-> >  # Maybe one day convert this block of bash into something that returns
-> >  # all matching commit ids, but it's very slow...
-> >  #
-> 
-> Thanks.
-> 
-> Did git ever change to actually support human readable
-> messages in multiple languages?
 
-Yep, e.g.:
+--=-0LtRcsKKEiURq7JtFoDE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  error: Kurzer SHA-1 745f ist mehrdeutig.
+Le vendredi 30 ao=C3=BBt 2019 =C3=A0 07:48 +0200, Boris Brezillon a =C3=A9c=
+rit :
+> On Thu, 29 Aug 2019 21:04:28 +0200
+> Jernej =C5=A0krabec <jernej.skrabec@siol.net> wrote:
+>=20
+> > Dne ponedeljek, 26. avgust 2019 ob 20:28:31 CEST je Boris Brezillon=20
+> > napisal(a):
+> > > Hi Jernej,
+> > >=20
+> > > On Thu, 22 Aug 2019 21:44:57 +0200
+> > >=20
+> > > Jernej Skrabec <jernej.skrabec@siol.net> wrote: =20
+> > > > When codec supports multiple slices in one frame, VPU has to know w=
+hen
+> > > > first slice of each frame is being processed, presumably to correct=
+ly
+> > > > clear/set data in auxiliary buffers.
+> > > >=20
+> > > > Add first_slice field to cedrus_run structure and set it according =
+to
+> > > > timestamps of capture and output buffers. If timestamps are differe=
+nt,
+> > > > it's first slice and viceversa.
+> > > >=20
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > ---
+> > > >=20
+> > > >  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
+> > > >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
+> > > >  2 files changed, 3 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > > > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+> > > > 2f017a651848..32cb38e541c6 100644
+> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > > > @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
+> > > >=20
+> > > >  struct cedrus_run {
+> > > > =20
+> > > >  	struct vb2_v4l2_buffer	*src;
+> > > >  	struct vb2_v4l2_buffer	*dst;
+> > > >=20
+> > > > +	bool first_slice;
+> > > >=20
+> > > >  	union {
+> > > >  =09
+> > > >  		struct cedrus_h264_run	h264;
+> > > >=20
+> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
+> > > > 56ca4c9ad01c..d7b54accfe83 100644
+> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > > > @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
+> > > >=20
+> > > >  	run.src =3D v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > >  	run.dst =3D v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> > > >=20
+> > > > +	run.first_slice =3D
+> > > > +		run.src->vb2_buf.timestamp !=3D run.dst- =20
+> > > vb2_buf.timestamp;
+> > >=20
+> > > Can't we use slice->first_mb_in_slice to determine if a slice is the
+> > > first? I'd expect ->first_mb_in_slice to be 0 (unless we decide to
+> > > support ASO). =20
+> >=20
+> > I looked in all VPU documentation available to me (which isn't much) an=
+d there=20
+> > is no indication if ASO is supported or not. Do you have any sample vid=
+eo with=20
+> > out-of-order slices? It's my understanding that this is uncommon.
+>=20
+> I'm not entirely sure, but my understanding was that it might be used
+> when streaming over network where some packets might be lost and
+> re-emitted later on.
+>=20
+> > If it's=20
+> > supported, I would leave code as-is.
+>=20
+> I remember seeing the ASO acronym mentioned in the hantro G1 spec, but
+> at the same time we're doing frame-based decoding, so I guess the HW
+> block expects slices to be ordered in that case. Honestly I don't know,
+> so let's keep the code as-is.
 
-> If so, this won't work for non-english output.
+We had an ASO interrupt when we tried to do slice decoding rather then
+frame. I believe on Hantro, the way to do ASO is to actually re-order
+in software.
 
-Yep again.  The next check for 'fatal: ambiguous argument' obviously fails
-as well and checkpatch ends up using git's error message as the id and
-description.
+ASO is a feature of baseline profile use to reduce latency. As an
+example, VA-API does not support baseline profile (only constrained-
+baseline, which excludes ASO).
 
-  ERROR: Please use git ... - ie: 'commit error: Kurze ("")'
+Nicolas
+
+
+--=-0LtRcsKKEiURq7JtFoDE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXWlarwAKCRBxUwItrAao
+HBNPAJ9N2BBAFQLk5dhvhHq+DkURXWdFXQCcDJNUwgnp0u1Q8T6rWaMoTSg5Kck=
+=hsiz
+-----END PGP SIGNATURE-----
+
+--=-0LtRcsKKEiURq7JtFoDE--
+
