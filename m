@@ -2,150 +2,158 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691E3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C960C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4290622CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:28:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ai/zCqyb"
+	by mail.kernel.org (Postfix) with ESMTP id 195AF23428
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfH3S2g (ORCPT
+        id S1728120AbfH3S35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:28:36 -0400
-Received: from mail-pf1-f172.google.com ([209.85.210.172]:39291 "EHLO
-        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3S2g (ORCPT
+        Fri, 30 Aug 2019 14:29:57 -0400
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:60228 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727904AbfH3S35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:28:36 -0400
-Received: by mail-pf1-f172.google.com with SMTP id a67so1864786pfa.6
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 11:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=9GeCgw/KxFloNeY2cmQhUJuI6BYk8fDzNxr9XRd8OXk=;
-        b=ai/zCqyb/BzQPSLxNpUrZR7CwKxGWQ2I+RXtaeVKtdkNKoEKnMxFwrdfTlSjANybDL
-         FF+SNidSutGnxWc+1lYqacTgreiFWZg7A6uEls2EktdaioC8OiAd991XAHTvd/I/CTsq
-         I0D3cpqKf3EdMUshwYywp0JTUbS39u11rPAy4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=9GeCgw/KxFloNeY2cmQhUJuI6BYk8fDzNxr9XRd8OXk=;
-        b=Is4JEVQdOUuRcROes7vGX4ENvQrnSdJlsjxOQCPgzAA1E5oFGaYjNh3kGhkVhEjtzD
-         jRG5cyNtUEXDe3QdArnt9FVjzW+YagnfIL38/LTbZ3gLACVO9tZujmLdahggNx5kIfue
-         XmzECnURcA4z7HdtWszIkA8HqMjYqY1SOVvmc/bAytrXNb8O+t/ogErUurZZz62Cvbax
-         1PPjvW7U5aaL6wS76xQyVy4+VgWF1EgaJJ8/9JZqkj1aOJodT9eugchMp61tDk+LcW31
-         tVd2Hz/e1bDtbVbVustCTFW5isIPBU2tXh9FCGE7qur4wuarWZZGcorbcSkhDDOYa91z
-         w9Lw==
-X-Gm-Message-State: APjAAAUAGz/09mgobRu5Yq+qC9hzFT8jbwTxg7emnAyOqxmzFmVmqfih
-        TTCbhYN0J33musWkmcPWiNIqAA==
-X-Google-Smtp-Source: APXvYqzMiFGN83Njt2/JrFLYZUyyM9L9qiaHV6onYdWf1y1eG8n3W6IX2y++KngHRNf/PFHG04PAew==
-X-Received: by 2002:a63:460c:: with SMTP id t12mr13961916pga.69.1567189714926;
-        Fri, 30 Aug 2019 11:28:34 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g14sm7411264pfb.150.2019.08.30.11.28.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 11:28:34 -0700 (PDT)
-Message-ID: <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Aug 2019 14:29:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 74ACC1804CB44;
+        Fri, 30 Aug 2019 18:29:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: egg88_739ff7db6f829
+X-Filterd-Recvd-Size: 5067
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 30 Aug 2019 18:29:54 +0000 (UTC)
+Message-ID: <2c0595c97811044a45e3d482e752d5877a14c06d.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: Remove obsolete period from "ambiguous
+ SHA1" query
+From:   Joe Perches <joe@perches.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 30 Aug 2019 11:29:53 -0700
+In-Reply-To: <a8afdbf13db47e7650473c7f71384f177f3dff59.camel@perches.com>
+References: <20190830163103.15914-1-sean.j.christopherson@intel.com>
+         <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
+         <20190830171731.GB15405@linux.intel.com>
+         <a8afdbf13db47e7650473c7f71384f177f3dff59.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190830164520.GK26807@tuxbook-pro>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org> <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org> <20190223165218.GB572@tuxbook-pro> <6dc0957d-5806-7643-4454-966015865d38@linaro.org> <5d694878.1c69fb81.5f13b.ec4f@mx.google.com> <20190830164520.GK26807@tuxbook-pro>
-Cc:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh@kernel.org,
-        andy.gross@linaro.org, shawn.guo@linaro.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
-        jackp@codeaurora.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        khasim.mohammed@linaro.org
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 30 Aug 2019 11:28:33 -0700
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-08-30 09:45:20)
-> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
->=20
-> > Quoting Jorge Ramirez (2019-08-29 00:03:48)
-> > > On 2/23/19 17:52, Bjorn Andersson wrote:
-> > > > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
-> > > >> +
-> > > >> +Required child nodes:
-> > > >> +
-> > > >> +- usb connector node as defined in bindings/connector/usb-connect=
-or.txt
-> > > >> +  containing the property vbus-supply.
-> > > >> +
-> > > >> +Example:
-> > > >> +
-> > > >> +usb3_phy: usb3-phy@78000 {
-> > > >> +    compatible =3D "qcom,snps-usb-ssphy";
-> > > >> +    reg =3D <0x78000 0x400>;
-> > > >> +    #phy-cells =3D <0>;
-> > > >> +    clocks =3D <&rpmcc RPM_SMD_LN_BB_CLK>,
-> > > >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-> > > >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
-> > > >> +    clock-names =3D "ref", "phy", "pipe";
-> > > >> +    resets =3D <&gcc GCC_USB3_PHY_BCR>,
-> > > >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
-> > > >> +    reset-names =3D "com", "phy";
-> > > >> +    vdd-supply =3D <&vreg_l3_1p05>;
-> > > >> +    vdda1p8-supply =3D <&vreg_l5_1p8>;
-> > > >> +    usb3_c_connector: usb3-c-connector {
-> >=20
-> > Node name should be 'connector', not usb3-c-connector.
-> >=20
->=20
-> It probably has to be usb-c-connector, because we have a
-> micro-usb-connector on the same board.
+On Fri, 2019-08-30 at 11:01 -0700, Joe Perches wrote:
+> On Fri, 2019-08-30 at 10:17 -0700, Sean Christopherson wrote:
+> > On Fri, Aug 30, 2019 at 09:37:51AM -0700, Joe Perches wrote:
+> > > On Fri, 2019-08-30 at 09:31 -0700, Sean Christopherson wrote:
+> > > > Git dropped the period from its "ambiguous SHA1" error message in commit
+> > > > 0c99171ad2 ("get_short_sha1: mark ambiguity error for translation"),
+> > > > circa 2016.  Drop the period from checkpatch's associated query so as to
+> > > > match both the old and new error messages.
+> > > > 
+> > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > > ---
+> > > >  scripts/checkpatch.pl | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > > index 93a7edfe0f05..ef3642c53100 100755
+> > > > --- a/scripts/checkpatch.pl
+> > > > +++ b/scripts/checkpatch.pl
+> > > > @@ -962,7 +962,7 @@ sub git_commit_info {
+> > > >  
+> > > >  	return ($id, $desc) if ($#lines < 0);
+> > > >  
+> > > > -	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous\./) {
+> > > > +	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous/) {
+> > > >  # Maybe one day convert this block of bash into something that returns
+> > > >  # all matching commit ids, but it's very slow...
+> > > >  #
+> > > 
+> > > Thanks.
+> > > 
+> > > Did git ever change to actually support human readable
+> > > messages in multiple languages?
+> > 
+> > Yep, e.g.:
+> > 
+> >   error: Kurzer SHA-1 745f ist mehrdeutig.
+> > 
+> > > If so, this won't work for non-english output.
+> > 
+> > Yep again.  The next check for 'fatal: ambiguous argument' obviously fails
+> > as well and checkpatch ends up using git's error message as the id and
+> > description.
+> > 
+> >   ERROR: Please use git ... - ie: 'commit error: Kurze ("")'
+> 
+> Does git exit with unique failure codes?
+> If so, maybe the waitid/siginfo_t error could be used instead.
+> 
 
-Ok. Or connector@1 and connector@2? Our toplevel node container story is
-sort of sad because we have to play tricks with node names. But in the
-example, just connector I presume?=20
+Maybe something like this works?
+---
+ scripts/checkpatch.pl | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
->=20
-> > > >=20
-> > > > The USB-C connector is attached both to the HS and SS PHYs, so I th=
-ink
-> > > > you should represent this external to this node and use of_graph to
-> > > > query it.
-> > >=20
-> > > but AFAICS we wont be able to retrieve the vbux-supply from an extern=
-al
-> > > node (that interface does not exist).
-> > >=20
-> > > rob, do you have a suggestion?
-> >=20
-> > Shouldn't the vbus supply be in the phy? Or is this a situation where
-> > the phy itself doesn't have the vbus supply going to it because the PMIC
-> > gets in the way and handles the vbus for the connector by having the SoC
-> > communicate with the PMIC about when to turn the vbus on and off, etc?
-> >=20
->=20
-> That's correct, the VBUS comes out of the PMIC and goes directly to the
-> connector.
->=20
-> The additional complicating factor here is that the connector is wired
-> to a USB2 phy as well, so we need to wire up detection and vbus control
-> to both of them - but I think this will be fine, if we can only figure
-> out a sane way of getting hold of the vbus-supply.
->=20
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index f4b6127ff469..dc001b7899ed 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -62,6 +62,7 @@ my $conststructsfile = "$D/const_structs.checkpatch";
+ my $typedefsfile = "";
+ my $color = "auto";
+ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
++my $git_command ='export LANG=en_US.utf-8; git';
+ 
+ sub help {
+ 	my ($exitcode) = @_;
+@@ -918,7 +919,7 @@ sub seed_camelcase_includes {
+ 	$camelcase_seeded = 1;
+ 
+ 	if (-e ".git") {
+-		my $git_last_include_commit = `git log --no-merges --pretty=format:"%h%n" -1 -- include`;
++		my $git_last_include_commit = `${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
+ 		chomp $git_last_include_commit;
+ 		$camelcase_cache = ".checkpatch-camelcase.git.$git_last_include_commit";
+ 	} else {
+@@ -946,7 +947,7 @@ sub seed_camelcase_includes {
+ 	}
+ 
+ 	if (-e ".git") {
+-		$files = `git ls-files "include/*.h"`;
++		$files = `${git_command} ls-files "include/*.h"`;
+ 		@include_files = split('\n', $files);
+ 	}
+ 
+@@ -970,7 +971,7 @@ sub git_commit_info {
+ 
+ 	return ($id, $desc) if ((which("git") eq "") || !(-e ".git"));
+ 
+-	my $output = `git log --no-color --format='%H %s' -1 $commit 2>&1`;
++	my $output = `${git_command} log --no-color --format='%H %s' -1 $commit 2>&1`;
+ 	$output =~ s/^\s*//gm;
+ 	my @lines = split("\n", $output);
+ 
+@@ -1020,7 +1021,7 @@ if ($git) {
+ 		} else {
+ 			$git_range = "-1 $commit_expr";
+ 		}
+-		my $lines = `git log --no-color --no-merges --pretty=format:'%H %s' $git_range`;
++		my $lines = `${git_command} log --no-color --no-merges --pretty=format:'%H %s' $git_range`;
+ 		foreach my $line (split(/\n/, $lines)) {
+ 			$line =~ /^([0-9a-fA-F]{40,40}) (.*)$/;
+ 			next if (!defined($1) || !defined($2));
 
-Does it really matter to describe this situation though? Maybe it's
-simpler to throw the vbus supply into the phy and control it from the
-phy driver, even if it never really goes there. Or put it into the
-toplevel usb controller?
 
