@@ -2,100 +2,156 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55665C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0137BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B552341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F0523428
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SxtANCrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfH3Ozl (ORCPT
+        id S1727935AbfH3O50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:55:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:18314 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfH3Ozl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:55:41 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 07:55:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="210946213"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Aug 2019 07:55:37 -0700
-Date:   Fri, 30 Aug 2019 23:00:02 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        linux-input@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
-        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
- backdoor call with support for new instructions
-Message-ID: <20190830150002.GA6931@intel.com>
-References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2>
- <201908292325.aLXyyzEx%lkp@intel.com>
- <20190829163353.GC2132@zn.tnic>
- <20190830010349.GD857@intel.com>
- <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
- <20190830062053.GA2598@intel.com>
- <20190830080650.GA30413@zn.tnic>
- <20190830143645.GA4784@intel.com>
- <20190830144628.GC30413@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830144628.GC30413@zn.tnic>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 30 Aug 2019 10:57:26 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35282 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfH3O5Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:57:25 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c189so4803583qkg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 07:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=VdU4IqIQzFHxd+M6em7DlzdJoaPdlqgzf47U8Wo/UZY=;
+        b=SxtANCrQGcj5MVFqjiRM80K8nFsdfP0XQkmVLkSZaGYju+3XCHqMTDoxWdS0m+HWp7
+         ghqB+tnB8cqMAdgoSNIfD5yCNX4O09Hd7c/JzCTtzk5c6tlAhSIiqtbCpEqClrQtMJHZ
+         HT8Ppu2+J96acsckDryUozSGx0QavgQgtJx3Ifa7Spv0Thp296veLzJ4rUEH9tWOR1XV
+         bnho9j8kNqRc17iAroF1a9EUlnPTGHD2tn44mkOOiM83IxNHTJfHG03kAeOHpOgzzpRW
+         ECevlQ/tF0ECPpTLoruzER3CprFVRpSXZ6kLDfnmiVz3x761o/p+QItaReDmXDCU8dr1
+         YJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VdU4IqIQzFHxd+M6em7DlzdJoaPdlqgzf47U8Wo/UZY=;
+        b=WDnmqF1pk7FZDPsoXja82oRJnHlk5jhMWpRQkDN74A8WjUL9w+EQ/y6Avrtn6hhgng
+         Hme6/m1So+Cbogwl+IN4oGfMX5AmvbWPar8UCb33GJrspDikMpKSz4aGXgNjPC2cKIG5
+         Jk39YRewM8SKAq2Vw4tFLRmJEHmjeniTcx0DIIqTUf5cDO4nvB7FvnCVfwA+xg4V3Lra
+         zWwrvdfnymIanU4cQBw6CLQbm4GxC7rHewD4lm4Wj09Wyy+4vhiVrjSP/k6jPxIHhtdY
+         JmSznhOs2nz+PYtGymIWVKA/dJVMHd2nxMlGoIaSHG7GdDZJO42bc7TqaW97p2ED9sTL
+         Ax5g==
+X-Gm-Message-State: APjAAAVv7dAQMDwa/0coxdMXoAKMMJK3DK9M3PF0RCNotNGMGC7FB51k
+        4eaB8Vuov1HhJFy4u99tA2dPGQhFzu0=
+X-Google-Smtp-Source: APXvYqzRogG5eVXU3g/T5CrzUOOO+WHGUX1BRnSwQvEQtDl0AfM6xqZ4iw2zSRiF0cP2PWHtu/IaTA==
+X-Received: by 2002:a37:6003:: with SMTP id u3mr16046845qkb.166.1567177044407;
+        Fri, 30 Aug 2019 07:57:24 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y23sm2668473qki.118.2019.08.30.07.57.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 07:57:23 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] net/skbuff: silence warnings under memory pressure
+Date:   Fri, 30 Aug 2019 10:57:05 -0400
+Message-Id: <1567177025-11016-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 04:46:28PM +0200, Borislav Petkov wrote:
-> On Fri, Aug 30, 2019 at 10:36:45PM +0800, Philip Li wrote:
-> > yes, we monitor the repo pub/scm/linux/kernel/git/tip/tip.git, and will
-> > send build status of head
-> 
-> ... and what you call "head" is the "master" branch on that repo, right?
-Hi Boris, you are right. It is the head of monitored branch, here master branch is
-one of the branches on this repo that we monitor.
+When running heavy memory pressure workloads, the system is throwing
+endless warnings below due to the allocation could fail from
+__build_skb(), and the volume of this call could be huge which may
+generate a lot of serial console output and cosumes all CPUs as
+warn_alloc() could be expensive by calling dump_stack() and then
+show_mem().
 
-Early on, there's requirement to blacklist a few branches, which is configured
-as below
-	blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
+Fix it by silencing the warning in this call site. Also, it seems
+unnecessary to even print a warning at all if the allocation failed in
+__build_skb(), as it may just retransmit the packet and retry.
 
-Except the blacklist branches, we will monitor all other branches. We also
-support pull request to update the configuration or email us to update.
-Refer to https://github.com/intel/lkp-tests/blob/master/repo/linux/tip.
+NMI watchdog: Watchdog detected hard LOCKUP on cpu 7
+Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420 Gen9, BIOS U19
+12/27/2015
+RIP: 0010:dump_stack+0xd/0x9a
+Code: 5d c3 48 c7 c2 c0 ce aa bb 4c 89 ee 48 c7 c7 60 32 e3 ae e8 b3 3e
+81 ff e9 ab ff ff ff 55 48 89 e5 41 55 41 83 cd ff 41 54 53 <9c> 41 5c
+fa be 04 00 00 00 48 c7 c7 80 42 63 af 65 8b 1d f6 7c 8c
+RSP: 0018:ffff888452389670 EFLAGS: 00000086
+RAX: 000000000000000b RBX: 0000000000000007 RCX: ffffffffae75143f
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: ffffffffaf634280
+RBP: ffff888452389688 R08: 0000000000000004 R09: fffffbfff5ec6850
+R10: fffffbfff5ec6850 R11: 0000000000000003 R12: 0000000000000086
+R13: 00000000ffffffff R14: ffff88820547c040 R15: ffffffffaecc86a0
+FS:  0000000000000000(0000) GS:ffff888452380000(0000)
+knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f94f0537000 CR3: 00000005c8012006 CR4: 00000000001606a0
+Call Trace:
+ <IRQ>
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ alloc_pages_current+0x9c/0x110
+ allocate_slab+0x34a/0x11f0
+ new_slab+0x46/0x70
+ ___slab_alloc+0x604/0x950
+ __slab_alloc+0x12/0x20
+ kmem_cache_alloc+0x32a/0x400
+ __build_skb+0x23/0x60
+ build_skb+0x1a/0xb0
+ igb_clean_rx_irq+0xafc/0x1010 [igb]
+ igb_poll+0x4bb/0xe30 [igb]
+ net_rx_action+0x244/0x7a0
+ __do_softirq+0x1a0/0x60a
+ irq_exit+0xb5/0xd0
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x151/0x8d0
+Code: 64 af e8 62 22 c2 ff 8b 05 04 f6 0b 01 85 c0 0f 8f 18 04 00 00 31
+ff e8 9d 9e 97 ff 80 7d d0 00 0f 85 06 02 00 00 fb 45 85 ed <0f> 88 2d
+02 00 00 4d 63 fd 49 83 ff 09 0f 87 8c 06 00 00 4b 8d 04
+RSP: 0018:ffff888205487cf8 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffdc
+RAX: 0000000000000000 RBX: ffffe8fc09596f98 RCX: ffffffffadf093da
+RDX: dffffc0000000000 RSI: dffffc0000000000 RDI: ffff8884523c2128
+RBP: ffff888205487d48 R08: fffffbfff5ec9d62 R09: fffffbfff5ec9d62
+R10: fffffbfff5ec9d61 R11: ffffffffaf64eb0b R12: ffffffffaf459580
+R13: 0000000000000004 R14: 0000101fb3d64a9b R15: ffffe8fc09596f9c
+ cpuidle_enter+0x41/0x70
+ call_cpuidle+0x5e/0x90
+ do_idle+0x313/0x340
+ cpu_startup_entry+0x1d/0x1f
+ start_secondary+0x28b/0x330
+ secondary_startup_64+0xb6/0xc0
 
-Thanks
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ net/core/skbuff.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Just making sure you got that right.
-> 
-> > (like BUILD SUCCESS or REGRESSION), also provide bisect report of
-> > unique error for first bad commit.
-> 
-> Perfect!
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 0338820ee0ec..9cc4148deddd 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -307,7 +307,9 @@ struct sk_buff *__build_skb(void *data, unsigned int frag_size)
+ {
+ 	struct sk_buff *skb;
+ 
+-	skb = kmem_cache_alloc(skbuff_head_cache, GFP_ATOMIC);
++	skb = kmem_cache_alloc(skbuff_head_cache,
++			       GFP_ATOMIC | __GFP_NOWARN);
++
+ 	if (unlikely(!skb))
+ 		return NULL;
+ 
+-- 
+1.8.3.1
+
