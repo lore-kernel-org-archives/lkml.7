@@ -2,139 +2,203 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDC2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34564C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCA621874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="UV08w7N+"
+	by mail.kernel.org (Postfix) with ESMTP id 0710221897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfH3CBw (ORCPT
+        id S1727578AbfH3CGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 22:01:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39723 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfH3CBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 22:01:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a67so195618pfa.6
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 19:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zO8PdeeIdG1tzfsClmI9LZenmd5UMF2AEWQotpYVtec=;
-        b=UV08w7N+5XgxFjTDWXP/3lw1pQs3F9sFih4WmrXbG9U1ct8t9lWf2ogCOxhxXaPehS
-         wA24OrTp0v0DshA8cBBQNpF3AssXMiO5fORzdCQ2I6FjT6U3h8F90v8b4SKDURnkPtVO
-         GD2Q5lxuwrOUlw6pYPSaTUbpToD/zQuObr2pfLVncswWmB+OdHrGoeAv/VOwUNIcjk0q
-         iSgKDDLJwcqC17yibYASvtIH4319ktHSVNtdJt8AJCGwS+y1UqSVCv3Q+zZd6DXBNwyU
-         sxVqGBvsnCQ7CsD5cufFmK7FGJRt436S2qTZcBlwtrfB5Ndou5BRp1SAQZ+abIKHc2re
-         67Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zO8PdeeIdG1tzfsClmI9LZenmd5UMF2AEWQotpYVtec=;
-        b=lqpTtqfjy1C7XIX1w/huw2NsZ2JYLjE3+z0Jkiko1uzQGAQrfD1g2O+ZM71orjvchg
-         3kluXt5G54fmQKlKErq/0irwHPxDGdSoMbQgzZG1hM+tCmI3SOykR+LODs51HX0MYy13
-         AmBSoASx6xHYIYIsim93gWlk/jwJhVbqMPmOCSlqiFLxsEaT2PmlVuKy7dHTSyzUxG7y
-         8A1kp55EBNOCJJPfbibgRxlUVeO6rA0XtPgodDateBhRD38xsgotD6xXyOaXnP7roygK
-         VRqsoJJ8onPdvQNPGKHNRe9hqRn2MJwckdUYGYZOjx3drPwSweX7M7f9vEux9uN/+qTE
-         yn7w==
-X-Gm-Message-State: APjAAAWdhB41lPIB1MBHwNBB4ZAC/pWxJq6cHgZHLwMPsIKudvfxYPab
-        1ekTxgRQrEMbHhkbh6lpfF78OA==
-X-Google-Smtp-Source: APXvYqxAKUgTUdilFGku6rp2i6CciI9SDnT1shayBd62iyV14FjbrqVjZQH30hIzVPpbyDHjOrfotQ==
-X-Received: by 2002:a65:6281:: with SMTP id f1mr10331899pgv.400.1567130511065;
-        Thu, 29 Aug 2019 19:01:51 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:3184:4148:fbd:376a? ([2601:646:c200:1ef2:3184:4148:fbd:376a])
-        by smtp.gmail.com with ESMTPSA id c5sm4502562pfo.175.2019.08.29.19.01.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 19:01:50 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 0/7] Rework random blocking
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16G102)
-In-Reply-To: <20190830014906.GD10779@mit.edu>
-Date:   Thu, 29 Aug 2019 19:01:49 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>, Theodore Tso <tytso@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B9BEDD92-7EE4-40C9-96D2-389D32B8D040@amacapital.net>
-References: <cover.1567126741.git.luto@kernel.org> <20190830014906.GD10779@mit.edu>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+        Thu, 29 Aug 2019 22:06:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:43618 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727270AbfH3CGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 22:06:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 19:06:36 -0700
+X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
+   d="scan'208";a="172091821"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 19:06:35 -0700
+Subject: [PATCH v5 00/10] EFI Specific Purpose Memory Support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, rafael.j.wysocki@intel.com
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Keith Busch <keith.busch@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        x86@kernel.org
+Date:   Thu, 29 Aug 2019 18:52:18 -0700
+Message-ID: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes since v4 [1]:
+- Rename the facility from "Application Reserved" to "Soft Reserved" to
+  better reflect how the memory is treated. While the spec talks about
+  "specific / application purpose" memory the expected kernel behavior is
+  to make a best effort at reserving the memory from general purpose
+  allocations.
+
+- Add a new efi=nosoftreserve option to disable consideration of the
+  EFI_MEMORY_SP attribute at boot time. This is also motivated by
+  Christoph's initial feedback of allowing the kernel to opt-out of the
+  policy whims of the platform BIOS implementation.
+
+- Update the KASLR implementation to exclude soft-reserved memory
+  including the case where soft-reserved memory is specified via the
+  efi_fake_mem= attribute-override command-line option.
+
+- Move the memregion allocator to its own object file. v4 had it in
+  kernel/resource.c which caused compile errors on Sparc. I otherwise
+  could not find an appropriate place to stash it.
+
+- Rebase on a merge of tip/master and rafael/linux-next since the series
+  collides with changes in both those trees.
+
+[1]: https://lore.kernel.org/r/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
+
+---
+
+Thomas, Rafael,
+
+This happens to collide with both your trees. I think the content
+warrants going through the x86 tree, but would need to publish commit:
+
+5c7ed4385424 HMAT: Skip publishing target info for nodes with no online memory
+
+...in Rafael's tree as a stable id for -tip to pull in, but I'm also
+open to other options. I've retained Dave's reviewed-by from v4.
+
+---
+
+The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
+purpose") memory attribute. This attribute bit replaces the deprecated
+ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
+in ACPI 6.3.
+
+Given the increasing diversity of memory types that might be advertised
+to the operating system, there is a need for platform firmware to hint
+which memory ranges are free for the OS to use as general purpose memory
+and which ranges are intended for application specific usage. For
+example, an application with prior knowledge of the platform may expect
+to be able to exclusively allocate a precious / limited pool of high
+bandwidth memory. Alternatively, for the general purpose case, the
+operating system may want to make the memory available on a best effort
+basis as a unique numa-node with performance properties by the new
+CONFIG_HMEM_REPORTING [3] facility.
+
+In support of optionally allowing either application-exclusive and
+core-kernel-mm managed access to differentiated memory, claim
+EFI_MEMORY_SP ranges for exposure as "soft reserved" and assigned to a
+device-dax instance by default. Such instances can be directly owned /
+mapped by a platform-topology-aware application. Alternatively, with the
+new kmem facility [4], the administrator has the option to instead
+designate that those memory ranges be hot-added to the core-kernel-mm as
+a unique memory numa-node. In short, allow for the decision about what
+software agent manages soft-reserved memory to be made at runtime.
+
+The patches build on the new HMAT+HMEM_REPORTING facilities merged
+for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
+[5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
+attribute. Specific details on reproducing the test configuration are in
+patch 10.
+
+[2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
+[5]: http://patchwork.ozlabs.org/cover/1096737/
+
+---
+
+Dan Williams (10):
+      acpi/numa: Establish a new drivers/acpi/numa/ directory
+      efi: Enumerate EFI_MEMORY_SP
+      x86, efi: Push EFI_MEMMAP check into leaf routines
+      x86, efi: Reserve UEFI 2.8 Specific Purpose Memory for dax
+      x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
+      lib: Uplevel the pmem "region" ida to a global allocator
+      dax: Fix alloc_dax_region() compile warning
+      device-dax: Add a driver for "hmem" devices
+      acpi/numa/hmat: Register HMAT at device_initcall level
+      acpi/numa/hmat: Register "soft reserved" memory as an "hmem" device
 
 
-> On Aug 29, 2019, at 6:49 PM, Theodore Y. Ts'o <tytso@mit.edu> wrote:
->=20
->> On Thu, Aug 29, 2019 at 06:11:35PM -0700, Andy Lutomirski wrote:
->> This series also removes the blocking pool and makes /dev/random
->> work just like getentropy(..., 0) and makes GRND_RANDOM a no-op.  I
->> believe that Linux's blocking pool has outlived its usefulness.
->> Linux's CRNG generates output that is good enough to use even for
->> key generation.  The blocking pool is not stronger in any material
->> way, and keeping it around requires a lot of infrastructure of
->> dubious value.
->=20
-> It's too late for the 5.4 cycle for a change of this magnitude, and
-> I'd just as soon let this wait until *after* the LTS kernel gets cut.
-> The reason for this is because at the moment, there are some PCI
-> compliance labs who believe that the "true randomness" of /dev/random
-> is necessary for PCI compliance and so they mandate the use of
-> /dev/random over /dev/urandom's "cryptographic randomness" for that
-> reason.  A lot of things which are thought to be needed for PCI
-> compliance that are about as useful as eye of newt and toe of frog,
-> but nothing says that PCI compliance (and enterprise customer
-> requirements :-) have to make sense.
->=20
-> It may be that what we might need to really support people (or stupid
-> compliance labs) who have a fetish for "true randomness" to get a
-> better interface for hardware random number generators than
-> /dev/hwrng.  Specifically, one which allows for a more sane way of
-> selecting which hardware random number generator to use if there are
-> multiple available, and also one where we mix in some CRNG as a
-> whitening step just case the hardware number generator is busted in
-> some way.  (And to fix the issue that at the moment, if someone evil
-> fakes up a USB device with the USB manufacturer and minor device
-> number for a ChosKey device that generates a insecure sequence, it
-> will still get blindly trusted by the kernel without any kind of
-> authentication of said hardware device.)
->=20
-> That probably means we need to come up with a new interface than
-> /dev/hwrng, or have some way of configuring /dev/random to use a
-> hardware RNG device for those people who really care about "true
-> randomness".  The current /dev/hwrng interface and how it is
-> configured via sysfs is pretty baroque IMO.
->=20
->                    =20
-
-Hmm. Does this really need to be in the kernel?  ISTM it should be straightf=
-orward to write a little CUSE program that grabs bytes from RDSEED or RDRAND=
-, TPM, ChaosKey (if enabled, with a usb slot selected!), and whatever other s=
-ources are requested and, configurable to satisfy whoever actually cares, mi=
-xes some or all with a FIPS-compliant, provably-indististinguishable-from-ra=
-ndom, definitely not Dual-EC mixer, and spits out the result.  And filters i=
-t and checks all the sources for credibility, and generally does whatever th=
-e user actually needs.
-
-And the really over-the-top auditors can symlink it to /dev/random.
-
-Do the PCI folks actually care that it=E2=80=99s in the kernel?
-
-
-As an aside, the first two patches could plausibly land before the rest of t=
-he series if that seems appropriate.=
+ Documentation/admin-guide/kernel-parameters.txt |   19 +++
+ arch/x86/Kconfig                                |   21 ++++
+ arch/x86/boot/compressed/eboot.c                |    7 +
+ arch/x86/boot/compressed/kaslr.c                |   50 +++++++-
+ arch/x86/include/asm/e820/types.h               |    8 +
+ arch/x86/include/asm/efi-stub.h                 |   11 ++
+ arch/x86/include/asm/efi.h                      |   17 +++
+ arch/x86/kernel/e820.c                          |   12 ++
+ arch/x86/kernel/setup.c                         |   19 ++-
+ arch/x86/platform/efi/efi.c                     |   56 +++++++++
+ arch/x86/platform/efi/quirks.c                  |    3 +
+ drivers/acpi/Kconfig                            |    9 --
+ drivers/acpi/Makefile                           |    3 -
+ drivers/acpi/hmat/Makefile                      |    2 
+ drivers/acpi/numa/Kconfig                       |    8 +
+ drivers/acpi/numa/Makefile                      |    3 +
+ drivers/acpi/numa/hmat.c                        |  138 +++++++++++++++++++++--
+ drivers/acpi/numa/srat.c                        |    0 
+ drivers/dax/Kconfig                             |   27 ++++-
+ drivers/dax/Makefile                            |    2 
+ drivers/dax/bus.c                               |    2 
+ drivers/dax/bus.h                               |    2 
+ drivers/dax/dax-private.h                       |    2 
+ drivers/dax/hmem.c                              |   57 ++++++++++
+ drivers/firmware/efi/Makefile                   |    5 +
+ drivers/firmware/efi/efi.c                      |    8 +
+ drivers/firmware/efi/esrt.c                     |    3 +
+ drivers/firmware/efi/fake_mem.c                 |   26 ++--
+ drivers/firmware/efi/fake_mem.h                 |   10 ++
+ drivers/firmware/efi/libstub/efi-stub-helper.c  |   12 ++
+ drivers/firmware/efi/x86-fake_mem.c             |   69 ++++++++++++
+ drivers/nvdimm/Kconfig                          |    1 
+ drivers/nvdimm/core.c                           |    1 
+ drivers/nvdimm/nd-core.h                        |    1 
+ drivers/nvdimm/region_devs.c                    |   13 +-
+ include/linux/efi.h                             |    4 -
+ include/linux/ioport.h                          |    1 
+ include/linux/memregion.h                       |   23 ++++
+ lib/Kconfig                                     |    3 +
+ lib/Makefile                                    |    1 
+ lib/memregion.c                                 |   18 +++
+ 41 files changed, 584 insertions(+), 93 deletions(-)
+ create mode 100644 arch/x86/include/asm/efi-stub.h
+ delete mode 100644 drivers/acpi/hmat/Makefile
+ rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (70%)
+ create mode 100644 drivers/acpi/numa/Makefile
+ rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (85%)
+ rename drivers/acpi/{numa.c => numa/srat.c} (100%)
+ create mode 100644 drivers/dax/hmem.c
+ create mode 100644 drivers/firmware/efi/fake_mem.h
+ create mode 100644 drivers/firmware/efi/x86-fake_mem.c
+ create mode 100644 include/linux/memregion.h
+ create mode 100644 lib/memregion.c
