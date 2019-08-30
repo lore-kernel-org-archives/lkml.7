@@ -2,85 +2,80 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1150EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8349CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F5023407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526392186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfH3PMg (ORCPT
+        id S1728225AbfH3PNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:12:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48628 "EHLO mx1.redhat.com"
+        Fri, 30 Aug 2019 11:13:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:33786 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbfH3PMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:12:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 143BB881346;
-        Fri, 30 Aug 2019 15:12:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4492100197A;
-        Fri, 30 Aug 2019 15:12:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190830145454.B91DF125411@zmta02.collab.prod.int.phx2.redhat.com>
-References: <20190830145454.B91DF125411@zmta02.collab.prod.int.phx2.redhat.com> <20190830085646.14740-1-hdanton@sina.com> <4384.1567174383@warthog.procyon.org.uk>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     dhowells@redhat.com, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Oops (request_key_auth_describe) while running cve-2016-7042 from LTP
+        id S1727434AbfH3PNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:13:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1092344;
+        Fri, 30 Aug 2019 08:13:20 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F0323F703;
+        Fri, 30 Aug 2019 08:13:17 -0700 (PDT)
+Subject: Re: [PATCH 2/7] dt-bindings: arm-smmu: Add binding for nvidia,smmu-v2
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     snikam@nvidia.com, thomasz@nvidia.com, jtukkinen@nvidia.com,
+        mperttunen@nvidia.com, praithatha@nvidia.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        talho@nvidia.com, yhsu@nvidia.com, linux-tegra@vger.kernel.org,
+        treding@nvidia.com, avanbrunt@nvidia.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+ <1567118827-26358-3-git-send-email-vdumpa@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <37034b76-7e3f-5f3c-25b2-696e25127682@arm.com>
+Date:   Fri, 30 Aug 2019 16:13:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <11907.1567177954.1@warthog.procyon.org.uk>
-Date:   Fri, 30 Aug 2019 16:12:34 +0100
-Message-ID: <11908.1567177954@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 30 Aug 2019 15:12:36 +0000 (UTC)
+In-Reply-To: <1567118827-26358-3-git-send-email-vdumpa@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hillf Danton <hdanton@sina.com> wrote:
+On 29/08/2019 23:47, Krishna Reddy wrote:
+> Add binding doc for Nvidia's smmu-v2 implementation.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index 3133f3b..0de3759 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -17,6 +17,7 @@ conditions.
+>                           "arm,mmu-401"
+>                           "arm,mmu-500"
+>                           "cavium,smmu-v2"
+> +                        "nidia,smmu-v2"
+>                           "qcom,smmu-v2"
 
-> 1, callee has no pre defined duty to help caller in general; they should not
-> try to do anything, however, to help their callers in principle due to
-> limited info on their hands IMO.
+I agree with Mikko that the compatible must be at least SoC-specific, 
+but potentially even instance-specific (e.g. "nvidia,tegra194-gpu-smmu") 
+depending on how many of these parallel-SMMU configurations might be 
+hiding in current and future SoCs.
 
-Ah, no.  It's entirely reasonable for an API to specify that one of its
-methods will be called with one or more locks held - and that the method must
-be aware of this and may make use of this.
+Robin.
 
-> 3, no comment can be found in security/keys/request_key_auth.c about
-> the rcu already documented.
-
-There is API documentation in Documentation/security/keys/core.rst.  If you
-look at about line 1538 onwards:
-
-  *  ``void (*describe)(const struct key *key, struct seq_file *p);``
-
-     This method is optional. It is called during /proc/keys reading to
-     summarise a key's description and payload in text form.
-
-     This method will be called with the RCU read lock held. rcu_dereference()
-     should be used to read the payload pointer if the payload is to be
-     accessed. key->datalen cannot be trusted to stay consistent with the
-     contents of the payload.
-
-     The description will not change, though the key's state may.
-
-     It is not safe to sleep in this method; the RCU read lock is held by the
-     caller.
-
-David
+>   
+>                     depending on the particular implementation and/or the
+> 
