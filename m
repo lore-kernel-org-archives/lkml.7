@@ -2,127 +2,83 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4526EC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D6AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B37421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A29B21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfH3JYh (ORCPT
+        id S1727993AbfH3JZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:24:37 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:6051 "EHLO spam1.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfH3JYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:24:36 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam1.hygon.cn with ESMTP id x7U9Nl0h068530;
-        Fri, 30 Aug 2019 17:23:47 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id x7U9NP3W062188;
-        Fri, 30 Aug 2019 17:23:26 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from pw-vbox.hygon.cn (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Fri, 30 Aug
- 2019 17:23:44 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <lenb@kernel.org>, <calvin.walton@kepstin.ca>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH] tools/power turbostat: Add support for Hygon Fam 18h (Dhyana) RAPL
-Date:   Fri, 30 Aug 2019 17:23:28 +0800
-Message-ID: <1567157008-29679-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x7U9Nl0h068530
-X-DNSRBL: 
+        Fri, 30 Aug 2019 05:25:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41694 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726480AbfH3JZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:25:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B8A66AD85;
+        Fri, 30 Aug 2019 09:25:51 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v3 net-next 00/15] ioc3-eth improvements
+Date:   Fri, 30 Aug 2019 11:25:23 +0200
+Message-Id: <20190830092539.24550-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 9392bd98bba760be96ee ("tools/power turbostat: Add support for AMD
-Fam 17h (Zen) RAPL") and the commit 3316f99a9f1b68c578c5 ("tools/power
-turbostat: Also read package power on AMD F17h (Zen)") add AMD Fam 17h
-RAPL support.
+In my patch series for splitting out the serial code from ioc3-eth
+by using a MFD device there was one big patch for ioc3-eth.c,
+which wasn't really usefull for reviews. This series contains the
+ioc3-eth changes splitted in smaller steps and few more cleanups.
+Only the conversion to MFD will be done later in a different series.
 
-Hygon Family 18h(Dhyana) support RAPL in bit 14 of CPUID 0x80000007 EDX,
-and has MSRs RAPL_PWR_UNIT/CORE_ENERGY_STAT/PKG_ENERGY_STAT. So add Hygon
-Dhyana Family 18h support for RAPL.
+Changes in v3:
+- no need to check skb == NULL before passing it to dev_kfree_skb_any
+- free memory allocated with get_page(s) with free_page(s)
+- allocate rx ring with just GFP_KERNEL
+- add required alignment for rings in comments
 
-Already tested on Hygon multi-node systems and it shows correct per-core
-energy usage and the total package power.
+Changes in v2:
+- use net_err_ratelimited for printing various ioc3 errors
+- added missing clearing of rx buf valid flags into ioc3_alloc_rings
+- use __func__ for printing out of memory messages
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
----
- tools/power/x86/turbostat/turbostat.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Thomas Bogendoerfer (15):
+  MIPS: SGI-IP27: remove ioc3 ethernet init
+  MIPS: SGI-IP27: restructure ioc3 register access
+  net: sgi: ioc3-eth: remove checkpatch errors/warning
+  net: sgi: ioc3-eth: use defines for constants dealing with desc rings
+  net: sgi: ioc3-eth: allocate space for desc rings only once
+  net: sgi: ioc3-eth: get rid of ioc3_clean_rx_ring()
+  net: sgi: ioc3-eth: separate tx and rx ring handling
+  net: sgi: ioc3-eth: introduce chip start function
+  net: sgi: ioc3-eth: split ring cleaning/freeing and allocation
+  net: sgi: ioc3-eth: refactor rx buffer allocation
+  net: sgi: ioc3-eth: use dma-direct for dma allocations
+  net: sgi: ioc3-eth: use csum_fold
+  net: sgi: ioc3-eth: Fix IPG settings
+  net: sgi: ioc3-eth: protect emcr in all cases
+  net: sgi: ioc3-eth: no need to stop queue set_multicast_list
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 1cd28eb..f2629b1 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -60,6 +60,7 @@ unsigned int do_irtl_hsw;
- unsigned int units = 1000000;	/* MHz etc */
- unsigned int genuine_intel;
- unsigned int authentic_amd;
-+unsigned int hygon_genuine;
- unsigned int max_level, max_extended_level;
- unsigned int has_invariant_tsc;
- unsigned int do_nhm_platform_info;
-@@ -1714,7 +1715,7 @@ void get_apic_id(struct thread_data *t)
- 	if (!DO_BIC(BIC_X2APIC))
- 		return;
- 
--	if (authentic_amd) {
-+	if (authentic_amd || hygon_genuine) {
- 		unsigned int topology_extensions;
- 
- 		if (max_extended_level < 0x8000001e)
-@@ -3803,6 +3804,7 @@ double get_tdp_amd(unsigned int family)
- {
- 	switch (family) {
- 	case 0x17:
-+	case 0x18:
- 	default:
- 		/* This is the max stock TDP of HEDT/Server Fam17h chips */
- 		return 250.0;
-@@ -3982,6 +3984,7 @@ void rapl_probe_amd(unsigned int family, unsigned int model)
- 
- 	switch (family) {
- 	case 0x17: /* Zen, Zen+ */
-+	case 0x18:
- 		do_rapl = RAPL_AMD_F17H | RAPL_PER_CORE_ENERGY;
- 		if (rapl_joules) {
- 			BIC_PRESENT(BIC_Pkg_J);
-@@ -4018,7 +4021,7 @@ void rapl_probe(unsigned int family, unsigned int model)
- {
- 	if (genuine_intel)
- 		rapl_probe_intel(family, model);
--	if (authentic_amd)
-+	if (authentic_amd || hygon_genuine)
- 		rapl_probe_amd(family, model);
- }
- 
-@@ -4600,6 +4603,8 @@ void process_cpuid()
- 		genuine_intel = 1;
- 	else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
- 		authentic_amd = 1;
-+	else if (ebx == 0x6f677948 && ecx == 0x656e6975 && edx == 0x6e65476e)
-+		hygon_genuine = 1;
- 
- 	if (!quiet)
- 		fprintf(outf, "CPUID(0): %.4s%.4s%.4s ",
+ arch/mips/include/asm/sn/ioc3.h     |  357 +++++-------
+ arch/mips/sgi-ip27/ip27-console.c   |    5 +-
+ arch/mips/sgi-ip27/ip27-init.c      |   13 -
+ drivers/net/ethernet/sgi/ioc3-eth.c | 1038 +++++++++++++++++------------------
+ 4 files changed, 665 insertions(+), 748 deletions(-)
+
 -- 
-2.7.4
+2.13.7
 
