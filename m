@@ -2,130 +2,167 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA19C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C78EC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AFE2087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140A82189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j37L7Al5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dIUKOH91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfH3CUn (ORCPT
+        id S1727741AbfH3CVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 22:20:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41335 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfH3CUn (ORCPT
+        Thu, 29 Aug 2019 22:21:08 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15443 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfH3CVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 22:20:43 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so2663199pgg.8;
-        Thu, 29 Aug 2019 19:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TRHcnIepKK5U2wNfUCScZ2wTbvSrlBuU+oVE4yt3loQ=;
-        b=j37L7Al5CTzS+uEeWPzG2no8G3GAm82pD6DnC65KkfBWv5UCKc3ENxVPfnx6NE2nRp
-         VkpT1IFhadWb6iQ33X3JNpeqk5kHDhzElJrwOM2rLFit00Iq9oEljm/GHeIm9dFSZc0f
-         WJBrJx8zmiEY29bfQ+iOriHew+ACzyDJqtMsT8OagSkrG5gVHbJ5yXYeGk6cWxMdA7Tt
-         gnlNAvleoZUXm80Ylbaf/KyXZFmVJhNBIbsnYPtJCNoefKGLl2eXY/7+tjM2i4oF//yf
-         dJ8qMMhcoYiYz5NJt29AY+bQnRm7lG47ddugbr05HFShK60EmXa9DaxS0NPXevd8Li4Z
-         tliw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TRHcnIepKK5U2wNfUCScZ2wTbvSrlBuU+oVE4yt3loQ=;
-        b=eqjp57+t2sjJBZzL+12qozNxqrEIWN0zCuM8m/2GUBh6YNaEV5Y8C4cReThekvvXlp
-         blNCXETledy9jSmYOBiXkyDCET0/z2xWyn468IeFkd5tL0AtvvTfsGESwKF0vZ/kYhiS
-         RUbJnohI86m1WFWXwFycbSZoDXo0aqd+EqjK+MbrFaKP5b4V3nfe6nUf9S73GiCaTaW8
-         /y/Ao0yBwGr72gu53bH7pIN5EiQX0eIs9JLnU80E8cUzXs8gEXy92du9+aVCFrbpM6mT
-         9gHm0uu4yr3TWblxLO4wtp/qexQRpDx6mnWYjwQIqSXpqHzT74qJBgrulDTcGwMp0UaN
-         9aNw==
-X-Gm-Message-State: APjAAAXKTYZ30dy8KjWXgVr3raDkjSf//fH7sua87AeUEIL0T+vsNFoK
-        B13OP+/YR3JCKDzDNND3HzI=
-X-Google-Smtp-Source: APXvYqyRQP2+H5hOEHYHiDdlJiEP9CNZ/q0q1WYaIpeXgasDhwLdBANWFCseWJcs8sXVL97EjQYI1w==
-X-Received: by 2002:a62:3046:: with SMTP id w67mr9486666pfw.5.1567131642214;
-        Thu, 29 Aug 2019 19:20:42 -0700 (PDT)
-Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id u16sm3104843pgm.83.2019.08.29.19.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 19:20:41 -0700 (PDT)
-From:   Ben Chuang <benchuanggli@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
-        Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V7 0/5] Add Genesys Logic GL975x support
-Date:   Fri, 30 Aug 2019 10:20:39 +0800
-Message-Id: <20190830022039.8210-1-benchuanggli@gmail.com>
-X-Mailer: git-send-email 2.22.1
+        Thu, 29 Aug 2019 22:21:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6888110001>; Thu, 29 Aug 2019 19:21:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 29 Aug 2019 19:21:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 29 Aug 2019 19:21:04 -0700
+Received: from [10.110.48.201] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 30 Aug
+ 2019 02:21:03 +0000
+Subject: Re: [PATCH v3 00/39] put_user_pages(): miscellaneous call sites
+To:     Mike Marshall <hubcap@omnibond.com>
+CC:     <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
+        <x86@kernel.org>, <xen-devel@lists.xenproject.org>
+References: <20190807013340.9706-1-jhubbard@nvidia.com>
+ <912eb2bd-4102-05c1-5571-c261617ad30b@nvidia.com>
+ <CAOg9mSQKGDywcMde2DE42diUS7J8m74Hdv+xp_PJhC39EXZQuw@mail.gmail.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d453f865-2224-ed53-a2f4-f43d574c130a@nvidia.com>
+Date:   Thu, 29 Aug 2019 19:21:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOg9mSQKGDywcMde2DE42diUS7J8m74Hdv+xp_PJhC39EXZQuw@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567131665; bh=ws5caXaEY0X3GX3egw6JsJDC0L7OwnIAHkDMK9ZQcE4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dIUKOH913DAYlocN1x3OWKU66rYzbsvcqMg6XurXOtfsQm0mTaQq0ufL9HiRQjmKf
+         MYeR8XR6MbUy9f2nOHFjitJW5jxjU59hEwD2KYzGMRBc0+P+o4b2mkzUliEchFZQzm
+         D0OR0ZfFBCp6cKpnoBGakw3Ch1supTeIz+DcDxFqgzxBAMqXWQoRbk0Sq3VWx6u9tp
+         6uURi8FKe6XveWY1U9zok9s2um/SF43+51Cnxqw5q2h2Dtp4kEwxNonMDqxzAcZjDx
+         HfyaHZc2XUvwuRV5WZb7Ki3OlH/mp5QHGx5CtmwXtp2TNme1r3iXAZgXDKrycQZylt
+         qlPWiGD9ap9bQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+On 8/29/2019 6:29 PM, Mike Marshall wrote:
+> Hi John...
+> 
+> I added this patch series on top of Linux 5.3rc6 and ran
+> xfstests with no regressions...
+> 
+> Acked-by: Mike Marshall <hubcap@omnibond.com>
+> 
 
-The patches modify internal clock setup to match SD Host Controller
-Simplified Specifications 4.20 and support Genesys Logic GL9750/GL9755 chipsets.
+Hi Mike (and I hope Ira and others are reading as well, because
+I'm making a bunch of claims further down),
 
-v7:
- - remove condition define CONFIG_MMC_SDHCI_IO_ACCESSORS from sdhci-pci-gli.c
- - making the accessors(MMC_SDHCI_IO_ACCESSORS) always available when selecting
-   MMC_SDHCI_PCI in Kconfig
+That's great news, thanks for running that test suite and for
+the report and the ACK.
 
-V6:
- - export sdhci_abot_tuning() function symbol
- - use C-style comments
- - use BIT, FIELD_{GET,PREP} and GENMASK to define bit fields of register
- - use host->ops->platform_execute_tuning instead of mmc->ops->execute_tuning
- - call sdhci_reset() instead of duplicating the code in sdhci_gl9750_reset
- - remove .hw_reset 
- - use condition define CONFIG_MMC_SDHCI_IO_ACCESSORS for read_l
+There is an interesting pause right now, due to the fact that
+we've made some tentative decisions about gup pinning, that affect
+the call sites. A key decision is that only pages that were
+requested via FOLL_PIN, will require put_user_page*() to release
+them. There are 4 main cases, which were first explained by Jan
+Kara and Vlastimil Babka, and are now written up in my FOLL_PIN
+patch [1].
 
-V5:
- - add "change timeout of loop .." to a patch
- - fix typo "verndor" to "vendor"
+So, what that means for this series is that:
 
-V4:
- - change name from sdhci_gli_reset to sdhci_gl9750_reset
- - fix sdhci_reset to sdhci_gl9750_reset in sdhci_gl9750_ops
- - fix sdhci_gli_reset to sdhci_reset in sdhci_gl9755_ops
- 
-V3:
- - change usleep_range to udelay
- - add Genesys Logic PCI Vendor ID to a patch
- - separate the Genesys Logic specific part to a patch
+1. Some call sites (mlock.c for example, and a lot of the mm/ files
+in fact, and more) will not be converted: some of these patches will
+get dropped, especially in mm/.
 
-V2:
- - change udelay to usleep_range
+2. Call sites that do DirectIO or RDMA will need to set FOLL_PIN, and
+will also need to call put_user_page().
 
-Ben Chuang (5):
-  mmc: sdhci: Change timeout of loop for checking internal clock stable
-  mmc: sdhci: Add PLL Enable support to internal clock setup
-  PCI: Add Genesys Logic, Inc. Vendor ID
-  mmc: sdhci: Export sdhci_abort_tuning function symbol
-  mmc: host: sdhci-pci: Add Genesys Logic GL975x support
+3. Call sites that do RDMA will need to set FOLL_LONGTERM *and* FOLL_PIN,
 
- drivers/mmc/host/Kconfig          |   1 +
- drivers/mmc/host/Makefile         |   2 +-
- drivers/mmc/host/sdhci-pci-core.c |   2 +
- drivers/mmc/host/sdhci-pci-gli.c  | 350 ++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci-pci.h      |   5 +
- drivers/mmc/host/sdhci.c          |  30 ++-
- drivers/mmc/host/sdhci.h          |   2 +
- include/linux/pci_ids.h           |   2 +
- 8 files changed, 390 insertions(+), 4 deletions(-)
- create mode 100644 drivers/mmc/host/sdhci-pci-gli.c
+    3.a. ...and will at least in some cases need to provide a link to a
+    vaddr_pin object, and thus back to a struct file*...maybe. Still
+    under discussion.
 
+4. It's desirable to keep FOLL_* flags (or at least FOLL_PIN) internal
+to the gup() calls. That implies using a wrapper call such as Ira's
+vaddr_pin_[user]_pages(), instead of gup(), and vaddr_unpin_[user]_pages()
+instead of put_user_page*().
+
+5. We don't want to churn the call sites unnecessarily.
+
+With that in mind, I've taken another pass through all these patches
+and narrowed it down to:
+
+     a) 12 call sites that I'd like to convert soon, but even those
+        really look cleaner with a full conversion to a wrapper call
+        similar to (identical to?) vaddr_pin_[user]_pages(), probably
+        just the FOLL_PIN only variant (not FOLL_LONGTERM). That
+        wrapper call is not ready yet, though.
+
+     b) Some more call sites that require both FOLL_PIN and FOLL_LONGTERM.
+        Definitely will wait to use the wrapper calls for these, because
+        they may also require hooking up to a struct file*.
+
+     c) A few more that were already applied, which is fine, because they
+        show where to convert, and simplify a few sites anyway. But they'll
+        need follow-on changes to, one way or another, set FOLL_PIN.
+
+     d) And of course a few sites whose patches get dropped, as mentioned
+        above.
+
+[1] https://lore.kernel.org/r/20190821040727.19650-3-jhubbard@nvidia.com
+
+thanks,
 -- 
-2.22.1
-
+John Hubbard
+NVIDIA
