@@ -2,141 +2,190 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE167C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630552186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hnMZlylC"
+	by mail.kernel.org (Postfix) with ESMTP id 8E51B23405
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfH3Fkp (ORCPT
+        id S1728017AbfH3FmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:40:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40899 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfH3Fko (ORCPT
+        Fri, 30 Aug 2019 01:42:03 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:26669 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726716AbfH3FmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:40:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w16so3850428pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 22:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eVvtzN7Igkuh4Imleg3djnnr5OtlI8MGXuQLQiEidZU=;
-        b=hnMZlylCor+dZUvWVSWYiA8UIOvAlApi2I0f+Ywdk+k9sW5KnRJJeMF1IJd3tX7vkU
-         oaZHglBJbWbFB/jvIbYVjQaAnporW/L9dZx1dWJmGIbQMgt5u8KzMnu0pZMZ3WsDg/DF
-         ut4lcjfTVbUwEvfyvTQgRkFXWxUnAhD0nSlEQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eVvtzN7Igkuh4Imleg3djnnr5OtlI8MGXuQLQiEidZU=;
-        b=HSwr2YnuqcEBNynd0uU2zZFikJL/RXyPwzqkezlqk2JW1kQiDAZFQWDnWUF9kARgyv
-         t5vfuTTkVK6dOolB6NxbJ9EO4V3qQjQj+fsxeDSZExU+RsTXEqrn1Fh3uFFjXphdHYfB
-         FGvV4rSYxd5MXWnfgacE5f5oNZiGruH8aCAFfL00fO4Urh1+MWgEud/NpaommrT0a3Va
-         ZgBqfu6xvMc7Ty6GbylNLy4bS0WbLnkN48CebRRGSs+m8b2bhJBAwL7Ra42btA/KyqeU
-         AfL8st+xdCoslqd25C2qzLBE25KiymhK4IxZnMyqCgv2PH6DOf9nF3wmrgC+QTa7OlCs
-         eldA==
-X-Gm-Message-State: APjAAAVhPVU4+2OvspxyxD72+4MX5xu4hL4VodZ1JAzFQwEtl9UpQCmg
-        1xMdFNLsj0v24l5yQB/Ieerx30la9Ko=
-X-Google-Smtp-Source: APXvYqw+F5l2dLUHf4clL+wuN5FTwsCCkJfTv4z/xD76/v2pwtskdDaZ43oFaBVsm56JgOyDMxNNfQ==
-X-Received: by 2002:a17:90a:a40e:: with SMTP id y14mr13342365pjp.83.1567143643954;
-        Thu, 29 Aug 2019 22:40:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u4sm4937379pfh.186.2019.08.29.22.40.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 22:40:43 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 22:40:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leds: pwm: Use struct_size() helper
-Message-ID: <201908292240.E0C345D884@keescook>
-References: <20190830005320.GA15267@embeddedor>
+        Fri, 30 Aug 2019 01:42:03 -0400
+X-UUID: 7c4078c7a9474170b97f8c3d36eb57c0-20190830
+X-UUID: 7c4078c7a9474170b97f8c3d36eb57c0-20190830
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2135017108; Fri, 30 Aug 2019 13:41:33 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 13:41:31 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 13:41:30 +0800
+Message-ID: <1567143685.5942.11.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 13/32] drm/mediatek: move rdma sout from
+ mtk_ddp_mout_en into mtk_ddp_sout_sel
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 30 Aug 2019 13:41:25 +0800
+In-Reply-To: <1567090254-15566-14-git-send-email-yongqiang.niu@mediatek.com>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-14-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830005320.GA15267@embeddedor>
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 91FBBB659019F98841FF1162CEE48D62A4310431E53ADFD011B0F26E739CCC8C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:53:20PM -0500, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct led_pwm_priv {
-> 	...
->         struct led_pwm_data leds[0];
-> };
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> So, replace the following function:
-> 
-> static inline size_t sizeof_pwm_leds_priv(int num_leds)
-> {
->        return sizeof(struct led_pwm_priv) +
->                      (sizeof(struct led_pwm_data) * num_leds);
-> }
-> 
-> with:
-> 
-> struct_size(priv, leds, count)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Hi, Yongqiang:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch move rdma sout from mtk_ddp_mout_en into mtk_ddp_sout_sel
+> rdma only has single output, but no multi output,
+> all these rdma->dsi/dpi usecase should move to mtk_ddp_sout_sel
 
--Kees
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > ---
->  drivers/leds/leds-pwm.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 90 +++++++++++++++++-----------------
+>  1 file changed, 45 insertions(+), 45 deletions(-)
 > 
-> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> index d0e1f2710351..8b6965a563e9 100644
-> --- a/drivers/leds/leds-pwm.c
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -65,12 +65,6 @@ static int led_pwm_set(struct led_classdev *led_cdev,
->  	return 0;
->  }
->  
-> -static inline size_t sizeof_pwm_leds_priv(int num_leds)
-> -{
-> -	return sizeof(struct led_pwm_priv) +
-> -		      (sizeof(struct led_pwm_data) * num_leds);
-> -}
-> -
->  static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
->  		       struct led_pwm *led, struct fwnode_handle *fwnode)
->  {
-> @@ -174,7 +168,7 @@ static int led_pwm_probe(struct platform_device *pdev)
->  	if (!count)
->  		return -EINVAL;
->  
-> -	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(count),
-> +	priv = devm_kzalloc(&pdev->dev, struct_size(priv, leds, count),
->  			    GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
-> -- 
-> 2.23.0
-> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 338cc2f..a5a6689 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -299,51 +299,6 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
+>  	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
+>  		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+>  		value = OD1_MOUT_EN_RDMA1;
+> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> -		value = RDMA0_SOUT_DPI0;
+> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> -		value = RDMA0_SOUT_DPI1;
+> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> -		value = RDMA0_SOUT_DSI1;
+> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> -		value = RDMA0_SOUT_DSI2;
+> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> -		value = RDMA0_SOUT_DSI3;
+> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> -		value = RDMA1_SOUT_DSI1;
+> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> -		value = RDMA1_SOUT_DSI2;
+> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> -		value = RDMA1_SOUT_DSI3;
+> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+> -		*addr = data->rdma1_sout_sel_in;
+> -		value = data->rdma1_sout_dpi0;
+> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> -		value = RDMA1_SOUT_DPI1;
+> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> -		value = RDMA2_SOUT_DPI0;
+> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> -		value = RDMA2_SOUT_DPI1;
+> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> -		value = RDMA2_SOUT_DSI1;
+> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> -		value = RDMA2_SOUT_DSI2;
+> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> -		value = RDMA2_SOUT_DSI3;
+>  	} else {
+>  		value = 0;
+>  	}
+> @@ -423,6 +378,51 @@ static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
+>  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+>  		*addr = DISP_REG_CONFIG_OUT_SEL;
+>  		value = BLS_TO_DPI_RDMA1_TO_DSI;
+> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +		value = RDMA0_SOUT_DPI0;
+> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +		value = RDMA0_SOUT_DPI1;
+> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +		value = RDMA0_SOUT_DSI1;
+> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +		value = RDMA0_SOUT_DSI2;
+> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +		value = RDMA0_SOUT_DSI3;
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +		value = RDMA1_SOUT_DSI1;
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +		value = RDMA1_SOUT_DSI2;
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +		value = RDMA1_SOUT_DSI3;
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+> +		*addr = data->rdma1_sout_sel_in;
+> +		value = data->rdma1_sout_dpi0;
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +		value = RDMA1_SOUT_DPI1;
+> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +		value = RDMA2_SOUT_DPI0;
+> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +		value = RDMA2_SOUT_DPI1;
+> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +		value = RDMA2_SOUT_DSI1;
+> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +		value = RDMA2_SOUT_DSI2;
+> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +		value = RDMA2_SOUT_DSI3;
+>  	} else {
+>  		value = 0;
+>  	}
 
--- 
-Kees Cook
+
