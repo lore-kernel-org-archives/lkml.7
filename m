@@ -2,204 +2,102 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2EDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F11BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B91623431
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D190B23431
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K2pR4YqO"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WgwqfRjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfH3WDZ (ORCPT
+        id S1728267AbfH3WEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 18:03:25 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40216 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbfH3WDZ (ORCPT
+        Fri, 30 Aug 2019 18:04:02 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41401 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728007AbfH3WEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 18:03:25 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h3so3944768pls.7
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 15:03:24 -0700 (PDT)
+        Fri, 30 Aug 2019 18:04:02 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z9so4338723edq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 15:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=EnIXpwAIfyekw22wgx99HmUalWiPh7x+7uNWDpr4m5g=;
-        b=K2pR4YqO5U71A8d7/ZSJnhEN61Q57gnxY1N86g9ZAJcYOsLAX3zsiWr7dUD7BU7jLf
-         hSRoplf5AtIB3e8uMdK8raUmI9aLI2Y+prfm2ASCh3acb8Hu8m76DWvy4EBKrap9zaae
-         5E9JnJm/GmuOw+LnUOwd8YEXFVvKTm1p5fdhM=
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+CLMhNM5gPu732EY0YQc5MeoyNi9A2+mkByQgSox020=;
+        b=WgwqfRjCXhL1vF6NjwfGzSOjDnhkh8u+SJL9yPVcRIkdSN6FMYls+gJNd0DBqY+ebX
+         pLaZoSxnuBIgEHqABrKiFjo1iX37kfvjHkJIDMn/tZuMfgQYreNprSssm64szgVc3OUP
+         YWGMqT5WmISbE5woFDfuJPXUT24nKFCnoO97E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=EnIXpwAIfyekw22wgx99HmUalWiPh7x+7uNWDpr4m5g=;
-        b=eWhlBmEYLfhshWYuzvIA+RMBM2+AOnQ5W56uzv/Yoq1VnWj49JALIXmiqnz3RQSnRd
-         vUmzl7xsnxvdieaS4ip5NKGpY+7SNXJPp7TdOFCqfhTvRo8T9R8pLcg5dzsq3abZXk4a
-         kmAyNJKk9e1Z9S1Wc8ufpZbpolMwwDQZw1lhbctf2Q5GMZAN5puJOknCrjM6c8BD6EFE
-         KGD6qejFbYst9VL8V+1g/6QZpZ3Tf/ykkfafaW8kiMk/MA1GONr2i0JlGpqJfvwla1xy
-         ny3lXQinYDlfKjOJJoRg1wygQFL3bUCNqpWutb5IL5Ey3GemfyJpb5/NKEdsX4y+bzAj
-         jGwQ==
-X-Gm-Message-State: APjAAAUxoXXdCGIsdhVaX95Kv5ey2bP1lmP5k4UgdGKMNf2Bp10POOzK
-        IjklJTLkNz9vvjICi/YXqWFOnv4ZbDyZaw==
-X-Google-Smtp-Source: APXvYqzU0MQ9yN8nzVcGsYuJjMci6Yqm58R5OG2ryZAbPSCU8fR2RU/hDxTWNsH2/geIfEuQjigbjw==
-X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr18280350plp.245.1567202604286;
-        Fri, 30 Aug 2019 15:03:24 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 138sm8700928pfw.78.2019.08.30.15.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 15:03:23 -0700 (PDT)
-Message-ID: <5d699d2b.1c69fb81.6db46.76a9@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+CLMhNM5gPu732EY0YQc5MeoyNi9A2+mkByQgSox020=;
+        b=QOrDGx7aVLnzQaatq6GjwHc2flEKRVUamtEpng/QG6mc3oqKYYVzzULsYSL1zr4cbR
+         AlopmJWW8EXNK1DX5yriov6kWLkPtXYjqjaEdTp3aLtbikNgWksaFKNatlmXXpBKRbAW
+         TK7u64pafIly9Q9bZosvn35Pn06Ye5CLoxbFJIxSpqM1Ipg92+M/hyLhDgseleur4VKv
+         3kXbSbiwJIUjfDwvHy69aNhV7bMsrQDtVdjimUE4Tqwr05LcdTf/mDkEXnUp76j5cc6S
+         c0UScxKnb2KlBikTIAdjAL3E4nXsHtqe0hvMaueIEDy5CsE1vCIYvjWmGFAPE0m5Wu3l
+         McDw==
+X-Gm-Message-State: APjAAAUkwXuBs381YrgkDJVgb1Ez1EX8ME2uO7lywjOLKNoluM4AARvy
+        rFxmnhCG2t7qnucQNvtiup+aPa3iPFa87G4x
+X-Google-Smtp-Source: APXvYqz0T4mR7t35IkGgU7GPMFDrR+32WgLGxOPr798JywjnVKrMRIqLA7wYp/GFF8+RDmrHNeHsTA==
+X-Received: by 2002:a50:fa05:: with SMTP id b5mr18013381edq.84.1567202640321;
+        Fri, 30 Aug 2019 15:04:00 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
+        by smtp.gmail.com with ESMTPSA id i4sm930846ejs.39.2019.08.30.15.03.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 15:03:59 -0700 (PDT)
+Subject: Re: [PATCH] printf: add support for printing symbolic error codes
+To:     Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
+References: <20190830214655.6625-1-linux@rasmusvillemoes.dk>
+ <64a000cc3b0fcd7c99b5cd41b0db7f1b5e9e6db7.camel@perches.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <9fecd3a9-e1ae-a1f9-a0c5-f5db3430c81d@rasmusvillemoes.dk>
+Date:   Sat, 31 Aug 2019 00:03:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5d2e61fc.1c69fb81.afb7a.a64a@mx.google.com>
-References: <20190604222939.195471-1-swboyd@chromium.org> <20190604223700.GE4814@minitux> <5cf6f4bb.1c69fb81.c39da.5496@mx.google.com> <CAFp+6iHZeawnz7Vfk3=Oox-GN_y6c-E9wMwc-qdp1bTOXgqjFQ@mail.gmail.com> <5cf82c6f.1c69fb81.9e342.dbda@mx.google.com> <CAFp+6iE8FUXxexKbYy=ak+se-pj1XXUZxTu5o=hJvg66V6+Rzw@mail.gmail.com> <5cfee60a.1c69fb81.584d9.cf12@mx.google.com> <7299c814-3d9f-c5d1-fe7b-44e05f8b4ec9@codeaurora.org> <5d2e61fc.1c69fb81.afb7a.a64a@mx.google.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add iommus property to qup1
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 30 Aug 2019 15:03:22 -0700
+In-Reply-To: <64a000cc3b0fcd7c99b5cd41b0db7f1b5e9e6db7.camel@perches.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-07-16 16:47:07)
-> Quoting Vivek Gautam (2019-06-12 02:26:20)
-> >=20
-> >=20
-> > On 6/11/2019 4:51 AM, Stephen Boyd wrote:
-> > > hardware signal like the NS bit and/or the Execution Level. Hopefully
-> > > it's a config and then our difference from MTP can be minimized.
-> >=20
-> > I don't think SMMU limits any such programming of SIDs. It's a design=20
-> > decision
-> > to program few SIDs in TZ/Hyp and allocate the corresponding context ba=
-nks
-> > and create respective mappings. You should be able to see these SMR=20
-> > configurations
-> > before kernel boots up. I use a simple T32 command -
-> >=20
-> > smmu.add "<name>" <smmu_type> <base_address>
-> > smmu.streammaptable <name>
-> >=20
-> > e.g. for sdm845 apps_smmu
-> >=20
-> > smmu.add "apps" MMU500 a:0x15000000
-> > smmu.StreamMapTable apps
-> >=20
-> > This dumps all the information regarding the smmu.
->=20
-> Preferably I can see this by using devmem instead of jtag and T32. Do
-> you know the address of the register? Otherwise I'll go dig into the
-> documentation and try to figure it out.
+On 30/08/2019 23.53, Joe Perches wrote:
+> 
+>> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> []
+>> @@ -2178,8 +2204,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>>  		return flags_string(buf, end, ptr, spec, fmt);
+>>  	case 'O':
+>>  		return kobject_string(buf, end, ptr, spec, fmt);
+>> -	case 'x':
+>> -		return pointer_string(buf, end, ptr, spec);
+>>  	}
+>>  
+>>  	/* default is to _not_ leak addresses, hash before printing */
+> 
+> why remove this?
+> 
 
-And this won't really help me will it? I thought the stream ID was "fixed" =
-by
-hardware, so it seems sort of weird that we're talking about limiting it in
-TZ/hyp. Here's the S2CR table from Cheza in case that is useful.
+The handling of %px is moved above the test for ptr being an ERR_PTR, so
+that %px, ptr continues to be (roughly) equivalent to %08lx, (long)ptr.
 
-localhost ~ # mem
-Welcome to mem interactive mode (featuring python!)
-
-Available functions:
-- r(addr) # Read a single 32-bit word (little endian).
-- rm(addr, nbytes) # Read memory at the given addr as a string.
-- w(addr, val) # Write a single 32-bit word (little endian).
-- wm(addr, val) # Write a string to memory at the given addr.
->>> for x in range(64):
-...     r(0x15000c00 + (x << 2))
-...
-0x00000000
-0x00000000
-0x00000001
-0x00000002
-0x00000003
-0x00000004
-0x00000005
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-0x00020000
-
->=20
-> >=20
-> > >
-> > > As far as I can tell, HLOS on SDM845 has always used GPI (yet another
-> > > DMA engine) to do the DMA transfers. And the GPI is the hardware block
-> > > that uses the SID of 0x6d6 above, so putting that into iommus for the
-> > > geniqup doesn't make any sense given that GPI is another node. Can you
-> > > confirm this is the case? Furthermore, the SID of 0x6c3 sounds untest=
-ed?
-> > > Has it ever been generated on SDM845 MTP?
-> >=20
-> > I will get back with this information.
-> >=20
->=20
-> Any update?
-
-Any news?
-
+Rasmus
