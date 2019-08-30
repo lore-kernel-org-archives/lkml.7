@@ -2,232 +2,303 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DF8C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89673C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3095923427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA7621721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vNqfRzTu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/XzB+Se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfH3R2a (ORCPT
+        id S1727994AbfH3RgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:28:30 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51594 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfH3R23 (ORCPT
+        Fri, 30 Aug 2019 13:36:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45461 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfH3RgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:28:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k1so8166961wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 10:28:27 -0700 (PDT)
+        Fri, 30 Aug 2019 13:36:07 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so3664416plr.12;
+        Fri, 30 Aug 2019 10:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=eu7o1tjFJuoZ/R7GMzAcbzkgVT62tsYAxGmizjWMX1g=;
-        b=vNqfRzTuHbAvVsS3zUpvAVib5iQ1fToXe25SMvEN3IZ6lKxyl1nk3LVqLbPT52L/e7
-         h5mm7R83u/TOPgVcrOKY1IAXFwIjRRAQshoHym8JYlqKKxQuWVW/y+y0GzXPPWaXhypD
-         JAXnmHSBwMRF3livuug96Ox1F2DepxnFINXLI647jrPR+/9V5SWrnkMp3vrlwzQ9iIL6
-         Le2BVyhDYv4T3IUHcVPAJl1wBL9qxXtmERxOu1SHy+TeDexMl6Fj1Yp3rfOYlrGdwkDR
-         s3mzYAmvCqoBCBYppE9lZ25q9wkH5AopP8ZqFJ5+XkmKByr9b6v2Z7ipZy4L351Sk/DB
-         g6Qw==
+        bh=Pafo73I1UbBRX8XwIZQylqQ4gK9txbwYzG4pKvHI3F8=;
+        b=f/XzB+SeEsVRxFEknXHKYgibFNLpjaG/LE0MjGm3VLZ/Zx4lss9JzcDr/2nlg03iq2
+         xpFRuoFL+ArKTHR2Ic3szIPLegOknO4mWolM+GdCzrVU4OBEsGiqW4rFjkIXH4cqyGDL
+         ieLiEgR0SqVHWNkpusRL/q6UdVr5P8WNpNH0eVDZZyHnCdk1u9X/9GuPzEvkieTf4yzs
+         AHtSS8HpN+o5mADp30NlUtg0hxe39Cin6Lyou6n4LWNAAHXNcpsSo61E+yLN2NQO6G21
+         S3GIG4u2zdTtA9BZ8BWj3nWx1F1wvP5WXoWl5xWMVcFtLRwexcy+0ecGQVY91OXPZjof
+         c93Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eu7o1tjFJuoZ/R7GMzAcbzkgVT62tsYAxGmizjWMX1g=;
-        b=DYDfPJrVHcNALyhau32ncIVew5RokrRvXyTkzP9dmhZG8IypvCaoAmpsM5Q8fHXCbm
-         jmq/ROZvTfkCc/eErHgWv+gTXUgYF/DUr02Q55bKEAXQfdEo3a7O5FhTiSQFDp9YkCW0
-         oSx7uxMM2dwGkKklaIw7tSDpkW6LZVBwnTBltV82J8ZIRUdd261O3gOIyWT3R5Xg8Hcx
-         TIu/RygrV799WU+Wdzs4E1thSsQUuAr4StHjSs4WrKgPJwzQ5ZUQEWIle1RETT/LhsKu
-         xYeeXpgMPbDHBsIC5RPALMVxiJP/SxJnX/+I+z3sMOaUn63kftbnVQDeGd7Za3G5fG1t
-         WOAg==
-X-Gm-Message-State: APjAAAV2dzGCmPAz62Z31WqZbTzhSqhpRTgkr2PBu93ZnCJOPmaz5ooI
-        afzmkGsYN7DI+YO+/Hl90HE=
-X-Google-Smtp-Source: APXvYqz/4etEtnnJmT0nqV9j3YE+c03EhkYjYG1flkPxaetZUPtf48FALOgc5C5NoMqOsBgY4e48ig==
-X-Received: by 2002:a1c:f910:: with SMTP id x16mr18881080wmh.173.1567186106390;
-        Fri, 30 Aug 2019 10:28:26 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id p9sm7465898wru.61.2019.08.30.10.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 10:28:25 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 10:28:24 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Stefan Agner <stefan@agner.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or
- newer
-Message-ID: <20190830172824.GA119107@archlinux-threadripper>
-References: <20190829062635.45609-1-natechancellor@gmail.com>
- <CAKwvOdkXSWE+_JCZsuQdkCSrK5pJSp9n_Cd27asFP0mHBfHg6w@mail.gmail.com>
- <20190829193432.GA10138@archlinux-threadripper>
- <885bb20c11f0cb004e5eeda7b0ca6d16@agner.ch>
- <CAKwvOdm-9T5Mmys93VMK8HLUgPJa2HOpcmG96SAvH2EGLA=3Nw@mail.gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pafo73I1UbBRX8XwIZQylqQ4gK9txbwYzG4pKvHI3F8=;
+        b=X3xEBBSGOsyNw8Roupfh9SB/BMH7iEkN0+qOYUSBFBQedSx0LIAZo1njt4UupFPft+
+         QkGMT/4iKI7Re86JsNv/QRZ0V7neGBJgneLbxw56ryT06GeJEUCXTVotw4fOT0/ar/QE
+         GTM6CmNKlD5h++XkjY1xoy2Xq6VDkQxRB9drtWvPsalT5VWITOOZBCGfnwGdmxquLOLN
+         ku4eOrBeT08smHY9EjmF2+ozR/iBsBeS1J/Av3HBDXCLY7LFwTjwG36ZQb7/insT1CGI
+         ozJTBnT+D+DiqU6lutWUlgoRjBC0wG/5slT34UYF6ixkb9/Ndr28AUIDfvN4bW6T0ssk
+         FrmQ==
+X-Gm-Message-State: APjAAAVhTaHh+qS/VZ3xanelkuGHydQbRltilqRNfoN0cEFWj/v1BtXQ
+        eyActNkKxPnkFDR4ye8tCQE=
+X-Google-Smtp-Source: APXvYqxpGugk/VQ+2edUg60V5g3B6e7BsglHIs5QrhYmn1FKo4djBUFftIpEWoFU+ny6R7+GZQawzg==
+X-Received: by 2002:a17:902:f204:: with SMTP id gn4mr16870589plb.23.1567186566135;
+        Fri, 30 Aug 2019 10:36:06 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r23sm8887772pfg.10.2019.08.30.10.36.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 10:36:04 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 10:36:03 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com,
+        robh+dt@kernel.org, jdelvare@suse.com
+Subject: Re: [PATCH 3/3] pmbus: ibm-cffps: Add support for version 2 of the
+ PSU
+Message-ID: <20190830173603.GA10472@roeck-us.net>
+References: <1567181385-22129-1-git-send-email-eajames@linux.ibm.com>
+ <1567181385-22129-4-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdm-9T5Mmys93VMK8HLUgPJa2HOpcmG96SAvH2EGLA=3Nw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1567181385-22129-4-git-send-email-eajames@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:57:35PM -0700, Nick Desaulniers wrote:
-> On Thu, Aug 29, 2019 at 1:21 PM Stefan Agner <stefan@agner.ch> wrote:
-> >
-> > On 2019-08-29 21:34, Nathan Chancellor wrote:
-> > > On Thu, Aug 29, 2019 at 10:55:28AM -0700, Nick Desaulniers wrote:
-> > >> On Wed, Aug 28, 2019 at 11:27 PM Nathan Chancellor
-> > >> <natechancellor@gmail.com> wrote:
-> > >> >
-> > >> > Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-> > >> > with clang:
-> > >> >
-> > >> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-> > >> > softirq.c:(.text+0x504): undefined reference to `mcount'
-> > >> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-> > >> > softirq.c:(.text+0x58c): undefined reference to `mcount'
-> > >> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-> > >> > softirq.c:(.text+0x6c8): undefined reference to `mcount'
-> > >> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-> > >> > softirq.c:(.text+0x75c): undefined reference to `mcount'
-> > >> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-> > >> > softirq.c:(.text+0x840): undefined reference to `mcount'
-> > >> > arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
-> > >> >
-> > >> > clang can emit a working mcount symbol, __gnu_mcount_nc, when
-> > >> > '-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-> > >> > broken and caused the kernel not to boot because the calling
-> > >> > convention was not correct. Now that it is fixed, add this to
-> > >> > the command line when clang is 10.0.0 or newer so everything
-> > >> > works properly.
-> > >> >
-> > >> > Link: https://github.com/ClangBuiltLinux/linux/issues/35
-> > >> > Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-> > >> > Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-> > >> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > >> > ---
-> > >> >  arch/arm/Makefile | 6 ++++++
-> > >> >  1 file changed, 6 insertions(+)
-> > >> >
-> > >> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> > >> > index c3624ca6c0bc..7b5a26a866fc 100644
-> > >> > --- a/arch/arm/Makefile
-> > >> > +++ b/arch/arm/Makefile
-> > >> > @@ -112,6 +112,12 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
-> > >> >  CFLAGS_ABI     +=-funwind-tables
-> > >> >  endif
-> > >> >
-> > >> > +ifeq ($(CONFIG_CC_IS_CLANG),y)
-> > >> > +ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000; echo $$?),0)
-> > >> > +CFLAGS_ABI     +=-meabi gnu
-> > >> > +endif
-> > >> > +endif
-> > >> > +
-> > >>
-> > >> Thanks for the patch!  I think this is one of the final issues w/ 32b
-> > >> ARM configs when building w/ Clang.
-> > >>
-> > >> I'm not super enthused about the version check.  The flag is indeed
-> > >> not recognized by GCC, but I think it would actually be more concise
-> > >> with $(cc-option) and no compiler or version check.
-> > >>
-> > >> Further, I think that the working __gnu_mcount_nc in Clang would
-> > >> better be represented as marking the arch/arm/KConfig option for
-> > >> CONFIG_FUNCTION_TRACER for dependent on a version of Clang greater
-> > >> than or equal to Clang 10, not conditionally adding this flag. (We
-> > >> should always add the flag when supported, IMO.  __gnu_mcount_nc's
-> > >> calling convention being broken is orthogonal to the choice of
-> > >> __gnu_mcount_nc vs mcount, and it's the former's that should be
-> > >> checked, not the latter as in this patch.
-> > >
-> > > I will test with or without CONFIG_AEABI like Matthias asked and I will
-> > > implement your Kconfig suggestion if it passes all of my tests. The
-> > > reason that I did it this way is because I didn't want a user to end up
-> > > with a non-booting kernel since -meabi gnu works with older versions of
-> > > clang at build time, the issue happens at boot time but the Kconfig
-> > > suggestion + cc-option should fix that.
-> >
-> > I agree with Nathan here, I'd rather prefer the build system to fail
-> > building rather than runtime error.
-> >
-> > If we decide we want to have it building despite it not building a
-> > functional kernel, we should at least add a #warning...
+On Fri, Aug 30, 2019 at 11:09:45AM -0500, Eddie James wrote:
+> Version 2 of the PSU supports a second page of data and changes the
+> format of the FW version. Use the devicetree binding to differentiate
+> between the version the driver should use.
 > 
-> Just to be clear...I was suggesting a build failure, but for
-> __gnu_mcount_nc not having the correct calling convention in older
-> clang releases, which is orthogonal to passing `-meabi gnu`.  This
-> patch uses the __gnu_mcount_nc calling convention problem to justify a
-> version check for a flag that while closely related, is not actually
-> the problem, IMO.
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  drivers/hwmon/pmbus/ibm-cffps.c | 109 ++++++++++++++++++++++++++++++++--------
+>  1 file changed, 87 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+> index ee2ee9e..ca26fbd 100644
+> --- a/drivers/hwmon/pmbus/ibm-cffps.c
+> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
+> @@ -12,16 +12,20 @@
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pmbus.h>
+>  
+>  #include "pmbus.h"
+>  
+> +#define CFFPS_VERSIONS				2
+> +
 
-I am not entirely sure what you mean. -meabi gnu has always produced a
-buildable kernel (see Stefan's original report [1]), it just doesn't
-boot and that all happens silently.
+Any chance you can use an enum for the versions ? Using version
+numbers 1/2 combined with array indices 0/1 is confusing, error
+prone, and seems unnecessary.
 
-[1]: https://lore.kernel.org/linux-arm-kernel/35ae3d464c7b77a5fe86a732079e32bc@agner.ch/
+Thanks,
+Guenter
 
-Okay, after doing some further testing...
-
-Disabling CONFIG_AEABI does not work with clang, I get a ton of failures
-around undefined references to __aeabi_idivmod and __aeabi_uidivmod. I
-don't think this is worth looking into given that CONFIG_AEABI is not
-selectable when CONFIG_CPU_V6 or CONFIG_CPU_V7 is selected, which is
-what we primarily care about.. We currently build and boot
-multi_v5_defconfig but it has CONFIG_AEABI set in it. As a result, I
-don't think we need to care about it with this patch.
-
-This diff would also solve the issue without the need for the version
-check in the Makefile, as it is the combination of -meabi gnu and -pg
-that causes the boot issue and -pg gets added when
-CONFIG_FUNCTION_TRACER is enabled. Would that be preferred? I do not
-think adding cc-option is necessary given that we know GCC universally
-does not support this flag; there is no point in adding a small penalty
-with cc-option to either compiler.
-
-Cheers,
-Nathan
-
-================================================
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index a98c7af50bf0..440ad41e77e4 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -83,7 +83,7 @@ config ARM
- 	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index a43fc753aa53..23c2bf0fbd30 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -115,6 +115,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
- CFLAGS_ABI	+=-funwind-tables
- endif
- 
-+ifeq ($(CONFIG_CC_IS_CLANG),y)
-+CFLAGS_ABI	+=-meabi gnu
-+endif
-+
- # Accept old syntax despite ".syntax unified"
- AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
- 
+>  #define CFFPS_FRU_CMD				0x9A
+>  #define CFFPS_PN_CMD				0x9B
+>  #define CFFPS_SN_CMD				0x9E
+>  #define CFFPS_CCIN_CMD				0xBD
+> -#define CFFPS_FW_CMD_START			0xFA
+> -#define CFFPS_FW_NUM_BYTES			4
+> +#define CFFPS_FW_CMD				0xFA
+> +#define CFFPS1_FW_NUM_BYTES			4
+> +#define CFFPS2_FW_NUM_WORDS			3
+>  #define CFFPS_SYS_CONFIG_CMD			0xDA
+>  
+>  #define CFFPS_INPUT_HISTORY_CMD			0xD6
+> @@ -61,6 +65,7 @@ struct ibm_cffps_input_history {
+>  };
+>  
+>  struct ibm_cffps {
+> +	int version;
+>  	struct i2c_client *client;
+>  
+>  	struct ibm_cffps_input_history input_history;
+> @@ -132,6 +137,8 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>  	struct ibm_cffps *psu = to_psu(idxp, idx);
+>  	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
+>  
+> +	pmbus_set_page(psu->client, 0);
+> +
+>  	switch (idx) {
+>  	case CFFPS_DEBUGFS_INPUT_HISTORY:
+>  		return ibm_cffps_read_input_history(psu, buf, count, ppos);
+> @@ -152,16 +159,36 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>  		rc = snprintf(data, 5, "%04X", rc);
+>  		goto done;
+>  	case CFFPS_DEBUGFS_FW:
+> -		for (i = 0; i < CFFPS_FW_NUM_BYTES; ++i) {
+> -			rc = i2c_smbus_read_byte_data(psu->client,
+> -						      CFFPS_FW_CMD_START + i);
+> -			if (rc < 0)
+> -				return rc;
+> +		switch (psu->version) {
+> +		case 1:
+> +			for (i = 0; i < CFFPS1_FW_NUM_BYTES; ++i) {
+> +				rc = i2c_smbus_read_byte_data(psu->client,
+> +							      CFFPS_FW_CMD +
+> +								i);
+> +				if (rc < 0)
+> +					return rc;
+> +
+> +				snprintf(&data[i * 2], 3, "%02X", rc);
+> +			}
+>  
+> -			snprintf(&data[i * 2], 3, "%02X", rc);
+> -		}
+> +			rc = i * 2;
+> +			break;
+> +		case 2:
+> +			for (i = 0; i < CFFPS2_FW_NUM_WORDS; ++i) {
+> +				rc = i2c_smbus_read_word_data(psu->client,
+> +							      CFFPS_FW_CMD +
+> +								i);
+> +				if (rc < 0)
+> +					return rc;
+> +
+> +				snprintf(&data[i * 4], 5, "%04X", rc);
+> +			}
+>  
+> -		rc = i * 2;
+> +			rc = i * 4;
+> +			break;
+> +		default:
+> +			return -EOPNOTSUPP;
+> +		}
+>  		goto done;
+>  	default:
+>  		return -EINVAL;
+> @@ -279,6 +306,8 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+>  			psu->led_state = CFFPS_LED_ON;
+>  	}
+>  
+> +	pmbus_set_page(psu->client, 0);
+> +
+>  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+>  				       psu->led_state);
+>  	if (rc < 0)
+> @@ -299,6 +328,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+>  	if (led_cdev->brightness == LED_OFF)
+>  		return 0;
+>  
+> +	pmbus_set_page(psu->client, 0);
+> +
+>  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+>  				       CFFPS_LED_BLINK);
+>  	if (rc < 0)
+> @@ -328,15 +359,32 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
+>  		dev_warn(dev, "failed to register led class: %d\n", rc);
+>  }
+>  
+> -static struct pmbus_driver_info ibm_cffps_info = {
+> -	.pages = 1,
+> -	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+> -		PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+> -		PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
+> -		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
+> -		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
+> -	.read_byte_data = ibm_cffps_read_byte_data,
+> -	.read_word_data = ibm_cffps_read_word_data,
+> +static struct pmbus_driver_info ibm_cffps_info[CFFPS_VERSIONS] = {
+> +	[0] = {
+> +		.pages = 1,
+> +		.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+> +			PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+> +			PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
+> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
+> +			PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
+> +			PMBUS_HAVE_STATUS_FAN12,
+> +		.read_byte_data = ibm_cffps_read_byte_data,
+> +		.read_word_data = ibm_cffps_read_word_data,
+> +	},
+> +	[1] = {
+> +		.pages = 2,
+> +		.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+> +			PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+> +			PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
+> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
+> +			PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
+> +			PMBUS_HAVE_STATUS_FAN12,
+> +		.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
+> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT,
+> +		.read_byte_data = ibm_cffps_read_byte_data,
+> +		.read_word_data = ibm_cffps_read_word_data,
+> +	},
+>  };
+>  
+>  static struct pmbus_platform_data ibm_cffps_pdata = {
+> @@ -346,13 +394,21 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
+>  static int ibm_cffps_probe(struct i2c_client *client,
+>  			   const struct i2c_device_id *id)
+>  {
+> -	int i, rc;
+> +	int i, rc, vs;
+>  	struct dentry *debugfs;
+>  	struct dentry *ibm_cffps_dir;
+>  	struct ibm_cffps *psu;
+> +	const void *md = of_device_get_match_data(&client->dev);
+> +
+> +	if (md)
+> +		vs = (int)md;
+> +	else if (id)
+> +		vs = (int)id->driver_data;
+> +	else
+> +		vs = 1;
+>  
+>  	client->dev.platform_data = &ibm_cffps_pdata;
+> -	rc = pmbus_do_probe(client, id, &ibm_cffps_info);
+> +	rc = pmbus_do_probe(client, id, &ibm_cffps_info[vs - 1]);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -364,6 +420,7 @@ static int ibm_cffps_probe(struct i2c_client *client,
+>  	if (!psu)
+>  		return 0;
+>  
+> +	psu->version = vs;
+>  	psu->client = client;
+>  	mutex_init(&psu->input_history.update_lock);
+>  	psu->input_history.last_update = jiffies - HZ;
+> @@ -406,12 +463,20 @@ static int ibm_cffps_probe(struct i2c_client *client,
+>  
+>  static const struct i2c_device_id ibm_cffps_id[] = {
+>  	{ "ibm_cffps1", 1 },
+> +	{ "ibm_cffps2", 2 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ibm_cffps_id);
+>  
+>  static const struct of_device_id ibm_cffps_of_match[] = {
+> -	{ .compatible = "ibm,cffps1" },
+> +	{
+> +		.compatible = "ibm,cffps1",
+> +		.data = (void *)1
+> +	},
+> +	{
+> +		.compatible = "ibm,cffps2",
+> +		.data = (void *)2
+> +	},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, ibm_cffps_of_match);
+> -- 
+> 1.8.3.1
+> 
