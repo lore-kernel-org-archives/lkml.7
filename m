@@ -2,148 +2,211 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5A2C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBE3C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA802073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D212073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:41:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j04hvyN7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcBhRd6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfH3KjD (ORCPT
+        id S1727936AbfH3Klz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:39:03 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40359 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfH3KjD (ORCPT
+        Fri, 30 Aug 2019 06:41:55 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36968 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfH3Klz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:39:03 -0400
-Received: by mail-vs1-f65.google.com with SMTP id i128so4455177vsc.7
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 03:39:02 -0700 (PDT)
+        Fri, 30 Aug 2019 06:41:55 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bj8so3200941plb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 03:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/UGLkrJRvm+li0YZyHFEsmW2SjqLYvPQTm0FTUlv6Ag=;
-        b=j04hvyN72L+zDRpxCWzBS9vYgYaPDy1tVt4SfRR8Bg++NMXQKt+4ImKHJeWP/+L4+f
-         FsxNd8HSMpPK/H9A2pJjH88qCwKM39QTQ49uSVQbaxvvRHcHV0Yi2ueGmHw8hhb5lNZJ
-         9mb+mys0fDmWSR2WSvBvnmBENeXqQAk69lbbmA7s/5UDWRVm0fAqQ/sloezQoFx8XxwV
-         ZqWGjgaxPbEj0NRW3jQoQO2b99l5bTSvSk2pimXTSNcJD3tfqvA0TuoPnK6r2c9bfrzf
-         spLwuJryZa6UIdcvwpdkMTb80NQgntry5FDEO2x33aidLwWiqkQ5zWHs0Eg4pwlbgts5
-         4hSw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=q05DhHEnCoDT5I56H/M2ahJoXZvDFRVu5ln4bhnllRo=;
+        b=BcBhRd6+K28OuQaF/kodze6BvREmM/GdC+mLsdSTUEHy3h+XoM5848sXDzV9efqnh9
+         mIIE+QCh8nR6LJ1U+OZgjByjBA+78jm2fMZXz0Wm9nxxnIw7uml339+Zn+of0n/uEwbC
+         KWZUF9TgVuYcgT5lk+VJU3cAf5kkrZzNZhJ9iYVC+R3JRHowSYD5n1QAsGFDIkkwXOWg
+         UfTTGyeJczSl0/KWSXBiGy+Eoe+HWU3jFVyx9UAcpf/zxK4bmDmNJwqBpscouGfz0gx0
+         ZBj8+FB2lqyCM0hfyIQG8o92OcLawF9IUItH2tfbvy0FgPHB9/6/eUCHl3fEKZdp1Hub
+         iwjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/UGLkrJRvm+li0YZyHFEsmW2SjqLYvPQTm0FTUlv6Ag=;
-        b=I8C0ngnDaDPRoZrYf7rkUGx3q8MPaLtJovyyZf7cfY+PaxGp4DIpo7lWUNpcu4tsAr
-         J7VV5ITQU+DnDfN7b4/lOO+SWFlR65V7SiqXbT7XaNwbjCynUC3XCLMfQAh6p8v2dr87
-         nqPQ6fnkc6GdT1MRPypCs7w62OerzUBdn8yQN1GEISjhD9wflZI1nHnwE/3Am53KQBtW
-         5ndc6U8PytmjcLFI+35s3/TnKleNE3/8xLuen0othbGM5NTqDUrUISbmbT0KpnAWQjXh
-         jwGkLHKEKZCguQO56YwbTiSq0z9A7NMF/vojxWM0FmkTcr+WoX/+Pm5pb+HCJM5bBfMi
-         5QDQ==
-X-Gm-Message-State: APjAAAWkxj1D+FVWBoHZqo7UzfRdkEhd+OyKx2bsPWPj3RdDJ7hMQCEK
-        L20+6WuO2ukkL285AuW9QonMTAsJF3SW9Q1HgozuLA==
-X-Google-Smtp-Source: APXvYqyexb/mfNJJQsyEuU1xMvNLp6YAZf+F2QKjVy8WDgPjJur+u8KWulIE/o4fnV72MYujkJgPj7YRlPDTX5ADcM4=
-X-Received: by 2002:a67:347:: with SMTP id 68mr8224648vsd.35.1567161542239;
- Fri, 30 Aug 2019 03:39:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190828214620.66003-1-mka@chromium.org> <20190828214620.66003-2-mka@chromium.org>
- <CAPDyKFr2R-ta5Xob12-6k=+mXXt0NowJ=dpLGJu10qhn7cB1HQ@mail.gmail.com>
- <20190829171555.GD70797@google.com> <CAD=FV=VhAFGZusYac8hqYNZ9t+ipTZ5EAo5qY5+A8jA4xjw2vg@mail.gmail.com>
- <CAPDyKFo-NkkYyNNxtU9PpP7aG5zRd-pXsxOujdN53J=uAezieA@mail.gmail.com>
-In-Reply-To: <CAPDyKFo-NkkYyNNxtU9PpP7aG5zRd-pXsxOujdN53J=uAezieA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 30 Aug 2019 12:38:26 +0200
-Message-ID: <CAPDyKFp-p_iunzFd8vSuuP0ubd7WzPY4XOzCoo=EEFQ8rscWCw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: core: Run handlers for pending SDIO interrupts
- on resume
-To:     Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=q05DhHEnCoDT5I56H/M2ahJoXZvDFRVu5ln4bhnllRo=;
+        b=oUkcycNW4BzLqIaRKwJ8zlkIpOeLr2iJJb7EBrB66nrENaJekBxy9K5EkcEiPsKivp
+         6406gX7cGFeEt5crEvO2oMOOpTTUxCvYXd8oDa7QJ2PqkHJwjxajiPPYceVvJq9B6wcS
+         bLMSSIb07ehEYzixyPkAbQZF/ZVAWj1LUCijBWxpVfWu8gxt2woKxpc0tW8FgNMskEds
+         Zxi5NbmUbAkKWQQrTWIJPa0GExxXkPcBnOL4j1xnSgN1WXO0p7HXTNDLwgNb5GzSMs77
+         0bySSgoJxAipQP90gI1y2jIyETymBXLbK/hMqR2IzkHs/X2NORhZjJjHr5bhLGfX1F+3
+         MbPQ==
+X-Gm-Message-State: APjAAAXp5PV0tuYHSmhD6GS6J6Auy/zMlYMDevkNsIC1d2pRYrw+e53d
+        lr3uv3R04ffc7DyQpOHdq4M=
+X-Google-Smtp-Source: APXvYqxlP3RKIpEy8DvgzIDIAw/CmqfXzCW54gwqdTo8Ke5an4X84CCOGNfT3QKO59B9F7jBS5RC4Q==
+X-Received: by 2002:a17:902:c9:: with SMTP id a67mr8892798pla.178.1567161714272;
+        Fri, 30 Aug 2019 03:41:54 -0700 (PDT)
+Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.183])
+        by smtp.gmail.com with ESMTPSA id u10sm5945184pfn.94.2019.08.30.03.41.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 03:41:53 -0700 (PDT)
+From:   Satendra Singh Thakur <sst2005@gmail.com>
+Cc:     satendrasingh.thakur@hcl.com, tglx@linutronix.de,
+        Satendra Singh Thakur <sst2005@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] [semaphore] Removed redundant code from semaphore's down family of function
+Date:   Fri, 30 Aug 2019 16:10:10 +0530
+Message-Id: <20190830104011.15568-1-sst2005@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190826142557.GM2386@hirez.programming.kicks-ass.net>
+References: <20190826142557.GM2386@hirez.programming.kicks-ass.net>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 at 08:08, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+On Mon, 26 Aug 2019 16:25:57 +0200, Peter Zijlstra wrote:
+>On Mon, Aug 26, 2019 at 04:14:36PM +0200, Peter Zijlstra wrote:
+> > (XXX, we should probably move the schedule_timeout() thing into its own
+> > patch)
 >
-> On Thu, 29 Aug 2019 at 19:40, Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Aug 29, 2019 at 10:16 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > >
-> > > > In one way, this change makes sense as it adopts the legacy behavior,
-> > > > signaling "cached" SDIO IRQs also for the new SDIO irq work interface.
-> > > >
-> > > > However, there is at least one major concern I see with this approach.
-> > > > That is, in the execution path for sdio_signal_irq() (or calling
-> > > > wake_up_process() for the legacy path), we may end up invoking the
-> > > > SDIO func's ->irq_handler() callback, as to let the SDIO func driver
-> > > > to consume the SDIO IRQ.
-> > > >
-> > > > The problem with this is, that the corresponding SDIO func driver may
-> > > > not have been system resumed, when the ->irq_handler() callback is
-> > > > invoked.
-> > >
-> > > While debugging the the problem with btmrvl I found that this is
-> > > already the case without the patch, just not during resume, but when
-> > > suspending. The func driver suspends before the SDIO bus and
-> > > interrupts can keep coming in. These are processed while the func
-> > > driver is suspended, until the SDIO core starts dropping the
-> > > interrupts.
-> > >
-> > > And I think it is also already true at resume time: mmc_sdio_resume()
-> > > re-enables SDIO IRQs and disables dropping them.
-> >
-> > I would also note that this matches the design of the normal system
-> > suspend/resume functions.  Interrupts continue to be enabled even
-> > after the "suspend" call is made for a device.  Presumably this is so
-> > that the suspend function can make use of interrupts even if there is
-> > no other reason.
+> A better version here...
 >
-> I understand and you have a good point!
+> ---
+> Subject: sched,time: Allow better constprop/DCE for schedule_timeout()
+> 
+> If timeout is constant and MAX_SCHEDULE_TIMEOUT, it would be nice to
+> allow to optimize away everything timeout.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+> include/linux/sched.h | 13 ++++++++++++-
+> kernel/time/timer.c   | 52 ++++++++++++++++++++++++---------------------------
+> 2 files changed, 36 insertions(+), 29 deletions(-)
 >
-> However, in my experience, the most common generic case, is that it's
-> a bad idea to let a device process interrupts once they have been
-> suspended. This also applies to runtime suspend (via runtime PM).
->
-> > If it's important for a device to stop getting
-> > interrupts after the "suspend" function is called then it's up to that
-> > device to re-configure the device to stop giving interrupts.
->
-> Again, you have a very good point. The corresponding driver for the
-> device in question is responsible for dealing with this.
->
-> Then, for this particular case, the SDIO func driver scenario, how
-> would that work?
->
-> For example, assume that the SDIO func driver can't process IRQs after
-> its been system suspended, however it still wants the IRQs to be
-> re-kicked to consume them once it has been resumed?
->
-> Or are you saying that the SDIO func driver for cases when IRQs can't
-> be consumed during system suspend, that is should call
-> sdio_release_irq() (then reclaim the IRQ once resumed)?
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index f0edee94834a..6003e96bce52 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -214,7 +214,18 @@ extern void scheduler_tick(void);
+> 
+> #define	MAX_SCHEDULE_TIMEOUT		LONG_MAX
+> 
+> -extern long schedule_timeout(long timeout);
+> +extern long __schedule_timeout(long timeout);
+> +
+> +static inline long schedule_timeout(long timeout)
+> +{
+> +	if (__builtin_constant_p(timeout) && timeout == MAX_SCHEDULE_TIMEOUT) {
+> +		schedule();
+> +		return timeout;
+> +	}
+> +
+> +	return __schedule_timeout(timeout);
+> +}
+> +
+> extern long schedule_timeout_interruptible(long timeout);
+> extern long schedule_timeout_killable(long timeout);
+> extern long schedule_timeout_uninterruptible(long timeout);
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 0e315a2e77ae..912ae56b96b8 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -1851,38 +1851,34 @@ static void process_timeout(struct timer_list *t)
+>  * jiffies will be returned.  In all cases the return value is guaranteed
+>  * to be non-negative.
+>  */
+> -signed long __sched schedule_timeout(signed long timeout)
+> +signed long __sched __schedule_timeout(signed long timeout)
+> {
+> 	struct process_timer timer;
+> 	unsigned long expire;
+> 
+> -	switch (timeout)
+> -	{
+> -	case MAX_SCHEDULE_TIMEOUT:
+> -		/*
+> -		 * These two special cases are useful to be comfortable
+> -		 * in the caller. Nothing more. We could take
+> -		 * MAX_SCHEDULE_TIMEOUT from one of the negative value
+> -		 * but I' d like to return a valid offset (>=0) to allow
+> -		 * the caller to do everything it want with the retval.
+> -		 */
+> +	/*
+> +	 * We could take MAX_SCHEDULE_TIMEOUT from one of the negative values,
+> +	 * but I'd like to return a valid offset (>= 0) to allow the caller to
+> +	 * do everything it wants with the retval.
+> +	 */
+> +	if (timeout == MAX_SCHEDULE_TIMEOUT) {
+> 		schedule();
+> -		goto out;
+Hi Mr Peter,
+I have a suggestion here:
+The condition timeout == MAX_SCHEDULE_TIMEOUT is already handled in
+schedule_timeout function and  same conditon is handled again in __schedule_timeout.
+Currently, no other function calls __schedule_timeout except schedule_timeout.
+Therefore, it seems this condition will never become true.
 
-I have been thinking more about this. The above seems like a
-reasonable assumption to make. So, I started to hack and improve the
-SDIO IRQ management, again.
+This conditon will only be true when __schedule_timeout is called directly from kernel
+with timeout = MAX_SCHEDULE_TIMEOUT. This case may be rare. Therefore, we can modify it as
 
-Just to be clear, I like the approach Matthias has taken here, which
-means reading SDIO_CCCR_INTx register at system resume, to understand
-whether there are some SDIO IRQs that needs to be processed, however
-there are some more corner cases that needs to be covered as well.
+if (unlikely(timeout == MAX_SCHEDULE_TIMEOUT))
 
-Let me post something on Monday, then we can continue our discussions
-and run some tests as well.
-
-Have nice weekend!
-Uffe
+Please let me know your comments.
+Thanks
+Satendra
+> -	default:
+> -		/*
+> -		 * Another bit of PARANOID. Note that the retval will be
+> -		 * 0 since no piece of kernel is supposed to do a check
+> -		 * for a negative retval of schedule_timeout() (since it
+> -		 * should never happens anyway). You just have the printk()
+> -		 * that will tell you if something is gone wrong and where.
+> -		 */
+> -		if (timeout < 0) {
+> -			printk(KERN_ERR "schedule_timeout: wrong timeout "
+> +		return timeout;
+> +	}
+> +
+> +	/*
+> +	 * Another bit of PARANOID. Note that the retval will be 0 since no
+> +	 * piece of kernel is supposed to do a check for a negative retval of
+> +	 * schedule_timeout() (since it should never happens anyway). You just
+> +	 * have the printk() that will tell you if something is gone wrong and
+> +	 * where.
+> +	 */
+> +	if (timeout < 0) {
+> +		printk(KERN_ERR "schedule_timeout: wrong timeout "
+> 				"value %lx\n", timeout);
+> -			dump_stack();
+> -			current->state = TASK_RUNNING;
+> -			goto out;
+> -		}
+> +		dump_stack();
+> +		current->state = TASK_RUNNING;
+> +		goto out;
+> 	}
+> 
+> 	expire = timeout + jiffies;
+> @@ -1898,10 +1894,10 @@ signed long __sched schedule_timeout(signed long timeout)
+> 
+> 	timeout = expire - jiffies;
+> 
+> - out:
+> +out:
+> 	return timeout < 0 ? 0 : timeout;
+> }
+> -EXPORT_SYMBOL(schedule_timeout);
+> +EXPORT_SYMBOL(__schedule_timeout);
+>
+> /*
+>  * We can use __set_current_state() here because schedule_timeout() calls
