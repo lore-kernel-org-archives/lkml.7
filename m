@@ -2,134 +2,110 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40104C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA65BC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118C123430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB64323430
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYxkV44g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbfH3WzU (ORCPT
+        id S1728246AbfH3XC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 18:55:20 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44870 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbfH3WzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 18:55:19 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B8A351A008B;
-        Sat, 31 Aug 2019 00:55:16 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A20AB1A0412;
-        Sat, 31 Aug 2019 00:55:16 +0200 (CEST)
-Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 222C220627;
-        Sat, 31 Aug 2019 00:55:16 +0200 (CEST)
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     broonie@kernel.org
-Cc:     festevam@gmail.com, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        shengjiu.wang@nxp.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, timur@kernel.org,
-        gabrielcsmo@gmail.com, Daniel Baluta <daniel.baluta@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Subject: [PATCH] ASoC: fsl_sai: Set SAI Channel Mode to Output Mode
-Date:   Sat, 31 Aug 2019 01:55:14 +0300
-Message-Id: <20190830225514.5283-1-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 30 Aug 2019 19:02:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37423 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfH3XC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 19:02:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bj8so4005081plb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WuSrKaBjz6ivWHwLFrJgF/L58VeUxzznRdGEYR+c17w=;
+        b=EYxkV44gAiJ5RGYNjhQk6VbArVubnJW/4qj50Eu8EsglB+MFzheaW/0YM4soCMmUvy
+         sBx6BCsU81MbaWrb+zExxv/sNrAWyhxZbGpG5nDfEGZ4nUDjLCxBqp+6G+LL+525lhlN
+         HbokrROYgvVX1dBiCYW/M7kPYIrtL3VeLSKEN4SqEtlcOFqwEs2sTM4RIaUsHpqPOtJF
+         ChT3acb5jJ3MDHbDXseFCZs8DkuC/cUStBiX5q3gu8fByUeNedQvJ0kytpmpRvGmxM23
+         mS3rHmTMIrL5iw5YAcFJDl6gOqJXnQ/WFaH0Nxyky0M5SYDCrBTjbkI+Y02q3Ihi/x7d
+         rc+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WuSrKaBjz6ivWHwLFrJgF/L58VeUxzznRdGEYR+c17w=;
+        b=g1DQkqH3BzSwYYpl1PGOY88PhEemgaY4HEcz2DFXCf5Ifk0LR/kfNYXCl5hrJkYOEQ
+         gZ3Ido6kYADmYK+qi+cZZD/k5vOUnQl6sJcqxl2dWBZKeW0+dyWRqyXZvJf6sga5gYYM
+         k6gMsYexHiu4wKVD2Ex0Mpf0zwE/XwR23j0tbNti2zSPvUdL4NrtDn+Pie+LPhGzeiGt
+         aPDdPvXf6mJYF0MdzBOqobHkpPsaTnHqLDq9KJKGBdK0OwEtfwUkP5m9I/yLud/3Mg0Q
+         awH5gkR3aKENma42yjaKxRfY4wMPGpgJoiIP9awrweXk6P9pr1R8qj91hwK4i1BkIPZe
+         Pwag==
+X-Gm-Message-State: APjAAAVAUp0IjmlfON5DkJcLBRNiuO+191lyZrwr8NJ6ubUxLKXaVal/
+        7uEaRuL7rff9C5pviaBbEno1hFqn3q+Wt7PDQXQP7g==
+X-Google-Smtp-Source: APXvYqzkMlSCoOQPf0lhYF0++cQJXd6u59DjiL0h5Bj++9ubODi8+C2cl9McsvOTctf9UxMtNw30sqoEUw3WN7OcBu0=
+X-Received: by 2002:a17:902:169:: with SMTP id 96mr17348451plb.297.1567206144995;
+ Fri, 30 Aug 2019 16:02:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190828093143.163302-1-brendanhiggins@google.com>
+ <20190828094929.GA14038@jagdpanzerIV> <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
+ <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
+ <20190830183821.GA30306@google.com> <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977A8392@USCULXMSG01.am.sony.com> <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
+In-Reply-To: <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 30 Aug 2019 16:02:13 -0700
+Message-ID: <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
+Subject: Re: [PATCH v2] kunit: fix failure to build without printk
+To:     Joe Perches <joe@perches.com>
+Cc:     "Bird, Timothy" <Tim.Bird@sony.com>, shuah <shuah@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, sergey.senozhatsky@gmail.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From SAI datasheet:
+On Fri, Aug 30, 2019 at 3:46 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2019-08-30 at 21:58 +0000, Tim.Bird@sony.com wrote:
+> > > From: Joe Perches
+> []
+> > IMHO %pV should be avoided if possible.  Just because people are
+> > doing it doesn't mean it should be used when it is not necessary.
+>
+> Well, as the guy that created %pV, I of course
+> have a different opinion.
+>
+> > >  then wouldn't it be easier to pass in the
+> > > > kernel level as a separate parameter and then strip off all printk
+> > > > headers like this:
+> > >
+> > > Depends on whether or not you care for overall
+> > > object size.  Consolidated formats with the
+> > > embedded KERN_<LEVEL> like suggested are smaller
+> > > overall object size.
+> >
+> > This is an argument I can agree with.  I'm generally in favor of
+> > things that lessen kernel size creep. :-)
+>
+> As am I.
 
-CHMOD, configures if transmit data pins are configured for TDM mode
-or Output mode.
-	* (0) TDM mode, transmit data pins are tri-stated when slots are
-	masked or channels are disabled.
-	* (1) Output mode, transmit data pins are never tri-stated and
-	will output zero when slots are masked or channels are disabled.
-
-When data pins are tri-stated, there is noise on some channels
-when FS clock value is high and data is read while fsclk is
-transitioning from high to low.
-
-Fix this by setting CHMOD to Output Mode so that pins will output zero
-when slots are masked or channels are disabled.
-
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/fsl/fsl_sai.c | 15 ++++++++++++---
- sound/soc/fsl/fsl_sai.h |  2 ++
- 2 files changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index e896b577b1f7..b9daab0eb6eb 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -467,6 +467,12 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 
- 	val_cr4 |= FSL_SAI_CR4_FRSZ(slots);
- 
-+	/*
-+	 * set CHMOD to Output Mode so that transmit data pins will
-+	 * output zero when slots are masked or channels are disabled
-+	 */
-+	val_cr4 |= FSL_SAI_CR4_CHMOD;
-+
- 	/*
- 	 * For SAI master mode, when Tx(Rx) sync with Rx(Tx) clock, Rx(Tx) will
- 	 * generate bclk and frame clock for Tx(Rx), we should set RCR4(TCR4),
-@@ -477,7 +483,8 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 	if (!sai->is_slave_mode) {
- 		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
- 			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
--				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
-+				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK |
-+				FSL_SAI_CR4_CHMOD_MASK,
- 				val_cr4);
- 			regmap_update_bits(sai->regmap, FSL_SAI_TCR5(ofs),
- 				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
-@@ -486,7 +493,8 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 				~0UL - ((1 << channels) - 1));
- 		} else if (!sai->synchronous[RX] && sai->synchronous[TX] && tx) {
- 			regmap_update_bits(sai->regmap, FSL_SAI_RCR4(ofs),
--				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
-+				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK |
-+				FSL_SAI_CR4_CHMOD_MASK,
- 				val_cr4);
- 			regmap_update_bits(sai->regmap, FSL_SAI_RCR5(ofs),
- 				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
-@@ -497,7 +505,8 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 	}
- 
- 	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
--			   FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
-+			   FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK |
-+			   FSL_SAI_CR4_CHMOD_MASK,
- 			   val_cr4);
- 	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx, ofs),
- 			   FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index f96f8d97489d..1e3b4a6889a8 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -119,6 +119,8 @@
- #define FSL_SAI_CR4_FRSZ_MASK	(0x1f << 16)
- #define FSL_SAI_CR4_SYWD(x)	(((x) - 1) << 8)
- #define FSL_SAI_CR4_SYWD_MASK	(0x1f << 8)
-+#define FSL_SAI_CR4_CHMOD	BIT(5)
-+#define FSL_SAI_CR4_CHMOD_MASK	GENMASK(5, 5)
- #define FSL_SAI_CR4_MF		BIT(4)
- #define FSL_SAI_CR4_FSE		BIT(3)
- #define FSL_SAI_CR4_FSP		BIT(1)
--- 
-2.17.1
-
+Sorry, to be clear, we are talking about the object size penalty due
+to adding a single parameter to a function. Is that right?
