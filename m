@@ -2,151 +2,276 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08812C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D54C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E4923430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C891323429
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlV7OCds"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WBeU8UAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfH3VBz (ORCPT
+        id S1728195AbfH3VCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:01:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36098 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbfH3VBz (ORCPT
+        Fri, 30 Aug 2019 17:02:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46590 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfH3VCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:01:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l21so4128226pgm.3;
-        Fri, 30 Aug 2019 14:01:54 -0700 (PDT)
+        Fri, 30 Aug 2019 17:02:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m3so4099394pgv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 14:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9HWgbMIqRserk4twrMsOkgXr9R1mUbhAHHKsL/aOnKI=;
-        b=VlV7OCdsjLM+wpxDQO2Ki5ulx8r2y9In1A8QiMj/bphFBjCi6YohJe4YAw7c4lZRsD
-         nO7TrJeZ1h2eO7+1TRb2KUEUIoskX8q4evdFUQbiC9l8+C88IZxS1+bVCCiAXext0VyL
-         YNuIUMFFv0LbI6LZL3A9ul+858LAB9m/UZGKC7enDHIclEwb6tbO872Bk/XYM4kZ0kfB
-         PlRLy1654G/vU2tkc/StrIYRXFWl2QyCOoE3tM/vRjdM/RtZJHcwF9c8+ZzdhW1Xyp6n
-         mJQaKy0abZ51fLyPSJuxU3kXdbysnQ3ZjQQZe04KlxEE5e8zY/P98/KRTzaehnc15pOW
-         4Yww==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JhMV1jTD3mPsfg3GhoNSr9wlsLmJbYqBSQl0eZsMIz8=;
+        b=WBeU8UAycSpqkfqlO1sVT0TEZLp+jnqY/kw4pz0QXAcPQPZen6e3+xubiJVRpGVRud
+         01QjRQlbHbzlhsRoNp8THOEBSvbdLgCgLrMC28TXdRTUU6EMYMw9hrdFNjjPNgY8s3Up
+         b6mnvu7ntkaJyrgUf2eHW09hMwbxBC4MQS38MIO7ZGadW++ZXhBTNJc9sr+FZx8bwZE9
+         KFqn6QRYiqnIp1qcYRL65H8sN+FwgsZVLrjS+2vkwxyL2G/uQCRPUOsOEfiVQY49FMp6
+         7JGXYg8CCyDG1cBCVBRr/V9XeK1x/5ofjDJS/nwNRRnqpTLfUMmJyA8PGHTz+oXaJpwi
+         ZCtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9HWgbMIqRserk4twrMsOkgXr9R1mUbhAHHKsL/aOnKI=;
-        b=TuOP9lUjW4mJv6Pe9I+3Cvt1FIGjQuspk3XaX8Wq7qDgA5tEPeSuqYHSpDgmvPb4A1
-         WogKvrhKPXO78OsMDf9ERaykL7bb2aQTFqR5Ew4Ntad7x8zrNxXsqeDmMU/RjSqa65/c
-         6fkGQH+eMxtslF0H66IGNL+gPbK9a/vPhxT7dKxcBovPxLfhyrV8+EOyCClCHkm7eZeH
-         0WelLAL9yUO8q760h6Sla6J0mqs+XBh1ABtayiKDmyLid7B5MrCIO5IwERKsFQ03ggB4
-         l01ygPnva59/P49OTRDnv8y+7Ws2IZ7spcyU3v/ai8QkIpA8w0jKRx0Doj2chxAD0Fn7
-         IhSg==
-X-Gm-Message-State: APjAAAWSu+9CpFnL1Wgg0L1D14m7Uk6LPnvDlM7M9MZ2Xs3qlFDlQ0rF
-        Zwk2YxwF+IM5Hs49wctYvsw=
-X-Google-Smtp-Source: APXvYqxmYdyiEHAwhEfe49D9XpVmFYBRI7a3/7LC/SEYCOBepCEDYPjhOeSD7Up2X2PJwOHkWa9Lfw==
-X-Received: by 2002:a63:4c5a:: with SMTP id m26mr14237469pgl.270.1567198913959;
-        Fri, 30 Aug 2019 14:01:53 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id fa14sm5732456pjb.12.2019.08.30.14.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 14:01:53 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: imx8mq: Add CAAM node
-Date:   Fri, 30 Aug 2019 14:01:39 -0700
-Message-Id: <20190830210139.7028-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JhMV1jTD3mPsfg3GhoNSr9wlsLmJbYqBSQl0eZsMIz8=;
+        b=WS8UtvCps6IXi3KCZhOAaXAWAZzAc9mf54Hd7/HCe8xx5XrD50Ud+dzAPmJsdOm6kr
+         Rum9MXwnseDYBy2BNNzLT25F8yYUs1r4ejJVM/mGGKGIy5hIy74vx4C+P0QwJBzq0osk
+         y2xus0qlkokCsGgeQGBMJAfNxm2jfAii/AbLwERoovGvDJ5nGlqHjKHrvaAuxjaaSwVT
+         NxVEjcVRwNzZBfke4U13eWR0ngfqjZRh7H/ar5exvn3WLl/q70cARMlt/EATfNa5/h+B
+         7Fb22U+xR03V7j6p5rN4mlbXn3jbGv2q2HVa4DE02BTSW2dh2qaj+47J7/XYYt+hK7VG
+         nXbA==
+X-Gm-Message-State: APjAAAXXOhQPWJqTmHn9LPBk+BcoCjGKNfimaS+OXbDDIP2c+TmNcItx
+        /Chxe51TiO1+/zaho2P/VkQcAtTAfPkVCW1ilyfjaw==
+X-Google-Smtp-Source: APXvYqy/SCN4xgIhwh8g2qZ82udv/JJ4bD/ZxvQlx7zZmaNWaaXMWIb4AMAOETsykK+Sjw15ojQQE7b1FbKkOeXTK98=
+X-Received: by 2002:aa7:984a:: with SMTP id n10mr20614018pfq.3.1567198970999;
+ Fri, 30 Aug 2019 14:02:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190829181231.5920-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190829181231.5920-1-yamada.masahiro@socionext.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 30 Aug 2019 14:02:39 -0700
+Message-ID: <CAKwvOdn4abmHse=EUf1mMNUbXO3ZprZQYDmxbRFyeLVhhs8Rew@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: refactor scripts/Makefile.extrawarn
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add node for CAAM - Cryptographic Acceleration and Assurance Module.
+On Thu, Aug 29, 2019 at 11:12 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Instead of the warning-[123] magic, let's accumulate compiler options
+> to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
+> easier to understand what is going on in this file.
+>
+> This commit slightly changes the behavior, I think all of which are OK.
+>
+> [1] Currently, cc-option calls are needlessly evaluated. For example,
+>       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+>     needs evaluating only when W=3, but it is actually evaluated for
+>     W=1, W=2 as well. With this commit, only relevant cc-option calls
+>     will be evaluated. This is a slight optimization.
+>
+> [2] Currently, unsupported level like W=4 is checked by:
+>       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+>     This will no longer be checked, but I do not think it is a big
+>     deal.
+>
+> [3] Currently, 4 Clang warnings (Winitializer-overrides, Wformat,
+>     Wsign-compare, Wformat-zero-length) are shown by any of W=1, W=2,
+>     and W=3. With this commit, they will be warned only by W=1. I
+>     think this is a more correct behavior since each warning belongs
+>     to only one group.
+>
+> For understanding this commit correctly:
+>
+> We have 3 warning groups, W=1, W=2, and W=3. You may think W=3 has a
+> higher level than W=1, but they are actually independent. If you like,
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
+What?! Ok now things make much more sense.  (This is a great addition
+to this patch).  Maybe this should additionally be a comment in the
+source code?
 
-Shawn:
+> you can combine them like W=13. To enable all the warnings, you can
+> pass W=123. This is shown by 'make help', but it is often missed
+> unfortunately. Since we support W= combination, there should not exist
+> intersection among the three groups. If we enable Winitializer-overrides
+> for W=1, we do not need to for W=2 or W=3. This is why I believe the
+> change [3] makes sense.
+>
+> The documentation says -Winitializer-overrides is enabled by default.
+> (https://clang.llvm.org/docs/DiagnosticsReference.html#winitializer-overrides)
+> We negate it by passing -Wno-initializer-overrides for the normal
+> build, but we do not do that for W=1. This means, W=1 effectively
+> enables -Winitializer-overrides by the clang's default. The same for
+> the other three. I wonder if this logic needs detailed commenting,
+> but I do not want to be bothered any more. I added comments.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Just a bit of a context: as per this thread
-https://lore.kernel.org/linux-crypto/20190830131547.GA27480@gondor.apana.org.au/
-I am hoping I can get and Ack from you for this patch, so it can go
-via cryptodev tree.
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Thanks,
-Andrey Smirnov
+> ---
+>
+> Changes in v2:
+>   - Added comments and more commit log
+>
+>  scripts/Makefile.extrawarn | 105 +++++++++++++++++++------------------
+>  1 file changed, 54 insertions(+), 51 deletions(-)
+>
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index a74ce2e3c33e..3680445823b7 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -1,14 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # ==========================================================================
+> -#
+>  # make W=... settings
+> -#
+> -# W=1 - warnings that may be relevant and does not occur too often
+> -# W=2 - warnings that occur quite often but may still be relevant
+> -# W=3 - the more obscure warnings, can most likely be ignored
+> -#
+> -# $(call cc-option, -W...) handles gcc -W.. options which
+> -# are not supported by all versions of the compiler
+>  # ==========================================================================
+>
+>  KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
+> @@ -17,58 +9,69 @@ ifeq ("$(origin W)", "command line")
+>    export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
+>  endif
+>
+> -ifdef KBUILD_ENABLE_EXTRA_GCC_CHECKS
+> -warning-  := $(empty)
+> +#
+> +# W=1 - warnings that may be relevant and does not occur too often
+> +#
+> +ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+>
+> -warning-1 := -Wextra -Wunused -Wno-unused-parameter
+> -warning-1 += -Wmissing-declarations
+> -warning-1 += -Wmissing-format-attribute
+> -warning-1 += -Wmissing-prototypes
+> -warning-1 += -Wold-style-definition
+> -warning-1 += -Wmissing-include-dirs
+> -warning-1 += $(call cc-option, -Wunused-but-set-variable)
+> -warning-1 += $(call cc-option, -Wunused-const-variable)
+> -warning-1 += $(call cc-option, -Wpacked-not-aligned)
+> -warning-1 += $(call cc-option, -Wstringop-truncation)
+> +KBUILD_CFLAGS += -Wextra -Wunused -Wno-unused-parameter
+> +KBUILD_CFLAGS += -Wmissing-declarations
+> +KBUILD_CFLAGS += -Wmissing-format-attribute
+> +KBUILD_CFLAGS += -Wmissing-prototypes
+> +KBUILD_CFLAGS += -Wold-style-definition
+> +KBUILD_CFLAGS += -Wmissing-include-dirs
+> +KBUILD_CFLAGS += $(call cc-option, -Wunused-but-set-variable)
+> +KBUILD_CFLAGS += $(call cc-option, -Wunused-const-variable)
+> +KBUILD_CFLAGS += $(call cc-option, -Wpacked-not-aligned)
+> +KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
+>  # The following turn off the warnings enabled by -Wextra
+> -warning-1 += -Wno-missing-field-initializers
+> -warning-1 += -Wno-sign-compare
+> -
+> -warning-2 += -Wcast-align
+> -warning-2 += -Wdisabled-optimization
+> -warning-2 += -Wnested-externs
+> -warning-2 += -Wshadow
+> -warning-2 += $(call cc-option, -Wlogical-op)
+> -warning-2 += -Wmissing-field-initializers
+> -warning-2 += -Wsign-compare
+> -warning-2 += $(call cc-option, -Wmaybe-uninitialized)
+> -warning-2 += $(call cc-option, -Wunused-macros)
+> -
+> -warning-3 := -Wbad-function-cast
+> -warning-3 += -Wcast-qual
+> -warning-3 += -Wconversion
+> -warning-3 += -Wpacked
+> -warning-3 += -Wpadded
+> -warning-3 += -Wpointer-arith
+> -warning-3 += -Wredundant-decls
+> -warning-3 += -Wswitch-default
+> -warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+> -
+> -warning := $(warning-$(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+> -warning += $(warning-$(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+> -warning += $(warning-$(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+> -
+> -ifeq ("$(strip $(warning))","")
+> -        $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+> -endif
+> +KBUILD_CFLAGS += -Wno-missing-field-initializers
+> +KBUILD_CFLAGS += -Wno-sign-compare
+>
+> -KBUILD_CFLAGS += $(warning)
+>  else
+>
+> +# Some diagnostics such as -Winitializer-overrides are enabled by default.
+> +# We suppress them by using -Wno... except for W=1.
+> +
+>  ifdef CONFIG_CC_IS_CLANG
+>  KBUILD_CFLAGS += -Wno-initializer-overrides
+>  KBUILD_CFLAGS += -Wno-format
+>  KBUILD_CFLAGS += -Wno-sign-compare
+>  KBUILD_CFLAGS += -Wno-format-zero-length
+>  endif
+> +
+> +endif
+> +
+> +#
+> +# W=2 - warnings that occur quite often but may still be relevant
+> +#
+> +ifneq ($(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+> +
+> +KBUILD_CFLAGS += -Wcast-align
+> +KBUILD_CFLAGS += -Wdisabled-optimization
+> +KBUILD_CFLAGS += -Wnested-externs
+> +KBUILD_CFLAGS += -Wshadow
+> +KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
+> +KBUILD_CFLAGS += -Wmissing-field-initializers
+> +KBUILD_CFLAGS += -Wsign-compare
+> +KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+> +KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
+> +
+> +endif
+> +
+> +#
+> +# W=3 - the more obscure warnings, can most likely be ignored
+> +#
+> +ifneq ($(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+> +
+> +KBUILD_CFLAGS += -Wbad-function-cast
+> +KBUILD_CFLAGS += -Wcast-qual
+> +KBUILD_CFLAGS += -Wconversion
+> +KBUILD_CFLAGS += -Wpacked
+> +KBUILD_CFLAGS += -Wpadded
+> +KBUILD_CFLAGS += -Wpointer-arith
+> +KBUILD_CFLAGS += -Wredundant-decls
+> +KBUILD_CFLAGS += -Wswitch-default
+> +KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
+> +
+>  endif
+> --
+> 2.17.1
+>
 
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808eff87..752d5a61878c 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -728,6 +728,36 @@
- 				status = "disabled";
- 			};
- 
-+			crypto: crypto@30900000 {
-+				compatible = "fsl,sec-v4.0";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x30900000 0x40000>;
-+				ranges = <0 0x30900000 0x40000>;
-+				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk IMX8MQ_CLK_AHB>,
-+					 <&clk IMX8MQ_CLK_IPG_ROOT>;
-+				clock-names = "aclk", "ipg";
-+
-+				sec_jr0: jr@1000 {
-+					compatible = "fsl,sec-v4.0-job-ring";
-+					reg = <0x1000 0x1000>;
-+					interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+
-+				sec_jr1: jr@2000 {
-+					compatible = "fsl,sec-v4.0-job-ring";
-+					reg = <0x2000 0x1000>;
-+					interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+
-+				sec_jr2: jr@3000 {
-+					compatible = "fsl,sec-v4.0-job-ring";
-+					reg = <0x3000 0x1000>;
-+					interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+
- 			i2c1: i2c@30a20000 {
- 				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
- 				reg = <0x30a20000 0x10000>;
 -- 
-2.21.0
-
+Thanks,
+~Nick Desaulniers
