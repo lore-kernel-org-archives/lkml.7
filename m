@@ -2,385 +2,142 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA28C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29D3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490F02186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D4421874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SbAoq1F7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="EkoszOmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfH3Eea (ORCPT
+        id S1728194AbfH3Eed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 00:34:30 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:61916 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfH3Ee3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 00:34:29 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x7U4YJNO016589;
-        Fri, 30 Aug 2019 13:34:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x7U4YJNO016589
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567139660;
-        bh=MPNM9M3x6FbK9aTZX0gHyVug6M/h/nMhrkDXWNUZS5U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SbAoq1F7/on3rNJBp1a9Hnetww4heSPj9pFNXzyN3drmxYAYgs8jmSLScFD9Dk3yh
-         mlbFP1aCxaEY7Q+kjvcU+lDqfonXQPsOMHfhPKL3UEgpibCzKj3EkBKLWRm9N28jo9
-         HCaoY/XvVXxIoVdfSv47AHUO5FIWS7kQk4p1uQibhrmsjGk4Jjay4BBjrnzQCXrHJd
-         tXj4w95iRihhv89lzkMxVHXcsBgGqo/GS6WcW9iS1ryCL7PR3M2As95gdWCMqYopsQ
-         pVjrPryybaqOSq5i01QGjydjVYGtBL6+buyZhupfk4K+igkQESwkLXPLT39w52iK1r
-         eVUpMZH4KpRfQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3] kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)
-Date:   Fri, 30 Aug 2019 13:34:01 +0900
-Message-Id: <20190830043401.18030-1-yamada.masahiro@socionext.com>
+        Fri, 30 Aug 2019 00:34:33 -0400
+Received: from mx1.ucr.edu ([138.23.248.2]:46228 "EHLO mx1.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfH3Eec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 00:34:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567139706; x=1598675706;
+  h=from:to:cc:subject:date:message-id;
+  bh=XPfJegQ++l69vVm04ifZLNdv62gocxHQ8bqgeCGaYj0=;
+  b=EkoszOmR/refO5SPAHZTn6cHSMiQj+1Z7CKq8J232swFnJTsdb/jEqTH
+   6qbOHXPYdQnmFMsCKu3loddPPx3OFpQ9ESqt5hKZBcrFrt7QRC4Sfav+m
+   I4iNzqh7qCX4Hrt93SATteVN7yXHEPMZhyrDoj+Ji/nBipUNHYjO99Rsj
+   qmM8hOLeX+sr5TyLUMJuzEL4lP8s67Eoh3MuTfqN8wqqP6NMKFUfl2DEI
+   UGS7/F4zh5W7mxGcoGQXT65FUO8OKXlaghwR3UCRriVy8ahNFQRMnq8Z2
+   fMJeL+tvlDCujL+L7CbHZd5OC1ioXH34xZLq11+TS0Z8jLru5hNA5agde
+   g==;
+IronPort-SDR: b4ouB7Ow4Gn5yfmqbt4f1g+53HOgJwg5KD4Hr/J0YjX5azJFPytyBRSeLePu+wg99iKxW2/w6b
+ jHd1pnXfCYi/WDSl1FWYStzX8E56ux3GP8m6ac3eJ6fAmRk1hvOIUxZ9uejNN+3glcKl38UwvB
+ kedngjXsYoN/yVWXLZXHAoBQ/a+qSPnn1uq5zBDWfDFbuRfrvsO3KqEsFEZKMfFW9R8464cwqX
+ 0QMx+vowv96oRB2G2N0QxL2oBfSllsPb5GcJYN9MF+oNFq0Fc5H3l93sk5nCF8H3oc7ygb3FG3
+ fU8=
+IronPort-PHdr: =?us-ascii?q?9a23=3AMofmWhZUDb9se7lPNsHc2JL/LSx+4OfEezUN45?=
+ =?us-ascii?q?9isYplN5qZoMW+bnLW6fgltlLVR4KTs6sC17OM9fm+AidQuN6oizMrSNR0TR?=
+ =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
+ =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vMhm6txjdu8gYjIdtKas91w?=
+ =?us-ascii?q?bCr2dVdehR2W5mP0+YkQzm5se38p5j8iBQtOwk+sVdT6j0fLk2QKJBAjg+PG?=
+ =?us-ascii?q?87+MPktR/YTQuS/XQcSXkZkgBJAwfe8h73WIr6vzbguep83CmaOtD2TawxVD?=
+ =?us-ascii?q?+/4apnVAPkhSEaPDMi7mrZltJ/g75aoBK5phxw3YjUYJ2ONPFjeq/RZM4WSX?=
+ =?us-ascii?q?ZdUspUUSFBB4K8b5AUD+oAO+ZYoJT2qUUXoxCjCwmsBf3gyjtViXTr2aE33f?=
+ =?us-ascii?q?gtHQTA0Qc9HdwBrW7Uoc31OqkMTO67wqrGwzLYYv9KxTvw8pTEfwo9rf2QW7?=
+ =?us-ascii?q?97bMrfyVMoFwPAllifq43lPjKV1uQQtGiQ8u1tVOKuim4nsQ5xoySjytsih4?=
+ =?us-ascii?q?TSm4Ia1krE+T9nz4koON21UUh2asOnHptIryyWKZd6T8c4T2xruCs20KMKtY?=
+ =?us-ascii?q?OncCQQ1ZgqwxzSZ+Saf4WJ5h/vTvidLDl4iX5/Zr6yhgy+/Eqvx+D6S8K6yk?=
+ =?us-ascii?q?xFrjBfndnJrn0N0hvT5dWZRfZl5Ueh3CqP1xjU6uFZPUA4jarbJIAlwr43jp?=
+ =?us-ascii?q?cTtF7MHi7ymEnvlK+WeFgo9vGm6+j6ZrjrpIWQN4BzigH5PaQuntKwDf4kPQ?=
+ =?us-ascii?q?gJWmiX4eW81Lv98k3lWLhGkOE6n63DvJ3ZJckXvLC1DxJJ3oo59hqyCzWr3M?=
+ =?us-ascii?q?wdnXYdLVJFfByHj5LuO1HLOP35Dfa+g1S2nzdq2/zKIrPsD47QLnffirftZ6?=
+ =?us-ascii?q?hy5FNByAYr19BQ+4pUCq0dIPL0QkLxsN3YDhkkMw272urnC8ty1pkYWW2RBq?=
+ =?us-ascii?q?+UK73SsVCW6eI1OeWMZ5EauCz7K/c74/7il3g5mUUSffrh84EQbSWJH+ZmPk?=
+ =?us-ascii?q?LRNWv+gt4AST9Rlhc1VqrnhEDUAm0bXGq7Q69pvmJzM4mhF4qWA9/1jQ=3D?=
+ =?us-ascii?q?=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EZAQCqgmddgMXSVdFlHgEGBwaBVgY?=
+ =?us-ascii?q?LAYNXTBCNHYZcAQEBBosfGHGFeYooAQgBAQEMAQEtAgEBhD+CWyM3Bg4CAwg?=
+ =?us-ascii?q?BAQUBAQEBAQYEAQECEAEBCQ0JCCeFQ4I6KYJgCxYVUoEVAQUBNSI5gkcBgXY?=
+ =?us-ascii?q?UnTyBAzyMIzOIaQEIDIFJCQEIgSKHHoRZgRCBB4ERgmRsh2OCRASBLgEBAZR?=
+ =?us-ascii?q?OlgUBBgIBggwUgXKSUyeEMIkZixMBpiQCCgcGDyGBRYF7TSWBbAqBRJEnHzO?=
+ =?us-ascii?q?BCI5VAQ?=
+X-IPAS-Result: =?us-ascii?q?A2EZAQCqgmddgMXSVdFlHgEGBwaBVgYLAYNXTBCNHYZcA?=
+ =?us-ascii?q?QEBBosfGHGFeYooAQgBAQEMAQEtAgEBhD+CWyM3Bg4CAwgBAQUBAQEBAQYEA?=
+ =?us-ascii?q?QECEAEBCQ0JCCeFQ4I6KYJgCxYVUoEVAQUBNSI5gkcBgXYUnTyBAzyMIzOIa?=
+ =?us-ascii?q?QEIDIFJCQEIgSKHHoRZgRCBB4ERgmRsh2OCRASBLgEBAZROlgUBBgIBggwUg?=
+ =?us-ascii?q?XKSUyeEMIkZixMBpiQCCgcGDyGBRYF7TSWBbAqBRJEnHzOBCI5VAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
+   d="scan'208";a="4951582"
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 21:35:06 -0700
+Received: by mail-pf1-f197.google.com with SMTP id i2so4339521pfe.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 21:34:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=07dOxqCdQxKDoU2+68GM0KeX5KWpD+AWua+kX8OJRIA=;
+        b=t7KcO6vpveacavTzju18yxR3Gu1XPumGtzEdn84qhdws7UIpK5Gwp4iewVfMaw70px
+         tm479x862y6ICk2bCjXg8GuXzcEytxXCzZc8tiL0zBtrlOuMwQ/YmYFi24FvD7+ShDg1
+         GvzBN/q0NRQtpqi6osOrV47AgRBehr2vviRSDeF00ASJz86OUDrGx/+oQAV5WLaRE8oc
+         pOajNDRmJkYInFUAvwJ0cS7oIKjqmzGo5moxN+K4UjX1tBZ1yYunj057EnBDMVIVA1A0
+         qYNL+fB4pyX9TldRLFyctBQW46hIIkyPOi0kJTEVSrPgHk3TVyOtLzdGVXnEAXMU9Fj5
+         3Mzw==
+X-Gm-Message-State: APjAAAUioyBYmhaCQkSU/NbCogJdZSqDr0Fs5WLFUaVjDzW6NGfAc0Ib
+        HkvEDioYXvyFzEkR5ean4HdW8I3QXeXAeUUCdxLGZL8wN+hDieMh8mweE6AIRtZCDyK2xh7xru+
+        e/li7iBf0aCiMQNRHHOPxz3YVgQ==
+X-Received: by 2002:a17:902:8204:: with SMTP id x4mr13607510pln.37.1567139670465;
+        Thu, 29 Aug 2019 21:34:30 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwyvmLToVZOecb3FxtZYyGbzvjpkmy+blWZgKh+cvqVJJgCWAhy1BthWVCA7K/ffjCHY7QWwA==
+X-Received: by 2002:a17:902:8204:: with SMTP id x4mr13607482pln.37.1567139670076;
+        Thu, 29 Aug 2019 21:34:30 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id 6sm5204331pfa.7.2019.08.29.21.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 21:34:29 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/powerplay: Variable ps could be NULL when it get dereferenced
+Date:   Thu, 29 Aug 2019 21:35:04 -0700
+Message-Id: <20190830043504.23760-1-yzhai003@ucr.edu>
 X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild provides per-file compiler flag addition/removal:
+Inside function cz_get_performance_level(), pointer ps could be NULL via
+cast_const_PhwCzPowerState(). However, this pointer is dereferenced
+without any check, which is potentially unsafe.
 
-  CFLAGS_<basetarget>.o
-  CFLAGS_REMOVE_<basetarget>.o
-  AFLAGS_<basetarget>.o
-  AFLAGS_REMOVE_<basetarget>.o
-  CPPFLAGS_<basetarget>.lds
-  HOSTCFLAGS_<basetarget>.o
-  HOSTCXXFLAGS_<basetarget>.o
-
-The <basetarget> is the filename of the target with its directory and
-suffix stripped.
-
-This syntax comes into a trouble when two files with the same basename
-appear in one Makefile, for example:
-
-  obj-y += foo.o
-  obj-y += dir/foo.o
-  CFLAGS_foo.o := <some-flags>
-
-Here, the <some-flags> applies to both foo.o and dir/foo.o
-
-The real world problem is:
-
-  scripts/kconfig/util.c
-  scripts/kconfig/lxdialog/util.c
-
-Both files are compiled into scripts/kconfig/mconf, but only the
-latter should be given with the ncurses flags.
-
-It is more sensible to use the relative path to the Makefile, like this:
-
-  obj-y += foo.o
-  CFLAGS_foo.o := <some-flags>
-  obj-y += dir/foo.o
-  CFLAGS_dir/foo.o := <other-flags>
-
-At first, I attempted to replace $(basetarget) with $*. The $* variable
-is replaced with the stem ('%') part in a pattern rule. This works with
-most of cases, but does not for explicit rules.
-
-For example, arch/ia64/lib/Makefile reuses rule_as_o_S in its own
-explicit rules, so $* will be empty, resulting in ignoring the per-file
-AFLAGS.
-
-I introduced a new variable, target-stem, which can be used also from
-explicit rules.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
 ---
+ drivers/gpu/drm/amd/powerplay/hwmgr/cz_hwmgr.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v3:
- - Fix breakage of ia64 lib
-
-Changes in v2:
- - Fix build errors for gpu drivers
-
- arch/arm/kvm/Makefile                         |  5 +++--
- arch/x86/entry/vdso/Makefile                  |  3 ++-
- drivers/gpu/drm/amd/display/dc/calcs/Makefile |  6 ++---
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile |  2 +-
- drivers/gpu/drm/amd/display/dc/dml/Makefile   | 17 ++++++--------
- drivers/gpu/drm/amd/display/dc/dsc/Makefile   |  7 +++---
- drivers/gpu/drm/i915/Makefile                 |  2 +-
- scripts/Makefile.host                         | 22 +++++++++----------
- scripts/Makefile.lib                          | 13 ++++++-----
- scripts/kconfig/Makefile                      |  8 +++----
- 10 files changed, 43 insertions(+), 42 deletions(-)
-
-diff --git a/arch/arm/kvm/Makefile b/arch/arm/kvm/Makefile
-index 531e59f5be9c..b76b75bd9e00 100644
---- a/arch/arm/kvm/Makefile
-+++ b/arch/arm/kvm/Makefile
-@@ -8,13 +8,14 @@ ifeq ($(plus_virt),+virt)
- 	plus_virt_def := -DREQUIRES_VIRT=1
- endif
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/cz_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/cz_hwmgr.c
+index bc839ff0bdd0..d2628e7b612d 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/cz_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/cz_hwmgr.c
+@@ -1799,6 +1799,9 @@ static int cz_get_performance_level(struct pp_hwmgr *hwmgr, const struct pp_hw_p
+ 	data = (struct cz_hwmgr *)(hwmgr->backend);
+ 	ps = cast_const_PhwCzPowerState(state);
  
-+KVM := ../../../virt/kvm
++	if (!ps)
++		return -EINVAL;
 +
- ccflags-y += -I $(srctree)/$(src) -I $(srctree)/virt/kvm/arm/vgic
--CFLAGS_arm.o := $(plus_virt_def)
-+CFLAGS_$(KVM)/arm/arm.o := $(plus_virt_def)
+ 	level_index = index > ps->level - 1 ? ps->level - 1 : index;
+ 	level->coreClock = ps->levels[level_index].engineClock;
  
- AFLAGS_init.o := -Wa,-march=armv7-a$(plus_virt)
- AFLAGS_interrupts.o := -Wa,-march=armv7-a$(plus_virt)
- 
--KVM := ../../../virt/kvm
- kvm-arm-y = $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o $(KVM)/eventfd.o $(KVM)/vfio.o
- 
- obj-$(CONFIG_KVM_ARM_HOST) += hyp/
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 8df549138193..0f2154106d01 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -89,6 +89,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS
- #
- CFLAGS_REMOVE_vdso-note.o = -pg
- CFLAGS_REMOVE_vclock_gettime.o = -pg
-+CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
- CFLAGS_REMOVE_vgetcpu.o = -pg
- CFLAGS_REMOVE_vvar.o = -pg
- 
-@@ -128,7 +129,7 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
- $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
- 	$(call if_changed,vdso_and_check)
- 
--CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
-+CPPFLAGS_vdso32/vdso32.lds = $(CPPFLAGS_vdso.lds)
- VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
- 
- targets += vdso32/vdso32.lds
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/Makefile b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-index 95f332ee3e7e..d930df63772c 100644
---- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-@@ -32,9 +32,9 @@ endif
- 
- calcs_ccflags := -mhard-float -msse $(cc_stack_align)
- 
--CFLAGS_dcn_calcs.o := $(calcs_ccflags)
--CFLAGS_dcn_calc_auto.o := $(calcs_ccflags)
--CFLAGS_dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
-+CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calcs.o := $(calcs_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_auto.o := $(calcs_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
- 
- BW_CALCS = dce_calcs.o bw_fixed.o custom_float.o
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-index e9721a906592..83635ad9124e 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-@@ -16,7 +16,7 @@ else ifneq ($(call cc-option, -mstack-alignment=16),)
- 	cc_stack_align := -mstack-alignment=16
- endif
- 
--CFLAGS_dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
-+CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
- 
- AMD_DAL_DCN20 = $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index 0bb7a20675c4..83792e2c0f0e 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -32,19 +32,16 @@ endif
- 
- dml_ccflags := -mhard-float -msse $(cc_stack_align)
- 
--CFLAGS_display_mode_lib.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o := $(dml_ccflags)
- 
- ifdef CONFIG_DRM_AMD_DC_DCN2_0
--CFLAGS_display_mode_vba.o := $(dml_ccflags)
--CFLAGS_display_mode_vba_20.o := $(dml_ccflags)
--CFLAGS_display_rq_dlg_calc_20.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
- endif
--ifdef CONFIG_DRM_AMD_DCN3AG
--CFLAGS_display_mode_vba_3ag.o := $(dml_ccflags)
--endif
--CFLAGS_dml1_display_rq_dlg_calc.o := $(dml_ccflags)
--CFLAGS_display_rq_dlg_helpers.o := $(dml_ccflags)
--CFLAGS_dml_common_defs.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o := $(dml_ccflags)
- 
- DML = display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_calc.o \
- 	dml_common_defs.o
-diff --git a/drivers/gpu/drm/amd/display/dc/dsc/Makefile b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-index e019cd9447e8..c3922d6e7696 100644
---- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-@@ -9,10 +9,9 @@ endif
- 
- dsc_ccflags := -mhard-float -msse $(cc_stack_align)
- 
--CFLAGS_rc_calc.o := $(dsc_ccflags)
--CFLAGS_rc_calc_dpi.o := $(dsc_ccflags)
--CFLAGS_codec_main_amd.o := $(dsc_ccflags)
--CFLAGS_dc_dsc.o := $(dsc_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc.o := $(dsc_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc_dpi.o := $(dsc_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dsc/dc_dsc.o := $(dsc_ccflags)
- 
- DSC = dc_dsc.o rc_calc.o rc_calc_dpi.o
- 
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index 8cace65f50ce..69c75484cc26 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -26,7 +26,7 @@ subdir-ccflags-$(CONFIG_DRM_I915_WERROR) += -Werror
- 
- # Fine grained warnings disable
- CFLAGS_i915_pci.o = $(call cc-disable-warning, override-init)
--CFLAGS_intel_fbdev.o = $(call cc-disable-warning, override-init)
-+CFLAGS_display/intel_fbdev.o = $(call cc-disable-warning, override-init)
- 
- subdir-ccflags-y += \
- 	$(call as-instr,movntdqa (%eax)$(comma)%xmm0,-DCONFIG_AS_MOVNTDQA)
-diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-index b402c619147d..4c51c95d40f4 100644
---- a/scripts/Makefile.host
-+++ b/scripts/Makefile.host
-@@ -80,9 +80,9 @@ host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
- # Handle options to gcc. Support building with separate output directory
- 
- _hostc_flags   = $(KBUILD_HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
--                 $(HOSTCFLAGS_$(basetarget).o)
-+                 $(HOSTCFLAGS_$(target-stem).o)
- _hostcxx_flags = $(KBUILD_HOSTCXXFLAGS) $(HOST_EXTRACXXFLAGS) \
--                 $(HOSTCXXFLAGS_$(basetarget).o)
-+                 $(HOSTCXXFLAGS_$(target-stem).o)
- 
- # $(objtree)/$(obj) for including generated headers from checkin source files
- ifeq ($(KBUILD_EXTMOD),)
-@@ -102,7 +102,7 @@ hostcxx_flags  = -Wp,-MD,$(depfile) $(_hostcxx_flags)
- # host-csingle -> Executable
- quiet_cmd_host-csingle 	= HOSTCC  $@
-       cmd_host-csingle	= $(HOSTCC) $(hostc_flags) $(KBUILD_HOSTLDFLAGS) -o $@ $< \
--		$(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
-+		$(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem))
- $(host-csingle): $(obj)/%: $(src)/%.c FORCE
- 	$(call if_changed_dep,host-csingle)
- 
-@@ -110,8 +110,8 @@ $(host-csingle): $(obj)/%: $(src)/%.c FORCE
- # host-cmulti -> executable
- quiet_cmd_host-cmulti	= HOSTLD  $@
-       cmd_host-cmulti	= $(HOSTCC) $(KBUILD_HOSTLDFLAGS) -o $@ \
--			  $(addprefix $(obj)/,$($(@F)-objs)) \
--			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
-+			  $(addprefix $(obj)/, $($(target-stem)-objs)) \
-+			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem))
- $(host-cmulti): FORCE
- 	$(call if_changed,host-cmulti)
- $(call multi_depend, $(host-cmulti), , -objs)
-@@ -128,8 +128,8 @@ $(host-cobjs): $(obj)/%.o: $(src)/%.c FORCE
- quiet_cmd_host-cxxmulti	= HOSTLD  $@
-       cmd_host-cxxmulti	= $(HOSTCXX) $(KBUILD_HOSTLDFLAGS) -o $@ \
- 			  $(foreach o,objs cxxobjs,\
--			  $(addprefix $(obj)/,$($(@F)-$(o)))) \
--			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
-+			  $(addprefix $(obj)/, $($(target-stem)-$(o)))) \
-+			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem))
- $(host-cxxmulti): FORCE
- 	$(call if_changed,host-cxxmulti)
- $(call multi_depend, $(host-cxxmulti), , -objs -cxxobjs)
-@@ -161,8 +161,8 @@ $(host-cxxshobjs): $(obj)/%.o: $(src)/%.c FORCE
- # *.o -> .so shared library (host-cshlib)
- quiet_cmd_host-cshlib	= HOSTLLD -shared $@
-       cmd_host-cshlib	= $(HOSTCC) $(KBUILD_HOSTLDFLAGS) -shared -o $@ \
--			  $(addprefix $(obj)/,$($(@F:.so=-objs))) \
--			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
-+			  $(addprefix $(obj)/, $($(target-stem)-objs)) \
-+			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem).so)
- $(host-cshlib): FORCE
- 	$(call if_changed,host-cshlib)
- $(call multi_depend, $(host-cshlib), .so, -objs)
-@@ -171,8 +171,8 @@ $(call multi_depend, $(host-cshlib), .so, -objs)
- # *.o -> .so shared library (host-cxxshlib)
- quiet_cmd_host-cxxshlib	= HOSTLLD -shared $@
-       cmd_host-cxxshlib	= $(HOSTCXX) $(KBUILD_HOSTLDFLAGS) -shared -o $@ \
--			  $(addprefix $(obj)/,$($(@F:.so=-objs))) \
--			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
-+			  $(addprefix $(obj)/, $($(target-stem)-objs)) \
-+			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem).so)
- $(host-cxxshlib): FORCE
- 	$(call if_changed,host-cxxshlib)
- $(call multi_depend, $(host-cxxshlib), .so, -objs)
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 264611972c4a..2d1d806f4f22 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -101,6 +101,9 @@ modname-multi = $(subst $(space),:,$(sort $(foreach m,$(multi-used),\
- 
- modname = $(if $(modname-multi),$(modname-multi),$(basetarget))
- 
-+# target with $(obj)/ and its suffix stripped
-+target-stem = $(basename $(patsubst $(obj)/%,%,$@))
-+
- # These flags are needed for modversions and compiling, so we define them here
- # $(modname_flags) defines KBUILD_MODNAME as the name of the module it will
- # end up in (or would, if it gets compiled in)
-@@ -109,12 +112,12 @@ basename_flags = -DKBUILD_BASENAME=$(call name-fix,$(basetarget))
- modname_flags  = -DKBUILD_MODNAME=$(call name-fix,$(modname))
- 
- orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) \
--                 $(ccflags-y) $(CFLAGS_$(basetarget).o)
--_c_flags       = $(filter-out $(CFLAGS_REMOVE_$(basetarget).o), $(orig_c_flags))
-+                 $(ccflags-y) $(CFLAGS_$(target-stem).o)
-+_c_flags       = $(filter-out $(CFLAGS_REMOVE_$(target-stem).o), $(orig_c_flags))
- orig_a_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_AFLAGS) \
--                 $(asflags-y) $(AFLAGS_$(basetarget).o)
--_a_flags       = $(filter-out $(AFLAGS_REMOVE_$(basetarget).o), $(orig_a_flags))
--_cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(@F))
-+                 $(asflags-y) $(AFLAGS_$(target-stem).o)
-+_a_flags       = $(filter-out $(AFLAGS_REMOVE_$(target-stem).o), $(orig_a_flags))
-+_cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(target-stem).lds)
- 
- #
- # Enable gcov profiling flags for a file, directory or for all files depending
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index bed7a5a2fbe9..ef2f2336c469 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -166,15 +166,15 @@ $(obj)/nconf.o $(obj)/nconf.gui.o: $(obj)/nconf-cfg
- 
- # mconf: Used for the menuconfig target based on lxdialog
- hostprogs-y	+= mconf
--lxdialog	:= checklist.o inputbox.o menubox.o textbox.o util.o yesno.o
--mconf-objs	:= mconf.o $(addprefix lxdialog/, $(lxdialog)) $(common-objs)
-+lxdialog	:= $(addprefix lxdialog/, \
-+		     checklist.o inputbox.o menubox.o textbox.o util.o yesno.o)
-+mconf-objs	:= mconf.o $(lxdialog) $(common-objs)
- 
- HOSTLDLIBS_mconf = $(shell . $(obj)/mconf-cfg && echo $$libs)
- $(foreach f, mconf.o $(lxdialog), \
-   $(eval HOSTCFLAGS_$f = $$(shell . $(obj)/mconf-cfg && echo $$$$cflags)))
- 
--$(obj)/mconf.o: $(obj)/mconf-cfg
--$(addprefix $(obj)/lxdialog/, $(lxdialog)): $(obj)/mconf-cfg
-+$(addprefix $(obj)/, mconf.o $(lxdialog)): $(obj)/mconf-cfg
- 
- # qconf: Used for the xconfig target based on Qt
- hostprogs-y	+= qconf
 -- 
 2.17.1
 
