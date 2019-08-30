@@ -2,73 +2,72 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F4FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6D9C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF472343D
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5CC23431
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="boJouUw7"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mJNxoFoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfH3XPw (ORCPT
+        id S1728309AbfH3XSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 19:15:52 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44846 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbfH3XPk (ORCPT
+        Fri, 30 Aug 2019 19:18:36 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38995 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbfH3XSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 19:15:40 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a21so9695880edt.11
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:15:39 -0700 (PDT)
+        Fri, 30 Aug 2019 19:18:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so4251822pgi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6P0N9+OtzBQ/+pWxgapquiOAPv3FZmW3I9CzZ8KtwA0=;
-        b=boJouUw78n75bFxQRuRR8zbkuteRj6NjF5ukCY3vk1vAP3W5UUvRAzwPJ7M4qRF0b1
-         VhaNF6RFkQm01KXbbHye45S5UxAtRndhVKlvQI6um+I2GuQ4yAYDuGEytSKxDbBA9bPf
-         r8Ack5+2qynx6L1DM68lp3PCdFRZ7Nv04qnQA=
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRkLiK2zQKW37sHjUWJi7ClUsfSJsVnDy5LzPyDzYvE=;
+        b=mJNxoFoPw68Pczu3Q5Tl9Hubb1oPwPMN4HNOUR5BMqcq1lrDlYBVP6S84iC0HCLgRk
+         bxc9EPapppZF4nytHiwbl/a1svpheNULWsFifiCEEtJxbx/2Nd5ec0nyECglpbsmGi7n
+         tU+hvwsEYwTZP9DetuJiTg4UUwmi2g/IyPVjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6P0N9+OtzBQ/+pWxgapquiOAPv3FZmW3I9CzZ8KtwA0=;
-        b=c+Yr4lXks06oRozEv89kMql98kL3Jonj5M6xssaOsNlYOiaSq13CP/xXZr8sEaT9h5
-         Q7G4mVyL7ovhPRxKqo2lmrhD54xbnAgb8tZK4c//OZ+TmevPA/hXFLPpNZdZTnxIF+5w
-         A2Hf6YOI6lmdcTQ2PcbMhZcgLVSWrpxFDbRPY3S7IVI1K3hBtsWz+ta4VczDc7HcB3RU
-         DJ2z9q+7e7YCyOClOPcta80bhj/L6DwIAFpudaniF9U3hZTdFtU+AOh7YhnkNOcnprK7
-         qZCQg8UT2oDJlEhRfHhCB3hVUdfYAHlBFtbc1KULDWfqwpph3VVoixOII2eF7ZWii7Au
-         ht3Q==
-X-Gm-Message-State: APjAAAX6WGM+L9DVtLAyuPUGs5hWOXoevFbNd6EdpQwAtlPofQqU5Slu
-        0k/5CMJHWmwUZMsfML+dP5bPbg==
-X-Google-Smtp-Source: APXvYqxDn9oW7XVGPRMon5L9MXdlUpj2LtGtNsSOwcfNtJ1/yjaDHjJNDf6/aG6ezAwBa1tFvn/hlg==
-X-Received: by 2002:a50:ba81:: with SMTP id x1mr17958640ede.257.1567206938426;
-        Fri, 30 Aug 2019 16:15:38 -0700 (PDT)
-Received: from prevas-ravi.prevas.se (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id s4sm875457ejx.33.2019.08.30.16.15.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRkLiK2zQKW37sHjUWJi7ClUsfSJsVnDy5LzPyDzYvE=;
+        b=W1mHCFvT6/ceN8g5V/E8xyBXxJqoPMIy5Iv2sv+0rRJ5MWYjrC/bxRwoYPe8ooXR1I
+         7Jd5/z6ltVlrJgyreNhwoHo+O8g+8ADKtTXwXU4iBMvc3TWZkySu0/SThSP+31ynN9BA
+         nt0KVZCI2UnWC13yMm+W5APJ7hkFe396iaRT2JVJd/SOL1A9MD9OVT9hkELqbLdyVf27
+         nzTKPmu+RCQdhIXOcQIQMN82NcigXad/psWb/tspydENPoMkxp/WRhIZVHi7+bowXtBU
+         ZEXxzVgFhhDPhPqQ/yrhyWh1+buTR6S36q/qhH6kApE5R35biwiw6Dk2VZjSqfxd/hcc
+         VJhQ==
+X-Gm-Message-State: APjAAAXFhTnOKzphQsFJYRrWKw3cHIl2TLaSCNc4pBIyDdhgTy4JoPq5
+        mLzf3MCE3qWZ0cINZBSOlCwU37FTA2o=
+X-Google-Smtp-Source: APXvYqwWcIpjQmKfZ2KNw+QhAexpYhPxvb+SAlTByxWo8nuTzYepBvzn5LLXes3DPdl/v5VIIOmnfg==
+X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr1009296pjr.45.1567207114673;
+        Fri, 30 Aug 2019 16:18:34 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id t23sm8479395pfl.154.2019.08.30.16.18.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 16:15:37 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        ndesaulniers@google.com,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v2 5/6] x86: alternative.h: use asm_inline for all alternative variants
-Date:   Sat, 31 Aug 2019 01:15:26 +0200
-Message-Id: <20190830231527.22304-6-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk>
+        Fri, 30 Aug 2019 16:18:33 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 1/2] pci: Convert to use built-in RCU list checking
+Date:   Fri, 30 Aug 2019 19:18:16 -0400
+Message-Id: <20190830231817.76862-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,78 +75,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most, if not all, uses of the alternative* family just provide one or
-two instructions in .text, but the string literal can be quite large,
-causing gcc to overestimate the size of the generated code. That in
-turn affects its decisions about inlining of the function containing
-the alternative() asm statement.
+CONFIG_PROVE_RCU_LIST requires list_for_each_entry_rcu() to pass a
+lockdep expression if using srcu or locking for protection. It can only
+check regular RCU protection, all other protection needs to be passed as
+lockdep expression.
 
-gcc >= 9.1 allows one to overrule the estimated size by using "asm
-inline" instead of just "asm". So replace asm by the helper
-asm_inline, which for older gccs just expands to asm.
-
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- arch/x86/include/asm/alternative.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pci/controller/vmd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 094fbc9c0b1c..13adca37c99a 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -201,10 +201,10 @@ static inline int alternatives_text_reserved(void *start, void *end)
-  * without volatile and memory clobber.
-  */
- #define alternative(oldinstr, newinstr, feature)			\
--	asm volatile (ALTERNATIVE(oldinstr, newinstr, feature) : : : "memory")
-+	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature) : : : "memory")
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 4575e0c6dc4b..127631d0c6da 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -718,7 +718,8 @@ static irqreturn_t vmd_irq(int irq, void *data)
+ 	int idx;
  
- #define alternative_2(oldinstr, newinstr1, feature1, newinstr2, feature2) \
--	asm volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1, newinstr2, feature2) ::: "memory")
-+	asm_inline volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1, newinstr2, feature2) ::: "memory")
+ 	idx = srcu_read_lock(&irqs->srcu);
+-	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node)
++	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
++				srcu_read_lock_held(&irqs->srcu))
+ 		generic_handle_irq(vmdirq->virq);
+ 	srcu_read_unlock(&irqs->srcu, idx);
  
- /*
-  * Alternative inline assembly with input.
-@@ -218,7 +218,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
-  * Leaving an unused argument 0 to keep API compatibility.
-  */
- #define alternative_input(oldinstr, newinstr, feature, input...)	\
--	asm volatile (ALTERNATIVE(oldinstr, newinstr, feature)		\
-+	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)	\
- 		: : "i" (0), ## input)
- 
- /*
-@@ -231,18 +231,18 @@ static inline int alternatives_text_reserved(void *start, void *end)
-  */
- #define alternative_input_2(oldinstr, newinstr1, feature1, newinstr2,	     \
- 			   feature2, input...)				     \
--	asm volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1,	     \
-+	asm_inline volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1,     \
- 		newinstr2, feature2)					     \
- 		: : "i" (0), ## input)
- 
- /* Like alternative_input, but with a single output argument */
- #define alternative_io(oldinstr, newinstr, feature, output, input...)	\
--	asm volatile (ALTERNATIVE(oldinstr, newinstr, feature)		\
-+	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)	\
- 		: output : "i" (0), ## input)
- 
- /* Like alternative_io, but for replacing a direct call with another one. */
- #define alternative_call(oldfunc, newfunc, feature, output, input...)	\
--	asm volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
-+	asm_inline volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
- 		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
- 
- /*
-@@ -253,7 +253,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
-  */
- #define alternative_call_2(oldfunc, newfunc1, feature1, newfunc2, feature2,   \
- 			   output, input...)				      \
--	asm volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
-+	asm_inline volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
- 		"call %P[new2]", feature2)				      \
- 		: output, ASM_CALL_CONSTRAINT				      \
- 		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		      \
 -- 
-2.20.1
+2.23.0.187.g17f5b7556c-goog
 
