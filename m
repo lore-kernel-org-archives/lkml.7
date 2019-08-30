@@ -2,115 +2,94 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72414C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E333BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD1A23405
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E4F23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxMt6aFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfH3PNh convert rfc822-to-8bit (ORCPT
+        id S1728246AbfH3POA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:13:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43354 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbfH3PNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:13:36 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 95434308FEC1;
-        Fri, 30 Aug 2019 15:13:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 47D8E60BE1;
-        Fri, 30 Aug 2019 15:13:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <85B7196E-D717-4F19-A7E8-82A18287A3DE@linux.vnet.ibm.com>
-References: <85B7196E-D717-4F19-A7E8-82A18287A3DE@linux.vnet.ibm.com>
-To:     Sachin Sant <sachinp@linux.vnet.ibm.com>
-Cc:     dhowells@redhat.com, Hillf Danton <hdanton@sina.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        keyrings@vger.kernel.org
-Subject: Re: Oops (request_key_auth_describe) while running cve-2016-7042 from LTP
+        Fri, 30 Aug 2019 11:14:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50633 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfH3POA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:14:00 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so7752279wml.0;
+        Fri, 30 Aug 2019 08:13:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=E7PGOYI8rGQ02S2EYAIX+ke+QGmp3N+PyvHdu2tcGW0=;
+        b=lxMt6aFZ+Lw+pV8L6Tw7ARsCnDOr7PbB+glpwcRzc2q1qIkDzbb5p1tnLGdRvaI1w1
+         aOSmZTZXJ1QpsRr+enlJX9lbTKL3sbQN0g5LbNoFRf1FFBBfB9bE7dW0YZnR7Gl9yKUY
+         HdfQNqzg02yXGQrZokOpEu7w/TEXTQhScgHNmyzs0x4zPNZXQ4e0fxOewhWtVYvFVrGP
+         6/SGvWgB0K0UrUmM/nFta7tFJafJ7N9TbYUO+/XYCt8ytYd6XgmD80Iyog6rapTorQTB
+         /bwb2YdlNd2T/ZLhdBjT55rbJkhpv4HKPjy5rxkWaDPgRp8N0u6G9pGm9YkLUjK7jxm/
+         LjoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=E7PGOYI8rGQ02S2EYAIX+ke+QGmp3N+PyvHdu2tcGW0=;
+        b=j+CHHRfw08TFqA+55/ib1sTpZ1cHtYzr0nJDLB00IFCvrwKRg5LDnKC09xTvoZvayj
+         pfuEQGq0Uyaf+LjmpZLRYqcK42eQcYKlbA+qD3V6BjwgTH+zRthHDf8oM7v4LPdsA2tM
+         h+Wp0nDiIr6YPmj9fDJr+3Ft6X40P3HZz4zRDt6xjvEgDYeeTA0H0EWUtVbq9q87GXTj
+         JtI9vH5c1it4VDvZPTgh/D8yXlyDQhNxnzHg2d3igxPPlnzYT9NyOP+0PHSwNBWKPfQB
+         Q0BxpOk96wBBLtpTyphra9d3rDrY+8MMsWmsA0JWzvbVnUFpA3foWrUqWOZ0kinEb2fM
+         pw5g==
+X-Gm-Message-State: APjAAAVrnQ1VScFXHU02IwqZUEAfWcy/U57rkqs0e2IBEwmEdvUp53M6
+        jId+02fIwbLjQokYDM3shIQ=
+X-Google-Smtp-Source: APXvYqxJyn0XZ/qM3MACfd810XJfxy3SvRZFOee7lYS28kbnXkUKguPS5L3ollXyo3A/ieoIGlEo7A==
+X-Received: by 2002:a1c:9950:: with SMTP id b77mr19687725wme.46.1567178038153;
+        Fri, 30 Aug 2019 08:13:58 -0700 (PDT)
+Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id q15sm5162920wrv.1.2019.08.30.08.13.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 08:13:57 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 17:13:56 +0200
+From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
+Subject: Re: [PATCH] leds: Move static keyword to the front of declarations
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1567178036.21498.0@gmail.com>
+In-Reply-To: <bdf6bc22-bc82-68ac-d3f2-4f3954d9e9e0@ti.com>
+References: <20190830090958.27108-1-kw@linux.com>
+        <bdf6bc22-bc82-68ac-d3f2-4f3954d9e9e0@ti.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <11985.1567178014.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 30 Aug 2019 16:13:34 +0100
-Message-ID: <11986.1567178014@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 30 Aug 2019 15:13:36 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can you try this patch instead of Hillf's?
+Hello Dan,
 
-David
----
-commit df882ad6d4e24a3763719c1798ea58e87d56c2d7
-Author: Hillf Danton <hdanton@sina.com>
-Date:   Fri Aug 30 15:54:33 2019 +0100
+Thank you for feedback.
+[...]
+> This file is missing in the subject.
+> 
+> Maybe break it out into a separate patch since they do not have 
+> dependencies on each other.
 
-    keys: Fix missing null pointer check in request_key_auth_describe()
-    
-    If a request_key authentication token key gets revoked, there's a window in
-    which request_key_auth_describe() can see it with a NULL payload - but it
-    makes no check for this and something like the following oops may occur:
-    
-            BUG: Kernel NULL pointer dereference at 0x00000038
-            Faulting instruction address: 0xc0000000004ddf30
-            Oops: Kernel access of bad area, sig: 11 [#1]
-            ...
-            NIP [...] request_key_auth_describe+0x90/0xd0
-            LR [...] request_key_auth_describe+0x54/0xd0
-            Call Trace:
-            [...] request_key_auth_describe+0x54/0xd0 (unreliable)
-            [...] proc_keys_show+0x308/0x4c0
-            [...] seq_read+0x3d0/0x540
-            [...] proc_reg_read+0x90/0x110
-            [...] __vfs_read+0x3c/0x70
-            [...] vfs_read+0xb4/0x1b0
-            [...] ksys_read+0x7c/0x130
-            [...] system_call+0x5c/0x70
-    
-    Fix this by checking for a NULL pointer when describing such a key.
-    
-    Also make the read routine check for a NULL pointer to be on the safe side.
-    
-    Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-    Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-    Signed-off-by: David Howells <dhowells@redhat.com>
+Will do.  Sorry about that.  I initially had these
+as separate patches, but after looking at who the
+maintainer is and thought that it perhaps makes
+sense to send as a single patch.  Good point.
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index e73ec040e250..ecba39c93fd9 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -66,6 +66,9 @@ static void request_key_auth_describe(const struct key *key,
- {
- 	struct request_key_auth *rka = dereference_key_rcu(key);
- 
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -83,6 +86,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
- 
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
- 
+Krzysztof
+
+
