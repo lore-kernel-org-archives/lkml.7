@@ -2,99 +2,100 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94336C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFFDC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7016622CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDD221721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfH3LvX (ORCPT
+        id S1727780AbfH3LzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 07:51:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34428 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726969AbfH3LvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 07:51:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E999AFF2;
-        Fri, 30 Aug 2019 11:51:21 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 690C2DA809; Fri, 30 Aug 2019 13:51:42 +0200 (CEST)
-Date:   Fri, 30 Aug 2019 13:51:42 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190830115142.GM2752@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Chao Yu <yuchao0@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-References: <20190829062340.GB3047@infradead.org>
- <20190829063955.GA30193@kroah.com>
- <20190829094136.GA28643@infradead.org>
- <20190829095019.GA13557@kroah.com>
- <20190829103749.GA13661@infradead.org>
- <20190829111810.GA23393@kroah.com>
- <20190829151144.GJ23584@kadam>
- <20190829152757.GA125003@architecture4>
- <20190829154346.GK23584@kadam>
- <cd38b645-2930-3e02-6c6a-5972ea02b537@huawei.com>
+        Fri, 30 Aug 2019 07:55:11 -0400
+Received: from mga18.intel.com ([134.134.136.126]:42612 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727410AbfH3LzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 07:55:10 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 04:55:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="181186330"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Aug 2019 04:55:07 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i3fUf-00077m-Jj; Fri, 30 Aug 2019 14:55:05 +0300
+Date:   Fri, 30 Aug 2019 14:55:05 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Peter Cai <peter@typeblog.net>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2
+ Max
+Message-ID: <20190830115505.GX2680@smile.fi.intel.com>
+References: <20190830000024.20384-1-peter@typeblog.net>
+ <20190830000024.20384-2-peter@typeblog.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd38b645-2930-3e02-6c6a-5972ea02b537@huawei.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20190830000024.20384-2-peter@typeblog.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:06:25AM +0800, Chao Yu wrote:
-> On 2019/8/29 23:43, Dan Carpenter wrote:
-> >> p.s. There are 2947 (un)likely places in fs/ directory.
-> > 
-> > I was complaining about you adding new pointless ones, not existing
-> > ones.  The likely/unlikely annotations are supposed to be functional and
-> > not decorative.  I explained this very clearly.
-> > 
-> > Probably most of the annotations in fs/ are wrong but they are also
-> > harmless except for the slight messiness.  However there are definitely
-> > some which are important so removing them all isn't a good idea.
+On Fri, Aug 30, 2019 at 08:00:24AM +0800, Peter Cai wrote:
+> The firmware of GPD P2 Max could not handle panel resets although code
+> is present in DSDT. The kernel needs to take on this job instead, but
+> the DSDT does not provide _DSD, rendering kernel helpless when trying to
+> find the respective GPIO pins.
 > 
-> Hi Dan,
+> Fortunately, this time GPD has proper DMI vendor / product strings that
+> we could match against. We simply apply an acpi_gpio_mapping table when
+> GPD P2 Max is matched.
 > 
-> Could you please pick up one positive example using likely and unlikely
-> correctly? so we can follow the example, rather than removing them all blindly.
+> Additionally, the DSDT definition of the irq pin specifies a wrong
+> polarity. The new quirk introduced in the previous patch
+> (ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this.
 
-Remove all of them and re-add with explanation if and how each is going
-to make things better. If you can't reason about, prove by benchmarks or
-point to inefficient asm code generated, then don't add them again.
+> +#ifdef CONFIG_ACPI
 
-The feedback I got from CPU and compiler people over the years is not to
-bother using the annotations. CPUs are doing dynamic branch prediction
-and compilers are applying tons of optimizations.
+I guess most of these #ifdef:s makes code less readable for exchange of saving
+few bytes in the module footprint.
 
-GCC docs state about the builtin: "In general, you should prefer to use
-actual profile feedback for this (-fprofile-arcs), as programmers are
-notoriously bad at predicting how their programs actually perform."
-(https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html)
+> +	{ "irq-gpios", &irq_gpios_default, 1,
+> +		ACPI_GPIO_QUIRK_OVERRIDE_POLARITY },
+
+One line?
+
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "P2 MAX")
+
+Comma at the end?
+
+> +		},
+> +		.driver_data = &gpio_mapping_force_irq_active_high
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
