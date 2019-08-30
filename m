@@ -2,158 +2,138 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDA7C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C899C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12AB2397E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CB7239C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jTGtFZaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfH3IeX (ORCPT
+        id S1727814AbfH3Iew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:34:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:55984 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 04:34:52 -0400
+Received: from ozlabs.org ([203.11.71.1]:60069 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfH3IeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:34:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D533A344;
-        Fri, 30 Aug 2019 01:34:21 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C5243F718;
-        Fri, 30 Aug 2019 01:34:20 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 09:34:18 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-Message-ID: <20190830083415.GI27757@arm.com>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
- <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
- <201908292224.007EB4D5@keescook>
+        id S1727043AbfH3Iew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:34:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KXpb5KJPz9sML;
+        Fri, 30 Aug 2019 18:34:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567154089;
+        bh=9OJ8AufYKE/UYQvEH07V3RR2Rg0rrMtuziIYoRJkZRY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jTGtFZaae6vOUJlJTlW3fE0MeJlXfebAsIB3NRVa5uclMZX5B5Pzkd23/Wg7EjAQ2
+         A810/uiJUAJNJPYn+MxdLU4gun4B5NMcnND3vNPx3YzRT3GTcqAmZWWX+S+sOGOqqD
+         kHUDPkJcyK8VVt2uG2XCLXffE88IhQknEqB+ZxJnTKbwRdbztwkoyN0pocHXnqRLQI
+         EFhLTutebx+UlngX1FGnCUCBSeM7Ib1sKjHsCJF8hcGHPItiEVhC+jNOTY1fmJudJz
+         VggozfMorXdIoWq1PrL/sELIuvix5aj6JVw6EEA/IBa7jq4yrtVW2vI47HoLx9j1MX
+         mKXBku1GyIuUw==
+Date:   Fri, 30 Aug 2019 18:34:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Poirier <bpoirier@suse.com>,
+        Valdis =?UTF-8?B?S2zEk3RuaWVrcw==?= <valdis.kletnieks@vt.edu>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: linux-next: manual merge of the staging tree with the net-next and
+ usb trees
+Message-ID: <20190830183445.7ee30c35@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908292224.007EB4D5@keescook>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; boundary="Sig_/7Rz0+Y84nhStRS26SvAVNmn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
-> On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
-> > ELF program properties will needed for detecting whether to enable
-> > optional architecture or ABI features for a new ELF process.
-> > 
-> > For now, there are no generic properties that we care about, so do
-> > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > 
-> > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > phdrs entry (if any), and notify each property to the arch code.
-> > 
-> > For now, the added code is not used.
-> > 
-> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+--Sig_/7Rz0+Y84nhStRS26SvAVNmn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the review.
+Hi all,
 
-Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
-early-terminate the scan if we can, but my feeling so far was that the
-scan is cheap, the number of properties is unlikely to be more than a
-smallish integer, and the code separation benefits of just calling the
-arch code for every property probably likely outweigh the costs of
-having to iterate over every property.  We could always optimise it
-later if necessary.
+Today's linux-next merge of the staging tree got conflicts in:
 
-I need to double-check that there's no way we can get stuck in an
-infinite loop with the current code, though I've not seen it in my
-testing.  I should throw some malformed notes at it though.
+  drivers/staging/Kconfig
+  drivers/staging/Makefile
 
-> Note below...
-> 
-> > [...]
-> > +static int parse_elf_property(const char *data, size_t *off, size_t datasz,
-> > +			      struct arch_elf_state *arch,
-> > +			      bool have_prev_type, u32 *prev_type)
-> > +{
-> > +	size_t size, step;
-> > +	const struct gnu_property *pr;
-> > +	int ret;
-> > +
-> > +	if (*off == datasz)
-> > +		return -ENOENT;
-> > +
-> > +	if (WARN_ON(*off > datasz || *off % elf_gnu_property_align))
-> > +		return -EIO;
-> > +
-> > +	size = datasz - *off;
-> > +	if (size < sizeof(*pr))
-> > +		return -EIO;
-> > +
-> > +	pr = (const struct gnu_property *)(data + *off);
-> > +	if (pr->pr_datasz > size - sizeof(*pr))
-> > +		return -EIO;
-> > +
-> > +	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
-> > +	if (step > size)
-> > +		return -EIO;
-> > +
-> > +	/* Properties are supposed to be unique and sorted on pr_type: */
-> > +	if (have_prev_type && pr->pr_type <= *prev_type)
-> > +		return -EIO;
-> > +	*prev_type = pr->pr_type;
-> > +
-> > +	ret = arch_parse_elf_property(pr->pr_type,
-> > +				      data + *off + sizeof(*pr),
-> > +				      pr->pr_datasz, ELF_COMPAT, arch);
-> 
-> I find it slightly hard to read the "cursor" motion in this parse. It
-> feels strange, for example, to refer twice to "data + *off" with the
-> second including consumed *pr size. Everything is fine AFAICT in the math,
-> though, and I haven't been able to construct a convincingly "cleaner"
-> version. Maybe:
-> 
-> 	data += *off;
-> 	pr = (const struct gnu_property *)data;
-> 	data += sizeof(*pr);
-> 	...
-> 	ret = arch_parse_elf_property(pr->pr_type, data,
-> 				      pr->pr_datasz, ELF_COMPAT, arch);
+between commits:
 
-Fair point.  The cursor is really *off, which I suppose I could update
-as we go through this function, or cache in a local variable and assign
-on the way out.
+  955315b0dc8c ("qlge: Move drivers/net/ethernet/qlogic/qlge/ to drivers/st=
+aging/qlge/")
+  71ed79b0e4be ("USB: Move wusbcore and UWB to staging as it is obsolete")
 
-> But that feels disjoint from the "step" calculation, so... I think what
-> you have is fine. :)
+from the net-next and usb trees and commit:
 
-It's good to be as clear as possible about exactly how far we have
-parsed, so I'll see if I can improve this when I repost.
+  c48c9f7ff32b ("staging: exfat: add exfat filesystem code to staging")
 
+from the staging tree.
 
-Do you have any objection to merging patch 1 with this one?  For
-upstreaming purposes, it seems overkill for that to be a separate patch.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-I may also convert elf_gnu_property_align to upper case, since unlike
-the other related definitions this one isn't trying to look like a
-struct tag.
+--=20
+Cheers,
+Stephen Rothwell
 
-Do you have any opinion on the WARN_ON()s?  They should be un-hittable,
-so they're documenting assumptions rather than protecting against
-anything real.  Maybe I should replace them with comments.
+diff --cc drivers/staging/Kconfig
+index fc1420f2a949,fbdc33874780..000000000000
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@@ -120,9 -118,6 +118,11 @@@ source "drivers/staging/kpc2000/Kconfig
+ =20
+  source "drivers/staging/isdn/Kconfig"
+ =20
+ +source "drivers/staging/qlge/Kconfig"
+ +
+ +source "drivers/staging/wusbcore/Kconfig"
+ +source "drivers/staging/uwb/Kconfig"
+ +
++ source "drivers/staging/exfat/Kconfig"
++=20
+  endif # STAGING
+diff --cc drivers/staging/Makefile
+index b08ab677e49b,ca13f87b1e1b..000000000000
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@@ -49,7 -49,4 +49,7 @@@ obj-$(CONFIG_XIL_AXIS_FIFO)	+=3D axis-fif
+  obj-$(CONFIG_FIELDBUS_DEV)     +=3D fieldbus/
+  obj-$(CONFIG_KPC2000)		+=3D kpc2000/
+  obj-$(CONFIG_ISDN_CAPI)		+=3D isdn/
+ +obj-$(CONFIG_QLGE)		+=3D qlge/
+ +obj-$(CONFIG_UWB)		+=3D uwb/
+ +obj-$(CONFIG_USB_WUSB)		+=3D wusbcore/
++ obj-$(CONFIG_EXFAT_FS)		+=3D exfat/
 
-Cheers
----Dave
+--Sig_/7Rz0+Y84nhStRS26SvAVNmn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1o36UACgkQAVBC80lX
+0GzgUggAlvhyLRTs12ZYfRL8uP2FsACfLiGBGKs7py8Acj/onxEI84OuCspxe8VH
+TlsRWV2Sf9JeFOsDv2tLGphZKM5rdXLSgxJIm5yVKpbMJmptOcVGyHaUbTzHg9X7
+oD2TpyMkFr1neO4nV+NAp9vKMyPe89IfLJz2ZSw5IrfyQ4ysW4//sAaieTdcC8Jy
+OGuUYlxRWs+D3Kwz3pGKGlD9WoTMtuX55AWBYDu1DLM23F/FPtGtJyfB7WSzrqZ4
+iVYDyG0dEuhvZyy7afPbuAI7O6kPeITddrt0uQwEOyO4FZg4n/C7UabtLLoYxETw
+Pb5HvjE5R4yHfe1OwSIx5lVJlrfO+A==
+=yPvP
+-----END PGP SIGNATURE-----
+
+--Sig_/7Rz0+Y84nhStRS26SvAVNmn--
