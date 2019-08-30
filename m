@@ -2,113 +2,108 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634AEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FB3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337BB208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150B7208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzuSLJOr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRyKF7ln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfH3BiL (ORCPT
+        id S1727701AbfH3Biy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 21:38:11 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45341 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfH3BiK (ORCPT
+        Thu, 29 Aug 2019 21:38:54 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39109 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfH3Bix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 21:38:10 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m2so4751748qki.12;
-        Thu, 29 Aug 2019 18:38:10 -0700 (PDT)
+        Thu, 29 Aug 2019 21:38:53 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n2so4274025wmk.4;
+        Thu, 29 Aug 2019 18:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=riBD6zIa0GLwxZxw5kjfrzLClNMKDhfP3dU69LeJJuE=;
-        b=KzuSLJOrcRihiHLsTnPx+PjcG0KIUfLAnA9glP7fuG2YK7/RRlQtmXifOyTXNpXs06
-         wPNFDT4AV/NlElcaQwEqwvWq63hF36D2fsOiYNe2btW8g7Sy0iaPjZELJpG+e4LxeTFx
-         lrlB7Ot1pxWEPOxDWcwDN3Rd7h0FjTOS3W0GJudkFLDEZKXtKexZRAnEBYV28ZuW8E5z
-         KgK72lTGMk58vWTc/haCWSq73/Mq0GWf0DqHbgE7is2yAsX3nUu2L06D2znstREBlJqC
-         LfcbK2dd8SpNe/K6nPcJVk6jBNvGClDGk6cA5e/vc+RjOEc6NIoxUqwUNtPAOGY4jsu4
-         /x3Q==
+         :cc;
+        bh=o1j9LHjuAqXPfCkdFDTq6GuQQpzubrWokzlwRyLgeIE=;
+        b=cRyKF7ln8tAobkPAhbdHIIRgPgGVpzUPE2QldGpyGtX3oP6wMGDkfMqjltHHtJIl6w
+         fO3Ko22tco9czVh6kSUTiMKcVpjweU4xXGVMohO6phrnMAUuH7vQujFJaEDEG6j5juIn
+         ct1VO0P49OCPiThtTL3pZI9wtb6b6gx2TxtXloV6dI3hivDEi6FuGIT5M+W55YgbRzXq
+         fs9WP1OtddSP1TC15ga2kiEdH45rlWk//O70Ea4IyjO1TJQTvvRqAi10x+tAO21jb9RT
+         OGe2phtgq/85BeI3B5iW2fKYFaGnX7JwJGRJmuarXhuQXLPWGSzn408f1R0AgD5bf5gY
+         VrdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=riBD6zIa0GLwxZxw5kjfrzLClNMKDhfP3dU69LeJJuE=;
-        b=ge5g89R0MoQ3dMH5gJ/wWpfCDwuRfF7clBqpvZGa7KH0RwvzeElwMhZg/gYkS4tOQd
-         TioB/waDzD0Tla0zsY7WX9AMCamNogGFkkqnhfMK00WsRGgt3vpvRFRwY+E8D2tkbTux
-         eZ3ZVjAWYLzCgaA+5h8anqNlERZhBLFMV16eD9BLWOusuoMTau4/k2oGWf5+frJ+BO37
-         HfdJd4oIZstIVGeS5Jl/fxSOXyHpYkMkZs8jq4EaTyHdvo9PNahv5wKEVFOeff/VPOP/
-         PFCtAbS0NC7jcHu3cz+Z1Te9xzMTZxSCFYcE6WNEOCR68rhCcbbHRDU3zto+LWJZ7VVY
-         fUmw==
-X-Gm-Message-State: APjAAAXMMQhYIffqMYcesxUdfRTIVe0ONNeh24RIwpDvTlcEIAZ/q4fU
-        Wsg6jGr7o6qNo1X5wM1xbUOCE3oQvDeABxOzbnY=
-X-Google-Smtp-Source: APXvYqxx/DUEr1wrbCAVRGFpFI1e1ScthD1Gbbq8Of2A5WiFuipHThL8SOTiWitnlIqCWjysQ9pr+6R8Tlffocsy0lg=
-X-Received: by 2002:a05:620a:691:: with SMTP id f17mr13059559qkh.470.1567129089481;
- Thu, 29 Aug 2019 18:38:09 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=o1j9LHjuAqXPfCkdFDTq6GuQQpzubrWokzlwRyLgeIE=;
+        b=il3sHQaRi8CUBZAyxdwz/NOP/n+tzZMWUNh1BMa5a67Am4PWBjWLMhukGCZKcY5oac
+         nEzDXKdI7Om4Vs8Sjb+Wr9vLIOfs488+zJLI4NqvDeSZXgj2qqt8YXxF80mThWXf6RAi
+         2r7NVaG3SiWy4uasoYKIqVgauHg0nVsUPhZuziOV7ySamOGKUcxWK5YkCBXJxlIelgns
+         QKkhEwvYwuCVtoQNnUvM+rywDakrCcykdljMFx5wjva4kx1S9j/4WcN73OsocwYHVwWm
+         12OB/C0ewem2Aakz+RetjMGQUrxbkh+qMMHcN713HLgTA4ErHDUtv3VX/dOLIT3LnaTT
+         9uGw==
+X-Gm-Message-State: APjAAAWklecNBtOnBZMLXM2jy7Wxn5OEUNIJ5UZRn3id6Xu1nzQahwge
+        GHLctMS1hPK4qXBewhB12Bi/xPaIYYZRH6mHkWG8Ug==
+X-Google-Smtp-Source: APXvYqxs8tsKKjtfCGPf7Wr+IGE9qJedDSBF/3HY1XGN6CR4aoYnZKNWPDsMOHC4WiZaNyYlWfHxYvsouQJc1rkZRAI=
+X-Received: by 2002:a1c:7a10:: with SMTP id v16mr14386926wmc.2.1567129131520;
+ Thu, 29 Aug 2019 18:38:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190830003022.GA152970@LGEARND20B15> <20190830003356.GW5354@magnolia>
-In-Reply-To: <20190830003356.GW5354@magnolia>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Fri, 30 Aug 2019 10:37:58 +0900
-Message-ID: <CADLLry5Z1ex_FCnBj4_kX=FTRkVY9ykKR5u3bpL5Z30zMHVdyQ@mail.gmail.com>
-Subject: Re: [PATCH] xfs: Use WARN_ON_ONCE rather than BUG for bailout mount-operation
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190829014645.4479-1-zhang.lyra@gmail.com> <CAPDyKFp_+YuPOjURiE0YhT0uotZi=P2sRVYNr3ejgZmrMaN=tA@mail.gmail.com>
+In-Reply-To: <CAPDyKFp_+YuPOjURiE0YhT0uotZi=P2sRVYNr3ejgZmrMaN=tA@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 30 Aug 2019 09:38:15 +0800
+Message-ID: <CAAfSe-uVsy8vieTRP0hfbkuyDFF+8n1m7UnNdMd-raPQMnLY5g@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2 0/5] a few fixes for sprd's sd host controller
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 8=EC=9B=94 30=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 9:33, D=
-arrick J. Wong <darrick.wong@oracle.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
+On Thu, 29 Aug 2019 at 17:33, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 >
-> On Fri, Aug 30, 2019 at 09:30:22AM +0900, Austin Kim wrote:
-> > If the CONFIG_BUG is enabled, BUG is executed and then system is crashe=
-d.
-> > However, the bailout for mount is no longer proceeding.
+> On Thu, 29 Aug 2019 at 03:47, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
 > >
-> > For this reason, using WARN_ON_ONCE rather than BUG can prevent this si=
-tuation.
+> > With this patch-set, both sd card and mmc can be setup.  This patch-set was
+> > verified on Unisoc's Whale2 and another mobile phone platform SC9863A.
 > >
-> > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> > ---
-> >  fs/xfs/xfs_mount.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > Changes from v1:
+> > - Added Reviewed-by and Tested-by of Baolin;
+> > - Added fixes tag for all patches in this series.
 > >
-> > diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> > index 322da69..c0d0b72 100644
-> > --- a/fs/xfs/xfs_mount.c
-> > +++ b/fs/xfs/xfs_mount.c
-> > @@ -213,8 +213,7 @@ xfs_initialize_perag(
-> >                       goto out_hash_destroy;
+> > Chunyan Zhang (5):
+> >   mmc: sdhci-sprd: fixed incorrect clock divider
+> >   mmc: sdhci-sprd: add get_ro hook function
+> >   mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN
+> >   mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION
+> >   mmc: sdhci-sprd: clear the UHS-I modes read from registers
 > >
-> >               spin_lock(&mp->m_perag_lock);
-> > -             if (radix_tree_insert(&mp->m_perag_tree, index, pag)) {
-> > -                     BUG();
-> > +             if (WARN_ON_ONCE(radix_tree_insert(&mp->m_perag_tree, ind=
-ex, pag))) {
->
-> Er... please wrap the line at 80 columns.
-
-Oh..
-Let me resend patch soon after wrapping 80 column lines.
-
->
-> --D
->
-> >                       spin_unlock(&mp->m_perag_lock);
-> >                       radix_tree_preload_end();
-> >                       error =3D -EEXIST;
+> >  drivers/mmc/host/sdhci-sprd.c | 30 +++++++++++++++++++++++++-----
+> >  1 file changed, 25 insertions(+), 5 deletions(-)
+> >
 > > --
-> > 2.6.2
+> > 2.20.1
 > >
+>
+> Thanks, but I amended the current applied patches, assuming the only
+> change change you did was to put the fixes tag on one single line (for
+> each patch).
+
+Yes and right, thanks!
+
+Chunyan
+
+>
+> Kind regards
+> Uffe
