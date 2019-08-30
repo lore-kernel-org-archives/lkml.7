@@ -2,356 +2,147 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E749CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E270CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11862341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NAepYYwz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B+GMc7wN"
+	by mail.kernel.org (Postfix) with ESMTP id C1F542341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfH3P65 (ORCPT
+        id S1728289AbfH3P7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:58:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44250 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfH3P65 (ORCPT
+        Fri, 30 Aug 2019 11:59:01 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45717 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfH3P7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:58:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A694B60128; Fri, 30 Aug 2019 15:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567180735;
-        bh=4NxFQHBBDhTd9PF9Spo5Zg9uecXMm43cMnHcq8yhCkg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NAepYYwz2SadM1U618ErlqzFJQuLJoKKROf3pq87Myt9g6/Ybslb6ObM8IrLQHXj4
-         38qb3ICaith54idII7twTsHapE/hmXItBVisXy1H/W1fwuuDIsa6q4/oPQaSfRiZFJ
-         EadBeegMKw5Ocrbn69SVjp+FM7U53ciQQqv2x5cc=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 199F160128;
-        Fri, 30 Aug 2019 15:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567180734;
-        bh=4NxFQHBBDhTd9PF9Spo5Zg9uecXMm43cMnHcq8yhCkg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B+GMc7wNumi0TqSU+lZo38JFYHoPjnOpLXka7zpcAnR8EfO5USGApBMl/Hjtc+UGF
-         /U7PHma7/STew63Rg7Z8wbgSNjkoZYFrUD0FSgn0mj7n0Vpy3oFQQ+hFkJpGuT5jAd
-         Xch6IyQEg451kL7cvU7pl5qX1hJ4/fm6VPmX6JRk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 199F160128
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Fri, 30 Aug 2019 09:58:53 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     swboyd@chromium.org, evgreen@chromium.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup
- capable GPIOs
-Message-ID: <20190830155853.GA5224@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-4-ilina@codeaurora.org>
- <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
+        Fri, 30 Aug 2019 11:59:00 -0400
+Received: by mail-qt1-f193.google.com with SMTP id r15so2441819qtn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:58:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b1NptnaKsHGtVYobYo+gGBTUiMbQOSW0eYJzS/qWLqw=;
+        b=cNmFO9Yo+WY/57uv8FaldRlQxzw1N88MublP/TFRqXgYJ2zRUxXdOhL6rmF0oj8Kfd
+         0YXwsmTej1Jq+GTcNBHLEfcZayEg3x43ZvXBA2TKkgJGvdr8FSTj8UiMdwtAgz27hdbJ
+         xSj7P4G42yQxfovbS7Q+lrS4ux65Wp5q0zgubAQonjFDF18hiqGLxi5D+YSbIcqdZ5V4
+         veMLPxag0jaPNNxUgY7abAnjI4rGyyMpTq/gB12LF5FG1KnlMjfZegT3yPUtidkvO2WS
+         /f4TLBfyPMKEWW8e9pFP+RRbsA5Dp0xaTU2xQzPIwFF1z6/YXgceI/sTWnKnNRTAMwKH
+         xWwQ==
+X-Gm-Message-State: APjAAAXZmB7ac/jMIFCjAX/1X0n2yL0/zXuaH6oYNF9AB27mDOGMfDuh
+        FrThjEDFPEbsjgKd3up/VwHqzSLhZ/czuu4TEQ4=
+X-Google-Smtp-Source: APXvYqz1jmm88ay9mIxv7qKKZj78yEMuvvLMBTTFiV++PZYrmJ6Y6HrhuhyYUrbOMz9431YgRGxVq3OfIuXMde5DQ4A=
+X-Received: by 2002:a05:6214:80b:: with SMTP id df11mr3948711qvb.45.1567180738675;
+ Fri, 30 Aug 2019 08:58:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+ <20190828152226.r6pl64ij5kol6d4p@treble> <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+ <CAK8P3a1CONyt0AwBr2wQXZNo5+jpwAT8T3WfXe73=j799Jnv6A@mail.gmail.com>
+ <20190829232439.w3whzmci2vqtq53s@treble> <CAK8P3a0ddxbGVj974XS+PM_mSJDu=aGfTGarjmqMCuLKn81mRg@mail.gmail.com>
+ <20190830151422.o4pbvjyravrz2wre@treble>
+In-Reply-To: <20190830151422.o4pbvjyravrz2wre@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 30 Aug 2019 17:58:41 +0200
+Message-ID: <CAK8P3a33LQAzsReSUyB_aZxkws28RP=oJocQXonYbxxBky7aaQ@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30 2019 at 08:50 -0600, Marc Zyngier wrote:
->[Please use my kernel.org address in the future. The days of this
->arm.com address are numbered...]
+On Fri, Aug 30, 2019 at 5:14 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Fri, Aug 30, 2019 at 12:44:24PM +0200, Arnd Bergmann wrote:
+> > On Fri, Aug 30, 2019 at 1:24 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > On Wed, Aug 28, 2019 at 05:40:01PM +0200, Arnd Bergmann wrote:
+> > > > diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+> > > > index 8eb7193e158d..fd49d28abbc5 100644
+> > > > --- a/arch/x86/kernel/signal.c
+> > > > +++ b/arch/x86/kernel/signal.c
+> > > > @@ -414,6 +414,9 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+> > > >                  */
+> > > >                 put_user_ex(*((u64 *)&rt_retcode), (u64 *)frame->retcode);
+> > > >         } put_user_catch(err);
+> > > > +
+> > > > +       if (current->sas_ss_flags & SS_AUTODISARM)
+> > > > +               sas_ss_reset(current);
+> > > >
+> > > >         err |= copy_siginfo_to_user(&frame->info, &ksig->info);
+> > > >         err |= setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
+> >
+> > > > diff --git a/include/linux/signal.h b/include/linux/signal.h
+> > > > index 67ceb6d7c869..9056239787f7 100644
+> > > > --- a/include/linux/signal.h
+> > > > +++ b/include/linux/signal.h
+> > > > @@ -435,8 +435,6 @@ int __save_altstack(stack_t __user *, unsigned long);
+> > > >         put_user_ex((void __user *)t->sas_ss_sp, &__uss->ss_sp); \
+> > > >         put_user_ex(t->sas_ss_flags, &__uss->ss_flags); \
+> > > >         put_user_ex(t->sas_ss_size, &__uss->ss_size); \
+> > > > -       if (t->sas_ss_flags & SS_AUTODISARM) \
+> > > > -               sas_ss_reset(t); \
+> > > >  } while (0);
+> > > >
+> > > >  #ifdef CONFIG_PROC_FS
+> > >
+> > > Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> >
+> > Thanks! Before I submit this version for inclusion, let's make sure this
+> > is the best variant. I noticed later that save_altstack_ex() is meant to
+> > behave the same as __save_altstack(), but my patch breaks that
+> > assumption.
 >
-Sure, will update and repost.
+> Good point.
+>
+> There's also compat_save_altstack_ex() -- which presumably needs the
+> same fix? -- and __compat_save_altstack().
 
->On 29/08/2019 19:11, Lina Iyer wrote:
->> Introduce a new domain for wakeup capable GPIOs. The domain can be
->> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
->> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
->> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
->> corresponding PDC interrupt as its parent.
->>
->> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
->>  include/linux/soc/qcom/irq.h |  34 ++++++++++++
->>  2 files changed, 129 insertions(+), 9 deletions(-)
->>  create mode 100644 include/linux/soc/qcom/irq.h
->>
->> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> index 338fae604af5..ad1faf634bcf 100644
->> --- a/drivers/irqchip/qcom-pdc.c
->> +++ b/drivers/irqchip/qcom-pdc.c
->> @@ -13,12 +13,13 @@
->>  #include <linux/of.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_device.h>
->> +#include <linux/soc/qcom/irq.h>
->>  #include <linux/spinlock.h>
->> -#include <linux/platform_device.h>
->>  #include <linux/slab.h>
->>  #include <linux/types.h>
->>
->>  #define PDC_MAX_IRQS		126
->> +#define PDC_MAX_GPIO_IRQS	256
->>
->>  #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
->>  #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
->> @@ -26,6 +27,8 @@
->>  #define IRQ_ENABLE_BANK		0x10
->>  #define IRQ_i_CFG		0x110
->>
->> +#define PDC_NO_PARENT_IRQ	~0UL
->> +
->>  struct pdc_pin_region {
->>  	u32 pin_base;
->>  	u32 parent_base;
->> @@ -65,23 +68,35 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
->>
->>  static void qcom_pdc_gic_disable(struct irq_data *d)
->>  {
->> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> +		return;
->> +
->>  	pdc_enable_intr(d, false);
->>  	irq_chip_disable_parent(d);
->>  }
->>
->>  static void qcom_pdc_gic_enable(struct irq_data *d)
->>  {
->> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> +		return;
->> +
->>  	pdc_enable_intr(d, true);
->>  	irq_chip_enable_parent(d);
->>  }
->>
->>  static void qcom_pdc_gic_mask(struct irq_data *d)
->>  {
->> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> +		return;
->> +
->>  	irq_chip_mask_parent(d);
->>  }
->>
->>  static void qcom_pdc_gic_unmask(struct irq_data *d)
->>  {
->> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> +		return;
->> +
->>  	irq_chip_unmask_parent(d);
->>  }
->>
->> @@ -124,6 +139,9 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
->>  	int pin_out = d->hwirq;
->>  	enum pdc_irq_config_bits pdc_type;
->>
->> +	if (pin_out == GPIO_NO_WAKE_IRQ)
->> +		return 0;
->> +
->>  	switch (type) {
->>  	case IRQ_TYPE_EDGE_RISING:
->>  		pdc_type = PDC_EDGE_RISING;
->> @@ -181,8 +199,7 @@ static irq_hw_number_t get_parent_hwirq(int pin)
->>  			return (region->parent_base + pin - region->pin_base);
->>  	}
->>
->> -	WARN_ON(1);
->> -	return ~0UL;
->> +	return PDC_NO_PARENT_IRQ;
->>  }
->>
->>  static int qcom_pdc_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->> @@ -211,17 +228,17 @@ static int qcom_pdc_alloc(struct irq_domain *domain, unsigned int virq,
->>
->>  	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
->>  	if (ret)
->> -		return -EINVAL;
->> -
->> -	parent_hwirq = get_parent_hwirq(hwirq);
->> -	if (parent_hwirq == ~0UL)
->> -		return -EINVAL;
->> +		return ret;
->>
->>  	ret  = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
->>  					     &qcom_pdc_gic_chip, NULL);
->>  	if (ret)
->>  		return ret;
->>
->> +	parent_hwirq = get_parent_hwirq(hwirq);
->> +	if (parent_hwirq == PDC_NO_PARENT_IRQ)
->> +		return 0;
->> +
->>  	if (type & IRQ_TYPE_EDGE_BOTH)
->>  		type = IRQ_TYPE_EDGE_RISING;
->>
->> @@ -244,6 +261,60 @@ static const struct irq_domain_ops qcom_pdc_ops = {
->>  	.free		= irq_domain_free_irqs_common,
->>  };
->>
->> +static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
->> +			       unsigned int nr_irqs, void *data)
->> +{
->> +	struct irq_fwspec *fwspec = data;
->> +	struct irq_fwspec parent_fwspec;
->> +	irq_hw_number_t hwirq, parent_hwirq;
->> +	unsigned int type;
->> +	int ret;
->> +
->> +	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
->> +					    &qcom_pdc_gic_chip, NULL);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (hwirq == GPIO_NO_WAKE_IRQ)
->> +		return 0;
->> +
->> +	parent_hwirq = get_parent_hwirq(hwirq);
->> +	if (parent_hwirq == PDC_NO_PARENT_IRQ)
->> +		return 0;
->> +
->> +	if (type & IRQ_TYPE_EDGE_BOTH)
->> +		type = IRQ_TYPE_EDGE_RISING;
->> +
->> +	if (type & IRQ_TYPE_LEVEL_MASK)
->> +		type = IRQ_TYPE_LEVEL_HIGH;
->> +
->> +	parent_fwspec.fwnode      = domain->parent->fwnode;
->> +	parent_fwspec.param_count = 3;
->> +	parent_fwspec.param[0]    = 0;
->> +	parent_fwspec.param[1]    = parent_hwirq;
->> +	parent_fwspec.param[2]    = type;
->> +
->> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
->> +					    &parent_fwspec);
->> +}
->> +
->> +static int qcom_pdc_gpio_domain_select(struct irq_domain *d,
->> +				       struct irq_fwspec *fwspec,
->> +				       enum irq_domain_bus_token bus_token)
->> +{
->> +	return (bus_token == DOMAIN_BUS_WAKEUP);
->> +}
->> +
->> +static const struct irq_domain_ops qcom_pdc_gpio_ops = {
->> +	.select		= qcom_pdc_gpio_domain_select,
->> +	.alloc		= qcom_pdc_gpio_alloc,
->> +	.free		= irq_domain_free_irqs_common,
->> +};
->> +
->>  static int pdc_setup_pin_mapping(struct device_node *np)
->>  {
->>  	int ret, n;
->> @@ -282,7 +353,7 @@ static int pdc_setup_pin_mapping(struct device_node *np)
->>
->>  static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->>  {
->> -	struct irq_domain *parent_domain, *pdc_domain;
->> +	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
->>  	int ret;
->>
->>  	pdc_base = of_iomap(node, 0);
->> @@ -313,8 +384,23 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->>  		goto fail;
->>  	}
->>
->> +	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
->> +						      IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP,
->> +						      PDC_MAX_GPIO_IRQS,
->> +						      of_fwnode_handle(node),
->> +						      &qcom_pdc_gpio_ops, NULL);
->> +	if (!pdc_gpio_domain) {
->> +		pr_err("%pOF: GIC domain add failed for GPIO domain\n", node);
->> +		ret = -ENOMEM;
->> +		goto remove;
->> +	}
->> +
->> +	irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
->> +
->>  	return 0;
->>
->> +remove:
->> +	irq_domain_remove(pdc_domain);
->>  fail:
->>  	kfree(pdc_region);
->>  	iounmap(pdc_base);
->> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
->> new file mode 100644
->> index 000000000000..73239917dc38
->> --- /dev/null
->> +++ b/include/linux/soc/qcom/irq.h
->> @@ -0,0 +1,34 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +
->> +#ifndef __QCOM_IRQ_H
->> +#define __QCOM_IRQ_H
->> +
->> +#include <linux/irqdomain.h>
->> +
->> +#define GPIO_NO_WAKE_IRQ	~0U
->> +
->> +/**
->> + * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
->> + * capable interrupts by different interrupt controllers.
->> + *
->> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
->> + *                                  interrupt configuration is done at PDC
->> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
->> + */
->> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
->> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
->
->Any reason why you're starting at bit 17? The available range in from
->bit 16... But overall, it would be better if you expressed it as:
->
->#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP	(IRQ_DOMAIN_FLAG_NONCORE << 0)
->#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP (IRQ_DOMAIN_FLAG_NONCORE << 1)
->
-Okay.
+Yes, I meant both here of course (as in my earlier patch).
 
->> +
->> +/**
->> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
->> + *                                configuration
->> + * @parent: irq domain
->> + *
->> + * This QCOM specific irq domain call returns if the interrupt controller
->> + * requires the interrupt be masked at the child interrupt controller.
->> + */
->> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
->> +{
->> +	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
->> +}
->> +
->> +#endif
->>
+> > Two other alternatives I can think of are
+> >
+> > - completely open-code save_altstack_ex() in its only call site on x86,
+> >   in addition to the change above
 >
->But most of this file isn't used by this patch, so maybe it should be
->moved somewhere else...
+> But it has two call sites: the 32-bit and 64-bit versions of
+> save_altstack_ex().
+
+Ah, that's what I get for looking only at the compat version.
+
+> > - explicitly mark memset() as an exception in objtool in
+> >   uaccess_safe_builtin[], assuming that is actually safe.
 >
-Apart from creating the domain, this is not used here, but a separate
-patch seemed excessive. Let me know if you have any suggestions.
+> I wonder if this might open up more theoretical SMAP holes for other
+> callers to memset().
+>
+> What about just adding a couple of WRITE_ONCE's to sas_ss_reset()?  That
+> would probably be the least disruptive option.
 
-Thanks,
-Lina
+Fine with me, too.
 
+> Or even better, it would be great if we could get Clang to change their
+> memset() insertion heuristics, so that KASAN acts more like non-KASAN
+> code in that regard.
+
+I suspect that's going to be harder. The clang-9 release is going to be
+soon, and that change probably wouldn't be considered a regression fix.
+
+Maybe Nick can find what happens, but I don't actually see any reference
+to KASAN in the llvm source code related to the memset generation.
+
+https://github.com/llvm-mirror/clang/blob/master/lib/CodeGen/CGExprAgg.cpp#L1803
+has a check for >16 bytes, but that again does not match my observation.
+
+     Arnd
