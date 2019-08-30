@@ -2,119 +2,257 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF276C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC1BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F42E21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3EB21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJQhakBK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lKkrnMmi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfH3NzM (ORCPT
+        id S1727945AbfH3Nzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:55:12 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45492 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfH3NzM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:55:12 -0400
-Received: by mail-yw1-f68.google.com with SMTP id n69so2385107ywd.12;
-        Fri, 30 Aug 2019 06:55:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uwyr09OeKTgN7mrxVHx+2hnXAPzOPQfRzUlZ2zECK50=;
-        b=LJQhakBK31minFRW4+8ZqTjPS3meQLKD9H4oU3dh9tMkpMp6sFAIeTMemX1uaJjgjR
-         MXHO7nRFXUstF0WXKc7ByqGTy3QTteAYN8cOXjf7CG40/7dj59OjmKjymJ5Ty/GcqdA1
-         3luwpNCClgEG5EYsRPc8ECjrSyQWMb+h0QOS37SXa66utV+Oq0IpUDXV9IteyCXnImOR
-         +EM49X/KYXCkxRBd9CoCUp6iaY3eNN54YtTQ1jx+prWFPdyWyl4quO0DvBUKe816r7El
-         epndZ4XYWWHJWIPcEjR6uuNEed3xh8ZL8inhpE0WVZS1YHTy6UWTdlC6rCsLXSPL8eHy
-         ofng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uwyr09OeKTgN7mrxVHx+2hnXAPzOPQfRzUlZ2zECK50=;
-        b=EUc1/Cw3O0e1K5GB1HgcF/jMvE1ywRWpC1i+C/Hd/q1yTmP3eGQbHyV19oD4OrHv52
-         APD7HW7xaRGamtmvnGL2bg+FLT/SqWyyVCdDLd1ENheUxY5cRAYRHqqNplfBci0Ml05a
-         jDilSANqRHlpcNkUHcDXezfsoGPKONab+XywBIETDSl9gRteHauJNRqY719lh4dgMNUt
-         CdnmuW4dImdY5mO39NZJ5G+nXUeoE1ckUEosbnSm5ZTDNzWEeI9N9FCoEwfpwzfEIP4l
-         WvFT/qtwlDHRrC5cF3iX4NY6EaLNbMCmi+iRcc+S1ZcaWJnjgv1dYXC1nIoOtUPP/sRX
-         Jg+Q==
-X-Gm-Message-State: APjAAAXIjdDW2sLnvZCshXRng/K7+grBh0hxocja16m1/xVI7xtYL9Yk
-        0xL4kd6wQKNcHNzQVECwhcvKKZEzzlQGVwHmB6M=
-X-Google-Smtp-Source: APXvYqyKUdtdX4Fn6uwYsTcN5PRkZApmByK6IhOxrD/lRH6xihpu7XCLNslcRQr0GpGRhHl1KZcBpCGVcEJg+UKNPxM=
-X-Received: by 2002:a81:9108:: with SMTP id i8mr11138441ywg.346.1567173311094;
- Fri, 30 Aug 2019 06:55:11 -0700 (PDT)
+        Fri, 30 Aug 2019 09:55:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:36015 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbfH3Nzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:55:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Kgwl19HKz9s7T;
+        Fri, 30 Aug 2019 23:55:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567173335;
+        bh=VTAiaBz22TTXel1ha2s/bTgs6tmonm/LUfRyubXF/Dw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lKkrnMmiKFvu5EfyA27jHtGLH3nCTUI68MCausSw+qzoIdzYFdkbO8zqXPHx/SrVF
+         8mEtqxlwewsxy4vhrvYjOvetximHJCVBsXaZwRDWQKV7oA26W0vMtF8Kl36zB9gmhx
+         NwD5ZLiO/uJc7aIpr62KegpjkiVLmGudBP78zuZjg0H/LThbCqTkV8Ppz6KlyDI8Lg
+         uQjmzYKiIDiE2XKOlD4ocn9AyOTiBWHH07mHVwDARaEFEPkPEEwpFWHcumGWH/V9e6
+         Kp4Bx1AQrkN/yp3fkcLW19JMV3Alfr4NZmZbRKam3HRHLTVryK6Y3PeCa1TMEpd5sy
+         0n90MHgrhNxdw==
+Date:   Fri, 30 Aug 2019 23:55:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Minchan Kim <minchan@kernel.org>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20190830235530.67c23ad3@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190830095639.4562-1-kkamagui@gmail.com> <20190830095639.4562-3-kkamagui@gmail.com>
- <20190830124334.GA10004@ziepe.ca>
-In-Reply-To: <20190830124334.GA10004@ziepe.ca>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Fri, 30 Aug 2019 22:54:59 +0900
-Message-ID: <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
- supporting AMD's fTPM
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/_h0l=FaIWHvEqTs3K=mFyHZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Fri, Aug 30, 2019 at 06:56:39PM +0900, Seunghun Han wrote:
-> > I got an AMD system which had a Ryzen Threadripper 1950X and MSI
-> > mainboard, and I had a problem with AMD's fTPM. My machine showed an error
-> > message below, and the fTPM didn't work because of it.
-> >
-> > [  5.732084] tpm_crb MSFT0101:00: can't request region for resource
-> >              [mem 0x79b4f000-0x79b4ffff]
-> > [  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
-> >
-> > When I saw the iomem, I found two fTPM regions were in the ACPI NVS area.
-> > The regions are below.
-> >
-> > 79a39000-79b6afff : ACPI Non-volatile Storage
-> >   79b4b000-79b4bfff : MSFT0101:00
-> >   79b4f000-79b4ffff : MSFT0101:00
-> >
-> > After analyzing this issue, I found that crb_map_io() function called
-> > devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
-> > CRB driver to assign a resource in it because a busy bit was set to
-> > the ACPI NVS area.
-> >
-> > To support AMD's fTPM, I added a function to check intersects between
-> > the TPM region and ACPI NVS before it mapped the region. If some
-> > intersects are detected, the function just calls devm_ioremap() for
-> > a workaround. If there is no intersect, it calls devm_ioremap_resource().
-> >
-> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
-> > ---
-> >  drivers/char/tpm/tpm_crb.c | 25 +++++++++++++++++++++++--
-> >  1 file changed, 23 insertions(+), 2 deletions(-)
->
-> This still seems to result in two drivers controlling the same
-> memory. Does this create bugs and races during resume?
->
-> Jason
+--Sig_/_h0l=FaIWHvEqTs3K=mFyHZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When I tested this patch in my machine, it seemed that ACPI NVS was
-saved after TPM CRB driver sent "TPM2_Shutdown(STATE)" to the fTPM
-while suspending. Then, ACPI NVS was restored while resuming.
-After resuming, PCRs didn't change and TPM2 tools such as
-tpm2_pcrlist, tpm2_extend, tpm2_getrandoms worked well.
-So, according to my test result, it seems that the patch doesn't
-create bugs and race during resume.
+Hi all,
 
-Seunghun
+After merging the akpm-current tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
+
+mm/madvise.c: In function 'madvise_cold_page_range':
+mm/madvise.c:459:4: error: 'struct mm_walk' has no member named 'pmd_entry'
+  459 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
+      |    ^~~~~~~~~
+mm/madvise.c:459:16: error: initialization of 'const struct mm_walk_ops *' =
+from incompatible pointer type 'int (*)(pmd_t *, long unsigned int,  long u=
+nsigned int,  struct mm_walk *)' {aka 'int (*)(unsigned int *, long unsigne=
+d int,  long unsigned int,  struct mm_walk *)'} [-Werror=3Dincompatible-poi=
+nter-types]
+  459 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mm/madvise.c:459:16: note: (near initialization for 'cold_walk.ops')
+mm/madvise.c:465:18: warning: passing argument 1 of 'walk_page_range' makes=
+ pointer from integer without a cast [-Wint-conversion]
+  465 |  walk_page_range(addr, end, &cold_walk);
+      |                  ^~~~
+      |                  |
+      |                  long unsigned int
+In file included from mm/madvise.c:24:
+include/linux/pagewalk.h:60:39: note: expected 'struct mm_struct *' but arg=
+ument is of type 'long unsigned int'
+   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
+      |                     ~~~~~~~~~~~~~~~~~~^~
+mm/madvise.c:465:29: warning: passing argument 3 of 'walk_page_range' makes=
+ integer from pointer without a cast [-Wint-conversion]
+  465 |  walk_page_range(addr, end, &cold_walk);
+      |                             ^~~~~~~~~~
+      |                             |
+      |                             struct mm_walk *
+In file included from mm/madvise.c:24:
+include/linux/pagewalk.h:61:17: note: expected 'long unsigned int' but argu=
+ment is of type 'struct mm_walk *'
+   61 |   unsigned long end, const struct mm_walk_ops *ops,
+      |   ~~~~~~~~~~~~~~^~~
+mm/madvise.c:465:2: error: too few arguments to function 'walk_page_range'
+  465 |  walk_page_range(addr, end, &cold_walk);
+      |  ^~~~~~~~~~~~~~~
+In file included from mm/madvise.c:24:
+include/linux/pagewalk.h:60:5: note: declared here
+   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
+      |     ^~~~~~~~~~~~~~~
+mm/madvise.c: In function 'madvise_pageout_page_range':
+mm/madvise.c:498:4: error: 'struct mm_walk' has no member named 'pmd_entry'
+  498 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
+      |    ^~~~~~~~~
+mm/madvise.c:498:16: error: initialization of 'const struct mm_walk_ops *' =
+from incompatible pointer type 'int (*)(pmd_t *, long unsigned int,  long u=
+nsigned int,  struct mm_walk *)' {aka 'int (*)(unsigned int *, long unsigne=
+d int,  long unsigned int,  struct mm_walk *)'} [-Werror=3Dincompatible-poi=
+nter-types]
+  498 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mm/madvise.c:498:16: note: (near initialization for 'pageout_walk.ops')
+mm/madvise.c:504:18: warning: passing argument 1 of 'walk_page_range' makes=
+ pointer from integer without a cast [-Wint-conversion]
+  504 |  walk_page_range(addr, end, &pageout_walk);
+      |                  ^~~~
+      |                  |
+      |                  long unsigned int
+In file included from mm/madvise.c:24:
+include/linux/pagewalk.h:60:39: note: expected 'struct mm_struct *' but arg=
+ument is of type 'long unsigned int'
+   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
+      |                     ~~~~~~~~~~~~~~~~~~^~
+mm/madvise.c:504:29: warning: passing argument 3 of 'walk_page_range' makes=
+ integer from pointer without a cast [-Wint-conversion]
+  504 |  walk_page_range(addr, end, &pageout_walk);
+      |                             ^~~~~~~~~~~~~
+      |                             |
+      |                             struct mm_walk *
+In file included from mm/madvise.c:24:
+include/linux/pagewalk.h:61:17: note: expected 'long unsigned int' but argu=
+ment is of type 'struct mm_walk *'
+   61 |   unsigned long end, const struct mm_walk_ops *ops,
+      |   ~~~~~~~~~~~~~~^~~
+mm/madvise.c:504:2: error: too few arguments to function 'walk_page_range'
+  504 |  walk_page_range(addr, end, &pageout_walk);
+      |  ^~~~~~~~~~~~~~~
+In file included from mm/madvise.c:24:
+include/linux/pagewalk.h:60:5: note: declared here
+   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
+      |     ^~~~~~~~~~~~~~~
+
+Caused by commit
+
+  1c8999b3963d ("mm: introduce MADV_COLD")
+(and following commits)
+
+interacting with commit
+
+  923bfc561e75 ("pagewalk: separate function pointers from iterator data")
+
+from the hmm tree.
+
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 30 Aug 2019 23:39:37 +1000
+Subject: [PATCH] mm: merge fix for "pagewalk: separate function pointers fr=
+om iterator data"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/madvise.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 7ec7c8f6d5ab..20598df8360a 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -446,6 +446,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pm=
+d,
+ 	return 0;
+ }
+=20
++static const struct mm_walk_ops cold_walk_ops =3D {
++	.pmd_entry =3D madvise_cold_or_pageout_pte_range,
++};
++
+ static void madvise_cold_page_range(struct mmu_gather *tlb,
+ 			     struct vm_area_struct *vma,
+ 			     unsigned long addr, unsigned long end)
+@@ -455,14 +459,8 @@ static void madvise_cold_page_range(struct mmu_gather =
+*tlb,
+ 		.pageout =3D false,
+ 	};
+=20
+-	struct mm_walk cold_walk =3D {
+-		.pmd_entry =3D madvise_cold_or_pageout_pte_range,
+-		.mm =3D vma->vm_mm,
+-		.private =3D &walk_private,
+-	};
+-
+ 	tlb_start_vma(tlb, vma);
+-	walk_page_range(addr, end, &cold_walk);
++	walk_page_range(vma->vm_mm, addr, end, &cold_walk_ops, &walk_private);
+ 	tlb_end_vma(tlb, vma);
+ }
+=20
+@@ -485,6 +483,10 @@ static long madvise_cold(struct vm_area_struct *vma,
+ 	return 0;
+ }
+=20
++static const struct mm_walk_ops pageout_walk_ops =3D {
++	.pmd_entry =3D madvise_cold_or_pageout_pte_range,
++};
++
+ static void madvise_pageout_page_range(struct mmu_gather *tlb,
+ 			     struct vm_area_struct *vma,
+ 			     unsigned long addr, unsigned long end)
+@@ -494,14 +496,8 @@ static void madvise_pageout_page_range(struct mmu_gath=
+er *tlb,
+ 		.tlb =3D tlb,
+ 	};
+=20
+-	struct mm_walk pageout_walk =3D {
+-		.pmd_entry =3D madvise_cold_or_pageout_pte_range,
+-		.mm =3D vma->vm_mm,
+-		.private =3D &walk_private,
+-	};
+-
+ 	tlb_start_vma(tlb, vma);
+-	walk_page_range(addr, end, &pageout_walk);
++	walk_page_range(vma->vm_mm, addr, end, &pageout_walk_ops, &walk_private);
+ 	tlb_end_vma(tlb, vma);
+ }
+=20
+--=20
+2.23.0.rc1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_h0l=FaIWHvEqTs3K=mFyHZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1pKtIACgkQAVBC80lX
+0GxvGgf+Itl70PzMNQJTI39dr4u8EAVCgIl4Xyvm9DDS25l0onw33TFaMnybqnaG
+B7pcm539jWVubOIGTuZq6SM9HO1lApYCBv8Y0UNu0hgAg2lHeDnFzJxBgL4o1dm2
+f95KFyqo2s25UcVmxG74FSH5thOsE/sCyYirJQ9ElCq/J037ogCeZO5oohrMGAbK
+cK2fGMnka++8fqbRs1ZOyVv3bAGOHJW4z2mqMxp2hGkN2648xIJnv3tqtBg/+ElJ
+Bz0pgtunmc0x6TUxmz33fUGT3kNaHG5by3pw0DIGVcJzxJDSX6iqZByTl/MAdIa+
+Pq22AwBSHaDLamHKm6Uv53mq3PUp3Q==
+=p1E9
+-----END PGP SIGNATURE-----
+
+--Sig_/_h0l=FaIWHvEqTs3K=mFyHZ--
