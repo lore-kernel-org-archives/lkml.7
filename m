@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6D9C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2278BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5CC23431
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77C52343B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mJNxoFoP"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="SRkoLbFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfH3XSg (ORCPT
+        id S1728373AbfH3XSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 19:18:36 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38995 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfH3XSf (ORCPT
+        Fri, 30 Aug 2019 19:18:39 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40322 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728314AbfH3XSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 19:18:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so4251822pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:18:35 -0700 (PDT)
+        Fri, 30 Aug 2019 19:18:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w16so5541268pfn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:18:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PRkLiK2zQKW37sHjUWJi7ClUsfSJsVnDy5LzPyDzYvE=;
-        b=mJNxoFoPw68Pczu3Q5Tl9Hubb1oPwPMN4HNOUR5BMqcq1lrDlYBVP6S84iC0HCLgRk
-         bxc9EPapppZF4nytHiwbl/a1svpheNULWsFifiCEEtJxbx/2Nd5ec0nyECglpbsmGi7n
-         tU+hvwsEYwTZP9DetuJiTg4UUwmi2g/IyPVjU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Z7Fsc+37SdglEjx6/P+VaXoRvmLqI7xYMe39+8FKKog=;
+        b=SRkoLbFdjxOOLUsGorlvwCDB8Y7h+4UZCxPAUooe5JUYDpPZoOm+hC88wSCIUVQUJi
+         FedLK4Mry/31IytlGZFBo09jNfGHCQpy+KeCRFEAjd/CHA9NXZ0xgmevw0j+ww4PVOri
+         NVgKz5E4oVN1UEDexyn1rDN7wNhQVIao8Kavw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PRkLiK2zQKW37sHjUWJi7ClUsfSJsVnDy5LzPyDzYvE=;
-        b=W1mHCFvT6/ceN8g5V/E8xyBXxJqoPMIy5Iv2sv+0rRJ5MWYjrC/bxRwoYPe8ooXR1I
-         7Jd5/z6ltVlrJgyreNhwoHo+O8g+8ADKtTXwXU4iBMvc3TWZkySu0/SThSP+31ynN9BA
-         nt0KVZCI2UnWC13yMm+W5APJ7hkFe396iaRT2JVJd/SOL1A9MD9OVT9hkELqbLdyVf27
-         nzTKPmu+RCQdhIXOcQIQMN82NcigXad/psWb/tspydENPoMkxp/WRhIZVHi7+bowXtBU
-         ZEXxzVgFhhDPhPqQ/yrhyWh1+buTR6S36q/qhH6kApE5R35biwiw6Dk2VZjSqfxd/hcc
-         VJhQ==
-X-Gm-Message-State: APjAAAXFhTnOKzphQsFJYRrWKw3cHIl2TLaSCNc4pBIyDdhgTy4JoPq5
-        mLzf3MCE3qWZ0cINZBSOlCwU37FTA2o=
-X-Google-Smtp-Source: APXvYqwWcIpjQmKfZ2KNw+QhAexpYhPxvb+SAlTByxWo8nuTzYepBvzn5LLXes3DPdl/v5VIIOmnfg==
-X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr1009296pjr.45.1567207114673;
-        Fri, 30 Aug 2019 16:18:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Z7Fsc+37SdglEjx6/P+VaXoRvmLqI7xYMe39+8FKKog=;
+        b=gicbI4LBBAF3bmyv0bu042JXy1gQ/fQC7CcWcUpB3sbaAjJTHtTJTDVFd9gg4fOj7t
+         bTWrLlIQjJdpaf5OXQC2phesPYGONeFCGHTwIWApJWUkjvIoOH/6B+OO5fLPBAAxeDMv
+         hSE7znRCp3IDaf2yOvCP7chuugmAXrGA86lAyAdTRbMVg2PW5yd1Pp5IsEDvWudkavzA
+         6qbWAOuPy/KmU3BvfPtJr2YoWpVeRXwVLpkMLG9hMZ0kiDCxiUk/+HdBmA41uaEya1L3
+         9Sebai3lVvAHhPtjBEHYm27erRASd8TWSu2KxXDj4fgcSp1LBOHzm9vp6UkJC9bNoBmi
+         iOCg==
+X-Gm-Message-State: APjAAAWa1MfywouvzmVgZpYaTq8/73UVBWf/NyfBldr3iqAX3lVHT2Mc
+        uja4ClD8+NBSbmbra/g3cT/Y26wlzhg=
+X-Google-Smtp-Source: APXvYqzsgIbQD1SS2U2BV8UWGEyzmoL50WWwQMMc6aPYggCkWNncKrpdEs1Qv0qQtklc19SPrZyVdA==
+X-Received: by 2002:a17:90a:3748:: with SMTP id u66mr1008427pjb.4.1567207116764;
+        Fri, 30 Aug 2019 16:18:36 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t23sm8479395pfl.154.2019.08.30.16.18.32
+        by smtp.gmail.com with ESMTPSA id t23sm8479395pfl.154.2019.08.30.16.18.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 16:18:33 -0700 (PDT)
+        Fri, 30 Aug 2019 16:18:36 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -64,10 +64,12 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Jonathan Derrick <jonathan.derrick@intel.com>,
         Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 1/2] pci: Convert to use built-in RCU list checking
-Date:   Fri, 30 Aug 2019 19:18:16 -0400
-Message-Id: <20190830231817.76862-1-joel@joelfernandes.org>
+Subject: [PATCH 2/2] ipc/sem: Convert to use built-in RCU list checking
+Date:   Fri, 30 Aug 2019 19:18:17 -0400
+Message-Id: <20190830231817.76862-2-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+In-Reply-To: <20190830231817.76862-1-joel@joelfernandes.org>
+References: <20190830231817.76862-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,23 +84,23 @@ lockdep expression.
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- drivers/pci/controller/vmd.c | 3 ++-
+ ipc/sem.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 4575e0c6dc4b..127631d0c6da 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -718,7 +718,8 @@ static irqreturn_t vmd_irq(int irq, void *data)
- 	int idx;
+diff --git a/ipc/sem.c b/ipc/sem.c
+index 7da4504bcc7c..ec97a7072413 100644
+--- a/ipc/sem.c
++++ b/ipc/sem.c
+@@ -1852,7 +1852,8 @@ static struct sem_undo *__lookup_undo(struct sem_undo_list *ulp, int semid)
+ {
+ 	struct sem_undo *un;
  
- 	idx = srcu_read_lock(&irqs->srcu);
--	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node)
-+	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
-+				srcu_read_lock_held(&irqs->srcu))
- 		generic_handle_irq(vmdirq->virq);
- 	srcu_read_unlock(&irqs->srcu, idx);
- 
+-	list_for_each_entry_rcu(un, &ulp->list_proc, list_proc) {
++	list_for_each_entry_rcu(un, &ulp->list_proc, list_proc,
++				spin_is_locked(&ulp->lock)) {
+ 		if (un->semid == semid)
+ 			return un;
+ 	}
 -- 
 2.23.0.187.g17f5b7556c-goog
 
