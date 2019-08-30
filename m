@@ -2,250 +2,78 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DBCC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB568C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCC32173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567159348;
-	bh=8s7yw69CBXfvbrDvzVKtEWUV36YMSTWqhk7vp00J82g=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=j9Y7BqlNeksjBihzd8eeRGql0E73inmrOgmiiGkqBEo/5S7DBrfDTiZVZkoP5lYGZ
-	 zijfCxPkya65c3QUiLYseCzjqIVmsbHaOIsH8+KSX6RmJIx4UDZWq36YjFnRad6i4W
-	 CShMMRdd5J2XSrz3lQLXT3hpT4OU6MVJxca6Jxyw=
+	by mail.kernel.org (Postfix) with ESMTP id BCECC2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfH3KC1 (ORCPT
+        id S1727993AbfH3KEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:02:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:57712 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfH3KC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:02:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A7A5344;
-        Fri, 30 Aug 2019 03:02:26 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A37183F718;
-        Fri, 30 Aug 2019 03:02:22 -0700 (PDT)
-Subject: Re: [PATCH v4 07/10] KVM: arm64: Provide VCPU attributes for stolen
- time
-To:     Steven Price <steven.price@arm.com>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190830084255.55113-1-steven.price@arm.com>
- <20190830084255.55113-8-steven.price@arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <36104ec0-2237-fb0e-376f-ab50c23c6101@kernel.org>
-Date:   Fri, 30 Aug 2019 11:02:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 06:04:00 -0400
+Received: from smtprelay0125.hostedemail.com ([216.40.44.125]:36676 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbfH3KEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 06:04:00 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id ED946182CF665;
+        Fri, 30 Aug 2019 10:03:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: town56_3fb8114aab143
+X-Filterd-Recvd-Size: 1891
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 30 Aug 2019 10:03:57 +0000 (UTC)
+Message-ID: <ef0c0782216006d187954e5b80f412bf4b8e6392.camel@perches.com>
+Subject: Re: [PATCH] staging: rts5208: Fixed checkpath warning.
+From:   Joe Perches <joe@perches.com>
+To:     Prakhar Sinha <prakharsinha2808@gmail.com>,
+        gregkh@linuxfoundation.org, kim.jamie.bradley@gmail.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Fri, 30 Aug 2019 03:03:56 -0700
+In-Reply-To: <20190830071144.GA29987@MeraComputer>
+References: <20190830071144.GA29987@MeraComputer>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20190830084255.55113-8-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 09:42, Steven Price wrote:
-> Allow user space to inform the KVM host where in the physical memory
-> map the paravirtualized time structures should be located.
-> 
-> User space can set an attribute on the VCPU providing the IPA base
-> address of the stolen time structure for that VCPU. This must be
-> repeated for every VCPU in the VM.
-> 
-> The address is given in terms of the physical address visible to
-> the guest and must be 64 byte aligned. The guest will discover the
-> address via a hypercall.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h |  7 +++++
->  arch/arm64/include/uapi/asm/kvm.h |  2 ++
->  arch/arm64/kvm/guest.c            |  9 ++++++
->  include/uapi/linux/kvm.h          |  2 ++
->  virt/kvm/arm/pvtime.c             | 47 +++++++++++++++++++++++++++++++
->  5 files changed, 67 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 1697e63f6dd8..6af16b29a41f 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -489,6 +489,13 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
->  long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu);
->  int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init);
->  
-> +int kvm_arm_pvtime_set_attr(struct kvm_vcpu *vcpu,
-> +			    struct kvm_device_attr *attr);
-> +int kvm_arm_pvtime_get_attr(struct kvm_vcpu *vcpu,
-> +			    struct kvm_device_attr *attr);
-> +int kvm_arm_pvtime_has_attr(struct kvm_vcpu *vcpu,
-> +			    struct kvm_device_attr *attr);
-> +
->  static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
->  {
->  	vcpu_arch->steal.base = GPA_INVALID;
-> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-> index 9a507716ae2f..bde9f165ad3a 100644
-> --- a/arch/arm64/include/uapi/asm/kvm.h
-> +++ b/arch/arm64/include/uapi/asm/kvm.h
-> @@ -323,6 +323,8 @@ struct kvm_vcpu_events {
->  #define KVM_ARM_VCPU_TIMER_CTRL		1
->  #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
->  #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
-> +#define KVM_ARM_VCPU_PVTIME_CTRL	2
-> +#define   KVM_ARM_VCPU_PVTIME_SET_IPA	0
->  
->  /* KVM_IRQ_LINE irq field index values */
->  #define KVM_ARM_IRQ_TYPE_SHIFT		24
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index dfd626447482..d3ac9d2fd405 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -858,6 +858,9 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
->  	case KVM_ARM_VCPU_TIMER_CTRL:
->  		ret = kvm_arm_timer_set_attr(vcpu, attr);
->  		break;
-> +	case KVM_ARM_VCPU_PVTIME_CTRL:
-> +		ret = kvm_arm_pvtime_set_attr(vcpu, attr);
-> +		break;
->  	default:
->  		ret = -ENXIO;
->  		break;
-> @@ -878,6 +881,9 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
->  	case KVM_ARM_VCPU_TIMER_CTRL:
->  		ret = kvm_arm_timer_get_attr(vcpu, attr);
->  		break;
-> +	case KVM_ARM_VCPU_PVTIME_CTRL:
-> +		ret = kvm_arm_pvtime_get_attr(vcpu, attr);
-> +		break;
->  	default:
->  		ret = -ENXIO;
->  		break;
-> @@ -898,6 +904,9 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
->  	case KVM_ARM_VCPU_TIMER_CTRL:
->  		ret = kvm_arm_timer_has_attr(vcpu, attr);
->  		break;
-> +	case KVM_ARM_VCPU_PVTIME_CTRL:
-> +		ret = kvm_arm_pvtime_has_attr(vcpu, attr);
-> +		break;
->  	default:
->  		ret = -ENXIO;
->  		break;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 5e3f12d5359e..265156a984f2 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1222,6 +1222,8 @@ enum kvm_device_type {
->  #define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
->  	KVM_DEV_TYPE_XIVE,
->  #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
-> +	KVM_DEV_TYPE_ARM_PV_TIME,
-> +#define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
->  	KVM_DEV_TYPE_MAX,
->  };
->  
-> diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
-> index d9d0dbc6994b..7b1834b98a68 100644
-> --- a/virt/kvm/arm/pvtime.c
-> +++ b/virt/kvm/arm/pvtime.c
-> @@ -2,7 +2,9 @@
->  // Copyright (C) 2019 Arm Ltd.
->  
->  #include <linux/arm-smccc.h>
-> +#include <linux/kvm_host.h>
->  
-> +#include <asm/kvm_mmu.h>
->  #include <asm/pvclock-abi.h>
->  
->  #include <kvm/arm_hypercalls.h>
-> @@ -75,3 +77,48 @@ long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
->  
->  	return vcpu->arch.steal.base;
->  }
-> +
-> +int kvm_arm_pvtime_set_attr(struct kvm_vcpu *vcpu,
-> +			    struct kvm_device_attr *attr)
-> +{
-> +	u64 __user *user = (u64 __user *)attr->addr;
-> +	u64 ipa;
-> +
-> +	if (attr->attr != KVM_ARM_VCPU_PVTIME_SET_IPA)
-> +		return -ENXIO;
-> +
-> +	if (get_user(ipa, user))
-> +		return -EFAULT;
-> +	if (ipa & 63)
+On Fri, 2019-08-30 at 12:41 +0530, Prakhar Sinha wrote:
+> This patch solves the following checkpatch.pl's message in drivers/staging/rts5208/rtsx_transport.c:397.
+> WARNING: line over 80 characters
+> +                               option = RTSX_SG_VALID | RTSX_SG_END | RTSX_SG_TRANS_DATA;
+[]
+> diff --git a/drivers/staging/rts5208/rtsx_transport.c b/drivers/staging/rts5208/rtsx_transport.c
+[]
+> @@ -394,7 +394,8 @@ static int rtsx_transfer_sglist_adma_partial(struct rtsx_chip *chip, u8 card,
+>  			*index = *index + 1;
+>  		}
+>  		if ((i == (sg_cnt - 1)) || !resid)
+> -			option = RTSX_SG_VALID | RTSX_SG_END | RTSX_SG_TRANS_DATA;
+> +			option = RTSX_SG_VALID | RTSX_SG_END | 
+> +				 RTSX_SG_TRANS_DATA;
+>  		else
+>  			option = RTSX_SG_VALID | RTSX_SG_TRANS_DATA;
 
-nit: Please express this as !IS_ALIGNED(ipa, 64) instead.
+probably more readable as:
 
-> +		return -EINVAL;
-> +	if (vcpu->arch.steal.base != GPA_INVALID)
-> +		return -EEXIST;
-> +	vcpu->arch.steal.base = ipa;
+		option = RTXS_SG_VALID | RTSX_SG_TRANS_DATA;
+		if (i == sg_cnt - 1 || !resid)
+			option |= RTXS_SG_END;
 
-I'm still worried that you end-up not knowing whether the IPA is valid
-or not at this stage, nor that we check about overlapping vcpus. How do
-we validate that?
+The compiler should produce the same object code.
 
-I also share Christoffer's concern that the memslot parsing may be
-expensive on a system with multiple memslots. But maybe that can be
-solved by adding some caching capabilities to your kvm_put_guest(),
-should this become a problem.
+Add parentheses in the if to suit, but they are not
+necessary.
 
-> +	return 0;
-> +}
-> +
-> +int kvm_arm_pvtime_get_attr(struct kvm_vcpu *vcpu,
-> +			    struct kvm_device_attr *attr)
-> +{
-> +	u64 __user *user = (u64 __user *)attr->addr;
-> +	u64 ipa;
-> +
-> +	if (attr->attr != KVM_ARM_VCPU_PVTIME_SET_IPA)
 
-It is a bit odd that this is using "SET_IPA" as a way to GET it.
-
-> +		return -ENXIO;
-> +
-> +	ipa = vcpu->arch.steal.base;
-> +
-> +	if (put_user(ipa, user))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> +
-> +int kvm_arm_pvtime_has_attr(struct kvm_vcpu *vcpu,
-> +			    struct kvm_device_attr *attr)
-> +{
-> +	switch (attr->attr) {
-> +	case KVM_ARM_VCPU_PVTIME_SET_IPA:
-> +		return 0;
-> +	}
-> +	return -ENXIO;
-> +}
-> 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
