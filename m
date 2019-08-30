@@ -2,115 +2,139 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3896C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D74C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D75E21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567147188;
-	bh=7/rlq7vaiQOs31GzJFIA6k/xmE5490eBtARLEuRFq7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dG26oJ3Xedpwc6sE4zsqjtFpx4PS/g1Xd0NkDwhGPCGaP/jQ9L/+dlZuMhM5NAfNJ
-	 iTuuFnGFwYVXbEl/zTgqh5alp1bJSJ6KC4qzwT25h5SkeT34uylhHkVaURcw+yqHJb
-	 OEZTsS2fzgxwJtb8bL2Jh1JOROqeM8rlgoOmOmps=
+	by mail.kernel.org (Postfix) with ESMTP id 1368921726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UVEbVzrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfH3Gjr (ORCPT
+        id S1727936AbfH3Glc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfH3Gjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:39:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C431421726;
-        Fri, 30 Aug 2019 06:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567147186;
-        bh=7/rlq7vaiQOs31GzJFIA6k/xmE5490eBtARLEuRFq7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NLua+rWZfK61axwTbxetb7LZfM7o5wumj8OLYbaDAq4Dbw4SnLP64ExzXhrtBV6PE
-         R4xhiF3XthsZRRTmTKpxP7R+X6necCQY2PuG14kcWtklm4XHPs1zPu7SRbhEZmrmWy
-         +wK//lHXUFRzZRT/AhPZ8J9iXo5HGB7ylBYjLv/4=
-Date:   Fri, 30 Aug 2019 08:39:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Peikan Tsai <peikantsai@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        devel@driverdev.osuosl.org, tkjos@android.com,
-        linux-kernel@vger.kernel.org, arve@android.com,
-        Joel Fernandes <joel@joelfernandes.org>, maco@android.com
-Subject: Re: [PATCH] binder: Use kmem_cache for binder_thread
-Message-ID: <20190830063943.GH15257@kroah.com>
-References: <20190829054953.GA18328@mark-All-Series>
- <20190829064229.GA30423@kroah.com>
- <20190829135359.GB63638@google.com>
- <20190829152721.ttsyfwaeygmwmcu7@wittgenstein>
- <20190829185901.GA4680@mark-All-Series>
+        Fri, 30 Aug 2019 02:41:32 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46173 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfH3Glc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:41:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id n19so4437097lfe.13
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 23:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vWBOF7L/DOCaXKkeBfa9bHcFotH7VO/yMH6MWg+pOs8=;
+        b=UVEbVzrOcyBD9t7iur7XNpIk4mk114Y4yd9S55ZNizwKYZfTBQNFqi9/kxI4iOMh1N
+         s464ZhcarWv02wag88TJuDsrPO/ok09wjh8jzTCwfmDfFTzv5crFcAe+2vkO2HKxEVmq
+         B2HkuBxjKYxYKB0cDOgKuZwEpapCrkBCjcUX8GJCiL/ElHWHK0bBCkhxZqNDxuFRSJDn
+         r7URIldThRjLe1sur+3KZMAOJhkXEbaZXfhvRAElPNoHVjAl3DCK0G6dCvfnzbIT0m+B
+         ZeqHagY989QX/AyingVkSlTx5c6mTyld7f8MFBciKvQkiBWhHTp28/TdIQA0JsPr3XA2
+         OWBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vWBOF7L/DOCaXKkeBfa9bHcFotH7VO/yMH6MWg+pOs8=;
+        b=JzdIWKek6/r3k/yGvKbdjnfTPpEbqZIyh9Mw2kAXyxZ4OojnT0R3aJdO1JsFyOO2e0
+         X7JHB3ju4YtW8wajzrbf7CLVKMZ/s/y+SDjt1qcNn/dpcD4+ELpuWUsdc6AZwzSLoSNm
+         veqA4H6r2/H4F35Nupyl96PSZqWJ3bLxZB6NPsorwgdUoa4hjAIapRl0vT66jpWmuEsF
+         DaMsfXdL06mb1YQAhCBmvIUXE8+I+kDvw91NGUT5d8BdkYrv/yGBCTgn6fqJz2I2+Sgz
+         YeyIffZsKTaOf9GhwXyqS1+sC2EjK31IxL2lI/kuJdlpz0TDkAK0FpQm0JsY8DmIsohE
+         GcIA==
+X-Gm-Message-State: APjAAAWhX+xfoaINLOA+spgD/yUDoN6Z2s+Zm8Jf1gOVScT9k99eHAwb
+        suQeqoupW0c+4Jncr3fvwkMc8kCnHBMU6rcNvkhxgQ==
+X-Google-Smtp-Source: APXvYqzNHkk48QdykrCa7nUQ5bgYkDthjxlYnNFho7YV8cxx+XVNa82Ph7h5UpeTPzzpIjWNGcYD+TNoX7vdies4qYY=
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr7672532lfp.125.1567147289641;
+ Thu, 29 Aug 2019 23:41:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829185901.GA4680@mark-All-Series>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-9-riel@surriel.com>
+ <CAKfTPtDxHijR3PCOFfxA-r02rf2hVP4LpB=y-9emHS7znTPxTA@mail.gmail.com>
+ <d703071084dadb477b8248b041d0d1aa730d65cd.camel@surriel.com>
+ <CAKfTPtDX+keNfNxf78yMoF3QaXSG_fZHJ_nqCFKYDMYGa84A6Q@mail.gmail.com> <2a87463e8a51c34733e9c1fcf63380f9caa7afc4.camel@surriel.com>
+In-Reply-To: <2a87463e8a51c34733e9c1fcf63380f9caa7afc4.camel@surriel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 30 Aug 2019 08:41:17 +0200
+Message-ID: <CAKfTPtCAU7bT3sJ_FPexqKrfFzd8Yk0hVTEB5Da=+VbqPViXpA@mail.gmail.com>
+Subject: Re: [PATCH 08/15] sched,fair: simplify timeslice length code
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mel Gorman <mgorman@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 02:59:01AM +0800, Peikan Tsai wrote:
-> On Thu, Aug 29, 2019 at 05:27:22PM +0200, Christian Brauner wrote:
-> > On Thu, Aug 29, 2019 at 09:53:59AM -0400, Joel Fernandes wrote:
-> > > On Thu, Aug 29, 2019 at 08:42:29AM +0200, Greg KH wrote:
-> > > > On Thu, Aug 29, 2019 at 01:49:53PM +0800, Peikan Tsai wrote:
-> > > [snip] 
-> > > > > The allocated size for each binder_thread is 512 bytes by kzalloc.
-> > > > > Because the size of binder_thread is fixed and it's only 304 bytes.
-> > > > > It will save 208 bytes per binder_thread when use create a kmem_cache
-> > > > > for the binder_thread.
-> > > > 
-> > > > Are you _sure_ it really will save that much memory?  You want to do
-> > > > allocations based on a nice alignment for lots of good reasons,
-> > > > especially for something that needs quick accesses.
-> > > 
-> > > Alignment can be done for slab allocations, kmem_cache_create() takes an
-> > > align argument. I am not sure what the default alignment of objects is
-> > > though (probably no default alignment). What is an optimal alignment in your
-> > > view?
-> > 
-> > Probably SLAB_HWCACHE_ALIGN would make most sense.
-> > 
-> 
-> Agree. Thanks for yours comments and suggestions.
-> I'll put SLAB_HWCACHE_ALIGN it in patch v2.
-> 
-> > > 
-> > > > Did you test your change on a system that relies on binder and find any
-> > > > speed improvement or decrease, and any actual memory savings?
-> > > > 
-> > > > If so, can you post your results?
-> > > 
-> > > That's certainly worth it and I thought of asking for the same, but spoke too
-> > > soon!
-> > 
-> > Yeah, it'd be interesting to see what difference this actually makes. 
-> > 
-> > Christian
-> 
-> I tested this change on an Android device(arm) with AOSP kernel 4.19 and
-> observed
-> memory usage of binder_thread. But I didn't do binder benchmark yet.
-> 
-> On my platform the memory usage of binder_thread reduce about 90 KB as
-> the
-> following result.
->         nr obj          obj size        total
-> 	before: 624             512             319488 bytes
-> 	after:  728             312             227136 bytes
+On Thu, 29 Aug 2019 at 18:00, Rik van Riel <riel@surriel.com> wrote:
+>
+> On Thu, 2019-08-29 at 16:02 +0200, Vincent Guittot wrote:
+> > On Thu, 29 Aug 2019 at 01:19, Rik van Riel <riel@surriel.com> wrote:
+> >
+> > > What am I overlooking?
+> >
+> > My point is more for task that runs several ticks in a row. Their
+> > sched_slice will be shorter in some cases with your changes so they
+> > can be preempted earlier by other runnable tasks with a lower
+> > vruntime
+> > and there will be more context switch
+>
+> I can think of exactly one case where the time slice
+> will be shorter with my new code than with the old code,
+> and that is the case where:
+> - A CPU has nr_running > sched_nr_latency
 
-You have more objects???
+yes nr_running must be higher than  sched_nr_latency
 
+> - __sched_period returns a value larger than sysctl_sched_latency
+> - one of the tasks is much higher priority than the others
+
+it's not only one, that can be several. It depends of the number of
+running tasks
+
+> - that one task alone gets a timeslice larger than sysctl_sched_latency
+>
+> With the new code, that high priority task will get a time
+> slice that is a (large) fraction of sysctl_sched_latency,
+
+yes
+
+> while the other (lower priority) tasks get their time slices
+> rounded up to sysctl_sched_min_granularity.
+
+yes and if the jify period is higher than sysctl_sched_min_granularity
+they will get a full jiffy period
+
+>
+> When tasks get their timeslice rounded up, that will increase
+> the total sched period in a similar way the old code did by
+> returning a longer period from __sched_period.
+
+sched_slice is not a strict value and scheduler will not schedule out
+the task after the sched_slice (unless you enable HRTICK which is
+disable by default). Instead it will wait for next tick to change the
+running task
+
+sched_slice is mainly use to ensure a minimum running time in a row.
+With this change, the running time of the high priority task will most
+probably be split in several slice instead of one
+
+>
+> If a CPU is faced with a large number of equal priority tasks,
+> both the old code and the new code would end up giving each
+> task a timeslice length of sysctl_sched_min_granularity.
+>
+> What am I missing?
+>
+> --
+> All Rights Reversed.
