@@ -2,101 +2,209 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BA3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4AAC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C2E2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F1E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfH3NAi (ORCPT
+        id S1727789AbfH3NDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:00:38 -0400
-Received: from sauhun.de ([88.99.104.3]:53716 "EHLO pokefinder.org"
+        Fri, 30 Aug 2019 09:03:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58577 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfH3NAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:00:38 -0400
-Received: from localhost (p54B335BE.dip0.t-ipconnect.de [84.179.53.190])
-        by pokefinder.org (Postfix) with ESMTPSA id 350732C0095;
-        Fri, 30 Aug 2019 15:00:36 +0200 (CEST)
-Date:   Fri, 30 Aug 2019 15:00:35 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 1/2] rtc: max77686: convert to devm_i2c_new_dummy_device()
-Message-ID: <20190830130035.GF2870@ninjato>
-References: <20190820154239.8230-1-wsa+renesas@sang-engineering.com>
- <20190820154239.8230-2-wsa+renesas@sang-engineering.com>
- <20190829205752.GL21922@piout.net>
- <20190830124554.GB2870@ninjato>
- <20190830125338.GP21922@piout.net>
+        id S1726969AbfH3NDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:03:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 06:03:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="182646184"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Aug 2019 06:03:51 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i3gZB-0007i1-OP; Fri, 30 Aug 2019 16:03:49 +0300
+Date:   Fri, 30 Aug 2019 16:03:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 09/10] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Message-ID: <20190830130349.GJ2680@smile.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-10-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8JPrznbw0YAQ/KXy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830125338.GP21922@piout.net>
+In-Reply-To: <20190829101043.24963-10-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 01:10:42PM +0300, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
+> 
+> On ACPI based systems the resulting strings look like
+> 
+> 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> 
+> where the nodes are separated by a dot (".") and the first three are
+> ACPI device nodes and the latter two ACPI data nodes.
 
---8JPrznbw0YAQ/KXy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Couple of comments below, FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
+>  lib/vsprintf.c                            | 37 +++++++++++++++++++++++
+>  scripts/checkpatch.pl                     |  3 +-
+>  3 files changed, 63 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 922a29eb70e6c..abba210f67567 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -418,6 +418,30 @@ Examples::
+>  
+>  Passed by reference.
+>  
+> +Fwnode handles
+> +--------------
+> +
+> +::
+> +
+> +	%pfw[fP]
+
+I'm not familiar with all flavours of the OF case, the question is do we use
+same letters for analogues?
+
+> +
+> +For printing information on fwnode handles. The default is to print the full
+> +node name, including the path. The modifiers are functionally equivalent to
+> +%pOF above.
+> +
+> +	- f - full name of the node, including the path
+> +	- P - the name of the node including an address (if there is one)
+> +
+> +Examples (ACPI):
+> +
+> +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
+> +	%pfwP	endpoint@0				- Node name
+> +
+> +Examples (OF):
+> +
+> +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
+> +	%pfwP	endpoint				- Node name
+> +
+>  Time and date (struct rtc_time)
+>  -------------------------------
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 19f9b3f30623e..79dacd0b9e124 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1978,6 +1978,37 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	return widen_string(buf, buf - buf_start, end, spec);
+>  }
+>  
+> +static noinline_for_stack
+> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +	struct printf_spec str_spec = spec;
+> +	char *buf_start = buf;
+> +
+> +	str_spec.field_width = -1;
+> +
+> +	if (*fmt != 'w')
+> +		return error_string(buf, end, "(%pfw?)", spec);
+> +
+> +	if (check_pointer(&buf, end, fwnode, spec))
+> +		return buf;
+> +
+> +	fmt++;
+> +
+> +	switch (*fmt) {
+> +	case 'f':	/* full_name */
+> +	default:
+> +		buf = fwnode_full_name_string(fwnode, buf, end);
+> +		break;
+> +	case 'P':	/* name */
+
+> +		buf = string(buf, end, fwnode_get_name(fwnode),
+> +			     str_spec);
+
+Perfectly one line.
+
+> +		break;
+> +	}
+> +
+> +	return widen_string(buf, buf - buf_start, end, spec);
+> +}
+> +
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> @@ -2080,6 +2111,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>   *                  F device node flags
+>   *                  c major compatible string
+>   *                  C full compatible string
+> + * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
+> + *		Without an option prints the full name of the node
+> + *		f full name
+> + *		P node name, including a possible unit address
+>   * - 'x' For printing the address. Equivalent to "%lx".
+>   *
+>   * ** When making changes please also update:
+> @@ -2157,6 +2192,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		return flags_string(buf, end, ptr, spec, fmt);
+>  	case 'O':
+>  		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> +	case 'f':
+> +		return fwnode_string(buf, end, ptr, spec, fmt + 1);
+>  	case 'x':
+>  		return pointer_string(buf, end, ptr, spec);
+>  	}
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index a60c241112cd4..8df50911ff4e9 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -5995,7 +5995,8 @@ sub process {
+>  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+>  					$specifier = $1;
+>  					$extension = $2;
+> -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
+> +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
+> +					    $extension =~ /^f[^w]/) {
+>  						$bad_specifier = $specifier;
+>  						last;
+>  					}
+> -- 
+> 2.20.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> > > I'm confused because I already applied:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/co=
-mmit/?h=3Drtc-next&id=3D7150710f3084de8d35ce3221eeae2caee8813f92
-> >=20
-> > The above was a mass conversion to i2c_new_dummy_device() to make sure
-> > all in-kernel users use the API returning an ERRPTR. Mass conversion to
-> > the devm_ variant of the same function was too troublesome.
-> >=20
-> > With another series, I wanted to remove superfluous error checking of
-> > i2c_unregister_device() because it is NULL-ptr safe, like here:
-> >=20
-> > > > -	if (info->rtc)
-> > > > -		i2c_unregister_device(info->rtc);
-> >=20
-> > But for these two RTC drivers, I figured moving to devm_* is way easier
-> > than fixing up the mass conversion result from coccinelle.
-> >=20
->=20
-> Ok so should I drop the previous patches and apply those instead?
-
-Nope, they should be incremental, aren't they?
-
-
---8JPrznbw0YAQ/KXy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1pHfMACgkQFA3kzBSg
-Kban+hAApng8jeSWw1/5/K5+lAqBCFLu2mmoMYDvy4I/4VOaGWO1cGYs37e148zQ
-fJJdGKs0B8gb02s08/8CqJEEJLNPBHhOVfUZPo5KVDsSBBQbTvh3Sv8gmOobM5SL
-36Bk55Vj6aWzOEoKh6jMkJyDv8q4D4/HR1V6TpiaIPG5dObx7OiUoCccXvQRK1e3
-STVcZxvay6E/43v5rk+eUhdjyTIZkqnTcMXtpg0e7sM1/Jyr1j6mKfUWWTu8C+in
-c67WXyhcWXrHckhjQRhpKDYuYHeawjvUMmycjOyInRnrwtBR2qJRGmQxExDGztDH
-pxijj2T1WdgP3kvHWIWeDudr7CaCZaGpv4jTiA5f2OD5fpdyas9lq8E2CMiqDnRX
-oDku3RdCInTfOeJGXQGUs62jm7S4xjWalINl9yWx4VBOq+bnt4HF1RDDfGY3Tt62
-4Sri2fHZdk65czsTWu4jutU1BcWO2rdjBs8XDvpbTKjhTDWJnX/Ef4Eph6j8RzXS
-sQ6TNPJQVmr9wS1iV9pfsgaiVaxDEB3vaLCbOMGw9EJkSuRNvfJBtfkQ93p1TEiu
-6tMZIpceVFkmfTKj6Zn3DNS3SPTUO9meWEXwpJOtRBZaH/74uQeKdRs3P1/j9rzF
-K31G5lv4wyHlJCSE0FKiuMWFfOeiN9mxXT+1bgdDY4BKuzINONU=
-=9bct
------END PGP SIGNATURE-----
-
---8JPrznbw0YAQ/KXy--
