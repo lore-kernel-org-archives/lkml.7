@@ -2,142 +2,73 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E990C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD08C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE412342E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nHEwYYT1"
+	by mail.kernel.org (Postfix) with ESMTP id 9D5E62342F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfH3SOx (ORCPT
+        id S1728161AbfH3SP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:14:53 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.56]:47200 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727979AbfH3SOw (ORCPT
+        Fri, 30 Aug 2019 14:15:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37009 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbfH3SP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:14:52 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id DBEC85DC0F
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 13:14:50 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3lQAieMry3Qi03lQAiJHoY; Fri, 30 Aug 2019 13:14:50 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FvxkqczR+A1t/cFp9JibpXsNBR3Ts73/K/qlmM3yxeo=; b=nHEwYYT1ZkeN4QEQCXUjEiNKjH
-        raYuW8hBKhZcskRrW+68HmzCeM+oYA8kDcPBggzJFy5/fMO2AwJJnDTdtQFdMY/ix7DcPiC6e6/12
-        MNwlv+8WKVm5wRyrxhSGZgYYSB9aFZPm69MPqujl6HO9EUmRObfHmNQLO1d2bLjFmnzJ6QksnMn0d
-        WiUBdhJdSEp67TbI19BbW80Nz8pVdJRVTfPcvyx3mg8A+7NgXS+v/rbrPqxa0XKqoaV+L4uP/ReSG
-        mehAvDJrfUvmc0D/3wAoMiLTLVCpjOZaT1lC2LRWHlApcOAWaULHQBqu1wJFaGFJL1hlbJ0F27Ccq
-        6A1lKYXw==;
-Received: from [189.152.216.116] (port=37172 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3lQ9-001tMY-A8; Fri, 30 Aug 2019 13:14:49 -0500
-Date:   Fri, 30 Aug 2019 13:14:48 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] leds: is31fl32xx: Use struct_size() helper
-Message-ID: <20190830181448.GA24483@embeddedor>
+        Fri, 30 Aug 2019 14:15:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i3lQi-0001db-9R; Fri, 30 Aug 2019 18:15:24 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: exfat: remove redundant goto
+Date:   Fri, 30 Aug 2019 19:15:23 +0100
+Message-Id: <20190830181523.13356-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3lQ9-001tMY-A8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:37172
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+From: Colin Ian King <colin.king@canonical.com>
 
-struct is31fl32xx_priv {
-	...
-        struct is31fl32xx_led_data leds[0];
-};
+The goto after a return is never executed, so it is redundant and can
+be removed.
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
-
-So, replace the following function:
-
-static inline size_t sizeof_is31fl32xx_priv(int num_leds)
-{
-       return sizeof(struct is31fl32xx_priv) +
-                     (sizeof(struct is31fl32xx_led_data) * num_leds);
-}
-
-with:
-
-struct_size(priv, leds, count)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Addresses-Coverity: ("Structurally dead code")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/leds/leds-is31fl32xx.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/staging/exfat/exfat_super.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is31fl32xx.c
-index 6fbab70dfb04..6f29b8943913 100644
---- a/drivers/leds/leds-is31fl32xx.c
-+++ b/drivers/leds/leds-is31fl32xx.c
-@@ -324,12 +324,6 @@ static int is31fl32xx_init_regs(struct is31fl32xx_priv *priv)
- 	return 0;
- }
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 5b5c2ca8c9aa..5b3c4dfe0ecc 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -663,10 +663,8 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 	/* search the file name for directories */
+ 	dentry = p_fs->fs_func->find_dir_entry(sb, &dir, &uni_name, num_entries,
+ 					       &dos_name, TYPE_ALL);
+-	if (dentry < -1) {
++	if (dentry < -1)
+ 		return FFS_NOTFOUND;
+-		goto out;
+-	}
  
--static inline size_t sizeof_is31fl32xx_priv(int num_leds)
--{
--	return sizeof(struct is31fl32xx_priv) +
--		      (sizeof(struct is31fl32xx_led_data) * num_leds);
--}
--
- static int is31fl32xx_parse_child_dt(const struct device *dev,
- 				     const struct device_node *child,
- 				     struct is31fl32xx_led_data *led_data)
-@@ -450,7 +444,7 @@ static int is31fl32xx_probe(struct i2c_client *client,
- 	if (!count)
- 		return -EINVAL;
- 
--	priv = devm_kzalloc(dev, sizeof_is31fl32xx_priv(count),
-+	priv = devm_kzalloc(dev, struct_size(priv, leds, count),
- 			    GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
+ 	fid->dir.dir = dir.dir;
+ 	fid->dir.size = dir.size;
 -- 
-2.23.0
+2.20.1
 
