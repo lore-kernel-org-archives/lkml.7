@@ -2,107 +2,99 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6691C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64D4C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D6E21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F3221874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfH3M1l (ORCPT
+        id S1728026AbfH3M2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:27:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12352 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfH3M1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:27:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:27:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="198026261"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 30 Aug 2019 05:27:27 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 30 Aug 2019 15:27:26 +0300
-Date:   Fri, 30 Aug 2019 15:27:26 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 02/10] software node: Make argument to
- to_software_node const
-Message-ID: <20190830122726.GB1636@kuha.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-3-sakari.ailus@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-3-sakari.ailus@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 30 Aug 2019 08:28:51 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49662 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfH3M2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:28:51 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 85B6560208; Fri, 30 Aug 2019 12:28:50 +0000 (UTC)
+Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: c-hbandi@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B143B6014B;
+        Fri, 30 Aug 2019 12:28:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B143B6014B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=fail (p=none dis=none) header.from=qti.qualcomm.com
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=fail smtp.mailfrom=c_hbandi@qti.qualcomm.com
+From:   Harish Bandi <c_hbandi@qti.qualcomm.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
+Subject: [PATCH v3] Bluetooth: hci_qca: wait for Pre shutdown complete event before sending the Power off pulse
+Date:   Fri, 30 Aug 2019 17:58:36 +0530
+Message-Id: <1567168116-12462-1-git-send-email-c_hbandi@qti.qualcomm.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:35PM +0300, Sakari Ailus wrote:
-> to_software_node() does not need to modify the fwnode_handle it operates
-> on; therefore make it const. This allows passing a const fwnode_handle to
-> to_software_node().
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Harish Bandi <c-hbandi@codeaurora.org>
 
-OK by me.
+When SoC receives pre shut down command, it share the same
+with other COEX shared clients. So SoC needs a short time
+after sending VS pre shutdown command before turning off
+the regulators and sending the power off pulse. Along with
+short delay, needs to wait for command complete event for
+Pre shutdown VS command
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com
+Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+---
+Changes in V3:
+- updated patch on latest tip.
+---
+ drivers/bluetooth/btqca.c   | 5 +++--
+ drivers/bluetooth/hci_qca.c | 2 ++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/base/swnode.c    | 4 ++--
->  include/linux/property.h | 3 ++-
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index a7cb41812cfda..951e7efd47c23 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
->  	return swnode;
->  }
->  
-> -const struct software_node *to_software_node(struct fwnode_handle *fwnode)
-> +const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
->  {
-> -	struct swnode *swnode = to_swnode(fwnode);
-> +	const struct swnode *swnode = to_swnode(fwnode);
->  
->  	return swnode ? swnode->node : NULL;
->  }
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 5a910ad795910..421c76e53708d 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -418,7 +418,8 @@ struct software_node {
->  };
->  
->  bool is_software_node(const struct fwnode_handle *fwnode);
-> -const struct software_node *to_software_node(struct fwnode_handle *fwnode);
-> +const struct software_node *
-> +to_software_node(const struct fwnode_handle *fwnode);
->  struct fwnode_handle *software_node_fwnode(const struct software_node *node);
->  
->  int software_node_register_nodes(const struct software_node *nodes);
-> -- 
-> 2.20.1
-
-thanks,
-
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 0875470..8cc21ad 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -106,8 +106,9 @@ int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
+ 
+ 	bt_dev_dbg(hdev, "QCA pre shutdown cmd");
+ 
+-	skb = __hci_cmd_sync(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
+-				NULL, HCI_INIT_TIMEOUT);
++	skb = __hci_cmd_sync_ev(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
++				NULL, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
++
+ 	if (IS_ERR(skb)) {
+ 		err = PTR_ERR(skb);
+ 		bt_dev_err(hdev, "QCA preshutdown_cmd failed (%d)", err);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 15753f6..d33828f 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1375,6 +1375,8 @@ static int qca_power_off(struct hci_dev *hdev)
+ 	/* Perform pre shutdown command */
+ 	qca_send_pre_shutdown_cmd(hdev);
+ 
++	usleep_range(8000, 10000);
++
+ 	qca_power_shutdown(hu);
+ 	return 0;
+ }
 -- 
-heikki
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
