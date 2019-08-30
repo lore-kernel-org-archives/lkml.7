@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C088C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B18C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DE123717
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403D32342E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0jOYzoo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHXoLyNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfH3VsF (ORCPT
+        id S1728474AbfH3VsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:48:05 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37240 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728094AbfH3VsD (ORCPT
+        Fri, 30 Aug 2019 17:48:07 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45960 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728455AbfH3VsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:48:03 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so9289762qto.4
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 14:48:02 -0700 (PDT)
+        Fri, 30 Aug 2019 17:48:05 -0400
+Received: by mail-qt1-f193.google.com with SMTP id r15so3594564qtn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 14:48:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fy5a7OM3WKipJOb0pBIkcn0k9cPfYCaCEfNLlMDhAqE=;
-        b=V0jOYzoo+LfyKBY3IERIzxQAZSePtXTZn83TzwZ3Nibc1uBECOYUBSSlHgLrh0dicE
-         Ccb85Ia3gTMV4m64kRj2DPgaEIvHEfNzD1ICbNBeJI88oyhLbObzuNMgSKrXsr8JSwdu
-         ahJuws4eelDBSRAFCPf6Rfvo40Pa5cfhsfDt+SA6EBTjMtVL77D63RIM3Bj/42GykiIt
-         mvhyk12oB7miyz8vvM1LZA2Y+KYwdjKm+uo3XxXn6J7u/Sq4rlJ9L3h8gZBqefU7GGIt
-         q4HWbyzvU0NWnRoDz6syVbvsL21ivGHwZopJPm6m36kRiEOo2wkfDiueYBrj7PI7UwON
-         guuw==
+        bh=4w/5foUOWsGiIALhc9FkX1i52x/QwOcQXv5vExOoBOQ=;
+        b=uHXoLyNPT7g+1xR6937SaYsBmR7HeBZDJ89JU2W4k2H/qnX8OkvNHYZgN9lq8JNRIb
+         MoNfjR4nzlVMgyCqp2ClBfhU16UUhKZKFNQEW1yGnpA++xAWBZrBiwtX1w2HNfcM+rgM
+         xKu6O4AP2AV0rzPzWOJfTwzYVBcVdiJ4UfpXeGw3RqjBFegxYjql8Swlr4fRUG486CcI
+         wRq/v59BYWvutChVlIr1wjptEOAQkAp6da6UVV3ne7yw2FfLwMkCifDL4Rx6mApBaK68
+         df/oDRTW7F2ALlUq55UiIDKMSfF6Cjr91mst4WkKcgDHgl+sHp1VaxAwrMmmyJYDpmBA
+         Rgeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Fy5a7OM3WKipJOb0pBIkcn0k9cPfYCaCEfNLlMDhAqE=;
-        b=WgEl+pbI1uQhq5CtyBeC+N8y/ALy088mnrOmjKdTNtyKrxUpZ3mIaboPUK05d842D+
-         c8a9YrhmLa3VCCeRWv4V72xHOEMZBISsKvGLLITVUtIMCTJPZsXgwrTtV3h34MBxMPmb
-         h+B44mj3DKWMYiajxjCpz/9XjbM14hA8rk20SOK+HYrUS1QGCibx68Yv9UpYXdc69V17
-         1sUc7oQB1IZdJFMdABs4MalZ2v0Q1nVDzXiIOmWwii5qoxZKBDdaeYlP/PDK05cg3Ssx
-         7KfOCWPsUnV6QTGAj+YVcS0y1xjiAqV0Zb/OT1dI3wu6xs4Ak6eML3LczYEqK3FSHJKb
-         Xi7g==
-X-Gm-Message-State: APjAAAU/QPMdD4NocBtqbEiT3iBJtJ0wlTon9GooEAyK2y6BS3dpmAXw
-        L9E4NKePDvPGTJOsddKdMw==
-X-Google-Smtp-Source: APXvYqxY2hPF6twppIW1bsNq800xKUUB6mZwSm4nE0LNweg1cwdygGw7Bb+rqh//qRv5Gwf9hFGwUQ==
-X-Received: by 2002:ac8:6bca:: with SMTP id b10mr17055522qtt.254.1567201681902;
-        Fri, 30 Aug 2019 14:48:01 -0700 (PDT)
+        bh=4w/5foUOWsGiIALhc9FkX1i52x/QwOcQXv5vExOoBOQ=;
+        b=bFHUQOTYiTqPY2uJhTqiiJP5szzj00fKU/wVlWBIRT9xZF+kEPIPAckfmCH4GhpKw+
+         l387KgTqx3+vB5abyD7rN0Fd31Nz8zXqXPsr3OLwq3BRbUEYoUaLD3PdBKG+aLYVqUQn
+         Vr8/QCrQ3Mgfg5HnIQW1fkE1Z7/oPpS4KZ+6eaAkWpQaqFIUVPjn8av4mTQA6Y5Hy1aa
+         dtNnzFRGEWX+mozYpBgTTNYLyNBd4EKgC4u0Lo+bdoSe+FUAHPMrEJL5W3/u2MO8qbKE
+         BD7Y5DnaZBotSty24IR/je8dVzJ62Jhcz0rk187QTNnHzWmaldliqN3Tn7vfi6vM5OEO
+         7fjw==
+X-Gm-Message-State: APjAAAWocVzoJJgL2P9PqwMWMxyaaVygWnoFOgBIgP6EdqRTFdx8dUth
+        xYca24hGAcbCSgWM6MlzNw==
+X-Google-Smtp-Source: APXvYqxpjkeboMJNaq6exwkGx/ymWx+cjmBRwLwt2mSOwfZHSXQmJ+7yikFJJ9x5Y1PCxpJZOHA2iQ==
+X-Received: by 2002:a0c:fec4:: with SMTP id z4mr11930335qvs.101.1567201684588;
+        Fri, 30 Aug 2019 14:48:04 -0700 (PDT)
 Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id a4sm4857834qtb.17.2019.08.30.14.48.00
+        by smtp.gmail.com with ESMTPSA id a4sm4857834qtb.17.2019.08.30.14.48.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 14:48:01 -0700 (PDT)
+        Fri, 30 Aug 2019 14:48:04 -0700 (PDT)
 From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -65,9 +65,9 @@ To:     Borislav Petkov <bp@alien8.de>,
 Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/5] x86/boot: Add max_addr field in struct boot_params
-Date:   Fri, 30 Aug 2019 17:47:04 -0400
-Message-Id: <20190830214707.1201-3-msys.mizuma@gmail.com>
+Subject: [PATCH v3 4/5] x86/mm/KASLR: Cleanup calculation for direct mapping size
+Date:   Fri, 30 Aug 2019 17:47:06 -0400
+Message-Id: <20190830214707.1201-5-msys.mizuma@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190830214707.1201-1-msys.mizuma@gmail.com>
 References: <20190830214707.1201-1-msys.mizuma@gmail.com>
@@ -78,48 +78,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Add max_addr field in struct boot_params. max_addr shows the
-maximum memory address to be reachable by memory hot-add.
-max_addr is set by parsing ACPI SRAT.
+Cleanup calculation for direct mapping size.
 
+Signed-off-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 ---
- Documentation/x86/zero-page.rst       | 4 ++++
- arch/x86/include/uapi/asm/bootparam.h | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/mm/kaslr.c | 50 +++++++++++++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/x86/zero-page.rst b/Documentation/x86/zero-page.rst
-index f088f5881..cc3938d68 100644
---- a/Documentation/x86/zero-page.rst
-+++ b/Documentation/x86/zero-page.rst
-@@ -19,6 +19,7 @@ Offset/Size	Proto	Name			Meaning
- 058/008		ALL	tboot_addr      	Physical address of tboot shared page
- 060/010		ALL	ist_info		Intel SpeedStep (IST) BIOS support information
- 						(struct ist_info)
-+078/010		ALL	max_addr		The possible maximum physical memory address [1]_
- 080/010		ALL	hd0_info		hd0 disk parameter, OBSOLETE!!
- 090/010		ALL	hd1_info		hd1 disk parameter, OBSOLETE!!
- 0A0/010		ALL	sys_desc_table		System description table (struct sys_desc_table),
-@@ -43,3 +44,6 @@ Offset/Size	Proto	Name			Meaning
- 						(array of struct e820_entry)
- D00/1EC		ALL	eddbuf			EDD data (array of struct edd_info)
- ===========	=====	=======================	=================================================
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index dc6182eec..8e5f3642e 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -70,15 +70,45 @@ static inline bool kaslr_memory_enabled(void)
+ 	return kaslr_enabled() && !IS_ENABLED(CONFIG_KASAN);
+ }
+ 
++/*
++ * Even though a huge virtual address space is reserved for the direct
++ * mapping of physical memory, e.g in 4-level paging mode, it's 64TB,
++ * rare system can own enough physical memory to use it up, most are
++ * even less than 1TB. So with KASLR enabled, we adapt the size of
++ * direct mapping area to the size of actual physical memory plus the
++ * configured padding CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING.
++ * The left part will be taken out to join memory randomization.
++ */
++static inline unsigned long calc_direct_mapping_size(void)
++{
++	unsigned long size_tb, memory_tb;
 +
-+.. [1] max_addr shows the maximum memory address to be reachable by memory
-+       hot-add. max_addr is set by parsing ACPI SRAT.
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index c895df548..6efad338b 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -158,7 +158,7 @@ struct boot_params {
- 	__u64  tboot_addr;				/* 0x058 */
- 	struct ist_info ist_info;			/* 0x060 */
- 	__u64 acpi_rsdp_addr;				/* 0x070 */
--	__u8  _pad3[8];					/* 0x078 */
-+	__u64 max_addr;					/* 0x078 */
- 	__u8  hd0_info[16];	/* obsolete! */		/* 0x080 */
- 	__u8  hd1_info[16];	/* obsolete! */		/* 0x090 */
- 	struct sys_desc_table sys_desc_table; /* obsolete! */	/* 0x0a0 */
++	/*
++	 * Update Physical memory mapping to available and
++	 * add padding if needed (especially for memory hotplug support).
++	 */
++	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
++		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
++
++	size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
++
++	/*
++	 * Adapt physical memory region size based on available memory
++	 */
++	if (memory_tb < size_tb)
++		size_tb = memory_tb;
++
++	return size_tb;
++}
++
+ /* Initialize base and padding for each memory region randomized with KASLR */
+ void __init kernel_randomize_memory(void)
+ {
+-	size_t i;
+-	unsigned long vaddr_start, vaddr;
+-	unsigned long rand, memory_tb;
+-	struct rnd_state rand_state;
++	unsigned long vaddr_start, vaddr, rand;
+ 	unsigned long remain_entropy;
+ 	unsigned long vmemmap_size;
++	struct rnd_state rand_state;
++	size_t i;
+ 
+ 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+ 	vaddr = vaddr_start;
+@@ -95,20 +125,10 @@ void __init kernel_randomize_memory(void)
+ 	if (!kaslr_memory_enabled())
+ 		return;
+ 
+-	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
++	kaslr_regions[0].size_tb = calc_direct_mapping_size();
+ 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
+ 
+-	/*
+-	 * Update Physical memory mapping to available and
+-	 * add padding if needed (especially for memory hotplug support).
+-	 */
+ 	BUG_ON(kaslr_regions[0].base != &page_offset_base);
+-	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
+-		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
+-
+-	/* Adapt phyiscal memory region size based on available memory */
+-	if (memory_tb < kaslr_regions[0].size_tb)
+-		kaslr_regions[0].size_tb = memory_tb;
+ 
+ 	/*
+ 	 * Calculate the vmemmap region size in TBs, aligned to a TB
 -- 
 2.18.1
 
