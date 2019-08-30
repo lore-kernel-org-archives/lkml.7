@@ -2,205 +2,79 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41EEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0DEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A785723407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A67723407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TmdCTuad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfH3HTK (ORCPT
+        id S1728532AbfH3HTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:19:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62229 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfH3HTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:19:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 00:19:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
-   d="scan'208";a="182576927"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga007.fm.intel.com with ESMTP; 30 Aug 2019 00:19:05 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
-        kevin.tian@intel.com, mika.westerberg@linux.intel.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v8 6/7] iommu/vt-d: Add trace events for device dma map/unmap
-Date:   Fri, 30 Aug 2019 15:17:17 +0800
-Message-Id: <20190830071718.16613-7-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190830071718.16613-1-baolu.lu@linux.intel.com>
-References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
+        Fri, 30 Aug 2019 03:19:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49668 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbfH3HTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:19:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w1SF78Kk0E6HLyNwS5UYNieyf6tAgGpx5WCCw58u+14=; b=TmdCTuadbEDWKBDjPAR48Zg9k
+        IvIl/cF5dZhNltgANev4nrj8oAQmTddvp3eLwX3tLVmDYIV7fB4Hy3dzVP+oQPg7udwTsgl8ov94k
+        UelhkrFj+kxkoTwq+fKHHUWLVhaZfq+K9l0wJjZ6xup/HwZv8HL18gky+vkDe+Ns0fiy78WC+ENyu
+        UVJdO/sQsu+7SmF0zsYBNzjNFok/bxyqzDViZz/uQ5EcfhcjjQidZJYBLXOP1zl6e8WOJ5s3Kn/kn
+        ZO4MNXBeMFzjqdK9KKCpmZXGiOR0+QLLvjU1vcjsVuZbMWwOoin0UABc6PYcxG02SRZ8htQc5u/fK
+        kjTVIKLcw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3bBf-0000Qt-AB; Fri, 30 Aug 2019 07:19:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D53C305615;
+        Fri, 30 Aug 2019 09:18:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A47A4202411AD; Fri, 30 Aug 2019 09:19:08 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 09:19:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 0/4] objtool,perf: Use shared x86 insn decoder
+Message-ID: <20190830071908.GY2369@hirez.programming.kicks-ass.net>
+References: <cover.1567118001.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1567118001.git.jpoimboe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds trace support for the Intel IOMMU driver. It
-also declares some events which could be used to trace
-the events when an IOVA is being mapped or unmapped in
-a domain.
+On Thu, Aug 29, 2019 at 05:41:17PM -0500, Josh Poimboeuf wrote:
+> It's kind of silly that we have *three* identical copies of the x86 insn
+> decoder in the kernel tree.  Make it approximately 50% less silly by
+> reducing that number to two.
+> 
+> Josh Poimboeuf (4):
+>   objtool: Move x86 insn decoder to a common location
+>   perf: Update .gitignore file
+>   perf intel-pt: Remove inat.c from build dependency list
+>   perf intel-pt: Use shared x86 insn decoder
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- drivers/iommu/Makefile             |  1 +
- drivers/iommu/intel-trace.c        | 14 +++++
- include/trace/events/intel_iommu.h | 84 ++++++++++++++++++++++++++++++
- 3 files changed, 99 insertions(+)
- create mode 100644 drivers/iommu/intel-trace.c
- create mode 100644 include/trace/events/intel_iommu.h
-
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index f13f36ae1af6..bfe27b2755bd 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
- obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
- obj-$(CONFIG_DMAR_TABLE) += dmar.o
- obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-+obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
- obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
- obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
- obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
-diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel-trace.c
-new file mode 100644
-index 000000000000..bfb6a6e37a88
---- /dev/null
-+++ b/drivers/iommu/intel-trace.c
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel IOMMU trace support
-+ *
-+ * Copyright (C) 2019 Intel Corporation
-+ *
-+ * Author: Lu Baolu <baolu.lu@linux.intel.com>
-+ */
-+
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/intel_iommu.h>
-diff --git a/include/trace/events/intel_iommu.h b/include/trace/events/intel_iommu.h
-new file mode 100644
-index 000000000000..9c28e6cae86f
---- /dev/null
-+++ b/include/trace/events/intel_iommu.h
-@@ -0,0 +1,84 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel IOMMU trace support
-+ *
-+ * Copyright (C) 2019 Intel Corporation
-+ *
-+ * Author: Lu Baolu <baolu.lu@linux.intel.com>
-+ */
-+#ifdef CONFIG_INTEL_IOMMU
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM intel_iommu
-+
-+#if !defined(_TRACE_INTEL_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_INTEL_IOMMU_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/intel-iommu.h>
-+
-+DECLARE_EVENT_CLASS(dma_map,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-+		 size_t size),
-+
-+	TP_ARGS(dev, dev_addr, phys_addr, size),
-+
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+		__field(dma_addr_t, dev_addr)
-+		__field(phys_addr_t, phys_addr)
-+		__field(size_t,	size)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(dev));
-+		__entry->dev_addr = dev_addr;
-+		__entry->phys_addr = phys_addr;
-+		__entry->size = size;
-+	),
-+
-+	TP_printk("dev=%s dev_addr=0x%llx phys_addr=0x%llx size=%zu",
-+		  __get_str(dev_name),
-+		  (unsigned long long)__entry->dev_addr,
-+		  (unsigned long long)__entry->phys_addr,
-+		  __entry->size)
-+);
-+
-+DEFINE_EVENT(dma_map, bounce_map_single,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-+		 size_t size),
-+	TP_ARGS(dev, dev_addr, phys_addr, size)
-+);
-+
-+DECLARE_EVENT_CLASS(dma_unmap,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-+
-+	TP_ARGS(dev, dev_addr, size),
-+
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+		__field(dma_addr_t, dev_addr)
-+		__field(size_t,	size)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(dev));
-+		__entry->dev_addr = dev_addr;
-+		__entry->size = size;
-+	),
-+
-+	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
-+		  __get_str(dev_name),
-+		  (unsigned long long)__entry->dev_addr,
-+		  __entry->size)
-+);
-+
-+DEFINE_EVENT(dma_unmap, bounce_unmap_single,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-+	TP_ARGS(dev, dev_addr, size)
-+);
-+
-+#endif /* _TRACE_INTEL_IOMMU_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-+#endif /* CONFIG_INTEL_IOMMU */
--- 
-2.17.1
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
