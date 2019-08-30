@@ -2,116 +2,458 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21342C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F3CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E5A2397E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DOBICrS+"
+	by mail.kernel.org (Postfix) with ESMTP id 7D09B2397F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfH3IgB (ORCPT
+        id S1728182AbfH3IgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:36:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35952 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfH3IgA (ORCPT
+        Fri, 30 Aug 2019 04:36:04 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55653 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727234AbfH3IgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:36:00 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U8Y1Q7157966;
-        Fri, 30 Aug 2019 08:35:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=5qQDKREBIOpHdjcAhX41kOtTEKTT3PXvNeLkBeWr4GA=;
- b=DOBICrS+B9+nyFrqwktq0ryaroZKDA4Aep2xBK1TDM5+z5c6fMjptnDvB7CUNbtVbprJ
- mp3QngjZFhyO/F4qxi+dAogd8t95pI2MBDUInDKOL2fzUH5NsoptABZrOwh4SPnxFhK/
- vX1zpV+Plarl+TMJ2xtEk1vMBiBeQFdJxY6Sm3M5EDACU1Xp+ee0PZ/qJ6xIkeWjZr0b
- TreacrSB+0XSv63gvHjiVT5HNGk4jRZwsgOZ2YlhXVT4l0Qq0xd4kPNyi09CVvyCESRi
- dhOgmH6qR+Wlw5Y5ayOYnqQ3dUDVVdxVHMWhzO01oFtt1atDFdT+mUkAMCnI1xkuYB/n lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uq009g5pj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 08:35:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U8Xlk6004822;
-        Fri, 30 Aug 2019 08:35:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2upc8x6487-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 08:34:59 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7U8Yrwu012117;
-        Fri, 30 Aug 2019 08:34:53 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 30 Aug 2019 01:34:53 -0700
-Date:   Fri, 30 Aug 2019 11:34:45 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     devel@driverdev.osuosl.org, Christoph Hellwig <hch@infradead.org>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190830083445.GL23584@kadam>
-References: <20190829063955.GA30193@kroah.com>
- <20190829094136.GA28643@infradead.org>
- <20190829095019.GA13557@kroah.com>
- <20190829103749.GA13661@infradead.org>
- <20190829111810.GA23393@kroah.com>
- <20190829151144.GJ23584@kadam>
- <20190829152757.GA125003@architecture4>
- <20190829154346.GK23584@kadam>
- <20190829155127.GA136563@architecture4>
- <20190829160441.GA141079@architecture4>
+        Fri, 30 Aug 2019 04:36:01 -0400
+X-UUID: 8a4f7bad47934e6aa052e8c8afb70867-20190830
+X-UUID: 8a4f7bad47934e6aa052e8c8afb70867-20190830
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1261851753; Fri, 30 Aug 2019 16:35:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 16:35:55 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 16:35:55 +0800
+Message-ID: <1567154150.13325.2.camel@mtksdaap41>
+Subject: Re: [PATCH 1/2] drm/mediatek: Only block updates to CRTCs that have
+ a pending update
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Date:   Fri, 30 Aug 2019 16:35:50 +0800
+In-Reply-To: <20190830073819.16566-2-bibby.hsieh@mediatek.com>
+References: <20190830073819.16566-1-bibby.hsieh@mediatek.com>
+         <20190830073819.16566-2-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829160441.GA141079@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908300092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908300092
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 6A96CFC89D33F5FA5F20A3018DA500853F5365A8A16AA1784E06D7C60982FE4B2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:04:41AM +0800, Gao Xiang wrote:
-> Anyway, I'm fine to delete them all if you like, but I think majority of these
-> are meaningful.
+Hi, Bibby:
+
+On Fri, 2019-08-30 at 15:38 +0800, Bibby Hsieh wrote:
+> Currently we use a single mutex to allow only a single atomic
+> update at a time. In truth, though, we really only want to
+> ensure that only a single atomic update is allowed per CRTC.
 > 
-> data.c-		/* page is already locked */
-> data.c-		DBG_BUGON(PageUptodate(page));
-> data.c-
-> data.c:		if (unlikely(err))
-> data.c-			SetPageError(page);
-> data.c-		else
-> data.c-			SetPageUptodate(page);
+> In other words, for each atomic update, we only block if there
+> is a pending update for the CRTCs involved, and don't block if
+> there are only pending updates for other CRTCs.
 
-If we cared about speed here then we would delete the DBG_BUGON() check
-because that's going to be expensive.  The likely/unlikely annotations
-should be used in places a reasonable person thinks it will make a
-difference to benchmarks.
+I don't know why this patch is so complicated. The original problem is
+that one mutex for whole drm would block different crtc. So I think each
+crtc has its own mutex would solve this problem and we need not the
+event waiting. Do I miss something?
 
-regards,
-dan carpenter
+Regards,
+CK
+
+> 
+> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+> 
+> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  14 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 182 +++++++++++++++++++++---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  12 +-
+>  3 files changed, 184 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index b55970a2869d..7697b40baac0 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -5,6 +5,7 @@
+>  
+>  #include <asm/barrier.h>
+>  #include <drm/drmP.h>
+> +#include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_probe_helper.h>
+> @@ -45,6 +46,8 @@ struct mtk_drm_crtc {
+>  	struct mtk_disp_mutex		*mutex;
+>  	unsigned int			ddp_comp_nr;
+>  	struct mtk_ddp_comp		**ddp_comp;
+> +
+> +	struct drm_crtc_state		*old_crtc_state;
+>  };
+>  
+>  struct mtk_crtc_state {
+> @@ -343,6 +346,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>  static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  {
+>  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+> +	struct drm_atomic_state *atomic_state = mtk_crtc->old_crtc_state->state;
+>  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+>  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+>  	unsigned int i;
+> @@ -382,6 +386,7 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  			}
+>  		}
+>  		mtk_crtc->pending_planes = false;
+> +		mtk_atomic_state_put_queue(atomic_state);
+>  	}
+>  }
+>  
+> @@ -451,6 +456,7 @@ static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
+>  static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  				      struct drm_crtc_state *old_crtc_state)
+>  {
+> +	struct drm_atomic_state *old_atomic_state = old_crtc_state->state;
+>  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+>  	struct mtk_drm_private *priv = crtc->dev->dev_private;
+>  	unsigned int pending_planes = 0;
+> @@ -469,8 +475,13 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  			pending_planes |= BIT(i);
+>  		}
+>  	}
+> -	if (pending_planes)
+> +
+> +	if (pending_planes) {
+>  		mtk_crtc->pending_planes = true;
+> +		drm_atomic_state_get(old_atomic_state);
+> +		mtk_crtc->old_crtc_state = old_crtc_state;
+> +	}
+> +
+>  	if (crtc->state->color_mgmt_changed)
+>  		for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+>  			mtk_ddp_gamma_set(mtk_crtc->ddp_comp[i], crtc->state);
+> @@ -526,6 +537,7 @@ static int mtk_drm_crtc_init(struct drm_device *drm,
+>  
+>  void mtk_crtc_ddp_irq(struct drm_crtc *crtc, struct mtk_ddp_comp *comp)
+>  {
+> +
+>  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+>  	struct mtk_drm_private *priv = crtc->dev->dev_private;
+>  
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index c0928b69dc43..b0308a3a7483 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -31,11 +31,120 @@
+>  #define DRIVER_MAJOR 1
+>  #define DRIVER_MINOR 0
+>  
+> -static void mtk_atomic_schedule(struct mtk_drm_private *private,
+> +struct mtk_atomic_state {
+> +	struct drm_atomic_state base;
+> +	struct list_head list;
+> +	struct work_struct work;
+> +};
+> +
+> +static inline struct mtk_atomic_state *to_mtk_state(struct drm_atomic_state *s)
+> +{
+> +	return container_of(s, struct mtk_atomic_state, base);
+> +}
+> +
+> +void mtk_atomic_state_put_queue(struct drm_atomic_state *state)
+> +{
+> +	struct drm_device *drm = state->dev;
+> +	struct mtk_drm_private *mtk_drm = drm->dev_private;
+> +	struct mtk_atomic_state *mtk_state = to_mtk_state(state);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&mtk_drm->unreference.lock, flags);
+> +	list_add_tail(&mtk_state->list, &mtk_drm->unreference.list);
+> +	spin_unlock_irqrestore(&mtk_drm->unreference.lock, flags);
+> +
+> +	schedule_work(&mtk_drm->unreference.work);
+> +}
+> +
+> +static uint32_t mtk_atomic_crtc_mask(struct drm_device *drm,
+> +				     struct drm_atomic_state *state)
+> +{
+> +	uint32_t crtc_mask;
+> +	int i;
+> +
+> +	for (i = 0, crtc_mask = 0; i < drm->mode_config.num_crtc; i++) {
+> +		struct drm_crtc *crtc = state->crtcs[i].ptr;
+> +
+> +		if (crtc)
+> +			crtc_mask |= (1 << drm_crtc_index(crtc));
+> +	}
+> +
+> +	return crtc_mask;
+> +}
+> +
+> +/*
+> + * Block until specified crtcs are no longer pending update, and atomically
+> + * mark them as pending update.
+> + */
+> +static int mtk_atomic_get_crtcs(struct drm_device *drm,
+> +				struct drm_atomic_state *state)
+> +{
+> +	struct mtk_drm_private *private = drm->dev_private;
+> +	uint32_t crtc_mask;
+> +	int ret;
+> +
+> +	crtc_mask = mtk_atomic_crtc_mask(drm, state);
+> +
+> +	/*
+> +	 * Wait for all pending updates to complete for the set of crtcs being
+> +	 * changed in this atomic commit
+> +	 */
+> +	spin_lock(&private->commit.crtcs_event.lock);
+> +	ret = wait_event_interruptible_locked(private->commit.crtcs_event,
+> +			!(private->commit.crtcs & crtc_mask));
+> +	if (ret == 0)
+> +		private->commit.crtcs |= crtc_mask;
+> +	spin_unlock(&private->commit.crtcs_event.lock);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Mark specified crtcs as no longer pending update.
+> + */
+> +static void mtk_atomic_put_crtcs(struct drm_device *drm,
+> +				 struct drm_atomic_state *state)
+> +{
+> +	struct mtk_drm_private *private = drm->dev_private;
+> +	uint32_t crtc_mask;
+> +
+> +	crtc_mask = mtk_atomic_crtc_mask(drm, state);
+> +
+> +	spin_lock(&private->commit.crtcs_event.lock);
+> +	private->commit.crtcs &= ~crtc_mask;
+> +	wake_up_all_locked(&private->commit.crtcs_event);
+> +	spin_unlock(&private->commit.crtcs_event.lock);
+> +}
+> +
+> +static void mtk_unreference_work(struct work_struct *work)
+> +{
+> +	struct mtk_drm_private *mtk_drm = container_of(work,
+> +			struct mtk_drm_private, unreference.work);
+> +	unsigned long flags;
+> +	struct mtk_atomic_state *state, *tmp;
+> +
+> +	/*
+> +	 * framebuffers cannot be unreferenced in atomic context.
+> +	 * Therefore, only hold the spinlock when iterating unreference_list,
+> +	 * and drop it when doing the unreference.
+> +	 */
+> +	spin_lock_irqsave(&mtk_drm->unreference.lock, flags);
+> +	list_for_each_entry_safe(state, tmp, &mtk_drm->unreference.list, list) {
+> +		list_del(&state->list);
+> +		spin_unlock_irqrestore(&mtk_drm->unreference.lock, flags);
+> +		drm_atomic_state_put(&state->base);
+> +		spin_lock_irqsave(&mtk_drm->unreference.lock, flags);
+> +	}
+> +	spin_unlock_irqrestore(&mtk_drm->unreference.lock, flags);
+> +}
+> +
+> +
+> +static void mtk_atomic_schedule(struct drm_device *drm,
+>  				struct drm_atomic_state *state)
+>  {
+> -	private->commit.state = state;
+> -	schedule_work(&private->commit.work);
+> +	struct mtk_atomic_state *mtk_state = to_mtk_state(state);
+> +
+> +	schedule_work(&mtk_state->work);
+>  }
+>  
+>  static void mtk_atomic_wait_for_fences(struct drm_atomic_state *state)
+> @@ -48,13 +157,10 @@ static void mtk_atomic_wait_for_fences(struct drm_atomic_state *state)
+>  		mtk_fb_wait(new_plane_state->fb);
+>  }
+>  
+> -static void mtk_atomic_complete(struct mtk_drm_private *private,
+> +static void mtk_atomic_complete(struct drm_device *drm,
+>  				struct drm_atomic_state *state)
+>  {
+> -	struct drm_device *drm = private->drm;
+> -
+>  	mtk_atomic_wait_for_fences(state);
+> -
+>  	/*
+>  	 * Mediatek drm supports runtime PM, so plane registers cannot be
+>  	 * written when their crtc is disabled.
+> @@ -77,53 +183,86 @@ static void mtk_atomic_complete(struct mtk_drm_private *private,
+>  	drm_atomic_helper_wait_for_vblanks(drm, state);
+>  
+>  	drm_atomic_helper_cleanup_planes(drm, state);
+> +	mtk_atomic_put_crtcs(drm, state);
+> +
+>  	drm_atomic_state_put(state);
+>  }
+>  
+>  static void mtk_atomic_work(struct work_struct *work)
+>  {
+> -	struct mtk_drm_private *private = container_of(work,
+> -			struct mtk_drm_private, commit.work);
+> +	struct mtk_atomic_state *mtk_state = container_of(work,
+> +			struct mtk_atomic_state, work);
+> +	struct drm_atomic_state *state = &mtk_state->base;
+> +	struct drm_device *drm = state->dev;
+>  
+> -	mtk_atomic_complete(private, private->commit.state);
+> +	mtk_atomic_complete(drm, state);
+>  }
+>  
+>  static int mtk_atomic_commit(struct drm_device *drm,
+>  			     struct drm_atomic_state *state,
+>  			     bool async)
+>  {
+> -	struct mtk_drm_private *private = drm->dev_private;
+>  	int ret;
+>  
+>  	ret = drm_atomic_helper_prepare_planes(drm, state);
+>  	if (ret)
+>  		return ret;
+>  
+> -	mutex_lock(&private->commit.lock);
+> -	flush_work(&private->commit.work);
+> +	ret = mtk_atomic_get_crtcs(drm, state);
+> +	if (ret) {
+> +		drm_atomic_helper_cleanup_planes(drm, state);
+> +		return ret;
+> +	}
+>  
+>  	ret = drm_atomic_helper_swap_state(state, true);
+>  	if (ret) {
+> -		mutex_unlock(&private->commit.lock);
+>  		drm_atomic_helper_cleanup_planes(drm, state);
+>  		return ret;
+>  	}
+>  
+>  	drm_atomic_state_get(state);
+>  	if (async)
+> -		mtk_atomic_schedule(private, state);
+> +		mtk_atomic_schedule(drm, state);
+>  	else
+> -		mtk_atomic_complete(private, state);
+> -
+> -	mutex_unlock(&private->commit.lock);
+> +		mtk_atomic_complete(drm, state);
+>  
+>  	return 0;
+>  }
+>  
+> +static struct drm_atomic_state *mtk_drm_atomic_state_alloc(
+> +		struct drm_device *dev)
+> +{
+> +	struct mtk_atomic_state *mtk_state;
+> +
+> +	mtk_state = kzalloc(sizeof(*mtk_state), GFP_KERNEL);
+> +	if (!mtk_state)
+> +		return NULL;
+> +
+> +	if (drm_atomic_state_init(dev, &mtk_state->base) < 0) {
+> +		kfree(mtk_state);
+> +		return NULL;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&mtk_state->list);
+> +	INIT_WORK(&mtk_state->work, mtk_atomic_work);
+> +
+> +	return &mtk_state->base;
+> +}
+> +
+> +static void mtk_drm_atomic_state_free(struct drm_atomic_state *state)
+> +{
+> +	struct mtk_atomic_state *mtk_state = to_mtk_state(state);
+> +
+> +	drm_atomic_state_default_release(state);
+> +	kfree(mtk_state);
+> +}
+> +
+>  static const struct drm_mode_config_funcs mtk_drm_mode_config_funcs = {
+>  	.fb_create = mtk_drm_mode_fb_create,
+>  	.atomic_check = drm_atomic_helper_check,
+>  	.atomic_commit = mtk_atomic_commit,
+> +	.atomic_state_alloc = mtk_drm_atomic_state_alloc,
+> +	.atomic_state_free = mtk_drm_atomic_state_free
+>  };
+>  
+>  static const enum mtk_ddp_comp_id mt2701_mtk_ddp_main[] = {
+> @@ -319,6 +458,11 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>  	drm_kms_helper_poll_init(drm);
+>  	drm_mode_config_reset(drm);
+>  
+> +	INIT_WORK(&private->unreference.work, mtk_unreference_work);
+> +	INIT_LIST_HEAD(&private->unreference.list);
+> +	spin_lock_init(&private->unreference.lock);
+> +	init_waitqueue_head(&private->commit.crtcs_event);
+> +
+>  	return 0;
+>  
+>  err_component_unbind:
+> @@ -504,8 +648,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>  	if (!private)
+>  		return -ENOMEM;
+>  
+> -	mutex_init(&private->commit.lock);
+> -	INIT_WORK(&private->commit.work, mtk_atomic_work);
+>  	private->data = of_device_get_match_data(dev);
+>  
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> index 823ba4081c18..0934f83b860d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> @@ -48,12 +48,16 @@ struct mtk_drm_private {
+>  	const struct mtk_mmsys_driver_data *data;
+>  
+>  	struct {
+> -		struct drm_atomic_state *state;
+> -		struct work_struct work;
+> -		struct mutex lock;
+> +		uint32_t crtcs;
+> +		wait_queue_head_t crtcs_event;
+>  	} commit;
+>  
+>  	struct drm_atomic_state *suspend_state;
+> +	struct {
+> +		struct work_struct	work;
+> +		struct list_head	list;
+> +		spinlock_t		lock;
+> +	} unreference;
+>  };
+>  
+>  extern struct platform_driver mtk_ddp_driver;
+> @@ -64,4 +68,6 @@ extern struct platform_driver mtk_dpi_driver;
+>  extern struct platform_driver mtk_dsi_driver;
+>  extern struct platform_driver mtk_mipi_tx_driver;
+>  
+> +void mtk_atomic_state_put_queue(struct drm_atomic_state *state);
+> +
+>  #endif /* MTK_DRM_DRV_H */
+
 
