@@ -2,126 +2,106 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2806C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA9FC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29CB23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfnaCKLd"
+	by mail.kernel.org (Postfix) with ESMTP id 6233923407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567179822;
+	bh=hckvUu+AH8s9AnJumzwHdoU9dL0jFNOS5cpjuRy4Xqk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nbELHRViDpT9nyMReKK1n69Dsaz7o8ybiW2EF2RMBVhxvjKAH7yFNN94Nd/RrHvnC
+	 MYm8DtW1P28dwS6zcU1/MlCmDry3kFaAzJpZlfxfMAqtTX80qQu+6tMTYRt4ZGMXjw
+	 Ketoy15hShYbD5dFOIoQVOEAEoG93ZfcKBFnrzr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfH3PnW (ORCPT
+        id S1728398AbfH3Pnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:43:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52872 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfH3PnW (ORCPT
+        Fri, 30 Aug 2019 11:43:41 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46479 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfH3Pnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:43:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t17so7834051wmi.2;
-        Fri, 30 Aug 2019 08:43:20 -0700 (PDT)
+        Fri, 30 Aug 2019 11:43:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f9so6848905ljc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hSPruanynkI2nxLpUzm3uL7IYac5dvQ3oQe3jl6VLFU=;
-        b=nfnaCKLdbctQKQUkacHhaZsoiKIsJEgXtg5ZQt+aGp5XFQAijpASM1A5BmrlCejEQK
-         kOn9FIrc5vpJ8YLaYL5eFAK6POudjWvd6F6UG2MjC9FsdgStYp/LLU4N80UDo9w+txIr
-         ZGCd4rjnswWooLVkkdd044Q+cVTRymuE5uFn7bixg5CDB75cQTdTxkGKIGk7s3p0XF3C
-         mW7IruyFo9/JeAeQbgl0gjnPxXc9pjhPpkWJN1bw8srfRh90bwbtmbH8FjhFG3ChGLHs
-         WkPLgEhVf1WASqNOUcy7tq/HeiBFrg2VH8GJpxQjkFcM9jZuvT3w4VRgxoR1A6Ct88VY
-         FewQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZTA0gedVw618t+Kf7dOTI7q2YbfXx9rp+QOfL/WGIwg=;
+        b=QaD0KeEvtDCdqFBd/v36FtnvNayWhMUlo7JuHAHRwXqkvR8KZbB5DwoKkh/wDKwKYL
+         6uJMYacfI4JxfmdYz/TPerI+EZNZyDwpDjTTUoLCr8hOn9xd/oMpl1nL5VcJk3bEe7id
+         fx0/Mmr3PMEgXvbk+7zjg6mS93NQgzOmweG7k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hSPruanynkI2nxLpUzm3uL7IYac5dvQ3oQe3jl6VLFU=;
-        b=oITyu9nqKJo9kYrfS6lxGMIOL3bf+lu/Nbsv6Xln1SQyxRIi6BhYBj+pg+dF5HsRoI
-         eJpSdDUkDlY4XlFC9XJNDXfHuQ64rPdE7BU3PcWrk5PfG9HupbvuNFdriYgColF6lZpk
-         TzXaZhKeTvdU/scpZRUXX7ZfzDbViiuPnYHVvmHhTfBlWw6H6F3aNP/otmIJSCqBtS7p
-         BAUyJ/sLycPiDG9+/TZppccwJ+BG7y2wq+hr7dyr4QKTsnQl+Lzxtq4qsYbev/gB6xi1
-         bYo/lnlxhYQe9t0RtXk4YIbC74SKgR4agejGkP7oD/8vYIVpdXYz9sulxD9oCUxQJ44w
-         mynQ==
-X-Gm-Message-State: APjAAAW9HsyIacA48t62ZW1HngNf+WfViBS1h7KCfzt+xIRI2uZt1xJQ
-        oyXO7ZccwExtGD1jzPzqjoo=
-X-Google-Smtp-Source: APXvYqzHRdHs4oKVvSRpy8X7yKHta2hE6g56Kl/oPBafz13i4AYYofq0MPcNwspxJ4vIBJRN+3KfyA==
-X-Received: by 2002:a1c:3944:: with SMTP id g65mr19938452wma.68.1567179800378;
-        Fri, 30 Aug 2019 08:43:20 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id y3sm12403115wmg.2.2019.08.30.08.43.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 30 Aug 2019 08:43:19 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 17:43:18 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190830154318.ppggurnejlgtrly5@pali>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <20190830154006.GB30863@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZTA0gedVw618t+Kf7dOTI7q2YbfXx9rp+QOfL/WGIwg=;
+        b=tbbn/urGiR8U+8UP44UhlW7XBUv/T9h+IGCLCfR7QzBJCUeqOUtK1vTb+zUhLGdy8g
+         2l3jZ3aLpEnVhZ1M0Bm8zsAZWR/mmQ8hUk4yI1UyrJ68d1UgXe+o0iGTLOyDOyJAvT/v
+         rsOXIErq3jOf1zeG1zJrcmT4+s94ifBQlA06b2Az9/GfUdkWTxrcJrm0b5AWUZy3VAjT
+         zswrcVvaqzGigNCBc4rX1TubXxKvZJGixbydVBQyLsaYcxMMZHw6Xg7lSMtRuv6zQjvG
+         IP5IWu4fqRInm2j9a6yEC+bCIbVTuMQ7H3E9znPIUTzj/K9kQOn1Vuok6zkv0XjfXDaQ
+         GFSQ==
+X-Gm-Message-State: APjAAAXmz6DI72kATh6Y2FMZH4dy9Ri8VgQvD3Tdt55Qucuaj7xJSUne
+        gAIp2Urnlaq04jlYNw5kvKX8asPizCM=
+X-Google-Smtp-Source: APXvYqy9XlXrX+PWspb3zXYwbfbI7KWnlSLBIxB+WhdzAb8EZi8s2El3WtOg5JVMNo63oZ0jzsPmAA==
+X-Received: by 2002:a2e:884d:: with SMTP id z13mr2481553ljj.62.1567179819092;
+        Fri, 30 Aug 2019 08:43:39 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id z23sm566932lji.58.2019.08.30.08.43.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 08:43:38 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id l14so6901619ljj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:43:37 -0700 (PDT)
+X-Received: by 2002:a2e:9702:: with SMTP id r2mr8842714lji.84.1567179817730;
+ Fri, 30 Aug 2019 08:43:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="r4iv4rpxa6pvfbis"
-Content-Disposition: inline
-In-Reply-To: <20190830154006.GB30863@infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190830140805.GD13294@shell.armlinux.org.uk> <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
+ <20190830154023.GF13294@shell.armlinux.org.uk>
+In-Reply-To: <20190830154023.GF13294@shell.armlinux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 30 Aug 2019 08:43:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiKqLjr_9cqJvgEzWWnMKQJgCpc1sT9o0kimfQdyE6NFA@mail.gmail.com>
+Message-ID: <CAHk-=wiKqLjr_9cqJvgEzWWnMKQJgCpc1sT9o0kimfQdyE6NFA@mail.gmail.com>
+Subject: Re: [BUG] Use of probe_kernel_address() in task_rcu_dereference()
+ without checking return value
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Davydov <vdavydov@parallels.com>,
+        Kirill Tkhai <ktkhai@parallels.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 30, 2019 at 8:40 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> Ah, ok.  Might be worth some comments - I find the comments in that
+> function particularly unhelpful (even after Oleg mentions this is
+> case 2.)
 
---r4iv4rpxa6pvfbis
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah, a comment like "This might fault if we race with the task
+scheduling away and being destroyed, but we check that below".
 
-On Friday 30 August 2019 08:40:06 Christoph Hellwig wrote:
-> On Thu, Aug 29, 2019 at 10:56:31PM +0200, Pali Roh=C3=A1r wrote:
-> > In my opinion, proper way should be to implement exFAT support into
-> > existing fs/fat/ code instead of replacing whole vfat/msdosfs by this
-> > new (now staging) fat implementation.
-> >=20
-> > In linux kernel we really do not need two different implementation of
-> > VFAT32.
->=20
-> Not only not useful, but having another one is actively harmful, as
-> people might actually accidentally used it for classic fat.
->=20
-> But what I'm really annoyed at is this whole culture of just dumping
-> some crap into staging and hoping it'll sort itself out.  Which it
-> won't.  We'll need a dedidcated developer spending some time on it
-> and just get it into shape, and having it in staging does not help
-> with that at all - it will get various random cleanup that could
-> be trivially scripted, but that is rarely the main issue with any
-> codebase.
+But that code has some performance issues too, as mentioned. Which is
+all kinds of sad since it clearly _tries_ to perform well with RCU
+locking and optimistic accesses etc.
 
-Exactly. Somebody should take this code and work on it. Otherwise we can
-say it is dead code and would happen same thing as with other staging
-drivers -- ready to be removed.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---r4iv4rpxa6pvfbis
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXWlEFAAKCRCL8Mk9A+RD
-UhoKAJ4vZsLuZYAJ6Er06ChAjCyn4WGWCACeLwf/3Q10nG7S6qqrLYFhUaO8WJQ=
-=F393
------END PGP SIGNATURE-----
-
---r4iv4rpxa6pvfbis--
+             Linus
