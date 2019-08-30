@@ -2,105 +2,100 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070BFC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55665C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D642423438
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B552341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfH3OzJ (ORCPT
+        id S1728122AbfH3Ozl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:55:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:33474 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 10:55:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18314 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbfH3OzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:55:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C500F344;
-        Fri, 30 Aug 2019 07:55:05 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0C2E3F703;
-        Fri, 30 Aug 2019 07:55:04 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 15:55:02 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Jing-Ting Wu <jing-ting.wu@mediatek.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
-Message-ID: <20190830145501.zadfv2ffuu7j46ft@e107158-lin.cambridge.arm.com>
-References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
- <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
+        id S1727791AbfH3Ozl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:55:41 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 07:55:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="210946213"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Aug 2019 07:55:37 -0700
+Date:   Fri, 30 Aug 2019 23:00:02 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
+ backdoor call with support for new instructions
+Message-ID: <20190830150002.GA6931@intel.com>
+References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2>
+ <201908292325.aLXyyzEx%lkp@intel.com>
+ <20190829163353.GC2132@zn.tnic>
+ <20190830010349.GD857@intel.com>
+ <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
+ <20190830062053.GA2598@intel.com>
+ <20190830080650.GA30413@zn.tnic>
+ <20190830143645.GA4784@intel.com>
+ <20190830144628.GC30413@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190830144628.GC30413@zn.tnic>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/29/19 11:38, Valentin Schneider wrote:
-> On 29/08/2019 04:15, Jing-Ting Wu wrote:
-> > At original linux design, RT & CFS scheduler are independent.
-> > Current RT task placement policy will select the first cpu in
-> > lowest_mask, even if the first CPU is running a CFS task.
-> > This may put RT task to a running cpu and let CFS task runnable.
-> > 
-> > So we select idle cpu in lowest_mask first to avoid preempting
-> > CFS task.
-> > 
+On Fri, Aug 30, 2019 at 04:46:28PM +0200, Borislav Petkov wrote:
+> On Fri, Aug 30, 2019 at 10:36:45PM +0800, Philip Li wrote:
+> > yes, we monitor the repo pub/scm/linux/kernel/git/tip/tip.git, and will
+> > send build status of head
 > 
-> Regarding the RT & CFS thing, that's working as intended. RT is a whole
-> class above CFS, it shouldn't have to worry about CFS.
+> ... and what you call "head" is the "master" branch on that repo, right?
+Hi Boris, you are right. It is the head of monitored branch, here master branch is
+one of the branches on this repo that we monitor.
+
+Early on, there's requirement to blacklist a few branches, which is configured
+as below
+	blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
+
+Except the blacklist branches, we will monitor all other branches. We also
+support pull request to update the configuration or email us to update.
+Refer to https://github.com/intel/lkp-tests/blob/master/repo/linux/tip.
+
+Thanks
+
+> Just making sure you got that right.
 > 
-> On the other side of things, CFS does worry about RT. We have the concept
-> of RT-pressure in the CFS scheduler, where RT tasks will reduce a CPU's
-> capacity (see fair.c::scale_rt_capacity()).
+> > (like BUILD SUCCESS or REGRESSION), also provide bisect report of
+> > unique error for first bad commit.
 > 
-> CPU capacity is looked at on CFS wakeup (see wake_cap() and
-> find_idlest_cpu()), and the periodic load balancer tries to spread load
-> over capacity, so it'll tend to put less things on CPUs that are also
-> running RT tasks.
+> Perfect!
 > 
-> If RT were to start avoiding rqs with CFS tasks, we'd end up with a nasty
-> situation were both are avoiding each other. It's even more striking when
-> you see that RT pressure is done with a rq-wide RT util_avg, which
-> *doesn't* get migrated when a RT task migrates. So if you decide to move
-> a RT task to an idle CPU "B" because CPU "A" had runnable CFS tasks, the
-> CFS scheduler will keep seeing CPU "B" as not significantly RT-pressured
-> while that util_avg signal ramps up, whereas it would correctly see CPU
-> "A" as RT-pressured if the RT task previously ran there.
+> Thx.
 > 
-> So overall I think this is the wrong approach.
-
-I like the idea, but yeah tend to agree the current approach might not be
-enough.
-
-I think the major problem here is that on generic systems where CFS is a first
-class citizen, RT tasks can be hostile to them - not always necessarily for a
-good reason.
-
-To further complicate the matter, even among CFS tasks we can't tell which are
-more important than the others - though hopefully latency-nice proposal will
-make the situation better.
-
-So I agree we have a problem here, but I think this patch is just a temporary
-band aid and we need to do better. Though I have no concrete suggestion yet on
-how to do that.
-
-Another thing I couldn't quantify yet how common and how severe this problem is
-yet. Jing-Ting, if you can share the details of your use case that'd be great.
-
-Cheers
-
---
-Qais Yousef
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
