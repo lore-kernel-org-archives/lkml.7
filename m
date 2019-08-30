@@ -2,166 +2,115 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B518EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8070C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD9B23426
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="m0p/mIOD"
+	by mail.kernel.org (Postfix) with ESMTP id A3FAF23426
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfH3Rlu (ORCPT
+        id S1728122AbfH3Rnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:41:50 -0400
-Received: from mail-eopbgr720097.outbound.protection.outlook.com ([40.107.72.97]:62649
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727434AbfH3Rlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:41:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZNjPmaVtDZU2jAy47MeasN2X7ikYdU8TTgZcWfqKTK1onVXI41c3f98kFdLq8G/iqENV9ewkLUMqGivzGfAPvAm41/qULRh0DPZS3MzN/4lE3myOlFUWsEJ9Wtp7AGizt/JO9cEWUmZMe/0PEH8YT6UdEz+iDUtoU4h5pK4ye8sNxUEskcg4+pkcDH0K/htYlpUjJX0402V3VFM+3N0n9qAOUTzsnCq2MEZ2bd+HdVXmaJxf70bx+1f37nQpWhca0HO9xnuQSTyhwy093Jzei3ycZIlrCXlbK/r84xyXYSh5iLmeVT+R7c5irpFbzkCpUNEMdfgFEeRqudq1PIHXbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oexsqe6FMa+egYRrxcs6nfgxPWGndpfhoiDhojZdDe0=;
- b=Kk7Nec0AInGWfkFk/IYUnVKl47LaywOy0FmPGZAWw6sB1jI6Ps+pooZ4SZE8EXlEyp/UYM7luCndSnei9AH8+sjvEIkjnsM+11ntrk+zy8JSepzBucpThUK8t9YlGYkhPRZrFN8GLmiVABr49g4q+frwnvD9tn2GtK25a0yfaSuVWIkP4NAlEvqIjdu514lk7GB8Tsbd8L6lCx5FLWSs144vaBFAlirrYZhuX3HhEF+CQ9GgJMnEUEZeZp483dRZcwsuROeF5/fh5F5mIt+Ib9gUkR3HKaJFTiqdfx+Vi+mOMKW5x4q9dEo3kZJGAMF2yJXm9IjDgSABhZvO0BaBKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oexsqe6FMa+egYRrxcs6nfgxPWGndpfhoiDhojZdDe0=;
- b=m0p/mIODkMTy+vD9+HRYfjC5taoGdLGkhQv2dxT0vBV5jo8iGJIDWrU80B1iLIN5zukdWdPYXSOsjYWBnEeunEepQ7dG+YebpfsQFts/n25KpYEHmgAv49b8WdJvFldx9AZ0sBV60RnYTme2JsxUddWu/2hrtoH0+oCP/yOM1lI=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0844.namprd21.prod.outlook.com (10.173.172.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.1; Fri, 30 Aug 2019 17:41:06 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%7]) with mapi id 15.20.2241.000; Fri, 30 Aug 2019
- 17:41:06 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
-Thread-Topic: [PATCH] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
-Thread-Index: AQHVXvphdgTb3vS6T0iILxQzg0FAQ6cTtUmw
-Date:   Fri, 30 Aug 2019 17:41:06 +0000
-Message-ID: <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20190830061540.211072-1-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20190830061540.211072-1-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-30T17:41:04.7566166Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=079b217d-92f2-49cb-b3e4-013ede42540f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db772134-055b-4ad3-bbe0-08d72d713c99
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0844;
-x-ms-traffictypediagnostic: DM5PR21MB0844:|DM5PR21MB0844:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB0844F1EAFF80741F7203D4ECD7BD0@DM5PR21MB0844.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0145758B1D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(189003)(199004)(66476007)(52536014)(7736002)(229853002)(22452003)(8990500004)(305945005)(25786009)(3846002)(6116002)(26005)(8676002)(4326008)(14444005)(81166006)(7696005)(256004)(486006)(186003)(81156014)(53936002)(102836004)(6506007)(55016002)(9686003)(8936002)(33656002)(6246003)(74316002)(6436002)(10090500001)(2201001)(66946007)(76116006)(7416002)(11346002)(14454004)(476003)(10290500003)(76176011)(446003)(86362001)(1511001)(71200400001)(54906003)(2501003)(110136005)(71190400001)(66556008)(66066001)(316002)(66446008)(478600001)(99286004)(5660300002)(2906002)(64756008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0844;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2h5A9mx0fvCS0PRkAjLwgsBZfM1gYgra1TaSh3yslr/k5UrGkaNjQ14fk6KR0uWm2aPKpyPCY9nGTX+MuwtrbXypRdRWgBoTy7zSk1mQFJ4J5PYwPd7gal48j29pDj3xPoWQNUi0icVqvis2z4vkoKQHCpgTmewOY1Jbr3uycHYpsLRbavg6xxw4KwSyZQ3gowR02tX0ZXausaZtnTScT8VCcC+QPkTCnmZukTkCV3n2bruk8v0V92bxf2CExnigJUwlpIY0zqiYUII5caNE845cOPNOBdJ3K6WrkUKFGEPrm3d6Degee+ntgBjJHuF2IdeTLT9C9HeKTmCQZzTfOitwMEiaeNxyQXkhulrN3zjaElg03n5MUNn3XRde27FKf9MAy2BYwjurJTVJbzFplfl2jmG0Cw/HNXQmdh5hxso=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 30 Aug 2019 13:43:37 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:40788 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727904AbfH3Rnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:43:37 -0400
+Received: (qmail 1647 invoked by uid 2102); 30 Aug 2019 13:43:36 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 30 Aug 2019 13:43:36 -0400
+Date:   Fri, 30 Aug 2019 13:43:36 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Julius Werner <jwerner@chromium.org>, Greg KH <greg@kroah.com>
+cc:     Dan Williams <dcbw@redhat.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        USB Storage list <usb-storage@lists.one-eyed-alien.net>
+Subject: Re: [PATCH] usb: storage: Add ums-cros-aoa driver
+In-Reply-To: <CAODwPW8gTZ_2WEc9n=WJ2PEmQk2anTQYfwQ-898+kOq6wsjnZw@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1908301337150.1459-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db772134-055b-4ad3-bbe0-08d72d713c99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 17:41:06.5646
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hWwZfohga8a8L6XZnIPs7sjocR2zafNg4TnzzHWN6t/guLYkKnptCg0OAB+AeECChMMvWaRBAn8CL8GaWGyNb6IGpwobSijwmNXeriMv/mE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0844
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: lantianyu1986@gmail.com  Sent: Thursday, August 29, 2019 11:16 PM
->=20
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->=20
-> fill_gva_list() populates gva list and adds offset
-> HV_TLB_FLUSH_UNIT(0x1000000) to variable "cur"
-> in the each loop. When diff between "end" and "cur" is
-> less than HV_TLB_FLUSH_UNIT, the gva entry should
-> be the last one and the loop should be end.
->=20
-> If cur is equal or greater than 0xFF000000 on 32-bit
-> mode, "cur" will be overflow after adding HV_TLB_FLUSH_UNIT.
-> Its value will be wrapped and less than "end". fill_gva_list()
-> falls into an infinite loop and fill gva list out of
-> border finally.
->=20
-> Set "cur" to be "end" to make loop end when diff is
-> less than HV_TLB_FLUSH_UNIT and add HV_TLB_FLUSH_UNIT to
-> "cur" when diff is equal or greater than HV_TLB_FLUSH_UNIT.
-> Fix the overflow issue.
+On Thu, 29 Aug 2019, Julius Werner wrote:
 
-Let me suggest simplifying the commit message a bit.  It
-doesn't need to describe every line of the code change.   I think
-it should also make clear that the same problem could occur on
-64-bit systems with the right "start" address.  My suggestion:
+> > In fact, there already is a way to do this in the kernel: write to the
+> > sysfs "bind" file.  The difficulty is that you can't force a driver to
+> > bind to an interface if it doesn't believe it is compatible with the
+> > interface.  And if the driver believes it is compatible, it will
+> > automatically attempt to bind with all such interfaces regardless of
+> > their path.
+> >
+> > Perhaps what you need is a usb_device_id flag to indicate that the
+> > entry should never be used for automatic matches -- only for matches
+> > made by the user via the "bind" file.  Greg KH would probably be
+> > willing to accept a new USB_DEVICE_ID_MATCH_NO_AUTO flag, which
+> > could be included in your unusual_devs.h entries.
+> 
+> This is an interesting idea, but I don't quite see how it can work as
+> you described? When I write to 'bind', the driver core calls
+> driver_match_device(), which ends up calling usb_device_match()
+> (right?), which is the same path that it would call for automatic
+> matching.
 
-When the 'start' parameter is >=3D  0xFF000000 on 32-bit
-systems, or >=3D 0xFFFFFFFF'FF000000 on 64-bit systems,
-fill_gva_list gets into an infinite loop.  With such inputs,
-'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
-compares as less than end.  Memory is filled with guest virtual
-addresses until the system crashes
+Oh, too bad.  I had a vague memory that it did not call
+driver_match_device().
 
-Fix this by never incrementing 'cur' to be larger than 'end'.
+>  It still ends up in usb_match_one_id(), and if I check for
+> the NO_AUTO flag there it would abort just as if it was an auto-match
+> attempt. I see no way to pass the information that this is an
+> explicit, user-requested "bind" rather than an automatic match across
+> the bus->match() callback into the USB code. (I could change the
+> signature of the match() callback, but that would require changing
+> code for all device busses in Linux, which I assume is something we
+> wouldn't want to do? I could also add a flag to struct device to
+> communicate "this is currently trying to match for a user-initiated
+> bind", but that seems hacky and not really the right place to put
+> that.)
+> 
+> I could instead add a new sysfs node 'force_bind' to the driver core,
+> that would work like 'bind' except for skipping the
+> driver_match_device() call entirely and forcing a probe(). Do you
+> think that would be acceptable? Or is that too big of a hammer to make
+> available for all drivers in Linux? Maybe if I do the same thing but
+> only for usb drivers, or even only for the usb-storage driver
+> specifically, would that be acceptable?
 
->=20
-> Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote
-> TLB flush")
+This is a question for Greg.  The problem is that there may be drivers
+which can't handle being probed for devices they don't match.
 
-The "Fixes:" line needs to not wrap.  It's exempt from the
-"wrap at 75 columns" rule in order to simplify parsing scripts.
+Still, we ought to have a mechanism for doing manual but not automatic 
+matches.
 
-The code itself looks good.
+Greg, any thoughts?
 
-Michael
+> If none of this works, I could also extend the new_id interface to
+> allow subclass/protocol matches instead. I don't like that as much
+> because it doesn't allow me to control the devpath of the device I'm
+> matching, but I think it would be enough for my use case (I can't make
+> the usb-storage driver bind all AOA devices at all times, but at the
+> times where I do want to use it for my one device, I don't expect any
+> other AOA devices to be connected). The problem with this is that the
+> order of arguments for new ID is already set in stone (vendor,
+> product, interface class, refVendor, refProduct), and I don't think I
+> can use the refVendor/refProduct for my case so I can't just append
+> more numbers behind that. I could maybe instead change it so that it
+> also accepts a key-value style line (like "idVendor=abcd
+> idProduct=efgh bInterfaceSubClass=ff"), while still being
+> backwards-compatible to the old format if you only give it numbers?
+> What do you think?
+
+I prefer the manual/automatic approach.  It allows the user to control 
+exactly which device will be probed, which could be important.
+
+Alan Stern
 
