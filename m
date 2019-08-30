@@ -2,111 +2,112 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC57C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751DBC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2E421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D6E21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="0tWMSg+Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qp8yU+LP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfH3IBf (ORCPT
+        id S1728335AbfH3ICF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:01:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55055 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbfH3IBe (ORCPT
+        Fri, 30 Aug 2019 04:02:05 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40662 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbfH3ICF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:01:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id k2so4841152wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:01:33 -0700 (PDT)
+        Fri, 30 Aug 2019 04:02:05 -0400
+Received: by mail-vs1-f68.google.com with SMTP id i128so4210474vsc.7
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:02:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xDWFOC5KIqBUnS5KsrM2GDBVfGw82n9BymZaCeLwnrQ=;
-        b=0tWMSg+ZCEeBjFWM+KTT8++sDU93IOoqfi78OtpLOYzGx5L6DqRT490amuDK/8IY3A
-         pi8I3hmd4hfEXFyWXXc3N4/L0XkzY5gsDvefa73RcNYXcXsMLUTEhEGgy7yLYZjSFMtj
-         lGd1jqIW2tkpwIbJyBN8vScRO/l1x+lAaxXfOFWu7Su19kQYp8N9T41hgufo8Ev5jz3f
-         vlPiW/Xp7sMVtKzdpENlIPKFCL7H5Fu9ISGCBT0OnHOdLDnQiFkAsa1jmW8kKaMtWcDZ
-         IUd6oNl9HT9RVQcrSDvg36v1WBdEcB7YKFXRtdQQl8pjSb2rLPhPBMoAXCSol4wZDm5Z
-         Foig==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zSReTBR+21k+gQlfPIxdDjT6LtoW1ARQm0j/COjHJ9U=;
+        b=qp8yU+LPUcX/mAFN/tdWTbxE8ZDUp2Z8cCy/SKuHHj80GZtnQ3tQP7JQDmbyIBAWoy
+         ZePqJezkftPXgjaRJ7H2pFtF5ZnZOQZy4N5kyyN4o2HhEhsa410M5iWSyc0l/Ynzaktm
+         YOSy3tWjasqTapLStwH3UrO5al31vEt96KXMWgXhv2YXTynO/2BcGjuL+2uj+TX6vHDJ
+         UVwmxzPe4wEYqJUHp6HIsvv7G9ymY37avF2pBFZHYsAo8M6r54t/hRz3V8vqsvpuFx4x
+         JuYF9njW9ZhqiqYVZqFshkjVEd+qOApUqzk1gOe47O82ybxuy80NG/F0a3bmeO2YRwQJ
+         8eEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xDWFOC5KIqBUnS5KsrM2GDBVfGw82n9BymZaCeLwnrQ=;
-        b=eocChD86w/2j5KNnXtJftGmuRIgbL/aDPEvM6iPdSnx3lfdfwt7PkLERMzfr9LPn59
-         CAAltaYTDHYRjdlMqPI0UB1ePNQwZ8vJfbmRql5h0CgR9DblL4YdYRAc0V0h8tfnJpGi
-         sJ33zF0kAAZFdsUY7zaejIwxUfwuIXniGElAaSl9Q30+UUFWjVGTnujVbdDHjWWMKAC3
-         D/KiLOSsYJnMXq+1C+LY9Xrja2ztL8IAFJoddjCsf0h9Ii5QWaC7OL8PGXktxOwSF7d1
-         YQ9LwoI7X6JtxsAY9oYe7I38PuDiU2AfcXcHVbPpZjzQcFmmNkZ/f5uio1N/JlydRCDX
-         85LQ==
-X-Gm-Message-State: APjAAAU9irrLe2YeVSNSjnp6Ipc923sKgaYNiJdTmoVbYaukDb6KUbWY
-        e+WEAbfdqvLUQTy0PvwsRMuvIA==
-X-Google-Smtp-Source: APXvYqx+aypUiGiA41kuEqSHGWPSBA1IhTUH9hae5gxadfLmM/cYcrrCHWto4Rv6vNFVumxKXZVSpQ==
-X-Received: by 2002:a1c:ca02:: with SMTP id a2mr1076784wmg.127.1567152092914;
-        Fri, 30 Aug 2019 01:01:32 -0700 (PDT)
-Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
-        by smtp.gmail.com with ESMTPSA id j20sm9610535wre.65.2019.08.30.01.01.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 01:01:32 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 10:01:31 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     David Miller <davem@davemloft.net>
-Cc:     idosch@idosch.org, andrew@lunn.ch, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        allan.nielsen@microchip.com, ivecera@redhat.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190830080131.GQ2312@nanopsycho>
-References: <20190830063624.GN2312@nanopsycho>
- <20190830.001223.669650763835949848.davem@davemloft.net>
- <20190830072133.GP2312@nanopsycho>
- <20190830.003225.292019185488425085.davem@davemloft.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zSReTBR+21k+gQlfPIxdDjT6LtoW1ARQm0j/COjHJ9U=;
+        b=ZENfahYofYJgJbK/fz4iNcBPicODw4HwoN2DANkmyncNiqn/Sgks7VkoKv0eyXwbKS
+         duwn8Kekk4eMsON4XFR401tjkfMxFWzn2hvhmuzVVadw2Z63QBNTCZmgTG/nn+LBrUMx
+         ZGOwx3MeSgTZTNG635SJwejF0Ra6lTNzIwVj4iGrTGWzIzAKlxQcm1ndJjqc7iLaWg8B
+         dUMvYl5P1SskXkroshB7OZtkjRfHCxZy9pFhtDu3jLIXPa2L8Y5vE6VQj2MR1gdliztD
+         543tkqIdEMqCcK0KoTnczVqBRasRXYHuWgPg5tyF0r4+qbIah6e81OHlAZ+BlERhYKad
+         XNxQ==
+X-Gm-Message-State: APjAAAWWwWH5pldDsLu3gvKP7U3c3XaSzeJO+53wrPreIR26801vjvKz
+        jgV4n3QQ0Rle897+5L05+QUS1Bj1gcmN3Pjg9JPklA==
+X-Google-Smtp-Source: APXvYqyOx0hFYInMfmpsUnvpCKFGXIHa/+Ahs3V3CNXSh7WcogIeV6A1MSfhHPGxYA3SEvRTgK+RozQPc8r1yR8QgSo=
+X-Received: by 2002:a67:983:: with SMTP id 125mr2338906vsj.191.1567152124259;
+ Fri, 30 Aug 2019 01:02:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830.003225.292019185488425085.davem@davemloft.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190830074644.10936-1-andrew@aj.id.au> <20190830074644.10936-2-andrew@aj.id.au>
+In-Reply-To: <20190830074644.10936-2-andrew@aj.id.au>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 30 Aug 2019 10:01:27 +0200
+Message-ID: <CAPDyKFrKXfB1F2dh63KrkCiKGbmbBWaAM16vJqtQncnF4YctQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mmc: sdhci-of-aspeed: Uphold clocks-on post-condition
+ of set_clock()
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Ryan Chen <ryanchen.aspeed@gmail.com>,
+        openbmc@lists.ozlabs.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Aug 30, 2019 at 09:32:25AM CEST, davem@davemloft.net wrote:
->From: Jiri Pirko <jiri@resnulli.us>
->Date: Fri, 30 Aug 2019 09:21:33 +0200
+On Fri, 30 Aug 2019 at 09:46, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
->> Fri, Aug 30, 2019 at 09:12:23AM CEST, davem@davemloft.net wrote:
->>>From: Jiri Pirko <jiri@resnulli.us>
->>>Date: Fri, 30 Aug 2019 08:36:24 +0200
->>>
->>>> The promiscuity is a way to setup the rx filter. So promics == rx filter
->>>> off. For normal nics, where there is no hw fwd datapath,
->>>> this coincidentally means all received packets go to cpu.
->>>
->>>You cannot convince me that the HW datapath isn't a "rx filter" too, sorry.
->> 
->> If you look at it that way, then we have 2: rx_filter and hw_rx_filter.
->> The point is, those 2 are not one item, that is the point I'm trying to
->> make :/
+> The early-exit didn't seem to matter on the AST2500, but on the AST2600
+> the SD clock genuinely may not be running on entry to
+> aspeed_sdhci_set_clock(). Remove the early exit to ensure we always run
+> sdhci_enable_clk().
 >
->And you can turn both of them off when I ask for promiscuous mode, that's
->a detail of the device not a semantic issue.
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  drivers/mmc/host/sdhci-of-aspeed.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> index d5acb5afc50f..a9175ca85696 100644
+> --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> @@ -55,9 +55,6 @@ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+>         int div;
+>         u16 clk;
+>
+> -       if (clock == host->clock)
+> -               return;
+> -
+>         sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+>
+>         if (clock == 0)
+> --
+> 2.20.1
+>
 
-Well, bridge asks for promiscuous mode during enslave -> hw_rx_filter off
-When you, want to see all traffic in tcpdump -> rx_filter off
+Further down in aspeed_sdhci_set_clock() you should probably also
+remove the assignment of host->clock = clock, as that is already
+managed by sdhci_set_ios().
 
-So basically there are 2 flavours of promiscuous mode we have to somehow
-distinguish between, so the driver knows what to do.
-
-Nothe that the hw_rx_filter off is not something special to bridge.
-There is a usecase for this when no bridge is there, only TC filters for
-example.
+Kind regards
+Uffe
