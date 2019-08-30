@@ -2,146 +2,99 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24950C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFBEC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5B623429
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:57:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oABKnLPq"
+	by mail.kernel.org (Postfix) with ESMTP id 0A49023427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfH3S5Y (ORCPT
+        id S1728251AbfH3S6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:57:24 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.234]:25337 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727888AbfH3S5X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:57:23 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 688BF8599B
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 13:57:22 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3m5KiHitBiQer3m5KiarFA; Fri, 30 Aug 2019 13:57:22 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cPkR+sjQETckei88bj4J3c37q+XYl3hWNTjp7VyXbZ0=; b=oABKnLPqx/CkQNLn7fGJAdolHe
-        EIcYU6kFVYE/porHtSK1snbeKvFjYfqU/ek5Gqkqsw++Ge8fOHMrzxmqyMU8xQjDApdRB3dKOfYUz
-        I3TFUcU8m5vQAmF9cPvzATIXC8K1PaFhkJn3UrDuMn3UNGZG2c6AKxEBt4i2hfyON9FR9O0cfEh50
-        CR4fqc5WVuurWn5GkYQjiRMqotoF2VbnLjcVRHxk7MFLsi70DakRzWtATYPcXE3boldfPxBr0ZgCv
-        f67/hFI/y7MNIo6a3e18pk9gSCviRUM0S3Ma1M5BUAt/aB/0WO3sAh7fIID/vT3iIlQBxcPecAxKH
-        qyWpbZRA==;
-Received: from [189.152.216.116] (port=39024 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3m5J-002Gwo-7r; Fri, 30 Aug 2019 13:57:21 -0500
-Date:   Fri, 30 Aug 2019 13:57:16 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] zd1211rw: zd_usb: Use struct_size() helper
-Message-ID: <20190830185716.GA10044@embeddedor>
+        Fri, 30 Aug 2019 14:58:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727888AbfH3S6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:58:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B3993ABE9;
+        Fri, 30 Aug 2019 18:58:05 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Breno Leitao <leitao@debian.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Nicolai Stange <nstange@suse.de>,
+        Michael Neuling <mikey@neuling.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/6] powerpc: make llseek 32bit-only.
+Date:   Fri, 30 Aug 2019 20:57:52 +0200
+Message-Id: <bb6d25c6baae315d05b571d8c508f0e8fa90027c.1567188299.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <cover.1567188299.git.msuchanek@suse.de>
+References: <cover.1567188299.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3m5J-002Gwo-7r
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:39024
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+The llseek syscall is not built in fs/read_write.c when !64bit && !COMPAT
+With the syscall marked as common in syscall.tbl build fails in this
+case.
 
-struct usb_int_regs {
-	...
-        struct reg_data regs[0];
-} __packed;
+The llseek interface does not make sense on 64bit and it is explicitly
+described as 32bit interface. Use on 64bit is not well-defined so just
+drop it for 64bit.
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+Fixes: caf6f9c8a326 ("asm-generic: Remove unneeded __ARCH_WANT_SYS_LLSEEK macro")
+Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
+Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
 
-So, replace the following function:
-
-static int usb_int_regs_length(unsigned int count)
-{
-       return sizeof(struct usb_int_regs) + count * sizeof(struct reg_data);
-}
-
-with:
-
-struct_size(regs, regs, count)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+v5: update commit message.
+---
+ arch/powerpc/kernel/syscalls/syscall.tbl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-index 1965cd0fafc4..4e44ea8c652d 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-@@ -1597,11 +1597,6 @@ static int zd_ep_regs_out_msg(struct usb_device *udev, void *data, int len,
- 	}
- }
- 
--static int usb_int_regs_length(unsigned int count)
--{
--	return sizeof(struct usb_int_regs) + count * sizeof(struct reg_data);
--}
--
- static void prepare_read_regs_int(struct zd_usb *usb,
- 				  struct usb_req_read_regs *req,
- 				  unsigned int count)
-@@ -1636,10 +1631,10 @@ static bool check_read_regs(struct zd_usb *usb, struct usb_req_read_regs *req,
- 	/* The created block size seems to be larger than expected.
- 	 * However results appear to be correct.
- 	 */
--	if (rr->length < usb_int_regs_length(count)) {
-+	if (rr->length < struct_size(regs, regs, count)) {
- 		dev_dbg_f(zd_usb_dev(usb),
--			 "error: actual length %d less than expected %d\n",
--			 rr->length, usb_int_regs_length(count));
-+			 "error: actual length %d less than expected %ld\n",
-+			 rr->length, struct_size(regs, regs, count));
- 		return false;
- 	}
- 
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 010b9f445586..53e427606f6c 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -188,7 +188,7 @@
+ 137	common	afs_syscall			sys_ni_syscall
+ 138	common	setfsuid			sys_setfsuid
+ 139	common	setfsgid			sys_setfsgid
+-140	common	_llseek				sys_llseek
++140	32	_llseek				sys_llseek
+ 141	common	getdents			sys_getdents			compat_sys_getdents
+ 142	common	_newselect			sys_select			compat_sys_select
+ 143	common	flock				sys_flock
 -- 
-2.23.0
+2.22.0
 
