@@ -2,87 +2,158 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEAEC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDA7C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED5F2377D
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567153899;
-	bh=tyTk3IIgvGDJTpsIJUhA5X+AF9/OKS6VWDIx6qMarAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tuJQNjtrWNJzJtFsVTYA2VeyLwtmo33xCYJKxdWk86lOgS6e8QeFzcLtb6FlvCytt
-	 uqPYLpi57MrooPKXIAOGPTLyZWZeumXigRKd5jxYc9a4nd4DqAh2wEgIj3hRTNW9r0
-	 ACd+Le18ajZRLHmqIGsZmhaLCe+blGAN0brf/2dE=
+	by mail.kernel.org (Postfix) with ESMTP id C12AB2397E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfH3Ibi (ORCPT
+        id S1727525AbfH3IeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:31:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47956 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbfH3Ibi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:31:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9BD1AAF47;
-        Fri, 30 Aug 2019 08:31:36 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 10:31:35 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v2 3/6] mm/memory_hotplug: Process all zones when
- removing memory
-Message-ID: <20190830083135.GU28313@dhcp22.suse.cz>
-References: <20190826101012.10575-1-david@redhat.com>
- <20190826101012.10575-4-david@redhat.com>
- <20190829153936.GJ28313@dhcp22.suse.cz>
- <c01ceaab-4032-49cd-3888-45838cb46e11@redhat.com>
- <20190829162704.GL28313@dhcp22.suse.cz>
- <b5a9f070-b43a-c21d-081b-9926b2007f5c@redhat.com>
- <20190830060100.GP28313@dhcp22.suse.cz>
- <18aed12d-0611-7d35-2994-075d09269513@redhat.com>
- <20190830064724.GT28313@dhcp22.suse.cz>
- <17de8d65-592f-72be-0891-6eaaedfd26f2@redhat.com>
+        Fri, 30 Aug 2019 04:34:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:55984 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbfH3IeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:34:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D533A344;
+        Fri, 30 Aug 2019 01:34:21 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C5243F718;
+        Fri, 30 Aug 2019 01:34:20 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 09:34:18 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
+Message-ID: <20190830083415.GI27757@arm.com>
+References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
+ <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
+ <201908292224.007EB4D5@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17de8d65-592f-72be-0891-6eaaedfd26f2@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <201908292224.007EB4D5@keescook>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 30-08-19 09:07:59, David Hildenbrand wrote:
-> On 30.08.19 08:47, Michal Hocko wrote:
-> > On Fri 30-08-19 08:20:32, David Hildenbrand wrote:
-> > [...]
-> >> Regarding shrink_zone_span(), I suspect it was introduced by
-> >>
-> >> d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
+> On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
+> > ELF program properties will needed for detecting whether to enable
+> > optional architecture or ABI features for a new ELF process.
 > > 
-> > zone shrinking code is much older - 815121d2b5cd5. But I do not think
-> > this is really needed for Fixes tag.
+> > For now, there are no generic properties that we care about, so do
+> > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
 > > 
+> > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
+> > phdrs entry (if any), and notify each property to the arch code.
+> > 
+> > For now, the added code is not used.
+> > 
+> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 > 
-> Yes it's older, but since d0dc12e86b31 we could run into uninitialized
-> nids for added memory when trying to shrink the zone.
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Well, not really. Strictly speaking pre d0dc12e86b31 would initialize
-struct page to zero so it is initialized but that doesn't mean that the
-struct page has a meaningfull and usable content. Zone index would be 0
-so the lowest zone which is not something you want to use on the
-hotremove path.
+Thanks for the review.
 
--- 
-Michal Hocko
-SUSE Labs
+Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
+early-terminate the scan if we can, but my feeling so far was that the
+scan is cheap, the number of properties is unlikely to be more than a
+smallish integer, and the code separation benefits of just calling the
+arch code for every property probably likely outweigh the costs of
+having to iterate over every property.  We could always optimise it
+later if necessary.
+
+I need to double-check that there's no way we can get stuck in an
+infinite loop with the current code, though I've not seen it in my
+testing.  I should throw some malformed notes at it though.
+
+> Note below...
+> 
+> > [...]
+> > +static int parse_elf_property(const char *data, size_t *off, size_t datasz,
+> > +			      struct arch_elf_state *arch,
+> > +			      bool have_prev_type, u32 *prev_type)
+> > +{
+> > +	size_t size, step;
+> > +	const struct gnu_property *pr;
+> > +	int ret;
+> > +
+> > +	if (*off == datasz)
+> > +		return -ENOENT;
+> > +
+> > +	if (WARN_ON(*off > datasz || *off % elf_gnu_property_align))
+> > +		return -EIO;
+> > +
+> > +	size = datasz - *off;
+> > +	if (size < sizeof(*pr))
+> > +		return -EIO;
+> > +
+> > +	pr = (const struct gnu_property *)(data + *off);
+> > +	if (pr->pr_datasz > size - sizeof(*pr))
+> > +		return -EIO;
+> > +
+> > +	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
+> > +	if (step > size)
+> > +		return -EIO;
+> > +
+> > +	/* Properties are supposed to be unique and sorted on pr_type: */
+> > +	if (have_prev_type && pr->pr_type <= *prev_type)
+> > +		return -EIO;
+> > +	*prev_type = pr->pr_type;
+> > +
+> > +	ret = arch_parse_elf_property(pr->pr_type,
+> > +				      data + *off + sizeof(*pr),
+> > +				      pr->pr_datasz, ELF_COMPAT, arch);
+> 
+> I find it slightly hard to read the "cursor" motion in this parse. It
+> feels strange, for example, to refer twice to "data + *off" with the
+> second including consumed *pr size. Everything is fine AFAICT in the math,
+> though, and I haven't been able to construct a convincingly "cleaner"
+> version. Maybe:
+> 
+> 	data += *off;
+> 	pr = (const struct gnu_property *)data;
+> 	data += sizeof(*pr);
+> 	...
+> 	ret = arch_parse_elf_property(pr->pr_type, data,
+> 				      pr->pr_datasz, ELF_COMPAT, arch);
+
+Fair point.  The cursor is really *off, which I suppose I could update
+as we go through this function, or cache in a local variable and assign
+on the way out.
+
+> But that feels disjoint from the "step" calculation, so... I think what
+> you have is fine. :)
+
+It's good to be as clear as possible about exactly how far we have
+parsed, so I'll see if I can improve this when I repost.
+
+
+Do you have any objection to merging patch 1 with this one?  For
+upstreaming purposes, it seems overkill for that to be a separate patch.
+
+I may also convert elf_gnu_property_align to upper case, since unlike
+the other related definitions this one isn't trying to look like a
+struct tag.
+
+Do you have any opinion on the WARN_ON()s?  They should be un-hittable,
+so they're documenting assumptions rather than protecting against
+anything real.  Maybe I should replace them with comments.
+
+Cheers
+---Dave
