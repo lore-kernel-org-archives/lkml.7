@@ -2,127 +2,300 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9134C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76B1C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0FF21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88E421726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Bxf+31Bp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfH3IA0 (ORCPT
+        id S1728194AbfH3IB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:00:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24868 "EHLO mga05.intel.com"
+        Fri, 30 Aug 2019 04:01:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62037 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbfH3IA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:00:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 01:00:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
-   d="asc'?scan'208";a="197984393"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Aug 2019 01:00:24 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        davem@davemloft.net
-Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
-In-Reply-To: <20190829172848.GC2166@localhost>
-References: <20190829095825.2108-1-felipe.balbi@linux.intel.com> <20190829095825.2108-2-felipe.balbi@linux.intel.com> <20190829172509.GB2166@localhost> <20190829172848.GC2166@localhost>
-Date:   Fri, 30 Aug 2019 11:00:20 +0300
-Message-ID: <87r253ulpn.fsf@gmail.com>
+        id S1726090AbfH3IB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:01:27 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46KX442L0pzB09bM;
+        Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Bxf+31Bp; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id QwA2671RsViN; Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46KX440RlJzB09bL;
+        Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567152084; bh=MrB0D1XRCQ1TDzjNZzXYKTbCynoXrd0Cy3NZgBAs/4I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Bxf+31BpxVR3fFhYfMDmWCPlemMdcoJ+Zq5uBcFJkVLyOoyNyD0BaIjE/2C2h2sY6
+         i7ICpfLRIVFEXXwlJn1ik5kRqfm3gFXQo3BkNPzSEjVl97+/bBh5QRM4z5lnYnj90f
+         oQ67+Bw3NRBJVjgIGrVRow4uV1F8JySSworxYysc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D5E78B8EB;
+        Fri, 30 Aug 2019 10:01:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 77KKYpnWQWBA; Fri, 30 Aug 2019 10:01:25 +0200 (CEST)
+Received: from [172.25.230.105] (po15451.idsi0.si.c-s.fr [172.25.230.105])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CA37F8B8E3;
+        Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
+Subject: Re: [PATCH v5 3/5] powerpc/64: make buildable without CONFIG_COMPAT
+To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Allison Randal <allison@lohutok.net>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christian Brauner <christian@brauner.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>
+References: <90594004804c6a9b690b69bdf0e5c4d6c880c5f4.1567117050.git.msuchanek@suse.de>
+ <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
+ <20190830095451.47ab750f@naga>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c5795c3b-1df4-3a69-4cd9-fc67fcc3ae5e@c-s.fr>
+Date:   Fri, 30 Aug 2019 10:01:24 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20190830095451.47ab750f@naga>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
 
-Hi,
+Le 30/08/2019 à 09:54, Michal Suchánek a écrit :
+> On Fri, 30 Aug 2019 06:35:13 +0000 (UTC)
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+>> On 08/29/2019 10:28 PM, Michal Suchanek wrote:
+>>> There are numerous references to 32bit functions in generic and 64bit
+>>> code so ifdef them out.
+>>>
+>>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+>>> ---
+>>> v2:
+>>> - fix 32bit ifdef condition in signal.c
+>>> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+>>> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+>>> v3:
+>>> - use IS_ENABLED and maybe_unused where possible
+>>> - do not ifdef declarations
+>>> - clean up Makefile
+>>> v4:
+>>> - further makefile cleanup
+>>> - simplify is_32bit_task conditions
+>>> - avoid ifdef in condition by using return
+>>> v5:
+>>> - avoid unreachable code on 32bit
+>>> - make is_current_64bit constant on !COMPAT
+>>> - add stub perf_callchain_user_32 to avoid some ifdefs
+>>> ---
+>>>    arch/powerpc/include/asm/thread_info.h |  4 ++--
+>>>    arch/powerpc/kernel/Makefile           |  7 +++----
+>>>    arch/powerpc/kernel/entry_64.S         |  2 ++
+>>>    arch/powerpc/kernel/signal.c           |  3 +--
+>>>    arch/powerpc/kernel/syscall_64.c       |  6 ++----
+>>>    arch/powerpc/kernel/vdso.c             |  5 ++---
+>>>    arch/powerpc/perf/callchain.c          | 13 +++++++++++--
+>>>    7 files changed, 23 insertions(+), 17 deletions(-)
+>>>    
+>> [...]
+>>
+>>> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+>>> index c84bbd4298a0..881be5c4e9bb 100644
+>>> --- a/arch/powerpc/perf/callchain.c
+>>> +++ b/arch/powerpc/perf/callchain.c
+>>> @@ -15,7 +15,7 @@
+>>>    #include <asm/sigcontext.h>
+>>>    #include <asm/ucontext.h>
+>>>    #include <asm/vdso.h>
+>>> -#ifdef CONFIG_PPC64
+>>> +#ifdef CONFIG_COMPAT
+>>>    #include "../kernel/ppc32.h"
+>>>    #endif
+>>>    #include <asm/pte-walk.h>
+>>> @@ -291,7 +291,8 @@ static inline int current_is_64bit(void)
+>>>    	 * interrupt stack, and the thread flags don't get copied over
+>>>    	 * from the thread_info on the main stack to the interrupt stack.
+>>>    	 */
+>>> -	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+>>> +	return !IS_ENABLED(CONFIG_COMPAT) ||
+>>> +		!test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+>>>    }
+>>>    
+>>>    #else  /* CONFIG_PPC64 */
+>>> @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+>>>    
+>>>    #endif /* CONFIG_PPC64 */
+>>>    
+>>> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+>>>    /*
+>>>     * Layout for non-RT signal frames
+>>>     */
+>>> @@ -482,6 +484,13 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>>>    		sp = next_sp;
+>>>    	}
+>>>    }
+>>> +#else /* 32bit */
+>>> +static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>>> +				   struct pt_regs *regs)
+>>> +{
+>>> +	(void)&read_user_stack_32; /* unused if !COMPAT */
+>>
+>> That looks pretty much like a hack.
+>>
+>> See possible alternative below.
+>>
+>>> +}
+>>> +#endif /* 32bit */
+>>>    
+>>>    void
+>>>    perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+>>>    
+>>
+>> ---
+>>   arch/powerpc/perf/callchain.c | 62 +++++++++++++++++++------------------------
+>>   1 file changed, 27 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+>> index 881be5c4e9bb..1b169b32776a 100644
+>> --- a/arch/powerpc/perf/callchain.c
+>> +++ b/arch/powerpc/perf/callchain.c
+>> @@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+>>   	return read_user_stack_slow(ptr, ret, 8);
+>>   }
+>>   
+>> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+>> -{
+>> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+>> -	    ((unsigned long)ptr & 3))
+>> -		return -EFAULT;
+>> -
+>> -	pagefault_disable();
+>> -	if (!__get_user_inatomic(*ret, ptr)) {
+>> -		pagefault_enable();
+>> -		return 0;
+>> -	}
+>> -	pagefault_enable();
+>> -
+>> -	return read_user_stack_slow(ptr, ret, 4);
+>> -}
+>> -
+>>   static inline int valid_user_sp(unsigned long sp, int is_64)
+>>   {
+>>   	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+>> @@ -296,25 +280,10 @@ static inline int current_is_64bit(void)
+>>   }
+>>   
+>>   #else  /* CONFIG_PPC64 */
+>> -/*
+>> - * On 32-bit we just access the address and let hash_page create a
+>> - * HPTE if necessary, so there is no need to fall back to reading
+>> - * the page tables.  Since this is called at interrupt level,
+>> - * do_page_fault() won't treat a DSI as a page fault.
+>> - */
+>> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+>> -{
+>> -	int rc;
+>> -
+>> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+>> -	    ((unsigned long)ptr & 3))
+>> -		return -EFAULT;
+>>   
+>> -	pagefault_disable();
+>> -	rc = __get_user_inatomic(*ret, ptr);
+>> -	pagefault_enable();
+>> -
+>> -	return rc;
+>> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+>> +{
+>> +	return 0;
 
-Richard Cochran <richardcochran@gmail.com> writes:
-> Adding davem onto CC...
->
-> On Thu, Aug 29, 2019 at 12:58:25PM +0300, Felipe Balbi wrote:
->> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
->> index 98ec1395544e..a407e5f76e2d 100644
->> --- a/drivers/ptp/ptp_chardev.c
->> +++ b/drivers/ptp/ptp_chardev.c
->> @@ -177,9 +177,8 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int =
-cmd, unsigned long arg)
->>  			err =3D -EFAULT;
->>  			break;
->>  		}
->> -		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
->> -				|| req.perout.rsv[2] || req.perout.rsv[3])
->> -			&& cmd =3D=3D PTP_PEROUT_REQUEST2) {
->> +		if ((req.perout.rsv[0] || req.perout.rsv[1] || req.perout.rsv[2]
->> +			|| req.perout.rsv[3]) && cmd =3D=3D PTP_PEROUT_REQUEST2) {
->
-> Please check that the reserved bits of req.perout.flags, namely
-> ~PTP_PEROUT_ONE_SHOT, are clear.
 
-Actually, we should check more. PEROUT_FEATURE_ENABLE is still valid
-here, right? So are RISING and FALLING edges, no?
+Here it is
 
->
->>  			err =3D -EINVAL;
->>  			break;
->>  		} else if (cmd =3D=3D PTP_PEROUT_REQUEST) {
->> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clo=
-ck.h
->> index 039cd62ec706..95840e5f5c53 100644
->> --- a/include/uapi/linux/ptp_clock.h
->> +++ b/include/uapi/linux/ptp_clock.h
->> @@ -67,7 +67,9 @@ struct ptp_perout_request {
->>  	struct ptp_clock_time start;  /* Absolute start time. */
->>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
->>  	unsigned int index;           /* Which channel to configure. */
->> -	unsigned int flags;           /* Reserved for future use. */
+
+>>   }
+>>   
+>>   static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+>> @@ -344,6 +313,30 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+>>   
+>>   #if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+>>   /*
+>> + * On 32-bit we just access the address and let hash_page create a
+>> + * HPTE if necessary, so there is no need to fall back to reading
+>> + * the page tables.  Since this is called at interrupt level,
+>> + * do_page_fault() won't treat a DSI as a page fault.
+>> + */
+>> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+>> +{
+>> +	int rc;
 >> +
->> +#define PTP_PEROUT_ONE_SHOT BIT(0)
->> +	unsigned int flags;
->
-> @davem  Any CodingStyle policy on #define within a struct?  (Some
-> maintainers won't allow it.)
+>> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+>> +	    ((unsigned long)ptr & 3))
+>> +		return -EFAULT;
+>> +
+>> +	pagefault_disable();
+>> +	rc = __get_user_inatomic(*ret, ptr);
+>> +	pagefault_enable();
+>> +
+>> +	if (IS_ENABLED(CONFIG_PPC32) || !rc)
+>> +		return rc;
+>> +
+>> +	return read_user_stack_slow(ptr, ret, 4);
+> Which is not declared here. This is not intended to be the final state,
+> anyway.
 
-seems like this should be defined together with the other flags? If
-that's the case, it seems like we would EXTTS and PEROUT masks.
+Yes it is declared here, see above
 
-=2D-=20
-balbi
+Christophe
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1o15QACgkQzL64meEa
-mQY0jBAA1zCKLgKpD6T5AY9iNnfG+uJQm7wlFLkhxf6nmWqVOIDXeKKqTKlY6t/U
-SRcyjH5aEUM+r4sWHlkC3nue7fyI4I492bxe/ToBgUnkifGsc55/PtZCaRrIvh6H
-crSnwiG/+dA9LlI6nI1woq1Rd/AcUwJ6SAV8zHjUyWWo3/Pp7XJUwM9LRF10jrVj
-WG8OGKNhmFoCSn0esIyzFRaTGPUDEycQ7MjfhBDlaRca/pL60N4Y/e0Q+K2h5zSt
-tQU9Qa6NsyPBqYWMYR2+vAIBNq8pWAXnebYH3UbViAPOSDBLeFE8CezcAefZVgc7
-n5xYHMhRZgZKLG1QaD2jBysh0yFOGYDX0vY4hYUQeucgJUU3ksZtSVIAphupoxh3
-xjgvGN77ZxDUkQmwOmNfu2nEgYILdiSHuyOjFqmynFpDO2e0Dc4BafiNN4DjaRjI
-XrJREEgPGU6ck4FtVtQ1+22yxusNk2nqpAe5v5IDCbqZ7jmVgWiOqZGdJUhoqhIG
-KBWMM/UoA1ft5SdZvKidvZf0TIYsfCjAA9eEOgiRBf1CBRISmA51WJzL/uSSc+Qv
-mLeFHjwN/UdxO30fMDmjXxS86/6J1o6qQ1/8nZBbGSW6O3FqiUiR8sA7wW8j8gZE
-RQaXWTQmIeRCoPVqsJn0whIo9eOsL1t7N5Bkv1+ZsmBkioKHaVQ=
-=KWTp
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> Thanks
+> 
+> Michal
+>> +}
+>> +
+>> +/*
+>>    * Layout for non-RT signal frames
+>>    */
+>>   struct signal_frame_32 {
+>> @@ -488,7 +481,6 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>>   static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>>   				   struct pt_regs *regs)
+>>   {
+>> -	(void)&read_user_stack_32; /* unused if !COMPAT */
+>>   }
+>>   #endif /* 32bit */
+>>   
