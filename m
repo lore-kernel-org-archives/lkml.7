@@ -2,103 +2,122 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E825C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C3C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C1323429
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E2D23429
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfH3SRE (ORCPT
+        id S1728094AbfH3SSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:17:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7946 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfH3SRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:17:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 11:17:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="382093729"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Aug 2019 11:17:00 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i3lSF-0002tl-7k; Fri, 30 Aug 2019 21:16:59 +0300
-Date:   Fri, 30 Aug 2019 21:16:59 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Cai <peter@typeblog.net>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2
- Max
-Message-ID: <20190830181659.GO2680@smile.fi.intel.com>
-References: <20190830000024.20384-1-peter@typeblog.net>
- <20190830000024.20384-2-peter@typeblog.net>
- <20190830115505.GX2680@smile.fi.intel.com>
- <CA+Zf_0etfu7282TQ4wYE8tOrhh2Je4aV4Dz5tgC_wt7=FMAidA@mail.gmail.com>
+        Fri, 30 Aug 2019 14:18:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727246AbfH3SSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:18:52 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UI2gaZ111190;
+        Fri, 30 Aug 2019 14:17:08 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uq77fb9wc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 14:17:08 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7UI4pdi023363;
+        Fri, 30 Aug 2019 18:17:06 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2ujvv6v7ad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 18:17:06 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UIH6Pj53084484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 18:17:06 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76867AE05F;
+        Fri, 30 Aug 2019 18:17:06 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13AC7AE064;
+        Fri, 30 Aug 2019 18:17:04 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.151.141])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 18:17:03 +0000 (GMT)
+Message-ID: <77102bfec450d92c58d572a0af3981f7171e67e9.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Date:   Fri, 30 Aug 2019 15:16:59 -0300
+In-Reply-To: <20190829205832.GM20113@breakpoint.cc>
+References: <20190821141505.2394-1-leonardo@linux.ibm.com>
+         <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
+         <b6585989069fd832a65b73d1c4f4319a10714165.camel@linux.ibm.com>
+         <20190829205832.GM20113@breakpoint.cc>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-LXuXxsj4EfX4WwucxL0p"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+Zf_0etfu7282TQ4wYE8tOrhh2Je4aV4Dz5tgC_wt7=FMAidA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:15:27PM +0800, Peter Cai wrote:
-> On Fri, Aug 30, 2019, 7:55 PM Andy Shevchenko <
-> andriy.shevchenko@linux.intel.com> wrote:
 
-> > I guess most of these #ifdef:s makes code less readable for exchange of
-> saving
-> few bytes in the module footprint.
-> 
-> Well since they can only be used when ACPI is supported
+--=-LXuXxsj4EfX4WwucxL0p
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> (devm_acpi_dev_add_driver_gpios does not exist without ACPI defined, thus
-> the last guard must exist),
+On Thu, 2019-08-29 at 22:58 +0200, Florian Westphal wrote:
 
-This is not correct.
+> Ah, it was the latter.
+> Making bridge netfilter not pass packets up with ipv6 off closes
+> the problem for fib_ipv6 and inet, so only _netdev.c needs fixing.
 
-> if they were not guarded then we would be left
-> with a bunch of unused variables warnings when building without ACPI which
-> doesn't seem good.
+Ok then, preparing a v4.
+https://lkml.org/lkml/2019/8/30/843
 
-Good / no-good is only matter of few dozens of bytes here and there to be saved.
 
-> Should we use __maybe_unused here instead of #ifdef guards?
+--=-LXuXxsj4EfX4WwucxL0p
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-No, it won't make sense, because the structures will be part of
-_add_driver_gpio() call, due to which compiler likely can't recognize unused
-structures. However, you may try with warnings enabled `make W=1`.
+-----BEGIN PGP SIGNATURE-----
 
-> > Comma at the end?
-> 
-> I was trying to follow the style of this driver but it doesn't seem to be
-> really consistent within itself. Another dmi_system_id definition in the
-> same file mixed both styles so I was kind of confused.
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1paBsACgkQlQYWtz9S
+ttSreg//XGxhxzY/pjkpjXL6mAu4Ba2JIuox5I+MBXaU1arO1ruCqx3Ses4CVSlr
+RDydtxtS2iCPo6d30Ynsfk5MoyKCIeppFNYQzjT7AHHzym3xoZOuOBIQrf5n/Or/
+mvandv5TuEuMrsmna4ADSKxBinkJCaBgQYNufkeKzONqJhMyLaWj2DXQITpy+SEx
+yx+IXOniAkU6x3w+P44ESLBaDTX62njJGXfeQS3Taf7CQVDlOIywiT0ScfKZ0OHW
+VppqGirwDgUsBbXkjIgthgXp+exEa+gRtc8laWf+48pReY/aNiWKesSBC4zW0j9j
+bjbPx19TssSa2KhkKhre0p4Y/EjsbAfNyEJRXR2DgNvqG+aKd+ye/qI9HfczGGE6
+MTbXQ4Vg2PDxPGWczjVL4EpRS9iVAl5tQpETDXz48a4YVH2aeY1H7+3mWCcESgtY
+AhegAKFzXP9ZlSVZjgb0yoQ79lHiGkOkxdeOZMz8PC+4XnJIMvKn/ren+tZsQz4k
+EbOdS1Nnv6QMnQADnLiStgMO0uWn+rVu6ZLWK9hKxKWv2NCmNBV/e2SHxsmFElyM
+w8Kusc2KkUXG8Q1DlwpQGt8IjRPUL0oirY9xKPhoBRWdfmllH3XVFUoPaHEBEiag
+flNTnU7BS9xplMVvRxAxOuHVa2d/WxeYY23pGnO8omabU0sBNNo=
+=YKYm
+-----END PGP SIGNATURE-----
 
-I see. So, this is for Dmitry's preferences.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+--=-LXuXxsj4EfX4WwucxL0p--
 
