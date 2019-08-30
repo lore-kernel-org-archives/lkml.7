@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E2AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67882C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A722186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB10206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="E8m80fGM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zxLlQbmT"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Gm2vqLZR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gGd/ZFur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfH3Hql (ORCPT
+        id S1728158AbfH3Hqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:46:41 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47747 "EHLO
+        Fri, 30 Aug 2019 03:46:45 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45793 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727125AbfH3Hqj (ORCPT
+        by vger.kernel.org with ESMTP id S1727125AbfH3Hqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:46:39 -0400
+        Fri, 30 Aug 2019 03:46:43 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id B96E7205DD;
-        Fri, 30 Aug 2019 03:46:38 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5D68120A34;
+        Fri, 30 Aug 2019 03:46:42 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 30 Aug 2019 03:46:38 -0400
+  by compute4.internal (MEProxy); Fri, 30 Aug 2019 03:46:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=ccb4qfASYNJsR
-        kcCGbcB3o9/3lt3kvx57ndPsTCioUU=; b=E8m80fGMIH+S8N6Pd12CHP8Mi6K79
-        AyQPJwKb8jFTtbRdtgTjeWull3smJBUNDMyXAXYspV0eeicKoHtAUbXeE8Fy/HPO
-        d9SwpItWo7OnkecCkC4VyAgIpGRNqxwltHEgpFtYOXLAzjPgW6mKH9D9CiGDH1BI
-        cF/OpeUray34sjRba4iJV4OuiwTMGgaL1tUm/hl9ThvprPSVbx7In2v8LZSyQ5Hk
-        hCuUqE0MWxvIYZutlrBoyI1GsiUeht6w37yUWM97tvgM0rBhRew/4hC1FnFvdlrw
-        cqOFDKQiRQEfXLj8VGODD7cmhlLoAYk4WF3hpeeAMfV5hPTSyR5NpxScA==
+        :mime-version:content-transfer-encoding; s=fm3; bh=2Kccgmz9rjelR
+        IO9aczulPQlBm48n9tsTFBim9C8Ml0=; b=Gm2vqLZREqLxAukDM2yV1i9iRpLfD
+        kGEaAs8Or3YMclJd02jJ/gWPn+ixd82VkTgoIgv5rDbSoh0tdu9mMFLCIrQabSrJ
+        t0JP8ZnYtiJ7/4tEZQUDc0kFBR1qxJWYRk7/GB9QxKhX4u4MFvRKHJ50ICU1NhU9
+        dhepCKIw+dM3jSCVp844BFWK6iHbN2W1VYtCLwClOFwQQNE67MgI7qAvTPSba8QU
+        0tM/q00t2Jahn1e2zEayOEgmHDitp158M6csj43vdXwF+W+R+vba5dUBdLL0mhn8
+        DJVpWUzhp83qi+hDZGgIwPw/NTY5u47E9SAEWLCUEgo5cDVhyUjVT2FSw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=ccb4qfASYNJsRkcCGbcB3o9/3lt3kvx57ndPsTCioUU=; b=zxLlQbmT
-        QWJ3vE9cvYoCa9WlMmL37M+O7Le9REVQpONgkbVUzPOIYl0HzfChnF2F7JawkjuV
-        1Q/tTradg5f2exI4yNOjRMDKFDKCjtXZGe2GkW88t7xuWC0lBEfkN1K/tkBw5Mhu
-        g9tTvipqynbFgqIqcHYBJVuIP5cdoqGnPsZfRz4DVaXR9USVD3sofwqV6iI5dnCV
-        oo7XWNSFIPv1+vKhQfY7oCBv718cegKesTOrSknT5E6g/ERBBQY1W7tq//4+WURE
-        F83Hnaqh872oufgoay0B/l/JwiDfcdOeyCBNF2Tu2kuf/AMhtz7ZGV0PKftsgqi5
-        Rc5jgunXd0w3QA==
-X-ME-Sender: <xms:XtRoXdCoztIaE-bm9Umb99VL2wb8GR_gBfJq5-kI9eIF4jtoEHTMAQ>
+        fm3; bh=2Kccgmz9rjelRIO9aczulPQlBm48n9tsTFBim9C8Ml0=; b=gGd/ZFur
+        YFw1xQhxP0fenQwUuAJeUJ9AT7Z86GjJCtNWV7jp8s2f0OkCFjrDM54UheVpcvhA
+        VBzzRGbtOQb+/1r/SxJwf42YPfQA6ysXEI+xvwkYrkLF1SQwTV52NYQzv/5sTsAo
+        sfiVJ8QFx8FsiWHdAap09KGlbxeZXoQUCWFzykDBG3YiQQc5yJKRbbgFJsd2ivEH
+        Ypp33OTOT6dKZMNtCAP725KG4t6IyMokaVXRRKA2C2x3xXr9NyHrt4oss/tUg9Hq
+        TL0L19WM5fXfTXS63dx2y9VDgY2OaJta9h2zTC2h4jnXonPISmh74ck7S7FnJ4nD
+        xv+ILEoNi1cRdg==
+X-ME-Sender: <xms:YtRoXW5coA30Yg9-8ujHS4OCJT0dOkZzBQESCUuxdq7GRpB5lXvL7w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeifedguddvudcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
@@ -57,22 +57,22 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeifedguddvudcutefuodetgg
     rghjrdhiugdrrghuqeenucfkphepvddtfedrheejrddvudehrddujeeknecurfgrrhgrmh
     epmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfu
     ihiivgeptd
-X-ME-Proxy: <xmx:XtRoXfy1jQ6gICTVt4ivGjmly9Ln96hEwLp7xZBrR7ApBDlh1rVgnw>
-    <xmx:XtRoXTnR0ZHAfA4lLM3db-JyeW2ERj-y-A9M1kUjLCeePkHqQXUQAA>
-    <xmx:XtRoXcFU2vWhAStkhkXUaU4RBQFTeKcIOEJYJlIfiYoUDpMwGwKUOg>
-    <xmx:XtRoXULM_gOgWv8WJ67fPT9_C8eIQJQ2UgN17naqRMrNPmIWqFQ1XQ>
+X-ME-Proxy: <xmx:YtRoXbRhpxaTEEZY-MQ__dgsXKyp9mTTATLlEPrVUWABIn62YcCMMQ>
+    <xmx:YtRoXTNUZEAS98Uur4qxtkIG_a9MjoqWPBx_bxYHmqq5YwORKn_O6Q>
+    <xmx:YtRoXZrikDXWjnbU3CF2bWYcvLIjwdhp-Ddty2rbYsBMqKZvAP1GkA>
+    <xmx:YtRoXcKKvyBVr4a9so2vV2qm05RAkgmdr1XO74g7wKsXnf_UUOgNmg>
 Received: from localhost.localdomain (203-57-215-178.dyn.iinet.net.au [203.57.215.178])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 043FDD6005F;
-        Fri, 30 Aug 2019 03:46:34 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 14361D60057;
+        Fri, 30 Aug 2019 03:46:38 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-mmc@vger.kernel.org
 Cc:     Andrew Jeffery <andrew@aj.id.au>, adrian.hunter@intel.com,
         ulf.hansson@linaro.org, joel@jms.id.au, ryanchen.aspeed@gmail.com,
         openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] mmc: sdhci-of-aspeed: Uphold clocks-on post-condition of set_clock()
-Date:   Fri, 30 Aug 2019 17:16:43 +0930
-Message-Id: <20190830074644.10936-2-andrew@aj.id.au>
+Subject: [PATCH 2/2] mmc: sdhci-of-aspeed: Allow max-frequency limitation of SDCLK
+Date:   Fri, 30 Aug 2019 17:16:44 +0930
+Message-Id: <20190830074644.10936-3-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190830074644.10936-1-andrew@aj.id.au>
 References: <20190830074644.10936-1-andrew@aj.id.au>
@@ -83,30 +83,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The early-exit didn't seem to matter on the AST2500, but on the AST2600
-the SD clock genuinely may not be running on entry to
-aspeed_sdhci_set_clock(). Remove the early exit to ensure we always run
-sdhci_enable_clk().
+Add a get_max_clock() handler to sdhci-of-aspeed to report f_max as the
+maximum clock rate if it is set. This enables artificial limitation of
+the bus speed via max-frequency in the devicetree for e.g. the AST2600
+evaluation board where I am seeing errors at 200MHz.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/mmc/host/sdhci-of-aspeed.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/mmc/host/sdhci-of-aspeed.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-index d5acb5afc50f..a9175ca85696 100644
+index a9175ca85696..5cc00abcd71f 100644
 --- a/drivers/mmc/host/sdhci-of-aspeed.c
 +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -55,9 +55,6 @@ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+@@ -52,16 +52,24 @@ static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+ 
+ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
++	struct sdhci_pltfm_host *pltfm_host;
++	unsigned long parent;
  	int div;
  	u16 clk;
  
--	if (clock == host->clock)
--		return;
--
++	pltfm_host = sdhci_priv(host);
++	parent = clk_get_rate(pltfm_host->clk);
++
  	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
  
  	if (clock == 0)
+ 		goto out;
+ 
++	if (WARN_ON(clock > host->max_clk))
++		clock = host->max_clk;
++
+ 	for (div = 1; div < 256; div *= 2) {
+-		if ((host->max_clk / div) <= clock)
++		if ((parent / div) <= clock)
+ 			break;
+ 	}
+ 	div >>= 1;
+@@ -74,6 +82,14 @@ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	host->clock = clock;
+ }
+ 
++static unsigned int aspeed_sdhci_get_max_clock(struct sdhci_host *host)
++{
++	if (host->mmc->f_max)
++		return host->mmc->f_max;
++
++	return sdhci_pltfm_clk_get_max_clock(host);
++}
++
+ static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
+ {
+ 	struct sdhci_pltfm_host *pltfm_priv;
+@@ -100,7 +116,7 @@ static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
+ 
+ static const struct sdhci_ops aspeed_sdhci_ops = {
+ 	.set_clock = aspeed_sdhci_set_clock,
+-	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
++	.get_max_clock = aspeed_sdhci_get_max_clock,
+ 	.set_bus_width = aspeed_sdhci_set_bus_width,
+ 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
+ 	.reset = sdhci_reset,
 -- 
 2.20.1
 
