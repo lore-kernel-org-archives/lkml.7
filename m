@@ -2,114 +2,138 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1352AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1888EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AE82186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E042E2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n50sbYC+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+3XGo8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfH3NNy (ORCPT
+        id S1727876AbfH3NQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:13:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36948 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbfH3NNx (ORCPT
+        Fri, 30 Aug 2019 09:16:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36078 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbfH3NQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:13:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z11so6938562wrt.4;
-        Fri, 30 Aug 2019 06:13:52 -0700 (PDT)
+        Fri, 30 Aug 2019 09:16:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so6957786wrd.3;
+        Fri, 30 Aug 2019 06:16:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JqpdhCNElm8Ik1HxewZXY9EY8Fd3DEXFwvJVx75KrYE=;
-        b=n50sbYC+FgutUT7ECCoEMtCug2yBV6K89ro+gQqT6r1hIcdSjVf15jSwbB8hUCOvLP
-         yZLK+P0vmE9jkvdq5ldZbdx4hSEPJCCytNdGmBacEpRTTw1qkYW//YwY7S6Q1UuB31a/
-         dm6Ij3rD8rVxb1CxacJC8Ak2E0UCED4sB1R+Odygxmoh3SLjPHsV3sz57t/I/AkdnT4C
-         cSrRgRFlzS/PIeUcokSHgOIxdoQzFd1MvL6OORmv8y685F4xHpFyarX8iieHU1PN2qel
-         o98HwNeJ1U4ysDW4uIIAIQm6g8vWqxK4YzmC+uisxozec9BF0RdHTNDjzc1+g1wApTwF
-         C3Wg==
+        h=from:to:cc:subject:date:message-id;
+        bh=/S9eKzefNd7RMHB9sZJ0C1DeLdzhViGsRQEhurBvj1g=;
+        b=A+3XGo8eLt+CGtuybCO9ryzkFPRMsbxbjBkOf4VjPVt2rsCOYMfHDej1Di6DOKJXly
+         SpSQu6uRxWh3yGTnqY1ZE16DixxGObQ/e2iV7A5lzp6yvh9nQAybLebOV5lsWnA9zy/d
+         3/pImBjcK0C0w8gI+jLlA1cbQc8PJ6c+leWm9ZvucIikXtKUEv04Hv3mLGU6IunDmYTN
+         6xBR+ITWi02Y8kNVUdiPsCSFBhSGHWKa3AnrM/2VlEvnccV09yikcVhwKlZt5AHqTeSK
+         4SG8eG0rDij/3dA363LL084hvv3/seTWBYIIvRXDIV1CNS2Q+3B4uRTdpw/0gMbalxGN
+         PBpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=JqpdhCNElm8Ik1HxewZXY9EY8Fd3DEXFwvJVx75KrYE=;
-        b=hGMJpa1ktkuvjdRKLYCBjd2sYLxpmTitSHejnCbrl3P0zqpVyw5F3xr52tYpNayWK3
-         c68WlgGiDBpX/2Jf7K6GiL89gaj+jsWtQeHmIqCt8/yCz97oaCXKBSzWY6u1y70k4Mxl
-         +a7q4aGO8KTfU8lrJNp8Zcn+aLFphe3yFhSQ2VKHjluA0z++Q1XfQNxiUD1+c5Ul3et+
-         nFl3+e4f8GdiMrVU5RZgFxEettvHQZzqP21wiBKRvx93++qlhQZke2Vzk139lXBlFUZ2
-         ODTj78mIYxO1VJwcNFVLsNpgui5sik9UtnkzYdGAC6eniTjzORwnKXLnnpcferHdb9NE
-         T8aw==
-X-Gm-Message-State: APjAAAXOTi6InGcZl8hHp4u5qoz2Eh1zLP48v1h3RPsGYWCZtKmuzCu/
-        4G34WTFgRoP/r4rnQ76BMrhkQPl1z0A=
-X-Google-Smtp-Source: APXvYqz6EC78MzgkBTxKRKjQA9m/g4eSPMCtfmGenxFJAPq755Flmn2cDtfuHwFVmUL3368buS/NAA==
-X-Received: by 2002:adf:f304:: with SMTP id i4mr20016620wro.61.1567170831384;
-        Fri, 30 Aug 2019 06:13:51 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id a141sm18323244wmd.0.2019.08.30.06.13.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/S9eKzefNd7RMHB9sZJ0C1DeLdzhViGsRQEhurBvj1g=;
+        b=MT5jBdo5clXM813seWcMF9utNlgCbpYuyG4K5NJfu7kou9mBB2E3cb+ksOMQ9d9NMi
+         YiY2MX798FiLRMEZTpyeJNSq9ueOm3ft5nL97RuWHkbzcvkPHvPdlJ81JsP5Jq02DRuz
+         81IZL1qPhA79gOZoWuKdoVG8aGjgP0om2lMb3otlfmQGm5t/eHD1LWXkigP40jMF53h/
+         o/yJaBCl669Y69hFBsCanmNBMtdoPjoX2916U/2oeG0clchbmYR9zqqJ2YIo2KM/HzSe
+         c1oBoKJtlfnlp5Xd1Py5buXr+0Z4kO/84EvnEVhGDy20qaDBjMPmily6v2AVpZyR2dZG
+         pxHg==
+X-Gm-Message-State: APjAAAViB2yMaIQA+WkP154h/t1PL49rsxr/uxBrr45cJXmXoaBdHxGS
+        itcUj1kirDxmfq1bOrhhq4k=
+X-Google-Smtp-Source: APXvYqwXJjWiBE6NwdOXRxtwcsABPge0Ls8aIICSf4qJIPRfYa8/4rruesJBhd011tmXjtH1LkfrYA==
+X-Received: by 2002:adf:dfc8:: with SMTP id q8mr19146221wrn.121.1567170965131;
+        Fri, 30 Aug 2019 06:16:05 -0700 (PDT)
+Received: from 5WDYG62.mdi (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
+        by smtp.gmail.com with ESMTPSA id t19sm6384517wmi.29.2019.08.30.06.16.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 06:13:50 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] unicode: Move static keyword to the front of declarations
-Date:   Fri, 30 Aug 2019 15:13:49 +0200
-Message-Id: <20190830131349.14074-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 30 Aug 2019 06:16:04 -0700 (PDT)
+From:   Romain Izard <romain.izard.pro@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Romain Izard <romain.izard.pro@gmail.com>
+Subject: [PATCH v2] power: supply: register HWMON devices with valid names
+Date:   Fri, 30 Aug 2019 15:15:56 +0200
+Message-Id: <20190830131556.10021-1-romain.izard.pro@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declarations of nfdi_test_data
-and nfdicf_test_data, and resolve the following compiler warnings that
-can be seen when building with warnings enabled (W=1):
+With the introduction of the HWMON compatibility layer to the power
+supply framework in Linux 5.3, all power supply devices' names can be
+used directly to create HWMON devices with the same names.
 
-fs/unicode/utf8-selftest.c:38:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+But HWMON has rules on allowable names that are different from those
+used in the power supply framework. The dash character is forbidden, as
+it is used by the libsensors library in userspace as a separator,
+whereas this character is used in the device names in more than half of
+the existing power supply drivers. This last case is consistent with the
+typical naming usage with MFD and Device Tree.
 
-fs/unicode/utf8-selftest.c:92:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+This leads to warnings in the kernel log, with the format:
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+power_supply gpio-charger: hwmon: \
+	'gpio-charger' is not a valid name attribute, please fix
+
+Add a protection to power_supply_add_hwmon_sysfs() that replaces any
+dash in the device name with an underscore when registering with the
+HWMON framework. Other forbidden characters (star, slash, space, tab,
+newline) are not replaced, as they are not in common use.
+
+Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
-Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
 
- fs/unicode/utf8-selftest.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2: Remove a superfluous cast
 
-diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/utf8-selftest.c
-index 6c1a36bbf6ad..6fe8af7edccb 100644
---- a/fs/unicode/utf8-selftest.c
-+++ b/fs/unicode/utf8-selftest.c
-@@ -35,7 +35,7 @@ unsigned int total_tests;
- #define test_f(cond, fmt, ...) _test(cond, __func__, __LINE__, fmt, ##__VA_ARGS__)
- #define test(cond) _test(cond, __func__, __LINE__, "")
+ drivers/power/supply/power_supply_hwmon.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+index 51fe60440d12..75cf861ba492 100644
+--- a/drivers/power/supply/power_supply_hwmon.c
++++ b/drivers/power/supply/power_supply_hwmon.c
+@@ -284,6 +284,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+ 	struct device *dev = &psy->dev;
+ 	struct device *hwmon;
+ 	int ret, i;
++	const char *name;
  
--const static struct {
-+static const struct {
- 	/* UTF-8 strings in this vector _must_ be NULL-terminated. */
- 	unsigned char str[10];
- 	unsigned char dec[10];
-@@ -89,7 +89,7 @@ const static struct {
+ 	if (!devres_open_group(dev, power_supply_add_hwmon_sysfs,
+ 			       GFP_KERNEL))
+@@ -334,7 +335,19 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+ 		}
+ 	}
  
- };
- 
--const static struct {
-+static const struct {
- 	/* UTF-8 strings in this vector _must_ be NULL-terminated. */
- 	unsigned char str[30];
- 	unsigned char ncf[30];
+-	hwmon = devm_hwmon_device_register_with_info(dev, psy->desc->name,
++	name = psy->desc->name;
++	if (strchr(name, '-')) {
++		char *new_name;
++
++		new_name = devm_kstrdup(dev, name, GFP_KERNEL);
++		if (!new_name) {
++			ret = -ENOMEM;
++			goto error;
++		}
++		strreplace(new_name, '-', '_');
++		name = new_name;
++	}
++	hwmon = devm_hwmon_device_register_with_info(dev, name,
+ 						psyhw,
+ 						&power_supply_hwmon_chip_info,
+ 						NULL);
 -- 
-2.22.1
+2.17.1
 
