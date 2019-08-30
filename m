@@ -2,109 +2,106 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75A2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457CBC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FB82087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nb5baDLH"
+	by mail.kernel.org (Postfix) with ESMTP id 1F0212087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfH3QmT (ORCPT
+        id S1728242AbfH3Qme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:42:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49882 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbfH3QmT (ORCPT
+        Fri, 30 Aug 2019 12:42:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49953 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727976AbfH3Qme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:42:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zT6Sffc7p6dXxr/DqLVZuPlm0esCLyE+d/3ikz+/jqI=; b=Nb5baDLHs6tOVMnZ2y1xUxHzs
-        MhSwjOCDGxy8BvtXnOfjEW35qlNWyTbB5J8UoRl4zzLn+YSkRG+J46vsn972X8NpB8I7gKz1i1ZcD
-        Bi2JWKJq4ZUANCc0oWI11+X0jE7gzpS3IFc1UfQGoD9Mk+ov4ZRJqRweV6Ek2FRGvomWDP7hd3ryu
-        oaPu2QpDsqEh4GwblDsXtaPgKEHbndclLqmmnGyF5+5JhqE/2wMWTx6zkz1YCrd3bEALL5KVNQKUQ
-        WpHREdtO/JtxBC5fHQ2repjFQJhEBNYaFxOJln6YisDqgjlMrFlhxRGO4FqgfssIOHIyKIy5OFC+0
-        f9lySr1Cg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3jyP-0002rX-Ku; Fri, 30 Aug 2019 16:42:05 +0000
-Date:   Fri, 30 Aug 2019 09:42:05 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 05/24] erofs: add inode operations
-Message-ID: <20190830164205.GD29603@infradead.org>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-6-gaoxiang25@huawei.com>
- <20190829102426.GE20598@infradead.org>
- <20190829115922.GG64893@architecture4>
+        Fri, 30 Aug 2019 12:42:34 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-117-W1tnBhGoOWa2nq3fOcF08g-1; Fri, 30 Aug 2019 17:42:31 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 17:42:30 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 30 Aug 2019 17:42:30 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: RE: objtool warning "uses BP as a scratch register" with clang-9
+Thread-Topic: objtool warning "uses BP as a scratch register" with clang-9
+Thread-Index: AQHVX0pqqj9VEXOMQ0SdqQ13OMpYJacT10cw///xooCAABloAA==
+Date:   Fri, 30 Aug 2019 16:42:30 +0000
+Message-ID: <108518fd630642468e5c6e0274485a93@AcuMS.aculab.com>
+References: <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+ <20190828152226.r6pl64ij5kol6d4p@treble>
+ <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+ <20190829173458.skttfjlulbiz5s25@treble>
+ <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
+ <CAK8P3a1K5HgfACmJXr4dTTwDJFz5BeSCCa3RQWYbXGE-2q4TJQ@mail.gmail.com>
+ <CAHk-=whuUdqrh2=LLNfRiW6oadx0zzGVkvqyx_O1cGLa2U6Jjg@mail.gmail.com>
+ <20190830150208.jyk7tfzznqimc6ow@treble>
+ <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
+ <d1af87f139b54346b420d06855297cfa@AcuMS.aculab.com>
+ <CAHk-=wh33ouqv7UNovQn8WWXGA_kXEHDY3_H7x5-_j33AHYPwg@mail.gmail.com>
+In-Reply-To: <CAHk-=wh33ouqv7UNovQn8WWXGA_kXEHDY3_H7x5-_j33AHYPwg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829115922.GG64893@architecture4>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-MC-Unique: W1tnBhGoOWa2nq3fOcF08g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:59:22PM +0800, Gao Xiang wrote:
-> On Thu, Aug 29, 2019 at 03:24:26AM -0700, Christoph Hellwig wrote:
-> 
-> []
-> 
-> > 
-> > > +
-> > > +		/* fill last page if inline data is available */
-> > > +		err = fill_inline_data(inode, data, ofs);
-> > 
-> > Well, I think you should move the is_inode_flat_inline and
-> > (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) checks from that
-> > helper here, as otherwise you make everyone wonder why you'd always
-> > fill out the inline data.
-> 
-> Currently, fill_inline_data() only fills for fast symlink,
-> later we can fill any tail-end block (such as dir block)
-> for our requirements.
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMzAgQXVndXN0IDIwMTkgMTc6MDENCj4gT24g
+RnJpLCBBdWcgMzAsIDIwMTkgYXQgODo1NSBBTSBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBh
+Y3VsYWIuY29tPiB3cm90ZToNCi4uLg0KPiBCdXQgeWVhaCwgaW4gZ2VuZXJhbCBpdCdzIGp1c3Qg
+bm90IG9idmlvdXNseSBzYWZlIHRvIHR1cm4gaW5kaXZpZHVhbA0KPiBhY2Nlc3NlcyBpbnRvIG1l
+bXNldC9tZW1jcHkuIEluIGNvbnRyYXN0LCB0aGUgcmV2ZXJzZSBpcyBvYnZpb3VzbHkNCj4gZmlu
+ZSAoYW5kIF9yZXF1aXJlZF8gZm9yIGFueSBraW5kIG9mIGhhbGYtd2F5IGdvb2QgcGVyZm9ybWFu
+Y2Ugd2hlbg0KPiB5b3UgZG8gc21hbGwgY29uc3RhbnQtc2l6ZWQgbWVtb3J5IGNvcGllcywgd2hp
+Y2ggaXMgYWN0dWFsbHkgYSBjb21tb24NCj4gcGF0dGVybiBwYXJ0bHkgYmVjYXVzZSB0aGUgaW5z
+YW5lIEMgYWxpYXNpbmcgcnVsZXMgaGF2ZSB0YXVnaHQgcGVvcGxlDQo+IHRoYXQgaXQncyB0aGUg
+X29ubHlfIHNhZmUgcGF0dGVybiBpbiBzb21lIHNpdHVhdGlvbnMpLg0KDQpJIHdvbmRlciB3aGVy
+ZSB0aGUgYWN0dWFsIGN1dG9mZiBpcyBmb3IgY29udmVydGluZyBhIHNlcXVlbmNlIG9mIHdyaXRl
+cw0Kb2YgemVybyBpbnRvIGEgY2FsbCB0byBtZW1zZXQoKT8NCg0KSWYgeW91IGFzc3VtZSBlaXRo
+ZXI6DQoxKSBjb2xkIGNhY2hlIChmb3IgbWVtc2V0KS4NCjIpIGJyYW5jaCBwcmVkaWN0b3Igbm90
+IHNldCBmb3IgemVyb2luZyBhIHNtYWxsIG51bWJlciBvZiB3b3Jkcy4NCkkgc3VzcGVjdCB0aGF0
+IGl0IGlzIGNvbnNpZGVyYWJsZS4NCg0KPiBUaGlzIGlzIHdoeSBJIHRoaW5rICItZmZyZWVzdGFu
+ZGluZyIgYW5kICItZm5vLWJ1aWx0aW4tbWVtY3B5IiBhcmUNCj4gY29tcGxldGVseSBicm9rZW4g
+YXMtaXM6IHRoZXkgYXJlIGFuIGFsbC1vci1ub3RoaW5nIHRoaW5nLCB0aGV5IGRvbid0DQo+IHVu
+ZGVyc3RhbmQgdGhhdCBpdCdzIGRpcmVjdGlvbmFsLg0KDQpZZXAsIGFuZCBzb21lIG9mIHRoZSBj
+b252ZXJzaW9ucyBhcmUgYSBqdXN0IGEgUElUQS4NCmVnIHByaW50ZigiJXMiLCBzdHJpbmcpID0+
+IHB1dHMoc3RyaW5nKS4NCg0KSSB3YXMgYWxzbyB0cnlpbmcgdG8gZ2V0IGFyb3VuZCB0aGUgbWVt
+Y3B5QEdMSUJDNCBmdWJhciBzbyBJIGNvdWxkDQpjb21waWxlIGNvZGUgdGhhdCB3b3VsZCBydW4g
+b24gYW4gb2xkIHN5c3RlbS4NCkkgbWFuYWdlZCBldmVyeXRoaW5nIGV4Y2VwdCB0aGUgbWVtY3B5
+KCkgY2FsbHMgdGhhdCBnY2MgZW1pdHMgZm9yDQpzdHJ1Y3R1cmUgY29waWVzIChpdCBtaWdodCBl
+dmVuIGRvIHRoYXQgZXZlbiBmb3IgJ2ZyZWVzdGFuZGluZycpLg0KSXQgcmVhbGx5IG91Z2h0IHRv
+IGVtaXQgYSBjYWxsIHRvIGEgZGlmZmVyZW50IHN5bWJvbCB0aGF0IHdvdWxkIG5vcm1hbGx5DQpi
+ZSBhbGlhc2VkIHRvIG1lbWNweSgpIChvciBiZXR0ZXIgYSBtZW1jcHlfd29yZHMoKSBmdW5jdGlv
+bikuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
+Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
+biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-So change it when that later changes actually come in.  And even then
-having the checks outside the function is a lot more obvious.
-
-> And I think that is minor.
-
-The problem is that each of these issues might appear minor on their
-own.  But combined a lot of the coding style choices lead to code that
-is more suitable an obsfucated code contest than the Linux kernel as
-trying to understand even just a few places requires jumping through
-tons of helpers with misleading names and spread over various files.
-
-> The consideration is simply because iget_locked performs better
-> than iget5_locked.
-
-In what benchmark do the differences show up?
