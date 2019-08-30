@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715F6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FDDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67921897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB2920828
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfH3D5v (ORCPT
+        id S1728332AbfH3D55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:57:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:3127 "EHLO
+        Thu, 29 Aug 2019 23:57:57 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60935 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727729AbfH3D5u (ORCPT
+        with ESMTP id S1728188AbfH3D5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:57:50 -0400
-X-UUID: 2de0a44793fc4148969b60a92c2cb7ef-20190830
-X-UUID: 2de0a44793fc4148969b60a92c2cb7ef-20190830
+        Thu, 29 Aug 2019 23:57:51 -0400
+X-UUID: 7291e3a14c1347b4a37caf7783ff9682-20190830
+X-UUID: 7291e3a14c1347b4a37caf7783ff9682-20190830
 Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2132333334; Fri, 30 Aug 2019 11:57:44 +0800
+        with ESMTP id 1146518011; Fri, 30 Aug 2019 11:57:44 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 11:57:41 +0800
+ 15.0.1395.4; Fri, 30 Aug 2019 11:57:46 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 11:57:36 +0800
+ Transport; Fri, 30 Aug 2019 11:57:46 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -43,138 +43,124 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v7 01/11] pwm: mediatek: add a property "num-pwms"
-Date:   Fri, 30 Aug 2019 11:57:07 +0800
-Message-ID: <1567137437-10041-2-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v7 03/11] pwm: mediatek: remove a property "has-clks"
+Date:   Fri, 30 Aug 2019 11:57:09 +0800
+Message-ID: <1567137437-10041-4-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
 References: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-TM-SNTS-SMTP: 5D9E2CFE126B7D2F541E3D23232AF46D400C2D243B3591F13D860B1A7C8A812E2000:8
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 853F9C6FEF7A490E2953782898BBD157C8997D2B8174CBD6EFE23594A706E6AA2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
-
-This adds a property "num-pwms" to avoid having an endless
-list of compatibles with no differences for the same driver.
+We can use fixed-clock to repair mt7628 pwm during configure from
+userspace. The SoC is legacy MIPS and has no complex clock tree.
+Due to we can get clock frequency for period calculation from DT
+fixed-clock, so we can remove has-clock property, and directly
+use devm_clk_get and clk_get_rate.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
 ---
 Changes since v6:
-Add a Reviewed-by tag
+Based on fixed-clock in DT, we can remove has-clks property
 
 Changes since v5:
-Check num-pwms value is no more than MTK_CLK_MAX - 2 (MAIN + TOP)
+1. Follow reviewer's comments
+Make the changes of fix mt7628 pwm as a single patch
 
 Changes since v4:
-Follow reviewer's comments:
-Move the changes of droping the check for of_device_get_match_data returning non-NULL to next patch
-
-
+- Follow reviewers's comments
+1. use pc->soc->has_clks to check clocks exist or not.
+2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period caculation;
+otherwise, use clk_get_rate to get clock frequency and apply period caculation.
 ---
- drivers/pwm/pwm-mediatek.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ drivers/pwm/pwm-mediatek.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index eb6674ce995f..e214f4f57107 100644
+index ebd62629e3fe..07e843aeddb1 100644
 --- a/drivers/pwm/pwm-mediatek.c
 +++ b/drivers/pwm/pwm-mediatek.c
-@@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+@@ -57,7 +57,6 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+ struct mtk_pwm_platform_data {
+ 	unsigned int fallback_npwms;
+ 	bool pwm45_fixup;
+-	bool has_clks;
  };
  
- struct mtk_pwm_platform_data {
--	unsigned int num_pwms;
-+	unsigned int fallback_npwms;
- 	bool pwm45_fixup;
- 	bool has_clks;
- };
-@@ -227,9 +227,10 @@ static const struct pwm_ops mtk_pwm_ops = {
- static int mtk_pwm_probe(struct platform_device *pdev)
- {
- 	const struct mtk_pwm_platform_data *data;
-+	struct device_node *np = pdev->dev.of_node;
- 	struct mtk_pwm_chip *pc;
- 	struct resource *res;
--	unsigned int i;
-+	unsigned int i, npwms;
+ /**
+@@ -87,9 +86,6 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
  	int ret;
  
- 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-@@ -246,7 +247,26 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pc->regs))
- 		return PTR_ERR(pc->regs);
+-	if (!pc->soc->has_clks)
+-		return 0;
+-
+ 	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
+ 	if (ret < 0)
+ 		return ret;
+@@ -116,9 +112,6 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
  
--	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
-+	ret = of_property_read_u32(np, "num-pwms", &npwms);
-+	if (ret < 0) {
-+		/* It's deprecated, we should specify num_pwms via DT now. */
-+		if (pc->soc->fallback_npwms) {
-+			npwms = pc->soc->fallback_npwms;
-+			dev_warn(&pdev->dev, "DT is outdated, please update it\n");
-+		} else {
-+			dev_err(&pdev->dev, "failed to get number of PWMs\n");
-+			return ret;
-+		}
-+	}
-+
-+	/* MAIN + TOP + NPWM < MTK_CLK_MAX */
-+	if ((npwms + 2) > MTK_CLK_MAX) {
-+		dev_warn(&pdev->dev, "number of PWMs is larger than %d\n",
-+			 MTK_CLK_MAX - 2);
-+		npwms = MTK_CLK_MAX - 2;
-+	}
-+
-+	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
- 		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+-	if (!pc->soc->has_clks)
+-		return;
+-
+ 	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
+ 	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
+ 	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
+@@ -262,11 +255,13 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 		npwms = MTK_CLK_MAX - 2;
+ 	}
+ 
+-	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+-		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
++	for (i = 0; i < npwms + 2 ; i++) {
++		pc->clks[i] = devm_clk_get(&pdev->dev,
++					  mtk_pwm_clk_name[i]);
  		if (IS_ERR(pc->clks[i])) {
  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-@@ -260,7 +280,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &mtk_pwm_ops;
- 	pc->chip.base = -1;
--	pc->chip.npwm = data->num_pwms;
-+	pc->chip.npwm = npwms;
- 
- 	ret = pwmchip_add(&pc->chip);
- 	if (ret < 0) {
-@@ -279,25 +299,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
- }
- 
+-				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
++				mtk_pwm_clk_name[i],
++				PTR_ERR(pc->clks[i]));
+ 			return PTR_ERR(pc->clks[i]);
+ 		}
+ 	}
+@@ -297,25 +292,21 @@ static int mtk_pwm_remove(struct platform_device *pdev)
  static const struct mtk_pwm_platform_data mt2712_pwm_data = {
--	.num_pwms = 8,
-+	.fallback_npwms = 8,
+ 	.fallback_npwms = 8,
  	.pwm45_fixup = false,
- 	.has_clks = true,
+-	.has_clks = true,
  };
  
  static const struct mtk_pwm_platform_data mt7622_pwm_data = {
--	.num_pwms = 6,
-+	.fallback_npwms = 6,
+ 	.fallback_npwms = 6,
  	.pwm45_fixup = false,
- 	.has_clks = true,
+-	.has_clks = true,
  };
  
  static const struct mtk_pwm_platform_data mt7623_pwm_data = {
--	.num_pwms = 5,
-+	.fallback_npwms = 5,
+ 	.fallback_npwms = 5,
  	.pwm45_fixup = true,
- 	.has_clks = true,
+-	.has_clks = true,
  };
  
  static const struct mtk_pwm_platform_data mt7628_pwm_data = {
--	.num_pwms = 4,
-+	.fallback_npwms = 4,
+ 	.fallback_npwms = 4,
  	.pwm45_fixup = true,
- 	.has_clks = false,
+-	.has_clks = false,
  };
+ 
+ static const struct of_device_id mtk_pwm_of_match[] = {
 -- 
 2.17.1
 
