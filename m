@@ -2,151 +2,265 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,WEIRD_QUOTING
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5418C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A0BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A982341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CE72341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfH3OQP (ORCPT
+        id S1728247AbfH3OQh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:16:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1244 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727751AbfH3OQP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:16:15 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UE3hwn132775;
-        Fri, 30 Aug 2019 10:15:31 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uq0kt2772-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 10:15:31 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7UEB94f005012;
-        Fri, 30 Aug 2019 14:15:30 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 2un65kfrta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 14:15:30 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UEFT5i55312664
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 14:15:29 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5DA40112064;
-        Fri, 30 Aug 2019 14:15:29 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 027CB11206E;
-        Fri, 30 Aug 2019 14:15:26 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.151.141])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Aug 2019 14:15:26 +0000 (GMT)
-Message-ID: <daa9f83eaeba2ce41a72ac2fa23e24817ef3d4a1.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
- IPv6 is disabled on boot
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Florian Westphal <fw@strlen.de>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Date:   Fri, 30 Aug 2019 11:15:22 -0300
-In-Reply-To: <20190829205832.GM20113@breakpoint.cc>
-References: <20190821141505.2394-1-leonardo@linux.ibm.com>
-         <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
-         <b6585989069fd832a65b73d1c4f4319a10714165.camel@linux.ibm.com>
-         <20190829205832.GM20113@breakpoint.cc>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+IABKuOZYCco6cLZ6aAe"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 30 Aug 2019 10:16:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45190 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727751AbfH3OQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:16:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1DEE23084031;
+        Fri, 30 Aug 2019 14:16:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5148A6012C;
+        Fri, 30 Aug 2019 14:16:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+References: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: keyctl_watch_key.3 manpage
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908300146
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4676.1567174592.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 30 Aug 2019 15:16:32 +0100
+Message-ID: <4677.1567174592@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 30 Aug 2019 14:16:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-+IABKuOZYCco6cLZ6aAe
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-08-29 at 22:58 +0200, Florian Westphal wrote:
-> In any case your patch looks ok to me.
-
-Great! Please give your feedback on v3:=20
-http://patchwork.ozlabs.org/patch/1154040/
-
-[...]
->=20
-> Even if we disable call-ip6tables in br_netfilter we will at least
-> in addition need a patch for nft_fib_netdev.c.
->=20
-> From a "avoid calls to ipv6 stack when its disabled" standpoint,
-> the safest fix is to disable call-ip6tables functionality if ipv6
-> module is off *and* fix nft_fib_netdev.c to BREAK in ipv6 is off case.
->=20
-> I started to place a list of suspicous modules here, but that got out
-> of hand quickly.
->=20
-> So, given I don't want to plaster ipv6_mod_enabled() everywhere, I
-> would suggest this course of action:
->=20
-> 1. add a patch to BREAK in nft_fib_netdev.c for !ipv6_mod_enabled()
-> 2. change net/bridge/br_netfilter_hooks.c, br_nf_pre_routing() to
->    make sure ipv6_mod_enabled() is true before doing the ipv6 stack
->    "emulation".
->=20
-> Makes sense?
-IMHO sure.
-
-Shortly, I will send a couple patches proposing the above changes.
-(Or my best understanding about them :) )=20
-
->=20
-> Thanks,
-> Florian
-
-Thank you,
-Leonardo Bras
-
---=-+IABKuOZYCco6cLZ6aAe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1pL3oACgkQlQYWtz9S
-ttRoEg//YEDzqVS2pknZEenxYLlPas/7KfnsR9DlKgvsPOgmMGilF7cNsmX6TGRj
-LeosgkxEJF2vr0Slja1c9jRNNl1gTBq9ICTdRw9CFMni/XOAmwPKgHVqqA6XMd9I
-K5D7hdsJz2Yev00SylE5/bI+WPGhgA2deBQToKgPQiILKxQH/aU4TJer6fdiuOra
-kip4EG58o164qwZH3nqPArQR32RjGOPiK4J6LxMB0OQttrBjk6i0oTQjXgYfdX/P
-MqV5KZEBKRvM6NiFat1ZR7C5ns1lDONTfOAzmX1zGBHXY28xDCEpaaCSdQTUj+5G
-SoCwkBtnN8h+xHtP4XuyBdlBQVJOIqoW2ICGqaYonO+k0Pa4QoXuW9VKSrRfK/x8
-qLd+JHjLSPnZo9c35Gz7TaFbDPelaQnFRjBVmXhzgWiJeAIRosFzWVtzH7aQ6wAU
-UOEFYMSrkYLe06gyarZR1Lltb6qSJK5SSwV7lG8kl2YmMRbc25a+UmaaRaZ2ePjt
-FwyXTuYjrKL2zAwo2heF+EnJwWL4QlQifdBMS2uczXTdhX5OayElOZFYU68Mcg/n
-QEe5u0G+FolDPWaA7X0eqRzjQoCmaAWNF6i78mP6NjhPdgsif5XbSzmzrYB9Tzdv
-oGmHflawcvhTciuqVOZRFwN9Uow0B88OpQtSWh7H/lx7qIgf77w=
-=WcP3
------END PGP SIGNATURE-----
-
---=-+IABKuOZYCco6cLZ6aAe--
-
+.\"
+.\" Copyright (C) 2019 Red Hat, Inc. All Rights Reserved.
+.\" Written by David Howells (dhowells@redhat.com)
+.\"
+.\" This program is free software; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License
+.\" as published by the Free Software Foundation; either version
+.\" 2 of the License, or (at your option) any later version.
+.\"
+.TH KEYCTL_GRANT_PERMISSION 3 "28 Aug 2019" Linux "Linux Key Management Calls"
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH NAME
+keyctl_watch_key \- Watch for changes to a key
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH SYNOPSIS
+.nf
+.B #include <keyutils.h>
+.sp
+.BI "long keyctl_watch_key(key_serial_t " key ,
+.BI "                      int " watch_queue_fd
+.BI "                      int " watch_id ");"
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH DESCRIPTION
+.BR keyctl_watch_key ()
+sets or removes a watch on
+.IR key .
+.PP
+.I watch_id
+specifies the ID for a watch that will be included in notification messages.
+It can be between 0 and 255 to add a key; it should be -1 to remove a key.
+.PP
+.I watch_queue_fd
+is a file descriptor attached to a watch_queue device instance.  Multiple
+openings of a device provide separate instances.  Each device instance can
+only have one watch on any particular key.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SS Notification Record
+.PP
+Key-specific notification messages that the kernel emits into the buffer have
+the following format:
+.PP
+.in +4n
+.EX
+struct key_notification {
+	struct watch_notification watch;
+	__u32	key_id;
+	__u32	aux;
+};
+.EE
+.in
+.PP
+The
+.I watch.type
+field will be set to
+.B WATCH_TYPE_KEY_NOTIFY
+and the
+.I watch.subtype
+field will contain one of the following constants, indicating the event that
+occurred and the watch_id passed to keyctl_watch_key() will be placed in
+.I watch.info
+in the ID field.  The following events are defined:
+.TP
+.B NOTIFY_KEY_INSTANTIATED
+This indicates that a watched key got instantiated or negatively instantiated.
+.I key_id
+indicates the key that was instantiated and
+.I aux
+is unused.
+.TP
+.B NOTIFY_KEY_UPDATED
+This indicates that a watched key got updated or instantiated by update.
+.I key_id
+indicates the key that was updated and
+.I aux
+is unused.
+.TP
+.B NOTIFY_KEY_LINKED
+This indicates that a key got linked into a watched keyring.
+.I key_id
+indicates the keyring that was modified
+.I aux
+indicates the key that was added.
+.TP
+.B NOTIFY_KEY_UNLINKED
+This indicates that a key got unlinked from a watched keyring.
+.I key_id
+indicates the keyring that was modified
+.I aux
+indicates the key that was removed.
+.TP
+.B NOTIFY_KEY_CLEARED
+This indicates that a watched keyring got cleared.
+.I key_id
+indicates the keyring that was cleared and
+.I aux
+is unused.
+.TP
+.B NOTIFY_KEY_REVOKED
+This indicates that a watched key got revoked.
+.I key_id
+indicates the key that was revoked and
+.I aux
+is unused.
+.TP
+.B NOTIFY_KEY_INVALIDATED
+This indicates that a watched key got invalidated.
+.I key_id
+indicates the key that was invalidated and
+.I aux
+is unused.
+.TP
+.B NOTIFY_KEY_SETATTR
+This indicates that a watched key had its attributes (owner, group,
+permissions, timeout) modified.
+.I key_id
+indicates the key that was modified and
+.I aux
+is unused.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SS Removal Notification
+When a watched key is garbage collected, all of its watches are automatically
+destroyed and a notification is delivered to each watcher.  This will normally
+be an extended notification of the form:
+.PP
+.in +4n
+.EX
+struct watch_notification_removal {
+	struct watch_notification watch;
+	__u64	id;
+};
+.EE
+.in
+.PP
+The
+.I watch.type
+field will be set to
+.B WATCH_TYPE_META
+and the
+.I watch.subtype
+field will contain
+.BR WATCH_META_REMOVAL_NOTIFICATION .
+If the extended notification is given, then the length will be 2 units,
+otherwise it will be 1 and only the header will be present.
+.PP
+The watch_id passed to
+.IR keyctl_watch_key ()
+will be placed in
+.I watch.info
+in the ID field.
+.PP
+If the extension is present,
+.I id
+will be set to the ID of the destroyed key.
+.PP
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH RETURN VALUE
+On success
+.BR keyctl_watch_key ()
+returns
+.B 0 .
+On error, the value
+.B -1
+will be returned and
+.I errno
+will have been set to an appropriate error.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH ERRORS
+.TP
+.B ENOKEY
+The specified key does not exist.
+.TP
+.B EKEYEXPIRED
+The specified key has expired.
+.TP
+.B EKEYREVOKED
+The specified key has been revoked.
+.TP
+.B EACCES
+The named key exists, but does not grant
+.B view
+permission to the calling process.
+.TP
+.B EBUSY
+The specified key already has a watch on it for that device instance (add
+only).
+.TP
+.B EBADSLT
+The specified key doesn't have a watch on it (removal only).
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH LINKING
+This is a library function that can be found in
+.IR libkeyutils .
+When linking,
+.B \-lkeyutils
+should be specified to the linker.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.SH SEE ALSO
+.ad l
+.nh
+.BR keyctl (1),
+.BR add_key (2),
+.BR keyctl (2),
+.BR request_key (2),
+.BR keyctl (3),
+.BR keyrings (7),
+.BR keyutils (7)
