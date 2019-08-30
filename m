@@ -2,107 +2,278 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C908EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEDCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F86322CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F4222CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Wv0f0CzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfH3Geq (ORCPT
+        id S1727992AbfH3GfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:34:46 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:1677 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726791AbfH3Geq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:34:46 -0400
-X-UUID: 38e5d13ac4ea4e928864b05c935a20a0-20190830
-X-UUID: 38e5d13ac4ea4e928864b05c935a20a0-20190830
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 360870798; Fri, 30 Aug 2019 14:34:46 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 14:34:44 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 14:34:38 +0800
-Message-ID: <1567146872.5942.21.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 30/32] drm/mediatek: add connection from DITHER0 to
- DSI0
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 14:34:32 +0800
-In-Reply-To: <1567090254-15566-31-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-31-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 2D80EE79821C3E6C697081CC7D2D39A69D62CD500E2390B9E48C61F531F4FD352000:8
-X-MTK:  N
+        Fri, 30 Aug 2019 02:35:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52678 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfH3GfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:35:15 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46KV8c4WMyzB09Zs;
+        Fri, 30 Aug 2019 08:35:12 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Wv0f0CzV; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 6xDHGUkJL6Ou; Fri, 30 Aug 2019 08:35:12 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46KV8c3GtyzB09Zq;
+        Fri, 30 Aug 2019 08:35:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567146912; bh=daBzpgXma54rEqO2TTJjz5G+MsbbiHTlA3O/m6q6Djs=;
+        h=From:To:Cc:Subject:In-Reply-To:Date:From;
+        b=Wv0f0CzVBZANV/E48p09FJhBCt+68AqUXjnNHvCpJfwlMSBGxiAKKhZmwuPtNIp5a
+         mRzLsKlfF7jHzLHTeQDj011zQWo9y1NO4iSWg3ZqHrTDdQ7RS6kEaoK+uqCs4divqf
+         3TfpqMbNSym1vQgaDm2lgqfQTHR3lgaU/f+VSMS0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 60AA08B8E0;
+        Fri, 30 Aug 2019 08:35:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id YuZIhhxde7Ii; Fri, 30 Aug 2019 08:35:13 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 24AA98B8DD;
+        Fri, 30 Aug 2019 08:35:13 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 0F5B169881; Fri, 30 Aug 2019 06:35:13 +0000 (UTC)
+Message-Id: <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Breno Leitao <leitao@debian.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Nicolai Stange <nstange@suse.de>,
+        Michael Neuling <mikey@neuling.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] powerpc/64: make buildable without CONFIG_COMPAT
+In-Reply-To: <90594004804c6a9b690b69bdf0e5c4d6c880c5f4.1567117050.git.msuchanek@suse.de>
+Date:   Fri, 30 Aug 2019 06:35:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On 08/29/2019 10:28 PM, Michal Suchanek wrote:
+> There are numerous references to 32bit functions in generic and 64bit
+> code so ifdef them out.
 > 
-> This patch add connection from DITHER0 to DSI0
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> v2:
+> - fix 32bit ifdef condition in signal.c
+> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> v3:
+> - use IS_ENABLED and maybe_unused where possible
+> - do not ifdef declarations
+> - clean up Makefile
+> v4:
+> - further makefile cleanup
+> - simplify is_32bit_task conditions
+> - avoid ifdef in condition by using return
+> v5:
+> - avoid unreachable code on 32bit
+> - make is_current_64bit constant on !COMPAT
+> - add stub perf_callchain_user_32 to avoid some ifdefs
+> ---
+>   arch/powerpc/include/asm/thread_info.h |  4 ++--
+>   arch/powerpc/kernel/Makefile           |  7 +++----
+>   arch/powerpc/kernel/entry_64.S         |  2 ++
+>   arch/powerpc/kernel/signal.c           |  3 +--
+>   arch/powerpc/kernel/syscall_64.c       |  6 ++----
+>   arch/powerpc/kernel/vdso.c             |  5 ++---
+>   arch/powerpc/perf/callchain.c          | 13 +++++++++++--
+>   7 files changed, 23 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 237824f..fd38658 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -35,10 +35,12 @@
->  
->  #define MT8183_DISP_OVL0_2L_MOUT_EN		0xf04
->  #define MT8183_DISP_OVL1_2L_MOUT_EN		0xf08
-> +#define MT8183_DISP_DITHER0_MOUT_EN		0xf0c
->  #define MT8183_DISP_PATH0_SEL_IN		0xf24
->  
->  #define OVL0_2L_MOUT_EN_DISP_PATH0			BIT(0)
->  #define OVL1_2L_MOUT_EN_RDMA1				BIT(4)
-> +#define DITHER0_MOUT_IN_DSI0				BIT(0)
->  #define DISP_PATH0_SEL_IN_OVL0_2L			0x1
->  
->  #define MT2701_DISP_MUTEX0_MOD0			0x2c
-> @@ -323,6 +325,9 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
->  		   next == DDP_COMPONENT_RDMA1) {
->  		*addr = MT8183_DISP_OVL1_2L_MOUT_EN;
->  		value = OVL1_2L_MOUT_EN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_DITHER && next == DDP_COMPONENT_DSI0) {
-> +		*addr = MT8183_DISP_DITHER0_MOUT_EN;
-> +		value = DITHER0_MOUT_IN_DSI0;
->  	} else {
->  		value = 0;
->  	}
+[...]
 
+> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> index c84bbd4298a0..881be5c4e9bb 100644
+> --- a/arch/powerpc/perf/callchain.c
+> +++ b/arch/powerpc/perf/callchain.c
+> @@ -15,7 +15,7 @@
+>   #include <asm/sigcontext.h>
+>   #include <asm/ucontext.h>
+>   #include <asm/vdso.h>
+> -#ifdef CONFIG_PPC64
+> +#ifdef CONFIG_COMPAT
+>   #include "../kernel/ppc32.h"
+>   #endif
+>   #include <asm/pte-walk.h>
+> @@ -291,7 +291,8 @@ static inline int current_is_64bit(void)
+>   	 * interrupt stack, and the thread flags don't get copied over
+>   	 * from the thread_info on the main stack to the interrupt stack.
+>   	 */
+> -	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+> +	return !IS_ENABLED(CONFIG_COMPAT) ||
+> +		!test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+>   }
+>   
+>   #else  /* CONFIG_PPC64 */
+> @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+>   
+>   #endif /* CONFIG_PPC64 */
+>   
+> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+>   /*
+>    * Layout for non-RT signal frames
+>    */
+> @@ -482,6 +484,13 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>   		sp = next_sp;
+>   	}
+>   }
+> +#else /* 32bit */
+> +static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> +				   struct pt_regs *regs)
+> +{
+> +	(void)&read_user_stack_32; /* unused if !COMPAT */
+
+That looks pretty much like a hack.
+
+See possible alternative below.
+
+> +}
+> +#endif /* 32bit */
+>   
+>   void
+>   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+> 
+
+---
+ arch/powerpc/perf/callchain.c | 62 +++++++++++++++++++------------------------
+ 1 file changed, 27 insertions(+), 35 deletions(-)
+
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index 881be5c4e9bb..1b169b32776a 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+ 	return read_user_stack_slow(ptr, ret, 8);
+ }
+ 
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+-{
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	pagefault_disable();
+-	if (!__get_user_inatomic(*ret, ptr)) {
+-		pagefault_enable();
+-		return 0;
+-	}
+-	pagefault_enable();
+-
+-	return read_user_stack_slow(ptr, ret, 4);
+-}
+-
+ static inline int valid_user_sp(unsigned long sp, int is_64)
+ {
+ 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+@@ -296,25 +280,10 @@ static inline int current_is_64bit(void)
+ }
+ 
+ #else  /* CONFIG_PPC64 */
+-/*
+- * On 32-bit we just access the address and let hash_page create a
+- * HPTE if necessary, so there is no need to fall back to reading
+- * the page tables.  Since this is called at interrupt level,
+- * do_page_fault() won't treat a DSI as a page fault.
+- */
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+-{
+-	int rc;
+-
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+ 
+-	pagefault_disable();
+-	rc = __get_user_inatomic(*ret, ptr);
+-	pagefault_enable();
+-
+-	return rc;
++static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
++{
++	return 0;
+ }
+ 
+ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+@@ -344,6 +313,30 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+ 
+ #if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+ /*
++ * On 32-bit we just access the address and let hash_page create a
++ * HPTE if necessary, so there is no need to fall back to reading
++ * the page tables.  Since this is called at interrupt level,
++ * do_page_fault() won't treat a DSI as a page fault.
++ */
++static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++{
++	int rc;
++
++	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
++	    ((unsigned long)ptr & 3))
++		return -EFAULT;
++
++	pagefault_disable();
++	rc = __get_user_inatomic(*ret, ptr);
++	pagefault_enable();
++
++	if (IS_ENABLED(CONFIG_PPC32) || !rc)
++		return rc;
++
++	return read_user_stack_slow(ptr, ret, 4);
++}
++
++/*
+  * Layout for non-RT signal frames
+  */
+ struct signal_frame_32 {
+@@ -488,7 +481,6 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+ 				   struct pt_regs *regs)
+ {
+-	(void)&read_user_stack_32; /* unused if !COMPAT */
+ }
+ #endif /* 32bit */
+ 
+-- 
+2.13.3
 
