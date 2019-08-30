@@ -2,244 +2,116 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C184C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21342C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10BB2397E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E5A2397E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DOBICrS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfH3IfT (ORCPT
+        id S1728107AbfH3IgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:35:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:56004 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726653AbfH3IfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:35:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE18D344;
-        Fri, 30 Aug 2019 01:35:17 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 689183F718;
-        Fri, 30 Aug 2019 01:35:16 -0700 (PDT)
-Subject: Re: [PATCH v3 01/10] KVM: arm64: Document PV-time interface
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190821153656.33429-1-steven.price@arm.com>
- <20190821153656.33429-2-steven.price@arm.com>
- <20190829171548.xfk7i2bwnwl4w2po@kamzik.brq.redhat.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <22fc60f0-e3d5-900d-c067-007c39485ba9@arm.com>
-Date:   Fri, 30 Aug 2019 09:35:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 04:36:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35952 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfH3IgA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:36:00 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U8Y1Q7157966;
+        Fri, 30 Aug 2019 08:35:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=5qQDKREBIOpHdjcAhX41kOtTEKTT3PXvNeLkBeWr4GA=;
+ b=DOBICrS+B9+nyFrqwktq0ryaroZKDA4Aep2xBK1TDM5+z5c6fMjptnDvB7CUNbtVbprJ
+ mp3QngjZFhyO/F4qxi+dAogd8t95pI2MBDUInDKOL2fzUH5NsoptABZrOwh4SPnxFhK/
+ vX1zpV+Plarl+TMJ2xtEk1vMBiBeQFdJxY6Sm3M5EDACU1Xp+ee0PZ/qJ6xIkeWjZr0b
+ TreacrSB+0XSv63gvHjiVT5HNGk4jRZwsgOZ2YlhXVT4l0Qq0xd4kPNyi09CVvyCESRi
+ dhOgmH6qR+Wlw5Y5ayOYnqQ3dUDVVdxVHMWhzO01oFtt1atDFdT+mUkAMCnI1xkuYB/n lg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2uq009g5pj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 08:35:00 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U8Xlk6004822;
+        Fri, 30 Aug 2019 08:35:00 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2upc8x6487-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 08:34:59 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7U8Yrwu012117;
+        Fri, 30 Aug 2019 08:34:53 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 30 Aug 2019 01:34:53 -0700
+Date:   Fri, 30 Aug 2019 11:34:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     devel@driverdev.osuosl.org, Christoph Hellwig <hch@infradead.org>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190830083445.GL23584@kadam>
+References: <20190829063955.GA30193@kroah.com>
+ <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
+ <20190829103749.GA13661@infradead.org>
+ <20190829111810.GA23393@kroah.com>
+ <20190829151144.GJ23584@kadam>
+ <20190829152757.GA125003@architecture4>
+ <20190829154346.GK23584@kadam>
+ <20190829155127.GA136563@architecture4>
+ <20190829160441.GA141079@architecture4>
 MIME-Version: 1.0
-In-Reply-To: <20190829171548.xfk7i2bwnwl4w2po@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829160441.GA141079@architecture4>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908300092
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908300092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 18:15, Andrew Jones wrote:
-> On Wed, Aug 21, 2019 at 04:36:47PM +0100, Steven Price wrote:
->> Introduce a paravirtualization interface for KVM/arm64 based on the
->> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
->>
->> This only adds the details about "Stolen Time" as the details of "Live
->> Physical Time" have not been fully agreed.
->>
->> User space can specify a reserved area of memory for the guest and
->> inform KVM to populate the memory with information on time that the host
->> kernel has stolen from the guest.
->>
->> A hypercall interface is provided for the guest to interrogate the
->> hypervisor's support for this interface and the location of the shared
->> memory structures.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++++++++++++++
->>  1 file changed, 100 insertions(+)
->>  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
->>
->> diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
->> new file mode 100644
->> index 000000000000..1ceb118694e7
->> --- /dev/null
->> +++ b/Documentation/virt/kvm/arm/pvtime.txt
->> @@ -0,0 +1,100 @@
->> +Paravirtualized time support for arm64
->> +======================================
->> +
->> +Arm specification DEN0057/A defined a standard for paravirtualised time
->> +support for AArch64 guests:
->> +
->> +https://developer.arm.com/docs/den0057/a
->> +
->> +KVM/arm64 implements the stolen time part of this specification by providing
->> +some hypervisor service calls to support a paravirtualized guest obtaining a
->> +view of the amount of time stolen from its execution.
->> +
->> +Two new SMCCC compatible hypercalls are defined:
->> +
->> +PV_FEATURES 0xC5000020
->> +PV_TIME_ST  0xC5000022
->> +
->> +These are only available in the SMC64/HVC64 calling convention as
->> +paravirtualized time is not available to 32 bit Arm guests. The existence of
->> +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
->> +mechanism before calling it.
->> +
->> +PV_FEATURES
->> +    Function ID:  (uint32)  : 0xC5000020
->> +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
->> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
->> +                              PV-time feature is supported by the hypervisor.
->> +
->> +PV_TIME_ST
->> +    Function ID:  (uint32)  : 0xC5000022
->> +    Return value: (int64)   : IPA of the stolen time data structure for this
->> +                              (V)CPU. On failure:
+On Fri, Aug 30, 2019 at 12:04:41AM +0800, Gao Xiang wrote:
+> Anyway, I'm fine to delete them all if you like, but I think majority of these
+> are meaningful.
 > 
-> Why the () around the V in VCPU?
+> data.c-		/* page is already locked */
+> data.c-		DBG_BUGON(PageUptodate(page));
+> data.c-
+> data.c:		if (unlikely(err))
+> data.c-			SetPageError(page);
+> data.c-		else
+> data.c-			SetPageUptodate(page);
 
-There's nothing preventing the same mechanism being used without the
-virtualisation of CPUs. For example a hypervisor like Jailhouse could
-implement this interface even though there the CPU isn't being
-virtualised but is being handed over to the guest. Equally it is
-possible for firmware to provide the same mechanism (using the SMC64
-calling convention).
+If we cared about speed here then we would delete the DBG_BUGON() check
+because that's going to be expensive.  The likely/unlikely annotations
+should be used in places a reasonable person thinks it will make a
+difference to benchmarks.
 
-Admittedly that's a little confusing here because the rest of this
-document is talking about KVM's implementation and normal hypervisors.
-So I'll drop the brackets.
-
->> +                              NOT_SUPPORTED (-1)
->> +
->> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
->> +with inner and outer write back caching attributes, in the inner shareable
->> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
->> +meaningfully filled by the hypervisor (see structure below).
->> +
->> +PV_TIME_ST returns the structure for the calling VCPU.
-> 
-> The above sentence seems redundant here.
-
-It is an important detail that each VCPU must use PV_TIME_ST to fetch
-the address of the structure for that VCPU. E.g. It could have been
-implemented so that the hypercall took a VCPU number. So while redundant
-I do feel it's worth pointing this out explicitly.
-
->> +
->> +Stolen Time
->> +-----------
->> +
->> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
->> +
->> +  Field       | Byte Length | Byte Offset | Description
->> +  ----------- | ----------- | ----------- | --------------------------
->> +  Revision    |      4      |      0      | Must be 0 for version 0.1
->> +  Attributes  |      4      |      4      | Must be 0
->> +  Stolen time |      8      |      8      | Stolen time in unsigned
->> +              |             |             | nanoseconds indicating how
->> +              |             |             | much time this VCPU thread
->> +              |             |             | was involuntarily not
->> +              |             |             | running on a physical CPU.
->> +
->> +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
->> +will be present within a reserved region of the normal memory given to the
->> +guest. The guest should not attempt to write into this memory. There is a
->> +structure per VCPU of the guest.
->> +
->> +User space interface
->> +====================
->> +
->> +User space can request that KVM provide the paravirtualized time interface to
->> +a guest by creating a KVM_DEV_TYPE_ARM_PV_TIME device, for example:
->> +
->> +    struct kvm_create_device pvtime_device = {
->> +            .type = KVM_DEV_TYPE_ARM_PV_TIME,
->> +            .attr = 0,
->> +            .flags = 0,
->> +    };
->> +
->> +    pvtime_fd = ioctl(vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
-> 
-> The ioctl doesn't return the fd. If the ioctl returns zero the fd will be
-> in pvtime_device.fd.
-
-Good catch - I'm not sure quite why I wrote that. Anyway I've agreed to
-change the interface to operate on the VCPU device instead so this text
-is rewritten completely.
-
->> +
->> +Creation of the device should be done after creating the vCPUs of the virtual
->> +machine.
-> 
-> Or else what? Will an error be reported in that case?
-
-This is now enforced by calling the ioctl on the VCPU device, so it's
-impossible to do in the wrong order.
-
->> +
->> +The IPA of the structures must be given to KVM. This is the base address
->> +of an array of stolen time structures (one for each VCPU). The base address
->> +must be page aligned. The size must be at least 64 * number of VCPUs and be a
->> +multiple of PAGE_SIZE.
->> +
->> +The memory for these structures should be added to the guest in the usual
->> +manner (e.g. using KVM_SET_USER_MEMORY_REGION).
-> 
-> Above it says the guest shouldn't attempt to write the memory. Should
-> KVM_MEM_READONLY be used with KVM_SET_USER_MEMORY_REGION for it?
-
-That is optional - the specification states the guest must not attempt
-to write to it - so marking it read-only for the guest should work fine
-with a conforming guest. But it's not required.
-
->> +
->> +For example:
->> +
->> +    struct kvm_dev_arm_st_region region = {
->> +            .gpa = <IPA of guest base address>,
->> +            .size = <size in bytes>
->> +    };
->> +
->> +    struct kvm_device_attr st_base = {
->> +            .group = KVM_DEV_ARM_PV_TIME_PADDR,
-> 
-> This is KVM_DEV_ARM_PV_TIME_REGION in the code.
-
-Gah - I obviously missed that when I refactored to define the region
-rather than just the base address. Anyway this has all changed (again)
-because each VCPU has its own base address so the size is no longer
-necessary.
-
-Thanks for the review,
-
-Steve
-
->> +            .attr = KVM_DEV_ARM_PV_TIME_ST,
->> +            .addr = (u64)&region
->> +    };
->> +
->> +    ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &st_base);
->> -- 
->> 2.20.1
->>
-> 
-> Thanks,
-> drew 
-> 
+regards,
+dan carpenter
 
