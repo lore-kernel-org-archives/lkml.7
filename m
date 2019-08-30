@@ -2,189 +2,206 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FC5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763F9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547CA21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Vk9EQ5XK"
+	by mail.kernel.org (Postfix) with ESMTP id 3EEDA20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567133196;
+	bh=FxE7xlat60kmVXb5PHtPX6Pm0K+r6JFeLP+3EhKc5ME=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=BepEzgLhCEgIdgj5LE5bUWHI4qGm2pDIwHpsTZrAzjblhSxgy/K5AtY3yh7JaquRg
+	 4KssrGE5B9Ak521Db7el1VlbXk6mGbSpuHFljYKu+xavx8tQIhwV5iH5enFNGTqygf
+	 8CTZSounEjhsmei+IBikap4sP0Eoc3f6FsdEndRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfH3C3o (ORCPT
+        id S1727426AbfH3Cqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 22:29:44 -0400
-Received: from mail-eopbgr70051.outbound.protection.outlook.com ([40.107.7.51]:18114
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727270AbfH3C3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 22:29:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ig7s1o0io2FqgFW36rIWjzgUdON7NIUJGIF/rlzjzsakbs/TkpJiddR5vLUptKMVD6q/Xr+nypAHByYe3moMTvidMqhADEQwSxZVyEWoTx3CtmoNFM0cdRyG85BA5n+7N+OIyLhirPSMVxnH9JyjSr3zqwvuWaDhwuuq1IX7BGBV5ViFxOF//f8887Fj8i2rD411WrvnrM/wPPbpHI9qxviPKKEaToIwrR36BntdlWxcQ4x1QE7QkxKvNqrBfrqOURN6jnVV4GRgAUCUpczOiV0kbD79l3s/UfWlL58gS5Nl2UhHKG2LNY8gR6l0tXgQnJJUDeUkkL9iKdT/0H1xyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NMo8cj6+r3d26mJ9PDaxpXMWAqbZW7vXrvf7a0xmyPE=;
- b=HMgbBsILezw/S0JBWUYVlIBwPHbbfqjZiaUFMt91wwfMRyUHbXvgjaZSL43bq05wvVFne3jlx+R6Q0ayoFbsRQqtLm0Mhzq8ea0K2htV6s1xxIjzp0zKAVhuqcfaZ4CenJm3hLQCAmYpUEdkw/ooHU/ByxkqM13dql2b1NDsoBoL+1XAOomWzvqn4FMEWzzasBDfUrqtVajROmeus0k8C8UBBQtZAKKBRLG9fpxaybo0dP9xg9YUVeKXgp6YyCCWFZzIBTd+DAkljUepgace92JSO9ORTo5A6/pCFa+4SJH0/a+rmcFr4gKgaRVYj2609yY5kJ3HZTjUzDli8hzosg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NMo8cj6+r3d26mJ9PDaxpXMWAqbZW7vXrvf7a0xmyPE=;
- b=Vk9EQ5XKGkj6NK+OD8I9gf+m0BTChC4fznT0AvXe+CLG6wyGa7UjewiYObGfduflIpCif3HEU4uJaQhgp1FiFmKQqFwZ8CHe/GCQRn0+iZ6zXQT4YAhrdmYOtVHumOyZrAhW8+DsEHJ98p4SRZ7gIaYlLubo1MoIMiVnbE8q/P8=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB4484.eurprd05.prod.outlook.com (52.134.124.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Fri, 30 Aug 2019 02:27:57 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.021; Fri, 30 Aug 2019
- 02:27:57 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Yunsheng Lin <linyunsheng@huawei.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 1/6] mdev: Introduce sha1 based mdev alias
-Thread-Topic: [PATCH v2 1/6] mdev: Introduce sha1 based mdev alias
-Thread-Index: AQHVXluia2ak8fbBtkW+HkGgDQ+zpacSDVCAgADpXEA=
-Date:   Fri, 30 Aug 2019 02:27:57 +0000
-Message-ID: <AM0PR05MB48664658A79ECDB617A5F1A7D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
- <20190829111904.16042-1-parav@mellanox.com>
- <20190829111904.16042-2-parav@mellanox.com>
- <63e58577-f652-e021-2ff7-7e7403e38f9f@huawei.com>
-In-Reply-To: <63e58577-f652-e021-2ff7-7e7403e38f9f@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4afea8c6-5dcf-4c37-0584-08d72cf1abdb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4484;
-x-ms-traffictypediagnostic: AM0PR05MB4484:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB44846768C5444F786A019192D1BD0@AM0PR05MB4484.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-forefront-prvs: 0145758B1D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(189003)(199004)(54534003)(13464003)(229853002)(76116006)(446003)(476003)(11346002)(14454004)(81166006)(5660300002)(305945005)(3846002)(33656002)(6116002)(9456002)(74316002)(2906002)(478600001)(486006)(2201001)(316002)(54906003)(110136005)(81156014)(66066001)(7736002)(8676002)(86362001)(53936002)(26005)(4326008)(2501003)(71190400001)(99286004)(7696005)(71200400001)(6246003)(6506007)(53546011)(55236004)(25786009)(6436002)(186003)(8936002)(52536014)(66946007)(64756008)(66446008)(66556008)(66476007)(256004)(14444005)(102836004)(76176011)(55016002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4484;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mVquW7fuzFEE785qZkq9Ogi4Nd1DE9VtFbzGdtOg2goe/FoGm3iN9KPV7Kp+lhx6DWeawqbGTDAN4uwuo1dE451+yxy1VEYEeh+k6N/j3e3NCHkpc4OkDuZAoffd1WhEXJdKf6xtC8ySMjVyjps7brqT4pum7gSKGoi9orNEceVJkBlopnxKPl1fJamnu9Dn/Y3WwhYjocLm3FLJSBUaZdJXdFS1F6n/0g4Xo6f6icrBZNZy4aobUHVa+YCj9UTSqNxy7Cvp+jD3jOQzDrkjNr5+xA2R1B7YjRN0XP9Cepr16Z5Mx8jmpPd55aCxMfX+mI08ic1rUhhMgagSl+wVxNwQtE0h105Qi1H77W00/AuNpW5v9C/ElBJWnCkm/3bxVxgCz2ZAk4CM5fS0Rm3gqhWoGtL5KY1LN1xauiLE61A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 29 Aug 2019 22:46:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55452 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727066AbfH3Cqd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 22:46:33 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7U2fliL024217;
+        Thu, 29 Aug 2019 22:45:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uppvcfjnc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 22:45:59 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7U2fwJn024344;
+        Thu, 29 Aug 2019 22:45:59 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uppvcfjmu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 22:45:59 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7U2iZpW009104;
+        Fri, 30 Aug 2019 02:45:58 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ujvv709n8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 02:45:58 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7U2jvcR48496946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 02:45:57 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8B89AB2065;
+        Fri, 30 Aug 2019 02:45:57 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 557BBB205F;
+        Fri, 30 Aug 2019 02:45:57 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.159.7])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 02:45:57 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id EF33C16C1D7F; Thu, 29 Aug 2019 19:45:56 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 19:45:56 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
+Message-ID: <20190830024556.GZ4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190828221444.GA100789@google.com>
+ <20190828231247.GE26530@linux.ibm.com>
+ <20190829015155.GB100789@google.com>
+ <20190829034336.GD4125@linux.ibm.com>
+ <20190829144355.GE63638@google.com>
+ <20190829151325.GF63638@google.com>
+ <20190829161301.GQ4125@linux.ibm.com>
+ <20190829171454.GA115245@google.com>
+ <20190830004756.GW4125@linux.ibm.com>
+ <20190830012036.GA184995@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4afea8c6-5dcf-4c37-0584-08d72cf1abdb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 02:27:57.4205
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0PtP9J8WjpQoF0CYWIak2IplPWowtDdlXw1rW4rFN5vk33LKV9P2q3v0JWThxTn9+xsr3kOKOtglcs8ETTa2eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4484
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830012036.GA184995@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogWXVuc2hlbmcgTGluIDxs
-aW55dW5zaGVuZ0BodWF3ZWkuY29tPg0KPiBTZW50OiBUaHVyc2RheSwgQXVndXN0IDI5LCAyMDE5
-IDU6NTcgUE0NCj4gVG86IFBhcmF2IFBhbmRpdCA8cGFyYXZAbWVsbGFub3guY29tPjsgYWxleC53
-aWxsaWFtc29uQHJlZGhhdC5jb207IEppcmkNCj4gUGlya28gPGppcmlAbWVsbGFub3guY29tPjsg
-a3dhbmtoZWRlQG52aWRpYS5jb207IGNvaHVja0ByZWRoYXQuY29tOw0KPiBkYXZlbUBkYXZlbWxv
-ZnQubmV0DQo+IENjOiBrdm1Admdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOw0KPiBuZXRkZXZAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-djIgMS82XSBtZGV2OiBJbnRyb2R1Y2Ugc2hhMSBiYXNlZCBtZGV2IGFsaWFzDQo+IA0KPiBPbiAy
-MDE5LzgvMjkgMTk6MTgsIFBhcmF2IFBhbmRpdCB3cm90ZToNCj4gPiBTb21lIHZlbmRvciBkcml2
-ZXJzIHdhbnQgYW4gaWRlbnRpZmllciBmb3IgYW4gbWRldiBkZXZpY2UgdGhhdCBpcw0KPiA+IHNo
-b3J0ZXIgdGhhbiB0aGUgVVVJRCwgZHVlIHRvIGxlbmd0aCByZXN0cmljdGlvbnMgaW4gdGhlIGNv
-bnN1bWVycyBvZg0KPiA+IHRoYXQgaWRlbnRpZmllci4NCj4gPg0KPiA+IEFkZCBhIGNhbGxiYWNr
-IHRoYXQgYWxsb3dzIGEgdmVuZG9yIGRyaXZlciB0byByZXF1ZXN0IGFuIGFsaWFzIG9mIGENCj4g
-PiBzcGVjaWZpZWQgbGVuZ3RoIHRvIGJlIGdlbmVyYXRlZCBmb3IgYW4gbWRldiBkZXZpY2UuIElm
-IGdlbmVyYXRlZCwNCj4gPiB0aGF0IGFsaWFzIGlzIGNoZWNrZWQgZm9yIGNvbGxpc2lvbnMuDQo+
-ID4NCj4gPiBJdCBpcyBhbiBvcHRpb25hbCBhdHRyaWJ1dGUuDQo+ID4gbWRldiBhbGlhcyBpcyBn
-ZW5lcmF0ZWQgdXNpbmcgc2hhMSBmcm9tIHRoZSBtZGV2IG5hbWUuDQo+ID4NCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBQYXJhdiBQYW5kaXQgPHBhcmF2QG1lbGxhbm94LmNvbT4NCj4gPg0KPiA+IC0tLQ0K
-PiA+IENoYW5nZWxvZzoNCj4gPiB2MS0+djI6DQo+ID4gIC0gS2VwdCBtZGV2X2RldmljZSBuYXR1
-cmFsbHkgYWxpZ25lZA0KPiA+ICAtIEFkZGVkIGVycm9yIGNoZWNraW5nIGZvciBjcnlwdF8qKCkg
-Y2FsbHMNCj4gPiAgLSBDb3JyZWN0ZWQgYSB0eXBvIGZyb20gJ2FuZCcgdG8gJ2FuJw0KPiA+ICAt
-IENoYW5nZWQgcmV0dXJuIHR5cGUgb2YgZ2VuZXJhdGVfYWxpYXMoKSBmcm9tIGludCB0byBjaGFy
-Kg0KPiA+IHYwLT52MToNCj4gPiAgLSBNb3ZlZCBhbGlhcyBsZW5ndGggY2hlY2sgb3V0c2lkZSBv
-ZiB0aGUgcGFyZW50IGxvY2sNCj4gPiAgLSBNb3ZlZCBhbGlhcyBhbmQgZGlnZXN0IGFsbG9jYXRp
-b24gZnJvbSBrdnphbGxvYyB0byBremFsbG9jDQo+ID4gIC0gJmFsaWFzWzBdIGNoYW5nZWQgdG8g
-YWxpYXMNCj4gPiAgLSBhbGlhc19sZW5ndGggY2hlY2sgaXMgbmVzdGVkIHVuZGVyIGdldF9hbGlh
-c19sZW5ndGggY2FsbGJhY2sgY2hlY2sNCj4gPiAgLSBDaGFuZ2VkIGNvbW1lbnRzIHRvIHN0YXJ0
-IHdpdGggYW4gZW1wdHkgbGluZQ0KPiA+ICAtIEZpeGVkIGNsZWF1bnVwIG9mIGhhc2ggaWYgbWRl
-dl9idXNfcmVnaXN0ZXIoKSBmYWlscw0KPiA+ICAtIEFkZGVkIGNvbW1lbnQgd2hlcmUgYWxpYXMg
-bWVtb3J5IG93bmVyc2hpcCBpcyBoYW5kZWQgb3ZlciB0byBtZGV2DQo+ID4gZGV2aWNlDQo+ID4g
-IC0gVXBkYXRlZCBjb21taXQgbG9nIHRvIGluZGljYXRlIG1vdGl2YXRpb24gZm9yIHRoaXMgZmVh
-dHVyZQ0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3ZmaW8vbWRldi9tZGV2X2NvcmUuYyAgICB8IDEy
-Mw0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIGRyaXZlcnMvdmZpby9t
-ZGV2L21kZXZfcHJpdmF0ZS5oIHwgICA1ICstDQo+ID4gIGRyaXZlcnMvdmZpby9tZGV2L21kZXZf
-c3lzZnMuYyAgIHwgIDEzICsrLS0NCj4gPiAgaW5jbHVkZS9saW51eC9tZGV2LmggICAgICAgICAg
-ICAgfCAgIDQgKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDEzNSBpbnNlcnRpb25zKCspLCAxMCBk
-ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZmaW8vbWRldi9tZGV2
-X2NvcmUuYw0KPiA+IGIvZHJpdmVycy92ZmlvL21kZXYvbWRldl9jb3JlLmMgaW5kZXggYjU1OGQ0
-Y2ZkMDgyLi4zYmRmZjA0Njk2MDcNCj4gPiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3ZmaW8v
-bWRldi9tZGV2X2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvdmZpby9tZGV2L21kZXZfY29yZS5j
-DQo+ID4gQEAgLTEwLDkgKzEwLDExIEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4N
-Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2xh
-Yi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW0uaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3V1
-aWQuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3N5c2ZzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51
-eC9tZGV2Lmg+DQo+ID4gKyNpbmNsdWRlIDxjcnlwdG8vaGFzaC5oPg0KPiA+DQo+ID4gICNpbmNs
-dWRlICJtZGV2X3ByaXZhdGUuaCINCj4gPg0KPiA+IEBAIC0yNyw2ICsyOSw4IEBAIHN0YXRpYyBz
-dHJ1Y3QgY2xhc3NfY29tcGF0ICptZGV2X2J1c19jb21wYXRfY2xhc3M7DQo+ID4gc3RhdGljIExJ
-U1RfSEVBRChtZGV2X2xpc3QpOyAgc3RhdGljIERFRklORV9NVVRFWChtZGV2X2xpc3RfbG9jayk7
-DQo+ID4NCj4gPiArc3RhdGljIHN0cnVjdCBjcnlwdG9fc2hhc2ggKmFsaWFzX2hhc2g7DQo+ID4g
-Kw0KPiA+ICBzdHJ1Y3QgZGV2aWNlICptZGV2X3BhcmVudF9kZXYoc3RydWN0IG1kZXZfZGV2aWNl
-ICptZGV2KSAgew0KPiA+ICAJcmV0dXJuIG1kZXYtPnBhcmVudC0+ZGV2Ow0KPiA+IEBAIC0xNTAs
-NiArMTU0LDE2IEBAIGludCBtZGV2X3JlZ2lzdGVyX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYs
-IGNvbnN0DQo+IHN0cnVjdCBtZGV2X3BhcmVudF9vcHMgKm9wcykNCj4gPiAgCWlmICghb3BzIHx8
-ICFvcHMtPmNyZWF0ZSB8fCAhb3BzLT5yZW1vdmUgfHwgIW9wcy0NCj4gPnN1cHBvcnRlZF90eXBl
-X2dyb3VwcykNCj4gPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gPg0KPiA+ICsJaWYgKG9wcy0+Z2V0
-X2FsaWFzX2xlbmd0aCkgew0KPiA+ICsJCXVuc2lnbmVkIGludCBkaWdlc3Rfc2l6ZTsNCj4gPiAr
-CQl1bnNpZ25lZCBpbnQgYWxpZ25lZF9sZW47DQo+ID4gKw0KPiA+ICsJCWFsaWduZWRfbGVuID0g
-cm91bmR1cChvcHMtPmdldF9hbGlhc19sZW5ndGgoKSwgMik7DQo+ID4gKwkJZGlnZXN0X3NpemUg
-PSBjcnlwdG9fc2hhc2hfZGlnZXN0c2l6ZShhbGlhc19oYXNoKTsNCj4gPiArCQlpZiAoYWxpZ25l
-ZF9sZW4gLyAyID4gZGlnZXN0X3NpemUpDQo+ID4gKwkJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJ
-fQ0KPiA+ICsNCj4gPiAgCWRldiA9IGdldF9kZXZpY2UoZGV2KTsNCj4gPiAgCWlmICghZGV2KQ0K
-PiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+IEBAIC0yNTksNiArMjczLDcgQEAgc3RhdGljIHZv
-aWQgbWRldl9kZXZpY2VfZnJlZShzdHJ1Y3QgbWRldl9kZXZpY2UNCj4gKm1kZXYpDQo+ID4gIAlt
-dXRleF91bmxvY2soJm1kZXZfbGlzdF9sb2NrKTsNCj4gPg0KPiA+ICAJZGV2X2RiZygmbWRldi0+
-ZGV2LCAiTURFVjogZGVzdHJveWluZ1xuIik7DQo+ID4gKwlrZnJlZShtZGV2LT5hbGlhcyk7DQo+
-ID4gIAlrZnJlZShtZGV2KTsNCj4gPiAgfQ0KPiA+DQo+ID4gQEAgLTI2OSwxOCArMjg0LDEwMSBA
-QCBzdGF0aWMgdm9pZCBtZGV2X2RldmljZV9yZWxlYXNlKHN0cnVjdCBkZXZpY2UNCj4gKmRldikN
-Cj4gPiAgCW1kZXZfZGV2aWNlX2ZyZWUobWRldik7DQo+ID4gIH0NCj4gPg0KPiA+IC1pbnQgbWRl
-dl9kZXZpY2VfY3JlYXRlKHN0cnVjdCBrb2JqZWN0ICprb2JqLA0KPiA+IC0JCSAgICAgICBzdHJ1
-Y3QgZGV2aWNlICpkZXYsIGNvbnN0IGd1aWRfdCAqdXVpZCkNCj4gPiArc3RhdGljIGNvbnN0IGNo
-YXIgKg0KPiA+ICtnZW5lcmF0ZV9hbGlhcyhjb25zdCBjaGFyICp1dWlkLCB1bnNpZ25lZCBpbnQg
-bWF4X2FsaWFzX2xlbikgew0KPiA+ICsJc3RydWN0IHNoYXNoX2Rlc2MgKmhhc2hfZGVzYzsNCj4g
-PiArCXVuc2lnbmVkIGludCBkaWdlc3Rfc2l6ZTsNCj4gPiArCXVuc2lnbmVkIGNoYXIgKmRpZ2Vz
-dDsNCj4gPiArCXVuc2lnbmVkIGludCBhbGlhc19sZW47DQo+ID4gKwljaGFyICphbGlhczsNCj4g
-PiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJLyoNCj4gPiArCSAqIEFsaWduIHRvIG11bHRpcGxl
-IG9mIDIgYXMgYmluMmhleCB3aWxsIGdlbmVyYXRlDQo+ID4gKwkgKiBldmVuIG51bWJlciBvZiBi
-eXRlcy4NCj4gPiArCSAqLw0KPiA+ICsJYWxpYXNfbGVuID0gcm91bmR1cChtYXhfYWxpYXNfbGVu
-LCAyKTsNCj4gPiArCWFsaWFzID0ga3phbGxvYyhhbGlhc19sZW4gKyAxLCBHRlBfS0VSTkVMKTsN
-Cj4gDQo+IEl0IHNlZW1zIHRoZSBtdHR5X2FsaWFzX2xlbmd0aCBpbiBtdHR5LmMgY2FuIGJlIHNl
-dCBmcm9tIG1vZHVsZSBwYXJhbWV0ZXIsDQo+IGFuZCB1c2VyIGNhbiBzZXQgYSB2ZXJ5IGxhcmdl
-IG51bWJlciwgbWF5YmUgbGltaXQgdGhlIG1heCBvZiB0aGUgYWxpYXNfbGVuDQo+IGJlZm9yZSBj
-YWxsaW5nIGt6YWxsb2M/DQpUaGlzIGlzIGFscmVhZHkgZ3VhcmRlZCBpbiBtZGV2X3JlZ2lzdGVy
-X2RldmljZSgpLg0KVXNlciBjYW5ub3QgcmVxdWVzdCBhbGlhcyBsZW5ndGggYmlnZ2VyIHRoYW4g
-dGhlIGRpZ2VzdCBzaXplIG9mIHNoYTEgKHdoaWNoIGlzIDIwIGJ5dGVzKS4NCg==
+On Thu, Aug 29, 2019 at 09:20:36PM -0400, Joel Fernandes wrote:
+> On Thu, Aug 29, 2019 at 05:47:56PM -0700, Paul E. McKenney wrote:
+> [snip]
+> > > > > Paul, also what what happens in the following scenario:
+> > > > > 
+> > > > > CPU0                                                 CPU1
+> > > > > 
+> > > > > A syscall causes rcu_eqs_exit()
+> > > > > rcu_read_lock();
+> > > > >                                                      ---> FQS loop waiting on
+> > > > > 						           dyntick_snap
+> > > > > usermode-upcall  entry -->causes rcu_eqs_enter();
+> > > > > 
+> > > > > usermode-upcall  exit  -->causes rcu_eqs_exit();
+> > > > > 
+> > > > >                                                      ---> FQS loop sees
+> > > > > 						          dyntick snap
+> > > > > 							  increment and
+> > > > > 							  declares CPU0 is
+> > > > > 							  in a QS state
+> > > > > 							  before the
+> > > > > 							  rcu_read_unlock!
+> > > > > 
+> > > > > rcu_read_unlock();
+> > > > > ---
+> > > > > 
+> > > > > Does the context tracking not call rcu_user_enter() in this case, or did I
+> > > > > really miss something?
+> > > > 
+> > > > Holding rcu_read_lock() across usermode execution (in this case,
+> > > > the usermode upcall) is a bad idea.  Why is CPU 0 doing that?
+> > > 
+> > > Oh, ok. I was just hypothesizing that since usermode upcalls from
+> > > something as heavy as interrupts, it could also mean we had the same from
+> > > some path that held an rcu_read_lock() as well. It was just a theoretical
+> > > concern, if it is not an issue, no problem.
+> > 
+> > Are there the usual lockdep checks in the upcall code?  Holding a spinlock
+> > across them would seem to be at least as bad as holding an rcu_read_lock()
+> > across them.
+> 
+> Great point, I'll take a look.
+> 
+> > > The other question I had was, in which cases would dyntick_nesting in current
+> > > RCU code be > 1 (after removing the lower bit and any crowbarring) ? In the
+> > > scenarios I worked out on paper, I can only see this as 1 or 0. But the
+> > > wording of it is 'dynticks_nesting'. May be I am missing a nesting scenario?
+> > > We can exit RCU-idleness into process context only once (either exiting idle
+> > > mode or user mode). Both cases would imply a value of 1.
+> > 
+> > Interrrupt -> NMI -> certain types of tracing.  I believe that can get
+> > it to 5.  There might be even more elaborate sequences of events.
+> 
+> I am only talking about dynticks_nesting, not dynticks_nmi_nesting. In
+> current mainline, I see this only 0 or 1. I am running the below patch
+> overnight on all RCU configurations to see if it is ever any other value.
+
+Ah!  Then yes, we never enter non-idle/non-user process-level mode
+twice without having exited it.  There would have been a splat,
+I believe.
+
+> And, please feel free to ignore my emails as you mentioned you are supposed
+> to be out next 2 days! Thanks for the replies though!
+
+Actually this day and next.  ;-)
+
+							Thanx, Paul
+
+> ---8<-----------------------
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 68ebf0eb64c8..8c8ddb6457d5 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -571,6 +571,9 @@ static void rcu_eqs_enter(bool user)
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+>  		     rdp->dynticks_nesting == 0);
+> +
+> +	WARN_ON_ONCE(rdp->dynticks_nesting != 1);
+> +
+>  	if (rdp->dynticks_nesting != 1) {
+>  		rdp->dynticks_nesting--;
+>  		return;
+> @@ -736,6 +739,9 @@ static void rcu_eqs_exit(bool user)
+>  	lockdep_assert_irqs_disabled();
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	oldval = rdp->dynticks_nesting;
+> +
+> +	WARN_ON_ONCE(rdp->dynticks_nesting != 0);
+> +
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && oldval < 0);
+>  	if (oldval) {
+>  		rdp->dynticks_nesting++;
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
