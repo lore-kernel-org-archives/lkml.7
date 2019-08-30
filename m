@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03653C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F8AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C672342E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249512342E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfH3WQv (ORCPT
+        id S1728653AbfH3WQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 18:16:51 -0400
-Received: from shell.v3.sk ([90.176.6.54]:56366 "EHLO shell.v3.sk"
+        Fri, 30 Aug 2019 18:16:59 -0400
+Received: from shell.v3.sk ([90.176.6.54]:56361 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728342AbfH3WQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728180AbfH3WQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 30 Aug 2019 18:16:21 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 52D51D87E7;
-        Sat, 31 Aug 2019 00:08:47 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 448D5D87C5;
+        Sat, 31 Aug 2019 00:08:22 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id CvhPEaUgcc89; Sat, 31 Aug 2019 00:08:21 +0200 (CEST)
+        with ESMTP id X5asfx9c0zVr; Sat, 31 Aug 2019 00:08:04 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id D3008D87E1;
-        Sat, 31 Aug 2019 00:08:00 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id EE9C1D873B;
+        Sat, 31 Aug 2019 00:07:54 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ShqfBR8zablj; Sat, 31 Aug 2019 00:07:56 +0200 (CEST)
+        with ESMTP id iVSFb6QHU_Vq; Sat, 31 Aug 2019 00:07:50 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 91806D87EC;
-        Sat, 31 Aug 2019 00:07:51 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id B2F3ED87E6;
+        Sat, 31 Aug 2019 00:07:49 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     "To : Olof Johansson" <olof@lixom.net>
 Cc:     "Cc : Rob Herring" <robh+dt@kernel.org>,
@@ -46,10 +46,11 @@ Cc:     "Cc : Rob Herring" <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 09/16] ARM: mmp: DT: convert timer driver to use TIMER_OF_DECLARE
-Date:   Sat, 31 Aug 2019 00:07:36 +0200
-Message-Id: <20190830220743.439670-10-lkundrak@v3.sk>
+        linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 04/16] dt-bindings: mrvl,intc: Add a MMP3 interrupt controller
+Date:   Sat, 31 Aug 2019 00:07:31 +0200
+Message-Id: <20190830220743.439670-5-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190830220743.439670-1-lkundrak@v3.sk>
 References: <20190830220743.439670-1-lkundrak@v3.sk>
@@ -60,139 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes things just a tiny bit simpler.
+Similar to MMP2 one, but has an extra range for the other core. The
+muxes stay the same.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/mach-mmp/mmp-dt.c  |  5 ++---
- arch/arm/mach-mmp/mmp2-dt.c |  5 ++---
- arch/arm/mach-mmp/time.c    | 38 +++++++++++--------------------------
- 3 files changed, 15 insertions(+), 33 deletions(-)
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm/mach-mmp/mmp-dt.c b/arch/arm/mach-mmp/mmp-dt.c
-index 35559792d5cca..91214996acecc 100644
---- a/arch/arm/mach-mmp/mmp-dt.c
-+++ b/arch/arm/mach-mmp/mmp-dt.c
-@@ -9,14 +9,13 @@
- #include <linux/irqchip.h>
- #include <linux/of_platform.h>
- #include <linux/clk-provider.h>
-+#include <linux/clocksource.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/time.h>
- #include <asm/hardware/cache-tauros2.h>
+---
+Changes since v2:
+- Add Rob's Reviewed-by tag
+
+Changes since v1:
+- Reformat the compatible property documentation to higlight the valid
+  combinations
+- Drop an unneeded mmp3-intc example
+
+ .../bindings/interrupt-controller/mrvl,intc.txt    | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,=
+intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,in=
+tc.txt
+index 608fee15a4cfc..a0ed02725a9d7 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.tx=
+t
++++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.tx=
+t
+@@ -1,13 +1,17 @@
+ * Marvell MMP Interrupt controller
 =20
- #include "common.h"
-=20
--extern void __init mmp_dt_init_timer(void);
--
- static const char *const pxa168_dt_board_compat[] __initconst =3D {
- 	"mrvl,pxa168-aspenite",
- 	NULL,
-@@ -32,8 +31,8 @@ static void __init mmp_init_time(void)
- #ifdef CONFIG_CACHE_TAUROS2
- 	tauros2_init(0);
- #endif
--	mmp_dt_init_timer();
- 	of_clk_init(NULL);
-+	timer_probe();
- }
-=20
- DT_MACHINE_START(PXA168_DT, "Marvell PXA168 (Device Tree Support)")
-diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
-index 8eec881191f4b..510c762ddc484 100644
---- a/arch/arm/mach-mmp/mmp2-dt.c
-+++ b/arch/arm/mach-mmp/mmp2-dt.c
-@@ -10,21 +10,20 @@
- #include <linux/irqchip.h>
- #include <linux/of_platform.h>
- #include <linux/clk-provider.h>
-+#include <linux/clocksource.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/time.h>
- #include <asm/hardware/cache-tauros2.h>
-=20
- #include "common.h"
-=20
--extern void __init mmp_dt_init_timer(void);
--
- static void __init mmp_init_time(void)
- {
- #ifdef CONFIG_CACHE_TAUROS2
- 	tauros2_init(0);
- #endif
- 	of_clk_init(NULL);
--	mmp_dt_init_timer();
-+	timer_probe();
- }
-=20
- static const char *const mmp2_dt_board_compat[] __initconst =3D {
-diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
-index 483df32583be6..3f6fd0be00512 100644
---- a/arch/arm/mach-mmp/time.c
-+++ b/arch/arm/mach-mmp/time.c
-@@ -195,30 +195,17 @@ void __init mmp_timer_init(int irq, unsigned long r=
-ate)
- 	clockevents_config_and_register(&ckevt, rate, MIN_DELTA, MAX_DELTA);
- }
-=20
--#ifdef CONFIG_OF
--static const struct of_device_id mmp_timer_dt_ids[] =3D {
--	{ .compatible =3D "mrvl,mmp-timer", },
--	{}
--};
--
--void __init mmp_dt_init_timer(void)
-+static int __init mmp_dt_init_timer(struct device_node *np)
- {
--	struct device_node *np;
- 	struct clk *clk;
- 	int irq, ret;
- 	unsigned long rate;
-=20
--	np =3D of_find_matching_node(NULL, mmp_timer_dt_ids);
--	if (!np) {
--		ret =3D -ENODEV;
--		goto out;
--	}
--
- 	clk =3D of_clk_get(np, 0);
- 	if (!IS_ERR(clk)) {
- 		ret =3D clk_prepare_enable(clk);
- 		if (ret)
--			goto out;
-+			return ret;
- 		rate =3D clk_get_rate(clk) / 2;
- 	} else if (cpu_is_pj4()) {
- 		rate =3D 6500000;
-@@ -227,18 +214,15 @@ void __init mmp_dt_init_timer(void)
- 	}
-=20
- 	irq =3D irq_of_parse_and_map(np, 0);
--	if (!irq) {
--		ret =3D -EINVAL;
--		goto out;
--	}
-+	if (!irq)
-+		return -EINVAL;
-+
- 	mmp_timer_base =3D of_iomap(np, 0);
--	if (!mmp_timer_base) {
--		ret =3D -ENOMEM;
--		goto out;
--	}
-+	if (!mmp_timer_base)
-+		return -ENOMEM;
-+
- 	mmp_timer_init(irq, rate);
--	return;
--out:
--	pr_err("Failed to get timer from device tree with error:%d\n", ret);
-+	return 0;
- }
--#endif
-+
-+TIMER_OF_DECLARE(mmp_timer, "mrvl,mmp-timer", mmp_dt_init_timer);
+ Required properties:
+-- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+-  "mrvl,mmp2-mux-intc"
++- compatible : Should be
++               "mrvl,mmp-intc" on Marvel MMP,
++               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 =
+or
++               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
+ - reg : Address and length of the register set of the interrupt controll=
+er.
+   If the interrupt controller is intc, address and length means the rang=
+e
+-  of the whole interrupt controller. If the interrupt controller is mux-=
+intc,
+-  address and length means one register. Since address of mux-intc is in=
+ the
+-  range of intc. mux-intc is secondary interrupt controller.
++  of the whole interrupt controller. The "marvell,mmp3-intc" controller
++  also has a secondary range for the second CPU core.  If the interrupt
++  controller is mux-intc, address and length means one register. Since
++  address of mux-intc is in the range of intc. mux-intc is secondary
++  interrupt controller.
+ - reg-names : Name of the register set of the interrupt controller. It's
+   only required in mux-intc interrupt controller.
+ - interrupts : Should be the port interrupt shared by mux interrupts. It=
+'s
 --=20
 2.21.0
 
