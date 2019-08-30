@@ -2,173 +2,148 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85CBC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D6CC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9698D20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6297F2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfH3MxS (ORCPT
+        id S1728094AbfH3Mx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:53:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:56142 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfH3MxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:53:18 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:53:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="183793140"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 30 Aug 2019 05:53:15 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i3gOw-0007cr-9c; Fri, 30 Aug 2019 15:53:14 +0300
-Date:   Fri, 30 Aug 2019 15:53:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 07/10] lib/vsprintf: Make use of fwnode API to obtain
- node names and separators
-Message-ID: <20190830125314.GG2680@smile.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-8-sakari.ailus@linux.intel.com>
+        Fri, 30 Aug 2019 08:53:28 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:1367 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfH3Mx2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:53:28 -0400
+IronPort-SDR: ftUQrbgKZqMqXP0GgI/qioBlKP7RWDhlP49AneyLRcaH2p0FHsqa3cxezZUcLXII9rIWl7MZrM
+ 1lFuZxgXuMKfK4oNjBS319mcKxcVOnvP13RPddtU3Y41Yh2i5DhoSNBnR8cvqgvjzdc8koOSUh
+ rMNvqd2OE4Gs9Fab9iswKUL4kYsQ7COgMWoO5WFiH0YlOFZ9tyULA8SrQIz2DCxvSU4PMUC3K0
+ 1RuXzIgdF6MMsHZJ0AOaXOQY3aLgcuAeTnVhmZXEiu3rGKZwSusaij+ZYCxaK64L3ejvQo5BI6
+ Y7w=
+X-IronPort-AV: E=Sophos;i="5.64,447,1559548800"; 
+   d="scan'208";a="40914045"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 30 Aug 2019 04:53:27 -0800
+IronPort-SDR: BfUqS4T6iM8gFkQUoQ5yVoMCEwqCwm3BatoU4xc4GNO8X3symaUxj3awZnPIVWZIm+uGGVxW3j
+ +ixhfIqIx5hfG5RcUY22cgNSPbAOkG8iLlIlQElMc/z9EsOf3XqNjpulN3w9a2pyZXaXBuLqnm
+ cS6ahfirX6UJGmCrcI/xfwreHjx4V3b3BDzrD7927b/3k5vEhEdnmqo1GoFugo8w60OkxQKQOD
+ XynQ4rbKai8ol54UlLsHzDczMScsifjTcqQw8YQKxaZng5YfftVOLTiiLiyyjidGO/zq7Yv+Ey
+ NFY=
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     Shuah Khan <shuah@kernel.org>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH v2] selftests: watchdog: Add optional file argument
+Date:   Fri, 30 Aug 2019 08:53:16 -0400
+Message-ID: <1567169597-10330-1-git-send-email-george_davis@mentor.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-8-sakari.ailus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:40PM +0300, Sakari Ailus wrote:
-> Instead of implementing our own means of discovering parent nodes, node
-> names or counting how many parents a node has, use the newly added
-> functions in the fwnode API to obtain that information.
-> 
+Some systems have multiple watchdog devices where the first device
+registered is assigned to the /dev/watchdog device file. In order
+to test other watchdog devices, add an optional file argument for
+selecting non-default watchdog devices for testing.
 
-Some style comments below.
-Nevertheless,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+---
+v1:
+- https://lkml.org/lkml/2019/8/29/16
+v2:
+- Update printf for ENOENT case based on report from Eugeniu Rosca
+---
+ tools/testing/selftests/watchdog/watchdog-test.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  lib/vsprintf.c | 38 ++++++++++++++++----------------------
->  1 file changed, 16 insertions(+), 22 deletions(-)
-> 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index b00b57f9f911f..a04a2167101ef 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -38,6 +38,7 @@
->  #include <net/addrconf.h>
->  #include <linux/siphash.h>
->  #include <linux/compiler.h>
-> +#include <linux/property.h>
->  #ifdef CONFIG_BLOCK
->  #include <linux/blkdev.h>
->  #endif
-> @@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
->  	return format_flags(buf, end, flags, names);
->  }
->  
-> -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
-> -{
-> -	for ( ; np && depth; depth--)
-> -		np = np->parent;
-> -
-> -	return kbasename(np->full_name);
-> -}
-> -
->  static noinline_for_stack
-> -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-
-> +char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
-> +			      char *end)
-
-I would leave it on one line.
-
->  {
->  	int depth;
-> -	const struct device_node *parent = np->parent;
->  
-> -	/* special case for root node */
-> -	if (!parent)
-> -		return string_nocheck(buf, end, "/", default_str_spec);
-> +	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
-> +		struct fwnode_handle *__fwnode =
-> +			fwnode_get_nth_parent(fwnode, depth);
-
-Ditto if you name temporary variable like fw / fh / fn / etc.
-
->  
-> -	for (depth = 0; parent->parent; depth++)
-> -		parent = parent->parent;
-> -
-> -	for ( ; depth >= 0; depth--) {
-> -		buf = string_nocheck(buf, end, "/", default_str_spec);
-> -		buf = string(buf, end, device_node_name_for_depth(np, depth),
-
-> +		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
-> +			     default_str_spec);
-> +		buf = string(buf, end, fwnode_get_name(__fwnode),
->  			     default_str_spec);
-
-Ditto.
-
-> +
-> +		fwnode_handle_put(__fwnode);
->  	}
-> +
->  	return buf;
->  }
->  
-> @@ -1933,10 +1926,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
->  
->  		switch (*fmt) {
->  		case 'f':	/* full_name */
-> -			buf = device_node_gen_full_name(dn, buf, end);
-
-> +			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
-> +						      end);
-
-Ditto, disregard checkpatch.
-
->  			break;
->  		case 'n':	/* name */
-> -			p = kbasename(of_node_full_name(dn));
-> +			p = fwnode_get_name(of_fwnode_handle(dn));
->  			precision = str_spec.precision;
->  			str_spec.precision = strchrnul(p, '@') - p;
->  			buf = string(buf, end, p, str_spec);
-> @@ -1946,7 +1940,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
->  			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
->  			break;
->  		case 'P':	/* path-spec */
-> -			p = kbasename(of_node_full_name(dn));
-> +			p = fwnode_get_name(of_fwnode_handle(dn));
->  			if (!p[1])
->  				p = "/";
->  			buf = string(buf, end, p, str_spec);
-> -- 
-> 2.20.1
-> 
-
+diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
+index c2333c78cf04..9f17cae61007 100644
+--- a/tools/testing/selftests/watchdog/watchdog-test.c
++++ b/tools/testing/selftests/watchdog/watchdog-test.c
+@@ -19,7 +19,7 @@
+ 
+ int fd;
+ const char v = 'V';
+-static const char sopts[] = "bdehp:t:Tn:NL";
++static const char sopts[] = "bdehp:t:Tn:NLf:";
+ static const struct option lopts[] = {
+ 	{"bootstatus",          no_argument, NULL, 'b'},
+ 	{"disable",             no_argument, NULL, 'd'},
+@@ -31,6 +31,7 @@ static const struct option lopts[] = {
+ 	{"pretimeout",    required_argument, NULL, 'n'},
+ 	{"getpretimeout",       no_argument, NULL, 'N'},
+ 	{"gettimeleft",		no_argument, NULL, 'L'},
++	{"file",          required_argument, NULL, 'f'},
+ 	{NULL,                  no_argument, NULL, 0x0}
+ };
+ 
+@@ -69,6 +70,7 @@ static void term(int sig)
+ static void usage(char *progname)
+ {
+ 	printf("Usage: %s [options]\n", progname);
++	printf(" -f, --file          Open watchdog device file (default is /dev/watchdog)\n");
+ 	printf(" -b, --bootstatus    Get last boot status (Watchdog/POR)\n");
+ 	printf(" -d, --disable       Turn off the watchdog timer\n");
+ 	printf(" -e, --enable        Turn on the watchdog timer\n");
+@@ -92,14 +94,20 @@ int main(int argc, char *argv[])
+ 	int ret;
+ 	int c;
+ 	int oneshot = 0;
++	char *file = "/dev/watchdog";
+ 
+ 	setbuf(stdout, NULL);
+ 
+-	fd = open("/dev/watchdog", O_WRONLY);
++	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
++		if (c == 'f')
++			file = optarg;
++	}
++
++	fd = open(file, O_WRONLY);
+ 
+ 	if (fd == -1) {
+ 		if (errno == ENOENT)
+-			printf("Watchdog device not enabled.\n");
++			printf("Watchdog device (%s) not found.\n", file);
+ 		else if (errno == EACCES)
+ 			printf("Run watchdog as root.\n");
+ 		else
+@@ -108,6 +116,8 @@ int main(int argc, char *argv[])
+ 		exit(-1);
+ 	}
+ 
++	optind = 0;
++
+ 	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
+ 		switch (c) {
+ 		case 'b':
+@@ -190,6 +200,9 @@ int main(int argc, char *argv[])
+ 			else
+ 				printf("WDIOC_GETTIMELEFT error '%s'\n", strerror(errno));
+ 			break;
++		case 'f':
++			/* Handled above */
++			break;
+ 
+ 		default:
+ 			usage(argv[0]);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.7.4
 
