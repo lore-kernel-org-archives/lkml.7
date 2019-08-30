@@ -2,120 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2519C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2806C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF1323427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29CB23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfnaCKLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfH3Pmk (ORCPT
+        id S1728350AbfH3PnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:42:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55312 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfH3Pmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:42:40 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 45E0031752A9;
-        Fri, 30 Aug 2019 15:42:40 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AE1860BE1;
-        Fri, 30 Aug 2019 15:42:39 +0000 (UTC)
-Message-ID: <cef8e627336f4a85b2860fd9bde25c71aef7e194.camel@redhat.com>
-Subject: [PULL REQUEST] Please pull rdma.git
-From:   Doug Ledford <dledford@redhat.com>
-To:     "Torvalds, Linus" <torvalds@linux-foundation.org>
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Gunthorpe, Jason" <jgg@ziepe.ca>
-Date:   Fri, 30 Aug 2019 11:42:36 -0400
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9+g+DU5xRdEhDhCeiuFC"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 30 Aug 2019 11:43:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52872 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfH3PnW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:43:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t17so7834051wmi.2;
+        Fri, 30 Aug 2019 08:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hSPruanynkI2nxLpUzm3uL7IYac5dvQ3oQe3jl6VLFU=;
+        b=nfnaCKLdbctQKQUkacHhaZsoiKIsJEgXtg5ZQt+aGp5XFQAijpASM1A5BmrlCejEQK
+         kOn9FIrc5vpJ8YLaYL5eFAK6POudjWvd6F6UG2MjC9FsdgStYp/LLU4N80UDo9w+txIr
+         ZGCd4rjnswWooLVkkdd044Q+cVTRymuE5uFn7bixg5CDB75cQTdTxkGKIGk7s3p0XF3C
+         mW7IruyFo9/JeAeQbgl0gjnPxXc9pjhPpkWJN1bw8srfRh90bwbtmbH8FjhFG3ChGLHs
+         WkPLgEhVf1WASqNOUcy7tq/HeiBFrg2VH8GJpxQjkFcM9jZuvT3w4VRgxoR1A6Ct88VY
+         FewQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hSPruanynkI2nxLpUzm3uL7IYac5dvQ3oQe3jl6VLFU=;
+        b=oITyu9nqKJo9kYrfS6lxGMIOL3bf+lu/Nbsv6Xln1SQyxRIi6BhYBj+pg+dF5HsRoI
+         eJpSdDUkDlY4XlFC9XJNDXfHuQ64rPdE7BU3PcWrk5PfG9HupbvuNFdriYgColF6lZpk
+         TzXaZhKeTvdU/scpZRUXX7ZfzDbViiuPnYHVvmHhTfBlWw6H6F3aNP/otmIJSCqBtS7p
+         BAUyJ/sLycPiDG9+/TZppccwJ+BG7y2wq+hr7dyr4QKTsnQl+Lzxtq4qsYbev/gB6xi1
+         bYo/lnlxhYQe9t0RtXk4YIbC74SKgR4agejGkP7oD/8vYIVpdXYz9sulxD9oCUxQJ44w
+         mynQ==
+X-Gm-Message-State: APjAAAW9HsyIacA48t62ZW1HngNf+WfViBS1h7KCfzt+xIRI2uZt1xJQ
+        oyXO7ZccwExtGD1jzPzqjoo=
+X-Google-Smtp-Source: APXvYqzHRdHs4oKVvSRpy8X7yKHta2hE6g56Kl/oPBafz13i4AYYofq0MPcNwspxJ4vIBJRN+3KfyA==
+X-Received: by 2002:a1c:3944:: with SMTP id g65mr19938452wma.68.1567179800378;
+        Fri, 30 Aug 2019 08:43:20 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id y3sm12403115wmg.2.2019.08.30.08.43.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 30 Aug 2019 08:43:19 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 17:43:18 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190830154318.ppggurnejlgtrly5@pali>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190829205631.uhz6jdboneej3j3c@pali>
+ <20190830154006.GB30863@infradead.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 30 Aug 2019 15:42:40 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="r4iv4rpxa6pvfbis"
+Content-Disposition: inline
+In-Reply-To: <20190830154006.GB30863@infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-9+g+DU5xRdEhDhCeiuFC
-Content-Type: text/plain; charset="UTF-8"
+--r4iv4rpxa6pvfbis
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Friday 30 August 2019 08:40:06 Christoph Hellwig wrote:
+> On Thu, Aug 29, 2019 at 10:56:31PM +0200, Pali Roh=C3=A1r wrote:
+> > In my opinion, proper way should be to implement exFAT support into
+> > existing fs/fat/ code instead of replacing whole vfat/msdosfs by this
+> > new (now staging) fat implementation.
+> >=20
+> > In linux kernel we really do not need two different implementation of
+> > VFAT32.
+>=20
+> Not only not useful, but having another one is actively harmful, as
+> people might actually accidentally used it for classic fat.
+>=20
+> But what I'm really annoyed at is this whole culture of just dumping
+> some crap into staging and hoping it'll sort itself out.  Which it
+> won't.  We'll need a dedidcated developer spending some time on it
+> and just get it into shape, and having it in staging does not help
+> with that at all - it will get various random cleanup that could
+> be trivially scripted, but that is rarely the main issue with any
+> codebase.
 
-*Much* calmer week this week.  Just one -rc patch queued up.  The way
-the siw driver was locking around the traversal of the list of ipv6
-addresses on a device was causing a scheduling while atomic issue.=20
-Bernard straightened it out by using the rtnl_lock.
-
-Here's the boiler plate:
-
-The following changes since commit c536277e0db1ad2e9fbb9dfd940c3565a14d9c52=
-:
-
-  RDMA/siw: Fix 64/32bit pointer inconsistency (2019-08-23 12:08:27 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linu=
-s
-
-for you to fetch changes up to 531a64e4c35bb9844b0cf813a6c9a87e00be05ff:
-
-  RDMA/siw: Fix IPv6 addr_list locking (2019-08-28 10:29:19 -0400)
-
-----------------------------------------------------------------
-Pull request for 5.3-rc6
-
-- Fix locking on list traversal (siw)
-
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-
-----------------------------------------------------------------
-Bernard Metzler (1):
-      RDMA/siw: Fix IPv6 addr_list locking
-
- drivers/infiniband/sw/siw/siw_cm.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+Exactly. Somebody should take this code and work on it. Otherwise we can
+say it is dead code and would happen same thing as with other staging
+drivers -- ready to be removed.
 
 --=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
---=-9+g+DU5xRdEhDhCeiuFC
+--r4iv4rpxa6pvfbis
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1pQ+wACgkQuCajMw5X
-L92RXw/+IG/iEPp7sY5SklyoC9WPxoghEvo59yRxJfdBkJAVi855MWF3SffCW0i9
-YNJw0uMZ5CkY9XuXFxV7sPpLuUWNv/JET4Q7EeQkj/nTrSvr/+R9op5Uuy5p3Zsk
-DymZCxKn+iW2mbphXVjbgMTgWcUzNVpgxlp92pDpZqmDtPKpt0rhL8hQAJ6ujq5h
-oXuamdgmMSf+P600A8OfmP2c3G5io0cU2xozIfIRCKV4UO2k6qJg7YHlobQC08Xy
-eT+MATALp8hoheret5TPC/Zxdewja3zEUqNiLL3kRFaHFkWy3khZW64Ih4RumdfS
-etuRg8ZzovBVeK+wTXf5TETSd5dVDZpJ5ajme23+hbjGs4DsNhEHyl//TE7mo1uO
-mFy+O1mNw97CZ1OzD70lRuYCflcgTXMVVRP2rROzQQQpVzew5XDIhdkrFohGsDdG
-jduqt6jh3sGJZ+aLuicT7COtScVEks0HDPQDn+khw2EJlDfM9WURGPVzvdpx+yNL
-dMp37Ny2z0c/hYAWuK4y3e3RVJ9xq+tyX54uD23+I8fVigM+g5VDn8N2W+De0Z89
-aj5Gi6EDpHBTKKXW46WLCq+SdtnUgHBKWEH/xrItWxhJFxhH9Jevja5fkwzBasp7
-9HVfPkKLtipEQoSOF+tNk7cdf9WneuQiz6rNUFWLn8P0JHHgJIg=
-=ulam
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXWlEFAAKCRCL8Mk9A+RD
+UhoKAJ4vZsLuZYAJ6Er06ChAjCyn4WGWCACeLwf/3Q10nG7S6qqrLYFhUaO8WJQ=
+=F393
 -----END PGP SIGNATURE-----
 
---=-9+g+DU5xRdEhDhCeiuFC--
-
+--r4iv4rpxa6pvfbis--
