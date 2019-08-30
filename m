@@ -2,335 +2,306 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EF3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2801EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252B020659
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567176648;
-	bh=aWiWfLDLWh7KyzN18ytAGs/+bskNM5FmOEELhpEFm28=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=djk+ipeMe/emWFQRoH3e9SGQ4f1ldrs92HQlMHCyOdUXywTldRtT1V0pekUP4Oo72
-	 ZfHzB5Ju9TALgVTcoN+zyfDirWbdM964H5C0KPwZzX8U5OtcA/5oH0Jb4D9N1kufXy
-	 V2qOW+x28RkjxZqxt3eavHesWVP3LwJUNJsVXU2g=
+	by mail.kernel.org (Postfix) with ESMTP id D45C62341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2nPxphu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfH3Our (ORCPT
+        id S1727891AbfH3Own (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:50:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:33436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfH3Our (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:50:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFB08344;
-        Fri, 30 Aug 2019 07:50:45 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 876243F703;
-        Fri, 30 Aug 2019 07:50:44 -0700 (PDT)
-Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup
- capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org, linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-4-ilina@codeaurora.org>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
-Date:   Fri, 30 Aug 2019 15:50:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 10:52:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34097 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3Own (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:52:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y135so4572457wmc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 07:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WnDh4GYxLlPevTo2ZCuvO0gFHsJHAxBrMo8QB7NPLOg=;
+        b=B2nPxphuhmRbpfjOjq1ETlDwNHTTkV1OSNfVdXXFU0801mI1gAUWhW/stSwsZWdkC8
+         7jEGLO38sP5coHGBjjj1DzIU+9szQG0MALl8J0ttoGrYoVnyvZtLhX8fl9LFSZuXoAXe
+         jlO/LTb/A9jou/QOxSED0jnoPcpyBpJrLu5SXALTCm359y7RFAEj51hKV6l06VARF3b/
+         ApBCWiDwr1OhNPBSzZNaqj8d63cf4YJdbPr2LTkUDiU+PJQb5UcyaBllrLboMpX7X8QV
+         gEzZJ7+/J4URfW9l2KjE5Vf50qJ9HLe00IUXoQV7HBfY35fsfbvoMUdcyoGMbxgEwpr2
+         Fv0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WnDh4GYxLlPevTo2ZCuvO0gFHsJHAxBrMo8QB7NPLOg=;
+        b=cnSzJn6g5sZOBPCzrXrzoZNGi8NKCGM7BvWMcZunBzIZG0ichg+9+uDDjRGaOH64Kf
+         bN8oWcOY94muTa5ZxRdPUGoQnFfjK25XOk2OLda5qr43R1FTR8fj4o3EAHwmUeJ7cOpE
+         grfu0yAD9VgJTOrkrgm3usytXTRCbh5N0aDEslxz6scgTb1BXdA98ueXQdQq5JLqPTk9
+         Ank6p7zFAOp5w5aIdDqp2SYZrpd3krZctmAYYiUaDn4+ABafASirIZXMCYDuMTB3NqYi
+         KeRRAFi90mglLSysMrfNO5kmMsYmZ0GvMzwv8UU01zfAhGFLvzBJxDarWNOWb+mNIOI5
+         Hg6A==
+X-Gm-Message-State: APjAAAU2Wf89YmsKUlFPr+4XmTkcmCny/taSbdPzvx5S/2CaVF4cmdSj
+        1VqmelKEEwRdCXqqFC+/dEa/9Q==
+X-Google-Smtp-Source: APXvYqzsxo/zQBDlvDqG7aghvQ2Ie4zikD8vWk5e0BDdMzsCgy9wqNdVOXe0wOqe+hZ/+mLk9cQHcA==
+X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr5678117wme.22.1567176760441;
+        Fri, 30 Aug 2019 07:52:40 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id w5sm11200334wrc.82.2019.08.30.07.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 07:52:39 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 15:52:37 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kdb: Fix stack crawling on 'running' CPUs that aren't
+ the master
+Message-ID: <20190830145237.aoysubwetqe3eggj@holly.lan>
+References: <20190731183732.178134-1-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190829181203.2660-4-ilina@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731183732.178134-1-dianders@chromium.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Please use my kernel.org address in the future. The days of this
-arm.com address are numbered...]
-
-On 29/08/2019 19:11, Lina Iyer wrote:
-> Introduce a new domain for wakeup capable GPIOs. The domain can be
-> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
-> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
-> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
-> corresponding PDC interrupt as its parent.
+On Wed, Jul 31, 2019 at 11:37:32AM -0700, Douglas Anderson wrote:
+> In kdb when you do 'btc' (back trace on CPU) it doesn't necessarily
+> give you the right info.  Specifically on many architectures
+> (including arm64, where I tested) you can't dump the stack of a
+> "running" process that isn't the process running on the current CPU.
+> This can be seen by this:
 > 
-> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>  echo SOFTLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
+>  # wait 2 seconds
+>  <sysrq>g
+> 
+> Here's what I see now on rk3399-gru-kevin.  I see the stack crawl for
+> the CPU that handled the sysrq but everything else just shows me stuck
+> in __switch_to() which is bogus:
+> 
+> ======
+> 
+> [0]kdb> btc
+> btc: cpu status: Currently on cpu 0
+> Available cpus: 0, 1-3(I), 4, 5(I)
+> Stack traceback for pid 0
+> 0xffffff801101a9c0        0        0  1    0   R  0xffffff801101b3b0 *swapper/0
+> Call trace:
+>  dump_backtrace+0x0/0x138
+>  ...
+>  kgdb_compiled_brk_fn+0x34/0x44
+>  ...
+>  sysrq_handle_dbg+0x34/0x5c
+> Stack traceback for pid 0
+> 0xffffffc0f175a040        0        0  1    1   I  0xffffffc0f175aa30  swapper/1
+> Call trace:
+>  __switch_to+0x1e4/0x240
+>  0xffffffc0f65616c0
+> Stack traceback for pid 0
+> 0xffffffc0f175d040        0        0  1    2   I  0xffffffc0f175da30  swapper/2
+> Call trace:
+>  __switch_to+0x1e4/0x240
+>  0xffffffc0f65806c0
+> Stack traceback for pid 0
+> 0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
+> Call trace:
+>  __switch_to+0x1e4/0x240
+>  0xffffffc0f659f6c0
+> Stack traceback for pid 1474
+> 0xffffffc0dde8b040     1474      727  1    4   R  0xffffffc0dde8ba30  bash
+> Call trace:
+>  __switch_to+0x1e4/0x240
+>  __schedule+0x464/0x618
+>  0xffffffc0dde8b040
+> Stack traceback for pid 0
+> 0xffffffc0f17b0040        0        0  1    5   I  0xffffffc0f17b0a30  swapper/5
+> Call trace:
+>  __switch_to+0x1e4/0x240
+>  0xffffffc0f65dd6c0
+> 
+> ===
+> 
+> The problem is that 'btc' eventually boils down to
+>   show_stack(task_struct, NULL);
+> 
+> ...and show_stack() doesn't work for "running" CPUs because their
+> registers haven't been stashed.
+> 
+> On x86 things might work better (I haven't tested) because kdb has a
+> special case for x86 in kdb_show_stack() where it passes the stack
+> pointer to show_stack().  This wouldn't work on arm64 where the stack
+> crawling function seems needs the "fp" and "pc", not the "sp" which is
+> presumably why arm64's show_stack() function totally ignores the "sp"
+> parameter.
+> 
+> NOTE: we _can_ get a good stack dump for all the cpus if we manually
+> switch each one to the kdb master and do a back trace.  AKA:
+>   cpu 4
+>   bt
+> ...will give the expected trace.  That's because now arm64's
+> dump_backtrace will now see that "tsk == current" and go through a
+> different path.
+> 
+> In this patch I fix the problems by catching a request to stack crawl
+> a task that's running on a CPU and then I ask that CPU to do the stack
+> crawl.
+> 
+> NOTE: this will (presumably) change what stack crawls are printed for
+> x86 machines.  Now kdb functions will show up in the stack crawl.
+> Presumably this is OK but if it's not we can go back and add a special
+> case for x86 again.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+I think this approach can be made work but there are problems as things
+exist today, see below.
+
+
 > ---
->  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
->  include/linux/soc/qcom/irq.h |  34 ++++++++++++
->  2 files changed, 129 insertions(+), 9 deletions(-)
->  create mode 100644 include/linux/soc/qcom/irq.h
 > 
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index 338fae604af5..ad1faf634bcf 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -13,12 +13,13 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/soc/qcom/irq.h>
->  #include <linux/spinlock.h>
-> -#include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
->  #define PDC_MAX_IRQS		126
-> +#define PDC_MAX_GPIO_IRQS	256
->  
->  #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
->  #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
-> @@ -26,6 +27,8 @@
->  #define IRQ_ENABLE_BANK		0x10
->  #define IRQ_i_CFG		0x110
->  
-> +#define PDC_NO_PARENT_IRQ	~0UL
-> +
->  struct pdc_pin_region {
->  	u32 pin_base;
->  	u32 parent_base;
-> @@ -65,23 +68,35 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
->  
->  static void qcom_pdc_gic_disable(struct irq_data *d)
->  {
-> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-> +		return;
-> +
->  	pdc_enable_intr(d, false);
->  	irq_chip_disable_parent(d);
->  }
->  
->  static void qcom_pdc_gic_enable(struct irq_data *d)
->  {
-> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-> +		return;
-> +
->  	pdc_enable_intr(d, true);
->  	irq_chip_enable_parent(d);
->  }
->  
->  static void qcom_pdc_gic_mask(struct irq_data *d)
->  {
-> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-> +		return;
-> +
->  	irq_chip_mask_parent(d);
->  }
->  
->  static void qcom_pdc_gic_unmask(struct irq_data *d)
->  {
-> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-> +		return;
-> +
->  	irq_chip_unmask_parent(d);
->  }
->  
-> @@ -124,6 +139,9 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
->  	int pin_out = d->hwirq;
->  	enum pdc_irq_config_bits pdc_type;
->  
-> +	if (pin_out == GPIO_NO_WAKE_IRQ)
-> +		return 0;
-> +
->  	switch (type) {
->  	case IRQ_TYPE_EDGE_RISING:
->  		pdc_type = PDC_EDGE_RISING;
-> @@ -181,8 +199,7 @@ static irq_hw_number_t get_parent_hwirq(int pin)
->  			return (region->parent_base + pin - region->pin_base);
->  	}
->  
-> -	WARN_ON(1);
-> -	return ~0UL;
-> +	return PDC_NO_PARENT_IRQ;
->  }
->  
->  static int qcom_pdc_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
-> @@ -211,17 +228,17 @@ static int qcom_pdc_alloc(struct irq_domain *domain, unsigned int virq,
->  
->  	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
->  	if (ret)
-> -		return -EINVAL;
-> -
-> -	parent_hwirq = get_parent_hwirq(hwirq);
-> -	if (parent_hwirq == ~0UL)
-> -		return -EINVAL;
-> +		return ret;
->  
->  	ret  = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
->  					     &qcom_pdc_gic_chip, NULL);
->  	if (ret)
->  		return ret;
->  
-> +	parent_hwirq = get_parent_hwirq(hwirq);
-> +	if (parent_hwirq == PDC_NO_PARENT_IRQ)
-> +		return 0;
-> +
->  	if (type & IRQ_TYPE_EDGE_BOTH)
->  		type = IRQ_TYPE_EDGE_RISING;
->  
-> @@ -244,6 +261,60 @@ static const struct irq_domain_ops qcom_pdc_ops = {
->  	.free		= irq_domain_free_irqs_common,
->  };
->  
-> +static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
-> +			       unsigned int nr_irqs, void *data)
-> +{
-> +	struct irq_fwspec *fwspec = data;
-> +	struct irq_fwspec parent_fwspec;
-> +	irq_hw_number_t hwirq, parent_hwirq;
-> +	unsigned int type;
-> +	int ret;
-> +
-> +	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-> +					    &qcom_pdc_gic_chip, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (hwirq == GPIO_NO_WAKE_IRQ)
-> +		return 0;
-> +
-> +	parent_hwirq = get_parent_hwirq(hwirq);
-> +	if (parent_hwirq == PDC_NO_PARENT_IRQ)
-> +		return 0;
-> +
-> +	if (type & IRQ_TYPE_EDGE_BOTH)
-> +		type = IRQ_TYPE_EDGE_RISING;
-> +
-> +	if (type & IRQ_TYPE_LEVEL_MASK)
-> +		type = IRQ_TYPE_LEVEL_HIGH;
-> +
-> +	parent_fwspec.fwnode      = domain->parent->fwnode;
-> +	parent_fwspec.param_count = 3;
-> +	parent_fwspec.param[0]    = 0;
-> +	parent_fwspec.param[1]    = parent_hwirq;
-> +	parent_fwspec.param[2]    = type;
-> +
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
-> +					    &parent_fwspec);
-> +}
-> +
-> +static int qcom_pdc_gpio_domain_select(struct irq_domain *d,
-> +				       struct irq_fwspec *fwspec,
-> +				       enum irq_domain_bus_token bus_token)
-> +{
-> +	return (bus_token == DOMAIN_BUS_WAKEUP);
-> +}
-> +
-> +static const struct irq_domain_ops qcom_pdc_gpio_ops = {
-> +	.select		= qcom_pdc_gpio_domain_select,
-> +	.alloc		= qcom_pdc_gpio_alloc,
-> +	.free		= irq_domain_free_irqs_common,
-> +};
-> +
->  static int pdc_setup_pin_mapping(struct device_node *np)
->  {
->  	int ret, n;
-> @@ -282,7 +353,7 @@ static int pdc_setup_pin_mapping(struct device_node *np)
->  
->  static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->  {
-> -	struct irq_domain *parent_domain, *pdc_domain;
-> +	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
->  	int ret;
->  
->  	pdc_base = of_iomap(node, 0);
-> @@ -313,8 +384,23 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->  		goto fail;
->  	}
->  
-> +	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
-> +						      IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP,
-> +						      PDC_MAX_GPIO_IRQS,
-> +						      of_fwnode_handle(node),
-> +						      &qcom_pdc_gpio_ops, NULL);
-> +	if (!pdc_gpio_domain) {
-> +		pr_err("%pOF: GIC domain add failed for GPIO domain\n", node);
-> +		ret = -ENOMEM;
-> +		goto remove;
-> +	}
-> +
-> +	irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
-> +
->  	return 0;
->  
-> +remove:
-> +	irq_domain_remove(pdc_domain);
->  fail:
->  	kfree(pdc_region);
->  	iounmap(pdc_base);
-> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
-> new file mode 100644
-> index 000000000000..73239917dc38
-> --- /dev/null
-> +++ b/include/linux/soc/qcom/irq.h
-> @@ -0,0 +1,34 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef __QCOM_IRQ_H
-> +#define __QCOM_IRQ_H
-> +
-> +#include <linux/irqdomain.h>
-> +
-> +#define GPIO_NO_WAKE_IRQ	~0U
-> +
-> +/**
-> + * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
-> + * capable interrupts by different interrupt controllers.
-> + *
-> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
-> + *                                  interrupt configuration is done at PDC
-> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
-> + */
-> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
-> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
-
-Any reason why you're starting at bit 17? The available range in from
-bit 16... But overall, it would be better if you expressed it as:
-
-#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP	(IRQ_DOMAIN_FLAG_NONCORE << 0)
-#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP (IRQ_DOMAIN_FLAG_NONCORE << 1)
-
-> +
-> +/**
-> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
-> + *                                configuration
-> + * @parent: irq domain
-> + *
-> + * This QCOM specific irq domain call returns if the interrupt controller
-> + * requires the interrupt be masked at the child interrupt controller.
-> + */
-> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
-> +{
-> +	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
-> +}
-> +
-> +#endif
+> Changes in v2:
+> - Totally new approach; now arch agnostic.
 > 
+>  kernel/debug/debug_core.c |  5 +++++
+>  kernel/debug/debug_core.h |  1 +
+>  kernel/debug/kdb/kdb_bt.c | 44 ++++++++++++++++++++++++++++++---------
+>  3 files changed, 40 insertions(+), 10 deletions(-)
+> 
+> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> index 5cc608de6883..a89c72714fe6 100644
+> --- a/kernel/debug/debug_core.c
+> +++ b/kernel/debug/debug_core.c
+> @@ -92,6 +92,8 @@ static int kgdb_use_con;
+>  bool dbg_is_early = true;
+>  /* Next cpu to become the master debug core */
+>  int dbg_switch_cpu;
+> +/* cpu number of slave we request a stack crawl of */
+> +int dbg_slave_dumpstack_cpu = -1;
+>  
+>  /* Use kdb or gdbserver mode */
+>  int dbg_kdb_mode = 1;
+> @@ -580,6 +582,9 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+>  				atomic_xchg(&kgdb_active, cpu);
+>  				break;
+>  			}
+> +		} else if (dbg_slave_dumpstack_cpu == cpu) {
 
-But most of this file isn't used by this patch, so maybe it should be
-moved somewhere else...
+Couldn't this be encoded in the exception state?
 
-Thanks,
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+> +			dump_stack();
+> +			dbg_slave_dumpstack_cpu = -1;
+
+>  		} else if (kgdb_info[cpu].exception_state & DCPU_IS_SLAVE) {
+>  			if (!raw_spin_is_locked(&dbg_slave_lock))
+>  				goto return_normal;
+> diff --git a/kernel/debug/debug_core.h b/kernel/debug/debug_core.h
+> index b4a7c326d546..dca74d5caef2 100644
+> --- a/kernel/debug/debug_core.h
+> +++ b/kernel/debug/debug_core.h
+> @@ -62,6 +62,7 @@ extern int dbg_io_get_char(void);
+>  /* Switch from one cpu to another */
+>  #define DBG_SWITCH_CPU_EVENT -123456
+>  extern int dbg_switch_cpu;
+> +extern int dbg_slave_dumpstack_cpu;
+>  
+>  /* gdbstub interface functions */
+>  extern int gdb_serial_stub(struct kgdb_state *ks);
+> diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
+> index 7e2379aa0a1e..10095ae05826 100644
+> --- a/kernel/debug/kdb/kdb_bt.c
+> +++ b/kernel/debug/kdb/kdb_bt.c
+> @@ -10,6 +10,7 @@
+>   */
+>  
+>  #include <linux/ctype.h>
+> +#include <linux/delay.h>
+>  #include <linux/string.h>
+>  #include <linux/kernel.h>
+>  #include <linux/sched/signal.h>
+> @@ -22,20 +23,43 @@
+>  static void kdb_show_stack(struct task_struct *p, void *addr)
+>  {
+>  	int old_lvl = console_loglevel;
+> +	int time_left;
+> +	int cpu;
+> +
+>  	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
+>  	kdb_trap_printk++;
+> -	kdb_set_current_task(p);
+> -	if (addr) {
+> -		show_stack((struct task_struct *)p, addr);
+> -	} else if (kdb_current_regs) {
+> -#ifdef CONFIG_X86
+> -		show_stack(p, &kdb_current_regs->sp);
+> -#else
+> -		show_stack(p, NULL);
+> -#endif
+> +
+> +	if (!addr && kdb_task_has_cpu(p)) {
+> +		cpu = kdb_process_cpu(p);
+> +
+> +		if (cpu == raw_smp_processor_id()) {
+> +			dump_stack();
+> +			goto exit;
+
+This goto is not for error recovery but looks like it is. Why can't we
+use normal control flow here (extracting the remote stack dump logic
+into a seperate function if the right margin is getting too close)?
+
+In fact to be honest a function call would be useful anyway since I'd
+rather have all the resulting horror in a single file (debug_core.c).
+
+
+> +		}
+> +
+> +		/*
+> +		 * In general architectures don't support dumping the stack
+> +		 * of a "running" process that's not the current one so if
+> +		 * we want to dump the stack of a running process that's not
+> +		 * the master then we'll set a global letting the slave
+> +		 * (which should be looping) know to dump its own stack.
+> +		 */
+> +		dbg_slave_dumpstack_cpu = cpu;
+> +		for (time_left = MSEC_PER_SEC; time_left; time_left--) {
+> +			udelay(1000);
+> +			if (dbg_slave_dumpstack_cpu == -1)
+> +				break;
+> +		}
+
+This timeout does not interact correctly with the pager (the timer does
+not get reset when we sit in the pager loop waiting for user to tell us
+to continue).
+
+
+> +		if (dbg_slave_dumpstack_cpu != -1) {
+> +			kdb_printf("ERROR: Timeout dumping CPU %d stack\n",
+> +				   cpu);
+> +			dbg_slave_dumpstack_cpu = -1;
+> +		}
+>  	} else {
+> -		show_stack(p, NULL);
+> +		show_stack(p, addr);
+>  	}
+> +
+> +exit:
+>  	console_loglevel = old_lvl;
+>  	kdb_trap_printk--;
+>  }
+> -- 
+> 2.22.0.770.g0f2c4a37fd-goog
