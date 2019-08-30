@@ -2,220 +2,101 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000BCC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC738C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EEA23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC6623407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfH3R7p (ORCPT
+        id S1727994AbfH3SBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:59:45 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:43765 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3R7o (ORCPT
+        Fri, 30 Aug 2019 14:01:33 -0400
+Received: from smtprelay0133.hostedemail.com ([216.40.44.133]:57059 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727246AbfH3SBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:59:44 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3E995100004;
-        Fri, 30 Aug 2019 17:59:37 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 20:01:09 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Message-ID: <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-2-jacopo+renesas@jmondi.org>
- <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
- <20190826075943.h7ivwagape3glym5@uno.localdomain>
- <20190826101550.GB5031@pendragon.ideasonboard.com>
+        Fri, 30 Aug 2019 14:01:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id EA4F8180238A6;
+        Fri, 30 Aug 2019 18:01:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: mint24_d3d3ba433a38
+X-Filterd-Recvd-Size: 2856
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 30 Aug 2019 18:01:30 +0000 (UTC)
+Message-ID: <a8afdbf13db47e7650473c7f71384f177f3dff59.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: Remove obsolete period from "ambiguous
+ SHA1" query
+From:   Joe Perches <joe@perches.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 30 Aug 2019 11:01:29 -0700
+In-Reply-To: <20190830171731.GB15405@linux.intel.com>
+References: <20190830163103.15914-1-sean.j.christopherson@intel.com>
+         <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
+         <20190830171731.GB15405@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cdwthwydolvsh24c"
-Content-Disposition: inline
-In-Reply-To: <20190826101550.GB5031@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-08-30 at 10:17 -0700, Sean Christopherson wrote:
+> On Fri, Aug 30, 2019 at 09:37:51AM -0700, Joe Perches wrote:
+> > On Fri, 2019-08-30 at 09:31 -0700, Sean Christopherson wrote:
+> > > Git dropped the period from its "ambiguous SHA1" error message in commit
+> > > 0c99171ad2 ("get_short_sha1: mark ambiguity error for translation"),
+> > > circa 2016.  Drop the period from checkpatch's associated query so as to
+> > > match both the old and new error messages.
+> > > 
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > ---
+> > >  scripts/checkpatch.pl | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > index 93a7edfe0f05..ef3642c53100 100755
+> > > --- a/scripts/checkpatch.pl
+> > > +++ b/scripts/checkpatch.pl
+> > > @@ -962,7 +962,7 @@ sub git_commit_info {
+> > >  
+> > >  	return ($id, $desc) if ($#lines < 0);
+> > >  
+> > > -	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous\./) {
+> > > +	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous/) {
+> > >  # Maybe one day convert this block of bash into something that returns
+> > >  # all matching commit ids, but it's very slow...
+> > >  #
+> > 
+> > Thanks.
+> > 
+> > Did git ever change to actually support human readable
+> > messages in multiple languages?
+> 
+> Yep, e.g.:
+> 
+>   error: Kurzer SHA-1 745f ist mehrdeutig.
+> 
+> > If so, this won't work for non-english output.
+> 
+> Yep again.  The next check for 'fatal: ambiguous argument' obviously fails
+> as well and checkpatch ends up using git's error message as the id and
+> description.
+> 
+>   ERROR: Please use git ... - ie: 'commit error: Kurze ("")'
 
---cdwthwydolvsh24c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Does git exit with unique failure codes?
+If so, maybe the waitid/siginfo_t error could be used instead.
 
-Hi Laurent,
 
-On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> On Mon, Aug 26, 2019 at 09:59:43AM +0200, Jacopo Mondi wrote:
-> > On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
-> > > On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > > > Add device tree bindings documentation for the Renesas R-Car Display
-> > > > Unit Color Management Module.
-> > > >
-> > > > CMM is the image enhancement module available on each R-Car DU video
-> > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> > > >
-> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> > > > @@ -0,0 +1,33 @@
-> > > > +* Renesas R-Car Color Management Module (CMM)
-> > > > +
-> > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible: shall be one or more of the following:
-> > > > +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
-> > > > +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
-> > > > +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
-> > > > +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
-> > > > +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
-> > >
-> > > Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
-> >
-> > I actually copied it from the r-car gpio bindings, and I liked
-> > cmm-<soctype> better. If you prefer I can change it though.
-> >
-> > > > +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
-> > > > +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
-> > > > +
-> > > > +   When the generic compatible string is specified, the SoC-specific
-> > > > +   version corresponding to the platform should be listed first.
-> > > > +
-> > > > + - reg: the address base and length of the memory area where CMM control
-> > > > +   registers are mapped to.
-> > > > +
-> > > > + - clocks: phandle and clock-specifier pair to the CMM functional clock
-> > > > +   supplier.
-> > >
-> > > Thinking about yaml validation:
-> > >
-> > > power-domains?
-> > > resets?
-> >
-> > They should indeed be documented.
->
-> How about converting this binding to yaml alreay ? It should be fairly
-> simple.
-
-I'm trying to, and I'm having my portion of fun time at it.
-
-The definition of the schema itself seems good, but I wonder, is this
-the first renesas schema we have? Because it seems to me the schema
-validator is having an hard time to digest the examplea 'clocks' and
-'power-domains' properties, which have 1 phandle and 2 specifiers and 1
-phandle and 1 specifier respectively for Rensas SoCs.
-
-In other words, if in the example I have:
-
- examples:
-   - |
-     cmm0: cmm@fea40000 {
-          compatible = "renesas,r8a7796-cmm";
-          reg = <0 0xfea40000 0 0x1000>;
-          clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
-          resets = <&cpg 711>;
-          power-domains = <&sysc>;         <---- 1 phandle
-     };
-
-The schema validation is good.
-
-While if I use an actual example
-   - |
-     cmm0: cmm@fea40000 {
-          compatible = "renesas,r8a7796-cmm";
-          reg = <0 0xfea40000 0 0x1000>;
-          clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
-          resets = <&cpg 711>;
-          power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
-     };                                                       + 1 specfier
-
-The schema validation fails...
-Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
-FATAL ERROR: Unable to parse input tree
-
-Are clocks properties with > 2 entries and power-domains properties with
-> 1 entries supported?
-
-Because from what I read here:
-https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
-"The length of a clock specifier is defined by the value of a #clock-cells
-property in the clock provider node."
-
-And that's expected, but is the examples actually validated against the
-clock provider pointed by the phandle? Because in that case, if we had a
-yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
-
-Do we need a schema for cpg-mssr first, or am I doing something else
-wrong?
-
-Thanks
-   j
-
->
-> > > > +Example:
-> > > > +--------
-> > > > +
-> > > > +       cmm0: cmm@fea40000 {
-> > > > +               compatible = "renesas,cmm-r8a7796";
-> > > > +               reg = <0 0xfea40000 0 0x1000>;
-> > > > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> > > > +               clocks = <&cpg CPG_MOD 711>;
-> > > > +               resets = <&cpg 711>;
-> > > > +       };
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---cdwthwydolvsh24c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1pZGQACgkQcjQGjxah
-VjzlaA//WrMjIoh5mpirNuc1YnVXSvW7ZqWWQ6jp/mCaKrsImVVmqAmb9VEGJcfK
-KUZvxF2xlp7pEtQfPbDJWVLvEX6dey+EeNoEK2S2RwCS4AYmPkrVe7mdLZ7rXGbh
-HhVsi347kR5qeIjWazR/TmRNySank+gp/HKWvjaNguYP0LCK0U7Ybmh2GA5hjsIe
-wFJnHfvt2rOxujXtF+G0rNerKSUAI7bQJYlfcKfHyFF4471Orid05CVr5vRue/n5
-vTd9TlmFfp4Hzfv6aftHV32RWyWxNKXSKvlvy2ukH+/4Q0Cx/cAb1+PNJW8m3pEM
-O3k972DSykDQmclu4z5Ge2Z9pxScSROL6ypCCbcbLek1G2KxVuhV1VfHSQ+YgKZk
-nW9T602yRaJC/4ZbwH3Vu5OwudQXc282AL6WE/MwljwZ0mhvGG0JWSdBt0344z9v
-P00CPvZFgVuXjWeF2JQp0YYza7rIch+TQi/OLiwX8t4grcaZV+KsgQbRWl6M/FHv
-mAim2SiLt6VhPJ+1FkBNHwjKp6SAsuXO8BW5q5beXvJSXusw6gPVVv6V/YnQMHbI
-Eswoex0Kp54mWuZv/ejyaWs7pSL7288qzDj+yCwbCkUwg3AHHvN/avhdXc2BAPyn
-cNOulOiRbiCpU8e2zKidbqYcx1fyBq3qeuPvFzuhvWWXPEozD3U=
-=t2Px
------END PGP SIGNATURE-----
-
---cdwthwydolvsh24c--
