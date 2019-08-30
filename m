@@ -2,303 +2,160 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E55C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C31C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EC62186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86642186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fHj/GBDn"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="eDolhatu";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BWLbdPLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfH3TYG (ORCPT
+        id S1728161AbfH3TZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 15:24:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34936 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3TYG (ORCPT
+        Fri, 30 Aug 2019 15:25:16 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:52246 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727883AbfH3TZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 15:24:06 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7UJNtii072563;
-        Fri, 30 Aug 2019 14:23:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567193035;
-        bh=BRGq9rtIEX6J8dTXlS0C++xR15x6pyi8E6jSLrRs14I=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=fHj/GBDnhOHKpgGT75zWtw+YhojiFjS6l4HgW1ii7b8oWCxYDv8epvw5P/Czw9AOh
-         kHq3LvFUd8J/vOlpgRBA4E4qhiJR1490P6G8vI6SBV50UrJQgLZKXqoSe+1BJ2ALiV
-         CHBTsFaBsjx+dD2hD/1l5sZfqGjK2uk5Y6E28fSw=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7UJNtAp128741
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 30 Aug 2019 14:23:55 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 30
- Aug 2019 14:23:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 30 Aug 2019 14:23:55 -0500
-Received: from [10.250.95.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7UJNsJY104679;
-        Fri, 30 Aug 2019 14:23:54 -0500
-From:   "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH] arm64: use x22 to save boot exception level
-To:     Mark Rutland <mark.rutland@arm.com>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthew Leach <matthew.leach@arm.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190828173318.12428-1-afd@ti.com>
- <20190829094720.GA44575@lakrids.cambridge.arm.com>
-Message-ID: <511d200c-9294-e562-5ba5-4f061965395d@ti.com>
-Date:   Fri, 30 Aug 2019 15:23:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190829094720.GA44575@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Aug 2019 15:25:15 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7UJNj4x022431;
+        Fri, 30 Aug 2019 12:24:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=TqshAb1/YXv1lSSayk6NreG/7ncKHRKsSAveSK43NIk=;
+ b=eDolhatuIvaBTQ+kHG8vfB3oazm36fR2kNUFqWCFssX2hosX33c51fLmpWTFJ6hm/nKy
+ GVkOOEtLS21hs1j692DJQBWaDbNHUXfRg1HgIFI+Nk8JdHzv5vk21ll8dW4MpPIDjZMt
+ urB2AplskRaA9SC+QpQhe9i8ORraEW0JbFs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2upqya4ptx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 30 Aug 2019 12:24:53 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 30 Aug 2019 12:24:52 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 30 Aug 2019 12:24:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A9Ows3PxeoFSPJP0P4g2V2zgER9u6FqtgXHOCF0cI/la8VU1q23rxsLGn4GXdKEJ6ZInL5QVIhnQGnAqvYl9sp1kc54xtZb23axp9TOv8EgbqXQo7AOONaiUCOCUEKqvigaS1XuUVLZd3Ll/jmPSw3c9VtcdGNk2YPFxlzrRIqgoVk7fpigZZO2IxuzN7ZcXN4EaKo3BBYFewFPQrbOdR9CX06NIdcfuW5OzWJUBubq7g9FzLAIu1IFMIZK6mZ48kdhCjO0q6HN6ayJjICJTjUkwE5oGSJdDK48aTbZ0aOfQgi+2U3xZQoRYJfaDPOHkJq9GK8WzEU3TUlSGJvjU0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TqshAb1/YXv1lSSayk6NreG/7ncKHRKsSAveSK43NIk=;
+ b=Olk3cmsl6P0Ku+UxAUKvWKwviaJOs6qG4imQ/WYQ99MTUtODsnmoDS5ria042RCr6Co8jv6o1n+GxJEIdYbS9w4l7Q83Ce25DuSXvYBe7LoK/7cTpStSO47Bm2XFxxyfZKbyfR/SmkozsQi20Lrqy3klz41Di6T04NwkKlnxTERikQZKubbFnNpJz7mja3BiEt9U5MU/Hsuf7umFiscc921Q2YRjjn5gv8jKXcnvrIBqWa2QYX8bKIT5koUEQ7rLOz+lYuOztXjUnaHqFHm+foo608J21x3Ry0Ht6xQAXM/jTL4AOU93tmnTFxbn0WBBSpsAfM7ISHD2hJtc22jMag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TqshAb1/YXv1lSSayk6NreG/7ncKHRKsSAveSK43NIk=;
+ b=BWLbdPLtBu/DVdsTf3h7A7UQeVMG7CNHaGNatpE7kprQi+6rCN9FniAY1LgwrJNLu2mPp5JmlfzwOs+sih5ztoJyHPa0Mnl5G7EOK7+UWmZlhJe5d68tCe53CFQa4JtT6/fUra/QLcTUuvkB5fLLqeDtJMDmj0Bx06vEsFBoleI=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1919.namprd15.prod.outlook.com (10.174.100.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Fri, 30 Aug 2019 19:24:51 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::45ee:bc50:acfa:60a5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::45ee:bc50:acfa:60a5%3]) with mapi id 15.20.2199.021; Fri, 30 Aug 2019
+ 19:24:51 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Anton Protopopov <a.s.protopopov@gmail.com>
+CC:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next] tools: libbpf: update extended attributes
+ version of bpf_object__open()
+Thread-Topic: [PATCH bpf-next] tools: libbpf: update extended attributes
+ version of bpf_object__open()
+Thread-Index: AQHVUvz4yT9fypjbn0OKIVyRaBIXqqcSo2gAgAF++ACAAAjVAA==
+Date:   Fri, 30 Aug 2019 19:24:50 +0000
+Message-ID: <9EC54605-1911-48B0-B33A-02EC46DEF3DD@fb.com>
+References: <20190815000330.12044-1-a.s.protopopov@gmail.com>
+ <796E4DA8-4844-4708-866E-A8AE9477E94E@fb.com>
+ <CAGn_itwS=bLf8NGVNbByNx8FmR_JtPWnuEnKO23ig8xnK_GYOw@mail.gmail.com>
+In-Reply-To: <CAGn_itwS=bLf8NGVNbByNx8FmR_JtPWnuEnKO23ig8xnK_GYOw@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::34a2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 85da3c98-b0c9-4380-95ad-08d72d7fba98
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1919;
+x-ms-traffictypediagnostic: MWHPR15MB1919:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB1919A4858D019041341A3894B3BD0@MWHPR15MB1919.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:660;
+x-forefront-prvs: 0145758B1D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(366004)(376002)(396003)(136003)(189003)(199004)(256004)(5660300002)(305945005)(36756003)(71190400001)(71200400001)(86362001)(33656002)(76176011)(6246003)(8936002)(53546011)(316002)(229853002)(66446008)(66946007)(54906003)(66476007)(4326008)(64756008)(66556008)(6486002)(76116006)(99286004)(8676002)(81156014)(81166006)(25786009)(102836004)(7736002)(50226002)(186003)(6116002)(57306001)(476003)(478600001)(6506007)(2906002)(11346002)(53936002)(6436002)(6512007)(14454004)(46003)(446003)(486006)(6916009)(2616005)(101420200001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1919;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z7KgPIs5Mc4iquZ+8PmBr6GTEn3HbiIOU3k1yom2vVjb5JkB/xOc+PMDa4NiYZz7lLShukBe24E4RZd5aYVvYP5uN4I5nvp+iwZlzYf9WzwgQjXHRk/cUkbaq2e1MbgrHwJ/L6X6UW/EsfgM5RBLtnDp22FJo+EQIuvh1hQxbjAHAiMrtXd1W15Kv40SlaelPzlkXatehFYtOzzSP2amYoU6Bqy1AS3AReUfCKUYcnQbqAEExA55e8xLg6w6r2jqW8VqYQXNIRaOkJi6whprxgRidpZqAEJ/c0641Wp22gPtk+HzmCtoP2bfcGGNiQOIcN5THJUvy8DoD9vns/o9F2NGmnTYWizHEGeCbC70at2VAvb8CNzqCy+f0mDY8A6v+cXh4/8H0uq+mObFkIPjNkInAibuDS/fNO4my7LC7yU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <82D5DFBBBD85824188CE056BB017D66A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85da3c98-b0c9-4380-95ad-08d72d7fba98
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 19:24:50.8653
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Je5OxqKHF8pVINvwJEJwj3+M7axEIpRHvQNNwoVUKZr91kYYaKWUqYaOeZ1yceAsXkUvYmhN08jqObJd5xWU+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1919
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-08-30_07:2019-08-29,2019-08-30 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 bulkscore=0 mlxscore=0 impostorscore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1908300182
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 5:47 AM, Mark Rutland wrote:
-> Hi Andrew,
-> 
-> On Wed, Aug 28, 2019 at 01:33:18PM -0400, Andrew F. Davis wrote:
->> The exception level in which the kernel was entered needs to be saved for
->> later. We do this by writing the exception level to memory. As this data
->> is written with the MMU/cache off it will bypass any cache, after this we
->> invalidate the address so that later reads from cacheable mappings do not
->> read a stale cache line. The side effect of this invalidate is any
->> existing cache line for this address in the same coherency domain will be
->> cleaned and written into memory, possibly overwriting the data we just
->> wrote. As this memory is treated as cacheable by already running cores it
->> on not architecturally safe to perform any non-caching accesses to this
->> memory anyway.
-> 
-> Are you seeing an issue in practice here, or is this something that
-> you've found by inspection?
-> 
-
-We are seeing an actual issue. And I do have a good idea what is causing
-it, let me answer your questions on the system then I'll explain below.
-
-> If this is an issue in practice, can you tell me more about the system,
-> i.e.
-> 
-> - Which CPU models do you see this with?
-
-A53s
-
-> - Do you see this with the boot CPU, secondaries, or both?
-
-Both
-
-> - Do you have a system-level cache? If so, which model?
-
-Yes, Custom design, Datasheet has some more details if needed:
-http://www.ti.com/product/AM6548
-
-> - Do you see this on bare-metal?
-
-Not tested
-
-> - Do you see this under a hypervisor? If so, which hypervisor?
-> 
-
-Not tested
-
-> We place __boot_cpu_mode in the .mmuoff.data.write section, which is
-> only written with the MMU off (i.e. with non-cacheable accesses), such
-> that the cached copy should always be clean and shouldn't be written
-> back. Your description sounds like you're seeing a write-back, which is
-> surprising and may indicate a bug elsewhere.
-> 
-> Depending on what exactly you're seeing, this could also be an issue for
-> __early_cpu_boot_status and the early page table creation, so I'd like
-> to understand that better.
-> 
-
-We are seeing is a write-back from L3 cache. Our bootloader writes the
-kernel image with caches on, then after turning off caching but before
-handing off to Linux it clean/invalidates all cache lines by set/way.
-This cleans out the L1/L2 but leaves dirty lines in L3. Our platform
-doesn't really have a good way to clean L3 as it only provides cache
-maintenance operations by VA, not by line, so we would need to clean
-every VA address manually..
-
-Also want to point out, although this isn't a problem for most platforms
-what this code does here, with writing to a location as non-cacheable,
-is not architecturally safe as the running cores that do the reads have
-this section marked as cacheable when they read, therefor you have
-mismatched attributes. When this happens like this according to the ARM
-ARM we should do a cache invalidate after the write *and* before the
-read, which we do not do.
-
-I would like to work this fix from the U-Boot side also, but in parallel
-I would like to reduce the mismatched attributes as much as possible on
-the kernel side like done here. So yes, we still will have issue with
-__early_cpu_boot_status, but that only seems to be needed in the failure
-to boot case, I'd like to fix that up as well at some later point.
-
-As for early page table, since U-Boot doesn't write anything to those
-addresses (__boot_cpu_mode is in the data section and so written by the
-loader), they seem to be safe for now (I can break them by writing to
-all memory locations to dirty up the caches).
-
-Thanks,
-Andrew
-
-> Thanks,
-> Mark.
-> 
->> Lets avoid these issues altogether by moving the writing of the boot
->> exception level to after MMU/caching has been enabled. Saving the boot
->> state in unused register x22 until we can safely and coherently write out
->> this data.
->>
->> As the data is not written with the MMU off anymore we move the variable
->> definition out of this section and into a regular C code data section.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>  arch/arm64/kernel/head.S | 31 +++++++++++--------------------
->>  arch/arm64/kernel/smp.c  | 10 ++++++++++
->>  2 files changed, 21 insertions(+), 20 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->> index 2cdacd1c141b..4c71493742c5 100644
->> --- a/arch/arm64/kernel/head.S
->> +++ b/arch/arm64/kernel/head.S
->> @@ -99,6 +99,7 @@ pe_header:
->>  	 *
->>  	 *  Register   Scope                      Purpose
->>  	 *  x21        stext() .. start_kernel()  FDT pointer passed at boot in x0
->> +	 *  x22        stext() .. start_kernel()  exception level core was booted
->>  	 *  x23        stext() .. start_kernel()  physical misalignment/KASLR offset
->>  	 *  x28        __create_page_tables()     callee preserved temp register
->>  	 *  x19/x20    __primary_switch()         callee preserved temp registers
->> @@ -108,7 +109,6 @@ ENTRY(stext)
->>  	bl	el2_setup			// Drop to EL1, w0=cpu_boot_mode
->>  	adrp	x23, __PHYS_OFFSET
->>  	and	x23, x23, MIN_KIMG_ALIGN - 1	// KASLR offset, defaults to 0
->> -	bl	set_cpu_boot_mode_flag
->>  	bl	__create_page_tables
->>  	/*
->>  	 * The following calls CPU setup code, see arch/arm64/mm/proc.S for
->> @@ -428,6 +428,8 @@ __primary_switched:
->>  	sub	x4, x4, x0			// the kernel virtual and
->>  	str_l	x4, kimage_voffset, x5		// physical mappings
->>  
->> +	bl	set_cpu_boot_mode_flag
->> +
->>  	// Clear BSS
->>  	adr_l	x0, __bss_start
->>  	mov	x1, xzr
->> @@ -470,7 +472,7 @@ EXPORT_SYMBOL(kimage_vaddr)
->>   * If we're fortunate enough to boot at EL2, ensure that the world is
->>   * sane before dropping to EL1.
->>   *
->> - * Returns either BOOT_CPU_MODE_EL1 or BOOT_CPU_MODE_EL2 in w0 if
->> + * Returns either BOOT_CPU_MODE_EL1 or BOOT_CPU_MODE_EL2 in w22 if
->>   * booted in EL1 or EL2 respectively.
->>   */
->>  ENTRY(el2_setup)
->> @@ -480,7 +482,7 @@ ENTRY(el2_setup)
->>  	b.eq	1f
->>  	mov_q	x0, (SCTLR_EL1_RES1 | ENDIAN_SET_EL1)
->>  	msr	sctlr_el1, x0
->> -	mov	w0, #BOOT_CPU_MODE_EL1		// This cpu booted in EL1
->> +	mov	w22, #BOOT_CPU_MODE_EL1		// This cpu booted in EL1
->>  	isb
->>  	ret
->>  
->> @@ -593,7 +595,7 @@ set_hcr:
->>  
->>  	cbz	x2, install_el2_stub
->>  
->> -	mov	w0, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
->> +	mov	w22, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
->>  	isb
->>  	ret
->>  
->> @@ -632,7 +634,7 @@ install_el2_stub:
->>  		      PSR_MODE_EL1h)
->>  	msr	spsr_el2, x0
->>  	msr	elr_el2, lr
->> -	mov	w0, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
->> +	mov	w22, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
->>  	eret
->>  ENDPROC(el2_setup)
->>  
->> @@ -642,12 +644,10 @@ ENDPROC(el2_setup)
->>   */
->>  set_cpu_boot_mode_flag:
->>  	adr_l	x1, __boot_cpu_mode
->> -	cmp	w0, #BOOT_CPU_MODE_EL2
->> +	cmp	w22, #BOOT_CPU_MODE_EL2
->>  	b.ne	1f
->> -	add	x1, x1, #4
->> -1:	str	w0, [x1]			// This CPU has booted in EL1
->> -	dmb	sy
->> -	dc	ivac, x1			// Invalidate potentially stale cache line
->> +	add	x1, x1, #4			// This CPU has booted in EL2
->> +1:	str	w22, [x1]
->>  	ret
->>  ENDPROC(set_cpu_boot_mode_flag)
->>  
->> @@ -658,16 +658,7 @@ ENDPROC(set_cpu_boot_mode_flag)
->>   * sufficient alignment that the CWG doesn't overlap another section.
->>   */
->>  	.pushsection ".mmuoff.data.write", "aw"
->> -/*
->> - * We need to find out the CPU boot mode long after boot, so we need to
->> - * store it in a writable variable.
->> - *
->> - * This is not in .bss, because we set it sufficiently early that the boot-time
->> - * zeroing of .bss would clobber it.
->> - */
->> -ENTRY(__boot_cpu_mode)
->> -	.long	BOOT_CPU_MODE_EL2
->> -	.long	BOOT_CPU_MODE_EL1
->> +
->>  /*
->>   * The booting CPU updates the failed status @__early_cpu_boot_status,
->>   * with MMU turned off.
->> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
->> index 018a33e01b0e..66bdcaf61a46 100644
->> --- a/arch/arm64/kernel/smp.c
->> +++ b/arch/arm64/kernel/smp.c
->> @@ -65,6 +65,16 @@ struct secondary_data secondary_data;
->>  /* Number of CPUs which aren't online, but looping in kernel text. */
->>  int cpus_stuck_in_kernel;
->>  
->> +/*
->> + * We need to find out the CPU boot mode long after boot, so we need to
->> + * store it in a writable variable in early boot. Any core started in
->> + * EL1 will write that to the first location, EL2 to the second. After
->> + * all cores are started this allows us to check that all cores started
->> + * in the same mode.
->> + */
->> +u32 __boot_cpu_mode[2] = { BOOT_CPU_MODE_EL2, BOOT_CPU_MODE_EL1 };
->> +EXPORT_SYMBOL(__boot_cpu_mode);
->> +
->>  enum ipi_msg_type {
->>  	IPI_RESCHEDULE,
->>  	IPI_CALL_FUNC,
->> -- 
->> 2.17.1
->>
+DQoNCj4gT24gQXVnIDMwLCAyMDE5LCBhdCAxMTo1MyBBTSwgQW50b24gUHJvdG9wb3BvdiA8YS5z
+LnByb3RvcG9wb3ZAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+INGH0YIsIDI5INCw0LLQsy4gMjAx
+OSDQsy4g0LIgMTY6MDIsIFNvbmcgTGl1IDxzb25nbGl1YnJhdmluZ0BmYi5jb20+Og0KPj4gDQo+
+PiANCj4+IA0KPj4+IE9uIEF1ZyAxNCwgMjAxOSwgYXQgNTowMyBQTSwgQW50b24gUHJvdG9wb3Bv
+diA8YS5zLnByb3RvcG9wb3ZAZ21haWwuY29tPiB3cm90ZToNCj4+PiANCj4+IA0KPj4gWy4uLl0N
+Cj4+IA0KPj4+IA0KPj4+IA0KPj4+IGludCBicGZfb2JqZWN0X191bmxvYWQoc3RydWN0IGJwZl9v
+YmplY3QgKm9iaikNCj4+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvbGliL2JwZi9saWJicGYuaCBiL3Rv
+b2xzL2xpYi9icGYvbGliYnBmLmgNCj4+PiBpbmRleCBlOGY3MDk3N2QxMzcuLjYzNGYyNzg1Nzhk
+ZCAxMDA2NDQNCj4+PiAtLS0gYS90b29scy9saWIvYnBmL2xpYmJwZi5oDQo+Pj4gKysrIGIvdG9v
+bHMvbGliL2JwZi9saWJicGYuaA0KPj4+IEBAIC02Myw4ICs2MywxMyBAQCBMSUJCUEZfQVBJIGxp
+YmJwZl9wcmludF9mbl90IGxpYmJwZl9zZXRfcHJpbnQobGliYnBmX3ByaW50X2ZuX3QgZm4pOw0K
+Pj4+IHN0cnVjdCBicGZfb2JqZWN0Ow0KPj4+IA0KPj4+IHN0cnVjdCBicGZfb2JqZWN0X29wZW5f
+YXR0ciB7DQo+Pj4gLSAgICAgY29uc3QgY2hhciAqZmlsZTsNCj4+PiArICAgICB1bmlvbiB7DQo+
+Pj4gKyAgICAgICAgICAgICBjb25zdCBjaGFyICpmaWxlOw0KPj4+ICsgICAgICAgICAgICAgY29u
+c3QgY2hhciAqb2JqX25hbWU7DQo+Pj4gKyAgICAgfTsNCj4+PiAgICAgIGVudW0gYnBmX3Byb2df
+dHlwZSBwcm9nX3R5cGU7DQo+Pj4gKyAgICAgdm9pZCAqb2JqX2J1ZjsNCj4+PiArICAgICBzaXpl
+X3Qgb2JqX2J1Zl9zejsNCj4+PiB9Ow0KPj4gDQo+PiBJIHRoaW5rIHRoaXMgd291bGQgYnJlYWsg
+ZHluYW1pY2FsbHkgbGlua2VkIGxpYmJwZi4gTm8/DQo+IA0KPiBBaCwgeWVzLCBzdXJlLiBXaGF0
+IGlzIHRoZSByaWdodCB3YXkgdG8gbWFrZSBjaGFuZ2VzIHdoaWNoIGJyZWFrIEFCSSBpbiBsaWJi
+cGY/DQoNCkkgZG9uJ3QgaGF2ZSBhIGdvb2QgaWRlYSBoZXJlIG9uIHRoZSB0b3Agb2YgbXkgaGVh
+ZC4NCg0KTWF5YmUgd2UgbmVlZCBhIG5ldyBzdHJ1Y3QgYW5kL29yIGZ1bmN0aW9uIGZvciB0aGlz
+LiANCiANCj4gDQo+IEJUVywgZG9lcyB0aGUgY29tbWl0IGRkYzdjMzA0MjYxNCAoImxpYmJwZjog
+aW1wbGVtZW50IEJQRiBDTy1SRSBvZmZzZXQNCj4gcmVsb2NhdGlvbiBhbGdvcml0aG0iKSB3aGlj
+aCBhZGRzIGEgbmV3IGZpZWxkIHRvIHRoZSBzdHJ1Y3QNCj4gYnBmX29iamVjdF9sb2FkX2F0dHIg
+YWxzbyBicmVhayBBQkk/DQoNCkkgdGhpbmsgdGhpcyBjaGFuZ2Ugd2FzIGluIHRoZSBzYW1lIHJl
+bGVhc2UsIHNvIGl0IGlzIE9LLiANCg0KVGhhbmtzLA0KU29uZw==
