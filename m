@@ -2,87 +2,92 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFD5C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62670C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4EA23426
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352F923426
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:46:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B3OihVax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfH3Opm (ORCPT
+        id S1728143AbfH3Oqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:45:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:33318 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 10:46:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47476 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfH3Opm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:45:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 307CB344;
-        Fri, 30 Aug 2019 07:45:41 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 657F23F703;
-        Fri, 30 Aug 2019 07:45:38 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 15:45:36 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>, eric@anholt.net,
-        linux-riscv@lists.infradead.org, frowand.list@gmail.com,
-        m.szyprowski@samsung.com, linux-arch@vger.kernel.org,
-        f.fainelli@gmail.com, will@kernel.org, devicetree@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com,
-        robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, phill@raspberryi.org,
-        mbrugger@suse.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        wahrenst@gmx.net, akpm@linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
-Message-ID: <20190830144536.GJ36992@arrakis.emea.arm.com>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
- <20190820145821.27214-2-nsaenzjulienne@suse.de>
- <20190826070939.GD11331@lst.de>
- <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+        id S1727135AbfH3Oqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:46:35 -0400
+Received: from zn.tnic (p200300EC2F0AAA0001D832AAA778AB1D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:aa00:1d8:32aa:a778:ab1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A979C1EC0A9C;
+        Fri, 30 Aug 2019 16:46:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567176393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=rdtR+kT6Ig9LDu74bo7+i5kSsEJ/cLZD4Yd90y7ZtoE=;
+        b=B3OihVaxZ0kJ3pKQmocPmgmYPvh4ahKHToUvwHCmUdNOnzxeNBSWU3J0kySlCF2DfGmQIp
+        Y9b2kw9YHE/rnT5jXtmwCKt91X25iyUdNs59AaiPNmSDPq0lw77WqolP6Z5uJycuzCjMbz
+        TnRwV/nAJktuxx2sgRvGkOShvNwNZr4=
+Date:   Fri, 30 Aug 2019 16:46:28 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Philip Li <philip.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
+ backdoor call with support for new instructions
+Message-ID: <20190830144628.GC30413@zn.tnic>
+References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2>
+ <201908292325.aLXyyzEx%lkp@intel.com>
+ <20190829163353.GC2132@zn.tnic>
+ <20190830010349.GD857@intel.com>
+ <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
+ <20190830062053.GA2598@intel.com>
+ <20190830080650.GA30413@zn.tnic>
+ <20190830143645.GA4784@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+In-Reply-To: <20190830143645.GA4784@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 03:46:52PM +0200, Nicolas Saenz Julienne wrote:
-> On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
-> > On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
-> > > Some architectures have platform specific DMA addressing limitations.
-> > > This will allow for hardware description code to provide the constraints
-> > > in a generic manner, so as for arch code to properly setup it's memory
-> > > zones and DMA mask.
-> > 
-> > I know this just spreads the arm code, but I still kinda hate it.
-> 
-> Rob's main concern was finding a way to pass the constraint from HW definition
-> to arch without widening fdt's architecture specific function surface. I'd say
-> it's fair to argue that having a generic mechanism makes sense as it'll now
-> traverse multiple archs and subsystems.
-> 
-> I get adding globals like this is not very appealing, yet I went with it as it
-> was the easier to integrate with arm's code. Any alternative suggestions?
+On Fri, Aug 30, 2019 at 10:36:45PM +0800, Philip Li wrote:
+> yes, we monitor the repo pub/scm/linux/kernel/git/tip/tip.git, and will
+> send build status of head
 
-In some discussion with Robin, since it's just RPi4 that we are aware of
-having such requirement on arm64, he suggested that we have a permanent
-ZONE_DMA on arm64 with a default size of 1GB. It should cover all arm64
-SoCs we know of without breaking the single Image binary. The arch/arm
-can use its current mach-* support.
+... and what you call "head" is the "master" branch on that repo, right?
+Just making sure you got that right.
 
-I may like this more than the proposed early_init_dt_get_dma_zone_size()
-here which checks for specific SoCs (my preferred way was to build the
-mask from all buses described in DT but I hadn't realised the
-complications).
+> (like BUILD SUCCESS or REGRESSION), also provide bisect report of
+> unique error for first bad commit.
+
+Perfect!
+
+Thx.
 
 -- 
-Catalin
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
