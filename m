@@ -2,110 +2,83 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B021BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DDDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBD021726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B6423427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfH3Jb6 convert rfc822-to-8bit (ORCPT
+        id S1728031AbfH3Jc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:31:58 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45200 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfH3Jb5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:31:57 -0400
-Received: by mail-ed1-f65.google.com with SMTP id x19so7219923eda.12;
-        Fri, 30 Aug 2019 02:31:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=quxTjiQEbSMBklWmXgExSrqlngqxZMn93Jw/def3jQU=;
-        b=UxsSt0QTCQXi/nV293XOePpQzTd5LxZFmORbu/IOWpJk8Geokb+nc3ncLM9ABbJ49N
-         u+NNX2PRs3NrS6c8IPq/SKBgrb3uoQWtjo0Zq61Fa51NuYdj9mEYNAEH3fJTAHt8+Wlk
-         k0QFoepWSUt8G2TdFTfY/AUMz63o5zMOhfMwSouO+ksQX+ULgOH+vb168uMbVFkH0DtI
-         BIAjyG/3RDXqP0067UNww8cD6bWUa23uVokzAB1FSfqlXG+NfdV3tbeAyonUzsckmZ9N
-         gU1sxknTuIKqysEwrML/Lvdd2Rn7bfsNiL8HRsqcNAhtKVrd2n+Q6HaEAPCCVTP/7aBO
-         kxFg==
-X-Gm-Message-State: APjAAAXDqcmbP4aNZMWRaINZaBg1FERI/hY0350sfX1ygUCwjIBhJuDy
-        1qDhzwPvlulXSJgHHtpDTK26S81bg+c=
-X-Google-Smtp-Source: APXvYqzo4PgixqO+XU81t2yHMAS8MYLNSqk3HJx/4rQbunlItxDjnC8Pj9U5C1OIMf2y0664tC0UOw==
-X-Received: by 2002:aa7:db12:: with SMTP id t18mr14440426eds.266.1567157514810;
-        Fri, 30 Aug 2019 02:31:54 -0700 (PDT)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id k15sm717087ejk.46.2019.08.30.02.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2019 02:31:54 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id g7so6281506wrx.2;
-        Fri, 30 Aug 2019 02:31:54 -0700 (PDT)
-X-Received: by 2002:a5d:6785:: with SMTP id v5mr6428772wru.9.1567157508357;
- Fri, 30 Aug 2019 02:31:48 -0700 (PDT)
+        Fri, 30 Aug 2019 05:32:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:57128 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727236AbfH3Jc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:32:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ADE6344;
+        Fri, 30 Aug 2019 02:32:28 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0C913F718;
+        Fri, 30 Aug 2019 02:32:26 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 10:32:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Message-ID: <20190830093224.GB31297@bogus>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+ <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+ <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+ <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
+ <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190821210056.11995-1-alejandro.gonzalez.correo@gmail.com>
-In-Reply-To: <20190821210056.11995-1-alejandro.gonzalez.correo@gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 30 Aug 2019 17:31:35 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64X4jbXcg1rnmmb5m=D+WUr-=Bg=6GyJckLf19jMP7PBw@mail.gmail.com>
-Message-ID: <CAGb2v64X4jbXcg1rnmmb5m=D+WUr-=Bg=6GyJckLf19jMP7PBw@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/1] rtc: sun6i: Allow using as wakeup source from suspend
-To:     =?UTF-8?Q?Alejandro_Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-rtc@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:01 AM Alejandro González
-<alejandro.gonzalez.correo@gmail.com> wrote:
->
-> This patch allows userspace to set up wakeup alarms on any RTC handled by the
-> sun6i driver, and adds the necessary PM operations to allow resuming from
-> suspend when the configured wakeup alarm fires a IRQ. Of course, that the
-> device actually resumes depends on the suspend state and how a particular
-> hardware reacts to it, but that is out of scope for this patch.
->
-> I've tested these changes on a Pine H64 model B, which contains a
-> Allwinner H6 SoC, with the help of CONFIG_PM_TEST_SUSPEND kernel option.
-> These are the interesting outputs from the kernel and commands which
-> show that it works. As every RTC handled by this driver is largely the
-> same, I think that it shouldn't introduce any regression on other SoCs,
-> but I may be wrong.
->
-> [    1.092705] PM: test RTC wakeup from 'freeze' suspend
-> [    1.098230] PM: suspend entry (s2idle)
-> [    1.212907] PM: suspend devices took 0.080 seconds
-> (The SoC freezes for some seconds)
-> [    3.197604] PM: resume devices took 0.104 seconds
-> [    3.215937] PM: suspend exit
->
-> [    1.092812] PM: test RTC wakeup from 'mem' suspend
-> [    1.098089] PM: suspend entry (deep)
-> [    1.102033] PM: suspend exit
-> [    1.105205] PM: suspend test failed, error -22
->
-> In any case, the RTC alarm interrupt gets fired as exptected:
->
-> $ echo +5 > /sys/class/rtc/rtc0/wakealarm && sleep 5 && grep rtc /proc/interrupts
->  29:          1          0          0          0     GICv2 133 Level     7000000.rtc
->
-> Signed-off-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
+On Fri, Aug 30, 2019 at 02:52:40AM -0500, Jassi Brar wrote:
+> On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:
 
-This seems like standard PM stuff. Nothing sunxi-specific.
-FWIW, for sunxi,
+[...]
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+> >
+> > If I get your point correctly,
+> > On UP, both could not be active. On SMP, tx/rx could be both active, anyway
+> > this depends on secure firmware and Linux firmware design.
+> >
+> > Do you have any suggestions about arm,func-ids here?
+> >
+> I was thinking if this is just an instruction, why can't each channel
+> be represented as a controller, i.e, have exactly one func-id per
+> controller node. Define as many controllers as you need channels ?
+>
+
+I might have missed to follow this, but what's the advantage of doing so ?
+Which can't single controller instance deal with all the channels ?
+
+--
+Regards,
+Sudeep
