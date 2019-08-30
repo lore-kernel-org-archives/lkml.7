@@ -2,161 +2,183 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A96C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A8FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D6023407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4BC23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ff/syI5y"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="AADPPeKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfH3PlI (ORCPT
+        id S1728408AbfH3PlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:41:08 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33585 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfH3PlI (ORCPT
+        Fri, 30 Aug 2019 11:41:22 -0400
+Received: from UHIL19PA39.eemsg.mail.mil ([214.24.21.198]:23225 "EHLO
+        UHIL19PA39.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbfH3PlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:41:08 -0400
-Received: by mail-qt1-f195.google.com with SMTP id r5so2796371qtd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:41:07 -0700 (PDT)
+        Fri, 30 Aug 2019 11:41:21 -0400
+X-EEMSG-check-017: 19910871|UHIL19PA39_ESA_OUT05.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.64,447,1559520000"; 
+   d="scan'208";a="19910871"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by UHIL19PA39.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 30 Aug 2019 15:41:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=djD1pQ1U7LhQ/148ZQfZebehfdvHuL8mZ2td74QG7gA=;
-        b=Ff/syI5yLdu0ja4Kdyq9aVwjjyIDV2gJiItT4pZn2Zw9XrWofLZe/+bmXAvq0gc4Vc
-         f3EJcvfXbnJ4yVU7HYTqFkhNhRx/6A8/4PA3tN1pM7WB0T7diXqFsyWWffTh6Hyeuhdp
-         rNiPJKpku7NB6WN1ViS3WrjHvXz/EaRsCmOq2mvhs/7Z+gRwMGFydPcSELrfmY99e5GU
-         1YbQr89iBNUmJVXd+Iztt/v6wQQsqtUuY6KqCiah5jACppnM1bC9Y04NeoJbSUh7ZxCt
-         WajM3rZQfE1B6OKJjXAL83Oi+l6852bNBY5LqJ+0RdAlFHeCx1Bw57I/fY+1++dt6/Dc
-         jqbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=djD1pQ1U7LhQ/148ZQfZebehfdvHuL8mZ2td74QG7gA=;
-        b=uXXTzc8Tq+7jxSr6LC6LiCnsVaVE+i0qK/GqOeZwp34uvfU445Fnw1lJw5d8squWuY
-         viQJC+p6uMnryXxhsZfvxG20tueGJEMoX717G064sirYjoJ5EDkSuQmu61wSWzjwvUr6
-         e/fwyn+/6yzqPNoFXZVC9mpZwdl6fRqYKsjrFSggLgAra7QCVgIg/c0G5ZDh8suL9p10
-         8Tn/renxMF901PhHPbiB7/zPV4gczssE2dXFSM1z7Hl3GOA4SiQHH8dVF7XiU9ETCsZl
-         RrJX3RIv+vzeioapMD7MW1PymCma+V2B89+YvoawP/Y4VZNvxl3DdXsFkygF9Uq0S0F3
-         Q9aw==
-X-Gm-Message-State: APjAAAUyxVqbRoRnI5ghJmx3yCHGdQmPwmaD4PkzWQaJpQ1dvCpn8z+b
-        6gjbPRbOAxjzycQ2K1j6Y58=
-X-Google-Smtp-Source: APXvYqw/7somUTQTd2TTBc+L0G94eZDim5rIR3AA3axbBqLZAD07MbIMr2Cvs7OFOJdtTHKEkNIrzw==
-X-Received: by 2002:ac8:31cc:: with SMTP id i12mr16178711qte.170.1567179666815;
-        Fri, 30 Aug 2019 08:41:06 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id k49sm3064292qtc.9.2019.08.30.08.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 08:41:06 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3F24041146; Fri, 30 Aug 2019 12:41:03 -0300 (-03)
-Date:   Fri, 30 Aug 2019 12:41:03 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 0/4] objtool,perf: Use shared x86 insn decoder
-Message-ID: <20190830154103.GA8994@kernel.org>
-References: <cover.1567118001.git.jpoimboe@redhat.com>
- <20190831002004.d570fcb7b611860e025dbdb2@kernel.org>
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1567179679; x=1598715679;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=0BD40FUiWz6a0ni0oCrJsaBl2kWWx61EIcww3i0zvGI=;
+  b=AADPPeKUHZuYNXAmtYlcXHKG/4ZfSEuDvmQ1AGq5TSIzJnbTJBmihiRZ
+   66f0QYUPf/SodyDZkzXIgfSGXz+yuUeOfgkEBY9KeJPlDts9GFj9y8fMg
+   3sUrOghGIVKgAPR9r7Y8+8JOrsyoEeWdHZth4Whx/AJdEO5jnIOcmXW0E
+   033EUd316xDvNm0ZO6lFtVuC6fcRusM2LHNzmEubvJz0wREpWnZJCt0yW
+   +o05dx8B9xe9Veav/pD1R5+POEQgJgF/r35+Ih1ej9z6Rk1QJDEkHK4Qu
+   EZsPYtZWl2WSd6vE/GnczJp9rIIbtOe2Ubs7+klU4qIhSp2sXEBK/8buE
+   g==;
+X-IronPort-AV: E=Sophos;i="5.64,447,1559520000"; 
+   d="scan'208";a="32186112"
+IronPort-PHdr: =?us-ascii?q?9a23=3AQW2cuBEgLS9uDm6gg0Ru8J1GYnF86YWxBRYc79?=
+ =?us-ascii?q?8ds5kLTJ76ocq4bnLW6fgltlLVR4KTs6sC17OM9fm+BSdQsN6oizMrSNR0TR?=
+ =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
+ =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vMhm6txjdu8gZjIdtKas8zg?=
+ =?us-ascii?q?bCr2dVdehR2W5mP0+YkQzm5se38p5j8iBQtOwk+sVdT6j0fLk2QKJBAjg+PG?=
+ =?us-ascii?q?87+MPktR/YTQuS/XQcSXkZkgBJAwfe8h73WIr6vzbguep83CmaOtD2TawxVD?=
+ =?us-ascii?q?+/4apnVAPkhSEaPDMi7mrZltJ/g75aoBK5phxw3YjUYJ2ONPFjeq/RZM4WSX?=
+ =?us-ascii?q?ZdUspUUSFODJm8b48SBOQfO+hWoZT2q18XoRawAQSgAeXiwSJKiHDrx603y/?=
+ =?us-ascii?q?kvHx/I3AIgHNwAvnrbo9r3O6gOXu6417XIwDfZYv9KxTvw5orFfxY8qv+MR7?=
+ =?us-ascii?q?Jwds/RxFEyGQPZkFqQsYzlMC2T1u8Qrmab6vBvVeari2E5qwB6vz+ixtwxhY?=
+ =?us-ascii?q?nSnY8V1lDF+jl5wIYyP9G4TlV7bsS+HJtfsCGaKZJ7T8U/SG9roCY30qAKtJ?=
+ =?us-ascii?q?G0cSQQyJkr2gTTZ+KIfoSW+B7vSeCcKipiin1/YrKwnROy/FClyu37S8a7zk?=
+ =?us-ascii?q?5HrjFAktnQrnAN0AHT6tSfRvt94Eih3TGP2hjP6u5eO0A0lLfbK4U7zr4slp?=
+ =?us-ascii?q?scrUTDHijslEXwkKCWbVkr9vKt6+TmZrXqvp6cN4lqhQHiKqkih8OyDOsiPg?=
+ =?us-ascii?q?UOQmSX4/qw2bL98UHjXblGlvg2nbPYsJDeK8QbvKm5AwpN34Y49hm/FCyr0M?=
+ =?us-ascii?q?gYnHYbLFJFfwiLj47yO17UOvz4AvC/g0q0nDdx2//GJqHhAonKLnXbjbjhfb?=
+ =?us-ascii?q?F96kBCxwo3ydBf/IlZCqsfL/3uWk/+rsDYAgUlPAyzxubtEM992Z8GWWKTHq?=
+ =?us-ascii?q?+ZN7vfsUGJ5uI1JOmBf44Utyj7K/gk+f7il3s5mV4bfam00pobcne4Hu5pI0?=
+ =?us-ascii?q?mDfHrsgc8LEX0WsQomUOzqlFqCXCZPaHmoRKIz+DE6BZm9DYjfRoCimqGB3C?=
+ =?us-ascii?q?m/HpJIfGBKE0yDHm3ye4qYXPcMbTqYItV9nTwcSbihV4gh2AmhtA/g1bVnIe?=
+ =?us-ascii?q?nU+i0DuJLn1dh14fDTlB489TxzEsSd1XyCQHtonmMJQD822rpzoUtnyleMya?=
+ =?us-ascii?q?J4meBXFcRP5/NVVQc3LZjcz+1mBND1XgLOZMyJREy7TdWnHT4xTs4xzMEKY0?=
+ =?us-ascii?q?tmGtijgBHD3yy3DLMPi7OLA5k0+LrG33ftP8Z912rG1K45glk8WMRPK3Ophq?=
+ =?us-ascii?q?hk+gjPB47GjUCZmLykdKgG2i7C6nuDx3KUvE5ESA5wTbnFXXcHa0TKrdT5/E?=
+ =?us-ascii?q?LCT6SyCbQmKARBz9WPJbBQatLzkFVGQunsOM7Eb2KwnGe6HQyIya+UbIr2Z2?=
+ =?us-ascii?q?Ud2z3QCEsanAET53aGNA4+Bii6o2/FEjxuGkzgY1n2/el9tny7VEk0wB+Ob0?=
+ =?us-ascii?q?F70Lq14BEVj+SGS/wPxrIEpDshqzJsEVa53tLWDceApgV4cKVBetMy+0xK1X?=
+ =?us-ascii?q?zWtwNjJJysNaNiiUAEcwRxoUzu0w97CoJakcgltHkq1hZ9KbqE0FNdcDOVxZ?=
+ =?us-ascii?q?TwOrzRKmnv8xGjcrXW1U/C39aL4KcP6eg4qlX6sAGsEUot7mhn091L3HaH+J?=
+ =?us-ascii?q?XKAxQdUYjrXkY06Rd6vbfabTc554/O0n1sK6a0uCfY2901HOsl1gqgf9BHPa?=
+ =?us-ascii?q?OAFQ/yFdAaBse3JOwkgFimcwwLPP5M+64wJM6mafSG17CxPOp6nzKpk35H4I?=
+ =?us-ascii?q?Zj3UKI7SZ8TfTI35kdyfGCwgSHTyv8jEumss3vnYBEZDcSHnewyCT9HoFRfq?=
+ =?us-ascii?q?xycJ0VCWehPcK33M9yh53zVH5C8l6sGVcG1NWueRqIYFz3xRdQ2lgPoXy7hS?=
+ =?us-ascii?q?u4yCR5kzUorqqZwSzPzP3uewEDOm5MWGZijkzhIZa7j98ERkikdQspmwW/5U?=
+ =?us-ascii?q?b82adboL5zL27JQUdHZyL2NX1tUrOstrqeZM5C8JcosSRRUOShblGWU739rA?=
+ =?us-ascii?q?UA0yPlAWRewCs2dy+luprnhRx2kmGdI2hprHrfZ85wwQ3T5NvGRf5ejXI6Q3?=
+ =?us-ascii?q?xUgCfWChCcOMak+dGP38PPsuehWmalTbVJfCXrxJ/Gvyy+sz5EGxq6ysuvl8?=
+ =?us-ascii?q?XnHA5y6iry091nRG2ctxrnSpX63KS9d+R8dw9nA0GquJkyIZ13joZl3MJY4n?=
+ =?us-ascii?q?MdnJjAuCNcwGo=3D?=
+X-IPAS-Result: =?us-ascii?q?A2A6CgD3Qmld/wHyM5BmHgEGBwaBZ4FuKoFAMiqEIY8LT?=
+ =?us-ascii?q?gEBAQEBBoE2iW+RJgkBAQEBAQEBAQE0AQIBAYQ/AoJgIzgTAgsBAQEEAQEBA?=
+ =?us-ascii?q?QEGAwEBbIU6gjopAYJmAQEBAQIBIwQRQRALDgYEAgImAgJXBg0GAgEBgl8/g?=
+ =?us-ascii?q?XcFD60lfzOFSoM2gUmBDCiLeBh4gQeBESeCaz6HT4JYBJVCiA2OQIIpgieJU?=
+ =?us-ascii?q?YhZBhuYYi2oGCGBWCsIAhgIIQ+DJ4JOF44+IwMwgQYBAY4rAQE?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 30 Aug 2019 15:41:18 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x7UFfGwf014909;
+        Fri, 30 Aug 2019 11:41:16 -0400
+Subject: Re: [PATCH 10/11] selinux: Implement the watch_key security hook [ver
+ #7]
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov>
+ <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+ <156717352079.2204.16378075382991665807.stgit@warthog.procyon.org.uk>
+ <13308.1567176090@warthog.procyon.org.uk>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <87de7cc1-435e-1b56-afec-bc041c193317@tycho.nsa.gov>
+Date:   Fri, 30 Aug 2019 11:41:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190831002004.d570fcb7b611860e025dbdb2@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <13308.1567176090@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 31, 2019 at 12:20:04AM +0900, Masami Hiramatsu escreveu:
-> On Thu, 29 Aug 2019 17:41:17 -0500
-> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> 
-> > It's kind of silly that we have *three* identical copies of the x86 insn
-> > decoder in the kernel tree.  Make it approximately 50% less silly by
-> > reducing that number to two.
-> > 
-> 
-> Sounds good to me ;)
-> 
-> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+On 8/30/19 10:41 AM, David Howells wrote:
+> How about the attached instead, then?
 
-Good, two already, Adrian?
+Works for me.
 
-- Arnaldo
- 
-> Thanks,
 > 
-> > Josh Poimboeuf (4):
-> >   objtool: Move x86 insn decoder to a common location
-> >   perf: Update .gitignore file
-> >   perf intel-pt: Remove inat.c from build dependency list
-> >   perf intel-pt: Use shared x86 insn decoder
-> > 
-> >  .../{objtool => }/arch/x86/include/asm/inat.h |    0
-> >  .../arch/x86/include/asm/inat_types.h         |    0
-> >  .../{objtool => }/arch/x86/include/asm/insn.h |    0
-> >  .../arch/x86/include/asm/orc_types.h          |    0
-> >  tools/{objtool => }/arch/x86/lib/inat.c       |    0
-> >  tools/{objtool => }/arch/x86/lib/insn.c       |    0
-> >  .../arch/x86/lib/x86-opcode-map.txt           |    0
-> >  .../arch/x86/tools/gen-insn-attr-x86.awk      |    0
-> >  tools/objtool/Makefile                        |    4 +-
-> >  tools/objtool/arch/x86/Build                  |    4 +-
-> >  tools/objtool/arch/x86/decode.c               |    4 +-
-> >  tools/objtool/sync-check.sh                   |   12 +-
-> >  tools/perf/.gitignore                         |    3 +
-> >  tools/perf/arch/x86/tests/insn-x86.c          |    2 +-
-> >  tools/perf/arch/x86/util/archinsn.c           |    2 +-
-> >  tools/perf/check-headers.sh                   |   11 +-
-> >  tools/perf/util/intel-pt-decoder/Build        |   22 +-
-> >  .../intel-pt-decoder/gen-insn-attr-x86.awk    |  392 ------
-> >  tools/perf/util/intel-pt-decoder/inat.c       |   82 --
-> >  tools/perf/util/intel-pt-decoder/inat.h       |  230 ----
-> >  tools/perf/util/intel-pt-decoder/inat_types.h |   15 -
-> >  tools/perf/util/intel-pt-decoder/insn.c       |  593 ---------
-> >  tools/perf/util/intel-pt-decoder/insn.h       |  216 ----
-> >  .../intel-pt-decoder/intel-pt-insn-decoder.c  |   10 +-
-> >  .../util/intel-pt-decoder/x86-opcode-map.txt  | 1072 -----------------
-> >  25 files changed, 34 insertions(+), 2640 deletions(-)
-> >  rename tools/{objtool => }/arch/x86/include/asm/inat.h (100%)
-> >  rename tools/{objtool => }/arch/x86/include/asm/inat_types.h (100%)
-> >  rename tools/{objtool => }/arch/x86/include/asm/insn.h (100%)
-> >  rename tools/{objtool => }/arch/x86/include/asm/orc_types.h (100%)
-> >  rename tools/{objtool => }/arch/x86/lib/inat.c (100%)
-> >  rename tools/{objtool => }/arch/x86/lib/insn.c (100%)
-> >  rename tools/{objtool => }/arch/x86/lib/x86-opcode-map.txt (100%)
-> >  rename tools/{objtool => }/arch/x86/tools/gen-insn-attr-x86.awk (100%)
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.c
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.h
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/inat_types.h
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.c
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.h
-> >  delete mode 100644 tools/perf/util/intel-pt-decoder/x86-opcode-map.txt
-> > 
-> > -- 
-> > 2.20.1
-> > 
+> David
+> ---
+> commit 00444a695b35c602230ac2cabb4f1d7e94e3966d
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Thu Aug 29 17:01:34 2019 +0100
 > 
-> 
-> -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
+>      selinux: Implement the watch_key security hook
+>      
+>      Implement the watch_key security hook to make sure that a key grants the
+>      caller View permission in order to set a watch on a key.
+>      
+>      For the moment, the watch_devices security hook is left unimplemented as
+>      it's not obvious what the object should be since the queue is global and
+>      didn't previously exist.
+>      
+>      Signed-off-by: David Howells <dhowells@redhat.com>
 
--- 
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
 
-- Arnaldo
+> 
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 74dd46de01b6..88df06969bed 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -6533,6 +6533,17 @@ static int selinux_key_getsecurity(struct key *key, char **_buffer)
+>   	*_buffer = context;
+>   	return rc;
+>   }
+> +
+> +#ifdef CONFIG_KEY_NOTIFICATIONS
+> +static int selinux_watch_key(struct key *key)
+> +{
+> +	struct key_security_struct *ksec = key->security;
+> +	u32 sid = current_sid();
+> +
+> +	return avc_has_perm(&selinux_state,
+> +			    sid, ksec->sid, SECCLASS_KEY, KEY_NEED_VIEW, NULL);
+> +}
+> +#endif
+>   #endif
+>   
+>   #ifdef CONFIG_SECURITY_INFINIBAND
+> @@ -6965,6 +6976,9 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+>   	LSM_HOOK_INIT(key_free, selinux_key_free),
+>   	LSM_HOOK_INIT(key_permission, selinux_key_permission),
+>   	LSM_HOOK_INIT(key_getsecurity, selinux_key_getsecurity),
+> +#ifdef CONFIG_KEY_NOTIFICATIONS
+> +	LSM_HOOK_INIT(watch_key, selinux_watch_key),
+> +#endif
+>   #endif
+>   
+>   #ifdef CONFIG_AUDIT
+> 
+
