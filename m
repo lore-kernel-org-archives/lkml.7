@@ -2,106 +2,111 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0E1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A6FC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D2C21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6052342A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfH3H0l (ORCPT
+        id S1728191AbfH3H2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:26:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41114 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfH3H0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:26:40 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6335E7BDA0;
-        Fri, 30 Aug 2019 07:26:40 +0000 (UTC)
-Received: from ceranb (ovpn-204-112.brq.redhat.com [10.40.204.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 366435D9CA;
-        Fri, 30 Aug 2019 07:26:37 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 09:26:37 +0200
-From:   Ivan Vecera <ivecera@redhat.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        davem@davemloft.net, allan.nielsen@microchip.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to
- dev->promiscuity.
-Message-ID: <20190830092637.7f83d162@ceranb>
-In-Reply-To: <20190830061327.GM2312@nanopsycho>
-References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
-        <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
-        <20190829095100.GH2312@nanopsycho>
-        <20190829132611.GC6998@lunn.ch>
-        <20190829134901.GJ2312@nanopsycho>
-        <20190829143732.GB17864@lunn.ch>
-        <20190830061327.GM2312@nanopsycho>
+        Fri, 30 Aug 2019 03:28:21 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:54303 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726731AbfH3H2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:28:20 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 3bKLiM2X6zaKO3bKOiQPhh; Fri, 30 Aug 2019 09:28:18 +0200
+Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
+        paul.kocialkowski@bootlin.com, mripard@kernel.org
+Cc:     pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        acourbot@chromium.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+References: <20190822194500.2071-1-jernej.skrabec@siol.net>
+ <20190822194500.2071-6-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <ee46d461-1be8-e803-9792-9fb9481acf16@xs4all.nl>
+Date:   Fri, 30 Aug 2019 09:28:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190822194500.2071-6-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 30 Aug 2019 07:26:40 +0000 (UTC)
+X-CMAE-Envelope: MS4wfAklJxN99U94VgVdrg/wZWzFtkJLsUOAcDBPdvvu7N4xnAGlcRiHNmIHd9ozKfJqnwU1xSC8qX3gGJWdJaYewvrK/js+bIxfWV/1ACz1dt1R+iYcmlxK
+ foiXEWAMvXY+tghwfqmr/zsL8IqXb4dStPKOXA9jONcO2zWdfZZ9okaNghI7k6WaYzhtbthDMZYGbdq+IC0ZrxfOvZKdxH9fBEZr1Sg5h4SL+/Ci65S2vFhJ
+ Tcq9qaQuXd1VsmGnVXN3dmv9a+7pxklKRl6Wckh4vSciUxUBY8AwDDVZRc32kyi4EHpuBXY5LCYD6QoSF09hNlueaMfADSknFO/vYKnbfdmrxuG0Ja6F1k5V
+ bAWbtX8yMSt+k4HApzJI+bZA9wjWe6D3hOKufJffSe6OCY+vzua8DYxB267V39eAqDSc3NvGhkvuVExsCwyBI4IGgHrYVSJb3c2kCbn8W/JJG4/aLfj8M7/U
+ dD6VcrzZmerQdF7fXGFWmumdbOmEnMMYkkzJVdQGnvaIhDN1HWxQZ3pfOPFZ9W0Ze4+9UkBoZWdbsgQ6vVtHasF9EsqXSey4dZ6vs9gKAXaFWX99Cl6XtFfQ
+ a0cObES470eOMn8R6GyxokYst2TSMt8eCT0zkFoVlfoV1SzRj057QUhENYrjWT/IcO0ZfDQfaYV8F4F0L7ME+snr6bpviuUv6feHCsfZPdxyp4XRYwWcwk/b
+ vdOI2SH8+nyNXgEreuWmqIiQjoXA5hkU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 08:13:27 +0200
-Jiri Pirko <jiri@resnulli.us> wrote:
-
-> Thu, Aug 29, 2019 at 04:37:32PM CEST, andrew@lunn.ch wrote:
-> >> Wait, I believe there has been some misundestanding. Promisc mode
-> >> is NOT about getting packets to the cpu. It's about setting hw
-> >> filters in a way that no rx packet is dropped.
-> >> 
-> >> If you want to get packets from the hw forwarding dataplane to
-> >> cpu, you should not use promisc mode for that. That would be
-> >> incorrect.  
-> >
-> >Hi Jiri
-> >
-> >I'm not sure a wireshark/tcpdump/pcap user would agree with you. They
-> >want to see packets on an interface, so they use these tools. The
-> >fact that the interface is a switch interface should not matter. The
-> >switchdev model is that we try to hide away the interface happens to
-> >be on a switch, you can just use it as normal. So why should promisc
-> >mode not work as normal?  
+On 8/22/19 9:44 PM, Jernej Skrabec wrote:
+> When codec supports multiple slices in one frame, VPU has to know when
+> first slice of each frame is being processed, presumably to correctly
+> clear/set data in auxiliary buffers.
 > 
-> It does, disables the rx filter. Why do you think it means the same
-> thing as "trap all to cpu"? Hw datapath was never considered by
-> wireshark.
+> Add first_slice field to cedrus_run structure and set it according to
+> timestamps of capture and output buffers. If timestamps are different,
+> it's first slice and viceversa.
 > 
-> In fact, I have usecase where I need to see only slow-path traffic by
-> wireshark, not all packets going through hw. So apparently, there is a
-> need of another wireshark option and perhaps another flag
-> IFF_HW_TRAPPING?.
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
+>  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> index 2f017a651848..32cb38e541c6 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
+>  struct cedrus_run {
+>  	struct vb2_v4l2_buffer	*src;
+>  	struct vb2_v4l2_buffer	*dst;
+> +	bool first_slice;
+>  
+>  	union {
+>  		struct cedrus_h264_run	h264;
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> index 56ca4c9ad01c..d7b54accfe83 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
+>  
+>  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+>  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> +	run.first_slice =
+> +		run.src->vb2_buf.timestamp != run.dst->vb2_buf.timestamp;
 
-Agree with Jiri but understand both perspectives. We can treat
-IFF_PROMISC as:
+This is almost correct. To handle the corner case where no timestamp
+was ever copied to run.dst->vb2_buf you need this check:
 
-1) "I want to _SEE_ all Rx traffic on specified interface"
-that means for switchdev driver that it has to trap all traffic to CPU
-implicitly. And in this case we need another flag that will say "I
-don't want to see offloaded traffic".
+	run.first_slice = !run.dst->vb2_buf.copied_timestamp ||
+		run.src->vb2_buf.timestamp != run.dst->vb2_buf.timestamp;
 
-2) "I want to ensure that nothing is dropped on specified interface" so
-IFF_PROMISC is treated as filtering option only. To see offloaded
-traffic you need to setup TC rule with trap action or another flag like
-IFF_TRAPPING.
+Regards,
 
-IMO IFF_PROMISC should be considered to be a filtering option and
-should not imply trapping of offloaded traffic.
+	Hans
 
-Thanks,
-Ivan 
+>  
+>  	/* Apply request(s) controls if needed. */
+>  	src_req = run.src->vb2_buf.req_obj.req;
+> 
+
