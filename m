@@ -2,269 +2,156 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79303C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23961C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549342186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27022186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZaeWaQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfH3SuX (ORCPT
+        id S1728240AbfH3Svo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:50:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40444 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727945AbfH3SuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:50:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C9C9AE03;
-        Fri, 30 Aug 2019 18:50:18 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
+        Fri, 30 Aug 2019 14:51:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39263 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727940AbfH3Svo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:51:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a67so1899158pfa.6;
+        Fri, 30 Aug 2019 11:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jTcYXHmcwTFTI6VOUlzprfsmZi8Itb3+Lqlua1cNJBU=;
+        b=hZaeWaQ2zF4I+0ltVuTEewLKvOTRfYO/4NsXFwCk/7KbtwEsikopN0Xr26Jy0Swbea
+         C9gZj29rlNS4wARbVKPxVJzT9R/Qd+BYWAVkLWUpYDr2L3zCuMqwovtP2xLjj4Dp34rh
+         j+CP8dIbUK1k4bususK94GzC8uK5LvdxADeRiC3+iEwTQCnUNdGn3gaasH4yo62gbB1o
+         2vc7+UxZBSUvj6tSiSWk3/IcDaFeaZnu05Ahcn8YNKrQ9UFP3MBktssYHyqPzHiZzMU+
+         SFeEYRlCGIgvvEpPMlJ0aDlZUQljNLwD02fsm64sMeLb1M6/HmHkaAxDUy5G2WVThnXa
+         fW4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jTcYXHmcwTFTI6VOUlzprfsmZi8Itb3+Lqlua1cNJBU=;
+        b=KwJw3QldyopyFfgcnFHAtDjDrz2TnMPdIyyf2l1hJYNOeZQKiHGyjfo1o2DSEZzbWj
+         suhvEGeuRF0X/Iutc45Q/GlEnGfqNwsjsXapEs/lCVqngAoOu3JdUvBuj/niF8QdYxy9
+         cMA1WI2DEgK5saSwRacLszvNs50fHf3d5V/5s/MqI7VcsZv8wW9dt0+ZS5DO+ZP+VTIt
+         +kuqAX4vxkM6tqVQyOwLmGOUqM0WTxPaVGtN7ngFeleV3nKR5Tr4VVneAOI/KifhBCMx
+         EgcT5j7Q4A8km8srZglSHkXSV2l8u9fktxabCANmD+SoQQUQlrD6yXWoNGAEjFVvaFqX
+         jqFA==
+X-Gm-Message-State: APjAAAWR/6vhUupwiNQlroaAph7lZZ4PcDv6UhCrJEkW5f1Kzb0VGjBu
+        6PIhdHHeK/FEPOhjM2e0w52ZZdBfe5U=
+X-Google-Smtp-Source: APXvYqxrM+/qEHB4yobtpnbvlmYwQXcgSzgFiMFeu/JlojLlSbUWnx8Khm/rrHW85ikIrs287jnp5g==
+X-Received: by 2002:a62:cec4:: with SMTP id y187mr19633661pfg.84.1567191103050;
+        Fri, 30 Aug 2019 11:51:43 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id r6sm6450362pjb.22.2019.08.30.11.51.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 11:51:42 -0700 (PDT)
+Subject: Re: [PATCH] net: bcmgenet: use ethtool_op_get_ts_info()
+To:     "Ryan M. Collins" <rmc032@bucknell.edu>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] w1: add 1-wire master driver for IP block found in SGI ASICs
-Date:   Fri, 30 Aug 2019 20:50:06 +0200
-Message-Id: <20190830185008.3177-2-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190830185008.3177-1-tbogendoerfer@suse.de>
-References: <20190830185008.3177-1-tbogendoerfer@suse.de>
+References: <20190830184955.GA27521@pop-os.localdomain>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <a7003b3c-4035-5d4f-43e7-a8a76dcea0fb@gmail.com>
+Date:   Fri, 30 Aug 2019 11:51:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190830184955.GA27521@pop-os.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting with SGI Origin machines nearly every new SGI ASIC contains
-an 1-Wire master. They are used for attaching One-Wire prom devices,
-which contain information about part numbers, revision numbers,
-serial number etc. and MAC addresses for ethernet interfaces.
-This patch adds a master driver to support this IP block.
-It also adds an extra field dev_id to struct w1_bus_master, which
-could be in used in slave drivers for creating unique device names.
+On 8/30/19 11:49 AM, Ryan M. Collins wrote:
+> This change enables the use of SW timestamping on the Raspberry Pi 4.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/w1/masters/Kconfig           |   9 +++
- drivers/w1/masters/Makefile          |   1 +
- drivers/w1/masters/sgi_w1.c          | 130 +++++++++++++++++++++++++++++++++++
- include/linux/platform_data/sgi-w1.h |  15 ++++
- include/linux/w1.h                   |   5 ++
- 5 files changed, 160 insertions(+)
- create mode 100644 drivers/w1/masters/sgi_w1.c
- create mode 100644 include/linux/platform_data/sgi-w1.h
+Finally the first bcmgenet patch that was tested on the Pi 4!
 
-diff --git a/drivers/w1/masters/Kconfig b/drivers/w1/masters/Kconfig
-index 7ae260577901..24b9a8e05f64 100644
---- a/drivers/w1/masters/Kconfig
-+++ b/drivers/w1/masters/Kconfig
-@@ -65,5 +65,14 @@ config HDQ_MASTER_OMAP
- 	  Say Y here if you want support for the 1-wire or HDQ Interface
- 	  on an OMAP processor.
- 
-+config W1_MASTER_SGI
-+	tristate "SGI ASIC driver"
-+	help
-+	  Say Y here if you want support for your 1-wire devices using
-+	  SGI ASIC 1-Wire interface
-+
-+	  This support is also available as a module.  If so, the module
-+	  will be called sgi_w1.
-+
- endmenu
- 
-diff --git a/drivers/w1/masters/Makefile b/drivers/w1/masters/Makefile
-index 18954cae4256..dae629b7ab49 100644
---- a/drivers/w1/masters/Makefile
-+++ b/drivers/w1/masters/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_W1_MASTER_MXC)		+= mxc_w1.o
- obj-$(CONFIG_W1_MASTER_DS1WM)		+= ds1wm.o
- obj-$(CONFIG_W1_MASTER_GPIO)		+= w1-gpio.o
- obj-$(CONFIG_HDQ_MASTER_OMAP)		+= omap_hdq.o
-+obj-$(CONFIG_W1_MASTER_SGI)		+= sgi_w1.o
-diff --git a/drivers/w1/masters/sgi_w1.c b/drivers/w1/masters/sgi_w1.c
-new file mode 100644
-index 000000000000..1b2d96b945be
---- /dev/null
-+++ b/drivers/w1/masters/sgi_w1.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * sgi_w1.c - w1 master driver for one wire support in SGI ASICs
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/jiffies.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/platform_data/sgi-w1.h>
-+
-+#include <linux/w1.h>
-+
-+#define MCR_RD_DATA	BIT(0)
-+#define MCR_DONE	BIT(1)
-+
-+#define MCR_PACK(pulse, sample) (((pulse) << 10) | ((sample) << 2))
-+
-+struct sgi_w1_device {
-+	u32 __iomem *mcr;
-+	struct w1_bus_master bus_master;
-+	char dev_id[64];
-+};
-+
-+static u8 sgi_w1_wait(u32 __iomem *mcr)
-+{
-+	u32 mcr_val;
-+
-+	do {
-+		mcr_val = readl(mcr);
-+	} while (!(mcr_val & MCR_DONE));
-+
-+	return (mcr_val & MCR_RD_DATA) ? 1 : 0;
-+}
-+
-+/*
-+ * this is the low level routine to
-+ * reset the device on the One Wire interface
-+ * on the hardware
-+ */
-+static u8 sgi_w1_reset_bus(void *data)
-+{
-+	struct sgi_w1_device *dev = data;
-+	u8 ret;
-+
-+	writel(MCR_PACK(520, 65), dev->mcr);
-+	ret = sgi_w1_wait(dev->mcr);
-+	udelay(500); /* recovery time */
-+	return ret;
-+}
-+
-+/*
-+ * this is the low level routine to read/write a bit on the One Wire
-+ * interface on the hardware. It does write 0 if parameter bit is set
-+ * to 0, otherwise a write 1/read.
-+ */
-+static u8 sgi_w1_touch_bit(void *data, u8 bit)
-+{
-+	struct sgi_w1_device *dev = data;
-+	u8 ret;
-+
-+	if (bit)
-+		writel(MCR_PACK(6, 13), dev->mcr);
-+	else
-+		writel(MCR_PACK(80, 30), dev->mcr);
-+
-+	ret = sgi_w1_wait(dev->mcr);
-+	if (bit)
-+		udelay(100); /* recovery */
-+	return ret;
-+}
-+
-+static int sgi_w1_probe(struct platform_device *pdev)
-+{
-+	struct sgi_w1_device *sdev;
-+	struct sgi_w1_platform_data *pdata;
-+	struct resource *res;
-+
-+	sdev = devm_kzalloc(&pdev->dev, sizeof(struct sgi_w1_device),
-+			    GFP_KERNEL);
-+	if (!sdev)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sdev->mcr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(sdev->mcr))
-+		return PTR_ERR(sdev->mcr);
-+
-+	sdev->bus_master.data = sdev;
-+	sdev->bus_master.reset_bus = sgi_w1_reset_bus;
-+	sdev->bus_master.touch_bit = sgi_w1_touch_bit;
-+
-+	pdata = dev_get_platdata(&pdev->dev);
-+	if (pdata) {
-+		strlcpy(sdev->dev_id, pdata->dev_id, sizeof(sdev->dev_id));
-+		sdev->bus_master.dev_id = sdev->dev_id;
-+	}
-+
-+	platform_set_drvdata(pdev, sdev);
-+
-+	return w1_add_master_device(&sdev->bus_master);
-+}
-+
-+/*
-+ * disassociate the w1 device from the driver
-+ */
-+static int sgi_w1_remove(struct platform_device *pdev)
-+{
-+	struct sgi_w1_device *sdev = platform_get_drvdata(pdev);
-+
-+	w1_remove_master_device(&sdev->bus_master);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver sgi_w1_driver = {
-+	.driver = {
-+		.name = "sgi_w1",
-+	},
-+	.probe = sgi_w1_probe,
-+	.remove = sgi_w1_remove,
-+};
-+module_platform_driver(sgi_w1_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Thomas Bogendoerfer");
-+MODULE_DESCRIPTION("Driver for One-Wire IP in SGI ASICs");
-diff --git a/include/linux/platform_data/sgi-w1.h b/include/linux/platform_data/sgi-w1.h
-new file mode 100644
-index 000000000000..fc6b92e0b942
---- /dev/null
-+++ b/include/linux/platform_data/sgi-w1.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * SGI One-Wire (W1) IP
-+ */
-+
-+#ifndef PLATFORM_DATA_SGI_W1_H
-+#define PLATFORM_DATA_SGI_W1_H
-+
-+#include <asm/sn/types.h>
-+
-+struct sgi_w1_platform_data {
-+	char dev_id[64];
-+};
-+
-+#endif /* PLATFORM_DATA_SGI_W1_H */
-diff --git a/include/linux/w1.h b/include/linux/w1.h
-index e0b5156f78fd..7da0c7588e04 100644
---- a/include/linux/w1.h
-+++ b/include/linux/w1.h
-@@ -118,6 +118,9 @@ typedef void (*w1_slave_found_callback)(struct w1_master *, u64);
-  * w1_master* is passed to the slave found callback.
-  * u8 is search_type, W1_SEARCH or W1_ALARM_SEARCH
-  *
-+ * @dev_id: Optional device id string, which w1 slaves could use for
-+ * creating names, which then give a connection to the w1 master
-+ *
-  * Note: read_bit and write_bit are very low level functions and should only
-  * be used with hardware that doesn't really support 1-wire operations,
-  * like a parallel/serial port.
-@@ -150,6 +153,8 @@ struct w1_bus_master {
- 
- 	void		(*search)(void *, struct w1_master *,
- 		u8, w1_slave_found_callback);
-+
-+	char		*dev_id;
- };
- 
- /**
+> 
+> bcmgenet's transmit function bcmgenet_xmit() implements software
+> timestamping. However the SOF_TIMESTAMPING_TX_SOFTWARE capability was
+> missing and only SOF_TIMESTAMPING_RX_SOFTWARE was announced. By using
+> ethtool_ops bcmgenet_ethtool_ops() as get_ts_info(), the
+> SOF_TIMESTAMPING_TX_SOFTWARE capability is announced.
+> 
+> Similar to commit a8f5cb9e7991 ("smsc95xx: use ethtool_op_get_ts_info()")
+> 
+> Signed-off-by: Ryan M. Collins <rmc032@bucknell.edu>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.13.7
-
+Florian
