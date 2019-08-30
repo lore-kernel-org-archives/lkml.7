@@ -2,68 +2,135 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8DFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2284C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE52521874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63AC208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="b18bVQjK";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y5BEWXLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfH3IZq (ORCPT
+        id S1728324AbfH3I0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:25:46 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59720 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728279AbfH3IZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:25:45 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i3cDa-0005jJ-Mk; Fri, 30 Aug 2019 18:25:15 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 30 Aug 2019 18:25:08 +1000
-Date:   Fri, 30 Aug 2019 18:25:08 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: sha256 - Add missing MODULE_LICENSE() to
- lib/crypto/sha256.c
-Message-ID: <20190830082508.GI8033@gondor.apana.org.au>
-References: <20190825181841.2494-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190825181841.2494-1-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 30 Aug 2019 04:26:37 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42954 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfH3I0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:26:36 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 686366155C; Fri, 30 Aug 2019 08:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567153594;
+        bh=fe+1CIFsLrsFmj7GnadvoGOHiiGzQrdsXLHYlpV+vnM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b18bVQjK0tujCHtmNVN7r2uJvzBYrVzIEND/NqFYiponvrWVncdoFvGUewLCFt+hr
+         i5FWd3mfndhPExuUKD+DtyopBFJAqM/xDKSSHRE3RqJ0n/YF0vb1Dj6YD9r2Tl6BNL
+         2MiNFmcExEjQMbDS9yZW7jv6386j9+dVn+MD0/7E=
+Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: c-hbandi@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF1876333C;
+        Fri, 30 Aug 2019 08:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567153591;
+        bh=fe+1CIFsLrsFmj7GnadvoGOHiiGzQrdsXLHYlpV+vnM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Y5BEWXLjOCPvhsZGooH78akW+LC0OFO32rHaVS3BdJf4WgOtuUVzL9euDsFqlDTjB
+         ItOz53j7ogyCFylAvNVbSW6wUL2C7jcAIXKK4qaascaLjOrQaKtmmCqi9BoWUg+QaF
+         WUabcHePRtcPdhyiuInrTKHEE6ToJKB2/NG2F8hk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF1876333C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
+From:   Harish Bandi <c-hbandi@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
+Subject: [PATCH v2] Bluetooth: hci_qca: wait for Pre shutdown complete event before sending the Power off pulse
+Date:   Fri, 30 Aug 2019 13:56:16 +0530
+Message-Id: <1567153576-16895-1-git-send-email-c-hbandi@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 08:18:41PM +0200, Hans de Goede wrote:
-> lib/crypto/sha256.c / lib/crypto/libsha256.o may end up being a module,
-> so it needs a MODULE_LICENSE() line, add this.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  lib/crypto/sha256.c | 3 +++
->  1 file changed, 3 insertions(+)
+When SoC receives pre shut down command, it share the same
+with other COEX shared clients. So SoC needs a short time
+after sending VS pre shutdown command before turning off
+the regulators and sending the power off pulse. Along with
+short delay, needs to wait for command complete event for
+Pre shutdown VS command
 
-Patch applied.  Thanks.
+Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+---
+Changes in V2:
+- Modified commit text.
+---
+ drivers/bluetooth/btqca.c   | 22 ++++++++++++++++++++++
+ drivers/bluetooth/hci_qca.c |  5 +++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 8b33128..d48dc9e 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -99,6 +99,28 @@ static int qca_send_reset(struct hci_dev *hdev)
+ 	return 0;
+ }
+ 
++int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
++{
++	struct sk_buff *skb;
++	int err;
++
++	bt_dev_dbg(hdev, "QCA pre shutdown cmd");
++
++	skb = __hci_cmd_sync_ev(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
++				NULL, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
++
++	if (IS_ERR(skb)) {
++		err = PTR_ERR(skb);
++		bt_dev_err(hdev, "QCA preshutdown_cmd failed (%d)", err);
++		return err;
++	}
++
++	kfree_skb(skb);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
++
+ static void qca_tlv_check_data(struct rome_config *config,
+ 				const struct firmware *fw)
+ {
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index ab4c18e..43df13c 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1367,6 +1367,11 @@ static int qca_power_off(struct hci_dev *hdev)
+ {
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 
++	/* Perform pre shutdown command */
++	qca_send_pre_shutdown_cmd(hdev);
++
++	usleep_range(8000, 10000);
++
+ 	qca_power_shutdown(hu);
+ 	return 0;
+ }
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
