@@ -2,110 +2,88 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE33C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376FAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9741421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B9B2341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="S4xlxo1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfH3Nj4 convert rfc822-to-8bit (ORCPT
+        id S1727887AbfH3NnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:39:56 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:25633 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727729AbfH3Nj4 (ORCPT
+        Fri, 30 Aug 2019 09:43:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36806 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbfH3NnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:39:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-210-F1QPlVPsMbqytrDM-jSL6w-1; Fri, 30 Aug 2019 14:39:52 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 14:39:51 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 30 Aug 2019 14:39:51 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Lu Baolu' <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>
-CC:     "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>,
-        "alan.cox@intel.com" <alan.cox@intel.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "pengfei.xu@intel.com" <pengfei.xu@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Robin Murphy" <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: RE: [PATCH v8 7/7] iommu/vt-d: Use bounce buffer for untrusted
- devices
-Thread-Topic: [PATCH v8 7/7] iommu/vt-d: Use bounce buffer for untrusted
- devices
-Thread-Index: AQHVXwNAt0TkSHwjwEWfpppIl7udg6cTsWfA
-Date:   Fri, 30 Aug 2019 13:39:51 +0000
-Message-ID: <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
-References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
- <20190830071718.16613-8-baolu.lu@linux.intel.com>
-In-Reply-To: <20190830071718.16613-8-baolu.lu@linux.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 30 Aug 2019 09:43:18 -0400
+Received: by mail-io1-f68.google.com with SMTP id o9so14069051iom.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 06:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zYGH3fN4v8plY5qOryvWCm0ZkkSEcqIXPLFE0LXF1xM=;
+        b=S4xlxo1McUe3ODbG6lFGApEUyreIy3lVJLjs+cn9444a0h0+Rw/NY4ZYuiUhvrjZPo
+         DmB3w8J5vYckaTr6NsZa5XfN94OcZxbrVgulnZbOWhB6mRLpe4+kLyv43tswN/kHk4GG
+         9UHMiIN5cFXivXPg3y9OVT9Tg1EsF/bMJHpgPMOgiv6k4nDTt2wvthKF6hoO3GMwReXK
+         fIQpZ2YrA/op7HljEdDrnfM3cap4cNptn4aIL7Tiiue5UgTXJiAZOyYcBEvGwX4MJfyC
+         kYCa9ot7vwFWEc/WqwgS2OomWM/Ed1tsIkDvT7jB8a7sXwHTnKsiDO4uIU9ToiEeWM30
+         Hlww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zYGH3fN4v8plY5qOryvWCm0ZkkSEcqIXPLFE0LXF1xM=;
+        b=UnGrmdalhPoMXGr55PgeudHvB0dqafSWzHnERfdyAZTCx6s0kf/qCdxGtEK/ymzw6p
+         YBZdF1/9jmTtQm+QqUXKB7VnyQQq7RkhDELc2SfZXN0L2ACtyWVzO+p0lt6hkxhlGewK
+         b0upd7BeYojeroR9rPrNy72hmNR6OYoL+MHSrnZ4t0eUnT4TH9lwAPmX2GFmuWcphEF6
+         9m2hUUuNJnDXvdanu0mQJeHq8+ubR9E4G1XNqhxGAEeZxPwwvcB7xKcNQC5KuShScS+n
+         IWkCvVRpudSbN7PNDxNThuU+WpBaZVPzy354jOOuRnVqIDcx+F9aeUG0K42RtC3x6831
+         z+jQ==
+X-Gm-Message-State: APjAAAUujGe0iUVLvacfoNutXSrZIF7TIqurvkxn2NK3LpaSTk4/i3+k
+        jAtX80HMQo9hewtTZPrQuDzZEA==
+X-Google-Smtp-Source: APXvYqxv98ySoIehWYfQrkiVnKQ7682zkf1UCD2MmgpAND0sCQpnfidFJwrCLdPl9ybmgBa1NkKwWw==
+X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr12501340iob.282.1567172597938;
+        Fri, 30 Aug 2019 06:43:17 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id o2sm5032889iob.64.2019.08.30.06.43.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 06:43:16 -0700 (PDT)
+Subject: Re: [PATCH block/for-next] writeback: add tracepoints for cgroup
+ foreign writebacks
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+References: <20190829224701.GX2263813@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a54af97b-b9c2-3e31-d7e5-bacd40e74711@kernel.dk>
+Date:   Fri, 30 Aug 2019 07:43:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MC-Unique: F1QPlVPsMbqytrDM-jSL6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190829224701.GX2263813@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu
-> Sent: 30 August 2019 08:17
+On 8/29/19 4:47 PM, Tejun Heo wrote:
+> cgroup foreign inode handling has quite a bit of heuristics and
+> internal states which sometimes makes it difficult to understand
+> what's going on.  Add tracepoints to improve visibility.
 
-> The Intel VT-d hardware uses paging for DMA remapping.
-> The minimum mapped window is a page size. The device
-> drivers may map buffers not filling the whole IOMMU
-> window. This allows the device to access to possibly
-> unrelated memory and a malicious device could exploit
-> this to perform DMA attacks. To address this, the
-> Intel IOMMU driver will use bounce pages for those
-> buffers which don't fill whole IOMMU pages.
+LGTM, applied.
 
-Won't this completely kill performance?
-
-I'd expect to see something for dma_alloc_coherent() (etc)
-that tries to give the driver page sized buffers.
-
-Either that or the driver could allocate page sized buffers
-even though it only passes fragments of these buffers to
-the dma functions (to avoid excessive cache invalidates).
-
-Since you have to trust the driver, why not actually trust it?
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+Jens Axboe
 
