@@ -2,72 +2,105 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA43CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E23C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DDB2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DD222CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfH3MpQ (ORCPT
+        id S1728158AbfH3Mpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:45:16 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:52184 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfH3MpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:45:15 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 567FCCECDE;
-        Fri, 30 Aug 2019 14:54:00 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3] Bluetooth: hci_qca: wait for Pre shutdown complete
- event before sending the Power off pulse
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1567168116-12462-1-git-send-email-c_hbandi@qti.qualcomm.com>
-Date:   Fri, 30 Aug 2019 14:45:13 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        Harish Bandi <c-hbandi@codeaurora.org>
+        Fri, 30 Aug 2019 08:45:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:59676 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727417AbfH3Mpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:45:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CD94337;
+        Fri, 30 Aug 2019 05:45:30 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 911AE3F246;
+        Fri, 30 Aug 2019 05:45:27 -0700 (PDT)
+Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
+ EDAC
+To:     Rob Herring <robh@kernel.org>, "Hawa, Hanna" <hhhawa@amazon.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        Talel Shenhar <talel@amazon.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>
+References: <20190805143911.12185-1-hhhawa@amazon.com>
+ <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
+ <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
+ <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
+Date:   Fri, 30 Aug 2019 13:45:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Message-Id: <5CFF45A9-2495-405E-B488-9BACB7E1F873@holtmann.org>
-References: <1567168116-12462-1-git-send-email-c_hbandi@qti.qualcomm.com>
-To:     Harish Bandi <c_hbandi@qti.qualcomm.com>
-X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Harish,
+Hi guys,
 
-> When SoC receives pre shut down command, it share the same
-> with other COEX shared clients. So SoC needs a short time
-> after sending VS pre shutdown command before turning off
-> the regulators and sending the power off pulse. Along with
-> short delay, needs to wait for command complete event for
-> Pre shutdown VS command
+On 27/08/2019 14:49, Rob Herring wrote:
+> On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
+>> On 8/21/2019 10:17 PM, Rob Herring wrote:
+>>> Why is this even in DT? AFAICT, this is all just CortexA57 core features
+>>> (i.e. nothing Amazon specific). The core type and the ECC capabilities
+>>> are discoverable.
+>>
+>> Added to the DT in order to easily enable/disable the driver.
 > 
-> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> Changes in V3:
-> - updated patch on latest tip.
-> ---
-> drivers/bluetooth/btqca.c   | 5 +++--
-> drivers/bluetooth/hci_qca.c | 2 ++
-> 2 files changed, 5 insertions(+), 2 deletions(-)
+> That alone is not reason enough to put it in DT. From a DT
+> perspective, I have no idea what the whims of a OS maintainer are
+> regarding whether they want all this to be 1 driver or 2 drivers.
+> (IMO, it should be 1 as this is ECC for an A57. For a core and memory
+> controller, then 2 seems appropriate.)
+> 
+>> You are
+>> correct that they are CortexA57 core features and nothing Amazon
+>> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
+>> cortex revisions (e.g. A57) the register bitmap may change. Because of
+>> that we added an Amazon compatible which corresponds to the specific
+>> core we are using.
 
-patch has been applied to bluetooth-next tree.
+I think its that the instruction encoding is in the imp-def space that is important.
 
-Regards
+CPU-implementers can add whatever registers they find useful here. A57 and A72 both
+implemented some ECC registers here. (They are not guaranteed to be the same, but I can't
+find any differences).
 
-Marcel
+We need some information from DT because the TRM doesn't say what happens when you read
+from these registers on an A57 that doesn't have the 'optional ECC protection'. It could
+take an exception due to an unimplemented system register.
 
+The imp-def instruction space may also be trapped by a higher exception level. KVM does
+this, and emulates these registers as if they were all undefined.
+
+
+Thanks,
+
+James
