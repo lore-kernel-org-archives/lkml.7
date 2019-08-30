@@ -2,122 +2,65 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F50C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41817C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F89F23427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567177180;
-	bh=yuEg/AYA1c6NUhWecZUlheoiYTGMOlPXr3slJwLMjBE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=yVSp+y+VRYNRfYOBTAdR90ep2iX19AgnPsBoShp15Ii2AS3j96DRRCmxanEpL9uLe
-	 T6dBsQwNr+bJDGPSB1PzTuao4yOW8tpq+xLDaEh/3Utnd9Qr5smOglAx5wrMNEFd27
-	 H7n1mcKmgbtMsFarmb9FMxC4btjC7HoBs6GEEXTg=
+	by mail.kernel.org (Postfix) with ESMTP id 209D923427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfH3O7j (ORCPT
+        id S1728098AbfH3O7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:59:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39098 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 10:59:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:56266 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfH3O7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:59:38 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70C352341B;
-        Fri, 30 Aug 2019 14:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567177177;
-        bh=yuEg/AYA1c6NUhWecZUlheoiYTGMOlPXr3slJwLMjBE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=u1JFAqN/QGD4Fr1TrQB0MS943k5rWA952cBRxVbOh9N0fjLhRovc2G1XoK6mDEGXl
-         zQRqexm0Nzp2k5V9m7YyupViYZnXtEYln5bMhI0CMIUjUrnDUCChwEioFkGkCjYBXv
-         Br+Hx3PpKg8ee/48k5R/YO9a0jdkk06ep3gGNN0A=
-Subject: Re: [PATCH] seccomp: fix compilation errors in seccomp-bpf kselftest
-To:     Alakesh Haloi <alakesh.haloi@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Cc:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190822215823.GA11292@ip-172-31-44-144.us-west-2.compute.internal>
- <30e993fe-de76-9831-7ecc-61fcbcd51ae0@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b19f12c1-9d22-f366-ebb8-2ac0759bfebf@kernel.org>
-Date:   Fri, 30 Aug 2019 08:59:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727958AbfH3O7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:59:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8244E68BFE; Fri, 30 Aug 2019 16:59:35 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 16:59:35 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] vmalloc: lift the arm flag for coherent mappings
+ to common code
+Message-ID: <20190830145935.GA19838@lst.de>
+References: <20190830062924.21714-1-hch@lst.de> <20190830062924.21714-2-hch@lst.de> <20190830092918.GV13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <30e993fe-de76-9831-7ecc-61fcbcd51ae0@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830092918.GV13294@shell.armlinux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 8:09 AM, shuah wrote:
-> On 8/22/19 3:58 PM, Alakesh Haloi wrote:
->> Without this patch we see following error while building and kselftest
->> for secccomp_bpf fails.
->>
->> seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ 
->> undeclared (first use in this function);
->> seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared 
->> (first use in this function);
->>
->> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
->> ---
->>   tools/testing/selftests/seccomp/seccomp_bpf.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c 
->> b/tools/testing/selftests/seccomp/seccomp_bpf.c
->> index 6ef7f16c4cf5..2e619760fc3e 100644
->> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
->> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
->> @@ -1353,6 +1353,14 @@ TEST_F(precedence, log_is_fifth_in_any_order)
->>   #define PTRACE_EVENT_SECCOMP 7
->>   #endif
->> +#ifndef PTRACE_EVENTMSG_SYSCALL_ENTRY
->> +#define PTRACE_EVENTMSG_SYSCALL_ENTRY 1
->> +#endif
->> +
->> +#ifndef PTRACE_EVENTMSG_SYSCALL_EXIT
->> +#define PTRACE_EVENTMSG_SYSCALL_EXIT 2
->> +#endif
->> +
->>   #define IS_SECCOMP_EVENT(status) ((status >> 16) == 
->> PTRACE_EVENT_SECCOMP)
->>   bool tracer_running;
->>   void tracer_stop(int sig)
->>
+On Fri, Aug 30, 2019 at 10:29:18AM +0100, Russell King - ARM Linux admin wrote:
+> On Fri, Aug 30, 2019 at 08:29:21AM +0200, Christoph Hellwig wrote:
+> > The arm architecture had a VM_ARM_DMA_CONSISTENT flag to mark DMA
+> > coherent remapping for a while.  Lift this flag to common code so
+> > that we can use it generically.  We also check it in the only place
+> > VM_USERMAP is directly check so that we can entirely replace that
+> > flag as well (although I'm not even sure why we'd want to allow
+> > remapping DMA appings, but I'd rather not change behavior).
 > 
-> Hi Kees,
-> 
-> Okay to apply this one for 5.4-rc1. Or is this going through bpf tree?
-> If it is going through bpf tree:
-> 
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-> 
-> thanks,
-> -- Shuah
-> 
+> Good, because if you did change that behaviour, you'd break almost
+> every ARM framebuffer and cripple ARM audio drivers.
 
-I saw your mail about Tycho's solution to be your preferred. Ignore this
-message. I am applying Tycho's patch.
-
-thanks,
--- Shuah
+How would that break them?  All the usual video and audio drivers that
+use dma_alloc_* then use dma_mmap_* which never end up in the only place
+that actually checks VM_USERMAP (remap_vmalloc_range_partial) as they
+end up in the dma_map_ops mmap methods which contain what is effecitvely
+open coded versions of that routine.  There are very few callers of
+remap_vmalloc_range_partial / remap_vmalloc_range, and while a few of
+those actually are in media drivers and the virtual frame buffer video
+driver, none of these seems to be called on dma memory (which would
+be a layering violation anyway).
