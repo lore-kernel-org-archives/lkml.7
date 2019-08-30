@@ -2,179 +2,124 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF069C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB71C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9331A21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DC221874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:29:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0175i7P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HSSx1i5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfH3I2v (ORCPT
+        id S1727960AbfH3I3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:28:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43417 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfH3I2v (ORCPT
+        Fri, 30 Aug 2019 04:29:42 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40133 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfH3I3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:28:51 -0400
-Received: by mail-io1-f68.google.com with SMTP id u185so8581361iod.10;
-        Fri, 30 Aug 2019 01:28:50 -0700 (PDT)
+        Fri, 30 Aug 2019 04:29:42 -0400
+Received: by mail-vs1-f65.google.com with SMTP id i128so4252393vsc.7
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:29:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FnQGezDYO5hoi4qMr6hFteu6J0hxc2afK6Bu1JCgpJs=;
-        b=J0175i7PLeHrpTIwJsAcjfdidXf+v04TTsZELE9ltkPQ4tU0FTMGiEGfrh7gzahRcN
-         gI+2m7WmnEzGmVtL3lyOvPLu7WpeJgT7zFZPDvYyusZZXIYHpGS3KoTemenCmRAWNvKQ
-         lBpSeCe5b/5846aDMypZHsV6xObfkqZ8XP2ezfzf/I4kGiRPvHd4/D2+X+aU5u9bFwzI
-         DiL9qH19yqf1m3gkHvPWFC5Ra2kJjO2qSOMNd4qfNlma5nCIVbpbA2RF+V1MnAC8nV4E
-         uKvZ0eEVqRYb8OGAV3fCBPv+5v/DwhFuh55ASVp/AvZmnT2aKq0ZeEE+qRi4aVlcJo9Z
-         7XTw==
+        bh=uBe6XaZnp1DnbEiSR3tbPdbSTWUBiMGkZ5MQKY+Y/KY=;
+        b=HSSx1i5MvIQIppnHZp5fqcZbrHRsEuE5YKsm/+pYHehWrBMRK+Fd6yYLM9RPceYWJd
+         2KN6Ql6owRNffruGbdNcZSAqSso17tFIIcpLbRp0zC8kl60dO1JXkxCOZvRcyu1dIufG
+         1hvgSKaVKD1JOa1eugdmJFPrx3JHFGraiG6Yc+aNazmxxyKhIeW0A1MPoue8sWBjkHg1
+         2U/LjQQvHxtbyHKyKIvRHUSrnvL/0y4viuiAdHl86m6N5FXBwrgxRMsJfPfOTkX2P/xF
+         bddVRikttGaleYOjqpQag/5g5JIML0+a/1FaVIA8U+xTCk8rUGlWv6r2EV2vQ8hSxIyC
+         SbMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FnQGezDYO5hoi4qMr6hFteu6J0hxc2afK6Bu1JCgpJs=;
-        b=nsDDoj16Ko9L5+cmuHbARIBt1qVToQ8rrPEtJf23Zn2X45QIFnB6NuXYVsribmrO4I
-         sHVGn1mwN9yBds6FChZp2hprEF2emEHIBfmqdHLZWPbAEHKAWIbHRLZh9FiRXiaqppWl
-         gx0AJwS0MQGkwHwtBnAJZCllfny4qrUV92C510HBwJu474kPBoYjt0RcvbTrjpCJI/9c
-         WYR4arC57MVTx7eQaxyfSdFxcRRKUEJQ3UmQAFDv1k8M+5m53CJXjj73Q7L1leL5TS6H
-         a7e7zntT2FXRRY0pdj547NNOl5qGgwMp5RNkDnVKfTHxX1WrkmqN5MWWoc1tckD3D1wd
-         8tDA==
-X-Gm-Message-State: APjAAAX6A9dBjj/J37LJaewwBS+0XiZuREmb1sBaLG1Ha0BuvmvnE1sr
-        zztxQm9lGDqp3C75uzjhLTdJCb1c6e0pSvvrpRU=
-X-Google-Smtp-Source: APXvYqzh4ZWbYUgOrIXRKzNwKFlVdvLdRsMAd4czJUiBBQ34pQ8gvCsfatlbWy3/zbYJpGODP3+G603e8CbSc4iZKHc=
-X-Received: by 2002:a5d:9d49:: with SMTP id k9mr1449448iok.106.1567153729688;
- Fri, 30 Aug 2019 01:28:49 -0700 (PDT)
+        bh=uBe6XaZnp1DnbEiSR3tbPdbSTWUBiMGkZ5MQKY+Y/KY=;
+        b=DKyEUQBFVdBAh7YvFfxQ/X1R3QKvYfc2xJ8Pel2gQd7pIzubiJBkvkZiPCGLsGF6C9
+         LiJ620NR53WFBgLTda3IgnUdBjPi/kDA7QD/kGRZOvNb0q412Xo29inYXoZ5r/owPFwb
+         OhmiVDEoCfBBISf7ZJV3n09Q+06Zbgl2anGPdz0I9UUvSv7D6mqOpWXbG0TU/4PVq77K
+         8IUe3sRpaJEUOQ0EfmGFEWOX9lE6zWf9O/cELMLVbFsjLk7ojmk2HX7KQI3UAqN7adwA
+         rCPrpCKX4Ni2dfmSYpl6rPnKhbi02ezEYMN5wd1pl5GGej7PpcmbROmugsr6euLS3I5y
+         QE4Q==
+X-Gm-Message-State: APjAAAU9/BhLgiWsEM9vjtN+frDk3n1hgBzqwUw+V8jD+iDjP1fU+dX2
+        diNfmMmmw2itgR1gQm5LwZ9088wUXm9SKxdSanEEQw==
+X-Google-Smtp-Source: APXvYqwT1/od4MWptrO2+eo5tENQaNYQ7XxIzCOrNHxyh49sPnVWPm0JNv85t1DAPIYt12rpwJzChBk7AwrIozo1u18=
+X-Received: by 2002:a67:e287:: with SMTP id g7mr7906924vsf.200.1567153781210;
+ Fri, 30 Aug 2019 01:29:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829181311.7562-1-sashal@kernel.org> <20190829181311.7562-66-sashal@kernel.org>
- <CAOi1vP9-A-U6J15hT+XmtXzBw5WVRZECry8gPFzqp0CV36ecig@mail.gmail.com> <20190829211640.GN5281@sasha-vm>
-In-Reply-To: <20190829211640.GN5281@sasha-vm>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 30 Aug 2019 10:31:53 +0200
-Message-ID: <CAOi1vP-EPJ5VfEAMa_-4LyNv-mXf1acozoa=Z0kHDMAnVKfGxw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.2 66/76] ceph: fix buffer free while holding
- i_ceph_lock in __ceph_setxattr()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>
+References: <20190830074644.10936-1-andrew@aj.id.au> <20190830074644.10936-2-andrew@aj.id.au>
+ <CAPDyKFrKXfB1F2dh63KrkCiKGbmbBWaAM16vJqtQncnF4YctQw@mail.gmail.com> <6feca359-34ce-445e-87bf-62fa063d785f@www.fastmail.com>
+In-Reply-To: <6feca359-34ce-445e-87bf-62fa063d785f@www.fastmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 30 Aug 2019 10:29:04 +0200
+Message-ID: <CAPDyKFpiftO194L2pf-_Yxu_BbizP6ss46YUZNO9ZxceeeWw4Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mmc: sdhci-of-aspeed: Uphold clocks-on post-condition
+ of set_clock()
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Ryan Chen <ryanchen.aspeed@gmail.com>,
+        openbmc@lists.ozlabs.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 11:16 PM Sasha Levin <sashal@kernel.org> wrote:
+On Fri, 30 Aug 2019 at 10:07, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
-> On Thu, Aug 29, 2019 at 10:51:04PM +0200, Ilya Dryomov wrote:
-> >On Thu, Aug 29, 2019 at 8:15 PM Sasha Levin <sashal@kernel.org> wrote:
-> >>
-> >> From: Luis Henriques <lhenriques@suse.com>
-> >>
-> >> [ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
-> >>
-> >> Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-> >> i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-> >> fixed by postponing the call until later, when the lock is released.
-> >>
-> >> The following backtrace was triggered by fstests generic/117.
-> >>
-> >>   BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-> >>   in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-> >>   3 locks held by fsstress/650:
-> >>    #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-> >>    #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-> >>    #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-> >>   CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-> >>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-> >>   Call Trace:
-> >>    dump_stack+0x67/0x90
-> >>    ___might_sleep.cold+0x9f/0xb1
-> >>    vfree+0x4b/0x60
-> >>    ceph_buffer_release+0x1b/0x60
-> >>    __ceph_setxattr+0x2b4/0x810
-> >>    __vfs_setxattr+0x66/0x80
-> >>    __vfs_setxattr_noperm+0x59/0xf0
-> >>    vfs_setxattr+0x81/0xa0
-> >>    setxattr+0x115/0x230
-> >>    ? filename_lookup+0xc9/0x140
-> >>    ? rcu_read_lock_sched_held+0x74/0x80
-> >>    ? rcu_sync_lockdep_assert+0x2e/0x60
-> >>    ? __sb_start_write+0x142/0x1a0
-> >>    ? mnt_want_write+0x20/0x50
-> >>    path_setxattr+0xba/0xd0
-> >>    __x64_sys_lsetxattr+0x24/0x30
-> >>    do_syscall_64+0x50/0x1c0
-> >>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>   RIP: 0033:0x7ff23514359a
-> >>
-> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> >> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >> ---
-> >>  fs/ceph/xattr.c | 8 ++++++--
-> >>  1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> >> index 0619adbcbe14c..8382299fc2d84 100644
-> >> --- a/fs/ceph/xattr.c
-> >> +++ b/fs/ceph/xattr.c
-> >> @@ -1028,6 +1028,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
-> >>         struct ceph_inode_info *ci = ceph_inode(inode);
-> >>         struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
-> >>         struct ceph_cap_flush *prealloc_cf = NULL;
-> >> +       struct ceph_buffer *old_blob = NULL;
-> >>         int issued;
-> >>         int err;
-> >>         int dirty = 0;
-> >> @@ -1101,13 +1102,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
-> >>                 struct ceph_buffer *blob;
-> >>
-> >>                 spin_unlock(&ci->i_ceph_lock);
-> >> -               dout(" preaallocating new blob size=%d\n", required_blob_size);
-> >> +               ceph_buffer_put(old_blob); /* Shouldn't be required */
-> >> +               dout(" pre-allocating new blob size=%d\n", required_blob_size);
-> >>                 blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
-> >>                 if (!blob)
-> >>                         goto do_sync_unlocked;
-> >>                 spin_lock(&ci->i_ceph_lock);
-> >> +               /* prealloc_blob can't be released while holding i_ceph_lock */
-> >>                 if (ci->i_xattrs.prealloc_blob)
-> >> -                       ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-> >> +                       old_blob = ci->i_xattrs.prealloc_blob;
-> >>                 ci->i_xattrs.prealloc_blob = blob;
-> >>                 goto retry;
-> >>         }
-> >> @@ -1123,6 +1126,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
-> >>         }
-> >>
-> >>         spin_unlock(&ci->i_ceph_lock);
-> >> +       ceph_buffer_put(old_blob);
-> >>         if (lock_snap_rwsem)
-> >>                 up_read(&mdsc->snap_rwsem);
-> >>         if (dirty)
-> >
-> >Hi Sasha,
-> >
-> >I didn't tag i_ceph_lock series for stable because this is a very old
-> >bug which no one ever hit in real life, at least to my knowledge.
 >
-> I can drop it if you prefer.
+>
+> On Fri, 30 Aug 2019, at 17:31, Ulf Hansson wrote:
+> > On Fri, 30 Aug 2019 at 09:46, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > The early-exit didn't seem to matter on the AST2500, but on the AST2600
+> > > the SD clock genuinely may not be running on entry to
+> > > aspeed_sdhci_set_clock(). Remove the early exit to ensure we always run
+> > > sdhci_enable_clk().
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  drivers/mmc/host/sdhci-of-aspeed.c | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> > > index d5acb5afc50f..a9175ca85696 100644
+> > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> > > @@ -55,9 +55,6 @@ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> > >         int div;
+> > >         u16 clk;
+> > >
+> > > -       if (clock == host->clock)
+> > > -               return;
+> > > -
+> > >         sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> > >
+> > >         if (clock == 0)
+> > > --
+> > > 2.20.1
+> > >
+> >
+> > Further down in aspeed_sdhci_set_clock() you should probably also
+> > remove the assignment of host->clock = clock, as that is already
+> > managed by sdhci_set_ios().
+>
+> Ah, I'll fix that in a v2 once I have your thoughts on patch 2/2.
 
-Either is fine with me.  I just wanted to explain my rationale for not
-tagging them for stable in the first place and point out that there is
-a prerequisite.
+I leave this one to Adrian to comment on, as he knows this better than me.
 
-Thanks,
+[...]
 
-                Ilya
+Kind regards
+Uffe
