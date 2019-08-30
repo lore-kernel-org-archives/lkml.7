@@ -2,257 +2,331 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC1BC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B31C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3EB21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lKkrnMmi"
+	by mail.kernel.org (Postfix) with ESMTP id D255023427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfH3Nzj (ORCPT
+        id S1727958AbfH3N5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:55:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:36015 "EHLO ozlabs.org"
+        Fri, 30 Aug 2019 09:57:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40356 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfH3Nzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:55:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727170AbfH3N5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:57:17 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Kgwl19HKz9s7T;
-        Fri, 30 Aug 2019 23:55:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567173335;
-        bh=VTAiaBz22TTXel1ha2s/bTgs6tmonm/LUfRyubXF/Dw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lKkrnMmiKFvu5EfyA27jHtGLH3nCTUI68MCausSw+qzoIdzYFdkbO8zqXPHx/SrVF
-         8mEtqxlwewsxy4vhrvYjOvetximHJCVBsXaZwRDWQKV7oA26W0vMtF8Kl36zB9gmhx
-         NwD5ZLiO/uJc7aIpr62KegpjkiVLmGudBP78zuZjg0H/LThbCqTkV8Ppz6KlyDI8Lg
-         uQjmzYKiIDiE2XKOlD4ocn9AyOTiBWHH07mHVwDARaEFEPkPEEwpFWHcumGWH/V9e6
-         Kp4Bx1AQrkN/yp3fkcLW19JMV3Alfr4NZmZbRKam3HRHLTVryK6Y3PeCa1TMEpd5sy
-         0n90MHgrhNxdw==
-Date:   Fri, 30 Aug 2019 23:55:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Minchan Kim <minchan@kernel.org>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20190830235530.67c23ad3@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A167102BB36;
+        Fri, 30 Aug 2019 13:57:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 40FC619C6A;
+        Fri, 30 Aug 2019 13:57:13 +0000 (UTC)
+Subject: [PATCH 00/11] Keyrings, Block and USB notifications [ver #7]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 30 Aug 2019 14:57:12 +0100
+Message-ID: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_h0l=FaIWHvEqTs3K=mFyHZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 30 Aug 2019 13:57:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_h0l=FaIWHvEqTs3K=mFyHZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Here's a set of patches to add a general notification queue concept and to
+add sources of events for:
 
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+ (1) Key/keyring events, such as creating, linking and removal of keys.
 
-mm/madvise.c: In function 'madvise_cold_page_range':
-mm/madvise.c:459:4: error: 'struct mm_walk' has no member named 'pmd_entry'
-  459 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
-      |    ^~~~~~~~~
-mm/madvise.c:459:16: error: initialization of 'const struct mm_walk_ops *' =
-from incompatible pointer type 'int (*)(pmd_t *, long unsigned int,  long u=
-nsigned int,  struct mm_walk *)' {aka 'int (*)(unsigned int *, long unsigne=
-d int,  long unsigned int,  struct mm_walk *)'} [-Werror=3Dincompatible-poi=
-nter-types]
-  459 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-mm/madvise.c:459:16: note: (near initialization for 'cold_walk.ops')
-mm/madvise.c:465:18: warning: passing argument 1 of 'walk_page_range' makes=
- pointer from integer without a cast [-Wint-conversion]
-  465 |  walk_page_range(addr, end, &cold_walk);
-      |                  ^~~~
-      |                  |
-      |                  long unsigned int
-In file included from mm/madvise.c:24:
-include/linux/pagewalk.h:60:39: note: expected 'struct mm_struct *' but arg=
-ument is of type 'long unsigned int'
-   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
-      |                     ~~~~~~~~~~~~~~~~~~^~
-mm/madvise.c:465:29: warning: passing argument 3 of 'walk_page_range' makes=
- integer from pointer without a cast [-Wint-conversion]
-  465 |  walk_page_range(addr, end, &cold_walk);
-      |                             ^~~~~~~~~~
-      |                             |
-      |                             struct mm_walk *
-In file included from mm/madvise.c:24:
-include/linux/pagewalk.h:61:17: note: expected 'long unsigned int' but argu=
-ment is of type 'struct mm_walk *'
-   61 |   unsigned long end, const struct mm_walk_ops *ops,
-      |   ~~~~~~~~~~~~~~^~~
-mm/madvise.c:465:2: error: too few arguments to function 'walk_page_range'
-  465 |  walk_page_range(addr, end, &cold_walk);
-      |  ^~~~~~~~~~~~~~~
-In file included from mm/madvise.c:24:
-include/linux/pagewalk.h:60:5: note: declared here
-   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
-      |     ^~~~~~~~~~~~~~~
-mm/madvise.c: In function 'madvise_pageout_page_range':
-mm/madvise.c:498:4: error: 'struct mm_walk' has no member named 'pmd_entry'
-  498 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
-      |    ^~~~~~~~~
-mm/madvise.c:498:16: error: initialization of 'const struct mm_walk_ops *' =
-from incompatible pointer type 'int (*)(pmd_t *, long unsigned int,  long u=
-nsigned int,  struct mm_walk *)' {aka 'int (*)(unsigned int *, long unsigne=
-d int,  long unsigned int,  struct mm_walk *)'} [-Werror=3Dincompatible-poi=
-nter-types]
-  498 |   .pmd_entry =3D madvise_cold_or_pageout_pte_range,
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-mm/madvise.c:498:16: note: (near initialization for 'pageout_walk.ops')
-mm/madvise.c:504:18: warning: passing argument 1 of 'walk_page_range' makes=
- pointer from integer without a cast [-Wint-conversion]
-  504 |  walk_page_range(addr, end, &pageout_walk);
-      |                  ^~~~
-      |                  |
-      |                  long unsigned int
-In file included from mm/madvise.c:24:
-include/linux/pagewalk.h:60:39: note: expected 'struct mm_struct *' but arg=
-ument is of type 'long unsigned int'
-   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
-      |                     ~~~~~~~~~~~~~~~~~~^~
-mm/madvise.c:504:29: warning: passing argument 3 of 'walk_page_range' makes=
- integer from pointer without a cast [-Wint-conversion]
-  504 |  walk_page_range(addr, end, &pageout_walk);
-      |                             ^~~~~~~~~~~~~
-      |                             |
-      |                             struct mm_walk *
-In file included from mm/madvise.c:24:
-include/linux/pagewalk.h:61:17: note: expected 'long unsigned int' but argu=
-ment is of type 'struct mm_walk *'
-   61 |   unsigned long end, const struct mm_walk_ops *ops,
-      |   ~~~~~~~~~~~~~~^~~
-mm/madvise.c:504:2: error: too few arguments to function 'walk_page_range'
-  504 |  walk_page_range(addr, end, &pageout_walk);
-      |  ^~~~~~~~~~~~~~~
-In file included from mm/madvise.c:24:
-include/linux/pagewalk.h:60:5: note: declared here
-   60 | int walk_page_range(struct mm_struct *mm, unsigned long start,
-      |     ^~~~~~~~~~~~~~~
+ (2) General device events (single common queue) including:
 
-Caused by commit
+     - Block layer events, such as device errors
 
-  1c8999b3963d ("mm: introduce MADV_COLD")
-(and following commits)
+     - USB subsystem events, such as device/bus attach/remove, device
+       reset, device errors.
 
-interacting with commit
+Tests for the key/keyring events can be found on the keyutils next branch:
 
-  923bfc561e75 ("pagewalk: separate function pointers from iterator data")
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log/?h=next
 
-from the hmm tree.
+Notifications are done automatically inside of the testing infrastructure
+on every change to that every test makes to a key or keyring.
 
-I have applied the following patch for today:
+Manual pages can be found there also, including pages for watch_queue(7)
+and the watch_devices(2) system call (these should be transferred to the
+manpages package if taken upstream).
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 30 Aug 2019 23:39:37 +1000
-Subject: [PATCH] mm: merge fix for "pagewalk: separate function pointers fr=
-om iterator data"
+LSM hooks are included:
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+ (1) A set of hooks are provided that allow an LSM to rule on whether or
+     not a watch may be set.  Each of these hooks takes a different
+     "watched object" parameter, so they're not really shareable.  The LSM
+     should use current's credentials.  [Wanted by SELinux & Smack]
+
+ (2) A hook is provided to allow an LSM to rule on whether or not a
+     particular message may be posted to a particular queue.  This is given
+     the credentials from the event generator (which may be the system) and
+     the watch setter.  [Wanted by Smack]
+
+I've provided a preliminary attempt to provide SELinux and Smack with
+implementations of some of these hooks.
+
+
+Design decisions:
+
+ (1) A misc chardev is used to create and open a ring buffer:
+
+	fd = open("/dev/watch_queue", O_RDWR);
+
+     which is then configured and mmap'd into userspace:
+
+	ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE);
+	ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
+	buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
+		   MAP_SHARED, fd, 0);
+
+     The fd cannot be read or written (though there is a facility to use
+     write to inject records for debugging) and userspace just pulls data
+     directly out of the buffer.
+
+ (2) The ring index pointers are stored inside the ring and are thus
+     accessible to userspace.  Userspace should only update the tail
+     pointer and never the head pointer or risk breaking the buffer.  The
+     kernel checks that the pointers appear valid before trying to use
+     them.  A 'skip' record is maintained around the pointers.
+
+ (3) poll() can be used to wait for data to appear in the buffer.
+
+ (4) Records in the buffer are binary, typed and have a length so that they
+     can be of varying size.
+
+     This means that multiple heterogeneous sources can share a common
+     buffer.  Tags may be specified when a watchpoint is created to help
+     distinguish the sources.
+
+ (5) The queue is reusable as there are 16 million types available, of
+     which I've used just a few, so there is scope for others to be used.
+
+ (6) Records are filterable as types have up to 256 subtypes that can be
+     individually filtered.  Other filtration is also available.
+
+ (7) Each time the buffer is opened, a new buffer is created - this means
+     that there's no interference between watchers.
+
+ (8) When recording a notification, the kernel will not sleep, but will
+     rather mark a queue as overrun if there's insufficient space, thereby
+     avoiding userspace causing the kernel to hang.
+
+ (9) The 'watchpoint' should be specific where possible, meaning that you
+     specify the object that you want to watch.
+
+(10) The buffer is created and then watchpoints are attached to it, using
+     one of:
+
+	keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01);
+	watch_devices(fd, 0x02, 0);
+
+     where in both cases, fd indicates the queue and the number after is a
+     tag between 0 and 255.
+
+(11) The watch must be removed if either the watch buffer is destroyed or
+     the watched object is destroyed.
+
+
+Things I want to avoid:
+
+ (1) Introducing features that make the core VFS dependent on the network
+     stack or networking namespaces (ie. usage of netlink).
+
+ (2) Dumping all this stuff into dmesg and having a daemon that sits there
+     parsing the output and distributing it as this then puts the
+     responsibility for security into userspace and makes handling
+     namespaces tricky.  Further, dmesg might not exist or might be
+     inaccessible inside a container.
+
+ (3) Letting users see events they shouldn't be able to see.
+
+
+The patches can be found here also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-core
+
+Changes:
+
+ ver #7:
+
+ (*) Removed the 'watch' argument from the security_watch_key() and
+     security_watch_devices() hooks as current_cred() can be used instead
+     of watch->cred.
+
+ ver #6:
+
+ (*) Fix mmap bug in watch_queue driver.
+
+ (*) Add an extended removal notification that can transmit an identifier
+     to userspace (such as a key ID).
+
+ (*) Don't produce a instantiation notification in mark_key_instantiated()
+     but rather do it in the caller to prevent key updates from producing
+     an instantiate notification as well as an update notification.
+
+ (*) Set the right number of filters in the sample program.
+
+ (*) Provide preliminary hook implementations for SELinux and Smack.
+
+ ver #5:
+
+ (*) Split the superblock watch and mount watch parts out into their own
+     branch (notifications-mount) as they really need certain fsinfo()
+     attributes.
+
+ (*) Rearrange the watch notification UAPI header to push the length down
+     to bits 0-5 and remove the lost-message bits.  The userspace's watch
+     ID tag is moved to bits 8-15 and then the message type is allocated
+     all of bits 16-31 for its own purposes.
+
+     The lost-message bit is moved over to the header, rather than being
+     placed in the next message to be generated and given its own word so
+     it can be cleared with xchg(,0) for parisc.
+
+ (*) The security_post_notification() hook is no longer called with the
+     spinlock held and softirqs disabled - though the RCU readlock is still
+     held.
+
+ (*) Buffer pages are now accounted towards RLIMIT_MEMLOCK and CAP_IPC_LOCK
+     will skip the overuse check.
+
+ (*) The buffer is marked VM_DONTEXPAND.
+
+ (*) Save the watch-setter's creds in struct watch and give that to the LSM
+     hook for posting a message.
+
+ ver #4:
+
+ (*) Split the basic UAPI bits out into their own patch and then split the
+     LSM hooks out into an intermediate patch.  Add LSM hooks for setting
+     watches.
+
+     Rename the *_notify() system calls to watch_*() for consistency.
+
+ ver #3:
+
+ (*) I've added a USB notification source and reformulated the block
+     notification source so that there's now a common watch list, for which
+     the system call is now device_notify().
+
+     I've assigned a pair of unused ioctl numbers in the 'W' series to the
+     ioctls added by this series.
+
+     I've also added a description of the kernel API to the documentation.
+
+ ver #2:
+
+ (*) I've fixed various issues raised by Jann Horn and GregKH and moved to
+     krefs for refcounting.  I've added some security features to try and
+     give Casey Schaufler the LSM control he wants.
+
+David
 ---
- mm/madvise.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+David Howells (11):
+      uapi: General notification ring definitions
+      security: Add hooks to rule on setting a watch
+      security: Add a hook for the point of notification insertion
+      General notification queue with user mmap()'able ring buffer
+      keys: Add a notification facility
+      Add a general, global device notification watch list
+      block: Add block layer notifications
+      usb: Add USB subsystem notifications
+      Add sample notification program
+      selinux: Implement the watch_key security hook
+      smack: Implement the watch_key and post_notification hooks [untested]
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 7ec7c8f6d5ab..20598df8360a 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -446,6 +446,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pm=
-d,
- 	return 0;
- }
-=20
-+static const struct mm_walk_ops cold_walk_ops =3D {
-+	.pmd_entry =3D madvise_cold_or_pageout_pte_range,
-+};
-+
- static void madvise_cold_page_range(struct mmu_gather *tlb,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
-@@ -455,14 +459,8 @@ static void madvise_cold_page_range(struct mmu_gather =
-*tlb,
- 		.pageout =3D false,
- 	};
-=20
--	struct mm_walk cold_walk =3D {
--		.pmd_entry =3D madvise_cold_or_pageout_pte_range,
--		.mm =3D vma->vm_mm,
--		.private =3D &walk_private,
--	};
--
- 	tlb_start_vma(tlb, vma);
--	walk_page_range(addr, end, &cold_walk);
-+	walk_page_range(vma->vm_mm, addr, end, &cold_walk_ops, &walk_private);
- 	tlb_end_vma(tlb, vma);
- }
-=20
-@@ -485,6 +483,10 @@ static long madvise_cold(struct vm_area_struct *vma,
- 	return 0;
- }
-=20
-+static const struct mm_walk_ops pageout_walk_ops =3D {
-+	.pmd_entry =3D madvise_cold_or_pageout_pte_range,
-+};
-+
- static void madvise_pageout_page_range(struct mmu_gather *tlb,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
-@@ -494,14 +496,8 @@ static void madvise_pageout_page_range(struct mmu_gath=
-er *tlb,
- 		.tlb =3D tlb,
- 	};
-=20
--	struct mm_walk pageout_walk =3D {
--		.pmd_entry =3D madvise_cold_or_pageout_pte_range,
--		.mm =3D vma->vm_mm,
--		.private =3D &walk_private,
--	};
--
- 	tlb_start_vma(tlb, vma);
--	walk_page_range(addr, end, &pageout_walk);
-+	walk_page_range(vma->vm_mm, addr, end, &pageout_walk_ops, &walk_private);
- 	tlb_end_vma(tlb, vma);
- }
-=20
---=20
-2.23.0.rc1
 
---=20
-Cheers,
-Stephen Rothwell
+ Documentation/ioctl/ioctl-number.rst        |    1 
+ Documentation/security/keys/core.rst        |   58 ++
+ Documentation/watch_queue.rst               |  460 ++++++++++++++
+ arch/alpha/kernel/syscalls/syscall.tbl      |    1 
+ arch/arm/tools/syscall.tbl                  |    1 
+ arch/ia64/kernel/syscalls/syscall.tbl       |    1 
+ arch/m68k/kernel/syscalls/syscall.tbl       |    1 
+ arch/microblaze/kernel/syscalls/syscall.tbl |    1 
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 
+ arch/parisc/kernel/syscalls/syscall.tbl     |    1 
+ arch/powerpc/kernel/syscalls/syscall.tbl    |    1 
+ arch/s390/kernel/syscalls/syscall.tbl       |    1 
+ arch/sh/kernel/syscalls/syscall.tbl         |    1 
+ arch/sparc/kernel/syscalls/syscall.tbl      |    1 
+ arch/x86/entry/syscalls/syscall_32.tbl      |    1 
+ arch/x86/entry/syscalls/syscall_64.tbl      |    1 
+ arch/xtensa/kernel/syscalls/syscall.tbl     |    1 
+ block/Kconfig                               |    9 
+ block/blk-core.c                            |   29 +
+ drivers/base/Kconfig                        |    9 
+ drivers/base/Makefile                       |    1 
+ drivers/base/watch.c                        |   90 +++
+ drivers/misc/Kconfig                        |   13 
+ drivers/misc/Makefile                       |    1 
+ drivers/misc/watch_queue.c                  |  893 +++++++++++++++++++++++++++
+ drivers/usb/core/Kconfig                    |    9 
+ drivers/usb/core/devio.c                    |   56 ++
+ drivers/usb/core/hub.c                      |    4 
+ include/linux/blkdev.h                      |   15 
+ include/linux/device.h                      |    7 
+ include/linux/key.h                         |    3 
+ include/linux/lsm_audit.h                   |    1 
+ include/linux/lsm_hooks.h                   |   38 +
+ include/linux/security.h                    |   32 +
+ include/linux/syscalls.h                    |    1 
+ include/linux/usb.h                         |   18 +
+ include/linux/watch_queue.h                 |   94 +++
+ include/uapi/asm-generic/unistd.h           |    4 
+ include/uapi/linux/keyctl.h                 |    2 
+ include/uapi/linux/watch_queue.h            |  183 ++++++
+ kernel/sys_ni.c                             |    1 
+ samples/Kconfig                             |    6 
+ samples/Makefile                            |    1 
+ samples/watch_queue/Makefile                |    8 
+ samples/watch_queue/watch_test.c            |  233 +++++++
+ security/keys/Kconfig                       |    9 
+ security/keys/compat.c                      |    3 
+ security/keys/gc.c                          |    5 
+ security/keys/internal.h                    |   30 +
+ security/keys/key.c                         |   38 +
+ security/keys/keyctl.c                      |   99 +++
+ security/keys/keyring.c                     |   20 -
+ security/keys/request_key.c                 |    4 
+ security/security.c                         |   23 +
+ security/selinux/hooks.c                    |   14 
+ security/smack/smack_lsm.c                  |   82 ++
+ 58 files changed, 2593 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/watch_queue.rst
+ create mode 100644 drivers/base/watch.c
+ create mode 100644 drivers/misc/watch_queue.c
+ create mode 100644 include/linux/watch_queue.h
+ create mode 100644 include/uapi/linux/watch_queue.h
+ create mode 100644 samples/watch_queue/Makefile
+ create mode 100644 samples/watch_queue/watch_test.c
 
---Sig_/_h0l=FaIWHvEqTs3K=mFyHZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1pKtIACgkQAVBC80lX
-0GxvGgf+Itl70PzMNQJTI39dr4u8EAVCgIl4Xyvm9DDS25l0onw33TFaMnybqnaG
-B7pcm539jWVubOIGTuZq6SM9HO1lApYCBv8Y0UNu0hgAg2lHeDnFzJxBgL4o1dm2
-f95KFyqo2s25UcVmxG74FSH5thOsE/sCyYirJQ9ElCq/J037ogCeZO5oohrMGAbK
-cK2fGMnka++8fqbRs1ZOyVv3bAGOHJW4z2mqMxp2hGkN2648xIJnv3tqtBg/+ElJ
-Bz0pgtunmc0x6TUxmz33fUGT3kNaHG5by3pw0DIGVcJzxJDSX6iqZByTl/MAdIa+
-Pq22AwBSHaDLamHKm6Uv53mq3PUp3Q==
-=p1E9
------END PGP SIGNATURE-----
-
---Sig_/_h0l=FaIWHvEqTs3K=mFyHZ--
