@@ -2,79 +2,124 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD71C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F045C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5747B2343A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:47:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567201626;
-	bh=LGPd6aGerbg+EQvRvyLkbXiqdmmLuliyIP1+PAbHKZE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Ij1NphjI1yaxebhLj0PlkkbIu2j0KSdwc0riXiNSaa8dYwIL72lphGH+Rb2n3e+mM
-	 CwQ0gGYbvnbY93cCcrMwp/8uwKRdzf0dAfyTIW6uKYdvhkb5j0y6yncs2479jfov2v
-	 7uNiPal1mse2Udz8jIYLamyFuTgi7PScCTK6Qsxg=
+	by mail.kernel.org (Postfix) with ESMTP id F03C42343A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqoH0U6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfH3VrF (ORCPT
+        id S1728241AbfH3VrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfH3VrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:47:03 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 334982342E;
-        Fri, 30 Aug 2019 21:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567201622;
-        bh=LGPd6aGerbg+EQvRvyLkbXiqdmmLuliyIP1+PAbHKZE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Rp+l4BiAm1yJj9balH6YdcatrsbH55JTvgAaFymAa2f5QMttZN90wffsKUx6E6oTc
-         uUuPA1mSrWhLqvdmoWCQMMs3WIfIOrMZ7sy+ow/8/xwwTlJ0m2Lk5V30FSGzPLmfad
-         cM2fJRoNj9CwLhYs5KMtI7Eo/DQUunNli505mTys=
-Subject: Re: [PATCH] selftest/ftrace: Fix typo in trigger-snapshot.tc
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masanari Iida <standby24x7@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190803000126.23200-1-standby24x7@gmail.com>
- <20190830173154.467d9335@gandalf.local.home>
-From:   shuah <shuah@kernel.org>
-Message-ID: <2484ed4e-2a59-07f3-3f00-4ac3d1178621@kernel.org>
-Date:   Fri, 30 Aug 2019 15:47:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 17:47:18 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37585 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfH3VrR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 17:47:17 -0400
+Received: by mail-io1-f66.google.com with SMTP id r4so1807495iop.4;
+        Fri, 30 Aug 2019 14:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zobn1PfaWdiFKh+2AJisvXaXaN9Pv4+pvGnHv+s5H4g=;
+        b=PqoH0U6MfwrpAsH2I8tyCEQptXVIiBeTnOsXbU8Ar8ranL1XpLus6OwSuKVJ3vvw1t
+         NyOIEgheKhfIOyWmzehIPpcCMBCbnVBmqAVaIYK8uOQz9qbtKYu743+vuP5K3vLLB86u
+         92/oafOaYMZXZ6I/YRq9y0ful6k7Y4g0CFxQwnrPo4oQFzD45FVBN0X23i9z6JCYEP4v
+         0AGR2TKK1ckUBolAcqZvVz2e/uzlYquJb61tIlX7sV6wqla4vfB8rVCR9x432k+17SsJ
+         cTIu4QtXSiaGkEKed2pxOdm30n1pukvCPAAew81YizAWchrT7FrirRpuA84mqm1+0Jyw
+         fDRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zobn1PfaWdiFKh+2AJisvXaXaN9Pv4+pvGnHv+s5H4g=;
+        b=QLRyj++d9O9UP47p/4OFHiKpcUMkPLJcWwKpKHUlg9H/hRw37mdcqVzgxy6v5bcnXG
+         Y4aIwtX76XzT3fePR0Asr8XAmjhe7q7oFFHvjmPmzSoZjN7rD+vScYoUAnDrxF3eACoY
+         ncuvEpjLKBTVzT7gweiBy+qtYc7PvwY1493DTiz8epK0amItFnCMeg2FzJP267d7ZhHt
+         Tc5W0f034aYeDZjq9TAvJVDrxfrWUpsQJ8Hc6ZxfhrcBn2Cuiw9uUDGOqEgspAZmbBv8
+         pvgqa3MNZctjv/i3pPgxs7LCqGFl5WJASBMLdb9pBjJipD1yT0HsgvyCRGmM13pfvvkf
+         QM+A==
+X-Gm-Message-State: APjAAAVH0zCaRGdvwaPtQ5OVdoRgA95qXzcxF4JGcxO4C+/5Mh5JRuPb
+        suzo/DQ7u4uHNzdm4sBUkg8cOkeVm/kWeA==
+X-Google-Smtp-Source: APXvYqzDz5V/Q5AiD+cZ2p5/0vLITIFai9ECVqT6mDBjH8GdVUW+FMbMKnbyxabOxzlGVMoewVzgcA==
+X-Received: by 2002:a02:c992:: with SMTP id b18mr18578961jap.128.1567201636655;
+        Fri, 30 Aug 2019 14:47:16 -0700 (PDT)
+Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
+        by smtp.googlemail.com with ESMTPSA id m10sm5951564ioj.75.2019.08.30.14.47.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 14:47:16 -0700 (PDT)
+From:   Hui Peng <benquike@gmail.com>
+To:     stable@vger.kernel.org
+Cc:     Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wenwen Wang <wang6495@umn.edu>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
+Date:   Fri, 30 Aug 2019 17:46:49 -0400
+Message-Id: <20190830214649.27761-1-benquike@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190830173154.467d9335@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 3:31 PM, Steven Rostedt wrote:
-> On Sat,  3 Aug 2019 09:01:26 +0900
-> Masanari Iida <standby24x7@gmail.com> wrote:
-> 
->> This patch fixes a spelling typo in tigger-snapshot.tc
->>
-> 
-> As Randy said: "trigger-snapshot.tc"
-> 
-> Shuah, can you take this?
-> 
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
+The `uac_mixer_unit_descriptor` shown as below is read from the
+device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+accessed from index 0 to `bNrInPins` - 1, the current implementation
+assumes that descriptor is always valid (the length  of descriptor
+is no shorter than 5 + `bNrInPins`). If a descriptor read from
+the device side is invalid, it may trigger out-of-bound memory
+access.
 
-Done. Applied with typo fix to the commit log.
+```
+struct uac_mixer_unit_descriptor {
+	__u8 bLength;
+	__u8 bDescriptorType;
+	__u8 bDescriptorSubtype;
+	__u8 bUnitID;
+	__u8 bNrInPins;
+	__u8 baSourceID[];
+}
+```
 
-thanks,
--- Shuah
+This patch fixes the bug by add a sanity check on the length of
+the descriptor.
+
+CVE: CVE-2018-15117
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+---
+ sound/usb/mixer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 1f7eb3816cd7..10ddec76f906 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1628,6 +1628,7 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
+ 	int pin, ich, err;
+ 
+ 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
++	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
+ 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
+ 		usb_audio_err(state->chip,
+ 			      "invalid MIXER UNIT descriptor %d\n",
+-- 
+2.17.1
+
