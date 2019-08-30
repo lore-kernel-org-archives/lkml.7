@@ -2,122 +2,102 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CBFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441BCC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485AE21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D114B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsCXS5Al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfH3JwK (ORCPT
+        id S1728057AbfH3Jwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:52:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:57630 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfH3JwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:52:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C85E8344;
-        Fri, 30 Aug 2019 02:52:08 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23C263F718;
-        Fri, 30 Aug 2019 02:52:07 -0700 (PDT)
-Subject: Re: [PATCH v4 05/10] KVM: arm64: Support stolen time reporting via
- shared structure
-To:     Christoffer Dall <christoffer.dall@arm.com>
-Cc:     kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <20190830084255.55113-1-steven.price@arm.com>
- <20190830084255.55113-6-steven.price@arm.com>
- <20190830094245.GB5307@e113682-lin.lund.arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <bf45fea9-f2f7-1ff3-c90c-cb9623cbd959@arm.com>
-Date:   Fri, 30 Aug 2019 10:52:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 05:52:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53348 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfH3Jwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:52:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 10so6611582wmp.3;
+        Fri, 30 Aug 2019 02:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=tc17SwiXpDz1kgEk0p61gpWwIWAbuTeHVLdYo1NejAk=;
+        b=DsCXS5AlfL8N6Pd/BW1O50jCajoaMNCX6Gh/ZpcI750WV99gdv/GDDQQOuhc+g7kQj
+         PrR2UciBC/udBCeDc7zmvV0pv/IQag9tJFcZjNccdyoDyzV5Vli8kp00xaGABHm+22CJ
+         QGjM5QwY08jOwBpS1IXIFSuNTqnPk6gv4KTDzPM3MfNPZATg578eAznzEnMbiYPhnIRm
+         Bt8derDP1APJB4thdBFtrh4Qg5+sjwi5qq6M5nqQPWTRl35KDxRRkkH1lmZCzPhRiFG5
+         hfF8Z3GoA4Kl6FR/fEmQPtAMX6hEUUaE5IqlzT4QBHyVfZWzz2wYNplNIvk7wtpXfEk3
+         67qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=tc17SwiXpDz1kgEk0p61gpWwIWAbuTeHVLdYo1NejAk=;
+        b=CxDaPOMN920h2wjotR27TudvViRynfs/5zCZBnMGtFaPMlTtlw+Xlwks8yb6iRjlIy
+         mdJJ16nhIEqVLS8dWRzr/b9+k+HyDd3yuL/65UIqNSd+AyT55qFPUycmvnoalqWhammr
+         lFqETx6v3GpVeR7KaCNkXDcyBUBer0Qjmot3twDPY2AJ1nkX7AQsmtyQNJXYbzpKjAsD
+         oruKeMvjQrDtE1AkHLxYovrciKP6aM7hHPSXD+v/z/0fevcPcEED6vm/br0zNAn4wtxc
+         LTb9N4E+DctGh35X7USPGTHwX8teOJVQealrxaLTjyXITtmT/ax9U6rzT6TfeA93CxwV
+         wA2Q==
+X-Gm-Message-State: APjAAAXbmy4Lou1uIQRwE9FwoNVQlKe3wPAj/ZAgX/Tt65QHPriFz2qa
+        Zk+XkR2Sqb6QZCcR2vCmK3wCQ576Z7knJC6RhxQ=
+X-Google-Smtp-Source: APXvYqypzwcOYYLIG7MVcOC8GJ2qXLrEkr2UlocT3ycDPxkWToyVuADTLoF3SbWMPb4REfw4xL2k75Z4f6QA6ctcV+w=
+X-Received: by 2002:a7b:c013:: with SMTP id c19mr9625630wmb.118.1567158756429;
+ Fri, 30 Aug 2019 02:52:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190830094245.GB5307@e113682-lin.lund.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
+ <20190828055425.24765-2-yamada.masahiro@socionext.com> <20190828182017.GB127646@archlinux-threadripper>
+ <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com> <CA+icZUWmmC7CruvXx6U0cdXMLaMWJadU=T61E0om1rOuW3==pw@mail.gmail.com>
+In-Reply-To: <CA+icZUWmmC7CruvXx6U0cdXMLaMWJadU=T61E0om1rOuW3==pw@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 30 Aug 2019 11:52:24 +0200
+Message-ID: <CA+icZUXX6YG7=4n60A3_HiTYE0SkNXd8yr4-pqfOsqg66QvXzw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
+ functions for W=1 build
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sven Schnelle <svens@stackframe.org>,
+        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 10:42, Christoffer Dall wrote:
-> On Fri, Aug 30, 2019 at 09:42:50AM +0100, Steven Price wrote:
->> Implement the service call for configuring a shared structure between a
->> VCPU and the hypervisor in which the hypervisor can write the time
->> stolen from the VCPU's execution time by other tasks on the host.
->>
->> The hypervisor allocates memory which is placed at an IPA chosen by user
->> space. The hypervisor then updates the shared structure using
->> kvm_put_guest() to ensure single copy atomicity of the 64-bit value
->> reporting the stolen time in nanoseconds.
->>
->> Whenever stolen time is enabled by the guest, the stolen time counter is
->> reset.
->>
->> The stolen time itself is retrieved from the sched_info structure
->> maintained by the Linux scheduler code. We enable SCHEDSTATS when
->> selecting KVM Kconfig to ensure this value is meaningful.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
-[...]
->> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
->> +{
->> +	struct kvm *kvm = vcpu->kvm;
->> +	u64 steal;
->> +	u64 steal_le;
->> +	u64 offset;
->> +	int idx;
->> +	u64 base = vcpu->arch.steal.base;
->> +
->> +	if (base == GPA_INVALID)
->> +		return -ENOTSUPP;
->> +
->> +	/* Let's do the local bookkeeping */
->> +	steal = vcpu->arch.steal.steal;
->> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
->> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
->> +	vcpu->arch.steal.steal = steal;
->> +
->> +	steal_le = cpu_to_le64(steal);
->> +	idx = srcu_read_lock(&kvm->srcu);
->> +	if (init) {
->> +		struct pvclock_vcpu_stolen_time init_values = {
->> +			.revision = 0,
->> +			.attributes = 0
->> +		};
->> +		kvm_write_guest(kvm, base, &init_values,
->> +				sizeof(init_values));
->> +	}
->> +	offset = offsetof(struct pvclock_vcpu_stolen_time, stolen_time);
->> +	kvm_put_guest(kvm, base + offset, steal_le, u64);
-> 
-> Let's hope we don't have thousands of memslots through which we have to
-> do a linear scan on every vcpu load after this.  If that were the case,
-> I think the memslot search path would have to be updated anyhow.
+Just as a sidenote:
 
-Yes I'm not sure with the current memslot implementation it is actually
-beneficial to split up the stolen time structures into separate
-memslots. But there's nothing requiring the use of so many memslots.
+From [PATCH v2] kbuild: enable unused-function warnings for W= build with Clang:
 
-If this is really a problem it would be possible to implement a
-memslot-caching kvm_put_guest(), but I'd want to wait until someone
-shows there's actually a problem first.
+"Per the documentation [1], -Wno-unused-function will also disable
+-Wunneeded-internal-declaration, which can help find bugs like
+commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
+mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
+I added -Wunneeded-internal-declaration to address it.
 
-> Otherwise looks reasonable to me.
+If you contribute to code clean-up, please run "make CC=clang W=1"
+and check -Wunused-function warnings. You will find lots of unused
+functions."
 
-Great, thanks for the review.
+Isn't that missing in your double?
 
-Steve
+- Sedat -
+
+[1] https://lkml.org/lkml/2019/8/27/729
