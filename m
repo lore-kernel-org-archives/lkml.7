@@ -2,194 +2,300 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF69CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18898C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F1423430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B6kEGyu0"
+	by mail.kernel.org (Postfix) with ESMTP id E613A22CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfH3Tqg (ORCPT
+        id S1728309AbfH3TrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 15:46:36 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40734 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728042AbfH3Tqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 15:46:35 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g4so8876196qtq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=prUuXHya4Y/DomAW4iXoguJVfhofWITQRPrJf210z+4=;
-        b=B6kEGyu0xgkpBbkwspv92Z9JloWE1b9rYGlitXUXk0XNsnywFy8uKLdsIWuHZY5AGO
-         h0GevNSy7EgvZ1Fae1DeGa7ik7VQDIAjyucjdw8siYs5ODp4jaX5PY/k/1xmFp5hHZ+E
-         zDRkt7qSycLkjyfwFsMn/RnYdilCiBHDBZ/kXFaMBLqFZPC4kdKPwBYbiLfeRGgf6uMD
-         X0CdGB78YwpiILXVQpghiLIWXEUwVKdIeMAeMjA5pP9rXZVPstZ1fm4s0oHMMD4pQqCB
-         I6PTKCSLE0aeAhpIvv5hE6cGV1RYUIf8W2Sg2jQi/Bx6+q8+ell+QGBNRgHrbY/9nY3i
-         QQVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=prUuXHya4Y/DomAW4iXoguJVfhofWITQRPrJf210z+4=;
-        b=dOuLCWu3+vhdNSnltAIGrsMNU/rZHkq+opVlecqWpxFx2gWCaItDsygtgQZzgO7ozD
-         g+QnH81og7xCDIkAXwHR9UOE+mdZsBEDM8z6/kGgfHtff3rR1KMFjW7oKK4qMVz/A4Jf
-         +gmK1JH5Kf8jJdkDH/nclSNsq6C+wG2/YfrNxheLBDjTC0yaTFwKcE311OhCw53Lw3Dz
-         wF/TuM2NdmRqg1WneoYNhdKvV12RN2ADCK8L36DdG8HRs53sSlmPfGU8SEg8Ydn0XsNu
-         3LtZpT9bIWlxwxbum7iHiHUnfnUZs801KdLEo29N2vRZerCaWRSugw+AhQ326yFtMfk+
-         k0ww==
-X-Gm-Message-State: APjAAAUDbSSaSZIicHZKTnA3qN7z1keJcbTC4LEiRKaQWasb5T47ch+E
-        Ft+59v2lQ6hCQpQtnGMpfYci1R1DvspVr4+VsNrkAQ==
-X-Google-Smtp-Source: APXvYqzThREkXeMueCHugy8CLOJQ390Xkt7ZdBqZ+0Gnp2LrwuuWCfANLtZ6AX7JUXosWUMt/p+PsuQsky0A5BhaI3o=
-X-Received: by 2002:ac8:45d6:: with SMTP id e22mr12364511qto.380.1567194394198;
- Fri, 30 Aug 2019 12:46:34 -0700 (PDT)
+        Fri, 30 Aug 2019 15:47:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60918 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728058AbfH3Tq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 15:46:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 21F09B03C;
+        Fri, 30 Aug 2019 19:46:56 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-arch@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH] Revert "asm-generic: Remove unneeded __ARCH_WANT_SYS_LLSEEK macro"
+Date:   Fri, 30 Aug 2019 21:46:51 +0200
+Message-Id: <20190830194651.31043-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <bb6d25c6baae315d05b571d8c508f0e8fa90027c.1567188299.git.msuchanek@suse.de>
+References: <bb6d25c6baae315d05b571d8c508f0e8fa90027c.1567188299.git.msuchanek@suse.de>
 MIME-Version: 1.0
-References: <0000000000006fc70605915ac6ad@google.com> <CAKwvOdkAaFKr5gDw31uRzGoEC1JaJGNnrnAX_ysx9kH7dKx19Q@mail.gmail.com>
-In-Reply-To: <CAKwvOdkAaFKr5gDw31uRzGoEC1JaJGNnrnAX_ysx9kH7dKx19Q@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 30 Aug 2019 12:46:21 -0700
-Message-ID: <CACT4Y+aiSbZr=m0E1c2eHe6JvyNeKUDxEb2NTLxk77LsBXGVVg@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in ext4_fill_super
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+0bf8ddafbdf2c46eb6f3@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:42 PM 'Nick Desaulniers' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> Dmitry,
-> Any idea how clang-built-linux got CC'ed on this?  Is syzcaller
-> running clang builds, yet?  (this looks like a GCC build)
+This reverts commit caf6f9c8a326cffd1d4b3ff3f1cfba75d159d70b.
 
-syzbot always uses get_maintainers:
+Maybe it was needed after all.
 
-$ ./scripts/get_maintainer.pl -f fs/ext4/super.c
-"Theodore Ts'o" <tytso@mit.edu> (maintainer:EXT4 FILE SYSTEM)
-Andreas Dilger <adilger.kernel@dilger.ca> (maintainer:EXT4 FILE SYSTEM)
-linux-ext4@vger.kernel.org (open list:EXT4 FILE SYSTEM)
-linux-kernel@vger.kernel.org (open list)
-clang-built-linux@googlegroups.com (open list:CLANG/LLVM BUILD SUPPORT)
+When CONFIG_COMPAT is disabled on ppc64 the kernel does not build.
 
+There is resistance to both removing the llseek syscall from the 64bit
+syscall tables and building the llseek interface unconditionally.
 
-> On Fri, Aug 30, 2019 at 12:39 PM syzbot
-> <syzbot+0bf8ddafbdf2c46eb6f3@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    ed858b88 Add linux-next specific files for 20190826
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14209eca600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ee8373cd9733e305
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0bf8ddafbdf2c46eb6f3
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+0bf8ddafbdf2c46eb6f3@syzkaller.appspotmail.com
-> >
-> > EXT4-fs (loop2): corrupt root inode, run e2fsck
-> > EXT4-fs (loop2): mount failed
-> > ------------[ cut here ]------------
-> > ODEBUG: free active (active state 0) object type: percpu_counter hint: 0x0
-> > WARNING: CPU: 0 PID: 12342 at lib/debugobjects.c:481
-> > debug_print_object+0x168/0x250 lib/debugobjects.c:481
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 0 PID: 12342 Comm: syz-executor.2 Not tainted 5.3.0-rc6-next-20190826
-> > #73
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >   panic+0x2dc/0x755 kernel/panic.c:220
-> >   __warn.cold+0x2f/0x3c kernel/panic.c:581
-> >   report_bug+0x289/0x300 lib/bug.c:195
-> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-> >   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-> >   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> > RIP: 0010:debug_print_object+0x168/0x250 lib/debugobjects.c:481
-> > Code: dd 60 6c e6 87 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48
-> > 8b 14 dd 60 6c e6 87 48 c7 c7 c0 61 e6 87 e8 20 31 01 fe <0f> 0b 83 05 f3
-> > 67 83 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-> > RSP: 0018:ffff88806c9ff938 EFLAGS: 00010086
-> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> > RDX: 0000000000040000 RSI: ffffffff815bd606 RDI: ffffed100d93ff19
-> > RBP: ffff88806c9ff978 R08: ffff888067d48140 R09: ffffed1015d04109
-> > R10: ffffed1015d04108 R11: ffff8880ae820847 R12: 0000000000000001
-> > R13: ffffffff8935e800 R14: 0000000000000000 R15: ffff88806903c818
-> >   __debug_check_no_obj_freed lib/debugobjects.c:963 [inline]
-> >   debug_check_no_obj_freed+0x2d4/0x43f lib/debugobjects.c:994
-> >   kfree+0xf8/0x2c0 mm/slab.c:3755
-> >   ext4_fill_super+0x8cb/0xcc80 fs/ext4/super.c:4684
-> >   mount_bdev+0x304/0x3c0 fs/super.c:1407
-> >   ext4_mount+0x35/0x40 fs/ext4/super.c:6019
-> >   legacy_get_tree+0x113/0x220 fs/fs_context.c:651
-> >   vfs_get_tree+0x8f/0x380 fs/super.c:1482
-> >   do_new_mount fs/namespace.c:2796 [inline]
-> >   do_mount+0x13b3/0x1c30 fs/namespace.c:3116
-> >   ksys_mount+0xdb/0x150 fs/namespace.c:3325
-> >   __do_sys_mount fs/namespace.c:3339 [inline]
-> >   __se_sys_mount fs/namespace.c:3336 [inline]
-> >   __x64_sys_mount+0xbe/0x150 fs/namespace.c:3336
-> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x45c2ca
-> > Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 9d 8d fb ff c3 66 2e 0f
-> > 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff
-> > ff 0f 83 7a 8d fb ff c3 66 0f 1f 84 00 00 00 00 00
-> > RSP: 002b:00007fa684517a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
-> > RAX: ffffffffffffffda RBX: 00007fa684517b40 RCX: 000000000045c2ca
-> > RDX: 00007fa684517ae0 RSI: 0000000020000000 RDI: 00007fa684517b00
-> > RBP: 0000000000001000 R08: 00007fa684517b40 R09: 00007fa684517ae0
-> > R10: 0000000000000001 R11: 0000000000000206 R12: 0000000000000003
-> > R13: 00000000004c89d6 R14: 00000000004df8f8 R15: 00000000ffffffff
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/0000000000006fc70605915ac6ad%40google.com.
->
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/CAKwvOdkAaFKr5gDw31uRzGoEC1JaJGNnrnAX_ysx9kH7dKx19Q%40mail.gmail.com.
+Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
+Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
+
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ arch/arm/include/asm/unistd.h        |  1 +
+ arch/arm64/include/asm/unistd.h      |  1 +
+ arch/csky/include/asm/unistd.h       |  2 +-
+ arch/m68k/include/asm/unistd.h       |  1 +
+ arch/microblaze/include/asm/unistd.h |  1 +
+ arch/mips/include/asm/unistd.h       |  1 +
+ arch/parisc/include/asm/unistd.h     |  1 +
+ arch/powerpc/include/asm/unistd.h    |  1 +
+ arch/s390/include/asm/unistd.h       |  1 +
+ arch/sh/include/asm/unistd.h         |  1 +
+ arch/sparc/include/asm/unistd.h      |  1 +
+ arch/x86/include/asm/unistd.h        |  1 +
+ arch/xtensa/include/asm/unistd.h     |  1 +
+ fs/read_write.c                      |  2 +-
+ include/asm-generic/unistd.h         | 12 ++++++++++++
+ 15 files changed, 26 insertions(+), 2 deletions(-)
+ create mode 100644 include/asm-generic/unistd.h
+
+diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
+index 3676e82cf95c..e35ec8100a21 100644
+--- a/arch/arm/include/asm/unistd.h
++++ b/arch/arm/include/asm/unistd.h
+@@ -18,6 +18,7 @@
+ #define __ARCH_WANT_SYS_GETHOSTNAME
+ #define __ARCH_WANT_SYS_PAUSE
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_SIGPENDING
+ #define __ARCH_WANT_SYS_SIGPROCMASK
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 2629a68b8724..2c9d8d91e347 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -7,6 +7,7 @@
+ #define __ARCH_WANT_SYS_GETHOSTNAME
+ #define __ARCH_WANT_SYS_PAUSE
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_SIGPENDING
+ #define __ARCH_WANT_SYS_SIGPROCMASK
+diff --git a/arch/csky/include/asm/unistd.h b/arch/csky/include/asm/unistd.h
+index da7a18295615..bee8ba8309e7 100644
+--- a/arch/csky/include/asm/unistd.h
++++ b/arch/csky/include/asm/unistd.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ // Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+ 
+-#include <uapi/asm/unistd.h>
++#include <asm-generic/unistd.h>
+ 
+ #define NR_syscalls (__NR_syscalls)
+diff --git a/arch/m68k/include/asm/unistd.h b/arch/m68k/include/asm/unistd.h
+index 2e0047cf86f8..54c04eb4495a 100644
+--- a/arch/m68k/include/asm/unistd.h
++++ b/arch/m68k/include/asm/unistd.h
+@@ -21,6 +21,7 @@
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLD_GETRLIMIT
+ #define __ARCH_WANT_SYS_OLD_MMAP
+diff --git a/arch/microblaze/include/asm/unistd.h b/arch/microblaze/include/asm/unistd.h
+index d79d35ac6253..c5fcbce1f997 100644
+--- a/arch/microblaze/include/asm/unistd.h
++++ b/arch/microblaze/include/asm/unistd.h
+@@ -27,6 +27,7 @@
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ /* #define __ARCH_WANT_SYS_OLD_GETRLIMIT */
+ #define __ARCH_WANT_SYS_OLDUMOUNT
+diff --git a/arch/mips/include/asm/unistd.h b/arch/mips/include/asm/unistd.h
+index 071053ece677..8e8c7cab95ca 100644
+--- a/arch/mips/include/asm/unistd.h
++++ b/arch/mips/include/asm/unistd.h
+@@ -38,6 +38,7 @@
+ #define __ARCH_WANT_SYS_WAITPID
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLD_UNAME
+ #define __ARCH_WANT_SYS_OLDUMOUNT
+diff --git a/arch/parisc/include/asm/unistd.h b/arch/parisc/include/asm/unistd.h
+index cd438e4150f6..29bd46381f2e 100644
+--- a/arch/parisc/include/asm/unistd.h
++++ b/arch/parisc/include/asm/unistd.h
+@@ -159,6 +159,7 @@ type name(type1 arg1, type2 arg2, type3 arg3, type4 arg4, type5 arg5)	\
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLDUMOUNT
+ #define __ARCH_WANT_SYS_SIGPENDING
+diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
+index b0720c7c3fcf..700fcdac2e3c 100644
+--- a/arch/powerpc/include/asm/unistd.h
++++ b/arch/powerpc/include/asm/unistd.h
+@@ -31,6 +31,7 @@
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLD_GETRLIMIT
+ #define __ARCH_WANT_SYS_OLD_UNAME
+diff --git a/arch/s390/include/asm/unistd.h b/arch/s390/include/asm/unistd.h
+index 9e9f75ef046a..52e9e2fe3768 100644
+--- a/arch/s390/include/asm/unistd.h
++++ b/arch/s390/include/asm/unistd.h
+@@ -21,6 +21,7 @@
+ #define __ARCH_WANT_SYS_IPC
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLD_GETRLIMIT
+ #define __ARCH_WANT_SYS_OLD_MMAP
+diff --git a/arch/sh/include/asm/unistd.h b/arch/sh/include/asm/unistd.h
+index 9c7d9d9999c6..4899b6b72f1a 100644
+--- a/arch/sh/include/asm/unistd.h
++++ b/arch/sh/include/asm/unistd.h
+@@ -22,6 +22,7 @@
+ # define __ARCH_WANT_SYS_SOCKETCALL
+ # define __ARCH_WANT_SYS_FADVISE64
+ # define __ARCH_WANT_SYS_GETPGRP
++# define __ARCH_WANT_SYS_LLSEEK
+ # define __ARCH_WANT_SYS_NICE
+ # define __ARCH_WANT_SYS_OLD_GETRLIMIT
+ # define __ARCH_WANT_SYS_OLD_UNAME
+diff --git a/arch/sparc/include/asm/unistd.h b/arch/sparc/include/asm/unistd.h
+index 1e66278ba4a5..7edfc208e2af 100644
+--- a/arch/sparc/include/asm/unistd.h
++++ b/arch/sparc/include/asm/unistd.h
+@@ -36,6 +36,7 @@
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLDUMOUNT
+ #define __ARCH_WANT_SYS_SIGPENDING
+diff --git a/arch/x86/include/asm/unistd.h b/arch/x86/include/asm/unistd.h
+index 097589753fec..9e5a1748b4ce 100644
+--- a/arch/x86/include/asm/unistd.h
++++ b/arch/x86/include/asm/unistd.h
+@@ -39,6 +39,7 @@
+ # define __ARCH_WANT_SYS_FADVISE64
+ # define __ARCH_WANT_SYS_GETHOSTNAME
+ # define __ARCH_WANT_SYS_GETPGRP
++# define __ARCH_WANT_SYS_LLSEEK
+ # define __ARCH_WANT_SYS_NICE
+ # define __ARCH_WANT_SYS_OLDUMOUNT
+ # define __ARCH_WANT_SYS_OLD_GETRLIMIT
+diff --git a/arch/xtensa/include/asm/unistd.h b/arch/xtensa/include/asm/unistd.h
+index b52236245e51..9fd236a7825e 100644
+--- a/arch/xtensa/include/asm/unistd.h
++++ b/arch/xtensa/include/asm/unistd.h
+@@ -9,6 +9,7 @@
+ #define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_STAT64
+ #define __ARCH_WANT_SYS_UTIME32
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_GETPGRP
+ 
+ #define NR_syscalls				__NR_syscalls
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 5bbf587f5bc1..2f3c4bb138c4 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -331,7 +331,7 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
+ }
+ #endif
+ 
+-#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
++#ifdef __ARCH_WANT_SYS_LLSEEK
+ SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
+ 		unsigned long, offset_low, loff_t __user *, result,
+ 		unsigned int, whence)
+diff --git a/include/asm-generic/unistd.h b/include/asm-generic/unistd.h
+new file mode 100644
+index 000000000000..ea74eca8463f
+--- /dev/null
++++ b/include/asm-generic/unistd.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <uapi/asm-generic/unistd.h>
++#include <linux/export.h>
++
++/*
++ * These are required system calls, we should
++ * invert the logic eventually and let them
++ * be selected by default.
++ */
++#if __BITS_PER_LONG == 32
++#define __ARCH_WANT_SYS_LLSEEK
++#endif
+-- 
+2.22.0
+
