@@ -2,122 +2,201 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282C4C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC92C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2802186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwn0RWHZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7F98323430
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfH3QYu (ORCPT
+        id S1727979AbfH3Q0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:24:50 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38008 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3QYt (ORCPT
+        Fri, 30 Aug 2019 12:26:10 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36397 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfH3Q0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:24:49 -0400
-Received: by mail-io1-f65.google.com with SMTP id p12so15216742iog.5
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RHySHF2uwEhmKQaEHe0OPL8GmZZ5+dREwVbeFYlqd3c=;
-        b=dwn0RWHZ+Um+l/0l8KxAVtK9/XCUY5drIfMskunEhTk7upC2I0w2tmibG77Ds/21/4
-         JJoGM8HWSM3DCAtH8AYBZ/LmZvoJJq0x1jKREkrFnk7jfkKC2BJRP3GFMnR6ic9Jffd0
-         sVC0h7v9o6ui5kdqEwP0wwyIEkuJIVTh0SNgDPCZEdEajFrRJZ4SXg8ivCSGaTHeVhYn
-         wm3/6YbtHhrI9Gq5JRL9k0wJZSUi7JTiSLGn5xb+NLTOkKT9BS73IUko0kK/Fd71nOj1
-         joRjzfXCPtV8W9B/esh4Ea2p3xu9AEEt2gvLMkGyYH6BCRhnEKilZRSt3SHab1J21YR3
-         8ihA==
+        Fri, 30 Aug 2019 12:26:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z4so8231305qtc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:26:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RHySHF2uwEhmKQaEHe0OPL8GmZZ5+dREwVbeFYlqd3c=;
-        b=fucCNJtar0ewbZYeMWbcqJ9vj5hS5wBai81c1jDXZpH1mhjZFdfebJ8MNNrkfZ1BW+
-         VXjMtw0iuTvsN6Nou24pQv0OmdxmZPJR5IbmXenoBbC1SJvKbiLdC/4DpESMfjw3h/0p
-         8Vm1V7KD/0x3LBvzhQbAko31DrXTw+82NW7mXjuIoTnRVSi2egxX+JFkMn3WvsE5RnRl
-         vqjAzcvGsmW32syYvRKOIZw8PHQQRjdy1N7okprabU9CTa8zVDdIkQkkbdhGzR6u9vc3
-         0LjEYA6zNdnlFNzLIr+A9rf4ZGCG2YWnj9rGNEs8lkhv34Q7YVe0pXCpy6oKuboLJtQO
-         SGfQ==
-X-Gm-Message-State: APjAAAW/meAiuFj8KliWf/VNTDpIVwN4RKPWtYkilthjUwyRBc9KDWEK
-        5KEeb1MJxtp2ugAJRKpTPVjyL/6UMErBJ16BdTafnoHN
-X-Google-Smtp-Source: APXvYqwdBntb7kZCrsB+QQ9/2O7jjxtojMf474NZbsTPQdQ/YH+u5yW+U8plZem5ml3b+bETz1LpbVWveMMm96zRFJg=
-X-Received: by 2002:a5d:96cb:: with SMTP id r11mr19355270iol.200.1567182288772;
- Fri, 30 Aug 2019 09:24:48 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=qHgWu5Rl4zvcECH09Viw3cWfbmbYnQJRz+dq3rEzn6k=;
+        b=bldkA9j/JDkmhvQfKq/VdxoARhkv5ee1wc2LET1T/mjJChNb5YBhanpWBHlgIT10kf
+         RxAjCaFgE2+0pV0c0gvvvaVd0qyx0rCktoJR74AfL0YOUoUSaIeW6yqIHxGLNacdGLAf
+         35KipioZ51/Krc2rZmFHKC6HbMetrvKPABWZFA8hk6J3rjNbzMevuUcl4kJk325rffrQ
+         gyag2bYng3PeWpYizJwZmL+JXavMk/xHeqP0ath4yUiT1FvU6Q6ee4fi7NxigclHoINz
+         L88qrcBFSBe5f4LsWFvsHH92XtFkmeQTfDJK4KCsc6b56d3QT94mxzbY2m7qUA/0GHWe
+         xmaA==
+X-Gm-Message-State: APjAAAXdihOdvo52PlxpXuvCH6Djh6SeoWRp78f67GTuPMkgJqwVJML1
+        Q2igAIodI7bXOaN5fNUFYJpEPPi2iUQskaBBSsI=
+X-Google-Smtp-Source: APXvYqyWqzDMv6Hcrz05N4SE3mDmSNuAw0OYHoxkdQOiyRxXs5JB18HnTRXZ/9ZMa7+OEnE/pUAH561xbkH5EkpIf+I=
+X-Received: by 2002:ac8:117:: with SMTP id e23mr16102582qtg.18.1567182368579;
+ Fri, 30 Aug 2019 09:26:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829212417.257397-1-davidriley@chromium.org>
- <20190830060857.tzrzgoi2hrmchdi5@sirius.home.kraxel.org> <CAASgrz2v0DYb_5A3MnaWFM4Csx1DKkZe546v7DG7R+UyLOA8og@mail.gmail.com>
- <20190830111605.twzssycagmjhfa45@sirius.home.kraxel.org>
-In-Reply-To: <20190830111605.twzssycagmjhfa45@sirius.home.kraxel.org>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Fri, 30 Aug 2019 09:24:37 -0700
-Message-ID: <CAPaKu7QeYDqek7pBSHmg1E5A9h9E=njrvLxBMnkCtqeb3s77Cg@mail.gmail.com>
-Subject: Re: [PATCH] drm/virtio: Use vmalloc for command buffer allocations.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     David Riley <davidriley@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
-        "open list:VIRTIO CORE, NET AND BLOCK DRIVERS" 
-        <virtualization@lists.linux-foundation.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 30 Aug 2019 18:25:52 +0200
+Message-ID: <CAK8P3a2OZPybUQ=2xXcF4Qft-Gpe3a1mvgPncJZugETnaOxsvw@mail.gmail.com>
+Subject: [GIT PULL] ARM: SoC fixes for Linux-5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        SoC Team <soc@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        John Garry <john.garry@huawei.com>,
+        Tony Lindgren <tony@atomide.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 4:16 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
->   Hi,
->
-> > > > -     kfree(vbuf->data_buf);
-> > > > +     kvfree(vbuf->data_buf);
-> > >
-> > > if (is_vmalloc_addr(vbuf->data_buf)) ...
-> > >
-> > > needed here I gues?
-> > >
-> >
-> > kvfree() handles vmalloc/kmalloc/kvmalloc internally by doing that check.
->
-> Ok.
->
-> > - videobuf_vmalloc_to_sg in drivers/media/v4l2-core/videobuf-dma-sg.c,
-> > assumes contiguous array of scatterlist and that the buffer being converted
-> > is page aligned
->
-> Well, vmalloc memory _is_ page aligned.
->
-> sg_alloc_table_from_pages() does alot of what you need, you just need a
-> small loop around vmalloc_to_page() create a struct page array
-> beforehand.
->
-> Completely different approach: use get_user_pages() and don't copy the
-> execbuffer at all.
-It would be really nice if execbuffer does not copy.
+The following changes since commit d45331b00ddb179e291766617259261c112db872:
 
-The user space owns the buffer and may overwrite the contents
-immediately after the ioctl.  We also need a flag to indicate that the
-ownership of the buffer is transferred to the kernel.
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git armsoc-fixes
 
+for you to fetch changes up to 7a6c9dbb36a415c5901313fc89871fd19f533656:
 
->
-> cheers,
->   Gerd
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+  soc: ixp4xx: Protect IXP4xx SoC drivers by ARCH_IXP4XX ||
+COMPILE_TEST (2019-08-29 17:34:38 +0200)
+
+----------------------------------------------------------------
+ARM: SoC fixes
+
+The majority of the fixes this time are for OMAP hardware,
+here is a breakdown of the significant changes:
+
+Various device tree bug fixes:
+- TI am57xx boards need a voltage level fix to avoid damaging SD cards
+- vf610-bk4 fails to detect its flash due to an incorrect description
+- meson-g12a USB phy configuration fails
+- meson-g12b reboot should not power off the SD card
+- Some corrections for apparently harmless differences from the
+  documentation.
+
+Regression fixes:
+- ams-delta FIQ interrupts broke in 5.3
+- TI am3/am4 mmc controllers broke in 5.2
+
+The logic_pio driver (used on some Huawei ARM servers) needs a few
+bug fixes for reliability.
+
+A couple of compile-time warning fixes
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+----------------------------------------------------------------
+Arnd Bergmann (5):
+      Merge tag 'imx-fixes-5.3-2' of
+git://git.kernel.org/.../shawnguo/linux into arm/fixes
+      Merge tag 'omap-for-v5.3/fixes-rc4' of
+git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
+      Merge tag 'amlogic-fixes' of
+git://git.kernel.org/.../khilman/linux-amlogic into arm/fixes
+      Merge tag 'hisi-fixes-for-5.3' of
+git://github.com/hisilicon/linux-hisi into arm/fixes
+      Merge tag 'sunxi-fixes-for-5.3-3' of
+git://git.kernel.org/.../sunxi/linux into arm/fixes
+
+Emmanuel Vadot (1):
+      ARM: dts: am335x: Fix UARTs length
+
+Faiz Abbas (2):
+      ARM: dts: am57xx: Disable voltage switching for SD card
+      ARM: dts: dra74x: Fix iodelay configuration for mmc3
+
+Geert Uytterhoeven (1):
+      soc: ixp4xx: Protect IXP4xx SoC drivers by ARCH_IXP4XX || COMPILE_TEST
+
+Gustavo A. R. Silva (1):
+      ARM: OMAP: dma: Mark expected switch fall-throughs
+
+Janusz Krzysztofik (1):
+      ARM: OMAP1: ams-delta-fiq: Fix missing irq_ack
+
+John Garry (5):
+      lib: logic_pio: Fix RCU usage
+      lib: logic_pio: Avoid possible overlap for unregistering regions
+      lib: logic_pio: Add logic_pio_unregister_range()
+      bus: hisi_lpc: Unregister logical PIO range to avoid potential
+use-after-free
+      bus: hisi_lpc: Add .remove method to avoid driver unbind crash
+
+Keerthy (1):
+      soc: ti: pm33xx: Fix static checker warnings
+
+Lukasz Majewski (1):
+      ARM: dts: vf610-bk4: Fix qspi node description
+
+Maxime Ripard (1):
+      MAINTAINERS: Update my email address
+
+Neil Armstrong (2):
+      arm64: dts: meson-g12a: add missing dwc2 phy-names
+      arm64: dts: meson-g12a-sei510: enable IR controller
+
+Suman Anna (1):
+      bus: ti-sysc: Simplify cleanup upon failures in sysc_probe()
+
+Tony Lindgren (10):
+      Merge commit '79499bb11db508' into fixes
+      ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for dra7 epwmss
+      bus: ti-sysc: Fix handling of forced idle
+      bus: ti-sysc: Fix using configured sysc mask value
+      ARM: dts: Fix flags for gpio7
+      ARM: dts: Fix incorrect dcan register mapping for am3, am4 and dra7
+      ARM: OMAP2+: Fix omap4 errata warning on other SoCs
+      Merge branch 'ti-sysc-fixes' into fixes
+      ARM: dts: Fix incomplete dts data for am3 and am4 mmc
+      Merge branch 'ti-sysc-fixes' into fixes
+
+Xavier Ruppen (1):
+      arm64: dts: amlogic: odroid-n2: keep SD card regulator always on
+
+YueHaibing (1):
+      soc: ti: pm33xx: Make two symbols static
+
+ .mailmap                                             |  2 ++
+ MAINTAINERS                                          | 10 +++++-----
+ arch/arm/boot/dts/am33xx-l4.dtsi                     | 16 ++++++++++------
+ arch/arm/boot/dts/am33xx.dtsi                        | 32
+++++++++++++++++++++++++++------
+ arch/arm/boot/dts/am4372.dtsi                        | 32
+++++++++++++++++++++++++++------
+ arch/arm/boot/dts/am437x-l4.dtsi                     |  4 ++++
+ arch/arm/boot/dts/am571x-idk.dts                     |  7 +------
+ arch/arm/boot/dts/am572x-idk.dts                     |  7 +------
+ arch/arm/boot/dts/am574x-idk.dts                     |  7 +------
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi      |  3 ++-
+ arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts        |  7 +------
+ arch/arm/boot/dts/am57xx-beagle-x15-revc.dts         |  7 +------
+ arch/arm/boot/dts/dra7-evm.dts                       |  2 +-
+ arch/arm/boot/dts/dra7-l4.dtsi                       |  6 +++---
+ arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi            | 50
+++++++++++++++++++++++++-------------------------
+ arch/arm/boot/dts/vf610-bk4.dts                      |  4 ++--
+ arch/arm/mach-omap1/ams-delta-fiq-handler.S          |  3 ++-
+ arch/arm/mach-omap1/ams-delta-fiq.c                  |  4 +---
+ arch/arm/mach-omap2/omap4-common.c                   |  3 +++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c            |  3 ++-
+ arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts    |  6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi          |  1 +
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts |  1 +
+ drivers/bus/hisi_lpc.c                               | 47
+++++++++++++++++++++++++++++++++++++++++------
+ drivers/bus/ti-sysc.c                                | 24
++++++++++++-------------
+ drivers/soc/ixp4xx/Kconfig                           |  4 ++++
+ drivers/soc/ti/pm33xx.c                              | 19 ++++++++++++-------
+ include/linux/logic_pio.h                            |  1 +
+ lib/logic_pio.c                                      | 73
++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------
+ 29 files changed, 250 insertions(+), 135 deletions(-)
