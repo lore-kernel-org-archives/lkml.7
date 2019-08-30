@@ -2,67 +2,100 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7472FC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7A6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CCE20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567143181;
-	bh=DqiSWN3Cg+YWi7gm8pJ3TVJi3LuVX4/mHtRCT9Q7U/Y=;
-	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
-	b=z4yN3QRGhT41qQksk9BYUlZmHCrgGhxqftV/wvDRGn57Ba0P71oNIGMzGPhj4mWkr
-	 ay9YSGzGvw+HeBg9G8wxtRNmqxht3eW9mlQL3oKo/UAQop3NFyYb9PZHn4gStyY3WN
-	 ETHXJ4Vbp4hUrIE89fdaKuzjH65rFQM6Bn0Wnul0=
+	by mail.kernel.org (Postfix) with ESMTP id D98AE2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:37:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoqvZ/vU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfH3Fc6 (ORCPT
+        id S1727812AbfH3FhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727635AbfH3Fcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:32:55 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30BCE2087F;
-        Fri, 30 Aug 2019 05:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567142730;
-        bh=DqiSWN3Cg+YWi7gm8pJ3TVJi3LuVX4/mHtRCT9Q7U/Y=;
-        h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
-        b=Q2/08f1sRSuazV5XzINUGcA/uLN3s1haX/SDZ3QdT/8XpkNFLp4EdM3aLW1GFFjTL
-         JNvexbJ42ppLjSSqjQKsyEqMuBxqbs9K55N5mB2RfaMCqfrzOy5IDabM90y7N+pAde
-         gpVF7T5KVNktfdcbow+iYnq+xUe2DZNOScmgaRjk=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Aug 2019 01:37:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39345 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfH3FhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 01:37:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so2935699pgi.6;
+        Thu, 29 Aug 2019 22:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=w7YEtGvCAOlZwrqQsoF3/LXuqZDGNstU9nE89n8+OrQ=;
+        b=OoqvZ/vUxFI6labySN8wIMZm111YgA8EMKBCc/9d+kIVWKKSin8fyuSZnHLsWgLCew
+         ucpeOlhTMWY/3XccH57aPaaRSUs/diAwe3Uq5tnKvbXz2YWI2XLJwYvjHYugLOL7dcJ5
+         z2S2kVX3VITtcrRpOpGi7VBGg9/ni0MaTzvjHq+s4BVlghaZ42k7q2+v37oDlSj4vbgn
+         ELIwuPI2Dy1pDMHiFEAUPGdDyX/KmZnFi5sAW3sW7ndbb1BTdrN9BEvy4VG/8Enz7sQt
+         IqrOIk/goJQAIVCLOZ3JvQPylCAWWLjCOp2sOFDSS2+2yKrNw8WynGCl7eXDBZ+KDT18
+         LeeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=w7YEtGvCAOlZwrqQsoF3/LXuqZDGNstU9nE89n8+OrQ=;
+        b=VGFdsB8gFfBgrJwy7o1Hyj0R61tKsgN39mXGBwru/oG/VQMJvhVP+XRFl89P1LoHI+
+         4btrbvq9+4WlH1Rb3QaLk601RWrY3AUn9/lnEzliz5sEQ+FJaqll/LsL0IWVqHONXLkn
+         KwVrHn/tXe+XXuMBRnMlXNhffUO8AnimVKu19dmr9IlJZ80WG0AC1sCYxGxpl/e6XkOn
+         d0Ix419XvfeKEsIqG4IDBaogKkK4UM7d6IZByCFuN+9+Wwbe0+ObvJMeDdR46GxW4iCL
+         MkL+GTZGMAv+RFLgQLqi+TCOI5QUyhkJF0LTnMwjXTVF6YqqTim3CIjr3AUaUV5HCBmv
+         NXcg==
+X-Gm-Message-State: APjAAAVRVTP7urfnZui2N33YdkwMgc8kaE8mR4csu+GdZI4eDe8GyrmR
+        6z2FdRqC4hzDsgZDKM+KTiZhalk90X8=
+X-Google-Smtp-Source: APXvYqyvlY5W7ohXFLAalwW3xB8x2eN8NPb55vlospRd7LBCyNqXx91dMIigqQ9sWAOQd24JrosIeA==
+X-Received: by 2002:a62:8344:: with SMTP id h65mr16090697pfe.85.1567143431949;
+        Thu, 29 Aug 2019 22:37:11 -0700 (PDT)
+Received: from LGEARND20B15 ([27.122.242.75])
+        by smtp.gmail.com with ESMTPSA id e129sm11854174pfa.92.2019.08.29.22.37.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 22:37:11 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 14:37:07 +0900
+From:   Austin Kim <austindh.kim@gmail.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        austindh.kim@gmail.com
+Subject: [PATCH] xfs: Initialize label array properly
+Message-ID: <20190830053707.GA69101@LGEARND20B15>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190829200340.15498-2-jorge.ramirez-ortiz@linaro.org>
-References: <20190829200340.15498-1-jorge.ramirez-ortiz@linaro.org> <20190829200340.15498-2-jorge.ramirez-ortiz@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs404: add the watchdog node
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 29 Aug 2019 22:25:29 -0700
-Message-Id: <20190830052530.30BCE2087F@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2019-08-29 13:03:40)
-> Allows QCS404 based designs to enable watchdog support
->=20
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
+In case kernel stack variable is not initialized properly,
+there is a risk of kernel information disclosure.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+So, initialize 'char label[]' array with null characters.
+
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+---
+ fs/xfs/xfs_ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 9ea5166..09b3bee 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -2037,7 +2037,7 @@ xfs_ioc_setlabel(
+ 	char			__user *newlabel)
+ {
+ 	struct xfs_sb		*sbp = &mp->m_sb;
+-	char			label[XFSLABEL_MAX + 1];
++	char			label[XFSLABEL_MAX + 1] = {0};
+ 	size_t			len;
+ 	int			error;
+ 
+-- 
+2.6.2
 
