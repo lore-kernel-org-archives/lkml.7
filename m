@@ -2,116 +2,237 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8B0C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC55C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB3821874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD6823405
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:11:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VgofyAk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfH3KId convert rfc822-to-8bit (ORCPT
+        id S1727968AbfH3KLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:08:33 -0400
-Received: from is-comm2.is-ol.de ([159.69.231.212]:59856 "EHLO
-        is-comm2.is-ol.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfH3KIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:08:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by is-comm2.is-ol.de (Postfix) with ESMTP id 4935D15F57F;
-        Fri, 30 Aug 2019 09:59:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at is-comm2.is-ol.de
-Received: from SSSDEEX.i.sigma-surface-science.com (p50937f79.dip0.t-ipconnect.de [80.147.127.121])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by is-comm2.is-ol.de (Postfix) with ESMTPS;
-        Fri, 30 Aug 2019 11:59:02 +0200 (CEST)
-Received: from SSSDEEX.i.sigma-surface-science.com (172.27.0.81) by
- SSSDEEX.i.sigma-surface-science.com (172.27.0.81) with Microsoft SMTP Server
- (TLS) id 15.0.913.22; Fri, 30 Aug 2019 11:58:42 +0200
-Received: from SSSDEEX.i.sigma-surface-science.com ([::1]) by
- SSSDEEX.i.sigma-surface-science.com ([::1]) with mapi id 15.00.0913.011; Fri,
- 30 Aug 2019 11:58:42 +0200
-From:   =?iso-8859-1?Q?Christoph_Vogtl=E4nder?= 
-        <Christoph.Vogtlaender@sigma-surface-science.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Fri, 30 Aug 2019 06:11:10 -0400
+Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:64846
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbfH3KLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 06:11:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BL24DG2H5OUMZTWpyYVBZmoMH8iZ/ZrWrILuSD2oOTkA9T8qdcn7xbE2KdboUPRqox0Grj0LZ1yVJIkIWXNLD/+eFGU7ltHioMILhBUIS0TbOGRiMXryRyqYHFCMMSeHHdcry039hc0pkaa0CieJNR4VTY0Ldp9czBZf7vcYWLpmfSoKBvf4EVGDMP35pHFO5+JSgtXn4Zwpw47ZgctAnfqyEkQ6vJ3DIhWo8vNPoDCL3PeiAGurx+byK0fFt7jyTo55IeLn9afl+ezs/YxmJEY16IwwmxopD1fg5u88HETqdOxziGHz3oliCIfAYHtq7exwvVjlZcJalhb5rnLyGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mhhW3lP55wZJiUEpNJN+svWmF+teI8mwxFzSSD62wkQ=;
+ b=VMutBtexnx58GINQ4M8pnfQwapsSGZo538SC1+Xl1uWScmpcVNEdvoUvOkI+SVzTq6yyX8BGM8TCVO2X4zJvE0rpG1Z++ZX/OCaRYMSQHoogtWW3V1rM24CXasenGfrzZ2YB984ZbgUwklLNPbVNseM5kVx0uWroLwC0iozgTY6ywtttj3Rb/X75rfFsqzhIavZknD1XyDrFwxxoVa17PFCi4gU7seBEDPQtuRdEAmcFIG4tdnWInfKvOjK68recq85L3IQUyffD5DnLRz/eKKyUKCHrZnaMgIqP7o6Lpb6npXA+1wjQJbLF4RFJ7w7Kxo6W9MKXS+Z9WP/ISjo4sQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mhhW3lP55wZJiUEpNJN+svWmF+teI8mwxFzSSD62wkQ=;
+ b=VgofyAk4PuY5pG/rCvOcR5Mxm5xySiRB+N+9RdxlJBZUMuPdqESQ4+6N29GouvNqArYksCARX963/s0LaUGNo6MHLRhcmU0Dubym7itfEjAr/1vjnN+CngJhH/G/DuWJe6P8mLbgkp0+GQ3cYtEH4YcUYpcewkCZ8XINAHLqW2w=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4636.eurprd04.prod.outlook.com (52.135.134.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Fri, 30 Aug 2019 10:11:04 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254%3]) with mapi id 15.20.2220.013; Fri, 30 Aug 2019
+ 10:11:04 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Christoph_Vogtl=E4nder?= 
-        <Christoph.Vogtlaender@sigma-surface-science.com>
-Subject: [PATCH] serial: max310x: turn off transmitter before activating
- AutoCTS or auto transmitter flow control
-Thread-Topic: [PATCH] serial: max310x: turn off transmitter before
- activating AutoCTS or auto transmitter flow control
-Thread-Index: AdVfGB6E5SXElxQNQ2i0pQLfeo3BQw==
-Date:   Fri, 30 Aug 2019 09:58:41 +0000
-Message-ID: <bd9fb8e75d0e45218eb110c25bb539ef@SSSDEEX.i.sigma-surface-science.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: RE: [EXT] Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
+ properties
+Thread-Topic: [EXT] Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
+ properties
+Thread-Index: AQHVXxUmbdQ14FGRtEKpSD4KQzyPQqcTcP4AgAAGgTA=
+Date:   Fri, 30 Aug 2019 10:11:03 +0000
+Message-ID: <DB7PR04MB4490C2664AE88D18D52E4B018FBD0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190830091720.41156-1-biwen.li@nxp.com>
+ <20190830094456.GO21922@piout.net>
+In-Reply-To: <20190830094456.GO21922@piout.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [172.27.0.74]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7d0b02e4-5ce4-4e55-11b3-08d72d325dcc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4636;
+x-ms-traffictypediagnostic: DB7PR04MB4636:|DB7PR04MB4636:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB463634B3442A690FDEFED6F68FBD0@DB7PR04MB4636.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0145758B1D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(376002)(346002)(136003)(189003)(51444003)(199004)(229853002)(8676002)(26005)(11346002)(446003)(3846002)(6246003)(52536014)(53936002)(99286004)(102836004)(74316002)(7736002)(25786009)(6506007)(478600001)(2906002)(305945005)(54906003)(76176011)(4326008)(186003)(14454004)(33656002)(45080400002)(8936002)(66946007)(76116006)(256004)(7696005)(6116002)(316002)(966005)(5660300002)(6916009)(9686003)(55016002)(71190400001)(71200400001)(6436002)(6306002)(486006)(44832011)(476003)(64756008)(81166006)(66066001)(86362001)(66476007)(66556008)(66446008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4636;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hhGzpNokenHa10kU3H7hLdJ7VQgAPbPmiFN5eFKgQS0gT4B0nQSa//URIxMlQazQYQhXcu0mVnxdLsl1qCuxIjHXJ7E7DPBhTaXqlyjidWsXyDjz8+Mc3ULRnnZvlfPIJDvitAIH7B4muxC2S0VBT0Q4T9+siLKzkjwOa+BVZ2zRPVYMdM0GfuGQFERK06wpLdclxvOz904bCO1pcjLoCnJsUYLnidjODIYCHTUEw2kXrkL4voOCB2+lTigeolTri84uPD2S9XsSCaP0eQMHPZIAg8y4ThhNrVahTl9V8RKYbLhS+qQSb8g2NLI0YIPfg+WfsD6cRTWmQWioTz6fbpEa3BrImw5KH2Zxnaby0KaDs+mi2QnPGy+EZsXk+I3DIZOdGwras1UGx6Arh3POEg36yZ/i3ol/sOPRjK2W1FQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To:     unlisted-recipients:; (no To-header on input)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d0b02e4-5ce4-4e55-11b3-08d72d325dcc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 10:11:04.0005
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 23ui3qQGC3gzyKoQnNHTnPKOfNpmpbrz/66MraALOl+iBR7xbOuCFRxpD/12GuEoicgaRnFLJAoinQ2kjA2/Ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4636
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As documented in the data-sheet, the transmitter must be disabled before
-activating AutoCTS or auto transmitter flow control. Accordingly, the
-transmitter must be enabled after AutoCTS or auto transmitter flow
-control gets deactivated.
-
-Signed-off-by: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
----
- drivers/tty/serial/max310x.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index fb5a7e0e58e9..adfef6dae4a7 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -860,6 +860,15 @@ static void max310x_set_termios(struct uart_port *port,
- max310x_port_write(port, MAX310X_XON1_REG, termios->c_cc[VSTART]);
- max310x_port_write(port, MAX310X_XOFF1_REG, termios->c_cc[VSTOP]);
-
-+/* Disable transmitter before enabling AutoCTS or auto transmitter
-+ * flow control
-+ */
-+if (termios->c_cflag & CRTSCTS || termios->c_iflag & IXOFF) {
-+max310x_port_update(port, MAX310X_MODE1_REG,
-+    MAX310X_MODE1_TXDIS_BIT,
-+    MAX310X_MODE1_TXDIS_BIT);
-+}
-+
- port->status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
-
- if (termios->c_cflag & CRTSCTS) {
-@@ -878,6 +887,15 @@ static void max310x_set_termios(struct uart_port *port,
- }
- max310x_port_write(port, MAX310X_FLOWCTRL_REG, flow);
-
-+/* Enable transmitter after disabling AutoCTS and auto transmitter
-+ * flow control
-+ */
-+if (!(termios->c_cflag & CRTSCTS) && !(termios->c_iflag & IXOFF)) {
-+max310x_port_update(port, MAX310X_MODE1_REG,
-+    MAX310X_MODE1_TXDIS_BIT,
-+    0);
-+}
-+
- /* Get baud rate generator configuration */
- baud = uart_get_baud_rate(port, termios, old,
-   port->uartclk / 16 / 0xffff,
---
-2.22.1
-
-
-Sigma Surface Science GmbH, Idsteiner Str. 78, 65232 Taunusstein. Amtsgericht Wiesbaden, HRB 27422. Geschäftsführer: Norbert Nold
+>=20
+> On 30/08/2019 17:17:19+0800, Biwen Li wrote:
+> > Add some properties for pcf85263/pcf85363 as follows:
+> >   - interrupt-output-pin: string type
+> >   - quartz-load-capacitance: integer type
+> >   - quartz-drive-strength: integer type
+> >   - quartz-low-jitter: bool type
+> >   - wakeup-source: bool type
+> >
+> > Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> >  .../devicetree/bindings/rtc/pcf85363.txt      | 31
+> +++++++++++++++++++
+> >  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+> >  2 files changed, 46 insertions(+)
+> >  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > index 94adc1cf93d9..d83359990bd7 100644
+> > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > @@ -8,10 +8,41 @@ Required properties:
+> >  Optional properties:
+> >  - interrupts: IRQ line for the RTC (not implemented).
+> >
+> > +- interrupt-output-pin: The interrupt output pin must be
+> > +  "NONE", "INTA" or "INTB", default value is "NONE"
+> > +
+>=20
+> default value can't be none if there is an interrupts property. Also, bot=
+h pins
+> can be enabled at the same time and this binding would prevent that.
+> Finally, it may also be desirable to have some interrupts on one pin and
+> other interrupts on another pin e.g. alarms and timestamping on INTA goin=
+g
+> to the SoC and only alarms on INTB going to a PMIC.
+Ok, got it, I will correct it on v2.
+>=20
+> > +- quartz-load-capacitance: The internal capacitor to select for the qu=
+artz:
+> > +     PCF85263_QUARTZCAP_7pF          [0]
+> > +     PCF85263_QUARTZCAP_6pF          [1]
+> > +     PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
+> > +
+>=20
+> The correct generic property is quartz-load-femtofarads.
+I will replace it on v2.
+>=20
+> > +- quartz-drive-strength: Drive strength for the quartz:
+> > +     PCF85263_QUARTZDRIVE_NORMAL     [0] DEFAULT
+> > +     PCF85263_QUARTZDRIVE_LOW        [1]
+> > +     PCF85263_QUARTZDRIVE_HIGH       [2]
+> > +
+>=20
+> This has to take a value in ohm to be generic and then you don't need the
+> include file.
+I will adjust it on v2.
+>=20
+> > +- quartz-low-jitter: Boolean property, if present enables low jitter
+> > +mode
+> > +  which reduces jitter at the cost of increased power consumption.
+> > +
+>=20
+> I think that property needs to be nxp specific.
+I will replace it with nxp,quartz-low-jitter on v2.
+>=20
+> > +- wakeup-source: Boolean property, mark the chip as a wakeup source,
+> > +  independently of the availability of an IRQ line connected to the So=
+C.
+> > +  This is useful if the IRQ line is connected to a PMIC or other
+> > +circuit
+> > +  that can power up the device rather than to a normal SOC interrupt.
+> > +
+>=20
+> This is already defined in bindings/power/wakeup-source.txt I guess you c=
+an
+> simply refer to it.
+I will correct it on v2.
+>=20
+> >  Example:
+> >
+> >  pcf85363: pcf85363@51 {
+> >       compatible =3D "nxp,pcf85363";
+> >       reg =3D <0x51>;
+> > +
+> > +     interrupt-parent =3D <&gpio1>;
+> > +     interrupts =3D <18 IRQ_TYPE_EDGE_FALLING>;
+> > +
+> > +     #include <dt-bindings/rtc/pcf85363.h>
+> > +     wakeup-source;
+> > +     interrupt-output-pin =3D "INTA";
+> > +     quartz-load-capacitance =3D <PCF85363_QUARTZCAP_12p5pF>;
+> > +     quartz-drive-strength =3D <PCF85363_QUARTZDRIVE_LOW>;
+> > +     quartz-low-jitter;
+> >  };
+> >
+> > diff --git a/include/dt-bindings/rtc/pcf85363.h
+> > b/include/dt-bindings/rtc/pcf85363.h
+> > new file mode 100644
+> > index 000000000000..2c06c28eb5ff
+> > --- /dev/null
+> > +++ b/include/dt-bindings/rtc/pcf85363.h
+> > @@ -0,0 +1,15 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */ #ifndef
+> > +_DT_BINDINGS_RTC_PCF85363_H #define
+> _DT_BINDINGS_RTC_PCF85363_H
+> > +
+> > +/* Quartz capacitance */
+> > +#define PCF85363_QUARTZCAP_7pF               0
+> > +#define PCF85363_QUARTZCAP_6pF               1
+> > +#define PCF85363_QUARTZCAP_12p5pF    2
+> > +
+> > +/* Quartz drive strength */
+> > +#define PCF85363_QUARTZDRIVE_NORMAL  0
+> > +#define PCF85363_QUARTZDRIVE_LOW     1
+> > +#define PCF85363_QUARTZDRIVE_HIGH    2
+> > +
+> > +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbootl
+> in.com&amp;data=3D02%7C01%7Cbiwen.li%40nxp.com%7C0a2e5b50f8fc45a
+> ef6a208d72d2ebe2e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
+> %7C637027551094795780&amp;sdata=3DPMMS6PMBPkuuIYgMJFmtOaoD%
+> 2B7fCO3eZvOtlYhTEL5w%3D&amp;reserved=3D0
