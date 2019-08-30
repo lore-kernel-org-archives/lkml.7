@@ -2,136 +2,121 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3813C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B20C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A2C20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:48:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfeV8ETA"
+	by mail.kernel.org (Postfix) with ESMTP id B016620820
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbfH3Qsn (ORCPT
+        id S1728257AbfH3QtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:48:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41446 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3Qsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:48:42 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 196so4983840pfz.8;
-        Fri, 30 Aug 2019 09:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Pk5V+7zqa1A7jxjsbjG2uhSw9j6dlDFBclUGejhv4g8=;
-        b=hfeV8ETA4/yFa7bnnUmPSGglA2PvpWL9uUl3aKK022l+hcIbP8E6R/qPOZbY9pNDD+
-         AxE4b4DseTq++lqUwXI7aDU4Wkgj5zpdyJJlZ4IfKRFEJaT04tnN0BoNUmUsHF4z85Gp
-         pWYW/ZzMZYmxd92O4B/NsqYYQgcUlzHSLi7dLUjyLlYf70qseir0uLP1rqHnULm2SCnf
-         6cITvevC3zCQLtWE9SYu9h+xQpC6Kg3ozhIc1spvom4ojR4FEtWvTHlikm1C3QbjBhSo
-         PimITd09AuIgjF2R0Fv49MOiTsyBy8bhEsWgEv53TH5NPWTPshXzgpeN3ils3IE2nR7M
-         ETwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pk5V+7zqa1A7jxjsbjG2uhSw9j6dlDFBclUGejhv4g8=;
-        b=jE50o7Es1aEeqRaAeWU8ITSqUZsNCgYf2wiT7UJ48RB/JYmmntWJnZQubsFrbZBsd3
-         OP3sLo0PWg0+AXw2JXLmYVgh+lZuvn2Iv7bEFK4hn6uMMOKH/ToRZuKJrHDeYFPG3Ybi
-         /dlKdEmyLm66ww1FT5oMNjfIbeoTqiQ/s6pk+UOXBeikFMTrru/rv7D0ywJI8MUqJicP
-         8rJmXYlAoGHfm9pl0rtsx+FWgRWiRYjrwaSbAoKyVxvfcbZk9N+PTdI2owCQOyORbzFn
-         Q+R6LaGU4LCxhPsGIlMhLR8H3hlFrwnTNeiKIuX9o2jwln/jRqhYzKK/8giLwsGEcBZY
-         fAXw==
-X-Gm-Message-State: APjAAAUCV0GFfkuxQQTnQSDVBUiE6Ob9EFxIDAyIFDJSa7ZUCWeoEfvT
-        Bz2YBegR+6CIvMRB/QMIe40PtXFK
-X-Google-Smtp-Source: APXvYqzSW1fwYGfO9+zh5OWaAop3/qR5bz8ZgiTXNWF4yiHCTa+UfVOG4jLlpNMeZiTPPwjn+OHX8Q==
-X-Received: by 2002:a62:4ed1:: with SMTP id c200mr19076386pfb.218.1567183722041;
-        Fri, 30 Aug 2019 09:48:42 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b14sm6882987pfo.15.2019.08.30.09.48.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 09:48:41 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 09:48:40 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 4/6] dt-bindings: watchdog: sun4i: Add the
- watchdog clock
-Message-ID: <20190830164840.GD7911@roeck-us.net>
-References: <20190821143835.7294-1-mripard@kernel.org>
- <20190821143835.7294-4-mripard@kernel.org>
+        Fri, 30 Aug 2019 12:49:18 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3962 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727883AbfH3QtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 12:49:18 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 6662DE36B8648C21C1E2;
+        Sat, 31 Aug 2019 00:49:16 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 00:49:15 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 31 Aug 2019 00:49:15 +0800
+Date:   Sat, 31 Aug 2019 00:48:27 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Chao Yu <yuchao0@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        "Fang Wei" <fangwei1@huawei.com>
+Subject: Re: [PATCH v3 7/7] erofs: redundant assignment in
+ __erofs_get_meta_page()
+Message-ID: <20190830164827.GA107220@architecture4>
+References: <20190830032006.GA20217@architecture4>
+ <20190830033643.51019-1-gaoxiang25@huawei.com>
+ <20190830033643.51019-7-gaoxiang25@huawei.com>
+ <20190830162812.GA10694@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190821143835.7294-4-mripard@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190830162812.GA10694@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme705-chm.china.huawei.com (10.1.199.101) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 04:38:33PM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
-> The Allwinner watchdog has a clock that has been described in some DT, but
-> not all of them.
-> 
-> The binding is also completely missing that description. Let's add that
-> property to be consistent.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Hi Christoph,
 
-> ---
+On Fri, Aug 30, 2019 at 09:28:12AM -0700, Christoph Hellwig wrote:
+> > -		err = bio_add_page(bio, page, PAGE_SIZE, 0);
+> > -		if (err != PAGE_SIZE) {
+> > +		if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE) {
+> >  			err = -EFAULT;
+> >  			goto err_out;
+> >  		}
 > 
-> Changes from v1:
->   - New patch
-> ---
->  .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
->  1 file changed, 5 insertions(+)
+> This patch looks like an improvement.  But looking at that whole
+> area just makes me cringe.
+
+OK, I agree with you, I will improve it or just kill them all with
+new iomap approach after it supports tail-end packing inline.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> index 31c95c404619..3a54f58683a0 100644
-> --- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> @@ -31,12 +31,16 @@ properties:
->    reg:
->      maxItems: 1
->  
-> +  clocks:
-> +    maxItems: 1
-> +
->    interrupts:
->      maxItems: 1
->  
->  required:
->    - compatible
->    - reg
-> +  - clocks
->    - interrupts
->  
->  unevaluatedProperties: false
-> @@ -47,6 +51,7 @@ examples:
->          compatible = "allwinner,sun4i-a10-wdt";
->          reg = <0x01c20c90 0x10>;
->          interrupts = <24>;
-> +        clocks = <&osc24M>;
->          timeout-sec = <10>;
->      };
->  
-> -- 
-> 2.21.0
+> Why is there __erofs_get_meta_page with the two weird booleans instead
+> of a single erofs_get_meta_page that gets and gfp_t for additional
+> flags and an unsigned int for additional bio op flags.
+
+I agree with you. Thanks for your suggestion.
+
 > 
+> Why do need ioprio support to start with?  Seeing that in a new
+> fs look kinda odd.  Do you have benchmarks that show the difference?
+
+I don't have some benchmark for all of these, can I just set
+REQ_PRIO for all metadata? is that reasonable?
+Could you kindly give some suggestion on this?
+
+> 
+> That function then calls erofs_grab_bio, which tries to handle a
+> bio_alloc failure, except that the function will not actually fail
+> due the mempool backing it.  It also seems like and awfully
+> huge function to inline.
+
+OK, I will simplify it. Thanks for your suggestion.
+
+> 
+> Why is there __submit_bio which really just obsfucates what is
+> going on?  Also why is __submit_bio using bio_set_op_attrs instead
+> of opencode it as the comment right next to it asks you to?
+
+Originally, mainly due to backport consideration since some
+of our smartphones use 3.x kernel as well...
+
+> 
+> Also I really don't understand why you can't just use read_cache_page
+> or even read_cache_page_gfp instead of __erofs_get_meta_page.
+> That function is a whole lot of duplication of functionality shared
+> by a lot of other file systems.
+
+OK, I have to admit, that code was originally just copied from f2fs
+with some modification (maybe it's not a good example for us).
+
+Thanks,
+Gao Xiang
+
