@@ -2,176 +2,150 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D1FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC53C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029B421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567127535;
-	bh=Xa5lUKuEKR/Mj/s8RMBKL11PjH1zbgHgXvtpnqsOn+I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HtZznnNOeHHej7gFmd5A2y58a/dqtFvtJPUX8o9WTtv9jeTittQzK12n8qtUr0EM6
-	 2z9CFTe8+/6sPI3IioacR5o6S4Z1dEG6MXxBN3RbYfZcf+JSsV+FYjRIJQ1YJwFGkP
-	 Ap9upAp+LKUvf2IkrV1DbOFyQw9gTHR81HF5S+EU=
+	by mail.kernel.org (Postfix) with ESMTP id 6D58621726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 01:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kSF6EZJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfH3BMO (ORCPT
+        id S1727985AbfH3BMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 29 Aug 2019 21:12:17 -0400
+Received: from gateway23.websitewelcome.com ([192.185.49.184]:19768 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727947AbfH3BMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 21:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfH3BLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 21:11:47 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA90E22CEA;
-        Fri, 30 Aug 2019 01:11:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567127507;
-        bh=Xa5lUKuEKR/Mj/s8RMBKL11PjH1zbgHgXvtpnqsOn+I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SMCGZRd22WrJwWkHI0xVmGGznYLHOi4p+488UsMn7UbCICUpyuxBv5hU5TAs5xJQ6
-         VN0/bOV9eK0aMV8OQrbk5u7L3H9hAJe8tf50jvA7NNq+TGYbmIrPStantg7B3CW0os
-         UZnbLjPWTgws7hNM+b4/AEVvqBZi/Cr6NYTnLmZ8=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     Theodore Tso <tytso@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 4/7] random: Make /dev/random be almost like /dev/urandom
-Date:   Thu, 29 Aug 2019 18:11:39 -0700
-Message-Id: <f2d5a19225273f1b7ce9fb77d48c1740c358740e.1567126741.git.luto@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1567126741.git.luto@kernel.org>
-References: <cover.1567126741.git.luto@kernel.org>
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 188CB84EC
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 20:12:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3VSXiJocp2PzO3VSXiHKav; Thu, 29 Aug 2019 20:12:13 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=VTOOgjyJtQhQpU+6Umy1FeKBLztwuppbHPl7xEc0pLg=; b=kSF6EZJBtijHZHJOxCRXSqFXMQ
+        rw1497KhcwcHpz/079SGvB1oLDCkEWwfNw4L9x7W6L+8DkSgu54hxeTFO0gWuIltTWIK+/gQvRYxw
+        KbEC1OBXv0ccuOtSQzOgS7ufNpjPsvnEA9X4iGgobxL9MK5wh1bMFlGxO7nO3MAJZsTvSc5HTk74x
+        xfZSnPdvwVJ6gOwKkxgtYkVLq0yxHKX9+ycjySZb5kh7lCiOPEJZ/1CRhOk/06rYeG6RMhauloED9
+        cLt6uvCwTfT5Zyl1sz2/zpTp79ir/tvYykMYI2VQWoM15gZsjPnFXtRXQQYA7kDrSHYStDJhDAr6c
+        aGTrHCjQ==;
+Received: from [189.152.216.116] (port=50230 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3VSV-000hFw-WB; Thu, 29 Aug 2019 20:12:12 -0500
+Date:   Thu, 29 Aug 2019 20:12:11 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] Bluetooth: mgmt: Use struct_size() helper
+Message-ID: <20190830011211.GA26531@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3VSV-000hFw-WB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:50230
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the read semantics of /dev/random to be the same
-as /dev/urandom except that reads will block until the CRNG is
-ready.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-None of the cleanups that this enables have been done yet.  As a
-result, this gives a warning about an unused function.
+struct mgmt_rp_get_connections {
+	...
+        struct mgmt_addr_info addr[0];
+} __packed;
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
+
+So, replace the following form:
+
+sizeof(*rp) + (i * sizeof(struct mgmt_addr_info));
+
+with:
+
+struct_size(rp, addr, i)
+
+Also, notice that, in this case, variable rp_len is not necessary,
+hence it is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/char/random.c | 55 +++++++++++--------------------------------
- 1 file changed, 14 insertions(+), 41 deletions(-)
+ net/bluetooth/mgmt.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 1ad2c7eaf675..29a158d9353c 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -354,7 +354,6 @@
- #define INPUT_POOL_WORDS	(1 << (INPUT_POOL_SHIFT-5))
- #define OUTPUT_POOL_SHIFT	10
- #define OUTPUT_POOL_WORDS	(1 << (OUTPUT_POOL_SHIFT-5))
--#define SEC_XFER_SIZE		512
- #define EXTRACT_SIZE		10
- 
- 
-@@ -803,7 +802,6 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
- 		if (entropy_bits >= random_read_wakeup_bits &&
- 		    wq_has_sleeper(&random_read_wait)) {
- 			wake_up_interruptible(&random_read_wait);
--			kill_fasync(&fasync, SIGIO, POLL_IN);
- 		}
- 		/* If the input pool is getting full, and the blocking
- 		 * pool has room, send some entropy to the blocking
-@@ -1031,6 +1029,7 @@ static void crng_reseed(struct crng_state *crng, struct entropy_store *r)
- 		crng_init = 2;
- 		process_random_ready_list();
- 		wake_up_interruptible(&crng_init_wait);
-+		kill_fasync(&fasync, SIGIO, POLL_IN);
- 		pr_notice("random: crng init done\n");
- 		if (unseeded_warning.missed) {
- 			pr_notice("random: %d get_random_xx warning(s) missed "
-@@ -1921,43 +1920,6 @@ void rand_initialize_disk(struct gendisk *disk)
- }
- #endif
- 
--static ssize_t
--_random_read(int nonblock, char __user *buf, size_t nbytes)
--{
--	ssize_t n;
--
--	if (nbytes == 0)
--		return 0;
--
--	nbytes = min_t(size_t, nbytes, SEC_XFER_SIZE);
--	while (1) {
--		n = extract_entropy_user(&blocking_pool, buf, nbytes);
--		if (n < 0)
--			return n;
--		trace_random_read(n*8, (nbytes-n)*8,
--				  ENTROPY_BITS(&blocking_pool),
--				  ENTROPY_BITS(&input_pool));
--		if (n > 0)
--			return n;
--
--		/* Pool is (near) empty.  Maybe wait and retry. */
--		if (nonblock)
--			return -EAGAIN;
--
--		wait_event_interruptible(random_read_wait,
--		    blocking_pool.initialized &&
--		    (ENTROPY_BITS(&input_pool) >= random_read_wakeup_bits));
--		if (signal_pending(current))
--			return -ERESTARTSYS;
--	}
--}
--
--static ssize_t
--random_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
--{
--	return _random_read(file->f_flags & O_NONBLOCK, buf, nbytes);
--}
--
- static ssize_t
- urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 150114e33b20..acb7c6d5643f 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -2588,7 +2588,6 @@ static int get_connections(struct sock *sk, struct hci_dev *hdev, void *data,
  {
-@@ -1981,15 +1943,26 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 	return ret;
- }
+ 	struct mgmt_rp_get_connections *rp;
+ 	struct hci_conn *c;
+-	size_t rp_len;
+ 	int err;
+ 	u16 i;
  
-+static ssize_t
-+random_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
-+{
-+	int ret;
-+
-+	ret = wait_for_random_bytes();
-+	if (ret != 0)
-+		return ret;
-+	return urandom_read(file, buf, nbytes, ppos);
-+}
-+
- static __poll_t
- random_poll(struct file *file, poll_table * wait)
- {
- 	__poll_t mask;
+@@ -2608,8 +2607,7 @@ static int get_connections(struct sock *sk, struct hci_dev *hdev, void *data,
+ 			i++;
+ 	}
  
--	poll_wait(file, &random_read_wait, wait);
-+	poll_wait(file, &crng_init_wait, wait);
- 	poll_wait(file, &random_write_wait, wait);
- 	mask = 0;
--	if (ENTROPY_BITS(&input_pool) >= random_read_wakeup_bits)
-+	if (crng_ready())
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 	if (ENTROPY_BITS(&input_pool) < random_write_wakeup_bits)
- 		mask |= EPOLLOUT | EPOLLWRNORM;
+-	rp_len = sizeof(*rp) + (i * sizeof(struct mgmt_addr_info));
+-	rp = kmalloc(rp_len, GFP_KERNEL);
++	rp = kmalloc(struct_size(rp, addr, i), GFP_KERNEL);
+ 	if (!rp) {
+ 		err = -ENOMEM;
+ 		goto unlock;
+@@ -2629,10 +2627,8 @@ static int get_connections(struct sock *sk, struct hci_dev *hdev, void *data,
+ 	rp->conn_count = cpu_to_le16(i);
+ 
+ 	/* Recalculate length in case of filtered SCO connections, etc */
+-	rp_len = sizeof(*rp) + (i * sizeof(struct mgmt_addr_info));
+-
+ 	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_GET_CONNECTIONS, 0, rp,
+-				rp_len);
++				struct_size(rp, addr, i));
+ 
+ 	kfree(rp);
+ 
 -- 
-2.21.0
+2.23.0
 
