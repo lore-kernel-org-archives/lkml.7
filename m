@@ -2,211 +2,255 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1FBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325F8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE83215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0468622CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sHAapob+"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="EmqcIx6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfH3EdF (ORCPT
+        id S1727800AbfH3EdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 00:33:05 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43341 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfH3EdE (ORCPT
+        Fri, 30 Aug 2019 00:33:11 -0400
+Received: from forward106p.mail.yandex.net ([77.88.28.109]:58701 "EHLO
+        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726090AbfH3EdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 00:33:04 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y8so4356736oih.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 21:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dckypzty3MXWBDTJpI2rCDfqM2cRZodYiUO2dmQlaCU=;
-        b=sHAapob+H6miA+mQX2BYVpewzufVv5Y3FsO5WLoWbQmnWUzrZF3K7h2nU/aPZhOcHM
-         l1tsF1fCipcFwY5jGWnzgW0IY7CF+gEYDQelZBODttt5Hq1ITiJgV8jsB/KZFVFA5AKh
-         kzdEGdI2OA/voVvEmjd2+5zj3j3KnQcZzEc9/pC+d/4m3sMG9XhJXFPHDCc5SZ6DbFJ/
-         dQhuoP/YICeX4pe1w0avEbbBV5MzNWP+ChlcVNSwDVpM2M3CA4G1RHsP7wGtgEePpEQI
-         xgZYtn6Iiwgli4XRRlcD2XLUkN/nFRs704vOV8FzICvXFitzppTFRPPOLoaINjm9IxQp
-         xmXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dckypzty3MXWBDTJpI2rCDfqM2cRZodYiUO2dmQlaCU=;
-        b=XlipqxbXIW45uw2Vf4AkGK1w6y+/TXUBk9ygPFuJOaicyyKZwQll3tPXQLqd38dhyh
-         VatiixmsZ9sSN5PiCmNCSoIx5c4CrEjsMhYgZBMR2gflripW/nXe1JpYagZwkCq5ch/v
-         DTZNkloawcmZTaL0w8Hti7pzEFoRkL1+J4uqFzBxD9QvmQbc0OjBNo64fB0vGov+rSal
-         hJcVqALTtGAgf6dqu5BBbux6MxfiEaFHpCE0cefuaS8Gg7u5rA5l70/x92plvDCQt6Qk
-         kpi1PgJ5tITl9jFKSLxm74SaiNxPfID75LQ7hy/zYmI17fWoFHmEnlW0vQNrWEwTTlXZ
-         t9+Q==
-X-Gm-Message-State: APjAAAX6tsj0Il6drQ1q1a7RVox1G0oyX9B2KaywnFk9+KYw/Qdn7Fq2
-        XFGxQ0oVqjhGOnhDgnddswgaNLWpvs+xtEKb9hqxrw==
-X-Google-Smtp-Source: APXvYqz+dnW0egNjofi/hbg61kqJwdkaAieyvb4VrFqONk/EHwkfUQ2t1veZKRT/Mr49JwMorSR7uXbSuHFt543L/vw=
-X-Received: by 2002:aca:cc81:: with SMTP id c123mr9117245oig.30.1567139582896;
- Thu, 29 Aug 2019 21:33:02 -0700 (PDT)
+        Fri, 30 Aug 2019 00:33:11 -0400
+Received: from mxback12j.mail.yandex.net (mxback12j.mail.yandex.net [IPv6:2a02:6b8:0:1619::87])
+        by forward106p.mail.yandex.net (Yandex) with ESMTP id 1F6441C80A75;
+        Fri, 30 Aug 2019 07:33:07 +0300 (MSK)
+Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
+        by mxback12j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id EF5346hYcL-X6oeTDPq;
+        Fri, 30 Aug 2019 07:33:07 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567139587;
+        bh=jLzJicLkbXfHmx3eYxmpwhMZURKGvtDVrPk8smkP6xQ=;
+        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
+        b=EmqcIx6H6da7C5wNP5sNvzZQsBO2Dx86kxx/35sUE9/eVfcpZKztaSVCtK+1o4Ect
+         i8fEITmt1TzjMCW7RXav5ZeDAJPEy1LZ3BmdDWu8i44Y/My1nbj5edoiuEzgxI10up
+         6TmmtvkrPLybcuWUAU+rd8YTU1gXWlf7Qyd8YPrs=
+Authentication-Results: mxback12j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id vFuwVxmDwr-WvDGJwA3;
+        Fri, 30 Aug 2019 07:33:03 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.co,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v1 07/18] irqchip: Add driver for Loongson-3 HyperTransport interrupt controller
+Date:   Fri, 30 Aug 2019 12:32:21 +0800
+Message-Id: <20190830043232.20191-2-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-References: <20190829074603.70424-1-saravanak@google.com> <CAL_Jsq+2vR75ofq=aKOt1bb1T-JfhiGSR9dnHWQf7VLmgJP4eA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+2vR75ofq=aKOt1bb1T-JfhiGSR9dnHWQf7VLmgJP4eA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 29 Aug 2019 21:32:26 -0700
-Message-ID: <CAGETcx_8AS8AVB-95vSzXXC=Rs0+0sp3OnJvFWXWtwEn-wH-ew@mail.gmail.com>
-Subject: Re: [PATCH v10 0/7] Solve postboot supplier cleanup and optimize
- probe ordering
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-acpi@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 9:43 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, Aug 29, 2019 at 2:46 AM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Add device-links to track functional dependencies between devices
-> > after they are created (but before they are probed) by looking at
-> > their common DT bindings like clocks, interconnects, etc.
-> >
-> > Having functional dependencies automatically added before the devices
-> > are probed, provides the following benefits:
-> >
-> > - Optimizes device probe order and avoids the useless work of
-> >   attempting probes of devices that will not probe successfully
-> >   (because their suppliers aren't present or haven't probed yet).
-> >
-> >   For example, in a commonly available mobile SoC, registering just
-> >   one consumer device's driver at an initcall level earlier than the
-> >   supplier device's driver causes 11 failed probe attempts before the
-> >   consumer device probes successfully. This was with a kernel with all
-> >   the drivers statically compiled in. This problem gets a lot worse if
-> >   all the drivers are loaded as modules without direct symbol
-> >   dependencies.
-> >
-> > - Supplier devices like clock providers, interconnect providers, etc
-> >   need to keep the resources they provide active and at a particular
-> >   state(s) during boot up even if their current set of consumers don't
-> >   request the resource to be active. This is because the rest of the
-> >   consumers might not have probed yet and turning off the resource
-> >   before all the consumers have probed could lead to a hang or
-> >   undesired user experience.
-> >
-> >   Some frameworks (Eg: regulator) handle this today by turning off
-> >   "unused" resources at late_initcall_sync and hoping all the devices
-> >   have probed by then. This is not a valid assumption for systems with
-> >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> >   this due to the lack of a clear signal for when they can turn off
-> >   resources. This leads to downstream hacks to handle cases like this
-> >   that can easily be solved in the upstream kernel.
-> >
-> >   By linking devices before they are probed, we give suppliers a clear
-> >   count of the number of dependent consumers. Once all of the
-> >   consumers are active, the suppliers can turn off the unused
-> >   resources without making assumptions about the number of consumers.
-> >
-> > By default we just add device-links to track "driver presence" (probe
-> > succeeded) of the supplier device. If any other functionality provided
-> > by device-links are needed, it is left to the consumer/supplier
-> > devices to change the link when they probe.
-> >
-> > v1 -> v2:
-> > - Drop patch to speed up of_find_device_by_node()
-> > - Drop depends-on property and use existing bindings
-> >
-> > v2 -> v3:
-> > - Refactor the code to have driver core initiate the linking of devs
-> > - Have driver core link consumers to supplier before it's probed
-> > - Add support for drivers to edit the device links before probing
-> >
-> > v3 -> v4:
-> > - Tested edit_links() on system with cyclic dependency. Works.
-> > - Added some checks to make sure device link isn't attempted from
-> >   parent device node to child device node.
-> > - Added way to pause/resume sync_state callbacks across
-> >   of_platform_populate().
-> > - Recursively parse DT node to create device links from parent to
-> >   suppliers of parent and all child nodes.
-> >
-> > v4 -> v5:
-> > - Fixed copy-pasta bugs with linked list handling
-> > - Walk up the phandle reference till I find an actual device (needed
-> >   for regulators to work)
-> > - Added support for linking devices from regulator DT bindings
-> > - Tested the whole series again to make sure cyclic dependencies are
-> >   broken with edit_links() and regulator links are created properly.
-> >
-> > v5 -> v6:
-> > - Split, squashed and reordered some of the patches.
-> > - Refactored the device linking code to follow the same code pattern for
-> >   any property.
-> >
-> > v6 -> v7:
-> > - No functional changes.
-> > - Renamed i to index
-> > - Added comment to clarify not having to check property name for every
-> >   index
-> > - Added "matched" variable to clarify code. No functional change.
-> > - Added comments to include/linux/device.h for add_links()
-> >
-> > v7 -> v8:
-> > - Rebased on top of linux-next to handle device link changes in [1]
-> >
-> > v8 -> v9:
-> > - Fixed kbuild test bot reported errors (docs and const)
-> >
-> > v9->v10:
-> > - Changes made based on reviews on LKML [2] and discussions at ELC [3]
-> > - Dropped the edit_links() patch
-> > - Dropped the patch that skips linking for default bus nodes
-> > - 1/7: Changed from bus.add_links() to fwnode.ops.add_links()
-> > - 1/7: Update device link doc
-> > - 1/7: Lots of comments/fn doc updates
-> > - 1/7: Renamed device_link_check_waiting_consumers() to
-> >   device_link_add_missing_supplier_links()
-> > - 2/7: Moved DT parsing/linking code from of/platform.c to of/property.c
->
-> Why? You'll notice that of/property.c doesn't know anything about
-> platform_device (and struct device):
->
-> $ git grep platform_device -- drivers/of/property.c
-> $
->
-> Everything related to platform_device goes in of/platform.c.
-> Everything related to struct device only goes in of/device.c. I'd be
-> okay with a new file for this too.
+This controller appeared on Loongson-3 family of chips to receive interrupts
+from PCH chip.
 
-The only platform_device related code in what got moved to
-of/property.c is the call to of_find_device_by_node(). And that's
-because I forgot that function returns a platform_device --- it should
-really have been called of_find_plat_device_by_node() or something
-similar. Outside of that, of/property.c makes sense because that's
-where the fwnode ops are implemented.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/irqchip/Kconfig          |   8 ++
+ drivers/irqchip/Makefile         |   1 +
+ drivers/irqchip/irq-ls3-htintc.c | 147 +++++++++++++++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 drivers/irqchip/irq-ls3-htintc.c
 
-As you mentioned in the other email, just searching platform_bus is
-not sufficient. So I'll have to figure something out for that. Once I
-do, I think the code will be fine in of/property.c as it shouldn't
-have any reference to platform_device.
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 8d9eac5fd4a7..b3ce0f3e43ae 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -480,6 +480,14 @@ config LS3_IOINTC
+ 	help
+ 	  Support for the Loongson-3 I/O Interrupt Controller.
+ 
++config LS3_HTINTC
++	bool "Loongson3 HyperTransport Interrupt Controller"
++	depends on MACH_LOONGSON64
++	default y
++	select IRQ_DOMAIN
++	select GENERIC_IRQ_CHIP
++	help
++	  Support for the Loongson-3 HyperTransport Interrupt Controller.
+ endmenu
+ 
+ config SIFIVE_PLIC
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 49ecb8d38138..0fda94c319e9 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -103,3 +103,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+ obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+ obj-$(CONFIG_LS3_IOINTC)			+= irq-ls3-iointc.o
++obj-$(CONFIG_LS3_HTINTC)			+= irq-ls3-htintc.o
+diff --git a/drivers/irqchip/irq-ls3-htintc.c b/drivers/irqchip/irq-ls3-htintc.c
+new file mode 100644
+index 000000000000..d5013606faa8
+--- /dev/null
++++ b/drivers/irqchip/irq-ls3-htintc.c
+@@ -0,0 +1,147 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2019, Jiaxun Yang <jiaxun.yang@flygoat.com>
++ *  Loongson-3 HyperTransport IRQ support
++ */
++
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/interrupt.h>
++#include <linux/ioport.h>
++#include <linux/irqchip.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/io.h>
++#include <linux/irqchip/chained_irq.h>
++
++#define HTINTC_NUM_GC  4
++#define HTINTC_GC_SIZE  0x4
++#define HTINTC_NUM_HANDLER  4
++#define HTINTC_HANDLER_SIZE  0x8
++#define HTINTC_HANDLER_IRQ  64
++
++#define HTINTC_VECTOR_OFFSET   0x0
++#define HTINTC_EN_OFFSET   0x20
++
++struct htintc_handler_priv {
++	struct irq_domain	*domain;
++	void __iomem		*handler_base;
++};
++
++static void htintc_chained_handle_irq(struct irq_desc *desc)
++{
++	struct htintc_handler_priv *priv = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	int i;
++	bool handled = false;
++
++	chained_irq_enter(chip, desc);
++
++	for (i = 0; i < HTINTC_NUM_GC; i++) {
++		uint32_t irqs = readl(priv->handler_base + HTINTC_GC_SIZE * i);
++
++		while (irqs) {
++			int bit = __ffs(irqs);
++
++			generic_handle_irq(irq_find_mapping(priv->domain, bit + 32 * i));
++			irqs &= ~BIT(bit);
++			handled = true;
++		}
++	}
++
++	if (!handled)
++		spurious_interrupt();
++
++	chained_irq_exit(chip, desc);
++}
++
++int __init ls3_htintc_of_init(struct device_node *node,
++					   struct device_node *parent)
++{
++	struct irq_chip_generic *gc;
++	struct irq_chip_type *ct;
++	struct htintc_handler_priv *priv;
++	struct irq_domain *domain;
++	void __iomem *base;
++	int parent_irq[HTINTC_NUM_HANDLER], err = 0;
++	int i;
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	base = of_iomap(node, 0);
++	if (!base) {
++		err = -ENODEV;
++		goto out_free_priv;
++	}
++
++	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
++		parent_irq[i] = irq_of_parse_and_map(node, i);
++		if (!parent_irq[i]) {
++			pr_err("ls3-htintc: unable to get parent irq %d\n", i);
++			err =  -ENODEV;
++			goto out_iounmap;
++		}
++	}
++	/* Set up an IRQ domain */
++	domain = irq_domain_add_linear(node, 32 * HTINTC_NUM_GC,
++								&irq_generic_chip_ops, NULL);
++	if (!domain) {
++		pr_err("ls3-htintc: cannot add IRQ domain\n");
++		err = -ENOMEM;
++		goto out_iounmap;
++	}
++
++	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
++		/* Mask all interrupts */
++		writeq(0x0, base + HTINTC_EN_OFFSET + HTINTC_HANDLER_SIZE * i);
++	}
++
++	err = irq_alloc_domain_generic_chips(domain, 32, 1,
++										node->full_name,
++										handle_edge_irq,
++										IRQ_NOPROBE, 0,
++										IRQ_GC_INIT_MASK_CACHE);
++	if (err) {
++		pr_err("ls3-htintc: unable to register IRQ domain\n");
++		err = -ENOMEM;
++		goto out_free_domain;
++	}
++
++	for (i = 0; i < HTINTC_NUM_GC; i++) {
++		gc = irq_get_domain_generic_chip(domain, i * 32);
++		gc->reg_base = base + HTINTC_GC_SIZE * i;
++		gc->domain = domain;
++
++		ct = gc->chip_types;
++		ct->regs.mask = HTINTC_EN_OFFSET;
++		ct->regs.ack = HTINTC_VECTOR_OFFSET;
++		ct->chip.irq_unmask = irq_gc_mask_set_bit;
++		ct->chip.irq_mask = irq_gc_mask_clr_bit;
++		ct->chip.irq_ack = irq_gc_ack_set_bit;
++	}
++
++	priv->domain = domain;
++	priv->handler_base = base + HTINTC_VECTOR_OFFSET;
++
++	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
++		irq_set_chained_handler_and_data(parent_irq[i],
++										htintc_chained_handle_irq,
++										priv);
++	}
++
++	return 0;
++
++out_free_domain:
++	irq_domain_remove(domain);
++out_iounmap:
++	iounmap(base);
++out_free_priv:
++	kfree(priv);
++
++	return err;
++}
++
++IRQCHIP_DECLARE(ls3_htintc, "loongson,ls3-htintc", ls3_htintc_of_init);
+-- 
+2.22.0
 
-Thanks for catching what I missed.
-
--Saravana
