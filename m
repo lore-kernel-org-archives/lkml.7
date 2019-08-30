@@ -2,80 +2,98 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFD5C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E5BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18C123430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EFF23430
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUYWYHJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfH3UJI (ORCPT
+        id S1728228AbfH3UJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 16:09:08 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43103 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbfH3UJG (ORCPT
+        Fri, 30 Aug 2019 16:09:42 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33582 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbfH3UJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 16:09:06 -0400
-Received: by mail-qt1-f195.google.com with SMTP id b11so8945212qtp.10;
-        Fri, 30 Aug 2019 13:09:05 -0700 (PDT)
+        Fri, 30 Aug 2019 16:09:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id go14so3835879plb.0;
+        Fri, 30 Aug 2019 13:09:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iUyLbFrRRfn8yBr4b5/WswzF/k/TMDXNh3dYn/pQ9TI=;
+        b=VUYWYHJQ7vIBHao0CvJlTLxuG3skA829TGT4qURdUfeQ5SKl/E91DiysBDzaoTs2r3
+         s10spdHjlEEqEctwWePmoFBNwvr4doLUu0TROUbIrpctRauR4rMk8XW4Tzl9Cb4rNFpu
+         zTijlEjKRFUzGYRM4wwQl8bHMgJLT4M1Dbo9x+66hEf8LMTrBiY9UB4lUpR/ZTxHC2Tg
+         9Y+9CufCjhWhzPNGylcK/HEP8yCIa5KKNOon4riEuEZSshcHLMqeVSn2ZRtIAN6Yy1oE
+         Uk3h8zXzwDHoZfoLDhF1/tZ0ZBHHAo4jwa66cmyJccnmsUaUOf00a3VaVgpvWCEIDwvp
+         iVyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JSz43+HaqBFF1Ng0B+1T6nx7xlLwk6j4lqf7D5VIcws=;
-        b=Te7I4oItEgvT+NWb9rFaghIkBtJvGp8XCCUvpDl4IwCW8LYDWxbA3FeYJykXq3yrQr
-         RgClfkVFNOdsTeIzN0yicaH/IotS4Z5L7j/IGTUliNQiEfloHD8GwHPUhYpmay9o3ddT
-         XCQD6rxvDHnRN32LFb03WXeWPiqwfIzUhr8TLXOkWEujG0QOBa1aWjqgBunqVWXFT3sD
-         kxkd22YEXS9XOQFvnYP4pJVcSpu7f8LZOZbd6pk7MO71uuqrgos4ME3DWYa3xdLBKoMy
-         krep2Cnv0DLF6Vf2ZnOM3kISLWjeXLjQfxjCjH1TjXe/0Knf8SWL5Bh+VsHGeetyHu3l
-         shBw==
-X-Gm-Message-State: APjAAAXpKUE5ka3OraJ/JA5Qf1Cie2+/9bopAdIo1ISdHoFCqfKbcJM3
-        qIj56TYcnDVWqFx6+ZWUo04cOGpijY58bBSbGpE=
-X-Google-Smtp-Source: APXvYqxuaGEEyWbbVoV2B3tqVUOjxwizqZzgkNMis/E8MNgJ0bdU2Nj37/z0UlOREhwaxP3xoIfFO3LThACiGdB/jtg=
-X-Received: by 2002:aed:2842:: with SMTP id r60mr7786550qtd.142.1567195745253;
- Fri, 30 Aug 2019 13:09:05 -0700 (PDT)
+        bh=iUyLbFrRRfn8yBr4b5/WswzF/k/TMDXNh3dYn/pQ9TI=;
+        b=fgQrIkMoM2Fk6OSJjbLxn1wbFECr/2Bl/0AZRdmY+OEVQ4EiuTk9oRKoeiX5oxVFTW
+         ZLeY+bMqXYox1vWaUjUDNWstqNGSf8y+hrDsqq7uyVybuEZ0Btu9reWtJ4cIiu7zGBCk
+         YlnzpgpZA7fzQWJaNJ6xE0L61tlFQTHuC2jpgL/CsOfWsUF6/P9yfbo1tyYTX7dh94u0
+         g+XQfZHoGkwW34qWL89Vti2rstpBgR2GFkdZbj/XPH2oODDpAf05WKLNB4nZzkd2fHsC
+         RC90LeCOeVpbBSzmffBmYAs6ZoOw67uF63zlcovWKn656e11FqzVS+RUduyqaFqc2UBK
+         rkyw==
+X-Gm-Message-State: APjAAAXpUrY4QK0IUSHRYz5kNQ7ohrbRghkrpvIb8nWpmM1I08MbYOnM
+        nBbAVfnVctLjjodFtTWLcJiReVi1gwvmViYZSjU=
+X-Google-Smtp-Source: APXvYqxoPxx7Ty+7NNRV2ZwlZygvtNhIEFwB7150clgIgwejwOIGPA+6QbNCp5AT0pl3Fj8AIu6cs0g0yOB4qqWMy08=
+X-Received: by 2002:a17:902:26b:: with SMTP id 98mr17601048plc.61.1567195781332;
+ Fri, 30 Aug 2019 13:09:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190828210934.17711-1-efremov@linux.com>
-In-Reply-To: <20190828210934.17711-1-efremov@linux.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 30 Aug 2019 22:08:49 +0200
-Message-ID: <CAK8P3a3T3r3b2uW977HiuMi0uYKs4V_d4e=PDnkWDpqs+wrLww@mail.gmail.com>
-Subject: Re: [PATCH] asm-generic: add unlikely to default BUG_ON(x)
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <1567191974-11578-1-git-send-email-zdai@linux.vnet.ibm.com>
+ <CAM_iQpVMYQUdQN5L+ntXZTffZkW4q659bvXoZ8+Ar+zeud7Y4Q@mail.gmail.com> <1567195432.20025.18.camel@oc5348122405>
+In-Reply-To: <1567195432.20025.18.camel@oc5348122405>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Fri, 30 Aug 2019 13:09:29 -0700
+Message-ID: <CAM_iQpX-pBBQ=AEzogmZowWm6=XJWnuMeOOxRWKYT0KTD3PnLw@mail.gmail.com>
+Subject: Re: [v2] net_sched: act_police: add 2 new attributes to support
+ police 64bit rate and peakrate
+To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, zdai@us.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:09 PM Denis Efremov <efremov@linux.com> wrote:
+On Fri, Aug 30, 2019 at 1:03 PM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
 >
-> Add unlikely to default BUG_ON(x) in !CONFIG_BUG. It makes
-> the define consistent with BUG_ON(x) in CONFIG_BUG.
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: <linux-arch@vger.kernel.org>
+> On Fri, 2019-08-30 at 12:11 -0700, Cong Wang wrote:
+> > On Fri, Aug 30, 2019 at 12:06 PM David Dai <zdai@linux.vnet.ibm.com> wrote:
+> > > -       if (p->peak_present)
+> > > +               if ((police->params->rate.rate_bytes_ps >= (1ULL << 32)) &&
+> > > +                   nla_put_u64_64bit(skb, TCA_POLICE_RATE64,
+> > > +                                     police->params->rate.rate_bytes_ps,
+> > > +                                     __TCA_POLICE_MAX))
+> >
+> > I think the last parameter should be TCA_POLICE_PAD.
+> Thanks for reviewing it!
+> I have the impression that last parameter num value should be larger
+> than the attribute num value in 2nd parameter (TC_POLICE_RATE64 in this
 
-This makes sense, I've applied it to the asm-generic tree for now.
+Why do you have this impression?
 
-Two concerns though:
+> case). This is the reason I changed the last parameter value to
+> __TCA_POLICE_MAX after I moved the new attributes after TC_POLICE_PAD in
+> pkt_cls.h header.
 
-- adding unlikely() can cause new (usually false-postive) compile time
-  warnings to show up in random configurations, so we'll have to see what
-  the build bots think
+The prototype clearly shows it must be a padding attribute:
 
-- Kees Cook has recently sent a series for asm/bug.h that was merged by
-  Andrew Morton. If there are is a conflict with your patch, it may be better
-  to merge both through the same tree, either linux-mm or asm-generic.
-
-        Arnd
+static inline int nla_put_u64_64bit(struct sk_buff *skb, int attrtype,
+                                    u64 value, int padattr)
