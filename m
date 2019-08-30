@@ -2,265 +2,235 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58425C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C78C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A3E21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1251121726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BZGGw9m0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfH3CX5 (ORCPT
+        id S1727826AbfH3CYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 22:23:57 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:60452 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727216AbfH3CX4 (ORCPT
+        Thu, 29 Aug 2019 22:24:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35622 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfH3CYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 22:23:56 -0400
-X-UUID: 2253cdb25a6c4982bc16fa3535e8a1da-20190830
-X-UUID: 2253cdb25a6c4982bc16fa3535e8a1da-20190830
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <houlong.wei@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 564175187; Fri, 30 Aug 2019 10:23:53 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 30 Aug
- 2019 10:23:49 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 10:23:48 +0800
-Message-ID: <1567131823.24642.4.camel@mhfsdcap03>
-Subject: Re: [PATCH v14 07/10] soc: mediatek: cmdq: define the instruction
- struct
-From:   houlong wei <houlong.wei@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= 
-        <ck.hu@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= 
-        <Dennis-YC.Hsieh@mediatek.com>, <houlong.wei@mediatek.com>
-Date:   Fri, 30 Aug 2019 10:23:43 +0800
-In-Reply-To: <20190829014817.25482-9-bibby.hsieh@mediatek.com>
-References: <20190829014817.25482-1-bibby.hsieh@mediatek.com>
-         <20190829014817.25482-9-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 29 Aug 2019 22:24:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so1047291pfw.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 19:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vmqdFZq2W5NbVGJIAJOCWKV2YxcrP+ZUk1h61mL1bYU=;
+        b=BZGGw9m07Y4KwMqD0JODv17E9TKwpHOIva+1t14VTjYXuYDIl2+5d//+LM0c6q+Cha
+         UVO+MdLMQCUjNQp3XWVjkApBt2H4jedD/3ksqelxcg2iC3AE2twsWpVMWvQl35W+vY/l
+         +Ntv0rsMRRx+mCVEbzKqW8G7TFVJcjkmt7qjI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vmqdFZq2W5NbVGJIAJOCWKV2YxcrP+ZUk1h61mL1bYU=;
+        b=BGrbvEybXve+4rogHYRgqHlRGkGGSFxkmCnc99N0VisRJYrJZUEAwuZKj78CNYoIsm
+         hNMTi9Q8+rPg8RI0sIewHfhA53LxUDWJYPD+Ow2ggwFbvNVASrahyU25fnAR8yuKeGTe
+         sKPUvU0Xlyc9QExHZp5HVPQRGzlGa74Z9UQwDTFkZmU6Mks4cZchAYZ09lNeD9A8gAIG
+         +px806p8bqM86JWalsDQbP3DCOzca6r8ZeoYTfW8emoK3zO3IwexqXUcQDvuGoD57uQW
+         e4zYKDfiXT4GnKRIwT1o46Gf6re3XdQTvyTD2EruZDZ19XPnbEZMbhCqtRFDYV6T28c0
+         Lq3A==
+X-Gm-Message-State: APjAAAWYOfq0Vdccw3HXRrOO+dcxR4T00duYFwpEetmYWzd43dFIbOeB
+        UECIptuQBqzezOvNIF0eEind4w==
+X-Google-Smtp-Source: APXvYqz3sFecpEul92stqU55cGfX9T+dihlDF8WozVTPTdc1FIfWSr5pacvWi7dEmeDiFiUigvmhfQ==
+X-Received: by 2002:a63:ee04:: with SMTP id e4mr11012732pgi.53.1567131848377;
+        Thu, 29 Aug 2019 19:24:08 -0700 (PDT)
+Received: from hungte-p920.tpe.corp.google.com ([2401:fa00:1:10:76a7:bbc0:2929:253d])
+        by smtp.googlemail.com with ESMTPSA id s125sm4679004pfc.133.2019.08.29.19.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 19:24:07 -0700 (PDT)
+From:   Hung-Te Lin <hungte@chromium.org>
+Cc:     hungte@chromium.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Allison Randal <allison@lohutok.net>,
+        Colin Ian King <colin.king@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] firmware: google: check if size is valid when decoding VPD data
+Date:   Fri, 30 Aug 2019 10:23:58 +0800
+Message-Id: <20190830022402.214442-1-hungte@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+In-Reply-To: <5d67e673.1c69fb81.5f13b.62ee@mx.google.com>
+References: <5d67e673.1c69fb81.5f13b.62ee@mx.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 12636E4DEB4769029CE24443B391F3E200D9807E82F84E9F8E69B09A8C990E5C2000:8
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 09:48 +0800, Bibby Hsieh wrote:
-> Define an instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 77 ++++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 10 +++
->  2 files changed, 61 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 7aa0517ff2f3..9472526ab076 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -9,12 +9,24 @@
->  #include <linux/mailbox_controller.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
->  
-> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
->  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
->  #define CMDQ_EOC_IRQ_EN		BIT(0)
->  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
->  				<< 32 | CMDQ_EOC_IRQ_EN)
->  
-> +struct cmdq_instruction {
-> +	union {
-> +		u32 value;
-> +		u32 mask;
-> +	};
-> +	union {
-> +		u16 offset;
-> +		u16 event;
-> +	};
-> +	u8 subsys;
-> +	u8 op;
-> +};
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> @@ -110,10 +122,10 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_destroy);
->  
-> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> -				   u32 arg_a, u32 arg_b)
-> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt,
-> +				   struct cmdq_instruction inst)
+The VPD implementation from Chromium Vital Product Data project used to
+parse data from untrusted input without checking if the meta data is
+invalid or corrupted. For example, the size from decoded content may
+be negative value, or larger than whole input buffer. Such invalid data
+may cause buffer overflow.
 
-Can we use 'struct cmdq_instruction *inst' instead of 'struct
-cmdq_instruction inst' to reduce stack memory consumption a bit?
+To fix that, the size parameters passed to vpd_decode functions should
+be changed to unsigned integer (u32) type, and the parsing of entry
+header should be refactored so every size field is correctly verified
+before starting to decode.
 
->  {
-> -	u64 *cmd_ptr;
-> +	struct cmdq_instruction *cmd_ptr;
->  
->  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->  		/*
-> @@ -129,8 +141,9 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  			__func__, (u32)pkt->buf_size);
->  		return -ENOMEM;
->  	}
-> +
->  	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> +	*cmd_ptr = inst;
->  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  
->  	return 0;
-> @@ -138,24 +151,31 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  
->  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  {
-> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> -		    (subsys << CMDQ_SUBSYS_SHIFT);
-> +	struct cmdq_instruction inst;
-> +
-> +	inst.op = CMDQ_CODE_WRITE;
-> +	inst.value = value;
-> +	inst.offset = offset;
-> +	inst.subsys = subsys;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
->  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->  			u16 offset, u32 value, u32 mask)
->  {
-> -	u32 offset_mask = offset;
-> +	struct cmdq_instruction inst = { {0} };
-> +	u16 offset_mask = offset;
->  	int err = 0;
->  
->  	if (mask != 0xffffffff) {
-> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> +		inst.op = CMDQ_CODE_MASK;
-> +		inst.mask = ~mask;
-> +		err = cmdq_pkt_append_command(pkt, inst);
->  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
->  	}
-> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
-> +	err |= cmdq_pkt_write(pkt, subsys, offset_mask, value);
->  
->  	return err;
->  }
-> @@ -163,43 +183,48 @@ EXPORT_SYMBOL(cmdq_pkt_write_mask);
->  
->  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->  {
-> -	u32 arg_b;
-> +	struct cmdq_instruction inst = { {0} };
->  
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * WFE arg_b
-> -	 * bit 0-11: wait value
-> -	 * bit 15: 1 - wait, 0 - no wait
-> -	 * bit 16-27: update value
-> -	 * bit 31: 1 - update, 0 - no update
-> -	 */
-> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +	inst.op = CMDQ_CODE_WFE;
-> +	inst.value = CMDQ_WFE_OPTION;
-> +	inst.event = event;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_wfe);
->  
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  {
-> +	struct cmdq_instruction inst = { {0} };
-> +
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> -				       CMDQ_WFE_UPDATE);
-> +	inst.op = CMDQ_CODE_WFE;
-> +	inst.value = CMDQ_WFE_UPDATE;
-> +	inst.event = event;
-> +
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->  
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  {
-> -	int err;
-> +	struct cmdq_instruction inst = { {0} };
-> +	int err = 0;
->  
->  	/* insert EOC and generate IRQ for each command iteration */
-> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	inst.op = CMDQ_CODE_EOC;
-> +	inst.value = CMDQ_EOC_IRQ_EN;
-> +	err = cmdq_pkt_append_command(pkt, inst);
->  
->  	/* JUMP to end */
-> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	inst.op = CMDQ_CODE_JUMP;
-> +	inst.value = CMDQ_JUMP_PASS;
-> +	err |= cmdq_pkt_append_command(pkt, inst);
->  
->  	return err;
->  }
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index e6f54ef6698b..678760548791 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -20,6 +20,16 @@
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
->  
-> +/*
-> + * WFE arg_b
-> + * bit 0-11: wait value
-> + * bit 15: 1 - wait, 0 - no wait
-> + * bit 16-27: update value
-> + * bit 31: 1 - update, 0 - no update
-> + */
-> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
-> +					CMDQ_WFE_WAIT_VALUE)
-> +
->  /** cmdq event maximum */
->  #define CMDQ_MAX_EVENT			0x3ff
->  
+Fixes: ad2ac9d5c5e0 ("firmware: Google VPD: import lib_vpd source files")
+Signed-off-by: Hung-Te Lin <hungte@chromium.org>
+---
+Changes in v4:
+- Prevent changing indent in function prototype
+- Removed changes in function comments
 
+ drivers/firmware/google/vpd.c        |  4 +-
+ drivers/firmware/google/vpd_decode.c | 55 ++++++++++++++++------------
+ drivers/firmware/google/vpd_decode.h |  6 +--
+ 3 files changed, 37 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
+index 0739f3b70347..db0812263d46 100644
+--- a/drivers/firmware/google/vpd.c
++++ b/drivers/firmware/google/vpd.c
+@@ -92,8 +92,8 @@ static int vpd_section_check_key_name(const u8 *key, s32 key_len)
+ 	return VPD_OK;
+ }
+ 
+-static int vpd_section_attrib_add(const u8 *key, s32 key_len,
+-				  const u8 *value, s32 value_len,
++static int vpd_section_attrib_add(const u8 *key, u32 key_len,
++				  const u8 *value, u32 value_len,
+ 				  void *arg)
+ {
+ 	int ret;
+diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
+index 92e3258552fc..dda525c0f968 100644
+--- a/drivers/firmware/google/vpd_decode.c
++++ b/drivers/firmware/google/vpd_decode.c
+@@ -9,8 +9,8 @@
+ 
+ #include "vpd_decode.h"
+ 
+-static int vpd_decode_len(const s32 max_len, const u8 *in,
+-			  s32 *length, s32 *decoded_len)
++static int vpd_decode_len(const u32 max_len, const u8 *in,
++			  u32 *length, u32 *decoded_len)
+ {
+ 	u8 more;
+ 	int i = 0;
+@@ -30,18 +30,39 @@ static int vpd_decode_len(const s32 max_len, const u8 *in,
+ 	} while (more);
+ 
+ 	*decoded_len = i;
++	return VPD_OK;
++}
++
++static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
++			    u32 *_consumed, const u8 **entry, u32 *entry_len)
++{
++	u32 decoded_len;
++	u32 consumed = *_consumed;
++
++	if (vpd_decode_len(max_len - consumed, &input_buf[consumed],
++			   entry_len, &decoded_len) != VPD_OK)
++		return VPD_FAIL;
++	if (max_len - consumed < decoded_len)
++		return VPD_FAIL;
++
++	consumed += decoded_len;
++	*entry = input_buf + consumed;
++
++	/* entry_len is untrusted data and must be checked again. */
++	if (max_len - consumed < *entry_len)
++		return VPD_FAIL;
+ 
++	consumed += decoded_len;
++	*_consumed = consumed;
+ 	return VPD_OK;
+ }
+ 
+-int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
++int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
+ 		      vpd_decode_callback callback, void *callback_arg)
+ {
+ 	int type;
+-	int res;
+-	s32 key_len;
+-	s32 value_len;
+-	s32 decoded_len;
++	u32 key_len;
++	u32 value_len;
+ 	const u8 *key;
+ 	const u8 *value;
+ 
+@@ -56,26 +77,14 @@ int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
+ 	case VPD_TYPE_STRING:
+ 		(*consumed)++;
+ 
+-		/* key */
+-		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
+-				     &key_len, &decoded_len);
+-		if (res != VPD_OK || *consumed + decoded_len >= max_len)
++		if (vpd_decode_entry(max_len, input_buf, consumed, &key,
++				     &key_len) != VPD_OK)
+ 			return VPD_FAIL;
+ 
+-		*consumed += decoded_len;
+-		key = &input_buf[*consumed];
+-		*consumed += key_len;
+-
+-		/* value */
+-		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
+-				     &value_len, &decoded_len);
+-		if (res != VPD_OK || *consumed + decoded_len > max_len)
++		if (vpd_decode_entry(max_len, input_buf, consumed, &value,
++				     &value_len) != VPD_OK)
+ 			return VPD_FAIL;
+ 
+-		*consumed += decoded_len;
+-		value = &input_buf[*consumed];
+-		*consumed += value_len;
+-
+ 		if (type == VPD_TYPE_STRING)
+ 			return callback(key, key_len, value, value_len,
+ 					callback_arg);
+diff --git a/drivers/firmware/google/vpd_decode.h b/drivers/firmware/google/vpd_decode.h
+index cf8c2ace155a..8dbe41cac599 100644
+--- a/drivers/firmware/google/vpd_decode.h
++++ b/drivers/firmware/google/vpd_decode.h
+@@ -25,8 +25,8 @@ enum {
+ };
+ 
+ /* Callback for vpd_decode_string to invoke. */
+-typedef int vpd_decode_callback(const u8 *key, s32 key_len,
+-				const u8 *value, s32 value_len,
++typedef int vpd_decode_callback(const u8 *key, u32 key_len,
++				const u8 *value, u32 value_len,
+ 				void *arg);
+ 
+ /*
+@@ -44,7 +44,7 @@ typedef int vpd_decode_callback(const u8 *key, s32 key_len,
+  * If one entry is successfully decoded, sends it to callback and returns the
+  * result.
+  */
+-int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
++int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
+ 		      vpd_decode_callback callback, void *callback_arg);
+ 
+ #endif  /* __VPD_DECODE_H */
+-- 
+2.23.0.187.g17f5b7556c-goog
 
