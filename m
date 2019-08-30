@@ -2,139 +2,130 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DCEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC52C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1B322CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD10121897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfH3NEd (ORCPT
+        id S1727948AbfH3NFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:04:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:58636 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfH3NEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:04:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 06:04:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="182646301"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 30 Aug 2019 06:04:31 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i3gZq-0007iM-4Q; Fri, 30 Aug 2019 16:04:30 +0300
-Date:   Fri, 30 Aug 2019 16:04:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 10/10] lib/test_printf: Add tests for %pfw printk
- modifier
-Message-ID: <20190830130430.GK2680@smile.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-11-sakari.ailus@linux.intel.com>
+        Fri, 30 Aug 2019 09:05:22 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:60068 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfH3NFV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:05:21 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Aug 2019 09:05:20 EDT
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from owl.dominikbrodowski.net (owl-tcp.brodo.linta [10.1.0.111])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 2A1C02006F1;
+        Fri, 30 Aug 2019 12:59:01 +0000 (UTC)
+Received: by owl.dominikbrodowski.net (Postfix, from userid 1000)
+        id 21948807E2; Fri, 30 Aug 2019 14:58:48 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 14:58:48 +0200
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     andreas.noever@gmail.com, michael.jamet@intel.com,
+        mika.westerberg@linux.intel.com, YehezkelShB@gmail.com,
+        bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: lockdep warning on thunderbolt docking
+Message-ID: <20190830125848.GA25929@owl.dominikbrodowski.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-11-sakari.ailus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:43PM +0300, Sakari Ailus wrote:
-> Add a test for the %pfw printk modifier using software nodes.
-> 
-
-Having tests is always a good thing!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 944eb50f38625..9c6d716979fb1 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -22,6 +22,8 @@
->  #include <linux/gfp.h>
->  #include <linux/mm.h>
->  
-> +#include <linux/property.h>
-> +
->  #include "../tools/testing/selftests/kselftest_module.h"
->  
->  #define BUF_SIZE 256
-> @@ -588,6 +590,40 @@ flags(void)
->  	kfree(cmp_buffer);
->  }
->  
-> +static void __init fwnode_pointer(void)
-> +{
-> +	const struct software_node softnodes[] = {
-> +		{ .name = "first", },
-> +		{ .name = "second", .parent = &softnodes[0], },
-> +		{ .name = "third", .parent = &softnodes[1], },
-> +		{ NULL /* Guardian */ },
-> +	};
-> +	const char * const full_name = "/second/third";
-> +	const char * const full_name_second = "/second";
-> +	const char * const second_name = "second";
-> +	const char * const third_name = "third";
-> +	int rval;
-> +
-> +	rval = software_node_register_nodes(softnodes);
-> +	if (rval) {
-> +		pr_warn("cannot register softnodes; rval %d\n", rval);
-> +		return;
-> +	}
-> +
-> +	test(full_name_second, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(full_name, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(full_name, "%pfwf",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(second_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(third_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +
-> +	software_node_unregister_nodes(softnodes);
-> +}
-> +
->  static void __init
->  test_pointer(void)
->  {
-> @@ -610,6 +646,7 @@ test_pointer(void)
->  	bitmap();
->  	netdev_features();
->  	flags();
-> +	fwnode_pointer();
->  }
->  
->  static void __init selftest(void)
-> -- 
-> 2.20.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
+When connecting a thunderbolt-enabled docking station to my work laptop,
+the following lockdep warning is reported on v5.3.0-rc6+ as of Thursday
+morning (can look up the exact git id if so required):
 
 
+thunderbolt 0-1: new device found, vendor=0xd4 device=0xb070
+thunderbolt 0-1: Dell WD19TB Thunderbolt Dock
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.3.0-rc6+ #1 Tainted: G                T
+------------------------------------------------------
+pool-/usr/lib/b/1258 is trying to acquire lock:
+000000005ab0ad43 (pci_rescan_remove_lock){+.+.}, at: authorized_store+0xe8/0x210
+
+but task is already holding lock:
+00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+
+which lock already depends on the new lock.
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&tb->lock){+.+.}:
+       __mutex_lock+0xac/0x9a0
+       tb_domain_add+0x2d/0x130
+       nhi_probe+0x1dd/0x330
+       pci_device_probe+0xd2/0x150
+       really_probe+0xee/0x280
+       driver_probe_device+0x50/0xc0
+       bus_for_each_drv+0x84/0xd0
+       __device_attach+0xe4/0x150
+       pci_bus_add_device+0x4e/0x70
+       pci_bus_add_devices+0x2e/0x66
+       pci_bus_add_devices+0x59/0x66
+       pci_bus_add_devices+0x59/0x66
+       enable_slot+0x344/0x450
+       acpiphp_check_bridge.part.0+0x119/0x150
+       acpiphp_hotplug_notify+0xaa/0x140
+       acpi_device_hotplug+0xa2/0x3f0
+       acpi_hotplug_work_fn+0x1a/0x30
+       process_one_work+0x234/0x580
+       worker_thread+0x50/0x3b0
+       kthread+0x10a/0x140
+       ret_from_fork+0x3a/0x50
+
+-> #0 (pci_rescan_remove_lock){+.+.}:
+       __lock_acquire+0xe54/0x1ac0
+       lock_acquire+0xb8/0x1b0
+       __mutex_lock+0xac/0x9a0
+       authorized_store+0xe8/0x210
+       kernfs_fop_write+0x125/0x1b0
+       vfs_write+0xc2/0x1d0
+       ksys_write+0x6c/0xf0
+       do_syscall_64+0x50/0x180
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+       CPU0                    CPU1
+       ----                    ----
+  lock(&tb->lock);
+                               lock(pci_rescan_remove_lock);
+                               lock(&tb->lock);
+  lock(pci_rescan_remove_lock);
+
+ *** DEADLOCK ***
+5 locks held by pool-/usr/lib/b/1258:
+ #0: 000000003df1a1ad (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x4d/0x60
+ #1: 0000000095a40b02 (sb_writers#6){.+.+}, at: vfs_write+0x185/0x1d0
+ #2: 0000000017a7d714 (&of->mutex){+.+.}, at: kernfs_fop_write+0xf2/0x1b0
+ #3: 000000004f262981 (kn->count#208){.+.+}, at: kernfs_fop_write+0xfa/0x1b0
+ #4: 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
+
+stack backtrace:
+CPU: 0 PID: 1258 Comm: pool-/usr/lib/b Tainted: G                T 5.3.0-rc6+ #1
+
+
+Thanks,
+	Dominik
