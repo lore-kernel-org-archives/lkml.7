@@ -6,96 +6,103 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD2FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6691C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8412341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D6E21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfH3M1a (ORCPT
+        id S1728021AbfH3M1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:27:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:59434 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 08:27:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12352 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfH3M1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:27:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3637D337;
-        Fri, 30 Aug 2019 05:27:29 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C18B3F246;
-        Fri, 30 Aug 2019 05:27:28 -0700 (PDT)
-Subject: Re: [PATCH] iommu/iova: avoid false sharing on fq_timer_on
-To:     Joerg Roedel <jroedel@suse.de>, Eric Dumazet <edumazet@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jinyu Qi <jinyuqi@huawei.com>, Will Deacon <will@kernel.org>
-References: <20190828131338.89832-1-edumazet@google.com>
- <20190830104925.GI17192@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3ffd6989-229b-9c67-d9fb-7a8e413c1336@arm.com>
-Date:   Fri, 30 Aug 2019 13:27:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726969AbfH3M1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:27:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:27:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="198026261"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 30 Aug 2019 05:27:27 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 30 Aug 2019 15:27:26 +0300
+Date:   Fri, 30 Aug 2019 15:27:26 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 02/10] software node: Make argument to
+ to_software_node const
+Message-ID: <20190830122726.GB1636@kuha.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-3-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190830104925.GI17192@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829101043.24963-3-sakari.ailus@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 11:49, Joerg Roedel wrote:
-> Looks good to me, but adding Robin for his opinion.
+On Thu, Aug 29, 2019 at 01:10:35PM +0300, Sakari Ailus wrote:
+> to_software_node() does not need to modify the fwnode_handle it operates
+> on; therefore make it const. This allows passing a const fwnode_handle to
+> to_software_node().
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Sounds reasonable to me too - that should also be true for the majority 
-of Arm systems that we know of. Will suggested that atomic_try_cmpxchg() 
-might be relevant, but AFAICS that's backwards compared to what we want 
-to do here, which I guess is more of an "atomic_unlikely_cmpxchg".
+OK by me.
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com
 
-Cheers,
-Robin.
+> ---
+>  drivers/base/swnode.c    | 4 ++--
+>  include/linux/property.h | 3 ++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index a7cb41812cfda..951e7efd47c23 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
+>  	return swnode;
+>  }
+>  
+> -const struct software_node *to_software_node(struct fwnode_handle *fwnode)
+> +const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
+>  {
+> -	struct swnode *swnode = to_swnode(fwnode);
+> +	const struct swnode *swnode = to_swnode(fwnode);
+>  
+>  	return swnode ? swnode->node : NULL;
+>  }
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 5a910ad795910..421c76e53708d 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -418,7 +418,8 @@ struct software_node {
+>  };
+>  
+>  bool is_software_node(const struct fwnode_handle *fwnode);
+> -const struct software_node *to_software_node(struct fwnode_handle *fwnode);
+> +const struct software_node *
+> +to_software_node(const struct fwnode_handle *fwnode);
+>  struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+>  
+>  int software_node_register_nodes(const struct software_node *nodes);
+> -- 
+> 2.20.1
 
-> On Wed, Aug 28, 2019 at 06:13:38AM -0700, Eric Dumazet wrote:
->> In commit 14bd9a607f90 ("iommu/iova: Separate atomic variables
->> to improve performance") Jinyu Qi identified that the atomic_cmpxchg()
->> in queue_iova() was causing a performance loss and moved critical fields
->> so that the false sharing would not impact them.
->>
->> However, avoiding the false sharing in the first place seems easy.
->> We should attempt the atomic_cmpxchg() no more than 100 times
->> per second. Adding an atomic_read() will keep the cache
->> line mostly shared.
->>
->> This false sharing came with commit 9a005a800ae8
->> ("iommu/iova: Add flush timer").
->>
->> Signed-off-by: Eric Dumazet <edumazet@google.com>
->> Cc: Jinyu Qi <jinyuqi@huawei.com>
->> Cc: Joerg Roedel <jroedel@suse.de>
->> ---
->>   drivers/iommu/iova.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
->> index 3e1a8a6755723a927a7942a7429ab7e6c19a0027..41c605b0058f9615c2dbdd83f1de2404a9b1d255 100644
->> --- a/drivers/iommu/iova.c
->> +++ b/drivers/iommu/iova.c
->> @@ -577,7 +577,9 @@ void queue_iova(struct iova_domain *iovad,
->>   
->>   	spin_unlock_irqrestore(&fq->lock, flags);
->>   
->> -	if (atomic_cmpxchg(&iovad->fq_timer_on, 0, 1) == 0)
->> +	/* Avoid false sharing as much as possible. */
->> +	if (!atomic_read(&iovad->fq_timer_on) &&
->> +	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
->>   		mod_timer(&iovad->fq_timer,
->>   			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
->>   }
->> -- 
->> 2.23.0.187.g17f5b7556c-goog
+thanks,
+
+-- 
+heikki
