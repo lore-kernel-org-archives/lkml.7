@@ -2,513 +2,226 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C059BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE1AC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896B021874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7160D2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8RHgFZW"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="Y0K4ISF+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfH3K5I (ORCPT
+        id S1727919AbfH3K6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:57:08 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52696 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfH3K5H (ORCPT
+        Fri, 30 Aug 2019 06:58:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51165 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbfH3K6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:57:07 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t17so6832615wmi.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 03:57:04 -0700 (PDT)
+        Fri, 30 Aug 2019 06:58:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so6852161wml.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 03:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JblrhOP2KckYCrAmRY7w2GmwW0D6OenWkyaD7huSuok=;
-        b=B8RHgFZWijZkYcw+wf6Z7W9FDUamkuMz5bYwNL02UchwXLF30Gw1aCTMpTAxqZrd4r
-         kw8om/Siqa9HFfjYhvNl2zTRWxyr3fA3qftJcN9dvNUqeHae5cwfVrMS4cCBLvwIBDLt
-         vWt3DYm8TFK052VhbwbjjsrGmB/lmDIP3DSC9xt+OXf9JeFJ+2cTXB/Q98bburK7EBnO
-         adysIcDxz6vR3r4/DGo9MxmVUZaY50Q7L3OaMJOGx9AGSTV2q5POeWbs2JXoByKnbwq1
-         850gpDvVW5EeTOMgL0wN68eb64JAINJG/uhRnM1B2bK09FKdRJpnWw4Zw3EK2y4hwDjF
-         2tsA==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=reply-to:subject:to:cc:references:from:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=m31OTTmU9nCFliwvSe4IxzHQbcVGDTW05lQC3jWd7f4=;
+        b=Y0K4ISF+xUZ6WtIPrIyzpO/sQYSK9PFd2YBmm0DZK586kjfT+e5SQ7ku6IBO1CnFek
+         NRHn4UAh85rIEVL1MxKN8dWW7TmfOwq+UJdzAAIqmrDlmapHT7KbsmwgZgy0Wku/QlZO
+         pMovwZAaFGpapS9NbIUrZdtUTg0GRjOljTrEgtXS0zp8/QA+S8egj5dVVMqBVfAzYGI9
+         tfD5fo5e/Dul+pr6PitrHLu/6qOticTgtj2syGCTE+2s/YMSX+S4YHIXqf3bK5FpJf3b
+         lf8D3n1AGzLThKWusNdMesOn9wBQbyAajZEK+NbeZgtHRh31vHWx9TAbSHEcS+fxIeuj
+         gwGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JblrhOP2KckYCrAmRY7w2GmwW0D6OenWkyaD7huSuok=;
-        b=GGf4Woo4Lx3fSWDRpLlQA3KslPtH2zscART2ZFDi1aVwGJTRkQIIdcMV9iYMXsKV//
-         InlytT/VRggwEn0cEvR/8VPrQF/hA+mg5H/7PQ//K+/yqUDVmLBK+hCO7EkAaEAyavsS
-         mw93UtjSmPvsM65vI7zx67mr09ftjIjewCDI9dIeMJ3UYOxnzfDuSKaD5pQnMydOVMnJ
-         D4GEK/tsUR8JjNzOn1VXChBPc8MoEGvkw/D6isr1pG+3lMUSXUUQLueyFOMaAWf10exS
-         37RIIGtEKDbYxI3vv6IdQut7JusEXQjcQKrg0n0gSRLobNY1/J35bdMtUmHM17HwBwpn
-         NECw==
-X-Gm-Message-State: APjAAAVfweoU/sr0U9DNXbNTbd9jRknRFZHEX66hOTxzglvWXfm9TjEj
-        h8UfK8yRbvXDCd2m+oeivOcQxvaI
-X-Google-Smtp-Source: APXvYqxyAJqGkXtx1rrm7+tU7ffXsgel5cWrdYIc6pX4fGjdn5NYUu2A2EQ4vzoOFkP7gqKgKIB3IQ==
-X-Received: by 2002:a1c:be19:: with SMTP id o25mr17016798wmf.54.1567162623391;
-        Fri, 30 Aug 2019 03:57:03 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id 74sm7930892wma.15.2019.08.30.03.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 03:57:02 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/2] habanalabs: add uapi to retrieve device utilization
-Date:   Fri, 30 Aug 2019 13:56:59 +0300
-Message-Id: <20190830105700.8781-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to;
+        bh=m31OTTmU9nCFliwvSe4IxzHQbcVGDTW05lQC3jWd7f4=;
+        b=fwqB4XXfRzKtox5+jMlh47mL9fMVCHAXsgg3+6ZVVwV0qNyLrl2eYb/vADZzwCLcOY
+         YUVjnTBu4o/MzsoMgNmym/OFT06BjBsyQlxNbEXU77Ac80wgNJFfhq14uU21Cgl6aGGS
+         aXpJVvs61oRsftkRg5NgMY7Yr6ZLDCB3d1DE/Ox3gLs88I2FoZtfs59GUqlgwHqY5jM5
+         MqnXGfVufsavVA34b8sRGJHDRygHrNTGKg9bny9COM0pSLuUSV0swv/eUE5WoqFXCup6
+         iHji8geu2tlaClntlRoEXu+63THKimu0BUxJHNwogto4AnNpJP8GCDUSCCNKiMVi+jbE
+         cGqA==
+X-Gm-Message-State: APjAAAVPmxDXkCRAjOx7ZUpvyjoSuUFBdjjdGZ7bzf91YnZIadkzmNgF
+        WnLam4lQsrS1x3bpSGjE9g5oqZt3rv3tmA==
+X-Google-Smtp-Source: APXvYqybcnIaJBSiXWOPneUuksCJfftFBHTR5DX1bmyi6tCPHrNH62v+Gp5ZKnm+G8uSc5ODDgd8Cw==
+X-Received: by 2002:a1c:f106:: with SMTP id p6mr16217216wmh.148.1567162691487;
+        Fri, 30 Aug 2019 03:58:11 -0700 (PDT)
+Received: from [64.233.167.109] ([149.199.62.129])
+        by smtp.gmail.com with ESMTPSA id e9sm6630051wmd.25.2019.08.30.03.58.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 03:58:10 -0700 (PDT)
+Reply-To: monstr@monstr.eu
+Subject: Re: convert microblaze to the generic dma remap allocator
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190814140348.3339-1-hch@lst.de>
+From:   Michal Simek <monstr@monstr.eu>
+Openpgp: preference=signencrypt
+Autocrypt: addr=monstr@monstr.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1462b1c4-2517-0506-20b4-b4ee9d26eb20@monstr.eu>
+Date:   Fri, 30 Aug 2019 12:58:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190814140348.3339-1-hch@lst.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="c8VXBJUQbaDAyxsFtJGj9FVefA4ela5DP"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Users and sysadmins usually want to know what is the device utilization as
-a level 0 indication if they are efficiently using the device.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--c8VXBJUQbaDAyxsFtJGj9FVefA4ela5DP
+Content-Type: multipart/mixed; boundary="5UqjWIYYQ0bFjEvBnUzsENLWU8VyR6Vdp";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Christoph Hellwig <hch@lst.de>
+Cc: iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Message-ID: <1462b1c4-2517-0506-20b4-b4ee9d26eb20@monstr.eu>
+Subject: Re: convert microblaze to the generic dma remap allocator
+References: <20190814140348.3339-1-hch@lst.de>
+In-Reply-To: <20190814140348.3339-1-hch@lst.de>
 
-Add a new opcode to the INFO IOCTL that will return the device utilization
-over the last period of 100-1000ms. The return value is 0-100,
-representing as percentage the total utilization rate.
+--5UqjWIYYQ0bFjEvBnUzsENLWU8VyR6Vdp
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/command_submission.c |  20 +++-
- drivers/misc/habanalabs/device.c             | 114 ++++++++++++++++++-
- drivers/misc/habanalabs/habanalabs.h         |  23 +++-
- drivers/misc/habanalabs/habanalabs_ioctl.c   |  27 +++++
- drivers/misc/habanalabs/hw_queue.c           |   8 +-
- drivers/misc/habanalabs/include/goya/goya.h  |   2 +
- include/uapi/misc/habanalabs.h               |  49 +++++---
- 7 files changed, 220 insertions(+), 23 deletions(-)
+Hi Christoph,
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index e4dd3e83df8b..4777ec4c2b55 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -178,11 +178,23 @@ static void cs_do_release(struct kref *ref)
- 
- 	/* We also need to update CI for internal queues */
- 	if (cs->submitted) {
--		int cs_cnt = atomic_dec_return(&hdev->cs_active_cnt);
-+		hdev->asic_funcs->hw_queues_lock(hdev);
- 
--		WARN_ONCE((cs_cnt < 0),
--			"hl%d: error in CS active cnt %d\n",
--			hdev->id, cs_cnt);
-+		hdev->cs_active_cnt--;
-+		if (!hdev->cs_active_cnt) {
-+			struct hl_device_idle_busy_ts *ts;
-+
-+			ts = &hdev->idle_busy_ts_arr[hdev->idle_busy_ts_idx++];
-+			ts->busy_to_idle_ts = ktime_get();
-+
-+			if (hdev->idle_busy_ts_idx == HL_IDLE_BUSY_TS_ARR_SIZE)
-+				hdev->idle_busy_ts_idx = 0;
-+		} else if (hdev->cs_active_cnt < 0) {
-+			dev_crit(hdev->dev, "CS active cnt %d is negative\n",
-+				hdev->cs_active_cnt);
-+		}
-+
-+		hdev->asic_funcs->hw_queues_unlock(hdev);
- 
- 		hl_int_hw_queue_update_ci(cs);
- 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 41c3ddbca351..bc98032cc4ec 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -293,6 +293,14 @@ static int device_early_init(struct hl_device *hdev)
- 		goto free_eq_wq;
- 	}
- 
-+	hdev->idle_busy_ts_arr = kmalloc_array(HL_IDLE_BUSY_TS_ARR_SIZE,
-+					sizeof(struct hl_device_idle_busy_ts),
-+					(GFP_KERNEL | __GFP_ZERO));
-+	if (!hdev->idle_busy_ts_arr) {
-+		rc = -ENOMEM;
-+		goto free_chip_info;
-+	}
-+
- 	hl_cb_mgr_init(&hdev->kernel_cb_mgr);
- 
- 	mutex_init(&hdev->send_cpu_message_lock);
-@@ -303,10 +311,11 @@ static int device_early_init(struct hl_device *hdev)
- 	INIT_LIST_HEAD(&hdev->fpriv_list);
- 	mutex_init(&hdev->fpriv_list_lock);
- 	atomic_set(&hdev->in_reset, 0);
--	atomic_set(&hdev->cs_active_cnt, 0);
- 
- 	return 0;
- 
-+free_chip_info:
-+	kfree(hdev->hl_chip_info);
- free_eq_wq:
- 	destroy_workqueue(hdev->eq_wq);
- free_cq_wq:
-@@ -336,6 +345,7 @@ static void device_early_fini(struct hl_device *hdev)
- 
- 	hl_cb_mgr_fini(hdev, &hdev->kernel_cb_mgr);
- 
-+	kfree(hdev->idle_busy_ts_arr);
- 	kfree(hdev->hl_chip_info);
- 
- 	destroy_workqueue(hdev->eq_wq);
-@@ -451,6 +461,100 @@ static void device_late_fini(struct hl_device *hdev)
- 	hdev->late_init_done = false;
- }
- 
-+uint32_t hl_device_utilization(struct hl_device *hdev, uint32_t period_ms)
-+{
-+	struct hl_device_idle_busy_ts *ts;
-+	ktime_t zero_ktime, curr = ktime_get();
-+	u32 overlap_cnt = 0, last_index = hdev->idle_busy_ts_idx;
-+	s64 period_us, last_start_us, last_end_us, last_busy_time_us,
-+		total_busy_time_us = 0;
-+
-+	zero_ktime = ktime_set(0, 0);
-+	period_us = period_ms * USEC_PER_MSEC;
-+	ts = &hdev->idle_busy_ts_arr[last_index];
-+
-+	/* check case that device is currently in idle */
-+	if (!ktime_compare(ts->busy_to_idle_ts, zero_ktime) &&
-+			!ktime_compare(ts->idle_to_busy_ts, zero_ktime)) {
-+
-+		last_index--;
-+		/* Handle case idle_busy_ts_idx was 0 */
-+		if (last_index > HL_IDLE_BUSY_TS_ARR_SIZE)
-+			last_index = HL_IDLE_BUSY_TS_ARR_SIZE - 1;
-+
-+		ts = &hdev->idle_busy_ts_arr[last_index];
-+	}
-+
-+	while (overlap_cnt < HL_IDLE_BUSY_TS_ARR_SIZE) {
-+		/* Check if we are in last sample case. i.e. if the sample
-+		 * begun before the sampling period. This could be a real
-+		 * sample or 0 so need to handle both cases
-+		 */
-+		last_start_us = ktime_to_us(
-+				ktime_sub(curr, ts->idle_to_busy_ts));
-+
-+		if (last_start_us > period_us) {
-+
-+			/* First check two cases:
-+			 * 1. If the device is currently busy
-+			 * 2. If the device was idle during the whole sampling
-+			 *    period
-+			 */
-+
-+			if (!ktime_compare(ts->busy_to_idle_ts, zero_ktime)) {
-+				/* Check if the device is currently busy */
-+				if (ktime_compare(ts->idle_to_busy_ts,
-+						zero_ktime))
-+					return 100;
-+
-+				/* We either didn't have any activity or we
-+				 * reached an entry which is 0. Either way,
-+				 * exit and return what was accumulated so far
-+				 */
-+				break;
-+			}
-+
-+			/* If sample has finished, check it is relevant */
-+			last_end_us = ktime_to_us(
-+					ktime_sub(curr, ts->busy_to_idle_ts));
-+
-+			if (last_end_us > period_us)
-+				break;
-+
-+			/* It is relevant so add it but with adjustment */
-+			last_busy_time_us = ktime_to_us(
-+						ktime_sub(ts->busy_to_idle_ts,
-+						ts->idle_to_busy_ts));
-+			total_busy_time_us += last_busy_time_us -
-+					(last_start_us - period_us);
-+			break;
-+		}
-+
-+		/* Check if the sample is finished or still open */
-+		if (ktime_compare(ts->busy_to_idle_ts, zero_ktime))
-+			last_busy_time_us = ktime_to_us(
-+						ktime_sub(ts->busy_to_idle_ts,
-+						ts->idle_to_busy_ts));
-+		else
-+			last_busy_time_us = ktime_to_us(
-+					ktime_sub(curr, ts->idle_to_busy_ts));
-+
-+		total_busy_time_us += last_busy_time_us;
-+
-+		last_index--;
-+		/* Handle case idle_busy_ts_idx was 0 */
-+		if (last_index > HL_IDLE_BUSY_TS_ARR_SIZE)
-+			last_index = HL_IDLE_BUSY_TS_ARR_SIZE - 1;
-+
-+		ts = &hdev->idle_busy_ts_arr[last_index];
-+
-+		overlap_cnt++;
-+	};
-+
-+	return DIV_ROUND_UP(((total_busy_time_us / USEC_PER_MSEC) * 100),
-+				period_ms);
-+}
-+
- /*
-  * hl_device_set_frequency - set the frequency of the device
-  *
-@@ -808,6 +912,14 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
- 	for (i = 0 ; i < hdev->asic_prop.completion_queues_count ; i++)
- 		hl_cq_reset(hdev, &hdev->completion_queue[i]);
- 
-+	hdev->idle_busy_ts_idx = 0;
-+	hdev->idle_busy_ts_arr[0].busy_to_idle_ts = ktime_set(0, 0);
-+	hdev->idle_busy_ts_arr[0].idle_to_busy_ts = ktime_set(0, 0);
-+
-+	if (hdev->cs_active_cnt)
-+		dev_crit(hdev->dev, "CS active cnt %d is not 0 during reset\n",
-+			hdev->cs_active_cnt);
-+
- 	mutex_lock(&hdev->fpriv_list_lock);
- 
- 	/* Make sure the context switch phase will run again */
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index a4d929f5bad8..23b86b7f9732 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -45,6 +45,8 @@
- /* MUST BE POWER OF 2 and larger than 1 */
- #define HL_MAX_PENDING_CS		64
- 
-+#define HL_IDLE_BUSY_TS_ARR_SIZE	4096
-+
- /* Memory */
- #define MEM_HASH_TABLE_BITS		7 /* 1 << 7 buckets */
- 
-@@ -1156,6 +1158,16 @@ struct hl_device_reset_work {
- 	struct hl_device		*hdev;
- };
- 
-+/**
-+ * struct hl_device_idle_busy_ts - used for calculating device utilization rate.
-+ * @idle_to_busy_ts: timestamp where device changed from idle to busy.
-+ * @busy_to_idle_ts: timestamp where device changed from busy to idle.
-+ */
-+struct hl_device_idle_busy_ts {
-+	ktime_t				idle_to_busy_ts;
-+	ktime_t				busy_to_idle_ts;
-+};
-+
- /**
-  * struct hl_device - habanalabs device structure.
-  * @pdev: pointer to PCI device, can be NULL in case of simulator device.
-@@ -1203,19 +1215,22 @@ struct hl_device_reset_work {
-  *              when a user opens the device
-  * @fpriv_list_lock: protects the fpriv_list
-  * @compute_ctx: current compute context executing.
-+ * @idle_busy_ts_arr: array to hold time stamps of transitions from idle to busy
-+ *                    and vice-versa
-  * @dram_used_mem: current DRAM memory consumption.
-  * @timeout_jiffies: device CS timeout value.
-  * @max_power: the max power of the device, as configured by the sysadmin. This
-  *             value is saved so in case of hard-reset, KMD will restore this
-  *             value and update the F/W after the re-initialization
-  * @in_reset: is device in reset flow.
-+ * @curr_pll_profile: current PLL profile.
-  * @cs_active_cnt: number of active command submissions on this device (active
-  *                 means already in H/W queues)
-- * @curr_pll_profile: current PLL profile.
-  * @major: habanalabs KMD major.
-  * @high_pll: high PLL profile frequency.
-  * @soft_reset_cnt: number of soft reset since KMD loading.
-  * @hard_reset_cnt: number of hard reset since KMD loading.
-+ * @idle_busy_ts_idx: index of current entry in idle_busy_ts_arr
-  * @id: device minor.
-  * @id_control: minor of the control device
-  * @disabled: is device disabled.
-@@ -1285,16 +1300,19 @@ struct hl_device {
- 
- 	struct hl_ctx			*compute_ctx;
- 
-+	struct hl_device_idle_busy_ts	*idle_busy_ts_arr;
-+
- 	atomic64_t			dram_used_mem;
- 	u64				timeout_jiffies;
- 	u64				max_power;
- 	atomic_t			in_reset;
--	atomic_t			cs_active_cnt;
- 	enum hl_pll_frequency		curr_pll_profile;
-+	int				cs_active_cnt;
- 	u32				major;
- 	u32				high_pll;
- 	u32				soft_reset_cnt;
- 	u32				hard_reset_cnt;
-+	u32				idle_busy_ts_idx;
- 	u16				id;
- 	u16				id_control;
- 	u8				disabled;
-@@ -1457,6 +1475,7 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
- void hl_hpriv_get(struct hl_fpriv *hpriv);
- void hl_hpriv_put(struct hl_fpriv *hpriv);
- int hl_device_set_frequency(struct hl_device *hdev, enum hl_pll_frequency freq);
-+uint32_t hl_device_utilization(struct hl_device *hdev, uint32_t period_ms);
- 
- int hl_build_hwmon_channel_info(struct hl_device *hdev,
- 		struct armcp_sensor *sensors_arr);
-diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
-index d894873ca2d1..6325e98a5ae9 100644
---- a/drivers/misc/habanalabs/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
-@@ -197,6 +197,29 @@ static int debug_coresight(struct hl_device *hdev, struct hl_debug_args *args)
- 	return rc;
- }
- 
-+static int device_utilization(struct hl_device *hdev, struct hl_info_args *args)
-+{
-+	struct hl_info_device_utilization device_util = {0};
-+	u32 max_size = args->return_size;
-+	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
-+
-+	if ((!max_size) || (!out))
-+		return -EINVAL;
-+
-+	if ((args->period_ms < 100) || (args->period_ms > 1000) ||
-+		(args->period_ms % 100)) {
-+		dev_err(hdev->dev,
-+			"period %u must be between 100 - 1000 and must be divisible by 100\n",
-+			args->period_ms);
-+		return -EINVAL;
-+	}
-+
-+	device_util.utilization = hl_device_utilization(hdev, args->period_ms);
-+
-+	return copy_to_user(out, &device_util,
-+		min((size_t) max_size, sizeof(device_util))) ? -EFAULT : 0;
-+}
-+
- static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
- 				struct device *dev)
- {
-@@ -239,6 +262,10 @@ static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
- 		rc = hw_idle(hdev, args);
- 		break;
- 
-+	case HL_INFO_DEVICE_UTILIZATION:
-+		rc = device_utilization(hdev, args);
-+		break;
-+
- 	default:
- 		dev_err(dev, "Invalid request %d\n", args->op);
- 		rc = -ENOTTY;
-diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
-index 696cf7d206c6..55b383b2a116 100644
---- a/drivers/misc/habanalabs/hw_queue.c
-+++ b/drivers/misc/habanalabs/hw_queue.c
-@@ -364,7 +364,13 @@ int hl_hw_queue_schedule_cs(struct hl_cs *cs)
- 		spin_unlock(&hdev->hw_queues_mirror_lock);
- 	}
- 
--	atomic_inc(&hdev->cs_active_cnt);
-+	if (!hdev->cs_active_cnt++) {
-+		struct hl_device_idle_busy_ts *ts;
-+
-+		ts = &hdev->idle_busy_ts_arr[hdev->idle_busy_ts_idx];
-+		ts->busy_to_idle_ts = ktime_set(0, 0);
-+		ts->idle_to_busy_ts = ktime_get();
-+	}
- 
- 	list_for_each_entry_safe(job, tmp, &cs->job_list, cs_node)
- 		if (job->ext_queue)
-diff --git a/drivers/misc/habanalabs/include/goya/goya.h b/drivers/misc/habanalabs/include/goya/goya.h
-index 3f02a52ba4ce..43d241891e45 100644
---- a/drivers/misc/habanalabs/include/goya/goya.h
-+++ b/drivers/misc/habanalabs/include/goya/goya.h
-@@ -38,4 +38,6 @@
- 
- #define TPC_MAX_NUM		8
- 
-+#define MME_MAX_NUM		1
-+
- #endif /* GOYA_H */
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index 266bf85056d4..73ee212d7fa6 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -77,22 +77,29 @@ enum hl_device_status {
- 
- /* Opcode for management ioctl
-  *
-- * HW_IP_INFO         - Receive information about different IP blocks in the
-- *                      device.
-- * HL_INFO_HW_EVENTS  - Receive an array describing how many times each event
-- *                      occurred since the last hard reset.
-- * HL_INFO_DRAM_USAGE - Retrieve the dram usage inside the device and of the
-- *                      specific context. This is relevant only for GOYA device.
-- * HL_INFO_HW_IDLE    - Retrieve information about the idle status of each
-- *                      internal engine.
-+ * HW_IP_INFO            - Receive information about different IP blocks in the
-+ *                         device.
-+ * HL_INFO_HW_EVENTS     - Receive an array describing how many times each event
-+ *                         occurred since the last hard reset.
-+ * HL_INFO_DRAM_USAGE    - Retrieve the dram usage inside the device and of the
-+ *                         specific context. This is relevant only for devices
-+ *                         where the dram is managed by the kernel driver
-+ * HL_INFO_HW_IDLE       - Retrieve information about the idle status of each
-+ *                         internal engine.
-  * HL_INFO_DEVICE_STATUS - Retrieve the device's status. This opcode doesn't
-  *                         require an open context.
-+ * HL_INFO_DEVICE_UTILIZATION - Retrieve the total utilization of the device
-+ *                              over the last period specified by the user.
-+ *                              The period can be between 100ms to 1s, in
-+ *                              resolution of 100ms. The return value is a
-+ *                              percentage of the utilization rate.
-  */
--#define HL_INFO_HW_IP_INFO	0
--#define HL_INFO_HW_EVENTS	1
--#define HL_INFO_DRAM_USAGE	2
--#define HL_INFO_HW_IDLE		3
--#define HL_INFO_DEVICE_STATUS	4
-+#define HL_INFO_HW_IP_INFO		0
-+#define HL_INFO_HW_EVENTS		1
-+#define HL_INFO_DRAM_USAGE		2
-+#define HL_INFO_HW_IDLE			3
-+#define HL_INFO_DEVICE_STATUS		4
-+#define HL_INFO_DEVICE_UTILIZATION	6
- 
- #define HL_INFO_VERSION_MAX_LEN	128
- 
-@@ -134,6 +141,11 @@ struct hl_info_device_status {
- 	__u32 pad;
- };
- 
-+struct hl_info_device_utilization {
-+	__u32 utilization;
-+	__u32 pad;
-+};
-+
- struct hl_info_args {
- 	/* Location of relevant struct in userspace */
- 	__u64 return_pointer;
-@@ -149,8 +161,15 @@ struct hl_info_args {
- 	/* HL_INFO_* */
- 	__u32 op;
- 
--	/* Context ID - Currently not in use */
--	__u32 ctx_id;
-+	union {
-+		/* Context ID - Currently not in use */
-+		__u32 ctx_id;
-+		/* Period value for utilization rate (100ms - 1000ms, in 100ms
-+		 * resolution.
-+		 */
-+		__u32 period_ms;
-+	};
-+
- 	__u32 pad;
- };
- 
--- 
-2.17.1
+On 14. 08. 19 16:03, Christoph Hellwig wrote:
+> Hi Michal,
+>=20
+> can you take a look at this patch that moves microblaze over to the
+> generic DMA remap allocator?  I've been trying to slowly get all
+> architectures over to the generic code, and microblaze is one that
+> seems very straightfoward to convert.
+>=20
 
+I took at look at this series and tested it on kc705 and I can't see any
+issue.
+Patches applied.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
+
+
+--5UqjWIYYQ0bFjEvBnUzsENLWU8VyR6Vdp--
+
+--c8VXBJUQbaDAyxsFtJGj9FVefA4ela5DP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXWkBOwAKCRDKSWXLKUoM
+IV0FAJ47oWIU3FJI2E3P8YVK38sKjc88tQCfd6MvuoMu/cddeKexWSHk/7Z4pCM=
+=64F7
+-----END PGP SIGNATURE-----
+
+--c8VXBJUQbaDAyxsFtJGj9FVefA4ela5DP--
