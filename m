@@ -2,186 +2,220 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD0FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000BCC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99FB2342B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PzMQSCQb"
+	by mail.kernel.org (Postfix) with ESMTP id C7EEA23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbfH3R67 (ORCPT
+        id S1728187AbfH3R7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:58:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34742 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3R67 (ORCPT
+        Fri, 30 Aug 2019 13:59:45 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:43765 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfH3R7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:58:59 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UHtAwa101451;
-        Fri, 30 Aug 2019 17:57:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=9Wemge0RcmvnUsm0W5wu0Dr6YJPAmuaEVvIIaiA/fIo=;
- b=PzMQSCQbH8ep8HL4bItrtKKaSC1zwTs1jJ48UmgBO2ipfeNZHA7D6G8IXWXR0VK/Oeh8
- Fcog1R9T7nHYDXbu3dqysVa7b34rc1joj0EwJPxfu334uwVZhVMwzb/R3iF89k7qvY/O
- Z2/HUcjDuTqdU5LaqBxUfo+qGwK13bCVviO5KcGuuvuyAk2oI8CS2B5AEdgZ+OipFTDh
- kcyEH3cuR3gWvy4S+Z9IqjVlB8dCoEokDcpkST8qpH8jITNMQ4jiOJEnXrVVhi64wMqx
- nnN3zy57hg/8Z753vCbn8jhYSdpe2LsAxpr+00wU3CziO/jiKx0jdsQ21B9G2FICSbIy mA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2uq8me80p1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 17:57:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UHrA8C047245;
-        Fri, 30 Aug 2019 17:54:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2upkrgnsft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 17:54:39 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7UHsaax014855;
-        Fri, 30 Aug 2019 17:54:36 GMT
-Received: from smazumda-Precision-T1600.us.oracle.com (/10.132.91.113)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 30 Aug 2019 10:54:36 -0700
-From:   subhra mazumdar <subhra.mazumdar@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com,
-        patrick.bellasi@arm.com
-Subject: [RFC PATCH 6/9] x86/smpboot: Optimize cpumask_weight_sibling macro for x86
-Date:   Fri, 30 Aug 2019 10:49:41 -0700
-Message-Id: <20190830174944.21741-7-subhra.mazumdar@oracle.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=983
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908300174
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908300174
+        Fri, 30 Aug 2019 13:59:44 -0400
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3E995100004;
+        Fri, 30 Aug 2019 17:59:37 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 20:01:09 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Message-ID: <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
+ <20190826075943.h7ivwagape3glym5@uno.localdomain>
+ <20190826101550.GB5031@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cdwthwydolvsh24c"
+Content-Disposition: inline
+In-Reply-To: <20190826101550.GB5031@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use per-CPU variable for cpumask_weight_sibling macro in case of x86 for
-fast lookup in select_idle_cpu. This avoids reading multiple cache lines
-in case of systems with large numbers of CPUs where bitmask can span
-multiple cache lines. Even if bitmask spans only one cache line this avoids
-looping through it to find the number of bits and gets it in O(1).
 
-Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
----
- arch/x86/include/asm/smp.h      |  1 +
- arch/x86/include/asm/topology.h |  1 +
- arch/x86/kernel/smpboot.c       | 17 ++++++++++++++++-
- 3 files changed, 18 insertions(+), 1 deletion(-)
+--cdwthwydolvsh24c
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index da545df..1e90cbd 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -22,6 +22,7 @@ extern int smp_num_siblings;
- extern unsigned int num_processors;
- 
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
-+DECLARE_PER_CPU_READ_MOSTLY(unsigned int, cpumask_weight_sibling);
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
- /* cpus sharing the last level cache: */
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 453cf38..dd19c71 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -111,6 +111,7 @@ extern const struct cpumask *cpu_coregroup_mask(int cpu);
- #ifdef CONFIG_SMP
- #define topology_core_cpumask(cpu)		(per_cpu(cpu_core_map, cpu))
- #define topology_sibling_cpumask(cpu)		(per_cpu(cpu_sibling_map, cpu))
-+#define topology_sibling_weight(cpu)	(per_cpu(cpumask_weight_sibling, cpu))
- 
- extern unsigned int __max_logical_packages;
- #define topology_max_packages()			(__max_logical_packages)
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 362dd89..57ad88d 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -85,6 +85,9 @@
- DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
- EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
- 
-+/* representing number of HT siblings of each CPU */
-+DEFINE_PER_CPU_READ_MOSTLY(unsigned int, cpumask_weight_sibling);
-+
- /* representing HT and core siblings of each logical CPU */
- DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
- EXPORT_PER_CPU_SYMBOL(cpu_core_map);
-@@ -520,6 +523,8 @@ void set_cpu_sibling_map(int cpu)
- 
- 	if (!has_mp) {
- 		cpumask_set_cpu(cpu, topology_sibling_cpumask(cpu));
-+		per_cpu(cpumask_weight_sibling, cpu) =
-+		    cpumask_weight(topology_sibling_cpumask(cpu));
- 		cpumask_set_cpu(cpu, cpu_llc_shared_mask(cpu));
- 		cpumask_set_cpu(cpu, topology_core_cpumask(cpu));
- 		c->booted_cores = 1;
-@@ -529,8 +534,13 @@ void set_cpu_sibling_map(int cpu)
- 	for_each_cpu(i, cpu_sibling_setup_mask) {
- 		o = &cpu_data(i);
- 
--		if ((i == cpu) || (has_smt && match_smt(c, o)))
-+		if ((i == cpu) || (has_smt && match_smt(c, o))) {
- 			link_mask(topology_sibling_cpumask, cpu, i);
-+			per_cpu(cpumask_weight_sibling, cpu) =
-+			    cpumask_weight(topology_sibling_cpumask(cpu));
-+			per_cpu(cpumask_weight_sibling, i) =
-+			    cpumask_weight(topology_sibling_cpumask(i));
-+		}
- 
- 		if ((i == cpu) || (has_mp && match_llc(c, o)))
- 			link_mask(cpu_llc_shared_mask, cpu, i);
-@@ -1173,6 +1183,8 @@ static __init void disable_smp(void)
- 	else
- 		physid_set_mask_of_physid(0, &phys_cpu_present_map);
- 	cpumask_set_cpu(0, topology_sibling_cpumask(0));
-+	per_cpu(cpumask_weight_sibling, 0) =
-+	    cpumask_weight(topology_sibling_cpumask(0));
- 	cpumask_set_cpu(0, topology_core_cpumask(0));
- }
- 
-@@ -1482,6 +1494,8 @@ static void remove_siblinginfo(int cpu)
- 
- 	for_each_cpu(sibling, topology_core_cpumask(cpu)) {
- 		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
-+		per_cpu(cpumask_weight_sibling, sibling) =
-+		    cpumask_weight(topology_sibling_cpumask(sibling));
- 		/*/
- 		 * last thread sibling in this cpu core going down
- 		 */
-@@ -1495,6 +1509,7 @@ static void remove_siblinginfo(int cpu)
- 		cpumask_clear_cpu(cpu, cpu_llc_shared_mask(sibling));
- 	cpumask_clear(cpu_llc_shared_mask(cpu));
- 	cpumask_clear(topology_sibling_cpumask(cpu));
-+	per_cpu(cpumask_weight_sibling, cpu) = 0;
- 	cpumask_clear(topology_core_cpumask(cpu));
- 	c->cpu_core_id = 0;
- 	c->booted_cores = 0;
--- 
-2.9.3
+Hi Laurent,
 
+On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> On Mon, Aug 26, 2019 at 09:59:43AM +0200, Jacopo Mondi wrote:
+> > On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
+> > > On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > > > Add device tree bindings documentation for the Renesas R-Car Display
+> > > > Unit Color Management Module.
+> > > >
+> > > > CMM is the image enhancement module available on each R-Car DU video
+> > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> > > >
+> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > >
+> > > Thanks for your patch!
+> > >
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > > > @@ -0,0 +1,33 @@
+> > > > +* Renesas R-Car Color Management Module (CMM)
+> > > > +
+> > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > > > +
+> > > > +Required properties:
+> > > > + - compatible: shall be one or more of the following:
+> > > > +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
+> > > > +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
+> > > > +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
+> > > > +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
+> > > > +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
+> > >
+> > > Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
+> >
+> > I actually copied it from the r-car gpio bindings, and I liked
+> > cmm-<soctype> better. If you prefer I can change it though.
+> >
+> > > > +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
+> > > > +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
+> > > > +
+> > > > +   When the generic compatible string is specified, the SoC-specific
+> > > > +   version corresponding to the platform should be listed first.
+> > > > +
+> > > > + - reg: the address base and length of the memory area where CMM control
+> > > > +   registers are mapped to.
+> > > > +
+> > > > + - clocks: phandle and clock-specifier pair to the CMM functional clock
+> > > > +   supplier.
+> > >
+> > > Thinking about yaml validation:
+> > >
+> > > power-domains?
+> > > resets?
+> >
+> > They should indeed be documented.
+>
+> How about converting this binding to yaml alreay ? It should be fairly
+> simple.
+
+I'm trying to, and I'm having my portion of fun time at it.
+
+The definition of the schema itself seems good, but I wonder, is this
+the first renesas schema we have? Because it seems to me the schema
+validator is having an hard time to digest the examplea 'clocks' and
+'power-domains' properties, which have 1 phandle and 2 specifiers and 1
+phandle and 1 specifier respectively for Rensas SoCs.
+
+In other words, if in the example I have:
+
+ examples:
+   - |
+     cmm0: cmm@fea40000 {
+          compatible = "renesas,r8a7796-cmm";
+          reg = <0 0xfea40000 0 0x1000>;
+          clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
+          resets = <&cpg 711>;
+          power-domains = <&sysc>;         <---- 1 phandle
+     };
+
+The schema validation is good.
+
+While if I use an actual example
+   - |
+     cmm0: cmm@fea40000 {
+          compatible = "renesas,r8a7796-cmm";
+          reg = <0 0xfea40000 0 0x1000>;
+          clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
+          resets = <&cpg 711>;
+          power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
+     };                                                       + 1 specfier
+
+The schema validation fails...
+Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
+FATAL ERROR: Unable to parse input tree
+
+Are clocks properties with > 2 entries and power-domains properties with
+> 1 entries supported?
+
+Because from what I read here:
+https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
+"The length of a clock specifier is defined by the value of a #clock-cells
+property in the clock provider node."
+
+And that's expected, but is the examples actually validated against the
+clock provider pointed by the phandle? Because in that case, if we had a
+yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
+
+Do we need a schema for cpg-mssr first, or am I doing something else
+wrong?
+
+Thanks
+   j
+
+>
+> > > > +Example:
+> > > > +--------
+> > > > +
+> > > > +       cmm0: cmm@fea40000 {
+> > > > +               compatible = "renesas,cmm-r8a7796";
+> > > > +               reg = <0 0xfea40000 0 0x1000>;
+> > > > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > > > +               clocks = <&cpg CPG_MOD 711>;
+> > > > +               resets = <&cpg 711>;
+> > > > +       };
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+--cdwthwydolvsh24c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1pZGQACgkQcjQGjxah
+VjzlaA//WrMjIoh5mpirNuc1YnVXSvW7ZqWWQ6jp/mCaKrsImVVmqAmb9VEGJcfK
+KUZvxF2xlp7pEtQfPbDJWVLvEX6dey+EeNoEK2S2RwCS4AYmPkrVe7mdLZ7rXGbh
+HhVsi347kR5qeIjWazR/TmRNySank+gp/HKWvjaNguYP0LCK0U7Ybmh2GA5hjsIe
+wFJnHfvt2rOxujXtF+G0rNerKSUAI7bQJYlfcKfHyFF4471Orid05CVr5vRue/n5
+vTd9TlmFfp4Hzfv6aftHV32RWyWxNKXSKvlvy2ukH+/4Q0Cx/cAb1+PNJW8m3pEM
+O3k972DSykDQmclu4z5Ge2Z9pxScSROL6ypCCbcbLek1G2KxVuhV1VfHSQ+YgKZk
+nW9T602yRaJC/4ZbwH3Vu5OwudQXc282AL6WE/MwljwZ0mhvGG0JWSdBt0344z9v
+P00CPvZFgVuXjWeF2JQp0YYza7rIch+TQi/OLiwX8t4grcaZV+KsgQbRWl6M/FHv
+mAim2SiLt6VhPJ+1FkBNHwjKp6SAsuXO8BW5q5beXvJSXusw6gPVVv6V/YnQMHbI
+Eswoex0Kp54mWuZv/ejyaWs7pSL7288qzDj+yCwbCkUwg3AHHvN/avhdXc2BAPyn
+cNOulOiRbiCpU8e2zKidbqYcx1fyBq3qeuPvFzuhvWWXPEozD3U=
+=t2Px
+-----END PGP SIGNATURE-----
+
+--cdwthwydolvsh24c--
