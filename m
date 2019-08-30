@@ -2,188 +2,161 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26E4C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A96C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE3723407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D6023407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="muR7C5wW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ff/syI5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfH3Pkq (ORCPT
+        id S1728368AbfH3PlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:40:46 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42678 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728331AbfH3Pkp (ORCPT
+        Fri, 30 Aug 2019 11:41:08 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33585 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbfH3PlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:40:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y1so3518044plp.9
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:40:44 -0700 (PDT)
+        Fri, 30 Aug 2019 11:41:08 -0400
+Received: by mail-qt1-f195.google.com with SMTP id r5so2796371qtd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:41:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=Ni6vNyoiAeI273d2BSfT1RbRFUtf/5mAYsPvknqZkqM=;
-        b=muR7C5wWL5lPrP4S4XeyNe0FZ45O/GeNLN2/NCaK1O+WpN6QlMihoe7PQzPflJ02i6
-         GV+xG/6KhUXf03e1zxSM4P1ZsyC7i4I+MWgMBk0Ab5i+a50uYi4U+fIL8nHwiWM+3Jiq
-         DljDInXRECSbYBXAKNKHbWpE6HUOKD/nxznnw=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=djD1pQ1U7LhQ/148ZQfZebehfdvHuL8mZ2td74QG7gA=;
+        b=Ff/syI5yLdu0ja4Kdyq9aVwjjyIDV2gJiItT4pZn2Zw9XrWofLZe/+bmXAvq0gc4Vc
+         f3EJcvfXbnJ4yVU7HYTqFkhNhRx/6A8/4PA3tN1pM7WB0T7diXqFsyWWffTh6Hyeuhdp
+         rNiPJKpku7NB6WN1ViS3WrjHvXz/EaRsCmOq2mvhs/7Z+gRwMGFydPcSELrfmY99e5GU
+         1YbQr89iBNUmJVXd+Iztt/v6wQQsqtUuY6KqCiah5jACppnM1bC9Y04NeoJbSUh7ZxCt
+         WajM3rZQfE1B6OKJjXAL83Oi+l6852bNBY5LqJ+0RdAlFHeCx1Bw57I/fY+1++dt6/Dc
+         jqbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=Ni6vNyoiAeI273d2BSfT1RbRFUtf/5mAYsPvknqZkqM=;
-        b=dftjb2opw0p71m2luNpLaAEMu5HMeOdG3Q4IhSBCQkyd9h0OYgj+xH9Jl/OoVkpHwA
-         fXGLOF2YNX0ngcXRJ2z/IeBhXq05W0/yZteseMPeJn9DPa3irmbGhic1o6ui8puQk6a0
-         F55l2Xx7hbfCudRSoATo4uuz7rejt9XdgVZNFY1cOdcMYMV5GBkIo+TT2JCrT+ntAzj1
-         lZfmu9XAj3XeS1mTdXicAtrrqeHZdPhEo6EVsA1LzA/2KIiEawnmrwWyPeWLbc7UrvLH
-         1BfcoeUwr+NcYddGhClCxyoQDDr5WLIOZybkDkPRQQqQdWoIOj44Hdq6NPrIQUS63C2l
-         N2cg==
-X-Gm-Message-State: APjAAAXOeB9EDUNdHMWjM+wl86kWvDxkhHAEdkjrDK9s03/eb3FrsYG4
-        GE4zpC/HYPXT7y5W/6OECtzd7w==
-X-Google-Smtp-Source: APXvYqzZ0ZAHomdPr+u0gekRSspkMTVbLIDC9pDSXzLNL2dUFK/VU90FKtIevvRB/QYLVlF4ZbfAlA==
-X-Received: by 2002:a17:902:e9:: with SMTP id a96mr16802533pla.169.1567179644447;
-        Fri, 30 Aug 2019 08:40:44 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i14sm3164228pfo.158.2019.08.30.08.40.43
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=djD1pQ1U7LhQ/148ZQfZebehfdvHuL8mZ2td74QG7gA=;
+        b=uXXTzc8Tq+7jxSr6LC6LiCnsVaVE+i0qK/GqOeZwp34uvfU445Fnw1lJw5d8squWuY
+         viQJC+p6uMnryXxhsZfvxG20tueGJEMoX717G064sirYjoJ5EDkSuQmu61wSWzjwvUr6
+         e/fwyn+/6yzqPNoFXZVC9mpZwdl6fRqYKsjrFSggLgAra7QCVgIg/c0G5ZDh8suL9p10
+         8Tn/renxMF901PhHPbiB7/zPV4gczssE2dXFSM1z7Hl3GOA4SiQHH8dVF7XiU9ETCsZl
+         RrJX3RIv+vzeioapMD7MW1PymCma+V2B89+YvoawP/Y4VZNvxl3DdXsFkygF9Uq0S0F3
+         Q9aw==
+X-Gm-Message-State: APjAAAUyxVqbRoRnI5ghJmx3yCHGdQmPwmaD4PkzWQaJpQ1dvCpn8z+b
+        6gjbPRbOAxjzycQ2K1j6Y58=
+X-Google-Smtp-Source: APXvYqw/7somUTQTd2TTBc+L0G94eZDim5rIR3AA3axbBqLZAD07MbIMr2Cvs7OFOJdtTHKEkNIrzw==
+X-Received: by 2002:ac8:31cc:: with SMTP id i12mr16178711qte.170.1567179666815;
+        Fri, 30 Aug 2019 08:41:06 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id k49sm3064292qtc.9.2019.08.30.08.41.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 08:40:43 -0700 (PDT)
-Message-ID: <5d69437b.1c69fb81.2722d.8556@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Aug 2019 08:41:06 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3F24041146; Fri, 30 Aug 2019 12:41:03 -0300 (-03)
+Date:   Fri, 30 Aug 2019 12:41:03 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 0/4] objtool,perf: Use shared x86 insn decoder
+Message-ID: <20190830154103.GA8994@kernel.org>
+References: <cover.1567118001.git.jpoimboe@redhat.com>
+ <20190831002004.d570fcb7b611860e025dbdb2@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2926868.n5I8ZQlzTx@phil>
-References: <20190829224110.91103-1-swboyd@chromium.org> <20190829224110.91103-5-swboyd@chromium.org> <2926868.n5I8ZQlzTx@phil>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH v6 4/4] tpm: tpm_tis_spi: Support cr50 devices
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 30 Aug 2019 08:40:42 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831002004.d570fcb7b611860e025dbdb2@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Heiko Stuebner (2019-08-30 08:33:48)
-> Am Freitag, 30. August 2019, 00:41:10 CEST schrieb Stephen Boyd:
-> > From: Andrey Pronin <apronin@chromium.org>
-> >=20
-> > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> > firmware. The firmware running on the currently supported H1 Secure
-> > Microcontroller requires a special driver to handle its specifics:
-> >=20
-> >  - need to ensure a certain delay between SPI transactions, or else
-> >    the chip may miss some part of the next transaction
-> >  - if there is no SPI activity for some time, it may go to sleep,
-> >    and needs to be waken up before sending further commands
-> >  - access to vendor-specific registers
-> >=20
-> > Cr50 firmware has a requirement to wait for the TPM to wakeup before
-> > sending commands over the SPI bus. Otherwise, the firmware could be in
-> > deep sleep and not respond. The method to wait for the device to wakeup
-> > is slightly different than the usual flow control mechanism described in
-> > the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
-> > start a SPI transfer so we can keep track of the last time the TPM
-> > driver accessed the SPI bus to support the flow control mechanism.
-> >=20
-> > Split the cr50 logic off into a different file to keep it out of the
-> > normal code flow of the existing SPI driver while making it all part of
-> > the same module when the code is optionally compiled into the same
-> > module. Export a new function, tpm_tis_spi_init(), and the associated
-> > read/write/transfer APIs so that we can do this. Make the cr50 code wrap
-> > the tpm_tis_spi_phy struct with its own struct to override the behavior
-> > of tpm_tis_spi_transfer() by supplying a custom flow control hook. This
-> > shares the most code between the core driver and the cr50 support
-> > without combining everything into the core driver or exporting module
-> > symbols.
-> >=20
-> > Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> > Cc: Andrey Pronin <apronin@chromium.org>
-> > Cc: Duncan Laurie <dlaurie@chromium.org>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Guenter Roeck <groeck@chromium.org>
-> > Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > [swboyd@chromium.org: Replace boilerplate with SPDX tag, drop
-> > suspended bit and remove ifdef checks in cr50.h, migrate to functions
-> > exported in tpm_tis_spi.h, combine into one module instead of two]
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->=20
-> This variant breaks building the tpm as a module:
->=20
->=20
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/char/tpm/cr50_spi.o
-> see include/linux/module.h for more information
-> ERROR: "tpm_tis_spi_write32" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_read32" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_read16" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_init" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_transfer" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_resume" [drivers/char/tpm/tpm_tis_spi.ko] undefined!
-> ERROR: "cr50_spi_probe" [drivers/char/tpm/tpm_tis_spi.ko] undefined!
-> make[2]: *** [../scripts/Makefile.modpost:103: modules-modpost] Fehler 1
-> make[1]: *** [/home/devel/hstuebner/00_git-repos/linux-rockchip/Makefile:=
-1302: modules] Fehler 2
-> make[1]: Verzeichnis =E2=80=9E/home/devel/hstuebner/00_git-repos/linux-ro=
-ckchip/_build-arm64=E2=80=9C wird verlassen
-> make: *** [Makefile:179: sub-make] Fehler 2
->=20
->=20
-> After adding a dummy MODULE_LICENSE I end up with:
->=20
-> ERROR: "tpm_tis_spi_write32" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_read32" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_read16" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_init" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_transfer" [drivers/char/tpm/cr50_spi.ko] undefined!
-> ERROR: "tpm_tis_spi_resume" [drivers/char/tpm/tpm_tis_spi.ko] undefined!
-> ERROR: "cr50_spi_probe" [drivers/char/tpm/tpm_tis_spi.ko] undefined!
->=20
->=20
-> So building things as modules this way clearly is not working. Going back
-> to the previous approach makes the module happy again, aka:
->=20
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 6ff135d6f008..477fcddbff8c 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -21,7 +21,9 @@ tpm-$(CONFIG_EFI) +=3D eventlog/efi.o
->  tpm-$(CONFIG_OF) +=3D eventlog/of.o
->  obj-$(CONFIG_TCG_TIS_CORE) +=3D tpm_tis_core.o
->  obj-$(CONFIG_TCG_TIS) +=3D tpm_tis.o
-> -obj-$(CONFIG_TCG_TIS_SPI) +=3D tpm_tis_spi.o cr50_spi.o
-> +obj-$(CONFIG_TCG_TIS_SPI) +=3D tpm_tis_spi_mod.o
-> +tpm_tis_spi_mod-y :=3D tpm_tis_spi.o
-> +tpm_tis_spi_mod-y +=3D cr50_spi.o
->  obj-$(CONFIG_TCG_TIS_I2C_ATMEL) +=3D tpm_i2c_atmel.o
->  obj-$(CONFIG_TCG_TIS_I2C_INFINEON) +=3D tpm_i2c_infineon.o
->  obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) +=3D tpm_i2c_nuvoton.o
->=20
+Em Sat, Aug 31, 2019 at 12:20:04AM +0900, Masami Hiramatsu escreveu:
+> On Thu, 29 Aug 2019 17:41:17 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> 
+> > It's kind of silly that we have *three* identical copies of the x86 insn
+> > decoder in the kernel tree.  Make it approximately 50% less silly by
+> > reducing that number to two.
+> > 
+> 
+> Sounds good to me ;)
+> 
+> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-I wasn't happy that I had to make a tpm_tis_spi_mod target to get the
-.ko to build properly but I thought it was because of the extra Kconfig
-option. If two files can't be combined into one .ko and have it be named
-tpm_tis_spi.ko then we have to do the above workaround. Or we can
-#include the cr50_spi.c file into tpm_tis_spi.c file. Or we can rename
-tpm_tis_spi.c to tpm_tis_spi_base.c and then do the above change with a
-tpm_tis_spi-y. Maybe Masahiro has some hints.
+Good, two already, Adrian?
 
+- Arnaldo
+ 
+> Thanks,
+> 
+> > Josh Poimboeuf (4):
+> >   objtool: Move x86 insn decoder to a common location
+> >   perf: Update .gitignore file
+> >   perf intel-pt: Remove inat.c from build dependency list
+> >   perf intel-pt: Use shared x86 insn decoder
+> > 
+> >  .../{objtool => }/arch/x86/include/asm/inat.h |    0
+> >  .../arch/x86/include/asm/inat_types.h         |    0
+> >  .../{objtool => }/arch/x86/include/asm/insn.h |    0
+> >  .../arch/x86/include/asm/orc_types.h          |    0
+> >  tools/{objtool => }/arch/x86/lib/inat.c       |    0
+> >  tools/{objtool => }/arch/x86/lib/insn.c       |    0
+> >  .../arch/x86/lib/x86-opcode-map.txt           |    0
+> >  .../arch/x86/tools/gen-insn-attr-x86.awk      |    0
+> >  tools/objtool/Makefile                        |    4 +-
+> >  tools/objtool/arch/x86/Build                  |    4 +-
+> >  tools/objtool/arch/x86/decode.c               |    4 +-
+> >  tools/objtool/sync-check.sh                   |   12 +-
+> >  tools/perf/.gitignore                         |    3 +
+> >  tools/perf/arch/x86/tests/insn-x86.c          |    2 +-
+> >  tools/perf/arch/x86/util/archinsn.c           |    2 +-
+> >  tools/perf/check-headers.sh                   |   11 +-
+> >  tools/perf/util/intel-pt-decoder/Build        |   22 +-
+> >  .../intel-pt-decoder/gen-insn-attr-x86.awk    |  392 ------
+> >  tools/perf/util/intel-pt-decoder/inat.c       |   82 --
+> >  tools/perf/util/intel-pt-decoder/inat.h       |  230 ----
+> >  tools/perf/util/intel-pt-decoder/inat_types.h |   15 -
+> >  tools/perf/util/intel-pt-decoder/insn.c       |  593 ---------
+> >  tools/perf/util/intel-pt-decoder/insn.h       |  216 ----
+> >  .../intel-pt-decoder/intel-pt-insn-decoder.c  |   10 +-
+> >  .../util/intel-pt-decoder/x86-opcode-map.txt  | 1072 -----------------
+> >  25 files changed, 34 insertions(+), 2640 deletions(-)
+> >  rename tools/{objtool => }/arch/x86/include/asm/inat.h (100%)
+> >  rename tools/{objtool => }/arch/x86/include/asm/inat_types.h (100%)
+> >  rename tools/{objtool => }/arch/x86/include/asm/insn.h (100%)
+> >  rename tools/{objtool => }/arch/x86/include/asm/orc_types.h (100%)
+> >  rename tools/{objtool => }/arch/x86/lib/inat.c (100%)
+> >  rename tools/{objtool => }/arch/x86/lib/insn.c (100%)
+> >  rename tools/{objtool => }/arch/x86/lib/x86-opcode-map.txt (100%)
+> >  rename tools/{objtool => }/arch/x86/tools/gen-insn-attr-x86.awk (100%)
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.c
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.h
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/inat_types.h
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.c
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.h
+> >  delete mode 100644 tools/perf/util/intel-pt-decoder/x86-opcode-map.txt
+> > 
+> > -- 
+> > 2.20.1
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
+
+-- 
+
+- Arnaldo
