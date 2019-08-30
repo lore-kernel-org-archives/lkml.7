@@ -2,112 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4C4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863CCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE8121874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moQeQIKo"
+	by mail.kernel.org (Postfix) with ESMTP id 6098720659
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfH3D5X (ORCPT
+        id S1728152AbfH3D51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:57:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34020 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727392AbfH3D5W (ORCPT
+        Thu, 29 Aug 2019 23:57:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17552 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727392AbfH3D51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:57:22 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so2816601pgc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 20:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/HuFXkowcP+PhyYkveYBzv+j/h0vppynxHJvt6n2HAk=;
-        b=moQeQIKoaJ93ePUYq94t6PADnGL2q3riHOwSm1XVfTZMGiQo4fV69WkpUmcqt5BP1W
-         3cXgke7tr09maxVWa/iWQThO8rMN8byoSkxy29BLEpAGyRjswKoA6rRn+/9t3swI74ck
-         mctaSLZRJ8NQaePEYastuGIEt4okwxK8PPu2KNj8oMV1j5OasElKppOurLrr0yw6/ruK
-         Ld/RXGOilFBM3dlmGUqgBPgrKY+Xu3ACWyMq2Dr/Z7jnkbrsg/i8HpBCWqdMiBp5mchU
-         jLsel04EOud3NkxXoSEGSPRAT8Fw7U+5nyRCZrrRhrPGvgh44xPJZbmZWnv/ZF4W/Ji7
-         XhZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/HuFXkowcP+PhyYkveYBzv+j/h0vppynxHJvt6n2HAk=;
-        b=fkHksisElpEN3FAdSc2orHr94dSxYPfGEnqAmDcTNMy/EGBUGyIoLMCUSK6STBGdOQ
-         CRjlaDGKy3kMLLgosyQEQAZk1ksfnB/E5nrU4wJOYnvkm0srXdnVCd75rGVW3Y51tcZ+
-         uSlKezPbWQ1okH02celBv5KSSGWFUK089Kxp4VFZ5QC7bBoGbKpHrQBuTxM0Q6+Xzbpo
-         nEM6iiSOWVIgUf2VVrW5HrVVb4s3g9fAMDemssZSCU+77FZxG8hZwKzwhDrxL5/XLOxe
-         NMSp29nYzCbmc6aFoGcNw3vbfGPgBfhb/rjelrsmqBZvMYWLaivom41HLlKD6TV6x/Rp
-         0QRw==
-X-Gm-Message-State: APjAAAVbN1aDxoW6u6YX1krQxdnUoG3GAIAGSSHV4+mng+fCIuSHhWl9
-        RNbogqHIyoYXFiOaWoSeZKQ=
-X-Google-Smtp-Source: APXvYqwNoLkKDpIBufzzAa4LKNrJHjHtc25D+dzgQpL88XmdY4FUFnHk06c63DKPdWP8/ES4ZAV4LQ==
-X-Received: by 2002:a17:90a:fa82:: with SMTP id cu2mr13917778pjb.85.1567137442010;
-        Thu, 29 Aug 2019 20:57:22 -0700 (PDT)
-Received: from LGEARND20B15 ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id o1sm3024519pjp.0.2019.08.29.20.57.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 20:57:21 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 12:57:16 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     akpm@linux-foundation.org, urezki@gmail.com, guro@fb.com,
-        rpenyaev@suse.de, mhocko@suse.com, rick.p.edgecombe@intel.com,
-        rppt@linux.ibm.com, aryabinin@virtuozzo.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        austindh.kim@gmail.com
-Subject: [PATCH] mm/vmalloc: move 'area->pages' after if statement
-Message-ID: <20190830035716.GA190684@LGEARND20B15>
+        Thu, 29 Aug 2019 23:57:27 -0400
+X-UUID: fefe565595ed48edb3adb77924f16125-20190830
+X-UUID: fefe565595ed48edb3adb77924f16125-20190830
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 546792957; Fri, 30 Aug 2019 11:57:21 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 11:57:25 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 11:57:25 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [RESEND, PATCH v7 0/11] Add mt7629 and fix mt7628 pwm
+Date:   Fri, 30 Aug 2019 11:57:06 +0800
+Message-ID: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F7BDBA47FF00EC61B619D606C371BCB2892B5403477FFFBA9C3B3A2986E6A3682000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If !area->pages statement is true where memory allocation fails, 
-area is freed.
+Changes since v7:
+  1. PATCH v7 10/11: Add a missed Reviewed-by tag
 
-In this case 'area->pages = pages' should not executed.
-So move 'area->pages = pages' after if statement.
+Changes since v6:
+  1. Due to we can use fixed-clock in DT
+     We removed has_clks and fixed-clock properties 
 
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
----
- mm/vmalloc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Changes since v5:
+- Follow reviewer's comments:
+  1. the license stuff is a separate change
+  2. split fix mt7628 pwm into a single patch
+  3. to ensure to not use mtk_pwm_clk_name[10] 
+     (After dynamic allocate clock array patch, 
+      this is no need to check)
+  4. Use clock-frequency property to replace 
+     the use of has_clks
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index b810103..af93ba6 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2416,13 +2416,15 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 	} else {
- 		pages = kmalloc_node(array_size, nested_gfp, node);
- 	}
--	area->pages = pages;
--	if (!area->pages) {
-+
-+	if (!pages) {
- 		remove_vm_area(area->addr);
- 		kfree(area);
- 		return NULL;
- 	}
- 
-+	area->pages = pages;
-+
- 	for (i = 0; i < area->nr_pages; i++) {
- 		struct page *page;
- 
+Changes since v4:
+- Follow reviewer's comments (v3: pwm: mediatek: add a property "num-pwms")
+  Move the changes of droping the check for of_device_get_match_data
+  returning non-NULL to next patch
+- Follow reviewers's comments 
+  (v3: pwm: mediatek: allocate the clks array dynamically)
+  1. use pc->soc->has_clks to check clocks exist or not.
+  2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period 
+calculation; otherwise, use clk_get_rate to get clock frequency and 
+apply period calculation.
+
+Changes since v3:
+- add a new property "clock-frequency" and fix mt7628 pwm
+- add mt7629 pwm support
+
+Changes since v2:
+- use num-pwms instead of mediatek,num-pwms.
+- rename the member from num_pwms to fallback_num_pwms to make it 
+  more obvious that it doesn't represent the actually used value.
+- add a dev_warn and a expressive comment to help other developers 
+  to not start adding num_pwms in the compatible_data.
+
+Changes since v1:
+- add some checks for backwards compatibility.
+
+
+Ryder Lee (5):
+  pwm: mediatek: add a property "num-pwms"
+  dt-bindings: pwm: add a property "num-pwms"
+  arm64: dts: mt7622: add a property "num-pwms" for PWM
+  arm: dts: mt7623: add a property "num-pwms" for PWM
+  dt-bindings: pwm: update bindings for MT7629 SoC
+
+Sam Shih (6):
+  pwm: mediatek: droping the check for of_device_get_match_data
+  pwm: mediatek: remove a property "has-clks"
+  pwm: mediatek: allocate the clks array dynamically
+  pwm: mediatek: use pwm_mediatek as common prefix
+  pwm: mediatek: update license and switch to SPDX tag
+  arm: dts: mediatek: add mt7629 pwm support
+
+ .../devicetree/bindings/pwm/pwm-mediatek.txt  |   8 +-
+ arch/arm/boot/dts/mt7623.dtsi                 |   1 +
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      |   1 +
+ drivers/pwm/pwm-mediatek.c                    | 245 +++++++++---------
+ arch/arm/boot/dts/mt7629.dtsi                 | 16 ++++++++++++++++
+ 5 files changed, 149 insertions(+), 122 deletions(-)
+
 -- 
-2.6.2
+2.17.1
 
