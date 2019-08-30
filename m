@@ -2,116 +2,91 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2481C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0F6C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDE621874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6BE21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfH3M43 (ORCPT
+        id S1728182AbfH3M5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:56:29 -0400
-Received: from sauhun.de ([88.99.104.3]:53618 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbfH3M42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:56:28 -0400
-Received: from localhost (p54B335BE.dip0.t-ipconnect.de [84.179.53.190])
-        by pokefinder.org (Postfix) with ESMTPSA id 922732C0095;
-        Fri, 30 Aug 2019 14:56:26 +0200 (CEST)
-Date:   Fri, 30 Aug 2019 14:56:26 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Ray Jui <ray.jui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Icarus Chau <icarus.chau@broadcom.com>,
-        Shivaraj Shetty <sshetty1@broadcom.com>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
-Message-ID: <20190830125626.GC2870@ninjato>
-References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+        Fri, 30 Aug 2019 08:57:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36318 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727522AbfH3M5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:57:04 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z4so7487045qtc.3;
+        Fri, 30 Aug 2019 05:57:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SFaIBBUhr4/2SlKlC0SL+JS7SwhLYOWGWRxz8fCIXxs=;
+        b=V7y82OeYxHoKF2bMgFWXDxbpr5IM9dUbPZ9UDk1SoC+/u4ItFqpuSO3uNH7DB9Rx9w
+         qYPTqv5OINm45mVxdoC9D0lh11juJGQX5OiDqOU8G/RdBEb6Jc97JExC74Iiwz8VQG8F
+         CLoP6DRB/xEUVlZVyZWtxBBYigkOAtQiqsCght6YPNvzmX3VSplR0WUG1w37cgN17ixT
+         Ap9Azd5HAYqwsPaF7NGJVvOb/8Sl9JE2f4SC1xbaDeGpYSPhHG+fFJvA+mYf0SVwnzNG
+         zxhrpa1WUDa2ezgDKlDGm5itn0+RSq1w5OWNyLRf31dD0wdaTBJincXJVoL/LzwGvWNI
+         Bjhw==
+X-Gm-Message-State: APjAAAXGt9rQMoZLZn322xlpnh4zQagQ/XxEJ7DTM11yzOpuhVrAYn7H
+        r9elxp7LZmbkW0JtwpWXkkLCB7bwywu1kciUgiE=
+X-Google-Smtp-Source: APXvYqx86F6I04uUf5dj55lbh3ezYYy6ct+9ri3fU2IjZXZtb6IRyo6Yls4GC5k0q7MYBeyK3/385Tfjt0p1owjzSts=
+X-Received: by 2002:ac8:117:: with SMTP id e23mr15085989qtg.18.1567169823216;
+ Fri, 30 Aug 2019 05:57:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qjNfmADvan18RZcF"
-Content-Disposition: inline
-In-Reply-To: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190829041132.26677-1-deepa.kernel@gmail.com>
+In-Reply-To: <20190829041132.26677-1-deepa.kernel@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 30 Aug 2019 14:56:46 +0200
+Message-ID: <CAK8P3a1XjOMpuS12Xao1xqOLFOuz1Jb8dTAfrhLcE643sSkC5g@mail.gmail.com>
+Subject: Re: [GIT PULL] vfs: Add support for timestamp limits
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger@dilger.ca>, aivazian.tigran@gmail.com,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Kees Cook <keescook@chromium.org>, me@bobcopeland.com,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 6:12 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>
+> Hi Al, Arnd,
+>
+> This is a pull request for filling in min and max timestamps for filesystems.
+> I've added all the acks, and dropped the adfs patch. That will be merged through
+> Russell's tree.
+>
+> Thanks,
+> Deepa
+>
+> The following changes since commit 5d18cb62218608a1388858880ad3ec76d6cb0d3b:
+>
+>   Add linux-next specific files for 20190828 (2019-08-28 19:59:14 +1000)
+>
+> are available in the Git repository at:
+>
+>   https://github.com/deepa-hub/vfs limits
 
---qjNfmADvan18RZcF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please rebase this branch on top of linux-5.3-rc6 and resend.
+I can't pull a branch that contains linux-next.
 
-Hi everyone,
+Maybe drop the orangefs patch for now, at least until we have come
+to a conclusion on that.
 
-> +/*
-> + * If 'process_call' is true, then this is a multi-msg transfer that requires
-> + * a repeated start between the messages.
-> + * More specifically, it must be a write (reg) followed by a read (data).
-> + * The i2c quirks are set to enforce this rule.
-> + */
-
-With all the limitations in place, I wonder if it might be easier to
-implement an smbus_xfer callback instead? What is left that makes this
-controller more than SMBus and real I2C?
-
-> +	/* Process the read message if this is process call */
-
-Also, the term "process call" here seriously sounds like SMBus.
-
-> +		addr = msg->addr << 1 | 1;
-
-addr = i2c_8bit_addr_from_msg(msg);
-
-> +		u32 protocol;
-
-Hmm, another SMBus terminology.
-
-
-> +	if (num > 2) {
-> +		dev_err(iproc_i2c->device,
-> +			"Only support up to 2 messages. Current msg count %d\n",
-> +			num);
-> +		return -EOPNOTSUPP;
-> +	}
-
-With your quirks flags set, the core checks it for you.
-
-Kind regards,
-
-   Wolfram
-
-
---qjNfmADvan18RZcF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1pHPkACgkQFA3kzBSg
-Kba6Ww/+MiQX21OGgbWmV1RzOJTJcm22OqliAmcBgIMJnQ3TB9Uoo0xpA4XkwD1z
-tHnXk1VKf4NsN7NLnoGRG8hYHwZLIElSTQz89eP/PMCmNnj5pu0ebgfP9X+NvC84
-vbFUN3fhmdhMlzvWlS/ixiEbvFud28JxJE9YAOpSDv+3sTMDM/EB2rTLk+tF1Hrn
-+L3B0D2C99gN/fm9kakCYow3FBCXEIwv2CSok5YQ2OXPdteG/rSNnm+3q6gSnleg
-xEgzP6MNSkCJXUaGVt4VSNZ8uek8GQSwy+ZnPr8M07bpmhEfYARJYirQCMatbBoj
-0Ga9/TZn/tFfArKiJMbVMVMJNzo479UQR+NXLpdcTSTScTckAyeNiFECAHXLAw76
-ZMx8q2SAiO2GR9u8xJl7OQoPZoyc+4nHoLxtQVLW1xf+Kfl0irzNBZGQ41dk1gVL
-veiFQy3+By3BqwzA4BaOIU2gsXMYORQ1yIczK4vQOTzq6tShAzj3gjVbrl0ijfc/
-2EtqHB2b8b9X44xd1FppKiHfzcVc8RpNLUziBdJxlWKfC0SAVqM47IcSe/2beynS
-4BUh9UbHhuIjJ+cS0fLUuaCHukk5p22G+g/DqmbctT7kP5GaZ0vQ07dWFyxzNb9/
-4e04NH5ZecIvlp2xlAuJBOn1DFIIBCHbDCPNhj59U5YhY6Mj6NQ=
-=1TD/
------END PGP SIGNATURE-----
-
---qjNfmADvan18RZcF--
+       Arnd
