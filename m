@@ -2,100 +2,112 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFFDC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B843C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDD221721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E233E21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FZ0EekVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfH3LzL (ORCPT
+        id S1727854AbfH3Lzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 07:55:11 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42612 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727410AbfH3LzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 07:55:10 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 04:55:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="181186330"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Aug 2019 04:55:07 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i3fUf-00077m-Jj; Fri, 30 Aug 2019 14:55:05 +0300
-Date:   Fri, 30 Aug 2019 14:55:05 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Cai <peter@typeblog.net>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2
- Max
-Message-ID: <20190830115505.GX2680@smile.fi.intel.com>
-References: <20190830000024.20384-1-peter@typeblog.net>
- <20190830000024.20384-2-peter@typeblog.net>
+        Fri, 30 Aug 2019 07:55:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58796 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727410AbfH3Lzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 07:55:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UBrkx2133927;
+        Fri, 30 Aug 2019 11:55:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=TtrLLU1GIdSPJmXiACh2hG5cwJbVveNPNY/SeFtoPUA=;
+ b=FZ0EekVQb9qQXrF+Jgc63Dt/JxSoTZnX7sK6a3UMBWQCQTUZoXy0NO9teMUY1x7Hjz0e
+ VkeJriitwGHGvQzqBt9ts1Nb4YeydVR9LR9Epjf2Kt0uP6A+4vDEwQd2qhL1DjJ1yTH9
+ 3T02BMWnq3d+LURGKMhZ8U3zlhy4cA00kIvYbUsMCoGkk95kAnLSrh5j51ybVQ1hy2AD
+ oLYQ4DDGLJbHFT6S9sVjYU4SN+LLWXWanxng2hcHKBskaEBG++hU5dsFbB5uSfIBj9bB
+ muEKbmBBXCWVnbzIXK70QGJ2qdkC7Qu+gU+O9ZZomUExiJOjlhTBwiUc2c2EISB9SWEV lA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2uq38x01cb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 11:55:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UBrdCr137639;
+        Fri, 30 Aug 2019 11:55:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2uphav3en9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 11:55:22 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7UBtL1J028456;
+        Fri, 30 Aug 2019 11:55:21 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 30 Aug 2019 04:55:20 -0700
+Date:   Fri, 30 Aug 2019 14:55:09 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+        Chao Yu <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>
+Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
+Message-ID: <20190830115509.GN23584@kadam>
+References: <20190830032006.GA20217@architecture4>
+ <20190830033643.51019-1-gaoxiang25@huawei.com>
+ <20190830033643.51019-6-gaoxiang25@huawei.com>
+ <4f2d6464-39f0-4134-f7ba-eec3b09b22d8@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830000024.20384-2-peter@typeblog.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4f2d6464-39f0-4134-f7ba-eec3b09b22d8@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908300130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908300130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 08:00:24AM +0800, Peter Cai wrote:
-> The firmware of GPD P2 Max could not handle panel resets although code
-> is present in DSDT. The kernel needs to take on this job instead, but
-> the DSDT does not provide _DSD, rendering kernel helpless when trying to
-> find the respective GPIO pins.
+On Fri, Aug 30, 2019 at 02:25:13PM +0800, Chao Yu wrote:
+> On 2019/8/30 11:36, Gao Xiang wrote:
+> > As Dan Carpenter suggested [1], I have to remove
+> > all erofs likely/unlikely annotations.
+> > 
+> > [1] https://lore.kernel.org/linux-fsdevel/20190829154346.GK23584@kadam/
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > 
-> Fortunately, this time GPD has proper DMI vendor / product strings that
-> we could match against. We simply apply an acpi_gpio_mapping table when
-> GPD P2 Max is matched.
-> 
-> Additionally, the DSDT definition of the irq pin specifies a wrong
-> polarity. The new quirk introduced in the previous patch
-> (ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this.
+> I suggest we can modify this by following good example rather than removing them
+> all, at least, the fuzzed random fields of disk layout handling should be very
+> rare case, I guess it's fine to use unlikely.
 
-> +#ifdef CONFIG_ACPI
+No, no...  It's the opposite.  Only use those annotations on fast paths
+where it's going to show up in benchmarks.  On fast paths then remove
+all the debug code and really optimize the heck out of the code.  We
+sacrifice readability for speed in places where it matters.
 
-I guess most of these #ifdef:s makes code less readable for exchange of saving
-few bytes in the module footprint.
-
-> +	{ "irq-gpios", &irq_gpios_default, 1,
-> +		ACPI_GPIO_QUIRK_OVERRIDE_POLARITY },
-
-One line?
-
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "P2 MAX")
-
-Comma at the end?
-
-> +		},
-> +		.driver_data = &gpio_mapping_force_irq_active_high
-
-Ditto.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+regards,
+dan carpenter
 
