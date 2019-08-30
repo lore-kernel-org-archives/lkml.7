@@ -2,166 +2,155 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21FBC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD2CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777FB2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445EC23427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="bqQ0yfMK";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="qZD7kNWW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JZSzfjCV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfH3Jfi (ORCPT
+        id S1727681AbfH3Jit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:35:38 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:36676 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727455AbfH3Jfi (ORCPT
+        Fri, 30 Aug 2019 05:38:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37710 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfH3Jis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:35:38 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7U9ZRLu025619;
-        Fri, 30 Aug 2019 02:35:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=AVg2HvTFUoFwmq2R3d/7P0lC1lkT8lgOKc109E72Pho=;
- b=bqQ0yfMKX8rGKr2vhXZ6QueGYDdr6wl83RSi1Aws3X0DpK1GfD917mtngE2xphi8l4hN
- gu1eYhYLNslY6XJ8oym/KCYH2ve35nIP4yP/dgd4XbfXmlvw9itxc2prLMkAHxcNLZcU
- pB3XgewEGAzPDq29TWSZzLGAZcRypVDDCxOizNCYIqY4P//GzZVh90FkFNnFtnOiT4W5
- IqUnglRAD2Ytdq7tuyvVfsUkH5qIoflKpgeT8nisr5OqQnDLkbqQeFY+1xc+t3eYsQl5
- HSyTn87to8UqadNGqGOhaU0H3tQfa21RhN2rW0ZOvYyLw2wIs8bGAhppe24NHIKggHKc rQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2upmepjpme-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 02:35:27 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 30 Aug
- 2019 02:35:25 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.58) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 30 Aug 2019 02:35:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iyW84A7bwgCUQp4olFPfAiJcU/2gtJ9izD5DllhdEe01ChzeQYZq0GpEwWpey/4c5XjfwhlcRZHOFqcNYkTY5xhEF7O1KJY7PvKYHYbaysCRlAcVGTOJcH3WIYVIu0vi3UUwkeZLEj8h5i3Xon5C/RJIZX/K1iRXMOFe0U1tR5qdTBxFh6LobW0OFPr8Mh+YO8zWZggBnCsd8XdL53TCGPs988eFK66wVNldI9KkyaK1Or+C8//9PU51Zbovrne/g8foBjyCjZOrBeo79pbMWqvAqCzcs6rVzs/wuMapgXV8l6XwR4VfQDmg/mZtt+rRDHWxWwwjEwgyE15+pwswyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AVg2HvTFUoFwmq2R3d/7P0lC1lkT8lgOKc109E72Pho=;
- b=bNff4/4+MwbT2xeO9eJWZahmbseGOZotBVpCwde56QbTIuwl0VvErba3ajAm5+wWPhx+SV/SRjdqprl7tCiZZJ7OJAT3zpgkprd+Q4qKD2wGaEH77RfQEJXJsnWaF82xvzyw/2rJairvCdbTYQ+P+KLKeqynspJ0F/8d6hPCzsLWIOuKI0DwNem5awSvDgR4V4egzIx12jIRLEjTIqHoc3LEhpwzDJaT3Lqonn7oYq2/aJQKyyV/NnGlVWXfyiGUUAR1xy0zsUBiTZnz0XC6Fx3Oed++HOeR204udtiSz8tD68SIaYktM/7aIxx4C5UaYM7hwCDmzt+aNc0BmUq24w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Fri, 30 Aug 2019 05:38:48 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 97so3500182otr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 02:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AVg2HvTFUoFwmq2R3d/7P0lC1lkT8lgOKc109E72Pho=;
- b=qZD7kNWWVA5gDthtCphfq1Cyqu/VwHJKCM8cNunsibTXVk35++MFfDtkE80b25k9DYtHHHp6e86IxXFT5oiV8Vp8Fubv3mEM160gkSx1RCQsEQIAZ/Gun4/tTVjqQdDTC8Orfb6PzDTV8NAj85CSLNfwj9XrgSEaZP9DHo2WfmE=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3181.namprd18.prod.outlook.com (10.255.236.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.19; Fri, 30 Aug 2019 09:35:23 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2220.013; Fri, 30 Aug 2019
- 09:35:23 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 13/24] EDAC, ghes: Add support for legacy API counters
-Thread-Topic: [PATCH v2 13/24] EDAC, ghes: Add support for legacy API counters
-Thread-Index: AQHVXxY/k/O/m3ZuPEe2DEuUofytfw==
-Date:   Fri, 30 Aug 2019 09:35:23 +0000
-Message-ID: <20190830093515.wrvoszz73aovl7tk@rric.localdomain>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-14-rrichter@marvell.com>
- <20190816095559.GL18980@zn.tnic>
-In-Reply-To: <20190816095559.GL18980@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR09CA0089.eurprd09.prod.outlook.com
- (2603:10a6:7:3d::33) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0c016180-f99d-4dc2-1657-08d72d2d619c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3181;
-x-ms-traffictypediagnostic: MN2PR18MB3181:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR18MB318188133ED7291CA0A8B64FD9BD0@MN2PR18MB3181.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0145758B1D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39850400004)(346002)(366004)(376002)(199004)(189003)(54906003)(66556008)(14454004)(316002)(6512007)(66476007)(64756008)(66946007)(6306002)(6246003)(9686003)(6486002)(71200400001)(26005)(4326008)(6916009)(11346002)(486006)(6116002)(66446008)(446003)(6436002)(66066001)(102836004)(476003)(229853002)(53546011)(6506007)(386003)(81156014)(5660300002)(8676002)(81166006)(966005)(14444005)(8936002)(3846002)(71190400001)(25786009)(52116002)(1076003)(256004)(2906002)(305945005)(186003)(7736002)(53936002)(86362001)(478600001)(99286004)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3181;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Dft6qAze9V7GeQm6ftbAQ+9a4a8ppN539vnCuK4uwHo3oQdo9CBGy/twvQ0TQt5kjjofq88L1PM+GmS5w3kmMNT/TkZgiIMTsAPYV7i7RF1dwf1rjWt3UL05ptFxNu34XVW+VWmR6dbN5jbH32nHLSXDBhTCSteTtUZ5Psm1UxsR8If4j+ANIVh2n3wwnBtjS/WjucBwVFKBnew9BHoFe1GhIfm1WKMnq7HfC5S7p8DDqEqTuCAq6ik+gQ98DcVLarGIlcWn++Zag9+zZF5ElkrVJ1lQrKGFokmczRU4CbN+eoklqQpw1WdErj1mAiiPPnzQPtsyT77LhodrcFpxLejQ9PcWOIDje/NTILQU9QIpIc3/HfKXVpJhCuWEPP4ZBiY0Bpe1/GvEcUDJOf6vFMw8h1RVnkklMurKeFdO0dI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <ED7B691DD4B8D347BDB6071EE202A956@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hfIr0oG7zkjfTylZRL1EmDdcoClxx4OzN+k3Fa69QOk=;
+        b=JZSzfjCV+OzEP0NKiy064AMNbZCphzNNPFXwQYxpUoxKno8taFSuAONsfm81PEzvhQ
+         qaCbe4ObT5UHEJBtWQSMdiRygC0gFb4piQ27RfDvbgjt1MFHx4FUZYcXKDJ16XhUnr/e
+         s1OWlBpt4sKcZVLl+qYpSVUn0vbanGsamHLos=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hfIr0oG7zkjfTylZRL1EmDdcoClxx4OzN+k3Fa69QOk=;
+        b=f3Lv+YJD96VYtQ1+J9NV37yAHw0apUkkLidEsH2UycWEq7AmM2ASDJz+sn70lm5iaR
+         OcsEoJtCWpUZZ/PsOY5cTPMUNvIIS9Y1JhnhLLBrGewo0c4tPVQblJbXmcNykZ11udJn
+         4SmMhW69Eh4akAIQ41mikVj7vZCHQmbqJkJ0hSAlqvHJ7ti5uhOlIXXGdHeXrENqVOcN
+         BoPZ3rcgX87qBlZTFUBjzUiqqKwDiZX9mlHmGDSHxdY1dmfJhbQ6JANDECN5qXA5hjNA
+         1ekaH8j424Zoeq67yC7uiQBqUoWAT8LnFBo9QqRyp/7fFseMuNMHhhtJFuqAlzZQf9dQ
+         cOrA==
+X-Gm-Message-State: APjAAAWl98YLjGE87XDu4+qZJsIduBEmGETKoJXBp6np9Qpt7imrd3An
+        zu5hdwXsUHv4oZ0rtY3VW9Z4yM7Mnyo=
+X-Google-Smtp-Source: APXvYqydPOiJCSJ6lci9akcXcqPzqatgRIV9T89FmJQ+wQjSj4ZWfGhqwKo38fSBiNPwWJRc6nTdBw==
+X-Received: by 2002:a05:6830:17d2:: with SMTP id p18mr11323858ota.113.1567157926899;
+        Fri, 30 Aug 2019 02:38:46 -0700 (PDT)
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
+        by smtp.gmail.com with ESMTPSA id j19sm1780360otk.46.2019.08.30.02.38.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 02:38:45 -0700 (PDT)
+Received: by mail-ot1-f45.google.com with SMTP id m24so6309487otp.12
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 02:38:45 -0700 (PDT)
+X-Received: by 2002:a9d:c67:: with SMTP id 94mr11849012otr.33.1567157924626;
+ Fri, 30 Aug 2019 02:38:44 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c016180-f99d-4dc2-1657-08d72d2d619c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 09:35:23.3850
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5xr1vuAWeMOxI/Isq3Ayke7fbannyOx0t8AbzChyDuH+j4QYFQN1DjGVnaz4BN3lRlf4vvWU2RDPuGQWogqonA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3181
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-08-30_04:2019-08-29,2019-08-30 signatures=0
+References: <20190822194500.2071-1-jernej.skrabec@siol.net> <20190822194500.2071-3-jernej.skrabec@siol.net>
+In-Reply-To: <20190822194500.2071-3-jernej.skrabec@siol.net>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Fri, 30 Aug 2019 18:38:32 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
+Message-ID: <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] videodev2.h: add V4L2_DEC_CMD_FLUSH
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        mripard@kernel.org, Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, Chen-Yu Tsai <wens@csie.org>,
+        gregkh@linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>, jonas@kwiboo.se
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.08.19 11:55:59, Borislav Petkov wrote:
-> On Mon, Jun 24, 2019 at 03:09:22PM +0000, Robert Richter wrote:
-> > The ghes driver is not able yet to count legacy API counters in sysfs,
-> > e.g.:
-> >=20
-> >  /sys/devices/system/edac/mc/mc0/csrow2/ce_count
-> >  /sys/devices/system/edac/mc/mc0/csrow2/ch0_ce_count
-> >  /sys/devices/system/edac/mc/mc0/csrow2/ch1_ce_count
-> >=20
-> > Make counting csrows/channels generic so that the ghes driver can use
-> > it too.
->=20
-> What for?
+On Fri, Aug 23, 2019 at 4:45 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+>
+> From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>
+> Add this new V4L2_DEC_CMD_FLUSH decoder command and document it.
+>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst | 11 ++++++++++-
+>  Documentation/media/videodev2.h.rst.exceptions      |  1 +
+>  include/uapi/linux/videodev2.h                      |  1 +
+>  3 files changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+> index 57f0066f4cff..0bffef6058f7 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+> @@ -208,7 +208,16 @@ introduced in Linux 3.3. They are, however, mandatory for stateful mem2mem decod
+>         been started yet, the driver will return an ``EPERM`` error code. When
+>         the decoder is already running, this command does nothing. No
+>         flags are defined for this command.
+> -
+> +    * - ``V4L2_DEC_CMD_FLUSH``
+> +      - 4
+> +      - Flush any held capture buffers. Only valid for stateless decoders,
+> +        and only if ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` was set.
+> +       This command is typically used when the application reached the
+> +       end of the stream and the last output buffer had the
+> +       ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
+> +       dequeueing the last capture buffer containing the last decoded frame.
+> +       So this command can be used to explicitly flush that last decoded
+> +       frame.
 
-Same was asked here:
+Just for safety, can we also specify that it is valid to call this
+command even if no buffer was held (in which case it is a no-op), as
+this can help make user-space code simpler?
 
- https://lore.kernel.org/patchwork/patch/1080277/
-
-Actually it is a fix for the counters exposed by the legacy API for
-the ghes driver. Counters are broken (set to zero). The ghes driver is
-the only where errors are reported using edac_raw_mc_handle_error()
-instead of edac_mc_handle_error().  The fix is to move the error
-counting to edac_mc_handle_error() where the other counters are
-incremented.
-
-All distributions that I have checked enable the legacy API option
-(CONFIG_EDAC_LEGACY_SYSFS=3Dy) and the interface cannot be disabled for
-individual drivers. As long as the counters are exposed, their values
-should be correct. See all options discussed in the thread from v1.
-
-> ghes_edac enumerates the DIMMs from SMBIOS - it doesn't need chip
-> selects and ranks. Those are used when you can't count the DIMMs
-> properly...
-
-Right, but that is true also for other drivers (actually all other
-drivers since DIMMs are used now). It is to support older tools that
-deal with */csrow*/ch* instead of */dimm* in sysfs.
-
--Robert
+>
+>  Return Value
+>  ============
+> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+> index adeb6b7a15cb..a79028e4d929 100644
+> --- a/Documentation/media/videodev2.h.rst.exceptions
+> +++ b/Documentation/media/videodev2.h.rst.exceptions
+> @@ -434,6 +434,7 @@ replace define V4L2_DEC_CMD_START decoder-cmds
+>  replace define V4L2_DEC_CMD_STOP decoder-cmds
+>  replace define V4L2_DEC_CMD_PAUSE decoder-cmds
+>  replace define V4L2_DEC_CMD_RESUME decoder-cmds
+> +replace define V4L2_DEC_CMD_FLUSH decoder-cmds
+>
+>  replace define V4L2_DEC_CMD_START_MUTE_AUDIO decoder-cmds
+>  replace define V4L2_DEC_CMD_PAUSE_TO_BLACK decoder-cmds
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 4fa9f543742d..91a79e16089c 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -1978,6 +1978,7 @@ struct v4l2_encoder_cmd {
+>  #define V4L2_DEC_CMD_STOP        (1)
+>  #define V4L2_DEC_CMD_PAUSE       (2)
+>  #define V4L2_DEC_CMD_RESUME      (3)
+> +#define V4L2_DEC_CMD_FLUSH       (4)
+>
+>  /* Flags for V4L2_DEC_CMD_START */
+>  #define V4L2_DEC_CMD_START_MUTE_AUDIO  (1 << 0)
+> --
+> 2.22.1
+>
