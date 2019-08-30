@@ -2,105 +2,948 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B925C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3620AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F18F2342E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFD723439
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qjlgasho"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="C0fJjiiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfH3U0g (ORCPT
+        id S1728217AbfH3U21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 16:26:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40916 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbfH3U0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 16:26:36 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UKPbJg008356;
-        Fri, 30 Aug 2019 20:26:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=+IsAOfMVpzahGu2lDbM+oEICyaMhBCIcRgFcY79hLpo=;
- b=qjlgasho68ZXU0nlCSS9C9ebImsf748nTzZIflPbvgmMtV+RPXTX0yH1UFT6GtNP509u
- SwY6W9IkyGL6dB0oxuRY7arsnrKpxVMx6fhabfwuvyG8cfoWVoJG5fB/6RgAh02Kjn2K
- HdgE8iuJAjfmACS4e4TTTj6Bbgh20P4HgC1uWPw/VHDkwJZHwxKaDWpwMsR7ZjImcZQ4
- dycKdDYqtir5/dPBZB+DMGxt9OSodfLB95gZ2BBY4HoUGJm6hNOcgY9FGDl0XjKdV30w
- hZFg+HLY10yTR6cU1rRhBbYAyETiTzbYsz9C8qW01dmTTfZibZ8Ojnartn0Cl+XQyF+k LQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2uqatw800w-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 20:26:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UHrniU071728;
-        Fri, 30 Aug 2019 17:54:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2upc8xrme7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 17:54:35 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7UHsY08027782;
-        Fri, 30 Aug 2019 17:54:34 GMT
-Received: from smazumda-Precision-T1600.us.oracle.com (/10.132.91.113)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 30 Aug 2019 10:54:33 -0700
-From:   subhra mazumdar <subhra.mazumdar@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com,
-        patrick.bellasi@arm.com
-Subject: [RFC PATCH 3/9] sched: add sched feature to disable idle core search
-Date:   Fri, 30 Aug 2019 10:49:38 -0700
-Message-Id: <20190830174944.21741-4-subhra.mazumdar@oracle.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908300174
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908300194
+        Fri, 30 Aug 2019 16:28:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:30233 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728053AbfH3U20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 16:28:26 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Krdz5FN5z9v7DV;
+        Fri, 30 Aug 2019 22:28:23 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=C0fJjiiK; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id O-pdQSA3Q2ME; Fri, 30 Aug 2019 22:28:23 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Krdz3nhVz9v7DT;
+        Fri, 30 Aug 2019 22:28:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567196903; bh=umJujtKCt9jA9s96NQbYBENAOmS2h+Mpa9zpQeN9sMM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=C0fJjiiKYEDYs/7rTwTHb33X+dunIK9qZAvTqnodUnQqUHfIMjQuGjSShAl84HFaw
+         JKQ9vC+W41YCNJYHtUU5dcahPTsCYQb45PvKs6BueOWO2NGz4WQKwaMkDzWgbQB8pi
+         JxJy3gf1vg/+2xx05IOjW89LGrAhX4Hx/pMw1ABM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C5F9C8B911;
+        Fri, 30 Aug 2019 22:28:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id swGmCwsH9bEQ; Fri, 30 Aug 2019 22:28:23 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2CBF38B90B;
+        Fri, 30 Aug 2019 22:28:22 +0200 (CEST)
+Subject: Re: [PATCH v6 6/6] powerpc/perf: split callchain.c by bitness
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Breno Leitao <leitao@debian.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Nicolai Stange <nstange@suse.de>,
+        Michael Neuling <mikey@neuling.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1567188299.git.msuchanek@suse.de>
+ <567e7e876edf29ae528027d8574038fbc287f25a.1567188299.git.msuchanek@suse.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <10934168-af3d-b804-1d4e-75c4fb186908@c-s.fr>
+Date:   Fri, 30 Aug 2019 22:28:21 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <567e7e876edf29ae528027d8574038fbc287f25a.1567188299.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new sched feature SIS_CORE to have an option to disable idle core
-search (select_idle_core).
 
-Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
----
- kernel/sched/features.h | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index 858589b..de4d506 100644
---- a/kernel/sched/features.h
-+++ b/kernel/sched/features.h
-@@ -57,6 +57,7 @@ SCHED_FEAT(TTWU_QUEUE, true)
-  */
- SCHED_FEAT(SIS_AVG_CPU, false)
- SCHED_FEAT(SIS_PROP, true)
-+SCHED_FEAT(SIS_CORE, true)
- 
- /*
-  * Issue a WARN when we do multiple update_rq_clock() calls
--- 
-2.9.3
+Le 30/08/2019 à 20:57, Michal Suchanek a écrit :
+> Building callchain.c with !COMPAT proved quite ugly with all the
+> defines. Splitting out the 32bit and 64bit parts looks better.
+> 
+> No code change intended.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+> ---
+> v6:
+>   - move current_is_64bit consolidetaion to earlier patch
+>   - move defines to the top of callchain_32.c
+>   - Makefile cleanup
+> ---
+>   arch/powerpc/perf/Makefile       |   5 +-
+>   arch/powerpc/perf/callchain.c    | 371 +------------------------------
+>   arch/powerpc/perf/callchain.h    |  11 +
+>   arch/powerpc/perf/callchain_32.c | 204 +++++++++++++++++
+>   arch/powerpc/perf/callchain_64.c | 185 +++++++++++++++
+>   5 files changed, 405 insertions(+), 371 deletions(-)
+>   create mode 100644 arch/powerpc/perf/callchain.h
+>   create mode 100644 arch/powerpc/perf/callchain_32.c
+>   create mode 100644 arch/powerpc/perf/callchain_64.c
+> 
+> diff --git a/arch/powerpc/perf/Makefile b/arch/powerpc/perf/Makefile
+> index c155dcbb8691..53d614e98537 100644
+> --- a/arch/powerpc/perf/Makefile
+> +++ b/arch/powerpc/perf/Makefile
+> @@ -1,6 +1,9 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   
+> -obj-$(CONFIG_PERF_EVENTS)	+= callchain.o perf_regs.o
+> +obj-$(CONFIG_PERF_EVENTS)	+= callchain.o callchain_$(BITS).o perf_regs.o
+> +ifdef CONFIG_COMPAT
+> +obj-$(CONFIG_PERF_EVENTS)	+= callchain_32.o
+> +endif
+>   
+>   obj-$(CONFIG_PPC_PERF_CTRS)	+= core-book3s.o bhrb.o
+>   obj64-$(CONFIG_PPC_PERF_CTRS)	+= ppc970-pmu.o power5-pmu.o \
+> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> index 788ad2c63f18..8f30f1b47c78 100644
+> --- a/arch/powerpc/perf/callchain.c
+> +++ b/arch/powerpc/perf/callchain.c
+> @@ -15,11 +15,9 @@
+>   #include <asm/sigcontext.h>
+>   #include <asm/ucontext.h>
+>   #include <asm/vdso.h>
+> -#ifdef CONFIG_COMPAT
+> -#include "../kernel/ppc32.h"
+> -#endif
+>   #include <asm/pte-walk.h>
+>   
+> +#include "callchain.h"
+>   
+>   /*
+>    * Is sp valid as the address of the next kernel stack frame after prev_sp?
+> @@ -102,373 +100,6 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+>   	}
+>   }
+>   
+> -#ifdef CONFIG_PPC64
+> -/*
+> - * On 64-bit we don't want to invoke hash_page on user addresses from
+> - * interrupt context, so if the access faults, we read the page tables
+> - * to find which page (if any) is mapped and access it directly.
+> - */
+> -static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+> -{
+> -	int ret = -EFAULT;
+> -	pgd_t *pgdir;
+> -	pte_t *ptep, pte;
+> -	unsigned shift;
+> -	unsigned long addr = (unsigned long) ptr;
+> -	unsigned long offset;
+> -	unsigned long pfn, flags;
+> -	void *kaddr;
+> -
+> -	pgdir = current->mm->pgd;
+> -	if (!pgdir)
+> -		return -EFAULT;
+> -
+> -	local_irq_save(flags);
+> -	ptep = find_current_mm_pte(pgdir, addr, NULL, &shift);
+> -	if (!ptep)
+> -		goto err_out;
+> -	if (!shift)
+> -		shift = PAGE_SHIFT;
+> -
+> -	/* align address to page boundary */
+> -	offset = addr & ((1UL << shift) - 1);
+> -
+> -	pte = READ_ONCE(*ptep);
+> -	if (!pte_present(pte) || !pte_user(pte))
+> -		goto err_out;
+> -	pfn = pte_pfn(pte);
+> -	if (!page_is_ram(pfn))
+> -		goto err_out;
+> -
+> -	/* no highmem to worry about here */
+> -	kaddr = pfn_to_kaddr(pfn);
+> -	memcpy(buf, kaddr + offset, nb);
+> -	ret = 0;
+> -err_out:
+> -	local_irq_restore(flags);
+> -	return ret;
+> -}
+> -
+> -static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+> -{
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned long) ||
+> -	    ((unsigned long)ptr & 7))
+> -		return -EFAULT;
+> -
+> -	pagefault_disable();
+> -	if (!__get_user_inatomic(*ret, ptr)) {
+> -		pagefault_enable();
+> -		return 0;
+> -	}
+> -	pagefault_enable();
+> -
+> -	return read_user_stack_slow(ptr, ret, 8);
+> -}
+> -
+> -static inline int valid_user_sp(unsigned long sp, int is_64)
+> -{
+> -	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+> -		return 0;
+> -	return 1;
+> -}
+> -
+> -/*
+> - * 64-bit user processes use the same stack frame for RT and non-RT signals.
+> - */
+> -struct signal_frame_64 {
+> -	char		dummy[__SIGNAL_FRAMESIZE];
+> -	struct ucontext	uc;
+> -	unsigned long	unused[2];
+> -	unsigned int	tramp[6];
+> -	struct siginfo	*pinfo;
+> -	void		*puc;
+> -	struct siginfo	info;
+> -	char		abigap[288];
+> -};
+> -
+> -static int is_sigreturn_64_address(unsigned long nip, unsigned long fp)
+> -{
+> -	if (nip == fp + offsetof(struct signal_frame_64, tramp))
+> -		return 1;
+> -	if (vdso64_rt_sigtramp && current->mm->context.vdso_base &&
+> -	    nip == current->mm->context.vdso_base + vdso64_rt_sigtramp)
+> -		return 1;
+> -	return 0;
+> -}
+> -
+> -/*
+> - * Do some sanity checking on the signal frame pointed to by sp.
+> - * We check the pinfo and puc pointers in the frame.
+> - */
+> -static int sane_signal_64_frame(unsigned long sp)
+> -{
+> -	struct signal_frame_64 __user *sf;
+> -	unsigned long pinfo, puc;
+> -
+> -	sf = (struct signal_frame_64 __user *) sp;
+> -	if (read_user_stack_64((unsigned long __user *) &sf->pinfo, &pinfo) ||
+> -	    read_user_stack_64((unsigned long __user *) &sf->puc, &puc))
+> -		return 0;
+> -	return pinfo == (unsigned long) &sf->info &&
+> -		puc == (unsigned long) &sf->uc;
+> -}
+> -
+> -static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> -				   struct pt_regs *regs)
+> -{
+> -	unsigned long sp, next_sp;
+> -	unsigned long next_ip;
+> -	unsigned long lr;
+> -	long level = 0;
+> -	struct signal_frame_64 __user *sigframe;
+> -	unsigned long __user *fp, *uregs;
+> -
+> -	next_ip = perf_instruction_pointer(regs);
+> -	lr = regs->link;
+> -	sp = regs->gpr[1];
+> -	perf_callchain_store(entry, next_ip);
+> -
+> -	while (entry->nr < entry->max_stack) {
+> -		fp = (unsigned long __user *) sp;
+> -		if (!valid_user_sp(sp, 1) || read_user_stack_64(fp, &next_sp))
+> -			return;
+> -		if (level > 0 && read_user_stack_64(&fp[2], &next_ip))
+> -			return;
+> -
+> -		/*
+> -		 * Note: the next_sp - sp >= signal frame size check
+> -		 * is true when next_sp < sp, which can happen when
+> -		 * transitioning from an alternate signal stack to the
+> -		 * normal stack.
+> -		 */
+> -		if (next_sp - sp >= sizeof(struct signal_frame_64) &&
+> -		    (is_sigreturn_64_address(next_ip, sp) ||
+> -		     (level <= 1 && is_sigreturn_64_address(lr, sp))) &&
+> -		    sane_signal_64_frame(sp)) {
+> -			/*
+> -			 * This looks like an signal frame
+> -			 */
+> -			sigframe = (struct signal_frame_64 __user *) sp;
+> -			uregs = sigframe->uc.uc_mcontext.gp_regs;
+> -			if (read_user_stack_64(&uregs[PT_NIP], &next_ip) ||
+> -			    read_user_stack_64(&uregs[PT_LNK], &lr) ||
+> -			    read_user_stack_64(&uregs[PT_R1], &sp))
+> -				return;
+> -			level = 0;
+> -			perf_callchain_store_context(entry, PERF_CONTEXT_USER);
+> -			perf_callchain_store(entry, next_ip);
+> -			continue;
+> -		}
+> -
+> -		if (level == 0)
+> -			next_ip = lr;
+> -		perf_callchain_store(entry, next_ip);
+> -		++level;
+> -		sp = next_sp;
+> -	}
+> -}
+> -
+> -#else  /* CONFIG_PPC64 */
+> -static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+> -{
+> -	return 0;
+> -}
+> -#endif /* CONFIG_PPC64 */
+> -
+> -/*
+> - * On 32-bit we just access the address and let hash_page create a
+> - * HPTE if necessary, so there is no need to fall back to reading
+> - * the page tables.  Since this is called at interrupt level,
+> - * do_page_fault() won't treat a DSI as a page fault.
+> - */
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> -{
+> -	int rc;
+> -
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+> -
+> -	pagefault_disable();
+> -	rc = __get_user_inatomic(*ret, ptr);
+> -	pagefault_enable();
+> -
+> -	if (IS_ENABLED(CONFIG_PPC64) && rc)
+> -		return read_user_stack_slow(ptr, ret, 4);
+> -	return rc;
+> -}
+> -
+> -#ifndef CONFIG_PPC64
+> -static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> -					  struct pt_regs *regs)
+> -{
+> -}
+> -
+> -static inline int valid_user_sp(unsigned long sp, int is_64)
+> -{
+> -	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
+> -		return 0;
+> -	return 1;
+> -}
+> -
+> -#define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
+> -#define sigcontext32		sigcontext
+> -#define mcontext32		mcontext
+> -#define ucontext32		ucontext
+> -#define compat_siginfo_t	struct siginfo
+> -
+> -#endif /* CONFIG_PPC64 */
+> -
+> -#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+> -/*
+> - * Layout for non-RT signal frames
+> - */
+> -struct signal_frame_32 {
+> -	char			dummy[__SIGNAL_FRAMESIZE32];
+> -	struct sigcontext32	sctx;
+> -	struct mcontext32	mctx;
+> -	int			abigap[56];
+> -};
+> -
+> -/*
+> - * Layout for RT signal frames
+> - */
+> -struct rt_signal_frame_32 {
+> -	char			dummy[__SIGNAL_FRAMESIZE32 + 16];
+> -	compat_siginfo_t	info;
+> -	struct ucontext32	uc;
+> -	int			abigap[56];
+> -};
+> -
+> -static int is_sigreturn_32_address(unsigned int nip, unsigned int fp)
+> -{
+> -	if (nip == fp + offsetof(struct signal_frame_32, mctx.mc_pad))
+> -		return 1;
+> -	if (vdso32_sigtramp && current->mm->context.vdso_base &&
+> -	    nip == current->mm->context.vdso_base + vdso32_sigtramp)
+> -		return 1;
+> -	return 0;
+> -}
+> -
+> -static int is_rt_sigreturn_32_address(unsigned int nip, unsigned int fp)
+> -{
+> -	if (nip == fp + offsetof(struct rt_signal_frame_32,
+> -				 uc.uc_mcontext.mc_pad))
+> -		return 1;
+> -	if (vdso32_rt_sigtramp && current->mm->context.vdso_base &&
+> -	    nip == current->mm->context.vdso_base + vdso32_rt_sigtramp)
+> -		return 1;
+> -	return 0;
+> -}
+> -
+> -static int sane_signal_32_frame(unsigned int sp)
+> -{
+> -	struct signal_frame_32 __user *sf;
+> -	unsigned int regs;
+> -
+> -	sf = (struct signal_frame_32 __user *) (unsigned long) sp;
+> -	if (read_user_stack_32((unsigned int __user *) &sf->sctx.regs, &regs))
+> -		return 0;
+> -	return regs == (unsigned long) &sf->mctx;
+> -}
+> -
+> -static int sane_rt_signal_32_frame(unsigned int sp)
+> -{
+> -	struct rt_signal_frame_32 __user *sf;
+> -	unsigned int regs;
+> -
+> -	sf = (struct rt_signal_frame_32 __user *) (unsigned long) sp;
+> -	if (read_user_stack_32((unsigned int __user *) &sf->uc.uc_regs, &regs))
+> -		return 0;
+> -	return regs == (unsigned long) &sf->uc.uc_mcontext;
+> -}
+> -
+> -static unsigned int __user *signal_frame_32_regs(unsigned int sp,
+> -				unsigned int next_sp, unsigned int next_ip)
+> -{
+> -	struct mcontext32 __user *mctx = NULL;
+> -	struct signal_frame_32 __user *sf;
+> -	struct rt_signal_frame_32 __user *rt_sf;
+> -
+> -	/*
+> -	 * Note: the next_sp - sp >= signal frame size check
+> -	 * is true when next_sp < sp, for example, when
+> -	 * transitioning from an alternate signal stack to the
+> -	 * normal stack.
+> -	 */
+> -	if (next_sp - sp >= sizeof(struct signal_frame_32) &&
+> -	    is_sigreturn_32_address(next_ip, sp) &&
+> -	    sane_signal_32_frame(sp)) {
+> -		sf = (struct signal_frame_32 __user *) (unsigned long) sp;
+> -		mctx = &sf->mctx;
+> -	}
+> -
+> -	if (!mctx && next_sp - sp >= sizeof(struct rt_signal_frame_32) &&
+> -	    is_rt_sigreturn_32_address(next_ip, sp) &&
+> -	    sane_rt_signal_32_frame(sp)) {
+> -		rt_sf = (struct rt_signal_frame_32 __user *) (unsigned long) sp;
+> -		mctx = &rt_sf->uc.uc_mcontext;
+> -	}
+> -
+> -	if (!mctx)
+> -		return NULL;
+> -	return mctx->mc_gregs;
+> -}
+> -
+> -static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> -				   struct pt_regs *regs)
+> -{
+> -	unsigned int sp, next_sp;
+> -	unsigned int next_ip;
+> -	unsigned int lr;
+> -	long level = 0;
+> -	unsigned int __user *fp, *uregs;
+> -
+> -	next_ip = perf_instruction_pointer(regs);
+> -	lr = regs->link;
+> -	sp = regs->gpr[1];
+> -	perf_callchain_store(entry, next_ip);
+> -
+> -	while (entry->nr < entry->max_stack) {
+> -		fp = (unsigned int __user *) (unsigned long) sp;
+> -		if (!valid_user_sp(sp, 0) || read_user_stack_32(fp, &next_sp))
+> -			return;
+> -		if (level > 0 && read_user_stack_32(&fp[1], &next_ip))
+> -			return;
+> -
+> -		uregs = signal_frame_32_regs(sp, next_sp, next_ip);
+> -		if (!uregs && level <= 1)
+> -			uregs = signal_frame_32_regs(sp, next_sp, lr);
+> -		if (uregs) {
+> -			/*
+> -			 * This looks like an signal frame, so restart
+> -			 * the stack trace with the values in it.
+> -			 */
+> -			if (read_user_stack_32(&uregs[PT_NIP], &next_ip) ||
+> -			    read_user_stack_32(&uregs[PT_LNK], &lr) ||
+> -			    read_user_stack_32(&uregs[PT_R1], &sp))
+> -				return;
+> -			level = 0;
+> -			perf_callchain_store_context(entry, PERF_CONTEXT_USER);
+> -			perf_callchain_store(entry, next_ip);
+> -			continue;
+> -		}
+> -
+> -		if (level == 0)
+> -			next_ip = lr;
+> -		perf_callchain_store(entry, next_ip);
+> -		++level;
+> -		sp = next_sp;
+> -	}
+> -}
+> -#else /* 32bit */
+> -static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> -				   struct pt_regs *regs)
+> -{
+> -	(void)&read_user_stack_32; /* unused if !COMPAT */
+> -}
+> -#endif /* 32bit */
+> -
+>   static inline int current_is_64bit(void)
+>   {
+>   	if (!IS_ENABLED(CONFIG_COMPAT))
+> diff --git a/arch/powerpc/perf/callchain.h b/arch/powerpc/perf/callchain.h
+> new file mode 100644
+> index 000000000000..63ffb43f3668
+> --- /dev/null
+> +++ b/arch/powerpc/perf/callchain.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _POWERPC_PERF_CALLCHAIN_H
+> +#define _POWERPC_PERF_CALLCHAIN_H
+> +
+> +int read_user_stack_slow(void __user *ptr, void *buf, int nb);
+> +void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> +			    struct pt_regs *regs);
+> +void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> +			    struct pt_regs *regs);
+> +
+> +#endif /* _POWERPC_PERF_CALLCHAIN_H */
+> diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
+> new file mode 100644
+> index 000000000000..01a38d929078
+> --- /dev/null
+> +++ b/arch/powerpc/perf/callchain_32.c
+> @@ -0,0 +1,204 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Performance counter callchain support - powerpc architecture code
+> + *
+> + * Copyright © 2009 Paul Mackerras, IBM Corporation.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/sched.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/percpu.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/mm.h>
+> +#include <asm/ptrace.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/sigcontext.h>
+> +#include <asm/ucontext.h>
+> +#include <asm/vdso.h>
+> +#include <asm/pte-walk.h>
+> +
+> +#include "callchain.h"
+> +
+> +#ifdef CONFIG_PPC64
+> +#include "../kernel/ppc32.h"
+> +#else  /* CONFIG_PPC64 */
+> +
+> +#define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
+> +#define sigcontext32		sigcontext
+> +#define mcontext32		mcontext
+> +#define ucontext32		ucontext
+> +#define compat_siginfo_t	struct siginfo
+> +
+> +#endif /* CONFIG_PPC64 */
+> +
+> +/*
+> + * On 32-bit we just access the address and let hash_page create a
+> + * HPTE if necessary, so there is no need to fall back to reading
+> + * the page tables.  Since this is called at interrupt level,
+> + * do_page_fault() won't treat a DSI as a page fault.
+> + */
+> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> +{
+> +	int rc;
+> +
+> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> +	    ((unsigned long)ptr & 3))
+> +		return -EFAULT;
+> +
+> +	pagefault_disable();
+> +	rc = __get_user_inatomic(*ret, ptr);
+> +	pagefault_enable();
+> +
+> +	if (IS_ENABLED(CONFIG_PPC64) && rc)
+> +		return read_user_stack_slow(ptr, ret, 4);
+> +	return rc;
+> +}
+> +
+> +static inline int valid_user_sp(unsigned long sp, int is_64)
+> +{
+> +	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
+> +		return 0;
+> +	return 1;
+> +}
+> +
+> +/*
+> + * Layout for non-RT signal frames
+> + */
+> +struct signal_frame_32 {
+> +	char			dummy[__SIGNAL_FRAMESIZE32];
+> +	struct sigcontext32	sctx;
+> +	struct mcontext32	mctx;
+> +	int			abigap[56];
+> +};
+> +
+> +/*
+> + * Layout for RT signal frames
+> + */
+> +struct rt_signal_frame_32 {
+> +	char			dummy[__SIGNAL_FRAMESIZE32 + 16];
+> +	compat_siginfo_t	info;
+> +	struct ucontext32	uc;
+> +	int			abigap[56];
+> +};
+> +
+> +static int is_sigreturn_32_address(unsigned int nip, unsigned int fp)
+> +{
+> +	if (nip == fp + offsetof(struct signal_frame_32, mctx.mc_pad))
+> +		return 1;
+> +	if (vdso32_sigtramp && current->mm->context.vdso_base &&
+> +	    nip == current->mm->context.vdso_base + vdso32_sigtramp)
+> +		return 1;
+> +	return 0;
+> +}
+> +
+> +static int is_rt_sigreturn_32_address(unsigned int nip, unsigned int fp)
+> +{
+> +	if (nip == fp + offsetof(struct rt_signal_frame_32,
+> +				 uc.uc_mcontext.mc_pad))
+> +		return 1;
+> +	if (vdso32_rt_sigtramp && current->mm->context.vdso_base &&
+> +	    nip == current->mm->context.vdso_base + vdso32_rt_sigtramp)
+> +		return 1;
+> +	return 0;
+> +}
+> +
+> +static int sane_signal_32_frame(unsigned int sp)
+> +{
+> +	struct signal_frame_32 __user *sf;
+> +	unsigned int regs;
+> +
+> +	sf = (struct signal_frame_32 __user *) (unsigned long) sp;
+> +	if (read_user_stack_32((unsigned int __user *) &sf->sctx.regs, &regs))
+> +		return 0;
+> +	return regs == (unsigned long) &sf->mctx;
+> +}
+> +
+> +static int sane_rt_signal_32_frame(unsigned int sp)
+> +{
+> +	struct rt_signal_frame_32 __user *sf;
+> +	unsigned int regs;
+> +
+> +	sf = (struct rt_signal_frame_32 __user *) (unsigned long) sp;
+> +	if (read_user_stack_32((unsigned int __user *) &sf->uc.uc_regs, &regs))
+> +		return 0;
+> +	return regs == (unsigned long) &sf->uc.uc_mcontext;
+> +}
+> +
+> +static unsigned int __user *signal_frame_32_regs(unsigned int sp,
+> +				unsigned int next_sp, unsigned int next_ip)
+> +{
+> +	struct mcontext32 __user *mctx = NULL;
+> +	struct signal_frame_32 __user *sf;
+> +	struct rt_signal_frame_32 __user *rt_sf;
+> +
+> +	/*
+> +	 * Note: the next_sp - sp >= signal frame size check
+> +	 * is true when next_sp < sp, for example, when
+> +	 * transitioning from an alternate signal stack to the
+> +	 * normal stack.
+> +	 */
+> +	if (next_sp - sp >= sizeof(struct signal_frame_32) &&
+> +	    is_sigreturn_32_address(next_ip, sp) &&
+> +	    sane_signal_32_frame(sp)) {
+> +		sf = (struct signal_frame_32 __user *) (unsigned long) sp;
+> +		mctx = &sf->mctx;
+> +	}
+> +
+> +	if (!mctx && next_sp - sp >= sizeof(struct rt_signal_frame_32) &&
+> +	    is_rt_sigreturn_32_address(next_ip, sp) &&
+> +	    sane_rt_signal_32_frame(sp)) {
+> +		rt_sf = (struct rt_signal_frame_32 __user *) (unsigned long) sp;
+> +		mctx = &rt_sf->uc.uc_mcontext;
+> +	}
+> +
+> +	if (!mctx)
+> +		return NULL;
+> +	return mctx->mc_gregs;
+> +}
+> +
+> +void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> +			    struct pt_regs *regs)
+> +{
+> +	unsigned int sp, next_sp;
+> +	unsigned int next_ip;
+> +	unsigned int lr;
+> +	long level = 0;
+> +	unsigned int __user *fp, *uregs;
+> +
+> +	next_ip = perf_instruction_pointer(regs);
+> +	lr = regs->link;
+> +	sp = regs->gpr[1];
+> +	perf_callchain_store(entry, next_ip);
+> +
+> +	while (entry->nr < entry->max_stack) {
+> +		fp = (unsigned int __user *) (unsigned long) sp;
+> +		if (!valid_user_sp(sp, 0) || read_user_stack_32(fp, &next_sp))
+> +			return;
+> +		if (level > 0 && read_user_stack_32(&fp[1], &next_ip))
+> +			return;
+> +
+> +		uregs = signal_frame_32_regs(sp, next_sp, next_ip);
+> +		if (!uregs && level <= 1)
+> +			uregs = signal_frame_32_regs(sp, next_sp, lr);
+> +		if (uregs) {
+> +			/*
+> +			 * This looks like an signal frame, so restart
+> +			 * the stack trace with the values in it.
+> +			 */
+> +			if (read_user_stack_32(&uregs[PT_NIP], &next_ip) ||
+> +			    read_user_stack_32(&uregs[PT_LNK], &lr) ||
+> +			    read_user_stack_32(&uregs[PT_R1], &sp))
+> +				return;
+> +			level = 0;
+> +			perf_callchain_store_context(entry, PERF_CONTEXT_USER);
+> +			perf_callchain_store(entry, next_ip);
+> +			continue;
+> +		}
+> +
+> +		if (level == 0)
+> +			next_ip = lr;
+> +		perf_callchain_store(entry, next_ip);
+> +		++level;
+> +		sp = next_sp;
+> +	}
+> +}
+> diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
+> new file mode 100644
+> index 000000000000..60308c2221a8
+> --- /dev/null
+> +++ b/arch/powerpc/perf/callchain_64.c
+> @@ -0,0 +1,185 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Performance counter callchain support - powerpc architecture code
+> + *
+> + * Copyright © 2009 Paul Mackerras, IBM Corporation.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/sched.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/percpu.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/mm.h>
+> +#include <asm/ptrace.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/sigcontext.h>
+> +#include <asm/ucontext.h>
+> +#include <asm/vdso.h>
+> +#include <asm/pte-walk.h>
+> +
+> +#include "callchain.h"
+> +
+> +/*
+> + * On 64-bit we don't want to invoke hash_page on user addresses from
+> + * interrupt context, so if the access faults, we read the page tables
+> + * to find which page (if any) is mapped and access it directly.
+> + */
+> +int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+> +{
+> +	int ret = -EFAULT;
+> +	pgd_t *pgdir;
+> +	pte_t *ptep, pte;
+> +	unsigned int shift;
+> +	unsigned long addr = (unsigned long) ptr;
+> +	unsigned long offset;
+> +	unsigned long pfn, flags;
+> +	void *kaddr;
+> +
+> +	pgdir = current->mm->pgd;
+> +	if (!pgdir)
+> +		return -EFAULT;
+> +
+> +	local_irq_save(flags);
+> +	ptep = find_current_mm_pte(pgdir, addr, NULL, &shift);
+> +	if (!ptep)
+> +		goto err_out;
+> +	if (!shift)
+> +		shift = PAGE_SHIFT;
+> +
+> +	/* align address to page boundary */
+> +	offset = addr & ((1UL << shift) - 1);
+> +
+> +	pte = READ_ONCE(*ptep);
+> +	if (!pte_present(pte) || !pte_user(pte))
+> +		goto err_out;
+> +	pfn = pte_pfn(pte);
+> +	if (!page_is_ram(pfn))
+> +		goto err_out;
+> +
+> +	/* no highmem to worry about here */
+> +	kaddr = pfn_to_kaddr(pfn);
+> +	memcpy(buf, kaddr + offset, nb);
+> +	ret = 0;
+> +err_out:
+> +	local_irq_restore(flags);
+> +	return ret;
+> +}
+> +
+> +static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+> +{
+> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned long) ||
+> +	    ((unsigned long)ptr & 7))
+> +		return -EFAULT;
+> +
+> +	pagefault_disable();
+> +	if (!__get_user_inatomic(*ret, ptr)) {
+> +		pagefault_enable();
+> +		return 0;
+> +	}
+> +	pagefault_enable();
+> +
+> +	return read_user_stack_slow(ptr, ret, 8);
+> +}
+> +
+> +static inline int valid_user_sp(unsigned long sp, int is_64)
+> +{
+> +	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+> +		return 0;
+> +	return 1;
+> +}
+> +
+> +/*
+> + * 64-bit user processes use the same stack frame for RT and non-RT signals.
+> + */
+> +struct signal_frame_64 {
+> +	char		dummy[__SIGNAL_FRAMESIZE];
+> +	struct ucontext	uc;
+> +	unsigned long	unused[2];
+> +	unsigned int	tramp[6];
+> +	struct siginfo	*pinfo;
+> +	void		*puc;
+> +	struct siginfo	info;
+> +	char		abigap[288];
+> +};
+> +
+> +static int is_sigreturn_64_address(unsigned long nip, unsigned long fp)
+> +{
+> +	if (nip == fp + offsetof(struct signal_frame_64, tramp))
+> +		return 1;
+> +	if (vdso64_rt_sigtramp && current->mm->context.vdso_base &&
+> +	    nip == current->mm->context.vdso_base + vdso64_rt_sigtramp)
+> +		return 1;
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Do some sanity checking on the signal frame pointed to by sp.
+> + * We check the pinfo and puc pointers in the frame.
+> + */
+> +static int sane_signal_64_frame(unsigned long sp)
+> +{
+> +	struct signal_frame_64 __user *sf;
+> +	unsigned long pinfo, puc;
+> +
+> +	sf = (struct signal_frame_64 __user *) sp;
+> +	if (read_user_stack_64((unsigned long __user *) &sf->pinfo, &pinfo) ||
+> +	    read_user_stack_64((unsigned long __user *) &sf->puc, &puc))
+> +		return 0;
+> +	return pinfo == (unsigned long) &sf->info &&
+> +		puc == (unsigned long) &sf->uc;
+> +}
+> +
+> +void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> +			    struct pt_regs *regs)
+> +{
+> +	unsigned long sp, next_sp;
+> +	unsigned long next_ip;
+> +	unsigned long lr;
+> +	long level = 0;
+> +	struct signal_frame_64 __user *sigframe;
+> +	unsigned long __user *fp, *uregs;
+> +
+> +	next_ip = perf_instruction_pointer(regs);
+> +	lr = regs->link;
+> +	sp = regs->gpr[1];
+> +	perf_callchain_store(entry, next_ip);
+> +
+> +	while (entry->nr < entry->max_stack) {
+> +		fp = (unsigned long __user *) sp;
+> +		if (!valid_user_sp(sp, 1) || read_user_stack_64(fp, &next_sp))
+> +			return;
+> +		if (level > 0 && read_user_stack_64(&fp[2], &next_ip))
+> +			return;
+> +
+> +		/*
+> +		 * Note: the next_sp - sp >= signal frame size check
+> +		 * is true when next_sp < sp, which can happen when
+> +		 * transitioning from an alternate signal stack to the
+> +		 * normal stack.
+> +		 */
+> +		if (next_sp - sp >= sizeof(struct signal_frame_64) &&
+> +		    (is_sigreturn_64_address(next_ip, sp) ||
+> +		     (level <= 1 && is_sigreturn_64_address(lr, sp))) &&
+> +		    sane_signal_64_frame(sp)) {
+> +			/*
+> +			 * This looks like an signal frame
+> +			 */
+> +			sigframe = (struct signal_frame_64 __user *) sp;
+> +			uregs = sigframe->uc.uc_mcontext.gp_regs;
+> +			if (read_user_stack_64(&uregs[PT_NIP], &next_ip) ||
+> +			    read_user_stack_64(&uregs[PT_LNK], &lr) ||
+> +			    read_user_stack_64(&uregs[PT_R1], &sp))
+> +				return;
+> +			level = 0;
+> +			perf_callchain_store_context(entry, PERF_CONTEXT_USER);
+> +			perf_callchain_store(entry, next_ip);
+> +			continue;
+> +		}
+> +
+> +		if (level == 0)
+> +			next_ip = lr;
+> +		perf_callchain_store(entry, next_ip);
+> +		++level;
+> +		sp = next_sp;
+> +	}
+> +}
+> 
