@@ -2,140 +2,114 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5416C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294A1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67A8215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="gVny2wTn"
+	by mail.kernel.org (Postfix) with ESMTP id EECBD215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfH3Hla (ORCPT
+        id S1728461AbfH3Hlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:41:30 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:61267 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728308AbfH3HlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:41:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46KWcn5Kyhz9vBmW;
-        Fri, 30 Aug 2019 09:41:13 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=gVny2wTn; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 14Tt15Z7pa5g; Fri, 30 Aug 2019 09:41:13 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46KWcn4H8Dz9vBmK;
-        Fri, 30 Aug 2019 09:41:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567150873; bh=Z3bd6wODPz5wA7uTANAowrL/V9jIt/k9bKsgaQKc7cY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gVny2wTndz/RHEcUKBQ8YjZjNNOj9ulkkSXsovq+Rg2W6RWn7fycH3f2mjz71nXKK
-         qEsOJItpmlghns5c65IYr5NutqFw6o0Rhkq8o6ON2T1TooQW5VBxanrx2ZIMICXcpb
-         y4AQoEAkaNf39a6nGn5tHIC7XqHvPE4RrkThtK4s=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9DA558B8E8;
-        Fri, 30 Aug 2019 09:41:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id WDKejOP-RFqE; Fri, 30 Aug 2019 09:41:14 +0200 (CEST)
-Received: from [172.25.230.105] (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E1218B8E3;
-        Fri, 30 Aug 2019 09:41:14 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/mm: tell if a bad page fault on data is read or
- write.
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <4f88d7e6fda53b5f80a71040ab400242f6c8cb93.1566400889.git.christophe.leroy@c-s.fr>
- <87o908tbgx.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <79e4ebad-7fef-7f9b-69f4-f9065b0dbde4@c-s.fr>
-Date:   Fri, 30 Aug 2019 09:41:14 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 03:41:35 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:5077 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726975AbfH3HlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:41:14 -0400
+X-UUID: db604b29063f487497010dbfd16a10cb-20190830
+X-UUID: db604b29063f487497010dbfd16a10cb-20190830
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1778108743; Fri, 30 Aug 2019 15:41:08 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 15:41:06 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 15:41:05 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 3/7] usb: mtu3: support ip-sleep wakeup for MT8183
+Date:   Fri, 30 Aug 2019 15:40:50 +0800
+Message-ID: <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <87o908tbgx.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F74322B90E1477F19AF735F69436CA832E94AD1F20C9FF0287F2AC178D6C26032000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Support USB wakeup by ip-sleep mode for MT8183, it's similar to
+MT8173
 
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v3: changes micros define
 
-Le 29/08/2019 à 14:14, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> DSISR has a bit to tell if the fault is due to a read or a write.
-> 
-> Except some CPUs don't have a DSISR?
-> 
-> Which is why we have page_fault_is_write() that's used in
-> __do_page_fault().
+v2: no changes
+---
+ drivers/usb/mtu3/mtu3_host.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
+index c871b94f3e6f..4f8208885ebd 100644
+--- a/drivers/usb/mtu3/mtu3_host.c
++++ b/drivers/usb/mtu3/mtu3_host.c
+@@ -18,6 +18,12 @@
+ #include "mtu3.h"
+ #include "mtu3_dr.h"
+ 
++/* mt8183 etc */
++#define PERI_WK_CTRL0	0x20
++#define WC0_IS_C(x)	(((x) & 0xf) << 28)  /* cycle debounce */
++#define WC0_IS_P	BIT(12)	/* polarity */
++#define WC0_IS_EN	BIT(6)
++
+ /* mt8173 etc */
+ #define PERI_WK_CTRL1	0x4
+ #define WC1_IS_C(x)	(((x) & 0xf) << 26)  /* cycle debounce */
+@@ -30,7 +36,8 @@
+ #define SSC_SPM_INT_EN		BIT(1)
+ 
+ enum ssusb_uwk_vers {
+-	SSUSB_UWK_V1 = 1,
++	SSUSB_UWK_V0 = 0,
++	SSUSB_UWK_V1,
+ 	SSUSB_UWK_V2,
+ };
+ 
+@@ -43,6 +50,11 @@ static void ssusb_wakeup_ip_sleep_set(struct ssusb_mtk *ssusb, bool enable)
+ 	u32 reg, msk, val;
+ 
+ 	switch (ssusb->uwk_vers) {
++	case SSUSB_UWK_V0:
++		reg = ssusb->uwk_reg_base + PERI_WK_CTRL0;
++		msk = WC0_IS_EN | WC0_IS_C(0xf) | WC0_IS_P;
++		val = enable ? (WC0_IS_EN | WC0_IS_C(0x8)) : 0;
++		break;
+ 	case SSUSB_UWK_V1:
+ 		reg = ssusb->uwk_reg_base + PERI_WK_CTRL1;
+ 		msk = WC1_IS_EN | WC1_IS_C(0xf) | WC1_IS_P;
+-- 
+2.23.0
 
-And that's why I'm also using page_fault_is_write() in my patch.
-
-> 
-> Or is that old cruft?
-> 
-> I see eg. in head_40x.S we pass r5=0 for error code, and we don't set
-> regs->dsisr anywhere AFAICS. So it might just contain some junk.
-
-
-We pass r5=0 in ISI but r5=SPRN_ESR in DSI.
-And r5 is also saved into _ESR(r11)
-
-And in asm-offset.c, we have:
-
-	STACK_PT_REGS_OFFSET(_ESR, dsisr);
-
-So regs->dsisr has the expected content.
-
-Christophe
-
-
-> 
-> cheers
-> 
->> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
->> index 8432c281de92..b5047f9b5dec 100644
->> --- a/arch/powerpc/mm/fault.c
->> +++ b/arch/powerpc/mm/fault.c
->> @@ -645,6 +645,7 @@ NOKPROBE_SYMBOL(do_page_fault);
->>   void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
->>   {
->>   	const struct exception_table_entry *entry;
->> +	int is_write = page_fault_is_write(regs->dsisr);
->>   
->>   	/* Are we prepared to handle this fault?  */
->>   	if ((entry = search_exception_tables(regs->nip)) != NULL) {
->> @@ -658,9 +659,10 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
->>   	case 0x300:
->>   	case 0x380:
->>   	case 0xe00:
->> -		pr_alert("BUG: %s at 0x%08lx\n",
->> +		pr_alert("BUG: %s on %s at 0x%08lx\n",
->>   			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
->> -			 "Unable to handle kernel data access", regs->dar);
->> +			 "Unable to handle kernel data access",
->> +			 is_write ? "write" : "read", regs->dar);
-> 
->>   		break;
->>   	case 0x400:
->>   	case 0x480:
->> -- 
->> 2.13.3
