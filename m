@@ -2,126 +2,142 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979B8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60EB23427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D88A23427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="UvLIj/ZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfH3O2B (ORCPT
+        id S1728007AbfH3O2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:28:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:33102 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfH3O2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:28:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 743A0344;
-        Fri, 30 Aug 2019 07:28:00 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A12BC3F703;
-        Fri, 30 Aug 2019 07:27:56 -0700 (PDT)
-Subject: Re: [PATCH v8 7/7] iommu/vt-d: Use bounce buffer for untrusted
- devices
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Lu Baolu' <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>,
-        "alan.cox@intel.com" <alan.cox@intel.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "pengfei.xu@intel.com" <pengfei.xu@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
- <20190830071718.16613-8-baolu.lu@linux.intel.com>
- <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <af54fa85-440a-52e4-cf6c-d2052ee9f385@arm.com>
-Date:   Fri, 30 Aug 2019 15:27:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 30 Aug 2019 10:28:51 -0400
+Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:65229
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727850AbfH3O2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:28:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MokEq6bvS9JYXbOggyA45HImt4TKMVMI31GmrhENBPz0LarefHdzdfO1vLo69xG4xN6zA3gVCf4jG/EsRl6u+nQIzIgri01Rlhz67efpyIGG41cOVEMbSax6E+fKxQz6CGRi7iP+e03CO4oR/ZHpqzs+fslgGbW+txKlsVSWLxwAs9UbsPy7Ro0akAteep+NQxESFI7r+ri+PS+nPN7d0iiBL0WFUfes/cubpEGaEfilRfzli3aj4m5XBgVVtcleB8O4zS/ZpaZUgxEhKPrdUWsCcVYADluNoifGUoxqAPquTnXjhfqMKJ3pcRwnr31XOnX3sO7z+dr6V8jl+b0TnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJTvFUTN3926L8ICcCta3rZkixpAG6B9Ow1+oAbyWH4=;
+ b=Tf5rFd3xJ+E6HTeDWxPmvvB3vFvCKQDEQSHIsROfpd4d638CXbkPJ+WAA2XzVDjJ911Y47NLDf7OLza5xL/h+E8dYeA2syhnRVGdgdpBri3GDuhgC9mx+pcyWSzrpBTIpLqwnwmKVRwifEJBwKfnZoOCzUZw3TaGATz9Fvz4v4/aFYIhCzY9cxoqM9L5ehb+2PGg4IZMSJ0zD3WS2hsQQX7ddHU0hQ2lmbFasHzsAu2ehCOphVhE4y7sMq9u6M9tMBen6pVEUXQuElqla21QnH1uK4eJp3kcHZuJXPKRu5JS1r/MHNfzm+Q+4TgsF933wpZ+Y6sGALr8RcytWnBoqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJTvFUTN3926L8ICcCta3rZkixpAG6B9Ow1+oAbyWH4=;
+ b=UvLIj/ZF1M9qbU5xpjnP42m/5r63GedY5/CpP+SHEuVE27L9DaqVZ2hDqFNvZNINroR4pS/UXCKHVr90j9ZGCGeWGEnBsBJs92jsjGl++MhjI/iS4fejrPe6xhBRCNRpgR3RdyStaLikb4d/UA7uQXXZntkgHEyxU5lqJ6gPPvg=
+Received: from DB7PR05MB4138.eurprd05.prod.outlook.com (52.135.129.16) by
+ DB7PR05MB5161.eurprd05.prod.outlook.com (20.178.40.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Fri, 30 Aug 2019 14:28:47 +0000
+Received: from DB7PR05MB4138.eurprd05.prod.outlook.com
+ ([fe80::8412:26d1:ef71:2869]) by DB7PR05MB4138.eurprd05.prod.outlook.com
+ ([fe80::8412:26d1:ef71:2869%7]) with mapi id 15.20.2199.021; Fri, 30 Aug 2019
+ 14:28:47 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Minchan Kim <minchan@kernel.org>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Thread-Topic: linux-next: build failure after merge of the akpm-current tree
+Thread-Index: AQHVXzqd+zDqw1hOT0eH/lp6ykmw4KcTv/wA
+Date:   Fri, 30 Aug 2019 14:28:47 +0000
+Message-ID: <20190830142841.GA20@mellanox.com>
+References: <20190830235530.67c23ad3@canb.auug.org.au>
+In-Reply-To: <20190830235530.67c23ad3@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTOPR0101CA0050.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::27) To DB7PR05MB4138.eurprd05.prod.outlook.com
+ (2603:10a6:5:23::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.177.133.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7ec5bd5c-eaab-493e-239f-08d72d565e95
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR05MB5161;
+x-ms-traffictypediagnostic: DB7PR05MB5161:
+x-microsoft-antispam-prvs: <DB7PR05MB51611ADD067C24085A610D01CFBD0@DB7PR05MB5161.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:655;
+x-forefront-prvs: 0145758B1D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(189003)(199004)(81156014)(229853002)(2906002)(186003)(256004)(1076003)(102836004)(316002)(33656002)(25786009)(5660300002)(81166006)(71200400001)(66066001)(305945005)(86362001)(52116002)(99286004)(76176011)(508600001)(8676002)(36756003)(8936002)(66556008)(71190400001)(66476007)(66446008)(4326008)(66946007)(64756008)(4744005)(6436002)(6916009)(54906003)(6506007)(3846002)(2616005)(6116002)(6512007)(7736002)(26005)(476003)(6246003)(446003)(6486002)(53936002)(486006)(14454004)(11346002)(386003)(79990200002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR05MB5161;H:DB7PR05MB4138.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +dMq6oC4OqzWdlYWGkinpUqdmyhBEW+OrYEPb6C42uLALV1InOvwu9YpTJiKWWMjsndwTtYMTvVMKi3vJn9ImwYvcaGwqhzDR2YqYgsvULd9ovdFvvjnWBi4ngMeDw1iTBj6okpydbXZiq4luS5+gg0dwK8nJkd4tch+tjenaKwnx59MzO2GPRbg9LjbgCqeNmr1QbnDCnXGIC/1Yb0DPlG8JxIh9QGK2JD9fRUVIu5hcBTilvV4gYycdInby5CIlRnqRCcAZnbxuhR98vojUQTsqFHt04nmYJJNo10r1+VrSuX/FEl1tz5IEeFBDVCrE+goNuerk6GIsGT23LM9n6JXjdiZN99Bi8d8LUxMTTtRiPaA8xrnI4JAsdSUPe0iE75gerw4C95q/ejCy1sp3VJSPvkiKq/6mA+OWC/yppfnR0O2GN2DwfXJ66kx0ltUIPdlIewNsrJdQLPbIF77BA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0A1CAFE6F94FFB43ACE93AAE5E7CB69B@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ec5bd5c-eaab-493e-239f-08d72d565e95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 14:28:47.4733
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fL1bvtN9EV4L061uVXNZctbaD+8e8Sqf1Denwt7JQCN4xzKMXhmy6UaMSAsiS+hzRw3IXrutbrFQKplzZUq+Tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR05MB5161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 14:39, David Laight wrote:
-> From: Lu Baolu
->> Sent: 30 August 2019 08:17
-> 
->> The Intel VT-d hardware uses paging for DMA remapping.
->> The minimum mapped window is a page size. The device
->> drivers may map buffers not filling the whole IOMMU
->> window. This allows the device to access to possibly
->> unrelated memory and a malicious device could exploit
->> this to perform DMA attacks. To address this, the
->> Intel IOMMU driver will use bounce pages for those
->> buffers which don't fill whole IOMMU pages.
-> 
-> Won't this completely kill performance?
+On Fri, Aug 30, 2019 at 11:55:30PM +1000, Stephen Rothwell wrote:
 
-Yes it will.
+> Caused by commit
+>=20
+>   1c8999b3963d ("mm: introduce MADV_COLD")
+> (and following commits)
+>=20
+> interacting with commit
+>=20
+>   923bfc561e75 ("pagewalk: separate function pointers from iterator data"=
+)
+>=20
+> from the hmm tree.
 
-Though hopefully by now we're all well aware that speed and security 
-being inversely proportional is the universal truth of modern computing.
+Yes, this is expected thanks
 
-> I'd expect to see something for dma_alloc_coherent() (etc)
-> that tries to give the driver page sized buffers.
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 7ec7c8f6d5ab..20598df8360a 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -446,6 +446,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *=
+pmd,
+>  	return 0;
+>  }
+> =20
+> +static const struct mm_walk_ops cold_walk_ops =3D {
+> +	.pmd_entry =3D madvise_cold_or_pageout_pte_range,
+> +};
+> +
 
-Coherent DMA already works in PAGE_SIZE units under the covers (at least 
-in the DMA API implementations relevant here) - that's not an issue. The 
-problem is streaming DMA, where we have to give the device access to, 
-say, some pre-existing 64-byte data packet, from right in the middle of 
-who knows what else. Since we do not necessarily have control over the 
-who knows what else, the only universally-practical way to isolate the 
-DMA data is to copy it away to some safe sanitised page which we *do* 
-control, and make the actual DMA accesses target that.
+> +static const struct mm_walk_ops pageout_walk_ops =3D {
+> +	.pmd_entry =3D madvise_cold_or_pageout_pte_range,
+> +};
 
-> Either that or the driver could allocate page sized buffers
-> even though it only passes fragments of these buffers to
-> the dma functions (to avoid excessive cache invalidates).
+These two can be shared
 
-Where, since we can't easily second-guess users' systems, "the driver" 
-turns out to be every DMA-capable driver, every subsystem-level buffer 
-manager, every userspace application which could possibly make use of 
-some kind of zero-copy I/O call...
+Looks OK otherwise
 
-Compared to a single effectively-transparent implementation in a single 
-place at the lowest level with a single switch for the user to turn it 
-on or off depending on how security-critical their particular system is, 
-I know which approach I'd rather review, maintain and rely on.
-
-Robin.
-
-> Since you have to trust the driver, why not actually trust it?
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+Jason
