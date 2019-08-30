@@ -2,81 +2,61 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFB2C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39817C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9E021897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567163352;
-	bh=4C2MycPnJAmtxAJboSW8Je0xl+P5kbMcibpxY8dKt4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xI4NL5fRQ2jx55YBIJhojXIjdmwVXrMUdR9KO3YYdcFnxl0vyGkRVzM9lBnCJhqAB
-	 fmYjbNqu3q6mK9xN4LjAB7LAjfXNSDwiMnTHmjOq1TpBVIDnAwWRdqjoRoSXipq8iK
-	 LwHPh8xtLLtrh+hoM8yBcxBepEMtxGM9tog9YWa0=
+	by mail.kernel.org (Postfix) with ESMTP id 15A4C22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfH3LJL (ORCPT
+        id S1727936AbfH3LJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 07:09:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35206 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726660AbfH3LJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 07:09:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3307FAF11;
-        Fri, 30 Aug 2019 11:09:09 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 13:09:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Sangwoo <sangwoo2.park@lge.com>
-Cc:     hannes@cmpxchg.org, arunks@codeaurora.org, guro@fb.com,
-        richard.weiyang@gmail.com, glider@google.com, jannh@google.com,
-        dan.j.williams@intel.com, akpm@linux-foundation.org,
-        alexander.h.duyck@linux.intel.com, rppt@linux.vnet.ibm.com,
-        gregkh@linuxfoundation.org, janne.huttunen@nokia.com,
-        pasha.tatashin@soleen.com, vbabka@suse.cz, osalvador@suse.de,
-        mgorman@techsingularity.net, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Add nr_free_highatomimic to fix incorrect watermatk
- routine
-Message-ID: <20190830110907.GC28313@dhcp22.suse.cz>
-References: <1567157153-22024-1-git-send-email-sangwoo2.park@lge.com>
+        Fri, 30 Aug 2019 07:09:20 -0400
+Received: from smtprelay0043.hostedemail.com ([216.40.44.43]:43654 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726660AbfH3LJT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 07:09:19 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 5FEE4182CF668;
+        Fri, 30 Aug 2019 11:09:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: comb79_33fd188898c22
+X-Filterd-Recvd-Size: 1235
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 30 Aug 2019 11:09:17 +0000 (UTC)
+Message-ID: <ccc65bd29747f8ad4d0ba1b3eda6c9d230f03c70.camel@perches.com>
+Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough to
+ -Wimplicit-fallthrough=2
+From:   Joe Perches <joe@perches.com>
+To:     Michal Suchanek <msuchanek@suse.de>, linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 30 Aug 2019 04:09:15 -0700
+In-Reply-To: <20190829120215.1977-1-msuchanek@suse.de>
+References: <20190829120215.1977-1-msuchanek@suse.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567157153-22024-1-git-send-email-sangwoo2.park@lge.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 30-08-19 18:25:53, Sangwoo wrote:
-> The highatomic migrate block can be increased to 1% of Total memory.
-> And, this is for only highorder ( > 0 order). So, this block size is
-> excepted during check watermark if allocation type isn't alloc_harder.
-> 
-> It has problem. The usage of highatomic is already calculated at NR_FREE_PAGES.
-> So, if we except total block size of highatomic, it's twice minus size of allocated
-> highatomic.
-> It's cause allocation fail although free pages enough.
-> 
-> We checked this by random test on my target(8GB RAM).
-> 
-> 	Binder:6218_2: page allocation failure: order:0, mode:0x14200ca(GFP_HIGHUSER_MOVABLE), nodemask=(null)
-> 	Binder:6218_2 cpuset=background mems_allowed=0
+On Thu, 2019-08-29 at 14:02 +0200, Michal Suchanek wrote:
+> In particular the default value of 3 does not match the comments like
+> /* falls through to do foobar */
 
-How come this order-0 sleepable allocation fails? The upstream kernel
-doesn't fail those allocations unless the process context is killed by
-the oom killer.
+How many comments are there like this in the kernel?
 
-Also please note that atomic reserves are released when the memory
-pressure is high and we cannot reclaim any other memory. Have a look at
-unreserve_highatomic_pageblock called from should_reclaim_retry.
--- 
-Michal Hocko
-SUSE Labs
+Also you have to deal with gcc/clang differences.
+As far as I know, clang doesn't take a value for this.
+
+
