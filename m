@@ -2,120 +2,152 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F9FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F86C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976E821670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HozWlQep"
+	by mail.kernel.org (Postfix) with ESMTP id 560CA21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfH3Jn0 (ORCPT
+        id S1727792AbfH3JpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:43:26 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:55973 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726969AbfH3Jn0 (ORCPT
+        Fri, 30 Aug 2019 05:45:03 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:55717 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726653AbfH3JpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:43:26 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A136332A9;
-        Fri, 30 Aug 2019 05:43:24 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 30 Aug 2019 05:43:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=xSMmHk
-        8zElgw/P9GO/Rx4Txs5yQjETOuxsESTLh73Xk=; b=HozWlQepDEdOiqmHdN+iB4
-        XDIiLG/bT+Mrp7NRjEn9tL2IvMjbKIXzKOU9xH5nTsG9mkl2MC/KNvkEWWg7232J
-        5oXQcNjFETuzzJalltAuOV5hMQ2wqqkw/l8ZIymJcUNDPKV75Oa8AYAsOt0qrEyY
-        Jz7BcoGWz6P3ymgFFX5EZ3aQNqHYvFVkckbZK1dNEdQ2PsUIh7rN+M0AvZcXgdeW
-        /u+PmmNDzRvE5qI9NRfXgmwi4OM1IvLKN1s9j47TGqS/6t+rtiCZLAoloYji1fks
-        025RIe1yvC7NsMHgPP2jyHlQruFw9GgVHm5rhX3rlW89ocw06+8x+AeP6feCbYVg
-        ==
-X-ME-Sender: <xms:uu9oXXxSWQ7nPhQRWgka53m4hrKouBXV0yFHfAOdQJ69-OzHUqIHlA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeigedgudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedutd
-    elrdeijedriedurddvvdegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhes
-    ihguohhstghhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:uu9oXTh8mI8-iGGVM7AOVy7GfkMzxE_oFY8ZmHsia6epPGyCdiR7lg>
-    <xmx:uu9oXcUg0vib1F477xVc084he61Mbv6dWl3Sm2Ygv8HrVMu38Nm2nQ>
-    <xmx:uu9oXV37g9VeJ9h5SxrUST_yaeBYJ3EpBSUb0g7UOhzZh_hBX4zKjg>
-    <xmx:vO9oXe44d5mvUPOCOC2Ytc0JFh8YhX16FJkO2XrmKTiQ-IS-krwgPg>
-Received: from localhost (bzq-109-67-61-224.red.bezeqint.net [109.67.61.224])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7D7F88005A;
-        Fri, 30 Aug 2019 05:43:21 -0400 (EDT)
-Date:   Fri, 30 Aug 2019 12:43:19 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     andrew@lunn.ch, jiri@resnulli.us, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        allan.nielsen@microchip.com, ivecera@redhat.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190830094319.GA31789@splinter>
-References: <20190829175759.GA19471@splinter>
- <20190829182957.GA17530@lunn.ch>
- <20190829193613.GA23259@splinter>
- <20190829.151201.940681219080864052.davem@davemloft.net>
+        Fri, 30 Aug 2019 05:45:03 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3dShiYEL4DqPe3dSkiRS9z; Fri, 30 Aug 2019 11:45:00 +0200
+Subject: Re: [PATCH 2/8] videodev2.h: add V4L2_DEC_CMD_FLUSH
+To:     Alexandre Courbot <acourbot@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        mripard@kernel.org, Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, Chen-Yu Tsai <wens@csie.org>,
+        gregkh@linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>, jonas@kwiboo.se
+References: <20190822194500.2071-1-jernej.skrabec@siol.net>
+ <20190822194500.2071-3-jernej.skrabec@siol.net>
+ <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <907f3c43-b994-f1c7-a15b-116566e19003@xs4all.nl>
+Date:   Fri, 30 Aug 2019 11:44:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829.151201.940681219080864052.davem@davemloft.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfB4Iwpuxa4ZWt3WM5IScwN1zIREASBWnbgJamG02lqSTKf0f6j1jls/icFEBpt/+ljEr/9Y5Sq5Zd9sZVR6ANFlk/wmVSJVnMrssJpDPeJBWRqvn+U/p
+ LVEEMt39B1UHj6sOC490LO9wF2NWibQ78kCPGnUAWmwR3oWf++lVNsd1bmDFh4tBqyCG4RjLtz+vPkfOYhbPEeoOa7+xOnaCdbl4H7IhWoAAXXIgl9IflOxH
+ cc1PFgWU6u4fVCy3OJoqsgnYEWRFujH3WodDTFiTFlKM51XUi7nVSeigAS14/3E1BU4EqYrOkJlGmcgQzLN8XJmQ52J74mkYg7qSyzrmKWZ/4ZC2CEjeWQJZ
+ XJk0wPWGnvRKw2bb+tiHbwkRY6r6CgAGmm8bu2mUaN/SZrqw4TVAHQuJtb8WvnSsKaijD5bREj07kRg4iflyy8L5MAAme/LpzwT2IMXyRsoSyuqOu3NBP1Z3
+ tzjcdWh2vLp/fcnK+DOELBvNwrvpRn6J6U4UKgf4j0MER/dsnK8hbKKzzMDwaQcSsCCZC1cHXRbDbrgZEY7hKCb/jdU5vyAdLncmCfmQDUGUajlV4vm07AF6
+ 1RitpU4Y+gnyKJ6XOCngTKZ91X4yTPrdGy//Ui2pdXkitnE+yvdwRjlIcSjHYCwjGNoXohLW8KGcEHXZslxfljBBeBnZoRiHWZhS3dzUqz9aQkvfaq3E2a8N
+ p4F05ydyvQwCdZKvYLxrSfrlWaxEa7nP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 03:12:01PM -0700, David Miller wrote:
-> From: Ido Schimmel <idosch@idosch.org>
-> Date: Thu, 29 Aug 2019 22:36:13 +0300
+On 8/30/19 11:38 AM, Alexandre Courbot wrote:
+> On Fri, Aug 23, 2019 at 4:45 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+>>
+>> From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>>
+>> Add this new V4L2_DEC_CMD_FLUSH decoder command and document it.
+>>
+>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>> ---
+>>  Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst | 11 ++++++++++-
+>>  Documentation/media/videodev2.h.rst.exceptions      |  1 +
+>>  include/uapi/linux/videodev2.h                      |  1 +
+>>  3 files changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+>> index 57f0066f4cff..0bffef6058f7 100644
+>> --- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+>> +++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+>> @@ -208,7 +208,16 @@ introduced in Linux 3.3. They are, however, mandatory for stateful mem2mem decod
+>>         been started yet, the driver will return an ``EPERM`` error code. When
+>>         the decoder is already running, this command does nothing. No
+>>         flags are defined for this command.
+>> -
+>> +    * - ``V4L2_DEC_CMD_FLUSH``
+>> +      - 4
+>> +      - Flush any held capture buffers. Only valid for stateless decoders,
+>> +        and only if ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` was set.
+>> +       This command is typically used when the application reached the
+>> +       end of the stream and the last output buffer had the
+>> +       ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
+>> +       dequeueing the last capture buffer containing the last decoded frame.
+>> +       So this command can be used to explicitly flush that last decoded
+>> +       frame.
 > 
-> > I fully agree that we should make it easy for users to capture offloaded
-> > traffic, which is why I suggested patching libpcap. Add a flag to
-> > capable netdevs that tells libpcap that in order to capture all the
-> > traffic from this interface it needs to add a tc filter with a trap
-> > action. That way zero familiarity with tc is required from users.
+> Just for safety, can we also specify that it is valid to call this
+> command even if no buffer was held (in which case it is a no-op), as
+> this can help make user-space code simpler?
+
+Ah yes, thanks for the reminder.
+
+Jernej, when you post the next version of this series, can you change the text
+above to:
+
+- Flush any held capture buffers. Only valid for stateless decoders.
+  This command is typically used when the application reached the
+  end of the stream and the last output buffer had the
+  ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
+  dequeueing the capture buffer containing the last decoded frame.
+  So this command can be used to explicitly flush that final decoded
+  frame. This command does nothing if there are no held capture buffers.
+
+Regards,
+
+	Hans
+
 > 
-> Why not just make setting promisc mode on the device do this rather than
-> require all of this tc indirection nonsense?
-> 
-> That's the whole point of this conversation I thought?
+>>
+>>  Return Value
+>>  ============
+>> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+>> index adeb6b7a15cb..a79028e4d929 100644
+>> --- a/Documentation/media/videodev2.h.rst.exceptions
+>> +++ b/Documentation/media/videodev2.h.rst.exceptions
+>> @@ -434,6 +434,7 @@ replace define V4L2_DEC_CMD_START decoder-cmds
+>>  replace define V4L2_DEC_CMD_STOP decoder-cmds
+>>  replace define V4L2_DEC_CMD_PAUSE decoder-cmds
+>>  replace define V4L2_DEC_CMD_RESUME decoder-cmds
+>> +replace define V4L2_DEC_CMD_FLUSH decoder-cmds
+>>
+>>  replace define V4L2_DEC_CMD_START_MUTE_AUDIO decoder-cmds
+>>  replace define V4L2_DEC_CMD_PAUSE_TO_BLACK decoder-cmds
+>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>> index 4fa9f543742d..91a79e16089c 100644
+>> --- a/include/uapi/linux/videodev2.h
+>> +++ b/include/uapi/linux/videodev2.h
+>> @@ -1978,6 +1978,7 @@ struct v4l2_encoder_cmd {
+>>  #define V4L2_DEC_CMD_STOP        (1)
+>>  #define V4L2_DEC_CMD_PAUSE       (2)
+>>  #define V4L2_DEC_CMD_RESUME      (3)
+>> +#define V4L2_DEC_CMD_FLUSH       (4)
+>>
+>>  /* Flags for V4L2_DEC_CMD_START */
+>>  #define V4L2_DEC_CMD_START_MUTE_AUDIO  (1 << 0)
+>> --
+>> 2.22.1
+>>
 
-As I understand it, the goal of this series is to be able to capture
-offloaded traffic.
-
-Currently, the only indication that drivers get when someone is running
-tcpdump/tshark/whatever over an interface is that it's is put in promisc
-mode. So this patches use it as an indication to trap all the traffic to
-the CPU and special case the bridge in order to prevent the driver from
-trapping packets when its ports are bridged. The same will have to be
-done for OVS and in any other (current or future) cases where promisc
-mode is needed to disable Rx filtering.
-
-If there was another indication that these applications are running over
-an interface, would we be bothering with this new interpretation of
-promisc mode and special casing? I don't think so.
-
-We can instead teach libpcap that in order to capture offloaded traffic
-it should use this "tc indirection nonsense". Or turn on a new knob.
-This avoids the need to change each driver with this new special case
-logic.
-
-Also, what happens when I'm running these application without putting
-the interface in promisc mode? On an offloaded interface I would not be
-able to even capture packets addressed to my interface's MAC address.
-What happens when the interface is already in promisc mode (because of
-the bridge) and I'm again running tcpdump with '-p'? I will not be able
-to capture offloaded traffic despite the fact that the interface is
-already configured in promisc mode.
