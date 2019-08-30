@@ -2,90 +2,122 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CBFC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADF721670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485AE21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfH3JvF convert rfc822-to-8bit (ORCPT
+        id S1727885AbfH3JwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:51:05 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35737 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfH3JvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:51:05 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7C221FF807;
-        Fri, 30 Aug 2019 09:51:01 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 11:51:00 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        juliensu@mxic.com.tw, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, richard@nod.at, tglx@linutronix.de,
-        vigneshr@ti.com
-Subject: Re: [PATCH] Add support for Macronix NAND randomizer
-Message-ID: <20190830115100.3fec9bf1@xps13>
-In-Reply-To: <OF22C5A579.E2E7676F-ON48258465.002F7F69-48258465.00322849@mxic.com.tw>
-References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190824130329.68f310aa@xps13>
-        <OF22C5A579.E2E7676F-ON48258465.002F7F69-48258465.00322849@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 30 Aug 2019 05:52:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:57630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727242AbfH3JwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:52:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C85E8344;
+        Fri, 30 Aug 2019 02:52:08 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23C263F718;
+        Fri, 30 Aug 2019 02:52:07 -0700 (PDT)
+Subject: Re: [PATCH v4 05/10] KVM: arm64: Support stolen time reporting via
+ shared structure
+To:     Christoffer Dall <christoffer.dall@arm.com>
+Cc:     kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20190830084255.55113-1-steven.price@arm.com>
+ <20190830084255.55113-6-steven.price@arm.com>
+ <20190830094245.GB5307@e113682-lin.lund.arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <bf45fea9-f2f7-1ff3-c90c-cb9623cbd959@arm.com>
+Date:   Fri, 30 Aug 2019 10:52:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190830094245.GB5307@e113682-lin.lund.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
-
-masonccyang@mxic.com.tw wrote on Thu, 29 Aug 2019 17:07:51 +0800:
-
-> Hi Miquel, 
+On 30/08/2019 10:42, Christoffer Dall wrote:
+> On Fri, Aug 30, 2019 at 09:42:50AM +0100, Steven Price wrote:
+>> Implement the service call for configuring a shared structure between a
+>> VCPU and the hypervisor in which the hypervisor can write the time
+>> stolen from the VCPU's execution time by other tasks on the host.
+>>
+>> The hypervisor allocates memory which is placed at an IPA chosen by user
+>> space. The hypervisor then updates the shared structure using
+>> kvm_put_guest() to ensure single copy atomicity of the 64-bit value
+>> reporting the stolen time in nanoseconds.
+>>
+>> Whenever stolen time is enabled by the guest, the stolen time counter is
+>> reset.
+>>
+>> The stolen time itself is retrieved from the sched_info structure
+>> maintained by the Linux scheduler code. We enable SCHEDSTATS when
+>> selecting KVM Kconfig to ensure this value is meaningful.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+[...]
+>> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
+>> +{
+>> +	struct kvm *kvm = vcpu->kvm;
+>> +	u64 steal;
+>> +	u64 steal_le;
+>> +	u64 offset;
+>> +	int idx;
+>> +	u64 base = vcpu->arch.steal.base;
+>> +
+>> +	if (base == GPA_INVALID)
+>> +		return -ENOTSUPP;
+>> +
+>> +	/* Let's do the local bookkeeping */
+>> +	steal = vcpu->arch.steal.steal;
+>> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
+>> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
+>> +	vcpu->arch.steal.steal = steal;
+>> +
+>> +	steal_le = cpu_to_le64(steal);
+>> +	idx = srcu_read_lock(&kvm->srcu);
+>> +	if (init) {
+>> +		struct pvclock_vcpu_stolen_time init_values = {
+>> +			.revision = 0,
+>> +			.attributes = 0
+>> +		};
+>> +		kvm_write_guest(kvm, base, &init_values,
+>> +				sizeof(init_values));
+>> +	}
+>> +	offset = offsetof(struct pvclock_vcpu_stolen_time, stolen_time);
+>> +	kvm_put_guest(kvm, base + offset, steal_le, u64);
 > 
-> 
-> > > 
-> > > If subpage write not available with hardware ECC, for example,
-> > > NAND chip options NAND_NO_SUBPAGE_WRITE be set in driver and
-> > > randomizer function is recommended for high-reliability.
-> > > Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-> > > to see if this high-reliability function is supported.
-> > >   
-> > 
-> > You did not flagged this patch as a v2 and forgot about the changelog.
-> > You did not listen to our comments in the last version neither. I was
-> > open to a solution with a specific DT property for warned users but I
-> > don't see it coming.
-> >   
-> 
-> Based on your comments by specific DT property for randomizer support.
-> to add a new property in children nodes:
-> 
-> i.e,.
-> 
-> nand: nand-controller@43c30000 {
-> 
->                 nand@0 {
->                         reg = <0>;
->                         nand-reliability = "randomizer";
+> Let's hope we don't have thousands of memslots through which we have to
+> do a linear scan on every vcpu load after this.  If that were the case,
+> I think the memslot search path would have to be updated anyhow.
 
-                          mxic,enable-randomizer-otp;
+Yes I'm not sure with the current memslot implementation it is actually
+beneficial to split up the stolen time structures into separate
+memslots. But there's nothing requiring the use of so many memslots.
 
-Would be better (with the proper documentation in the bindings).
+If this is really a problem it would be possible to implement a
+memslot-caching kvm_put_guest(), but I'd want to wait until someone
+shows there's actually a problem first.
 
+> Otherwise looks reasonable to me.
 
-Thanks,
-Miquèl
+Great, thanks for the review.
+
+Steve
