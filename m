@@ -2,217 +2,119 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF35EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF276C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A7321726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F42E21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJQhakBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfH3Nxy (ORCPT
+        id S1727923AbfH3NzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:53:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfH3Nxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:53:54 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F25521721;
-        Fri, 30 Aug 2019 13:53:51 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 09:53:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v8 6/7] iommu/vt-d: Add trace events for device dma
- map/unmap
-Message-ID: <20190830095349.1c222240@gandalf.local.home>
-In-Reply-To: <20190830071718.16613-7-baolu.lu@linux.intel.com>
-References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
-        <20190830071718.16613-7-baolu.lu@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 30 Aug 2019 09:55:12 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45492 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbfH3NzM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:55:12 -0400
+Received: by mail-yw1-f68.google.com with SMTP id n69so2385107ywd.12;
+        Fri, 30 Aug 2019 06:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uwyr09OeKTgN7mrxVHx+2hnXAPzOPQfRzUlZ2zECK50=;
+        b=LJQhakBK31minFRW4+8ZqTjPS3meQLKD9H4oU3dh9tMkpMp6sFAIeTMemX1uaJjgjR
+         MXHO7nRFXUstF0WXKc7ByqGTy3QTteAYN8cOXjf7CG40/7dj59OjmKjymJ5Ty/GcqdA1
+         3luwpNCClgEG5EYsRPc8ECjrSyQWMb+h0QOS37SXa66utV+Oq0IpUDXV9IteyCXnImOR
+         +EM49X/KYXCkxRBd9CoCUp6iaY3eNN54YtTQ1jx+prWFPdyWyl4quO0DvBUKe816r7El
+         epndZ4XYWWHJWIPcEjR6uuNEed3xh8ZL8inhpE0WVZS1YHTy6UWTdlC6rCsLXSPL8eHy
+         ofng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uwyr09OeKTgN7mrxVHx+2hnXAPzOPQfRzUlZ2zECK50=;
+        b=EUc1/Cw3O0e1K5GB1HgcF/jMvE1ywRWpC1i+C/Hd/q1yTmP3eGQbHyV19oD4OrHv52
+         APD7HW7xaRGamtmvnGL2bg+FLT/SqWyyVCdDLd1ENheUxY5cRAYRHqqNplfBci0Ml05a
+         jDilSANqRHlpcNkUHcDXezfsoGPKONab+XywBIETDSl9gRteHauJNRqY719lh4dgMNUt
+         CdnmuW4dImdY5mO39NZJ5G+nXUeoE1ckUEosbnSm5ZTDNzWEeI9N9FCoEwfpwzfEIP4l
+         WvFT/qtwlDHRrC5cF3iX4NY6EaLNbMCmi+iRcc+S1ZcaWJnjgv1dYXC1nIoOtUPP/sRX
+         Jg+Q==
+X-Gm-Message-State: APjAAAXIjdDW2sLnvZCshXRng/K7+grBh0hxocja16m1/xVI7xtYL9Yk
+        0xL4kd6wQKNcHNzQVECwhcvKKZEzzlQGVwHmB6M=
+X-Google-Smtp-Source: APXvYqyKUdtdX4Fn6uwYsTcN5PRkZApmByK6IhOxrD/lRH6xihpu7XCLNslcRQr0GpGRhHl1KZcBpCGVcEJg+UKNPxM=
+X-Received: by 2002:a81:9108:: with SMTP id i8mr11138441ywg.346.1567173311094;
+ Fri, 30 Aug 2019 06:55:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190830095639.4562-1-kkamagui@gmail.com> <20190830095639.4562-3-kkamagui@gmail.com>
+ <20190830124334.GA10004@ziepe.ca>
+In-Reply-To: <20190830124334.GA10004@ziepe.ca>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Fri, 30 Aug 2019 22:54:59 +0900
+Message-ID: <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
+ supporting AMD's fTPM
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 15:17:17 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>
+> On Fri, Aug 30, 2019 at 06:56:39PM +0900, Seunghun Han wrote:
+> > I got an AMD system which had a Ryzen Threadripper 1950X and MSI
+> > mainboard, and I had a problem with AMD's fTPM. My machine showed an error
+> > message below, and the fTPM didn't work because of it.
+> >
+> > [  5.732084] tpm_crb MSFT0101:00: can't request region for resource
+> >              [mem 0x79b4f000-0x79b4ffff]
+> > [  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+> >
+> > When I saw the iomem, I found two fTPM regions were in the ACPI NVS area.
+> > The regions are below.
+> >
+> > 79a39000-79b6afff : ACPI Non-volatile Storage
+> >   79b4b000-79b4bfff : MSFT0101:00
+> >   79b4f000-79b4ffff : MSFT0101:00
+> >
+> > After analyzing this issue, I found that crb_map_io() function called
+> > devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
+> > CRB driver to assign a resource in it because a busy bit was set to
+> > the ACPI NVS area.
+> >
+> > To support AMD's fTPM, I added a function to check intersects between
+> > the TPM region and ACPI NVS before it mapped the region. If some
+> > intersects are detected, the function just calls devm_ioremap() for
+> > a workaround. If there is no intersect, it calls devm_ioremap_resource().
+> >
+> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+> > ---
+> >  drivers/char/tpm/tpm_crb.c | 25 +++++++++++++++++++++++--
+> >  1 file changed, 23 insertions(+), 2 deletions(-)
+>
+> This still seems to result in two drivers controlling the same
+> memory. Does this create bugs and races during resume?
+>
+> Jason
 
-> This adds trace support for the Intel IOMMU driver. It
-> also declares some events which could be used to trace
-> the events when an IOVA is being mapped or unmapped in
-> a domain.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  drivers/iommu/Makefile             |  1 +
->  drivers/iommu/intel-trace.c        | 14 +++++
->  include/trace/events/intel_iommu.h | 84 ++++++++++++++++++++++++++++++
->  3 files changed, 99 insertions(+)
->  create mode 100644 drivers/iommu/intel-trace.c
->  create mode 100644 include/trace/events/intel_iommu.h
-> 
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index f13f36ae1af6..bfe27b2755bd 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
->  obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
->  obj-$(CONFIG_DMAR_TABLE) += dmar.o
->  obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-> +obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
->  obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
->  obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
->  obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
-> diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel-trace.c
-> new file mode 100644
-> index 000000000000..bfb6a6e37a88
-> --- /dev/null
-> +++ b/drivers/iommu/intel-trace.c
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel IOMMU trace support
-> + *
-> + * Copyright (C) 2019 Intel Corporation
-> + *
-> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
-> + */
-> +
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/intel_iommu.h>
-> diff --git a/include/trace/events/intel_iommu.h b/include/trace/events/intel_iommu.h
-> new file mode 100644
-> index 000000000000..9c28e6cae86f
-> --- /dev/null
-> +++ b/include/trace/events/intel_iommu.h
-> @@ -0,0 +1,84 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Intel IOMMU trace support
-> + *
-> + * Copyright (C) 2019 Intel Corporation
-> + *
-> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
-> + */
-> +#ifdef CONFIG_INTEL_IOMMU
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM intel_iommu
-> +
-> +#if !defined(_TRACE_INTEL_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_INTEL_IOMMU_H
-> +
-> +#include <linux/tracepoint.h>
-> +#include <linux/intel-iommu.h>
-> +
-> +DECLARE_EVENT_CLASS(dma_map,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-> +		 size_t size),
-> +
-> +	TP_ARGS(dev, dev_addr, phys_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(phys_addr_t, phys_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->phys_addr = phys_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s dev_addr=0x%llx phys_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name),
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  (unsigned long long)__entry->phys_addr,
-> +		  __entry->size)
-> +);
-> +
-> +DEFINE_EVENT(dma_map, bounce_map_single,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-> +		 size_t size),
-> +	TP_ARGS(dev, dev_addr, phys_addr, size)
-> +);
+When I tested this patch in my machine, it seemed that ACPI NVS was
+saved after TPM CRB driver sent "TPM2_Shutdown(STATE)" to the fTPM
+while suspending. Then, ACPI NVS was restored while resuming.
+After resuming, PCRs didn't change and TPM2 tools such as
+tpm2_pcrlist, tpm2_extend, tpm2_getrandoms worked well.
+So, according to my test result, it seems that the patch doesn't
+create bugs and race during resume.
 
-Do you plan on adding more events to these classes? This patch has two
-distinct DECLARE_EVENT_CLASS() calls, and each has one DEFINE_EVENT()
-for them.
-
-It's fine to do this, but I'm curious to why you did not use
-the "TRACE_EVENT()" macro, which basically is just a single
-DECLARE_EVENT_CLASS() followed by a single DEFINE_EVENT(). In other
-words, you just open coded TRACE_EVENT().
-
--- Steve
-
-> +
-> +DECLARE_EVENT_CLASS(dma_unmap,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-> +
-> +	TP_ARGS(dev, dev_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name),
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  __entry->size)
-> +);
-> +
-> +DEFINE_EVENT(dma_unmap, bounce_unmap_single,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-> +	TP_ARGS(dev, dev_addr, size)
-> +);
-> +
-> +#endif /* _TRACE_INTEL_IOMMU_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> +#endif /* CONFIG_INTEL_IOMMU */
-
+Seunghun
