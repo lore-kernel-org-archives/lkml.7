@@ -2,96 +2,110 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819CCC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E14C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4BC21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:38:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GXget5Qq"
+	by mail.kernel.org (Postfix) with ESMTP id 83FCA23426
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfH3Oiz (ORCPT
+        id S1728042AbfH3Ole convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:38:55 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42837 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfH3Oiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:38:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so12457068iod.9
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 07:38:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jgvuX3mMmDJc/ezKItSFjRT6UTB3DxucqcXRUOj/zcI=;
-        b=GXget5QqWcoVV20hrVl8z/734YXraq2fUD3DzCUj4gl3uabBS3UFzNf0ba0+YCbay7
-         vog1JwlLXNOx8mQxUYV/a6YYm26t8RUPUGzw0MK0LVwAOcTOOB21n0qyBcqS0UjvNlOC
-         kQgMcdNGGedkmoMSRrFZGpqfeWpLuSSe3EF8GyZyi/wEJCPDdTvPpw17Wht04TveC1LX
-         qHFRlVmfR9Oic2M2iuBThZOXT14BchHEbKos5E0eQUDBc1ZjuuEjPVy+8VloXQnBs3p8
-         dvN5ignrb8HBn2yxAA7tN9/746wKC7bfpUsRVbEfGj8+U3HevUHZ+FMJhQl6rzi+eMRR
-         bNng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jgvuX3mMmDJc/ezKItSFjRT6UTB3DxucqcXRUOj/zcI=;
-        b=QBChnFSxpd2ob7MCx1Urt8v/P40IcBmgGvXWEnmmP8WNj7WpxppSGXVHiJN5lHKTuG
-         MkGB948+QJTJT25U7bE2Xtk4pfZ+VtqjD1GSmw8KOSbLm07IGSVPYKFpbgqpfvufCWEG
-         5qfGX6yxUm8FCFQom6VTsrvHG9ftIQ38Y822yq8pJU7UFvmeVj1uYJtOykwxiFd8+Rea
-         hIjvR8ho1c5kiSmcscmmjPCyQAiLzbwR5xCoj1yUCKwdsd52K/l3PJD7bgw/8eNPIzOV
-         lcnCubcAgmECjvoL77cMgsCizNYTo/mi8vul/L5HbUOaPp0N+KiWo+kELq6tv2/WjH/L
-         k2ww==
-X-Gm-Message-State: APjAAAX+Zixg95B/ybo7s/0NWWLo48OBbxmtzlyt3QUTdAzoEEHJtU3r
-        yQnzSfngk+zpzCsAAIKOTgPkOw==
-X-Google-Smtp-Source: APXvYqwqV4sqIOnC5JkzIybJh2aOhL5g7B/SiCPWu7FObtesW0RDKSiaWPbQGgAkjnQniKe/QwNt5w==
-X-Received: by 2002:a5d:9282:: with SMTP id s2mr4066iom.283.1567175934280;
-        Fri, 30 Aug 2019 07:38:54 -0700 (PDT)
-Received: from ziepe.ca ([142.177.133.130])
-        by smtp.gmail.com with ESMTPSA id z9sm8093916ior.79.2019.08.30.07.38.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 30 Aug 2019 07:38:53 -0700 (PDT)
-Received: from jgg by LT-JGG-7470.mtl.com with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i3i3A-00005B-SD; Fri, 30 Aug 2019 11:38:52 -0300
-Date:   Fri, 30 Aug 2019 11:38:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Seunghun Han <kkamagui@gmail.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
- supporting AMD's fTPM
-Message-ID: <20190830143852.GA302@ziepe.ca>
-References: <20190830095639.4562-1-kkamagui@gmail.com>
- <20190830095639.4562-3-kkamagui@gmail.com>
- <20190830124334.GA10004@ziepe.ca>
- <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+        Fri, 30 Aug 2019 10:41:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50472 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfH3Ole (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:41:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A45901053717;
+        Fri, 30 Aug 2019 14:41:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F31AF414B;
+        Fri, 30 Aug 2019 14:41:30 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov>
+References: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717352079.2204.16378075382991665807.stgit@warthog.procyon.org.uk>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/11] selinux: Implement the watch_key security hook [ver #7]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13307.1567176090.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 30 Aug 2019 15:41:30 +0100
+Message-ID: <13308.1567176090@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Fri, 30 Aug 2019 14:41:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:54:59PM +0900, Seunghun Han wrote:
+How about the attached instead, then?
 
-> When I tested this patch in my machine, it seemed that ACPI NVS was
-> saved after TPM CRB driver sent "TPM2_Shutdown(STATE)" to the fTPM
-> while suspending. Then, ACPI NVS was restored while resuming.
-> After resuming, PCRs didn't change and TPM2 tools such as
-> tpm2_pcrlist, tpm2_extend, tpm2_getrandoms worked well.
-> So, according to my test result, it seems that the patch doesn't
-> create bugs and race during resume.
+David
+---
+commit 00444a695b35c602230ac2cabb4f1d7e94e3966d
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu Aug 29 17:01:34 2019 +0100
 
-I have a feeling that is shear luck of link time ordering and not guarenteed??	
+    selinux: Implement the watch_key security hook
+    
+    Implement the watch_key security hook to make sure that a key grants the
+    caller View permission in order to set a watch on a key.
+    
+    For the moment, the watch_devices security hook is left unimplemented as
+    it's not obvious what the object should be since the queue is global and
+    didn't previously exist.
+    
+    Signed-off-by: David Howells <dhowells@redhat.com>
 
-Jason
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 74dd46de01b6..88df06969bed 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -6533,6 +6533,17 @@ static int selinux_key_getsecurity(struct key *key, char **_buffer)
+ 	*_buffer = context;
+ 	return rc;
+ }
++
++#ifdef CONFIG_KEY_NOTIFICATIONS
++static int selinux_watch_key(struct key *key)
++{
++	struct key_security_struct *ksec = key->security;
++	u32 sid = current_sid();
++
++	return avc_has_perm(&selinux_state,
++			    sid, ksec->sid, SECCLASS_KEY, KEY_NEED_VIEW, NULL);
++}
++#endif
+ #endif
+ 
+ #ifdef CONFIG_SECURITY_INFINIBAND
+@@ -6965,6 +6976,9 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+ 	LSM_HOOK_INIT(key_free, selinux_key_free),
+ 	LSM_HOOK_INIT(key_permission, selinux_key_permission),
+ 	LSM_HOOK_INIT(key_getsecurity, selinux_key_getsecurity),
++#ifdef CONFIG_KEY_NOTIFICATIONS
++	LSM_HOOK_INIT(watch_key, selinux_watch_key),
++#endif
+ #endif
+ 
+ #ifdef CONFIG_AUDIT
