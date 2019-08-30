@@ -2,77 +2,121 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5BDC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011C7C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806EA23429
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E652073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzcdSt1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfH3SwU (ORCPT
+        id S1728247AbfH3Sx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:52:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40818 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727914AbfH3SwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:52:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 51E92AC84;
-        Fri, 30 Aug 2019 18:52:19 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     alsa-devel@alsa-project.org
-Cc:     Michal Suchanek <msuchanek@suse.de>, Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] soundwire: slave: Fix unused function warning on !ACPI
-Date:   Fri, 30 Aug 2019 20:52:12 +0200
-Message-Id: <20190830185212.25144-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.22.0
+        Fri, 30 Aug 2019 14:53:27 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:40407 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbfH3Sx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:53:26 -0400
+Received: by mail-ua1-f68.google.com with SMTP id s25so2632416uap.7;
+        Fri, 30 Aug 2019 11:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xK2myEoST0Vxt1PsxBqflm07dfmYsoiLaH0chIFi/wk=;
+        b=BzcdSt1Sf5kVEFD+sgdoHgEY6Da33Ty/2119/8qJWeNvJEs2sD7BW0X6xaecNtkoo8
+         2EbbNGDklNxBK7DSC/heugp1WpHeMA6jzRUcgfi665NZxV13EcCerqX3SLqjr/0pBWgM
+         EIOjjUOqd9HhovEkURNUsMlr45KPDxlwJaaf6rDQPobH/w2mIUOhUQPQrNZENlIxjDKd
+         nY/lsWm8y5mebKb/wUXJp7hdvPTnxiv4IutUIuN/V8BtusXFoDW39y+r3+93hYu6eSMA
+         x6uaMQ19dzPs3k4RkvKpeiMtxhBCmEhZFhmJ794lMYCk1eT6ec91Y4UZv1NO4eXbzJVV
+         B4Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xK2myEoST0Vxt1PsxBqflm07dfmYsoiLaH0chIFi/wk=;
+        b=qRBDmAvKEyarsma3g5WpjIvJkvZ59M8Flx1Irzxs9H8+t/mlUvX2yacA6SGYCdFJNG
+         rTM1Ys8iFFbWSrIvs3oeXqxZwy5HXolIsKtCo9VZBmKpJXt9bmhTyZvQQEHhIjMoSOz5
+         si4XuTMRPrN72nwSwjizuMQczqqz9wDAQ+9xGMb3GSIodhjhKd4/VR2FfNmJLRXHQy47
+         P8P1UJi/2gfSUXI+TDR8omkjJDhoH4BWHRNXOihFcp73QmjwbItnEzUBDuMWNmevHfPj
+         GLMd9vY9pX3o3Vgq9FL+DLaVFBVqoV8iBm7Jy909oU8CEKRwIF+6lqjfgLhWSZed65iY
+         CZWg==
+X-Gm-Message-State: APjAAAUuTZ4sfoO0yy7ggQXD4DZjrLgqPfnU/Z+Rj7cJMhtZex7TZjkM
+        S7cVRsVVWB5y3QCUqU7h656LdDl14hImgnLnNeE=
+X-Google-Smtp-Source: APXvYqx3p0qeEiqpOfcu6rstyvxgdzKrEafJWsPlt9eD9GL04G/JeteD+Fj7gjKTG8QN2+Yt5pl+1s9+SgP2f1fyq1w=
+X-Received: by 2002:ab0:630e:: with SMTP id a14mr8575342uap.37.1567191205441;
+ Fri, 30 Aug 2019 11:53:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190815000330.12044-1-a.s.protopopov@gmail.com> <796E4DA8-4844-4708-866E-A8AE9477E94E@fb.com>
+In-Reply-To: <796E4DA8-4844-4708-866E-A8AE9477E94E@fb.com>
+From:   Anton Protopopov <a.s.protopopov@gmail.com>
+Date:   Fri, 30 Aug 2019 14:53:14 -0400
+Message-ID: <CAGn_itwS=bLf8NGVNbByNx8FmR_JtPWnuEnKO23ig8xnK_GYOw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] tools: libbpf: update extended attributes
+ version of bpf_object__open()
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warning on !ACPI systems:
+=D1=87=D1=82, 29 =D0=B0=D0=B2=D0=B3. 2019 =D0=B3. =D0=B2 16:02, Song Liu <s=
+ongliubraving@fb.com>:
+>
+>
+>
+> > On Aug 14, 2019, at 5:03 PM, Anton Protopopov <a.s.protopopov@gmail.com=
+> wrote:
+> >
+>
+> [...]
+>
+> >
+> >
+> > int bpf_object__unload(struct bpf_object *obj)
+> > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> > index e8f70977d137..634f278578dd 100644
+> > --- a/tools/lib/bpf/libbpf.h
+> > +++ b/tools/lib/bpf/libbpf.h
+> > @@ -63,8 +63,13 @@ LIBBPF_API libbpf_print_fn_t libbpf_set_print(libbpf=
+_print_fn_t fn);
+> > struct bpf_object;
+> >
+> > struct bpf_object_open_attr {
+> > -     const char *file;
+> > +     union {
+> > +             const char *file;
+> > +             const char *obj_name;
+> > +     };
+> >       enum bpf_prog_type prog_type;
+> > +     void *obj_buf;
+> > +     size_t obj_buf_sz;
+> > };
+>
+> I think this would break dynamically linked libbpf. No?
 
-drivers/soundwire/slave.c:16:12: warning: ‘sdw_slave_add’ defined but
-not used [-Wunused-function]
- static int sdw_slave_add(struct sdw_bus *bus,
-            ^~~~~~~~~~~~~
+Ah, yes, sure. What is the right way to make changes which break ABI in lib=
+bpf?
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- drivers/soundwire/slave.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+BTW, does the commit ddc7c3042614 ("libbpf: implement BPF CO-RE offset
+relocation algorithm") which adds a new field to the struct
+bpf_object_load_attr also break ABI?
 
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index f39a5815e25d..34c7e65831d1 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -6,6 +6,7 @@
- #include <linux/soundwire/sdw_type.h>
- #include "bus.h"
- 
-+#if IS_ENABLED(CONFIG_ACPI)
- static void sdw_slave_release(struct device *dev)
- {
- 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-@@ -60,7 +61,6 @@ static int sdw_slave_add(struct sdw_bus *bus,
- 	return ret;
- }
- 
--#if IS_ENABLED(CONFIG_ACPI)
- /*
-  * sdw_acpi_find_slaves() - Find Slave devices in Master ACPI node
-  * @bus: SDW bus instance
--- 
-2.22.0
-
+>
+> Thanks,
+> Song
+>
