@@ -2,111 +2,128 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A6FC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAEEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6052342A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1B521897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfH3H2V (ORCPT
+        id S1727901AbfH3H3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:28:21 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:54303 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726731AbfH3H2U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:28:20 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 3bKLiM2X6zaKO3bKOiQPhh; Fri, 30 Aug 2019 09:28:18 +0200
-Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
-        paul.kocialkowski@bootlin.com, mripard@kernel.org
-Cc:     pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        acourbot@chromium.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-References: <20190822194500.2071-1-jernej.skrabec@siol.net>
- <20190822194500.2071-6-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <ee46d461-1be8-e803-9792-9fb9481acf16@xs4all.nl>
-Date:   Fri, 30 Aug 2019 09:28:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 03:29:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6144 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726716AbfH3H3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:29:37 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F26753916B59F0EEA57D;
+        Fri, 30 Aug 2019 15:09:00 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 30 Aug 2019 15:08:54 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <dyoung@redhat.com>, <bhsharma@redhat.com>
+CC:     <horms@verge.net.au>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v6 4/4] kdump: update Documentation about crashkernel on arm64
+Date:   Fri, 30 Aug 2019 15:12:00 +0800
+Message-ID: <20190830071200.56169-5-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190830071200.56169-1-chenzhou10@huawei.com>
+References: <20190830071200.56169-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822194500.2071-6-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAklJxN99U94VgVdrg/wZWzFtkJLsUOAcDBPdvvu7N4xnAGlcRiHNmIHd9ozKfJqnwU1xSC8qX3gGJWdJaYewvrK/js+bIxfWV/1ACz1dt1R+iYcmlxK
- foiXEWAMvXY+tghwfqmr/zsL8IqXb4dStPKOXA9jONcO2zWdfZZ9okaNghI7k6WaYzhtbthDMZYGbdq+IC0ZrxfOvZKdxH9fBEZr1Sg5h4SL+/Ci65S2vFhJ
- Tcq9qaQuXd1VsmGnVXN3dmv9a+7pxklKRl6Wckh4vSciUxUBY8AwDDVZRc32kyi4EHpuBXY5LCYD6QoSF09hNlueaMfADSknFO/vYKnbfdmrxuG0Ja6F1k5V
- bAWbtX8yMSt+k4HApzJI+bZA9wjWe6D3hOKufJffSe6OCY+vzua8DYxB267V39eAqDSc3NvGhkvuVExsCwyBI4IGgHrYVSJb3c2kCbn8W/JJG4/aLfj8M7/U
- dD6VcrzZmerQdF7fXGFWmumdbOmEnMMYkkzJVdQGnvaIhDN1HWxQZ3pfOPFZ9W0Ze4+9UkBoZWdbsgQ6vVtHasF9EsqXSey4dZ6vs9gKAXaFWX99Cl6XtFfQ
- a0cObES470eOMn8R6GyxokYst2TSMt8eCT0zkFoVlfoV1SzRj057QUhENYrjWT/IcO0ZfDQfaYV8F4F0L7ME+snr6bpviuUv6feHCsfZPdxyp4XRYwWcwk/b
- vdOI2SH8+nyNXgEreuWmqIiQjoXA5hkU
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 9:44 PM, Jernej Skrabec wrote:
-> When codec supports multiple slices in one frame, VPU has to know when
-> first slice of each frame is being processed, presumably to correctly
-> clear/set data in auxiliary buffers.
-> 
-> Add first_slice field to cedrus_run structure and set it according to
-> timestamps of capture and output buffers. If timestamps are different,
-> it's first slice and viceversa.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
->  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> index 2f017a651848..32cb38e541c6 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
->  struct cedrus_run {
->  	struct vb2_v4l2_buffer	*src;
->  	struct vb2_v4l2_buffer	*dst;
-> +	bool first_slice;
->  
->  	union {
->  		struct cedrus_h264_run	h264;
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> index 56ca4c9ad01c..d7b54accfe83 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
->  
->  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
->  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> +	run.first_slice =
-> +		run.src->vb2_buf.timestamp != run.dst->vb2_buf.timestamp;
+Now we support crashkernel=X,[low] on arm64, update the Documentation.
 
-This is almost correct. To handle the corner case where no timestamp
-was ever copied to run.dst->vb2_buf you need this check:
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++--
+ Documentation/admin-guide/kernel-parameters.txt | 12 +++++++++++-
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
-	run.first_slice = !run.dst->vb2_buf.copied_timestamp ||
-		run.src->vb2_buf.timestamp != run.dst->vb2_buf.timestamp;
-
-Regards,
-
-	Hans
-
->  
->  	/* Apply request(s) controls if needed. */
->  	src_req = run.src->vb2_buf.req_obj.req;
-> 
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index ac7e131..e55173e 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -299,7 +299,13 @@ Boot into System Kernel
+    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+ 
+-   On x86 and x86_64, use "crashkernel=64M@16M".
++   On x86 use "crashkernel=64M@16M".
++
++   On x86_64, use "crashkernel=Y[@X]" to select a region under 4G first, and
++   fall back to reserve region above 4G when '@offset' hasn't been specified.
++   We can also use "crashkernel=X,high" to select a region above 4G, which
++   also tries to allocate at least 256M below 4G automatically and
++   "crashkernel=Y,low" can be used to allocate specified size low memory.
+ 
+    On ppc64, use "crashkernel=128M@32M".
+ 
+@@ -316,8 +322,11 @@ Boot into System Kernel
+    kernel will automatically locate the crash kernel image within the
+    first 512MB of RAM if X is not given.
+ 
+-   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
++   On arm64, use "crashkernel=Y[@X]". Note that the start address of
+    the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
++   If crashkernel=Z,low is specified simultaneously, reserve spcified size
++   low memory for crash kdump kernel devices firstly and then reserve memory
++   above 4G.
+ 
+ Load the Dump-capture Kernel
+ ============================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 4c19719..069a122 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -708,6 +708,9 @@
+ 			[KNL, x86_64] select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
++			[KNL, arm64] If crashkernel=X,low is specified, reserve
++			spcified size low memory for crash kdump kernel devices
++			firstly, and then reserve memory above 4G.
+ 			See Documentation/admin-guide/kdump/kdump.rst for further details.
+ 
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+@@ -732,12 +735,19 @@
+ 			requires at least 64M+32K low memory, also enough extra
+ 			low memory is needed to make sure DMA buffers for 32-bit
+ 			devices won't run out. Kernel would try to allocate at
+-			at least 256M below 4G automatically.
++			least 256M below 4G automatically.
+ 			This one let user to specify own low range under 4G
+ 			for second kernel instead.
+ 			0: to disable low allocation.
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
++			[KNL, arm64] range under 4G.
++			This one let user to specify own low range under 4G
++			for crash dump kernel instead.
++			Different with x86_64, kernel allocates specified size
++			physical memory region only when this parameter is specified
++			instead of trying to allocate at least 256M below 4G
++			automatically.
+ 
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
+-- 
+2.7.4
 
