@@ -2,96 +2,80 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E40C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA98CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4D823426
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567182864;
-	bh=J6xHTzuTu6Mdh3DdpXR85jTGMfiBJsE9SACiWXiGv/M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sdwCQrMIE9o+aUg0XSGWSjA5zNbwQrxpPs7L8ty9CrSPJBPbsYq8cBQ2BtL3CFWoD
-	 BmkVncIANGjm4yaU4CrhxcFdgbSQGUB1sPU+pkznB0zA7Rcj7tU/conEHJGr9qXzat
-	 Q1uQrIgEtGo79t1N0YZS/g+bQxv6CrvZ0CIPa58U=
+	by mail.kernel.org (Postfix) with ESMTP id ABD822342B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UljtLp+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfH3QeX (ORCPT
+        id S1728117AbfH3Qfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:34:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44174 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfH3QeX (ORCPT
+        Fri, 30 Aug 2019 12:35:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48264 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfH3Qfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:34:23 -0400
-Received: by mail-lj1-f195.google.com with SMTP id u14so471312ljj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IjdkwsKSf2VRq5W1pF0YFvlLHvkAKLdWUUMauCVdd1k=;
-        b=cZ97VWp463OQmkWYxTJ3976yRGFL44HW3ecfvAYbV7yurzSFFe5/p6MB3LHoNqdarN
-         R/fxSaFNSs360fZmHMPWTChJym4lYPeKwQcycWe+7oBNP0/w5DXo7BCLGzCvzSMeRcI0
-         PMrJnck7KEGRpprtR2Wfi/laL2lQscD73tsCo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IjdkwsKSf2VRq5W1pF0YFvlLHvkAKLdWUUMauCVdd1k=;
-        b=dDDXecFDMZoWp2tkN5eWPZP8pE4COdMDWFuYcrfn2YMI8qe300e5mB3BNj1KUGQLLp
-         PEzQLUwUh6pBnMKBytfy8xetEGR7+9duSYLEJ/aKC4bNY1IwzW+IAltIz08xuPcspOm1
-         MCySy+8yQDil50qikezLk6w5iPV5bcKOA4hzSyfHxs2UTXuEjh4C2wSetean7Z76/gMr
-         g/n6y/dlpj5JjvgAMTmCHhPj4SdQdTM1BADbrtmGJQ92Sp/fvSHEfCsnbh3FXCt4K1sa
-         gwLlLuIzInhaiwgIdVfgePaKi63540piepZxLMdXXXu+Id2b5UQcPhmiPTmEjdxjrr6P
-         +b6A==
-X-Gm-Message-State: APjAAAV8/ehFylBi3XwRryupeQYEN3VEYXZJGtbEmM3rShKxFwVHJh5b
-        6F/FGIh6TBko6BYTa9/abPSiey5s29c=
-X-Google-Smtp-Source: APXvYqw1uk/WQJFy75vQ9Z/GxO7dXbqtf93lwHVgORfiDKd96H0BsI0bJqg4xYvtUJ2YYzYlZPBq5g==
-X-Received: by 2002:a2e:91c6:: with SMTP id u6mr9166739ljg.68.1567182861070;
-        Fri, 30 Aug 2019 09:34:21 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id g28sm571541lja.89.2019.08.30.09.34.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2019 09:34:20 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id u29so5795702lfk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:34:20 -0700 (PDT)
-X-Received: by 2002:ac2:4c12:: with SMTP id t18mr10064627lfq.134.1567182859940;
- Fri, 30 Aug 2019 09:34:19 -0700 (PDT)
+        Fri, 30 Aug 2019 12:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qjMbYb7pZX3h+u+WxhCaqJiHflS54PzmrV2Ki0KAxtg=; b=UljtLp+nXvq3zhhMc/qzw9CK+
+        OZQWG5SZ+yUDGVutwjT48sAl8Gaf58I4Ms7FfTOUk3s0eAd82Z6KP+SQWkD8VsvPeQCrghKOVPmf5
+        JvBPfh0hTx5sIzovqOvJ0uZ3UvRTIWWEKqAm4RWLEecNqVDtDTW51BodqDK5JvAs78F13iJpT1A9J
+        yMMb7GzPQbKAMDVIvruKzfiuEyQIAaCavV87GN/TwO0qnD6gvZVEXB41k/4987+pQXTK1E1mWR2AG
+        8Yvz7tP445Tx6zdf9gAy4X4wtOD7k1RQKvZoT9J+z5PYKtyDkAPwWPqQY/hXNmUtllRl+216w7Vqv
+        xV9kRz0yQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3js6-00010N-Da; Fri, 30 Aug 2019 16:35:34 +0000
+Date:   Fri, 30 Aug 2019 09:35:34 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v8 20/24] erofs: introduce generic decompression backend
+Message-ID: <20190830163534.GA29603@infradead.org>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-21-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-References: <CAK8P3a2OZPybUQ=2xXcF4Qft-Gpe3a1mvgPncJZugETnaOxsvw@mail.gmail.com>
-In-Reply-To: <CAK8P3a2OZPybUQ=2xXcF4Qft-Gpe3a1mvgPncJZugETnaOxsvw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 30 Aug 2019 09:34:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgq71zNZtcb7vAsgb0EEozJsBDrLC0L+91tmMCBG=8FiQ@mail.gmail.com>
-Message-ID: <CAHk-=wgq71zNZtcb7vAsgb0EEozJsBDrLC0L+91tmMCBG=8FiQ@mail.gmail.com>
-Subject: Re: [GIT PULL] ARM: SoC fixes for Linux-5.3
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     SoC Team <soc@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        John Garry <john.garry@huawei.com>,
-        Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815044155.88483-21-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 9:26 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git armsoc-fixes
->
-> for you to fetch changes up to 7a6c9dbb36a415c5901313fc89871fd19f533656:
+On Thu, Aug 15, 2019 at 12:41:51PM +0800, Gao Xiang wrote:
+> +static bool use_vmap;
+> +module_param(use_vmap, bool, 0444);
+> +MODULE_PARM_DESC(use_vmap, "Use vmap() instead of vm_map_ram() (default 0)");
 
-Nope. That's a stale tag for me, pointing to commit 7bd9d465140a. Your
-old pull request from end of July, it looks like.
-
-Forgot to push out? Or forgot to use "-f" to overwrite the old tag?
-
-                    Linus
+And how would anyone know which to pick? 
