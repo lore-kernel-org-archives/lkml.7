@@ -2,121 +2,72 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD044C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75554C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910A823439
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A25523439
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbfH3V7P (ORCPT
+        id S1728194AbfH3WBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:59:15 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52664 "EHLO inva021.nxp.com"
+        Fri, 30 Aug 2019 18:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728166AbfH3V7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:59:15 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F0D4420079F;
-        Fri, 30 Aug 2019 23:59:12 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E48EC20043B;
-        Fri, 30 Aug 2019 23:59:12 +0200 (CEST)
-Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3FC0F2061E;
-        Fri, 30 Aug 2019 23:59:12 +0200 (CEST)
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     broonie@kernel.org
-Cc:     festevam@gmail.com, shengjiu.wang@nxp.com, Xiubo.Lee@gmail.com,
-        nicoleotsuka@gmail.com, timur@kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Viorel Suman <viorel.suman@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH] ASoC: fsl_sai: Implement set_bclk_ratio
-Date:   Sat, 31 Aug 2019 00:59:10 +0300
-Message-Id: <20190830215910.31590-1-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728122AbfH3WBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 18:01:53 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B3323431;
+        Fri, 30 Aug 2019 22:01:51 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 18:01:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        oss-drivers@netronome.com, Divya Indi <divya.indi@oracle.com>
+Subject: Re: [PATCH 0/3] tracing: fix minor build warnings
+Message-ID: <20190830180150.687f3ec8@gandalf.local.home>
+In-Reply-To: <20190828052549.2472-1-jakub.kicinski@netronome.com>
+References: <20190828052549.2472-1-jakub.kicinski@netronome.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viorel Suman <viorel.suman@nxp.com>
+On Tue, 27 Aug 2019 22:25:46 -0700
+Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
 
-This is to allow machine drivers to set a certain bitclk rate
-which might not be exactly rate * frame size.
+> Hi!
+> 
+> trace.o gets rebuild on every make run when tracing is enabled,
+> which makes all warnings particularly noisy. This patchset fixes
+> some low-hanging fruit on W=1 C=1 builds.
+> 
+> Jakub Kicinski (3):
+>   tracing: correct kdoc formats
 
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/fsl/fsl_sai.c | 21 +++++++++++++++++++--
- sound/soc/fsl/fsl_sai.h |  1 +
- 2 files changed, 20 insertions(+), 2 deletions(-)
+I took the first one, but the two below, I wont take. Those changes
+were added in preparation of the kernel access to tracing code.
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index fe126029f4e3..e896b577b1f7 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -137,6 +137,16 @@ static int fsl_sai_set_dai_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 	return 0;
- }
- 
-+static int fsl_sai_set_dai_bclk_ratio(struct snd_soc_dai *dai,
-+				      unsigned int ratio)
-+{
-+	struct fsl_sai *sai = snd_soc_dai_get_drvdata(dai);
-+
-+	sai->bclk_ratio = ratio;
-+
-+	return 0;
-+}
-+
- static int fsl_sai_set_dai_sysclk_tr(struct snd_soc_dai *cpu_dai,
- 		int clk_id, unsigned int freq, int fsl_dir)
- {
-@@ -423,8 +433,14 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 		slot_width = sai->slot_width;
- 
- 	if (!sai->is_slave_mode) {
--		ret = fsl_sai_set_bclk(cpu_dai, tx,
--				slots * slot_width * params_rate(params));
-+		if (sai->bclk_ratio)
-+			ret = fsl_sai_set_bclk(cpu_dai, tx,
-+					       sai->bclk_ratio *
-+					       params_rate(params));
-+		else
-+			ret = fsl_sai_set_bclk(cpu_dai, tx,
-+					       slots * slot_width *
-+					       params_rate(params));
- 		if (ret)
- 			return ret;
- 
-@@ -640,6 +656,7 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
- }
- 
- static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
-+	.set_bclk_ratio	= fsl_sai_set_dai_bclk_ratio,
- 	.set_sysclk	= fsl_sai_set_dai_sysclk,
- 	.set_fmt	= fsl_sai_set_dai_fmt,
- 	.set_tdm_slot	= fsl_sai_set_dai_tdm_slot,
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 3a3f6f8e5595..f96f8d97489d 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -177,6 +177,7 @@ struct fsl_sai {
- 	unsigned int mclk_streams;
- 	unsigned int slots;
- 	unsigned int slot_width;
-+	unsigned int bclk_ratio;
- 
- 	const struct fsl_sai_soc_data *soc_data;
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
--- 
-2.17.1
+See:
+
+  http://lkml.kernel.org/r/1565805327-579-1-git-send-email-divya.indi@oracle.com
+
+-- Steve
+
+
+>   tracing: remove exported but unused trace_array_destroy()
+>   tracing: make trace_array_create() static
+> 
+>  kernel/trace/trace.c | 47 ++++++++++++++------------------------------
+>  1 file changed, 15 insertions(+), 32 deletions(-)
+> 
 
