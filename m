@@ -2,200 +2,83 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C61C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2946C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4710B23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="vhE/pRy0"
+	by mail.kernel.org (Postfix) with ESMTP id A3FA323407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfH3RTv (ORCPT
+        id S1728145AbfH3RT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:19:51 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37910 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfH3RTu (ORCPT
+        Fri, 30 Aug 2019 13:19:58 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36093 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfH3RT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:19:50 -0400
-Received: by mail-qk1-f194.google.com with SMTP id u190so6817961qkh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 10:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=Lv7F7XfXtTfsXJ4fsL2rJKslKTnu6PBtRjHrGo9jnJc=;
-        b=vhE/pRy0Rqd3VBQJA5AOWcACzc014lyGB4mWKq6KKlKsiZYlKftqO2Nt8QRZnyj4SB
-         XgH0ppxgYw2ebO+hAXlpMeL3tBwYbT1ckNr2kR5sta3R6QVhaBsq/2k4rXkcA3W1JXf9
-         c7+NWxG0azeMGQ9waD084P8ygY1qHdiHZBfo34hgS2atU4V2jscUlJ88KkNw2wkiabt3
-         tTvesrhPc9OOwARdzWh2y3OS8Ueo7LmIX67GwQDmVgXQ16t1ElTttGbYxAYFsLFty2/C
-         SS/yYlHVUEgb7YJs4n/thMT7LIclenx2VyhO6A3/c4qb1zH3Dzp1POGnHwbgFY+aX+Ib
-         hHpw==
+        Fri, 30 Aug 2019 13:19:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z4so8416991qtc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 10:19:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=Lv7F7XfXtTfsXJ4fsL2rJKslKTnu6PBtRjHrGo9jnJc=;
-        b=Oi1RkudbBzDWvyQs5stf7GFcqkaTwL/+OLrTjRhTAPG+vyy417vJ18HNvuF/hHpGBa
-         RFCcUY2LS010nbttWGv7fjmPx3dlBz0anccwRKIbiZUOB06ibSkbjDV1ay/u2xCdMjqW
-         I0m4CNd3yWNrD4+DDvuwAmGZzSDKC5TDJ8SxDexjucUquu+qVJJL4AyziF7fV+PkDZxX
-         2EWNRVgSDk5E47ecmjOwFel31Rq7WBDEtRvMMDufvn6V4zToSZloIgKBdZY2oC5EIi17
-         UUIAD4mg4KXKy50wt56JGRqPx/RpmldC/DibL1FeMPYMl0MFEGRtTFpElxl8gqggNkWK
-         VtAQ==
-X-Gm-Message-State: APjAAAX4JwpcyQH6hpw3s3JGtntTPwK5GQAsbx6EFupgw1OwDiSQL3gk
-        wQ+ahYfVlutxCoH1SUgmqeNNpA==
-X-Google-Smtp-Source: APXvYqzFCIDQ4rnTVqgs8xMi2NAdoI5wuK0m/PpbK+c/0M2O94L/SiDiAMj2ybLbsAwNMNggOuV7Dw==
-X-Received: by 2002:a37:92c6:: with SMTP id u189mr15710250qkd.69.1567185589116;
-        Fri, 30 Aug 2019 10:19:49 -0700 (PDT)
-Received: from tpx230-nicolas (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id z187sm3372624qke.99.2019.08.30.10.19.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 10:19:46 -0700 (PDT)
-Message-ID: <3580d4f1549c405173f061c5e2ece3c8f2cfa7e4.camel@ndufresne.ca>
-Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        paul.kocialkowski@bootlin.com, mripard@kernel.org,
-        pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        acourbot@chromium.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-Date:   Fri, 30 Aug 2019 13:19:42 -0400
-In-Reply-To: <20190830074806.78a2b8b4@collabora.com>
-References: <20190822194500.2071-1-jernej.skrabec@siol.net>
-         <20190822194500.2071-6-jernej.skrabec@siol.net>
-         <20190826202831.311c7c20@collabora.com> <3132748.mYbjOY1tKM@jernej-laptop>
-         <20190830074806.78a2b8b4@collabora.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-0LtRcsKKEiURq7JtFoDE"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eREbuz0j2yx01SeF7umXo65Zd8gunKI6vNp3hTkMlVc=;
+        b=MJZKcpJYpb1ogC/0tY9Sxq390Y2Em4aBYTWlMT7jlRk1Kgozl6H+ltqDYsQC8EsMuk
+         5o+85F0A08rsSETs/376eoYjBc/b4Q739AEzFVxm1S1ME25dPttphaG+Ks9pwC8CcXq7
+         oWJJo/3TqDIrK/o1LydMbkx/RDcqd05XLD2reXkAEgx/MaGO6R2PFN7eSQvtrqgIJrWt
+         DH5fn4qiT64tSeKijkx0ilFBitsOkoN61SQXQaGdCQuXnUeLFIJxop1YROYAsBSIGbaQ
+         cghPky0xc+tFi2BUwPD/pBYL3ciOhjyKe/mCdlEO9NEed+NKGJZ+vFJVjLc+jO1/b2TR
+         Uyog==
+X-Gm-Message-State: APjAAAWM4zk4LsTegD47An12EuL5w4T6GsmjDNz5/DZ+kRKjUaDUFihj
+        Es8HUTcsBdzd96rx8metisvqEXjZldQyjQBhkog=
+X-Google-Smtp-Source: APXvYqwVevCuvuH2sy338AJ2V2IsQ6SavmSFH2Vz3yo29gW/Ty69n6T+cSn11lboWM0ZqxXySp5bXRiU47TYVhw1fhY=
+X-Received: by 2002:aed:3363:: with SMTP id u90mr16473668qtd.7.1567185597224;
+ Fri, 30 Aug 2019 10:19:57 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAK8P3a2OZPybUQ=2xXcF4Qft-Gpe3a1mvgPncJZugETnaOxsvw@mail.gmail.com>
+ <CAHk-=wgq71zNZtcb7vAsgb0EEozJsBDrLC0L+91tmMCBG=8FiQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgq71zNZtcb7vAsgb0EEozJsBDrLC0L+91tmMCBG=8FiQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 30 Aug 2019 19:19:40 +0200
+Message-ID: <CAK8P3a1WQn67D2L1pBwF-L=HeodjgJNhAKfMM4BC99bXiO9t5g@mail.gmail.com>
+Subject: Re: [GIT PULL] ARM: SoC fixes for Linux-5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        John Garry <john.garry@huawei.com>,
+        Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 30, 2019 at 6:34 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, Aug 30, 2019 at 9:26 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git armsoc-fixes
+> >
+> > for you to fetch changes up to 7a6c9dbb36a415c5901313fc89871fd19f533656:
+>
+> Nope. That's a stale tag for me, pointing to commit 7bd9d465140a. Your
+> old pull request from end of July, it looks like.
+>
+> Forgot to push out? Or forgot to use "-f" to overwrite the old tag?
 
---=-0LtRcsKKEiURq7JtFoDE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Wrong tree: I pushed it to soc.git, but passed the old tree to 'git
+request-pull'
 
-Le vendredi 30 ao=C3=BBt 2019 =C3=A0 07:48 +0200, Boris Brezillon a =C3=A9c=
-rit :
-> On Thu, 29 Aug 2019 21:04:28 +0200
-> Jernej =C5=A0krabec <jernej.skrabec@siol.net> wrote:
->=20
-> > Dne ponedeljek, 26. avgust 2019 ob 20:28:31 CEST je Boris Brezillon=20
-> > napisal(a):
-> > > Hi Jernej,
-> > >=20
-> > > On Thu, 22 Aug 2019 21:44:57 +0200
-> > >=20
-> > > Jernej Skrabec <jernej.skrabec@siol.net> wrote: =20
-> > > > When codec supports multiple slices in one frame, VPU has to know w=
-hen
-> > > > first slice of each frame is being processed, presumably to correct=
-ly
-> > > > clear/set data in auxiliary buffers.
-> > > >=20
-> > > > Add first_slice field to cedrus_run structure and set it according =
-to
-> > > > timestamps of capture and output buffers. If timestamps are differe=
-nt,
-> > > > it's first slice and viceversa.
-> > > >=20
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > >=20
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
-> > > >  2 files changed, 3 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
-> > > > 2f017a651848..32cb38e541c6 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > > > @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
-> > > >=20
-> > > >  struct cedrus_run {
-> > > > =20
-> > > >  	struct vb2_v4l2_buffer	*src;
-> > > >  	struct vb2_v4l2_buffer	*dst;
-> > > >=20
-> > > > +	bool first_slice;
-> > > >=20
-> > > >  	union {
-> > > >  =09
-> > > >  		struct cedrus_h264_run	h264;
-> > > >=20
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
-> > > > 56ca4c9ad01c..d7b54accfe83 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > > > @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
-> > > >=20
-> > > >  	run.src =3D v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-> > > >  	run.dst =3D v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > > >=20
-> > > > +	run.first_slice =3D
-> > > > +		run.src->vb2_buf.timestamp !=3D run.dst- =20
-> > > vb2_buf.timestamp;
-> > >=20
-> > > Can't we use slice->first_mb_in_slice to determine if a slice is the
-> > > first? I'd expect ->first_mb_in_slice to be 0 (unless we decide to
-> > > support ASO). =20
-> >=20
-> > I looked in all VPU documentation available to me (which isn't much) an=
-d there=20
-> > is no indication if ASO is supported or not. Do you have any sample vid=
-eo with=20
-> > out-of-order slices? It's my understanding that this is uncommon.
->=20
-> I'm not entirely sure, but my understanding was that it might be used
-> when streaming over network where some packets might be lost and
-> re-emitted later on.
->=20
-> > If it's=20
-> > supported, I would leave code as-is.
->=20
-> I remember seeing the ASO acronym mentioned in the hantro G1 spec, but
-> at the same time we're doing frame-based decoding, so I guess the HW
-> block expects slices to be ordered in that case. Honestly I don't know,
-> so let's keep the code as-is.
+Correct URL is
 
-We had an ASO interrupt when we tried to do slice decoding rather then
-frame. I believe on Hantro, the way to do ASO is to actually re-order
-in software.
+git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
 
-ASO is a feature of baseline profile use to reduce latency. As an
-example, VA-API does not support baseline profile (only constrained-
-baseline, which excludes ASO).
+I guess we should just delete the old tree now to avoid confusion like this.
 
-Nicolas
-
-
---=-0LtRcsKKEiURq7JtFoDE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXWlarwAKCRBxUwItrAao
-HBNPAJ9N2BBAFQLk5dhvhHq+DkURXWdFXQCcDJNUwgnp0u1Q8T6rWaMoTSg5Kck=
-=hsiz
------END PGP SIGNATURE-----
-
---=-0LtRcsKKEiURq7JtFoDE--
-
+        Arnd
