@@ -2,133 +2,106 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BD1C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E196C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C71323717
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567201839;
-	bh=BMFO/ja6VS575JdKNAgPGs67fG/E1rzTU5Hcuyhlp3Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fEKpABp+nc6tSN3wY9wC1FeuI8NVg6PhsV08qmyq3gPj+zjgxOK7zibLAVbnL6sx5
-	 j2I20OyPOcYXNKMUbr78PnRTdGNO59YvN6OHs9L+RQRzJT0qeQpKurrP1xmO1iPmPf
-	 LUPXA0Z/AlspW97qWRKfd26W2L7U6mlGHaGr6Djg=
+	by mail.kernel.org (Postfix) with ESMTP id 006FD2087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfH3Vui (ORCPT
+        id S1728256AbfH3VvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 17:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfH3Vui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:50:38 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728111AbfH3VvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 17:51:12 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7D7623777;
-        Fri, 30 Aug 2019 21:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567201836;
-        bh=BMFO/ja6VS575JdKNAgPGs67fG/E1rzTU5Hcuyhlp3Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Xr9EVH03o73fNeuckzt6dLa3FfxpH2GW0Qn7velEm+IuPIc7/1LrPkZz48VRLey21
-         PJmaWr/pvtrKOdFuSti/pogGgcUyo+BEHaQUmy7VEFRuPQjhyb70rv7DEtXD+6mq1k
-         nuFl+OxgnCkudyUoGKmDHFuuRQsxrnRNbDQDa+BQ=
-Received: by mail-qk1-f172.google.com with SMTP id i78so6055249qke.11;
-        Fri, 30 Aug 2019 14:50:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAWjX9IRdrCZjLH1YCiB/Y90Gk4SGSkWbojJ6QAh9J2obcbbIcej
-        RlYZZvSsF2txnTAHMPdBe666KR0yjBguwvtpNw==
-X-Google-Smtp-Source: APXvYqw1u/Fyzf4M/pGE0WKEgY1r+h6iNzEwpmsmQCOY+XNy4hoICxOp5eBbsmTiZ2KtNobLJuNgVEJMuuTQythKs2k=
-X-Received: by 2002:a37:682:: with SMTP id 124mr17209455qkg.393.1567201835797;
- Fri, 30 Aug 2019 14:50:35 -0700 (PDT)
+        by mail.kernel.org (Postfix) with ESMTPSA id E104E2342E;
+        Fri, 30 Aug 2019 21:51:10 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 17:51:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Wu <peter@lekensteyn.nl>
+Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Subject: Re: [PATCH] docs: ftrace: clarify when tracing is disabled by the
+ trace file
+Message-ID: <20190830175108.0ffa6ef1@gandalf.local.home>
+In-Reply-To: <20190822234823.18594-1-peter@lekensteyn.nl>
+References: <20190822234823.18594-1-peter@lekensteyn.nl>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190805143911.12185-1-hhhawa@amazon.com> <20190805143911.12185-2-hhhawa@amazon.com>
- <20190821191704.GA32425@bogus> <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
- <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com> <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
-In-Reply-To: <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 30 Aug 2019 16:50:24 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
-Message-ID: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
-To:     James Morse <james.morse@arm.com>
-Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 7:45 AM James Morse <james.morse@arm.com> wrote:
->
-> Hi guys,
->
-> On 27/08/2019 14:49, Rob Herring wrote:
-> > On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
-> >> On 8/21/2019 10:17 PM, Rob Herring wrote:
-> >>> Why is this even in DT? AFAICT, this is all just CortexA57 core features
-> >>> (i.e. nothing Amazon specific). The core type and the ECC capabilities
-> >>> are discoverable.
-> >>
-> >> Added to the DT in order to easily enable/disable the driver.
-> >
-> > That alone is not reason enough to put it in DT. From a DT
-> > perspective, I have no idea what the whims of a OS maintainer are
-> > regarding whether they want all this to be 1 driver or 2 drivers.
-> > (IMO, it should be 1 as this is ECC for an A57. For a core and memory
-> > controller, then 2 seems appropriate.)
-> >
-> >> You are
-> >> correct that they are CortexA57 core features and nothing Amazon
-> >> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
-> >> cortex revisions (e.g. A57) the register bitmap may change. Because of
-> >> that we added an Amazon compatible which corresponds to the specific
-> >> core we are using.
->
-> I think its that the instruction encoding is in the imp-def space that is important.
->
-> CPU-implementers can add whatever registers they find useful here. A57 and A72 both
-> implemented some ECC registers here. (They are not guaranteed to be the same, but I can't
-> find any differences).
+On Fri, 23 Aug 2019 00:48:23 +0100
+Peter Wu <peter@lekensteyn.nl> wrote:
 
-Two cores potentially being the same only furthers my argument that
-this shouldn't be an Amazon driver.
+> The current text could mislead the user into believing that only read()
+> disables tracing. Clarify that any open() call that requests read access
+> disables tracing.
+> 
+> Link: https://lkml.kernel.org/r/CAADnVQ+hU6QOC_dPmpjnuv=9g4SQEeaMEMqXOS2WpMj=q=LdiQ@mail.gmail.com
+> Signed-off-by: Peter Wu <peter@lekensteyn.nl>
+> ---
+>  Documentation/trace/ftrace.rst | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index f60079259669..965be5c9afb3 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -125,7 +125,8 @@ of ftrace. Here is a list of some of the key files:
+>  
+>  	This file holds the output of the trace in a human
+>  	readable format (described below). Note, tracing is temporarily
+> -	disabled while this file is being read (opened).
+> +	disabled when the file is open for reading. Once all readers
+> +	are closed, tracing is re-enabled.
+>  
+>    trace_pipe:
+>  
+> @@ -139,8 +140,9 @@ of ftrace. Here is a list of some of the key files:
+>  	will not be read again with a sequential read. The
+>  	"trace" file is static, and if the tracer is not
+>  	adding more data, it will display the same
+> -	information every time it is read. This file will not
+> -	disable tracing while being read.
+> +	information every time it is read. Unlike the
+> +	"trace" file, opening this file for reading will not
+> +	temporarily disable tracing.
+>  
+>    trace_options:
+>  
+> @@ -3153,7 +3155,10 @@ different. The trace is live.
+>  
+>  
+>  Note, reading the trace_pipe file will block until more input is
+> -added.
+> +added. This is contrary to the trace file. If any process opened
+> +the trace file for reading, it will actually disable tracing and
+> +prevent new entries from being added. The trace_file file does
 
-> We need some information from DT because the TRM doesn't say what happens when you read
-> from these registers on an A57 that doesn't have the 'optional ECC protection'. It could
-> take an exception due to an unimplemented system register.
+I was just about to ack this, and then I saw the above.
 
-My read of the TRM is that L2 ECC is always there and L1 ECC/parity is
-optional. Furthermore, bit 22 of L2CTRL_EL1 indicates if L1 ECC/parity
-is supported or not and there's other non-ECC stuff like cache RAM
-timing values in that register.
+  s/trace_file/trace_pipe/
 
-> The imp-def instruction space may also be trapped by a higher exception level. KVM does
-> this, and emulates these registers as if they were all undefined.
+Other than that, it looks good!
 
-So KVM provides a semi-CortexA57? Code that runs on real h/w won't as a guest.
+-- Steve
 
-However, if we do need DT to indicate ECC support in a core or not,
-then we already have an A57 node and should put that info there.
+> +not have this limitation.
+>  
+>  trace entries
+>  -------------
 
-Rob
