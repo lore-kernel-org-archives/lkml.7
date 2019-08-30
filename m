@@ -2,106 +2,90 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA4CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7FEC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA0423427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FC023427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfH3QKx (ORCPT
+        id S1728017AbfH3QMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:10:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14360 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727809AbfH3QKw (ORCPT
+        Fri, 30 Aug 2019 12:12:08 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53784 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727809AbfH3QMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:10:52 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UG830R155467;
-        Fri, 30 Aug 2019 12:10:20 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uq4f5677h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 12:10:19 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7UG5B3E007090;
-        Fri, 30 Aug 2019 16:09:52 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03dal.us.ibm.com with ESMTP id 2umpcu23f8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 16:09:52 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UG9pap38076856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 16:09:51 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00F036A047;
-        Fri, 30 Aug 2019 16:09:51 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B6376A04D;
-        Fri, 30 Aug 2019 16:09:50 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.179.222])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Aug 2019 16:09:50 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux@roeck-us.net, andrew@aj.id.au,
-        joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org,
-        jdelvare@suse.com, Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 2/3] ARM: dts: aspeed: swift: Change power supplies to version 2
-Date:   Fri, 30 Aug 2019 11:09:44 -0500
-Message-Id: <1567181385-22129-3-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1567181385-22129-1-git-send-email-eajames@linux.ibm.com>
-References: <1567181385-22129-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=843 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908300160
+        Fri, 30 Aug 2019 12:12:08 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-8-vPgvCSCrNQKAFRHlhul29Q-1;
+ Fri, 30 Aug 2019 17:12:05 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 17:12:04 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 30 Aug 2019 17:12:04 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: RE: objtool warning "uses BP as a scratch register" with clang-9
+Thread-Topic: objtool warning "uses BP as a scratch register" with clang-9
+Thread-Index: AQHVX0vKqj9VEXOMQ0SdqQ13OMpYJacT3FgA
+Date:   Fri, 30 Aug 2019 16:12:04 +0000
+Message-ID: <7fb03b2951e04c5f9b2529a6b8d5c746@AcuMS.aculab.com>
+References: <20190827192255.wbyn732llzckmqmq@treble>
+ <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+ <20190828152226.r6pl64ij5kol6d4p@treble>
+ <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+ <CAK8P3a1CONyt0AwBr2wQXZNo5+jpwAT8T3WfXe73=j799Jnv6A@mail.gmail.com>
+ <20190829232439.w3whzmci2vqtq53s@treble>
+ <CAK8P3a0ddxbGVj974XS+PM_mSJDu=aGfTGarjmqMCuLKn81mRg@mail.gmail.com>
+ <20190830151422.o4pbvjyravrz2wre@treble>
+ <CAK8P3a33LQAzsReSUyB_aZxkws28RP=oJocQXonYbxxBky7aaQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a33LQAzsReSUyB_aZxkws28RP=oJocQXonYbxxBky7aaQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: vPgvCSCrNQKAFRHlhul29Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Swift power supplies are version 2 of the IBM CFFPS. Make it so in the
-devicetree.
-
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-index f14f745..815b865 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-@@ -494,7 +494,7 @@
- 	};
- 
- 	power-supply@68 {
--		compatible = "ibm,cffps1";
-+		compatible = "ibm,cffps2";
- 		reg = <0x68>;
- 	};
- 
-@@ -504,7 +504,7 @@
- 	};
- 
- 	power-supply@69 {
--		compatible = "ibm,cffps1";
-+		compatible = "ibm,cffps2";
- 		reg = <0x69>;
- 	};
- 
--- 
-1.8.3.1
+RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAzMCBBdWd1c3QgMjAxOSAxNjo1OQ0KLi4uDQo+
+ID4gT3IgZXZlbiBiZXR0ZXIsIGl0IHdvdWxkIGJlIGdyZWF0IGlmIHdlIGNvdWxkIGdldCBDbGFu
+ZyB0byBjaGFuZ2UgdGhlaXINCj4gPiBtZW1zZXQoKSBpbnNlcnRpb24gaGV1cmlzdGljcywgc28g
+dGhhdCBLQVNBTiBhY3RzIG1vcmUgbGlrZSBub24tS0FTQU4NCj4gPiBjb2RlIGluIHRoYXQgcmVn
+YXJkLg0KPiANCj4gSSBzdXNwZWN0IHRoYXQncyBnb2luZyB0byBiZSBoYXJkZXIuIFRoZSBjbGFu
+Zy05IHJlbGVhc2UgaXMgZ29pbmcgdG8gYmUNCj4gc29vbiwgYW5kIHRoYXQgY2hhbmdlIHByb2Jh
+Ymx5IHdvdWxkbid0IGJlIGNvbnNpZGVyZWQgYSByZWdyZXNzaW9uIGZpeC4NCj4gDQo+IE1heWJl
+IE5pY2sgY2FuIGZpbmQgd2hhdCBoYXBwZW5zLCBidXQgSSBkb24ndCBhY3R1YWxseSBzZWUgYW55
+IHJlZmVyZW5jZQ0KPiB0byBLQVNBTiBpbiB0aGUgbGx2bSBzb3VyY2UgY29kZSByZWxhdGVkIHRv
+IHRoZSBtZW1zZXQgZ2VuZXJhdGlvbi4NCj4gDQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9sbHZtLW1p
+cnJvci9jbGFuZy9ibG9iL21hc3Rlci9saWIvQ29kZUdlbi9DR0V4cHJBZ2cuY3BwI0wxODAzDQo+
+IGhhcyBhIGNoZWNrIGZvciA+MTYgYnl0ZXMsIGJ1dCB0aGF0IGFnYWluIGRvZXMgbm90IG1hdGNo
+IG15IG9ic2VydmF0aW9uLg0KDQpUaGF0IGxvb2tzIGxpa2UgdGhlIGNvZGUgZm9yIGluaXRpYWxp
+c2luZyBhIGxvY2FsIHN0cnVjdHVyZSB2YXJpYWJsZSwNCm5vdCBmb3IgbWVyZ2luZyAncmFuZG9t
+JyB3cml0ZXMgaW50byBhIG1lbXNldCgpLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
+ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
+MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
