@@ -2,75 +2,112 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1564C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF1CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C4223427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9AC23405
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbfH3N7i (ORCPT
+        id S1727936AbfH3OBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:59:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:60852 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 10:01:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:32774 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfH3N7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:59:25 -0400
+        id S1727135AbfH3OBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:01:32 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D6C6344;
-        Fri, 30 Aug 2019 06:59:25 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97EF83F703;
-        Fri, 30 Aug 2019 06:59:23 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
-        tglx@linutronix.de, salyzyn@android.com, 0x7f454c46@gmail.com,
-        luto@kernel.org
-Subject: [PATCH v2 6/8] arm64: compat: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
-Date:   Fri, 30 Aug 2019 14:59:00 +0100
-Message-Id: <20190830135902.20861-7-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190830135902.20861-1-vincenzo.frascino@arm.com>
-References: <20190830135902.20861-1-vincenzo.frascino@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D96F3344;
+        Fri, 30 Aug 2019 07:01:31 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E63023F703;
+        Fri, 30 Aug 2019 07:01:30 -0700 (PDT)
+Subject: Re: [PATCH 0/2] irqchip/meson-gpio: add sm1 support
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190829161635.25067-1-jbrunet@baylibre.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <b6f1c3d5-9098-03c6-b843-6eb2ddbe35a9@arm.com>
+Date:   Fri, 30 Aug 2019 15:01:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190829161635.25067-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VDSO_HAS_32BIT_FALLBACK has been removed from the core since
-the architectures that support the generic vDSO library have
-been converted to support the 32 bit fallbacks.
+On 29/08/2019 17:16, Jerome Brunet wrote:
+> This patchset adds support for the new sm1 SoC family in the Amlogic gpio
+> interrupt controller.
+> 
+> Jerome Brunet (2):
+>   dt-bindings: interrupt-controller: new binding for the meson sm1 SoCs
+>   irqchip/meson-gpio: Add support for meson sm1 SoCs
+> 
+>  .../amlogic,meson-gpio-intc.txt               |  1 +
+>  drivers/irqchip/irq-meson-gpio.c              | 52 ++++++++++++++-----
+>  2 files changed, 39 insertions(+), 14 deletions(-)
+> 
 
-Remove unused VDSO_HAS_32BIT_FALLBACK from arm64 compat vdso.
+Applied to irqchip-next.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index fe7afe0f1a3d..537b1e695365 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -16,7 +16,6 @@
- 
- #define VDSO_HAS_CLOCK_GETRES		1
- 
--#define VDSO_HAS_32BIT_FALLBACK		1
- #define BUILD_VDSO32			1
- 
- static __always_inline
+	M.
 -- 
-2.23.0
-
+Jazz is not dead. It just smells funny...
