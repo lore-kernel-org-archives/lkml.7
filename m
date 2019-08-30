@@ -2,97 +2,86 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC1C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3218C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37F821670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB8221670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfH3NiY (ORCPT
+        id S1728031AbfH3Nik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:38:24 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:41455 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfH3NiY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:38:24 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 42A593C0579;
-        Fri, 30 Aug 2019 15:38:22 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xi7ekeR7DieB; Fri, 30 Aug 2019 15:38:16 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 89A243C04C0;
-        Fri, 30 Aug 2019 15:38:16 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 30 Aug
- 2019 15:38:16 +0200
-Date:   Fri, 30 Aug 2019 15:38:13 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     "George G. Davis" <george_davis@mentor.com>
-CC:     Shuah Khan <shuah@kernel.org>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v2] selftests: watchdog: Add optional file argument
-Message-ID: <20190830133813.GA23613@vmlxhi-102.adit-jv.com>
-References: <1567169597-10330-1-git-send-email-george_davis@mentor.com>
+        Fri, 30 Aug 2019 09:38:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61411 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727455AbfH3Nik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:38:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 06:38:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="181207600"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Aug 2019 06:38:37 -0700
+Subject: Re: [PATCH] xhci: fix memleak on setup address fails.
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190811082259.48176-1-ikjn@chromium.org>
+ <5883d03d-31c4-206a-26c1-ca641dbf845c@linux.intel.com>
+ <CAATdQgA4z+hqM=U+1dRLQOq7obH3kq7C+pR8BzmzfvskxNKRng@mail.gmail.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <ddcb3b03-90c6-876e-31ee-005be6eebd1a@linux.intel.com>
+Date:   Fri, 30 Aug 2019 16:40:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1567169597-10330-1-git-send-email-george_davis@mentor.com>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <CAATdQgA4z+hqM=U+1dRLQOq7obH3kq7C+pR8BzmzfvskxNKRng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George,
-
-On Fri, Aug 30, 2019 at 08:53:16AM -0400, George G. Davis wrote:
-> Some systems have multiple watchdog devices where the first device
-> registered is assigned to the /dev/watchdog device file. In order
-> to test other watchdog devices, add an optional file argument for
-> selecting non-default watchdog devices for testing.
+On 26.8.2019 9.41, Ikjoon Jang wrote:
+> On Wed, Aug 14, 2019 at 9:57 PM Mathias Nyman
+> <mathias.nyman@linux.intel.com> wrote:
+>>
+>> On 11.8.2019 11.22, Ikjoon Jang wrote:
+>>> Xhci re-enables a slot on transaction error in set_address using
+>>> xhci_disable_slot() + xhci_alloc_dev().
+>>>
+>>> But in this case, xhci_alloc_dev() creates debugfs entries upon an
+>>> existing device without cleaning up old entries, thus memory leaks.
+>>>
+>>> So this patch simply moves calling xhci_debugfs_free_dev() from
+>>> xhci_free_dev() to xhci_disable_slot().
+>>>
+>>
+>> Othwerwise this looks good, but xhci_alloc_dev() will call xhci_disable_slot()
+>> in some failure cases before the slot debugfs entry is created.
+>>
+>> In these cases xhci_debugfs_remove_slot() will be called without
+>> xhci_debugfs_create_slot() ever being called.
+>>
+>> This might not be an issue as xhci_debugfs_remove_slot() checks
+>> if (!dev || !dev->debugfs_private) before doing anything, but should
+>> be checked out.
+>>
 > 
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> ---
-> v1:
-> - https://lkml.org/lkml/2019/8/29/16
-> v2:
-> - Update printf for ENOENT case based on report from Eugeniu Rosca
+> I checked out the case by adding simple fault injection on xhci_alloc_dev(),
+> to simulate xhci_debugfs_remove_slot() can be called without
+> xhci_debugfs_create_slot() being called.
+> 
 
-Below interdiff [1] matches my expectations. Thanks!
+Thanks, patch sent forward
 
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-[1] interdiff <(git show patch_v1) <(git show patch_v2)  
-diff -u b/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
---- b/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -107,7 +107,7 @@
- 
- 	if (fd == -1) {
- 		if (errno == ENOENT)
--			printf("Watchdog device not enabled.\n");
-+			printf("Watchdog device (%s) not found.\n", file);
- 		else if (errno == EACCES)
- 			printf("Run watchdog as root.\n");
- 		else
-
--- 
-Best Regards,
-Eugeniu.
+-Mathias
