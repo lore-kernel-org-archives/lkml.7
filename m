@@ -2,102 +2,94 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441BCC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075E8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D114B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsCXS5Al"
+	by mail.kernel.org (Postfix) with ESMTP id D5D162186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfH3Jwj (ORCPT
+        id S1727603AbfH3J4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:52:39 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53348 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfH3Jwi (ORCPT
+        Fri, 30 Aug 2019 05:56:43 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53541 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726653AbfH3J4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:52:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 10so6611582wmp.3;
-        Fri, 30 Aug 2019 02:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=tc17SwiXpDz1kgEk0p61gpWwIWAbuTeHVLdYo1NejAk=;
-        b=DsCXS5AlfL8N6Pd/BW1O50jCajoaMNCX6Gh/ZpcI750WV99gdv/GDDQQOuhc+g7kQj
-         PrR2UciBC/udBCeDc7zmvV0pv/IQag9tJFcZjNccdyoDyzV5Vli8kp00xaGABHm+22CJ
-         QGjM5QwY08jOwBpS1IXIFSuNTqnPk6gv4KTDzPM3MfNPZATg578eAznzEnMbiYPhnIRm
-         Bt8derDP1APJB4thdBFtrh4Qg5+sjwi5qq6M5nqQPWTRl35KDxRRkkH1lmZCzPhRiFG5
-         hfF8Z3GoA4Kl6FR/fEmQPtAMX6hEUUaE5IqlzT4QBHyVfZWzz2wYNplNIvk7wtpXfEk3
-         67qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=tc17SwiXpDz1kgEk0p61gpWwIWAbuTeHVLdYo1NejAk=;
-        b=CxDaPOMN920h2wjotR27TudvViRynfs/5zCZBnMGtFaPMlTtlw+Xlwks8yb6iRjlIy
-         mdJJ16nhIEqVLS8dWRzr/b9+k+HyDd3yuL/65UIqNSd+AyT55qFPUycmvnoalqWhammr
-         lFqETx6v3GpVeR7KaCNkXDcyBUBer0Qjmot3twDPY2AJ1nkX7AQsmtyQNJXYbzpKjAsD
-         oruKeMvjQrDtE1AkHLxYovrciKP6aM7hHPSXD+v/z/0fevcPcEED6vm/br0zNAn4wtxc
-         LTb9N4E+DctGh35X7USPGTHwX8teOJVQealrxaLTjyXITtmT/ax9U6rzT6TfeA93CxwV
-         wA2Q==
-X-Gm-Message-State: APjAAAXbmy4Lou1uIQRwE9FwoNVQlKe3wPAj/ZAgX/Tt65QHPriFz2qa
-        Zk+XkR2Sqb6QZCcR2vCmK3wCQ576Z7knJC6RhxQ=
-X-Google-Smtp-Source: APXvYqypzwcOYYLIG7MVcOC8GJ2qXLrEkr2UlocT3ycDPxkWToyVuADTLoF3SbWMPb4REfw4xL2k75Z4f6QA6ctcV+w=
-X-Received: by 2002:a7b:c013:: with SMTP id c19mr9625630wmb.118.1567158756429;
- Fri, 30 Aug 2019 02:52:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
- <20190828055425.24765-2-yamada.masahiro@socionext.com> <20190828182017.GB127646@archlinux-threadripper>
- <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com> <CA+icZUWmmC7CruvXx6U0cdXMLaMWJadU=T61E0om1rOuW3==pw@mail.gmail.com>
-In-Reply-To: <CA+icZUWmmC7CruvXx6U0cdXMLaMWJadU=T61E0om1rOuW3==pw@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 30 Aug 2019 11:52:24 +0200
-Message-ID: <CA+icZUXX6YG7=4n60A3_HiTYE0SkNXd8yr4-pqfOsqg66QvXzw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
- functions for W=1 build
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Fri, 30 Aug 2019 05:56:42 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-130-P6GY7liWP8u9PLRWlkmegQ-1; Fri, 30 Aug 2019 10:56:39 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 10:56:39 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 30 Aug 2019 10:56:39 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>
+CC:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
         Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sven Schnelle <svens@stackframe.org>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: RE: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+Thread-Topic: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+Thread-Index: AQHVV6Op4hc1jesckEO2Njx8G6LSv6cHrBeAgAC6ywCAAHvDAIABi1YAgAAYGYCAAC0oAIAACaQAgAi0npA=
+Date:   Fri, 30 Aug 2019 09:56:38 +0000
+Message-ID: <0eb1d644d233432b8e62d87bd470d7d5@AcuMS.aculab.com>
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
+ <20190823091636.GA10064@gmail.com>
+ <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
+ <20190824161432.GA25950@gmail.com>
+ <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
+ <20190824202224.GA5286@gmail.com>
+ <CAHk-=wjD5MMbAm0OkbKadzerwG3yGr9SvE7mrsCnhmiqRRdxMw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjD5MMbAm0OkbKadzerwG3yGr9SvE7mrsCnhmiqRRdxMw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: P6GY7liWP8u9PLRWlkmegQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just as a sidenote:
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjQgQXVndXN0IDIwMTkgMjE6NTcNCj4gT24g
+U2F0LCBBdWcgMjQsIDIwMTkgYXQgMToyMiBQTSBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9y
+Zz4gd3JvdGU6DQo+ID4NCj4gPiBUaGF0IG1ha2VzIHNlbnNlOiBJIG1lYXN1cmVkIDE3IHNlY29u
+ZHMgcGVyIDEwMCBNQiBvZiBkYXRhLCB3aGljaCBpcyBpcw0KPiA+IDAuMTYgdXNlY3MgcGVyIGJ5
+dGUuIFRoZSBpbnN0cnVjdGlvbiB1c2VkIGJ5DQo+ID4gY29weV91c2VyX2VuaGFuY2VkX2Zhc3Rf
+c3RyaW5nKCkgaXMgUkVQIE1PVlNCIC0gd2hpY2ggc3VwcG9zZWRseSBnb2VzIGFzDQo+ID4gaGln
+aCBhcyBjYWNoZWxpbmUgc2l6ZSBhY2Nlc3NlcyAtIGJ1dCBwZXJoYXBzIHRob3NlIGdldCBicm9r
+ZW4gZG93biBmb3INCj4gPiBwaHlzaWNhbCBtZW1vcnkgdGhhdCBoYXMgbm8gZGV2aWNlIGNsYWlt
+aW5nIGl0Pw0KPiANCj4gQWxsIHRoZSAicmVwIHN0cmluZyIgb3B0aW1pemF0aW9ucyBhcmUgX29u
+bHlfIGRvbmUgZm9yIHJlZ3VsYXIgbWVtb3J5Lg0KDQpNb3JlIGxpa2VseSBmb3IgcGFnZXMgdGhh
+dCB1c2VzIHRoZSBkYXRhIGNhY2hlLg0KSXQgb3VnaHQgdG8gYmUgcG9zc2libGUgdG8gbWFwIFBD
+SWUgbWVtb3J5IHRocm91Z2ggdGhlIGRhdGEgY2FjaGUuDQpXaXRoIGNhcmUgdGhhdCB3b3VsZCBh
+bGxvdyBsb25nZXIgVExQcyAoZXNwZWNpYWxseSByZWFkIFRMUCkgZm9yDQpjcHUgJ3BpbycgYnVm
+ZmVyIHRyYW5zZmVycy4NCg0KPiBXaGVuIGl0IGhpdHMgYW55IElPIGFjY2Vzc2VzLCBpdCB3aWxs
+IGRvIHRoZSBhY2Nlc3NlcyBhdCB0aGUgc3BlY2lmaWVkDQo+IHNpemUgKHNvICJtb3ZzYiIgd2ls
+bCBkbyBpdCBhIGJ5dGUgYXQgYSB0aW1lKS4NCj4gDQo+IDAuMTYgdXNlYyBwZXIgYnl0ZSBpcyBm
+YXN0ZXIgdGhhbiB0aGUgdHJhZGl0aW9uYWwgSVNBICdpbmInLCBidXQgbm90DQo+IGJ5IGEgaHVn
+ZSBmYWN0b3IuDQoNClRoYXQgc3BlZWQgZGVwZW5kcyBvbiB0aGUgdGFyZ2V0LCBJSVJDIG91ciBm
+cGdhIHRhcmdldCB0YWtlcyAxMjggY2xvY2tzDQphdCA2Mi41TUh6IHRvIHByb2Nlc3MgYSBQQ0ll
+IHJlYWQgcmVxdWVzdC4NCk5vbmUgb2YgdGhlIGN1cnJlbnQgSW50ZWwgeDg2IGNwdXMgd2lsbCBp
+c3N1ZSBtdWx0aXBsZSByZWFkIFRMUCBmcm9tDQphIHNpbmdsZSBjb3JlLCBzbyByZWFkcyBuZXZl
+ciBnZXQgYW55IG92ZXJsYXBwaW5nIGFuZCBzdWZmZXIgdGhlDQpmdWxsIGxhdGVuY3kuDQoNCglE
+YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
+bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
+NzM4NiAoV2FsZXMpDQo=
 
-From [PATCH v2] kbuild: enable unused-function warnings for W= build with Clang:
-
-"Per the documentation [1], -Wno-unused-function will also disable
--Wunneeded-internal-declaration, which can help find bugs like
-commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
-mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
-I added -Wunneeded-internal-declaration to address it.
-
-If you contribute to code clean-up, please run "make CC=clang W=1"
-and check -Wunused-function warnings. You will find lots of unused
-functions."
-
-Isn't that missing in your double?
-
-- Sedat -
-
-[1] https://lkml.org/lkml/2019/8/27/729
