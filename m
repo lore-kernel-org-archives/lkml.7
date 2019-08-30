@@ -2,91 +2,72 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04479C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BED9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83BD21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156A921721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfH3Mk7 (ORCPT
+        id S1728008AbfH3Mmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:40:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40976 "EHLO mx1.redhat.com"
+        Fri, 30 Aug 2019 08:42:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18803 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727603AbfH3Mk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:40:59 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E000018C427D;
-        Fri, 30 Aug 2019 12:40:58 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06111100194E;
-        Fri, 30 Aug 2019 12:40:54 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 14:40:52 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     alex.williamson@redhat.com, jiri@mellanox.com,
-        kwankhede@nvidia.com, davem@davemloft.net, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] mdev: Make mdev alias unique among all mdevs
-Message-ID: <20190830144052.11d23ec3.cohuck@redhat.com>
-In-Reply-To: <20190829111904.16042-3-parav@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190829111904.16042-1-parav@mellanox.com>
-        <20190829111904.16042-3-parav@mellanox.com>
-Organization: Red Hat GmbH
+        id S1727826AbfH3Mmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:42:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:42:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="198028263"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Aug 2019 05:42:36 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i3gEd-0007YI-82; Fri, 30 Aug 2019 15:42:35 +0300
+Date:   Fri, 30 Aug 2019 15:42:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 03/10] device property: Add functions for accessing
+ node's parents
+Message-ID: <20190830124235.GD2680@smile.fi.intel.com>
+References: <20190829101043.24963-4-sakari.ailus@linux.intel.com>
+ <20190829104401.24183-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 30 Aug 2019 12:40:59 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829104401.24183-1-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 06:19:00 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+On Thu, Aug 29, 2019 at 01:44:01PM +0300, Sakari Ailus wrote:
+> Add two convenience functions for accessing node's parents:
+> 
+> fwnode_count_parents() returns the number of parent nodes a given node
+> has. fwnode_get_nth_parent() returns node's parent at a given distance
+> from the node itself.
+> 
+> Also reorder fwnode_get_parent() in property.c according to the same order
+> as in property.h.
 
-> Mdev alias should be unique among all the mdevs, so that when such alias
-> is used by the mdev users to derive other objects, there is no
-> collision in a given system.
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> 
-> ---
-> Changelog:
-> v1->v2:
->  - Moved alias NULL check at beginning
-> v0->v1:
->  - Fixed inclusiong of alias for NULL check
->  - Added ratelimited debug print for sha1 hash collision error
-> ---
->  drivers/vfio/mdev/mdev_core.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 3bdff0469607..c9bf2ac362b9 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -388,6 +388,13 @@ int mdev_device_create(struct kobject *kobj, struct device *dev,
->  			ret = -EEXIST;
->  			goto mdev_fail;
->  		}
-> +		if (alias && tmp->alias && strcmp(alias, tmp->alias) == 0) {
-> +			mutex_unlock(&mdev_list_lock);
-> +			ret = -EEXIST;
-> +			dev_dbg_ratelimited(dev, "Hash collision in alias creation for UUID %pUl\n",
-> +					    uuid);
-> +			goto mdev_fail;
-> +		}
->  	}
->  
->  	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
+Same comment as per previous version.
 
-Any reason not to merge this into the first patch?
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
