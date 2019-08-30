@@ -2,150 +2,133 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD65C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BD1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9292087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsO5zQPF"
+	by mail.kernel.org (Postfix) with ESMTP id 5C71323717
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567201839;
+	bh=BMFO/ja6VS575JdKNAgPGs67fG/E1rzTU5Hcuyhlp3Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fEKpABp+nc6tSN3wY9wC1FeuI8NVg6PhsV08qmyq3gPj+zjgxOK7zibLAVbnL6sx5
+	 j2I20OyPOcYXNKMUbr78PnRTdGNO59YvN6OHs9L+RQRzJT0qeQpKurrP1xmO1iPmPf
+	 LUPXA0Z/AlspW97qWRKfd26W2L7U6mlGHaGr6Djg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfH3VsS (ORCPT
+        id S1728208AbfH3Vui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:48:18 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44692 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfH3VsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:48:04 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i78so6050376qke.11
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 14:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sVV2lnPwOeX0GLUaJ7vmcH2fqnxehztPL1uAZs7p67k=;
-        b=UsO5zQPFVoEncEhyBWusu7AbBJG0hM5eKksQ5djE5aKLAhKfy7+vWv2eCIxIheWe3I
-         s4QoGnOPidtTbwF1cL+W2bC7g/EGoeZJQxaAC+s3GEDlyaRKlsGDlVSBJYIaq1niVQhQ
-         005UqMPzL1TC+r5CuMTb0fmifJnw1dTLm5D3LgVJyP8d+TwbJP5kdpckG27JOWVRT66/
-         zfHbu3nF3zsunx/nW8xSNq0yUzNn3zzrO4rZKKyCIKi1AAq9G5QZg908kuHy4E7iByUT
-         AhOAd8mhX2UY6GbJ4DhDaNUEsuMejaZGeXkCGSiE4cpxVXMJY2jV8NUdq5ni/+QogGMv
-         ONoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sVV2lnPwOeX0GLUaJ7vmcH2fqnxehztPL1uAZs7p67k=;
-        b=IW7q1jwJ9xJpu0OUEurH6TL0VpJE4B3qV3s4VheL+AsopjEya7K209g4kKEE29fKHD
-         k71du76QhxKRway/M5W9JCVIuz/fC/QwdR70laUKmu3deuFVKUOb6vtzw9IrA/9Mlmx1
-         bCVE6bkkOiK8fo+3IIghQLHrT+YRWQbNUUd3hIB/yQVz9aH/9CEsExwr3RTXiVgE+R4x
-         XCuiD6dHJVaXv2vErsfxo1dvU1m4e3kMksYwbcrR1aQJTtNfwk0lzUFcxKVp9vNOTR9o
-         U6pBZbDbsLov/anS5xy1GvBkEpfiUU3mqPqu9Ns35dTIQM6sPV0Udh6U+2qujNXHjiWc
-         LUJQ==
-X-Gm-Message-State: APjAAAUFpHAdv4ghE0X5GZDHjAiTk9rjg1ID1yhkwtL0RcDL+hlbpwBg
-        e7zMeakv34zXdaBup88eZg==
-X-Google-Smtp-Source: APXvYqy67RFjdYEffeMRZhf/gnFZYzoLg8yOTGwCBTYZfKG1V4FwmMif6ic04AMJsnI2yqKwghwViQ==
-X-Received: by 2002:a05:620a:126c:: with SMTP id b12mr18299361qkl.177.1567201683411;
-        Fri, 30 Aug 2019 14:48:03 -0700 (PDT)
-Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id a4sm4857834qtb.17.2019.08.30.14.48.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 14:48:02 -0700 (PDT)
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Baoquan He <bhe@redhat.com>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] x86/boot: Get the max address from SRAT
-Date:   Fri, 30 Aug 2019 17:47:05 -0400
-Message-Id: <20190830214707.1201-4-msys.mizuma@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190830214707.1201-1-msys.mizuma@gmail.com>
-References: <20190830214707.1201-1-msys.mizuma@gmail.com>
+        Fri, 30 Aug 2019 17:50:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728111AbfH3Vui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 17:50:38 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D7623777;
+        Fri, 30 Aug 2019 21:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567201836;
+        bh=BMFO/ja6VS575JdKNAgPGs67fG/E1rzTU5Hcuyhlp3Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Xr9EVH03o73fNeuckzt6dLa3FfxpH2GW0Qn7velEm+IuPIc7/1LrPkZz48VRLey21
+         PJmaWr/pvtrKOdFuSti/pogGgcUyo+BEHaQUmy7VEFRuPQjhyb70rv7DEtXD+6mq1k
+         nuFl+OxgnCkudyUoGKmDHFuuRQsxrnRNbDQDa+BQ=
+Received: by mail-qk1-f172.google.com with SMTP id i78so6055249qke.11;
+        Fri, 30 Aug 2019 14:50:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAWjX9IRdrCZjLH1YCiB/Y90Gk4SGSkWbojJ6QAh9J2obcbbIcej
+        RlYZZvSsF2txnTAHMPdBe666KR0yjBguwvtpNw==
+X-Google-Smtp-Source: APXvYqw1u/Fyzf4M/pGE0WKEgY1r+h6iNzEwpmsmQCOY+XNy4hoICxOp5eBbsmTiZ2KtNobLJuNgVEJMuuTQythKs2k=
+X-Received: by 2002:a37:682:: with SMTP id 124mr17209455qkg.393.1567201835797;
+ Fri, 30 Aug 2019 14:50:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190805143911.12185-1-hhhawa@amazon.com> <20190805143911.12185-2-hhhawa@amazon.com>
+ <20190821191704.GA32425@bogus> <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
+ <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com> <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
+In-Reply-To: <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 30 Aug 2019 16:50:24 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
+Message-ID: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
+To:     James Morse <james.morse@arm.com>
+Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        Talel Shenhar <talel@amazon.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+On Fri, Aug 30, 2019 at 7:45 AM James Morse <james.morse@arm.com> wrote:
+>
+> Hi guys,
+>
+> On 27/08/2019 14:49, Rob Herring wrote:
+> > On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
+> >> On 8/21/2019 10:17 PM, Rob Herring wrote:
+> >>> Why is this even in DT? AFAICT, this is all just CortexA57 core features
+> >>> (i.e. nothing Amazon specific). The core type and the ECC capabilities
+> >>> are discoverable.
+> >>
+> >> Added to the DT in order to easily enable/disable the driver.
+> >
+> > That alone is not reason enough to put it in DT. From a DT
+> > perspective, I have no idea what the whims of a OS maintainer are
+> > regarding whether they want all this to be 1 driver or 2 drivers.
+> > (IMO, it should be 1 as this is ECC for an A57. For a core and memory
+> > controller, then 2 seems appropriate.)
+> >
+> >> You are
+> >> correct that they are CortexA57 core features and nothing Amazon
+> >> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
+> >> cortex revisions (e.g. A57) the register bitmap may change. Because of
+> >> that we added an Amazon compatible which corresponds to the specific
+> >> core we are using.
+>
+> I think its that the instruction encoding is in the imp-def space that is important.
+>
+> CPU-implementers can add whatever registers they find useful here. A57 and A72 both
+> implemented some ECC registers here. (They are not guaranteed to be the same, but I can't
+> find any differences).
 
-Get the max address from SRAT and write it into boot_params->max_addr.
+Two cores potentially being the same only furthers my argument that
+this shouldn't be an Amazon driver.
 
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
----
- arch/x86/boot/compressed/acpi.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+> We need some information from DT because the TRM doesn't say what happens when you read
+> from these registers on an A57 that doesn't have the 'optional ECC protection'. It could
+> take an exception due to an unimplemented system register.
 
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 908a1bfab..ba2bc5ab9 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -362,16 +362,24 @@ static unsigned long get_acpi_srat_table(void)
- 	return 0;
- }
- 
--static void subtable_parse(struct acpi_subtable_header *sub_table, int *num)
-+static void subtable_parse(struct acpi_subtable_header *sub_table, int *num,
-+		unsigned long *max_addr)
- {
- 	struct acpi_srat_mem_affinity *ma;
-+	unsigned long addr;
- 
- 	ma = (struct acpi_srat_mem_affinity *)sub_table;
- 
--	if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
--		immovable_mem[*num].start = ma->base_address;
--		immovable_mem[*num].size = ma->length;
--		(*num)++;
-+	if (ma->length) {
-+		if (ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) {
-+			addr = ma->base_address + ma->length;
-+			if (addr > *max_addr)
-+				*max_addr = addr;
-+		} else {
-+			immovable_mem[*num].start = ma->base_address;
-+			immovable_mem[*num].size = ma->length;
-+			(*num)++;
-+		}
- 	}
- }
- 
-@@ -391,6 +399,7 @@ int count_immovable_mem_regions(void)
- 	struct acpi_subtable_header *sub_table;
- 	struct acpi_table_header *table_header;
- 	char arg[MAX_ACPI_ARG_LENGTH];
-+	unsigned long max_addr = 0;
- 	int num = 0;
- 
- 	if (cmdline_find_option("acpi", arg, sizeof(arg)) == 3 &&
-@@ -409,7 +418,7 @@ int count_immovable_mem_regions(void)
- 		sub_table = (struct acpi_subtable_header *)table;
- 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
- 
--			subtable_parse(sub_table, &num);
-+			subtable_parse(sub_table, &num, &max_addr);
- 
- 			if (num >= MAX_NUMNODES*2) {
- 				debug_putstr("Too many immovable memory regions, aborting.\n");
-@@ -418,6 +427,9 @@ int count_immovable_mem_regions(void)
- 		}
- 		table += sub_table->length;
- 	}
-+
-+	boot_params->max_addr = max_addr;
-+
- 	return num;
- }
- #endif /* CONFIG_RANDOMIZE_BASE && CONFIG_MEMORY_HOTREMOVE */
--- 
-2.18.1
+My read of the TRM is that L2 ECC is always there and L1 ECC/parity is
+optional. Furthermore, bit 22 of L2CTRL_EL1 indicates if L1 ECC/parity
+is supported or not and there's other non-ECC stuff like cache RAM
+timing values in that register.
 
+> The imp-def instruction space may also be trapped by a higher exception level. KVM does
+> this, and emulates these registers as if they were all undefined.
+
+So KVM provides a semi-CortexA57? Code that runs on real h/w won't as a guest.
+
+However, if we do need DT to indicate ECC support in a core or not,
+then we already have an A57 node and should put that info there.
+
+Rob
