@@ -2,131 +2,123 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F391C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEA9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C9721721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE9A21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567144175;
+	bh=yYODkBTXKNyWYokAf9LiJ+mP/dtDhNaR7mR+7vs2ov8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j9Nbs+tALcHj1tGBx4YmVjcERMBTXdDhT3GSv8tXaU2VBbzU4fEDBQeXrjHKwzauD
+	 w01Suf42vZP86AqBn6otsbWw95VuVeJp2L0Z87jfZUakYdioe/OP7xvO6pjhDiMa9l
+	 gEbS2EqXZF/gN+cykg/JsBwHQyPDlwb9HacgkSIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfH3FsN convert rfc822-to-8bit (ORCPT
+        id S1727386AbfH3Ftf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:48:13 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42244 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfH3FsM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:48:12 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E83A528D773;
-        Fri, 30 Aug 2019 06:48:09 +0100 (BST)
-Date:   Fri, 30 Aug 2019 07:48:06 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        paul.kocialkowski@bootlin.com, mripard@kernel.org,
-        pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        acourbot@chromium.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
-Message-ID: <20190830074806.78a2b8b4@collabora.com>
-In-Reply-To: <3132748.mYbjOY1tKM@jernej-laptop>
-References: <20190822194500.2071-1-jernej.skrabec@siol.net>
-        <20190822194500.2071-6-jernej.skrabec@siol.net>
-        <20190826202831.311c7c20@collabora.com>
-        <3132748.mYbjOY1tKM@jernej-laptop>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 30 Aug 2019 01:49:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54484 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726005AbfH3Ftf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 01:49:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 65AC2B671;
+        Fri, 30 Aug 2019 05:49:33 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 07:49:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol: fix percpu vmstats and vmevents flush
+Message-ID: <20190830054931.GN28313@dhcp22.suse.cz>
+References: <20190829203110.129263-1-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829203110.129263-1-shakeelb@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 21:04:28 +0200
-Jernej Škrabec <jernej.skrabec@siol.net> wrote:
-
-> Dne ponedeljek, 26. avgust 2019 ob 20:28:31 CEST je Boris Brezillon 
-> napisal(a):
-> > Hi Jernej,
-> > 
-> > On Thu, 22 Aug 2019 21:44:57 +0200
-> > 
-> > Jernej Skrabec <jernej.skrabec@siol.net> wrote:  
-> > > When codec supports multiple slices in one frame, VPU has to know when
-> > > first slice of each frame is being processed, presumably to correctly
-> > > clear/set data in auxiliary buffers.
-> > > 
-> > > Add first_slice field to cedrus_run structure and set it according to
-> > > timestamps of capture and output buffers. If timestamps are different,
-> > > it's first slice and viceversa.
-> > > 
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > > 
-> > >  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
-> > >  2 files changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
-> > > 2f017a651848..32cb38e541c6 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > > @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
-> > > 
-> > >  struct cedrus_run {
-> > >  
-> > >  	struct vb2_v4l2_buffer	*src;
-> > >  	struct vb2_v4l2_buffer	*dst;
-> > > 
-> > > +	bool first_slice;
-> > > 
-> > >  	union {
-> > >  	
-> > >  		struct cedrus_h264_run	h264;
-> > > 
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
-> > > 56ca4c9ad01c..d7b54accfe83 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > > @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
-> > > 
-> > >  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-> > >  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > > 
-> > > +	run.first_slice =
-> > > +		run.src->vb2_buf.timestamp != run.dst-  
-> >vb2_buf.timestamp;
-> > 
-> > Can't we use slice->first_mb_in_slice to determine if a slice is the
-> > first? I'd expect ->first_mb_in_slice to be 0 (unless we decide to
-> > support ASO).  
+On Thu 29-08-19 13:31:10, Shakeel Butt wrote:
+> Instead of using raw_cpu_read() use per_cpu() to read the actual data of
+> the corresponding cpu otherwise we will be reading the data of the
+> current cpu for the number of online CPUs.
 > 
-> I looked in all VPU documentation available to me (which isn't much) and there 
-> is no indication if ASO is supported or not. Do you have any sample video with 
-> out-of-order slices? It's my understanding that this is uncommon.
+> Fixes: bb65f89b7d3d ("mm: memcontrol: flush percpu vmevents before releasing memcg")
+> Fixes: c350a99ea2b1 ("mm: memcontrol: flush percpu vmstats before releasing memcg")
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: <stable@vger.kernel.org>
 
-I'm not entirely sure, but my understanding was that it might be used
-when streaming over network where some packets might be lost and
-re-emitted later on.
+Ups, missed that when reviewing. Sorry about that.
 
-> If it's 
-> supported, I would leave code as-is.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-I remember seeing the ASO acronym mentioned in the hantro G1 spec, but
-at the same time we're doing frame-based decoding, so I guess the HW
-block expects slices to be ordered in that case. Honestly I don't know,
-so let's keep the code as-is.
+> ---
+> 
+> Note: The buggy patches were marked for stable therefore adding Cc to
+> stable.
+> 
+>  mm/memcontrol.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 26e2999af608..f4e60ee8b845 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -3271,7 +3271,7 @@ static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+>  
+>  	for_each_online_cpu(cpu)
+>  		for (i = 0; i < MEMCG_NR_STAT; i++)
+> -			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
+> +			stat[i] += per_cpu(memcg->vmstats_percpu->stat[i], cpu);
+>  
+>  	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+>  		for (i = 0; i < MEMCG_NR_STAT; i++)
+> @@ -3286,8 +3286,8 @@ static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+>  
+>  		for_each_online_cpu(cpu)
+>  			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+> -				stat[i] += raw_cpu_read(
+> -					pn->lruvec_stat_cpu->count[i]);
+> +				stat[i] += per_cpu(
+> +					pn->lruvec_stat_cpu->count[i], cpu);
+>  
+>  		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
+>  			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+> @@ -3306,8 +3306,8 @@ static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
+>  
+>  	for_each_online_cpu(cpu)
+>  		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
+> -			events[i] += raw_cpu_read(
+> -				memcg->vmstats_percpu->events[i]);
+> +			events[i] += per_cpu(memcg->vmstats_percpu->events[i],
+> +					     cpu);
+>  
+>  	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+>  		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
