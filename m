@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BC4C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32414C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4607E208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03277208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfH3IXE (ORCPT
+        id S1728246AbfH3IXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:23:04 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:23231 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727866AbfH3IXA (ORCPT
+        Fri, 30 Aug 2019 04:23:07 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:64130 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726492AbfH3IXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:23:00 -0400
-X-UUID: af66471736b24f7dadcd80d44d8a6198-20190830
-X-UUID: af66471736b24f7dadcd80d44d8a6198-20190830
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 30 Aug 2019 04:23:03 -0400
+X-UUID: 47040ba214544a84a9bfdca679aedb44-20190830
+X-UUID: 47040ba214544a84a9bfdca679aedb44-20190830
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <min.guo@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1866747388; Fri, 30 Aug 2019 16:23:00 +0800
+        with ESMTP id 1460728011; Fri, 30 Aug 2019 16:23:00 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 16:22:58 +0800
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 16:22:56 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 16:22:57 +0800
+ Transport; Fri, 30 Aug 2019 16:22:55 +0800
 From:   <min.guo@mediatek.com>
 To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -44,15 +44,15 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
         <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>
-Subject: [PATCH v7 4/6] usb: musb: Add noirq type of dma create interface
-Date:   Fri, 30 Aug 2019 16:20:24 +0800
-Message-ID: <20190830082026.30401-5-min.guo@mediatek.com>
+Subject: [PATCH v7 3/6] usb: musb: Add get/set toggle hooks
+Date:   Fri, 30 Aug 2019 16:20:23 +0800
+Message-ID: <20190830082026.30401-4-min.guo@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190830082026.30401-1-min.guo@mediatek.com>
 References: <20190830082026.30401-1-min.guo@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: C532C9635AC80C52974C181A136781EABC7AA483B61E6BDAC553564E7C6E68DE2000:8
+X-TM-SNTS-SMTP: 56356790E7FEBEB21DD6028D7E2AAE431EAAAF03992392C5EC57024D6348BDC02000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,9 +61,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Min Guo <min.guo@mediatek.com>
 
-Add noirq type of dma create interface for platform which do not
-have dedicated DMA interrupt line, move musbhsdma macro definition
-to musb_dma.h
+Add get/set toggle hooks in struct musb_io and struct musb_platform_ops
+for special platform; remove function musb_save_toggle, use the set/get
+callback to handle toggle.
 
 Signed-off-by: Min Guo <min.guo@mediatek.com>
 ---
@@ -78,136 +78,227 @@ changes in v5:
 
 new patch based on v4:
 ---
- drivers/usb/musb/musb_dma.h  |  9 ++++++++
- drivers/usb/musb/musbhsdma.c | 54 ++++++++++++++++++++++++++++++--------------
- 2 files changed, 46 insertions(+), 17 deletions(-)
+ drivers/usb/musb/musb_core.c | 42 ++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/musb/musb_core.h |  5 +++++
+ drivers/usb/musb/musb_host.c | 46 ++++++++++----------------------------------
+ drivers/usb/musb/musb_io.h   |  4 ++++
+ 4 files changed, 61 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/usb/musb/musb_dma.h b/drivers/usb/musb/musb_dma.h
-index 8f60271..05103ea 100644
---- a/drivers/usb/musb/musb_dma.h
-+++ b/drivers/usb/musb/musb_dma.h
-@@ -35,6 +35,12 @@
-  *    whether shared with the Inventra core or separate.
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 9f5a481..491d361 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -274,6 +274,38 @@ static void musb_default_writew(void __iomem *addr, unsigned offset, u16 data)
+ 	__raw_writew(data, addr + offset);
+ }
+ 
++static u16 musb_default_get_toggle(struct musb_qh *qh, int is_out)
++{
++	void __iomem *epio = qh->hw_ep->regs;
++	u16 csr;
++
++	if (is_out)
++		csr = musb_readw(epio, MUSB_TXCSR) & MUSB_TXCSR_H_DATATOGGLE;
++	else
++		csr = musb_readw(epio, MUSB_RXCSR) & MUSB_RXCSR_H_DATATOGGLE;
++
++	return csr;
++}
++
++static u16 musb_default_set_toggle(struct musb_qh *qh, int is_out,
++				   struct urb *urb)
++{
++	u16 csr;
++	u16 toggle;
++
++	toggle = usb_gettoggle(urb->dev, qh->epnum, is_out);
++
++	if (is_out)
++		csr = toggle ? (MUSB_TXCSR_H_WR_DATATOGGLE
++				| MUSB_TXCSR_H_DATATOGGLE)
++				: MUSB_TXCSR_CLRDATATOG;
++	else
++		csr = toggle ? (MUSB_RXCSR_H_WR_DATATOGGLE
++				| MUSB_RXCSR_H_DATATOGGLE) : 0;
++
++	return csr;
++}
++
+ /*
+  * Load an endpoint's FIFO
   */
+@@ -2278,6 +2310,16 @@ static void musb_deassert_reset(struct work_struct *work)
+ 	else
+ 		musb->io.write_fifo = musb_default_write_fifo;
  
-+#define MUSB_HSDMA_BASE		0x200
-+#define MUSB_HSDMA_INTR		(MUSB_HSDMA_BASE + 0)
-+#define MUSB_HSDMA_CONTROL		0x4
-+#define MUSB_HSDMA_ADDRESS		0x8
-+#define MUSB_HSDMA_COUNT		0xc
++	if (musb->ops->get_toggle)
++		musb->io.get_toggle = musb->ops->get_toggle;
++	else
++		musb->io.get_toggle = musb_default_get_toggle;
 +
- #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
++	if (musb->ops->set_toggle)
++		musb->io.set_toggle = musb->ops->set_toggle;
++	else
++		musb->io.set_toggle = musb_default_set_toggle;
++
+ 	if (!musb->xceiv->io_ops) {
+ 		musb->xceiv->io_dev = musb->controller;
+ 		musb->xceiv->io_priv = musb->mregs;
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 04203b7..9f5a69c 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -27,6 +27,7 @@
+ struct musb;
+ struct musb_hw_ep;
+ struct musb_ep;
++struct musb_qh;
  
- #ifdef CONFIG_MUSB_PIO_ONLY
-@@ -191,6 +197,9 @@ static inline void musb_dma_controller_destroy(struct dma_controller *d) { }
- extern struct dma_controller *
- musbhs_dma_controller_create(struct musb *musb, void __iomem *base);
- extern void musbhs_dma_controller_destroy(struct dma_controller *c);
-+extern struct dma_controller *
-+musbhs_dma_controller_create_noirq(struct musb *musb, void __iomem *base);
-+extern irqreturn_t dma_controller_irq(int irq, void *private_data);
+ /* Helper defines for struct musb->hwvers */
+ #define MUSB_HWVERS_MAJOR(x)	((x >> 10) & 0x1f)
+@@ -123,6 +124,8 @@ enum musb_g_ep0_state {
+  * @writew:	write 16 bits
+  * @read_fifo:	reads the fifo
+  * @write_fifo:	writes to fifo
++ * @get_toggle:	platform specific get toggle function
++ * @set_toggle:	platform specific set toggle function
+  * @dma_init:	platform specific dma init function
+  * @dma_exit:	platform specific dma exit function
+  * @init:	turns on clocks, sets up platform-specific registers, etc
+@@ -167,6 +170,8 @@ struct musb_platform_ops {
+ 	void	(*writew)(void __iomem *addr, unsigned offset, u16 data);
+ 	void	(*read_fifo)(struct musb_hw_ep *hw_ep, u16 len, u8 *buf);
+ 	void	(*write_fifo)(struct musb_hw_ep *hw_ep, u16 len, const u8 *buf);
++	u16	(*get_toggle)(struct musb_qh *qh, int is_out);
++	u16	(*set_toggle)(struct musb_qh *qh, int is_out, struct urb *urb);
+ 	struct dma_controller *
+ 		(*dma_init) (struct musb *musb, void __iomem *base);
+ 	void	(*dma_exit)(struct dma_controller *c);
+diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
+index eb308ec..ca866bc 100644
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -286,26 +286,6 @@ static void musb_giveback(struct musb *musb, struct urb *urb, int status)
+ 	spin_lock(&musb->lock);
+ }
  
- extern struct dma_controller *
- tusb_dma_controller_create(struct musb *musb, void __iomem *base);
-diff --git a/drivers/usb/musb/musbhsdma.c b/drivers/usb/musb/musbhsdma.c
-index 5fc6825..d549c0b 100644
---- a/drivers/usb/musb/musbhsdma.c
-+++ b/drivers/usb/musb/musbhsdma.c
-@@ -10,12 +10,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include "musb_core.h"
+-/* For bulk/interrupt endpoints only */
+-static inline void musb_save_toggle(struct musb_qh *qh, int is_in,
+-				    struct urb *urb)
+-{
+-	void __iomem		*epio = qh->hw_ep->regs;
+-	u16			csr;
 -
--#define MUSB_HSDMA_BASE		0x200
--#define MUSB_HSDMA_INTR		(MUSB_HSDMA_BASE + 0)
--#define MUSB_HSDMA_CONTROL		0x4
--#define MUSB_HSDMA_ADDRESS		0x8
--#define MUSB_HSDMA_COUNT		0xc
-+#include "musb_dma.h"
- 
- #define MUSB_HSDMA_CHANNEL_OFFSET(_bchannel, _offset)		\
- 		(MUSB_HSDMA_BASE + (_bchannel << 4) + _offset)
-@@ -268,7 +263,7 @@ static int dma_channel_abort(struct dma_channel *channel)
- 	return 0;
- }
- 
--static irqreturn_t dma_controller_irq(int irq, void *private_data)
-+irqreturn_t dma_controller_irq(int irq, void *private_data)
- {
- 	struct musb_dma_controller *controller = private_data;
- 	struct musb *musb = controller->private_data;
-@@ -383,6 +378,7 @@ static irqreturn_t dma_controller_irq(int irq, void *private_data)
- 	spin_unlock_irqrestore(&musb->lock, flags);
- 	return retval;
- }
-+EXPORT_SYMBOL_GPL(dma_controller_irq);
- 
- void musbhs_dma_controller_destroy(struct dma_controller *c)
- {
-@@ -398,18 +394,10 @@ void musbhs_dma_controller_destroy(struct dma_controller *c)
- }
- EXPORT_SYMBOL_GPL(musbhs_dma_controller_destroy);
- 
--struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
--						    void __iomem *base)
-+static struct musb_dma_controller *
-+dma_controller_alloc(struct musb *musb, void __iomem *base)
- {
- 	struct musb_dma_controller *controller;
--	struct device *dev = musb->controller;
--	struct platform_device *pdev = to_platform_device(dev);
--	int irq = platform_get_irq_byname(pdev, "dma");
+-	/*
+-	 * FIXME: the current Mentor DMA code seems to have
+-	 * problems getting toggle correct.
+-	 */
 -
--	if (irq <= 0) {
--		dev_err(dev, "No DMA interrupt line!\n");
--		return NULL;
--	}
+-	if (is_in)
+-		csr = musb_readw(epio, MUSB_RXCSR) & MUSB_RXCSR_H_DATATOGGLE;
+-	else
+-		csr = musb_readw(epio, MUSB_TXCSR) & MUSB_TXCSR_H_DATATOGGLE;
+-
+-	usb_settoggle(urb->dev, qh->epnum, !is_in, csr ? 1 : 0);
+-}
+-
+ /*
+  * Advance this hardware endpoint's queue, completing the specified URB and
+  * advancing to either the next URB queued to that qh, or else invalidating
+@@ -320,6 +300,7 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
+ 	struct musb_hw_ep	*ep = qh->hw_ep;
+ 	int			ready = qh->is_ready;
+ 	int			status;
++	u16			toggle;
  
- 	controller = kzalloc(sizeof(*controller), GFP_KERNEL);
- 	if (!controller)
-@@ -423,6 +411,25 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
- 	controller->controller.channel_release = dma_channel_release;
- 	controller->controller.channel_program = dma_channel_program;
- 	controller->controller.channel_abort = dma_channel_abort;
-+	return controller;
-+}
-+
-+struct dma_controller *
-+musbhs_dma_controller_create(struct musb *musb, void __iomem *base)
-+{
-+	struct musb_dma_controller *controller;
-+	struct device *dev = musb->controller;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	int irq = platform_get_irq_byname(pdev, "dma");
-+
-+	if (irq <= 0) {
-+		dev_err(dev, "No DMA interrupt line!\n");
-+		return NULL;
-+	}
-+
-+	controller = dma_controller_alloc(musb, base);
-+	if (!controller)
-+		return NULL;
+ 	status = (urb->status == -EINPROGRESS) ? 0 : urb->status;
  
- 	if (request_irq(irq, dma_controller_irq, 0,
- 			dev_name(musb->controller), &controller->controller)) {
-@@ -437,3 +444,16 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
- 	return &controller->controller;
- }
- EXPORT_SYMBOL_GPL(musbhs_dma_controller_create);
-+
-+struct dma_controller *
-+musbhs_dma_controller_create_noirq(struct musb *musb, void __iomem *base)
-+{
-+	struct musb_dma_controller *controller;
-+
-+	controller = dma_controller_alloc(musb, base);
-+	if (!controller)
-+		return NULL;
-+
-+	return &controller->controller;
-+}
-+EXPORT_SYMBOL_GPL(musbhs_dma_controller_create_noirq);
+@@ -327,7 +308,8 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
+ 	switch (qh->type) {
+ 	case USB_ENDPOINT_XFER_BULK:
+ 	case USB_ENDPOINT_XFER_INT:
+-		musb_save_toggle(qh, is_in, urb);
++		toggle = musb->io.get_toggle(qh, !is_in);
++		usb_settoggle(urb->dev, qh->epnum, !is_in, toggle ? 1 : 0);
+ 		break;
+ 	case USB_ENDPOINT_XFER_ISOC:
+ 		if (status == 0 && urb->error_count)
+@@ -772,13 +754,8 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 					);
+ 			csr |= MUSB_TXCSR_MODE;
+ 
+-			if (!hw_ep->tx_double_buffered) {
+-				if (usb_gettoggle(urb->dev, qh->epnum, 1))
+-					csr |= MUSB_TXCSR_H_WR_DATATOGGLE
+-						| MUSB_TXCSR_H_DATATOGGLE;
+-				else
+-					csr |= MUSB_TXCSR_CLRDATATOG;
+-			}
++			if (!hw_ep->tx_double_buffered)
++				csr |= musb->io.set_toggle(qh, is_out, urb);
+ 
+ 			musb_writew(epio, MUSB_TXCSR, csr);
+ 			/* REVISIT may need to clear FLUSHFIFO ... */
+@@ -860,17 +837,12 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 
+ 	/* IN/receive */
+ 	} else {
+-		u16	csr;
++		u16 csr = 0;
+ 
+ 		if (hw_ep->rx_reinit) {
+ 			musb_rx_reinit(musb, qh, epnum);
++			csr |= musb->io.set_toggle(qh, is_out, urb);
+ 
+-			/* init new state: toggle and NYET, maybe DMA later */
+-			if (usb_gettoggle(urb->dev, qh->epnum, 0))
+-				csr = MUSB_RXCSR_H_WR_DATATOGGLE
+-					| MUSB_RXCSR_H_DATATOGGLE;
+-			else
+-				csr = 0;
+ 			if (qh->type == USB_ENDPOINT_XFER_INT)
+ 				csr |= MUSB_RXCSR_DISNYET;
+ 
+@@ -933,6 +905,7 @@ static void musb_bulk_nak_timeout(struct musb *musb, struct musb_hw_ep *ep,
+ 	void __iomem		*epio = ep->regs;
+ 	struct musb_qh		*cur_qh, *next_qh;
+ 	u16			rx_csr, tx_csr;
++	u16			toggle;
+ 
+ 	musb_ep_select(mbase, ep->epnum);
+ 	if (is_in) {
+@@ -970,7 +943,8 @@ static void musb_bulk_nak_timeout(struct musb *musb, struct musb_hw_ep *ep,
+ 			urb->actual_length += dma->actual_len;
+ 			dma->actual_len = 0L;
+ 		}
+-		musb_save_toggle(cur_qh, is_in, urb);
++		toggle = musb->io.get_toggle(cur_qh, !is_in);
++		usb_settoggle(urb->dev, cur_qh->epnum, !is_in, toggle ? 1 : 0);
+ 
+ 		if (is_in) {
+ 			/* move cur_qh to end of queue */
+diff --git a/drivers/usb/musb/musb_io.h b/drivers/usb/musb/musb_io.h
+index 8058a58..8179334 100644
+--- a/drivers/usb/musb/musb_io.h
++++ b/drivers/usb/musb/musb_io.h
+@@ -22,6 +22,8 @@
+  * @read_fifo:	platform specific function to read fifo
+  * @write_fifo:	platform specific function to write fifo
+  * @busctl_offset: platform specific function to get busctl offset
++ * @get_toggle: platform specific function to get toggle
++ * @set_toggle: platform specific function to set toggle
+  */
+ struct musb_io {
+ 	u32	(*ep_offset)(u8 epnum, u16 offset);
+@@ -30,6 +32,8 @@ struct musb_io {
+ 	void	(*read_fifo)(struct musb_hw_ep *hw_ep, u16 len, u8 *buf);
+ 	void	(*write_fifo)(struct musb_hw_ep *hw_ep, u16 len, const u8 *buf);
+ 	u32	(*busctl_offset)(u8 epnum, u16 offset);
++	u16	(*get_toggle)(struct musb_qh *qh, int is_out);
++	u16	(*set_toggle)(struct musb_qh *qh, int is_out, struct urb *urb);
+ };
+ 
+ /* Do not add new entries here, add them the struct musb_io instead */
 -- 
 1.9.1
 
