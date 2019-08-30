@@ -2,110 +2,176 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB46C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C261C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE6122CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567144532;
-	bh=6fqFyHm+bf3c7+oVWB2+lphHlrvBdHM1nDoyepO9mX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1KQ4g1pNU+enSyVOso7k15q9PHuCEMILbX5LLrvUAh2Wytg6JE1tN49cFqaza5fFG
-	 h+XjERccB6S04cut+DhpsQ159C+LZm+CTqpEfUicxeDME+571lYeHdqTw3y4dW1ouj
-	 iwgBmFrgdydeKYK3UCSYfeeDMmmDhx3sP6W+Cfgo=
+	by mail.kernel.org (Postfix) with ESMTP id 730CF208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfH3Fzb (ORCPT
+        id S1727639AbfH3F6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:55:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56028 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725902AbfH3Fzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:55:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA784B613;
-        Fri, 30 Aug 2019 05:55:29 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 07:55:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     will@kernel.org, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, adobriyan@gmail.com, cai@lca.pw,
-        robin.murphy@arm.com, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH] arm64: numa: check the node id before accessing
- node_to_cpumask_map
-Message-ID: <20190830055528.GO28313@dhcp22.suse.cz>
-References: <1567131991-189761-1-git-send-email-linyunsheng@huawei.com>
+        Fri, 30 Aug 2019 01:58:37 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:17947 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726510AbfH3F6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 01:58:37 -0400
+X-UUID: 42b35fa41ef44a98b6033bdcc34a5599-20190830
+X-UUID: 42b35fa41ef44a98b6033bdcc34a5599-20190830
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1923270620; Fri, 30 Aug 2019 13:58:36 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 13:58:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 13:58:33 +0800
+Message-ID: <1567144708.5942.14.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 30 Aug 2019 13:58:28 +0800
+In-Reply-To: <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567131991-189761-1-git-send-email-linyunsheng@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: BFED0D0927310008AFF9ED5326E56B8F7DFF664A50F74D44F2BA6301A1C6B1482000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 30-08-19 10:26:31, Yunsheng Lin wrote:
-> Some buggy bios may not set the device' numa id, and dev_to_node
-> will return -1, which may cause global-out-of-bounds error
-> detected by KASAN.
+Hi, Yongqiang:
 
-Why should we workaround a buggy bios like that? Is it so widespread and
-no BIOS update available? Also, why is this arm64 specific?
-
-> This patch changes cpumask_of_node to return cpu_none_mask if the
-> node is not valid, and sync the cpumask_of_node between the
-> cpumask_of_node function in numa.h and numa.c.
-
-Why?
-
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
->  arch/arm64/include/asm/numa.h | 6 ++++++
->  arch/arm64/mm/numa.c          | 2 +-
->  2 files changed, 7 insertions(+), 1 deletion(-)
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-> index 626ad01..da891ed 100644
-> --- a/arch/arm64/include/asm/numa.h
-> +++ b/arch/arm64/include/asm/numa.h
-> @@ -25,6 +25,12 @@ const struct cpumask *cpumask_of_node(int node);
->  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->  static inline const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node >= nr_node_ids || node < 0)
-> +		return cpu_none_mask;
-> +
-> +	if (!node_to_cpumask_map[node])
-> +		return cpu_online_mask;
-> +
->  	return node_to_cpumask_map[node];
->  }
->  #endif
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index 4f241cc..3846313 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -46,7 +46,7 @@ EXPORT_SYMBOL(node_to_cpumask_map);
->   */
->  const struct cpumask *cpumask_of_node(int node)
->  {
-> -	if (WARN_ON(node >= nr_node_ids))
-> +	if (WARN_ON(node >= nr_node_ids || node < 0))
->  		return cpu_none_mask;
+> This patch add ovl0/ovl_2l0 usecase
+> in ovl->ovl_2l0 direct link usecase:
+> 1. the crtc support layer number will 4+2
+> 2. ovl_2l0 background color input select ovl0 when crtc init
+> and disable it when crtc finish
+> 3. config ovl_2l0 layer, if crtc config layer number is
+> bigger than ovl0 support layers(max is 4)
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index c63ff2b..b55970a 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -270,6 +270,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
 >  
->  	if (WARN_ON(node_to_cpumask_map[node] == NULL))
-> -- 
-> 2.8.1
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
+> +		enum mtk_ddp_comp_id prev;
+> +
+> +		if (i > 0)
+> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
+> +		else
+> +			prev = DDP_COMPONENT_ID_MAX;
+> +
+> +		if (prev == DDP_COMPONENT_OVL0)
+> +			mtk_ddp_comp_bgclr_in_on(comp);
 
--- 
-Michal Hocko
-SUSE Labs
+Even though both OVL and OVL_2L implement this function, I think we
+could still call this function for OVL and OVL_2L, and in
+mtk_ovl_bgclr_in_on(), to judge it's OVL or OVL_2L.
+
+Regards,
+CK
+
+>  
+>  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
+>  		mtk_ddp_comp_start(comp);
+> @@ -279,9 +288,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
+>  		struct drm_plane *plane = &mtk_crtc->planes[i];
+>  		struct mtk_plane_state *plane_state;
+> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +		unsigned int local_layer;
+>  
+>  		plane_state = to_mtk_plane_state(plane->state);
+> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
+> +
+> +		if (i >= comp_layer_nr) {
+> +			comp = mtk_crtc->ddp_comp[1];
+> +			local_layer = i - comp_layer_nr;
+> +		} else
+> +			local_layer = i;
+> +		mtk_ddp_comp_layer_config(comp, local_layer,
+>  					  plane_state);
+>  	}
+>  
+> @@ -307,6 +325,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>  					   mtk_crtc->ddp_comp[i]->id);
+>  	mtk_disp_mutex_disable(mtk_crtc->mutex);
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
+>  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+>  					      mtk_crtc->mmsys_reg_data,
+>  					      mtk_crtc->ddp_comp[i]->id,
+> @@ -327,6 +346,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+>  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+>  	unsigned int i;
+> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +	unsigned int local_layer;
+>  
+>  	/*
+>  	 * TODO: instead of updating the registers here, we should prepare
+> @@ -349,7 +370,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  			plane_state = to_mtk_plane_state(plane->state);
+>  
+>  			if (plane_state->pending.config) {
+> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
+> +				if (i >= comp_layer_nr) {
+> +					comp = mtk_crtc->ddp_comp[1];
+> +					local_layer = i - comp_layer_nr;
+> +				} else
+> +					local_layer = i;
+> +
+> +				mtk_ddp_comp_layer_config(comp, local_layer,
+> +							  plane_state);
+>  				plane_state->pending.config = false;
+>  			}
+>  		}
+> @@ -572,6 +600,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  	}
+>  
+>  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
+> +	if (mtk_crtc->ddp_comp_nr > 1) {
+> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
+> +
+> +		if (comp->funcs->bgclr_in_on)
+> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
+> +	}
+>  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
+>  					sizeof(struct drm_plane),
+>  					GFP_KERNEL);
+
+
