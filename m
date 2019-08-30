@@ -2,71 +2,146 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4072C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A36FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9104A22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038FE21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Jt5sn3Q8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfH3Hc1 (ORCPT
+        id S1728192AbfH3HdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:32:27 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59796 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbfH3Hc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:32:27 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::642])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5B9951544FE29;
-        Fri, 30 Aug 2019 00:32:26 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 00:32:25 -0700 (PDT)
-Message-Id: <20190830.003225.292019185488425085.davem@davemloft.net>
-To:     jiri@resnulli.us
-Cc:     idosch@idosch.org, andrew@lunn.ch, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        allan.nielsen@microchip.com, ivecera@redhat.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to
- dev->promiscuity.
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190830072133.GP2312@nanopsycho>
-References: <20190830063624.GN2312@nanopsycho>
-        <20190830.001223.669650763835949848.davem@davemloft.net>
-        <20190830072133.GP2312@nanopsycho>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 30 Aug 2019 00:32:26 -0700 (PDT)
+        Fri, 30 Aug 2019 03:33:13 -0400
+Received: from mail-eopbgr730044.outbound.protection.outlook.com ([40.107.73.44]:39232
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726090AbfH3HdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:33:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IgeYY11z9elLs8LGO1Yg8leYoGbIcDEgpbjIP8olqC0BhhSpCXdKFuH9JwqfASCZO32g7Dsg0sy6upypYELe2qicEqYWyulMdAlRnZXQqaLUnAJeYuRooW0q0GNqcl6EZTTJl1e4rKF+/bejXF4VPUuopJ8IgV8eh9U4GafYsSc2STCV2MHUR8j7IDKdQhoUJtzoYmdoT+pW0i8duoZgSTsQqdqn74f0nSjDp++qErCyzo80chl9OwFRpWbcbowfU7yWsTx99fyRt2fo597LB0q22HevmdyzhcIa6rI1p+K9aYDBLdiCc8hyEB2V1gqadxpoh6NoHD7pNCpl9pp48A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4qepn83RcfoYsJmdKX4UFm7xEk7jtdzH5a7hShtLng=;
+ b=RkmLkiqLEMpj077fLrvEjEpn8DH5hWby+eZZRwqMnqoUePsw04DMZ+lVH5JGT+GQZesaSVsyI+shpXmuJrPz3cNiLgIUKp5HOtqmwGf3ErwTR/F7krBvV5DiZ7zbNzZ6IteCJWfP3xhIip/X7aOTC3CSXFP7WICyritIK6Ug1cAdmEpqvM88lWilbRqgTeB65vEDcMEshR8gxl5tUEGHioxFofy4F93xZT4kQ7P2/HjI9AZqtf6s9BzkMgwf8Hu174Za3Hfqjs4gBDHOeFSe2iO1u7lAbFjfkXsGUDGcR4z83sfaJcdZYZwi0rymmwultupSVFsGZpnBatWrsn84eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4qepn83RcfoYsJmdKX4UFm7xEk7jtdzH5a7hShtLng=;
+ b=Jt5sn3Q8+PF962G/QfoncghZE81f+3VV8JVJxvsufJxHIXoB34Io1CVUmXDjKtX/tCT1qvVAo6aJAhJcqvuo2QvVVfJpzh5P4Vbgm9bYVL28CHQ1ofXg7qC+sJsg7NkcoyOqY6s4MQDLhiGNQnxDWGe1CyxJzeriTTE0bM9vFbI=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB4871.namprd03.prod.outlook.com (20.179.93.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Fri, 30 Aug 2019 07:33:09 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::391b:4d0f:a377:41c]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::391b:4d0f:a377:41c%4]) with mapi id 15.20.2220.013; Fri, 30 Aug 2019
+ 07:33:09 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benson Gui <Benson.Gui@synaptics.com>
+Subject: [PATCH] media: rc-map: Sort rc map name MACROs
+Thread-Topic: [PATCH] media: rc-map: Sort rc map name MACROs
+Thread-Index: AQHVXwUr7nCzhAFWy0yQxn91HIokEQ==
+Date:   Fri, 30 Aug 2019 07:33:08 +0000
+Message-ID: <20190830152143.4ad42aeb@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR0101CA0029.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::15) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e8f7970e-5e88-4d8b-e281-08d72d1c4deb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4871;
+x-ms-traffictypediagnostic: BYAPR03MB4871:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR03MB48712C0EE246D975633D9DCBEDBD0@BYAPR03MB4871.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:206;
+x-forefront-prvs: 0145758B1D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(376002)(136003)(39850400004)(189003)(199004)(81156014)(71200400001)(71190400001)(53936002)(256004)(6486002)(6436002)(107886003)(4326008)(6916009)(2906002)(386003)(52116002)(6506007)(102836004)(6512007)(486006)(9686003)(476003)(316002)(8676002)(50226002)(14454004)(81166006)(7736002)(66476007)(305945005)(66066001)(8936002)(1076003)(3846002)(6116002)(99286004)(64756008)(186003)(86362001)(478600001)(66556008)(66946007)(25786009)(5660300002)(66446008)(54906003)(26005)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4871;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: byhAiTQiXjYXUaReU6X+PWz9iZ5jYBdC8SQbCj9Nw2ejvaEzfZfA6lNcp1v+rzanvSpKQWR1FRIdLpu13NMf2nYs8CHzzMXKk8eQjTlxvf3VOqgXuoJ+ENiCCxLzRmUvbVRQ6mK7pg0J5pm8DsEKj3iJvS9j/j+k3rUeyMY80M/WWqdkkXlDVjxPjAk3ao/oBOHdE/b5Ly6H/q8S4YAquDrm3SdtbaUdQVv0jbG4voLkevGLUKvNcIS+TizwhxyzGOgG17V4EhcBBJIxMXkdoLlctb7OT1B6ITJXqhy/gED2gL9X9o/9KKAAutIQ2JD7XHl6R2nXc7UYWSQwMV5J6ZgnPG9HNcu818unR0jRtg+lOR8Y+pe1ytbKCy/dp0Cw2DXwCzW+K+lYCNbNQli9YMm4nYit/NeTgN4Jqt5Dxtw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <78AE431B2941D14FAC38ACC7358EBE39@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8f7970e-5e88-4d8b-e281-08d72d1c4deb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 07:33:08.9821
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IBxLmL07WBwcatoLOKGQ5GBiKoOdqXO82lSwxLpnGAe4r11sC2ZYpjSUUy2uyCBU0dumkkMovL5u/tKxaifr0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@resnulli.us>
-Date: Fri, 30 Aug 2019 09:21:33 +0200
+Except RC_MAP_SU3000 and RC_MAP_HAUPPAUGE, others are alphabetically
+sorted. Sort names alphabetically.
 
-> Fri, Aug 30, 2019 at 09:12:23AM CEST, davem@davemloft.net wrote:
->>From: Jiri Pirko <jiri@resnulli.us>
->>Date: Fri, 30 Aug 2019 08:36:24 +0200
->>
->>> The promiscuity is a way to setup the rx filter. So promics == rx filter
->>> off. For normal nics, where there is no hw fwd datapath,
->>> this coincidentally means all received packets go to cpu.
->>
->>You cannot convince me that the HW datapath isn't a "rx filter" too, sorry.
-> 
-> If you look at it that way, then we have 2: rx_filter and hw_rx_filter.
-> The point is, those 2 are not one item, that is the point I'm trying to
-> make :/
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ include/media/rc-map.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-And you can turn both of them off when I ask for promiscuous mode, that's
-a detail of the device not a semantic issue.
+diff --git a/include/media/rc-map.h b/include/media/rc-map.h
+index bebd3c4c6338..af71b08be9f2 100644
+--- a/include/media/rc-map.h
++++ b/include/media/rc-map.h
+@@ -215,6 +215,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_GENIUS_TVGO_A11MCE        "rc-genius-tvgo-a11mce"
+ #define RC_MAP_GOTVIEW7135               "rc-gotview7135"
+ #define RC_MAP_HAUPPAUGE_NEW             "rc-hauppauge"
++#define RC_MAP_HAUPPAUGE                 "rc-hauppauge"
+ #define RC_MAP_HISI_POPLAR               "rc-hisi-poplar"
+ #define RC_MAP_HISI_TV_DEMO              "rc-hisi-tv-demo"
+ #define RC_MAP_IMON_MCE                  "rc-imon-mce"
+@@ -253,13 +254,13 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_PROTEUS_2309              "rc-proteus-2309"
+ #define RC_MAP_PURPLETV                  "rc-purpletv"
+ #define RC_MAP_PV951                     "rc-pv951"
+-#define RC_MAP_HAUPPAUGE                 "rc-hauppauge"
+ #define RC_MAP_RC5_TV                    "rc-rc5-tv"
+ #define RC_MAP_RC6_MCE                   "rc-rc6-mce"
+ #define RC_MAP_REAL_AUDIO_220_32_KEYS    "rc-real-audio-220-32-keys"
+ #define RC_MAP_REDDO                     "rc-reddo"
+ #define RC_MAP_SNAPSTREAM_FIREFLY        "rc-snapstream-firefly"
+ #define RC_MAP_STREAMZAP                 "rc-streamzap"
++#define RC_MAP_SU3000                    "rc-su3000"
+ #define RC_MAP_TANGO                     "rc-tango"
+ #define RC_MAP_TBS_NEC                   "rc-tbs-nec"
+ #define RC_MAP_TECHNISAT_TS35            "rc-technisat-ts35"
+@@ -282,7 +283,6 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
+ #define RC_MAP_WINFAST                   "rc-winfast"
+ #define RC_MAP_WINFAST_USBII_DELUXE      "rc-winfast-usbii-deluxe"
+-#define RC_MAP_SU3000                    "rc-su3000"
+ #define RC_MAP_XBOX_DVD                  "rc-xbox-dvd"
+ #define RC_MAP_ZX_IRDEC                  "rc-zx-irdec"
+=20
+--=20
+2.23.0
+
