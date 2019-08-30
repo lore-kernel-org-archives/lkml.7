@@ -2,166 +2,123 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D164C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F66C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA1CC2087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29777208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCGMafDG"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NRD5a4F2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfH3ELL (ORCPT
+        id S1726791AbfH3ENM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 00:11:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36403 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfH3ELL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 00:11:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p13so5912075wmh.1;
-        Thu, 29 Aug 2019 21:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=EzdpqBHFBURqZtpqMz86yppY6L9goi80pSe5/xSwXtU=;
-        b=TCGMafDGV40KPc2+AkZEqcuDwEa7xEze4WiCa/yfEroGBVTaTVfSCrVhKhoM8S3wsD
-         qBJF/mHmd4gGjBnB135iZLpABxCysDufVbbhyNyROpHJkRJflTokdXTPycQbsBM3FIpN
-         Ln9AJ7Fc9Oa257XZ+rl4cmFElbTvE2Zyr+D/zJarSJ9vGtrMxZqY6mtl+pTn37vFzdzR
-         AEbg30TX45+bcbH4xwbwsmo7YLf28EUUvv6b6s7sevLXkN+4kC58bSocwdesXEtYBYy+
-         tc9mvZWJmSxJn9eBqSEPBh+vBf6DGtIQxDJomPxdLKNXdZK8Sdk46dcKiI9cwCeEqihX
-         hlIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=EzdpqBHFBURqZtpqMz86yppY6L9goi80pSe5/xSwXtU=;
-        b=JV9VVVejbl3qQdTXjMFfMrolu2MKpZFa3kqhjcJnd9u6WpW4Tdcasxcc4dHz3BkUIr
-         rwDWqA/G6u+Krn4370XBxoy+Sq/vZEPSkVtug7LUOA+jFfVT4wxV4w1KL2vDfxWSbsqE
-         eGfKSRlXn8tDBHNXcBZ5ZnDXVF8HUqgWKzuWRMX+DRAOkPOX1t6hGQi6FLQJNKt7ii4o
-         +Ep9VjWqrCBWYXOD/MlxrNiPTiRN0A5QAKnJ6pxI3AQEsZ+3zfiWId5w6vxryKnVABXv
-         YvmMtMJjAX4oeeBQpNJVPpbh5OKwgxmLEne90tCfIoACeHiCiDoQccZMxEAJKBVW93Ca
-         VDvA==
-X-Gm-Message-State: APjAAAX+zTiud87teYpJqrF6mgBk5ycNeeU404R0a/zYNbErjoPUkNO/
-        LxaUxXCUG380ZvZlIx+AI2Y7rie4rpRXzNIR6QY=
-X-Google-Smtp-Source: APXvYqzQODrGE115hX6AyOOjmhKJAZ5etXq0AxSfXgroo4468fZ3yfVGVy4BG2ukkYO8P4FUDTk9u4mSj4EBsbaVke4=
-X-Received: by 2002:a05:600c:225a:: with SMTP id a26mr16372285wmm.81.1567138268731;
- Thu, 29 Aug 2019 21:11:08 -0700 (PDT)
+        Fri, 30 Aug 2019 00:13:12 -0400
+Received: from mail-eopbgr60084.outbound.protection.outlook.com ([40.107.6.84]:52094
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725774AbfH3ENM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 00:13:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JjsyikWdZd75+0/4d2TIISmio4SB40ycT4T4zimkXpJ9Qa6/vrfuhYqlfztMYRLXjsNvCZIjElAVbcnOyA6gV0g8Q7kzASIGM+vsqubHA5WNlQIKcoAefwlcT5Z8rc9B890AjYED9vyRPBzOKUgWD/1GPyXT7Udq4+EEDmspw0nFn7nU0c6WWkAVn+G2rPpBHPmKNVim0Oh/1Hikte3XidxuKrMwAYL7i2Crv870tReScPsJsg3Y8mlp4HJ/EJDxbfHqwCn9yIc9SCFdJn/6ETNCxfC4ido4/qj35u+nBb7Jbvh3eLxUIBebZgK9ZD8PwqHrPJ7ywPMrQ0GNm9Dwzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0jr3jgf62/aVZqKHX8F648j4zqkoxDB7/xY3vAuL7xc=;
+ b=hbyiwpBKnFqYC5VesjIMBn0mRugvMW0lpwFA8MyFvL/8jsau1cyTXd6x4RPYn9GXkHF3rnvmRTQ6M/TWblMvurJYdDjPyd0Mbr1g11LumJAw9hVn9uhgUESxEzwAogV20mzqAUldXjKIq/esTAIAzQfff/XD4mlSLOag2+mD3OwL6eZBHDSJEF5IO9P97bt7rvEBGCGrqgMOc5vv/4K84aoYeIb2lzKkdtIqDMo0mJSaSMUHomAhqPAW7L8cvKQONkr8M/O3j2qHRSV0MqovGfPoUzj5BKa10WDglLnFkn+xcW9Su9Zb1zGt3XGMWVjHEecJNbF9XY0S3Tjd3dxiCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0jr3jgf62/aVZqKHX8F648j4zqkoxDB7/xY3vAuL7xc=;
+ b=NRD5a4F2KwkX0qZrYSMOkzktGVZ094PJ1Ym8APfdnRpvzl4purvFmK2f4SfH2zIhZKjT/FRdzXlgfURhM9ZmGS5aloYJ2pXJVoDZ0PVxocGlO8ABbLOGghMIMoSNIhYMLsvqGicZ8w8hyWm6g5ccqmbzNCCAzTfzoocNNtdXp54=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB4579.eurprd05.prod.outlook.com (52.133.59.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Fri, 30 Aug 2019 04:13:08 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.021; Fri, 30 Aug 2019
+ 04:13:08 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Parav Pandit <parav@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>
+Subject: RE: [PATCH internal net-next 0/2] Minor refactor in devlink
+Thread-Topic: [PATCH internal net-next 0/2] Minor refactor in devlink
+Thread-Index: AQHVXujt/gPRfY70+kuNzFmwjbDaJqcTFHNQ
+Date:   Fri, 30 Aug 2019 04:13:07 +0000
+Message-ID: <AM0PR05MB48666EF55831C8A90858FECBD1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190830041035.60581-1-parav@mellanox.com>
+In-Reply-To: <20190830041035.60581-1-parav@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.18.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 13bf66b1-7113-43ec-1184-08d72d005d1d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4579;
+x-ms-traffictypediagnostic: AM0PR05MB4579:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB4579E3B53D3DE14E61821F3BD1BD0@AM0PR05MB4579.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0145758B1D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(199004)(189003)(13464003)(7736002)(102836004)(229853002)(9456002)(86362001)(110136005)(8936002)(6436002)(55236004)(6506007)(81156014)(26005)(76176011)(2501003)(33656002)(14454004)(8676002)(99286004)(9686003)(52536014)(5660300002)(81166006)(55016002)(6636002)(25786009)(6116002)(7696005)(305945005)(478600001)(3846002)(316002)(4744005)(66476007)(64756008)(66556008)(71200400001)(66946007)(76116006)(53546011)(256004)(53936002)(186003)(74316002)(66446008)(66066001)(2906002)(11346002)(476003)(6246003)(486006)(71190400001)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4579;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: D4JlTxDgpwIAe5muRRjh+l0D1+9dNi1+yzsKKRsKbLxH5cn5LdmJHYkm5TLBrdKkdyDgHoMJzZtOneQVdlL4qcLAFLwUbJ8eTa3GwgPIL7DimBdzU4nG+samFM+TDojl7HhPemqFwwjg1uemm7EbXOeLmaz8ahv9C4tpDEf0hKbCYv37sjjZhUgutzOeeNT7kx22n989NFyXGZ7ex2JdP8K4abA6KDgk/7A6g94yhooG8D3ODdw/YT1anwPR5QKTGgTr5dXZ12wHV+Ad0UhfLeHM4dTHuJUyHO+n6JCMFea2YndHsu8Yh0Scxz+5m8Myght/y56zL/X5z4iEsUYA8bFg1jNWJMr5PmKhCP5OGM61178VPIZ0wQF9B9uPfAxEBLGNCQvBy7mJ06fMlv+IFUsVCgbgeklBT4KW6E7jz74=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
- <8b09d93a-bc42-bd8e-29ee-cd37765f4899@infradead.org> <20190828171923.4sir3sxwsnc2pvjy@treble>
- <57d6ab2e-1bae-dca3-2544-4f6e6a936c3a@infradead.org> <20190828200134.d3lwgyunlpxc6cbn@treble>
- <20190829082445.GM2369@hirez.programming.kicks-ass.net> <20190829233735.yp3mwhg6er353qw5@treble>
-In-Reply-To: <20190829233735.yp3mwhg6er353qw5@treble>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 30 Aug 2019 06:10:56 +0200
-Message-ID: <CA+icZUVEAJziiuuQ2vzzjYbDrzUMVd+-pkJnmJkt8PPQ6szdPQ@mail.gmail.com>
-Subject: Re: mmotm 2019-08-27-20-39 uploaded (objtool: xen)
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13bf66b1-7113-43ec-1184-08d72d005d1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 04:13:08.0001
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XRSmz/s6aUjDIXCYlBfLJe9ttoO+xJdiiFUkstE835Mb4/WVC42dxU1zVQc3/EeioHUMIHrYKm7jEw/vgCH57Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4579
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 1:38 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Thu, Aug 29, 2019 at 10:24:45AM +0200, Peter Zijlstra wrote:
-> > On Wed, Aug 28, 2019 at 03:01:34PM -0500, Josh Poimboeuf wrote:
-> > > On Wed, Aug 28, 2019 at 10:56:25AM -0700, Randy Dunlap wrote:
-> > > > >> drivers/xen/gntdev.o: warning: objtool: gntdev_copy()+0x229: call to __ubsan_handle_out_of_bounds() with UACCESS enabled
-> > > > >
-> > > > > Easy one :-)
-> > > > >
-> > > > > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> > > > > index 0c8e17f946cd..6a935ab93149 100644
-> > > > > --- a/tools/objtool/check.c
-> > > > > +++ b/tools/objtool/check.c
-> > > > > @@ -483,6 +483,7 @@ static const char *uaccess_safe_builtin[] = {
-> > > > >         "ubsan_type_mismatch_common",
-> > > > >         "__ubsan_handle_type_mismatch",
-> > > > >         "__ubsan_handle_type_mismatch_v1",
-> > > > > +       "__ubsan_handle_out_of_bounds",
-> > > > >         /* misc */
-> > > > >         "csum_partial_copy_generic",
-> > > > >         "__memcpy_mcsafe",
-> > > > >
-> > > >
-> > > >
-> > > > then I get this one:
-> > > >
-> > > > lib/ubsan.o: warning: objtool: __ubsan_handle_out_of_bounds()+0x5d: call to ubsan_prologue() with UACCESS enabled
-> > >
-> > > And of course I jinxed it by calling it easy.
-> > >
-> > > Peter, how do you want to handle this?
-> > >
-> > > Should we just disable UACCESS checking in lib/ubsan.c?
-> >
-> > No, that is actually unsafe and could break things (as would you patch
-> > above).
->
-> Oops.  -EFIXINGTOOMANYOBJTOOLISSUESATONCE
->
-> > I'm thinking the below patch ought to cure things:
-> >
-> > ---
-> > Subject: x86/uaccess: Don't leak the AC flags into __get_user() argument evalidation
->
-> s/evalidation/evaluation
->
-> > Identical to __put_user(); the __get_user() argument evalution will too
-> > leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
-> > While uncommon this was observed to happen for:
-> >
-> >   drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
-> >
-> > where UBSAN added array bound checking.
-> >
-> > This complements commit:
-> >
-> >   6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
-> >
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: luto@kernel.org
-> > ---
-> >  arch/x86/include/asm/uaccess.h | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-> > index 9c4435307ff8..35c225ede0e4 100644
-> > --- a/arch/x86/include/asm/uaccess.h
-> > +++ b/arch/x86/include/asm/uaccess.h
-> > @@ -444,8 +444,10 @@ __pu_label:                                                      \
-> >  ({                                                                   \
-> >       int __gu_err;                                                   \
-> >       __inttype(*(ptr)) __gu_val;                                     \
-> > +     __typeof__(ptr) __gu_ptr = (ptr);                               \
-> > +     __typeof__(size) __gu_size = (size);                            \
-> >       __uaccess_begin_nospec();                                       \
-> > -     __get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);    \
-> > +     __get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);      \
-> >       __uaccess_end();                                                \
-> >       (x) = (__force __typeof__(*(ptr)))__gu_val;                     \
-> >       __builtin_expect(__gu_err, 0);                                  \
->
-> Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
->
 
-Tested-by Sedat Dilek <sedat.dilek@gmail.com>
 
-- Sedat -
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> owner@vger.kernel.org> On Behalf Of Parav Pandit
+> Sent: Friday, August 30, 2019 9:41 AM
+> To: linux-kernel@vger.kernel.org; Jiri Pirko <jiri@mellanox.com>
+> Cc: Parav Pandit <parav@mellanox.com>
+> Subject: [PATCH internal net-next 0/2] Minor refactor in devlink
+>=20
+> Two minor refactors in devlink.
+>=20
+> Patch-1 Explicitly defines devlink port index as unsigned int
+> Patch-2 Uses switch-case to handle different port flavours attributes
+>=20
+> Parav Pandit (2):
+>   devlink: Make port index data type as unsigned int
+>   devlink: Use switch-case instead of if-else
+>=20
+>  include/net/devlink.h |  2 +-
+>  net/core/devlink.c    | 44 ++++++++++++++++++++++++-------------------
+>  2 files changed, 26 insertions(+), 20 deletions(-)
+>=20
+> --
+> 2.19.2
+
+I am sorry for noise.
+By mistake send to wrong list.
