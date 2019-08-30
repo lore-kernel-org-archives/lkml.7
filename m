@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F4AC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24963C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AA023427
+	by mail.kernel.org (Postfix) with ESMTP id E055423407
 	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567177770;
-	bh=Ei+UUuI2bjs9MCSyFZ3sjrySi931/9VchlR6vlNSp5E=;
+	s=default; t=1567177771;
+	bh=VpzzJ2ZRApF5XJP92g0pEAE+DutW36XP7+YugwXF208=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MtIwKEv72FV/ZkChB6c4+xTZBq3rSXWH0b1tTcLXSaQQQDK6p2SqeoUw5fxjg7mpR
-	 0Z+psOX5KyVUhEu4zSPGqTOE5mlTAKAAqNN7Ie3+MsmKsk4DJdtwcTIiV/SmPthCzc
-	 YHoVI/RD2xNtZ+AzERcQfgTKx0OQtGG1VcWiOYoU=
+	b=AcAQtsbBx0Ag83GxvGzFCQryNSe+OYGsSjzrvxVt+jrxRpd5Q57RiXQCEAVs7SepM
+	 bMMLfuVWe92maMFCld2nt7gGG9Kik0PEQQu0pGMoQKppaEEFAPaw/Bn8DLPSz6483u
+	 49xFw1c1MhyYz+ULR5Pc2S+mNSIl7xXzAOHsL6hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfH3PJ3 (ORCPT
+        id S1728333AbfH3PJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 11:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbfH3PJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:09:27 -0400
+        id S1728216AbfH3PJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:09:28 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765FC2342A;
-        Fri, 30 Aug 2019 15:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2FF2342B;
+        Fri, 30 Aug 2019 15:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567177766;
-        bh=Ei+UUuI2bjs9MCSyFZ3sjrySi931/9VchlR6vlNSp5E=;
+        s=default; t=1567177767;
+        bh=VpzzJ2ZRApF5XJP92g0pEAE+DutW36XP7+YugwXF208=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1CKzGdB4sF99gq98msmqUSBmQuG0RmHrf8M4uvLeAH6qzKDqLaMZSsAOCvzd4Pv2
-         N6OW+6++0D8JjgLbfu7nEpuIAFmD4kZsj4OxTl30XBLg+gayj4S6CxuFhk4M6vqHFl
-         VvTKMNM07iYuoZ9MtxB00lpeENkYDzR4EHl2A4EU=
+        b=Br6Mk2vqLJTALACyh7UHMrBYOwKmD/2KqK3SvebXhPgrXoDDHyJi2iiV+4LXQEqCN
+         NW27VV7spvKkw64vP2q4pprk4Mu6GH+RPl4MIhGx7h+L4I2MtrbOWtIQ0vHwNlcO2v
+         IvWoKmsq6TEoO3H7NXOlr5vcoZlM5Qq4wh4+s9xE=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 07/12] clk: fixed-rate: Add clk flags for parent accuracy
-Date:   Fri, 30 Aug 2019 08:09:18 -0700
-Message-Id: <20190830150923.259497-8-sboyd@kernel.org>
+Subject: [PATCH 09/12] clk: asm9260: Use parent accuracy in fixed rate clk
+Date:   Fri, 30 Aug 2019 08:09:20 -0700
+Message-Id: <20190830150923.259497-10-sboyd@kernel.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190830150923.259497-1-sboyd@kernel.org>
 References: <20190830150923.259497-1-sboyd@kernel.org>
@@ -57,60 +57,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some clk providers want to use the accuracy of the parent clk and use
-the fixed rate basic type clk to do that. This requires getting the
-parent clk and extracting the accuracy before registering the fixed rate
-clk. Let's add a flag for this and update the clk_ops to support this.
+This fixed rate clk is registered with the accuracy of the parent. Use
+CLK_FIXED_RATE_PARENT_ACCURACY for that instead of getting the parent
+clk and finding out the accuracy that way.
 
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk-fixed-rate.c | 7 ++++++-
- include/linux/clk-provider.h | 6 ++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/clk/clk-asm9260.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index 6ee25e2dae76..f6d9eb982c20 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -35,7 +35,12 @@ static unsigned long clk_fixed_rate_recalc_rate(struct clk_hw *hw,
- static unsigned long clk_fixed_rate_recalc_accuracy(struct clk_hw *hw,
- 		unsigned long parent_accuracy)
- {
--	return to_clk_fixed_rate(hw)->fixed_accuracy;
-+	struct clk_fixed_rate *fixed = to_clk_fixed_rate(hw);
-+
-+	if (fixed->flags & CLK_FIXED_RATE_PARENT_ACCURACY)
-+		return parent_accuracy;
-+
-+	return fixed->fixed_accuracy;
- }
+diff --git a/drivers/clk/clk-asm9260.c b/drivers/clk/clk-asm9260.c
+index dd0f90c9dd0e..536b59aabd2c 100644
+--- a/drivers/clk/clk-asm9260.c
++++ b/drivers/clk/clk-asm9260.c
+@@ -260,7 +260,6 @@ static void __init asm9260_acc_init(struct device_node *np)
+ 	const char *ref_clk, *pll_clk = "pll";
+ 	u32 rate;
+ 	int n;
+-	u32 accuracy = 0;
  
- const struct clk_ops clk_fixed_rate_ops = {
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 9acafd9de216..b1ed4b840476 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -322,6 +322,10 @@ struct clk_hw {
-  * @fixed_rate:	constant frequency of clock
-  * @fixed_accuracy: constant accuracy of clock in ppb (parts per billion)
-  * @flags:	hardware specific flags
-+ *
-+ * Flags:
-+ * CLK_FIXED_RATE_PARENT_ACCURACY - Use the accuracy of the parent clk
-+ * 	instead of what's set in @fixed_accuracy.
-  */
- struct clk_fixed_rate {
- 	struct		clk_hw hw;
-@@ -330,6 +334,8 @@ struct clk_fixed_rate {
- 	unsigned long	flags;
- };
+ 	clk_data = kzalloc(struct_size(clk_data, hws, MAX_CLKS), GFP_KERNEL);
+ 	if (!clk_data)
+@@ -275,10 +274,11 @@ static void __init asm9260_acc_init(struct device_node *np)
+ 	/* register pll */
+ 	rate = (ioread32(base + HW_SYSPLLCTRL) & 0xffff) * 1000000;
  
-+#define CLK_FIXED_RATE_PARENT_ACCURACY		BIT(0)
-+
- extern const struct clk_ops clk_fixed_rate_ops;
- struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
- 		struct device_node *np, const char *name,
++	/* TODO: Convert to DT parent scheme */
+ 	ref_clk = of_clk_get_parent_name(np, 0);
+-	accuracy = clk_get_accuracy(__clk_lookup(ref_clk));
+-	hw = clk_hw_register_fixed_rate_with_accuracy(NULL, pll_clk,
+-			ref_clk, 0, rate, accuracy);
++	hw = __clk_hw_register_fixed_rate_with_accuracy(NULL, NULL, pll_clk,
++			ref_clk, NULL, NULL, 0, rate, 0,
++			CLK_FIXED_RATE_PARENT_ACCURACY);
+ 
+ 	if (IS_ERR(hw))
+ 		panic("%pOFn: can't register REFCLK. Check DT!", np);
 -- 
 Sent by a computer through tubes
 
