@@ -2,79 +2,105 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A1FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88449C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D642F22CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66735215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfH3Pw3 (ORCPT
+        id S1728246AbfH3PxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:52:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43012 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfH3Pw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:52:28 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8D9A8307D985;
-        Fri, 30 Aug 2019 15:52:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DC145EE1D;
-        Fri, 30 Aug 2019 15:52:27 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] keys: ensure that ->match_free() is called in
- request_key_and_link()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     Eric Biggers <ebiggers@google.com>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 30 Aug 2019 16:52:26 +0100
-Message-ID: <156718034654.6899.18350327020509594564.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Fri, 30 Aug 2019 11:53:24 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3543 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727135AbfH3PxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:53:24 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 35A7FA282F3B47C6C9FA;
+        Fri, 30 Aug 2019 23:53:12 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 30 Aug 2019 23:53:11 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 30 Aug 2019 23:53:11 +0800
+Date:   Fri, 30 Aug 2019 23:52:23 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Joe Perches <joe@perches.com>, Chao Yu <yuchao0@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v2 2/7] erofs: some marcos are much more readable as a
+ function
+Message-ID: <20190830155223.GA69026@architecture4>
+References: <20190830030040.10599-1-gaoxiang25@huawei.com>
+ <20190830030040.10599-2-gaoxiang25@huawei.com>
+ <5b2ecf5cec1a6aa3834e9af41886a7fcb18ae86a.camel@perches.com>
+ <20190830154551.GA11571@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 30 Aug 2019 15:52:28 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190830154551.GA11571@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Hi Christoph,
 
-If check_cached_key() returns a non-NULL value, we still need to call
-key_type::match_free() to undo key_type::match_preparse().
+On Fri, Aug 30, 2019 at 08:45:51AM -0700, Christoph Hellwig wrote:
+> On Thu, Aug 29, 2019 at 08:16:27PM -0700, Joe Perches wrote:
+> > > -		sizeof(__u32) * ((__count) - 1); })
+> > > +static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
+> > > +{
+> > > +	unsigned int icount = le16_to_cpu(d_icount);
+> > > +
+> > > +	if (!icount)
+> > > +		return 0;
+> > > +
+> > > +	return sizeof(struct erofs_xattr_ibody_header) +
+> > > +		sizeof(__u32) * (icount - 1);
+> > 
+> > Maybe use struct_size()?
+> 
+> Declaring a variable that is only used for struct_size is rather ugly.
+> But while we are nitpicking: you don't need to byteswap to check for 0,
+> so the local variable could be avoided.
+> 
+> Also what is that magic -1 for?  Normally we use that for the
+> deprecated style where a variable size array is declared using
+> varname[1], but that doesn't seem to be the case for erofs.
 
-Fixes: 7743c48e54ee ("keys: Cache result of request_key*() temporarily in task_struct")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+I have to explain more about this (sorry about my awkward English)
+here i_xattr_icount is to represent the size of xattr field of erofs, as follows:
+ 0 - no xattr at all (no erofs_xattr_ibody_header)
+  _______
+ | inode |
+ |_______|
 
- security/keys/request_key.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 1 - a erofs_xattr_ibody_header (12 byte) + 4-byte (shared + inline) xattrs
+ 2 - a erofs_xattr_ibody_header (12 byte) + 8-byte (shared + inline) xattrs
+ ....
+ (that is the magic -1 means...)
 
-diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index 7325f382dbf4..957b9e3e1492 100644
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -595,7 +595,7 @@ struct key *request_key_and_link(struct key_type *type,
- 
- 	key = check_cached_key(&ctx);
- 	if (key)
--		return key;
-+		goto error_free;
- 
- 	/* search all the process keyrings for a key */
- 	rcu_read_lock();
+In order to keep the number continuously, actually the content could be
+ an array of shared_xattr_id and
+ an inline xattr combination (struct erofs_xattr_entry + name + value)
+
+Thanks,
+Gao Xiang
 
