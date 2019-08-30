@@ -2,107 +2,325 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C77C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AAEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778DD23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FD623427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OgnKYvKc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uhod1U8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfH3PG7 (ORCPT
+        id S1728165AbfH3PIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:06:59 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50552 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727603AbfH3PG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:06:59 -0400
-Received: from zn.tnic (p200300EC2F0AAA0001D832AAA778AB1D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:aa00:1d8:32aa:a778:ab1d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0E6E1EC08E5;
-        Fri, 30 Aug 2019 17:06:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1567177617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9k1f8mtsHGTd5plZBYyKV0oOAkCDQaOFW+kp3D3S8oY=;
-        b=OgnKYvKcGy+zfy6MuWZovDCcArNH371zrg6SruD4rhUIXj+mzgkHy/bVQ2o81pShLivZyS
-        V+O98LYi7AW8IHWhhSlgIQz0ii7rnLhqZ59ZGH87YOEgy8je9lLLUO5YWTyG1DrIs3vIeR
-        7UbxppF+zL8m3j1ULhf6msf8kCCtKWo=
-Date:   Fri, 30 Aug 2019 17:06:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Philip Li <philip.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        linux-input@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
-        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
- backdoor call with support for new instructions
-Message-ID: <20190830150653.GD30413@zn.tnic>
-References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2>
- <201908292325.aLXyyzEx%lkp@intel.com>
- <20190829163353.GC2132@zn.tnic>
- <20190830010349.GD857@intel.com>
- <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
- <20190830062053.GA2598@intel.com>
- <20190830080650.GA30413@zn.tnic>
- <20190830143645.GA4784@intel.com>
- <20190830144628.GC30413@zn.tnic>
- <20190830150002.GA6931@intel.com>
+        Fri, 30 Aug 2019 11:08:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36667 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfH3PIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:08:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so7339795wrd.3;
+        Fri, 30 Aug 2019 08:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0pAZWJp00xZ1ls1Af08EI7mW5qet6OlsQR65F0SwZhs=;
+        b=Uhod1U8XJp5hvgo/TUndU/vB/K3LqXxuAeZVAeuRIVdGOfTHzNRkOwN4osOc40UuE5
+         1zbifQ3t/DupGF//0a//lbZHwzoTo6QVboCPsr+tvklkQoTjH1/FYdaux2SjAfGCOpZ0
+         aaXT7pAXocMPWV0Xg9GtrbNyGi3SmspC4gJtWpFECD2jINQg8+kDPQEGXlrAPljAZ6MO
+         Bdigb/DGLDuPQjYHP6+nOeEcj4fW4+9AgzYdVUBteNpxJsrnLzwx/E63kRUe2CI/0SzE
+         heoO2mGCnXSSOoKS6wS0YDpnRrp6s8F65jBfDu0Q/tvSU+1uM06S/GMYkDzLMDPtR3BH
+         HskQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=0pAZWJp00xZ1ls1Af08EI7mW5qet6OlsQR65F0SwZhs=;
+        b=UYlWaW3SuGuQnLo4RremvGaalLQqKpoEkTaMWEUMHm8u8fxBzZ3IcceFGgOqGcZB38
+         UzIAYAVu3IiwivO9/1OioBIekor7pBjiA3G3z+0rpB8m3T0pw+sifsy5sZs6dUj9aiKe
+         1KwA7RdSy6p5YbjRF8RKSncewpek9mvio5S/Jv4uhdi6jbLjtp+iitQFXo7ogxZbj/pC
+         D+1TvWSg/5D0nWoaysL3yCN95ijhu30ykdAtdNLCpUHPFkMxkVNTj/x+d/yqICaeFvab
+         UdjH3cW1tOzp6kEyrVG+tpt5LejFwphY0uHjkKpz8k/ucK5wsIqX4TE6gBFMfeKRGcyd
+         +zSA==
+X-Gm-Message-State: APjAAAURWYraYtg13je1SP0TBg//LVXi1UHuV2IbrdszThxWsQ9NLBUy
+        CNPC7Q0u9wgODFARSLNz9Rc=
+X-Google-Smtp-Source: APXvYqzHQGc0Wx4HRiZiz1ofDsxcHrSk8e6DnIqmyFNiH0txU8A57/I3wSP5Sr5aEeWTtm785SC13w==
+X-Received: by 2002:adf:f507:: with SMTP id q7mr19297657wro.210.1567177678081;
+        Fri, 30 Aug 2019 08:07:58 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id 16sm8270956wmx.45.2019.08.30.08.07.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 08:07:57 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: Move ATS declarations to linux/pci.h
+Date:   Fri, 30 Aug 2019 17:07:56 +0200
+Message-Id: <20190830150756.21305-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190830150002.GA6931@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:00:02PM +0800, Philip Li wrote:
-> Early on, there's requirement to blacklist a few branches, which is configured
-> as below
-> 	blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
+Move ATS function prototypes from include/linux/pci-ats.h to
+include/linux/pci.h so users only need to include <linux/pci.h>:
 
-Looks about right.
+Realted to PRI capability:
 
-> Except the blacklist branches, we will monitor all other branches.
+  pci_enable_pri()
+  pci_disable_pri()
+  pci_restore_pri_state()
+  pci_reset_pri()
 
-Ok, good to know. Just as an optimization to your workflow, in case
-you're interested: the tip/master branch merges all tip branches so if
-you're trying to prioritize which branches to test first due to resource
-constraints, I'd go with tip/master first and then, when I have free
-cycles, I'd do the topic branches.
+Related to PASID capability:
 
-Just as an idea...
+  pci_enable_pasid()
+  pci_disable_pasid()
+  pci_restore_pasid_state()
+  pci_pasid_features()
+  pci_max_pasids()
+  pci_prg_resp_pasid_required()
 
-> We also support pull request to update the
-> configuration or email us to update. Refer to
-> https://github.com/intel/lkp-tests/blob/master/repo/linux/tip.
+No functional changes intended.
 
-Ok, cool. I'll talk to tglx about it and might even send you a pull
-request.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/iommu/amd_iommu.c   |  1 -
+ drivers/iommu/arm-smmu-v3.c |  1 -
+ drivers/iommu/intel-iommu.c |  1 -
+ drivers/iommu/intel-pasid.c |  1 -
+ drivers/iommu/intel-svm.c   |  1 -
+ drivers/pci/ats.c           |  1 -
+ drivers/pci/pci.c           |  1 -
+ include/linux/pci-ats.h     | 77 -------------------------------------
+ include/linux/pci.h         | 34 ++++++++++++++++
+ 9 files changed, 34 insertions(+), 84 deletions(-)
+ delete mode 100644 include/linux/pci-ats.h
 
-Thx.
-
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 04a9f8443344..d43913386915 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -13,7 +13,6 @@
+ #include <linux/acpi.h>
+ #include <linux/amba/bus.h>
+ #include <linux/platform_device.h>
+-#include <linux/pci-ats.h>
+ #include <linux/bitmap.h>
+ #include <linux/slab.h>
+ #include <linux/debugfs.h>
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 0ad6d34d1e96..3bd9455efc39 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -29,7 +29,6 @@
+ #include <linux/of_iommu.h>
+ #include <linux/of_platform.h>
+ #include <linux/pci.h>
+-#include <linux/pci-ats.h>
+ #include <linux/platform_device.h>
+ 
+ #include <linux/amba/bus.h>
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 4658cda6f3d2..362845b5c88a 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -35,7 +35,6 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/tboot.h>
+ #include <linux/dmi.h>
+-#include <linux/pci-ats.h>
+ #include <linux/memblock.h>
+ #include <linux/dma-contiguous.h>
+ #include <linux/dma-direct.h>
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 040a445be300..f670315afa67 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -16,7 +16,6 @@
+ #include <linux/iommu.h>
+ #include <linux/memory.h>
+ #include <linux/pci.h>
+-#include <linux/pci-ats.h>
+ #include <linux/spinlock.h>
+ 
+ #include "intel-pasid.h"
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 780de0caafe8..ee9dfc84f925 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -13,7 +13,6 @@
+ #include <linux/intel-svm.h>
+ #include <linux/rculist.h>
+ #include <linux/pci.h>
+-#include <linux/pci-ats.h>
+ #include <linux/dmar.h>
+ #include <linux/interrupt.h>
+ #include <linux/mm_types.h>
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index e18499243f84..3f5fb2d4a763 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -10,7 +10,6 @@
+  */
+ 
+ #include <linux/export.h>
+-#include <linux/pci-ats.h>
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index f20a3de57d21..c8f2a05e6b37 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -29,7 +29,6 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/vmalloc.h>
+-#include <linux/pci-ats.h>
+ #include <asm/setup.h>
+ #include <asm/dma.h>
+ #include <linux/aer.h>
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+deleted file mode 100644
+index 1ebb88e7c184..000000000000
+--- a/include/linux/pci-ats.h
++++ /dev/null
+@@ -1,77 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef LINUX_PCI_ATS_H
+-#define LINUX_PCI_ATS_H
+-
+-#include <linux/pci.h>
+-
+-#ifdef CONFIG_PCI_PRI
+-
+-int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+-void pci_disable_pri(struct pci_dev *pdev);
+-void pci_restore_pri_state(struct pci_dev *pdev);
+-int pci_reset_pri(struct pci_dev *pdev);
+-
+-#else /* CONFIG_PCI_PRI */
+-
+-static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+-{
+-	return -ENODEV;
+-}
+-
+-static inline void pci_disable_pri(struct pci_dev *pdev)
+-{
+-}
+-
+-static inline void pci_restore_pri_state(struct pci_dev *pdev)
+-{
+-}
+-
+-static inline int pci_reset_pri(struct pci_dev *pdev)
+-{
+-	return -ENODEV;
+-}
+-
+-#endif /* CONFIG_PCI_PRI */
+-
+-#ifdef CONFIG_PCI_PASID
+-
+-int pci_enable_pasid(struct pci_dev *pdev, int features);
+-void pci_disable_pasid(struct pci_dev *pdev);
+-void pci_restore_pasid_state(struct pci_dev *pdev);
+-int pci_pasid_features(struct pci_dev *pdev);
+-int pci_max_pasids(struct pci_dev *pdev);
+-int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+-
+-#else  /* CONFIG_PCI_PASID */
+-
+-static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
+-{
+-	return -EINVAL;
+-}
+-
+-static inline void pci_disable_pasid(struct pci_dev *pdev)
+-{
+-}
+-
+-static inline void pci_restore_pasid_state(struct pci_dev *pdev)
+-{
+-}
+-
+-static inline int pci_pasid_features(struct pci_dev *pdev)
+-{
+-	return -EINVAL;
+-}
+-
+-static inline int pci_max_pasids(struct pci_dev *pdev)
+-{
+-	return -EINVAL;
+-}
+-
+-static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_PCI_PASID */
+-
+-
+-#endif /* LINUX_PCI_ATS_H*/
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 463486016290..8ac142801890 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2349,6 +2349,40 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
+ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #endif
+ 
++#ifdef CONFIG_PCI_PRI
++int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
++void pci_disable_pri(struct pci_dev *pdev);
++void pci_restore_pri_state(struct pci_dev *pdev);
++int pci_reset_pri(struct pci_dev *pdev);
++#else /* CONFIG_PCI_PRI */
++static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
++{ return -ENODEV; }
++static inline void pci_disable_pri(struct pci_dev *pdev) { }
++static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
++static inline int pci_reset_pri(struct pci_dev *pdev)
++{ return -ENODEV; }
++#endif /* CONFIG_PCI_PRI */
++
++#ifdef CONFIG_PCI_PASID
++int pci_enable_pasid(struct pci_dev *pdev, int features);
++void pci_disable_pasid(struct pci_dev *pdev);
++void pci_restore_pasid_state(struct pci_dev *pdev);
++int pci_pasid_features(struct pci_dev *pdev);
++int pci_max_pasids(struct pci_dev *pdev);
++int pci_prg_resp_pasid_required(struct pci_dev *pdev);
++#else  /* CONFIG_PCI_PASID */
++static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
++{ return -EINVAL; }
++static inline void pci_disable_pasid(struct pci_dev *pdev) { }
++static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
++static inline int pci_pasid_features(struct pci_dev *pdev)
++{ return -EINVAL; }
++static inline int pci_max_pasids(struct pci_dev *pdev)
++{ return -EINVAL; }
++static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
++{ return 0; }
++#endif /* CONFIG_PCI_PASID */
++
+ /* Provide the legacy pci_dma_* API */
+ #include <linux/pci-dma-compat.h>
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.22.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
