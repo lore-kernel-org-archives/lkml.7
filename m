@@ -2,376 +2,130 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A93CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA19C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7312189D
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AFE2087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j37L7Al5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfH3CHb (ORCPT
+        id S1727434AbfH3CUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 22:07:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38371 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfH3CHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 22:07:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 19:07:30 -0700
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="380977928"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 19:07:29 -0700
-Subject: [PATCH v5 10/10] acpi/numa/hmat: Register "soft reserved" memory as
- an "hmem" device
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     tglx@linutronix.de, rafael.j.wysocki@intel.com
-Cc:     Len Brown <lenb@kernel.org>, Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        peterz@infradead.org, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        x86@kernel.org
-Date:   Thu, 29 Aug 2019 18:53:12 -0700
-Message-ID: <156712999201.1616117.5589642966130091242.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Thu, 29 Aug 2019 22:20:43 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41335 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfH3CUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 22:20:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so2663199pgg.8;
+        Thu, 29 Aug 2019 19:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TRHcnIepKK5U2wNfUCScZ2wTbvSrlBuU+oVE4yt3loQ=;
+        b=j37L7Al5CTzS+uEeWPzG2no8G3GAm82pD6DnC65KkfBWv5UCKc3ENxVPfnx6NE2nRp
+         VkpT1IFhadWb6iQ33X3JNpeqk5kHDhzElJrwOM2rLFit00Iq9oEljm/GHeIm9dFSZc0f
+         WJBrJx8zmiEY29bfQ+iOriHew+ACzyDJqtMsT8OagSkrG5gVHbJ5yXYeGk6cWxMdA7Tt
+         gnlNAvleoZUXm80Ylbaf/KyXZFmVJhNBIbsnYPtJCNoefKGLl2eXY/7+tjM2i4oF//yf
+         dJ8qMMhcoYiYz5NJt29AY+bQnRm7lG47ddugbr05HFShK60EmXa9DaxS0NPXevd8Li4Z
+         tliw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TRHcnIepKK5U2wNfUCScZ2wTbvSrlBuU+oVE4yt3loQ=;
+        b=eqjp57+t2sjJBZzL+12qozNxqrEIWN0zCuM8m/2GUBh6YNaEV5Y8C4cReThekvvXlp
+         blNCXETledy9jSmYOBiXkyDCET0/z2xWyn468IeFkd5tL0AtvvTfsGESwKF0vZ/kYhiS
+         RUbJnohI86m1WFWXwFycbSZoDXo0aqd+EqjK+MbrFaKP5b4V3nfe6nUf9S73GiCaTaW8
+         /y/Ao0yBwGr72gu53bH7pIN5EiQX0eIs9JLnU80E8cUzXs8gEXy92du9+aVCFrbpM6mT
+         9gHm0uu4yr3TWblxLO4wtp/qexQRpDx6mnWYjwQIqSXpqHzT74qJBgrulDTcGwMp0UaN
+         9aNw==
+X-Gm-Message-State: APjAAAXKTYZ30dy8KjWXgVr3raDkjSf//fH7sua87AeUEIL0T+vsNFoK
+        B13OP+/YR3JCKDzDNND3HzI=
+X-Google-Smtp-Source: APXvYqyRQP2+H5hOEHYHiDdlJiEP9CNZ/q0q1WYaIpeXgasDhwLdBANWFCseWJcs8sXVL97EjQYI1w==
+X-Received: by 2002:a62:3046:: with SMTP id w67mr9486666pfw.5.1567131642214;
+        Thu, 29 Aug 2019 19:20:42 -0700 (PDT)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id u16sm3104843pgm.83.2019.08.29.19.20.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 19:20:41 -0700 (PDT)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
+        Ben Chuang <benchuanggli@gmail.com>
+Subject: [PATCH V7 0/5] Add Genesys Logic GL975x support
+Date:   Fri, 30 Aug 2019 10:20:39 +0800
+Message-Id: <20190830022039.8210-1-benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory that has been tagged EFI_MEMORY_SP, and has performance
-properties described by the ACPI HMAT is expected to have an application
-specific consumer.
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-Those consumers may want 100% of the memory capacity to be reserved from
-any usage by the kernel. By default, with this enabling, a platform
-device is created to represent this differentiated resource.
+The patches modify internal clock setup to match SD Host Controller
+Simplified Specifications 4.20 and support Genesys Logic GL9750/GL9755 chipsets.
 
-The device-dax "hmem" driver claims these devices by default and
-provides an mmap interface for the target application.  If the
-administrator prefers, the hmem resource range can be made available to
-the core-mm via the device-dax hotplug facility, kmem, to online the
-memory with its own numa node.
+v7:
+ - remove condition define CONFIG_MMC_SDHCI_IO_ACCESSORS from sdhci-pci-gli.c
+ - making the accessors(MMC_SDHCI_IO_ACCESSORS) always available when selecting
+   MMC_SDHCI_PCI in Kconfig
 
-This was tested with an emulated HMAT produced by qemu (with the pending
-HMAT enabling patches), and "efi_fake_mem=8G@9G:0x40000" on the kernel
-command line to mark the memory ranges associated with node2 and node3
-as EFI_MEMORY_SP.
+V6:
+ - export sdhci_abot_tuning() function symbol
+ - use C-style comments
+ - use BIT, FIELD_{GET,PREP} and GENMASK to define bit fields of register
+ - use host->ops->platform_execute_tuning instead of mmc->ops->execute_tuning
+ - call sdhci_reset() instead of duplicating the code in sdhci_gl9750_reset
+ - remove .hw_reset 
+ - use condition define CONFIG_MMC_SDHCI_IO_ACCESSORS for read_l
 
-qemu numa configuration options:
+V5:
+ - add "change timeout of loop .." to a patch
+ - fix typo "verndor" to "vendor"
 
--numa node,mem=4G,cpus=0-19,nodeid=0
--numa node,mem=4G,cpus=20-39,nodeid=1
--numa node,mem=4G,nodeid=2
--numa node,mem=4G,nodeid=3
--numa dist,src=0,dst=0,val=10
--numa dist,src=0,dst=1,val=21
--numa dist,src=0,dst=2,val=21
--numa dist,src=0,dst=3,val=21
--numa dist,src=1,dst=0,val=21
--numa dist,src=1,dst=1,val=10
--numa dist,src=1,dst=2,val=21
--numa dist,src=1,dst=3,val=21
--numa dist,src=2,dst=0,val=21
--numa dist,src=2,dst=1,val=21
--numa dist,src=2,dst=2,val=10
--numa dist,src=2,dst=3,val=21
--numa dist,src=3,dst=0,val=21
--numa dist,src=3,dst=1,val=21
--numa dist,src=3,dst=2,val=21
--numa dist,src=3,dst=3,val=10
--numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,base-lat=10,latency=5
--numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=5
--numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,base-lat=10,latency=10
--numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=10
--numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-latency,base-lat=10,latency=15
--numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=15
--numa hmat-lb,initiator=0,target=3,hierarchy=memory,data-type=access-latency,base-lat=10,latency=20
--numa hmat-lb,initiator=0,target=3,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=20
--numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-latency,base-lat=10,latency=10
--numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=10
--numa hmat-lb,initiator=1,target=1,hierarchy=memory,data-type=access-latency,base-lat=10,latency=5
--numa hmat-lb,initiator=1,target=1,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=5
--numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-latency,base-lat=10,latency=15
--numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=15
--numa hmat-lb,initiator=1,target=3,hierarchy=memory,data-type=access-latency,base-lat=10,latency=20
--numa hmat-lb,initiator=1,target=3,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=20
+V4:
+ - change name from sdhci_gli_reset to sdhci_gl9750_reset
+ - fix sdhci_reset to sdhci_gl9750_reset in sdhci_gl9750_ops
+ - fix sdhci_gli_reset to sdhci_reset in sdhci_gl9755_ops
+ 
+V3:
+ - change usleep_range to udelay
+ - add Genesys Logic PCI Vendor ID to a patch
+ - separate the Genesys Logic specific part to a patch
 
-Result:
+V2:
+ - change udelay to usleep_range
 
-# daxctl list -RDu
-[
-  {
-    "path":"\/platform\/hmem.1",
-    "id":1,
-    "size":"4.00 GiB (4.29 GB)",
-    "align":2097152,
-    "devices":[
-      {
-        "chardev":"dax1.0",
-        "size":"4.00 GiB (4.29 GB)"
-      }
-    ]
-  },
-  {
-    "path":"\/platform\/hmem.0",
-    "id":0,
-    "size":"4.00 GiB (4.29 GB)",
-    "align":2097152,
-    "devices":[
-      {
-        "chardev":"dax0.0",
-        "size":"4.00 GiB (4.29 GB)"
-      }
-    ]
-  }
-]
+Ben Chuang (5):
+  mmc: sdhci: Change timeout of loop for checking internal clock stable
+  mmc: sdhci: Add PLL Enable support to internal clock setup
+  PCI: Add Genesys Logic, Inc. Vendor ID
+  mmc: sdhci: Export sdhci_abort_tuning function symbol
+  mmc: host: sdhci-pci: Add Genesys Logic GL975x support
 
-# cat /proc/iomem
-[..]
-240000000-43fffffff : Soft Reserved
-  240000000-33fffffff : hmem.0
-    240000000-33fffffff : dax0.0
-  340000000-43fffffff : hmem.1
-    340000000-43fffffff : dax1.0
+ drivers/mmc/host/Kconfig          |   1 +
+ drivers/mmc/host/Makefile         |   2 +-
+ drivers/mmc/host/sdhci-pci-core.c |   2 +
+ drivers/mmc/host/sdhci-pci-gli.c  | 350 ++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci-pci.h      |   5 +
+ drivers/mmc/host/sdhci.c          |  30 ++-
+ drivers/mmc/host/sdhci.h          |   2 +
+ include/linux/pci_ids.h           |   2 +
+ 8 files changed, 390 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/mmc/host/sdhci-pci-gli.c
 
-Cc: Len Brown <lenb@kernel.org>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/acpi/numa/Kconfig |    1 
- drivers/acpi/numa/hmat.c  |  136 +++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 125 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-index d14582387ed0..c1be746e111a 100644
---- a/drivers/acpi/numa/Kconfig
-+++ b/drivers/acpi/numa/Kconfig
-@@ -8,6 +8,7 @@ config ACPI_HMAT
- 	bool "ACPI Heterogeneous Memory Attribute Table Support"
- 	depends on ACPI_NUMA
- 	select HMEM_REPORTING
-+	select MEMREGION
- 	help
- 	 If set, this option has the kernel parse and report the
- 	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 4707eb9dd07b..eaa5a0f93dec 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -8,12 +8,18 @@
-  * the applicable attributes with the node's interfaces.
-  */
- 
-+#define pr_fmt(fmt) "acpi/hmat: " fmt
-+#define dev_fmt(fmt) "acpi/hmat: " fmt
-+
- #include <linux/acpi.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/init.h>
- #include <linux/list.h>
-+#include <linux/mm.h>
-+#include <linux/platform_device.h>
- #include <linux/list_sort.h>
-+#include <linux/memregion.h>
- #include <linux/memory.h>
- #include <linux/mutex.h>
- #include <linux/node.h>
-@@ -49,6 +55,7 @@ struct memory_target {
- 	struct list_head node;
- 	unsigned int memory_pxm;
- 	unsigned int processor_pxm;
-+	struct resource memregions;
- 	struct node_hmem_attrs hmem_attrs;
- 	struct list_head caches;
- 	struct node_cache_attrs cache_attrs;
-@@ -104,22 +111,36 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
- 	list_add_tail(&initiator->node, &initiators);
- }
- 
--static __init void alloc_memory_target(unsigned int mem_pxm)
-+static __init void alloc_memory_target(unsigned int mem_pxm,
-+		resource_size_t start, resource_size_t len)
- {
- 	struct memory_target *target;
- 
- 	target = find_mem_target(mem_pxm);
--	if (target)
--		return;
--
--	target = kzalloc(sizeof(*target), GFP_KERNEL);
--	if (!target)
--		return;
-+	if (!target) {
-+		target = kzalloc(sizeof(*target), GFP_KERNEL);
-+		if (!target)
-+			return;
-+		target->memory_pxm = mem_pxm;
-+		target->processor_pxm = PXM_INVAL;
-+		target->memregions = (struct resource) {
-+			.name	= "ACPI mem",
-+			.start	= 0,
-+			.end	= -1,
-+			.flags	= IORESOURCE_MEM,
-+		};
-+		list_add_tail(&target->node, &targets);
-+		INIT_LIST_HEAD(&target->caches);
-+	}
- 
--	target->memory_pxm = mem_pxm;
--	target->processor_pxm = PXM_INVAL;
--	list_add_tail(&target->node, &targets);
--	INIT_LIST_HEAD(&target->caches);
-+	/*
-+	 * There are potentially multiple ranges per PXM, so record each
-+	 * in the per-target memregions resource tree.
-+	 */
-+	if (!__request_region(&target->memregions, start, len, "memory target",
-+				IORESOURCE_MEM))
-+		pr_warn("failed to reserve %#llx - %#llx in pxm: %d\n",
-+				start, start + len, mem_pxm);
- }
- 
- static __init const char *hmat_data_type(u8 type)
-@@ -452,7 +473,7 @@ static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	if (!(ma->flags & ACPI_SRAT_MEM_ENABLED))
- 		return 0;
--	alloc_memory_target(ma->proximity_domain);
-+	alloc_memory_target(ma->proximity_domain, ma->base_address, ma->length);
- 	return 0;
- }
- 
-@@ -613,10 +634,91 @@ static void hmat_register_target_perf(struct memory_target *target)
- 	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
- }
- 
-+static void hmat_register_target_device(struct memory_target *target,
-+		struct resource *r)
-+{
-+	/* define a clean / non-busy resource for the platform device */
-+	struct resource res = {
-+		.start = r->start,
-+		.end = r->end,
-+		.flags = IORESOURCE_MEM,
-+	};
-+	struct platform_device *pdev;
-+	struct memregion_info info;
-+	int rc, id;
-+
-+	rc = region_intersects(res.start, resource_size(&res), IORESOURCE_MEM,
-+			IORES_DESC_SOFT_RESERVED);
-+	if (rc != REGION_INTERSECTS)
-+		return;
-+
-+	id = memregion_alloc(GFP_KERNEL);
-+	if (id < 0) {
-+		pr_err("memregion allocation failure for %pr\n", &res);
-+		return;
-+	}
-+
-+	pdev = platform_device_alloc("hmem", id);
-+	if (!pdev) {
-+		pr_err("hmem device allocation failure for %pr\n", &res);
-+		goto out_pdev;
-+	}
-+
-+	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->memory_pxm);
-+	info = (struct memregion_info) {
-+		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
-+	};
-+	rc = platform_device_add_data(pdev, &info, sizeof(info));
-+	if (rc < 0) {
-+		pr_err("hmem memregion_info allocation failure for %pr\n", &res);
-+		goto out_pdev;
-+	}
-+
-+	rc = platform_device_add_resources(pdev, &res, 1);
-+	if (rc < 0) {
-+		pr_err("hmem resource allocation failure for %pr\n", &res);
-+		goto out_resource;
-+	}
-+
-+	rc = platform_device_add(pdev);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "device add failed for %pr\n", &res);
-+		goto out_resource;
-+	}
-+
-+	return;
-+
-+out_resource:
-+	put_device(&pdev->dev);
-+out_pdev:
-+	memregion_free(id);
-+}
-+
-+static __init void hmat_register_target_devices(struct memory_target *target)
-+{
-+	struct resource *res;
-+
-+	/*
-+	 * Do not bother creating devices if no driver is available to
-+	 * consume them.
-+	 */
-+	if (!IS_ENABLED(CONFIG_DEV_DAX_HMEM))
-+		return;
-+
-+	for (res = target->memregions.child; res; res = res->sibling)
-+		hmat_register_target_device(target, res);
-+}
-+
- static void hmat_register_target(struct memory_target *target)
- {
- 	int nid = pxm_to_node(target->memory_pxm);
- 
-+	/*
-+	 * Devices may belong to either an offline or online
-+	 * node, so unconditionally add them.
-+	 */
-+	hmat_register_target_devices(target);
-+
- 	/*
- 	 * Skip offline nodes. This can happen when memory
- 	 * marked EFI_MEMORY_SP, "specific purpose", is applied
-@@ -677,11 +779,21 @@ static __init void hmat_free_structures(void)
- 	struct target_cache *tcache, *cnext;
- 
- 	list_for_each_entry_safe(target, tnext, &targets, node) {
-+		struct resource *res, *res_next;
-+
- 		list_for_each_entry_safe(tcache, cnext, &target->caches, node) {
- 			list_del(&tcache->node);
- 			kfree(tcache);
- 		}
-+
- 		list_del(&target->node);
-+		res = target->memregions.child;
-+		while (res) {
-+			res_next = res->sibling;
-+			__release_region(&target->memregions, res->start,
-+					resource_size(res));
-+			res = res_next;
-+		}
- 		kfree(target);
- 	}
- 
+-- 
+2.22.1
 
