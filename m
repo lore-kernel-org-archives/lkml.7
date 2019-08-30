@@ -2,365 +2,335 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB01C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EF3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FCA20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252B020659
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567176648;
+	bh=aWiWfLDLWh7KyzN18ytAGs/+bskNM5FmOEELhpEFm28=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=djk+ipeMe/emWFQRoH3e9SGQ4f1ldrs92HQlMHCyOdUXywTldRtT1V0pekUP4Oo72
+	 ZfHzB5Ju9TALgVTcoN+zyfDirWbdM964H5C0KPwZzX8U5OtcA/5oH0Jb4D9N1kufXy
+	 V2qOW+x28RkjxZqxt3eavHesWVP3LwJUNJsVXU2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfH3Osm (ORCPT
+        id S1727961AbfH3Our (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:48:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44120 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727170AbfH3Osl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:48:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9DBBAB667;
-        Fri, 30 Aug 2019 14:48:39 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 16:48:38 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: dataring API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk
- ringbuffer implementation
-Message-ID: <20190830144838.smyfudvrqpfswphy@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
+        Fri, 30 Aug 2019 10:50:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:33436 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbfH3Our (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:50:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFB08344;
+        Fri, 30 Aug 2019 07:50:45 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 876243F703;
+        Fri, 30 Aug 2019 07:50:44 -0700 (PDT)
+Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup
+ capable GPIOs
+To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
+        evgreen@chromium.org, linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-4-ilina@codeaurora.org>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
+Date:   Fri, 30 Aug 2019 15:50:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807222634.1723-2-john.ogness@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190829181203.2660-4-ilina@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-08-08 00:32:26, John Ogness wrote:
-> diff --git a/kernel/printk/dataring.c b/kernel/printk/dataring.c
+[Please use my kernel.org address in the future. The days of this
+arm.com address are numbered...]
+
+On 29/08/2019 19:11, Lina Iyer wrote:
+> Introduce a new domain for wakeup capable GPIOs. The domain can be
+> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
+> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
+> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
+> corresponding PDC interrupt as its parent.
+> 
+> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
+>  include/linux/soc/qcom/irq.h |  34 ++++++++++++
+>  2 files changed, 129 insertions(+), 9 deletions(-)
+>  create mode 100644 include/linux/soc/qcom/irq.h
+> 
+> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> index 338fae604af5..ad1faf634bcf 100644
+> --- a/drivers/irqchip/qcom-pdc.c
+> +++ b/drivers/irqchip/qcom-pdc.c
+> @@ -13,12 +13,13 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> +#include <linux/soc/qcom/irq.h>
+>  #include <linux/spinlock.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+>  #define PDC_MAX_IRQS		126
+> +#define PDC_MAX_GPIO_IRQS	256
+>  
+>  #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
+>  #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
+> @@ -26,6 +27,8 @@
+>  #define IRQ_ENABLE_BANK		0x10
+>  #define IRQ_i_CFG		0x110
+>  
+> +#define PDC_NO_PARENT_IRQ	~0UL
+> +
+>  struct pdc_pin_region {
+>  	u32 pin_base;
+>  	u32 parent_base;
+> @@ -65,23 +68,35 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
+>  
+>  static void qcom_pdc_gic_disable(struct irq_data *d)
+>  {
+> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
+> +		return;
+> +
+>  	pdc_enable_intr(d, false);
+>  	irq_chip_disable_parent(d);
+>  }
+>  
+>  static void qcom_pdc_gic_enable(struct irq_data *d)
+>  {
+> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
+> +		return;
+> +
+>  	pdc_enable_intr(d, true);
+>  	irq_chip_enable_parent(d);
+>  }
+>  
+>  static void qcom_pdc_gic_mask(struct irq_data *d)
+>  {
+> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
+> +		return;
+> +
+>  	irq_chip_mask_parent(d);
+>  }
+>  
+>  static void qcom_pdc_gic_unmask(struct irq_data *d)
+>  {
+> +	if (d->hwirq == GPIO_NO_WAKE_IRQ)
+> +		return;
+> +
+>  	irq_chip_unmask_parent(d);
+>  }
+>  
+> @@ -124,6 +139,9 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
+>  	int pin_out = d->hwirq;
+>  	enum pdc_irq_config_bits pdc_type;
+>  
+> +	if (pin_out == GPIO_NO_WAKE_IRQ)
+> +		return 0;
+> +
+>  	switch (type) {
+>  	case IRQ_TYPE_EDGE_RISING:
+>  		pdc_type = PDC_EDGE_RISING;
+> @@ -181,8 +199,7 @@ static irq_hw_number_t get_parent_hwirq(int pin)
+>  			return (region->parent_base + pin - region->pin_base);
+>  	}
+>  
+> -	WARN_ON(1);
+> -	return ~0UL;
+> +	return PDC_NO_PARENT_IRQ;
+>  }
+>  
+>  static int qcom_pdc_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+> @@ -211,17 +228,17 @@ static int qcom_pdc_alloc(struct irq_domain *domain, unsigned int virq,
+>  
+>  	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
+>  	if (ret)
+> -		return -EINVAL;
+> -
+> -	parent_hwirq = get_parent_hwirq(hwirq);
+> -	if (parent_hwirq == ~0UL)
+> -		return -EINVAL;
+> +		return ret;
+>  
+>  	ret  = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+>  					     &qcom_pdc_gic_chip, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> +	parent_hwirq = get_parent_hwirq(hwirq);
+> +	if (parent_hwirq == PDC_NO_PARENT_IRQ)
+> +		return 0;
+> +
+>  	if (type & IRQ_TYPE_EDGE_BOTH)
+>  		type = IRQ_TYPE_EDGE_RISING;
+>  
+> @@ -244,6 +261,60 @@ static const struct irq_domain_ops qcom_pdc_ops = {
+>  	.free		= irq_domain_free_irqs_common,
+>  };
+>  
+> +static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
+> +			       unsigned int nr_irqs, void *data)
+> +{
+> +	struct irq_fwspec *fwspec = data;
+> +	struct irq_fwspec parent_fwspec;
+> +	irq_hw_number_t hwirq, parent_hwirq;
+> +	unsigned int type;
+> +	int ret;
+> +
+> +	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+> +					    &qcom_pdc_gic_chip, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (hwirq == GPIO_NO_WAKE_IRQ)
+> +		return 0;
+> +
+> +	parent_hwirq = get_parent_hwirq(hwirq);
+> +	if (parent_hwirq == PDC_NO_PARENT_IRQ)
+> +		return 0;
+> +
+> +	if (type & IRQ_TYPE_EDGE_BOTH)
+> +		type = IRQ_TYPE_EDGE_RISING;
+> +
+> +	if (type & IRQ_TYPE_LEVEL_MASK)
+> +		type = IRQ_TYPE_LEVEL_HIGH;
+> +
+> +	parent_fwspec.fwnode      = domain->parent->fwnode;
+> +	parent_fwspec.param_count = 3;
+> +	parent_fwspec.param[0]    = 0;
+> +	parent_fwspec.param[1]    = parent_hwirq;
+> +	parent_fwspec.param[2]    = type;
+> +
+> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
+> +					    &parent_fwspec);
+> +}
+> +
+> +static int qcom_pdc_gpio_domain_select(struct irq_domain *d,
+> +				       struct irq_fwspec *fwspec,
+> +				       enum irq_domain_bus_token bus_token)
+> +{
+> +	return (bus_token == DOMAIN_BUS_WAKEUP);
+> +}
+> +
+> +static const struct irq_domain_ops qcom_pdc_gpio_ops = {
+> +	.select		= qcom_pdc_gpio_domain_select,
+> +	.alloc		= qcom_pdc_gpio_alloc,
+> +	.free		= irq_domain_free_irqs_common,
+> +};
+> +
+>  static int pdc_setup_pin_mapping(struct device_node *np)
+>  {
+>  	int ret, n;
+> @@ -282,7 +353,7 @@ static int pdc_setup_pin_mapping(struct device_node *np)
+>  
+>  static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+>  {
+> -	struct irq_domain *parent_domain, *pdc_domain;
+> +	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
+>  	int ret;
+>  
+>  	pdc_base = of_iomap(node, 0);
+> @@ -313,8 +384,23 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+>  		goto fail;
+>  	}
+>  
+> +	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
+> +						      IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP,
+> +						      PDC_MAX_GPIO_IRQS,
+> +						      of_fwnode_handle(node),
+> +						      &qcom_pdc_gpio_ops, NULL);
+> +	if (!pdc_gpio_domain) {
+> +		pr_err("%pOF: GIC domain add failed for GPIO domain\n", node);
+> +		ret = -ENOMEM;
+> +		goto remove;
+> +	}
+> +
+> +	irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
+> +
+>  	return 0;
+>  
+> +remove:
+> +	irq_domain_remove(pdc_domain);
+>  fail:
+>  	kfree(pdc_region);
+>  	iounmap(pdc_base);
+> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
 > new file mode 100644
-> index 000000000000..911bac593ec1
+> index 000000000000..73239917dc38
 > --- /dev/null
-> +++ b/kernel/printk/dataring.c
-> + * DOC: dataring overview
-
-I have to spend a lot of time thinking about dataring API. I started
-with some small comments. I ended with a description how I see
-the API consistency.
-
-I am still not sure that I see it from the right angle. Let's see.
-
-> + * A dataring is a lockless ringbuffer consisting of variable length data
-> + * blocks, each of which are assigned an ID. The IDs map to descriptors, which
-> + * contain metadata about the data block. The lookup function mapping IDs to
-> + * descriptors is implemented by the user.
+> +++ b/include/linux/soc/qcom/irq.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __QCOM_IRQ_H
+> +#define __QCOM_IRQ_H
+> +
+> +#include <linux/irqdomain.h>
+> +
+> +#define GPIO_NO_WAKE_IRQ	~0U
+> +
+> +/**
+> + * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
+> + * capable interrupts by different interrupt controllers.
 > + *
-> + * Descriptors
-> + * -----------
-> + * A descriptor is a handle to a data block. How descriptors are structured
-> + * and mapped to IDs is implemented by the user.
+> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
+> + *                                  interrupt configuration is done at PDC
+> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
+> + */
+> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
+> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
 
-We should add a note that logical IDs are used to avoid ABA problems.
+Any reason why you're starting at bit 17? The available range in from
+bit 16... But overall, it would be better if you expressed it as:
 
-> + * Descriptors contain the begin (begin_lpos) and end (next_lpos) logical
-> + * positions of the data block they represent. The end logical position
-> + * matches the begin logical position of the adjacent data block.
+#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP	(IRQ_DOMAIN_FLAG_NONCORE << 0)
+#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP (IRQ_DOMAIN_FLAG_NONCORE << 1)
+
+> +
+> +/**
+> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
+> + *                                configuration
+> + * @parent: irq domain
 > + *
-> + * Why Descriptors?
-> + * ----------------
-> + * The data ringbuffer supports variable length entities, which means that
-> + * data blocks will not always begin at a predictable offset of the byte
-> + * array. This is a major problem for lockless writers that, for example, will
-> + * compete to expire and reuse old data blocks when the ringbuffer is full.
-> + * Without a predictable begin for the data blocks, a writer has no reliable
-> + * information about the status of the "free" area. Are any flags or state
-> + * variables already set or is it just garbage left over from previous usage?
-> + *
-> + * Descriptors allow safe and controlled access to data block metadata by
-> + * providing predictable offsets for such metadata. This is key to supporting
-> + * multiple concurrent lockless writers.
-> + *
-> + * Behavior
-> + * --------
-> + * The data ringbuffer allows writers to commit data without regard for
-> + * readers. Readers must pre- and post-validate the data blocks they are
-> + * processing to be sure the processed data is consistent. A function
-> + * dataring_datablock_isvalid() is available for that. Readers can only
-> + * iterate data blocks by utilizing an external implementation using
-> + * descriptor lookups based on IDs.
-> + *
-> + * Writers commit data in two steps:
-> + *
-> + * (1) Reserve a new data block (dataring_push()).
-> + * (2) Commit the data block (dataring_datablock_setid()).
-> + *
-> + * Once a data block is committed, it is available for recycling by another
-> + * writer. Therefore, once committed, a writer must no longer access the data
-> + * block.
-> + *
-> + * If data block reservation fails, it means the oldest reserved data block
-> + * has not yet been committed by its writer. This acts as a blocker for any
-> + * future data block reservation.
-
-Let's start with something easier. I am not sure with the FIFO interface:
-
-> +bool dataring_pop(struct dataring *dr);
-> +char *dataring_push(struct dataring *dr, unsigned int size,
-> +		    struct dr_desc *desc, unsigned long id);
-
-This is the same FIFO interface as in numlist. But the semantic
-is different, especially the push() part:
-
-   + numlist_push():
-      + adds a new (external node)
-      + node is valid when added
-      + always succeeds
-
-   + dataring_push()
-      + just reserves space in its own data structure;
-      + data are written later and not valid until anyone calls
-	setid() (commits)
-      + might fail when it is unable to remove old (non-committed)
-	data with wrong id
-
-The pop() part is similar but the wording is slightly different:
-
-    + numlist_pop()
-      + succeeds only when the oldest node is not blocked().
-      + blocked state is defined by external callback
-
-    + dataring_pop()
-      + succeeds only when the oldest node has correct id (committed)
-      + the id is validated using external callback
-
-
-I am somehow confused by the same names and the differences.
-Also dataring_push() does not push any data. It is only making
-space.
-
-I believe that the following interface will be much easier
-to understand. It is inspired by ringbuffer API. Both APIs
-actually have similar usage:
-
-  + dataring_reserve() instead of push()
-  + dataring_commit() instead of setid()
-  + dataring_remove_oldest() instead of pop()
-
-
-> +struct dr_datablock *dataring_getdatablock(struct dataring *dr,
-> +					   struct dr_desc *desc, int *size);
-
-please: getdatablock -> get_datablock
-
-On the same note, please, rename getdesc() callback to get_desc().
-
-> +bool dataring_datablock_isvalid(struct dataring *dr, struct dr_desc *desc);
-
-I am always in doubts what it exactly means, especially whether
-the data are valid. I suggest something like:
-
-   dataring_datablock_is_used()  (means reserved or committed)
-
-Or make it clear that it only compares the given ranges:
-
-   dataring_range_in_use()
-
-
-
-OK, now, the complicated part: consistency:
-
-Dataring API works with:
-
-   + global: head_lpos, tail_lpos
-   + per datablock:
-       + locally stored: id
-       + externally stored: begin_lpos, next_lpos
-
-Let's look at "id" more closely from the dataring API side of view:
-
-  1. ID stored the in the external struct prb_desc.
-
-     Here the ID match is a bit fuzzy from dataring API point of view.
-     begin_lpos and next_lpos stored in the external prb_desc can point
-     to datablock for the current id or id from the previous
-     cycle because they were not updated yet.
-
-     Now, dataring API is allowed to rewrite them in
-     dataring_push()/reserve(). But it does not know
-     if they are consistent in another situation.
-
-
-  2. ID stored in the datablock
-
-     Here the ID match means that the data are committed
-     and could get reused. Except when they are already
-     overwritten and the ID matches just by chance.
-
-Summary:
-
-     The dataring API could not decide about the validity on its own.
-
-     The API is a slave that does some actions when asked.
-     The action is that it computes all the lpos indexes.
-     But the external code decides when they are valid and
-     when they can be written.
-
-
-More pitfalls of the internally stored id (in datablock):
-
-      + invalid value (id - 1) is set in dataring_push/reserve()
-      + valid value (id) is set in dataring_setid/commit()
-      + id is used only in one check and indirectly!!!
-
-     In particular, the "id" is used to index the external dr_desc
-     in dataring_pop().
-
-     The external prb_getdesc() callback then checks that it
-     matches with id stored in the external prb_desc. It returns
-     back pointer to db_desc. dataring_pop() then checks that
-     lpos_begin and lpos_next are in bounds.
-
-     WARN: I do not see a check whether lpos_begin points back
-	   to exactly the same location when the original
-	   "id" was read.
-
-     WARN: Reader, prb_iter_next_valid_entry(), does not check
-	   the ID stored in datablock. It should make sure
-	   the data are consistent. It relies on the fact that
-	   only valid datablocks are reachable via numlist.
-
-	   Except that the related numlist entries are not
-	   removed from the list when the related datablock
-	   is poped. It relies on the fact that the stored
-	   lpos values are not longer in valid range.
-
-	   Sigh, these are a lot of assumptions that are
-	   hard to describe and keep in mind.
-
-
-      BTW: The check at the end of the reading is really weak,
-	   see prb_iter_next_valid_entry(). It does not check
-	   that the ID is still the same and that lpos_begin
-	   and lpos_end are still the same.
-
-
-OK, the above looks a bit scary to me. Let's look at it
-from another angle.
-
-What is the purpose of the API?
-
-  + provide the requested space for writer
-  + assist with reading the data???
-
-
-What are the responsibilities (current code):
-
-  + Writer:
-
-     + provides "id" pointing to external struct db_desc
-       where the ring buffer could store lpos for
-       the reserved space.
-
-     + ensures exclusive write access to this structure until
-       the space is reserved.
-
-     + tells when the data are committed and the space can get
-       reused
-
-     + provides callback to find the external struct prb_desc
-       for a given ID. The callback does only basic consistency
-       check (by ID). The information is used to check if
-       the space is reusable.
-
-
-  + Reader:
-
-     + uses dataring_getdatablock() to get address and size
-       of the datablock; There are no barriers and no consistency
-       checks done by the dataring API.
-
-     + Calls dataring_datablock_isvalid() to check if lpos
-       are in valid bounds. The dataring API does not provide
-       any barriers to assist with it.
-
-
-  + dataring API:
-
-     + Manipulates the global lpos_head, lpos_tail indexes
-       and "id" field.
-
-     + Uses barriers to manipulate the above three variables
-       a safe way.
-
-
-Power and weakness:
-
-  + The dataring API helps:
-
-     + separate lpos computation
-     + handle lpos related barriers
-
-
-  + The dataring API does not help much:
-
-      + writer has many responsibilities and have to use
-	the API carefully.
-
-      + readers have to get and validate information by more
-	API calls
-
-      + more consistency checks are possible; it is hard to
-	say what is must-to-have or nice-to-have and
-	which API is responsible for what.
-
-
-Result:
-
-I am sure that this API might get improved. But I am not sure
-that it is worth it.
-
-I though that the splint into 3 layers (ringbuffer, dataring, numlist)
-might help to split the problem and make it easier. It helped,
-definitely. But the consistency is still too complicated. The number
-of memory barriers is really high.
-
-There might be also argument that the APIs are reusable. But I do not
-believe it. They are too complicated and depends on each other.
-I do not think that anyone else might need exactly this complexity
-for their use case.
-
-
-OK, I have spent big part of two weeks with this patchset. I think
-that I did a big progress. But it seems that either me or someone
-else would need to put quite some effort to make this approach
-manageable for me.
-
-This brings me back to my alternative solution, see
-https://lore.kernel.org/lkml/20190704103321.10022-1-pmladek@suse.com/
-I believe that it might be easier to get into some
-usable and manageable state than to fight with the numlist
-based approach.
-
-John did a port on top of this patchset, see
-https://lore.kernel.org/lkml/87lfvwcssu.fsf@linutronix.de/
-and it seems to work. It would need to get refactored
-back to a cleaner state: remove numlist and maybe even
-ringbuffer API. What do you think?
-
-Best Regards,
-Petr
+> + * This QCOM specific irq domain call returns if the interrupt controller
+> + * requires the interrupt be masked at the child interrupt controller.
+> + */
+> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
+> +{
+> +	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
+> +}
+> +
+> +#endif
+> 
+
+But most of this file isn't used by this patch, so maybe it should be
+moved somewhere else...
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
