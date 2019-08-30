@@ -2,105 +2,90 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88449C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C042BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66735215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951CF22CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iq6TkDDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbfH3PxY (ORCPT
+        id S1728337AbfH3Px0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 30 Aug 2019 11:53:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43008 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3PxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 30 Aug 2019 11:53:24 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3543 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727135AbfH3PxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:53:24 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 35A7FA282F3B47C6C9FA;
-        Fri, 30 Aug 2019 23:53:12 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 30 Aug 2019 23:53:11 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 30 Aug 2019 23:53:11 +0800
-Date:   Fri, 30 Aug 2019 23:52:23 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Joe Perches <joe@perches.com>, Chao Yu <yuchao0@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v2 2/7] erofs: some marcos are much more readable as a
- function
-Message-ID: <20190830155223.GA69026@architecture4>
-References: <20190830030040.10599-1-gaoxiang25@huawei.com>
- <20190830030040.10599-2-gaoxiang25@huawei.com>
- <5b2ecf5cec1a6aa3834e9af41886a7fcb18ae86a.camel@perches.com>
- <20190830154551.GA11571@infradead.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zHweZvPv+qS/uw/ey2KytzqYKe6e+8sBiSgp7HEOu4A=; b=iq6TkDDssGGAfJpgik5ak2P6z
+        k+EkNHyvUt5DYa6Mo/5qad5Y3LOTnrz+66CiqqQ0TzL71W+6ucF/ugiriFY1UtRSvtjc0yCoTPkMO
+        MmWNDG83+xz3bqQ3N/LGn0Sr5FMx/T25D438R8GoSVQXSh0TsNZH91b1cJOs7LDjJXJha67qbRtb1
+        4f9tK+z04lGEcyydrCw4/iB/wgv3vc4Dw35csJ2w5SClP0RZW68nJPIVZOhNUK9fbdzTmfIoLuCy7
+        iLirIk7a044snRG40OuwH4IyqdkFukC1AicEsU7MBRZ6GnlBHnzNFRY705Nfq/sh9XYxmWSl7WUPi
+        p2pSIggiQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3jDG-0007w4-FQ; Fri, 30 Aug 2019 15:53:22 +0000
+Date:   Fri, 30 Aug 2019 08:53:22 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
+Message-ID: <20190830155322.GA30046@infradead.org>
+References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
+ <20190826113526.GA23425@infradead.org>
+ <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830154551.GA11571@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Tue, Aug 27, 2019 at 02:14:59PM +0900, Masahiro Yamada wrote:
+> There is a small documentation about "Makefile" vs "Kbuild"
+> in Documentation/kbuild/modules.rst section 3.2
 
-On Fri, Aug 30, 2019 at 08:45:51AM -0700, Christoph Hellwig wrote:
-> On Thu, Aug 29, 2019 at 08:16:27PM -0700, Joe Perches wrote:
-> > > -		sizeof(__u32) * ((__count) - 1); })
-> > > +static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
-> > > +{
-> > > +	unsigned int icount = le16_to_cpu(d_icount);
-> > > +
-> > > +	if (!icount)
-> > > +		return 0;
-> > > +
-> > > +	return sizeof(struct erofs_xattr_ibody_header) +
-> > > +		sizeof(__u32) * (icount - 1);
-> > 
-> > Maybe use struct_size()?
+I know that part.
+
 > 
-> Declaring a variable that is only used for struct_size is rather ugly.
-> But while we are nitpicking: you don't need to byteswap to check for 0,
-> so the local variable could be avoided.
+> It is talking about external modules, but the benefit applies
+> to arch/$(SRCARCH)/Kbuild as well.
+
+I fail to fully understand this part, though.
+
+> arch/$(SRCARCH)/Makefile is included by the top Makefile
+> to specify arch-specific compiler flags, etc.
 > 
-> Also what is that magic -1 for?  Normally we use that for the
-> deprecated style where a variable size array is declared using
-> varname[1], but that doesn't seem to be the case for erofs.
+> On the other hand, arch/$(SRCARCH)/Kbuild, if exists, is included
+> when Kbuild actually descends into arch/$(SRCARCH)/.
+> 
+> This allows you to hierarchize the sub-directories to visit
+> instead of specifying everything in flat in arch/$(SRCARCH)/Makefile.
 
-I have to explain more about this (sorry about my awkward English)
-here i_xattr_icount is to represent the size of xattr field of erofs, as follows:
- 0 - no xattr at all (no erofs_xattr_ibody_header)
-  _______
- | inode |
- |_______|
-
- 1 - a erofs_xattr_ibody_header (12 byte) + 4-byte (shared + inline) xattrs
- 2 - a erofs_xattr_ibody_header (12 byte) + 8-byte (shared + inline) xattrs
- ....
- (that is the magic -1 means...)
-
-In order to keep the number continuously, actually the content could be
- an array of shared_xattr_id and
- an inline xattr combination (struct erofs_xattr_entry + name + value)
-
-Thanks,
-Gao Xiang
-
+Yes, but what is the plan in the long run?  arch/$(ARCH)/Makefile
+is still a weird hodge-podge of overriding global variables and misc
+Makefile targets, it now just has a tiny little work.  Is there any
+actual benefit from using Kbuild for the build process?  Can we
+eventually move the setting of variables in the Makefile into another
+special purpose file?  Is the support for actually compiling kernel
+source files from the arch/$(ARCH) Makefile eventually going away?
