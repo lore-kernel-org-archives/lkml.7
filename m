@@ -2,27 +2,27 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD496C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CEFC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF83F23429
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986672342C
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfH3S6Y (ORCPT
+        id S1728199AbfH3S6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:58:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42564 "EHLO mx1.suse.de"
+        Fri, 30 Aug 2019 14:58:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42382 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727935AbfH3S6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:58:10 -0400
+        id S1727304AbfH3S6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:58:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0E9F5AE65;
-        Fri, 30 Aug 2019 18:58:10 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B4572ABD6;
+        Fri, 30 Aug 2019 18:58:04 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -50,12 +50,10 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Allison Randal <allison@lohutok.net>,
         David Hildenbrand <david@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 5/6] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
-Date:   Fri, 30 Aug 2019 20:57:56 +0200
-Message-Id: <a4704404cccb801457aab577781001b28c495233.1567188299.git.msuchanek@suse.de>
+Subject: [PATCH v6 0/6] Disable compat cruft on ppc64le v6
+Date:   Fri, 30 Aug 2019 20:57:51 +0200
+Message-Id: <cover.1567188299.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1567188299.git.msuchanek@suse.de>
-References: <cover.1567188299.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,32 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On bigendian ppc64 it is common to have 32bit legacy binaries but much
-less so on littleendian.
+Less code means less bugs so add a knob to skip the compat stuff.
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v3: make configurable
----
- arch/powerpc/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This is tested on ppc64le top of
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 5bab0bb6b833..b0339e892329 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -264,8 +264,9 @@ config PANIC_TIMEOUT
- 	default 180
- 
- config COMPAT
--	bool
--	default y if PPC64
-+	bool "Enable support for 32bit binaries"
-+	depends on PPC64
-+	default y if !CPU_LITTLE_ENDIAN
- 	select COMPAT_BINFMT_ELF
- 	select ARCH_WANT_OLD_COMPAT_IPC
- 	select COMPAT_OLD_SIGACTION
+https://patchwork.ozlabs.org/cover/1153556/
+
+Changes in v2: saner CONFIG_COMPAT ifdefs
+Changes in v3:
+ - change llseek to 32bit instead of builing it unconditionally in fs
+ - clanup the makefile conditionals
+ - remove some ifdefs or convert to IS_DEFINED where possible
+Changes in v4:
+ - cleanup is_32bit_task and current_is_64bit
+ - more makefile cleanup
+Changes in v5:
+ - more current_is_64bit cleanup
+ - split off callchain.c 32bit and 64bit parts
+Changes in v6:
+ - cleanup makefile after split
+ - consolidate read_user_stack_32
+ - fix some checkpatch warnings
+
+Michal Suchanek (6):
+  powerpc: make llseek 32bit-only.
+  powerpc: move common register copy functions from signal_32.c to
+    signal.c
+  powerpc/perf: consolidate read_user_stack_32
+  powerpc/64: make buildable without CONFIG_COMPAT
+  powerpc/64: Make COMPAT user-selectable disabled on littleendian by
+    default.
+  powerpc/perf: split callchain.c by bitness
+
+ arch/powerpc/Kconfig                     |   5 +-
+ arch/powerpc/include/asm/thread_info.h   |   4 +-
+ arch/powerpc/kernel/Makefile             |   7 +-
+ arch/powerpc/kernel/entry_64.S           |   2 +
+ arch/powerpc/kernel/signal.c             | 144 ++++++++-
+ arch/powerpc/kernel/signal_32.c          | 140 ---------
+ arch/powerpc/kernel/syscall_64.c         |   6 +-
+ arch/powerpc/kernel/syscalls/syscall.tbl |   2 +-
+ arch/powerpc/kernel/vdso.c               |   5 +-
+ arch/powerpc/perf/Makefile               |   5 +-
+ arch/powerpc/perf/callchain.c            | 377 +----------------------
+ arch/powerpc/perf/callchain.h            |  11 +
+ arch/powerpc/perf/callchain_32.c         | 204 ++++++++++++
+ arch/powerpc/perf/callchain_64.c         | 185 +++++++++++
+ 14 files changed, 564 insertions(+), 533 deletions(-)
+ create mode 100644 arch/powerpc/perf/callchain.h
+ create mode 100644 arch/powerpc/perf/callchain_32.c
+ create mode 100644 arch/powerpc/perf/callchain_64.c
+
 -- 
 2.22.0
 
