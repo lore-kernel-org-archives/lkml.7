@@ -2,116 +2,143 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F36C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BD9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCE5215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9542342A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PfpcOMF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfH3APe convert rfc822-to-8bit (ORCPT
+        id S1727328AbfH3AQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:15:34 -0400
-Received: from mga03.intel.com ([134.134.136.65]:36471 "EHLO mga03.intel.com"
+        Thu, 29 Aug 2019 20:16:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:51419 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfH3APe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:15:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:15:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="332693126"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by orsmga004.jf.intel.com with ESMTP; 29 Aug 2019 17:15:32 -0700
-Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 17:15:32 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 17:15:32 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.112]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.163]) with mapi id 14.03.0439.000;
- Fri, 30 Aug 2019 08:15:30 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     Andi Kleen <ak@linux.intel.com>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v1 1/9] KVM: x86: Add base address parameter for
- get_fixed_pmc function
-Thread-Topic: [RFC v1 1/9] KVM: x86: Add base address parameter for
- get_fixed_pmc function
-Thread-Index: AQHVXiwTvN9l0Wf/9ESeUncX5js89qcSGdmAgAC25tA=
-Date:   Fri, 30 Aug 2019 00:15:29 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E1737F7892@SHSMSX104.ccr.corp.intel.com>
-References: <1567056849-14608-1-git-send-email-luwei.kang@intel.com>
- <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
- <20190829211015.GU5447@tassilo.jf.intel.com>
-In-Reply-To: <20190829211015.GU5447@tassilo.jf.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1727182AbfH3AQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:16:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KKlm2Mlzz9sN6;
+        Fri, 30 Aug 2019 10:16:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567124196;
+        bh=g5NGWNARkNDvpAI12TjAprP6jJ76TkUM5e9Q9OcBPN0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PfpcOMF42mhnP8oLbq3PJBFpPaXjIX8gNfuNeVxRanYkG2F590OOBcAQosakCrWTm
+         7BGZfEohFundO2ea7ey6dLeMZzab1uK0jCww3joh+1izlmPP64QxcmjZOcsf0+7Lwv
+         1x1DQUsKj1VwrszEMgUqD2crMYGPoTnMlfOnuS9ilKbNdeFt+u/MakUR1LSAF7JJ+M
+         8IuQdigRCEpPPbZL1F4tWIWHtT+gDrptAlrflm9vo6p6fZWmgtMEmnkQ4HIKx1FmJT
+         WdiRYjrHPX+fWpc4UzUeYYyhotFe3cCnYetvb6BAey9gotxQjmGM0mafZYY8F9MI3s
+         xk7veVw4OuHog==
+Date:   Fri, 30 Aug 2019 10:16:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Guo Ren <ren_guo@c-sky.com>, Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the csky tree with the dma-mapping tree
+Message-ID: <20190830101634.21dca185@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/PRcj0/Yawm.MCDGpYYaNiWW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >  /* returns fixed PMC with the specified MSR */ -static inline struct
-> > kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
-> > +static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32
-> msr,
-> > +								int base)
-> 
-> Better define a __get_fixed_pmc just for this case, with the existing
-> get_fixed_pmc being a wrapper.
-> 
-> This would avoid changing all the callers below.
+--Sig_/PRcj0/Yawm.MCDGpYYaNiWW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Do you mean change the code like this, and call "__get_fixed_pmc" in my patch? We already have a similar function to get gp counters.
-struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr, u32 base)	// get gp counters
-struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)		// get fixed counters
+Hi all,
 
--/* returns fixed PMC with the specified MSR */
--static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
-+static inline struct kvm_pmc *__get_fixed_pmc(struct kvm_pmu *pmu, u32 msr, u32 base)
- {
--       int base = MSR_CORE_PERF_FIXED_CTR0;
--
-        if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
-                return &pmu->fixed_counters[msr - base];
+Today's linux-next merge of the csky tree got a conflict in:
 
-        return NULL;
- }
+  arch/csky/mm/dma-mapping.c
 
-+/* returns fixed PMC with the specified MSR */
-+static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
-+{
-+       return __get_fixed_pmc(pmu, msr, MSR_CORE_PERF_FIXED_CTR0)
-+}
+between commit:
 
-Thanks,
-Luwei Kang
+  8e3a68fb55e0 ("dma-mapping: make dma_atomic_pool_init self-contained")
 
-> 
-> 
-> -Andi
+from the dma-mapping tree and commit:
+
+  4af9027d3f40 ("csky/dma: Fixup cache_op failed when cross memory ZONEs")
+
+from the csky tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/csky/mm/dma-mapping.c
+index 602a60d47a94,106ef02a8f89..000000000000
+--- a/arch/csky/mm/dma-mapping.c
++++ b/arch/csky/mm/dma-mapping.c
+@@@ -14,33 -14,12 +14,6 @@@
+  #include <linux/version.h>
+  #include <asm/cache.h>
+ =20
+- void arch_dma_prep_coherent(struct page *page, size_t size)
+ -static int __init atomic_pool_init(void)
+--{
+- 	if (PageHighMem(page)) {
+- 		unsigned int count =3D PAGE_ALIGN(size) >> PAGE_SHIFT;
+-=20
+- 		do {
+- 			void *ptr =3D kmap_atomic(page);
+- 			size_t _size =3D (size < PAGE_SIZE) ? size : PAGE_SIZE;
+-=20
+- 			memset(ptr, 0, _size);
+- 			dma_wbinv_range((unsigned long)ptr,
+- 					(unsigned long)ptr + _size);
+-=20
+- 			kunmap_atomic(ptr);
+-=20
+- 			page++;
+- 			size -=3D PAGE_SIZE;
+- 			count--;
+- 		} while (count);
+- 	} else {
+- 		void *ptr =3D page_address(page);
+-=20
+- 		memset(ptr, 0, size);
+- 		dma_wbinv_range((unsigned long)ptr, (unsigned long)ptr + size);
+- 	}
+ -	return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERNEL));
+--}
+ -postcore_initcall(atomic_pool_init);
+--
+  static inline void cache_op(phys_addr_t paddr, size_t size,
+  			    void (*fn)(unsigned long start, unsigned long end))
+  {
+
+--Sig_/PRcj0/Yawm.MCDGpYYaNiWW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oauIACgkQAVBC80lX
+0GzVyQf+PEyj5yFHMX/BLhINUl3JIg44T0Ejk81hGmZx6HdebSWtSEdiA6TLY6Ht
+QebgZ9MM6+aw5FIJpx38MvvzruWnMTh0L0gpdpfNbpTIg7nYCnvflRTsxVoHUGah
+sjzAXfp9CqkvObhHfNnArRCP53yvW74MhO9xjGhppsD7mqe5nvmdBNOdeCvNrRW3
+iE5nBBIo2x1yhyki4RsT6JqqXq241koY9GCe+uTWgtliL4Mrrq2u2uoMLYTxLQ5W
+5oNGFltKafOUaAjpaqYg9l8gPV89EiUIglMce4/VPhRfIrUmjc5Uhh4kaQFk/kzJ
+JoIspUaXaVA7Wp9BHVHWhgXjnlytpw==
+=mpiq
+-----END PGP SIGNATURE-----
+
+--Sig_/PRcj0/Yawm.MCDGpYYaNiWW--
