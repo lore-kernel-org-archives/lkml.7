@@ -2,24 +2,24 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0367C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006D1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9BF2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D150F21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbfH3HwK (ORCPT
+        id S1728361AbfH3HwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:52:10 -0400
+        Fri, 30 Aug 2019 03:52:15 -0400
 Received: from esa2.microchip.iphmx.com ([68.232.149.84]:11873 "EHLO
         esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728191AbfH3HwI (ORCPT
+        with ESMTP id S1728191AbfH3HwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:52:08 -0400
+        Fri, 30 Aug 2019 03:52:12 -0400
 Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   Razvan.Stefanescu@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -39,22 +39,22 @@ Received-SPF: None (esa2.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Razvan.Stefanescu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Tk0s43DimFZSh11bE//WzVTzqjY4uSzqQ3VLHFaFEAlUVKsvhJdvwwgxYtdtJPe/xte8KPpCx8
- TQufMN84Toy7SsPd90iBNSCvK9AoJcZxV0t1XLEwTNBIW8M0X8IjsM6uddiRjg7U4EEERhCLeK
- 0y9P11KnflqClxvLqyA66L0qNEumhLGUlNvEiOWFaoKAVpejrgBMUHz5o4IjcUk3DalTfoCSd3
- ho6BFqM3E/2eOphB/1mcCihNEXRxQgemsqD8TY2+NB9W5OY2Dh6rBrrkiomKcAZX7etW6kSy1Q
- rhE=
+IronPort-SDR: AkT+FMWxh1pWp+czqHmW91p5RGNGhmRxcNYFVW3aFIoS7uC2SQvovFaNdrmMwGVDFBR4oQuP6A
+ WrTSZnDHpgOeeXDs1j3iaeJlEN6GeF74i0VCS+u18zG4tMxW7J2rhbia4C9upl/jHd6rMe/848
+ oxfSCrkWjH5+EGWL+ZMNUiowlcffpgJlo78jKkwJm9jCmK+CF8DTe0u+sH+8hnCH6wkIIlmAaX
+ FTaIPHWJ8UhbPPbL4mWhiblpzy/237CqtYmju4JuhmNr1lDwMG2hl1yTc4gZbjKGOQHy1FRcQi
+ I6A=
 X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
-   d="scan'208";a="47133020"
+   d="scan'208";a="47133033"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Aug 2019 00:52:07 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Aug 2019 00:52:11 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 30 Aug 2019 00:52:07 -0700
+ 15.1.1713.5; Fri, 30 Aug 2019 00:52:11 -0700
 Received: from rob-ult-m50855.microchip.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 30 Aug 2019 00:52:05 -0700
+ 15.1.1713.5 via Frontend Transport; Fri, 30 Aug 2019 00:52:09 -0700
 From:   Razvan Stefanescu <razvan.stefanescu@microchip.com>
 To:     Woojung Huh <woojung.huh@microchip.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
@@ -64,10 +64,12 @@ To:     Woojung Huh <woojung.huh@microchip.com>,
         "David S . Miller" <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Razvan Stefanescu" <razvan.stefanescu@microchip.com>
-Subject: [PATCH v2 0/2] net: dsa: microchip: add KSZ8563 support
-Date:   Fri, 30 Aug 2019 10:52:00 +0300
-Message-ID: <20190830075202.20740-1-razvan.stefanescu@microchip.com>
+Subject: [PATCH v2 1/2] dt-bindings: net: dsa: document additional Microchip KSZ8563 switch
+Date:   Fri, 30 Aug 2019 10:52:01 +0300
+Message-ID: <20190830075202.20740-2-razvan.stefanescu@microchip.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190830075202.20740-1-razvan.stefanescu@microchip.com>
+References: <20190830075202.20740-1-razvan.stefanescu@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -76,19 +78,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds compatibility string for the KSZ8563 switch.
+It is a 3-Port 10/100 Ethernet Switch with 1588v2 PTP.
 
-Razvan Stefanescu (2):
-  dt-bindings: net: dsa: document additional Microchip KSZ8563 switch
-  net: dsa: microchip: add KSZ8563 compatibility string
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+---
+Changelog
+v2: no update
 
  Documentation/devicetree/bindings/net/dsa/ksz.txt | 1 +
- drivers/net/dsa/microchip/ksz9477_spi.c           | 1 +
- 2 files changed, 2 insertions(+)
+ 1 file changed, 1 insertion(+)
 
---
-Changelog:
-v2: drop fix patches
-
+diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+index 5e8429b6f9ca..95e91e84151c 100644
+--- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
++++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+@@ -15,6 +15,7 @@ Required properties:
+   - "microchip,ksz8565"
+   - "microchip,ksz9893"
+   - "microchip,ksz9563"
++  - "microchip,ksz8563"
+ 
+ Optional properties:
+ 
+-- 
 2.20.1
 
