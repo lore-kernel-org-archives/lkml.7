@@ -2,167 +2,106 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C78EC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D670C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140A82189D
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA85321726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 02:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dIUKOH91"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWDWXTP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfH3CVI (ORCPT
+        id S1727671AbfH3CXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 22:21:08 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15443 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfH3CVH (ORCPT
+        Thu, 29 Aug 2019 22:23:12 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43144 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfH3CXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 22:21:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6888110001>; Thu, 29 Aug 2019 19:21:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 29 Aug 2019 19:21:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 29 Aug 2019 19:21:04 -0700
-Received: from [10.110.48.201] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 30 Aug
- 2019 02:21:03 +0000
-Subject: Re: [PATCH v3 00/39] put_user_pages(): miscellaneous call sites
-To:     Mike Marshall <hubcap@omnibond.com>
-CC:     <john.hubbard@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>
-References: <20190807013340.9706-1-jhubbard@nvidia.com>
- <912eb2bd-4102-05c1-5571-c261617ad30b@nvidia.com>
- <CAOg9mSQKGDywcMde2DE42diUS7J8m74Hdv+xp_PJhC39EXZQuw@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <d453f865-2224-ed53-a2f4-f43d574c130a@nvidia.com>
-Date:   Thu, 29 Aug 2019 19:21:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 22:23:12 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v12so3496405pfn.10;
+        Thu, 29 Aug 2019 19:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kyP8YtTFMbDNG7qsSo2w5pZq5BUurmqPvqGOvI+33I4=;
+        b=rWDWXTP702wCGI624fpXgt3wQTyudNC5ks+AxLmDINU0IG4hpia4jffy04LubJ+6FJ
+         3J9fzomGghyOAFnNdIHOF92yQes/q9vsDG6AtSF/MYC/5/NC68QPpTardqn+t/tyrxpI
+         64Ic+KzV2muXl7r97bMzxEH53rWDI9omFh9KAdJp+QBPzhDyDRMLZigFWK6Ux4nrOGln
+         +jpirFjI3lO1Z1hy+s54+fHYuX++TiY7g6IthPlRxKstTiCD7XEsSRP9ilR3O/mE81oR
+         zAcgaDkXM47vtcrkUMlMGeKuDfA5hxP97i/uXSpo/OuBUvySOy2UqQZFEwuTu3NFwizs
+         Y1DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kyP8YtTFMbDNG7qsSo2w5pZq5BUurmqPvqGOvI+33I4=;
+        b=gytAb3y4fOVZzvhxhg99ieCDR2B1nKK6kNzC0ywF47hUfSlLM28nQJkRVl5u1GVz4A
+         Ss5+i34Ez/z37k/QUAe3M2+SZH5Iwb/I2uya4VII7iCO6Qjb0i96nyBuRF2mOjqAkKgK
+         CiGTsSSK+qt+1fRXUVQHdje/lqNdifnFznJ+Hk0iPfbmp7qiN0mfbsNl229WmpHEwwW8
+         4hasCFMLZPYFPBjkprIGGBB99wUKridUm1NC2LEjLSHLH/1DkbKUAQF15s/TGFAv6XKO
+         aZ2HW1mOe/sKwONbmMnGuRTUdb9SQXkTvow2e9/BizwFOeiKR5e1rBZXf5EBH5ThlpHf
+         0+RA==
+X-Gm-Message-State: APjAAAV8NRRkPujBzWC0MtE7BNhmahaX3I+CxO8zbPBJVlR47trsLq6+
+        Vz7PXPHKSCLijA67vp7Z6UA6FQgg
+X-Google-Smtp-Source: APXvYqwNoezNZPMbXavWEQcLm3PgRE/QzsUs6IR2c9RsVMOYbOJ/axfZDqM7Kc++s47GBrpL7Emfhw==
+X-Received: by 2002:a62:8344:: with SMTP id h65mr15360588pfe.85.1567131791880;
+        Thu, 29 Aug 2019 19:23:11 -0700 (PDT)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id a11sm3231896pju.2.2019.08.29.19.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 19:23:11 -0700 (PDT)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
+        Ben Chuang <benchuanggli@gmail.com>
+Subject: [PATCH V7 1/5] mmc: sdhci: Change timeout of loop for checking internal clock stable
+Date:   Fri, 30 Aug 2019 10:23:10 +0800
+Message-Id: <20190830022310.8299-1-benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <CAOg9mSQKGDywcMde2DE42diUS7J8m74Hdv+xp_PJhC39EXZQuw@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567131665; bh=ws5caXaEY0X3GX3egw6JsJDC0L7OwnIAHkDMK9ZQcE4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dIUKOH913DAYlocN1x3OWKU66rYzbsvcqMg6XurXOtfsQm0mTaQq0ufL9HiRQjmKf
-         MYeR8XR6MbUy9f2nOHFjitJW5jxjU59hEwD2KYzGMRBc0+P+o4b2mkzUliEchFZQzm
-         D0OR0ZfFBCp6cKpnoBGakw3Ch1supTeIz+DcDxFqgzxBAMqXWQoRbk0Sq3VWx6u9tp
-         6uURi8FKe6XveWY1U9zok9s2um/SF43+51Cnxqw5q2h2Dtp4kEwxNonMDqxzAcZjDx
-         HfyaHZc2XUvwuRV5WZb7Ki3OlH/mp5QHGx5CtmwXtp2TNme1r3iXAZgXDKrycQZylt
-         qlPWiGD9ap9bQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/2019 6:29 PM, Mike Marshall wrote:
-> Hi John...
-> 
-> I added this patch series on top of Linux 5.3rc6 and ran
-> xfstests with no regressions...
-> 
-> Acked-by: Mike Marshall <hubcap@omnibond.com>
-> 
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-Hi Mike (and I hope Ira and others are reading as well, because
-I'm making a bunch of claims further down),
+According to section 3.2.1 internal clock setup in SD Host Controller
+Simplified Specifications 4.20, the timeout of loop for checking
+internal clock stable is defined as 150ms.
 
-That's great news, thanks for running that test suite and for
-the report and the ACK.
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ drivers/mmc/host/sdhci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-There is an interesting pause right now, due to the fact that
-we've made some tentative decisions about gup pinning, that affect
-the call sites. A key decision is that only pages that were
-requested via FOLL_PIN, will require put_user_page*() to release
-them. There are 4 main cases, which were first explained by Jan
-Kara and Vlastimil Babka, and are now written up in my FOLL_PIN
-patch [1].
-
-So, what that means for this series is that:
-
-1. Some call sites (mlock.c for example, and a lot of the mm/ files
-in fact, and more) will not be converted: some of these patches will
-get dropped, especially in mm/.
-
-2. Call sites that do DirectIO or RDMA will need to set FOLL_PIN, and
-will also need to call put_user_page().
-
-3. Call sites that do RDMA will need to set FOLL_LONGTERM *and* FOLL_PIN,
-
-    3.a. ...and will at least in some cases need to provide a link to a
-    vaddr_pin object, and thus back to a struct file*...maybe. Still
-    under discussion.
-
-4. It's desirable to keep FOLL_* flags (or at least FOLL_PIN) internal
-to the gup() calls. That implies using a wrapper call such as Ira's
-vaddr_pin_[user]_pages(), instead of gup(), and vaddr_unpin_[user]_pages()
-instead of put_user_page*().
-
-5. We don't want to churn the call sites unnecessarily.
-
-With that in mind, I've taken another pass through all these patches
-and narrowed it down to:
-
-     a) 12 call sites that I'd like to convert soon, but even those
-        really look cleaner with a full conversion to a wrapper call
-        similar to (identical to?) vaddr_pin_[user]_pages(), probably
-        just the FOLL_PIN only variant (not FOLL_LONGTERM). That
-        wrapper call is not ready yet, though.
-
-     b) Some more call sites that require both FOLL_PIN and FOLL_LONGTERM.
-        Definitely will wait to use the wrapper calls for these, because
-        they may also require hooking up to a struct file*.
-
-     c) A few more that were already applied, which is fine, because they
-        show where to convert, and simplify a few sites anyway. But they'll
-        need follow-on changes to, one way or another, set FOLL_PIN.
-
-     d) And of course a few sites whose patches get dropped, as mentioned
-        above.
-
-[1] https://lore.kernel.org/r/20190821040727.19650-3-jhubbard@nvidia.com
-
-thanks,
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 59acf8e3331e..bed0760a6c2a 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1636,8 +1636,8 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+ 	clk |= SDHCI_CLOCK_INT_EN;
+ 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+ 
+-	/* Wait max 20 ms */
+-	timeout = ktime_add_ms(ktime_get(), 20);
++	/* Wait max 150 ms */
++	timeout = ktime_add_ms(ktime_get(), 150);
+ 	while (1) {
+ 		bool timedout = ktime_after(ktime_get(), timeout);
+ 
 -- 
-John Hubbard
-NVIDIA
+2.22.1
+
