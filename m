@@ -2,362 +2,105 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778AAC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9070C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5882341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885E823427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567181034;
+	bh=/TsnS01NI9Faoc6jujUnnmfQXtA8X9ZnGBg/vjnb2Cg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sEEqUaYgL/gB4owG7muwPxpJEW7Zi19Hx4VO/acrHKWCbKByQaG7sQnOkQd9xItWV
+	 3F8Ocvc0qKnL5j3hlRrvK2XI56l6WvpoWbSx5hHSnFL+DTYVnwFmivlwkcPk2Nf1CT
+	 5i5WtRsErZBYZXBNiz3LIYI9jwV3G3F8x2hAXRiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfH3QDC (ORCPT
+        id S1728146AbfH3QDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:03:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38852 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727791AbfH3QDC (ORCPT
+        Fri, 30 Aug 2019 12:03:53 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:36745 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3QDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:03:02 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UFvvrx023500
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:03:01 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uq5tk2p8f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:03:00 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 30 Aug 2019 17:02:59 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 30 Aug 2019 17:02:56 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UG2qw757475302
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 16:02:53 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5972AE056;
-        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 661AEAE061;
-        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.193])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
-Date:   Fri, 30 Aug 2019 18:02:50 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
-        jjherne@linux.ibm.com
-Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
- queue interrupts
-In-Reply-To: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
-References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 30 Aug 2019 12:03:53 -0400
+Received: by mail-lf1-f51.google.com with SMTP id r5so5763635lfc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O41u0LaDz39ALIXuHv0yabeuXt1/muoAQJYzGxbd+Vw=;
+        b=ZBVoFQCN6MNrzzwJZVX2J48A0/aHFZjrkKuYNUWHmt13AKALINVRdBhChzKcPkihYN
+         p0xN9WEeK9Mwf77siewx9XgBUMz9FjYVFo5vi21h8mu+gD1wWAnbZvdj/M/wUq588kHc
+         GAQtzS1mnKGtj/4wDGgauqjsqXpvQ5QaojCqA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O41u0LaDz39ALIXuHv0yabeuXt1/muoAQJYzGxbd+Vw=;
+        b=lL0DQKBGDGzfm+0UPOAVC6hQDroE1QeUoxRLZNUMUy6jCOXj6ean9eX4LtkkWYGpIo
+         FhM6qwzNpAbwd4YvchVBezJsbiZZfdyTHZ9JWA7Rzxhiso0NBfaLD4Fv0bkwzLsBGi/d
+         JbHS6oI/HEhF0l8ItBAxevd+teQnrMByTRT5EDQqT9hDffgirOqcOMfqBxQSJZcycuai
+         zqVHdH++S9dz2yVYPUeENjdQY9Sru5mNwizB6q+WoFOwzvwQzTeZQhXY/PPaxgKD5Xy8
+         9J3hNgzdo2XTf/Iy8fD5OUpOsP3HtVAbHLF3bIuVeXQjzRoMvJ0CWfzm4wro/OWciW6q
+         qikQ==
+X-Gm-Message-State: APjAAAWgLnw/dKFJn8iyKIDLurAg4+cgPoHg658Iv3y5WMX/pCtR+zBS
+        ILNDaisIgeV372uKeJr2wNaYWHL9q5I=
+X-Google-Smtp-Source: APXvYqymMtDzmI54ztd0KqntgI+YPDClaAgEb76JmTtyT/OKOKO5qRfF7HHCBKuQVtKh6+hBrxMOVw==
+X-Received: by 2002:a19:c191:: with SMTP id r139mr9858584lff.23.1567181030497;
+        Fri, 30 Aug 2019 09:03:50 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id z2sm983212lfh.97.2019.08.30.09.03.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 09:03:49 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id g9so5772670lfb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:03:49 -0700 (PDT)
+X-Received: by 2002:ac2:4c9b:: with SMTP id d27mr9727934lfl.29.1567181029264;
+ Fri, 30 Aug 2019 09:03:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19083016-0016-0000-0000-000002A4B685
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19083016-0017-0000-0000-000033051207
-Message-Id: <20190830180250.79804f76.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908300159
+References: <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+ <20190828152226.r6pl64ij5kol6d4p@treble> <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+ <CAK8P3a1CONyt0AwBr2wQXZNo5+jpwAT8T3WfXe73=j799Jnv6A@mail.gmail.com>
+ <20190829232439.w3whzmci2vqtq53s@treble> <CAK8P3a0ddxbGVj974XS+PM_mSJDu=aGfTGarjmqMCuLKn81mRg@mail.gmail.com>
+ <20190830151422.o4pbvjyravrz2wre@treble>
+In-Reply-To: <20190830151422.o4pbvjyravrz2wre@treble>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 30 Aug 2019 09:03:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgcQBYjs-bX-v4CQUaT_bh_41EzEw4PmvSjBmAxGbr3OQ@mail.gmail.com>
+Message-ID: <CAHk-=wgcQBYjs-bX-v4CQUaT_bh_41EzEw4PmvSjBmAxGbr3OQ@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 13:48:49 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Fri, Aug 30, 2019 at 8:14 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> What about just adding a couple of WRITE_ONCE's to sas_ss_reset()?  That
+> would probably be the least disruptive option.
 
-> When an AP queue is reset (zeroized), interrupts are disabled. The queue
-> reset function currently tries to disable interrupts unnecessarily. This patch
-> removes the unnecessary calls to disable interrupts after queue reset.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 0604b49a4d32..e3bcb430e214 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->  
-> -static void vfio_ap_irq_disable_apqn(int apqn)
-> +static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
->  {
->  	struct device *dev;
-> -	struct vfio_ap_queue *q;
-> +	struct vfio_ap_queue *q = NULL;
->  
->  	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->  				 &apqn, match_apqn);
->  	if (dev) {
->  		q = dev_get_drvdata(dev);
-> -		vfio_ap_irq_disable(q);
->  		put_device(dev);
->  	}
-> +
-> +	return q;
->  }
->  
->  int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
-> @@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->  	int rc = 0;
->  	unsigned long apid, apqi;
->  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-> +	struct vfio_ap_queue *q;
->  
->  	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
->  			     matrix_mdev->matrix.apm_max + 1) {
-> @@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->  			 */
->  			if (ret)
->  				rc = ret;
-> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
-> +
-> +			/*
-> +			 * Resetting a queue disables interrupts as a side
-> +			 * effect, so there is no need to disable interrupts
-> +			 * here. Note that an error on reset indicates the
-> +			 * queue is inaccessible, so an attempt to disable
-> +			 * interrupts would fail and is therefore unnecessary.
-> +			 * Just free up the resources used by IRQ processing.
-> +			 */
+I think that WRITE_ONCE() with a comment about why is a good idea.
 
-I have some concerns about this patch. One thing we must ensure is that
-the machine does not poke freed memory (NIB, GISA). With the current
-design that means we must ensure that there won't be any interruption
-conditions indicated (and interrupts made pending) after this point.
+The reason I dislike WRITE_ONCE() in general is not because it's
+wrong, it's because people often use it mindlessly and the rationale
+for it isn't clear.
 
-I'm not entirely convinced this is ensured after your change. The
-relevant bits of the  documentation are particularly hard to figure out.
-I could use some clarifications for sure.
+But with a comment about why, that issue obviously goes away.
 
-This hunk removes the wait implemented by vfio_ap_wait_for_irqclear()
-along with the hopefully overkill AQIC.
-
-Let me name some of the scenarios I'm concerned about, along with the
-code that is currently supposed to handle these.
-
-
-int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,              
-                             unsigned int retry)                                
-{                                                                               
-        struct ap_queue_status status;                                          
-        int retry2 = 2;                                                         
-        int apqn = AP_MKQID(apid, apqi);                                        
-                                                                                
-        do {                                                                    
-                status = ap_zapq(apqn);                                         
-                switch (status.response_code) {                                 
-                case AP_RESPONSE_NORMAL:                                        
-                        while (!status.queue_empty && retry2--) {               
-                                msleep(20);                                     
-                                status = ap_tapq(apqn, NULL);                   
-                        }                                                       
-                        WARN_ON_ONCE(retry <= 0);                              
-                        return 0;                                               
-                case AP_RESPONSE_RESET_IN_PROGRESS:                             
-                case AP_RESPONSE_BUSY:                                          
-                        msleep(20);                                             
-                        break;                                                  
-                default:                                                        
-                        /* things are really broken, give up */                 
-                        return -EIO;                                            
-                }                                                               
-        } while (retry--);                                                      
-                                                                                
-        return -EBUSY; 
-
-Scenario 1) 
-
-ap_zapq() returns status.response_code == AP_RESPONSE_RESET_IN_PROGRESS,
-because for example G2 did a ZAPQ before us.
-
-The current logic retries ap_zapq() once after 20 msec. I have no idea
-if that is sufficient under all circumstances. If we get a
-AP_RESPONSE_RESET_IN_PROGRESS again, we return with -EBUSY and do nothing
-about it if the whole process was triggered by vfio_ap_mdev_release().
-Not even a warning.
-
-Please notice that this was almost fine before IRQ support, because the
-queue will get reset ASAP, and ...
-
-Scenario 2)
-
-It takes longer than 40 msec for the reset to complete. I don't know if
-this is a possibility, but before your patch we used to wait of 1 sec.
-
-I guess the we need the timeouts because do this with matrix_dev->lock
-held. I'm not sure it's a good idea long term.
-
-Scenario 3)
-
-ap_zapq() returns status.response_code == AP_RESPONSE_DECONFIGURED. In
-this case we would give up right away. Again so that we don't even know
-we hit this case. There ain't much I can think about we could do here.
-
-I hope we are guaranteed to  not get any bits set at this point, but I could
-use some help.
-
-                                  *
-
-The good thing is I'm pretty sure that we are safe (i.e. no bits will be
-poked by the hardware) after seeing the queue empty after we issued a
-reset request.
-
-So my concerns basically boil down to are the cumulative timeouts big enough
-so we never time out (including are timeouts really the way to go)?
-
-We should probably take any discussion about from which point on is it safe
-to assume that NIB and GISA won't be poked by HW offline as the guys
-without documentation can't contribute.
-
-
-Two issues not directly related to your patch. I formulated those as two
-follow up patches on top of yours .please take a look at them.
-
--------------------------------8<------------------------------------------
-From: Halil Pasic <pasic@linux.ibm.com>
-Date: Fri, 30 Aug 2019 16:03:42 +0200
-Subject: [PATCH 1/2] s390: vfio-ap: fix warning reset not completed
-
-The intention seems to be to warn once when we don't wait enough for the
-reset to complete. Let's use the right retry counter to accomplish that
-semantic.
-
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index e3bcb43..dd07ebf 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1144,7 +1144,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
- 				msleep(20);
- 				status = ap_tapq(apqn, NULL);
- 			}
--			WARN_ON_ONCE(retry <= 0);
-+			WARN_ON_ONCE(retry2 <= 0);
- 			return 0;
- 		case AP_RESPONSE_RESET_IN_PROGRESS:
- 		case AP_RESPONSE_BUSY:
--- 
-2.5.5
-
--------------------------------8<----------------------------------------
-From: Halil Pasic <pasic@linux.ibm.com>
-Date: Fri, 30 Aug 2019 17:39:47 +0200
-Subject: [PATCH 2/2] s390: vfio-ap: don't wait after AQIC interpretation
-
-Waiting for the asynchronous part of AQIC to complete as a part
-AQIC implementation is unnecessary and silly.
-
-Let's get rid of vfio_ap_wait_for_irqclear().
-
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 50 ++-------------------------------------
- 1 file changed, 2 insertions(+), 48 deletions(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index dd07ebf..8d098f0 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -68,47 +68,6 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
- }
- 
- /**
-- * vfio_ap_wait_for_irqclear
-- * @apqn: The AP Queue number
-- *
-- * Checks the IRQ bit for the status of this APQN using ap_tapq.
-- * Returns if the ap_tapq function succeeded and the bit is clear.
-- * Returns if ap_tapq function failed with invalid, deconfigured or
-- * checkstopped AP.
-- * Otherwise retries up to 5 times after waiting 20ms.
-- *
-- */
--static void vfio_ap_wait_for_irqclear(int apqn)
--{
--	struct ap_queue_status status;
--	int retry = 5;
--
--	do {
--		status = ap_tapq(apqn, NULL);
--		switch (status.response_code) {
--		case AP_RESPONSE_NORMAL:
--		case AP_RESPONSE_RESET_IN_PROGRESS:
--			if (!status.irq_enabled)
--				return;
--			/* Fall through */
--		case AP_RESPONSE_BUSY:
--			msleep(20);
--			break;
--		case AP_RESPONSE_Q_NOT_AVAIL:
--		case AP_RESPONSE_DECONFIGURED:
--		case AP_RESPONSE_CHECKSTOPPED:
--		default:
--			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
--				  status.response_code, apqn);
--			return;
--		}
--	} while (--retry);
--
--	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
--		  __func__, status.response_code, apqn);
--}
--
--/**
-  * vfio_ap_free_aqic_resources
-  * @q: The vfio_ap_queue
-  *
-@@ -133,14 +92,10 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
-  * @q: The vfio_ap_queue
-  *
-  * Uses ap_aqic to disable the interruption and in case of success, reset
-- * in progress or IRQ disable command already proceeded: calls
-- * vfio_ap_wait_for_irqclear() to check for the IRQ bit to be clear
-- * and calls vfio_ap_free_aqic_resources() to free the resources associated
-+ * in progress or IRQ disable command already proceeded :calls
-+ * vfio_ap_free_aqic_resources() to free the resources associated
-  * with the AP interrupt handling.
-  *
-- * In the case the AP is busy, or a reset is in progress,
-- * retries after 20ms, up to 5 times.
-- *
-  * Returns if ap_aqic function failed with invalid, deconfigured or
-  * checkstopped AP.
-  */
-@@ -155,7 +110,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
- 		switch (status.response_code) {
- 		case AP_RESPONSE_OTHERWISE_CHANGED:
- 		case AP_RESPONSE_NORMAL:
--			vfio_ap_wait_for_irqclear(q->apqn);
- 			goto end_free;
- 		case AP_RESPONSE_RESET_IN_PROGRESS:
- 		case AP_RESPONSE_BUSY:
--- 
-2.5.5
-
+            Linus
