@@ -2,135 +2,110 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51DDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE81C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750F12186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCD5206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="c1SAxMus"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="QOcqzeZA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1H1dbsIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfH3HpL (ORCPT
+        id S1727820AbfH3Hqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:45:11 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41574 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbfH3HpL (ORCPT
+        Fri, 30 Aug 2019 03:46:39 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51115 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727054AbfH3Hqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:45:11 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j4so4590662lfh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 00:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EAayauqBQaTSl6kGKSVw6Nau8X6fDyhB0ovLIE2umw8=;
-        b=c1SAxMusIO647i5iw3U/EQjSrnnO24tYxiQKcA6oskBBJE+wndns+E0PAqNzw0vR7e
-         2uFO3veAebXAF3PHZlGKuva6B64vCYAMNaD5mmzwLEWDT02OMo4xwh7GjCoWbP6CET0f
-         8l4h7ZWFNWCYxwJUgJpkGYRjc/OPs/Se/uo9w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EAayauqBQaTSl6kGKSVw6Nau8X6fDyhB0ovLIE2umw8=;
-        b=smQk1m/TDWM+xgOUkZym03o7mQNv3FdQOP2p9XTOqV43l5/XOBpxTJQ+0BLJTUCMJw
-         eJ8UneXTeAbacW5ai9tgs1MuXNRueWL80TqwN/BKRH7HFALfNs1HWbKi58ts7HSNv/LS
-         muGa+at6+N4ZYWbSIVltQs+nL4OEq1Zpfl+lXMpk/9bcX27D+sES0boEn8lJspAzXlrT
-         EvlgyROMV+i+eVz+3/Rx5REou9mUpz2H8CfDB9mhkq1hflmszNNJuT5Lj9I6SQCuNCrv
-         y+35uiQ+3yZnM01pCexuHl4rZAzJB7VjtIUWSPINkkLjJk1WddyfvReh9/CMSJfUSO/w
-         T4bw==
-X-Gm-Message-State: APjAAAXBH3p6NQBZi5Fc0bEItIfPP0cNrTXlvQLei5RuBA30B0X/LXwW
-        yr5XbMtn/s1iNUE94ylBg2alAQ==
-X-Google-Smtp-Source: APXvYqzhAEiAkXBkA2OI3BIwl/VgpebFQiWWaKBQvq7AU8olva45KdQCZg3ngbI05bCqdgNdNyMLgA==
-X-Received: by 2002:a19:ae0b:: with SMTP id f11mr3484089lfc.28.1567151109019;
-        Fri, 30 Aug 2019 00:45:09 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id w1sm779837lfe.67.2019.08.30.00.45.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 00:45:08 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/5] make use of gcc 9's "asm inline()"
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     the arch/x86 maintainers <x86@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <CAHk-=wihp7KZ_WjA16odsU7eGb-rUfg7J0rhqwhRoD0zjyGHpw@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <c3b71dff-c884-28b6-a4c7-ff2bf12720d4@rasmusvillemoes.dk>
-Date:   Fri, 30 Aug 2019 09:45:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 03:46:39 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1AFE3210F2;
+        Fri, 30 Aug 2019 03:46:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 30 Aug 2019 03:46:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=wOiPzLG3FhxjtzR8rsBkC79oy1
+        3YcSX1rCw5Ip7LvOk=; b=QOcqzeZAvNkdX0XrmuI/41pdvneLhtVk+adFkiK8Jd
+        xkjTDB/Z9UdtH6CVT9XFRrU/m178LYhbaH2qF6bmU7Lggshign+2mhLdsXyEWE27
+        gpaAS4ua+CTurEp0IYTrFRUdowCdzsLTEIfa1fz8cK+Pmo2p5KECYYOfmMDErOsI
+        Ltj1V/zoQw8Xk0PMhZtkZs2IP24Ror++YkMtw957Horncu1zNHSvL+WT3xrx9EQV
+        2uznitynpymlwI2uLLx4IIfDCHUv6QEYWOexettkzzJi3I4yx02lTJan4o6T5Qmy
+        XNPnVssx/tyE4D4Bxrc0hTculT/caS1QFOApUkJN0xxg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=wOiPzLG3FhxjtzR8r
+        sBkC79oy13YcSX1rCw5Ip7LvOk=; b=1H1dbsIzWAOdpx7lcBsSNh8xQqir/bqpa
+        RoEpc/IGrrncVUYSadJU7HPmajDudhVbyVrpigJNt5KyfoDRBpwBZNj0FdipJ4V3
+        FVs2kG46zuICyI10xicke0dyWyXq0HlIsppHg3CEW4cJl/Q5RbY4tVmpgfOenWr+
+        DgHPXTROLbPLr95ZJ0bl7qvSpK6pomU4Atc2eNVhUEZuC4TewLA+WEdJcnuT9qpp
+        +zl+p5xRnTT/+o3K0syw2rE6wfa1oIGs9OaDbrFuUw4CKnR/vXH2h2/kqnMKYuW5
+        gtUiMsmM7CHNp4REMN7vnO2cOV+pEIze9Mpzdpyb/WlQzMG85cdtQ==
+X-ME-Sender: <xms:WtRoXRJpycpv8bq9ZYWroPC8dbNZoOC0f2YgaZHEgarQTFwEw91DuQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeifedguddvudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
+    rdhiugdrrghuqeenucfkphepvddtfedrheejrddvudehrddujeeknecurfgrrhgrmhepmh
+    grihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihii
+    vgeptd
+X-ME-Proxy: <xmx:WtRoXcIydX4ajN2Gjn9zQkLTF4IiE2BLocK07jfkTD3KszNDJHPsDQ>
+    <xmx:WtRoXWXWcxCsps0CZuPIVgBiChwt0G4adj1xuuBksRthQwbU6ee2ug>
+    <xmx:WtRoXcndN8ysDArbdYrXJJaDuFj5qQdg9N5gmHgcQEPxfIW5VKsTsA>
+    <xmx:XtRoXX_-l60JPiQyz7jdX98IQDRAUYIPlvirQihJA0cHDfMTcS3_tw>
+Received: from localhost.localdomain (203-57-215-178.dyn.iinet.net.au [203.57.215.178])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D8181D60057;
+        Fri, 30 Aug 2019 03:46:30 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-mmc@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, adrian.hunter@intel.com,
+        ulf.hansson@linaro.org, joel@jms.id.au, ryanchen.aspeed@gmail.com,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mmc: sdhci-of-aspeed: Fixes for AST2600 eMMC support
+Date:   Fri, 30 Aug 2019 17:16:42 +0930
+Message-Id: <20190830074644.10936-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wihp7KZ_WjA16odsU7eGb-rUfg7J0rhqwhRoD0zjyGHpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 18.05, Linus Torvalds wrote:
-> On Thu, Aug 29, 2019 at 1:32 AM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> But since we #define the identifier inline to attach some attributes,
->> we have to use the alternate spelling __inline__ of that
->> keyword. Unfortunately, we also currently #define that one (to
->> inline), so we first have to get rid of all (mis)uses of
->> __inline__. Hence the huge diffstat.
-> 
-> Ugh. Not pretty, but I guess we're stuck with it.
-> 
-> However, it worries me a bit that you excluide the UAPI headers where
-> we still use "__inline__", and now the semantics of that will change
-> for the kernel (for some odd gcc versions).
+Hello,
 
-Yeah, as I wrote I was aware of that, but didn't have any good ideas, so
-I was fishing. Doing
+The ASPEED SDHCI driver patches sent previously were based on testing on the
+AST2500. The SD controllers in the 2500 and 2600 had the same register layout
+according to the documentation, so we added the necessary devicetree compatible
+string at the same time.
 
-#ifdef __KERNEL__
-#define __uapi_inline inline
-#else
-#define __uapi_inline __inline__
-#endif
+Now that I've got access to 2600 hardware with an eMMC chip I have a couple of
+patches that are fixes enabling support for it. I don't think the first patch
+is too controversial - in some cases we weren't ensuring the clock was enabled
+before returning from the set_clock() callback.
 
-was one of the bad ideas...
+I'm a bit unsure about the second patch though which enables use of
+max-frequency in the devicetree, it feels a bit hacky so I'm looking for any
+suggestions on the approach.
 
-> I suspect we should just bite the bullet and you should do it to the
-> uapi headers too. We already use "inline" in a lot of them, so it's
-> not the case that we're using __inline__ because of some namespace
-> issue, as far as I can tell.
-> 
-> One option might be to just use "__inline" for the asm_inline thing.
-> We have way fewer of those. That would make the noise much less for
-> this patch series.
+Please review!
 
-Ah, interesting. I didn't know that was also a compiler provided alias.
-It seems to be entirely undocumented -
-https://gcc.gnu.org/onlinedocs/gcc/Alternate-Keywords.html just mentions
-the __inline__ (and __asm__) spellings. But it's clear as day in the gcc
-sources
+Andrew
 
-  { "__inline",         RID_INLINE,     0 },
-  { "__inline__",       RID_INLINE,     0 },
+Andrew Jeffery (2):
+  mmc: sdhci-of-aspeed: Uphold clocks-on post-condition of set_clock()
+  mmc: sdhci-of-aspeed: Allow max-frequency limitation of SDCLK
 
-and has been that way since forever, AFAICT.
+ drivers/mmc/host/sdhci-of-aspeed.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-So yes, let's just start by getting rid of the __inline define and fix
-the staging (+acpi,zstd) users, to allow asm_inline to progress. I'll
-respin.
-
-Rasmus
+-- 
+2.20.1
 
