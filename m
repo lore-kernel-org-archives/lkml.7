@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF4DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99885C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B0C2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659FA2341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YVM/3gxk"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="GeC6ElFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfH3QXz (ORCPT
+        id S1728242AbfH3QX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:23:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36571 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfH3QXz (ORCPT
+        Fri, 30 Aug 2019 12:23:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44798 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbfH3QX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:23:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so3796542pgm.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:23:54 -0700 (PDT)
+        Fri, 30 Aug 2019 12:23:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so3573003plr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aACRDaRRRgyNMJa4GNZcRAy/BViO849VvZSxVxExkCY=;
-        b=YVM/3gxkAV5lYtZ2inMFLXJTwdI/cMxJBkwVfmWmZUrDmVPunc21WsOEEj6NS3k8IH
-         rfrPuGP60q0gsMyMAC91wqvEXowqt1daeQ7g9Azxk+tEnLxUyMXF1ZaRspuDiEKzqLuR
-         llLzNiReTBqTio6c/ZUlqOgF2V/sKCw/dSJpk=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+lcx73l3OzJk+ymCURbXhF5jO4XUhkQ3JEoTfd3jxVI=;
+        b=GeC6ElFerlFgRT/Mt0Q/M/2H6PAPix5mue9D2INqzxc8Azr0OxF+wViO3AbkwZzOSb
+         H/Kuphze/HAQyYZZl6taoCU1Ig9WNwBSZnD1zL92LdAK7pxYCjEGrjf44+HE54nW4k7A
+         eUTENa9xYo3+x32AOPC2Ao+I1zJq9zhjKrSYE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aACRDaRRRgyNMJa4GNZcRAy/BViO849VvZSxVxExkCY=;
-        b=AqxONz3r4bkOX7euN3XLuNgQGmYxAnGeLgQ3ow7w+syDyTT8ZZJ1l8f49d18ZHj9To
-         VU+iuaQGdyrCBT7/65lX7Cl6C7lzaXURcN8R29sndtLG7TIJ19mZb2nxmHO2MoNnXxQp
-         0uKWAZcbDNKZj9ILaPlTeYxN0N8ok7FsGuWCBqS8EGCcXasTOSpv0YhA6RQMFvdeD9AN
-         kDdknMHylniFC9vbn74q/24/DPEkG2kN+n+4gi/Rfo+RYO88FUiHWMG8LCqK4x8yN6AB
-         jf7ijWUaZg5WWizYyFXjdWw7yXXRGmOgO4X6c7EE8sGq+OmbFDKZMt7n6txGLLV6qvcE
-         kKRQ==
-X-Gm-Message-State: APjAAAVJvCoMRsAEsF0mx5EOwc4eozKr8zcnHakc/4ujyR1N7Dyr9y7j
-        nF5Agy89To16VaahjELLyKG/YoHdv7E=
-X-Google-Smtp-Source: APXvYqzQgFFN1jXgpTrEv33BfPi6fTFtOxdoSoJcj+qDrjJb/bydQIA0giDz4C+IDFQepSPwlqgHaA==
-X-Received: by 2002:a63:fe17:: with SMTP id p23mr13624563pgh.103.1567182233298;
-        Fri, 30 Aug 2019 09:23:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+lcx73l3OzJk+ymCURbXhF5jO4XUhkQ3JEoTfd3jxVI=;
+        b=lBJTqRyNIAGb3hyz95UCklGuOy/6QyynszGqxYG84lDeDW57v9NKLmkELqo/9w2OU1
+         e4EYFU+XkTXnznHDpGdQXh6o45uuBiT6EqWCsBcTQm0xcDXDidYOpwMNishcXyU5NkRa
+         9eit8tNFIHv/gOkWl2eLuVF7Kgpok+5M2AmFnBAKlsVM/6bcuTAOZsNTmEDLlJLmkc9X
+         8cRfY1EpiUSA7ZD6JCCfO1I9D+KZmeYh3u5BXKOl1bwUCEQ/G1ll7TOrR5oEcU4+Hudb
+         lJFibrtvAYl/UlWnGF8EqVcYp8Ir9MbIAeIFRMaSzenrLYY5b7S4BloKN/YKMYC4tx67
+         ec9g==
+X-Gm-Message-State: APjAAAVwgSHJMcyBSd0FIAbe76TWFfDHr5G2QtfbgLaELNhQWkMxmL7h
+        Ajwzeh9s2C9M/0J4IFJmbRKIgWRdy+0=
+X-Google-Smtp-Source: APXvYqxxxD8KIw/2cWvLLxdXw7npD04v0O0JIIDOdJUZx3AFjSZCze2PkguFJ17bK3RXDDyWFCJfWg==
+X-Received: by 2002:a17:902:f216:: with SMTP id gn22mr17464983plb.59.1567182235680;
+        Fri, 30 Aug 2019 09:23:55 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t9sm5646109pgj.89.2019.08.30.09.23.50
+        by smtp.gmail.com with ESMTPSA id t9sm5646109pgj.89.2019.08.30.09.23.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 09:23:52 -0700 (PDT)
+        Fri, 30 Aug 2019 09:23:54 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Ingo Molnar <mingo@redhat.com>,
         Josh Triplett <josh@joshtriplett.org>,
@@ -67,10 +66,12 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH -rcu dev 1/2] Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
-Date:   Fri, 30 Aug 2019 12:23:47 -0400
-Message-Id: <20190830162348.192303-1-joel@joelfernandes.org>
+Subject: [PATCH -rcu dev 2/2] rcu/dyntick-idle: Add better tracing
+Date:   Fri, 30 Aug 2019 12:23:48 -0400
+Message-Id: <20190830162348.192303-2-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+In-Reply-To: <20190830162348.192303-1-joel@joelfernandes.org>
+References: <20190830162348.192303-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,198 +79,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code is unused and can be removed now. Revert was straightforward.
+The dyntick-idle traces are a bit confusing. This patch makes it simpler
+and adds some missing cases such as EQS-enter due to user vs idle mode.
 
-Tested with light rcutorture.
+Following are the changes:
+(1) Add a new context field to trace_rcu_dyntick tracepoint. This
+    context field can be "USER", "IDLE" or "IRQ".
 
-Link: http://lore.kernel.org/r/CALCETrWNPOOdTrFabTDd=H7+wc6xJ9rJceg6OL1S0rTV5pfSsA@mail.gmail.com
-Suggested-by: Andy Lutomirski <luto@kernel.org>
+(2) Remove the "++=" and "--=" strings and replace them with
+   "StillNonIdle". This is much easier on the eyes, and the -- and ++
+   are easily apparent in the dynticks_nesting counters we are printing
+   anyway.
+
+This patch is based on the previous patches to simplify rcu_dyntick
+counters [1] and with these traces, I have verified the counters are
+working properly.
+
+[1]
+Link: https://lore.kernel.org/patchwork/patch/1120021/
+Link: https://lore.kernel.org/patchwork/patch/1120022/
+
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
 ---
- include/linux/rcutiny.h |  3 --
- kernel/rcu/tree.c       | 82 ++++++++++-------------------------------
- 2 files changed, 19 insertions(+), 66 deletions(-)
+ include/trace/events/rcu.h | 13 ++++++++-----
+ kernel/rcu/tree.c          | 19 +++++++++++++------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index b7607e2667ae..b3f689711289 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -14,9 +14,6 @@
+diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+index 66122602bd08..474c1f7e7104 100644
+--- a/include/trace/events/rcu.h
++++ b/include/trace/events/rcu.h
+@@ -449,12 +449,14 @@ TRACE_EVENT_RCU(rcu_fqs,
+  */
+ TRACE_EVENT_RCU(rcu_dyntick,
  
- #include <asm/param.h> /* for HZ */
+-	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
++	TP_PROTO(const char *polarity, const char *context, long oldnesting,
++		 long newnesting, atomic_t dynticks),
  
--/* Never flag non-existent other CPUs! */
--static inline bool rcu_eqs_special_set(int cpu) { return false; }
--
- static inline unsigned long get_state_synchronize_rcu(void)
- {
- 	return 0;
+-	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
++	TP_ARGS(polarity, context, oldnesting, newnesting, dynticks),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(const char *, polarity)
++		__field(const char *, context)
+ 		__field(long, oldnesting)
+ 		__field(long, newnesting)
+ 		__field(int, dynticks)
+@@ -462,14 +464,15 @@ TRACE_EVENT_RCU(rcu_dyntick,
+ 
+ 	TP_fast_assign(
+ 		__entry->polarity = polarity;
++		__entry->context = context;
+ 		__entry->oldnesting = oldnesting;
+ 		__entry->newnesting = newnesting;
+ 		__entry->dynticks = atomic_read(&dynticks);
+ 	),
+ 
+-	TP_printk("%s %lx %lx %#3x", __entry->polarity,
+-		  __entry->oldnesting, __entry->newnesting,
+-		  __entry->dynticks & 0xfff)
++	TP_printk("%s %s %lx %lx %#3x", __entry->polarity,
++		__entry->context, __entry->oldnesting, __entry->newnesting,
++		__entry->dynticks & 0xfff)
+ );
+ 
+ /*
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 68ebf0eb64c8..417dd00b9e87 100644
+index 417dd00b9e87..463407762b5a 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -69,20 +69,10 @@
+@@ -533,7 +533,8 @@ static void rcu_eqs_enter(bool user)
+ 	}
  
- /* Data structures. */
- 
--/*
-- * Steal a bit from the bottom of ->dynticks for idle entry/exit
-- * control.  Initially this is for TLB flushing.
-- */
--#define RCU_DYNTICK_CTRL_MASK 0x1
--#define RCU_DYNTICK_CTRL_CTR  (RCU_DYNTICK_CTRL_MASK + 1)
--#ifndef rcu_eqs_special_exit
--#define rcu_eqs_special_exit() do { } while (0)
--#endif
--
- static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
- 	.dynticks_nesting = 1,
- 	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
--	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
-+	.dynticks = ATOMIC_INIT(1),
- };
- struct rcu_state rcu_state = {
- 	.level = { &rcu_state.node[0] },
-@@ -229,20 +219,15 @@ void rcu_softirq_qs(void)
- static void rcu_dynticks_eqs_enter(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
--	int seq;
-+	int special;
- 
- 	/*
--	 * CPUs seeing atomic_add_return() must see prior RCU read-side
-+	 * CPUs seeing atomic_inc_return() must see prior RCU read-side
- 	 * critical sections, and we also must force ordering with the
- 	 * next idle sojourn.
+ 	lockdep_assert_irqs_disabled();
+-	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, rdp->dynticks);
++	trace_rcu_dyntick(TPS("Start"), (user ? TPS("USER") : TPS("IDLE")),
++			  rdp->dynticks_nesting, 0, rdp->dynticks);
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+ 	rdp = this_cpu_ptr(&rcu_data);
+ 	do_nocb_deferred_wakeup(rdp);
+@@ -606,14 +607,17 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+ 	 * leave it in non-RCU-idle state.
  	 */
--	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
--	/* Better be in an extended quiescent state! */
--	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
--		     (seq & RCU_DYNTICK_CTRL_CTR));
--	/* Better not have special action (TLB flush) pending! */
--	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
--		     (seq & RCU_DYNTICK_CTRL_MASK));
-+	special = atomic_inc_return(&rdp->dynticks);
-+	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && special & 0x1);
- }
- 
- /*
-@@ -252,22 +237,15 @@ static void rcu_dynticks_eqs_enter(void)
- static void rcu_dynticks_eqs_exit(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
--	int seq;
-+	int special;
- 
- 	/*
--	 * CPUs seeing atomic_add_return() must see prior idle sojourns,
-+	 * CPUs seeing atomic_inc_return() must see prior idle sojourns,
- 	 * and we also must force ordering with the next RCU read-side
- 	 * critical section.
- 	 */
--	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
--	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
--		     !(seq & RCU_DYNTICK_CTRL_CTR));
--	if (seq & RCU_DYNTICK_CTRL_MASK) {
--		atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
--		smp_mb__after_atomic(); /* _exit after clearing mask. */
--		/* Prefer duplicate flushes to losing a flush. */
--		rcu_eqs_special_exit();
--	}
-+	special = atomic_inc_return(&rdp->dynticks);
-+	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !(special & 0x1));
- }
- 
- /*
-@@ -284,9 +262,9 @@ static void rcu_dynticks_eqs_online(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 
--	if (atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR)
-+	if (atomic_read(&rdp->dynticks) & 0x1)
+ 	if (rdp->dynticks_nmi_nesting != 1) {
+-		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
++		trace_rcu_dyntick(TPS("StillNonIdle"), TPS("IRQ"),
++				  rdp->dynticks_nmi_nesting,
++				  rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
+ 		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+ 			   rdp->dynticks_nmi_nesting - 2);
  		return;
--	atomic_add(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-+	atomic_add(0x1, &rdp->dynticks);
- }
+ 	}
  
- /*
-@@ -298,7 +276,7 @@ bool rcu_dynticks_curr_cpu_in_eqs(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+-	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, rdp->dynticks);
++	trace_rcu_dyntick(TPS("Start"), TPS("IRQ"), rdp->dynticks_nmi_nesting,
++			  0, rdp->dynticks);
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
  
--	return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
-+	return !(atomic_read(&rdp->dynticks) & 0x1);
- }
- 
- /*
-@@ -309,7 +287,7 @@ int rcu_dynticks_snap(struct rcu_data *rdp)
- {
- 	int snap = atomic_add_return(0, &rdp->dynticks);
- 
--	return snap & ~RCU_DYNTICK_CTRL_MASK;
-+	return snap;
- }
- 
- /*
-@@ -318,7 +296,7 @@ int rcu_dynticks_snap(struct rcu_data *rdp)
-  */
- static bool rcu_dynticks_in_eqs(int snap)
- {
--	return !(snap & RCU_DYNTICK_CTRL_CTR);
-+	return !(snap & 0x1);
- }
- 
- /*
-@@ -331,28 +309,6 @@ static bool rcu_dynticks_in_eqs_since(struct rcu_data *rdp, int snap)
- 	return snap != rcu_dynticks_snap(rdp);
- }
- 
--/*
-- * Set the special (bottom) bit of the specified CPU so that it
-- * will take special action (such as flushing its TLB) on the
-- * next exit from an extended quiescent state.  Returns true if
-- * the bit was successfully set, or false if the CPU was not in
-- * an extended quiescent state.
-- */
--bool rcu_eqs_special_set(int cpu)
--{
--	int old;
--	int new;
--	struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
--
--	do {
--		old = atomic_read(&rdp->dynticks);
--		if (old & RCU_DYNTICK_CTRL_CTR)
--			return false;
--		new = old | RCU_DYNTICK_CTRL_MASK;
--	} while (atomic_cmpxchg(&rdp->dynticks, old, new) != old);
--	return true;
--}
--
- /*
-  * Let the RCU core know that this CPU has gone through the scheduler,
-  * which is a quiescent state.  This is called when the need for a
-@@ -366,13 +322,13 @@ bool rcu_eqs_special_set(int cpu)
-  */
- void rcu_momentary_dyntick_idle(void)
- {
--	int special;
-+	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-+	int special = atomic_add_return(2, &rdp->dynticks);
- 
--	raw_cpu_write(rcu_data.rcu_need_heavy_qs, false);
--	special = atomic_add_return(2 * RCU_DYNTICK_CTRL_CTR,
--				    &this_cpu_ptr(&rcu_data)->dynticks);
- 	/* It is illegal to call this from idle state. */
--	WARN_ON_ONCE(!(special & RCU_DYNTICK_CTRL_CTR));
-+	WARN_ON_ONCE(!(special & 0x1));
+ 	if (irq)
+@@ -700,7 +704,8 @@ static void rcu_eqs_exit(bool user)
+ 	rcu_dynticks_task_exit();
+ 	rcu_dynticks_eqs_exit();
+ 	rcu_cleanup_after_idle();
+-	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
++	trace_rcu_dyntick(TPS("End"), (user ? TPS("USER") : TPS("IDLE")),
++			  rdp->dynticks_nesting, 1, rdp->dynticks);
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+ 	WRITE_ONCE(rdp->dynticks_nesting, 1);
+ 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+@@ -787,9 +792,11 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 		rdp->rcu_forced_tick = true;
+ 		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+ 	}
+-	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+-			  rdp->dynticks_nmi_nesting,
 +
-+	raw_cpu_write(rcu_data.rcu_need_heavy_qs, false);
- 	rcu_preempt_deferred_qs(current);
- }
- EXPORT_SYMBOL_GPL(rcu_momentary_dyntick_idle);
++	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
++			  TPS("IRQ"), rdp->dynticks_nmi_nesting,
+ 			  rdp->dynticks_nmi_nesting + incby, rdp->dynticks);
++
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+ 		   rdp->dynticks_nmi_nesting + incby);
+ 	barrier();
 -- 
 2.23.0.187.g17f5b7556c-goog
 
