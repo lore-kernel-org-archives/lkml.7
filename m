@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC27C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBC9C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0296123427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9388F23427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567177785;
-	bh=lq5loIkxSt3ugN+aBMACxOO2vhnCkN0nhH1aF4brFsg=;
+	s=default; t=1567177787;
+	bh=MJlkPCYkMD+Y4plwpCnKgMza3JHPd1xCzxfWRQinRPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSiaQPejGGJOO5XKk5e5MHUlH4sViZ15dJr1OrpJBi7Mw6Qse75FidH40sjIGWUaT
-	 btBoK+Rk3DxPLUSoWbPA/kYyhIPWpNiPj8m45N+xgryj7OVgx8es4HATAL7QIy9hdk
-	 Rl3azYKtWnHZNjm6XD75ZoTVCjp2R6iMN7J/TJJI=
+	b=BfcRI8ZUHPbTG6WksLuB8AsOLEsPJro0xHIrz1dPcRDOm5jTowq6ER0NKZI4ByS9j
+	 k7dPY3NJb/i3VNATrvTSj+RCGqnwDa/vECdxcmqOX/iLZB81gvTuDLz+e8Gu8+8tRX
+	 JSP9th/X89R9inonVnFvBa/0dY4Aro4S+uuboe34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfH3PJo (ORCPT
+        id S1728420AbfH3PJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:09:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 11:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728232AbfH3PJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:09:28 -0400
+        id S1728236AbfH3PJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:09:29 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6851C2342A;
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B622342C;
         Fri, 30 Aug 2019 15:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1567177767;
-        bh=lq5loIkxSt3ugN+aBMACxOO2vhnCkN0nhH1aF4brFsg=;
+        bh=MJlkPCYkMD+Y4plwpCnKgMza3JHPd1xCzxfWRQinRPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kDUNxMJgKHqmzmneMudM9mjaTrFGJXeS3v7vAnDHgiNucrB5u6vXnpSGo5bfiKc4
-         BR79Yl6uqsaltCrIKI52nwrCsG26Xt+We2WeRvzyzDvB3sUMpBR+THn7vegLTW9iQM
-         smeb4aFfd5FJplNeBU68k59NNQ3C4PnIri3OWZgE=
+        b=A3eaj/gfSXqT12nTZlrstVUXIce3wQVBSETDlIcLybRHyum1IS0MDZytDZzrmdGap
+         ygOu1zJMWe26WMuwznYqEpAY9a9qNRxyD6n29sLtduHMhNu1IlEcxXgoha27ZqZziG
+         xVwIs+TyMxvMjyEU0NiQ9Ac50T+Ihxw4mtm3bs+Q=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 10/12] clk: mux: Add support for specifying parents via DT/pointers
-Date:   Fri, 30 Aug 2019 08:09:21 -0700
-Message-Id: <20190830150923.259497-11-sboyd@kernel.org>
+Subject: [PATCH 11/12] clk: gate: Add support for specifying parents via DT/pointers
+Date:   Fri, 30 Aug 2019 08:09:22 -0700
+Message-Id: <20190830150923.259497-12-sboyd@kernel.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190830150923.259497-1-sboyd@kernel.org>
 References: <20190830150923.259497-1-sboyd@kernel.org>
@@ -61,239 +60,171 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 After commit fc0c209c147f ("clk: Allow parents to be specified without
 string names") we can use DT or direct clk_hw pointers to specify
 parents. Create a generic function that shouldn't be used very often to
-encode the multitude of ways of registering a mux clk with different
+encode the multitude of ways of registering a gate clk with different
 parent information. Then add a bunch of wrapper macros that only pass
 down what needs to be passed down to the generic function to support
 this with less arguments.
 
-Note: the msm drm driver passes an anonymous array through the macro
-which seems to confuse my compiler. Adding a parenthesis around the
-whole thing at the call site seems to fix it but it must be wrong. Maybe
-it's better to split this patch and pick out the array bits there?
-
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk-mux.c                      | 58 +++++++---------------
- drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c |  4 +-
- drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c |  4 +-
- include/linux/clk-provider.h               | 56 ++++++++++++++-------
- 4 files changed, 60 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-index 66e91f740508..e0212c451880 100644
---- a/drivers/clk/clk-mux.c
-+++ b/drivers/clk/clk-mux.c
-@@ -145,17 +145,19 @@ const struct clk_ops clk_mux_ro_ops = {
+I'm debating having the multiplexer function take a DT index, clk_hw
+pointer, fw_name and name as different parameters. Then we can just
+always use the parent_data approach and cover all bases.
+
+ drivers/clk/clk-gate.c       | 35 ++++++++++-----------
+ include/linux/clk-provider.h | 59 ++++++++++++++++++++++++++++++++++--
+ 2 files changed, 74 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
+index 1b99fc962745..4296bb012abf 100644
+--- a/drivers/clk/clk-gate.c
++++ b/drivers/clk/clk-gate.c
+@@ -123,26 +123,18 @@ const struct clk_ops clk_gate_ops = {
  };
- EXPORT_SYMBOL_GPL(clk_mux_ro_ops);
+ EXPORT_SYMBOL_GPL(clk_gate_ops);
  
--struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u32 mask,
-+struct clk_hw *__clk_hw_register_mux(struct device *dev, struct device_node *np,
-+		const char *name, u8 num_parents,
-+		const char * const *parent_names,
-+		const struct clk_hw **parent_hws,
+-/**
+- * clk_hw_register_gate - register a gate clock with the clock framework
+- * @dev: device that is registering this clock
+- * @name: name of this clock
+- * @parent_name: name of this clock's parent
+- * @flags: framework-specific flags for this clock
+- * @reg: register address to control gating of this clock
+- * @bit_idx: which bit in the register controls gating of this clock
+- * @clk_gate_flags: gate-specific flags for this clock
+- * @lock: shared register lock for this clock
+- */
+-struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
+-		const char *parent_name, unsigned long flags,
++struct clk_hw *__clk_hw_register_gate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
 +		const struct clk_parent_data *parent_data,
-+		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
- 		u8 clk_mux_flags, u32 *table, spinlock_t *lock)
++		unsigned long flags,
+ 		void __iomem *reg, u8 bit_idx,
+ 		u8 clk_gate_flags, spinlock_t *lock)
  {
- 	struct clk_mux *mux;
+ 	struct clk_gate *gate;
  	struct clk_hw *hw;
  	struct clk_init_data init;
- 	u8 width = 0;
 -	int ret;
 +	int ret = -EINVAL;
  
- 	if (clk_mux_flags & CLK_MUX_HIWORD_MASK) {
- 		width = fls(mask) - ffs(mask) + 1;
-@@ -177,6 +179,8 @@ struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
- 		init.ops = &clk_mux_ops;
+ 	if (clk_gate_flags & CLK_GATE_HIWORD_MASK) {
+ 		if (bit_idx > 15) {
+@@ -160,7 +152,12 @@ struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
+ 	init.ops = &clk_gate_ops;
  	init.flags = flags;
- 	init.parent_names = parent_names;
+ 	init.parent_names = parent_name ? &parent_name : NULL;
+-	init.num_parents = parent_name ? 1 : 0;
++	init.parent_hws = parent_hw ? &parent_hw : NULL;
 +	init.parent_data = parent_data;
-+	init.parent_hws = parent_hws;
- 	init.num_parents = num_parents;
++	if (parent_name || parent_hw || parent_data)
++		init.num_parents = 1;
++	else
++		init.num_parents = 0;
  
- 	/* struct clk_mux assignments */
-@@ -189,7 +193,10 @@ struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
- 	mux->hw.init = &init;
+ 	/* struct clk_gate assignments */
+ 	gate->reg = reg;
+@@ -170,15 +167,19 @@ struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
+ 	gate->hw.init = &init;
  
- 	hw = &mux->hw;
+ 	hw = &gate->hw;
 -	ret = clk_hw_register(dev, hw);
 +	if (dev || !np)
 +		ret = clk_hw_register(dev, hw);
 +	else if (np)
 +		ret = of_clk_hw_register(np, hw);
  	if (ret) {
- 		kfree(mux);
+ 		kfree(gate);
  		hw = ERR_PTR(ret);
-@@ -197,53 +204,24 @@ struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
+ 	}
  
  	return hw;
++
  }
--EXPORT_SYMBOL_GPL(clk_hw_register_mux_table);
-+EXPORT_SYMBOL_GPL(__clk_hw_register_mux);
+-EXPORT_SYMBOL_GPL(clk_hw_register_gate);
++EXPORT_SYMBOL_GPL(__clk_hw_register_gate);
  
- struct clk *clk_register_mux_table(struct device *dev, const char *name,
- 		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u32 mask,
-+		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
- 		u8 clk_mux_flags, u32 *table, spinlock_t *lock)
- {
- 	struct clk_hw *hw;
- 
--	hw = clk_hw_register_mux_table(dev, name, parent_names, num_parents,
--				       flags, reg, shift, mask, clk_mux_flags,
--				       table, lock);
-+	hw = clk_hw_register_mux_table(dev, name, parent_names,
-+				       num_parents, flags, reg, shift, mask,
-+				       clk_mux_flags, table, lock);
- 	if (IS_ERR(hw))
- 		return ERR_CAST(hw);
- 	return hw->clk;
- }
- EXPORT_SYMBOL_GPL(clk_register_mux_table);
- 
--struct clk *clk_register_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width,
--		u8 clk_mux_flags, spinlock_t *lock)
--{
--	u32 mask = BIT(width) - 1;
--
--	return clk_register_mux_table(dev, name, parent_names, num_parents,
--				      flags, reg, shift, mask, clk_mux_flags,
--				      NULL, lock);
--}
--EXPORT_SYMBOL_GPL(clk_register_mux);
--
--struct clk_hw *clk_hw_register_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width,
--		u8 clk_mux_flags, spinlock_t *lock)
--{
--	u32 mask = BIT(width) - 1;
--
--	return clk_hw_register_mux_table(dev, name, parent_names, num_parents,
--				      flags, reg, shift, mask, clk_mux_flags,
--				      NULL, lock);
--}
--EXPORT_SYMBOL_GPL(clk_hw_register_mux);
--
- void clk_unregister_mux(struct clk *clk)
- {
- 	struct clk_mux *mux;
-diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-index 8f6100db90ed..1c894548dd72 100644
---- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-+++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-@@ -751,9 +751,9 @@ static int pll_10nm_register(struct dsi_pll_10nm *pll_10nm)
- 	snprintf(parent4, 32, "dsi%d_pll_post_out_div_clk", pll_10nm->id);
- 
- 	hw = clk_hw_register_mux(dev, clk_name,
--				 (const char *[]){
-+				 ((const char *[]){
- 				 parent, parent2, parent3, parent4
--				 }, 4, 0, pll_10nm->phy_cmn_mmio +
-+				 }), 4, 0, pll_10nm->phy_cmn_mmio +
- 				 REG_DSI_10nm_PHY_CMN_CLK_CFG1,
- 				 0, 2, 0, NULL);
- 	if (IS_ERR(hw)) {
-diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c
-index 8c99e01ae332..6dffd7f4a99b 100644
---- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c
-+++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c
-@@ -554,9 +554,9 @@ static int pll_28nm_register(struct dsi_pll_28nm *pll_28nm)
- 	snprintf(parent1, 32, "dsi%dvco_clk", pll_28nm->id);
- 	snprintf(parent2, 32, "dsi%dindirect_path_div2_clk", pll_28nm->id);
- 	clks[num++] = clk_register_mux(dev, clk_name,
--			(const char *[]){
-+			((const char *[]){
- 				parent1, parent2
--			}, 2, CLK_SET_RATE_PARENT, pll_28nm->mmio +
-+			}), 2, CLK_SET_RATE_PARENT, pll_28nm->mmio +
- 			REG_DSI_28nm_PHY_PLL_VREG_CFG, 1, 1, 0, NULL);
- 
- 	snprintf(clk_name, 32, "dsi%dpllbyte", pll_28nm->id);
+ struct clk *clk_register_gate(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
 diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 694bd3274221..47dd0efce416 100644
+index 47dd0efce416..04576a7a0f37 100644
 --- a/include/linux/clk-provider.h
 +++ b/include/linux/clk-provider.h
-@@ -644,28 +644,48 @@ struct clk_mux {
- extern const struct clk_ops clk_mux_ops;
- extern const struct clk_ops clk_mux_ro_ops;
+@@ -475,14 +475,67 @@ struct clk_gate {
+ #define CLK_GATE_BIG_ENDIAN		BIT(2)
  
--struct clk *clk_register_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width,
--		u8 clk_mux_flags, spinlock_t *lock);
--struct clk_hw *clk_hw_register_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width,
--		u8 clk_mux_flags, spinlock_t *lock);
--
--struct clk *clk_register_mux_table(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u32 mask,
-+struct clk_hw *__clk_hw_register_mux(struct device *dev, struct device_node *np,
-+		const char *name, u8 num_parents,
-+		const char * const *parent_names,
-+		const struct clk_hw **parent_hws,
+ extern const struct clk_ops clk_gate_ops;
+-struct clk *clk_register_gate(struct device *dev, const char *name,
+-		const char *parent_name, unsigned long flags,
++struct clk_hw *__clk_hw_register_gate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
 +		const struct clk_parent_data *parent_data,
-+		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
- 		u8 clk_mux_flags, u32 *table, spinlock_t *lock);
--struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
-+struct clk *clk_register_mux_table(struct device *dev, const char *name,
- 		const char * const *parent_names, u8 num_parents,
--		unsigned long flags,
--		void __iomem *reg, u8 shift, u32 mask,
-+		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
- 		u8 clk_mux_flags, u32 *table, spinlock_t *lock);
- 
-+#define clk_register_mux(dev, name, parent_names, num_parents, flags, reg,    \
-+			 shift, width, clk_mux_flags, lock)		      \
-+	clk_register_mux_table((dev), (name), (parent_names), (num_parents),  \
-+			       (flags), (reg), (shift), BIT((width)) - 1,     \
-+			       (clk_mux_flags), NULL, (lock))
-+#define clk_hw_register_mux_table(dev, name, parent_names, num_parents,	      \
-+				  flags, reg, shift, mask, clk_mux_flags,     \
-+				  table, lock)				      \
-+	__clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
-+			      (parent_names), NULL, NULL, (flags), (reg),     \
-+			      (shift), (mask), (clk_mux_flags), (table),      \
-+			      (lock))
-+#define clk_hw_register_mux(dev, name, parent_names, num_parents, flags, reg, \
-+			    shift, width, clk_mux_flags, lock)		      \
-+	__clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
-+			      (parent_names), NULL, NULL, (flags), (reg),     \
-+			      (shift), BIT((width)) - 1, (clk_mux_flags),     \
-+			      NULL, (lock))
-+#define clk_hw_register_mux_hws(dev, name, parent_hws, num_parents, flags,    \
-+				reg, shift, width, clk_mux_flags, lock)	      \
-+	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL,	      \
-+			      (parent_hws), NULL, (flags), (reg), (shift),    \
-+			      BIT((width)) - 1, (clk_mux_flags), NULL, (lock))
-+#define clk_hw_register_mux_parent_data(dev, name, parent_data, num_parents,  \
-+					flags, reg, shift, width,	      \
-+					clk_mux_flags, lock)      	      \
-+	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL, NULL, \
-+			      (parent_data), (flags), (reg), (shift),	      \
-+			      BIT((width)) - 1, (clk_mux_flags), NULL, (lock))
-+
- int clk_mux_val_to_index(struct clk_hw *hw, u32 *table, unsigned int flags,
- 			 unsigned int val);
- unsigned int clk_mux_index_to_val(u32 *table, unsigned int flags, u8 index);
++		unsigned long flags,
+ 		void __iomem *reg, u8 bit_idx,
+ 		u8 clk_gate_flags, spinlock_t *lock);
+-struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
++struct clk *clk_register_gate(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
+ 		void __iomem *reg, u8 bit_idx,
+ 		u8 clk_gate_flags, spinlock_t *lock);
++/**
++ * clk_hw_register_gate - register a gate clock with the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_name: name of this clock's parent
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_gate(dev, name, parent_name, flags, reg, bit_idx,     \
++			     clk_gate_flags, lock)			      \
++	__clk_hw_register_gate((dev), NULL, (name), (parent_name), NULL,      \
++			       NULL, (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
++/**
++ * clk_hw_register_gate_parent_hw - register a gate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_gate_parent_hw(dev, name, parent_name, flags, reg,    \
++				       bit_idx, clk_gate_flags, lock)	      \
++	__clk_hw_register_gate((dev), NULL, (name), (parent_name), NULL,      \
++			       NULL, (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
++/**
++ * clk_hw_register_gate_parent_data - register a gate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_gate_parent_data(dev, name, parent_name, flags, reg,  \
++				       bit_idx, clk_gate_flags, lock)	      \
++	__clk_hw_register_gate((dev), NULL, (name), (parent_name), NULL,      \
++			       NULL, (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
+ void clk_unregister_gate(struct clk *clk);
+ void clk_hw_unregister_gate(struct clk_hw *hw);
+ int clk_gate_is_enabled(struct clk_hw *hw);
 -- 
 Sent by a computer through tubes
 
