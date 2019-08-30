@@ -2,149 +2,128 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399DEC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B82DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BC021897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD5323430
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 19:36:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ggwKB1p6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfH3Tck (ORCPT
+        id S1728164AbfH3TgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 15:32:40 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7426 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfH3Tch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 15:32:37 -0400
-IronPort-SDR: X8fYbZV9kIhBAz3xaiJwabvVgUuAjxpsXsdSwmUl3SrfMdDgOxkW5PUELxt5VDmo37YpDbo0dh
- ctlApsNp9KHshW36jxsUMOICVhhwtHslkpJbEl9QxX+TOZPFqTLxivmlNDEkNrJVqAObrLmDeg
- KqHpeNNBQKjAhVy5BM2nBAxNVj4ikDtWzeGVfeG8gRIbAAqMl2048B8aDM79HMUS2zeihQ+Z+Y
- 82KUWKYqADKSQ/TdZainFbOv4fB80Oz5JgRFPLg+qWCoFZLKQHUXEknTTji+Z29iOwzoNMOSZf
- dNE=
-X-IronPort-AV: E=Sophos;i="5.64,447,1559548800"; 
-   d="scan'208";a="42727619"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 30 Aug 2019 11:32:36 -0800
-IronPort-SDR: iXn2p0LobRNISsxQgHKrhlc6v2VNwcoDy6dCvF6WpJxSsvAgXPJxbSy5CKSc+Q9tPh/GDd+VOj
- y1lihhvoh33Fhv3Cg/zBxV+F3Ghvy4HYxKNPOIJYyKIhr0cvtPbW1PauPj95uiavsgTEF8mbDd
- euluEADbiFelQM0bVUKgt6M8a7D/OYojZVWWUSacNZRqLLOq6SDuCc2Mdc1+99HHxgmDUwol/L
- f8u+ewf1A+52SnKw2gsRq+vJAppzgl3Y4Ob3vz6wUCPaBidZwSk5BXWSqPWgBGOOcKRVBIqPL9
- i0g=
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     <shuah@kernel.org>, Jerry Hoemann <jerry.hoemann@hpe.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH v3] selftests: watchdog: Add optional file argument
-Date:   Fri, 30 Aug 2019 15:32:23 -0400
-Message-ID: <1567193545-25171-1-git-send-email-george_davis@mentor.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 30 Aug 2019 15:36:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60330 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727888AbfH3TgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 15:36:05 -0400
+Received: from zn.tnic (p200300EC2F0AAA0065BEA12EFE5D4E65.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:aa00:65be:a12e:fe5d:4e65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 55C261EC0819;
+        Fri, 30 Aug 2019 21:36:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567193763;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=FTGKhVuj3U6v9FsAz7Xts6Aci6B1WqfD2IhDMm4Gyy4=;
+        b=ggwKB1p6KENXFxHZSrgTtJiNNhKCXZMkBEY4L1zRwZ22OYNJJwG+V5PBzwgtRUr3rZ/Ln5
+        KFoDXfx3ZYSpj6CbIJeCFDRz0DEvYtpqQdz90bgHQ2q9VNy5vNB/hnLSB7tQxgKSR/5oS2
+        isbzRBLmzDN+PqDVpx+4VFmBBF6fn+8=
+Date:   Fri, 30 Aug 2019 21:35:57 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Philip Li <philip.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
+ backdoor call with support for new instructions
+Message-ID: <20190830193557.GF30413@zn.tnic>
+References: <201908292325.aLXyyzEx%lkp@intel.com>
+ <20190829163353.GC2132@zn.tnic>
+ <20190830010349.GD857@intel.com>
+ <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
+ <20190830062053.GA2598@intel.com>
+ <20190830080650.GA30413@zn.tnic>
+ <20190830143645.GA4784@intel.com>
+ <20190830144628.GC30413@zn.tnic>
+ <20190830150002.GA6931@intel.com>
+ <20190830150856.GB6931@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190830150856.GB6931@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some systems have multiple watchdog devices where the first device
-registered is assigned to the /dev/watchdog device file. In order
-to test other watchdog devices, add an optional file argument for
-selecting non-default watchdog devices for testing.
+On Fri, Aug 30, 2019 at 11:08:56PM +0800, Philip Li wrote:
+> hi Boris, for the build status notification, we currently send to below
+> address, is it still valid? If not, can you suggest one for us?
 
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
----
-v1:
-- https://lkml.org/lkml/2019/8/29/16
-v2:
-- Update printf for ENOENT case based on report from Eugeniu Rosca
-v3:
-- Split long printf line in two as requested by Shuah Khan
----
- tools/testing/selftests/watchdog/watchdog-test.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Sure, here's an update patch ontop of your master branch:
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index c2333c78cf04..6a68b486dd61 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -19,7 +19,7 @@
- 
- int fd;
- const char v = 'V';
--static const char sopts[] = "bdehp:t:Tn:NL";
-+static const char sopts[] = "bdehp:t:Tn:NLf:";
- static const struct option lopts[] = {
- 	{"bootstatus",          no_argument, NULL, 'b'},
- 	{"disable",             no_argument, NULL, 'd'},
-@@ -31,6 +31,7 @@ static const struct option lopts[] = {
- 	{"pretimeout",    required_argument, NULL, 'n'},
- 	{"getpretimeout",       no_argument, NULL, 'N'},
- 	{"gettimeleft",		no_argument, NULL, 'L'},
-+	{"file",          required_argument, NULL, 'f'},
- 	{NULL,                  no_argument, NULL, 0x0}
- };
- 
-@@ -69,6 +70,8 @@ static void term(int sig)
- static void usage(char *progname)
- {
- 	printf("Usage: %s [options]\n", progname);
-+	printf(" -f, --file          Open watchdog device file\n");
-+	printf("                     Default is /dev/watchdog\n");
- 	printf(" -b, --bootstatus    Get last boot status (Watchdog/POR)\n");
- 	printf(" -d, --disable       Turn off the watchdog timer\n");
- 	printf(" -e, --enable        Turn on the watchdog timer\n");
-@@ -92,14 +95,20 @@ int main(int argc, char *argv[])
- 	int ret;
- 	int c;
- 	int oneshot = 0;
-+	char *file = "/dev/watchdog";
- 
- 	setbuf(stdout, NULL);
- 
--	fd = open("/dev/watchdog", O_WRONLY);
-+	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
-+		if (c == 'f')
-+			file = optarg;
-+	}
-+
-+	fd = open(file, O_WRONLY);
- 
- 	if (fd == -1) {
- 		if (errno == ENOENT)
--			printf("Watchdog device not enabled.\n");
-+			printf("Watchdog device (%s) not found.\n", file);
- 		else if (errno == EACCES)
- 			printf("Run watchdog as root.\n");
- 		else
-@@ -108,6 +117,8 @@ int main(int argc, char *argv[])
- 		exit(-1);
- 	}
- 
-+	optind = 0;
-+
- 	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
- 		switch (c) {
- 		case 'b':
-@@ -190,6 +201,9 @@ int main(int argc, char *argv[])
- 			else
- 				printf("WDIOC_GETTIMELEFT error '%s'\n", strerror(errno));
- 			break;
-+		case 'f':
-+			/* Handled above */
-+			break;
- 
- 		default:
- 			usage(argv[0]);
+---
+From: Borislav Petkov <bp@suse.de>
+Date: Fri, 30 Aug 2019 21:33:29 +0200
+Subject: [PATCH] repo/linux/tip: Update tip tree contact information
+
+Replace hpa with Borislav and change contact mail address.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ repo/linux/tip | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/repo/linux/tip b/repo/linux/tip
+index 4fc5d88176fd..96a7dec66f97 100644
+--- a/repo/linux/tip
++++ b/repo/linux/tip
+@@ -2,11 +2,11 @@ url: https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.git
+ integration_testing_branches: auto-latest
+ mail_cc:
+ - linux-kernel@vger.kernel.org
+-- tipbuild@zytor.com
++- x86@kernel.org
+ owner:
+ - Ingo Molnar <mingo@kernel.org>
+-- H. Peter Anvin <hpa@zytor.com>
+ - Thomas Gleixner <tglx@linutronix.de>
++- Borislav Petkov <bp@suse.de>
+ subsystems:
+ - x86
+ - fpu
+@@ -16,4 +16,4 @@ subsystems:
+ - locking
+ blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
+ notify_build_success_branch: .*
+-build_success_mail_to: tip build status <tipbuild@zytor.com>
++build_success_mail_to: x86-ml <x86@kernel.org>
 -- 
-2.7.4
+2.21.0
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
