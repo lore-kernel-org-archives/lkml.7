@@ -2,107 +2,176 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FF6C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B8BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313EE20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F1BB2073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfH3PVy (ORCPT
+        id S1727924AbfH3PXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:21:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:57755 "EHLO mga05.intel.com"
+        Fri, 30 Aug 2019 11:23:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:33928 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfH3PVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:21:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 08:21:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="186329765"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by orsmga006.jf.intel.com with ESMTP; 30 Aug 2019 08:21:50 -0700
-Date:   Fri, 30 Aug 2019 23:26:15 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        linux-input@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
-        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
- backdoor call with support for new instructions
-Message-ID: <20190830152615.GA13754@intel.com>
-References: <201908292325.aLXyyzEx%lkp@intel.com>
- <20190829163353.GC2132@zn.tnic>
- <20190830010349.GD857@intel.com>
- <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
- <20190830062053.GA2598@intel.com>
- <20190830080650.GA30413@zn.tnic>
- <20190830143645.GA4784@intel.com>
- <20190830144628.GC30413@zn.tnic>
- <20190830150002.GA6931@intel.com>
- <20190830150653.GD30413@zn.tnic>
+        id S1727135AbfH3PXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:23:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53209344;
+        Fri, 30 Aug 2019 08:23:16 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C7973F703;
+        Fri, 30 Aug 2019 08:23:14 -0700 (PDT)
+Subject: Re: [PATCH 3/7] iommu/arm-smmu: Add tlb_sync implementation hook
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     snikam@nvidia.com, thomasz@nvidia.com, jtukkinen@nvidia.com,
+        mperttunen@nvidia.com, praithatha@nvidia.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        talho@nvidia.com, yhsu@nvidia.com, linux-tegra@vger.kernel.org,
+        treding@nvidia.com, avanbrunt@nvidia.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+ <1567118827-26358-4-git-send-email-vdumpa@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <554f8de1-1638-4eb9-59ae-8e1f0d786c44@arm.com>
+Date:   Fri, 30 Aug 2019 16:23:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830150653.GD30413@zn.tnic>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1567118827-26358-4-git-send-email-vdumpa@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 05:06:53PM +0200, Borislav Petkov wrote:
-> On Fri, Aug 30, 2019 at 11:00:02PM +0800, Philip Li wrote:
-> > Early on, there's requirement to blacklist a few branches, which is configured
-> > as below
-> > 	blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
+On 29/08/2019 23:47, Krishna Reddy wrote:
+> tlb_sync hook allows nvidia smmu handle tlb sync
+> across multiple SMMUs as necessary.
 > 
-> Looks about right.
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>   drivers/iommu/arm-smmu-nvidia.c | 32 ++++++++++++++++++++++++++++++++
+>   drivers/iommu/arm-smmu.c        |  8 +++++---
+>   drivers/iommu/arm-smmu.h        |  4 ++++
+>   3 files changed, 41 insertions(+), 3 deletions(-)
 > 
-> > Except the blacklist branches, we will monitor all other branches.
-> 
-> Ok, good to know. Just as an optimization to your workflow, in case
-> you're interested: the tip/master branch merges all tip branches so if
-> you're trying to prioritize which branches to test first due to resource
-> constraints, I'd go with tip/master first and then, when I have free
-> cycles, I'd do the topic branches.
-thanks a lot for the advice. Meanwhile, the internal logic merges branches
-to test once to speed up, most of time, more branches will not increase the
-build testing workload. Of course, for the non merged branches, we need
-test individually, and we will take this information into consideration
-to add to our TODO.
+> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
+> index d93ceda..a429b2c 100644
+> --- a/drivers/iommu/arm-smmu-nvidia.c
+> +++ b/drivers/iommu/arm-smmu-nvidia.c
+> @@ -56,11 +56,43 @@ static void nsmmu_write_reg64(struct arm_smmu_device *smmu,
+>   		writeq_relaxed(val, nsmmu_page(smmu, i, page) + offset);
+>   }
+>   
+> +static void nsmmu_tlb_sync_wait(struct arm_smmu_device *smmu, int page,
+> +				int sync, int status, int inst)
+> +{
+> +	u32 reg;
+> +	unsigned int spin_cnt, delay;
+> +
+> +	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+> +		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+> +			reg = readl_relaxed(
+> +			      nsmmu_page(smmu, inst, page) + status);
+> +			if (!(reg & sTLBGSTATUS_GSACTIVE))
+> +				return;
+> +			cpu_relax();
+> +		}
+> +		udelay(delay);
+> +	}
+> +	dev_err_ratelimited(smmu->dev,
+> +			    "TLB sync timed out -- SMMU may be deadlocked\n");
+> +}
+> +
+> +static void nsmmu_tlb_sync(struct arm_smmu_device *smmu, int page,
+> +			   int sync, int status)
+> +{
+> +	int i;
+> +
+> +	arm_smmu_writel(smmu, page, sync, 0);
+> +
+> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++)
 
+It might make more sense to make this the innermost loop, i.e.:
+
+	for (i = 0; i < nsmmu->num_inst; i++)
+		reg &= readl_relaxed(nsmmu_page(smmu, i, page)...
+
+since polling the instances in parallel rather than in series seems like 
+it might be a bit more efficient.
+
+> +		nsmmu_tlb_sync_wait(smmu, page, sync, status, i);
+> +}
+> +
+>   static const struct arm_smmu_impl nsmmu_impl = {
+>   	.read_reg = nsmmu_read_reg,
+>   	.write_reg = nsmmu_write_reg,
+>   	.read_reg64 = nsmmu_read_reg64,
+>   	.write_reg64 = nsmmu_write_reg64,
+> +	.tlb_sync = nsmmu_tlb_sync,
+>   };
+>   
+>   struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 46e1641..f5454e71 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -52,9 +52,6 @@
+>    */
+>   #define QCOM_DUMMY_VAL -1
+>   
+> -#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
+> -#define TLB_SPIN_COUNT			10
+> -
+>   #define MSI_IOVA_BASE			0x8000000
+>   #define MSI_IOVA_LENGTH			0x100000
+>   
+> @@ -244,6 +241,11 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device *smmu, int page,
+>   	unsigned int spin_cnt, delay;
+>   	u32 reg;
+>   
+> +	if (smmu->impl->tlb_sync) {
+> +		smmu->impl->tlb_sync(smmu, page, sync, status);
+
+What I'd hoped is that rather than needing a hook for this, you could 
+just override smmu_domain->tlb_ops from .init_context to wire up the 
+alternate .sync method directly. That would save this extra level of 
+indirection.
+
+Robin.
+
+> +		return;
+> +	}
+> +
+>   	arm_smmu_writel(smmu, page, sync, QCOM_DUMMY_VAL);
+>   	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+>   		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index 9645bf1..d3217f1 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -207,6 +207,8 @@ enum arm_smmu_cbar_type {
+>   /* Maximum number of context banks per SMMU */
+>   #define ARM_SMMU_MAX_CBS		128
+>   
+> +#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
+> +#define TLB_SPIN_COUNT			10
+>   
+>   /* Shared driver definitions */
+>   enum arm_smmu_arch_version {
+> @@ -336,6 +338,8 @@ struct arm_smmu_impl {
+>   	int (*cfg_probe)(struct arm_smmu_device *smmu);
+>   	int (*reset)(struct arm_smmu_device *smmu);
+>   	int (*init_context)(struct arm_smmu_domain *smmu_domain);
+> +	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+> +			 int status);
+>   };
+>   
+>   static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
 > 
-> Just as an idea...
-> 
-> > We also support pull request to update the
-> > configuration or email us to update. Refer to
-> > https://github.com/intel/lkp-tests/blob/master/repo/linux/tip.
-> 
-> Ok, cool. I'll talk to tglx about it and might even send you a pull
-> request.
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
