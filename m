@@ -2,103 +2,395 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45ACC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CDDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FEC20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 857B920820
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qS/Y0Bkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfH3Qta (ORCPT
+        id S1728317AbfH3Qtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:49:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36966 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfH3Qta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:49:30 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3346B2A09CC;
-        Fri, 30 Aug 2019 16:49:30 +0000 (UTC)
-Received: from treble (ovpn-123-26.rdu2.redhat.com [10.10.123.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3DD6360605;
-        Fri, 30 Aug 2019 16:49:29 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 11:49:27 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
-Message-ID: <20190830164927.a2czlphx4ho3rhhf@treble>
-References: <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
- <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
- <20190828152226.r6pl64ij5kol6d4p@treble>
- <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
- <20190829173458.skttfjlulbiz5s25@treble>
- <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
- <CAK8P3a1K5HgfACmJXr4dTTwDJFz5BeSCCa3RQWYbXGE-2q4TJQ@mail.gmail.com>
- <CAHk-=whuUdqrh2=LLNfRiW6oadx0zzGVkvqyx_O1cGLa2U6Jjg@mail.gmail.com>
- <20190830150208.jyk7tfzznqimc6ow@treble>
- <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
+        Fri, 30 Aug 2019 12:49:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41385 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfH3Qtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 12:49:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so3813429pgg.8;
+        Fri, 30 Aug 2019 09:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qbpfzmALTW17ZlL1SFdtNKihZ+JnkvnR1FEeYTOzQCU=;
+        b=qS/Y0BkxqieZBjMcdEy+w9qTCzCHtKn1OyHlyNVC1ppJcOIZsahz2ZWrTFztrFarqu
+         dlr5/UNC6P4llIYn+MCWYa5GJwv2j62a3pDbtEXGFG4eS3gucqcPO1d6qsBmWz+kfM4E
+         lxZTtOfDuxMeFOVKZxIIymnj4976TdjIIiOXEP94F8GzbKcvdsIdzVGpT/NwPVde+A+k
+         9Hewn2/tKucNYtEaK1EaVDDhiAtfvRMqBlMRPeLEQDL6q3eP56upSVphAMDW4gvj2+mw
+         CHmdKXg1lC6koKnGq3H3L2VlFdrLnI0AjXN/cl3+EokeQ3maV97njQiz/S3FI8Cqzedk
+         Wbig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qbpfzmALTW17ZlL1SFdtNKihZ+JnkvnR1FEeYTOzQCU=;
+        b=hO4/juNPzJzrIAMdVAaJBymDLbF11eVMyFCUiCCyKkXfo+xvQcn0/eCoGCBhezNw1z
+         8G0bXPYTV3wercRPJkUMqC4ywg6dDjhuKrMOIevpUZ0NML4KdSpfnOJrPeGV173809C5
+         4RnEgI4ZQqMhp9GEbMJ3o8/Ot5/FFL6bPp7IMcBpRMni64bq4hcr6m/ZnP/1pD7NSlY2
+         lyUO+Dw3hgRFf88peqkqA6YdBf3IOhMkJosct9KvBpmztuR6xAJ3XURUowk5OX/G1DJA
+         H6eXIVIBClb7HrBqjMkC71C2zf9ezmXKS2+Tet6VNeP9qAdEF5DMZuIstotJla/pesre
+         2NxA==
+X-Gm-Message-State: APjAAAWyGRpG/GR1/STMmlvhr1SdF2Yhpvpe3TnhiOpdoXF2iA+1KyOv
+        70HuGWq/az95T2oy24UUsYw=
+X-Google-Smtp-Source: APXvYqzcrcwCyE4KcbARDBmdkB8wnJ422h2jkEnmmw6DCIOVAYhGKcc+BX5v/6plIFT8XkALIfP/kw==
+X-Received: by 2002:a65:430b:: with SMTP id j11mr13596490pgq.383.1567183788866;
+        Fri, 30 Aug 2019 09:49:48 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 67sm7751559pjo.29.2019.08.30.09.49.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 09:49:48 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 09:49:47 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br,
+        leonard.crestez@nxp.com, schnitzeltony@gmail.com,
+        u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 2/4] watchdog: Add i.MX7ULP watchdog support
+Message-ID: <20190830164947.GE7911@roeck-us.net>
+References: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
+ <1566441463-11911-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 30 Aug 2019 16:49:30 +0000 (UTC)
+In-Reply-To: <1566441463-11911-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 08:48:49AM -0700, Linus Torvalds wrote:
-> On Fri, Aug 30, 2019 at 8:02 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > For KASAN, the Clang threshold for inserting memset() is *2* consecutive
-> > writes instead of 17.  Isn't that likely to cause tearing-related
-> > surprises?
+On Wed, Aug 21, 2019 at 10:37:41PM -0400, Anson Huang wrote:
+> The i.MX7ULP Watchdog Timer (WDOG) module is an independent timer
+> that is available for system use.
+> It provides a safety feature to ensure that software is executing
+> as planned and that the CPU is not stuck in an infinite loop or
+> executing unintended code. If the WDOG module is not serviced
+> (refreshed) within a certain period, it resets the MCU.
 > 
-> Tearing isn't likely to be a problem.
+> Add driver support for i.MX7ULP watchdog.
 > 
-> It's not like memcpy() does byte-by-byte copies. If you pass it a
-> word-aligned pointer, it will do word-aligned accesses simply for
-> performance reasons.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+> Changes since V3:
+> 	- pass clk directly for reset action to avoid dereference from structure;
+> 	- use constant instead of variable for wdog clock rate, as it is fixed as 1KHz.
+> ---
+>  drivers/watchdog/Kconfig       |  13 +++
+>  drivers/watchdog/Makefile      |   1 +
+>  drivers/watchdog/imx7ulp_wdt.c | 243 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 257 insertions(+)
+>  create mode 100644 drivers/watchdog/imx7ulp_wdt.c
 > 
-> Even on x86, where we use "rep movsb", we (a) tend to disable it for
-> small copies and (b) it turns out that microcode that does the
-> optimized movsb (which is the only case we use it) probably ends up
-> doing atomic things anyway. Note the "probably". I don't have
-> microcode source code, but there are other indications like "we know
-> it doesn't take interrupts on a byte-per-byte level, only on the
-> cacheline level".
-
-The microcode argument is not all that comforting :-)
-
-Also what about unaligned accesses, e.g. if a struct member isn't on a
-word boundary?  Arnd's godbolt link showed those can get combined too.
-
-I don't see x86 memcpy() doing any destination alignment checks.
-
-Have we audited other arches' memset/memcpy implementations?
-
-> So it's probably not an issue from a tearing standpoint - but it
-> worries me because of "this has to be a leaf function" kind of issues
-> where we may be using individual stores on purpose. We do have things
-> like that.
-
-It sounds like everybody's in agreement that replacing accesses with
-memset/memcpy is bad in a kernel context.  Should we push for a new
-fine-grained compiler option to disable it?
-
--- 
-Josh
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index a8f5c81..d68e5b5 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -724,6 +724,19 @@ config IMX_SC_WDT
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called imx_sc_wdt.
+>  
+> +config IMX7ULP_WDT
+> +	tristate "IMX7ULP Watchdog"
+> +	depends on ARCH_MXC || COMPILE_TEST
+> +	select WATCHDOG_CORE
+> +	help
+> +	  This is the driver for the hardware watchdog on the Freescale
+> +	  IMX7ULP and later processors. If you have one of these
+> +	  processors and wish to have watchdog support enabled,
+> +	  say Y, otherwise say N.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called imx7ulp_wdt.
+> +
+>  config UX500_WATCHDOG
+>  	tristate "ST-Ericsson Ux500 watchdog"
+>  	depends on MFD_DB8500_PRCMU
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index b5a0aed..2ee352b 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -67,6 +67,7 @@ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+>  obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+>  obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+>  obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
+> +obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
+>  obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
+>  obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>  obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
+> new file mode 100644
+> index 0000000..5ce5102
+> --- /dev/null
+> +++ b/drivers/watchdog/imx7ulp_wdt.c
+> @@ -0,0 +1,243 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define WDOG_CS			0x0
+> +#define WDOG_CS_CMD32EN		BIT(13)
+> +#define WDOG_CS_ULK		BIT(11)
+> +#define WDOG_CS_RCS		BIT(10)
+> +#define WDOG_CS_EN		BIT(7)
+> +#define WDOG_CS_UPDATE		BIT(5)
+> +
+> +#define WDOG_CNT	0x4
+> +#define WDOG_TOVAL	0x8
+> +
+> +#define REFRESH_SEQ0	0xA602
+> +#define REFRESH_SEQ1	0xB480
+> +#define REFRESH		((REFRESH_SEQ1 << 16) | REFRESH_SEQ0)
+> +
+> +#define UNLOCK_SEQ0	0xC520
+> +#define UNLOCK_SEQ1	0xD928
+> +#define UNLOCK		((UNLOCK_SEQ1 << 16) | UNLOCK_SEQ0)
+> +
+> +#define DEFAULT_TIMEOUT	60
+> +#define MAX_TIMEOUT	128
+> +#define WDOG_CLOCK_RATE	1000
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0000);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +struct imx7ulp_wdt_device {
+> +	struct notifier_block restart_handler;
+> +	struct watchdog_device wdd;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +};
+> +
+> +static inline void imx7ulp_wdt_enable(void __iomem *base, bool enable)
+> +{
+> +	u32 val = readl(base + WDOG_CS);
+> +
+> +	writel(UNLOCK, base + WDOG_CNT);
+> +	if (enable)
+> +		writel(val | WDOG_CS_EN, base + WDOG_CS);
+> +	else
+> +		writel(val & ~WDOG_CS_EN, base + WDOG_CS);
+> +}
+> +
+> +static inline bool imx7ulp_wdt_is_enabled(void __iomem *base)
+> +{
+> +	u32 val = readl(base + WDOG_CS);
+> +
+> +	return val & WDOG_CS_EN;
+> +}
+> +
+> +static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +
+> +	writel(REFRESH, wdt->base + WDOG_CNT);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_start(struct watchdog_device *wdog)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +
+> +	imx7ulp_wdt_enable(wdt->base, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +
+> +	imx7ulp_wdt_enable(wdt->base, false);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
+> +				   unsigned int timeout)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +	u32 val = WDOG_CLOCK_RATE * timeout;
+> +
+> +	writel(UNLOCK, wdt->base + WDOG_CNT);
+> +	writel(val, wdt->base + WDOG_TOVAL);
+> +
+> +	wdog->timeout = timeout;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_ops imx7ulp_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = imx7ulp_wdt_start,
+> +	.stop  = imx7ulp_wdt_stop,
+> +	.ping  = imx7ulp_wdt_ping,
+> +	.set_timeout = imx7ulp_wdt_set_timeout,
+> +};
+> +
+> +static const struct watchdog_info imx7ulp_wdt_info = {
+> +	.identity = "i.MX7ULP watchdog timer",
+> +	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+> +		    WDIOF_MAGICCLOSE,
+> +};
+> +
+> +static inline void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
+> +{
+> +	u32 val;
+> +
+> +	/* unlock the wdog for reconfiguration */
+> +	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
+> +	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
+> +
+> +	/* set an initial timeout value in TOVAL */
+> +	writel(timeout, base + WDOG_TOVAL);
+> +	/* enable 32bit command sequence and reconfigure */
+> +	val = BIT(13) | BIT(8) | BIT(5);
+> +	writel(val, base + WDOG_CS);
+> +}
+> +
+> +static void imx7ulp_wdt_action(void *data)
+> +{
+> +	clk_disable_unprepare(data);
+> +}
+> +
+> +static int imx7ulp_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct imx7ulp_wdt_device *imx7ulp_wdt;
+> +	struct device *dev = &pdev->dev;
+> +	struct watchdog_device *wdog;
+> +	int ret;
+> +
+> +	imx7ulp_wdt = devm_kzalloc(dev, sizeof(*imx7ulp_wdt), GFP_KERNEL);
+> +	if (!imx7ulp_wdt)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, imx7ulp_wdt);
+> +
+> +	imx7ulp_wdt->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(imx7ulp_wdt->base))
+> +		return PTR_ERR(imx7ulp_wdt->base);
+> +
+> +	imx7ulp_wdt->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(imx7ulp_wdt->clk)) {
+> +		dev_err(dev, "Failed to get watchdog clock\n");
+> +		return PTR_ERR(imx7ulp_wdt->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(imx7ulp_wdt->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(dev, imx7ulp_wdt_action, imx7ulp_wdt->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	wdog = &imx7ulp_wdt->wdd;
+> +	wdog->info = &imx7ulp_wdt_info;
+> +	wdog->ops = &imx7ulp_wdt_ops;
+> +	wdog->min_timeout = 1;
+> +	wdog->max_timeout = MAX_TIMEOUT;
+> +	wdog->parent = dev;
+> +	wdog->timeout = DEFAULT_TIMEOUT;
+> +
+> +	watchdog_init_timeout(wdog, 0, dev);
+> +	watchdog_stop_on_reboot(wdog);
+> +	watchdog_stop_on_unregister(wdog);
+> +	watchdog_set_drvdata(wdog, imx7ulp_wdt);
+> +	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
+> +
+> +	return devm_watchdog_register_device(dev, wdog);
+> +}
+> +
+> +static int __maybe_unused imx7ulp_wdt_suspend(struct device *dev)
+> +{
+> +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
+> +
+> +	if (watchdog_active(&imx7ulp_wdt->wdd))
+> +		imx7ulp_wdt_stop(&imx7ulp_wdt->wdd);
+> +
+> +	clk_disable_unprepare(imx7ulp_wdt->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused imx7ulp_wdt_resume(struct device *dev)
+> +{
+> +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
+> +	u32 timeout = imx7ulp_wdt->wdd.timeout * WDOG_CLOCK_RATE;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(imx7ulp_wdt->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (imx7ulp_wdt_is_enabled(imx7ulp_wdt->base))
+> +		imx7ulp_wdt_init(imx7ulp_wdt->base, timeout);
+> +
+> +	if (watchdog_active(&imx7ulp_wdt->wdd))
+> +		imx7ulp_wdt_start(&imx7ulp_wdt->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(imx7ulp_wdt_pm_ops, imx7ulp_wdt_suspend,
+> +			 imx7ulp_wdt_resume);
+> +
+> +static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
+> +	{ .compatible = "fsl,imx7ulp-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx7ulp_wdt_dt_ids);
+> +
+> +static struct platform_driver imx7ulp_wdt_driver = {
+> +	.probe		= imx7ulp_wdt_probe,
+> +	.driver		= {
+> +		.name	= "imx7ulp-wdt",
+> +		.pm	= &imx7ulp_wdt_pm_ops,
+> +		.of_match_table = imx7ulp_wdt_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(imx7ulp_wdt_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("Freescale i.MX7ULP watchdog driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
