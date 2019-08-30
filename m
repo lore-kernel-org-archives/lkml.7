@@ -2,96 +2,177 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C466C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A333C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E058E2342F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377E123427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHQpPopx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfH3RAK (ORCPT
+        id S1728170AbfH3RAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:00:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:43516 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbfH3RAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:00:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 10:00:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="356846778"
-Received: from floriank-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.77])
-  by orsmga005.jf.intel.com with ESMTP; 30 Aug 2019 10:00:04 -0700
-Date:   Fri, 30 Aug 2019 20:00:01 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm_tis: Fix interrupt probing
-Message-ID: <20190830170001.ii3r2sugwl2iogjt@linux.intel.com>
-References: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
- <20190827131400.qchcwa2act24c47b@linux.intel.com>
- <20190827151915.hb4xwr2vik2i5ryb@linux.intel.com>
- <797ff54e-dceb-21d2-dd74-e5244f9c6dfd@linux.ibm.com>
- <20190829132021.6vfc535ecb62jokf@linux.intel.com>
- <20190829161057.22l72j55jy3dyib7@linux.intel.com>
- <039601c6-e22a-d113-0eb2-ee2a206f5b73@linux.ibm.com>
+        Fri, 30 Aug 2019 13:00:47 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39002 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfH3RAr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:00:47 -0400
+Received: by mail-ed1-f66.google.com with SMTP id u6so2836021edq.6
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 10:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BYx/7ZZJMriDlNg4ZPsq21Bt/UqwjpyoKzwS2ezJwBE=;
+        b=fHQpPopx4LSbHrCvj7rw6l1CLOopOQzBJRjlVgJMH98EnxhPls8ZkejgfrdqYvd1FP
+         QKVs/gZovPqgZxUmNAqZYRUvejV71/GkggtdXplY9NATi5nWIxAixao0KrT9LRLQc5Mo
+         IvL8DnaH3m9RayTSLM/UcmEzg+vEWq0AJwrFiCbeg25v+y7rVW3KxQifYZIWFriZ//7t
+         eUpgC+7JASwn8HE40bUopQfVznDkB6Xd2n/maTuYzzgCysZ5aTXqLXoKWcr8HVZTP3uf
+         MlRfeJDYkmw3dtaGF7Y1Z8uuBAJ4elyMrGY18gR8GsbgHzFhqJLqcXG4EKtlrgnUkh6E
+         nsCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BYx/7ZZJMriDlNg4ZPsq21Bt/UqwjpyoKzwS2ezJwBE=;
+        b=JGybVHf+883Ag5u1Iz7pkxz/wKbYMFxPaW0OJgXw3f7nWTkYWV67QGMS25rQHFlmDk
+         LQJK6JHuMbXSgN6cJvrw6K8bM6XTAyYHYoOfU4KC5I3JXLTwnri5+EESRCrscpTy38aL
+         ikANKooLNivkweMV3tYJBivoUCXKYymDFNhfR4NyIq7CLXeUMbKOtasIUdQwJWDirud5
+         n4rR2qsPf2Rb8Zi1GUQxAyPq72E2hvHDGorHGCbvkzr4i4ZdRomSA9Rr4R8Ns5FRNhDz
+         lulN1J5ieF3hXw8ulBxCvt4YxRRdj109kix2o5a3oTHdPxrrObSc0WtpE0CGs6FCgZBQ
+         /liw==
+X-Gm-Message-State: APjAAAV660iUOuWghRRnRCCHH7FjT+saDf8sEvdnFWQxgpKSIpK3G0f8
+        ZJYNNzSSYuaktagR3CH30cja6rkk4sEWDdEoLXo=
+X-Google-Smtp-Source: APXvYqyZ6FiDbZXqhP+dUzvTWSJz4+sI8AP9b1IW11QFTTBJP93LJVxAD4AX29i6NLqjKmTRVObBEHluGl4oDaY4Kf4=
+X-Received: by 2002:a50:8d8b:: with SMTP id r11mr16378963edh.163.1567184444153;
+ Fri, 30 Aug 2019 10:00:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <039601c6-e22a-d113-0eb2-ee2a206f5b73@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+References: <20190829060550.62095-1-john.stultz@linaro.org>
+ <CGME20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da@epcas3p1.samsung.com>
+ <CAF6AEGvborwLmjfC6_vgZ-ZbfvF3HEFFyb_NHSLRoYWF35bw+g@mail.gmail.com> <ebdf3ff5-5a9b-718d-2832-f326138a5b2d@samsung.com>
+In-Reply-To: <ebdf3ff5-5a9b-718d-2832-f326138a5b2d@samsung.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 30 Aug 2019 10:00:32 -0700
+Message-ID: <CAF6AEGtkvRpXSoddjmxer2U6LxnV_SAe+jwE2Ct8B8dDpFy2mA@mail.gmail.com>
+Subject: Re: [RFC][PATCH] drm: kirin: Fix dsi probe/attach logic
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Matt Redfearn <matt.redfearn@thinci.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 08:11:27PM -0400, Stefan Berger wrote:
-> On 8/29/19 12:10 PM, Jarkko Sakkinen wrote:
-> > On Thu, Aug 29, 2019 at 04:20:21PM +0300, Jarkko Sakkinen wrote:
-> > > On Tue, Aug 27, 2019 at 03:34:36PM -0400, Stefan Berger wrote:
-> > > > On 8/27/19 11:19 AM, Jarkko Sakkinen wrote:
-> > > > > On Tue, Aug 27, 2019 at 04:14:00PM +0300, Jarkko Sakkinen wrote:
-> > > > > > On Tue, Aug 20, 2019 at 08:25:17AM -0400, Stefan Berger wrote:
-> > > > > > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > > > 
-> > > > > > > The interrupt probing of the TPM TIS was broken since we are trying to
-> > > > > > > run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
-> > > > > > > 
-> > > > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > > Need these:
-> > > > > > 
-> > > > > > Cc: linux-stable@vger.kernel.org
-> > > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> > > > > > 
-> > > > > > Thank you. I'll apply this to my tree.
-> > > > > > 
-> > > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > The commit went in the following form:
-> > > > > 
-> > > > > http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/9b558deab2c5d7dc23d5f7a4064892ede482ad32
-> > > > I saw you dropped the stetting of the IRQ flag - I needed it, otherwise it
-> > > > wouldn't execute certain code paths.
-> > > I explained why I removed that part. There was no any reasoning for
-> > > it. Also, it cannot be in the same commit if it fixes a diffent
-> > > issue.
-> > AFAIK they go with different fixes-tags.
-> 
-> I sent a separate patch for this. It looks like this bug goes back to when
-> the TPM_CHIP_FLAG_IRQ was introduced in March 2019?!
+On Thu, Aug 29, 2019 at 11:52 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> On 29.08.2019 19:39, Rob Clark wrote:
+> > On Wed, Aug 28, 2019 at 11:06 PM John Stultz <john.stultz@linaro.org> wrote:
+> >> Since commit 83f35bc3a852 ("drm/bridge: adv7511: Attach to DSI
+> >> host at probe time") landed in -next the HiKey board would fail
+> >> to boot, looping:
+> > No, please revert 83f35bc3a852.. that is going in the *complete* wrong
+> > direction.  We actually should be moving panels to not require dsi
+> > host until attach time, similar to how bridges work, not the other way
+> > around.
+>
+>
+> Devices of panels and bridges controlled via DSI will not appear at all
+> if DSI host is not created.
+>
+> So this is the only direction!!!
+>
 
-Thank you!
+I disagree, there is really no harm in the bridge probing if there is no dsi.
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Furthermore, it seems that this change broke a few other drivers.
 
-/Jarkko
+> >
+> > The problem is that, when dealing with bootloader enabled display, we
+> > need to be really careful not to touch the hardware until the display
+> > driver knows the bridge/panel is present.  If the bridge/panel probes
+> > after the display driver, we could end up killing scanout
+> > (efifb/simplefb).. if the bridge/panel is missing some dependency and
+> > never probes, it is rather unpleasant to be stuck trying to debug what
+> > went wrong with no display.
+>
+>
+> It has nothing to do with touching hardware, you can always (I hope)
+> postpone it till all components are present.
+
+Unfortunately this is harder than it sounds, since we need to read hw
+revision registers for display and dsi blocks to know which hw
+revision we are dealing with.
+
+(Also, we need to avoid
+drm_fb_helper_remove_conflicting_framebuffers() until we know we are
+ready to go.)
+
+We could possibly put more information in dt.  But the less we depend
+on dt, the easier time we'll have adding support for ACPI boot on the
+windows arm laptops.
+
+> But it is just requirement of device/driver model in Linux Kernel.
+
+yes and no.. the way the existing bridges work with a bridge->attach()
+step seems fairly pragmatic to me.
+
+>
+> >
+> > Sorry I didn't notice that adv7511 patch before it landed, but the
+> > right thing to do now is to revert it.
+>
+>
+> The 1st version of the patch was posted at the end of April and final
+> version was queued 1st July, so it was quite long time for discussions
+> and tests.
+
+sorry I didn't notice the patch sooner, most of my bandwidth goes to mesa.
+
+> Reverting it now seems quite late, especially if the patch does right
+> thing and there is already proper fix for one encoder (kirin), moreover
+> revert will break another platforms.
+
+kirin isn't the only other user of adv75xx.. at least it is my
+understanding that this broke db410c as well.
+
+> Of course it seems you have different opinion what is the right thing in
+> this case, so if you convince us that your approach is better one can
+> revert the patch.
+
+I guess my strongest / most immediate opinion is to not break other
+existing adv75xx bridge users.
+
+Beyond that, I found doing mipi_dsi_attach() in bridge->attach() was
+quite convenient to get display handover from efifb work.  And that
+was (previously) the way most of the bridges worked.
+
+But maybe there is another way.. perhaps somehow the bridges/panels
+could be added as sub-components using the component framework, to
+prevent the toplevel drm device from probing until they are ready?
+We'd still have the problem that the dsi component wants to be able to
+read hw revision before registering dsi host.. but I suppose if CCF
+exported a way that we could query whether the interface clk was
+already enabled, we could have the clk enable/disable cycle that would
+break efifb.
+
+BR,
+-R
