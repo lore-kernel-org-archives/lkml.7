@@ -2,257 +2,71 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68252C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8794FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DA92077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650A72077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfH3Hy4 (ORCPT
+        id S1728108AbfH3HzP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:54:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50912 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726975AbfH3Hyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:54:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A1977AD7F;
-        Fri, 30 Aug 2019 07:54:53 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 09:54:51 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Allison Randal <allison@lohutok.net>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian@brauner.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>
-Subject: Re: [PATCH v5 3/5] powerpc/64: make buildable without CONFIG_COMPAT
-Message-ID: <20190830095451.47ab750f@naga>
-In-Reply-To: <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
-References: <90594004804c6a9b690b69bdf0e5c4d6c880c5f4.1567117050.git.msuchanek@suse.de>
-        <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 30 Aug 2019 03:55:15 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:40632 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbfH3HzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:55:15 -0400
+Received: from [172.20.10.2] (tmo-106-216.customers.d1-online.com [80.187.106.216])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 57771CECD9;
+        Fri, 30 Aug 2019 10:03:59 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] Bluetooth: hci_qca: wait for Pre shutdown complete
+ event before sending the Power off pulse
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1567141304-24600-1-git-send-email-c-hbandi@codeaurora.org>
+Date:   Fri, 30 Aug 2019 09:55:12 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <13B39C38-FBB6-4630-B238-D032FAB753CA@holtmann.org>
+References: <1567141304-24600-1-git-send-email-c-hbandi@codeaurora.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 06:35:13 +0000 (UTC)
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+Hi Harish,
 
-> On 08/29/2019 10:28 PM, Michal Suchanek wrote:
-> > There are numerous references to 32bit functions in generic and 64bit
-> > code so ifdef them out.
-> > 
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> > v2:
-> > - fix 32bit ifdef condition in signal.c
-> > - simplify the compat ifdef condition in vdso.c - 64bit is redundant
-> > - simplify the compat ifdef condition in callchain.c - 64bit is redundant
-> > v3:
-> > - use IS_ENABLED and maybe_unused where possible
-> > - do not ifdef declarations
-> > - clean up Makefile
-> > v4:
-> > - further makefile cleanup
-> > - simplify is_32bit_task conditions
-> > - avoid ifdef in condition by using return
-> > v5:
-> > - avoid unreachable code on 32bit
-> > - make is_current_64bit constant on !COMPAT
-> > - add stub perf_callchain_user_32 to avoid some ifdefs
-> > ---
-> >   arch/powerpc/include/asm/thread_info.h |  4 ++--
-> >   arch/powerpc/kernel/Makefile           |  7 +++----
-> >   arch/powerpc/kernel/entry_64.S         |  2 ++
-> >   arch/powerpc/kernel/signal.c           |  3 +--
-> >   arch/powerpc/kernel/syscall_64.c       |  6 ++----
-> >   arch/powerpc/kernel/vdso.c             |  5 ++---
-> >   arch/powerpc/perf/callchain.c          | 13 +++++++++++--
-> >   7 files changed, 23 insertions(+), 17 deletions(-)
-> >   
-> [...]
+> When SoC receives pre shut down command, it share the same
+> with other COEX shared clients. So SoC needs a short time
+> after sending VS pre shutdown command before turning off
+> the regulators and sending the power off pulse. Along with
+> short delay, needs to wait for command complete event for
+> Pre shutdown VS command
 > 
-> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> > index c84bbd4298a0..881be5c4e9bb 100644
-> > --- a/arch/powerpc/perf/callchain.c
-> > +++ b/arch/powerpc/perf/callchain.c
-> > @@ -15,7 +15,7 @@
-> >   #include <asm/sigcontext.h>
-> >   #include <asm/ucontext.h>
-> >   #include <asm/vdso.h>
-> > -#ifdef CONFIG_PPC64
-> > +#ifdef CONFIG_COMPAT
-> >   #include "../kernel/ppc32.h"
-> >   #endif
-> >   #include <asm/pte-walk.h>
-> > @@ -291,7 +291,8 @@ static inline int current_is_64bit(void)
-> >   	 * interrupt stack, and the thread flags don't get copied over
-> >   	 * from the thread_info on the main stack to the interrupt stack.
-> >   	 */
-> > -	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
-> > +	return !IS_ENABLED(CONFIG_COMPAT) ||
-> > +		!test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
-> >   }
-> >   
-> >   #else  /* CONFIG_PPC64 */
-> > @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
-> >   
-> >   #endif /* CONFIG_PPC64 */
-> >   
-> > +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
-> >   /*
-> >    * Layout for non-RT signal frames
-> >    */
-> > @@ -482,6 +484,13 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
-> >   		sp = next_sp;
-> >   	}
-> >   }
-> > +#else /* 32bit */
-> > +static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
-> > +				   struct pt_regs *regs)
-> > +{
-> > +	(void)&read_user_stack_32; /* unused if !COMPAT */  
-> 
-> That looks pretty much like a hack.
-> 
-> See possible alternative below.
-> 
-> > +}
-> > +#endif /* 32bit */
-> >   
-> >   void
-> >   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> >   
-> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 > ---
->  arch/powerpc/perf/callchain.c | 62 +++++++++++++++++++------------------------
->  1 file changed, 27 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index 881be5c4e9bb..1b169b32776a 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
->  	return read_user_stack_slow(ptr, ret, 8);
->  }
->  
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> -{
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> -		return -EFAULT;
-> -
-> -	pagefault_disable();
-> -	if (!__get_user_inatomic(*ret, ptr)) {
-> -		pagefault_enable();
-> -		return 0;
-> -	}
-> -	pagefault_enable();
-> -
-> -	return read_user_stack_slow(ptr, ret, 4);
-> -}
-> -
->  static inline int valid_user_sp(unsigned long sp, int is_64)
->  {
->  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-> @@ -296,25 +280,10 @@ static inline int current_is_64bit(void)
->  }
->  
->  #else  /* CONFIG_PPC64 */
-> -/*
-> - * On 32-bit we just access the address and let hash_page create a
-> - * HPTE if necessary, so there is no need to fall back to reading
-> - * the page tables.  Since this is called at interrupt level,
-> - * do_page_fault() won't treat a DSI as a page fault.
-> - */
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> -{
-> -	int rc;
-> -
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> -		return -EFAULT;
->  
-> -	pagefault_disable();
-> -	rc = __get_user_inatomic(*ret, ptr);
-> -	pagefault_enable();
-> -
-> -	return rc;
-> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-> +{
-> +	return 0;
->  }
->  
->  static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> @@ -344,6 +313,30 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->  
->  #if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
->  /*
-> + * On 32-bit we just access the address and let hash_page create a
-> + * HPTE if necessary, so there is no need to fall back to reading
-> + * the page tables.  Since this is called at interrupt level,
-> + * do_page_fault() won't treat a DSI as a page fault.
-> + */
-> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +{
-> +	int rc;
-> +
-> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> +	    ((unsigned long)ptr & 3))
-> +		return -EFAULT;
-> +
-> +	pagefault_disable();
-> +	rc = __get_user_inatomic(*ret, ptr);
-> +	pagefault_enable();
-> +
-> +	if (IS_ENABLED(CONFIG_PPC32) || !rc)
-> +		return rc;
-> +
-> +	return read_user_stack_slow(ptr, ret, 4);
-Which is not declared here. This is not intended to be the final state,
-anyway.
+> Changes in V2:
+> - Modified commit text.
+> ---
+> drivers/bluetooth/btqca.c   | 22 ++++++++++++++++++++++
+> drivers/bluetooth/hci_qca.c |  5 +++++
+> 2 files changed, 27 insertions(+)
 
-Thanks
+the patch does not apply cleanly to bluetooth-next tree. Can you send an updated version please.
 
-Michal
-> +}
-> +
-> +/*
->   * Layout for non-RT signal frames
->   */
->  struct signal_frame_32 {
-> @@ -488,7 +481,6 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->  static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->  				   struct pt_regs *regs)
->  {
-> -	(void)&read_user_stack_32; /* unused if !COMPAT */
->  }
->  #endif /* 32bit */
->  
+Regards
+
+Marcel
 
