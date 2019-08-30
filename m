@@ -2,141 +2,250 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73DBC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DBCC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFF52173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/iH+APt"
+	by mail.kernel.org (Postfix) with ESMTP id 9DCC32173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567159348;
+	bh=8s7yw69CBXfvbrDvzVKtEWUV36YMSTWqhk7vp00J82g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=j9Y7BqlNeksjBihzd8eeRGql0E73inmrOgmiiGkqBEo/5S7DBrfDTiZVZkoP5lYGZ
+	 zijfCxPkya65c3QUiLYseCzjqIVmsbHaOIsH8+KSX6RmJIx4UDZWq36YjFnRad6i4W
+	 CShMMRdd5J2XSrz3lQLXT3hpT4OU6MVJxca6Jxyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfH3KCD (ORCPT
+        id S1727914AbfH3KC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:02:03 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45455 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfH3KCD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:02:03 -0400
-Received: by mail-yw1-f68.google.com with SMTP id n69so2172949ywd.12;
-        Fri, 30 Aug 2019 03:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BIMw0qKaytre7FG6jFJWV4iDfNINre/R6oO7ZIuT+RM=;
-        b=a/iH+APt7PbRkzLKE6KRlBQQvNjly6EgIh2Equ0T3wdPNvBCM9eYU3/uElXpVQVpJP
-         fIvORJDofPBr7LkutP4IBsVTrLCIsU0t10urIJmElXgiOXH4e9q1yYzyFv3+K2IuvN7P
-         /Ri6HQg6AofF4T7y54qZ8rGDJnhYQ1axF/RdpptNCVAXHT7zXuUpoiPM7qmzBIXPDxkc
-         yz43N32iSTODuXLhklnvg4xO3pFOf4iekY9g7XtUsy8MNVjxoZFssoP7e0AC4xiwpx7w
-         LhUzFXBsgsK2+Z7kNAbqDpvfakxDCbYzgiv5ZQqwOCQA3uq2h0SksKwaWhinmCGs9EZi
-         g2Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BIMw0qKaytre7FG6jFJWV4iDfNINre/R6oO7ZIuT+RM=;
-        b=o7467a9hQ2wg4Zp3nDa1ingY56rPNguUXkiOeQydiaOiCGeAk8zo5CPMRD1sti7E2t
-         7wrBY6KN0LS5NZXGIUCloFJHNGUSgOsGkR2CX9yPJGE460MJh5p+HdJ23LuherNrHSba
-         ruTpdc0PMy+HRgZ0nfNUVbExIiz/1GRj0q+MKeJHtNjJRzOj4tLsm27V60wezjbO9rcw
-         XVOhN+0/sPQ3iQL51+7/rRSofc1w/RZOrIAO/yMDm4maWJwYNvei2+Z1IIuFfME5LHty
-         On0bY991M5Vf4KR2HnbTnY9PLcZ1vaC27UDdwAPSL8S/K1ryUQs2CkPj8dljKXRItGjL
-         Ihlg==
-X-Gm-Message-State: APjAAAXX6aMTQp0ipPVje9gl0oY5TJVbQ/wUzm/CYedTRwgajvcqP5Zj
-        K9PH+renSiOV5TFuaOXrquhHpRaUtnBUvSYIL+4=
-X-Google-Smtp-Source: APXvYqzYIhbifbnfgdIKzmR3aU+cJzCuIaJQl3BUNyvyAZVabAy2aY3yZydYfvfnALekrK7oN9gYZXu8g0KQgBdsQKs=
-X-Received: by 2002:a0d:d596:: with SMTP id x144mr9971364ywd.69.1567159321875;
- Fri, 30 Aug 2019 03:02:01 -0700 (PDT)
+        Fri, 30 Aug 2019 06:02:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:57712 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfH3KC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 06:02:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A7A5344;
+        Fri, 30 Aug 2019 03:02:26 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A37183F718;
+        Fri, 30 Aug 2019 03:02:22 -0700 (PDT)
+Subject: Re: [PATCH v4 07/10] KVM: arm64: Provide VCPU attributes for stolen
+ time
+To:     Steven Price <steven.price@arm.com>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190830084255.55113-1-steven.price@arm.com>
+ <20190830084255.55113-8-steven.price@arm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <36104ec0-2237-fb0e-376f-ab50c23c6101@kernel.org>
+Date:   Fri, 30 Aug 2019 11:02:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190826081752.57258-1-kkamagui@gmail.com> <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
- <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
- <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
- <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
- <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org> <CAHjaAcSu04J3WqT_vnSnaQuYpFQ+xiXXWxhcCeLQccEq6eQGcQ@mail.gmail.com>
- <20190829153437.gjcqfolsc26vyt4x@linux.intel.com> <20190829153917.glq6eoka2eufy42w@linux.intel.com>
- <CAHjaAcQ2OmrFO2wWCXocR9xO_aTRYU4vLf3aBr4v5Fn2A89wvg@mail.gmail.com>
-In-Reply-To: <CAHjaAcQ2OmrFO2wWCXocR9xO_aTRYU4vLf3aBr4v5Fn2A89wvg@mail.gmail.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Fri, 30 Aug 2019 19:01:50 +0900
-Message-ID: <CAHjaAcQv+8ZqYwcYLj57rM9wMRvsoUczzE8uXjsTY+yxNB7vFw@mail.gmail.com>
-Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
- supporting AMD's fTPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190830084255.55113-8-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > On Thu, Aug 29, 2019 at 06:34:37PM +0300, Jarkko Sakkinen wrote:
-> > > On Wed, Aug 28, 2019 at 06:36:04PM +0900, Seunghun Han wrote:
-> > > > >
-> > > > > On Wed, Aug 28, 2019 at 01:36:30AM +0900, Seunghun Han wrote:
-> > > > >
-> > > > > > I got your point. Is there any problem if some regions which don't
-> > > > > > need to be handled in NVS area are saved and restored? If there is a
-> > > > > > problem, how about adding code for ignoring the regions in NVS area to
-> > > > > > the nvs.c file like Jarkko said? If we add the code, we can save and
-> > > > > > restore NVS area without driver's interaction.
-> > > > >
-> > > > > The only thing that knows which regions should be skipped by the NVS
-> > > > > driver is the hardware specific driver, so the TPM driver needs to ask
-> > > > > the NVS driver to ignore that region and grant control to the TPM
-> > > > > driver.
-> > > > >
-> > > > > --
-> > > > > Matthew Garrett | mjg59@srcf.ucam.org
-> > > >
-> > > > Thank you, Matthew and Jarkko.
-> > > > It seems that the TPM driver needs to handle the specific case that
-> > > > TPM regions are in the NVS. I would make a patch that removes TPM
-> > > > regions from the ACPI NVS by requesting to the NVS driver soon.
-> > > >
-> > > > Jarkko,
-> > > > I would like to get some advice on it. What do you think about
-> > > > removing TPM regions from the ACPI NVS in TPM CRB driver? If you don't
-> > > > mind, I would make the patch about it.
-> > >
-> > > I'm not sure if ignoring is right call. Then the hibernation behaviour
-> > > for TPM regions would break.
-> > >
-> > > Thus, should be "ask access" rather than "grant control".
->
-> I agree with your idea. It seems to make trouble. So, I would like to
-> do like your idea below.
->
-> > Or "reserve access" as NVS driver does not have intelligence to do any
-> > policy based decision here.
-> >
-> > A function that gets region and then checks if NVS driver has matching
-> > one and returns true/false based on that should be good enough. Then
-> > you raw ioremap() in the TPM driver.
-> >
-> > /Jarkko
->
-> This solution is great and clear to me. I will make a new patch on
-> your advice and test it in my machine. After that, I will send it
-> again soon.
-> I really appreciate it.
->
-> Seunghun
+On 30/08/2019 09:42, Steven Price wrote:
+> Allow user space to inform the KVM host where in the physical memory
+> map the paravirtualized time structures should be located.
+> 
+> User space can set an attribute on the VCPU providing the IPA base
+> address of the stolen time structure for that VCPU. This must be
+> repeated for every VCPU in the VM.
+> 
+> The address is given in terms of the physical address visible to
+> the guest and must be 64 byte aligned. The guest will discover the
+> address via a hypercall.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  arch/arm64/include/asm/kvm_host.h |  7 +++++
+>  arch/arm64/include/uapi/asm/kvm.h |  2 ++
+>  arch/arm64/kvm/guest.c            |  9 ++++++
+>  include/uapi/linux/kvm.h          |  2 ++
+>  virt/kvm/arm/pvtime.c             | 47 +++++++++++++++++++++++++++++++
+>  5 files changed, 67 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 1697e63f6dd8..6af16b29a41f 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -489,6 +489,13 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
+>  long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu);
+>  int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init);
+>  
+> +int kvm_arm_pvtime_set_attr(struct kvm_vcpu *vcpu,
+> +			    struct kvm_device_attr *attr);
+> +int kvm_arm_pvtime_get_attr(struct kvm_vcpu *vcpu,
+> +			    struct kvm_device_attr *attr);
+> +int kvm_arm_pvtime_has_attr(struct kvm_vcpu *vcpu,
+> +			    struct kvm_device_attr *attr);
+> +
+>  static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
+>  {
+>  	vcpu_arch->steal.base = GPA_INVALID;
+> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+> index 9a507716ae2f..bde9f165ad3a 100644
+> --- a/arch/arm64/include/uapi/asm/kvm.h
+> +++ b/arch/arm64/include/uapi/asm/kvm.h
+> @@ -323,6 +323,8 @@ struct kvm_vcpu_events {
+>  #define KVM_ARM_VCPU_TIMER_CTRL		1
+>  #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
+>  #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
+> +#define KVM_ARM_VCPU_PVTIME_CTRL	2
+> +#define   KVM_ARM_VCPU_PVTIME_SET_IPA	0
+>  
+>  /* KVM_IRQ_LINE irq field index values */
+>  #define KVM_ARM_IRQ_TYPE_SHIFT		24
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index dfd626447482..d3ac9d2fd405 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -858,6 +858,9 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
+>  	case KVM_ARM_VCPU_TIMER_CTRL:
+>  		ret = kvm_arm_timer_set_attr(vcpu, attr);
+>  		break;
+> +	case KVM_ARM_VCPU_PVTIME_CTRL:
+> +		ret = kvm_arm_pvtime_set_attr(vcpu, attr);
+> +		break;
+>  	default:
+>  		ret = -ENXIO;
+>  		break;
+> @@ -878,6 +881,9 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
+>  	case KVM_ARM_VCPU_TIMER_CTRL:
+>  		ret = kvm_arm_timer_get_attr(vcpu, attr);
+>  		break;
+> +	case KVM_ARM_VCPU_PVTIME_CTRL:
+> +		ret = kvm_arm_pvtime_get_attr(vcpu, attr);
+> +		break;
+>  	default:
+>  		ret = -ENXIO;
+>  		break;
+> @@ -898,6 +904,9 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
+>  	case KVM_ARM_VCPU_TIMER_CTRL:
+>  		ret = kvm_arm_timer_has_attr(vcpu, attr);
+>  		break;
+> +	case KVM_ARM_VCPU_PVTIME_CTRL:
+> +		ret = kvm_arm_pvtime_has_attr(vcpu, attr);
+> +		break;
+>  	default:
+>  		ret = -ENXIO;
+>  		break;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 5e3f12d5359e..265156a984f2 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1222,6 +1222,8 @@ enum kvm_device_type {
+>  #define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
+>  	KVM_DEV_TYPE_XIVE,
+>  #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
+> +	KVM_DEV_TYPE_ARM_PV_TIME,
+> +#define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
+>  	KVM_DEV_TYPE_MAX,
+>  };
+>  
+> diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
+> index d9d0dbc6994b..7b1834b98a68 100644
+> --- a/virt/kvm/arm/pvtime.c
+> +++ b/virt/kvm/arm/pvtime.c
+> @@ -2,7 +2,9 @@
+>  // Copyright (C) 2019 Arm Ltd.
+>  
+>  #include <linux/arm-smccc.h>
+> +#include <linux/kvm_host.h>
+>  
+> +#include <asm/kvm_mmu.h>
+>  #include <asm/pvclock-abi.h>
+>  
+>  #include <kvm/arm_hypercalls.h>
+> @@ -75,3 +77,48 @@ long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
+>  
+>  	return vcpu->arch.steal.base;
+>  }
+> +
+> +int kvm_arm_pvtime_set_attr(struct kvm_vcpu *vcpu,
+> +			    struct kvm_device_attr *attr)
+> +{
+> +	u64 __user *user = (u64 __user *)attr->addr;
+> +	u64 ipa;
+> +
+> +	if (attr->attr != KVM_ARM_VCPU_PVTIME_SET_IPA)
+> +		return -ENXIO;
+> +
+> +	if (get_user(ipa, user))
+> +		return -EFAULT;
+> +	if (ipa & 63)
 
-I have made and sent patches on your advice.
-The patch links are below and please review them.
-[PATCH 0/2] https://lkml.org/lkml/2019/8/30/372
-[PATCH 1/2] https://lkml.org/lkml/2019/8/30/373
-[PATCH 2/2] https://lkml.org/lkml/2019/8/30/374
+nit: Please express this as !IS_ALIGNED(ipa, 64) instead.
 
-Thank you again for your sincere advice.
+> +		return -EINVAL;
+> +	if (vcpu->arch.steal.base != GPA_INVALID)
+> +		return -EEXIST;
+> +	vcpu->arch.steal.base = ipa;
 
-Seunghun
+I'm still worried that you end-up not knowing whether the IPA is valid
+or not at this stage, nor that we check about overlapping vcpus. How do
+we validate that?
+
+I also share Christoffer's concern that the memslot parsing may be
+expensive on a system with multiple memslots. But maybe that can be
+solved by adding some caching capabilities to your kvm_put_guest(),
+should this become a problem.
+
+> +	return 0;
+> +}
+> +
+> +int kvm_arm_pvtime_get_attr(struct kvm_vcpu *vcpu,
+> +			    struct kvm_device_attr *attr)
+> +{
+> +	u64 __user *user = (u64 __user *)attr->addr;
+> +	u64 ipa;
+> +
+> +	if (attr->attr != KVM_ARM_VCPU_PVTIME_SET_IPA)
+
+It is a bit odd that this is using "SET_IPA" as a way to GET it.
+
+> +		return -ENXIO;
+> +
+> +	ipa = vcpu->arch.steal.base;
+> +
+> +	if (put_user(ipa, user))
+> +		return -EFAULT;
+> +	return 0;
+> +}
+> +
+> +int kvm_arm_pvtime_has_attr(struct kvm_vcpu *vcpu,
+> +			    struct kvm_device_attr *attr)
+> +{
+> +	switch (attr->attr) {
+> +	case KVM_ARM_VCPU_PVTIME_SET_IPA:
+> +		return 0;
+> +	}
+> +	return -ENXIO;
+> +}
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
