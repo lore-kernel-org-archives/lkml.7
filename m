@@ -2,114 +2,116 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BB6C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C46AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918982342E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB82F2342E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ey9XQvoj"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="SaLyfj4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfH3VpR (ORCPT
+        id S1728313AbfH3Vpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:45:17 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41888 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbfH3VpQ (ORCPT
+        Fri, 30 Aug 2019 17:45:47 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:47069 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728122AbfH3Vpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:45:16 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so3930569pls.8;
-        Fri, 30 Aug 2019 14:45:15 -0700 (PDT)
+        Fri, 30 Aug 2019 17:45:46 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z51so9503687edz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 14:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CyAnPYKlnqoE6HYrk4XrrLs/lfWC1furlwMXZwIbdJM=;
-        b=Ey9XQvoj8H/Rnwv8NzD/KreDQNAtk/Y1mAfNtWWSPWRvpRHkSG3qzrkTUiyqzLyy8y
-         FhYeM7nvgl239YS8plycKvLT74pvzlcX8njCo82d73vUDrqGOQIz8oARAkP7UKilrwM5
-         NDqVYaJdxQw5YtmBNy2VGaqetGKnvddyuLZTFzzrXm1WRH2hh5P7VzQIaPjNRzRh/cM8
-         +iOgz2nm0iGcnxDUVyloWrKJlS93KDGv8twzcGSeFsCL8uqXFf9uQEZtHNVy3yjgG/aD
-         DEMAEjrPTZxgLBaKb3rpS25bBzOjAWuXx/Z+kiRAvu2tepHCjzQrK3HOb0q7by4MMmYW
-         wmeg==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cBz0MMX0JgyAHjwyE8I1352iGkSxJIlsmG5ztl+6roE=;
+        b=SaLyfj4vRd7n2LDFFQRahUDf4PcSzy7K79IMAxpqyV4LzQALLJ5uUvekBkwAr72dpS
+         7ayWBlDt0ahoDU1k002ECX1qUVqL8sw5R3Hl6b11PWdt/YaebFSUeHs6b3Gl3Jxo5ok2
+         Zph2ANDm+Cdq46G6qrE6+s+NoOVsjK6AaoCS4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CyAnPYKlnqoE6HYrk4XrrLs/lfWC1furlwMXZwIbdJM=;
-        b=EIOO/dpI+2pUY4aPFL8ZvpQPyrNVpIj6HE8Cdu5W0ZRr3evJH+4Wcp4LtYcT1T/V8D
-         wMyHsWm1eSyvdxDmeYzjFZPLEv1+J29G5ldl+mx8F6xKG6etI1QKO2KxM0oVE41nRNeP
-         QobTKQ+ZNZRregfPzseXgLrriY+wK+IMfefZr8EcdZy2gPAX6iYLci/PCwFyLofl2Hqf
-         0kJs/VvNA38d3qR3b3YQz09KsPvspGGedvbJm5CShNdmiT1Y4YBzq3oA5tFVUWKBxmN6
-         HF6WzibRQRHI5DUWOtgCfbiakI9RFSYAq3YtohDMnkquqOPQxgJMSkQvOBQE166LwScl
-         b0HA==
-X-Gm-Message-State: APjAAAUI1QI8ePr7mY+ERjQxKNIzcol2ok3K8624tlRNypLxNJobmsiy
-        JDaxLfrJn4w8oTC31xZvHHoLCd8cqRQ=
-X-Google-Smtp-Source: APXvYqzQSc6jNbxZKUcovD9FZLciwfGuo7Kt2wn5aZSHSDm6zSKrBIeIlpBZCEWXRcfFUHXs7Afe6Q==
-X-Received: by 2002:a17:902:9b8f:: with SMTP id y15mr18714988plp.194.1567201515169;
-        Fri, 30 Aug 2019 14:45:15 -0700 (PDT)
-Received: from localhost (g75.222-224-160.ppp.wakwak.ne.jp. [222.224.160.75])
-        by smtp.gmail.com with ESMTPSA id q69sm5777108pjb.0.2019.08.30.14.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 14:45:14 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 06:45:12 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/26] openrisc: map as uncached in ioremap
-Message-ID: <20190830214512.GX24874@lianli.shorne-pla.net>
-References: <20190817073253.27819-1-hch@lst.de>
- <20190817073253.27819-6-hch@lst.de>
- <20190823135539.GC24874@lianli.shorne-pla.net>
- <20190830160705.GF26887@lst.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cBz0MMX0JgyAHjwyE8I1352iGkSxJIlsmG5ztl+6roE=;
+        b=d0kQ1WXEnQxBqh55LUt+2ig4Fxe+UAytlkfb54GQ//sov4PernV8+9euDh+Rc7WPjB
+         Vxu8TtJutv2tXJjB7FrNuILZpEPwlBNgp6OQtGs/Fh2jGkCZki7eVoat3sx6zSOGg/gU
+         ZC1y5kl9olIjrgQaW33sQ8k7UeX3V9QaaraBlHEVraJ1KGIon8JjgSz5eejWl1TbdFmP
+         7SAN3nLw5NdR+wT231vqilXy86/nCIbMW9x98PTIEAuGxHrvXSrkW8c+3sLAuhoZ8gg9
+         hljFme+3635u9wBD2jVcP71EJbEobG9sgDKkgO4UEkuPQqLOuNaCtkbrZsedTu6uqOL6
+         wGbg==
+X-Gm-Message-State: APjAAAUmgo9QPvgQ3WNFAMolPiXBwHU7LMjT8B9YWVhEHoWdboUW3jLQ
+        nhwOaIAKyynMh/hzk8CLzRgwfFcoZ0nTyap3
+X-Google-Smtp-Source: APXvYqyUMuKdzY/FFg+N2C4z43XxYZzTyHfyt1kARxcF6rQuLUR39CDEOTIT5F3KhAgvAnwKa2ylTg==
+X-Received: by 2002:aa7:c490:: with SMTP id m16mr18062490edq.156.1567201545118;
+        Fri, 30 Aug 2019 14:45:45 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
+        by smtp.gmail.com with ESMTPSA id qx4sm920543ejb.11.2019.08.30.14.45.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 14:45:44 -0700 (PDT)
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Juergen Gross <jgross@suse.com>, Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        metux IT consult Enrico Weigelt <lkml@metux.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
+ <74303921-aa95-9962-2254-27e556af54f4@kleine-koenig.org>
+ <20190829081249.3zvvsa4ggb5pfozl@pathway.suse.cz>
+ <45cd5b50-9854-fce7-5f08-f7660abb8691@suse.com>
+ <a83449cf-3a4a-f3e0-210a-dc7c39505355@rasmusvillemoes.dk>
+ <002dc2a7-40a3-f52a-c8fa-5dbb42e6dd7b@kleine-koenig.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <7eb732b3-eca5-34c0-ed1f-6814deab60d9@rasmusvillemoes.dk>
+Date:   Fri, 30 Aug 2019 23:45:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830160705.GF26887@lst.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <002dc2a7-40a3-f52a-c8fa-5dbb42e6dd7b@kleine-koenig.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 06:07:05PM +0200, Christoph Hellwig wrote:
-> On Fri, Aug 23, 2019 at 10:55:39PM +0900, Stafford Horne wrote:
-> > On Sat, Aug 17, 2019 at 09:32:32AM +0200, Christoph Hellwig wrote:
-> > > Openrisc is the only architecture not mapping ioremap as uncached,
-> > > which has been the default since the Linux 2.6.x days.  Switch it
-> > > over to implement uncached semantics by default.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/openrisc/include/asm/io.h      | 20 +++-----------------
-> > >  arch/openrisc/include/asm/pgtable.h |  2 +-
-> > >  arch/openrisc/mm/ioremap.c          |  8 ++++----
-> > >  3 files changed, 8 insertions(+), 22 deletions(-)
-> > 
-> > Acked-by: Stafford Horne <shorne@gmail.com>
+On 29/08/2019 19.39, Uwe Kleine-König wrote:
+> On 8/29/19 11:09 AM, Rasmus Villemoes wrote:
+
+>> still prefer making it %pE, both because it's easier to convert integers
+>> to ERR_PTRs than having to worry about the type of PTR_ERR() being long
+>> and not int, and because alphanumerics after %p have been ignored for a
+>> long time (10 years?) whether or not those characters have been
+>> recognized as a %p extension, so nobody relies on %pE putting an E after
+>> the %p output. It also keeps the non-standard extensions in the same
+>> "namespace", so to speak.
+>>
+>> Oh, 'E' is taken, well, make it 'e' then.
 > 
-> Can you send this one to Linus for 5.4?  That would help with the
-> possibility to remove ioremap_nocache after that.
+> I like having %pe to print error valued pointers. Then maybe we could
+> have both %de for ints and %pe for pointers. :-)
 
-Sure, I will pick this up.
+Oh no. And actually, come to think of it, we don't even need to extend
+%p at all (taking away yet another letter for future expansion...), we
+should simply make %p DTRT when passed an ERR_PTR - currently, if it's
+some %p<extension> that would normally derefence it, there's sanity
+checking in place which makes it print (efault), while if it's plain %p,
+it just does the hashing, making it impossible to figure out that it was
+an errno value (or which it was).
 
--Stafford
+I've cooked up what I mean, sending in separate thread.
+
+Rasmus
+
+
