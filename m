@@ -2,97 +2,165 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDA6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D4C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BD72342B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6522343B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YULv0bFj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pAliF8TG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfH3QNY (ORCPT
+        id S1728208AbfH3QO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:13:24 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:40940 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbfH3QNY (ORCPT
+        Fri, 30 Aug 2019 12:14:27 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.38]:22871 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727884AbfH3QO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:13:24 -0400
-Received: by mail-yb1-f194.google.com with SMTP id t15so2649563ybg.7;
-        Fri, 30 Aug 2019 09:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jxavUzmR4j4QY4vF+5GYDteLHfU18c17qk0astXeeP8=;
-        b=YULv0bFjeyounsVuhV7i2KEsAFrVn9IcJu+lmx6/Ml10Ln1qHiZje6PbDLzpuRoYWw
-         S46lZ/MNFuMWSZlpPyTl02bSZPqkRfb9bkhBGNqAQFj2bkZkmAM7A1mHRirAVNh/Gna/
-         1MFYpZn2WCIN4XUk7jjUmaA2B5wudQTys95LCLbDcznndluUctkDslijws6XmPpkDsTy
-         WwXCEVhC1qaZj3OUm5r0XgmfmIosWpeYhVIsnd3jnsBM2Y95m8y2Xy3Zw6lGMAMYe0sg
-         /b2kKx4chUULSB3p+GlJite2DR6bOuAuYq90dGPLsfRkApI9ICUQwTx6Wu9m/+21NuuK
-         41SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jxavUzmR4j4QY4vF+5GYDteLHfU18c17qk0astXeeP8=;
-        b=gV0pr55v6bdDXEW+Ix6GLwOUK9NsdBTZzkltR/8D6ZuerYn/D0NaBVN3brEBi2ttkM
-         WbwIpH3zvCwKuq0o9OC70aoDzole0cgPV0XikT7vGpTvEd1vNpRmTYrpIO6Tm6HjZ0jH
-         d3gybJqn0+QvFCB2mxs3fEL28Syx2+dHHitrW6CuMhllev7HuGjYNjSYCJMzUAuwgA6B
-         gJ004PDBkDocY1HxoZPSu1cYXu2YlNaxS6E9iJJ6KsK4mgEm5/G3VfYp4sCBv1SO4erm
-         Qqk8PZ1VlDEw4MdA9xLa68RcJx207Qe2eAgqvW77hTZLjT/+0D0RA5Vv6COQv8ROXdj9
-         l8rQ==
-X-Gm-Message-State: APjAAAU6i1Pky82/FIDhmI3pAUiy8nH7nWZGElkEOsy5UJ9F1hDpJc3m
-        HYy6LGqVPw7VL5OkfxLvHM3rb6JnPycewDMRnnjn8Xy8
-X-Google-Smtp-Source: APXvYqy5fIizkvflP77/xUWuXJZ1bCpNB9fIWDfTgrw9jBs2cK3N/Kg+2DA1Gt8TsX9SdzK/EGrfi8/nyJLXMvtUQtk=
-X-Received: by 2002:a25:2f42:: with SMTP id v63mr11611956ybv.228.1567181602873;
- Fri, 30 Aug 2019 09:13:22 -0700 (PDT)
+        Fri, 30 Aug 2019 12:14:27 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 01502129053
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 11:14:26 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3jXdijU3790on3jXdiVAdq; Fri, 30 Aug 2019 11:14:25 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aGYr2FM4QQtcTWRAHMFf23E34Ywi1aRTuyHCXd6kje0=; b=pAliF8TGvjsDz5WSKpj+xjc670
+        wG3SdMnDpV0CMTt6RY56y+kj5QAhp2VlSc66xWk513X6/TkKw8+aHdNS5DlJCWj2wigHMxromxRDb
+        iPMa3sVurbFOI1x6bHYrFu01Ip3EMiC/12ms7poxNoi/ph1lIjLU6lXhk48DXileLCfFVsD9pJ4vq
+        cfz7hSg96NYDOrSLiAHa4CBH656OaB0m3kdO7QTCtTdurZlwthlR6Lqs+ZfQFij4WWCpJIx0nA2ZY
+        4AgSPWtE4OGElW/r2HR+6Kfro853MmI01eRtd1Emp6UirKMojcshO4o8s21IWNAPiR/Gc3CBsE8U+
+        0+f630WA==;
+Received: from [189.152.216.116] (port=34988 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3jXc-000lDa-Le; Fri, 30 Aug 2019 11:14:24 -0500
+Date:   Fri, 30 Aug 2019 11:14:23 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] dmaengine: stm32-dma: Use struct_size() helper
+Message-ID: <20190830161423.GA3483@embeddedor>
 MIME-Version: 1.0
-References: <20190830095639.4562-1-kkamagui@gmail.com> <20190830095639.4562-3-kkamagui@gmail.com>
- <20190830124334.GA10004@ziepe.ca> <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
- <20190830143852.GA302@ziepe.ca>
-In-Reply-To: <20190830143852.GA302@ziepe.ca>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Sat, 31 Aug 2019 01:13:11 +0900
-Message-ID: <CAHjaAcQyCgfc+JbVNa_ix1HY64K3NCY5octj26j=o64EDtPkGw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
- supporting AMD's fTPM
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3jXc-000lDa-Le
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:34988
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Fri, Aug 30, 2019 at 10:54:59PM +0900, Seunghun Han wrote:
->
-> > When I tested this patch in my machine, it seemed that ACPI NVS was
-> > saved after TPM CRB driver sent "TPM2_Shutdown(STATE)" to the fTPM
-> > while suspending. Then, ACPI NVS was restored while resuming.
-> > After resuming, PCRs didn't change and TPM2 tools such as
-> > tpm2_pcrlist, tpm2_extend, tpm2_getrandoms worked well.
-> > So, according to my test result, it seems that the patch doesn't
-> > create bugs and race during resume.
->
-> I have a feeling that is shear luck of link time ordering and not guarenteed??
->
-> Jason
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-No, it is guaranteed. As you know, suspend_nvs_save() is called by
-acpi_pm_pre_suspend(), and it is called by
-platform_suspend_prepare_noirq(). platform_suspend_prepare_noirq() is
-also called by suspend_enter(), and it already suspends all devices
-like TPM CRB driver before calling platform_suspend_prepare_noirq().
-This means that the order is guaranteed and we don't need to worry about it.
+struct stm32_dma_desc {
+	...
+        struct stm32_dma_sg_req sg_req[];
+};
 
-Seunghun
+
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
+
+So, replace the following function:
+
+static struct stm32_dma_desc *stm32_dma_alloc_desc(u32 num_sgs)
+{
+       return kzalloc(sizeof(struct stm32_dma_desc) +
+                      sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_NOWAIT);
+}
+
+with:
+
+kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/dma/stm32-dma.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index e4cbe38d1b83..5989b0893521 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -243,12 +243,6 @@ static void stm32_dma_write(struct stm32_dma_device *dmadev, u32 reg, u32 val)
+ 	writel_relaxed(val, dmadev->base + reg);
+ }
+ 
+-static struct stm32_dma_desc *stm32_dma_alloc_desc(u32 num_sgs)
+-{
+-	return kzalloc(sizeof(struct stm32_dma_desc) +
+-		       sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_NOWAIT);
+-}
+-
+ static int stm32_dma_get_width(struct stm32_dma_chan *chan,
+ 			       enum dma_slave_buswidth width)
+ {
+@@ -853,7 +847,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
+ 		return NULL;
+ 	}
+ 
+-	desc = stm32_dma_alloc_desc(sg_len);
++	desc = kzalloc(struct_size(desc, sg_req, sg_len), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+ 
+@@ -954,7 +948,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
+ 
+ 	num_periods = buf_len / period_len;
+ 
+-	desc = stm32_dma_alloc_desc(num_periods);
++	desc = kzalloc(struct_size(desc, sg_req, num_periods), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+ 
+@@ -989,7 +983,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
+ 	int i;
+ 
+ 	num_sgs = DIV_ROUND_UP(len, STM32_DMA_ALIGNED_MAX_DATA_ITEMS);
+-	desc = stm32_dma_alloc_desc(num_sgs);
++	desc = kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+ 
+-- 
+2.23.0
+
