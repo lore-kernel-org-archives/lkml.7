@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2A0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE453C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B347E23405
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879CF233FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfH3HPT (ORCPT
+        id S1728271AbfH3HPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:15:19 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:63127 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726978AbfH3HPN (ORCPT
+        Fri, 30 Aug 2019 03:15:25 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:20045 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727781AbfH3HPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:15:13 -0400
-X-UUID: 0fa9a7fad37641009cfdaeb47579c295-20190830
-X-UUID: 0fa9a7fad37641009cfdaeb47579c295-20190830
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 30 Aug 2019 03:15:22 -0400
+X-UUID: eb7c3628171846a79b3c0383c83c895b-20190830
+X-UUID: eb7c3628171846a79b3c0383c83c895b-20190830
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2037637402; Fri, 30 Aug 2019 15:15:10 +0800
+        with ESMTP id 31657720; Fri, 30 Aug 2019 15:15:13 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 15:15:09 +0800
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 15:15:07 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 15:15:09 +0800
+ Transport; Fri, 30 Aug 2019 15:15:06 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,53 +42,48 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 05/11] dt-bindings: phy-mtk-tphy: add the properties about address mapping
-Date:   Fri, 30 Aug 2019 15:14:52 +0800
-Message-ID: <1567149298-29366-5-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 03/11] dt-bindings: phy-mtk-tphy: remove unused u3phya_ref clock
+Date:   Fri, 30 Aug 2019 15:14:50 +0800
+Message-ID: <1567149298-29366-3-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 2E65304BA8A05E8E598E054A85B4FBCC20543069F415E190C070E2A02EB0E47B2000:8
+X-TM-SNTS-SMTP: 1217626096F85A80F85E4FEE110C413F5F8CF8092E30A1DD3DE2BD12FE48B6812000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add three required properties about the address mapping, including
-'#address-cells', '#size-cells' and 'ranges'
+The u3phya_ref clock is already moved into sub-node, and
+renamed as ref clock, no used anymore now, so remove it
+to avoid confusion
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 v2: add Reviewed-by Rob
 ---
- Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-index a859b0db4051..dd75b676b71d 100644
+index 1f4a36dd80e0..48bc1a2e9299 100644
 --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
 +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-@@ -14,6 +14,16 @@ Required properties (controller (parent) node):
+@@ -13,10 +13,6 @@ Required properties (controller (parent) node):
+ 		  "mediatek,mt8173-u3phy";
  		  make use of "mediatek,generic-tphy-v1" on mt2701 instead and
  		  "mediatek,generic-tphy-v2" on mt2712 instead.
+- - clocks	: (deprecated, use port's clocks instead) a list of phandle +
+-		  clock-specifier pairs, one for each entry in clock-names
+- - clock-names	: (deprecated, use port's one instead) must contain
+-		  "u3phya_ref": for reference clock of usb3.0 analog phy.
  
-+- #address-cells:	the number of cells used to represent physical
-+		base addresses.
-+- #size-cells:	the number of cells used to represent the size of an address.
-+- ranges:	the address mapping relationship to the parent, defined with
-+		- empty value: if optional 'reg' is used.
-+		- non-empty value: if optional 'reg' is not used. should set
-+			the child's base address to 0, the physical address
-+			within parent's address space, and the length of
-+			the address map.
-+
  Required nodes	: a sub-node is required for each port the controller
  		  provides. Address range information including the usual
- 		  'reg' property is used inside these nodes to describe
 -- 
 2.23.0
 
