@@ -2,250 +2,270 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F308CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B260C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1B221670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tF/5l6aQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6223C21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfH3JuH (ORCPT
+        id S1727826AbfH3JuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:50:07 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54030 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfH3JuH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:50:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so6603620wmp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 02:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=c4pXhBax/amtMdhC4ViPEuR4nmjivXBNxfCkqMWIjlw=;
-        b=tF/5l6aQ3awe0t34PNY37DyGwVMnPi6hiFkUnO/fS5XIl85/RcoekOjf7I3utZiYx7
-         P0JMBEzriaE+HSlaE2bhudY3IrnzElL5ejd5XnVS8A7Ms367JRnqtnPPDnQinxcCeXoE
-         gcEOlyb5XNzvYoWUVkBn0IjfXnmbVrE8NmhXJH/rLjnlecQ1il6wwnhrrjf34iAjdzSv
-         J60/8bggo0e9zNm0si9I9/X9bGiLRoxRtNuk+HLah74ye6p0BdDlfeZhS9nncOQ/I0W6
-         Ux41R55VzSfN46Fz3fVU9CokzYNHusmg2sx8XjGPuzCI7Axkob76Emn1UUiQt/Z0wYHx
-         pRzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=c4pXhBax/amtMdhC4ViPEuR4nmjivXBNxfCkqMWIjlw=;
-        b=Dpk71gC5hzRGW4bsW/QgMCjgYVPqt6UxJR7MSZlEX7A2Z/bLZQ/6SxprFjOwLYGiEv
-         Egvm2pkxB9OFqR0Nzs22cG7WyOd8WBgpHtXI36IbhwSBulJEnhYs6D1LqaVqdrzAVIH/
-         bi/avyf4jGgXJ+HR7so1CgHYiff8KNs29miSLzPUIeWz//x8SXhFfvZkfpV16Xnk5Wbl
-         3+7DRWyo4lrWQaQFBQk1iU7iN8bSEF7nzHZ6cxVcitXwDcBXD+1MFGkFywg5BkErew/S
-         H4JlGzpRNL0S8uV0GA9WH13FMtBeQtPidg+uk63oSIfYgGeevCuodQ+dHw32VJVdiwyS
-         euHw==
-X-Gm-Message-State: APjAAAXLlgCevhwYzghd5zYYbrzvPpouWFj3iQOeZe7lV3pL16iZ2qbC
-        dCYPn3p016ZGGlyJkMyz2Diaei/TsZqn3g==
-X-Google-Smtp-Source: APXvYqxaDiiTn4PDScghCw0/ilrmvC0a0/fkDdxwpeyhfWhPTponlqWMM7HuuvnvM6tbxIY2wL6bmA==
-X-Received: by 2002:a7b:ce98:: with SMTP id q24mr18008856wmj.142.1567158603060;
-        Fri, 30 Aug 2019 02:50:03 -0700 (PDT)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id p7sm7525071wmh.38.2019.08.30.02.50.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 02:50:02 -0700 (PDT)
-Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-References: <20190828202723.1145-1-linux.amoon@gmail.com>
- <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
- <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
- <101a12ac-1464-8864-4f8c-56bb46034a08@baylibre.com>
- <CANAwSgQwZg_AXAnAY4KwDzHpwcSA9up7SrR6jyv5Bem24wtaJg@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <c25c6610-5393-ef9d-8a91-6fad088ac2c2@baylibre.com>
-Date:   Fri, 30 Aug 2019 11:50:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 05:50:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5256 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726480AbfH3JuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:50:17 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E15B6E46AA2F3FA4175D;
+        Fri, 30 Aug 2019 17:50:14 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 30 Aug 2019
+ 17:50:07 +0800
+Subject: Re: [PATCH] arm64: numa: check the node id before accessing
+ node_to_cpumask_map
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     <will@kernel.org>, <akpm@linux-foundation.org>,
+        <rppt@linux.ibm.com>, <anshuman.khandual@arm.com>,
+        <adobriyan@gmail.com>, <cai@lca.pw>, <robin.murphy@arm.com>,
+        <tglx@linutronix.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1567131991-189761-1-git-send-email-linyunsheng@huawei.com>
+ <20190830055528.GO28313@dhcp22.suse.cz>
+ <49b86da7-f114-27c2-463a-9bf5082ac197@huawei.com>
+ <20190830064421.GS28313@dhcp22.suse.cz>
+ <740cae36-f1a9-4d20-e4ea-3100076de533@huawei.com>
+ <20190830083925.GV28313@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <20839f55-dc99-d2bf-7c60-c37f38232044@huawei.com>
+Date:   Fri, 30 Aug 2019 17:49:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgQwZg_AXAnAY4KwDzHpwcSA9up7SrR6jyv5Bem24wtaJg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190830083925.GV28313@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 11:34, Anand Moon wrote:
-> Hi Neil,
-> 
-> On Fri, 30 Aug 2019 at 13:01, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 29/08/2019 20:35, Anand Moon wrote:
->>> Hi Neil,
->>>
->>> On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>>> On 28/08/2019 22:27, Anand Moon wrote:
->>>>> Below small changes help re-configure or fix missing inter linking
->>>>> of regulator node.
+On 2019/8/30 16:39, Michal Hocko wrote:
+> On Fri 30-08-19 16:08:14, Yunsheng Lin wrote:
+>> On 2019/8/30 14:44, Michal Hocko wrote:
+>>> On Fri 30-08-19 14:35:26, Yunsheng Lin wrote:
+>>>> On 2019/8/30 13:55, Michal Hocko wrote:
+>>>>> On Fri 30-08-19 10:26:31, Yunsheng Lin wrote:
+>>>>>> Some buggy bios may not set the device' numa id, and dev_to_node
+>>>>>> will return -1, which may cause global-out-of-bounds error
+>>>>>> detected by KASAN.
 >>>>>
->>>>> Changes based top on my prevoius series.
+>>>>> Why should we workaround a buggy bios like that? Is it so widespread and
+>>>>> no BIOS update available? Also, why is this arm64 specific?
 >>>>
->>>> For the serie:
->>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>>>> For our case, there is BIOS update available. I just thought it might
+>>>> be better to protect from this case when BIOS has not implemented the
+>>>> device' numa id setting feature or the feature from BIOS has some bug.
 >>>>
+>>>> It is not arm64 specific, right now I only have arm64 board. If it is
+>>>> ok to protect this from the buggy BIOS, maybe all other arch can be
+>>>> changed too.
 >>>
->>> Thanks for your review.
+>>> If we are to really care then this should be consistent among
+>>> architectures IMHO. But I am not really sure this is really worth it.
+>>> The code is quite old and I do not really remember any reports. 
+>>
+>> It is only detected by enabling KASAN, the system seems to run fine without
+>> any visible error if KASAN is disabled. Maybe there is why no report has
+>> been seen?
+>>
+>> Also according to Section 6.2.14 from ACPI spec 6.3 [1], the setting of proximity
+>> domain is optional, as below:
+>>
+>> This optional object is used to describe proximity domain
+>> associations within a machine. _PXM evaluates to an integer
+>> that identifies a device as belonging to a Proximity Domain
+>> defined in the System Resource Affinity Table (SRAT).
+>>
+>>
+>> Do you think it is ok to resend the fix with above clarification and below
+>> log:
+> 
+> OK, if the specification really allows to provide NUMA_NO_NODE (-1) then
+> the code really has to be prepared for that. And ideally all arches
+> should deal with that.
+> 
+>> [   42.970381] ==================================================================
+>> [   42.977595] BUG: KASAN: global-out-of-bounds in __bitmap_weight+0x48/0xb0
+>> [   42.984370] Read of size 8 at addr ffff20008cdf8790 by task kworker/0:1/13
+>> [   42.991230]
+>> [   42.992712] CPU: 0 PID: 13 Comm: kworker/0:1 Tainted: G           O      5.2.0-rc4-g8bde06a-dirty #3
+>> [   43.001830] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS 2280-A CS V2.B050.01 08/08/2019
+>> [   43.011298] Workqueue: events work_for_cpu_fn
+>> [   43.015643] Call trace:
+>> [   43.018078]  dump_backtrace+0x0/0x1e8
+>> [   43.021727]  show_stack+0x14/0x20
+>> [   43.025031]  dump_stack+0xc4/0xfc
+>> [   43.028335]  print_address_description+0x178/0x270
+>> [   43.033113]  __kasan_report+0x164/0x1b8
+>> [   43.036936]  kasan_report+0xc/0x18
+>> [   43.040325]  __asan_load8+0x84/0xa8
+>> [   43.043801]  __bitmap_weight+0x48/0xb0
+>> [   43.047552]  hclge_init_ae_dev+0x988/0x1e78 [hclge]
+>> [   43.052418]  hnae3_register_ae_dev+0xcc/0x278 [hnae3]
+>> [   43.057467]  hns3_probe+0xe0/0x120 [hns3]
+>> [   43.061464]  local_pci_probe+0x74/0xf0
+>> [   43.065200]  work_for_cpu_fn+0x2c/0x48
+>> [   43.068937]  process_one_work+0x3c0/0x878
+>> [   43.072934]  worker_thread+0x400/0x670
+>> [   43.076670]  kthread+0x1b0/0x1b8
+>> [   43.079885]  ret_from_fork+0x10/0x18
+>> [   43.083446]
+>> [   43.084925] The buggy address belongs to the variable:
+>> [   43.090052]  numa_distance+0x30/0x40
+>> [   43.093613]
+>> [   43.095091] Memory state around the buggy address:
+>> [   43.099870]  ffff20008cdf8680: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 fa fa
+>> [   43.107078]  ffff20008cdf8700: fa fa fa fa 04 fa fa fa fa fa fa fa 00 fa fa fa
+>> [   43.114286] >ffff20008cdf8780: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
+>> [   43.121494]                          ^
+>> [   43.125230]  ffff20008cdf8800: 01 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+>> [   43.132439]  ffff20008cdf8880: fa fa fa fa fa fa fa fa 00 00 fa fa fa fa fa fa
+>> [   43.139646] ==================================================================
+>>
+>>
 >>>
+>>>>>> This patch changes cpumask_of_node to return cpu_none_mask if the
+>>>>>> node is not valid, and sync the cpumask_of_node between the
+>>>>>> cpumask_of_node function in numa.h and numa.c.
 >>>>>
->>>>> [0] https://patchwork.kernel.org/cover/11113091/
->>>>>
->>>>> TOOD: Add support for DVFS GXBB odroid board in next series.
+>>>>> Why?
 >>>>
->>>> I'm curious how you will do this !
+>>>> When CONFIG_DEBUG_PER_CPU_MAPS is defined, the cpumask_of_node() in
+>>>> numa.c is used, if not, the cpumask_of_node() in numa.h is used.
+>>>>
+>>>> I am not sure why there is difference between them, and it is there
+>>>> when since the below commit:
+>>>> 1a2db300348b ("arm64, numa: Add NUMA support for arm64 platforms.")
+>>>>
+>>>> I synced them to keep them consistent whether CONFIG_DEBUG_PER_CPU_MAPS
+>>>> is defined.
 >>>
->>> I was just studying you previous series on how you have implemented
->>> this feature for C1, N2 and VIM3 boards.
->>>
->>> [0] https://patchwork.kernel.org/cover/11114125/
->>>
->>> I started gathering key inputs needed for this ie *clk / pwm*
->>> like VDDCPU and VDDE clk changes.
->>>
->>> But it looks like of the complex clk framework needed, so I leave this to the
->>> expert like your team of developers to do this much quick and efficiently.
+>>> Such a change should be made in a separate patch with a full
+>>> clarification/justification. From the above it is still not clear why
+>>> this is needed though.
 >>
->> On GXBB, GXL, GXM and AXG SoCs, CPU Frequency setting and PWM Regulator setup is
->> done by the SCPI Co-processor via the SCPI protocol.
+>> Ok.
 >>
->> Thus, we should not handle it from Linux, and even if we could, we don't have the
->> registers documentation of the CPU clusters clock tree.
+>> How about:
 >>
-> 
-> Ok thanks.
-> 
->> SCPI works fine on all tested devices, except Odroid-C2, because Hardkernel left
->> the > 1.5GHz freq in the initial SCPI tables loaded by the BL2, i.e. packed with U-Boot.
->> Nowadays they have removed the bad frequencies, but still some devices uses the old
->> bootloader.
+>> Currently there are different implementations of cpumask_of_node() depend
+>> on the arch, for example:
 >>
->> But in the SCPI case we trust the table returned by the firmware and use it as-in,
->> and there is no (simple ?) way to override the table and set a max frequency.
+>> ia64:
+>> #define cpumask_of_node(node) ((node) == -1 ?				\
+>> 			       cpu_all_mask :				\
+>> 			       &node_to_cpu_mask[node])
 >>
->> This is why we disabled SCPI.
 >>
->> See https://patchwork.kernel.org/patch/9500175/
+>> alpha:
+>> static const struct cpumask *cpumask_of_node(int node)
+>> {
+>> 	int cpu;
+>>
+>> 	if (node == NUMA_NO_NODE)
+>> 		return cpu_all_mask;
+>>
+>> 	cpumask_clear(&node_to_cpumask_map[node]);
+>>
+>> 	for_each_online_cpu(cpu) {
+>> 		if (cpu_to_node(cpu) == node)
+>> 			cpumask_set_cpu(cpu, node_to_cpumask_map[node]);
+>> 	}
+>>
+>> 	return &node_to_cpumask_map[node];
+>> }
+>>
+>> Even for the same arch, there are two implementations depend on the
+>> CONFIG_DEBUG_PER_CPU_MAPS configuration.
+>>
+>> arm64/x86 without CONFIG_DEBUG_PER_CPU_MAPS:
+>> static inline const struct cpumask *cpumask_of_node(int node)
+>> {
+>> 	return node_to_cpumask_map[node];
+>> }
+>>
+>> arm64/x86 with CONFIG_DEBUG_PER_CPU_MAPS:
+>> const struct cpumask *cpumask_of_node(int node)
+>> {
+>> 	if (WARN_ON(node >= nr_node_ids))
+>> 		return cpu_none_mask;
+>>
+>> 	if (WARN_ON(node_to_cpumask_map[node] == NULL))
+>> 		return cpu_online_mask;
+>>
+>> 	return node_to_cpumask_map[node];
+>> }
+>>
+>> It seems the cpumask_of_node with CONFIG_DEBUG_PER_CPU_MAPS is used
+>> to catch the erorr case and give a warning to user when node id is not
+>> valid.
 > 
-> I have quickly enable this on my board and here the cpufreq info
+> Yeah the config help text
+> config DEBUG_PER_CPU_MAPS
+>         bool "Debug access to per_cpu maps"
+>         depends on DEBUG_KERNEL
+>         depends on SMP
+>         help
+>           Say Y to verify that the per_cpu map being accessed has
+>           been set up. This adds a fair amount of code to kernel memory
+>           and decreases performance.
 > 
-> [alarm@alarm ~]$  cpupower frequency-info
-> analyzing CPU 0:
->   driver: scpi-cpufreq
->   CPUs which run at the same hardware frequency: 0 1 2 3
->   CPUs which need to have their frequency coordinated by software: 0 1 2 3
->   maximum transition latency: 200 us
->   hardware limits: 100.0 MHz - 1.54 GHz
->   available frequency steps:  100.0 MHz, 250 MHz, 500 MHz, 1000 MHz,
-> 1.30 GHz, 1.54 GHz
->   available cpufreq governors: conservative ondemand userspace
-> powersave performance schedutil
->   current policy: frequency should be within 100.0 MHz and 1.54 GHz.
->                   The governor "ondemand" may decide which speed to use
->                   within this range.
->   current CPU frequency: Unable to call hardware
->   current CPU frequency: 250 MHz (asserted by call to kernel)
+>           Say N if unsure.
 > 
-> I did some simple stress testing and observed the freq scaling is
-> working fine when cpufreq governor is set to ondemand.
-> 
-> Powertop output.
->             Package |            CPU 0
->  100 MHz     5.2%   |  100 MHz     1.6%
->  250 MHz     4.4%   |  250 MHz     4.3%
->  500 MHz     2.6%   |  500 MHz     2.4%
-> 1000 MHz     0.5%   | 1000 MHz     0.3%
-> 1296 MHz     0.2%   | 1296 MHz     0.1%
-> 1.54 GHz     0.2%   | 1.54 GHz     0.1%
-> Idle        86.9%   | Idle        91.2%
-> 
-> Here the output on the linaro's pm-qa testing for cpufreq.
-> 
-> [1] https://pastebin.com/h880WATn
-> Almost all the test case pass with this one as off now.
+> suggests that this is intentionally hidden behind a config so a normal
+> path shouldn't really duplicate it. If those checks make sense in
+> general then the config option should be dropped I think.
 
-Thanks for passing the tests, no doubt it works with a recent
-bootloader binary, but we can't leave alone the first Odroid-C2
-devices loaded with an incorrect SCPI table.
+It seems cpumask_of_node with CONFIG_DEBUG_PER_CPU_MAPS on may be used to
+debug some early use of cpumask_of_node problem, see below:
 
-I'll let Kevin decide for the following.
+/*
+ * Allocate node_to_cpumask_map based on number of available nodes
+ * Requires node_possible_map to be valid.
+ *
+ * Note: cpumask_of_node() is not valid until after this is done.
+ * (Use CONFIG_DEBUG_PER_CPU_MAPS to check this.)
+ */
+static void __init setup_node_to_cpumask_map(void)
+{
+	int node;
 
-Neil
+	/* setup nr_node_ids if not done yet */
+	if (nr_node_ids == MAX_NUMNODES)
+		setup_nr_node_ids();
 
-> 
-> Best Regards
-> -Anand
+	/* allocate and clear the mapping */
+	for (node = 0; node < nr_node_ids; node++) {
+		alloc_bootmem_cpumask_var(&node_to_cpumask_map[node]);
+		cpumask_clear(node_to_cpumask_map[node]);
+	}
+
+	/* cpumask_of_node() will now work */
+	pr_debug("Node to cpumask map for %u nodes\n", nr_node_ids);
+}
+
+So I prefer to keep it as two implementations for arm64 and x86, but
+ensure the two implementations be consistent. It can be cleaned up later
+when there is no use at all.
+
+Is it ok with you?
+
 > 
 
