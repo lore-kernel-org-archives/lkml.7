@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C023AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19930C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C90B22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD0922CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfH3HlM (ORCPT
+        id S1728497AbfH3Hln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:41:12 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:25944 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727866AbfH3HlL (ORCPT
+        Fri, 30 Aug 2019 03:41:43 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:12945 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728263AbfH3Hll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:41:11 -0400
-X-UUID: fe5b99b60b2d4a3383b30f281390990b-20190830
-X-UUID: fe5b99b60b2d4a3383b30f281390990b-20190830
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 30 Aug 2019 03:41:41 -0400
+X-UUID: 9833484203254332b3cccbd93e8fca5c-20190830
+X-UUID: 9833484203254332b3cccbd93e8fca5c-20190830
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2133285241; Fri, 30 Aug 2019 15:41:10 +0800
+        with ESMTP id 406786229; Fri, 30 Aug 2019 15:41:09 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 15:41:08 +0800
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 15:41:07 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 15:41:07 +0800
+ Transport; Fri, 30 Aug 2019 15:41:06 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -44,159 +44,72 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 5/7] arm64: dts: mt8183: add usb and phy nodes
-Date:   Fri, 30 Aug 2019 15:40:52 +0800
-Message-ID: <1567150854-30033-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 4/7] usb: mtk-xhci: support ip-sleep wakeup for MT8183
+Date:   Fri, 30 Aug 2019 15:40:51 +0800
+Message-ID: <1567150854-30033-5-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: BF373ACC4DF95141A9EFF43D24165B9D0EC931E41FD4D9A927ECBA6E8C56F9A42000:8
+X-TM-SNTS-SMTP: 0CC1AD750E0584FBAD4C3A1BDC6182D22AD563DBB0112078F6AB14F6D427608F2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add USB related nodes for MT8183, set it as host mode by default.
+Support USB wakeup by ip-sleep mode for MT8183, it's similar to
+MT8173
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v2~v3: no changes
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 22 +++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 55 +++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+v3: change micros define
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index d8e555cbb5d3..142ff52f0f42 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -6,7 +6,9 @@
-  */
+v2: no changes
+---
+ drivers/usb/host/xhci-mtk.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 026fe18972d3..9b30a868a7ab 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -57,6 +57,12 @@
+ #define CTRL_U2_FORCE_PLL_STB	BIT(28)
  
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "mt8183.dtsi"
-+#include "mt6358.dtsi"
- 
- / {
- 	model = "MediaTek MT8183 evaluation board";
-@@ -24,6 +26,16 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
+ /* usb remote wakeup registers in syscon */
++/* mt8183 etc */
++#define PERI_WK_CTRL0	0x20
++#define WC0_IS_C(x)	(((x) & 0xf) << 28)  /* cycle debounce */
++#define WC0_IS_P	BIT(12)	/* polarity */
++#define WC0_IS_EN	BIT(6)
 +
-+	usb_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "p0_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 42 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
+ /* mt8173 etc */
+ #define PERI_WK_CTRL1	0x4
+ #define WC1_IS_C(x)	(((x) & 0xf) << 26)  /* cycle debounce */
+@@ -69,7 +75,8 @@
+ #define SSC_SPM_INT_EN		BIT(1)
+ 
+ enum ssusb_uwk_vers {
+-	SSUSB_UWK_V1 = 1,
++	SSUSB_UWK_V0 = 0,
++	SSUSB_UWK_V1,
+ 	SSUSB_UWK_V2,
  };
  
- &auxadc {
-@@ -135,6 +147,16 @@
+@@ -282,6 +289,11 @@ static void usb_wakeup_ip_sleep_set(struct xhci_hcd_mtk *mtk, bool enable)
+ 	u32 reg, msk, val;
  
- };
- 
-+&ssusb {
-+	vusb33-supply = <&mt6358_vusb_reg>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usb_host {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c2749c4631bc..28da334237c6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/mt8183-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/phy/phy.h>
- #include "mt8183-pinfunc.h"
- 
- / {
-@@ -372,6 +373,35 @@
- 			status = "disabled";
- 		};
- 
-+		ssusb: usb@11201000 {
-+			compatible = "mediatek,mt8183-mtu3", "mediatek,mtu3";
-+			reg = <0 0x11201000 0 0x2e00>,
-+			      <0 0x11203e00 0 0x0100>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-+			phys = <&u2port0 PHY_TYPE_USB2>,
-+			       <&u3port0 PHY_TYPE_USB3>;
-+			clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-+				 <&infracfg CLK_INFRA_USB>;
-+			clock-names = "sys_ck", "ref_ck";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			usb_host: xhci@11200000 {
-+				compatible = "mediatek,mt8183-xhci",
-+					     "mediatek,mtk-xhci";
-+				reg = <0 0x11200000 0 0x1000>;
-+				reg-names = "mac";
-+				interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
-+				clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-+					 <&infracfg CLK_INFRA_USB>;
-+				clock-names = "sys_ck", "ref_ck";
-+				status = "disabled";
-+			};
-+		};
-+
- 		audiosys: syscon@11220000 {
- 			compatible = "mediatek,mt8183-audiosys", "syscon";
- 			reg = <0 0x11220000 0 0x1000>;
-@@ -384,6 +414,31 @@
- 			reg = <0 0x11f10000 0 0x1000>;
- 		};
- 
-+		u3phy: usb-phy@11f40000 {
-+			compatible = "mediatek,mt8183-tphy",
-+				     "mediatek,generic-tphy-v2";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x11f40000 0x1000>;
-+			status = "okay";
-+
-+			u2port0: usb-phy@0 {
-+				reg = <0x0 0x700>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+
-+			u3port0: usb-phy@0700 {
-+				reg = <0x0700 0x900>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+		};
-+
- 		mfgcfg: syscon@13000000 {
- 			compatible = "mediatek,mt8183-mfgcfg", "syscon";
- 			reg = <0 0x13000000 0 0x1000>;
+ 	switch (mtk->uwk_vers) {
++	case SSUSB_UWK_V0:
++		reg = mtk->uwk_reg_base + PERI_WK_CTRL0;
++		msk = WC0_IS_EN | WC0_IS_C(0xf) | WC0_IS_P;
++		val = enable ? (WC0_IS_EN | WC0_IS_C(0x8)) : 0;
++		break;
+ 	case SSUSB_UWK_V1:
+ 		reg = mtk->uwk_reg_base + PERI_WK_CTRL1;
+ 		msk = WC1_IS_EN | WC1_IS_C(0xf) | WC1_IS_P;
 -- 
 2.23.0
 
