@@ -2,93 +2,77 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ECFC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD0FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5A223429
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99FB2342B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:59:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PzMQSCQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfH3R6q (ORCPT
+        id S1728258AbfH3R67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:58:46 -0400
-Received: from mx0a-00176a03.pphosted.com ([67.231.149.52]:19476 "EHLO
-        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727883AbfH3R6p (ORCPT
+        Fri, 30 Aug 2019 13:58:59 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34742 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfH3R67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:58:45 -0400
-Received: from pps.filterd (m0048274.ppops.net [127.0.0.1])
-        by m0048274.ppops.net-00176a03. (8.16.0.42/8.16.0.42) with SMTP id x7UHt9ug005464;
-        Fri, 30 Aug 2019 13:58:43 -0400
-From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-To:     Seunghun Han <kkamagui@gmail.com>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Thread-Topic: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping
- mechanism for supporting AMD's fTPM
-Thread-Index: AQHVXxlOrNmKX2KHXEaevQ/odv4D9acT5e0AgAAT9ID//79NoIAAcvSA///KVoA=
-Date:   Fri, 30 Aug 2019 17:58:39 +0000
-Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
-References: <20190830095639.4562-1-kkamagui@gmail.com>
- <20190830095639.4562-3-kkamagui@gmail.com> <20190830124334.GA10004@ziepe.ca>
- <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
- <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
-In-Reply-To: <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jTWpFeU5EY3pPVFV3WEdGd2NHUmhkR0ZjY205aGJXbHVaMXd3T1dRNE5E?=
- =?utf-8?B?bGlOaTB6TW1RekxUUmhOREF0T0RWbFpTMDJZamcwWW1FeU9XVXpOV0pjYlhO?=
- =?utf-8?B?bmMxeHRjMmN0WTJFeE1URTRabVV0WTJJMFppMHhNV1U1TFRobE16WXRZVFJq?=
- =?utf-8?B?TTJZd1lqVTVPR0V6WEdGdFpTMTBaWE4wWEdOaE1URXhPR1ptTFdOaU5HWXRN?=
- =?utf-8?B?VEZsT1MwNFpUTTJMV0UwWXpObU1HSTFPVGhoTTJKdlpIa3VkSGgwSWlCemVq?=
- =?utf-8?B?MGlOamcwTVNJZ2REMGlNVE15TVRFMk5qRTFNVGMzTmpBNE1UQXhJaUJvUFNK?=
- =?utf-8?B?dFptNUphblowYlRWSFMzWXhabk40Ykdsb01GVkZhRWxGYW1zOUlpQnBaRDBp?=
- =?utf-8?B?SWlCaWJEMGlNQ0lnWW04OUlqRWlJR05wUFNKalFVRkJRVVZTU0ZVeFVsTlNW?=
- =?utf-8?B?VVpPUTJkVlFVRkZiME5CUVVOc2JUVmhUVmhHTDFaQlZuQm5XakUyTjBoRE1F?=
- =?utf-8?B?TlhiVUp1V0hKelkweFJTVVJCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJTRUZCUVVGRVlVRlJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJVVUZDUVVGQlFVWjBSMlZSZDBGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VW8wUVVGQlFtNUJSMVZCV0hkQ2FrRkhPRUZpWjBKdFFVZHJRVnBCUW14QlJ6?=
- =?utf-8?B?UkJaRUZDY0VGSFJVRmlRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFXZEJRVUZCUVVGdVowRkJRVWRqUVZwUlFtWkJSMmRCWVZGQ2JrRkhaMEZp?=
- =?utf-8?B?UVVJMVFVZE5RV0ozUW5WQlIxbEJZVkZDYTBGSFZVRmlaMEl3UVVkclFWbFJR?=
- =?utf-8?B?bk5CUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJV?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVU5CUVVGQlFVRkRaVUZCUVVGYWQwSnNRVVk0UVdKblFu?=
- =?utf-8?B?WkJSelJCWTBGQ01VRkhTVUZpUVVKd1FVZE5RVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUWtGQlFVRkJRVUZCUVVGSlFVRkJRVUZCUVQwOUlpOCtQQzl0?=
- =?utf-8?B?WlhSaFBnPT0=?=
-x-dg-rorf: 
-x-originating-ip: [3.159.19.191]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Subject: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for supporting
- AMD's fTPM
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_06:,,
- signatures=0
+        Fri, 30 Aug 2019 13:58:59 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UHtAwa101451;
+        Fri, 30 Aug 2019 17:57:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=9Wemge0RcmvnUsm0W5wu0Dr6YJPAmuaEVvIIaiA/fIo=;
+ b=PzMQSCQbH8ep8HL4bItrtKKaSC1zwTs1jJ48UmgBO2ipfeNZHA7D6G8IXWXR0VK/Oeh8
+ Fcog1R9T7nHYDXbu3dqysVa7b34rc1joj0EwJPxfu334uwVZhVMwzb/R3iF89k7qvY/O
+ Z2/HUcjDuTqdU5LaqBxUfo+qGwK13bCVviO5KcGuuvuyAk2oI8CS2B5AEdgZ+OipFTDh
+ kcyEH3cuR3gWvy4S+Z9IqjVlB8dCoEokDcpkST8qpH8jITNMQ4jiOJEnXrVVhi64wMqx
+ nnN3zy57hg/8Z753vCbn8jhYSdpe2LsAxpr+00wU3CziO/jiKx0jdsQ21B9G2FICSbIy mA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2uq8me80p1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 17:57:30 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UHrA8C047245;
+        Fri, 30 Aug 2019 17:54:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2upkrgnsft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 17:54:39 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7UHsaax014855;
+        Fri, 30 Aug 2019 17:54:36 GMT
+Received: from smazumda-Precision-T1600.us.oracle.com (/10.132.91.113)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 30 Aug 2019 10:54:36 -0700
+From:   subhra mazumdar <subhra.mazumdar@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com,
+        patrick.bellasi@arm.com
+Subject: [RFC PATCH 6/9] x86/smpboot: Optimize cpumask_weight_sibling macro for x86
+Date:   Fri, 30 Aug 2019 10:49:41 -0700
+Message-Id: <20190830174944.21741-7-subhra.mazumdar@oracle.com>
+X-Mailer: git-send-email 2.9.3
+In-Reply-To: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=983
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908300174
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1908300174
@@ -97,121 +81,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBTZXVuZ2h1biBIYW4gPGtrYW1hZ3VpQGdtYWlsLmNvbT4NCj4gU2VudDogRnJpZGF5
-LCBBdWd1c3QgMzAsIDIwMTkgMTI6NTUgUE0NCj4gVG86IFNhZmZvcmQsIERhdmlkIChHRSBHbG9i
-YWwgUmVzZWFyY2gsIFVTKSA8ZGF2aWQuc2FmZm9yZEBnZS5jb20+DQo+IENjOiBKYXNvbiBHdW50
-aG9ycGUgPGpnZ0B6aWVwZS5jYT47IEphcmtrbyBTYWtraW5lbg0KPiA8amFya2tvLnNha2tpbmVu
-QGxpbnV4LmludGVsLmNvbT47IFBldGVyIEh1ZXdlIDxwZXRlcmh1ZXdlQGdteC5kZT47DQo+IG9w
-ZW4gbGlzdDpUUE0gREVWSUNFIERSSVZFUiA8bGludXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9y
-Zz47IExpbnV4DQo+IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+DQo+IFN1YmplY3Q6IEVYVDogUmU6IFtQQVRDSCAyLzJdIHRwbTogdHBtX2NyYjogZW5o
-YW5jZSByZXNvdXJjZSBtYXBwaW5nDQo+IG1lY2hhbmlzbSBmb3Igc3VwcG9ydGluZyBBTUQncyBm
-VFBNDQo+IA0KPiA+DQo+ID4gPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3duZXJAdmdlci5rZXJu
-ZWwub3JnIDxsaW51eC1pbnRlZ3JpdHktDQo+ID4gPiBvd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9u
-IEJlaGFsZiBPZiBTZXVuZ2h1biBIYW4NCj4gPiA+IFNlbnQ6IEZyaWRheSwgQXVndXN0IDMwLCAy
-MDE5IDk6NTUgQU0NCj4gPiA+IFRvOiBKYXNvbiBHdW50aG9ycGUgPGpnZ0B6aWVwZS5jYT4NCj4g
-PiA+IENjOiBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+
-OyBQZXRlciBIdWV3ZQ0KPiA+ID4gPHBldGVyaHVld2VAZ214LmRlPjsgb3BlbiBsaXN0OlRQTSBE
-RVZJQ0UgRFJJVkVSIDxsaW51eC0NCj4gPiA+IGludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc+OyBM
-aW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4gPiA+IGtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+DQo+ID4gPiBTdWJqZWN0OiBFWFQ6IFJlOiBbUEFUQ0ggMi8yXSB0cG06IHRwbV9jcmI6
-IGVuaGFuY2UgcmVzb3VyY2UgbWFwcGluZw0KPiA+ID4gbWVjaGFuaXNtIGZvciBzdXBwb3J0aW5n
-IEFNRCdzIGZUUE0NCj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IE9uIEZyaSwgQXVnIDMwLCAyMDE5
-IGF0IDA2OjU2OjM5UE0gKzA5MDAsIFNldW5naHVuIEhhbiB3cm90ZToNCj4gPiA+ID4gPiBJIGdv
-dCBhbiBBTUQgc3lzdGVtIHdoaWNoIGhhZCBhIFJ5emVuIFRocmVhZHJpcHBlciAxOTUwWCBhbmQg
-TVNJDQo+ID4gPiA+ID4gbWFpbmJvYXJkLCBhbmQgSSBoYWQgYSBwcm9ibGVtIHdpdGggQU1EJ3Mg
-ZlRQTS4gTXkgbWFjaGluZQ0KPiA+ID4gPiA+IHNob3dlZA0KPiA+ID4gYW4NCj4gPiA+ID4gPiBl
-cnJvciBtZXNzYWdlIGJlbG93LCBhbmQgdGhlIGZUUE0gZGlkbid0IHdvcmsgYmVjYXVzZSBvZiBp
-dC4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFsgIDUuNzMyMDg0XSB0cG1fY3JiIE1TRlQwMTAxOjAw
-OiBjYW4ndCByZXF1ZXN0IHJlZ2lvbiBmb3IgcmVzb3VyY2UNCj4gPiA+ID4gPiAgICAgICAgICAg
-ICAgW21lbSAweDc5YjRmMDAwLTB4NzliNGZmZmZdIFsgIDUuNzMyMDg5XSB0cG1fY3JiOg0KPiA+
-ID4gPiA+IHByb2JlIG9mIE1TRlQwMTAxOjAwIGZhaWxlZCB3aXRoIGVycm9yIC0xNg0KPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gV2hlbiBJIHNhdyB0aGUgaW9tZW0sIEkgZm91bmQgdHdvIGZUUE0gcmVn
-aW9ucyB3ZXJlIGluIHRoZSBBQ1BJDQo+ID4gPiA+ID4gTlZTDQo+ID4gPiBhcmVhLg0KPiA+ID4g
-PiA+IFRoZSByZWdpb25zIGFyZSBiZWxvdy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IDc5YTM5MDAw
-LTc5YjZhZmZmIDogQUNQSSBOb24tdm9sYXRpbGUgU3RvcmFnZQ0KPiA+ID4gPiA+ICAgNzliNGIw
-MDAtNzliNGJmZmYgOiBNU0ZUMDEwMTowMA0KPiA+ID4gPiA+ICAgNzliNGYwMDAtNzliNGZmZmYg
-OiBNU0ZUMDEwMTowMA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gQWZ0ZXIgYW5hbHl6aW5nIHRoaXMg
-aXNzdWUsIEkgZm91bmQgdGhhdCBjcmJfbWFwX2lvKCkgZnVuY3Rpb24NCj4gPiA+ID4gPiBjYWxs
-ZWQNCj4gPiA+ID4gPiBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKSBhbmQgaXQgZmFpbGVkLiBUaGUg
-QUNQSSBOVlMgZGlkbid0IGFsbG93DQo+ID4gPiA+ID4gdGhlIFRQTSBDUkIgZHJpdmVyIHRvIGFz
-c2lnbiBhIHJlc291cmNlIGluIGl0IGJlY2F1c2UgYSBidXN5IGJpdA0KPiA+ID4gPiA+IHdhcyBz
-ZXQgdG8gdGhlIEFDUEkgTlZTIGFyZWEuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUbyBzdXBwb3J0
-IEFNRCdzIGZUUE0sIEkgYWRkZWQgYSBmdW5jdGlvbiB0byBjaGVjayBpbnRlcnNlY3RzDQo+ID4g
-PiA+ID4gYmV0d2VlbiB0aGUgVFBNIHJlZ2lvbiBhbmQgQUNQSSBOVlMgYmVmb3JlIGl0IG1hcHBl
-ZCB0aGUgcmVnaW9uLg0KPiA+ID4gPiA+IElmIHNvbWUgaW50ZXJzZWN0cyBhcmUgZGV0ZWN0ZWQs
-IHRoZSBmdW5jdGlvbiBqdXN0IGNhbGxzDQo+ID4gPiA+ID4gZGV2bV9pb3JlbWFwKCkgZm9yIGEg
-d29ya2Fyb3VuZC4gSWYgdGhlcmUgaXMgbm8gaW50ZXJzZWN0LCBpdA0KPiA+ID4gPiA+IGNhbGxz
-DQo+ID4gPiBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKS4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNp
-Z25lZC1vZmYtYnk6IFNldW5naHVuIEhhbiA8a2thbWFndWlAZ21haWwuY29tPg0KPiA+ID4gPiA+
-IC0tLQ0KPiA+ID4gPiA+ICBkcml2ZXJzL2NoYXIvdHBtL3RwbV9jcmIuYyB8IDI1ICsrKysrKysr
-KysrKysrKysrKysrKysrLS0NCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IFRoaXMgc3RpbGwgc2VlbXMg
-dG8gcmVzdWx0IGluIHR3byBkcml2ZXJzIGNvbnRyb2xsaW5nIHRoZSBzYW1lIG1lbW9yeS4NCj4g
-PiA+ID4gRG9lcyB0aGlzIGNyZWF0ZSBidWdzIGFuZCByYWNlcyBkdXJpbmcgcmVzdW1lPw0KPiA+
-ID4gPg0KPiA+ID4gPiBKYXNvbg0KPiA+ID4NCj4gPiA+IFdoZW4gSSB0ZXN0ZWQgdGhpcyBwYXRj
-aCBpbiBteSBtYWNoaW5lLCBpdCBzZWVtZWQgdGhhdCBBQ1BJIE5WUyB3YXMNCj4gPiA+IHNhdmVk
-IGFmdGVyIFRQTSBDUkIgZHJpdmVyIHNlbnQgIlRQTTJfU2h1dGRvd24oU1RBVEUpIiB0byB0aGUg
-ZlRQTQ0KPiA+ID4gd2hpbGUgc3VzcGVuZGluZy4gVGhlbiwgQUNQSSBOVlMgd2FzIHJlc3RvcmVk
-IHdoaWxlIHJlc3VtaW5nLg0KPiA+ID4gQWZ0ZXIgcmVzdW1pbmcsIFBDUnMgZGlkbid0IGNoYW5n
-ZSBhbmQgVFBNMiB0b29scyBzdWNoIGFzDQo+ID4gPiB0cG0yX3Bjcmxpc3QsIHRwbTJfZXh0ZW5k
-LCB0cG0yX2dldHJhbmRvbXMgd29ya2VkIHdlbGwuDQo+ID4gPiBTbywgYWNjb3JkaW5nIHRvIG15
-IHRlc3QgcmVzdWx0LCBpdCBzZWVtcyB0aGF0IHRoZSBwYXRjaCBkb2Vzbid0DQo+ID4gPiBjcmVh
-dGUgYnVncyBhbmQgcmFjZSBkdXJpbmcgcmVzdW1lLg0KPiA+ID4NCj4gPiA+IFNldW5naHVuDQo+
-ID4NCj4gPiBUaGlzIHdhcyBkaXNjdXNzZWQgZWFybGllciBvbiB0aGUgbGlzdC4NCj4gPiBUaGUg
-Y29uc2Vuc3VzIHdhcyB0aGF0LCB3aGlsZSBzYWZlIG5vdywgdGhpcyB3b3VsZCBiZSBmcmFnaWxl
-LCBhbmQNCj4gPiBzdWJqZWN0IHRvIHVuZXhwZWN0ZWQgY2hhbmdlcyBpbiBBQ1BJL05WUywgYW5k
-IHdlIHJlYWxseSBuZWVkIHRvIHRlbGwNCj4gPiBOVlMgdG8gZXhjbHVkZSB0aGUgcmVnaW9ucyBm
-b3IgbG9uZyB0ZXJtIHNhZmV0eS4NCj4gDQo+IFRoYW5rIHlvdSBmb3IgeW91ciBhZHZpY2UuIFdl
-IGFsc28gZGlzY3Vzc2VkIGVhcmxpZXIgYW5kIGNvbmNsdWRlZCB0aGF0DQo+IGNoZWNraW5nIGFu
-ZCByYXcgcmVtYXBwaW5nIGFyZSBlbm91Z2ggdG8gd29yayBhcm91bmQgdGhpcy4gVGhlIGxpbmsg
-aXMNCj4gaGVyZSwgaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvOC8yOS85NjIgLg0KDQpJIGRv
-bid0IHNlZSBNYXR0aGV3IEdhcnJldHQncyBhZ3JlZW1lbnQgb24gdGhhdCB0aHJlYWQuDQoNCj4g
-PiBBcyBzZXBhcmF0ZSBpc3N1ZXMsIHRoZSBwYXRjaGVzIGRvIG5vdCB3b3JrIGF0IGFsbCBvbiBz
-b21lIG9mIG15IEFNRA0KPiBzeXN0ZW1zLg0KPiA+IEZpcnN0LCB5b3Ugb25seSBmb3JjZSB0aGUg
-cmVtYXAgaWYgdGhlIG92ZXJsYXAgaXMgd2l0aCBOVlMsIGJ1dCBJIGhhdmUNCj4gPiBzeXN0ZW1z
-IHdoZXJlIHRoZSBvdmVybGFwIGlzIHdpdGggb3RoZXIgcmVzZXJ2ZWQgcmVnaW9ucy4gWW91IHNo
-b3VsZA0KPiA+IGZvcmNlIHRoZSByZW1hcCByZWdhcmRsZXNzLCBidXQgaWYgaXQgaXMgTlZTLCBn
-cmFiIHRoZSBzcGFjZSBiYWNrIGZyb20gTlZTLg0KPiANCj4gSSBkaWRuJ3Qga25vdyBhYm91dCB0
-aGF0LiBJIGp1c3QgZm91bmQgdGhlIGNhc2UgZnJvbSB5b3VyIHRocmVhZCB0aGF0IEFNRA0KPiBz
-eXN0ZW0gYXNzaWduZWQgVFBNIHJlZ2lvbiBpbnRvIHRoZSByZXNlcnZlZCBhcmVhLiBIb3dldmVy
-LCBhcyBJIGtub3csIHRoZQ0KPiByZXNlcnZlZCBhcmVhIGhhcyBubyBidXN5IGJpdCBzbyB0aGF0
-IFRQTSBDUkIgZHJpdmVyIGNvdWxkIGFzc2lnbiBidWZmZXINCj4gcmVzb3VyY2VzIGluIGl0LiBS
-aWdodD8gSW4gbXkgdmlldywgaWYgeW91IHBhdGNoZWQgeW91ciBUUE0gZHJpdmVyIHdpdGggbXkN
-Cj4gcGF0Y2ggc2VyaWVzLCB0aGVuIGl0IGNvdWxkIHdvcmsuIFdvdWxkIHlvdSBleHBsYWluIHdo
-YXQgaGFwcGVuZWQgaW4gVFBNDQo+IENSQiBkcml2ZXIgYW5kIHJlc2VydmVkIGFyZWE/DQoNCkdv
-b2QgcXVlc3Rpb24uIEknbGwgdHJ5IGl0IG91dCB0aGlzIHdlZWtlbmQuDQoNCj4gPiBTZWNvbmQs
-IHRoZSBwYXRjaCBleHRlbmRzIHRoZSB3cm9uZyBiZWhhdmlvciBvZiB0aGUgY3VycmVudCBkcml2
-ZXIgdG8NCj4gPiBib3RoIGJ1ZmZlciByZWdpb25zLiBJZiB0aGVyZSBpcyBhIGNvbmZsaWN0IGJl
-dHdlZW4gd2hhdCB0aGUgZGV2aWNlJ3MNCj4gPiBjb250cm9sIHJlZ2lzdGVyIHNheXMsIGFuZCB3
-aGF0IEFDUEkgc2F5cywgdGhlIGV4aXN0aW5nIGRyaXZlciBleHBsaWNpdGx5DQo+ICJ0cnVzdHMg
-dGhlIEFDUEkiLg0KPiA+IFRoaXMgaXMganVzdCB3cm9uZy4gVGhlIGFjdHVhbCBkZXZpY2Ugd2ls
-bCB1c2UgdGhlIGFyZWFzIGFzIGRlZmluZWQgYnkNCj4gPiBpdHMgY29udHJvbCByZWdpc3RlcnMg
-cmVnYXJkbGVzcyBvZiB3aGF0IEFDUEkgc2F5cy4gSSB0YWxrZWQgdG8NCj4gPiBNaWNyb3NvZnQs
-IGFuZCB0aGVpciBkcml2ZXIgdHJ1c3RzIHRoZSBjb250cm9sIHJlZ2lzdGVyIHZhbHVlcywgYW5k
-DQo+ID4gZG9lc24ndCBldmVuIGxvb2sgYXQgdGhlIEFDUEkgdmFsdWVzLg0KPiANCj4gQXMgeW91
-IGtub3csIHRoZSBvcmlnaW5hbCBjb2RlIHRydXN0cyB0aGUgQUNQSSB0YWJsZSBiZWNhdXNlIG9m
-IHRoZQ0KPiB3b3JrYXJvdW5kIGZvciBicm9rZW4gQklPUywgYW5kIHRoaXMgY29kZSBoYXMgd29y
-a2VkIHdlbGwgZm9yIGEgbG9uZyB0aW1lLg0KPiBJbiBteSB2aWV3LCBpZiB3ZSBjaGFuZ2UgdGhp
-cyBjb2RlIHRvIHRydXN0IGNvbnRyb2wgcmVnaXN0ZXIgdmFsdWUsIHdlIGNvdWxkDQo+IG1ha2Ug
-bmV3IHByb2JsZW1zIGFuZCBuZWVkIGEgbG90IG9mIHRpbWUgdG8gY2hlY2sgdGhlIHdvcmthcm91
-bmQuIFNvLCBJDQo+IHdhbnQgdG8gdHJ1c3QgdGhlIEFDUEkgdmFsdWUgbm93Lg0KDQpJIGRvbid0
-IHRoaW5rIHRoZSB3b3JrYXJvdW5kIGhhcyBldmVyeSByZWFsbHkgd29ya2VkLCBvdGhlciB0aGFu
-IHRoZSANCkhlbHBmdWwgZmlybXdhcmUgZXJyb3IgaXQgZW1pdHMuICBJIGRvbid0IHRoaW5rIGFu
-eW9uZSBoYXMgdGVzdGVkIHRoZQ0Kd29ya2Fyb3VuZCB3aXRoIGxhcmdlIHJlcXVlc3RzLiBUaGUg
-dHBtX2NyYiBkZXZpY2UgaXRzZWxmIGlzIHRlbGxpbmcNCnVzIHRoZSBidWZmZXJzIGl0IGlzIHVz
-aW5nLiBXaHkgYXJlIHdlIGlnbm9yaW5nIHRoYXQgYW5kIHRydXN0aW5nIHRoZQ0Ka25vd24gYmFk
-IEFDUEkgdGFibGVzPyBNYWtlcyBubyBzZW5zZSB0byBtZS4NCg0KPiA+DQo+ID4gSW4gcHJhY3Rp
-Y2UsIEkgaGF2ZSB0ZXN0ZWQgc2V2ZXJhbCBzeXN0ZW1zIGluIHdoaWNoIHRoZSBkZXZpY2UNCj4g
-PiByZWdpc3RlcnMgc2hvdyBUaGUgY29ycmVjdCA0SyBidWZmZXJzLCBidXQgdGhlIGRyaXZlciBp
-bnN0ZWFkIHRydXN0cw0KPiA+IHRoZSBBQ1BJIHZhbHVlcywgd2hpY2ggbGlzdCBqdXN0IDFLIGJ1
-ZmZlcnMuIDFLIGJ1ZmZlcnMgd2lsbCBub3Qgd29yaw0KPiA+IGZvciBsYXJnZSByZXF1ZXN0cywg
-YW5kIHRoZSBkZXZpY2UgaXMgZ29pbmcgdG8gcmVhZCBhbmQgd3JpdGUgdGhlIDRLIGJ1ZmZlcnMN
-Cj4gcmVnYXJkbGVzcy4NCj4gPg0KPiA+IGRhdmUNCj4gDQo+IEkga25vdyBhYm91dCB0aGF0LiBI
-b3dldmVyLCB0aGUgZGV2aWNlIGRyaXZlciBpcyBub3QgZ29pbmcgdG8gcmVhZCBhbmQgd3JpdGUN
-Cj4gNEsgYnVmZmVycyBpZiB5b3UgcGF0Y2ggeW91ciBUUE0gZHJpdmVyIHdpdGggbXkgcGF0Y2gg
-c2VyaWVzLg0KPiBPbmUgb2YgbXkgcGF0Y2hlcyBoYXMgYW4gZW5oYW5jZW1lbnQgZmVhdHVyZSB0
-aGF0IGNvdWxkIGNhbGN1bGF0ZSB0aGUNCj4gYnVmZmVyIHNpemUgd2VsbC4gVGhlIFRQTSBkcml2
-ZXIgdXNlcyBleGFjdGx5IDFLIGJ1ZmZlciBmb3IgdGhpcyBjYXNlLCBub3QgNEsNCj4gYnVmZmVy
-LCBhbmQgaXQgd29ya3MuDQoNCkhhdmUgeW91IHRlc3RlZCBsYXJnZSByZXF1ZXN0cyAod2VsbCBv
-dmVyIDFLKSB0byBtYWtlIHN1cmU/DQoNCmRhdmUgDQo+IA0KPiBTZXVuZ2h1bg0K
+Use per-CPU variable for cpumask_weight_sibling macro in case of x86 for
+fast lookup in select_idle_cpu. This avoids reading multiple cache lines
+in case of systems with large numbers of CPUs where bitmask can span
+multiple cache lines. Even if bitmask spans only one cache line this avoids
+looping through it to find the number of bits and gets it in O(1).
+
+Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+---
+ arch/x86/include/asm/smp.h      |  1 +
+ arch/x86/include/asm/topology.h |  1 +
+ arch/x86/kernel/smpboot.c       | 17 ++++++++++++++++-
+ 3 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index da545df..1e90cbd 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -22,6 +22,7 @@ extern int smp_num_siblings;
+ extern unsigned int num_processors;
+ 
+ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
++DECLARE_PER_CPU_READ_MOSTLY(unsigned int, cpumask_weight_sibling);
+ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
+ /* cpus sharing the last level cache: */
+ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 453cf38..dd19c71 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -111,6 +111,7 @@ extern const struct cpumask *cpu_coregroup_mask(int cpu);
+ #ifdef CONFIG_SMP
+ #define topology_core_cpumask(cpu)		(per_cpu(cpu_core_map, cpu))
+ #define topology_sibling_cpumask(cpu)		(per_cpu(cpu_sibling_map, cpu))
++#define topology_sibling_weight(cpu)	(per_cpu(cpumask_weight_sibling, cpu))
+ 
+ extern unsigned int __max_logical_packages;
+ #define topology_max_packages()			(__max_logical_packages)
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 362dd89..57ad88d 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -85,6 +85,9 @@
+ DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
+ EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
+ 
++/* representing number of HT siblings of each CPU */
++DEFINE_PER_CPU_READ_MOSTLY(unsigned int, cpumask_weight_sibling);
++
+ /* representing HT and core siblings of each logical CPU */
+ DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
+ EXPORT_PER_CPU_SYMBOL(cpu_core_map);
+@@ -520,6 +523,8 @@ void set_cpu_sibling_map(int cpu)
+ 
+ 	if (!has_mp) {
+ 		cpumask_set_cpu(cpu, topology_sibling_cpumask(cpu));
++		per_cpu(cpumask_weight_sibling, cpu) =
++		    cpumask_weight(topology_sibling_cpumask(cpu));
+ 		cpumask_set_cpu(cpu, cpu_llc_shared_mask(cpu));
+ 		cpumask_set_cpu(cpu, topology_core_cpumask(cpu));
+ 		c->booted_cores = 1;
+@@ -529,8 +534,13 @@ void set_cpu_sibling_map(int cpu)
+ 	for_each_cpu(i, cpu_sibling_setup_mask) {
+ 		o = &cpu_data(i);
+ 
+-		if ((i == cpu) || (has_smt && match_smt(c, o)))
++		if ((i == cpu) || (has_smt && match_smt(c, o))) {
+ 			link_mask(topology_sibling_cpumask, cpu, i);
++			per_cpu(cpumask_weight_sibling, cpu) =
++			    cpumask_weight(topology_sibling_cpumask(cpu));
++			per_cpu(cpumask_weight_sibling, i) =
++			    cpumask_weight(topology_sibling_cpumask(i));
++		}
+ 
+ 		if ((i == cpu) || (has_mp && match_llc(c, o)))
+ 			link_mask(cpu_llc_shared_mask, cpu, i);
+@@ -1173,6 +1183,8 @@ static __init void disable_smp(void)
+ 	else
+ 		physid_set_mask_of_physid(0, &phys_cpu_present_map);
+ 	cpumask_set_cpu(0, topology_sibling_cpumask(0));
++	per_cpu(cpumask_weight_sibling, 0) =
++	    cpumask_weight(topology_sibling_cpumask(0));
+ 	cpumask_set_cpu(0, topology_core_cpumask(0));
+ }
+ 
+@@ -1482,6 +1494,8 @@ static void remove_siblinginfo(int cpu)
+ 
+ 	for_each_cpu(sibling, topology_core_cpumask(cpu)) {
+ 		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
++		per_cpu(cpumask_weight_sibling, sibling) =
++		    cpumask_weight(topology_sibling_cpumask(sibling));
+ 		/*/
+ 		 * last thread sibling in this cpu core going down
+ 		 */
+@@ -1495,6 +1509,7 @@ static void remove_siblinginfo(int cpu)
+ 		cpumask_clear_cpu(cpu, cpu_llc_shared_mask(sibling));
+ 	cpumask_clear(cpu_llc_shared_mask(cpu));
+ 	cpumask_clear(topology_sibling_cpumask(cpu));
++	per_cpu(cpumask_weight_sibling, cpu) = 0;
+ 	cpumask_clear(topology_core_cpumask(cpu));
+ 	c->cpu_core_id = 0;
+ 	c->booted_cores = 0;
+-- 
+2.9.3
+
