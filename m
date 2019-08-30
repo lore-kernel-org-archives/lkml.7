@@ -2,106 +2,116 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457CBC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C324C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0212087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2865A2087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfH3Qme (ORCPT
+        id S1728324AbfH3Qmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:42:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49953 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727976AbfH3Qme (ORCPT
+        Fri, 30 Aug 2019 12:42:49 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:45086 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728246AbfH3Qms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:42:34 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-117-W1tnBhGoOWa2nq3fOcF08g-1; Fri, 30 Aug 2019 17:42:31 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 17:42:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 30 Aug 2019 17:42:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: RE: objtool warning "uses BP as a scratch register" with clang-9
-Thread-Topic: objtool warning "uses BP as a scratch register" with clang-9
-Thread-Index: AQHVX0pqqj9VEXOMQ0SdqQ13OMpYJacT10cw///xooCAABloAA==
-Date:   Fri, 30 Aug 2019 16:42:30 +0000
-Message-ID: <108518fd630642468e5c6e0274485a93@AcuMS.aculab.com>
-References: <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
- <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
- <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
- <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
- <20190828152226.r6pl64ij5kol6d4p@treble>
- <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
- <20190829173458.skttfjlulbiz5s25@treble>
- <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
- <CAK8P3a1K5HgfACmJXr4dTTwDJFz5BeSCCa3RQWYbXGE-2q4TJQ@mail.gmail.com>
- <CAHk-=whuUdqrh2=LLNfRiW6oadx0zzGVkvqyx_O1cGLa2U6Jjg@mail.gmail.com>
- <20190830150208.jyk7tfzznqimc6ow@treble>
- <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
- <d1af87f139b54346b420d06855297cfa@AcuMS.aculab.com>
- <CAHk-=wh33ouqv7UNovQn8WWXGA_kXEHDY3_H7x5-_j33AHYPwg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh33ouqv7UNovQn8WWXGA_kXEHDY3_H7x5-_j33AHYPwg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: W1tnBhGoOWa2nq3fOcF08g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Fri, 30 Aug 2019 12:42:48 -0400
+Received: from mr4.cc.vt.edu (mail.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7UGglAQ012145
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:42:47 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7UGggVe004889
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:42:47 -0400
+Received: by mail-qk1-f198.google.com with SMTP id o4so7932580qkg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:42:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=AMywH1n1mw6t5p5hLpZTz0Q6W8htDSaR2tsRwWJpbB4=;
+        b=PSM0hXySuyUo6FKNwnQhhJFozdU56VrY6V6ER239OAV7JMKT1OdM1MCwcI+loqEOp8
+         qJs4u/Mt7Tn7rxya7cFPwwcIdsiDLEEfPp3bx0cglCAOdHHroNImF72JVdlBP6iv91uZ
+         UmphT6fOkg+WyFuEOtCftm59BGtK1B5/LYNuIpiYmZritVbM/cLIBitRkQaGNP+aJS01
+         FY/lLLsUMUC4xum2pxwnnBm7PJUh3Ck0PYs8yc6JCZKDSI/qamnS7og1gUafdwQHX7LU
+         9EYocYUZTEB1NtLisrDNFisv43BU+pawdfqan2jd6he2QjI2b4iVtTOja/CrrYG71Ztt
+         OInQ==
+X-Gm-Message-State: APjAAAWXxYDwc2O/UGhPmmJp7qzSm54HgTxjtLajvfmtSGZ+gkO4/g3+
+        5/PATHZgLRXimSQKwZzUStlkPtPc1MXAV7bzcP1rMFtwLjhNGZoL2gfVXpOfcb6iRa7g84VSicT
+        9TezUP36NeYY2oSKRte/55IcQ0ZJVY32usPw=
+X-Received: by 2002:ac8:120c:: with SMTP id x12mr8899872qti.315.1567183361985;
+        Fri, 30 Aug 2019 09:42:41 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwaY2l4b6tk1M6trceqg9AZjRhcMlNGwJvpCK2NExWnBnD86JM81kuWaQfA7O5TUsj17REnaA==
+X-Received: by 2002:ac8:120c:: with SMTP id x12mr8899847qti.315.1567183361693;
+        Fri, 30 Aug 2019 09:42:41 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4340::ba0])
+        by smtp.gmail.com with ESMTPSA id f27sm2703076qkl.25.2019.08.30.09.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 09:42:40 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Fri, 30 Aug 2019 12:42:39 -0400
+Message-ID: <245727.1567183359@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMzAgQXVndXN0IDIwMTkgMTc6MDENCj4gT24g
-RnJpLCBBdWcgMzAsIDIwMTkgYXQgODo1NSBBTSBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBh
-Y3VsYWIuY29tPiB3cm90ZToNCi4uLg0KPiBCdXQgeWVhaCwgaW4gZ2VuZXJhbCBpdCdzIGp1c3Qg
-bm90IG9idmlvdXNseSBzYWZlIHRvIHR1cm4gaW5kaXZpZHVhbA0KPiBhY2Nlc3NlcyBpbnRvIG1l
-bXNldC9tZW1jcHkuIEluIGNvbnRyYXN0LCB0aGUgcmV2ZXJzZSBpcyBvYnZpb3VzbHkNCj4gZmlu
-ZSAoYW5kIF9yZXF1aXJlZF8gZm9yIGFueSBraW5kIG9mIGhhbGYtd2F5IGdvb2QgcGVyZm9ybWFu
-Y2Ugd2hlbg0KPiB5b3UgZG8gc21hbGwgY29uc3RhbnQtc2l6ZWQgbWVtb3J5IGNvcGllcywgd2hp
-Y2ggaXMgYWN0dWFsbHkgYSBjb21tb24NCj4gcGF0dGVybiBwYXJ0bHkgYmVjYXVzZSB0aGUgaW5z
-YW5lIEMgYWxpYXNpbmcgcnVsZXMgaGF2ZSB0YXVnaHQgcGVvcGxlDQo+IHRoYXQgaXQncyB0aGUg
-X29ubHlfIHNhZmUgcGF0dGVybiBpbiBzb21lIHNpdHVhdGlvbnMpLg0KDQpJIHdvbmRlciB3aGVy
-ZSB0aGUgYWN0dWFsIGN1dG9mZiBpcyBmb3IgY29udmVydGluZyBhIHNlcXVlbmNlIG9mIHdyaXRl
-cw0Kb2YgemVybyBpbnRvIGEgY2FsbCB0byBtZW1zZXQoKT8NCg0KSWYgeW91IGFzc3VtZSBlaXRo
-ZXI6DQoxKSBjb2xkIGNhY2hlIChmb3IgbWVtc2V0KS4NCjIpIGJyYW5jaCBwcmVkaWN0b3Igbm90
-IHNldCBmb3IgemVyb2luZyBhIHNtYWxsIG51bWJlciBvZiB3b3Jkcy4NCkkgc3VzcGVjdCB0aGF0
-IGl0IGlzIGNvbnNpZGVyYWJsZS4NCg0KPiBUaGlzIGlzIHdoeSBJIHRoaW5rICItZmZyZWVzdGFu
-ZGluZyIgYW5kICItZm5vLWJ1aWx0aW4tbWVtY3B5IiBhcmUNCj4gY29tcGxldGVseSBicm9rZW4g
-YXMtaXM6IHRoZXkgYXJlIGFuIGFsbC1vci1ub3RoaW5nIHRoaW5nLCB0aGV5IGRvbid0DQo+IHVu
-ZGVyc3RhbmQgdGhhdCBpdCdzIGRpcmVjdGlvbmFsLg0KDQpZZXAsIGFuZCBzb21lIG9mIHRoZSBj
-b252ZXJzaW9ucyBhcmUgYSBqdXN0IGEgUElUQS4NCmVnIHByaW50ZigiJXMiLCBzdHJpbmcpID0+
-IHB1dHMoc3RyaW5nKS4NCg0KSSB3YXMgYWxzbyB0cnlpbmcgdG8gZ2V0IGFyb3VuZCB0aGUgbWVt
-Y3B5QEdMSUJDNCBmdWJhciBzbyBJIGNvdWxkDQpjb21waWxlIGNvZGUgdGhhdCB3b3VsZCBydW4g
-b24gYW4gb2xkIHN5c3RlbS4NCkkgbWFuYWdlZCBldmVyeXRoaW5nIGV4Y2VwdCB0aGUgbWVtY3B5
-KCkgY2FsbHMgdGhhdCBnY2MgZW1pdHMgZm9yDQpzdHJ1Y3R1cmUgY29waWVzIChpdCBtaWdodCBl
-dmVuIGRvIHRoYXQgZXZlbiBmb3IgJ2ZyZWVzdGFuZGluZycpLg0KSXQgcmVhbGx5IG91Z2h0IHRv
-IGVtaXQgYSBjYWxsIHRvIGEgZGlmZmVyZW50IHN5bWJvbCB0aGF0IHdvdWxkIG5vcm1hbGx5DQpi
-ZSBhbGlhc2VkIHRvIG1lbWNweSgpIChvciBiZXR0ZXIgYSBtZW1jcHlfd29yZHMoKSBmdW5jdGlv
-bikuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
-Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
-biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Concerns have been raised about the exfat driver accidentally mounting
+fat/vfat file systems.  Add an extra configure option to help prevent that.
+
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
+diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
+index 78b32aa2ca19..1df177b1dc72 100644
+--- a/drivers/staging/exfat/Kconfig
++++ b/drivers/staging/exfat/Kconfig
+@@ -4,6 +4,14 @@ config EXFAT_FS
+ 	help
+ 	  This adds support for the exFAT file system.
+ 
++config EXFAT_DONT_MOUNT_VFAT
++	bool "Prohibit mounting of fat/vfat filesysems by exFAT"
++	default y
++	help
++	  By default, the exFAT driver will only mount exFAT filesystems, and refuse
++	  to mount fat/vfat filesystems.  Set this to 'n' to allow the exFAT driver
++	  to mount these filesystems.
++
+ config EXFAT_DISCARD
+ 	bool "enable discard support"
+ 	depends on EXFAT_FS
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 5b5c2ca8c9aa..7fdb5b8bc928 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -486,10 +486,16 @@ static int ffsMountVol(struct super_block *sb)
+ 			break;
+ 
+ 	if (i < 53) {
++#ifdef CONFIG_EXFAT_DONT_MOUNT_VFAT
++		ret = -EINVAL;
++		printk(KERN_INFO "EXFAT: Attempted to mount VFAT filesystem\n");
++		goto out;
++#else
+ 		if (GET16(p_pbr->bpb + 11)) /* num_fat_sectors */
+ 			ret = fat16_mount(sb, p_pbr);
+ 		else
+ 			ret = fat32_mount(sb, p_pbr);
++#endif
+ 	} else {
+ 		ret = exfat_mount(sb, p_pbr);
+ 	}
 
