@@ -2,119 +2,104 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A4C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11CCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61008238CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F99D238C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfH3Inq (ORCPT
+        id S1728249AbfH3Io2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:43:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:56258 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbfH3InT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:43:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F14C2344;
-        Fri, 30 Aug 2019 01:43:18 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D46BB3F718;
-        Fri, 30 Aug 2019 01:43:16 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 06/10] KVM: Allow kvm_device_ops to be const
-Date:   Fri, 30 Aug 2019 09:42:51 +0100
-Message-Id: <20190830084255.55113-7-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190830084255.55113-1-steven.price@arm.com>
-References: <20190830084255.55113-1-steven.price@arm.com>
+        Fri, 30 Aug 2019 04:44:28 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3542 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727236AbfH3Io2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:44:28 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id B098D2181E2B1D99C5AA;
+        Fri, 30 Aug 2019 16:44:22 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 30 Aug 2019 16:44:22 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 30 Aug 2019 16:44:21 +0800
+Date:   Fri, 30 Aug 2019 16:43:33 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     <devel@driverdev.osuosl.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        <linux-fsdevel@vger.kernel.org>,
+        "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190830084333.GA193084@architecture4>
+References: <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
+ <20190829103749.GA13661@infradead.org>
+ <20190829111810.GA23393@kroah.com>
+ <20190829151144.GJ23584@kadam>
+ <20190829152757.GA125003@architecture4>
+ <20190829154346.GK23584@kadam>
+ <20190829155127.GA136563@architecture4>
+ <20190829160441.GA141079@architecture4>
+ <20190830083445.GL23584@kadam>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190830083445.GL23584@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently a kvm_device_ops structure cannot be const without triggering
-compiler warnings. However the structure doesn't need to be written to
-and, by marking it const, it can be read-only in memory. Add some more
-const keywords to allow this.
+Hi Dan,
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- include/linux/kvm_host.h | 4 ++--
- virt/kvm/kvm_main.c      | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+On Fri, Aug 30, 2019 at 11:34:45AM +0300, Dan Carpenter wrote:
+> On Fri, Aug 30, 2019 at 12:04:41AM +0800, Gao Xiang wrote:
+> > Anyway, I'm fine to delete them all if you like, but I think majority of these
+> > are meaningful.
+> > 
+> > data.c-		/* page is already locked */
+> > data.c-		DBG_BUGON(PageUptodate(page));
+> > data.c-
+> > data.c:		if (unlikely(err))
+> > data.c-			SetPageError(page);
+> > data.c-		else
+> > data.c-			SetPageUptodate(page);
+> 
+> If we cared about speed here then we would delete the DBG_BUGON() check
+> because that's going to be expensive.  The likely/unlikely annotations
+> should be used in places a reasonable person thinks it will make a
+> difference to benchmarks.
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index bf0ae1825b9c..4e65f7566913 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1260,7 +1260,7 @@ extern unsigned int halt_poll_ns_grow_start;
- extern unsigned int halt_poll_ns_shrink;
- 
- struct kvm_device {
--	struct kvm_device_ops *ops;
-+	const struct kvm_device_ops *ops;
- 	struct kvm *kvm;
- 	void *private;
- 	struct list_head vm_node;
-@@ -1313,7 +1313,7 @@ struct kvm_device_ops {
- void kvm_device_get(struct kvm_device *dev);
- void kvm_device_put(struct kvm_device *dev);
- struct kvm_device *kvm_device_from_filp(struct file *filp);
--int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type);
-+int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type);
- void kvm_unregister_device_ops(u32 type);
- 
- extern struct kvm_device_ops kvm_mpic_ops;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index c6a91b044d8d..75488ebb87c9 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3046,14 +3046,14 @@ struct kvm_device *kvm_device_from_filp(struct file *filp)
- 	return filp->private_data;
- }
- 
--static struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
-+static const struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
- #ifdef CONFIG_KVM_MPIC
- 	[KVM_DEV_TYPE_FSL_MPIC_20]	= &kvm_mpic_ops,
- 	[KVM_DEV_TYPE_FSL_MPIC_42]	= &kvm_mpic_ops,
- #endif
- };
- 
--int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type)
-+int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type)
- {
- 	if (type >= ARRAY_SIZE(kvm_device_ops_table))
- 		return -ENOSPC;
-@@ -3074,7 +3074,7 @@ void kvm_unregister_device_ops(u32 type)
- static int kvm_ioctl_create_device(struct kvm *kvm,
- 				   struct kvm_create_device *cd)
- {
--	struct kvm_device_ops *ops = NULL;
-+	const struct kvm_device_ops *ops = NULL;
- 	struct kvm_device *dev;
- 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
- 	int type;
--- 
-2.20.1
+DBG_BUGON will be a no-op ((void)x) in non-debugging mode,
+I discussed related stuffs with Greg many months before [1] and
+other filesystems also have similar functions...
 
+p.s. I think we come to an agreement here...
+I killed all unlikely/likely.
+
+[1] http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2018-November/128951.html
+sorry about no lore here.
+
+Thanks,
+Gao Xiang
+
+> 
+> regards,
+> dan carpenter
+> 
