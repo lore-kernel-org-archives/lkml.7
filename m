@@ -2,176 +2,222 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C261C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA745C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730CF208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B1D23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:59:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRqQajhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfH3F6h (ORCPT
+        id S1727747AbfH3F7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:58:37 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:17947 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726510AbfH3F6h (ORCPT
+        Fri, 30 Aug 2019 01:59:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35316 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfH3F7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:58:37 -0400
-X-UUID: 42b35fa41ef44a98b6033bdcc34a5599-20190830
-X-UUID: 42b35fa41ef44a98b6033bdcc34a5599-20190830
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1923270620; Fri, 30 Aug 2019 13:58:36 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 13:58:34 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 13:58:33 +0800
-Message-ID: <1567144708.5942.14.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 13:58:28 +0800
-In-Reply-To: <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 01:59:03 -0400
+Received: by mail-io1-f67.google.com with SMTP id b10so11820578ioj.2;
+        Thu, 29 Aug 2019 22:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ndyanviOzu9Zi/yMi7I2hnP1XTTLaCsALOoRaimagU=;
+        b=hRqQajhYeOFJ0Do/UKvlZ8YCLqMFgsPu9EaM4WuZXWKonIayGwNzasBLgYD79HRu3l
+         mqIdo+C/hZhohTNBxV8l+jqpWs4plJQa/3N3Tw24kuLkXrUqfLa8gxpTfcOL3iCx5r4h
+         9WEUrhFm7NZ3ZU8Ey3ak/eigW3IShywzQ620MydDC+zYncJAaCSa+bjufjqDaZcIzWZ/
+         U9BPEnUxTe/4C2dPPAxrbC6mHwAP8o1po8Hqy1WGrpUKFzQoVYVvHxWPQDWN9TqYyAkP
+         eQb+lUgQbKcWXeCV4VgAfZ+5Hl199GefB+fulgZg0XuHxzCfOZuI/MnKql4kigbPwJZU
+         uRBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ndyanviOzu9Zi/yMi7I2hnP1XTTLaCsALOoRaimagU=;
+        b=KG7W5Ul8SSTeWxfOcVmOkkcxSYMGERxoeo2qu4dbiYuyggSgl1OcoCdwcmaWHaAPiL
+         vQIxyOaZ+YXX0KwSQXXgULDqCzUvcPGqVNR+j+5QIVveTgUJkvQJlLW2peGc6nbgQpP7
+         SIdKh+Rk2CXqJQxhZC6tKR7g2tEvSkUhq/IW0Yb4U+Jj/jSEDe5DABgmVXIjoB/nfZlT
+         bCVTJoL465TGuj/c65Ovb37OetuunzBz5xafhHLRU8UERw1oTEag306ssU94CwJdHGwm
+         WOLv0D3o6U3ev3WOuV85lU0PATJ8FvqztBkov7z1z3qbNL9Q6P6JPIDIw3zNV9VyZ/iw
+         iMWw==
+X-Gm-Message-State: APjAAAVNTF3ir7xVfS4o2oy1gnG600OFQNKJQkPYXmJm66dNl4NlV0W3
+        cbjR/EY/fraEUStQUp8uAMsRyP8svjEFBXa10nQ=
+X-Google-Smtp-Source: APXvYqz7HprZ4bcyYVV3mIF6aHucW/Znj2uC3GMS+aDtrA6tv/yEaG9x13MjchExSuH4RftaJHub77QchQjdK82qeBw=
+X-Received: by 2002:a6b:6516:: with SMTP id z22mr9438882iob.7.1567144742526;
+ Thu, 29 Aug 2019 22:59:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: BFED0D0927310008AFF9ED5326E56B8F7DFF664A50F74D44F2BA6301A1C6B1482000:8
-X-MTK:  N
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com> <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Fri, 30 Aug 2019 00:58:51 -0500
+Message-ID: <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add ovl0/ovl_2l0 usecase
-> in ovl->ovl_2l0 direct link usecase:
-> 1. the crtc support layer number will 4+2
-> 2. ovl_2l0 background color input select ovl0 when crtc init
-> and disable it when crtc finish
-> 3. config ovl_2l0 layer, if crtc config layer number is
-> bigger than ovl0 support layers(max is 4)
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Tue, Aug 27, 2019 at 10:02 PM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index c63ff2b..b55970a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -270,6 +270,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
->  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-> +		enum mtk_ddp_comp_id prev;
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> new file mode 100644
+> index 000000000000..f8eb28d5e307
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> @@ -0,0 +1,125 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +		if (i > 0)
-> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
-> +		else
-> +			prev = DDP_COMPONENT_ID_MAX;
+> +title: ARM SMC Mailbox Interface
 > +
-> +		if (prev == DDP_COMPONENT_OVL0)
-> +			mtk_ddp_comp_bgclr_in_on(comp);
-
-Even though both OVL and OVL_2L implement this function, I think we
-could still call this function for OVL and OVL_2L, and in
-mtk_ovl_bgclr_in_on(), to judge it's OVL or OVL_2L.
-
-Regards,
-CK
-
->  
->  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
->  		mtk_ddp_comp_start(comp);
-> @@ -279,9 +288,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
->  		struct drm_plane *plane = &mtk_crtc->planes[i];
->  		struct mtk_plane_state *plane_state;
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +		unsigned int local_layer;
->  
->  		plane_state = to_mtk_plane_state(plane->state);
-> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
 > +
-> +		if (i >= comp_layer_nr) {
-> +			comp = mtk_crtc->ddp_comp[1];
-> +			local_layer = i - comp_layer_nr;
-> +		} else
-> +			local_layer = i;
-> +		mtk_ddp_comp_layer_config(comp, local_layer,
->  					  plane_state);
->  	}
->  
-> @@ -307,6 +325,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
->  					   mtk_crtc->ddp_comp[i]->id);
->  	mtk_disp_mutex_disable(mtk_crtc->mutex);
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
->  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
->  					      mtk_crtc->mmsys_reg_data,
->  					      mtk_crtc->ddp_comp[i]->id,
-> @@ -327,6 +346,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
->  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	unsigned int i;
-> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +	unsigned int local_layer;
->  
->  	/*
->  	 * TODO: instead of updating the registers here, we should prepare
-> @@ -349,7 +370,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  			plane_state = to_mtk_plane_state(plane->state);
->  
->  			if (plane_state->pending.config) {
-> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
-> +				if (i >= comp_layer_nr) {
-> +					comp = mtk_crtc->ddp_comp[1];
-> +					local_layer = i - comp_layer_nr;
-> +				} else
-> +					local_layer = i;
+> +description: |
+> +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
+> +  call) instruction to trigger a mailbox-connected activity in firmware,
+> +  executing on the very same core as the caller. By nature this operation
+> +  is synchronous and this mailbox provides no way for asynchronous messages
+> +  to be delivered the other way round, from firmware to the OS, but
+> +  asynchronous notification could also be supported. However the value of
+> +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
+> +  message to the mailbox framework, so a synchronous communication can be
+> +  established, for a asynchronous notification, no value will be returned.
+> +  The exact meaning of both the action the mailbox triggers as well as the
+> +  return value is defined by their users and is not subject to this binding.
 > +
-> +				mtk_ddp_comp_layer_config(comp, local_layer,
-> +							  plane_state);
->  				plane_state->pending.config = false;
->  			}
->  		}
-> @@ -572,6 +600,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  	}
->  
->  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-> +	if (mtk_crtc->ddp_comp_nr > 1) {
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
+> +  One use case of this mailbox is the SCMI interface, which uses shared memory
+> +  to transfer commands and parameters, and a mailbox to trigger a function
+> +  call. This allows SoCs without a separate management processor (or when
+> +  such a processor is not available or used) to use this standardized
+> +  interface anyway.
 > +
-> +		if (comp->funcs->bgclr_in_on)
-> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-> +	}
->  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
->  					sizeof(struct drm_plane),
->  					GFP_KERNEL);
+> +  This binding describes no hardware, but establishes a firmware interface.
+> +  Upon receiving an SMC using one of the described SMC function identifiers,
+> +  the firmware is expected to trigger some mailbox connected functionality.
+> +  The communication follows the ARM SMC calling convention.
+> +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> +  identifiers are passed from consumers, or listed in the the arm,func-ids
+> +  properties as described below. The firmware can return one value in
+> +  the first SMC result register, it is expected to be an error value,
+> +  which shall be propagated to the mailbox client.
+> +
+> +  Any core which supports the SMC or HVC instruction can be used, as long as
+> +  a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,smc-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 1
+> +
+> +  arm,num-chans:
+> +    description: The number of channels supported.
+> +    items:
+> +      minimum: 1
+> +      maximum: 4096 # Should be enough?
+> +
+> +  method:
+> +    - enum:
+> +        - smc
+> +        - hvc
+> +
+> +  transports:
+> +    - enum:
+> +        - mem
+> +        - reg
+> +
+> +  arm,func-ids:
+> +    description: |
+> +      An array of 32-bit values specifying the function IDs used by each
+> +      mailbox channel. Those function IDs follow the ARM SMC calling
+> +      convention standard [1].
+> +
+> +      There is one identifier per channel and the number of supported
+> +      channels is determined by the length of this array.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 0
+> +    maxItems: 4096   # Should be enough?
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +  - arm,num-chans
+> +  - transports
+> +  - method
+> +
+> +examples:
+> +  - |
+> +    sram@910000 {
+> +      compatible = "mmio-sram";
+> +      reg = <0x0 0x93f000 0x0 0x1000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges = <0 0x0 0x93f000 0x1000>;
+> +
+> +      cpu_scp_lpri: scp-shmem@0 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x0 0x200>;
+> +      };
+> +
+> +      cpu_scp_hpri: scp-shmem@200 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x200 0x200>;
+> +      };
+> +    };
+> +
+> +    firmware {
+> +      smc_mbox: mailbox {
+> +        #mbox-cells = <1>;
+> +        compatible = "arm,smc-mbox";
+> +        method = "smc";
+> +        arm,num-chans = <0x2>;
+> +        transports = "mem";
+> +        /* Optional */
+> +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+>
+SMC/HVC is synchronously(block) running in "secure mode", i.e, there
+can only be one instance running platform wide. Right?  That implies
+there is only one physical channel in the platform. So if you need to
+initiate different functions (tx, rx), you call them sequentially by
+changing the func-id for each request. Why not?
 
-
+-Jassi
