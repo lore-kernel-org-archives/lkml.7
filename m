@@ -2,96 +2,74 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA621C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB28BC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC49623405
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m0ltjgx7"
+	by mail.kernel.org (Postfix) with ESMTP id 8175823426
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfH3Q2R (ORCPT
+        id S1728216AbfH3Q22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:28:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45450 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3Q2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:28:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RdPMpAXXBaiQno2G62m49MFypxqlVKUtgB8faAoi/bA=; b=m0ltjgx7t4ynixYMj9EPQrDSd
-        gouxhmamQQK46+oauBJCwjtVgtNnrQh3DY23q1oViqIYVv0QTxvU8EoQ2QX088A3jt8it37QT5tav
-        +G99U5Hvmr8MWiuaitu6f4u0/16jw6KiM7gZ1aQphmP3iwQ4Ep8Ka7z0Z1hi8dRKhi7TrUA50F4rN
-        6tsT6WTOz8bN8V7WcePdcW6dl7pBthWt1CXoQ36kayghdBUUFC2rvbk2mlhO/aFNG+K6fyaE5nxxt
-        s8RKesu5J5MzBXL4CN/QjwpPqfrgUu3acD8Zy1p3mVZi/IUFVrm/eTTNm+BVfU3APEHcq1XOQIYIO
-        cSh/4TjEA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3jky-0006Lt-Fu; Fri, 30 Aug 2019 16:28:12 +0000
-Date:   Fri, 30 Aug 2019 09:28:12 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v3 7/7] erofs: redundant assignment in
- __erofs_get_meta_page()
-Message-ID: <20190830162812.GA10694@infradead.org>
-References: <20190830032006.GA20217@architecture4>
- <20190830033643.51019-1-gaoxiang25@huawei.com>
- <20190830033643.51019-7-gaoxiang25@huawei.com>
+        Fri, 30 Aug 2019 12:28:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37600 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbfH3Q22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 12:28:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 80220882EA;
+        Fri, 30 Aug 2019 16:28:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB8CA60166;
+        Fri, 30 Aug 2019 16:28:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190820001805.241928-4-matthewgarrett@google.com>
+References: <20190820001805.241928-4-matthewgarrett@google.com> <20190820001805.241928-1-matthewgarrett@google.com>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     dhowells@redhat.com, jmorris@namei.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH V40 03/29] security: Add a static lockdown policy LSM
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830033643.51019-7-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3439.1567182506.1@warthog.procyon.org.uk>
+Date:   Fri, 30 Aug 2019 17:28:26 +0100
+Message-ID: <3440.1567182506@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 30 Aug 2019 16:28:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -		err = bio_add_page(bio, page, PAGE_SIZE, 0);
-> -		if (err != PAGE_SIZE) {
-> +		if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE) {
->  			err = -EFAULT;
->  			goto err_out;
->  		}
+Matthew Garrett <matthewgarrett@google.com> wrote:
 
-This patch looks like an improvement.  But looking at that whole
-area just makes me cringe.
+> +static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
 
-Why is there __erofs_get_meta_page with the two weird booleans instead
-of a single erofs_get_meta_page that gets and gfp_t for additional
-flags and an unsigned int for additional bio op flags.
+const char *const maybe?
 
-Why do need ioprio support to start with?  Seeing that in a new
-fs look kinda odd.  Do you have benchmarks that show the difference?
+> +static enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
+> +						 LOCKDOWN_INTEGRITY_MAX,
+> +						 LOCKDOWN_CONFIDENTIALITY_MAX};
+> +
 
-That function then calls erofs_grab_bio, which tries to handle a
-bio_alloc failure, except that the function will not actually fail
-due the mempool backing it.  It also seems like and awfully
-huge function to inline.
+const?
 
-Why is there __submit_bio which really just obsfucates what is
-going on?  Also why is __submit_bio using bio_set_op_attrs instead
-of opencode it as the comment right next to it asks you to?
+Isn't this also a 1:1 mapping?
 
-Also I really don't understand why you can't just use read_cache_page
-or even read_cache_page_gfp instead of __erofs_get_meta_page.
-That function is a whole lot of duplication of functionality shared
-by a lot of other file systems.
+> +static int lock_kernel_down(const char *where, enum lockdown_reason level)
+
+Is the last parameter the reason or the level?  You're mixing the terms.
+
+David
