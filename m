@@ -2,71 +2,138 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F26C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554D5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96652087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A93A2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfH3GJ5 (ORCPT
+        id S1727788AbfH3GLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:09:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19448 "EHLO mga02.intel.com"
+        Fri, 30 Aug 2019 02:11:16 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:46068 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfH3GJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:09:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 23:09:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="172141707"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga007.jf.intel.com with ESMTP; 29 Aug 2019 23:09:54 -0700
-From:   Bard liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, broonie@kernel.org,
-        pierre-louis.bossart@linux.intel.com, bard.liao@intel.com,
-        vkoul@kernel.org, gregkh@linuxfoundation.org,
-        Blauciak@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] soundwire: bus: set initial value to port_status
-Date:   Fri, 30 Aug 2019 02:11:35 +0800
-Message-Id: <20190829181135.16049-1-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726236AbfH3GLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:11:15 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id F1867EBCD69760BD4332;
+        Fri, 30 Aug 2019 14:11:12 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x7U6B1Mg089976;
+        Fri, 30 Aug 2019 14:11:01 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019083014113696-3292051 ;
+          Fri, 30 Aug 2019 14:11:36 +0800 
+From:   Cheng Lin <wang.yi59@zte.com.cn>
+To:     davem@davemloft.net
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Cheng Lin <cheng.lin130@zte.com.cn>
+Subject: [PATCH v3] ipv6: Not to probe neighbourless routes
+Date:   Fri, 30 Aug 2019 14:11:16 +0800
+Message-Id: <1567145476-33802-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-08-30 14:11:37,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-08-30 14:11:06,
+        Serialize complete at 2019-08-30 14:11:06
+X-MAIL: mse-fl2.zte.com.cn x7U6B1Mg089976
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
+From: Cheng Lin <cheng.lin130@zte.com.cn>
 
-port_status[port_num] are assigned for each port_num in some if
-conditions. So some of the port_status may not be initialized.
+Originally, Router Reachability Probing require a neighbour entry
+existed. Commit 2152caea7196 ("ipv6: Do not depend on rt->n in
+rt6_probe().") removed the requirement for a neighbour entry. And
+commit f547fac624be ("ipv6: rate-limit probes for neighbourless
+routes") adds rate-limiting for neighbourless routes.
 
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+And, the Neighbor Discovery for IP version 6 (IPv6)(rfc4861) says,
+"
+7.2.5.  Receipt of Neighbor Advertisements
+
+When a valid Neighbor Advertisement is received (either solicited or
+unsolicited), the Neighbor Cache is searched for the target's entry.
+If no entry exists, the advertisement SHOULD be silently discarded.
+There is no need to create an entry if none exists, since the
+recipient has apparently not initiated any communication with the
+target.
+".
+
+In rt6_probe(), just a Neighbor Solicitation message are transmited.
+When receiving a Neighbor Advertisement, the node does nothing in a
+Neighborless condition.
+
+Not sure it's needed to create a neighbor entry in Router
+Reachability Probing. And the Original way may be the right way.
+
+This patch recover the requirement for a neighbour entry.
+
+Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
 ---
- drivers/soundwire/bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/ip6_fib.h | 5 -----
+ net/ipv6/route.c      | 6 +-----
+ 2 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index f6a1e4b4813d..33f41b3e642e 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -835,7 +835,7 @@ static int sdw_handle_port_interrupt(struct sdw_slave *slave,
- static int sdw_handle_slave_alerts(struct sdw_slave *slave)
- {
- 	struct sdw_slave_intr_status slave_intr;
--	u8 clear = 0, bit, port_status[15];
-+	u8 clear = 0, bit, port_status[15] = {0};
- 	int port_num, stat, ret, count = 0;
- 	unsigned long port;
- 	bool slave_notify = false;
+diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+index 4b5656c..8c2e022 100644
+--- a/include/net/ip6_fib.h
++++ b/include/net/ip6_fib.h
+@@ -124,11 +124,6 @@ struct rt6_exception {
+ 
+ struct fib6_nh {
+ 	struct fib_nh_common	nh_common;
+-
+-#ifdef CONFIG_IPV6_ROUTER_PREF
+-	unsigned long		last_probe;
+-#endif
+-
+ 	struct rt6_info * __percpu *rt6i_pcpu;
+ 	struct rt6_exception_bucket __rcu *rt6i_exception_bucket;
+ };
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index fd059e0..1839dd7 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -639,12 +639,12 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
+ 	nh_gw = &fib6_nh->fib_nh_gw6;
+ 	dev = fib6_nh->fib_nh_dev;
+ 	rcu_read_lock_bh();
+-	idev = __in6_dev_get(dev);
+ 	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
+ 	if (neigh) {
+ 		if (neigh->nud_state & NUD_VALID)
+ 			goto out;
+ 
++		idev = __in6_dev_get(dev);
+ 		write_lock(&neigh->lock);
+ 		if (!(neigh->nud_state & NUD_VALID) &&
+ 		    time_after(jiffies,
+@@ -654,13 +654,9 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
+ 				__neigh_set_probe_once(neigh);
+ 		}
+ 		write_unlock(&neigh->lock);
+-	} else if (time_after(jiffies, fib6_nh->last_probe +
+-				       idev->cnf.rtr_probe_interval)) {
+-		work = kmalloc(sizeof(*work), GFP_ATOMIC);
+ 	}
+ 
+ 	if (work) {
+-		fib6_nh->last_probe = jiffies;
+ 		INIT_WORK(&work->work, rt6_probe_deferred);
+ 		work->target = *nh_gw;
+ 		dev_hold(dev);
 -- 
-2.17.1
+1.8.3.1
 
