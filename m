@@ -2,99 +2,150 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83342C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9956AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564EC2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC1A22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TV+xdT09"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="A1CaHrZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfH3EdX (ORCPT
+        id S1728029AbfH3Eda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 00:33:23 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33732 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfH3EdW (ORCPT
+        Fri, 30 Aug 2019 00:33:30 -0400
+Received: from forward105j.mail.yandex.net ([5.45.198.248]:50092 "EHLO
+        forward105j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbfH3Ed3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 00:33:22 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go14so2725817plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 21:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KklhaOrcJjumUOcMoajjDCuKO1cn0WIKBTfo3oVxm7U=;
-        b=TV+xdT09IOmtbG2hmZwo+q6JqoJtHVEdeKhgG4HQ4X/3cu6L+wYMCA2IiQmiJETnIP
-         kO3JKDv4I8yC50ikVI1dRbHa165dBQLFumdF3OPjd/72iA/CHRrfEEEn6XuIDgi1Ux0q
-         SVSVCNK3b03oS1A/2ORZ+E8NQpQUkUS1gELg8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KklhaOrcJjumUOcMoajjDCuKO1cn0WIKBTfo3oVxm7U=;
-        b=o1+2JWWvi2P8dtEei4/snRs0rSyNF9PWIoD7HliuO4htDwrPB7mqAe4uXVJd1CbuXx
-         YpMcXEzdJvqPgB2gdxK/77DWSkVUU/fXjBwrEqmV8HgPFRKmGWGaWywWy5W68Bnpuyg6
-         w9dHZBC5RqL5JqjxHDaErxKRmddiY8HuO+2m73VzTV6AqQzBnw/3Mq2WqRUBR0J+tVgh
-         uzy5dwM5FIzshTLvS3SNxaYFX/5FcQEFYrh6weWG1/sSO8NM7M6GNhcz4+spmKOwD7K+
-         uFrkgWDa1i2YtdxVWorz1mVuYqSONNw71cXZtslW9xVI6znETsFWIagRctsEL6ICbWSK
-         AW5g==
-X-Gm-Message-State: APjAAAWQ+XjUM2ULQj7EFSl1XXGRW/ENJUREMmawCOUBa7zI9Z4hp1JO
-        YiAkUPVnYqLGDLAAaS+VZQrzhQ==
-X-Google-Smtp-Source: APXvYqymW9vh3nPRzh8A/jrCiyA0Q3efc0k3mPI7rCtKnhANQGoF3EGZTwupRFVwNyETHVslldm7MQ==
-X-Received: by 2002:a17:902:6a82:: with SMTP id n2mr13024583plk.53.1567139601347;
-        Thu, 29 Aug 2019 21:33:21 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id ev3sm17753974pjb.3.2019.08.29.21.33.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 29 Aug 2019 21:33:19 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH V3 1/1] spi: bcm-qspi: Make BSPI default mode
-Date:   Fri, 30 Aug 2019 09:58:45 +0530
-Message-Id: <1567139325-7912-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 30 Aug 2019 00:33:29 -0400
+Received: from mxback24g.mail.yandex.net (mxback24g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:324])
+        by forward105j.mail.yandex.net (Yandex) with ESMTP id 2D1C7B20F00;
+        Fri, 30 Aug 2019 07:33:26 +0300 (MSK)
+Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
+        by mxback24g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id pV7fdG72ZP-XPx48VYU;
+        Fri, 30 Aug 2019 07:33:26 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567139606;
+        bh=GDPLbh2Za9If16kngBr0Vy91wenOeOyR+BDWVi+j/l8=;
+        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
+        b=A1CaHrZ6HcOfJhzZS+4BFCM2kqsP7dgmZp1mFMQQvuJ5oX2+ejDQC647BIDx5NMtT
+         Y1pRkbNevKcbp76LNHGWoYVqMvqRyJNWr2lxWYr+lWS8m2OOXt4oRKLDC+au6e3kts
+         4sgyjAnMhs85+qrLU26B9Q47yArkXCVIm4V6z/fk=
+Authentication-Results: mxback24g.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id vFuwVxmDwr-XHDGfXVO;
+        Fri, 30 Aug 2019 07:33:23 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.co,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v1 09/18] irqchip: i8259: Add plat-poll support
+Date:   Fri, 30 Aug 2019 12:32:23 +0800
+Message-Id: <20190830043232.20191-4-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The spi-nor controller defaults to BSPI mode, hence switch back
-to its default mode after MSPI operations (write or erase)
-are completed.
+For some platforms (e.g. Loongson-3), platfrom interrupt controller
+supports polling interrupt vector from i8259 automaticly and generating
+sepreated interrupt.
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Thus we add plat-poll OF property for these platforms and setup sepreated
+chained interrupt handler.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-changes from V2:
- - Address code review comment from Mark Brown about changelog.
+ drivers/irqchip/irq-i8259.c | 47 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 41 insertions(+), 6 deletions(-)
 
-Changes from V1:
- - Address code review comment from Mark Brown.
-
- drivers/spi/spi-bcm-qspi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 902bdbf..46a811a 100644
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -897,6 +897,7 @@ static int bcm_qspi_transfer_one(struct spi_master *master,
+diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
+index d000870d9b6b..e7a9895f3b2d 100644
+--- a/drivers/irqchip/irq-i8259.c
++++ b/drivers/irqchip/irq-i8259.c
+@@ -40,6 +40,12 @@ static void mask_and_ack_8259A(struct irq_data *d);
+ static void init_8259A(int auto_eoi);
+ static int (*i8259_poll)(void) = i8259_irq;
  
- 		read_from_hw(qspi, slots);
++struct plat_poll_priv {
++	struct irq_domain *domain;
++	int hwirq;
++};
++static struct plat_poll_priv plat_poll_priv[16];
++
+ static struct irq_chip i8259A_chip = {
+ 	.name			= "XT-PIC",
+ 	.irq_mask		= disable_8259A_irq,
+@@ -346,22 +352,51 @@ static void i8259_irq_dispatch(struct irq_desc *desc)
+ 	generic_handle_irq(irq);
+ }
+ 
++static void plat_poll_irq_dispatch(struct irq_desc *desc)
++{
++	struct plat_poll_priv *priv = irq_desc_get_handler_data(desc);
++	unsigned int irq;
++
++	irq = irq_linear_revmap(priv->domain, priv->hwirq);
++	generic_handle_irq(irq);
++}
++
+ int __init i8259_of_init(struct device_node *node, struct device_node *parent)
+ {
+ 	struct irq_domain *domain;
+-	unsigned int parent_irq;
+ 
+ 	domain = __init_i8259_irqs(node);
+ 
+-	parent_irq = irq_of_parse_and_map(node, 0);
+-	if (!parent_irq) {
+-		pr_err("Failed to map i8259 parent IRQ\n");
+-		irq_domain_remove(domain);
+-		return -ENODEV;
++	if (of_find_property(node, "plat-poll", NULL)) {
++		int i;
++
++		for (i = 0; i < 16; i++) {
++			int parent_irq = irq_of_parse_and_map(node, i);
++
++			if (!parent_irq) {
++				pr_err("Failed to map %d plat-poll i8259 parent IRQ\n", i);
++				irq_domain_remove(domain);
++				return -ENODEV;
++			}
++			plat_poll_priv[i].domain = domain;
++			plat_poll_priv[i].hwirq = i;
++			irq_set_chained_handler_and_data(parent_irq,
++				plat_poll_irq_dispatch,
++				&plat_poll_priv[i]);
++		}
++	} else {
++		unsigned int parent_irq;
++
++		parent_irq = irq_of_parse_and_map(node, 0);
++		if (!parent_irq) {
++			pr_err("Failed to map i8259 parent IRQ\n");
++			irq_domain_remove(domain);
++			return -ENODEV;
  	}
-+	bcm_qspi_enable_bspi(qspi);
  
+ 	irq_set_chained_handler_and_data(parent_irq, i8259_irq_dispatch,
+ 					 domain);
++	}
  	return 0;
  }
+ IRQCHIP_DECLARE(i8259, "intel,i8259", i8259_of_init);
 -- 
-1.9.1
+2.22.0
 
