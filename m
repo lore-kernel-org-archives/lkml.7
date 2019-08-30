@@ -2,186 +2,250 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56868C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F308CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDD821874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1B221670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EoqZX1Vs"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tF/5l6aQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfH3Jsx (ORCPT
+        id S1727857AbfH3JuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:48:53 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46246 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbfH3Jsw (ORCPT
+        Fri, 30 Aug 2019 05:50:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54030 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfH3JuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:48:52 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t24so4848710oij.13
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 02:48:51 -0700 (PDT)
+        Fri, 30 Aug 2019 05:50:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 10so6603620wmp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 02:50:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=opPJo7Zv4ht/hnWpVSpz0d5Vp3/hOswmpsE3zretzJE=;
-        b=EoqZX1Vsy9Szxp+b2Sg//tUs6kcL4ZoTGUwdLa+NeVeQfQf7IVynklZrNliG7NbW3c
-         BqTTvlkqs6KgPDc2/MsnL7jzP3HCSBgEPj3iAcwf3MaoLg8C9MgHhZhnJloMTNHx7gHf
-         ehsnc475CaxsOCW2n9iAALHDplUCtX23vexks=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c4pXhBax/amtMdhC4ViPEuR4nmjivXBNxfCkqMWIjlw=;
+        b=tF/5l6aQ3awe0t34PNY37DyGwVMnPi6hiFkUnO/fS5XIl85/RcoekOjf7I3utZiYx7
+         P0JMBEzriaE+HSlaE2bhudY3IrnzElL5ejd5XnVS8A7Ms367JRnqtnPPDnQinxcCeXoE
+         gcEOlyb5XNzvYoWUVkBn0IjfXnmbVrE8NmhXJH/rLjnlecQ1il6wwnhrrjf34iAjdzSv
+         J60/8bggo0e9zNm0si9I9/X9bGiLRoxRtNuk+HLah74ye6p0BdDlfeZhS9nncOQ/I0W6
+         Ux41R55VzSfN46Fz3fVU9CokzYNHusmg2sx8XjGPuzCI7Axkob76Emn1UUiQt/Z0wYHx
+         pRzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=opPJo7Zv4ht/hnWpVSpz0d5Vp3/hOswmpsE3zretzJE=;
-        b=N8clu11F2qRzN12ILdMN5HlABxtm0rhhQInLbB26gmcOtUeW8UPXP0r3bRFlyI4USv
-         AsYUkVi6cyOdVwBHmyk5eyc97KTwgOpy6fIZnyJvT/8dH3g9UD+Z/HD9Ll1Ygjj4A6i5
-         wH69i/mKrDejNMBEjjoiWBwylEKOdEb9asPQ7pZSEzYWv4kvjsYoZR5NZYTTE36dMWDn
-         8GZn3ZXemsIoke6RY9uMGBFHIS4Yf6tkzkJZXi8ZeDSLrlHVdWEJJk6+22a4toSUVdg+
-         J07rPkgQmK0Fx4LX2K1787NJD7zdjX1hjSm+CoNHXU0YNHVFklgdHpYDG00fYrEpIj1M
-         aTGA==
-X-Gm-Message-State: APjAAAU68NrvdnfQfVfbIAbYuF1E2ynqHx+v87E09rfgsLVX2CcRbO2N
-        QvAJD8hcESDkExWyZxxV4Mi+rBwEBAI=
-X-Google-Smtp-Source: APXvYqwImrklsoUjZr7rDvVfJ2uH80e5LD1FtwMcLL9YBfCZjdzPC0UErppsfQtduudZ0Y8DyKtyTg==
-X-Received: by 2002:aca:1007:: with SMTP id 7mr5867295oiq.24.1567158531121;
-        Fri, 30 Aug 2019 02:48:51 -0700 (PDT)
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
-        by smtp.gmail.com with ESMTPSA id k16sm1942332otj.58.2019.08.30.02.48.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2019 02:48:50 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id 97so3523435otr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 02:48:49 -0700 (PDT)
-X-Received: by 2002:a9d:4817:: with SMTP id c23mr10736054otf.97.1567158529318;
- Fri, 30 Aug 2019 02:48:49 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c4pXhBax/amtMdhC4ViPEuR4nmjivXBNxfCkqMWIjlw=;
+        b=Dpk71gC5hzRGW4bsW/QgMCjgYVPqt6UxJR7MSZlEX7A2Z/bLZQ/6SxprFjOwLYGiEv
+         Egvm2pkxB9OFqR0Nzs22cG7WyOd8WBgpHtXI36IbhwSBulJEnhYs6D1LqaVqdrzAVIH/
+         bi/avyf4jGgXJ+HR7so1CgHYiff8KNs29miSLzPUIeWz//x8SXhFfvZkfpV16Xnk5Wbl
+         3+7DRWyo4lrWQaQFBQk1iU7iN8bSEF7nzHZ6cxVcitXwDcBXD+1MFGkFywg5BkErew/S
+         H4JlGzpRNL0S8uV0GA9WH13FMtBeQtPidg+uk63oSIfYgGeevCuodQ+dHw32VJVdiwyS
+         euHw==
+X-Gm-Message-State: APjAAAXLlgCevhwYzghd5zYYbrzvPpouWFj3iQOeZe7lV3pL16iZ2qbC
+        dCYPn3p016ZGGlyJkMyz2Diaei/TsZqn3g==
+X-Google-Smtp-Source: APXvYqxaDiiTn4PDScghCw0/ilrmvC0a0/fkDdxwpeyhfWhPTponlqWMM7HuuvnvM6tbxIY2wL6bmA==
+X-Received: by 2002:a7b:ce98:: with SMTP id q24mr18008856wmj.142.1567158603060;
+        Fri, 30 Aug 2019 02:50:03 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id p7sm7525071wmh.38.2019.08.30.02.50.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 02:50:02 -0700 (PDT)
+Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <20190828202723.1145-1-linux.amoon@gmail.com>
+ <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
+ <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
+ <101a12ac-1464-8864-4f8c-56bb46034a08@baylibre.com>
+ <CANAwSgQwZg_AXAnAY4KwDzHpwcSA9up7SrR6jyv5Bem24wtaJg@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <c25c6610-5393-ef9d-8a91-6fad088ac2c2@baylibre.com>
+Date:   Fri, 30 Aug 2019 11:50:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190822194500.2071-1-jernej.skrabec@siol.net>
- <20190822194500.2071-3-jernej.skrabec@siol.net> <CAPBb6MUChtZcNSTa2uT50k6uPU9T68wofLYGUFRJntDhjH8+iw@mail.gmail.com>
- <907f3c43-b994-f1c7-a15b-116566e19003@xs4all.nl>
-In-Reply-To: <907f3c43-b994-f1c7-a15b-116566e19003@xs4all.nl>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Fri, 30 Aug 2019 18:48:36 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MV979V4BpOyYRGr4oAJOeqSmn-w1V3TRRhWePtqpzzWeQ@mail.gmail.com>
-Message-ID: <CAPBb6MV979V4BpOyYRGr4oAJOeqSmn-w1V3TRRhWePtqpzzWeQ@mail.gmail.com>
-Subject: Re: [PATCH 2/8] videodev2.h: add V4L2_DEC_CMD_FLUSH
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        mripard@kernel.org, Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, Chen-Yu Tsai <wens@csie.org>,
-        gregkh@linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>, jonas@kwiboo.se
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANAwSgQwZg_AXAnAY4KwDzHpwcSA9up7SrR6jyv5Bem24wtaJg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 6:45 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->
-> On 8/30/19 11:38 AM, Alexandre Courbot wrote:
-> > On Fri, Aug 23, 2019 at 4:45 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
-> >>
-> >> From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> >>
-> >> Add this new V4L2_DEC_CMD_FLUSH decoder command and document it.
-> >>
-> >> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> >> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >> ---
-> >>  Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst | 11 ++++++++++-
-> >>  Documentation/media/videodev2.h.rst.exceptions      |  1 +
-> >>  include/uapi/linux/videodev2.h                      |  1 +
-> >>  3 files changed, 12 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
-> >> index 57f0066f4cff..0bffef6058f7 100644
-> >> --- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
-> >> +++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
-> >> @@ -208,7 +208,16 @@ introduced in Linux 3.3. They are, however, mandatory for stateful mem2mem decod
-> >>         been started yet, the driver will return an ``EPERM`` error code. When
-> >>         the decoder is already running, this command does nothing. No
-> >>         flags are defined for this command.
-> >> -
-> >> +    * - ``V4L2_DEC_CMD_FLUSH``
-> >> +      - 4
-> >> +      - Flush any held capture buffers. Only valid for stateless decoders,
-> >> +        and only if ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` was set.
-> >> +       This command is typically used when the application reached the
-> >> +       end of the stream and the last output buffer had the
-> >> +       ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
-> >> +       dequeueing the last capture buffer containing the last decoded frame.
-> >> +       So this command can be used to explicitly flush that last decoded
-> >> +       frame.
-> >
-> > Just for safety, can we also specify that it is valid to call this
-> > command even if no buffer was held (in which case it is a no-op), as
-> > this can help make user-space code simpler?
->
-> Ah yes, thanks for the reminder.
->
-> Jernej, when you post the next version of this series, can you change the text
-> above to:
->
-> - Flush any held capture buffers. Only valid for stateless decoders.
->   This command is typically used when the application reached the
->   end of the stream and the last output buffer had the
->   ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
->   dequeueing the capture buffer containing the last decoded frame.
->   So this command can be used to explicitly flush that final decoded
->   frame. This command does nothing if there are no held capture buffers.
+On 30/08/2019 11:34, Anand Moon wrote:
+> Hi Neil,
+> 
+> On Fri, 30 Aug 2019 at 13:01, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> On 29/08/2019 20:35, Anand Moon wrote:
+>>> Hi Neil,
+>>>
+>>> On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>>
+>>>> On 28/08/2019 22:27, Anand Moon wrote:
+>>>>> Below small changes help re-configure or fix missing inter linking
+>>>>> of regulator node.
+>>>>>
+>>>>> Changes based top on my prevoius series.
+>>>>
+>>>> For the serie:
+>>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>>>>
+>>>
+>>> Thanks for your review.
+>>>
+>>>>>
+>>>>> [0] https://patchwork.kernel.org/cover/11113091/
+>>>>>
+>>>>> TOOD: Add support for DVFS GXBB odroid board in next series.
+>>>>
+>>>> I'm curious how you will do this !
+>>>
+>>> I was just studying you previous series on how you have implemented
+>>> this feature for C1, N2 and VIM3 boards.
+>>>
+>>> [0] https://patchwork.kernel.org/cover/11114125/
+>>>
+>>> I started gathering key inputs needed for this ie *clk / pwm*
+>>> like VDDCPU and VDDE clk changes.
+>>>
+>>> But it looks like of the complex clk framework needed, so I leave this to the
+>>> expert like your team of developers to do this much quick and efficiently.
+>>
+>> On GXBB, GXL, GXM and AXG SoCs, CPU Frequency setting and PWM Regulator setup is
+>> done by the SCPI Co-processor via the SCPI protocol.
+>>
+>> Thus, we should not handle it from Linux, and even if we could, we don't have the
+>> registers documentation of the CPU clusters clock tree.
+>>
+> 
+> Ok thanks.
+> 
+>> SCPI works fine on all tested devices, except Odroid-C2, because Hardkernel left
+>> the > 1.5GHz freq in the initial SCPI tables loaded by the BL2, i.e. packed with U-Boot.
+>> Nowadays they have removed the bad frequencies, but still some devices uses the old
+>> bootloader.
+>>
+>> But in the SCPI case we trust the table returned by the firmware and use it as-in,
+>> and there is no (simple ?) way to override the table and set a max frequency.
+>>
+>> This is why we disabled SCPI.
+>>
+>> See https://patchwork.kernel.org/patch/9500175/
+> 
+> I have quickly enable this on my board and here the cpufreq info
+> 
+> [alarm@alarm ~]$  cpupower frequency-info
+> analyzing CPU 0:
+>   driver: scpi-cpufreq
+>   CPUs which run at the same hardware frequency: 0 1 2 3
+>   CPUs which need to have their frequency coordinated by software: 0 1 2 3
+>   maximum transition latency: 200 us
+>   hardware limits: 100.0 MHz - 1.54 GHz
+>   available frequency steps:  100.0 MHz, 250 MHz, 500 MHz, 1000 MHz,
+> 1.30 GHz, 1.54 GHz
+>   available cpufreq governors: conservative ondemand userspace
+> powersave performance schedutil
+>   current policy: frequency should be within 100.0 MHz and 1.54 GHz.
+>                   The governor "ondemand" may decide which speed to use
+>                   within this range.
+>   current CPU frequency: Unable to call hardware
+>   current CPU frequency: 250 MHz (asserted by call to kernel)
+> 
+> I did some simple stress testing and observed the freq scaling is
+> working fine when cpufreq governor is set to ondemand.
+> 
+> Powertop output.
+>             Package |            CPU 0
+>  100 MHz     5.2%   |  100 MHz     1.6%
+>  250 MHz     4.4%   |  250 MHz     4.3%
+>  500 MHz     2.6%   |  500 MHz     2.4%
+> 1000 MHz     0.5%   | 1000 MHz     0.3%
+> 1296 MHz     0.2%   | 1296 MHz     0.1%
+> 1.54 GHz     0.2%   | 1.54 GHz     0.1%
+> Idle        86.9%   | Idle        91.2%
+> 
+> Here the output on the linaro's pm-qa testing for cpufreq.
+> 
+> [1] https://pastebin.com/h880WATn
+> Almost all the test case pass with this one as off now.
 
-With the above,
+Thanks for passing the tests, no doubt it works with a recent
+bootloader binary, but we can't leave alone the first Odroid-C2
+devices loaded with an incorrect SCPI table.
 
-Reviewed-by: Alexandre Courbot <acourbot@chromium.org>
+I'll let Kevin decide for the following.
 
-Thanks!
+Neil
 
->
-> Regards,
->
->         Hans
->
-> >
-> >>
-> >>  Return Value
-> >>  ============
-> >> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-> >> index adeb6b7a15cb..a79028e4d929 100644
-> >> --- a/Documentation/media/videodev2.h.rst.exceptions
-> >> +++ b/Documentation/media/videodev2.h.rst.exceptions
-> >> @@ -434,6 +434,7 @@ replace define V4L2_DEC_CMD_START decoder-cmds
-> >>  replace define V4L2_DEC_CMD_STOP decoder-cmds
-> >>  replace define V4L2_DEC_CMD_PAUSE decoder-cmds
-> >>  replace define V4L2_DEC_CMD_RESUME decoder-cmds
-> >> +replace define V4L2_DEC_CMD_FLUSH decoder-cmds
-> >>
-> >>  replace define V4L2_DEC_CMD_START_MUTE_AUDIO decoder-cmds
-> >>  replace define V4L2_DEC_CMD_PAUSE_TO_BLACK decoder-cmds
-> >> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> >> index 4fa9f543742d..91a79e16089c 100644
-> >> --- a/include/uapi/linux/videodev2.h
-> >> +++ b/include/uapi/linux/videodev2.h
-> >> @@ -1978,6 +1978,7 @@ struct v4l2_encoder_cmd {
-> >>  #define V4L2_DEC_CMD_STOP        (1)
-> >>  #define V4L2_DEC_CMD_PAUSE       (2)
-> >>  #define V4L2_DEC_CMD_RESUME      (3)
-> >> +#define V4L2_DEC_CMD_FLUSH       (4)
-> >>
-> >>  /* Flags for V4L2_DEC_CMD_START */
-> >>  #define V4L2_DEC_CMD_START_MUTE_AUDIO  (1 << 0)
-> >> --
-> >> 2.22.1
-> >>
->
+> 
+> Best Regards
+> -Anand
+> 
+
