@@ -2,135 +2,146 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30232C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4687C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A8E23431
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E74B23431
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VgREfwnT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="OzpFioaX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfH3WY2 (ORCPT
+        id S1728246AbfH3W1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 18:24:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41728 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbfH3WY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 18:24:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so4197917pgg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 15:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Ff6JaWGzUMMDLrrGDBYHz23FoZRhDC8ttvu90YEtwdE=;
-        b=VgREfwnTxqTwHEtIB/YXXOCG7Q7LzEmcClLOTJU02KAu0wSFLuvmmcZP5qGdljWWsV
-         WxxFX3mBofCfWG4ZDe0gcr+inqPXqpm0L7yuMFp0c+LeZryhyPpEUpKrdwlD4ilZowBu
-         foqsv1jwGDH5hoZicgk+FwV7vOKQPBdhYYcYg=
+        Fri, 30 Aug 2019 18:27:23 -0400
+Received: from mx2.ucr.edu ([138.23.62.3]:23601 "EHLO mx2.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728122AbfH3W1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 18:27:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567204042; x=1598740042;
+  h=mime-version:references:in-reply-to:from:date:message-id:
+   subject:to:cc;
+  bh=+AxKleiBOotn72mRXxY/KudOmnLMJMiIcrvaqwrtHdw=;
+  b=OzpFioaXHjOs1ZkOfgehhLN6JksrEiWwHw4FAr5GnMYaegARhvBpoG3L
+   96Nvl7QtXZrxM4C/sHmjvQKJnPQWswqJ7G1wVFmvs9wjYWtmv2qVQLLvc
+   4XcnLYIwmQr6mSXEY1PscQUoBjGOssX6kfUFvFI9Ho/XZw9eNDRlp2nGz
+   3wHZwDiLvKnRFKoasyD+sHLuKxp/+psLpqYaFC+ohNQx4zDfmrzxxHNuP
+   kJ73TP+V7K6scPeAfcf33oJbV5bbNUv4FQxHzPOTetin46Oy6oxFQLME6
+   o9y8H7fAxY873hkMBbZWjp4FHUIbHD9MR7FxKq8dsmEnwd68t+DXfwGoE
+   g==;
+IronPort-SDR: SAHogo5alGY6w/WNw6T0bCA49MkQmmBCVIYw67MLI2OLURyjcfWF5pvPcJImrGUc39JbmRo2PF
+ OIVf3Mh5MoKgH1UwoMvuT8srEwYfv/ruxPGzglIjWJ8So7gd8huFNlf8/R709LhTakKK19P/PX
+ GbBAtUMgbxqI5o+/f8oOFkEuN4A80PwJSjR+vtQjrp/z34FbAWPA7TPdkrXnlhtxVKmiafLkeH
+ Bv8Pr7gbxz1ja8x+N7IUyLShMOgafv7dcelaLGJRxlvLMRz95iNIX1vmH5LKLnKgSQeXGGPaH2
+ EYo=
+IronPort-PHdr: =?us-ascii?q?9a23=3A10fCyhKFckbbzuHm8dmcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgRLfjxwZ3uMQTl6Ol3ixeRBMOHsqgC0rSL+PixEUU7or+5+EgYd5JNUx?=
+ =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
+ =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCejbb9oMRm7rAXcusYKjYZmN6081g?=
+ =?us-ascii?q?bHrnxUdupM2GhmP0iTnxHy5sex+J5s7SFdsO8/+sBDTKv3Yb02QaRXAzo6PW?=
+ =?us-ascii?q?814tbrtQTYQguU+nQcSGQWnQFWDAXD8Rr3Q43+sir+tup6xSmaIcj7Rq06VD?=
+ =?us-ascii?q?i+86tmTgLjhTwZPDAl7m7Yls1wjLpaoB2/oRx/35XUa5yROPZnY6/RYc8WSW?=
+ =?us-ascii?q?9HU81MVSJOH5m8YpMAAOoPP+lWr4fzqVgToxWgGQahH//vxiNSi3PqwaE2z+?=
+ =?us-ascii?q?YsHAfb1wIgBdIOt3HUoc33O6cTUOG1zLTIzTLeZPxV2Tfy8onIeQ0mrPCMXL?=
+ =?us-ascii?q?NwcdDeyUgzGw/ZgFidspHlMC+P1ugXrWeU8vdgWPuphmU6qA9xuiCiytkwho?=
+ =?us-ascii?q?TNnI4YyVDJ+T9kzIs0J9C0Ukx2bcCiHZBNrS+VLZF2TdknQ2xwvSY6zaAJto?=
+ =?us-ascii?q?CjcSgRzZQn2wbfa/uac4iU+h7jVPieITN/hH99fbKwnRey8Uy5xu34WMm4zU?=
+ =?us-ascii?q?9GriRHn9XSrHwN2BvT6s+ISvt54EitwyqA1wfW6u1cIEA0k7TUK4I5z7Iuip?=
+ =?us-ascii?q?YetV7PEyz2lUnskaObd0cp9vKq5uj5ernmo4WTN45wigHwKKQuncm/DPw4Mw?=
+ =?us-ascii?q?kPX2iU4+W82KH/8UD3W7hKk+E5krPDvJ/EOMsbu7a1AxVJ3YY79xa/EzCm3c?=
+ =?us-ascii?q?wcnXkGKlJFZR2Gg5HqO17QOvD4C+mwg1C3nTd1yPDJIKfhDo/OLnfdirfhe6?=
+ =?us-ascii?q?hy60pGxAo019Bf6MEcNrZUBfP4Wkb1/PzfBRw+e1ixw+HsC9JV1Y4EX2+LRK?=
+ =?us-ascii?q?iDP/WBn0WP47ceIvuMeYhdijb0KrBx9uzuhH5hwQQ1YKKzm5YbdSbrTbxdP0?=
+ =?us-ascii?q?yFbC+00Z86GmAQs197FbSyhQ=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2E8AACKoWldhkinVdFmHgEGBwaBVQc?=
+ =?us-ascii?q?LAYNWMyqEIY8MgW0FHZN2hSSBewEIAQEBDi8BAYQ/AoJhIzYHDgIDCAEBBQE?=
+ =?us-ascii?q?BAQEBBgQBAQIQAQEBCAsLCCmFQYI6KQGCaAEBAQMSEQRSEAsLAwoCAiYCAiI?=
+ =?us-ascii?q?SAQUBHAYTCBqDAIILoWiBAzyLJH8ziG8BCAyBSRJ6KIt4gheBEYMSPodPglg?=
+ =?us-ascii?q?EgS4BAQGUVJYJAQYCgg0UjCuILBuYYi2mIg8hgTUBggozGiV/BmeBToJODgk?=
+ =?us-ascii?q?Vji0iMI84AQE?=
+X-IPAS-Result: =?us-ascii?q?A2E8AACKoWldhkinVdFmHgEGBwaBVQcLAYNWMyqEIY8Mg?=
+ =?us-ascii?q?W0FHZN2hSSBewEIAQEBDi8BAYQ/AoJhIzYHDgIDCAEBBQEBAQEBBgQBAQIQA?=
+ =?us-ascii?q?QEBCAsLCCmFQYI6KQGCaAEBAQMSEQRSEAsLAwoCAiYCAiISAQUBHAYTCBqDA?=
+ =?us-ascii?q?IILoWiBAzyLJH8ziG8BCAyBSRJ6KIt4gheBEYMSPodPglgEgS4BAQGUVJYJA?=
+ =?us-ascii?q?QYCgg0UjCuILBuYYi2mIg8hgTUBggozGiV/BmeBToJODgkVji0iMI84AQE?=
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="5435203"
+Received: from mail-lf1-f72.google.com ([209.85.167.72])
+  by smtp2.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 15:27:21 -0700
+Received: by mail-lf1-f72.google.com with SMTP id y24so1865011lfh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 15:27:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Ff6JaWGzUMMDLrrGDBYHz23FoZRhDC8ttvu90YEtwdE=;
-        b=d2vKbByiVELdsgb3sxlVoz9C0sdJN2NqPMnwBYUTwGhUfhy/opPJJ2U3xVrC7baK7x
-         9PtzxjOtElZlPkStuTG3G5943fKlbUcpM4PIQ4F2qk4TdF4gx+ZadL9GCUhbAI+AdNeJ
-         ju3OCV7Wgmo5mCgPitqH5XsLuhRz2B2vmuMZfVGgyQh+czmGQ5MTvqhD7mKjwb1dmJc+
-         DnVpFTpfP0HOdVDD8v7TCoEtBJLlaMlsqigGybm/z/0MV0ZeEWiHn55BMmbLJkehehzi
-         MTfWcsCnMadSq8DvB7gIzWk209uViG6wZaN1GcwKomH5Et/2Ry8v3nILghVpgu59N7c3
-         1YWg==
-X-Gm-Message-State: APjAAAWcyyFUO5LQUYLSyM3X/EneCxxi9FvjUJVEYyd1xlttf/D3XlVH
-        sbUv+LHn2Tq37n8ZH1jOOBRffQ==
-X-Google-Smtp-Source: APXvYqy1rRqO2cvMQ40YpDjzXhWN78RV44Nf2UhSHvaMGdNBkdXsK831laZrb5vyMBVwv1tK5GxvuQ==
-X-Received: by 2002:a62:ab13:: with SMTP id p19mr20845043pff.20.1567203866802;
-        Fri, 30 Aug 2019 15:24:26 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b126sm17999006pfa.177.2019.08.30.15.24.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 15:24:26 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
- userspace
-To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-References: <20190712180211.26333-1-sagi@grimberg.me>
- <20190712180211.26333-4-sagi@grimberg.me> <20190822002328.GP9511@lst.de>
- <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
- <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
- <20190826065639.GA11036@lst.de> <20190826075916.GA30396@kroah.com>
- <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
- <20190830055514.GC8492@lst.de>
- <4555a281-3cbc-0890-ce85-385c06ca912b@grimberg.me>
- <3c58613f-9380-6887-434a-0db31136e7aa@broadcom.com>
- <c50cbc24-328f-35b7-5c74-c66a9bd76128@grimberg.me>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <84338eac-c287-1826-4ac1-72cd17ee62cc@broadcom.com>
-Date:   Fri, 30 Aug 2019 15:24:24 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zLm09boqVLNebbJn0KRM9g9k9tAtM8q9U95oJU1h0L0=;
+        b=nsYNggDZWYFRdjvmYKw810pu7CDpC4YZQZDWHIrIsgl8lMDNtzx7PtgL0WEGMLMJ1j
+         i2w4ARzFFgwaEuC3ss+Qh8vd6YaJr2XRcK+Hf2I7x9aJjjdl3o9VexHhDxWZU6gvdXSH
+         yecth/BiWN2aMU90d7Q3v16Wy6vpa9NlCbmOYBazYDF19zhy29h9tGwYowM08UgcnAe7
+         RYAdPmnBNoAVsRzVgOqGn9z5nI37CqEyhUuTNc1d6HdK1Zdpjd9P/O0Q2WubqKS1oqVn
+         38Y50z7HTTHe9PFH6tJ+7V3QkD4rqEOwnT9rxC/MfDio1joWHDFomdWYFC28w/h3m08f
+         /tCg==
+X-Gm-Message-State: APjAAAXoLoSEctA8FuiZAqqdOwY/XsV7pCfLlnyWXym7tJAh/h1QnSYC
+        wR/c9YzIm4i44k9/IGuv0JLLKAMvAj5eYXrq/OWZZiPyjWDM9b94yvfvLGVw8NMqgB7DRfvgk1R
+        5YB8jZviaoF+0/625kkEn9K7i3zD+jUQvG36Fye5QDw==
+X-Received: by 2002:a19:2d19:: with SMTP id k25mr11524771lfj.76.1567204039625;
+        Fri, 30 Aug 2019 15:27:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxNwVPvOdN/tveaY5mDrcDGRnQDZr8owb4Bj/v//Ng1I8rWXAU6aT8pAFp3c8BU1Pct5O5eSmP/cI28qOpREA4=
+X-Received: by 2002:a19:2d19:: with SMTP id k25mr11524763lfj.76.1567204039450;
+ Fri, 30 Aug 2019 15:27:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c50cbc24-328f-35b7-5c74-c66a9bd76128@grimberg.me>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190822062210.18649-1-yzhai003@ucr.edu> <20190822070550.GA12785@dhcp22.suse.cz>
+ <CABvMjLRCt4gC3GKzBehGppxfyMOb6OGQwW-6Yu_+MbMp5tN3tg@mail.gmail.com> <20190822201200.GP12785@dhcp22.suse.cz>
+In-Reply-To: <20190822201200.GP12785@dhcp22.suse.cz>
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Fri, 30 Aug 2019 15:27:50 -0700
+Message-ID: <CABvMjLRFm5ghgXJYuuNOOSzg01EgE1MazAY7c6HXZaa6wogF8g@mail.gmail.com>
+Subject: Re: [PATCH] mm/memcg: return value of the function
+ mem_cgroup_from_css() is not checked
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chengyu Song <csong@cs.ucr.edu>, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/2019 2:07 PM, Sagi Grimberg wrote:
+Our tool did not trace back the whole path, so, now we could say it
+might happen.
+
+On Thu, Aug 22, 2019 at 1:12 PM Michal Hocko <mhocko@kernel.org> wrote:
 >
->>>>>> Yes we do, userspace should use it to order events.  Does udev not
->>>>>> handle that properly today?
->>>>>
->>>>> The problem is not ordering of events, its really about the fact that
->>>>> the chardev can be removed and reallocated for a different controller
->>>>> (could be a completely different discovery controller) by the time
->>>>> that userspace handles the event.
->>>>
->>>> The same is generally true for lot of kernel devices.  We could reduce
->>>> the chance by using the idr cyclic allocator.
->>>
->>> Well, it was raised by Hannes and James, so I'll ask them respond here
->>> because I don't mind having it this way. I personally think that this
->>> is a better approach than having a cyclic idr allocator. In general, I
->>> don't necessarily think that this is a good idea to have cyclic
->>> controller enumerations if we don't absolutely have to...
->>
->> We hit it right and left without the cyclic allocator, but that won't 
->> necessarily remove it.
->>
->> Perhaps we should have had a unique token assigned to the controller, 
->> and have the event pass the name and the token.  The cli would then, 
->> if the token is present, validate it via an ioctl before proceeding 
->> with other ioctls.
->>
->> Where all the connection arguments were added we due to the reuse 
->> issue and then solving the question of how to verify and/or lookup 
->> the desired controller, by using the shotgun approach rather than 
->> being very pointed, which is what the name/token would do.
+> On Thu 22-08-19 13:07:17, Yizhuo Zhai wrote:
+> > This will happen if variable "wb->memcg_css" is NULL. This case is reported
+> > by our analysis tool.
 >
-> This unique token is: trtype:traddr:trsvcid:host-traddr ...
+> Does your tool report the particular call path and conditions when that
+> happen? Or is it just a "it mignt happen" kinda thing?
+>
+> > Since the function mem_cgroup_wb_domain() is visible to the global, we
+> > cannot control caller's behavior.
+>
+> I am sorry but I do not understand what is this supposed to mean.
+> --
+> Michal Hocko
+> SUSE Labs
 
-well yes :)  though rather verbose.   There is still a minute window as 
-we're comparing values in sysfs, prior to opening the device, so 
-technically something could change in that window between when we 
-checked sysfs and when we open'd.   We can certain check after we open 
-the device to solve that issue.
 
-There is some elegance to a 32-bit token for the controller (can be an 
-incrementing value) passed in the event and used when servicing the 
-event that avoids a bunch of work.
 
-Doing either of these would eliminate what Hannes liked - looking for 
-the discovery controller with those attributes. Although, I don't know 
-that looking for it is all that meaningful.
+-- 
+Kind Regards,
 
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
