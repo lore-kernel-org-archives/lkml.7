@@ -2,85 +2,135 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A523C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588F5C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5402321721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338BB21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfH3Mi0 (ORCPT
+        id S1728151AbfH3Mjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:38:26 -0400
-Received: from sauhun.de ([88.99.104.3]:53442 "EHLO pokefinder.org"
+        Fri, 30 Aug 2019 08:39:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44598 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727603AbfH3Mi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:38:26 -0400
-Received: from localhost (p54B335BE.dip0.t-ipconnect.de [84.179.53.190])
-        by pokefinder.org (Postfix) with ESMTPSA id 951B72C0095;
-        Fri, 30 Aug 2019 14:38:24 +0200 (CEST)
-Date:   Fri, 30 Aug 2019 14:38:24 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: i2c mv64xxx: Update documentation path
-Message-ID: <20190830123824.GA2870@ninjato>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813060913.14722-1-efremov@linux.com>
+        id S1727754AbfH3Mjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:39:35 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 364933083363;
+        Fri, 30 Aug 2019 12:39:34 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A4B25D772;
+        Fri, 30 Aug 2019 12:39:29 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 14:39:27 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] mdev: Introduce sha1 based mdev alias
+Message-ID: <20190830143927.163d13a7.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB48660877881F7A2D757A9C82D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190829111904.16042-1-parav@mellanox.com>
+        <20190829111904.16042-2-parav@mellanox.com>
+        <20190830111720.04aa54e9.cohuck@redhat.com>
+        <AM0PR05MB48660877881F7A2D757A9C82D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-In-Reply-To: <20190813060913.14722-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 30 Aug 2019 12:39:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 30 Aug 2019 12:33:22 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Friday, August 30, 2019 2:47 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: Re: [PATCH v2 1/6] mdev: Introduce sha1 based mdev alias
+> > 
+> > On Thu, 29 Aug 2019 06:18:59 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > Some vendor drivers want an identifier for an mdev device that is
+> > > shorter than the UUID, due to length restrictions in the consumers of
+> > > that identifier.
+> > >
+> > > Add a callback that allows a vendor driver to request an alias of a
+> > > specified length to be generated for an mdev device. If generated,
+> > > that alias is checked for collisions.
+> > >
+> > > It is an optional attribute.
+> > > mdev alias is generated using sha1 from the mdev name.
+> > >
+> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > >
+> > > ---
+> > > Changelog:
+> > > v1->v2:
+> > >  - Kept mdev_device naturally aligned
+> > >  - Added error checking for crypt_*() calls
+> > >  - Corrected a typo from 'and' to 'an'
+> > >  - Changed return type of generate_alias() from int to char*
+> > > v0->v1:
+> > >  - Moved alias length check outside of the parent lock
+> > >  - Moved alias and digest allocation from kvzalloc to kzalloc
+> > >  - &alias[0] changed to alias
+> > >  - alias_length check is nested under get_alias_length callback check
+> > >  - Changed comments to start with an empty line
+> > >  - Fixed cleaunup of hash if mdev_bus_register() fails
+> > >  - Added comment where alias memory ownership is handed over to mdev
+> > > device
+> > >  - Updated commit log to indicate motivation for this feature
+> > > ---
+> > >  drivers/vfio/mdev/mdev_core.c    | 123  
+> > ++++++++++++++++++++++++++++++-  
+> > >  drivers/vfio/mdev/mdev_private.h |   5 +-
+> > >  drivers/vfio/mdev/mdev_sysfs.c   |  13 ++--
+> > >  include/linux/mdev.h             |   4 +
+> > >  4 files changed, 135 insertions(+), 10 deletions(-)
 
-On Tue, Aug 13, 2019 at 09:09:13AM +0300, Denis Efremov wrote:
-> Update MAINTAINERS record to reflect the file move
-> from i2c-mv64xxx.txt to marvell,mv64xxx-i2c.yaml.
->=20
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
-> Cc: linux-i2c@vger.kernel.org
-> Fixes: f8bbde72ef44 ("dt-bindings: i2c: mv64xxx: Add YAML schemas")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+> > ...and detached from the local variable here. Who is freeing it? The comment
+> > states that it is done by the mdev, but I don't see it?
+> >   
+> mdev_device_free() frees it.
 
-Applied to for-current, thanks!
+Ah yes, I overlooked the kfree().
 
+> once its assigned to mdev, mdev is the owner of it.
+> 
+> > This detour via the local variable looks weird to me. Can you either create the
+> > alias directly in the mdev (would need to happen later in the function, but I'm
+> > not sure why you generate the alias before checking for duplicates anyway), or
+> > do an explicit copy?  
+> Alias duplicate check is done after generating it, because duplicate alias are not allowed.
+> The probability of collision is rare.
+> So it is speculatively generated without hold the lock, because there is no need to hold the lock.
+> It is compared along with guid while mutex lock is held in single loop.
+> And if it is duplicate, there is no need to allocate mdev.
+> 
+> It will be sub optimal to run through the mdev list 2nd time after mdev creation and after generating alias for duplicate check.
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1pGLwACgkQFA3kzBSg
-KbbpVQ/+IH7kcAXue6rPOWOPJdmutU+Eg1LqiWGcV0Fp0IKxRdK3uEVk9rZriZT8
-QgkS+eBpPAF+R4YEmPaUtiCeQIZM32yefBaPxY4PxNb8m02ZNKmMXekaP0cu2Ng5
-XC24aUH73PJfZ/iK0v4BLUA8CwrUi3wWnrLs6cvBEqKpiIDvs1K43WDlaeM5nJIF
-pYRlM3W8GE9Qjh4eIPye9raAqEbEzNyHkyeeeNRSOZlDnoni21hyRBTpr6O6XjSa
-pUzjMQRUSTpA97fmpqQ4s+Hp6DDZ2CLrzFNT+c+9OJX6YzHYkKk7SN0OVEu/Wf36
-fmWySelznaNUtARrvhQLfkIBpjr3QRleNoz9A8YKHClgrFuyCtZc4foPymU0pzhq
-h8na8FuE3g9OAVyyL7BzI8Y9954OKvFjFYlbA62zZjlFuhcZnqeEKpL1US5FRUDX
-SsiZjuhJzF2RbS3HxjUIT7IH+XmLhZgH0YZ4yKCV326BCHUCD0IeZS8ty6JKEUGL
-GBlDcSeWt8LX4DTUv5v6/sbxdDlRIU8jnSP+vN2/CicfIGnVGvHCXC91wQsT+Zzq
-vBio/Mk4H5AaaAKsQcAGRWO/Y1EVplLLHkflsKcGelnIYZflvxi9BRC0DjCHzWcU
-80e0Wi67lOn5det6t2sKDoFtuClMfyL51UU5GPtOU1Gyj/ZCNLg=
-=E8jy
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
+Ok, but what about copying it? I find this "set local variable to NULL
+after ownership is transferred" pattern a bit unintuitive. Copying it
+to the mdev (and then unconditionally freeing it) looks more obvious to
+me.
