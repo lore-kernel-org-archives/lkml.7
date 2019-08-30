@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AD2C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5CCC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B03522CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4294621874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:18:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onwbf79/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpTPS/qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfH3LRM (ORCPT
+        id S1727922AbfH3LSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 07:17:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41968 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfH3LRM (ORCPT
+        Fri, 30 Aug 2019 07:18:16 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45917 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfH3LSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 07:17:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j16so6569160wrr.8;
-        Fri, 30 Aug 2019 04:17:10 -0700 (PDT)
+        Fri, 30 Aug 2019 07:18:15 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q12so6535014wrj.12;
+        Fri, 30 Aug 2019 04:18:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=o2gmsR8SfN1jWxhjc496QCWTI1VJt4aIEG6maTNYahM=;
-        b=onwbf79/BtwgvEn5Gopz44zpezVye3KUXf+/8z4nLsd2Rwr+U3lAm7u7wkRg3liD5A
-         WENEuKKP2snnF+4oA8c5c+r/T9+QdNEEfsbKJuOr+I8o6HS15DS13rccQglt43OTP/y3
-         h2CHwOb6aL4qwYJ7Z3HH5uc56JgSLPTixNOTp/cN0WZ2JEE1Ilp0vXQ5UxhxkCeN6MsR
-         b6npAjgorg2b/24812KAia+s1IyvIlwEWOa5u+YrtXg8klQtzEpbnmNNkR/sWJ/ut8l8
-         8PRZF83q82PMYqLyxc/QVNaTzkfAeknEo/ZxcxP/54CirddOQdDrpvZhh6DYHh2z1OxO
-         LHSw==
+        bh=MK/N1cs3pdVNjWhCaPYV2nk00LMCO2TH7MeXQEm9duU=;
+        b=kpTPS/qpbp1aEb7nmI4LVVZ4pEMAsKJqWpjCrqIr+UAxhkA2CXIgIiiTijIfIyutJQ
+         hMXbsuJDlzf4dLQ7EVji2Uioj0DT2WFYFatYTpHxAbzBPuibsMhONt3YfF+KEuTdqRs7
+         8MMUVr6Zwlz42z5B/q/HWyRXekXfbW/KPKrr+4iLy32n2z4NVMtv5asWfMXRrBNfKzTx
+         uYvbGQD4Rsdf7pSQdNXpR0DWQQ7uNgyLdW5JCfeGwuk7Kuxlb1iYzZlkpgDdNp6elV7i
+         IDigCMGRS1o4gn9GaBYQdYLkAkAq16T84+f47W2X1RhXlpN4fPCnHLkkkDtieLGiBvpV
+         cKlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o2gmsR8SfN1jWxhjc496QCWTI1VJt4aIEG6maTNYahM=;
-        b=Hg2DSDekMgVM5+6YkR3qQj2Sd8SF+rAM60bEabb0Q8j0Od70Rq8muXAes/JeE8rq84
-         knJsmhet+UWJN5x/3/y9xGXkzJ0GJwSat6vsHmHtoZRfrU0FRYxP54dbmFLTXW77Kkh/
-         JpdHkK5wUfR9rkbwbmsGgULmGgm8IqgF4DirtlZWot54zx9krD7ttOhb5xmcGeX1DWqt
-         67c51HfUVtfNC0PcCPXIpp9HU1NYVU/dA07YmBxpyBvaKEZwpuSw8Ddk5taKxZYsbcRl
-         0HVN4bzJwY32QZYFmTUjTO8T4t+uuEDQRETw3/ZqujOAM9uj3KlmMYEmVE6Q1Rd7jcrr
-         vO7Q==
-X-Gm-Message-State: APjAAAXCLpIR3/uayd73ohxTZYFq25Lhs5aP6W37fB3diWWdfT7b2SgE
-        cevwnyhCMSydnHvN8xD6z+av5EsK
-X-Google-Smtp-Source: APXvYqzvTEzEODFesHJxtLg4t4LGzBvFsVNXPP1dCXZtq9aXjX9vjbJPq0W4PJEFpAc3O0PxmloRuA==
-X-Received: by 2002:adf:c803:: with SMTP id d3mr18732220wrh.130.1567163829404;
-        Fri, 30 Aug 2019 04:17:09 -0700 (PDT)
+        bh=MK/N1cs3pdVNjWhCaPYV2nk00LMCO2TH7MeXQEm9duU=;
+        b=sX7BB5zDrcQim95rbRGl5dxKmA+brVki7awoR3rE1YQbo/gVDPyz1GjIJdH3Q7sMp/
+         45ZpvOTvnDv2XgvF/6l4FPEqtHkH8KpNpcQLUo3yEP35YH8kh2MTu6Jvfn5QYXh5Ftig
+         9FFVwpr2enhzD6PfZxqmBtwthzcMAQAFrav8ffKCDT9WmvAEr/5aSel7AtRJSfJ6ndBp
+         p9RWHj0N7+Ijsai3nKDrd47y/m+qH1uSqLBs7ChCnxeYATLBvoggQpFVPMvTKvoaI+QS
+         qUEaB9MCbRalP+Ild9ESdtECEp8eabmqxe7IS3a1G/M2xNeCajXcnaLy+3zw1E6/g/pU
+         i9IA==
+X-Gm-Message-State: APjAAAX6ainToM4TNrNhp5n7NDhQuhoN4Kih6GNkNv4uLPJto7250+Xl
+        XPcg5jApk5eLp6nNoBjljjg=
+X-Google-Smtp-Source: APXvYqyUz++sgTIOKGKI3gAlM6O7DdeIyQLVj5+xMRalBzdvkmqakR32MzGUi7HYRzHpxQR8Gfe0MA==
+X-Received: by 2002:a5d:51c6:: with SMTP id n6mr1641558wrv.206.1567163893010;
+        Fri, 30 Aug 2019 04:18:13 -0700 (PDT)
 Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id 23sm4048192wmo.13.2019.08.30.04.17.07
+        by smtp.gmail.com with ESMTPSA id n18sm4446870wru.2.2019.08.30.04.18.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 04:17:08 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 13:17:07 +0200
+        Fri, 30 Aug 2019 04:18:11 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 13:18:10 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Krishna Reddy <vdumpa@nvidia.com>
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -66,16 +66,15 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         snikam@nvidia.com, praithatha@nvidia.com, talho@nvidia.com,
         avanbrunt@nvidia.com, thomasz@nvidia.com, olof@lixom.net,
         jtukkinen@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [PATCH 4/7] iommu/arm-smmu: Add global/context fault
- implementation hooks
-Message-ID: <20190830111707.GD23902@ulmo>
+Subject: Re: [PATCH 5/7] arm64: tegra: Add Memory controller DT node on T194
+Message-ID: <20190830111810.GE23902@ulmo>
 References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
- <1567118827-26358-5-git-send-email-vdumpa@nvidia.com>
+ <1567118827-26358-6-git-send-email-vdumpa@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
+        protocol="application/pgp-signature"; boundary="/2994txjAzEdQwm5"
 Content-Disposition: inline
-In-Reply-To: <1567118827-26358-5-git-send-email-vdumpa@nvidia.com>
+In-Reply-To: <1567118827-26358-6-git-send-email-vdumpa@nvidia.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -83,232 +82,94 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---wLAMOaPNJ0fu1fTG
+--/2994txjAzEdQwm5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 29, 2019 at 03:47:04PM -0700, Krishna Reddy wrote:
-> Add global/context fault hooks to allow Nvidia SMMU implementation
-> handle faults across multiple SMMUs.
+On Thu, Aug 29, 2019 at 03:47:05PM -0700, Krishna Reddy wrote:
+> Add Memory controller DT node on T194 and enable it.
+> This patch is a prerequisite for SMMU enable on T194.
 >=20
 > Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 > ---
->  drivers/iommu/arm-smmu-nvidia.c | 127 ++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/iommu/arm-smmu.c        |   6 ++
->  drivers/iommu/arm-smmu.h        |   4 ++
->  3 files changed, 137 insertions(+)
+>  arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 4 ++++
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 7 +++++++
+>  2 files changed, 11 insertions(+)
 >=20
-> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvi=
-dia.c
-> index a429b2c..b2a3c49 100644
-> --- a/drivers/iommu/arm-smmu-nvidia.c
-> +++ b/drivers/iommu/arm-smmu-nvidia.c
-> @@ -14,6 +14,10 @@
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/=
+boot/dts/nvidia/tegra194-p2888.dtsi
+> index 62e07e11..4b3441b 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+> @@ -47,6 +47,10 @@
+>  			};
+>  		};
 > =20
->  #define NUM_SMMU_INSTANCES 3
+> +		memory-controller@2c00000 {
+> +			status =3D "okay";
+> +		};
+> +
+>  		serial@3110000 {
+>  			status =3D "okay";
+>  		};
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/d=
+ts/nvidia/tegra194.dtsi
+> index adebbbf..d906958 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -6,6 +6,7 @@
+>  #include <dt-bindings/reset/tegra194-reset.h>
+>  #include <dt-bindings/power/tegra194-powergate.h>
+>  #include <dt-bindings/thermal/tegra194-bpmp-thermal.h>
+> +#include <dt-bindings/memory/tegra186-mc.h>
 > =20
-> +static irqreturn_t nsmmu_context_fault_inst(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst);
+>  / {
+>  	compatible =3D "nvidia,tegra194";
+> @@ -130,6 +131,12 @@
+>  			};
+>  		};
+> =20
+> +		memory-controller@2c00000 {
+> +			compatible =3D "nvidia,tegra186-mc";
 
-More of these signed integers that could be unsigned. Also why the need
-to predeclare this? Can you not just put the definition of the function
-up here?
+I think we need to make this "nvidia,tegra194-mc" and then enhance the
+Tegra186 driver to match on that compatible string.
 
-> +
->  struct nvidia_smmu {
->  	struct arm_smmu_device	smmu;
->  	int			num_inst;
-> @@ -87,12 +91,135 @@ static void nsmmu_tlb_sync(struct arm_smmu_device *s=
-mmu, int page,
->  		nsmmu_tlb_sync_wait(smmu, page, sync, status, i);
->  }
-> =20
-> +static irqreturn_t nsmmu_global_fault_inst(int irq,
-> +					       struct arm_smmu_device *smmu,
-> +					       int inst)
-> +{
-> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
-> +
-> +	gfsr =3D readl_relaxed(nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
-> +	gfsynr0 =3D readl_relaxed(nsmmu_page(smmu, inst, 0) +
-> +				ARM_SMMU_GR0_sGFSYNR0);
-> +	gfsynr1 =3D readl_relaxed(nsmmu_page(smmu, inst, 0) +
-> +				ARM_SMMU_GR0_sGFSYNR1);
-> +	gfsynr2 =3D readl_relaxed(nsmmu_page(smmu, inst, 0) +
-> +				ARM_SMMU_GR0_sGFSYNR2);
-> +
-> +	if (!gfsr)
-> +		return IRQ_NONE;
-> +
-> +	dev_err_ratelimited(smmu->dev,
-> +		"Unexpected global fault, this could be serious\n");
-> +	dev_err_ratelimited(smmu->dev,
-> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
-> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
-> +
-> +	writel_relaxed(gfsr, nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t nsmmu_global_fault(int irq, struct arm_smmu_device *s=
-mmu)
-> +{
-> +	int i;
-> +	irqreturn_t irq_ret =3D IRQ_NONE;
-> +
-> +	/* Interrupt line is shared between global and context faults.
-> +	 * Check for both type of interrupts on either fault handlers.
-> +	 */
-> +	for (i =3D 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret =3D nsmmu_context_fault_inst(irq, smmu, 0, i);
-> +		if (irq_ret =3D=3D IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	for (i =3D 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret =3D nsmmu_global_fault_inst(irq, smmu, i);
-> +		if (irq_ret =3D=3D IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
-> +static irqreturn_t nsmmu_context_fault_bank(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst)
-> +{
-> +	u32 fsr, fsynr, cbfrsynra;
-> +	unsigned long iova;
-> +
-> +	fsr =3D arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
-> +	if (!(fsr & FSR_FAULT))
-> +		return IRQ_NONE;
-> +
-> +	fsynr =3D readl_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
-> +			      ARM_SMMU_CB_FSYNR0);
-> +	iova =3D readq_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
-> +			     ARM_SMMU_CB_FAR);
-> +	cbfrsynra =3D readl_relaxed(nsmmu_page(smmu, inst, 1) +
-> +				  ARM_SMMU_GR1_CBFRSYNRA(idx));
-> +
-> +	dev_err_ratelimited(smmu->dev,
-> +	"Unhandled context fault: fsr=3D0x%x, iova=3D0x%08lx, fsynr=3D0x%x, cbf=
-rsynra=3D0x%x, cb=3D%d\n",
-> +			    fsr, iova, fsynr, cbfrsynra, idx);
-> +
-> +	writel_relaxed(fsr, nsmmu_page(smmu, inst, smmu->numpage + idx) +
-> +			    ARM_SMMU_CB_FSR);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t nsmmu_context_fault_inst(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst)
-> +{
-> +	irqreturn_t irq_ret =3D IRQ_NONE;
-> +
-> +	/* Interrupt line shared between global and all context faults.
-> +	 * Check for faults across all contexts.
-> +	 */
-> +	for (idx =3D 0; idx < smmu->num_context_banks; idx++) {
-> +		irq_ret =3D nsmmu_context_fault_bank(irq, smmu, idx, inst);
-> +
-> +		if (irq_ret =3D=3D IRQ_HANDLED)
-> +			break;
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
-> +static irqreturn_t nsmmu_context_fault(int irq,
-> +				       struct arm_smmu_device *smmu,
-> +				       int cbndx)
-> +{
-> +	int i;
-> +	irqreturn_t irq_ret =3D IRQ_NONE;
-> +
-> +	/* Interrupt line is shared between global and context faults.
-> +	 * Check for both type of interrupts on either fault handlers.
-> +	 */
-> +	for (i =3D 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret =3D nsmmu_global_fault_inst(irq, smmu, i);
-> +		if (irq_ret =3D=3D IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	for (i =3D 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret =3D nsmmu_context_fault_inst(irq, smmu, cbndx, i);
-> +		if (irq_ret =3D=3D IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
->  static const struct arm_smmu_impl nsmmu_impl =3D {
->  	.read_reg =3D nsmmu_read_reg,
->  	.write_reg =3D nsmmu_write_reg,
->  	.read_reg64 =3D nsmmu_read_reg64,
->  	.write_reg64 =3D nsmmu_write_reg64,
->  	.tlb_sync =3D nsmmu_tlb_sync,
-> +	.global_fault =3D nsmmu_global_fault,
-> +	.context_fault =3D nsmmu_context_fault,
->  };
-> =20
->  struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *sm=
-mu)
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index f5454e71..9cc532d 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -454,6 +454,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, vo=
-id *dev)
->  	struct arm_smmu_device *smmu =3D smmu_domain->smmu;
->  	int idx =3D smmu_domain->cfg.cbndx;
-> =20
-> +	if (smmu->impl->context_fault)
-> +		return smmu->impl->context_fault(irq, smmu, idx);
-> +
-
-Same comment here...
-
->  	fsr =3D arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
->  	if (!(fsr & FSR_FAULT))
->  		return IRQ_NONE;
-> @@ -475,6 +478,9 @@ static irqreturn_t arm_smmu_global_fault(int irq, voi=
-d *dev)
->  	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
->  	struct arm_smmu_device *smmu =3D dev;
-> =20
-> +	if (smmu->impl->global_fault)
-> +		return smmu->impl->global_fault(irq, smmu);
-
-=2E.. and here about the extra level of indirection.
+Nothing to worry about just yet and I can make that change when
+applying.
 
 Thierry
 
---wLAMOaPNJ0fu1fTG
+> +			reg =3D <0x02c00000 0xb0000>;
+> +			status =3D "disabled";
+> +		};
+> +
+>  		uarta: serial@3100000 {
+>  			compatible =3D "nvidia,tegra194-uart", "nvidia,tegra20-uart";
+>  			reg =3D <0x03100000 0x40>;
+> --=20
+> 2.1.4
+>=20
+
+--/2994txjAzEdQwm5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1pBbMACgkQ3SOs138+
-s6HRnQ//e8kxnSuymTLiHTTs/LjliZ1RW0EOolgORCgheEKYM4ZJ/+SXDsJqFCQu
-rpCAaqhEhO3HudPZpttRr7jTSz15Zix7utRiApW3a7IltOLR1c7cgdLUT/+Cvl/F
-Q6WDv4KZhN0KNjbEBbAoOy90JfH9qscfWeBmhqPRB1vjtq+PcyBh45444IO/9W3K
-dyU0ov+wX6rV3BZf1Djf/UddCGBxkUUN/YYPjZ0+3PrTqMabzIm+mL2Zq9wAelvn
-bKgb5vsLC7Dq3kyCjodB/4DJ3N3pwOZoTFIv1FU4fCj5Ynlmsekvge/3b4wiQg/u
-Z1KKpfVCSd24M9Hv/OpWXWLRfiNFC5BUndrZMzUWOM9URINCjlVWwvQT5oabxQAP
-BXKMN5V4PBgqNMrw54+TFieNAEnKHVUsenLgsElcJte/0Y1K40+YnCSv1hvTryMC
-YcGJvhuHzsbTqVoFpEvMGiOcuHjHk8T8NCd3Xcw1XJ5c0cs1pM2jp4J1XNmq0zoi
-zc4KlwFHixT/F+mZoH7xIVg8087A0ecRqSq4u2MqSWJ3zASP3VcsLymGsmgxA0pq
-wfZ/u69HFJN7lzkeNUrTBIxOJ3QdLrPiNb+DiS5xHePqUbPQVQ6jyLyETK/IX2vy
-fsDfXBXDURmGJWIUz7yreL2kuafshxaNrrGitm/iToxPLloRElQ=
-=fMVj
+iQIyBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1pBfIACgkQ3SOs138+
+s6F3pw/3cgWOBb8LS08yjsbxQJkSYr3KYazBB/0FtFlaIBLaASqL+2XxQRNgHKsx
+pdXxkOABv6ltpV7L06zNs3HJZG6jkDpBy0Glpo0J6B8QEFqlNnZNVkLp2AzXZO/K
+pkXadSzvUq9pBh8nJJ8V1FvVnj4pj+dgzVE7JO7+1onjG195Hd2dyTmYysvtgvGr
+m92kq+YsBZDPoqVq3XhWcrKGpnQq+mXqseg4InEfcCb35Kn0mhgguiYDh9QcfbfF
++TOnm/A5ddPV+qXy4WMGHBZyqADRVrtMJh4o7/NyAfYEwL6f+DSGKLcP6nBJRZ1S
+DPsSDwQE1v2RHjYVhflHnfx4VEGL81+Twvn5RcNghOZqi6vzWbcYMSE+edwQHNwC
+rcFUtMMNuW1M1NdcgvgzHLdCyCa5EREVr28SPuAFIDtdYyYgc2PVaYNdx/zu3oN9
+y9uPmwcsvydOZzQHylsAgBt21EvmvijdOVayTIMe+M8ZZzKDIWmsb2NlCjAUG/Uw
+z7pUuHLwtZywFYAWP9r/8xp+M7PQNyMPyTqR3iF7p1+IzAQ0gLb6k4HKzejkIVV9
+jZ3Jpe7la3Q6i9o0vBX/NQw4WoxS4V7oBLuSXlOrEXNdx2naO+JjUYifqj6DZNP5
+T/yXjA3RJM/77CvrxXafkTG1EO68lceZeZPQgUpV9NOocRY9IQ==
+=7ECF
 -----END PGP SIGNATURE-----
 
---wLAMOaPNJ0fu1fTG--
+--/2994txjAzEdQwm5--
