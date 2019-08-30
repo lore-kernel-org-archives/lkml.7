@@ -2,121 +2,120 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C54DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2519C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE3223427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567179688;
-	bh=snAtiQDeS8r659a4ZgziXoPgzimAgLQxafB1YXrD7d4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SJrJJep1QVrR6MmDG5PnLxphk/bee+tK1HmvML/5Lk23pXBa+Swbdfju4EOoetdqc
-	 1Hj4elEIUdLEExXT1iPkNZLMRwkZP7tzl2A7DMvYmhsjlcjT6nt2eNKHHKpNY97OnF
-	 sdCTzVopaVgqyqxDi3WLx371iX00cBXjeFoM3fMI=
+	by mail.kernel.org (Postfix) with ESMTP id BFF1323427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfH3Pl1 (ORCPT
+        id S1728248AbfH3Pmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:41:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41968 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbfH3PlY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:41:24 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m24so6902156ljg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6l/MmER3LwxVChdeaRYIf4zH/5/oimVEhwZA0gfAJeA=;
-        b=hTMNumX8xZr51jZ2e8ioodaU7fZy7Zox0fVt25oHPu+ey/m2I7q6COdJTUw30VC209
-         kek6cE7p7Qc23NCmn25ahHuKo8wmqd/NbB/BBSNT1Jghi4IFJZOM6sr/9MWX6bHULgBL
-         qQFYDc/r1Z1RMajEzSGvyz2pVtBdstCLYcf3M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6l/MmER3LwxVChdeaRYIf4zH/5/oimVEhwZA0gfAJeA=;
-        b=U0giGfAcruum4bvRqaqxDcoqLBdWEifPb3GXwmZqdhrfqfQWOrZDFyISxJBpu4eQ3n
-         xbMFaO5kBk+VgxUIEJrzIpOx93m2x/j12qaic2s1f9Y5YGdkzSETxaWubxX/uWf4InGF
-         G4/zWT83tg4gFDOAwAYzmXsGoCWIth1SE6aK8Yf5tRXxdAXzpwnYoiTJuayz30PfZ6hD
-         LzUcI6GroGOdEW82dVvrsF1mqppMbDHs8QmMNvQy0yJhFmOLdd6pDvhwEz8FRCcWkQtj
-         lcFDwXPNqPHbZZtlx8pyGvbHA5K0aT7Yu7/0NAuQunFRSBjToB6QnB7YsnLMPqxurjz2
-         n4CA==
-X-Gm-Message-State: APjAAAW4Bx2gNTB4xHnRJZnzADJSZJQxjbrWa0fbwQnZw0xEq4QKf0ZD
-        16PoYYjtAcE57ncWkWe7x2E88gYHheo=
-X-Google-Smtp-Source: APXvYqxZrQVf5i33if9LPT98syLUwpRedS3t3CK51XnC+kKzyZ/1+PyMTeXgR0UtCS1AdBizFyprUw==
-X-Received: by 2002:a2e:7018:: with SMTP id l24mr8740705ljc.165.1567179681873;
-        Fri, 30 Aug 2019 08:41:21 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id b7sm912806ljk.80.2019.08.30.08.41.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2019 08:41:20 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id l14so6916937lje.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:41:19 -0700 (PDT)
-X-Received: by 2002:a2e:9702:: with SMTP id r2mr8837586lji.84.1567179679653;
- Fri, 30 Aug 2019 08:41:19 -0700 (PDT)
+        Fri, 30 Aug 2019 11:42:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55312 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727751AbfH3Pmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:42:40 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 45E0031752A9;
+        Fri, 30 Aug 2019 15:42:40 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AE1860BE1;
+        Fri, 30 Aug 2019 15:42:39 +0000 (UTC)
+Message-ID: <cef8e627336f4a85b2860fd9bde25c71aef7e194.camel@redhat.com>
+Subject: [PULL REQUEST] Please pull rdma.git
+From:   Doug Ledford <dledford@redhat.com>
+To:     "Torvalds, Linus" <torvalds@linux-foundation.org>
+Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Gunthorpe, Jason" <jgg@ziepe.ca>
+Date:   Fri, 30 Aug 2019 11:42:36 -0400
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-9+g+DU5xRdEhDhCeiuFC"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-References: <20190830140805.GD13294@shell.armlinux.org.uk> <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
-In-Reply-To: <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 30 Aug 2019 08:41:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
-Message-ID: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
-Subject: Re: [BUG] Use of probe_kernel_address() in task_rcu_dereference()
- without checking return value
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 30 Aug 2019 15:42:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 8:30 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Do you actually see that behavior?
->
-> Because the foillowing lines:
->
->         smp_rmb();
->         if (unlikely(task != READ_ONCE(*ptask)))
->                 goto retry;
 
-Side note: that code had better not be performance-critical, because
-"probe_kernel_address()" is actually really really slow.
+--=-9+g+DU5xRdEhDhCeiuFC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We really should do a real set of "read kernel with fault handling" functions.
+Hi Linus,
 
-We have *one* right now: load_unaligned_zeropad(), but that one
-assumes that at least the first byte is valid and that the fault can
-only be because of unaligned page crossers.
+*Much* calmer week this week.  Just one -rc patch queued up.  The way
+the siw driver was locking around the traversal of the list of ipv6
+addresses on a device was causing a scheduling while atomic issue.=20
+Bernard straightened it out by using the rtnl_lock.
 
-The problem with "probe_kernel_address()" is that it really just
-re-uses the user access functions, and then plays games to make them
-work for kernel addresses. Games we shouldn't play, and it's all very
-expensive when it really shouldn't need to be. Including changing
-limits, but also doing all the system instructions to allow user
-accesses (PAN on ARM, clac/stac on x86).
+Here's the boiler plate:
 
-Doing a set of "access kernel with error handling" should be trivial,
-it's just that every architecture needs to do it. So we'd probably
-need to do something where architectures can say "I have it", and fall
-back on the silly legacy implementation otherwise..
+The following changes since commit c536277e0db1ad2e9fbb9dfd940c3565a14d9c52=
+:
 
-             Linus
+  RDMA/siw: Fix 64/32bit pointer inconsistency (2019-08-23 12:08:27 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linu=
+s
+
+for you to fetch changes up to 531a64e4c35bb9844b0cf813a6c9a87e00be05ff:
+
+  RDMA/siw: Fix IPv6 addr_list locking (2019-08-28 10:29:19 -0400)
+
+----------------------------------------------------------------
+Pull request for 5.3-rc6
+
+- Fix locking on list traversal (siw)
+
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+
+----------------------------------------------------------------
+Bernard Metzler (1):
+      RDMA/siw: Fix IPv6 addr_list locking
+
+ drivers/infiniband/sw/siw/siw_cm.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-9+g+DU5xRdEhDhCeiuFC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1pQ+wACgkQuCajMw5X
+L92RXw/+IG/iEPp7sY5SklyoC9WPxoghEvo59yRxJfdBkJAVi855MWF3SffCW0i9
+YNJw0uMZ5CkY9XuXFxV7sPpLuUWNv/JET4Q7EeQkj/nTrSvr/+R9op5Uuy5p3Zsk
+DymZCxKn+iW2mbphXVjbgMTgWcUzNVpgxlp92pDpZqmDtPKpt0rhL8hQAJ6ujq5h
+oXuamdgmMSf+P600A8OfmP2c3G5io0cU2xozIfIRCKV4UO2k6qJg7YHlobQC08Xy
+eT+MATALp8hoheret5TPC/Zxdewja3zEUqNiLL3kRFaHFkWy3khZW64Ih4RumdfS
+etuRg8ZzovBVeK+wTXf5TETSd5dVDZpJ5ajme23+hbjGs4DsNhEHyl//TE7mo1uO
+mFy+O1mNw97CZ1OzD70lRuYCflcgTXMVVRP2rROzQQQpVzew5XDIhdkrFohGsDdG
+jduqt6jh3sGJZ+aLuicT7COtScVEks0HDPQDn+khw2EJlDfM9WURGPVzvdpx+yNL
+dMp37Ny2z0c/hYAWuK4y3e3RVJ9xq+tyX54uD23+I8fVigM+g5VDn8N2W+De0Z89
+aj5Gi6EDpHBTKKXW46WLCq+SdtnUgHBKWEH/xrItWxhJFxhH9Jevja5fkwzBasp7
+9HVfPkKLtipEQoSOF+tNk7cdf9WneuQiz6rNUFWLn8P0JHHgJIg=
+=ulam
+-----END PGP SIGNATURE-----
+
+--=-9+g+DU5xRdEhDhCeiuFC--
+
