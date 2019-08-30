@@ -2,115 +2,90 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8070C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B1DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FAF23426
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9603423426
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfH3Rnh (ORCPT
+        id S1728107AbfH3Rpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:43:37 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:40788 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727904AbfH3Rnh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:43:37 -0400
-Received: (qmail 1647 invoked by uid 2102); 30 Aug 2019 13:43:36 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 30 Aug 2019 13:43:36 -0400
-Date:   Fri, 30 Aug 2019 13:43:36 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Julius Werner <jwerner@chromium.org>, Greg KH <greg@kroah.com>
-cc:     Dan Williams <dcbw@redhat.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        USB Storage list <usb-storage@lists.one-eyed-alien.net>
-Subject: Re: [PATCH] usb: storage: Add ums-cros-aoa driver
-In-Reply-To: <CAODwPW8gTZ_2WEc9n=WJ2PEmQk2anTQYfwQ-898+kOq6wsjnZw@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1908301337150.1459-100000@iolanthe.rowland.org>
+        Fri, 30 Aug 2019 13:45:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:35696 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfH3Rpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:45:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 170BF337;
+        Fri, 30 Aug 2019 10:45:42 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719A83F718;
+        Fri, 30 Aug 2019 10:45:37 -0700 (PDT)
+Subject: Re: [PATCH 6/7] arm64: tegra: Add DT node for T194 SMMU
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     Sachin Nikam <Snikam@nvidia.com>,
+        "Thomas Zeng (SW-TEGRA)" <thomasz@nvidia.com>,
+        Juha Tukkinen <jtukkinen@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Timo Alho <talho@nvidia.com>, Yu-Huan Hsu <YHsu@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Alexander Van Brunt <avanbrunt@nvidia.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+ <1567118827-26358-7-git-send-email-vdumpa@nvidia.com>
+ <b834ceb2-b296-0a52-c913-5a8923466cf2@arm.com>
+ <BYAPR12MB2710BDF98FA472A77D106814B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <da30773d-5831-7cc6-4d82-b304d9b8a29b@arm.com>
+Date:   Fri, 30 Aug 2019 18:45:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <BYAPR12MB2710BDF98FA472A77D106814B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019, Julius Werner wrote:
-
-> > In fact, there already is a way to do this in the kernel: write to the
-> > sysfs "bind" file.  The difficulty is that you can't force a driver to
-> > bind to an interface if it doesn't believe it is compatible with the
-> > interface.  And if the driver believes it is compatible, it will
-> > automatically attempt to bind with all such interfaces regardless of
-> > their path.
-> >
-> > Perhaps what you need is a usb_device_id flag to indicate that the
-> > entry should never be used for automatic matches -- only for matches
-> > made by the user via the "bind" file.  Greg KH would probably be
-> > willing to accept a new USB_DEVICE_ID_MATCH_NO_AUTO flag, which
-> > could be included in your unusual_devs.h entries.
+On 30/08/2019 18:25, Krishna Reddy wrote:
+>>> +		#global-interrupts = <1>;
 > 
-> This is an interesting idea, but I don't quite see how it can work as
-> you described? When I write to 'bind', the driver core calls
-> driver_match_device(), which ends up calling usb_device_match()
-> (right?), which is the same path that it would call for automatic
-> matching.
-
-Oh, too bad.  I had a vague memory that it did not call
-driver_match_device().
-
->  It still ends up in usb_match_one_id(), and if I check for
-> the NO_AUTO flag there it would abort just as if it was an auto-match
-> attempt. I see no way to pass the information that this is an
-> explicit, user-requested "bind" rather than an automatic match across
-> the bus->match() callback into the USB code. (I could change the
-> signature of the match() callback, but that would require changing
-> code for all device busses in Linux, which I assume is something we
-> wouldn't want to do? I could also add a flag to struct device to
-> communicate "this is currently trying to match for a user-initiated
-> bind", but that seems hacky and not really the right place to put
-> that.)
+>> Shouldn't that be 3?
 > 
-> I could instead add a new sysfs node 'force_bind' to the driver core,
-> that would work like 'bind' except for skipping the
-> driver_match_device() call entirely and forcing a probe(). Do you
-> think that would be acceptable? Or is that too big of a hammer to make
-> available for all drivers in Linux? Maybe if I do the same thing but
-> only for usb drivers, or even only for the usb-storage driver
-> specifically, would that be acceptable?
+> Interrupt line is shared between global and all context faults for each SMMU instance.
+> Nvidia implementation checks for both Global and context faults on each interrupt to an SMMU instance.
+> It can be either 1 or 3.  If we make it 3, we need to add two more irq entries in node for context faults.
 
-This is a question for Greg.  The problem is that there may be drivers
-which can't handle being probed for devices they don't match.
+The number of global interrupts has never been related to the number of 
+context interrupts :/
 
-Still, we ought to have a mechanism for doing manual but not automatic 
-matches.
+> In the future, we can update arm-smmu.c to support shared interrupt line between global and all context faults.
 
-Greg, any thoughts?
+Clearly you have one combined interrupt output per SMMU - describing 
+those as one global interrupt and the first two context bank interrupts 
+respectively makes far less sense than calling them 3 global interrupts, 
+not least because the latter is strictly true. Yes, the binding prevents 
+us from describing the context bank interrupts for more than one 
+instance, but at that point the fact that it *is* the combined output 
+saves us - because the driver is aware of this specific integration it 
+knows it can just register the "secondary" global interrupts as 
+"secondary" context interrupts too. If we had separate IRQ lines per 
+context bank per instance, then we'd have a really big problem and might 
+have to redefine the binding, but as it is it happens to work out pretty 
+neatly.
 
-> If none of this works, I could also extend the new_id interface to
-> allow subclass/protocol matches instead. I don't like that as much
-> because it doesn't allow me to control the devpath of the device I'm
-> matching, but I think it would be enough for my use case (I can't make
-> the usb-storage driver bind all AOA devices at all times, but at the
-> times where I do want to use it for my one device, I don't expect any
-> other AOA devices to be connected). The problem with this is that the
-> order of arguments for new ID is already set in stone (vendor,
-> product, interface class, refVendor, refProduct), and I don't think I
-> can use the refVendor/refProduct for my case so I can't just append
-> more numbers behind that. I could maybe instead change it so that it
-> also accepts a key-value style line (like "idVendor=abcd
-> idProduct=efgh bInterfaceSubClass=ff"), while still being
-> backwards-compatible to the old format if you only give it numbers?
-> What do you think?
-
-I prefer the manual/automatic approach.  It allows the user to control 
-exactly which device will be probed, which could be important.
-
-Alan Stern
-
+Robin.
