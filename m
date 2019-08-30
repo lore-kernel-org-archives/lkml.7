@@ -2,117 +2,101 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757E5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A17C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB5622CF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3252189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfH3ACD (ORCPT
+        id S1727041AbfH3AJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:02:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58438 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbfH3ACB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:02:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:02:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="172067948"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga007.jf.intel.com with ESMTP; 29 Aug 2019 17:01:59 -0700
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 17:01:59 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 17:01:59 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.112]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.215]) with mapi id 14.03.0439.000;
- Fri, 30 Aug 2019 08:01:57 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3JjbcOhcg==?= <rkrcmar@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: RE: [RFC v1 1/9] KVM: x86: Add base address parameter for
- get_fixed_pmc function
-Thread-Topic: [RFC v1 1/9] KVM: x86: Add base address parameter for
- get_fixed_pmc function
-Thread-Index: AQHVXiwTvN9l0Wf/9ESeUncX5js89qcR9eUAgADWJzA=
-Date:   Fri, 30 Aug 2019 00:01:56 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E1737F7871@SHSMSX104.ccr.corp.intel.com>
-References: <1567056849-14608-1-git-send-email-luwei.kang@intel.com>
- <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
- <CALMp9eS0-OfAR1=mrvABrOg85V+-yM64KuOff3A1_wCKDYZNxw@mail.gmail.com>
-In-Reply-To: <CALMp9eS0-OfAR1=mrvABrOg85V+-yM64KuOff3A1_wCKDYZNxw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 29 Aug 2019 20:09:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14322 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726014AbfH3AJc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:09:32 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7U07LfO111295;
+        Thu, 29 Aug 2019 20:09:29 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2upna1f03b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 20:09:28 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7U04jrk002048;
+        Fri, 30 Aug 2019 00:09:28 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02dal.us.ibm.com with ESMTP id 2un65kb7fm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 00:09:28 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7U09QQl57082294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 00:09:27 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBDBD136059;
+        Fri, 30 Aug 2019 00:09:26 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F50813604F;
+        Fri, 30 Aug 2019 00:09:26 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 00:09:26 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        linux-stable@vger.kernel.org
+Subject: [PATCH] tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+Date:   Thu, 29 Aug 2019 20:09:06 -0400
+Message-Id: <20190830000906.2369009-1-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=954 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908290242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IFBFQlMgb3V0cHV0IEludGUgUFQgaW50cm9kdWNlcyBzb21lIG5ldyBNU1JzIChNU1JfUkVM
-T0FEX0ZJWEVEX0NUUngpDQo+ID4gZm9yIGZpeGVkIGZ1bmN0aW9uIGNvdW50ZXJzIHRoYXQgdXNl
-IGZvciBhdXRvbG9hZCB0aGUgcHJlc2V0IHZhbHVlDQo+ID4gYWZ0ZXIgd3JpdGluZyBvdXQgYSBQ
-RUJTIGV2ZW50Lg0KPiA+DQo+ID4gSW50cm9kdWNlIGJhc2UgTVNScyBhZGRyZXNzIHBhcmFtZXRl
-ciB0byBtYWtlIHRoaXMgZnVuY3Rpb24gY2FuIGdldA0KPiA+IHBlcmZvcm1hbmNlIG1vbml0b3Ig
-Y291bnRlciBzdHJ1Y3R1cmUgYnkgTVNSX1JFTE9BRF9GSVhFRF9DVFJ4DQo+IHJlZ2lzdGVycy4N
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEx1d2VpIEthbmcgPGx1d2VpLmthbmdAaW50ZWwuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBhcmNoL3g4Ni9rdm0vcG11LmggICAgICAgICAgIHwgIDUgKystLS0N
-Cj4gPiAgYXJjaC94ODYva3ZtL3ZteC9wbXVfaW50ZWwuYyB8IDE0ICsrKysrKysrKy0tLS0tDQo+
-ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vcG11LmggYi9hcmNoL3g4Ni9rdm0vcG11
-LmggaW5kZXgNCj4gPiA1ODI2NWY3Li5jNjJhMWZmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gveDg2
-L2t2bS9wbXUuaA0KPiA+ICsrKyBiL2FyY2gveDg2L2t2bS9wbXUuaA0KPiA+IEBAIC05MywxMCAr
-OTMsOSBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBrdm1fcG1jICpnZXRfZ3BfcG1jKHN0cnVjdA0K
-PiA+IGt2bV9wbXUgKnBtdSwgdTMyIG1zciwgIH0NCj4gPg0KPiA+ICAvKiByZXR1cm5zIGZpeGVk
-IFBNQyB3aXRoIHRoZSBzcGVjaWZpZWQgTVNSICovIC1zdGF0aWMgaW5saW5lIHN0cnVjdA0KPiA+
-IGt2bV9wbWMgKmdldF9maXhlZF9wbWMoc3RydWN0IGt2bV9wbXUgKnBtdSwgdTMyIG1zcikNCj4g
-PiArc3RhdGljIGlubGluZSBzdHJ1Y3Qga3ZtX3BtYyAqZ2V0X2ZpeGVkX3BtYyhzdHJ1Y3Qga3Zt
-X3BtdSAqcG11LCB1MzINCj4gbXNyLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQNCj4gPiArYmFzZSkNCj4gPiAg
-ew0KPiA+IC0gICAgICAgaW50IGJhc2UgPSBNU1JfQ09SRV9QRVJGX0ZJWEVEX0NUUjA7DQo+ID4g
-LQ0KPiA+ICAgICAgICAgaWYgKG1zciA+PSBiYXNlICYmIG1zciA8IGJhc2UgKyBwbXUtPm5yX2Fy
-Y2hfZml4ZWRfY291bnRlcnMpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiAmcG11LT5maXhl
-ZF9jb3VudGVyc1ttc3IgLSBiYXNlXTsNCj4gDQo+IElJVUMsIHRoZXNlIG5ldyBNU1JzIGFyZW4n
-dCBuZXcgZml4ZWQgUE1DcywgYnV0IGFyZSB2YWx1ZXMgdG8gYmUgcmVsb2FkZWQNCj4gaW50byB0
-aGUgZXhpc3RpbmcgZml4ZWQgUE1DcyB3aGVuIGEgUEVCUyBldmVudCBoYXMgYmVlbiB3cml0dGVu
-LiBUaGlzIGNoYW5nZQ0KPiBtYWtlcyBpdCBsb29rIGxpa2UgeW91IGFyZSBpbnRyb2R1Y2luZyBh
-biBhZGRpdGlvbmFsIHNldCBvZiBmaXhlZCBQTUNzLg0KDQpZZXMsIHlvdSBhcmUgcmlnaHQuIFRo
-ZXkgYXJlIG5vdCBuZXcgZml4ZWQgY291bnRlcnMuDQpFYWNoIGZpeGVkL2dlbmVyYWwgcHVycG9z
-ZSBjb3VudGVycyBoYXZlIGEgImt2bV9wbWMiIHN0cnVjdHVyZSBpbiBLVk0uIFdlIGFscmVhZHkg
-aGF2ZSBhIGZ1bmN0aW9uIHRvIGdldCBnZW5lcmFsIHB1cnBvc2UgY291bnRlciBieSBldmVudCBz
-ZWxlY3RvcnMgYW5kIGdwIGNvdW50ZXJzLCBhcyBiZWxvdzoNCnBtYyA9IGdldF9ncF9wbWMocG11
-LCBtc3IsIE1TUl9JQTMyX1BFUkZDVFIwKQkJLy9ieSBncCBjb3VudGVyDQpwbWMgPSBnZXRfZ3Bf
-cG1jKHBtdSwgbXNyLCBNU1JfUDZfRVZOVFNFTDApIAkJLy9ieSBncCBldmVudCBzZWxlY3Rvcg0K
-U28gSSBleHRlbmRlZCB0aGUgIiBnZXRfZml4ZWRfcG1jICIgZnVuY3Rpb24gdG8gc3VwcG9ydCBn
-ZXQgZml4ZWQgY291bnRlcnMgYnkgTVNSX1JFTE9BRF9GSVhFRF9DVFJ4LiBBY3R1YWxseSwgdGhl
-eSBhcmUgYWxsIGdldCAia3ZtX3BtYyIgc3RydWN0dXJlIGJ5IG9mZnNldC4NCg0KVGhhbmtzLA0K
-THV3ZWkgS2FuZw0KDQoNCg0K
+From: Stefan Berger <stefanb@linux.ibm.com>
+
+The tpm_tis_core has to set the TPM_CHIP_FLAG_IRQ before probing for
+interrupts since there is no other place in the code that would set
+it.
+
+Cc: linux-stable@vger.kernel.org
+Fixes: 570a36097f30 ("tpm: drop 'irq' from struct tpm_vendor_specific")
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index ffa9048d8f6c..270f43acbb77 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -981,6 +981,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+ 		}
+ 
+ 		tpm_chip_start(chip);
++		chip->flags |= TPM_CHIP_FLAG_IRQ;
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+ 						 irq);
+-- 
+2.14.5
+
