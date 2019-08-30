@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3487CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C5FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A8723779
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944442343B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MvXWFH6f"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="SEyfKpx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfH3XPl (ORCPT
+        id S1728529AbfH3XPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 19:15:41 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38232 "EHLO
+        Fri, 30 Aug 2019 19:15:46 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36218 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbfH3XPi (ORCPT
+        with ESMTP id S1728480AbfH3XPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 19:15:38 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r12so9739271edo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:15:36 -0700 (PDT)
+        Fri, 30 Aug 2019 19:15:41 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g24so9746262edu.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:15:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J/Zs3M8U4xSGbreIPfz9YMDfpqs2smNfuk85ROC+apU=;
-        b=MvXWFH6ftQzG8wWiBOpbSjKuTH4p25AU6oyHSkugbesKwVToHwqjPWARvv4qzk6ky3
-         NHRmgqltPXivqanNUfLAufvxTcIPXh6edYpWOLItncjHzLJ7uhdWVIeq8hwrq6zKou12
-         JHESRNTz9fQfjhmk7rGJtglpOeOwWZM61cMXQ=
+        bh=JgLR6Eqt8jfsgQZgs5aBVeUPiD11IsQFXRalFsn+2h4=;
+        b=SEyfKpx+UxdmCsImA4NLZZVWJ0Qc7uZoy3V9wb5N7x6SfGZ6OBGkohHadaiHd5Gj9W
+         GOhE+amAdonKoqRYvNSkuCIc4WvUouS4zt2RSP5UR8HUOz4Xoxo/yP2zugiG8WFh1cJj
+         8EWjQ+fE1yv2bFmRCJIwOvbJyC5Wm0Nl1Qg7s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=J/Zs3M8U4xSGbreIPfz9YMDfpqs2smNfuk85ROC+apU=;
-        b=PGKAvQcdocVUjVg2YrNiyTCYVKiyFYJDTuqGih3XdR209CcA0Uz8DJflKlLZTArT+l
-         91MwZqC8zNPMrjneW1fHB2exAA1DXiNvSswwF57OLZeRzzRBphwVW3PLE+mS3spkPkUa
-         ddenIV26g2kZXEfhql/kwyL1qF/JHObtU8zY9gQpJY7Oorq2PhDtf8+z2HH9Qi2yampO
-         dCcB5TVcQJNLs6JASxwfNPYikLv8jR2QFao499Vwr1pdBccuwaDJ075LEJI3ScVvMvep
-         aBjgjQsL9qj7i0wvXpd2CnHc1zoNPi/cDjNRnGmLv2gpuSDqCCCAHZNe77tHFg15CpkV
-         nk+A==
-X-Gm-Message-State: APjAAAW1FmOPga3LoRHOFxqpyXTHy4JkgpebyLY1D58S8SN3V1OK+yBP
-        Agn6Fjy61nbrEFGONQ5mVFr1Bg==
-X-Google-Smtp-Source: APXvYqyjP+IlOiO60QitHnJhC7VKtCSpvE/0viEv6q7xwARYRrE+IuIxfNjvGAgdpnE62JdcVRRO8g==
-X-Received: by 2002:a50:d48b:: with SMTP id s11mr10309799edi.253.1567206936269;
-        Fri, 30 Aug 2019 16:15:36 -0700 (PDT)
+        bh=JgLR6Eqt8jfsgQZgs5aBVeUPiD11IsQFXRalFsn+2h4=;
+        b=MAs5j7iDKY/flV+Grm/BIWGSrbSlrRzH9h+yoecXLMO2FCo1rO2A05x/LbcMTew0xs
+         0vuubNPvI44ilypkv8nWhZ77IGG2ZsFGwxmOuXn4VxUa4/nnOGi4Xy2ffOjcgq7fcWIB
+         YZdwTqXDSsBEvh+2tXLNVCTr+iqj+JmPjVFvWQq6EipPA0ZIrpNjFkFf7P68vr0Eom6a
+         FgWoUraXX3eSG6RnZa5v3sOGPknL0OL4eohpajLUeUTpceZXd3tGPEGrYznyixSAdPOU
+         urL+gh9PacL8GewfFJVx9ZTlxVynCWCOnSeGjVzGT0tnKMxXRz4/sUSxGl+8lpxCVVmb
+         bUZw==
+X-Gm-Message-State: APjAAAVIGH97G8m9Yk8m0J7xDayCdZXncQGsH4Djx/3kNJJyepe1glSt
+        zNmkW1HkKcmfsFHxhSeJjLgfyw==
+X-Google-Smtp-Source: APXvYqwztN8hUXwHyb2f1ocdxqiHWw3X9QG++5pPp9Dg6rUm/5MJi2FmPCmzx0umElLLb9kC/VnUww==
+X-Received: by 2002:a17:906:5c49:: with SMTP id c9mr8555292ejr.78.1567206939423;
+        Fri, 30 Aug 2019 16:15:39 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id s4sm875457ejx.33.2019.08.30.16.15.35
+        by smtp.gmail.com with ESMTPSA id s4sm875457ejx.33.2019.08.30.16.15.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 16:15:35 -0700 (PDT)
+        Fri, 30 Aug 2019 16:15:38 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@redhat.com>,
@@ -62,9 +62,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         ndesaulniers@google.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v2 3/6] compiler_types.h: don't #define __inline
-Date:   Sat, 31 Aug 2019 01:15:24 +0200
-Message-Id: <20190830231527.22304-4-linux@rasmusvillemoes.dk>
+Subject: [PATCH v2 6/6] x86: bug.h: use asm_inline in _BUG_FLAGS definitions
+Date:   Sat, 31 Aug 2019 01:15:27 +0200
+Message-Id: <20190830231527.22304-7-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
 References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
@@ -76,48 +76,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The spellings __inline and __inline__ should be reserved for uses
-where one really wants to refer to the inline keyword, regardless of
-whether or not the spelling "inline" has been #defined to something
-else. Due to use of __inline__ in uapi headers, we can't easily get
-rid of the definition of __inline__. However, almost all users of
-__inline has been converted to inline, so we can get rid of that
-#define.
+This helps preventing a BUG* or WARN* in some static inline from
+preventing that (or one of its callers) being inlined, so should allow
+gcc to make better informed inlining decisions.
 
-The exception is include/acpi/platform/acintel.h. However, that header
-is only included when using the intel compiler (does anybody actually
-build the kernel with that?), and the ACPI_INLINE macro is only used
-in the definition of utterly trivial stub functions, where I doubt a
-small change of semantics (lack of __gnu_inline) changes anything.
+For example, with gcc 9.2, tcp_fastopen_no_cookie() vanishes from
+net/ipv4/tcp_fastopen.o. It does not itself have any BUG or WARN, but
+it calls dst_metric() which has a WARN_ON_ONCE - and despite that
+WARN_ON_ONCE vanishing since the condition is compile-time false,
+dst_metric() is apparently sufficiently "large" that when it gets
+inlined into tcp_fastopen_no_cookie(), the latter becomes too large
+for inlining.
+
+Overall, if one asks size(1), .text decreases a little and .data
+increases by about the same amount (x86-64 defconfig)
+
+$ size vmlinux.{before,after}
+   text    data     bss     dec     hex filename
+19709726        5202600 1630280 26542606        195020e vmlinux.before
+19709330        5203068 1630280 26542678        1950256 vmlinux.after
+
+while bloat-o-meter says
+
+add/remove: 10/28 grow/shrink: 103/51 up/down: 3669/-2854 (815)
+...
+Total: Before=14783683, After=14784498, chg +0.01%
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- include/linux/compiler_types.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/bug.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 599c27b56c29..ee49be6d6088 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -150,8 +150,17 @@ struct ftrace_likely_data {
- 	__maybe_unused notrace
- #endif
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index 6804d6642767..facba9bc30ca 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -32,7 +32,7 @@
  
-+/*
-+ * gcc provides both __inline__ and __inline as alternate spellings of
-+ * the inline keyword, though the latter is undocumented. New kernel
-+ * code should only use the inline spelling, but some existing code
-+ * uses __inline__. Since we #define inline above, to ensure
-+ * __inline__ has the same semantics, we need this #define.
-+ *
-+ * However, the spelling __inline is strictly reserved for referring
-+ * to the bare keyword.
-+ */
- #define __inline__ inline
--#define __inline   inline
+ #define _BUG_FLAGS(ins, flags)						\
+ do {									\
+-	asm volatile("1:\t" ins "\n"					\
++	asm_inline volatile("1:\t" ins "\n"				\
+ 		     ".pushsection __bug_table,\"aw\"\n"		\
+ 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+ 		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
+@@ -49,7 +49,7 @@ do {									\
  
- /*
-  * Rather then using noinline to prevent stack consumption, use
+ #define _BUG_FLAGS(ins, flags)						\
+ do {									\
+-	asm volatile("1:\t" ins "\n"					\
++	asm_inline volatile("1:\t" ins "\n"				\
+ 		     ".pushsection __bug_table,\"aw\"\n"		\
+ 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+ 		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
 -- 
 2.20.1
 
