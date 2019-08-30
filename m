@@ -2,312 +2,103 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594F1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D030BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2566D23439
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5CEB2343B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BLGMZDX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfH3UrB (ORCPT
+        id S1728217AbfH3Urb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 16:47:01 -0400
-Received: from smtprelay0233.hostedemail.com ([216.40.44.233]:46449 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728079AbfH3UrA (ORCPT
+        Fri, 30 Aug 2019 16:47:31 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41605 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbfH3Urb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 16:47:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 82D1E18024542;
-        Fri, 30 Aug 2019 20:46:57 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: room74_212aeb625e22
-X-Filterd-Recvd-Size: 10213
-Received: from XPS-9350.home (unknown [47.151.137.30])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 30 Aug 2019 20:46:54 +0000 (UTC)
-Message-ID: <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
-Subject: Re: [PATCH v2] kunit: fix failure to build without printk
-From:   Joe Perches <joe@perches.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     shuah <shuah@kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
-        sboyd@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, Randy Dunlap <rdunlap@infradead.org>,
+        Fri, 30 Aug 2019 16:47:31 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 196so5363149pfz.8
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 13:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b8u2magLfJVwljZAGYTURbma2mpmy7TrJLGdd0rfPWc=;
+        b=BLGMZDX18kpe0sWfZwyNEN/x3wCg+PtSQX4ScBTDAaLkBAWub1CujNM5iGHBliKpEU
+         ZrPu9ZzDjWPu5GHyQ7cmon0yZhz9fIJ+8H+HoH7SsGtQ4F++HJxCiy/VyWKWt+Xzw1WX
+         O1OneofCTD2sRQcU4Aw0RD+89IEooAKz8I5pI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b8u2magLfJVwljZAGYTURbma2mpmy7TrJLGdd0rfPWc=;
+        b=titPgnizg04l68KfosfaL5ebRjeKYuT4Vn6icd+XBztQAWI8W5c2YAQubdedpHXX+k
+         5QOx4u908KJA1v7pnA+rWmiulGWi7dy5lVNd1lOPF8PWp8buAdfMJvueMjCFeR5AQ1L3
+         QYaWA4V++rwaCgb/y5aXKcEErfSNe7pIzOaedenHxrcQvCAu+9boFislWUcH13/Iwdur
+         iBZRLWGtkfQ1j3+0Mvo9qi4UOAGD25NGpENy12K9WTpmKzqtkvY+qShzYGGcFGawHOb2
+         7Oj8oJP07s3i+04vYEtsxRQ5ChDDZDSp1WBqt48yBsMsb0y3Sm0Cgky0QA3oNL9gcSSM
+         LciA==
+X-Gm-Message-State: APjAAAUPReKxyDBlniL5kcfENj06C1XlfEMUCPZzFhQ7x11+JmBzwJ3z
+        oVHuJZ6GQtqbhN4z2rV0pS/TmA==
+X-Google-Smtp-Source: APXvYqxMOrhTqkjdQCttFc7yV364Iys+Pb9Un4josyE2DbcbQpgmEtzeoZMjp+DQvlyXdnZOZftg4g==
+X-Received: by 2002:aa7:9d8d:: with SMTP id f13mr5969012pfq.196.1567198050541;
+        Fri, 30 Aug 2019 13:47:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t4sm8770187pfd.109.2019.08.30.13.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 13:47:29 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 13:47:28 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Fri, 30 Aug 2019 13:46:52 -0700
-In-Reply-To: <20190830183821.GA30306@google.com>
-References: <20190828093143.163302-1-brendanhiggins@google.com>
-         <20190828094929.GA14038@jagdpanzerIV>
-         <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
-         <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
-         <20190830183821.GA30306@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+Subject: Re: [PATCH] asm-generic: add unlikely to default BUG_ON(x)
+Message-ID: <201908301347.60905D1675@keescook>
+References: <20190828210934.17711-1-efremov@linux.com>
+ <CAK8P3a3T3r3b2uW977HiuMi0uYKs4V_d4e=PDnkWDpqs+wrLww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3T3r3b2uW977HiuMi0uYKs4V_d4e=PDnkWDpqs+wrLww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-30 at 11:38 -0700, Brendan Higgins wrote:
-> On Thu, Aug 29, 2019 at 09:44:58PM -0700, Joe Perches wrote:
-> > On Thu, 2019-08-29 at 11:01 -0600, shuah wrote:
-> > > On 8/28/19 3:49 AM, Sergey Senozhatsky wrote:
-> > > > On (08/28/19 02:31), Brendan Higgins wrote:
-> > > > [..]
-> > > > > Previously KUnit assumed that printk would always be present, which is
-> > > > > not a valid assumption to make. Fix that by removing call to
-> > > > > vprintk_emit, and calling printk directly.
-> > > > > 
-> > > > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > > > > Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
-> > > > > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > > Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-> > > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > 
-> > > > [..]
-> > > > 
-> > > > > -static void kunit_vprintk(const struct kunit *test,
-> > > > > -			  const char *level,
-> > > > > -			  struct va_format *vaf)
-> > > > > -{
-> > > > > -	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
-> > > > > -}
-> > > > 
-> > > > This patch looks good to me. I like the removal of recursive
-> > > > vsprintf() (%pV).
-> > > > 
-> > > > 	-ss
-> > > > 
-> > > 
-> > > Hi Sergey,
-> > > 
-> > > What are the guidelines for using printk(). I recall some discussion
-> > > about not using printk(). I am seeing the following from checkpatch
-> > > script:
-> > > 
-> > > 
-> > > WARNING: Prefer [subsystem eg: netdev]_level([subsystem]dev, ... then 
-> > > dev_level(dev, ... then pr_level(...  to printk(KERN_LEVEL ...
-> > > #105: FILE: include/kunit/test.h:343:
-> > > +	printk(KERN_LEVEL "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
-> > > 
-> > > 
-> > > Is there supposed to be pr_level() - I can find dev_level()
-> > > 
-> > > cc'ing Joe Perches for his feedback on this message recommending
-> > > pr_level() which isn't in 5.3.
-> > 
-> > I don't care for pr_level or KERN_LEVEL in a printk.
+On Fri, Aug 30, 2019 at 10:08:49PM +0200, Arnd Bergmann wrote:
+> On Wed, Aug 28, 2019 at 11:09 PM Denis Efremov <efremov@linux.com> wrote:
+> >
+> > Add unlikely to default BUG_ON(x) in !CONFIG_BUG. It makes
+> > the define consistent with BUG_ON(x) in CONFIG_BUG.
+> >
+> > Signed-off-by: Denis Efremov <efremov@linux.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: <linux-arch@vger.kernel.org>
 > 
-> I don't think I follow, how does your version fix this?
+> This makes sense, I've applied it to the asm-generic tree for now.
 > 
-> > I think this is somewhat overly complicated.
-> > 
-> > I think I'd write it like:
-> > ---
-> >  include/kunit/test.h | 11 ++++-----
-> >  kunit/test.c         | 69 ++++++++++++++++------------------------------------
-> >  2 files changed, 26 insertions(+), 54 deletions(-)
-> > 
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 8b7eb03d4971..aa4abf0a22a5 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -339,9 +339,8 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
-> >  
-> >  void kunit_cleanup(struct kunit *test);
-> >  
-> > -void __printf(3, 4) kunit_printk(const char *level,
-> > -				 const struct kunit *test,
-> > -				 const char *fmt, ...);
-> > +__printf(2, 3)
-> > +void kunit_printk(const struct kunit *test, const char *fmt, ...);
-> >  
-> >  /**
-> >   * kunit_info() - Prints an INFO level message associated with @test.
-> > @@ -353,7 +352,7 @@ void __printf(3, 4) kunit_printk(const char *level,
-> >   * Takes a variable number of format parameters just like printk().
-> >   */
-> >  #define kunit_info(test, fmt, ...) \
-> > -	kunit_printk(KERN_INFO, test, fmt, ##__VA_ARGS__)
-> > +	kunit_printk(test, KERN_INFO fmt, ##__VA_ARGS__)
-> >  
-> >  /**
-> >   * kunit_warn() - Prints a WARN level message associated with @test.
-> > @@ -364,7 +363,7 @@ void __printf(3, 4) kunit_printk(const char *level,
-> >   * Prints a warning level message.
-> >   */
-> >  #define kunit_warn(test, fmt, ...) \
-> > -	kunit_printk(KERN_WARNING, test, fmt, ##__VA_ARGS__)
-> > +	kunit_printk(test, KERN_WARNING fmt, ##__VA_ARGS__)
-> >  
-> >  /**
-> >   * kunit_err() - Prints an ERROR level message associated with @test.
-> > @@ -375,7 +374,7 @@ void __printf(3, 4) kunit_printk(const char *level,
-> >   * Prints an error level message.
-> >   */
-> >  #define kunit_err(test, fmt, ...) \
-> > -	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
-> > +	kunit_printk(test, KERN_ERR fmt, ##__VA_ARGS__)
-> >  
-> >  /**
-> >   * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-> > diff --git a/kunit/test.c b/kunit/test.c
-> > index b2ca9b94c353..ddb9bffb5a5d 100644
-> > --- a/kunit/test.c
-> > +++ b/kunit/test.c
-> > @@ -16,40 +16,6 @@ static void kunit_set_failure(struct kunit *test)
-> >  	WRITE_ONCE(test->success, false);
-> >  }
-> >  
-> > -static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-> > -{
-> > -	return vprintk_emit(0, level, NULL, 0, fmt, args);
-> > -}
-> > -
-> > -static int kunit_printk_emit(int level, const char *fmt, ...)
-> > -{
-> > -	va_list args;
-> > -	int ret;
-> > -
-> > -	va_start(args, fmt);
-> > -	ret = kunit_vprintk_emit(level, fmt, args);
-> > -	va_end(args);
-> > -
-> > -	return ret;
-> > -}
-> > -
-> > -static void kunit_vprintk(const struct kunit *test,
-> > -			  const char *level,
-> > -			  struct va_format *vaf)
-> > -{
-> > -	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
-> > -}
-> > -
-> > -static void kunit_print_tap_version(void)
-> > -{
-> > -	static bool kunit_has_printed_tap_version;
-> > -
-> > -	if (!kunit_has_printed_tap_version) {
-> > -		kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
-> > -		kunit_has_printed_tap_version = true;
-> > -	}
-> > -}
-> > -
-> >  static size_t kunit_test_cases_len(struct kunit_case *test_cases)
-> >  {
-> >  	struct kunit_case *test_case;
-> > @@ -63,11 +29,9 @@ static size_t kunit_test_cases_len(struct kunit_case *test_cases)
-> >  
-> >  static void kunit_print_subtest_start(struct kunit_suite *suite)
-> >  {
-> > -	kunit_print_tap_version();
-> > -	kunit_printk_emit(LOGLEVEL_INFO, "\t# Subtest: %s\n", suite->name);
-> > -	kunit_printk_emit(LOGLEVEL_INFO,
-> > -			  "\t1..%zd\n",
-> > -			  kunit_test_cases_len(suite->test_cases));
-> > +	pr_info_once("TAP version 14\n");
-> > +	pr_info("\t# Subtest: %s\n", suite->name);
-> > +	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
-> >  }
-> >  
-> >  static void kunit_print_ok_not_ok(bool should_indent,
-> > @@ -87,9 +51,8 @@ static void kunit_print_ok_not_ok(bool should_indent,
-> >  	else
-> >  		ok_not_ok = "not ok";
-> >  
-> > -	kunit_printk_emit(LOGLEVEL_INFO,
-> > -			  "%s%s %zd - %s\n",
-> > -			  indent, ok_not_ok, test_number, description);
-> > +	pr_info("%s%s %zd - %s\n",
-> > +		indent, ok_not_ok, test_number, description);
-> >  }
-> >  
-> >  static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
-> > @@ -133,11 +96,11 @@ static void kunit_print_string_stream(struct kunit *test,
-> >  		kunit_err(test,
-> >  			  "Could not allocate buffer, dumping stream:\n");
-> >  		list_for_each_entry(fragment, &stream->fragments, node) {
-> > -			kunit_err(test, fragment->fragment);
-> > +			kunit_err(test, "%s", fragment->fragment);
-> >  		}
-> >  		kunit_err(test, "\n");
-> >  	} else {
-> > -		kunit_err(test, buf);
-> > +		kunit_err(test, "%s", buf);
-> >  		kunit_kfree(test, buf);
-> >  	}
-> >  }
-> > @@ -505,19 +468,29 @@ void kunit_cleanup(struct kunit *test)
-> >  	}
-> >  }
-> >  
-> > -void kunit_printk(const char *level,
-> > -		  const struct kunit *test,
-> > -		  const char *fmt, ...)
-> > +void kunit_printk(const struct kunit *test, const char *fmt, ...)
-> >  {
-> > +	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
-> >  	struct va_format vaf;
-> >  	va_list args;
-> > +	int kern_level;
-> >  
-> >  	va_start(args, fmt);
-> >  
-> > +	while ((kern_level = printk_get_level(fmt)) != 0) {
-> > +		size_t size = printk_skip_level(fmt) - fmt;
-> > +
-> > +		if (kern_level >= '0' && kern_level <= '7') {
-> > +			memcpy(lvl, fmt,  size);
-> > +			lvl[size] = '\0';
-> > +		}
-> > +		fmt += size;
-> > +	}
-> > +
-> >  	vaf.fmt = fmt;
-> >  	vaf.va = &args;
-> >  
-> > -	kunit_vprintk(test, level, &vaf);
-> > +	printk("%s\t# %s %pV\n", lvl, test->name, &vaf);
-> >  
-> >  	va_end(args);
-> >  }
+> Two concerns though:
 > 
-> How is this simpler?
+> - adding unlikely() can cause new (usually false-postive) compile time
+>   warnings to show up in random configurations, so we'll have to see what
+>   the build bots think
 > 
-> If we are okay with dynamically adding the KERN_<LEVEL> and %pV (and I
-> don't think that Sergey is),
+> - Kees Cook has recently sent a series for asm/bug.h that was merged by
+>   Andrew Morton. If there are is a conflict with your patch, it may be better
+>   to merge both through the same tree, either linux-mm or asm-generic.
 
-Sergey may well be in the minority overall as %pV
-is now very frequently
-used throughout the kernel.
+FWIW, this patch looks sensible to me. :)
 
-$ git grep "%pV" | wc -l
-241
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
- then wouldn't it be easier to pass in the
-> kernel level as a separate parameter and then strip off all printk
-> headers like this:
-
-Depends on whether or not you care for overall
-object size.  Consolidated formats with the
-embedded KERN_<LEVEL> like suggested are smaller
-overall object size.
-
-This style is also already used in the kernel.
-
-> I don't know. I am clearly not an expert on this topic, but I don't see
-> the merit of the while loop you added above or dropping the level param.
-
-The while use is only to avoid misuses with consecutive 
-KERN_<LEVEL> formats, which had happened in the past.
-
+-- 
+Kees Cook
