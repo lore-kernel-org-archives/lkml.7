@@ -2,192 +2,118 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AB5C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85351C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F7A23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7oWCY6w"
+	by mail.kernel.org (Postfix) with ESMTP id 5683C23427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567180151;
+	bh=4vQmxNXvlIak9YxKz5wpPcEtHy6GO8FyVXU4QIA5ryo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jZ1CbJojCELdnIQ+JVCCqmAf+P4D66lqouYqh8jrGflf4oDb/PGZBAD9PAuvhdxzt
+	 xposOFaLoAMZA446erg12l6jasC7ge8phulWB6gv0lbKjj91bMbx2ZSYC6fcZCVt9f
+	 QvFcEzYM8YbpaE4/qUP7g4f+1RDZSUSxSBpTu5aU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfH3Psh (ORCPT
+        id S1728399AbfH3PtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:48:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40743 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfH3Psg (ORCPT
+        Fri, 30 Aug 2019 11:49:10 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46963 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727999AbfH3PtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:48:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so3745662pgj.7;
-        Fri, 30 Aug 2019 08:48:35 -0700 (PDT)
+        Fri, 30 Aug 2019 11:49:10 -0400
+Received: by mail-lf1-f67.google.com with SMTP id n19so5670481lfe.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4oHQ/J6gD7m5a2hZJIzg30k30/iTJHkHY5qB+o+D4cE=;
-        b=h7oWCY6wHIupyilklhVw3zKKmS4N6rNYStKFd6M4mXY2zoBod9UZ8VCkDGXpvOwPEx
-         y0aASnlb2KjG+wF+/aUT2biKn+NEObcgE8m7DGPrZYueZa0oebuiKl0kXOBZW/YvAFgG
-         wiNfxFX1BU+QMvruLmfNr9RwuUgTVgZhni7EzWpQBGg9w69s5GjxRS3CR8rDUkEmFDvX
-         StbzvePxJ6JAeogsEcWDy1lOLEazKGBM7XSWMidYvC4oTqL+OIaD7n27qxye/p6T0bld
-         MAh4tx6oguKUb4RPv6qhdVfxJi3jyYGLfFoX32P7ntEtN8+5CPxBMCDh7sUKz71y0419
-         8ZHw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vxocWBxPoSE7XWEgraDs2g3LtET7UTFJLMjvpVmaI8A=;
+        b=TqP98Es77k0/+rmmz3Uc6wMjpz2tzkZWjHrSzsSBeBrfuUyZCOzu0EHDKBLcDbkhDy
+         nUVmu9IOeafqbIRFVnLQ+x4s8ZIULtIlYgs6y9oYYYKUxEfSnMP5R09XMsNMjgKkfslw
+         9YGKytetf9RH2e53eyPma+gAp9CBNVGWeh/80=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4oHQ/J6gD7m5a2hZJIzg30k30/iTJHkHY5qB+o+D4cE=;
-        b=Rz2IvZhXVmR270TP1rqP+bsFbqlAzUFU+ogsw0a3zcwY73Ays/M2RoDIJGwjPEAIqb
-         VYIwMfiipdHXcn9UC5yDpmbdtlCxpSodv34k2jMbhAMUb4I1D1yTK97Vu+tKBIsc37s8
-         GSCCNIKpF+abp2YA7U7eDhepIydRU1+LGf+acYScrkZkAfI3Hsr9G0xmS6leWTO9GV1P
-         qKDUHC9/gYZhX6lYFYRG/Xe02tstyg3JDXt3BT27nS1ahs9QQ9wMYFFB/h96WRjXfAq2
-         cbwSTh8hXhQ9zOW+8zNECzDG6byv/+l0qNgvc+1tAE4pTmC0mHYePB1ZZAf5EqhfCUie
-         a90g==
-X-Gm-Message-State: APjAAAW5HNQUG6kwZYONGxLATMVAklsEp4QxQYDrVtQ9vXyJEDMlefx4
-        CC+IzJtV3xgw4tuO/Q2bDZk=
-X-Google-Smtp-Source: APXvYqw+TTjvl6C13mK+Kx+U+c7BoLzOucbYEU3GqDfQjm5bxaW7IFfh1q/TNPR40tNdaKG3mocNEw==
-X-Received: by 2002:a17:90a:c386:: with SMTP id h6mr16090687pjt.122.1567180114546;
-        Fri, 30 Aug 2019 08:48:34 -0700 (PDT)
-Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id z28sm8093085pfj.74.2019.08.30.08.48.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 08:48:33 -0700 (PDT)
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-To:     arnd@arndb.de, viro@zeniv.linux.org.uk
-Cc:     adilger@dilger.ca, aivazian.tigran@gmail.com,
-        darrick.wong@oracle.com, deepa.kernel@gmail.com, dsterba@suse.com,
-        gregkh@linuxfoundation.org, jlayton@kernel.org,
-        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
-        me@bobcopeland.com, y2038@lists.linaro.org,
-        adrian.hunter@intel.com, al@alarsen.net, anna.schumaker@netapp.com,
-        anton@enomsg.org, asmadeus@codewreck.org, ccross@android.com,
-        ceph-devel@vger.kernel.org, coda@cs.cmu.edu,
-        codalist@coda.cs.cmu.edu, dedekind1@gmail.com,
-        devel@lists.orangefs.org, dushistov@mail.ru, dwmw2@infradead.org,
-        ericvh@gmail.com, hch@infradead.org, hch@lst.de,
-        hirofumi@mail.parknet.co.jp, hubcap@omnibond.com,
-        idryomov@gmail.com, jack@suse.com, jaegeuk@kernel.org,
-        jaharkes@cs.cmu.edu, jfs-discussion@lists.sourceforge.net,
-        jlbec@evilplan.org, linux-cifs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-karma-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        lucho@ionkov.net, luisbg@kernel.org, martin@omnibond.com,
-        mikulas@artax.karlin.mff.cuni.cz, nico@fluxnic.net,
-        phillip@squashfs.org.uk, reiserfs-devel@vger.kernel.org,
-        richard@nod.at, sage@redhat.com, salah.triki@gmail.com,
-        sfrench@samba.org, shaggy@kernel.org, tj@kernel.org,
-        tony.luck@intel.com, trond.myklebust@hammerspace.com,
-        tytso@mit.edu, v9fs-developer@lists.sourceforge.net,
-        yuchao0@huawei.com, zyan@redhat.com
-Subject: [GIT PULL RESEND] vfs: Add support for timestamp limits
-Date:   Fri, 30 Aug 2019 08:47:44 -0700
-Message-Id: <20190830154744.4868-1-deepa.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAK8P3a1XjOMpuS12Xao1xqOLFOuz1Jb8dTAfrhLcE643sSkC5g@mail.gmail.com>
-References: <CAK8P3a1XjOMpuS12Xao1xqOLFOuz1Jb8dTAfrhLcE643sSkC5g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vxocWBxPoSE7XWEgraDs2g3LtET7UTFJLMjvpVmaI8A=;
+        b=Ao8olDubPpupDb5ZsdLEj7vCUywJjIqQm6vDZ258ITlTodHWnjrdWovI/Zn0aSqt7f
+         0slg4Ldq7NNcmlBmcwFF+GtwsIqLEkMjS1LzDlZPfm6RHeuTTJPiyK3CJNPM0ZYTj7Us
+         e/kbcpDCEPDy8qm2atKLP+gJ7bo1JPSo8w1MAXpZe7EN6UXHUG8dHB+j6LqfyGSu4C0M
+         emkNn6Zs6+FvaBCreQfEj8DLQPCXeT5AcUx/HkZOpOmNiExvWu4xJ2ClgBPwyUjLQC6x
+         R1WGIh1ziiTHP2cMhl0cYjHL7Dx1MrYydT5+Wy9locqch9mW2cZD7i+yg92DexqvDBP6
+         T3qw==
+X-Gm-Message-State: APjAAAUXDPBEhEvktcKR+dZbWoPyT3UHcXsI34RKzCJMlxvkN2XxRMAD
+        LK8ZuKkCmctb1EnCDF9t+JDtxRCWOkU=
+X-Google-Smtp-Source: APXvYqy5TXeX82wjdwJ6N9qKZGbQiAdOgRf+Asq2aBm4MYvEeFYTG6VHjrXTzHIWrdfux4eXRctX+w==
+X-Received: by 2002:ac2:53a3:: with SMTP id j3mr4791419lfh.155.1567180148071;
+        Fri, 30 Aug 2019 08:49:08 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id s7sm900079lji.26.2019.08.30.08.49.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 08:49:06 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id l11so5717415lfk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:49:06 -0700 (PDT)
+X-Received: by 2002:ac2:5976:: with SMTP id h22mr2633464lfp.79.1567180145802;
+ Fri, 30 Aug 2019 08:49:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+ <20190828152226.r6pl64ij5kol6d4p@treble> <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+ <20190829173458.skttfjlulbiz5s25@treble> <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
+ <CAK8P3a1K5HgfACmJXr4dTTwDJFz5BeSCCa3RQWYbXGE-2q4TJQ@mail.gmail.com>
+ <CAHk-=whuUdqrh2=LLNfRiW6oadx0zzGVkvqyx_O1cGLa2U6Jjg@mail.gmail.com> <20190830150208.jyk7tfzznqimc6ow@treble>
+In-Reply-To: <20190830150208.jyk7tfzznqimc6ow@treble>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 30 Aug 2019 08:48:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
+Message-ID: <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[resending, rebased onto linux v5.3-rc6, and dropped orangefs patch from the series]
+On Fri, Aug 30, 2019 at 8:02 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> For KASAN, the Clang threshold for inserting memset() is *2* consecutive
+> writes instead of 17.  Isn't that likely to cause tearing-related
+> surprises?
 
-Hi Al, Arnd,
+Tearing isn't likely to be a problem.
 
-This is a pull request for filling in min and max timestamps for filesystems.
-I've added all the acks, and dropped the adfs patch. That will be merged through
-Russell's tree.
+It's not like memcpy() does byte-by-byte copies. If you pass it a
+word-aligned pointer, it will do word-aligned accesses simply for
+performance reasons.
 
-Dropped orangefs until the maintainers decide what its limits should be.
+Even on x86, where we use "rep movsb", we (a) tend to disable it for
+small copies and (b) it turns out that microcode that does the
+optimized movsb (which is the only case we use it) probably ends up
+doing atomic things anyway. Note the "probably". I don't have
+microcode source code, but there are other indications like "we know
+it doesn't take interrupts on a byte-per-byte level, only on the
+cacheline level".
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+So it's probably not an issue from a tearing standpoint - but it
+worries me because of "this has to be a leaf function" kind of issues
+where we may be using individual stores on purpose. We do have things
+like that.
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
-
-are available in the Git repository at:
-
-  https://github.com/deepa-hub/vfs limits
-
-for you to fetch changes up to 5ad32b3acded06183f40806f76b030c3143017bb:
-
-  isofs: Initialize filesystem timestamp ranges (2019-08-30 08:11:25 -0700)
-
-----------------------------------------------------------------
-
-- Deepa
-
-Deepa Dinamani (18):
-      vfs: Add file timestamp range support
-      vfs: Add timestamp_truncate() api
-      timestamp_truncate: Replace users of timespec64_trunc
-      mount: Add mount warning for impending timestamp expiry
-      utimes: Clamp the timestamps before update
-      fs: Fill in max and min timestamps in superblock
-      9p: Fill min and max timestamps in sb
-      ext4: Initialize timestamps limits
-      fs: nfs: Initialize filesystem timestamp ranges
-      fs: cifs: Initialize filesystem timestamp ranges
-      fs: fat: Initialize filesystem timestamp ranges
-      fs: affs: Initialize filesystem timestamp ranges
-      fs: sysv: Initialize filesystem timestamp ranges
-      fs: ceph: Initialize filesystem timestamp ranges
-      fs: hpfs: Initialize filesystem timestamp ranges
-      fs: omfs: Initialize filesystem timestamp ranges
-      pstore: fs superblock limits
-      isofs: Initialize filesystem timestamp ranges
-
- fs/9p/vfs_super.c        |  6 +++++-
- fs/affs/amigaffs.c       |  2 +-
- fs/affs/amigaffs.h       |  3 +++
- fs/affs/inode.c          |  4 ++--
- fs/affs/super.c          |  4 ++++
- fs/attr.c                | 21 ++++++++++++---------
- fs/befs/linuxvfs.c       |  2 ++
- fs/bfs/inode.c           |  2 ++
- fs/ceph/super.c          |  2 ++
- fs/cifs/cifsfs.c         | 22 ++++++++++++++++++++++
- fs/cifs/netmisc.c        | 14 +++++++-------
- fs/coda/inode.c          |  3 +++
- fs/configfs/inode.c      | 12 ++++++------
- fs/cramfs/inode.c        |  2 ++
- fs/efs/super.c           |  2 ++
- fs/ext2/super.c          |  2 ++
- fs/ext4/ext4.h           | 10 +++++++++-
- fs/ext4/super.c          | 17 +++++++++++++++--
- fs/f2fs/file.c           | 21 ++++++++++++---------
- fs/fat/inode.c           | 12 ++++++++++++
- fs/freevxfs/vxfs_super.c |  2 ++
- fs/hpfs/hpfs_fn.h        |  6 ++----
- fs/hpfs/super.c          |  2 ++
- fs/inode.c               | 33 ++++++++++++++++++++++++++++++++-
- fs/isofs/inode.c         |  7 +++++++
- fs/jffs2/fs.c            |  3 +++
- fs/jfs/super.c           |  2 ++
- fs/kernfs/inode.c        |  7 +++----
- fs/minix/inode.c         |  2 ++
- fs/namespace.c           | 33 ++++++++++++++++++++++++++++++++-
- fs/nfs/super.c           | 20 +++++++++++++++++++-
- fs/ntfs/inode.c          | 21 ++++++++++++---------
- fs/omfs/inode.c          |  4 ++++
- fs/pstore/ram.c          |  2 ++
- fs/qnx4/inode.c          |  2 ++
- fs/qnx6/inode.c          |  2 ++
- fs/reiserfs/super.c      |  3 +++
- fs/romfs/super.c         |  2 ++
- fs/squashfs/super.c      |  2 ++
- fs/super.c               |  2 ++
- fs/sysv/super.c          |  5 ++++-
- fs/ubifs/file.c          | 21 ++++++++++++---------
- fs/ufs/super.c           |  7 +++++++
- fs/utimes.c              |  6 ++----
- fs/xfs/xfs_super.c       |  2 ++
- include/linux/fs.h       |  5 +++++
- include/linux/time64.h   |  2 ++
- 47 files changed, 296 insertions(+), 72 deletions(-)
+               Linus
