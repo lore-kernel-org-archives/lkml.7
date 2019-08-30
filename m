@@ -2,116 +2,144 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C324C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E1CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2865A2087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB492087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJl4ZiCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfH3Qmt (ORCPT
+        id S1728353AbfH3Qn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:42:49 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:45086 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728246AbfH3Qms (ORCPT
+        Fri, 30 Aug 2019 12:43:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43258 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbfH3Qn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:42:48 -0400
-Received: from mr4.cc.vt.edu (mail.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7UGglAQ012145
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:42:47 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7UGggVe004889
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:42:47 -0400
-Received: by mail-qk1-f198.google.com with SMTP id o4so7932580qkg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:42:47 -0700 (PDT)
+        Fri, 30 Aug 2019 12:43:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v12so4970469pfn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q5gzUFH+LLr1GeRh8d61wQ5ZxK6DUtBvBFz6N7zeYQ8=;
+        b=nJl4ZiCxYAu6twY2dIZpt6JBzmYgk4PbodtyM2DHZYiWFm3VZFwCvg9Zw15krklbGj
+         eaWHPK+cFBBCGA0j/4A0Yfzho/8xw6VmQkabo5OzbrYcK6qaR5aXh3iUDQWfcbGoSu4Z
+         poGclGdOBZhYYd8+6uSeM3dZ20P5jKdpWSYWZDeWh0gjHX+CjnUJf5w/keLKJbxMc+Db
+         kBHpAtM1aMNqaSEcg0LPKmRILXrjtbQDjXBBGQeb07g4YwZYcaIKzfRZ4xBW+3ZkhVds
+         zzBzYUC+cW02dZjQEYEUijUVJcsCfQkm2xhgu3ItpChGSLeorMLGu1WORzMS/Er5okqr
+         2pyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=AMywH1n1mw6t5p5hLpZTz0Q6W8htDSaR2tsRwWJpbB4=;
-        b=PSM0hXySuyUo6FKNwnQhhJFozdU56VrY6V6ER239OAV7JMKT1OdM1MCwcI+loqEOp8
-         qJs4u/Mt7Tn7rxya7cFPwwcIdsiDLEEfPp3bx0cglCAOdHHroNImF72JVdlBP6iv91uZ
-         UmphT6fOkg+WyFuEOtCftm59BGtK1B5/LYNuIpiYmZritVbM/cLIBitRkQaGNP+aJS01
-         FY/lLLsUMUC4xum2pxwnnBm7PJUh3Ck0PYs8yc6JCZKDSI/qamnS7og1gUafdwQHX7LU
-         9EYocYUZTEB1NtLisrDNFisv43BU+pawdfqan2jd6he2QjI2b4iVtTOja/CrrYG71Ztt
-         OInQ==
-X-Gm-Message-State: APjAAAWXxYDwc2O/UGhPmmJp7qzSm54HgTxjtLajvfmtSGZ+gkO4/g3+
-        5/PATHZgLRXimSQKwZzUStlkPtPc1MXAV7bzcP1rMFtwLjhNGZoL2gfVXpOfcb6iRa7g84VSicT
-        9TezUP36NeYY2oSKRte/55IcQ0ZJVY32usPw=
-X-Received: by 2002:ac8:120c:: with SMTP id x12mr8899872qti.315.1567183361985;
-        Fri, 30 Aug 2019 09:42:41 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwaY2l4b6tk1M6trceqg9AZjRhcMlNGwJvpCK2NExWnBnD86JM81kuWaQfA7O5TUsj17REnaA==
-X-Received: by 2002:ac8:120c:: with SMTP id x12mr8899847qti.315.1567183361693;
-        Fri, 30 Aug 2019 09:42:41 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4340::ba0])
-        by smtp.gmail.com with ESMTPSA id f27sm2703076qkl.25.2019.08.30.09.42.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q5gzUFH+LLr1GeRh8d61wQ5ZxK6DUtBvBFz6N7zeYQ8=;
+        b=iQN2VmCgyf4wCG13oYewGq1ilZWtIHZSUvXYAYhRzINwliWGZmbLSB2+15zkVZP0uO
+         bEfJgq8hjbuHOjW1SHOLD6dPPyJLRjiBeytb5acnkPSWSX8MMNL2baVjbgG0+LSSKpqd
+         77oIxM+DgEg2dJlK2jg78TSG9/KLCqTJrhIx9mWZ0zAHpNMDYXjoEU9f496eobFqiUGz
+         rygY7mb02ZPG8MN4MR3Zvejo5nKIXl8mEf04yxww4gSU9+AwFU1Q6iwZ6vJe1TIXqHX8
+         YuqxdHiovY3F+FG9bJ+CEXawCdQnP+T3B8fI2Vc+lHM4MrcrgqkjzQxzeAvHMH7B6WAs
+         0J3g==
+X-Gm-Message-State: APjAAAUGXPClpOd8B69QKOkdHsLgJzvtVxjHjVCVstUyZw4McElUvzpB
+        q8n8nLi5wT9BI6Jca14RjHRv9w==
+X-Google-Smtp-Source: APXvYqyWTZbyunakxQlyU8+azoFn/fVvPZoIev3hecPMzx3XNAaoIo+T2UrpOj7TfS4xJn93lMOOzQ==
+X-Received: by 2002:a63:188:: with SMTP id 130mr13572573pgb.231.1567183406399;
+        Fri, 30 Aug 2019 09:43:26 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c9sm8573589pfb.43.2019.08.30.09.43.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 09:42:40 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
-Mime-Version: 1.0
+        Fri, 30 Aug 2019 09:43:25 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 09:45:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh@kernel.org,
+        andy.gross@linaro.org, shawn.guo@linaro.org,
+        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
+        jackp@codeaurora.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        khasim.mohammed@linaro.org
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20190830164520.GK26807@tuxbook-pro>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Date:   Fri, 30 Aug 2019 12:42:39 -0400
-Message-ID: <245727.1567183359@turing-police>
+Content-Disposition: inline
+In-Reply-To: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Concerns have been raised about the exfat driver accidentally mounting
-fat/vfat file systems.  Add an extra configure option to help prevent that.
+On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> Quoting Jorge Ramirez (2019-08-29 00:03:48)
+> > On 2/23/19 17:52, Bjorn Andersson wrote:
+> > > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
+> > >> +
+> > >> +Required child nodes:
+> > >> +
+> > >> +- usb connector node as defined in bindings/connector/usb-connector.txt
+> > >> +  containing the property vbus-supply.
+> > >> +
+> > >> +Example:
+> > >> +
+> > >> +usb3_phy: usb3-phy@78000 {
+> > >> +    compatible = "qcom,snps-usb-ssphy";
+> > >> +    reg = <0x78000 0x400>;
+> > >> +    #phy-cells = <0>;
+> > >> +    clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> > >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> > >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
+> > >> +    clock-names = "ref", "phy", "pipe";
+> > >> +    resets = <&gcc GCC_USB3_PHY_BCR>,
+> > >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
+> > >> +    reset-names = "com", "phy";
+> > >> +    vdd-supply = <&vreg_l3_1p05>;
+> > >> +    vdda1p8-supply = <&vreg_l5_1p8>;
+> > >> +    usb3_c_connector: usb3-c-connector {
+> 
+> Node name should be 'connector', not usb3-c-connector.
+> 
 
-diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-index 78b32aa2ca19..1df177b1dc72 100644
---- a/drivers/staging/exfat/Kconfig
-+++ b/drivers/staging/exfat/Kconfig
-@@ -4,6 +4,14 @@ config EXFAT_FS
- 	help
- 	  This adds support for the exFAT file system.
- 
-+config EXFAT_DONT_MOUNT_VFAT
-+	bool "Prohibit mounting of fat/vfat filesysems by exFAT"
-+	default y
-+	help
-+	  By default, the exFAT driver will only mount exFAT filesystems, and refuse
-+	  to mount fat/vfat filesystems.  Set this to 'n' to allow the exFAT driver
-+	  to mount these filesystems.
-+
- config EXFAT_DISCARD
- 	bool "enable discard support"
- 	depends on EXFAT_FS
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 5b5c2ca8c9aa..7fdb5b8bc928 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -486,10 +486,16 @@ static int ffsMountVol(struct super_block *sb)
- 			break;
- 
- 	if (i < 53) {
-+#ifdef CONFIG_EXFAT_DONT_MOUNT_VFAT
-+		ret = -EINVAL;
-+		printk(KERN_INFO "EXFAT: Attempted to mount VFAT filesystem\n");
-+		goto out;
-+#else
- 		if (GET16(p_pbr->bpb + 11)) /* num_fat_sectors */
- 			ret = fat16_mount(sb, p_pbr);
- 		else
- 			ret = fat32_mount(sb, p_pbr);
-+#endif
- 	} else {
- 		ret = exfat_mount(sb, p_pbr);
- 	}
+It probably has to be usb-c-connector, because we have a
+micro-usb-connector on the same board.
 
+> > > 
+> > > The USB-C connector is attached both to the HS and SS PHYs, so I think
+> > > you should represent this external to this node and use of_graph to
+> > > query it.
+> > 
+> > but AFAICS we wont be able to retrieve the vbux-supply from an external
+> > node (that interface does not exist).
+> > 
+> > rob, do you have a suggestion?
+> 
+> Shouldn't the vbus supply be in the phy? Or is this a situation where
+> the phy itself doesn't have the vbus supply going to it because the PMIC
+> gets in the way and handles the vbus for the connector by having the SoC
+> communicate with the PMIC about when to turn the vbus on and off, etc?
+> 
+
+That's correct, the VBUS comes out of the PMIC and goes directly to the
+connector.
+
+The additional complicating factor here is that the connector is wired
+to a USB2 phy as well, so we need to wire up detection and vbus control
+to both of them - but I think this will be fine, if we can only figure
+out a sane way of getting hold of the vbus-supply.
+
+Regards,
+Bjorn
