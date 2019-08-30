@@ -2,106 +2,272 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA9FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2995AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6233923407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567179822;
-	bh=hckvUu+AH8s9AnJumzwHdoU9dL0jFNOS5cpjuRy4Xqk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nbELHRViDpT9nyMReKK1n69Dsaz7o8ybiW2EF2RMBVhxvjKAH7yFNN94Nd/RrHvnC
-	 MYm8DtW1P28dwS6zcU1/MlCmDry3kFaAzJpZlfxfMAqtTX80qQu+6tMTYRt4ZGMXjw
-	 Ketoy15hShYbD5dFOIoQVOEAEoG93ZfcKBFnrzr0=
+	by mail.kernel.org (Postfix) with ESMTP id F360421897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfH3Pnl (ORCPT
+        id S1728447AbfH3Pnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 30 Aug 2019 11:43:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:34172 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbfH3Pnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 30 Aug 2019 11:43:41 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46479 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfH3Pnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:43:41 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f9so6848905ljc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZTA0gedVw618t+Kf7dOTI7q2YbfXx9rp+QOfL/WGIwg=;
-        b=QaD0KeEvtDCdqFBd/v36FtnvNayWhMUlo7JuHAHRwXqkvR8KZbB5DwoKkh/wDKwKYL
-         6uJMYacfI4JxfmdYz/TPerI+EZNZyDwpDjTTUoLCr8hOn9xd/oMpl1nL5VcJk3bEe7id
-         fx0/Mmr3PMEgXvbk+7zjg6mS93NQgzOmweG7k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZTA0gedVw618t+Kf7dOTI7q2YbfXx9rp+QOfL/WGIwg=;
-        b=tbbn/urGiR8U+8UP44UhlW7XBUv/T9h+IGCLCfR7QzBJCUeqOUtK1vTb+zUhLGdy8g
-         2l3jZ3aLpEnVhZ1M0Bm8zsAZWR/mmQ8hUk4yI1UyrJ68d1UgXe+o0iGTLOyDOyJAvT/v
-         rsOXIErq3jOf1zeG1zJrcmT4+s94ifBQlA06b2Az9/GfUdkWTxrcJrm0b5AWUZy3VAjT
-         zswrcVvaqzGigNCBc4rX1TubXxKvZJGixbydVBQyLsaYcxMMZHw6Xg7lSMtRuv6zQjvG
-         IP5IWu4fqRInm2j9a6yEC+bCIbVTuMQ7H3E9znPIUTzj/K9kQOn1Vuok6zkv0XjfXDaQ
-         GFSQ==
-X-Gm-Message-State: APjAAAXmz6DI72kATh6Y2FMZH4dy9Ri8VgQvD3Tdt55Qucuaj7xJSUne
-        gAIp2Urnlaq04jlYNw5kvKX8asPizCM=
-X-Google-Smtp-Source: APXvYqy9XlXrX+PWspb3zXYwbfbI7KWnlSLBIxB+WhdzAb8EZi8s2El3WtOg5JVMNo63oZ0jzsPmAA==
-X-Received: by 2002:a2e:884d:: with SMTP id z13mr2481553ljj.62.1567179819092;
-        Fri, 30 Aug 2019 08:43:39 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id z23sm566932lji.58.2019.08.30.08.43.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71040344;
+        Fri, 30 Aug 2019 08:43:40 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9729F3F703;
         Fri, 30 Aug 2019 08:43:38 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id l14so6901619ljj.9
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:43:37 -0700 (PDT)
-X-Received: by 2002:a2e:9702:: with SMTP id r2mr8842714lji.84.1567179817730;
- Fri, 30 Aug 2019 08:43:37 -0700 (PDT)
+Subject: Re: [PATCH 4/7] iommu/arm-smmu: Add global/context fault
+ implementation hooks
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     snikam@nvidia.com, thomasz@nvidia.com, jtukkinen@nvidia.com,
+        mperttunen@nvidia.com, praithatha@nvidia.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        talho@nvidia.com, yhsu@nvidia.com, linux-tegra@vger.kernel.org,
+        treding@nvidia.com, avanbrunt@nvidia.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+ <1567118827-26358-5-git-send-email-vdumpa@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5ab7c402-344d-0967-2ecf-21e24ecd0a0f@arm.com>
+Date:   Fri, 30 Aug 2019 16:43:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190830140805.GD13294@shell.armlinux.org.uk> <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
- <20190830154023.GF13294@shell.armlinux.org.uk>
-In-Reply-To: <20190830154023.GF13294@shell.armlinux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 30 Aug 2019 08:43:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiKqLjr_9cqJvgEzWWnMKQJgCpc1sT9o0kimfQdyE6NFA@mail.gmail.com>
-Message-ID: <CAHk-=wiKqLjr_9cqJvgEzWWnMKQJgCpc1sT9o0kimfQdyE6NFA@mail.gmail.com>
-Subject: Re: [BUG] Use of probe_kernel_address() in task_rcu_dereference()
- without checking return value
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Davydov <vdavydov@parallels.com>,
-        Kirill Tkhai <ktkhai@parallels.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1567118827-26358-5-git-send-email-vdumpa@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 8:40 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> Ah, ok.  Might be worth some comments - I find the comments in that
-> function particularly unhelpful (even after Oleg mentions this is
-> case 2.)
+On 29/08/2019 23:47, Krishna Reddy wrote:
+> Add global/context fault hooks to allow Nvidia SMMU implementation
+> handle faults across multiple SMMUs.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>   drivers/iommu/arm-smmu-nvidia.c | 127 ++++++++++++++++++++++++++++++++++++++++
+>   drivers/iommu/arm-smmu.c        |   6 ++
+>   drivers/iommu/arm-smmu.h        |   4 ++
+>   3 files changed, 137 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
+> index a429b2c..b2a3c49 100644
+> --- a/drivers/iommu/arm-smmu-nvidia.c
+> +++ b/drivers/iommu/arm-smmu-nvidia.c
+> @@ -14,6 +14,10 @@
+>   
+>   #define NUM_SMMU_INSTANCES 3
+>   
+> +static irqreturn_t nsmmu_context_fault_inst(int irq,
+> +					    struct arm_smmu_device *smmu,
+> +					    int idx, int inst);
+> +
+>   struct nvidia_smmu {
+>   	struct arm_smmu_device	smmu;
+>   	int			num_inst;
+> @@ -87,12 +91,135 @@ static void nsmmu_tlb_sync(struct arm_smmu_device *smmu, int page,
+>   		nsmmu_tlb_sync_wait(smmu, page, sync, status, i);
+>   }
+>   
+> +static irqreturn_t nsmmu_global_fault_inst(int irq,
+> +					       struct arm_smmu_device *smmu,
+> +					       int inst)
+> +{
+> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
+> +
+> +	gfsr = readl_relaxed(nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
+> +	gfsynr0 = readl_relaxed(nsmmu_page(smmu, inst, 0) +
+> +				ARM_SMMU_GR0_sGFSYNR0);
+> +	gfsynr1 = readl_relaxed(nsmmu_page(smmu, inst, 0) +
+> +				ARM_SMMU_GR0_sGFSYNR1);
+> +	gfsynr2 = readl_relaxed(nsmmu_page(smmu, inst, 0) +
+> +				ARM_SMMU_GR0_sGFSYNR2);
+> +
+> +	if (!gfsr)
+> +		return IRQ_NONE;
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +		"Unexpected global fault, this could be serious\n");
+> +	dev_err_ratelimited(smmu->dev,
+> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
+> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
+> +
+> +	writel_relaxed(gfsr, nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t nsmmu_global_fault(int irq, struct arm_smmu_device *smmu)
+> +{
+> +	int i;
+> +	irqreturn_t irq_ret = IRQ_NONE;
+> +
+> +	/* Interrupt line is shared between global and context faults.
+> +	 * Check for both type of interrupts on either fault handlers.
+> +	 */
+> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
+> +		irq_ret = nsmmu_context_fault_inst(irq, smmu, 0, i);
+> +		if (irq_ret == IRQ_HANDLED)
+> +			return irq_ret;
+> +	}
+> +
+> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
+> +		irq_ret = nsmmu_global_fault_inst(irq, smmu, i);
+> +		if (irq_ret == IRQ_HANDLED)
+> +			return irq_ret;
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+> +static irqreturn_t nsmmu_context_fault_bank(int irq,
+> +					    struct arm_smmu_device *smmu,
+> +					    int idx, int inst)
+> +{
+> +	u32 fsr, fsynr, cbfrsynra;
+> +	unsigned long iova;
+> +
+> +	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
+> +	if (!(fsr & FSR_FAULT))
+> +		return IRQ_NONE;
+> +
+> +	fsynr = readl_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
+> +			      ARM_SMMU_CB_FSYNR0);
+> +	iova = readq_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
+> +			     ARM_SMMU_CB_FAR);
+> +	cbfrsynra = readl_relaxed(nsmmu_page(smmu, inst, 1) +
+> +				  ARM_SMMU_GR1_CBFRSYNRA(idx));
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
+> +			    fsr, iova, fsynr, cbfrsynra, idx);
+> +
+> +	writel_relaxed(fsr, nsmmu_page(smmu, inst, smmu->numpage + idx) +
+> +			    ARM_SMMU_CB_FSR);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t nsmmu_context_fault_inst(int irq,
+> +					    struct arm_smmu_device *smmu,
+> +					    int idx, int inst)
+> +{
+> +	irqreturn_t irq_ret = IRQ_NONE;
+> +
+> +	/* Interrupt line shared between global and all context faults.
+> +	 * Check for faults across all contexts.
+> +	 */
+> +	for (idx = 0; idx < smmu->num_context_banks; idx++) {
+> +		irq_ret = nsmmu_context_fault_bank(irq, smmu, idx, inst);
+> +
+> +		if (irq_ret == IRQ_HANDLED)
+> +			break;
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+> +static irqreturn_t nsmmu_context_fault(int irq,
+> +				       struct arm_smmu_device *smmu,
+> +				       int cbndx)
+> +{
+> +	int i;
+> +	irqreturn_t irq_ret = IRQ_NONE;
+> +
+> +	/* Interrupt line is shared between global and context faults.
+> +	 * Check for both type of interrupts on either fault handlers.
+> +	 */
+> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
+> +		irq_ret = nsmmu_global_fault_inst(irq, smmu, i);
+> +		if (irq_ret == IRQ_HANDLED)
+> +			return irq_ret;
+> +	}
+> +
+> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
+> +		irq_ret = nsmmu_context_fault_inst(irq, smmu, cbndx, i);
+> +		if (irq_ret == IRQ_HANDLED)
+> +			return irq_ret;
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+>   static const struct arm_smmu_impl nsmmu_impl = {
+>   	.read_reg = nsmmu_read_reg,
+>   	.write_reg = nsmmu_write_reg,
+>   	.read_reg64 = nsmmu_read_reg64,
+>   	.write_reg64 = nsmmu_write_reg64,
+>   	.tlb_sync = nsmmu_tlb_sync,
+> +	.global_fault = nsmmu_global_fault,
+> +	.context_fault = nsmmu_context_fault,
+>   };
+>   
+>   struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index f5454e71..9cc532d 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -454,6 +454,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+>   	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>   	int idx = smmu_domain->cfg.cbndx;
+>   
+> +	if (smmu->impl->context_fault)
+> +		return smmu->impl->context_fault(irq, smmu, idx);
+> +
+>   	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
+>   	if (!(fsr & FSR_FAULT))
+>   		return IRQ_NONE;
+> @@ -475,6 +478,9 @@ static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
+>   	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
+>   	struct arm_smmu_device *smmu = dev;
+>   
+> +	if (smmu->impl->global_fault)
+> +		return smmu->impl->global_fault(irq, smmu);
 
-Yeah, a comment like "This might fault if we race with the task
-scheduling away and being destroyed, but we check that below".
+Can't we just register impl->global_fault (if set) instead of 
+arm_smmu_global_fault as the handler when we first set up the IRQs in 
+arm_smmu_device_probe()?
 
-But that code has some performance issues too, as mentioned. Which is
-all kinds of sad since it clearly _tries_ to perform well with RCU
-locking and optimistic accesses etc.
+Ideally we'd do the same for the context banks as well, although we 
+might need an additional hook from which to request the secondary IRQs 
+that the main flow can't accommodate.
 
-             Linus
+Robin.
+
+> +
+>   	gfsr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sGFSR);
+>   	gfsynr0 = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sGFSYNR0);
+>   	gfsynr1 = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sGFSYNR1);
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index d3217f1..dec5e1a 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -17,6 +17,7 @@
+>   #include <linux/io-64-nonatomic-hi-lo.h>
+>   #include <linux/io-pgtable.h>
+>   #include <linux/iommu.h>
+> +#include <linux/irqreturn.h>
+>   #include <linux/mutex.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/types.h>
+> @@ -340,6 +341,9 @@ struct arm_smmu_impl {
+>   	int (*init_context)(struct arm_smmu_domain *smmu_domain);
+>   	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+>   			 int status);
+> +	irqreturn_t (*global_fault)(int irq, struct arm_smmu_device *smmu);
+> +	irqreturn_t (*context_fault)(int irq, struct arm_smmu_device *smmu,
+> +				     int cbndx);
+>   };
+>   
+>   static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
+> 
