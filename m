@@ -2,106 +2,127 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BBDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82227C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA4923428
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567180166;
-	bh=nXSVc79MwADtvMh03MpKMbHC0zBWv30zWalqSvd2N88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t9rLMKozAx++AnJh28sRHWgsivtcsBwSn5V4dsl/E59+rnOeYVuDhf8deFoPi4z6r
-	 I44oYQ5TzQFUfqPhxTDC0P6QUpPjz/czfR6lLuMXCJqwGgkQg9qM0MFfLsH0pBH/ei
-	 MOvxYCoW6wbjNvrp/yBjERHbv23LiuQR9ovoGmg4=
+	by mail.kernel.org (Postfix) with ESMTP id 5BC0323427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfH3PtZ (ORCPT
+        id S1728358AbfH3Pt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:49:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43964 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfH3PtZ (ORCPT
+        Fri, 30 Aug 2019 11:49:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58220 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727135AbfH3Pt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:49:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id b11so8052706qtp.10;
-        Fri, 30 Aug 2019 08:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EWG1xprHq5soDnqsOoV5sXd5YRcA3js3J4A3/q6CGlU=;
-        b=Wgqj8hYGo0A/I1gghmpb6uViT1RJgL5Ci/oQGuwImhV3JUnrMed5W6Api9CJ4JKZmb
-         jY/ufazdF5ggWnW70uWNMlWT1cKToe11F9WFbdSXajVHeyCRRXDzkotHY3xf9VDEyA7A
-         JQD4yjvtNO20WNyKTLvfU88pTkfrk+FZ+BIdC9xtrc/qTUdY1cOmUC5IhhdbwCJTm9eD
-         I/znZT9RBs31QbkRncZVHi5g8UE2o2JQDMWWxc1jXx3BISZ4D3lq4/F14jhTzfMfOpih
-         8isdIRt9jNllkKjnRdMIH7l4sV1Gojj5gdUHbt0KActpBD/L3fu/QUTTMOuteCilHqth
-         G4sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EWG1xprHq5soDnqsOoV5sXd5YRcA3js3J4A3/q6CGlU=;
-        b=Yz+XfjDcGp+BsuDUxQQOFhUYRz+8+sfctyuk7or5hB1KR5DAwoGRWtMZa1+8naKzBa
-         j7uA8Bdw3evI5uvyLP1YddIAtO9THfhKTARSQco8GTOB3VuP5130LjTkQOFCeYC6SmUR
-         GJ6OCOZeazi046lq2/5n8FX8gR2UCDOfMt8VxTinAdeBki3acwFUAcGt2U0+qbC2QSgp
-         lNXZmga8BJo8qmkR+nywe2EwRP9SwlWZFAoISKULUEgKniDuJDMtbsvkc7bGH3dEUeBA
-         knB7+8IBtGistFEaM0EIvfQejQk8uHNYRSVRR+c9notF/B8P7HVjh+kRFSO9CIbYZMdZ
-         kKsQ==
-X-Gm-Message-State: APjAAAWhTAA1O8LYLs2Xd5YPBxgkLUuHX8cZiyFSUfDAbOTZNP1mXCwZ
-        A+LHax2PCuLIUPi621o9iOM=
-X-Google-Smtp-Source: APXvYqyFRZU9QBAkzb28H9Q+R/5xB+7uaYqUf2sCiz0G9RGsOQcoyI03rNeLOsDzNUFbov3MavZYTQ==
-X-Received: by 2002:ac8:363c:: with SMTP id m57mr9461040qtb.240.1567180163904;
-        Fri, 30 Aug 2019 08:49:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::d0dd])
-        by smtp.gmail.com with ESMTPSA id y67sm2965672qkd.40.2019.08.30.08.49.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 08:49:23 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 08:49:21 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH block/for-next] writeback: add tracepoints for cgroup
- foreign writebacks
-Message-ID: <20190830154921.GZ2263813@devbig004.ftw2.facebook.com>
-References: <20190829224701.GX2263813@devbig004.ftw2.facebook.com>
- <20190830154023.GC25069@quack2.suse.cz>
+        Fri, 30 Aug 2019 11:49:57 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UFmKhi135060;
+        Fri, 30 Aug 2019 11:48:20 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uq6cd8w4h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 11:48:20 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7UFg72J028795;
+        Fri, 30 Aug 2019 15:48:19 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02dal.us.ibm.com with ESMTP id 2un65kg9dm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 15:48:19 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UFmInU42729834
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 15:48:18 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6FEF6AE05C;
+        Fri, 30 Aug 2019 15:48:18 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D75B3AE05F;
+        Fri, 30 Aug 2019 15:48:15 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.151.141])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 15:48:15 +0000 (GMT)
+Message-ID: <4b3b52d0f73aeb1437b4b2a46325b36e9c41f92b.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Date:   Fri, 30 Aug 2019 12:48:11 -0300
+In-Reply-To: <20190829205832.GM20113@breakpoint.cc>
+References: <20190821141505.2394-1-leonardo@linux.ibm.com>
+         <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
+         <b6585989069fd832a65b73d1c4f4319a10714165.camel@linux.ibm.com>
+         <20190829205832.GM20113@breakpoint.cc>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-oQxTJclox6vwlEkEdc9g"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830154023.GC25069@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Jan.
 
-On Fri, Aug 30, 2019 at 05:40:23PM +0200, Jan Kara wrote:
-> > +	TP_fast_assign(
-> > +		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
-> > +		__entry->bdi_id		= wb->bdi->id;
-> > +		__entry->ino		= page->mapping->host->i_ino;
-> > +		__entry->memcg_id	= wb->memcg_css->id;
-> > +		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
-> > +		__entry->page_cgroup_ino = page->mem_cgroup->css.cgroup->kn->id.ino;
-> > +	),
-> 
-> Are the page dereferences above safe? I suppose lock_page_memcg() protects
-> the page->mem_cgroup->css.cgroup->kn->id dereference? But page->mapping
-> does not seem to be protected by page lock?
+--=-oQxTJclox6vwlEkEdc9g
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hah, I assumed it would work because there are preceding if
-(page_mapping()) tests in the dirty paths -
-e.g. __set_page_dirty_nobuffers().  Oh, regardless of that assumption,
-I should have used page_mapping().
+On Thu, 2019-08-29 at 22:58 +0200, Florian Westphal wrote:
+[...]
+> 1. add a patch to BREAK in nft_fib_netdev.c for !ipv6_mod_enabled()
+[...]
 
-Thanks.
+But this is still needed? I mean, in nft_fib_netdev_eval there are only
+2 functions being called for IPv6 protocol : nft_fib6_eval and
+nft_fib6_eval_type. Both are already protected by this current patch.
 
--- 
-tejun
+Is your 1st suggestion about this patch, or you think it's better to
+move this change to nft_fib_netdev_eval ?
+
+Best regards,
+Leonardo Bras
+
+--=-oQxTJclox6vwlEkEdc9g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1pRTsACgkQlQYWtz9S
+ttR8vg//bORcfn9a17NfB/LSQtdMIyP0xefyHbkTJ3ZpRcj7XLzdkqrnAoksLzEG
+z0EP0HoNn1M2I8WDglih/B+pLqyc9vaCn73+7cem61/+Uhcqzb/7z8zvmn6HLdI2
+G8cpXJeOL+vOG2YXb1kX+FfJ7BtLyalCJ/KyJvLtpy+J0UVTILvXD/ag0huemWs1
+xHpzVEDys4Gwh+EPF9hOpFDCnQDbp6QdmOxXKXkq/C4ArLHrSok5mZQOsHo6BFrh
+SpPGZsStPVWPIx/Xt+2H4AxkP3VpSr332sWViTh94YX6rTGDMMaWCm0bH4/aIAF/
+J0Nj9ig2i1eKrKNXcg21dzcw0AgqXOdts4I1DJfi9aNflB8sOu9+/VgMLiz36mjl
+463rg6Lc/Rx16HQ3w3g2usaaVWM7qSSYw7AvWbccIJjYHQHO6Sw4o60ErJkE0mie
+W2KCD+pYRjmbF0pRmcsuFPlVMFa+u1aM2iwNbE47XYiXBBwHC5cvGBupj5KLanSy
+fsFQQX2qLpC5Wc67M1xGv6SE+1PuKza3sH3w/z0WzeKewAJ38BsEZtOF7mfdwrHw
+ZNKRpjUFimwQz1QjlSd7wki2nzrNj4REDQ1xMjdEZQpBnHN7jctb0AlpuI24VbMR
+pkhAqZE+qzGgoeT5j7fVg7ow487ckU9/mScTImeIRmHArgNGJVw=
+=cgry
+-----END PGP SIGNATURE-----
+
+--=-oQxTJclox6vwlEkEdc9g--
+
