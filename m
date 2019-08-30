@@ -2,148 +2,117 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2095FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF97C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A4823407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567184949;
-	bh=gMd5xlYG8lJ3Gus8qIlNByXHRVxU/bMgXRnvywdLzM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Eq8DcT+fgEXW5CGww3pEF4MLHCzOP0nVKjHZwtRWeo/APLZhqWqnArRoUEHIA58ub
-	 B0evO6+XxShl7T036aW3ECEMVf2QK2OA9SiTniIEk1IMi2FO911AiUgn4bMhbKlLpU
-	 DTuodWgQpracV/QQsj/oA5yFrOWKfOI7ZekET0Zw=
+	by mail.kernel.org (Postfix) with ESMTP id 9A78023407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfH3RJI (ORCPT
+        id S1727959AbfH3RMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:09:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33670 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfH3RJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:09:07 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r5so3106293qtd.0;
-        Fri, 30 Aug 2019 10:09:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zag/cCurJuI8nINltP1hM69M5M7TCZ8LCVJ1Mr2Rw9E=;
-        b=RNe+Qb5zoZXx6K4SAJ2I3Zg7N1BzEmvVWiTNb0YF2zfqjTcYHkhY9qX1bi4d8i1FGk
-         r5oLZLXJoqeIx4V+/2k8Uv0HumpF+RyOTfj0Obk43jaimI4UPKRoRV6sd0+isOli0V6o
-         X/madbTdHMGYh6q4hdTGhhNmB7eXSHU51hbAXjzsLDtOemDAqfHt0oziuvXhYvxstwjB
-         XZmdVp1cjPl3cE06OpN8T/DhyL6ZzMy/O6kX3eiJBeAjDnjWeLGrOTe4i3Pa/GZJ3ehq
-         X4lvG6Sn8TJrrFHAFfCPHo5waWEh9mJYemvG+wBOheerm120wHxeVbQYCwcpl2ctQLcl
-         XFOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zag/cCurJuI8nINltP1hM69M5M7TCZ8LCVJ1Mr2Rw9E=;
-        b=R3c7vYX+xMsRuU5gHFsDCFpVQhxIFYEflBWv32WGAf/oV+zRCYPXpehT6+H/DcWjzm
-         yFtQahp+n9GilQsEygo/zRQlG58ithiiKpBnhwX6w5xc5uD27IZn57pGaVT0JZEN3ASg
-         dwMmKFiISeBPa3FIxvaea8HpInfsOol7B09CAc/rRpZ4NymwcEwmNj0YQYTS8lNxAX3J
-         C7s7JcgVocy9dEUWUa7Q7G0Yfe8X3f9+y/Cxp/t1zsjFKpJkWlaPPAvbCfPjn1XhzQcg
-         NQNITuaMxttKg2fponWnFMkNO6bo8ttUu2IaAAQA0Qg20RRax7C1A74NHewwr+ckFMZp
-         sIDQ==
-X-Gm-Message-State: APjAAAW2WFYWZtcQTbe73JEaFgHBLKFeVpeKOfCA/Za4gLkq2LGZIQ2y
-        Dt18+3NQrOGKU2n/AHzFneM=
-X-Google-Smtp-Source: APXvYqwchRBbgZEE4wNHzNdKzi1iP+TxhWNP/ayEstj1LZU/qPNuW9VAzfDU9gQJLA47VKDIagx+Lg==
-X-Received: by 2002:a0c:a0e6:: with SMTP id c93mr6195303qva.109.1567184946122;
-        Fri, 30 Aug 2019 10:09:06 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::677e])
-        by smtp.gmail.com with ESMTPSA id c14sm1789122qta.80.2019.08.30.10.09.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 10:09:05 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 10:09:03 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH block/for-next] writeback: add tracepoints for cgroup
- foreign writebacks
-Message-ID: <20190830170903.GB2263813@devbig004.ftw2.facebook.com>
-References: <20190829224701.GX2263813@devbig004.ftw2.facebook.com>
- <20190830154023.GC25069@quack2.suse.cz>
- <20190830154921.GZ2263813@devbig004.ftw2.facebook.com>
- <20190830164211.GD25069@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830164211.GD25069@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Fri, 30 Aug 2019 13:12:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:14658 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727304AbfH3RMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:12:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 10:12:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="265378402"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by orsmga001.jf.intel.com with ESMTP; 30 Aug 2019 10:12:49 -0700
+Message-ID: <5ddd0306f42c2b53ffbd8ee8c9b948c1d529cf98.camel@intel.com>
+Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Fri, 30 Aug 2019 10:03:27 -0700
+In-Reply-To: <20190830083415.GI27757@arm.com>
+References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
+         <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
+         <201908292224.007EB4D5@keescook> <20190830083415.GI27757@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Jan.
-
-On Fri, Aug 30, 2019 at 06:42:11PM +0200, Jan Kara wrote:
-> Well, but if you look at __set_page_dirty_nobuffers() it is careful. It
-> does:
+On Fri, 2019-08-30 at 09:34 +0100, Dave Martin wrote:
+> On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
+> > On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
+> > > ELF program properties will needed for detecting whether to enable
+> > > optional architecture or ABI features for a new ELF process.
+> > > 
+> > > For now, there are no generic properties that we care about, so do
+> > > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
+> > > 
+> > > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
+> > > phdrs entry (if any), and notify each property to the arch code.
+> > > 
+> > > For now, the added code is not used.
+> > > 
+> > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > 
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
 > 
-> struct address_space *mapping = page_mapping(page);
+> Thanks for the review.
 > 
-> if (!mapping) {
-> 	bail
-> }
-> ... use mapping
+> Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
+> early-terminate the scan if we can, but my feeling so far was that the
+> scan is cheap, the number of properties is unlikely to be more than a
+> smallish integer, and the code separation benefits of just calling the
+> arch code for every property probably likely outweigh the costs of
+> having to iterate over every property.  We could always optimise it
+> later if necessary.
 > 
-> Exactly because page->mapping can become NULL under your hands if you don't
-> hold page lock. So I think you either need something similar in your
-> tracepoint or handle this in the caller.
+> I need to double-check that there's no way we can get stuck in an
+> infinite loop with the current code, though I've not seen it in my
+> testing.  I should throw some malformed notes at it though.
 
-So, account_page_dirtied() is called from two places.
+Here is my arch_parse_elf_property() and objdump of the property.
+The parser works fine.
 
-__set_page_dirty() and __set_page_dirty_nobuffers().  The following is
-from the latter.
+Thanks,
+Yu-cheng
 
-	lock_page_memcg(page);
-	if (!TestSetPageDirty(page)) {
-		struct address_space *mapping = page_mapping(page);
-		...
 
-		if (!mapping) {
-			unlock_page_memcg(page);
-			return 1;
-		}
 
-		xa_lock_irqsave(&mapping->i_pages, flags);
-		BUG_ON(page_mapping(page) != mapping);
-		WARN_ON_ONCE(!PagePrivate(page) && !PageUptodate(page));
-		account_page_dirtied(page, mapping);
-		...
 
-If I'm reading it right, it's saying that at this point if mapping
-exists after setting page dirty, it must not change while locking
-i_pages.
+int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
+          
+                   bool compat, struct arch_elf_state *state)
+{
+        if (type
+!= GNU_PROPERTY_X86_FEATURE_1_AND)
+                return -ENOENT;
 
-__set_page_dirty_nobuffers() is more brief but seems to be making the
-same assumption.
+        if (datasz < sizeof(unsigned int))
+                return -ENOEXEC;
 
-	xa_lock_irqsave(&mapping->i_pages, flags);
-	if (page->mapping) {	/* Race with truncate? */
-		WARN_ON_ONCE(warn && !PageUptodate(page));
-		account_page_dirtied(page, mapping);
-		__xa_set_mark(&mapping->i_pages, page_index(page),
-				PAGECACHE_TAG_DIRTY);
-	}
-	xa_unlock_irqrestore(&mapping->i_pages, flags);
+        state->gnu_property = *(unsigned int *)data;
+        return 0;
+}
 
-Both are clearly assuming that once i_pages is locked, mapping can't
-change.  So, inside account_page_dirtied(), mapping clearly can't
-change.  The TP in question - track_foreign_dirty - is invoked from
-mem_cgroup_track_foreign_dirty() which is only called from
-account_page_dirty(), so I'm failing to see how mapping would change
-there.
+Contents of section .note.gnu.property:
+ 400338 04000000 30000000 05000000 474e5500  ....0.......GNU.
+ 400348 020000c0 04000000 03000000 00000000  ................
+ 400358 000001c0 04000000 00000000 00000000  ................
+ 400368 010001c0 04000000 01000000 00000000  ................
 
-Thanks.
-
--- 
-tejun
