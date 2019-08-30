@@ -2,148 +2,89 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D6CC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EABC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6297F2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C282C23405
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfH3Mx2 (ORCPT
+        id S1728169AbfH3Mxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:53:28 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:1367 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfH3Mx2 (ORCPT
+        Fri, 30 Aug 2019 08:53:50 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:39195 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfH3Mxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:53:28 -0400
-IronPort-SDR: ftUQrbgKZqMqXP0GgI/qioBlKP7RWDhlP49AneyLRcaH2p0FHsqa3cxezZUcLXII9rIWl7MZrM
- 1lFuZxgXuMKfK4oNjBS319mcKxcVOnvP13RPddtU3Y41Yh2i5DhoSNBnR8cvqgvjzdc8koOSUh
- rMNvqd2OE4Gs9Fab9iswKUL4kYsQ7COgMWoO5WFiH0YlOFZ9tyULA8SrQIz2DCxvSU4PMUC3K0
- 1RuXzIgdF6MMsHZJ0AOaXOQY3aLgcuAeTnVhmZXEiu3rGKZwSusaij+ZYCxaK64L3ejvQo5BI6
- Y7w=
-X-IronPort-AV: E=Sophos;i="5.64,447,1559548800"; 
-   d="scan'208";a="40914045"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 30 Aug 2019 04:53:27 -0800
-IronPort-SDR: BfUqS4T6iM8gFkQUoQ5yVoMCEwqCwm3BatoU4xc4GNO8X3symaUxj3awZnPIVWZIm+uGGVxW3j
- +ixhfIqIx5hfG5RcUY22cgNSPbAOkG8iLlIlQElMc/z9EsOf3XqNjpulN3w9a2pyZXaXBuLqnm
- cS6ahfirX6UJGmCrcI/xfwreHjx4V3b3BDzrD7927b/3k5vEhEdnmqo1GoFugo8w60OkxQKQOD
- XynQ4rbKai8ol54UlLsHzDczMScsifjTcqQw8YQKxaZng5YfftVOLTiiLiyyjidGO/zq7Yv+Ey
- NFY=
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Shuah Khan <shuah@kernel.org>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH v2] selftests: watchdog: Add optional file argument
-Date:   Fri, 30 Aug 2019 08:53:16 -0400
-Message-ID: <1567169597-10330-1-git-send-email-george_davis@mentor.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 30 Aug 2019 08:53:49 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B4278200005;
+        Fri, 30 Aug 2019 12:53:45 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 14:53:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: max77686: convert to devm_i2c_new_dummy_device()
+Message-ID: <20190830125338.GP21922@piout.net>
+References: <20190820154239.8230-1-wsa+renesas@sang-engineering.com>
+ <20190820154239.8230-2-wsa+renesas@sang-engineering.com>
+ <20190829205752.GL21922@piout.net>
+ <20190830124554.GB2870@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830124554.GB2870@ninjato>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some systems have multiple watchdog devices where the first device
-registered is assigned to the /dev/watchdog device file. In order
-to test other watchdog devices, add an optional file argument for
-selecting non-default watchdog devices for testing.
+On 30/08/2019 14:45:54+0200, Wolfram Sang wrote:
+> On Thu, Aug 29, 2019 at 10:57:52PM +0200, Alexandre Belloni wrote:
+> > On 20/08/2019 17:42:37+0200, Wolfram Sang wrote:
+> > > I was about to simplify the call to i2c_unregister_device() when I
+> > > realized that converting to devm_i2c_new_dummy_device() will simplify
+> > > the driver a lot. So I took this approach.
+> > > 
+> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > > ---
+> > > Build tested only, buildbot is happy, too.
+> > > 
+> > > Please apply to your tree.
+> > > 
+> > 
+> > I'm confused because I already applied:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=rtc-next&id=7150710f3084de8d35ce3221eeae2caee8813f92
+> 
+> The above was a mass conversion to i2c_new_dummy_device() to make sure
+> all in-kernel users use the API returning an ERRPTR. Mass conversion to
+> the devm_ variant of the same function was too troublesome.
+> 
+> With another series, I wanted to remove superfluous error checking of
+> i2c_unregister_device() because it is NULL-ptr safe, like here:
+> 
+> > > -	if (info->rtc)
+> > > -		i2c_unregister_device(info->rtc);
+> 
+> But for these two RTC drivers, I figured moving to devm_* is way easier
+> than fixing up the mass conversion result from coccinelle.
+> 
 
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
----
-v1:
-- https://lkml.org/lkml/2019/8/29/16
-v2:
-- Update printf for ENOENT case based on report from Eugeniu Rosca
----
- tools/testing/selftests/watchdog/watchdog-test.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Ok so should I drop the previous patches and apply those instead?
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index c2333c78cf04..9f17cae61007 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -19,7 +19,7 @@
- 
- int fd;
- const char v = 'V';
--static const char sopts[] = "bdehp:t:Tn:NL";
-+static const char sopts[] = "bdehp:t:Tn:NLf:";
- static const struct option lopts[] = {
- 	{"bootstatus",          no_argument, NULL, 'b'},
- 	{"disable",             no_argument, NULL, 'd'},
-@@ -31,6 +31,7 @@ static const struct option lopts[] = {
- 	{"pretimeout",    required_argument, NULL, 'n'},
- 	{"getpretimeout",       no_argument, NULL, 'N'},
- 	{"gettimeleft",		no_argument, NULL, 'L'},
-+	{"file",          required_argument, NULL, 'f'},
- 	{NULL,                  no_argument, NULL, 0x0}
- };
- 
-@@ -69,6 +70,7 @@ static void term(int sig)
- static void usage(char *progname)
- {
- 	printf("Usage: %s [options]\n", progname);
-+	printf(" -f, --file          Open watchdog device file (default is /dev/watchdog)\n");
- 	printf(" -b, --bootstatus    Get last boot status (Watchdog/POR)\n");
- 	printf(" -d, --disable       Turn off the watchdog timer\n");
- 	printf(" -e, --enable        Turn on the watchdog timer\n");
-@@ -92,14 +94,20 @@ int main(int argc, char *argv[])
- 	int ret;
- 	int c;
- 	int oneshot = 0;
-+	char *file = "/dev/watchdog";
- 
- 	setbuf(stdout, NULL);
- 
--	fd = open("/dev/watchdog", O_WRONLY);
-+	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
-+		if (c == 'f')
-+			file = optarg;
-+	}
-+
-+	fd = open(file, O_WRONLY);
- 
- 	if (fd == -1) {
- 		if (errno == ENOENT)
--			printf("Watchdog device not enabled.\n");
-+			printf("Watchdog device (%s) not found.\n", file);
- 		else if (errno == EACCES)
- 			printf("Run watchdog as root.\n");
- 		else
-@@ -108,6 +116,8 @@ int main(int argc, char *argv[])
- 		exit(-1);
- 	}
- 
-+	optind = 0;
-+
- 	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
- 		switch (c) {
- 		case 'b':
-@@ -190,6 +200,9 @@ int main(int argc, char *argv[])
- 			else
- 				printf("WDIOC_GETTIMELEFT error '%s'\n", strerror(errno));
- 			break;
-+		case 'f':
-+			/* Handled above */
-+			break;
- 
- 		default:
- 			usage(argv[0]);
+
 -- 
-2.7.4
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
