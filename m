@@ -2,76 +2,71 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE1C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010ECC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0062021874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B7F21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="o0X8nnr3"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="XPYhccin"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfH3MEk (ORCPT
+        id S1727857AbfH3MGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:04:40 -0400
-Received: from sonic312-23.consmr.mail.gq1.yahoo.com ([98.137.69.204]:39667
-        "EHLO sonic312-23.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727386AbfH3MEi (ORCPT
+        Fri, 30 Aug 2019 08:06:20 -0400
+Received: from sonic303-24.consmr.mail.gq1.yahoo.com ([98.137.64.205]:45252
+        "EHLO sonic303-24.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727525AbfH3MGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:04:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1567166677; bh=3dnpKGsS+OuKzlzxbOlDQHhsBySeMNk6jgiZI/YORp4=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=o0X8nnr3IP6v52GpCtlks05j1+LcaEgdmvj6zrHlVWy/L+ZM6T/Tbp+Qjn9LRIgsNdmlR+PJHpLqvF65dzxnnXE3vvmSEUFhcCK3f8DbRDV8qexbecd7xb/YD81zDboZ/xnXfMFWwsZg7CXZj3F0VJBQlTxWo5hWrr8zrurWykG0TwouRw09+rnH2q7yQMIGzvwFn70Z37Q2BFtyg8j77XS0qIIV4IGYi4/y2wyWrVl8FqLvTDUT0qdiBljFdFpMTpmLhKEZwyAKopYorPSUJ+/FL093SuUhgn1jV7sKqGkLN9D45SAjDuxVXvye19JogHdzGzZ/p5orLDDZAABAfg==
-X-YMail-OSG: tLGm94MVM1lgTkycx0A6Qp6pt1TMIWZWvvQHgABks2L_KU5hq5j0MBLAvm86FVm
- _PoQEcB0IDeYv7JwOX9IrtYEnHiOGk6LfY0NbUmzWFAZOAyzBwhpRLNyySTrLuZyG1lKnc1SNucU
- DC.JLja.Dvf5KkeSZCGjJfsS3rC3t2q5w0JcPa.LyALbosKFQs_kQpIw8TtiA4FjOWE2j7gNJ0Ly
- 7LfifrdQK1bvU0Kng3RgGo7WPUZD1fz9clYnzyto85QaBiAqySg.HUL_KdjILEt95egseUsXv2zF
- scQiG9PNhp.dHKfzATZesJ4ONNk1UqdaqtnIAJsABjPFuM1l6OzMykrn8hE8I3D4G64Y2jfHQMlA
- zUUq212474oBOIEi62rcN2V2z4Lau9XwKE_09COyHeXbgunFps6HcNjnCMxStmhqyUDzZ6du9L0t
- sSjAv7b85f34QjSjjGW9r_5Pe2J2AukSNXgyerZZXD3ckuehjrqDUZi84AdURZdLuzLLMkjRnLrS
- JBH7WFQti24pjL.brQiwlwB_s4TWR6pcJi1RTMwJTC_uueswZRH_RCWT47kYIW.98Ccxdi2tZmXA
- cJWZKkettpegBEk9YF3jzetclqEMO2OcflVVRF16D65K2B99LboFX9Osn2SGd3h6tGjrEKyUmnkl
- IlpaCjHD9.VIqKRuYCteRnP5V4b9fOkDGKQzVSMjyPkPds6jNtuffqX8d.Nhtiz4J18.14NTURdD
- YzBZsshxjlv3mvb3ooXKvxKsntlzUa5ZInINO43G6LFliOpDpNNhIV1JMTvSG8aN5WLqReOJeX1h
- U1_uF1X0gbbMVgW8XR8SmTZPl5fCaQMHsqRqsP7neiUSTV13jebXyEOD7qmKqo_FNp1E.R4lNFXC
- lZIo0VUaUOdBNHslkLHo5yIsUxiWBNwSmOI8ANqTIsAgBeFk0WNbuDZTMTBM4KmtVLHYDH.NF0ok
- XWDMCaoWuAOmovgPYnPY2PoghauA3q2QLP3HTIINQUa9JSEAMeD1jyOwmprcRXlx2NkE1nrDAMaD
- pSLekSp27R7uOGI7lN6OP6qSol.yndelbJJTZ9UPsd61zuiyE79fx8M2MyXi2srBYzJ1kgRtAOJ.
- p.CGDu3LXRrQw0mvXU8D2ax5PfJy8wy0C9e.Jx4.tnROvSVm0CPbKZ_3H6ZzlatvgwcxfZYiqUKS
- goASo8RToc2WLr6CbFmg8nmtRt9PxupcSNrXbdEjOVeRwO.HCi7RJQcgLYQu7bmieAjP6q1GbCrg
- cEqdErOMY9iUJkSRoqdKzkfr3Z6vi7hs-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.gq1.yahoo.com with HTTP; Fri, 30 Aug 2019 12:04:37 +0000
-Received: by smtp428.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 7ab41f8c227fcd099f8ed0410cccad50;
-          Fri, 30 Aug 2019 12:04:33 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 20:04:20 +0800
+        Fri, 30 Aug 2019 08:06:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1567166778; bh=hGegLswRsXDMS7Mt0Mf9JkYB6NpI8ypuxStTJrsPGuE=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=XPYhccin0vNwy0qHU/AFTWVWWumy4xlu62gU/kiwuUoSqccL/ITAYQfsT9GOtawMrO6JpuewW8xTsbQ0K+IE1P0OK1p3dlFFmA7oBIRozcBGpxAxoweipZ6Hjf0lZIfZwP+B+ZwSd0lyf26Tz1Lb3lIHfIJUEwD6qm8gALrCt6YNkQ5Zw2Hb58z6MIzzzNXNcUUlOl98VnHwRgFWAltTinKnARKy0UWZg7pYVosX0/k91Ko2F+9/kmbQMOOsH8Qqr95UOzIr2fgy2wwa78Z8MyxHnd321+TudzHx3F8X4iKgj5R7FgRZtXxjI8DeX70HdBMMIQnxr+A9RvPUosm+9g==
+X-YMail-OSG: n7uX8fwVM1kpk7u0piUdmYrLH_5BBhUDBSNQd97K.Kneq0njub_LkIXQ7gDURbp
+ 1JG5yVYKXHMcVq2P2Pwvr6tfUZ84yLbsUH18ynkMR8x50aXD2KUBVMux3qitqGbXwIfi2vgNFASf
+ HNLNJl7aSQ7bJokzgnWM60lfcWZqjkerLFWKZV0mDfGjZavIR_pQz63xIeDheWxqwkAbUa7vjKAu
+ C_r6zNVenso.eP34gWhvnCtpkeN9scOPp7457MFWsrrE2GEbaImWiHf4CZfev7vkiI6Dflp.wetb
+ 3jHaY2y9C9DgnjRfnZSnfaDEyOkjlrPrlklDeEirfcUAyIxsqNBfYozJmR.._K8bW9KmJtoKzq3N
+ iRoNCI1hVqBIfDuA7PHDFRaM0fITssZURRpvFM1Dq6VpdtIU.RIEs_CraHjun8aSrXeSosCZ7mRi
+ 5Xe8oM1dw9Y571MR6iguM2Q95_D.1VLYZMMM2hNXzybUVolDJH7UtocP8_Ug7aCOseZtOfGJvd6e
+ ADU.KWtv88Ts2OZuVspPL4vrBvHmywXBogxA81GLyEq8iIlaaICpdcrfC46xpfnXCNl85md5pG7z
+ V4ln6zDzYSe5SgNBCoAOdyqZcPMZ6ja2pCq7T1xQzDefnZofKx1rk3mY1P1KwSlXFlClalTDzqNy
+ S7g33ExlvnR0NbsuMD5Tjv4YhwC8b4lUJ77okhXGWJ4iZC5kUeVy9Bui_65NJANxpb4ZjYNJspx2
+ _H9MbxdCtkse1hfCSIFwtq.qVEPXmFpPx04uYOy7piWiZMLRSV_zWEktduCp.HftEgVKZFpX_F.W
+ GPl4d2YVsE3G1z6iP.2_9y8bgEnN34qQ9qlJs17NWNoEq28eU5noISOv1lUXeWgCDk8LpaZrGLzV
+ 0KU4R7w8Z02F3df7egyCvIZVnmu.V8huCRkrplLgwByuvHs9_zPKbgueNcqNVLdj7HzWajD1E7hY
+ gp2NVF9pmrxaAypliSgt0rSAnOVbGYw7_WYpbOnf9eLafigu3JmfTPuwwxi0rgZNmZ8W9HQN2Z40
+ n4EB7ykmOkVq03fvjIYIas4L5hbYZZBT8GBrEmVkKDwGdNxY72ZhAJTpaeHbsp90JIFk2eoH8rON
+ Tt3N0jpnWgfshM2qavDU44SU3u35In3DF5lTsYrashl0SjStUN9Bquw3rJHYgLB.mCDfu4zh6J9l
+ jxBdV1es6ULUQVLDVP2WxfQNgnVV9Bbs0I1jmtoNUol58WyFAV8zG5a5EtGNJECL49RFtEXwB0R2
+ a1Pgqh833px_HmEH195a41YfEZZg9dzAB5AE-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Fri, 30 Aug 2019 12:06:18 +0000
+Received: by smtp408.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 27fd797655cd7ababf61147ca3d721bf;
+          Fri, 30 Aug 2019 12:06:14 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 20:06:05 +0800
 From:   Gao Xiang <hsiangkao@aol.com>
 To:     Dan Carpenter <dan.carpenter@oracle.com>
 Cc:     Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
+        Chao Yu <chao@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190830120419.GB10981@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190829103749.GA13661@infradead.org>
- <20190829111810.GA23393@kroah.com>
- <20190829151144.GJ23584@kadam>
- <20190829152757.GA125003@architecture4>
- <20190829154346.GK23584@kadam>
- <20190829155127.GA136563@architecture4>
- <20190829160441.GA141079@architecture4>
- <20190830083445.GL23584@kadam>
- <20190830084333.GA193084@architecture4>
- <20190830112612.GF8372@kadam>
+        Miao Xie <miaoxie@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, weidu.du@huawei.com,
+        Fang Wei <fangwei1@huawei.com>, Joe Perches <joe@perches.com>,
+        linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
+Message-ID: <20190830120601.GC10981@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190830032006.GA20217@architecture4>
+ <20190830033643.51019-1-gaoxiang25@huawei.com>
+ <20190830033643.51019-6-gaoxiang25@huawei.com>
+ <20190830113047.GG8372@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830112612.GF8372@kadam>
+In-Reply-To: <20190830113047.GG8372@kadam>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,45 +75,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Dan,
 
-On Fri, Aug 30, 2019 at 02:26:12PM +0300, Dan Carpenter wrote:
-> On Fri, Aug 30, 2019 at 04:43:33PM +0800, Gao Xiang wrote:
-> > Hi Dan,
+On Fri, Aug 30, 2019 at 02:30:47PM +0300, Dan Carpenter wrote:
+> On Fri, Aug 30, 2019 at 11:36:42AM +0800, Gao Xiang wrote:
+> > As Dan Carpenter suggested [1], I have to remove
+> > all erofs likely/unlikely annotations.
 > > 
-> > On Fri, Aug 30, 2019 at 11:34:45AM +0300, Dan Carpenter wrote:
-> > > On Fri, Aug 30, 2019 at 12:04:41AM +0800, Gao Xiang wrote:
-> > > > Anyway, I'm fine to delete them all if you like, but I think majority of these
-> > > > are meaningful.
-> > > > 
-> > > > data.c-		/* page is already locked */
-> > > > data.c-		DBG_BUGON(PageUptodate(page));
-> > > > data.c-
-> > > > data.c:		if (unlikely(err))
-> > > > data.c-			SetPageError(page);
-> > > > data.c-		else
-> > > > data.c-			SetPageUptodate(page);
-> > > 
-> > > If we cared about speed here then we would delete the DBG_BUGON() check
-> > > because that's going to be expensive.  The likely/unlikely annotations
-> > > should be used in places a reasonable person thinks it will make a
-> > > difference to benchmarks.
-> > 
-> > DBG_BUGON will be a no-op ((void)x) in non-debugging mode,
+> > [1] https://lore.kernel.org/linux-fsdevel/20190829154346.GK23584@kadam/
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> > ---
 > 
-> It expands to:
+> Thanks!
 > 
-> 	((void)PageUptodate(page));
+> This is a nice readability improvement and I'm so sure it won't impact
+> benchmarking at all.
 > 
-> Calling PageUptodate() doesn't do anything, but it isn't free.  The
-> time it takes to do that function call completely negates any speed up
-> from using likely/unlikely.
-> 
-> I'm really not trying to be a jerk...
+> Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-You are right, I recalled that PageUptodate is not as simple as it implys.
-Yes, those are all removed now... I am ok with that,
-thanks for your suggestion :)
+It seems Greg merged another version... I have no idea but thanks for
+your acked-by :)
+	https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-testing&id=8d8a09b093d7073465c824f74caf315c073d3875
 
-Thanks,
+THanks,
 Gao Xiang
 
 > 
