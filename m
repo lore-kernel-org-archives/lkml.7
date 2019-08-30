@@ -2,71 +2,57 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AAEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8566C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FD623427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uhod1U8X"
+	by mail.kernel.org (Postfix) with ESMTP id BC5772341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567177766;
+	bh=urqI24R4Tky6Gl0utQFu04g6HRXBk4eUkS4cN9ptgqE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=crSTRZ7p/2HK/4UQlR2jOIUsBdZtO8LBlRRqn3K8vcjMh1Q8vRmBQ9Vjv5tnESjoN
+	 U6TfvgtGW4rdXBAM3qPfdO0JefxsU170Vf18JLkmeW4T5dcyCgfbRahB+cqwI7EzSG
+	 zwymZ3aUUuL7JXhl6cFGBYfP6UrmDhUgPV+BtPmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfH3PIB (ORCPT
+        id S1728170AbfH3PJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:08:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36667 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfH3PIA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:08:00 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y19so7339795wrd.3;
-        Fri, 30 Aug 2019 08:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0pAZWJp00xZ1ls1Af08EI7mW5qet6OlsQR65F0SwZhs=;
-        b=Uhod1U8XJp5hvgo/TUndU/vB/K3LqXxuAeZVAeuRIVdGOfTHzNRkOwN4osOc40UuE5
-         1zbifQ3t/DupGF//0a//lbZHwzoTo6QVboCPsr+tvklkQoTjH1/FYdaux2SjAfGCOpZ0
-         aaXT7pAXocMPWV0Xg9GtrbNyGi3SmspC4gJtWpFECD2jINQg8+kDPQEGXlrAPljAZ6MO
-         Bdigb/DGLDuPQjYHP6+nOeEcj4fW4+9AgzYdVUBteNpxJsrnLzwx/E63kRUe2CI/0SzE
-         heoO2mGCnXSSOoKS6wS0YDpnRrp6s8F65jBfDu0Q/tvSU+1uM06S/GMYkDzLMDPtR3BH
-         HskQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=0pAZWJp00xZ1ls1Af08EI7mW5qet6OlsQR65F0SwZhs=;
-        b=UYlWaW3SuGuQnLo4RremvGaalLQqKpoEkTaMWEUMHm8u8fxBzZ3IcceFGgOqGcZB38
-         UzIAYAVu3IiwivO9/1OioBIekor7pBjiA3G3z+0rpB8m3T0pw+sifsy5sZs6dUj9aiKe
-         1KwA7RdSy6p5YbjRF8RKSncewpek9mvio5S/Jv4uhdi6jbLjtp+iitQFXo7ogxZbj/pC
-         D+1TvWSg/5D0nWoaysL3yCN95ijhu30ykdAtdNLCpUHPFkMxkVNTj/x+d/yqICaeFvab
-         UdjH3cW1tOzp6kEyrVG+tpt5LejFwphY0uHjkKpz8k/ucK5wsIqX4TE6gBFMfeKRGcyd
-         +zSA==
-X-Gm-Message-State: APjAAAURWYraYtg13je1SP0TBg//LVXi1UHuV2IbrdszThxWsQ9NLBUy
-        CNPC7Q0u9wgODFARSLNz9Rc=
-X-Google-Smtp-Source: APXvYqzHQGc0Wx4HRiZiz1ofDsxcHrSk8e6DnIqmyFNiH0txU8A57/I3wSP5Sr5aEeWTtm785SC13w==
-X-Received: by 2002:adf:f507:: with SMTP id q7mr19297657wro.210.1567177678081;
-        Fri, 30 Aug 2019 08:07:58 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id 16sm8270956wmx.45.2019.08.30.08.07.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 08:07:57 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] PCI: Move ATS declarations to linux/pci.h
-Date:   Fri, 30 Aug 2019 17:07:56 +0200
-Message-Id: <20190830150756.21305-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Fri, 30 Aug 2019 11:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727603AbfH3PJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:09:25 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E21D523407;
+        Fri, 30 Aug 2019 15:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567177764;
+        bh=urqI24R4Tky6Gl0utQFu04g6HRXBk4eUkS4cN9ptgqE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nIt7IS5UstXqE2AIgqF915TRB0tiOWUjSeLWr+jeroLIuyWfNjb7/qhyGi+bWi03r
+         Fn8pgtY+IRy3SOn3d0g27EWRLoc4bxgvk1zcPgqdF9DE+VqK0xopnlprkAbQtyvvq7
+         xOC+X48s/txWo5ahh/NmKmwkR1z6gt3NXvcwfgwA=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Simon Horman <horms@verge.net.au>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 00/12] Convert some basic type clks to new parent way
+Date:   Fri, 30 Aug 2019 08:09:11 -0700
+Message-Id: <20190830150923.259497-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,253 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move ATS function prototypes from include/linux/pci-ats.h to
-include/linux/pci.h so users only need to include <linux/pci.h>:
+This series converts most of the basic clk types to support the new way
+of specifying parents. There's still the composite and fixed-factor
+types to convert. Sending now because I'm internally debating having the
+big multiplexer function take only arguments that would correspond to
+the parent_data structure instead of passing down the three different
+ways of specifying parents.
 
-Realted to PRI capability:
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: Tony Lindgren <tony@atomide.com>
 
-  pci_enable_pri()
-  pci_disable_pri()
-  pci_restore_pri_state()
-  pci_reset_pri()
+Stephen Boyd (12):
+  clk: gpio: Use DT way of specifying parents
+  clk: fixed-rate: Convert to clk_hw based APIs
+  clk: fixed-rate: Remove clk_register_fixed_rate_with_accuracy()
+  clk: fixed-rate: Move to_clk_fixed_rate() to C file
+  clk: fixed-rate: Document accuracy member
+  clk: fixed-rate: Add support for specifying parents via DT/pointers
+  clk: fixed-rate: Add clk flags for parent accuracy
+  clk: fixed-rate: Document that accuracy isn't a rate
+  clk: asm9260: Use parent accuracy in fixed rate clk
+  clk: mux: Add support for specifying parents via DT/pointers
+  clk: gate: Add support for specifying parents via DT/pointers
+  clk: divider: Add support for specifying parents via DT/pointers
 
-Related to PASID capability:
+ drivers/clk/clk-asm9260.c                  |   8 +-
+ drivers/clk/clk-divider.c                  |  84 +----
+ drivers/clk/clk-fixed-rate.c               | 113 +++---
+ drivers/clk/clk-gate.c                     |  35 +-
+ drivers/clk/clk-gpio.c                     | 171 +++------
+ drivers/clk/clk-mux.c                      |  58 +--
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c |   4 +-
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c |   4 +-
+ include/linux/clk-provider.h               | 416 +++++++++++++++++----
+ 9 files changed, 490 insertions(+), 403 deletions(-)
 
-  pci_enable_pasid()
-  pci_disable_pasid()
-  pci_restore_pasid_state()
-  pci_pasid_features()
-  pci_max_pasids()
-  pci_prg_resp_pasid_required()
 
-No functional changes intended.
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/iommu/amd_iommu.c   |  1 -
- drivers/iommu/arm-smmu-v3.c |  1 -
- drivers/iommu/intel-iommu.c |  1 -
- drivers/iommu/intel-pasid.c |  1 -
- drivers/iommu/intel-svm.c   |  1 -
- drivers/pci/ats.c           |  1 -
- drivers/pci/pci.c           |  1 -
- include/linux/pci-ats.h     | 77 -------------------------------------
- include/linux/pci.h         | 34 ++++++++++++++++
- 9 files changed, 34 insertions(+), 84 deletions(-)
- delete mode 100644 include/linux/pci-ats.h
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 04a9f8443344..d43913386915 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -13,7 +13,6 @@
- #include <linux/acpi.h>
- #include <linux/amba/bus.h>
- #include <linux/platform_device.h>
--#include <linux/pci-ats.h>
- #include <linux/bitmap.h>
- #include <linux/slab.h>
- #include <linux/debugfs.h>
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 0ad6d34d1e96..3bd9455efc39 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -29,7 +29,6 @@
- #include <linux/of_iommu.h>
- #include <linux/of_platform.h>
- #include <linux/pci.h>
--#include <linux/pci-ats.h>
- #include <linux/platform_device.h>
- 
- #include <linux/amba/bus.h>
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 4658cda6f3d2..362845b5c88a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -35,7 +35,6 @@
- #include <linux/syscore_ops.h>
- #include <linux/tboot.h>
- #include <linux/dmi.h>
--#include <linux/pci-ats.h>
- #include <linux/memblock.h>
- #include <linux/dma-contiguous.h>
- #include <linux/dma-direct.h>
-diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-index 040a445be300..f670315afa67 100644
---- a/drivers/iommu/intel-pasid.c
-+++ b/drivers/iommu/intel-pasid.c
-@@ -16,7 +16,6 @@
- #include <linux/iommu.h>
- #include <linux/memory.h>
- #include <linux/pci.h>
--#include <linux/pci-ats.h>
- #include <linux/spinlock.h>
- 
- #include "intel-pasid.h"
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 780de0caafe8..ee9dfc84f925 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -13,7 +13,6 @@
- #include <linux/intel-svm.h>
- #include <linux/rculist.h>
- #include <linux/pci.h>
--#include <linux/pci-ats.h>
- #include <linux/dmar.h>
- #include <linux/interrupt.h>
- #include <linux/mm_types.h>
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index e18499243f84..3f5fb2d4a763 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -10,7 +10,6 @@
-  */
- 
- #include <linux/export.h>
--#include <linux/pci-ats.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f20a3de57d21..c8f2a05e6b37 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -29,7 +29,6 @@
- #include <linux/pm_runtime.h>
- #include <linux/pci_hotplug.h>
- #include <linux/vmalloc.h>
--#include <linux/pci-ats.h>
- #include <asm/setup.h>
- #include <asm/dma.h>
- #include <linux/aer.h>
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-deleted file mode 100644
-index 1ebb88e7c184..000000000000
---- a/include/linux/pci-ats.h
-+++ /dev/null
-@@ -1,77 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef LINUX_PCI_ATS_H
--#define LINUX_PCI_ATS_H
--
--#include <linux/pci.h>
--
--#ifdef CONFIG_PCI_PRI
--
--int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
--void pci_disable_pri(struct pci_dev *pdev);
--void pci_restore_pri_state(struct pci_dev *pdev);
--int pci_reset_pri(struct pci_dev *pdev);
--
--#else /* CONFIG_PCI_PRI */
--
--static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
--{
--	return -ENODEV;
--}
--
--static inline void pci_disable_pri(struct pci_dev *pdev)
--{
--}
--
--static inline void pci_restore_pri_state(struct pci_dev *pdev)
--{
--}
--
--static inline int pci_reset_pri(struct pci_dev *pdev)
--{
--	return -ENODEV;
--}
--
--#endif /* CONFIG_PCI_PRI */
--
--#ifdef CONFIG_PCI_PASID
--
--int pci_enable_pasid(struct pci_dev *pdev, int features);
--void pci_disable_pasid(struct pci_dev *pdev);
--void pci_restore_pasid_state(struct pci_dev *pdev);
--int pci_pasid_features(struct pci_dev *pdev);
--int pci_max_pasids(struct pci_dev *pdev);
--int pci_prg_resp_pasid_required(struct pci_dev *pdev);
--
--#else  /* CONFIG_PCI_PASID */
--
--static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
--{
--	return -EINVAL;
--}
--
--static inline void pci_disable_pasid(struct pci_dev *pdev)
--{
--}
--
--static inline void pci_restore_pasid_state(struct pci_dev *pdev)
--{
--}
--
--static inline int pci_pasid_features(struct pci_dev *pdev)
--{
--	return -EINVAL;
--}
--
--static inline int pci_max_pasids(struct pci_dev *pdev)
--{
--	return -EINVAL;
--}
--
--static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
--{
--	return 0;
--}
--#endif /* CONFIG_PCI_PASID */
--
--
--#endif /* LINUX_PCI_ATS_H*/
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 463486016290..8ac142801890 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2349,6 +2349,40 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
- void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #endif
- 
-+#ifdef CONFIG_PCI_PRI
-+int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
-+void pci_disable_pri(struct pci_dev *pdev);
-+void pci_restore_pri_state(struct pci_dev *pdev);
-+int pci_reset_pri(struct pci_dev *pdev);
-+#else /* CONFIG_PCI_PRI */
-+static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
-+{ return -ENODEV; }
-+static inline void pci_disable_pri(struct pci_dev *pdev) { }
-+static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
-+static inline int pci_reset_pri(struct pci_dev *pdev)
-+{ return -ENODEV; }
-+#endif /* CONFIG_PCI_PRI */
-+
-+#ifdef CONFIG_PCI_PASID
-+int pci_enable_pasid(struct pci_dev *pdev, int features);
-+void pci_disable_pasid(struct pci_dev *pdev);
-+void pci_restore_pasid_state(struct pci_dev *pdev);
-+int pci_pasid_features(struct pci_dev *pdev);
-+int pci_max_pasids(struct pci_dev *pdev);
-+int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+#else  /* CONFIG_PCI_PASID */
-+static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
-+{ return -EINVAL; }
-+static inline void pci_disable_pasid(struct pci_dev *pdev) { }
-+static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
-+static inline int pci_pasid_features(struct pci_dev *pdev)
-+{ return -EINVAL; }
-+static inline int pci_max_pasids(struct pci_dev *pdev)
-+{ return -EINVAL; }
-+static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-+{ return 0; }
-+#endif /* CONFIG_PCI_PASID */
-+
- /* Provide the legacy pci_dma_* API */
- #include <linux/pci-dma-compat.h>
- 
+base-commit: 5f9e832c137075045d15cd6899ab0505cfb2ca4b
 -- 
-2.22.1
+Sent by a computer through tubes
 
