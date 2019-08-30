@@ -2,119 +2,116 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE500C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F36C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38202173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCE5215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfH3ALg (ORCPT
+        id S1727122AbfH3APe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:11:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6058 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725826AbfH3ALf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:11:35 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7U07Ovq079474;
-        Thu, 29 Aug 2019 20:11:33 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2upp2dd8jj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 20:11:33 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7U0A5tB029665;
-        Fri, 30 Aug 2019 00:11:32 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02wdc.us.ibm.com with ESMTP id 2ujvv6yf8x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 00:11:32 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7U0BVu048169460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 00:11:31 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42CAE13604F;
-        Fri, 30 Aug 2019 00:11:31 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB0D0136053;
-        Fri, 30 Aug 2019 00:11:30 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Aug 2019 00:11:28 +0000 (GMT)
-Subject: Re: [PATCH] tpm_tis: Fix interrupt probing
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
- <20190827131400.qchcwa2act24c47b@linux.intel.com>
- <20190827151915.hb4xwr2vik2i5ryb@linux.intel.com>
- <797ff54e-dceb-21d2-dd74-e5244f9c6dfd@linux.ibm.com>
- <20190829132021.6vfc535ecb62jokf@linux.intel.com>
- <20190829161057.22l72j55jy3dyib7@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <039601c6-e22a-d113-0eb2-ee2a206f5b73@linux.ibm.com>
-Date:   Thu, 29 Aug 2019 20:11:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 29 Aug 2019 20:15:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36471 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbfH3APe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:15:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:15:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
+   d="scan'208";a="332693126"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga004.jf.intel.com with ESMTP; 29 Aug 2019 17:15:32 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 29 Aug 2019 17:15:32 -0700
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 29 Aug 2019 17:15:32 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.112]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.163]) with mapi id 14.03.0439.000;
+ Fri, 30 Aug 2019 08:15:30 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Andi Kleen <ak@linux.intel.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC v1 1/9] KVM: x86: Add base address parameter for
+ get_fixed_pmc function
+Thread-Topic: [RFC v1 1/9] KVM: x86: Add base address parameter for
+ get_fixed_pmc function
+Thread-Index: AQHVXiwTvN9l0Wf/9ESeUncX5js89qcSGdmAgAC25tA=
+Date:   Fri, 30 Aug 2019 00:15:29 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E1737F7892@SHSMSX104.ccr.corp.intel.com>
+References: <1567056849-14608-1-git-send-email-luwei.kang@intel.com>
+ <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
+ <20190829211015.GU5447@tassilo.jf.intel.com>
+In-Reply-To: <20190829211015.GU5447@tassilo.jf.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20190829161057.22l72j55jy3dyib7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-MW
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=566 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 12:10 PM, Jarkko Sakkinen wrote:
-> On Thu, Aug 29, 2019 at 04:20:21PM +0300, Jarkko Sakkinen wrote:
->> On Tue, Aug 27, 2019 at 03:34:36PM -0400, Stefan Berger wrote:
->>> On 8/27/19 11:19 AM, Jarkko Sakkinen wrote:
->>>> On Tue, Aug 27, 2019 at 04:14:00PM +0300, Jarkko Sakkinen wrote:
->>>>> On Tue, Aug 20, 2019 at 08:25:17AM -0400, Stefan Berger wrote:
->>>>>> From: Stefan Berger <stefanb@linux.ibm.com>
->>>>>>
->>>>>> The interrupt probing of the TPM TIS was broken since we are trying to
->>>>>> run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
->>>>>>
->>>>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>>>> Need these:
->>>>>
->>>>> Cc: linux-stable@vger.kernel.org
->>>>> Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
->>>>>
->>>>> Thank you. I'll apply this to my tree.
->>>>>
->>>>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>> The commit went in the following form:
->>>>
->>>> http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/9b558deab2c5d7dc23d5f7a4064892ede482ad32
->>> I saw you dropped the stetting of the IRQ flag - I needed it, otherwise it
->>> wouldn't execute certain code paths.
->> I explained why I removed that part. There was no any reasoning for
->> it. Also, it cannot be in the same commit if it fixes a diffent
->> issue.
-> AFAIK they go with different fixes-tags.
+> >  /* returns fixed PMC with the specified MSR */ -static inline struct
+> > kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
+> > +static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32
+> msr,
+> > +								int base)
+> 
+> Better define a __get_fixed_pmc just for this case, with the existing
+> get_fixed_pmc being a wrapper.
+> 
+> This would avoid changing all the callers below.
 
-I sent a separate patch for this. It looks like this bug goes back to 
-when the TPM_CHIP_FLAG_IRQ was introduced in March 2019?!
+Do you mean change the code like this, and call "__get_fixed_pmc" in my patch? We already have a similar function to get gp counters.
+struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr, u32 base)	// get gp counters
+struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)		// get fixed counters
 
-    Stefan
+-/* returns fixed PMC with the specified MSR */
+-static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
++static inline struct kvm_pmc *__get_fixed_pmc(struct kvm_pmu *pmu, u32 msr, u32 base)
+ {
+-       int base = MSR_CORE_PERF_FIXED_CTR0;
+-
+        if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
+                return &pmu->fixed_counters[msr - base];
 
+        return NULL;
+ }
 
++/* returns fixed PMC with the specified MSR */
++static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
++{
++       return __get_fixed_pmc(pmu, msr, MSR_CORE_PERF_FIXED_CTR0)
++}
+
+Thanks,
+Luwei Kang
+
+> 
+> 
+> -Andi
