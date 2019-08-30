@@ -2,276 +2,151 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,WEIRD_QUOTING
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A80C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5418C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0262341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A982341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfH3OPy convert rfc822-to-8bit (ORCPT
+        id S1728217AbfH3OQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:15:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49276 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfH3OPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:15:54 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 45A2E1089049;
-        Fri, 30 Aug 2019 14:15:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 514345C549;
-        Fri, 30 Aug 2019 14:15:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
-References: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: watch_devices(2) manpage
+        Fri, 30 Aug 2019 10:16:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1244 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727751AbfH3OQP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:16:15 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UE3hwn132775;
+        Fri, 30 Aug 2019 10:15:31 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uq0kt2772-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 10:15:31 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7UEB94f005012;
+        Fri, 30 Aug 2019 14:15:30 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 2un65kfrta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 14:15:30 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UEFT5i55312664
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 14:15:29 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DA40112064;
+        Fri, 30 Aug 2019 14:15:29 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 027CB11206E;
+        Fri, 30 Aug 2019 14:15:26 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.151.141])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 14:15:26 +0000 (GMT)
+Message-ID: <daa9f83eaeba2ce41a72ac2fa23e24817ef3d4a1.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Date:   Fri, 30 Aug 2019 11:15:22 -0300
+In-Reply-To: <20190829205832.GM20113@breakpoint.cc>
+References: <20190821141505.2394-1-leonardo@linux.ibm.com>
+         <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
+         <b6585989069fd832a65b73d1c4f4319a10714165.camel@linux.ibm.com>
+         <20190829205832.GM20113@breakpoint.cc>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+IABKuOZYCco6cLZ6aAe"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4595.1567174549.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 30 Aug 2019 15:15:49 +0100
-Message-ID: <4596.1567174549@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 30 Aug 2019 14:15:53 +0000 (UTC)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'\" t
-.\" Copyright (c) 2019 David Howells <dhowells@redhat.com>
-.\"
-.\" %%%LICENSE_START(VERBATIM)
-.\" Permission is granted to make and distribute verbatim copies of this
-.\" manual provided the copyright notice and this permission notice are
-.\" preserved on all copies.
-.\"
-.\" Permission is granted to copy and distribute modified versions of this
-.\" manual under the conditions for verbatim copying, provided that the
-.\" entire resulting derived work is distributed under the terms of a
-.\" permission notice identical to this one.
-.\"
-.\" Since the Linux kernel and libraries are constantly changing, this
-.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-.\" responsibility for errors or omissions, or for damages resulting from
-.\" the use of the information contained herein.  The author(s) may not
-.\" have taken the same level of care in the production of this manual,
-.\" which is licensed free of charge, as they might when working
-.\" professionally.
-.\"
-.\" Formatted or processed versions of this manual, if unaccompanied by
-.\" the source, must acknowledge the copyright and authors of this work.
-.\" %%%LICENSE_END
-.\"
-.TH WATCH_DEVICES 2 2019-08-29 "Linux" "Linux Programmer's Manual"
-.SH NAME
-watch_devices \- Watch for global device notifications
-.SH SYNOPSIS
-.nf
-.B #include <linux/watch_queue.h>
-.br
-.B #include <unistd.h>
-.br
-.BI "int watch_devices(int " watch_fd ", int " watch_id ", unsigned int " flags );
-.fi
-.PP
-.IR Note :
-There are no glibc wrappers for these system calls.
-.SH DESCRIPTION
-.PP
-.BR watch_devices ()
-attaches a watch on the global device notification source to a previously
-opened and configured watch queue.  See
-.BR watch_queue (7)
-for more information on how to set up and use those.
-.PP
-The global device notification source is provided with events from a number of
-sources, including block device errors and USB events.  Each notification type
-has a specific format.
 
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.SS Block Device Notifications
-Events on block devices, such as I/O errors are posted to any watching queues.
-The message format is:
-.PP
-.in +4n
-.EX
-struct block_notification {
-	struct watch_notification watch;
-	__u64	dev;
-	__u64	sector;
-};
-.EE
-.in
-.PP
-The
-.I watch.type
-field will be set to
-.BR WATCH_TYPE_BLOCK_NOTIFY ,
-the
-.I watch.subtype
-field will contain a constant that indicates the particular event that occurred
-and the watch_id passed to watch_devices() will be placed in
-.I watch.info
-in the ID field.
-.PP
-.I dev
-will contain the major and minor device numbers in
-.B dev_t
-form and
-.I sector
-will contain the first sector the notification pertains to.
-.PP
-The following events are defined:
-.PP
-.in +4n
-.TS
-lB l.
-NOTIFY_BLOCK_ERROR_TIMEOUT
-NOTIFY_BLOCK_ERROR_NO_SPACE
-NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT
-NOTIFY_BLOCK_ERROR_CRITICAL_TARGET
-NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS
-NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM
-NOTIFY_BLOCK_ERROR_PROTECTION
-NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE
-NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE
-NOTIFY_BLOCK_ERROR_IO
-.TE
-.in
-.PP
-All of which indicate error conditions.
+--=-+IABKuOZYCco6cLZ6aAe
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.SS USB Device Notifications
-Events on USB devices, such as I/O errors are posted to any watching queues.
-The message format is:
-.PP
-.in +4n
-.EX
-struct usb_notification {
-        struct watch_notification watch;
-        __u32   error;
-        __u32   reserved;
-        __u8    name_len;
-        __u8    name[0];
-};
-.EE
-.in
-.PP
-The
-.I watch.type
-field will be set to
-.BR WATCH_TYPE_USB_NOTIFY ,
-the
-.I watch.subtype
-field will contain a constant that indicates the particular event that occurred
-and the watch_id passed to watch_devices() will be placed in
-.I watch.info
-in the ID field.
-.PP
-.IR name " and " name_len
-indicates the textual name of the USB device that originated the notification.
-The name will be truncated to
-.B USB_NOTIFICATION_MAX_NAME_LEN
-if it is longer than that.
-.PP
-The following subtypes are currently defined:
-.TP
-.B NOTIFY_USB_DEVICE_ADD
-A new USB device has been plugged in.
-.TP
-.B NOTIFY_USB_DEVICE_REMOVE
-A USB device has been unplugged.
-.TP
-.B NOTIFY_USB_BUS_ADD
-A new USB bus is now available.
-.TP
-.B NOTIFY_USB_BUS_REMOVE
-A USB bus has been removed.
-.TP
-.B NOTIFY_USB_DEVICE_RESET
-A USB device has been reset.
-.TP
-.B NOTIFY_USB_DEVICE_ERROR
-A USB device has generated an error; a suitable error code will have been
-placed in
-.IR error .
+On Thu, 2019-08-29 at 22:58 +0200, Florian Westphal wrote:
+> In any case your patch looks ok to me.
 
+Great! Please give your feedback on v3:=20
+http://patchwork.ozlabs.org/patch/1154040/
 
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-.SH RETURN VALUE
-On success, the function returns 0.  On error, \-1 is returned, and
-.I errno
-is set appropriately.
-.SH ERRORS
-The following errors may be returned:
-.TP
-.B EBADF
-.I watch_fd
-is an invalid file descriptor.
-.TP
-.B EBADSLT
-The watch does not exist and so cannot be removed.
-.TP
-.B EBUSY
-The source is already attached to the watch device instance specified by
-.I watch_fd
-and so cannot be added.
-.TP
-.B EINVAL
-.I watch_fd
-does not refer to a watch_queue device file.
-.TP
-.B EINVAL
-.IR watch_fd " or " watch_id
-is out of range.
-.TP
-.B EINVAL
-Unsupported
-.I flags
-set.
-.TP
-.B ENOMEM
-Insufficient memory available to allocate a watch record.
-.TP
-.B EPERM
-The caller does not have the required privileges.
-.SH CONFORMING TO
-These functions are Linux-specific and should not be used in programs intended
-to be portable.
-.SH VERSIONS
-The notification queue driver first appeared in v??? of the Linux kernel.
-.SH NOTES
-Glibc does not (yet) provide a wrapper for the
-.BR watch_devices "()"
-system call; call it using
-.BR syscall (2).
-.SH SEE ALSO
-.BR watch_queue (7)
+[...]
+>=20
+> Even if we disable call-ip6tables in br_netfilter we will at least
+> in addition need a patch for nft_fib_netdev.c.
+>=20
+> From a "avoid calls to ipv6 stack when its disabled" standpoint,
+> the safest fix is to disable call-ip6tables functionality if ipv6
+> module is off *and* fix nft_fib_netdev.c to BREAK in ipv6 is off case.
+>=20
+> I started to place a list of suspicous modules here, but that got out
+> of hand quickly.
+>=20
+> So, given I don't want to plaster ipv6_mod_enabled() everywhere, I
+> would suggest this course of action:
+>=20
+> 1. add a patch to BREAK in nft_fib_netdev.c for !ipv6_mod_enabled()
+> 2. change net/bridge/br_netfilter_hooks.c, br_nf_pre_routing() to
+>    make sure ipv6_mod_enabled() is true before doing the ipv6 stack
+>    "emulation".
+>=20
+> Makes sense?
+IMHO sure.
+
+Shortly, I will send a couple patches proposing the above changes.
+(Or my best understanding about them :) )=20
+
+>=20
+> Thanks,
+> Florian
+
+Thank you,
+Leonardo Bras
+
+--=-+IABKuOZYCco6cLZ6aAe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1pL3oACgkQlQYWtz9S
+ttRoEg//YEDzqVS2pknZEenxYLlPas/7KfnsR9DlKgvsPOgmMGilF7cNsmX6TGRj
+LeosgkxEJF2vr0Slja1c9jRNNl1gTBq9ICTdRw9CFMni/XOAmwPKgHVqqA6XMd9I
+K5D7hdsJz2Yev00SylE5/bI+WPGhgA2deBQToKgPQiILKxQH/aU4TJer6fdiuOra
+kip4EG58o164qwZH3nqPArQR32RjGOPiK4J6LxMB0OQttrBjk6i0oTQjXgYfdX/P
+MqV5KZEBKRvM6NiFat1ZR7C5ns1lDONTfOAzmX1zGBHXY28xDCEpaaCSdQTUj+5G
+SoCwkBtnN8h+xHtP4XuyBdlBQVJOIqoW2ICGqaYonO+k0Pa4QoXuW9VKSrRfK/x8
+qLd+JHjLSPnZo9c35Gz7TaFbDPelaQnFRjBVmXhzgWiJeAIRosFzWVtzH7aQ6wAU
+UOEFYMSrkYLe06gyarZR1Lltb6qSJK5SSwV7lG8kl2YmMRbc25a+UmaaRaZ2ePjt
+FwyXTuYjrKL2zAwo2heF+EnJwWL4QlQifdBMS2uczXTdhX5OayElOZFYU68Mcg/n
+QEe5u0G+FolDPWaA7X0eqRzjQoCmaAWNF6i78mP6NjhPdgsif5XbSzmzrYB9Tzdv
+oGmHflawcvhTciuqVOZRFwN9Uow0B88OpQtSWh7H/lx7qIgf77w=
+=WcP3
+-----END PGP SIGNATURE-----
+
+--=-+IABKuOZYCco6cLZ6aAe--
+
