@@ -2,115 +2,78 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3204C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7922AC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FCC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4300B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwFFZ19r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mteAUakX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfH3QwL (ORCPT
+        id S1728331AbfH3QwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:52:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38678 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfH3QwL (ORCPT
+        Fri, 30 Aug 2019 12:52:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53530 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfH3QwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:52:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id p12so15391599iog.5;
-        Fri, 30 Aug 2019 09:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SFX0aYjr12ElBxGUUuhmY02XvhQTT8mqSM2FhQu+1yo=;
-        b=HwFFZ19rxfnn+04b1Fr5rxhs3yfgcYVDVOTgKOICvS7Vje0P49EkKSbtocdc/9zLWl
-         dxGRUNg782DyUerU+Dqk1UqTnHE6f8Ek6Te/hEbgue33eB2Du0Qs7yeWFz9gvDwFOOoL
-         0wt61hfVhfQ+FcEv88vCKbX1sY4EZ0cV28FsfNkpaqgL5vHT7QeQb5m2jZXo/c/99jVz
-         Qg45hz8w9fCRCb9H+9mJbJCN06R35ff7rer6FTu9xUvDSd1hTLhKsxdnIgyBonUm7QFy
-         jlqtnwF1BuJy743RtUXI/EitGhKAHOIRr45QoooQUG3Sd9xyqJQa1bYTs8EDTTFUcGUn
-         88Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SFX0aYjr12ElBxGUUuhmY02XvhQTT8mqSM2FhQu+1yo=;
-        b=cexcl1E8p71H6ubfbGbZb1KlJmSpngWTj7l73VZrdLq4ujcmO+qEjsljVShgWYEtSC
-         ctQrrn0bSw1pQwW/BDZqSj+/0gekde0zZoTkRAhGiRWyNawbEqb2PfKj7mX/IHHcgYMR
-         n5Ki0FYicgPSNvlb5QxoqDoH+/PqMyKGFlJgm7M11oKkcsG+uCNCcjIqBBFgSgb6QmOT
-         Tcifg1lBgdCoCV21s+0aUBtGAchSjGWJlWyVuYKTca+/VTpqzjU3IXWpOVK6Eq15DNTe
-         MytjwzuLlZ4cDDjx1XIqxdrA1oXVZQiZROYN5Ejw0n22zqmt6vCxk6WQKyCz2kaWcmSs
-         tugQ==
-X-Gm-Message-State: APjAAAVPeavTRXssxcYKRbt5IxbPa2golIUQbaSWToZKxi1G1KfrNRCl
-        D4BLmT3vrWTJAJZNiBxTxOv0g0YykAvmgrMQ9nc=
-X-Google-Smtp-Source: APXvYqzlWKFgDjjTrfQIk2y6OxaZynvy50zrh4t0KFl0mhFUbX+7qbK9xlyq9+st7WcODuPeEFGuzw0P4nS0q6CRW4k=
-X-Received: by 2002:a05:6638:143:: with SMTP id y3mr16244129jao.68.1567183930478;
- Fri, 30 Aug 2019 09:52:10 -0700 (PDT)
+        Fri, 30 Aug 2019 12:52:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7a+XCsiuXXCRR1Y2/qK9IVAIAgqTUuDihw3bfaNlQgE=; b=mteAUakXTj9/LbVuXP+4pW3nT
+        jBtwOjqFjNwLGwxgJ1uNHOFTM4deOUCfe+LBYq3uX9t1Rxp1z9KDX5CcrdgrsI5/WNmg4FMQ/8FsG
+        E5Sw542kisDnh4B5EePaqh6vIIzjYCRpC/EH7vu+e13ND0Ds6bbFJ3AKrn0ynlAh/Yr3CLxHyEFLt
+        VEE5MocBM4bGPCp49PijEuVeEKA2wf0YRNjViOG3F/HAs1wUhzFCKRW8mIV+BxlA/WANxD0QWhINJ
+        oejEubgTPnjxFOXenn0dRH233xmjsgENr27xjoNcHW9HD3BxAzvJousVPoxEvQYBrerTk8TsVh/iE
+        LA5gnXk1w==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3k8G-0002Tr-KG; Fri, 30 Aug 2019 16:52:16 +0000
+Subject: Re: linux-next: Tree for Aug 30 (exfat)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190831003613.7540b2d7@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8ef40504-ba29-5325-9cb6-0c800a7b03ce@infradead.org>
+Date:   Fri, 30 Aug 2019 09:52:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com> <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
- <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
- <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com> <20190830093224.GB31297@bogus>
-In-Reply-To: <20190830093224.GB31297@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 30 Aug 2019 11:51:59 -0500
-Message-ID: <CABb+yY1cpGVHvHz4MCwpmVXSYayWt3HWMLJKZTrCb_LXroBc_Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190831003613.7540b2d7@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 4:32 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Fri, Aug 30, 2019 at 02:52:40AM -0500, Jassi Brar wrote:
-> > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:
->
-> [...]
->
-> > >
-> > > If I get your point correctly,
-> > > On UP, both could not be active. On SMP, tx/rx could be both active, anyway
-> > > this depends on secure firmware and Linux firmware design.
-> > >
-> > > Do you have any suggestions about arm,func-ids here?
-> > >
-> > I was thinking if this is just an instruction, why can't each channel
-> > be represented as a controller, i.e, have exactly one func-id per
-> > controller node. Define as many controllers as you need channels ?
-> >
->
-> I might have missed to follow this, but what's the advantage of doing so ?
-> Which can't single controller instance deal with all the channels ?
->
-There are many advantages ...
-1) Design reflects the reality - two smc/hvc instructions have nothing
-tying them together.
-2) Driver code becomes simpler - don't have to pre-populate channels,
-deducting from the size of func-ids array.
-3) Driver becomes more flexible - We can have channels that pass
-func-id runtime and channels that pass via DT (if we must have the
-option of DT property).
+On 8/30/19 7:36 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20190829:
+> 
 
--jassi
+on x86_64:
+when CONFIG_VFAT_FS is not set/enabled:
+
+../drivers/staging/exfat/exfat_super.c:46:41: error: ‘CONFIG_FAT_DEFAULT_IOCHARSET’ undeclared here (not in a function); did you mean ‘CONFIG_EXFAT_DEFAULT_IOCHARSET’?
+ static char exfat_default_iocharset[] = CONFIG_FAT_DEFAULT_IOCHARSET;
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                         CONFIG_EXFAT_DEFAULT_IOCHARSET
+
+
+
+-- 
+~Randy
