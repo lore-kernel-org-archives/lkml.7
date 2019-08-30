@@ -2,105 +2,124 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC565C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D45C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4B521897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC6C215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZNTTPb+C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Grs7Mr/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfH3HfQ (ORCPT
+        id S1727958AbfH3HiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:35:16 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48118 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfH3HfP (ORCPT
+        Fri, 30 Aug 2019 03:38:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35238 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfH3HiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:35:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jXZGykbK7fcCFdm1k42aGJ6dco0WwRrRvnakPuLcX6w=; b=ZNTTPb+CmszhANgH38A+BIutb
-        DGT0soGfqg7qc/3wBwW5h/uOhVDqhow5wdji0O2TtcGJvv0Uv1Y1wuGw6VHzxfIks3NqcjV9TS7uU
-        GlVg6rYQlQ4YAdUyDUkRQmd8NQScZEAq9fKwu+4gCbGMbFAB04+oERcrtgxdJnJBhGXWgipCuGkmB
-        o+JTZSu4pX1TOareK5mhUWSsqDvNIrWqjZJ9f11XYwrL5bIpYbQAxDqKHpQVcy4+oJuMXZGouKZYc
-        Uy4aHE3Ps0bCPKBtuJFFsYF1SlE5TK47C13mglAmAkgimI9IUo/zr9WOb++Bz5GyYVQ6Tp197x3M8
-        QYGf1iQyg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3bQq-0008GY-7i; Fri, 30 Aug 2019 07:34:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3673030008D;
-        Fri, 30 Aug 2019 09:34:13 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D4F1202411AD; Fri, 30 Aug 2019 09:34:48 +0200 (CEST)
-Date:   Fri, 30 Aug 2019 09:34:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-Message-ID: <20190830073448.GZ2369@hirez.programming.kicks-ass.net>
-References: <20190828073130.83800-1-namhyung@kernel.org>
- <20190828073130.83800-2-namhyung@kernel.org>
- <20190828094459.GG2369@hirez.programming.kicks-ass.net>
- <CAM9d7cja=jh9ASa4ffCca34AHcB-aRkyWj9hAQbEoQf8qOcg9w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cja=jh9ASa4ffCca34AHcB-aRkyWj9hAQbEoQf8qOcg9w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 30 Aug 2019 03:38:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 205so1609615pfw.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 00:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=v5xyixMQpdnvsR85DjQFgmM24utx1QoiwCBrTyF/frg=;
+        b=Grs7Mr/kb+erqCA+QcT/K0ygk8yUOU+cOayf7fRm/iYs/sK5SMsg/Nhkyw28NnPaeB
+         njw6NpYe7ZN1z/SJOj/32nI9QCSXsEPPAopB39aBmH/nckAImHnf8bMbqOo0abLy+KiA
+         wzSU+G0/Chy4UekpPbEl6lx05fTwPT8hDhE15+IGk3v9XoUV49tzu7KE+pKHYcP/UARf
+         hPJx9MAuJrbPgUgnKxWuER0p+qoUWRZvt8OPkh6wW+on69na7borZhEuOwbZ/zz0FTI2
+         jNEtyZw7QBWGb+VSH5SEvu8AkmuDPgIO23O+TOstZytvgQIyYEXDP9fIUAbK95pi6nxn
+         MLMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=v5xyixMQpdnvsR85DjQFgmM24utx1QoiwCBrTyF/frg=;
+        b=jK6fpgprwQiCbL6IqV6npVZQBUjB70E2GNYfQjIGUWlLOA4hBY84OlJ79C9qMaWrCR
+         btbjxQCdMZ7ELxTLMLdmIWicYVvEaQGWd8KkZPjx0lXFCzv944XIro6hkGGXGRpcOMKJ
+         MzC4cKiWzOZcIQRsJEnLWeErCo0IJUZ1r9yrhpPmSuYYmoBFPBmaZFtqlrgdTEGBJHv9
+         ysyoFoC1RF7yz94zsv3k9W87a58ts9Hmd6ntYotJNUWT4rXfsrtOfHgl62TXIGaNAP8E
+         0ZSaJVKHILD9Z6pUwJzvpKkuQbgTZ9W7jPbbyU6u9OZqxBu7AHhcl40ozv3z0oJ/wOzK
+         HkNA==
+X-Gm-Message-State: APjAAAVdFxEMtzsV02TCPrcphyuMAQVHzAMT+A/FHoqadL/9Mv6zKzPL
+        EN2BGgOe2BI+YrqhzzQyCylnRQ==
+X-Google-Smtp-Source: APXvYqzDpmQvEW7+jkTs8Tps24AKLrQHBYSttRFZtZ8yU2QTCVGvVlI2lfsCP4wPD1x6JrkEMz54MQ==
+X-Received: by 2002:a62:641:: with SMTP id 62mr16324411pfg.55.1567150693260;
+        Fri, 30 Aug 2019 00:38:13 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id k8sm4036197pgm.14.2019.08.30.00.38.10
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 30 Aug 2019 00:38:12 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     vkoul@kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, eric.long@unisoc.com,
+        baolin.wang@linaro.org
+Subject: [PATCH] dmaengine: sprd: Fix the DMA link-list configuration
+Date:   Fri, 30 Aug 2019 15:37:45 +0800
+Message-Id: <77868edb7aff9d5cb12ac3af8827ef2e244441a6.1567150471.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:46:51PM +0900, Namhyung Kim wrote:
-> Hi Peter,
-> 
-> On Wed, Aug 28, 2019 at 6:45 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Aug 28, 2019 at 04:31:22PM +0900, Namhyung Kim wrote:
-> > > To support cgroup tracking, add CGROUP event to save a link between
-> > > cgroup path and inode number.  The attr.cgroup bit was also added to
-> > > enable cgroup tracking from userspace.
-> > >
-> > > This event will be generated when a new cgroup becomes active.
-> > > Userspace might need to synthesize those events for existing cgroups.
-> > >
-> > > As aux_output change is also going on, I just added the bit here as
-> > > well to remove possible conflicts later.
-> >
-> > Why do we want this?
-> 
-> I saw below [1] and thought you have the patch introduced aux_output
-> and it's gonna to be merged soon.
-> Also the tooling patches are already in the acme/perf/core
-> so I just wanted to avoid conflicts.
-> 
-> Anyway, I'm ok with changing it.  Will remove in v2.
+For the Spreadtrum DMA link-list mode, when the DMA engine got a slave
+hardware request, which will trigger the DMA engine to load the DMA
+configuration from the link-list memory automatically. But before the
+slave hardware request, the slave will get an incorrect residue due
+to the first node used to trigger the link-list was configured as the
+last source address and destination address.
 
-I seem to have confused both you and Arnaldo with this. This email
-questions the Changelog as a whole, not just the aux thing (I send a
-separate email for that).
+Thus we should make sure the first node was configured the start source
+address and destination address, which can fix this issue.
 
-This Changelog utterly fails to explain to me _why_ we need/want cgroup
-tracking. So why do I want to review and possibly merge this? Changelog
-needs to answer this.
+Fixes: 4ac695464763 ("dmaengine: sprd: Support DMA link-list mode")
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/dma/sprd-dma.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index baac476..525dc73 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -908,6 +908,7 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+ 	struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
+ 	struct dma_slave_config *slave_cfg = &schan->slave_cfg;
+ 	dma_addr_t src = 0, dst = 0;
++	dma_addr_t start_src = 0, start_dst = 0;
+ 	struct sprd_dma_desc *sdesc;
+ 	struct scatterlist *sg;
+ 	u32 len = 0;
+@@ -954,6 +955,11 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+ 			dst = sg_dma_address(sg);
+ 		}
+ 
++		if (!i) {
++			start_src = src;
++			start_dst = dst;
++		}
++
+ 		/*
+ 		 * The link-list mode needs at least 2 link-list
+ 		 * configurations. If there is only one sg, it doesn't
+@@ -970,8 +976,8 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+ 		}
+ 	}
+ 
+-	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, src, dst, len,
+-				 dir, flags, slave_cfg);
++	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, start_src,
++				 start_dst, len, dir, flags, slave_cfg);
+ 	if (ret) {
+ 		kfree(sdesc);
+ 		return NULL;
+-- 
+1.7.9.5
+
