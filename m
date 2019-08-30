@@ -2,119 +2,290 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC34C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953DCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E242A2341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QrSrtGf9"
+	by mail.kernel.org (Postfix) with ESMTP id 59F422070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfH3HSD (ORCPT
+        id S1728058AbfH3HSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:18:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46234 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfH3HRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:17:55 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so4523130wrt.13
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 00:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/2VDCi/8Nc6XhM54Nc0WK1H6m9eTFCgJrShafTKplS8=;
-        b=QrSrtGf9FjbrWkItYR3Mc4CqOLVCYT1FVWbRgCBg2Pu/Fdf7C/4W6eYHgzOrrBrWbq
-         JHcZW2ZIjjrgIMQnvF7oziVkdb5dPpo+6eWCQ5nhUyt1Z9tP+vFcNiObTEgtx/nnWCJl
-         7iD8LMqU3plCtQh2fTh2ZZFznTJef7MGmH//2p0s3OE4tADTPh08wkNf1xINmnxfzwhs
-         ECTsBbUZW40ejM+T1jUx+/elyxT9b9iZnRpX3tYsx10etXTY/QLw2SW002oG3aNRq7F+
-         YvYG/vUCfOfN5mPEFl9doHPOtPUb8oeaEAJp0Q32nCKYuWSi+4Vl9qItEHDWCe18BsIe
-         Ox7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/2VDCi/8Nc6XhM54Nc0WK1H6m9eTFCgJrShafTKplS8=;
-        b=Tz8JGH/yRvvziyoGIIE512KH7otVcklLcHTF8RCGm3lkyVXgyrDgd8J8fC+0zVQ3Ch
-         o1VM/suE/cnZTOTzpjpNCdahy/4JNbziWj6c1vUsvPL8CEROTFlA15VowQFEANc50gP3
-         NbZguSA0lDhrpPzDVDaOGd0hRW5cXIXESWC6YLuAkW2jutZ/kriurTVaiIKRwibHy99j
-         JjebpWiRz1MivaSDLU2yq+I3S/kp7ZeJGIrx4k7R4hEP3dh89h+grtRTe09G1IBin5yA
-         da67hrl0xLb1/U/fw/nBfU7XlNKiRHa946qGZ/rajPw35Mhfce5BIfTZ0ad15oiAsOEq
-         mBgA==
-X-Gm-Message-State: APjAAAUNX56EmkPCuVygB4hu/6S1LanPyJ+E4YoRZj4FEoD8Qbt+zueL
-        9LilbbkhZHaFwNWc7dytmjo64w==
-X-Google-Smtp-Source: APXvYqxQ+fhzAN12dqj8HcI+oZPcaqT6YamoO9mQejjXIJ1ON3y2eTjRph0jPHsEoE+jZMTi9k9wbg==
-X-Received: by 2002:adf:f0ce:: with SMTP id x14mr16642888wro.31.1567149473261;
-        Fri, 30 Aug 2019 00:17:53 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id x6sm7637529wrt.63.2019.08.30.00.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 00:17:52 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        JC Kuo <jckuo@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 3/4] phy: tegra: use regulator_bulk_set_supply_names()
-Date:   Fri, 30 Aug 2019 09:17:39 +0200
-Message-Id: <20190830071740.4267-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190830071740.4267-1-brgl@bgdev.pl>
-References: <20190830071740.4267-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 30 Aug 2019 03:18:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62229 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbfH3HSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:18:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 00:18:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
+   d="scan'208";a="182576854"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Aug 2019 00:18:45 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
+        kevin.tian@intel.com, mika.westerberg@linux.intel.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v8 0/7] iommu: Bounce page for untrusted devices
+Date:   Fri, 30 Aug 2019 15:17:11 +0800
+Message-Id: <20190830071718.16613-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The Thunderbolt vulnerabilities are public and have a nice
+name as Thunderclap [1] [3] nowadays. This patch series aims
+to mitigate those concerns.
 
-Use the new regulator helper instead of a for loop.
+An external PCI device is a PCI peripheral device connected
+to the system through an external bus, such as Thunderbolt.
+What makes it different is that it can't be trusted to the
+same degree as the devices build into the system. Generally,
+a trusted PCIe device will DMA into the designated buffers
+and not overrun or otherwise write outside the specified
+bounds. But it's different for an external device.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/phy/tegra/xusb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The minimum IOMMU mapping granularity is one page (4k), so
+for DMA transfers smaller than that a malicious PCIe device
+can access the whole page of memory even if it does not
+belong to the driver in question. This opens a possibility
+for DMA attack. For more information about DMA attacks
+imposed by an untrusted PCI/PCIe device, please refer to [2].
 
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index 2ea8497af82a..faf1137d1432 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -862,7 +862,6 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 	struct tegra_xusb_padctl *padctl;
- 	const struct of_device_id *match;
- 	struct resource *res;
--	unsigned int i;
- 	int err;
+This implements bounce buffer for the untrusted external
+devices. The transfers should be limited in isolated pages
+so the IOMMU window does not cover memory outside of what
+the driver expects. Previously (v3 and before), we proposed
+an optimisation to only copy the head and tail of the buffer
+if it spans multiple pages, and directly map the ones in the
+middle. Figure 1 gives a big picture about this solution.
+
+                                swiotlb             System
+                IOVA          bounce page           Memory
+             .---------.      .---------.        .---------.
+             |         |      |         |        |         |
+             |         |      |         |        |         |
+buffer_start .---------.      .---------.        .---------.
+             |         |----->|         |*******>|         |
+             |         |      |         | swiotlb|         |
+             |         |      |         | mapping|         |
+ IOMMU Page  '---------'      '---------'        '---------'
+  Boundary   |         |                         |         |
+             |         |                         |         |
+             |         |                         |         |
+             |         |------------------------>|         |
+             |         |    IOMMU mapping        |         |
+             |         |                         |         |
+ IOMMU Page  .---------.                         .---------.
+  Boundary   |         |                         |         |
+             |         |                         |         |
+             |         |------------------------>|         |
+             |         |     IOMMU mapping       |         |
+             |         |                         |         |
+             |         |                         |         |
+ IOMMU Page  .---------.      .---------.        .---------.
+  Boundary   |         |      |         |        |         |
+             |         |      |         |        |         |
+             |         |----->|         |*******>|         |
+  buffer_end '---------'      '---------' swiotlb'---------'
+             |         |      |         | mapping|         |
+             |         |      |         |        |         |
+             '---------'      '---------'        '---------'
+          Figure 1: A big view of iommu bounce page 
+
+As Robin Murphy pointed out, this ties us to using strict mode for
+TLB maintenance, which may not be an overall win depending on the
+balance between invalidation bandwidth vs. memcpy bandwidth. If we
+use standard SWIOTLB logic to always copy the whole thing, we should
+be able to release the bounce pages via the flush queue to allow
+'safe' lazy unmaps. So since v4 we start to use the standard swiotlb
+logic.
+
+                                swiotlb             System
+                IOVA          bounce page           Memory
+buffer_start .---------.      .---------.        .---------.
+             |         |      |         |        |         |
+             |         |      |         |        |         |
+             |         |      |         |        .---------.physical
+             |         |----->|         | ------>|         |_start  
+             |         |iommu |         | swiotlb|         |
+             |         | map  |         |   map  |         |
+ IOMMU Page  .---------.      .---------.        '---------'
+  Boundary   |         |      |         |        |         |
+             |         |      |         |        |         |
+             |         |----->|         |        |         |
+             |         |iommu |         |        |         |
+             |         | map  |         |        |         |
+             |         |      |         |        |         |
+ IOMMU Page  .---------.      .---------.        .---------.
+  Boundary   |         |      |         |        |         |
+             |         |----->|         |        |         |
+             |         |iommu |         |        |         |
+             |         | map  |         |        |         |
+             |         |      |         |        |         |
+ IOMMU Page  |         |      |         |        |         |
+  Boundary   .---------.      .---------.        .---------.
+             |         |      |         |------->|         |
+  buffer_end '---------'      '---------' swiotlb|         |
+             |         |----->|         |   map  |         |
+             |         |iommu |         |        |         |
+             |         | map  |         |        '---------' physical
+             |         |      |         |        |         | _end    
+             '---------'      '---------'        '---------'
+          Figure 2: A big view of simplified iommu bounce page 
+
+The implementation of bounce buffers for untrusted devices
+will cause a little performance overhead, but we didn't see
+any user experience problems. The users could use the kernel
+parameter defined in the IOMMU driver to remove the performance
+overhead if they trust their devices enough.
+
+This series introduces below APIs for bounce page:
+
+ * iommu_bounce_map(dev, addr, paddr, size, dir, attrs)
+   - Map a buffer start at DMA address @addr in bounce page
+     manner. For buffer that doesn't cross whole minimal
+     IOMMU pages, the bounce buffer policy is applied.
+     A bounce page mapped by swiotlb will be used as the DMA
+     target in the IOMMU page table.
  
- 	/* for backwards compatibility with old device trees */
-@@ -907,8 +906,9 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 		goto remove;
- 	}
+ * iommu_bounce_unmap(dev, addr, size, dir, attrs)
+   - Unmap the buffer mapped with iommu_bounce_map(). The bounce
+     page will be torn down after the bounced data get synced.
  
--	for (i = 0; i < padctl->soc->num_supplies; i++)
--		padctl->supplies[i].supply = padctl->soc->supply_names[i];
-+	regulator_bulk_set_supply_names(padctl->supplies,
-+					padctl->soc->supply_names,
-+					padctl->soc->num_supplies);
- 
- 	err = devm_regulator_bulk_get(&pdev->dev, padctl->soc->num_supplies,
- 				      padctl->supplies);
+ * iommu_bounce_sync_single(dev, addr, size, dir, target)
+   - Synce the bounced data in case the bounce mapped buffer is
+     reused.
+
+The bounce page idea:
+Based-on-idea-by: Mika Westerberg <mika.westerberg@intel.com>
+Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
+Based-on-idea-by: Alan Cox <alan.cox@intel.com>
+Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
+Based-on-idea-by: Robin Murphy <robin.murphy@arm.com>
+
+The patch series has been tested by:
+Tested-by: Xu Pengfei <pengfei.xu@intel.com>
+Tested-by: Mika Westerberg <mika.westerberg@intel.com>
+
+Reference:
+[1] https://thunderclap.io/
+[2] https://thunderclap.io/thunderclap-paper-ndss2019.pdf
+[3] https://christian.kellner.me/2019/02/27/thunderclap-and-linux/
+[4] https://lkml.org/lkml/2019/3/4/644
+
+Best regards,
+Baolu
+
+Change log:
+  v7->v8:
+  - The previous v7 was posted here:
+    https://lkml.org/lkml/2019/8/23/83
+  - Keep the swiotlb pre-allocated pages only if intel-iommu driver
+    needs bounce buffers, a.k.a. system has untrusted devices or
+    external ports.
+
+  v6->v7:
+  - The previous v6 was posted here:
+    https://lkml.org/lkml/2019/7/30/18
+  - Remove the unnecessary bounce page iommu APIs
+
+  v5->v6:
+  - The previous v5 was posted here:
+    https://lkml.org/lkml/2019/7/24/2134
+  - Move the per-device dma ops into another seperated series.
+  - Christoph Hellwig reviewed the patches and add his Reviewed-bys.
+  - Add Steven Rostedt's Review-by for the trace patch.
+  - Adress the review comments from Christoph Hellwig.
+  - This patch series is now based on v5.3-rc2.
+
+  v4->v5:
+  - The previous v4 was posted here:
+    https://lkml.org/lkml/2019/6/2/187
+  - Add per-device dma ops and use bounce buffer specific dma
+    ops for those untrusted devices.
+      devices with identity domains	-> system default dma ops
+      trusted devices with dma domains	-> iommu/vt-d dma ops
+      untrusted devices		 	-> bounced dma ops
+  - Address various review comments received since v4.
+  - This patch series is based on v5.3-rc1.
+
+  v3->v4:
+  - The previous v3 was posted here:
+    https://lkml.org/lkml/2019/4/20/213
+  - Discard the optimization of only mapping head and tail
+    partial pages, use the standard swiotlb in order to achieve
+    iotlb flush efficiency.
+  - This patch series is based on the top of the vt-d branch of
+    Joerg's iommu tree.
+
+  v2->v3:
+  - The previous v2 was posed here:
+    https://lkml.org/lkml/2019/3/27/157
+  - Reuse the existing swiotlb APIs for bounce buffer by
+    extending it to support bounce page.
+  - Move the bouce page APIs into iommu generic layer.
+  - This patch series is based on 5.1-rc1.
+
+  v1->v2:
+  - The previous v1 was posted here:
+    https://lkml.org/lkml/2019/3/12/66
+  - Refactor the code to remove struct bounce_param;
+  - During the v1 review cycle, we discussed the possibility
+    of reusing swiotlb code to avoid code dumplication, but
+    we found the swiotlb implementations are not ready for the
+    use of bounce page pool.
+    https://lkml.org/lkml/2019/3/19/259
+  - This patch series has been rebased to v5.1-rc2.
+
+Lu Baolu (7):
+  PCI: Add dev_is_untrusted helper
+  swiotlb: Split size parameter to map/unmap APIs
+  swiotlb: Zero out bounce buffer for untrusted device
+  iommu/vt-d: Check whether device requires bounce buffer
+  iommu/vt-d: Don't switch off swiotlb if bounce page is used
+  iommu/vt-d: Add trace events for device dma map/unmap
+  iommu/vt-d: Use bounce buffer for untrusted devices
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ drivers/iommu/Kconfig                         |   1 +
+ drivers/iommu/Makefile                        |   1 +
+ drivers/iommu/intel-iommu.c                   | 282 +++++++++++++++++-
+ drivers/iommu/intel-trace.c                   |  14 +
+ drivers/xen/swiotlb-xen.c                     |   8 +-
+ include/linux/pci.h                           |   2 +
+ include/linux/swiotlb.h                       |   8 +-
+ include/trace/events/intel_iommu.h            |  84 ++++++
+ kernel/dma/direct.c                           |   2 +-
+ kernel/dma/swiotlb.c                          |  46 ++-
+ 11 files changed, 419 insertions(+), 34 deletions(-)
+ create mode 100644 drivers/iommu/intel-trace.c
+ create mode 100644 include/trace/events/intel_iommu.h
+
 -- 
-2.21.0
+2.17.1
 
