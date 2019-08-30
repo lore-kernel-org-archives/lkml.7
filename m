@@ -2,135 +2,362 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B411C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778AAC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14FC2341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DVNT4sGr"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5882341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:03:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfH3QCB (ORCPT
+        id S1728240AbfH3QDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:02:01 -0400
-Received: from mail-pl1-f179.google.com ([209.85.214.179]:38255 "EHLO
-        mail-pl1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbfH3QCB (ORCPT
+        Fri, 30 Aug 2019 12:03:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727791AbfH3QDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:02:01 -0400
-Received: by mail-pl1-f179.google.com with SMTP id w11so3582627plp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=Ll00P0HvLyh9ff4mGqhoY7oNmqZV/WIp9ZbBt7WSZuQ=;
-        b=DVNT4sGrKS8uBzpUvPlrwNcWOB48ID/E33wWVXKNaf5Rn1vgh5+t2kQyuqrFOdqw8j
-         2YmAmtzGl93QBYkr5aUtVLO4FEmveVBcPhwSjMHjKvnQY3WFEPGdEkGAlL/QNiRxAde0
-         9vR6xABOTJ0qzHXur+j0+MpQAv4Et4E71ZHUg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=Ll00P0HvLyh9ff4mGqhoY7oNmqZV/WIp9ZbBt7WSZuQ=;
-        b=SlWPzHE8KQGJ3lIVTD6v2DGvhfGwx9VCeTFSt1b24YQRx00kRhZABM/+Gmwv9cwgOG
-         QU4+jACqG+NctFnWfY+g7wPmZg7KO25uNDDA3hsN9db7rZR29mobx2AhLhUDndoSoWq5
-         GAhZKH3fJ1v+4tG+bU84IFfI6wuPSzanCbJum7O1MTAcjx5XBtIq1Gnb3020z1FnFVu8
-         HhQmqS4tKm+AuSmeVWkbOKlszQku9cqoaN+bn8d2yiBld+d47oItROlScqRuAtkc6YOk
-         WRgnDbinJ83X/18qAIlv7wXLvGVwSM8sli/i2HAJAPSTEPjuYaZ9c+uaKtNuRw7uPspp
-         OT9A==
-X-Gm-Message-State: APjAAAWcEb83ZTgJHE2G7yPwLmHxa0onhSjRoamUz5+1GPAwSDHZPeBg
-        mwMj1j//WwBz2Kxw+pQuxJZ+6A==
-X-Google-Smtp-Source: APXvYqxBQB8qqHi4xILIYQH7twNKrk/p0gZaksrJaQi2G+n2F2uAcIBYTnbtvlcNY1uzFyMjBAQ7Rg==
-X-Received: by 2002:a17:902:223:: with SMTP id 32mr16796973plc.220.1567180920622;
-        Fri, 30 Aug 2019 09:02:00 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id t70sm5846917pjb.2.2019.08.30.09.01.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 09:02:00 -0700 (PDT)
-Message-ID: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Aug 2019 12:03:02 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UFvvrx023500
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:03:01 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uq5tk2p8f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 12:03:00 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 30 Aug 2019 17:02:59 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 30 Aug 2019 17:02:56 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UG2qw757475302
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 16:02:53 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5972AE056;
+        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 661AEAE061;
+        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.193])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
+Date:   Fri, 30 Aug 2019 18:02:50 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+In-Reply-To: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org> <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org> <20190223165218.GB572@tuxbook-pro> <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
-Cc:     robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
-        jackp@codeaurora.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        khasim.mohammed@linaro.org
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 30 Aug 2019 09:01:59 -0700
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19083016-0016-0000-0000-000002A4B685
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19083016-0017-0000-0000-000033051207
+Message-Id: <20190830180250.79804f76.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez (2019-08-29 00:03:48)
-> On 2/23/19 17:52, Bjorn Andersson wrote:
-> > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
-> >> +
-> >> +Required child nodes:
-> >> +
-> >> +- usb connector node as defined in bindings/connector/usb-connector.t=
-xt
-> >> +  containing the property vbus-supply.
-> >> +
-> >> +Example:
-> >> +
-> >> +usb3_phy: usb3-phy@78000 {
-> >> +    compatible =3D "qcom,snps-usb-ssphy";
-> >> +    reg =3D <0x78000 0x400>;
-> >> +    #phy-cells =3D <0>;
-> >> +    clocks =3D <&rpmcc RPM_SMD_LN_BB_CLK>,
-> >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-> >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
-> >> +    clock-names =3D "ref", "phy", "pipe";
-> >> +    resets =3D <&gcc GCC_USB3_PHY_BCR>,
-> >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
-> >> +    reset-names =3D "com", "phy";
-> >> +    vdd-supply =3D <&vreg_l3_1p05>;
-> >> +    vdda1p8-supply =3D <&vreg_l5_1p8>;
-> >> +    usb3_c_connector: usb3-c-connector {
+On Mon, 19 Aug 2019 13:48:49 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Node name should be 'connector', not usb3-c-connector.
+> When an AP queue is reset (zeroized), interrupts are disabled. The queue
+> reset function currently tries to disable interrupts unnecessarily. This patch
+> removes the unnecessary calls to disable interrupts after queue reset.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 0604b49a4d32..e3bcb430e214 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	return NOTIFY_OK;
+>  }
+>  
+> -static void vfio_ap_irq_disable_apqn(int apqn)
+> +static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
+>  {
+>  	struct device *dev;
+> -	struct vfio_ap_queue *q;
+> +	struct vfio_ap_queue *q = NULL;
+>  
+>  	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>  				 &apqn, match_apqn);
+>  	if (dev) {
+>  		q = dev_get_drvdata(dev);
+> -		vfio_ap_irq_disable(q);
+>  		put_device(dev);
+>  	}
+> +
+> +	return q;
+>  }
+>  
+>  int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> @@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  	int rc = 0;
+>  	unsigned long apid, apqi;
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+> +	struct vfio_ap_queue *q;
+>  
+>  	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+>  			     matrix_mdev->matrix.apm_max + 1) {
+> @@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  			 */
+>  			if (ret)
+>  				rc = ret;
+> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+> +
+> +			/*
+> +			 * Resetting a queue disables interrupts as a side
+> +			 * effect, so there is no need to disable interrupts
+> +			 * here. Note that an error on reset indicates the
+> +			 * queue is inaccessible, so an attempt to disable
+> +			 * interrupts would fail and is therefore unnecessary.
+> +			 * Just free up the resources used by IRQ processing.
+> +			 */
 
-> >=20
-> > The USB-C connector is attached both to the HS and SS PHYs, so I think
-> > you should represent this external to this node and use of_graph to
-> > query it.
->=20
-> but AFAICS we wont be able to retrieve the vbux-supply from an external
-> node (that interface does not exist).
->=20
-> rob, do you have a suggestion?
+I have some concerns about this patch. One thing we must ensure is that
+the machine does not poke freed memory (NIB, GISA). With the current
+design that means we must ensure that there won't be any interruption
+conditions indicated (and interrupts made pending) after this point.
 
-Shouldn't the vbus supply be in the phy? Or is this a situation where
-the phy itself doesn't have the vbus supply going to it because the PMIC
-gets in the way and handles the vbus for the connector by having the SoC
-communicate with the PMIC about when to turn the vbus on and off, etc?
+I'm not entirely convinced this is ensured after your change. The
+relevant bits of the  documentation are particularly hard to figure out.
+I could use some clarifications for sure.
 
->=20
-> >=20
-> > So the connector should look similar to example 2 in
-> > connector/usb-connector.txt.
-> >=20
-> > Regards,
-> > Bjorn
-> >=20
-> >> +            compatible =3D "usb-c-connector";
-> >> +            label =3D "USB-C";
-> >> +            type =3D "micro";
-> >> +            vbus-supply =3D <&usb3_vbus_reg>;
-> >> +    };
-> >> +};
+This hunk removes the wait implemented by vfio_ap_wait_for_irqclear()
+along with the hopefully overkill AQIC.
+
+Let me name some of the scenarios I'm concerned about, along with the
+code that is currently supposed to handle these.
+
+
+int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,              
+                             unsigned int retry)                                
+{                                                                               
+        struct ap_queue_status status;                                          
+        int retry2 = 2;                                                         
+        int apqn = AP_MKQID(apid, apqi);                                        
+                                                                                
+        do {                                                                    
+                status = ap_zapq(apqn);                                         
+                switch (status.response_code) {                                 
+                case AP_RESPONSE_NORMAL:                                        
+                        while (!status.queue_empty && retry2--) {               
+                                msleep(20);                                     
+                                status = ap_tapq(apqn, NULL);                   
+                        }                                                       
+                        WARN_ON_ONCE(retry <= 0);                              
+                        return 0;                                               
+                case AP_RESPONSE_RESET_IN_PROGRESS:                             
+                case AP_RESPONSE_BUSY:                                          
+                        msleep(20);                                             
+                        break;                                                  
+                default:                                                        
+                        /* things are really broken, give up */                 
+                        return -EIO;                                            
+                }                                                               
+        } while (retry--);                                                      
+                                                                                
+        return -EBUSY; 
+
+Scenario 1) 
+
+ap_zapq() returns status.response_code == AP_RESPONSE_RESET_IN_PROGRESS,
+because for example G2 did a ZAPQ before us.
+
+The current logic retries ap_zapq() once after 20 msec. I have no idea
+if that is sufficient under all circumstances. If we get a
+AP_RESPONSE_RESET_IN_PROGRESS again, we return with -EBUSY and do nothing
+about it if the whole process was triggered by vfio_ap_mdev_release().
+Not even a warning.
+
+Please notice that this was almost fine before IRQ support, because the
+queue will get reset ASAP, and ...
+
+Scenario 2)
+
+It takes longer than 40 msec for the reset to complete. I don't know if
+this is a possibility, but before your patch we used to wait of 1 sec.
+
+I guess the we need the timeouts because do this with matrix_dev->lock
+held. I'm not sure it's a good idea long term.
+
+Scenario 3)
+
+ap_zapq() returns status.response_code == AP_RESPONSE_DECONFIGURED. In
+this case we would give up right away. Again so that we don't even know
+we hit this case. There ain't much I can think about we could do here.
+
+I hope we are guaranteed to  not get any bits set at this point, but I could
+use some help.
+
+                                  *
+
+The good thing is I'm pretty sure that we are safe (i.e. no bits will be
+poked by the hardware) after seeing the queue empty after we issued a
+reset request.
+
+So my concerns basically boil down to are the cumulative timeouts big enough
+so we never time out (including are timeouts really the way to go)?
+
+We should probably take any discussion about from which point on is it safe
+to assume that NIB and GISA won't be poked by HW offline as the guys
+without documentation can't contribute.
+
+
+Two issues not directly related to your patch. I formulated those as two
+follow up patches on top of yours .please take a look at them.
+
+-------------------------------8<------------------------------------------
+From: Halil Pasic <pasic@linux.ibm.com>
+Date: Fri, 30 Aug 2019 16:03:42 +0200
+Subject: [PATCH 1/2] s390: vfio-ap: fix warning reset not completed
+
+The intention seems to be to warn once when we don't wait enough for the
+reset to complete. Let's use the right retry counter to accomplish that
+semantic.
+
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index e3bcb43..dd07ebf 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -1144,7 +1144,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+ 				msleep(20);
+ 				status = ap_tapq(apqn, NULL);
+ 			}
+-			WARN_ON_ONCE(retry <= 0);
++			WARN_ON_ONCE(retry2 <= 0);
+ 			return 0;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
+-- 
+2.5.5
+
+-------------------------------8<----------------------------------------
+From: Halil Pasic <pasic@linux.ibm.com>
+Date: Fri, 30 Aug 2019 17:39:47 +0200
+Subject: [PATCH 2/2] s390: vfio-ap: don't wait after AQIC interpretation
+
+Waiting for the asynchronous part of AQIC to complete as a part
+AQIC implementation is unnecessary and silly.
+
+Let's get rid of vfio_ap_wait_for_irqclear().
+
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 50 ++-------------------------------------
+ 1 file changed, 2 insertions(+), 48 deletions(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index dd07ebf..8d098f0 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -68,47 +68,6 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
+ }
+ 
+ /**
+- * vfio_ap_wait_for_irqclear
+- * @apqn: The AP Queue number
+- *
+- * Checks the IRQ bit for the status of this APQN using ap_tapq.
+- * Returns if the ap_tapq function succeeded and the bit is clear.
+- * Returns if ap_tapq function failed with invalid, deconfigured or
+- * checkstopped AP.
+- * Otherwise retries up to 5 times after waiting 20ms.
+- *
+- */
+-static void vfio_ap_wait_for_irqclear(int apqn)
+-{
+-	struct ap_queue_status status;
+-	int retry = 5;
+-
+-	do {
+-		status = ap_tapq(apqn, NULL);
+-		switch (status.response_code) {
+-		case AP_RESPONSE_NORMAL:
+-		case AP_RESPONSE_RESET_IN_PROGRESS:
+-			if (!status.irq_enabled)
+-				return;
+-			/* Fall through */
+-		case AP_RESPONSE_BUSY:
+-			msleep(20);
+-			break;
+-		case AP_RESPONSE_Q_NOT_AVAIL:
+-		case AP_RESPONSE_DECONFIGURED:
+-		case AP_RESPONSE_CHECKSTOPPED:
+-		default:
+-			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
+-				  status.response_code, apqn);
+-			return;
+-		}
+-	} while (--retry);
+-
+-	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
+-		  __func__, status.response_code, apqn);
+-}
+-
+-/**
+  * vfio_ap_free_aqic_resources
+  * @q: The vfio_ap_queue
+  *
+@@ -133,14 +92,10 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+  * @q: The vfio_ap_queue
+  *
+  * Uses ap_aqic to disable the interruption and in case of success, reset
+- * in progress or IRQ disable command already proceeded: calls
+- * vfio_ap_wait_for_irqclear() to check for the IRQ bit to be clear
+- * and calls vfio_ap_free_aqic_resources() to free the resources associated
++ * in progress or IRQ disable command already proceeded :calls
++ * vfio_ap_free_aqic_resources() to free the resources associated
+  * with the AP interrupt handling.
+  *
+- * In the case the AP is busy, or a reset is in progress,
+- * retries after 20ms, up to 5 times.
+- *
+  * Returns if ap_aqic function failed with invalid, deconfigured or
+  * checkstopped AP.
+  */
+@@ -155,7 +110,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+ 		switch (status.response_code) {
+ 		case AP_RESPONSE_OTHERWISE_CHANGED:
+ 		case AP_RESPONSE_NORMAL:
+-			vfio_ap_wait_for_irqclear(q->apqn);
+ 			goto end_free;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
+-- 
+2.5.5
+
