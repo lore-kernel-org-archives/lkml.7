@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56613C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345B5C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD2023426
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1208321897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfH3OFc (ORCPT
+        id S1728067AbfH3OG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:05:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56877 "EHLO
+        Fri, 30 Aug 2019 10:06:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56987 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfH3OFb (ORCPT
+        with ESMTP id S1727781AbfH3OGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:05:31 -0400
+        Fri, 30 Aug 2019 10:06:55 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212])
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1i3hWr-0000GM-AR; Fri, 30 Aug 2019 14:05:29 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        ceph-devel@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        id 1i3hYD-0000Qo-8C; Fri, 30 Aug 2019 14:06:53 +0000
+Subject: Re: [PATCH] afs: use BIT_ULL for shifting to fix integer overflow
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190830104912.1090-1-colin.king@canonical.com>
+ <3079.1567173701@warthog.procyon.org.uk>
 From:   Colin Ian King <colin.king@canonical.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
@@ -75,47 +75,34 @@ Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
  WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
  QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
  GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Subject: bug report: libceph: follow redirect replies from osds
-Message-ID: <3a4ff829-7302-7201-81c2-a557fe35afc8@canonical.com>
-Date:   Fri, 30 Aug 2019 15:05:28 +0100
+Message-ID: <0a5df84f-920f-d2aa-69d6-963b40142f1f@canonical.com>
+Date:   Fri, 30 Aug 2019 15:06:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <3079.1567173701@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 30/08/2019 15:01, David Howells wrote:
+> Colin King <colin.king@canonical.com> wrote:
+> 
+>> The expression 1 << nr_slots is evaluated with 32 bit integer arithmetic
+>> and can overflow before it is widened.
+> 
+> If it does, it's an error on the part of the caller.  See the banner comment:
+> 1 <= nr_slots <= 9.
 
-Static analysis with Coverity has picked up an issue with commit:
+Doh, totally missed that. My bad.
 
-commit 205ee1187a671c3b067d7f1e974903b44036f270
-Author: Ilya Dryomov <ilya.dryomov@inktank.com>
-Date:   Mon Jan 27 17:40:20 2014 +0200
-
-    libceph: follow redirect replies from osds
-
-Specifically in function ceph_redirect_decode in net/ceph/osd_client.c:
-
-3485
-3486        len = ceph_decode_32(p);
-
-CID 17904: Unused value (UNUSED_VALUE)
-
-3487        *p += len; /* skip osd_instructions */
-3488
-3489        /* skip the rest */
-3490        *p = struct_end;
-
-The double write to *p looks wrong, I suspect the *p += len; should be
-just incrementing pointer p as in: p += len.  Am I correct to assume
-this is the correct fix?
-
-Colin
-
-
+> 
+> And, in any case, if nr_slots >= 64, using BIT_ULL wouldn't help...
+> 
+> David
+> 
 
