@@ -2,200 +2,110 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7F3C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2847C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6625A23430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="soGYPU2c"
+	by mail.kernel.org (Postfix) with ESMTP id C3F282343B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567208399;
+	bh=tepavUerUfnWjCraglwSvqGogI76BfV/2NaN1BKELR8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=yehwQ+xIdiajZTvIfZSCCdSk98Ic0JfsZ2o2Voc5H3cv4A+j9ggNWdeTyiu0/PnNo
+	 h4RRbBmmcvNpMzuwXEBkpBEnPuXZq44DlUUaWnGMbSbKWs9funPMsjl380AbBwN4It
+	 O7JddO6kqFVRD0J8lyUsFLcjW0bSsFGgzKd8IUBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfH3XhT (ORCPT
+        id S1728334AbfH3Xj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 19:37:19 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40700 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728395AbfH3XhR (ORCPT
+        Fri, 30 Aug 2019 19:39:58 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39918 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbfH3Xj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 19:37:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w16so5562116pfn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:37:17 -0700 (PDT)
+        Fri, 30 Aug 2019 19:39:58 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 4so7689585qki.6;
+        Fri, 30 Aug 2019 16:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YFTK9l48HgFlEfO2ql+ojPVP+yldR+Yv79LTZZYwKgY=;
-        b=soGYPU2cXZVyEmSQrFtuZNhQ1j3VNFQJMN2wp6q10eDbyQfq8hQxHBrRL9izb5VZc7
-         eXz9edafaF8M5TP3yZDWnF/EopxRz3g049UVV70/TcDbaTn7hb/UPjz/+MZfQytEb1uZ
-         6fZJdK0Tb23JLwQfd75dCGUeOSFrXwTJHGoIhgOQTqk7qBps4c97F1zxF3bzcd3C4P4S
-         W7a9gItWvAaWjNjTvYc4CAgY5SzR76Vbl4xd6NMvw2s709Vt5MwB+9P2bntXaec82+2j
-         FeBKCuzpLjxYNBLJfz65j7bebXt50JjCPXpXHC3sbb0BehhwQwo1wN2hTsTsr9+cg+5l
-         NyDA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4zSHmBuu2z620JnQtJpjdnCiY4EyNxgyK8eXuy8Fp3g=;
+        b=crrlzWVCPrad6E/l5gUOJeUFBDMbX2j42jRsRshhDO06W+hRwrtPoDupOYNX9YRJAS
+         qnaa5R2MPgzHxkAKRiuhfPVvVLRyPRjcFQPhypTjiPF7t7eFlMfsEjVn3KyPHLDk0tqQ
+         yzsUwnmgWOy++tGxNtoL8EJjG9cCf/a82pn9HBy5c0eyiyVMTDys9ARccj420+yyXD3M
+         u/4j0d25UBsVS2oOWjfMOsVza8V1XM1cmrSPZjkQ84f8wIG6V/G+16MRkQM6ofxYrrBL
+         dlIUE9zVIml5Qt9U1Nn4by/DEDj1Re1H7tzZmS4OJNf71UuwFJWukVGyB2Bq2WuQJAFd
+         Om5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YFTK9l48HgFlEfO2ql+ojPVP+yldR+Yv79LTZZYwKgY=;
-        b=dS+bkm6ip2KUHk/+VKgvG0mur5oXb+X+g9lacRrpi7Z2/FWNq6dtCMMX7/pY3j8Wvp
-         pdtMka0Jx3JWnSSd3XxmhvX3wCA+biaBjKM/hSinW6Y6XUfuu1TN3E9kIu/DBVDYFNEJ
-         iFIsJ7AnLBeleYpOUwBpW0jkcn13TM/eiXFTZBSUvf584MxoeeDB1OLyz1vCvSpOarFq
-         QhjaIVxncvIunmzRHa1LjMevVbdk68c3cPKtgVvRnbaSW0GH1CKjsE+pjsTKGWpY2ujY
-         AFXiA3F/awpal3MWe6XPRsipQysRtTcnf2YMZsLJGTvx4o0JubnDxnh+F7sf0x62QNzp
-         SaVw==
-X-Gm-Message-State: APjAAAUnrO/f1v/Nb/QVrWols3nBvZvSHYmli7jehrqGcxjK9e2WZbmt
-        KddKS9Kl2UcYLqB2y2CuahWVpw==
-X-Google-Smtp-Source: APXvYqw6w0Q4kDWY2duwjPimT9htv/UJFgKQCmcAUtnMSA/hgFu1PLvccl2u2lz0C3vbaaQrSHrzOg==
-X-Received: by 2002:a63:d002:: with SMTP id z2mr15369704pgf.364.1567208236014;
-        Fri, 30 Aug 2019 16:37:16 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id x22sm14444793pfo.180.2019.08.30.16.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 16:37:15 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 16:37:10 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Tim.Bird@sony.com
-Cc:     joe@perches.com, shuah@kernel.org,
-        sergey.senozhatsky.work@gmail.com, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        frowand.list@gmail.com, sboyd@kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        rdunlap@infradead.org, sfr@canb.auug.org.au
-Subject: Re: [PATCH v2] kunit: fix failure to build without printk
-Message-ID: <20190830233710.GA101591@google.com>
-References: <20190828093143.163302-1-brendanhiggins@google.com>
- <20190828094929.GA14038@jagdpanzerIV>
- <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
- <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
- <20190830183821.GA30306@google.com>
- <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977A8392@USCULXMSG01.am.sony.com>
- <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
- <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977A8416@USCULXMSG01.am.sony.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=4zSHmBuu2z620JnQtJpjdnCiY4EyNxgyK8eXuy8Fp3g=;
+        b=TcjAQrfoR+WbvNr+dCO9X0MdGBh/CznZo6/1oxWw+zWyv9rkWkMCH7Lrr89AulmyWr
+         uV+4iL2V0w+xqkhZ7pmQIHVU/okSnxszBCPVUfIEhnoaCTicHIpmuCT3mv9zrdBIvoRP
+         VZq1O8nWVdkT7WFFB670uvkaJkEQgFIQVxPgFPX5E0BjRAXpB+KYFk4wjbpwZ8Op7t1E
+         0k7I5TCvpjgtGEWC9JTJFQVGLfwJx5FJ7XnZc54PiZHoClO/+PL7w5o5bebJl2AIT7PX
+         uDWzMGzGPC0Opifl4GLk2Ll2P9A2zA1s70SpoQtYdKGXmQ1gSR8HXOL3MKjZ+5RVUNJn
+         FKZg==
+X-Gm-Message-State: APjAAAVmrcDWQZ/Z/S54IA3i5VNqR5Lr9GAJLgzz2rZpgXvuk0Za0t8i
+        /zK6DPwfUVBbUD/8dO+iQqE=
+X-Google-Smtp-Source: APXvYqzzYmdlBxTIfr5O1rnxrjD1VLtmo8nqYlAbq7V/ubUjey9bDE5btLXe/5jb2phbO5KCpgThPQ==
+X-Received: by 2002:a37:7cc3:: with SMTP id x186mr18149092qkc.169.1567208397456;
+        Fri, 30 Aug 2019 16:39:57 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::ca48])
+        by smtp.gmail.com with ESMTPSA id q25sm3339719qkm.30.2019.08.30.16.39.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 16:39:56 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 16:39:54 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [block/for-next] writeback: don't access page->mapping directly in
+ track_foreign_dirty TP
+Message-ID: <20190830233954.GC2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977A8416@USCULXMSG01.am.sony.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:22:43PM +0000, Tim.Bird@sony.com wrote:
-> > -----Original Message-----
-> > From: Brendan Higgins 
-> > 
-> > On Fri, Aug 30, 2019 at 3:46 PM Joe Perches <joe@perches.com> wrote:
-> > >
-> > > On Fri, 2019-08-30 at 21:58 +0000, Tim.Bird@sony.com wrote:
-> > > > > From: Joe Perches
-> > > []
-> > > > IMHO %pV should be avoided if possible.  Just because people are
-> > > > doing it doesn't mean it should be used when it is not necessary.
-> > >
-> > > Well, as the guy that created %pV, I of course
-> > > have a different opinion.
-> > >
-> > > > >  then wouldn't it be easier to pass in the
-> > > > > > kernel level as a separate parameter and then strip off all printk
-> > > > > > headers like this:
-> > > > >
-> > > > > Depends on whether or not you care for overall
-> > > > > object size.  Consolidated formats with the
-> > > > > embedded KERN_<LEVEL> like suggested are smaller
-> > > > > overall object size.
-> > > >
-> > > > This is an argument I can agree with.  I'm generally in favor of
-> > > > things that lessen kernel size creep. :-)
-> > >
-> > > As am I.
-> > 
-> > Sorry, to be clear, we are talking about the object size penalty due
-> > to adding a single parameter to a function. Is that right?
-> 
-> Not exactly.  The argument is that pre-pending the different KERN_LEVEL
-> strings onto format strings can result in several versions of nearly identical strings
-> being compiled into the object file.  By parameterizing this (that is, adding
-> '%s' into the format string, and putting the level into the string as an argument),
-> it prevents this duplication of format strings.
-> 
-> I haven't seen the data on duplication of format strings, and how much this
-> affects it, but little things can add up.  Whether it matters in this case depends
-> on whether the format strings that kunit uses are also used elsewhere in the kernel,
-> and whether these same format strings are used with multiple kernel message levels.
->  -- Tim
+page->mapping may encode different values in it and page_mapping()
+should always be used to access the mapping pointer.
+track_foreign_dirty tracepoint was incorrectly accessing page->mapping
+directly.  Use page_mapping() instead.  Also, add NULL checks while at
+it.
 
-I thought this portion of the discussion was about whether Joe's version
-of kunit_printk was better or my critique of his version of kunit_printk:
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Jan Kara <jack@suse.cz>
+Fixes: 3a8e9ac89e6a ("writeback: add tracepoints for cgroup foreign writebacks")
+---
+ include/trace/events/writeback.h |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Joe's:
-> > > > -void kunit_printk(const char *level,
-> > > > -		  const struct kunit *test,
-> > > > -		  const char *fmt, ...)
-> > > > +void kunit_printk(const struct kunit *test, const char *fmt, ...)
-> > > >  {
-> > > > +	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
-> > > >  	struct va_format vaf;
-> > > >  	va_list args;
-> > > > +	int kern_level;
-> > > >
-> > > >  	va_start(args, fmt);
-> > > >
-> > > > +	while ((kern_level = printk_get_level(fmt)) != 0) {
-> > > > +		size_t size = printk_skip_level(fmt) - fmt;
-> > > > +
-> > > > +		if (kern_level >= '0' && kern_level <= '7') {
-> > > > +			memcpy(lvl, fmt,  size);
-> > > > +			lvl[size] = '\0';
-> > > > +		}
-> > > > +		fmt += size;
-> > > > +	}
-> > > > +
-> > > >  	vaf.fmt = fmt;
-> > > >  	vaf.va = &args;
-> > > >
-> > > > -	kunit_vprintk(test, level, &vaf);
-> > > > +	printk("%s\t# %s %pV\n", lvl, test->name, &vaf);
-> > > >
-> > > >  	va_end(args);
-> > > >  }
-
-Mine:
->  void kunit_printk(const char *level,
->  		  const struct kunit *test,
->  		  const char *fmt, ...)
->  {
->  	struct va_format vaf;
->  	va_list args;
-> 
->  	va_start(args, fmt);
-> 
-> +	fmt = printk_skip_headers(fmt);
-> +
->  	vaf.fmt = fmt;
->  	vaf.va = &args;
-> 
-> -	kunit_vprintk(test, level, &vaf);
-> +	printk("%s\t# %s %pV\n", level, test->name, &vaf);
-> 
->  	va_end(args);
->  }
-
-I thought you and Joe were arguing that "Joe's" resulted in a smaller
-object size than "Mine" (not to be confused with the actual patch I
-presented here, which is what Sergey suggested I do on a different
-thread).
-
-I really don't feel strongly about what Sergey suggested I do (which is
-what this patch originally introduced), versus, what Joe suggested,
-versus what I suggested in response to Joe (or any of the things
-suggested on other threads). I just want to pick one, fix the breakage
-in linux-next, and move on with my life.
-
-Cheers
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 3dc9fb9e7c78..3a27335fce2c 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -251,9 +251,12 @@ TRACE_EVENT(track_foreign_dirty,
+ 	),
+ 
+ 	TP_fast_assign(
++		struct address_space *mapping = page_mapping(page);
++		struct inode *inode = mapping ? mapping->host : NULL;
++
+ 		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
+ 		__entry->bdi_id		= wb->bdi->id;
+-		__entry->ino		= page->mapping->host->i_ino;
++		__entry->ino		= inode ? inode->i_ino : 0;
+ 		__entry->memcg_id	= wb->memcg_css->id;
+ 		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
+ 		__entry->page_cgroup_ino = page->mem_cgroup->css.cgroup->kn->id.ino;
