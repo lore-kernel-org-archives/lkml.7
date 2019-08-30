@@ -2,112 +2,73 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DECC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAFDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922C62173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C47F21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfH3H6C (ORCPT
+        id S1728275AbfH3H6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:58:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:57377 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfH3H6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:58:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 00:58:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
-   d="asc'?scan'208";a="381931845"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Aug 2019 00:57:59 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PTP: introduce new versions of IOCTLs
-In-Reply-To: <20190829172113.GA2166@localhost>
-References: <20190829095825.2108-1-felipe.balbi@linux.intel.com> <20190829172113.GA2166@localhost>
-Date:   Fri, 30 Aug 2019 10:57:55 +0300
-Message-ID: <87tv9zulto.fsf@gmail.com>
+        Fri, 30 Aug 2019 03:58:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52404 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbfH3H6r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:58:47 -0400
+Received: from [5.158.153.55] (helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i3bnr-0007Ec-6z; Fri, 30 Aug 2019 09:58:39 +0200
+Date:   Fri, 30 Aug 2019 09:58:26 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Philip Li <philip.li@intel.com>
+cc:     Borislav Petkov <bp@suse.de>, kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the backdoor
+ call with support for new instructions
+In-Reply-To: <20190830063326.GB2598@intel.com>
+Message-ID: <alpine.DEB.2.21.1908300957450.1933@nanos.tec.linutronix.de>
+References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2> <201908292325.aLXyyzEx%lkp@intel.com> <20190829163353.GC2132@zn.tnic> <20190830010349.GD857@intel.com> <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de> <20190830062053.GA2598@intel.com>
+ <20190830063326.GB2598@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Richard Cochran <richardcochran@gmail.com> writes:
->> @@ -139,11 +141,24 @@ long ptp_ioctl(struct posix_clock *pc, unsigned in=
-t cmd, unsigned long arg)
->>  		break;
->>=20=20
->>  	case PTP_EXTTS_REQUEST:
->> +	case PTP_EXTTS_REQUEST2:
->> +		memset(&req, 0, sizeof(req));
->> +
->>  		if (copy_from_user(&req.extts, (void __user *)arg,
->>  				   sizeof(req.extts))) {
->>  			err =3D -EFAULT;
->>  			break;
->>  		}
->> +		if ((req.extts.flags || req.extts.rsv[0] || req.extts.rsv[1])
->> +			&& cmd =3D=3D PTP_EXTTS_REQUEST2) {
->> +			err =3D -EINVAL;
->> +			break;
->> +		} else if (cmd =3D=3D PTP_EXTTS_REQUEST) {
->> +			req.extts.flags =3D 0;
+On Fri, 30 Aug 2019, Philip Li wrote:
+> On Fri, Aug 30, 2019 at 02:20:53PM +0800, Philip Li wrote:
+> > thanks for your patience. I just realize we actually block tip-bot, but
+> > not tip-bot2. I will update the logic to avoid this issue, and we will
+> > keep monitor for a while to fix new issue if any.
 >
-> This still isn't quite right.  Sorry that was my fault.
->
-> The req.extts.flags can be (PTP_ENABLE_FEATURE | PTP_RISING_EDGE |
-> PTP_FALLING_EDGE), and ENABLE is used immediately below in this case.
->
-> Please #define those bits into a valid mask, and then:
->
-> - for PTP_EXTTS_REQUEST2 check that ~mask is zero, and
-> - for PTP_EXTTS_REQUEST clear the ~mask bits for the drivers.=20
->
-> Thanks again for cleaning this up!
+> BTW: the related service need some time to be upgraded after code change,
+> some already fetched patches will continue sending out noisy mails until
+> they are consumed. Sorry about this.
 
-good point. This will actually reduce the size of the patch 2.
+All good. I'll just redirect them to /dev/null.
 
-=2D-=20
-balbi
+Thanks,
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1o1wMACgkQzL64meEa
-mQbDew/8DWmKxzYX8IhPyw6YmM+i3b0kv5RlGKOYOqGtkO8iVjIB2jSPFt+754dx
-lYonGzZjiRrZ31OQNscDHRfOJ89S6oC4WvGraOZiSEBh29qFg/SJ+BglUqaJDFW5
-v38sir9P/70aiCv8C7SWPC+dzlQ4xkVvzLwXSZidDUXmxun/2G1fxZhkQDWtXROq
-fgprli6RBgeYN4HkpmdSSxbC5AwQJmuz/yEGRX5R1pGZaL0zhQERTVd3+eM8bbRQ
-IJDqeQyZmRO9HkgnK9uvoqRpVc4F7nJ3CKd46Kfn5N8aa3saJXC1HW2LAlJJykB4
-3ZwYEApO+fw/j04O+AYYX+3NZ/qXGymKmaiUJUbPd2zmIeM4gOqfpZRtKX86A3aU
-U6I7KKfaBbee7gbkC64NnFSRaIBZJWQLPEMqrQpYTmDgsJTT5Atu9Oe1U+xqyn9p
-fWBowyY6B9IexxmGWjSlfdbEbZNNA7FxMs4XH4GwSlZWaBhG2slAacu3S2y1HPnq
-Bat2diD7gWrkRwfcbYnrvp/8DDXqZJ/xp6JB1dNta0AAnVflW043/0ai7DE395JZ
-jAZoOkUuHr8YNcKSs3rk/fMaXNY9oiX/1+Rus1Pdrf/LvWh4WfwD+KYotS+jxZsw
-Zby4phO8t9E4fEbzzcRRFjj2gMdPBO3QtKCDyxZS8RGmoPztzrA=
-=FFVY
------END PGP SIGNATURE-----
---=-=-=--
+	tglx
