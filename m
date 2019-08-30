@@ -2,93 +2,108 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1607C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41274C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A376823697
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC3823439
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 21:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfH3VE1 (ORCPT
+        id S1728176AbfH3VHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 17:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbfH3VE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 17:04:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4037C23439;
-        Fri, 30 Aug 2019 21:04:26 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 17:04:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Divya Indi <divya.indi@oracle.com>
-Subject: Re: [PATCH v1] tracing: Drop static keyword for exported
- ftrace_set_clr_event()
-Message-ID: <20190830170424.40c4188a@gandalf.local.home>
-In-Reply-To: <20190830193228.65446-1-andriy.shevchenko@linux.intel.com>
-References: <20190830193228.65446-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 30 Aug 2019 17:07:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46518 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfH3VHL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 17:07:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h7so6911467wrt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 14:07:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=w4hvEqHJLEa1mvGULDNj9eO45SqJ3qnxmWk/VetQNSk=;
+        b=nJ3dUc18kw/5S+lDtVVnK10jMBCLxIzgSJubSsEGYDz4aqBTqtiMdEIrPs2q5Rio4r
+         HnQltW+apF8oNAqQeYHSdS/0Qs9HztFn488Bhp3smaqbpJBNTAA24jsDf/LsYh5OQVtr
+         YtMkecba+aK1I2S2jyslg+nqIuSS0z4P2FIH0aw363tu1F9eqA6iKqVm2hdgki0Rd02i
+         BFD/ZjieKyraTZwpsgZ/mlWQb/KFymwr7UDo3sAW8lMjRRNpLI7FDhfldSIlX1uTidLk
+         lqtu7ko3+M9IzPPuywI3sY9uhYgPrgBn6t+1IXMUF4TcXnR4i9Mw8ZfrTsZIQcRRVa7e
+         Eepw==
+X-Gm-Message-State: APjAAAVLEOW0XC/MhoiK+zvzwZhGsr9GxY4jT/eyC9oE0X3OvFzaVDms
+        YceQOapwtFnfZx9ICGXADDk=
+X-Google-Smtp-Source: APXvYqxGL0ccEg29MqqNIg64URvCvazEH9a2xSZY2QlxYdBD+ARFTN8+N38kSUXxGRclw/YqOh6g/w==
+X-Received: by 2002:adf:dc43:: with SMTP id m3mr5271653wrj.118.1567199229860;
+        Fri, 30 Aug 2019 14:07:09 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id w13sm16030538wre.44.2019.08.30.14.07.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 14:07:09 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
+ userspace
+To:     James Smart <james.smart@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>
+References: <20190712180211.26333-1-sagi@grimberg.me>
+ <20190712180211.26333-4-sagi@grimberg.me> <20190822002328.GP9511@lst.de>
+ <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
+ <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
+ <20190826065639.GA11036@lst.de> <20190826075916.GA30396@kroah.com>
+ <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
+ <20190830055514.GC8492@lst.de>
+ <4555a281-3cbc-0890-ce85-385c06ca912b@grimberg.me>
+ <3c58613f-9380-6887-434a-0db31136e7aa@broadcom.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <c50cbc24-328f-35b7-5c74-c66a9bd76128@grimberg.me>
+Date:   Fri, 30 Aug 2019 14:07:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3c58613f-9380-6887-434a-0db31136e7aa@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 22:32:28 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> When we export something, it shan't be static.
-
-I'm finally getting around to my patch queue (it's unfortunately much
-bigger than I should be). But my punishment is duplicate patches.
-
-Someone beat you to it...
-
- http://lkml.kernel.org/r/20190704172110.27041-1-efremov@linux.com
-
--- Steve
-
+>>>>> Yes we do, userspace should use it to order events.  Does udev not
+>>>>> handle that properly today?
+>>>>
+>>>> The problem is not ordering of events, its really about the fact that
+>>>> the chardev can be removed and reallocated for a different controller
+>>>> (could be a completely different discovery controller) by the time
+>>>> that userspace handles the event.
+>>>
+>>> The same is generally true for lot of kernel devices.  We could reduce
+>>> the chance by using the idr cyclic allocator.
+>>
+>> Well, it was raised by Hannes and James, so I'll ask them respond here
+>> because I don't mind having it this way. I personally think that this
+>> is a better approach than having a cyclic idr allocator. In general, I
+>> don't necessarily think that this is a good idea to have cyclic
+>> controller enumerations if we don't absolutely have to...
 > 
-> Fixes: f45d1225adb0 ("tracing: Kernel access to Ftrace instances")
-> Cc: Divya Indi <divya.indi@oracle.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/linux/trace_events.h | 1 +
->  kernel/trace/trace_events.c  | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
+> We hit it right and left without the cyclic allocator, but that won't 
+> necessarily remove it.
 > 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 5150436783e8..30a8cdcfd4a4 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -548,6 +548,7 @@ extern int trace_event_get_offsets(struct trace_event_call *call);
->  
->  #define is_signed_type(type)	(((type)(-1)) < (type)1)
->  
-> +int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
->  int trace_set_clr_event(const char *system, const char *event, int set);
->  
->  /*
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 5a189fb8ec23..b89cdfe20bc1 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -787,7 +787,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
->  	return ret;
->  }
->  
-> -static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
-> +int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
->  {
->  	char *event = NULL, *sub = NULL, *match;
->  	int ret;
+> Perhaps we should have had a unique token assigned to the controller, 
+> and have the event pass the name and the token.  The cli would then, if 
+> the token is present, validate it via an ioctl before proceeding with 
+> other ioctls.
+> 
+> Where all the connection arguments were added we due to the reuse issue 
+> and then solving the question of how to verify and/or lookup the desired 
+> controller, by using the shotgun approach rather than being very 
+> pointed, which is what the name/token would do.
 
+This unique token is: trtype:traddr:trsvcid:host-traddr ...
