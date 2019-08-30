@@ -2,201 +2,276 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC92C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D8DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F98323430
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E6F2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wzFlPK/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfH3Q0K (ORCPT
+        id S1728021AbfH3Q0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:26:10 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36397 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfH3Q0K (ORCPT
+        Fri, 30 Aug 2019 12:26:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40799 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727246AbfH3Q0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:26:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z4so8231305qtc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:26:09 -0700 (PDT)
+        Fri, 30 Aug 2019 12:26:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w16so4952126pfn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M40HXfhf3xwJ1Orm+mXfqCiDTbdQrAOv8g4phHFgpG8=;
+        b=wzFlPK/UqW537RvnpuNlJVlNhQG0rzh+oF5Tzgf2zOgAMW/lUuKWz/pixCQLDC+kIV
+         IeLA9aTSrFokxF3M0C5NEb+rSXPDfqAlinrOjDShG9NIhI+fILlfsF86Nb8wHvlWQwSY
+         gryCtgmULJlXN0OBXgK0ZS2KBVVlFDluWs88o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=qHgWu5Rl4zvcECH09Viw3cWfbmbYnQJRz+dq3rEzn6k=;
-        b=bldkA9j/JDkmhvQfKq/VdxoARhkv5ee1wc2LET1T/mjJChNb5YBhanpWBHlgIT10kf
-         RxAjCaFgE2+0pV0c0gvvvaVd0qyx0rCktoJR74AfL0YOUoUSaIeW6yqIHxGLNacdGLAf
-         35KipioZ51/Krc2rZmFHKC6HbMetrvKPABWZFA8hk6J3rjNbzMevuUcl4kJk325rffrQ
-         gyag2bYng3PeWpYizJwZmL+JXavMk/xHeqP0ath4yUiT1FvU6Q6ee4fi7NxigclHoINz
-         L88qrcBFSBe5f4LsWFvsHH92XtFkmeQTfDJK4KCsc6b56d3QT94mxzbY2m7qUA/0GHWe
-         xmaA==
-X-Gm-Message-State: APjAAAXdihOdvo52PlxpXuvCH6Djh6SeoWRp78f67GTuPMkgJqwVJML1
-        Q2igAIodI7bXOaN5fNUFYJpEPPi2iUQskaBBSsI=
-X-Google-Smtp-Source: APXvYqyWqzDMv6Hcrz05N4SE3mDmSNuAw0OYHoxkdQOiyRxXs5JB18HnTRXZ/9ZMa7+OEnE/pUAH561xbkH5EkpIf+I=
-X-Received: by 2002:ac8:117:: with SMTP id e23mr16102582qtg.18.1567182368579;
- Fri, 30 Aug 2019 09:26:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M40HXfhf3xwJ1Orm+mXfqCiDTbdQrAOv8g4phHFgpG8=;
+        b=Dy+Y8LNKCry16pShjmSyjaqjs0mTzx/p1k0YhR8nUe9HWhGJw5cDOmbuqO/24+3wzx
+         pgNZ9ZFifacAQl1pA7J1JcIHDsLM6VXNAQytnwI5CApw2y0pl7gQ4PxhM9l6IaWSbMC4
+         LlcCGnQkwdl4MblFMsSPVuuC6znZQhwzMWL79b6LfD9lJGdnjlU3NJnItetB5X+vhu6k
+         ozpu1j89mWspeJouWFknPIefgjjavfW+E/I7USgELQaAIigt9oRJNUoWqesYR4/Wvo4y
+         789jZUVhPTdzgM/oG/TH9d28FGhIMQQjFNTMM3Ptn61dCeST6q0TWQtjXgtP6JbkjBKr
+         YhPg==
+X-Gm-Message-State: APjAAAWa3o4zh8+gDMCE+AmeZmY/caKDbn3v8nwKFSgL+nm3DK46LxKq
+        9rF1RlPolVSPKA3XznehZBF482xEuPc=
+X-Google-Smtp-Source: APXvYqwKfukrW1Ndrec24roSC3S0sPBY3iLY7gwIQIg/d4kRiKO56lE3QvAJTwwYzNveuPMi3g2S7w==
+X-Received: by 2002:aa7:9495:: with SMTP id z21mr18979669pfk.220.1567182398761;
+        Fri, 30 Aug 2019 09:26:38 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o3sm21012782pje.1.2019.08.30.09.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 09:26:38 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rcu@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v2 -rcu dev 1/2] Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
+Date:   Fri, 30 Aug 2019 12:26:27 -0400
+Message-Id: <20190830162628.232306-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 30 Aug 2019 18:25:52 +0200
-Message-ID: <CAK8P3a2OZPybUQ=2xXcF4Qft-Gpe3a1mvgPncJZugETnaOxsvw@mail.gmail.com>
-Subject: [GIT PULL] ARM: SoC fixes for Linux-5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        SoC Team <soc@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        John Garry <john.garry@huawei.com>,
-        Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit d45331b00ddb179e291766617259261c112db872:
+This code is unused and can be removed now. Revert was straightforward.
 
-  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+Tested with light rcutorture.
 
-are available in the Git repository at:
+Link: http://lore.kernel.org/r/CALCETrWNPOOdTrFabTDd=H7+wc6xJ9rJceg6OL1S0rTV5pfSsA@mail.gmail.com
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git armsoc-fixes
 
-for you to fetch changes up to 7a6c9dbb36a415c5901313fc89871fd19f533656:
+---
+Only made some commit message changes in this since v1.
 
-  soc: ixp4xx: Protect IXP4xx SoC drivers by ARCH_IXP4XX ||
-COMPILE_TEST (2019-08-29 17:34:38 +0200)
+ include/linux/rcutiny.h |  3 --
+ kernel/rcu/tree.c       | 82 ++++++++++-------------------------------
+ 2 files changed, 19 insertions(+), 66 deletions(-)
 
-----------------------------------------------------------------
-ARM: SoC fixes
-
-The majority of the fixes this time are for OMAP hardware,
-here is a breakdown of the significant changes:
-
-Various device tree bug fixes:
-- TI am57xx boards need a voltage level fix to avoid damaging SD cards
-- vf610-bk4 fails to detect its flash due to an incorrect description
-- meson-g12a USB phy configuration fails
-- meson-g12b reboot should not power off the SD card
-- Some corrections for apparently harmless differences from the
-  documentation.
-
-Regression fixes:
-- ams-delta FIQ interrupts broke in 5.3
-- TI am3/am4 mmc controllers broke in 5.2
-
-The logic_pio driver (used on some Huawei ARM servers) needs a few
-bug fixes for reliability.
-
-A couple of compile-time warning fixes
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Arnd Bergmann (5):
-      Merge tag 'imx-fixes-5.3-2' of
-git://git.kernel.org/.../shawnguo/linux into arm/fixes
-      Merge tag 'omap-for-v5.3/fixes-rc4' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
-      Merge tag 'amlogic-fixes' of
-git://git.kernel.org/.../khilman/linux-amlogic into arm/fixes
-      Merge tag 'hisi-fixes-for-5.3' of
-git://github.com/hisilicon/linux-hisi into arm/fixes
-      Merge tag 'sunxi-fixes-for-5.3-3' of
-git://git.kernel.org/.../sunxi/linux into arm/fixes
-
-Emmanuel Vadot (1):
-      ARM: dts: am335x: Fix UARTs length
-
-Faiz Abbas (2):
-      ARM: dts: am57xx: Disable voltage switching for SD card
-      ARM: dts: dra74x: Fix iodelay configuration for mmc3
-
-Geert Uytterhoeven (1):
-      soc: ixp4xx: Protect IXP4xx SoC drivers by ARCH_IXP4XX || COMPILE_TEST
-
-Gustavo A. R. Silva (1):
-      ARM: OMAP: dma: Mark expected switch fall-throughs
-
-Janusz Krzysztofik (1):
-      ARM: OMAP1: ams-delta-fiq: Fix missing irq_ack
-
-John Garry (5):
-      lib: logic_pio: Fix RCU usage
-      lib: logic_pio: Avoid possible overlap for unregistering regions
-      lib: logic_pio: Add logic_pio_unregister_range()
-      bus: hisi_lpc: Unregister logical PIO range to avoid potential
-use-after-free
-      bus: hisi_lpc: Add .remove method to avoid driver unbind crash
-
-Keerthy (1):
-      soc: ti: pm33xx: Fix static checker warnings
-
-Lukasz Majewski (1):
-      ARM: dts: vf610-bk4: Fix qspi node description
-
-Maxime Ripard (1):
-      MAINTAINERS: Update my email address
-
-Neil Armstrong (2):
-      arm64: dts: meson-g12a: add missing dwc2 phy-names
-      arm64: dts: meson-g12a-sei510: enable IR controller
-
-Suman Anna (1):
-      bus: ti-sysc: Simplify cleanup upon failures in sysc_probe()
-
-Tony Lindgren (10):
-      Merge commit '79499bb11db508' into fixes
-      ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for dra7 epwmss
-      bus: ti-sysc: Fix handling of forced idle
-      bus: ti-sysc: Fix using configured sysc mask value
-      ARM: dts: Fix flags for gpio7
-      ARM: dts: Fix incorrect dcan register mapping for am3, am4 and dra7
-      ARM: OMAP2+: Fix omap4 errata warning on other SoCs
-      Merge branch 'ti-sysc-fixes' into fixes
-      ARM: dts: Fix incomplete dts data for am3 and am4 mmc
-      Merge branch 'ti-sysc-fixes' into fixes
-
-Xavier Ruppen (1):
-      arm64: dts: amlogic: odroid-n2: keep SD card regulator always on
-
-YueHaibing (1):
-      soc: ti: pm33xx: Make two symbols static
-
- .mailmap                                             |  2 ++
- MAINTAINERS                                          | 10 +++++-----
- arch/arm/boot/dts/am33xx-l4.dtsi                     | 16 ++++++++++------
- arch/arm/boot/dts/am33xx.dtsi                        | 32
-++++++++++++++++++++++++++------
- arch/arm/boot/dts/am4372.dtsi                        | 32
-++++++++++++++++++++++++++------
- arch/arm/boot/dts/am437x-l4.dtsi                     |  4 ++++
- arch/arm/boot/dts/am571x-idk.dts                     |  7 +------
- arch/arm/boot/dts/am572x-idk.dts                     |  7 +------
- arch/arm/boot/dts/am574x-idk.dts                     |  7 +------
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi      |  3 ++-
- arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts        |  7 +------
- arch/arm/boot/dts/am57xx-beagle-x15-revc.dts         |  7 +------
- arch/arm/boot/dts/dra7-evm.dts                       |  2 +-
- arch/arm/boot/dts/dra7-l4.dtsi                       |  6 +++---
- arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi            | 50
-++++++++++++++++++++++++-------------------------
- arch/arm/boot/dts/vf610-bk4.dts                      |  4 ++--
- arch/arm/mach-omap1/ams-delta-fiq-handler.S          |  3 ++-
- arch/arm/mach-omap1/ams-delta-fiq.c                  |  4 +---
- arch/arm/mach-omap2/omap4-common.c                   |  3 +++
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c            |  3 ++-
- arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts    |  6 ++++++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi          |  1 +
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts |  1 +
- drivers/bus/hisi_lpc.c                               | 47
-++++++++++++++++++++++++++++++++++++++++------
- drivers/bus/ti-sysc.c                                | 24
-+++++++++++-------------
- drivers/soc/ixp4xx/Kconfig                           |  4 ++++
- drivers/soc/ti/pm33xx.c                              | 19 ++++++++++++-------
- include/linux/logic_pio.h                            |  1 +
- lib/logic_pio.c                                      | 73
-+++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------
- 29 files changed, 250 insertions(+), 135 deletions(-)
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index b7607e2667ae..b3f689711289 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -14,9 +14,6 @@
+ 
+ #include <asm/param.h> /* for HZ */
+ 
+-/* Never flag non-existent other CPUs! */
+-static inline bool rcu_eqs_special_set(int cpu) { return false; }
+-
+ static inline unsigned long get_state_synchronize_rcu(void)
+ {
+ 	return 0;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 68ebf0eb64c8..417dd00b9e87 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -69,20 +69,10 @@
+ 
+ /* Data structures. */
+ 
+-/*
+- * Steal a bit from the bottom of ->dynticks for idle entry/exit
+- * control.  Initially this is for TLB flushing.
+- */
+-#define RCU_DYNTICK_CTRL_MASK 0x1
+-#define RCU_DYNTICK_CTRL_CTR  (RCU_DYNTICK_CTRL_MASK + 1)
+-#ifndef rcu_eqs_special_exit
+-#define rcu_eqs_special_exit() do { } while (0)
+-#endif
+-
+ static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+ 	.dynticks_nesting = 1,
+ 	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
+-	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
++	.dynticks = ATOMIC_INIT(1),
+ };
+ struct rcu_state rcu_state = {
+ 	.level = { &rcu_state.node[0] },
+@@ -229,20 +219,15 @@ void rcu_softirq_qs(void)
+ static void rcu_dynticks_eqs_enter(void)
+ {
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+-	int seq;
++	int special;
+ 
+ 	/*
+-	 * CPUs seeing atomic_add_return() must see prior RCU read-side
++	 * CPUs seeing atomic_inc_return() must see prior RCU read-side
+ 	 * critical sections, and we also must force ordering with the
+ 	 * next idle sojourn.
+ 	 */
+-	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+-	/* Better be in an extended quiescent state! */
+-	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+-		     (seq & RCU_DYNTICK_CTRL_CTR));
+-	/* Better not have special action (TLB flush) pending! */
+-	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+-		     (seq & RCU_DYNTICK_CTRL_MASK));
++	special = atomic_inc_return(&rdp->dynticks);
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && special & 0x1);
+ }
+ 
+ /*
+@@ -252,22 +237,15 @@ static void rcu_dynticks_eqs_enter(void)
+ static void rcu_dynticks_eqs_exit(void)
+ {
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+-	int seq;
++	int special;
+ 
+ 	/*
+-	 * CPUs seeing atomic_add_return() must see prior idle sojourns,
++	 * CPUs seeing atomic_inc_return() must see prior idle sojourns,
+ 	 * and we also must force ordering with the next RCU read-side
+ 	 * critical section.
+ 	 */
+-	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+-	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+-		     !(seq & RCU_DYNTICK_CTRL_CTR));
+-	if (seq & RCU_DYNTICK_CTRL_MASK) {
+-		atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+-		smp_mb__after_atomic(); /* _exit after clearing mask. */
+-		/* Prefer duplicate flushes to losing a flush. */
+-		rcu_eqs_special_exit();
+-	}
++	special = atomic_inc_return(&rdp->dynticks);
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !(special & 0x1));
+ }
+ 
+ /*
+@@ -284,9 +262,9 @@ static void rcu_dynticks_eqs_online(void)
+ {
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 
+-	if (atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR)
++	if (atomic_read(&rdp->dynticks) & 0x1)
+ 		return;
+-	atomic_add(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
++	atomic_add(0x1, &rdp->dynticks);
+ }
+ 
+ /*
+@@ -298,7 +276,7 @@ bool rcu_dynticks_curr_cpu_in_eqs(void)
+ {
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 
+-	return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
++	return !(atomic_read(&rdp->dynticks) & 0x1);
+ }
+ 
+ /*
+@@ -309,7 +287,7 @@ int rcu_dynticks_snap(struct rcu_data *rdp)
+ {
+ 	int snap = atomic_add_return(0, &rdp->dynticks);
+ 
+-	return snap & ~RCU_DYNTICK_CTRL_MASK;
++	return snap;
+ }
+ 
+ /*
+@@ -318,7 +296,7 @@ int rcu_dynticks_snap(struct rcu_data *rdp)
+  */
+ static bool rcu_dynticks_in_eqs(int snap)
+ {
+-	return !(snap & RCU_DYNTICK_CTRL_CTR);
++	return !(snap & 0x1);
+ }
+ 
+ /*
+@@ -331,28 +309,6 @@ static bool rcu_dynticks_in_eqs_since(struct rcu_data *rdp, int snap)
+ 	return snap != rcu_dynticks_snap(rdp);
+ }
+ 
+-/*
+- * Set the special (bottom) bit of the specified CPU so that it
+- * will take special action (such as flushing its TLB) on the
+- * next exit from an extended quiescent state.  Returns true if
+- * the bit was successfully set, or false if the CPU was not in
+- * an extended quiescent state.
+- */
+-bool rcu_eqs_special_set(int cpu)
+-{
+-	int old;
+-	int new;
+-	struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
+-
+-	do {
+-		old = atomic_read(&rdp->dynticks);
+-		if (old & RCU_DYNTICK_CTRL_CTR)
+-			return false;
+-		new = old | RCU_DYNTICK_CTRL_MASK;
+-	} while (atomic_cmpxchg(&rdp->dynticks, old, new) != old);
+-	return true;
+-}
+-
+ /*
+  * Let the RCU core know that this CPU has gone through the scheduler,
+  * which is a quiescent state.  This is called when the need for a
+@@ -366,13 +322,13 @@ bool rcu_eqs_special_set(int cpu)
+  */
+ void rcu_momentary_dyntick_idle(void)
+ {
+-	int special;
++	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
++	int special = atomic_add_return(2, &rdp->dynticks);
+ 
+-	raw_cpu_write(rcu_data.rcu_need_heavy_qs, false);
+-	special = atomic_add_return(2 * RCU_DYNTICK_CTRL_CTR,
+-				    &this_cpu_ptr(&rcu_data)->dynticks);
+ 	/* It is illegal to call this from idle state. */
+-	WARN_ON_ONCE(!(special & RCU_DYNTICK_CTRL_CTR));
++	WARN_ON_ONCE(!(special & 0x1));
++
++	raw_cpu_write(rcu_data.rcu_need_heavy_qs, false);
+ 	rcu_preempt_deferred_qs(current);
+ }
+ EXPORT_SYMBOL_GPL(rcu_momentary_dyntick_idle);
+-- 
+2.23.0.187.g17f5b7556c-goog
