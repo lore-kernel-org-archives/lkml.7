@@ -2,190 +2,220 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE167C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E11C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E51B23405
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF0421721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="GI1KfcM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfH3FmD (ORCPT
+        id S1727738AbfH3FpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:42:03 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:26669 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726716AbfH3FmD (ORCPT
+        Fri, 30 Aug 2019 01:45:07 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34593 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfH3FpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:42:03 -0400
-X-UUID: 7c4078c7a9474170b97f8c3d36eb57c0-20190830
-X-UUID: 7c4078c7a9474170b97f8c3d36eb57c0-20190830
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2135017108; Fri, 30 Aug 2019 13:41:33 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 13:41:31 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 13:41:30 +0800
-Message-ID: <1567143685.5942.11.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 13/32] drm/mediatek: move rdma sout from
- mtk_ddp_mout_en into mtk_ddp_sout_sel
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 13:41:25 +0800
-In-Reply-To: <1567090254-15566-14-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-14-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 01:45:07 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c7so5872375otp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 22:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5xuuSwgJWCqcDc1AbsIjp7yN/mRhhcSgBhiJdsYZVCA=;
+        b=GI1KfcM4GYbh05OZLb000/qx2D4gy8snqMb4Nhu0mPHzjXiIQGXvxjYUu8geuOgkEB
+         W+7KNsA2w9g1tN5YyxSNCuuG/SgM0+hEqdr7pO0ovTrxikZ55cXaGkJLeiAX9ICEef0S
+         MkaShiZ1rT5cIDvil50XfiJD2diLLxqwk+So/ITlpV4VnZpykUPf78Qk/8IghjPUNAYx
+         s7NMYkKy2G7zYAM5ZRu/zmDYl3w2FlqcK3Vu6ES8cPh9nOPsb7sS3nqZVr7jcXJbcOtz
+         OrTpNN/50fQWFlzosGaObZK0aVCbv7wFfdFYqtHdIiRcjVPagMNnLydCj5TMZLfIsa0L
+         PiqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5xuuSwgJWCqcDc1AbsIjp7yN/mRhhcSgBhiJdsYZVCA=;
+        b=Q7HLjsqfrdKYth10g1R+I/ipChZSA3XD8LxMjWLD3I1HDcX7bPP+RSY6RHdWQPS3PN
+         umWBpC9MLc8h3VBEHowk5kPjHbPmTUDYcDB/FS9D6gIuzzxTsb3A4lQGiaGQGZGBaw99
+         aT36iRg4IvaHy3PBTgoKL0IDbMU7RqBnoZvOSyyyLIntxKfSjQ1TLVfPcxGu6vJB44i0
+         bRg5wO9EhIWJfAK8T9qhNaDpQ1LPO9XylTp3xk2Ek4a7ZPV/jDaEZW3/ZH+WG+fLHW3/
+         g5XD9GLInYhyNHrMtqsMoWlqV+plUpa9Ugdzfddn3LyA78FSQfdEAENma9UFNOuvWBx7
+         rhew==
+X-Gm-Message-State: APjAAAXKjLyjbhhazTRZsO+F/sMJsJKQfamkSmEGcgmLAfaRmCjAiNwe
+        zFcMhzpDGURl8+742D5B1coZSg==
+X-Google-Smtp-Source: APXvYqzGUyuAkVpBq01B1WkMHWncGpb/6RmallypNCRKvbAeHOKYuZlwyLICrAHdHcpk3ucJyNP5ug==
+X-Received: by 2002:a9d:6852:: with SMTP id c18mr11051720oto.218.1567143905919;
+        Thu, 29 Aug 2019 22:45:05 -0700 (PDT)
+Received: from hev-sbc.hz.ali.com ([47.89.83.40])
+        by smtp.gmail.com with ESMTPSA id l14sm1310424oii.27.2019.08.29.22.45.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 22:45:04 -0700 (PDT)
+From:   hev <r@hev.cc>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     e@80x24.org, Heiher <r@hev.cc>, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/epoll: fix the edge-triggered mode for epoll itself
+Date:   Fri, 30 Aug 2019 13:44:57 +0800
+Message-Id: <20190830054457.5445-1-r@hev.cc>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 91FBBB659019F98841FF1162CEE48D62A4310431E53ADFD011B0F26E739CCC8C2000:8
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+From: Heiher <r@hev.cc>
 
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch move rdma sout from mtk_ddp_mout_en into mtk_ddp_sout_sel
-> rdma only has single output, but no multi output,
-> all these rdma->dsi/dpi usecase should move to mtk_ddp_sout_sel
+The structure of event pools:
+ efd[2]:
+ {
+     sfd[0] (EPOLLIN)
+ }
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+ efd[1]:
+ {
+     efd[2] (EPOLLIN)
+ }
 
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 90 +++++++++++++++++-----------------
->  1 file changed, 45 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 338cc2f..a5a6689 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -299,51 +299,6 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
->  	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
->  		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
->  		value = OD1_MOUT_EN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI3;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI3;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = data->rdma1_sout_sel_in;
-> -		value = data->rdma1_sout_dpi0;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI3;
->  	} else {
->  		value = 0;
->  	}
-> @@ -423,6 +378,51 @@ static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
->  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
->  		*addr = DISP_REG_CONFIG_OUT_SEL;
->  		value = BLS_TO_DPI_RDMA1_TO_DSI;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = data->rdma1_sout_sel_in;
-> +		value = data->rdma1_sout_dpi0;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI3;
->  	} else {
->  		value = 0;
->  	}
+ efd[0]:
+ {
+     efd[2] (EPOLLIN | EPOLLET)
+ }
 
+When sfd[0] to be readable:
+ * the epoll_wait(efd[0], ..., 0) should return efd[2]'s events on first call,
+   and returns 0 on next calls, because efd[2] is added in edge-triggered mode.
+ * the epoll_wait(efd[1], ..., 0) should returns efd[2]'s events on every calls
+   until efd[2] is not readable (epoll_wait(efd[2], ...) => 0), because efd[1]
+   is added in level-triggered mode.
+ * the epoll_wait(efd[2], ..., 0) should returns sfd[0]'s events on every calls
+   until sfd[0] is not readable (read(sfd[0], ...) => EAGAIN), because sfd[0]
+   is added in level-triggered mode.
+
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <sys/epoll.h>
+ #include <sys/socket.h>
+
+ int main(int argc, char *argv[])
+ {
+ 	int sfd[2];
+ 	int efd[3];
+ 	int nfds;
+ 	struct epoll_event e;
+
+ 	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
+ 		goto out;
+
+ 	efd[0] = epoll_create(1);
+ 	if (efd[0] < 0)
+ 		goto out;
+
+ 	efd[1] = epoll_create(1);
+ 	if (efd[1] < 0)
+ 		goto out;
+
+ 	efd[2] = epoll_create(1);
+ 	if (efd[2] < 0)
+ 		goto out;
+
+ 	e.events = EPOLLIN;
+ 	if (epoll_ctl(efd[2], EPOLL_CTL_ADD, sfd[0], &e) < 0)
+ 		goto out;
+
+ 	e.events = EPOLLIN;
+ 	if (epoll_ctl(efd[1], EPOLL_CTL_ADD, efd[2], &e) < 0)
+ 		goto out;
+
+ 	e.events = EPOLLIN | EPOLLET;
+ 	if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[2], &e) < 0)
+ 		goto out;
+
+ 	if (write(sfd[1], "w", 1) != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[0], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[0], &e, 1, 0);
+ 	if (nfds != 0)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[1], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[1], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[2], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[2], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	close(efd[1]);
+ 	close(efd[0]);
+ 	close(sfd[0]);
+ 	close(sfd[1]);
+
+ 	printf("SUCC\n");
+ 	return 0;
+
+ out:
+ 	printf("FAIL\n");
+ 	return -1;
+ }
+
+Signed-off-by: hev <r@hev.cc>
+Cc: Eric Wong <e@80x24.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+---
+ fs/eventpoll.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d7f1f5011fac..a44cb27c636c 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -672,6 +672,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ {
+ 	__poll_t res;
+ 	int pwake = 0;
++	int nwake = 0;
+ 	struct epitem *epi, *nepi;
+ 	LIST_HEAD(txlist);
+ 
+@@ -685,6 +686,9 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 	if (!ep_locked)
+ 		mutex_lock_nested(&ep->mtx, depth);
+ 
++	if (!depth || list_empty(&ep->rdllist))
++		nwake = 1;
++
+ 	/*
+ 	 * Steal the ready list, and re-init the original one to the
+ 	 * empty list. Also, set ep->ovflist to NULL so that events
+@@ -739,7 +743,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 	list_splice(&txlist, &ep->rdllist);
+ 	__pm_relax(ep->ws);
+ 
+-	if (!list_empty(&ep->rdllist)) {
++	if (nwake && !list_empty(&ep->rdllist)) {
+ 		/*
+ 		 * Wake up (if active) both the eventpoll wait list and
+ 		 * the ->poll() wait list (delayed after we release the lock).
+-- 
+2.23.0
 
