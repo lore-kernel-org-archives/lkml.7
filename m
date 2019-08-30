@@ -2,124 +2,142 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22C1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A929C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE9720673
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3899921874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="biPM7KPd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MwE8AnR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfH3Avn (ORCPT
+        id S1727595AbfH3AxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:51:43 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38008 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfH3Aus (ORCPT
+        Thu, 29 Aug 2019 20:53:25 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.228]:11333 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727171AbfH3AxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:50:48 -0400
-Received: by mail-lj1-f193.google.com with SMTP id x3so4817652lji.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 17:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=baF6/BEW5KEVo2LOFkZZTRTkQs3Veu82MyQ6XaftpOU=;
-        b=biPM7KPdLtnr+xQRNp5xESVEeouLUJKehD24Gd9ioxx2OUh6OIbrndSWFIo+qFylSI
-         kWdpwF+J69U+3pO4IuT7c63y1CwY11q0cXDK5OXsQnG4N+5QSF0rdTNyreizSd4oQ8ux
-         Am84VUumVDcjZ1RoEaa413ZVsTrv4I2GuzRZa59p3t9MedXqHlG7BxfFeXGP1smCN1Rm
-         pj+FEwpD4ZadSIML4/3wTI9ldsdEy1/4SBL2pH8rHBRmKHSJVdGhBCPlnrs46hM1tr7p
-         VF5+0TZbcNTyjM8g81MSG9ZbEwNHniA392B0IqMVwrg9G2ma9dMcEqh7oNjuVlu+1z81
-         Z/3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=baF6/BEW5KEVo2LOFkZZTRTkQs3Veu82MyQ6XaftpOU=;
-        b=Vug1+Tq2XHIX3lqxDuJmduokghJTdzrMEYtcQV0ewTX6SoiVFzXEsK75HOpuLi2l8b
-         +ppIVrvwXOmr/7nrphhofDPlNn5fl1U4369sDy5vCop9NoH+QAppt2OuVurdZJz2bvt5
-         QULMYDDOYD+JawfUuzEihbqsGNENMG17uraMWmAJtw5wC7EOaXBMPZTbK5qxn5IyINKN
-         DIR6VER4tbC9vEwWNJRlc0uQleSGb04VhLRLVHhxMsqUaypOoj0XQvTnIXK3IvuWioFQ
-         1v0WfNHirKY2ioFk2s/q2xLry+yCzxEnL+3UrPAVUpapycQ48QcwM28mXogS4DuAjjOR
-         F9JA==
-X-Gm-Message-State: APjAAAXIMbUkkgB1OvIfmQy5jUcEab+zcpwJkclCdgWNb+eNrTdEcCfd
-        E3QlRuZSN4wrxbmuFhZ1ripz7Q==
-X-Google-Smtp-Source: APXvYqwlf7D/N+8AETmyrADFpsR/4uDHEHGgehGXXJJxn9PraZ2fAYxITTtvWqzPcr0SP5k+C+brcg==
-X-Received: by 2002:a2e:900c:: with SMTP id h12mr6901426ljg.151.1567126245707;
-        Thu, 29 Aug 2019 17:50:45 -0700 (PDT)
-Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id f19sm628149lfk.43.2019.08.29.17.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 17:50:45 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     linux@armlinux.org.uk, ast@kernel.org, daniel@iogearbox.net,
-        yhs@fb.com, davem@davemloft.net, jakub.kicinski@netronome.com,
-        hawk@kernel.org, john.fastabend@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH RFC bpf-next 03/10] libbpf: Makefile: add C/CXX/LDFLAGS to libbpf.so and test_libpf targets
-Date:   Fri, 30 Aug 2019 03:50:30 +0300
-Message-Id: <20190830005037.24004-4-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190830005037.24004-1-ivan.khoronzhuk@linaro.org>
-References: <20190830005037.24004-1-ivan.khoronzhuk@linaro.org>
+        Thu, 29 Aug 2019 20:53:25 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id BCE7A364AB
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 19:53:23 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3VAJiTqSN3Qi03VAJi8tiF; Thu, 29 Aug 2019 19:53:23 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zQhe90SNY9f5AafpNYwkineQK94njNMtAKBDMRbRfZA=; b=MwE8AnR/nsZQGJ+DAc/zeRIj1W
+        Q6kalLNRhpjEPgueSdl24hp5f2Z8bzjBCF46oXuclDaxYslBy2/4Vov6VEV86Gmq9gMO0NUhfQM8b
+        wRl+bxuxtPYjjfXho0ubrCSJIkysD/8UWxw17zu4d52VaSKPpi3yFX6wz4SU9kkH5htGeNJ0mDWrx
+        g49zBA2YHTzRmAywCae1/GJ0rHIpLzw0tCFS6poaHcuQCCo+q8eAYs9H+65DiNFne5QJA7xE0J6dI
+        kvELn1+gtHUacKIAyRdDwrVgh+WZO5Uj3WHkrU41WilN1HMUlF2m8oB8whEXsot09SMU97H5xpVki
+        eD+Z2RGA==;
+Received: from [189.152.216.116] (port=49566 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3VAH-000W2Y-Rb; Thu, 29 Aug 2019 19:53:22 -0500
+Date:   Thu, 29 Aug 2019 19:53:20 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] leds: pwm: Use struct_size() helper
+Message-ID: <20190830005320.GA15267@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3VAH-000W2Y-Rb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:49566
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of LDFLAGS and EXTRA_CC flags there is no way to pass them
-correctly to build command, for instance when --sysroot is used or
-external libraries are used, like -lelf. In follow patches this is
-used for samples/bpf cross-compiling.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+struct led_pwm_priv {
+	...
+        struct led_pwm_data leds[0];
+};
+
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
+
+So, replace the following function:
+
+static inline size_t sizeof_pwm_leds_priv(int num_leds)
+{
+       return sizeof(struct led_pwm_priv) +
+                     (sizeof(struct led_pwm_data) * num_leds);
+}
+
+with:
+
+struct_size(priv, leds, count)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- tools/lib/bpf/Makefile | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/leds/leds-pwm.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 844f6cd79c03..d606d249e334 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -99,6 +99,10 @@ else
-   CFLAGS := -g -Wall
- endif
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index d0e1f2710351..8b6965a563e9 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -65,12 +65,6 @@ static int led_pwm_set(struct led_classdev *led_cdev,
+ 	return 0;
+ }
  
-+ifdef EXTRA_CXXFLAGS
-+  CXXFLAGS := $(EXTRA_CXXFLAGS)
-+endif
-+
- ifeq ($(feature-libelf-mmap), 1)
-   override CFLAGS += -DHAVE_LIBELF_MMAP_SUPPORT
- endif
-@@ -179,8 +183,9 @@ $(BPF_IN): force elfdep bpfdep
- $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
+-static inline size_t sizeof_pwm_leds_priv(int num_leds)
+-{
+-	return sizeof(struct led_pwm_priv) +
+-		      (sizeof(struct led_pwm_data) * num_leds);
+-}
+-
+ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+ 		       struct led_pwm *led, struct fwnode_handle *fwnode)
+ {
+@@ -174,7 +168,7 @@ static int led_pwm_probe(struct platform_device *pdev)
+ 	if (!count)
+ 		return -EINVAL;
  
- $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
--	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libbpf.so.$(VERSION) \
--				    -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
-+	$(QUIET_LINK)$(CC) $(LDFLAGS) \
-+		--shared -Wl,-soname,libbpf.so.$(VERSION) \
-+		-Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
- 	@ln -sf $(@F) $(OUTPUT)libbpf.so
- 	@ln -sf $(@F) $(OUTPUT)libbpf.so.$(VERSION)
- 
-@@ -188,7 +193,7 @@ $(OUTPUT)libbpf.a: $(BPF_IN)
- 	$(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
- 
- $(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
--	$(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
-+	$(QUIET_LINK)$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^ -lelf -o $@
- 
- $(OUTPUT)libbpf.pc:
- 	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
+-	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(count),
++	priv = devm_kzalloc(&pdev->dev, struct_size(priv, leds, count),
+ 			    GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
 -- 
-2.17.1
+2.23.0
 
