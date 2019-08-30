@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279B5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA4C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03156238C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A48238C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfH3Ilg (ORCPT
+        id S1727756AbfH3Ilx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:41:36 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:56576 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726200AbfH3Ilf (ORCPT
+        Fri, 30 Aug 2019 04:41:53 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:34271 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726200AbfH3Ilw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:41:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TaqrgZn_1567154487;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TaqrgZn_1567154487)
+        Fri, 30 Aug 2019 04:41:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TaqsQFe_1567154503;
+Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TaqsQFe_1567154503)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 30 Aug 2019 16:41:31 +0800
+          Fri, 30 Aug 2019 16:41:46 +0800
 From:   Ben Luo <luoben@linux.alibaba.com>
 To:     tglx@linutronix.de, alex.williamson@redhat.com
 Cc:     linux-kernel@vger.kernel.org, tao.ma@linux.alibaba.com,
         gerry@linux.alibaba.com, nanhai.zou@linux.alibaba.com
-Subject: [PATCH v5 1/3] genirq: enhance error recovery code in free irq
-Date:   Fri, 30 Aug 2019 16:41:27 +0800
-Message-Id: <d2d582fc17b7a469f9e7294fe0f868a8ed168c0d.1567151182.git.luoben@linux.alibaba.com>
+Subject: [PATCH v5 2/3] genirq: introduce irq_update_devid()
+Date:   Fri, 30 Aug 2019 16:41:43 +0800
+Message-Id: <dccc49c34393c9c6114b3695feaab489d680d62d.1567151182.git.luoben@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1567151182.git.luoben@linux.alibaba.com>
 References: <cover.1567151182.git.luoben@linux.alibaba.com>
@@ -40,91 +40,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__free_irq()/__free_percpu_irq() need to return if called from IRQ
-context because the interrupt handler loop runs with desc->lock dropped
-and dev_id can be subject to load and store tearing. Also move WARNs
-out of lock region and print out dev_id to help debugging.
+Sometimes, only the dev_id field of irqaction needs to be changed.
+
+E.g. KVM VM with device passthru via VFIO may switch the interrupt
+injection path between KVM irqfd and userspace eventfd. These two
+paths share the same interrupt number and handler for the same msi
+vector of a device, only with different 'dev_id's referencing to
+different fds' contexts. Set interrupt affinity in this VM is a way
+to trigger the path switching.
+
+Currently, VFIO uses a free-then-request-irq way for the path switching.
+There is a time window between free_irq() and request_irq() where the
+target IRTE is invalid. So, in-flight interrupts (buffering in hardware
+layer and unfortunately cannot be synchronized in software) can cause
+DMAR faults and even worse, this VM may hang in waiting IO completion.
+
+By using irq_update_devid(), this issue can be avoided since IRTE will
+not be invalidated during the whole process.
 
 Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
 ---
- kernel/irq/manage.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ include/linux/interrupt.h |  3 ++
+ kernel/irq/manage.c       | 75 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+)
 
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 5b8328a..09b6a0f 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -172,6 +172,9 @@ struct irqaction {
+ request_percpu_nmi(unsigned int irq, irq_handler_t handler,
+ 		   const char *devname, void __percpu *dev);
+ 
++extern int __must_check
++irq_update_devid(unsigned int irq, void *dev_id, void *new_dev_id);
++
+ extern const void *free_irq(unsigned int, void *);
+ extern void free_percpu_irq(unsigned int, void __percpu *);
+ 
 diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index e8f7f17..10ec3e9 100644
+index 10ec3e9..adb1980 100644
 --- a/kernel/irq/manage.c
 +++ b/kernel/irq/manage.c
-@@ -1690,7 +1690,10 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 	struct irqaction *action, **action_ptr;
- 	unsigned long flags;
- 
--	WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
-+	if (WARN(in_interrupt(),
-+		 "Trying to free IRQ %d (dev_id %p) from IRQ context!\n",
-+		 irq, dev_id))
-+		return NULL;
- 
- 	mutex_lock(&desc->request_mutex);
- 	chip_bus_lock(desc);
-@@ -1705,10 +1708,11 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 		action = *action_ptr;
- 
- 		if (!action) {
--			WARN(1, "Trying to free already-free IRQ %d\n", irq);
- 			raw_spin_unlock_irqrestore(&desc->lock, flags);
- 			chip_bus_sync_unlock(desc);
- 			mutex_unlock(&desc->request_mutex);
-+			WARN(1, "Trying to free already-free IRQ %d (dev_id %p)\n",
-+			     irq, dev_id);
- 			return NULL;
- 		}
- 
-@@ -2286,7 +2290,10 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
- 	struct irqaction *action;
- 	unsigned long flags;
- 
--	WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
-+	if (WARN(in_interrupt(),
-+		 "Trying to free IRQ %d (dev_id %p) from IRQ context!\n",
-+		 irq, dev_id))
-+		return NULL;
- 
- 	if (!desc)
- 		return NULL;
-@@ -2295,14 +2302,17 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
- 
- 	action = desc->action;
- 	if (!action || action->percpu_dev_id != dev_id) {
--		WARN(1, "Trying to free already-free IRQ %d\n", irq);
--		goto bad;
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+		WARN(1, "Trying to free already-free IRQ (dev_id %p) %d\n",
-+		     dev_id, irq);
-+		return NULL;
- 	}
- 
- 	if (!cpumask_empty(desc->percpu_enabled)) {
--		WARN(1, "percpu IRQ %d still enabled on CPU%d!\n",
--		     irq, cpumask_first(desc->percpu_enabled));
--		goto bad;
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+		WARN(1, "percpu IRQ %d (dev_id %p) still enabled on CPU%d!\n",
-+		     irq, dev_id, cpumask_first(desc->percpu_enabled));
-+		return NULL;
- 	}
- 
- 	/* Found it - now remove it from the list of entries: */
-@@ -2317,10 +2327,6 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
- 	irq_chip_pm_put(&desc->irq_data);
- 	module_put(desc->owner);
- 	return action;
--
--bad:
--	raw_spin_unlock_irqrestore(&desc->lock, flags);
--	return NULL;
- }
+@@ -2063,6 +2063,81 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
+ EXPORT_SYMBOL(request_threaded_irq);
  
  /**
++ *	irq_update_devid - update irq dev_id to a new one
++ *
++ *	@irq:		Interrupt line to update
++ *	@dev_id:	A cookie to find the irqaction to update
++ *	@new_dev_id:	New cookie passed to the handler function
++ *
++ *	Sometimes, only the cookie data need to be changed. Instead of
++ *	free-then-request interrupt, only update dev_id of irqaction can
++ *	not only gain some performance benefit, but also reduce the risk
++ *	of losing interrupt.
++ *
++ *	This function won't update dev_id until any executing interrupts
++ *	for this IRQ have completed. This function must not be called
++ *	from interrupt context.
++ *
++ *	On failure, it returns a negative value. On success,
++ *	it returns 0
++ */
++int irq_update_devid(unsigned int irq, void *dev_id, void *new_dev_id)
++{
++	struct irq_desc *desc = irq_to_desc(irq);
++	struct irqaction *action, **action_ptr;
++	unsigned long flags;
++
++	if (WARN(in_interrupt(),
++		 "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
++		 irq, dev_id, new_dev_id))
++		return -EPERM;
++
++	if (!desc)
++		return -EINVAL;
++
++	/*
++	 * Ensure that an interrupt in flight on another CPU which uses the
++	 * old 'dev_id' has completed because the caller can free the memory
++	 * to which it points after this function returns. And also avoid to
++	 * update 'dev_id' in the middle of a threaded interrupt process, it
++	 * can lead to a twist that primary handler uses old 'dev_id' but new
++	 * 'dev_id' is used by secondary handler.
++	 */
++	disable_irq(irq);
++	raw_spin_lock_irqsave(&desc->lock, flags);
++
++	/*
++	 * There can be multiple actions per IRQ descriptor, find the right
++	 * one based on the dev_id:
++	 */
++	action_ptr = &desc->action;
++	for (;;) {
++		action = *action_ptr;
++
++		if (!action) {
++			raw_spin_unlock_irqrestore(&desc->lock, flags);
++			enable_irq(irq);
++			WARN(1,
++			     "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
++			     irq, dev_id, new_dev_id);
++			return -ENXIO;
++		}
++
++		if (action->dev_id == dev_id) {
++			action->dev_id = new_dev_id;
++			break;
++		}
++		action_ptr = &action->next;
++	}
++
++	raw_spin_unlock_irqrestore(&desc->lock, flags);
++	enable_irq(irq);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(irq_update_devid);
++
++/**
+  *	request_any_context_irq - allocate an interrupt line
+  *	@irq: Interrupt line to allocate
+  *	@handler: Function to be called when the IRQ occurs.
 -- 
 1.8.3.1
 
