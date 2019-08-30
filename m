@@ -2,97 +2,113 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0E3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77272186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:03:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OFE56oXW"
+	by mail.kernel.org (Postfix) with ESMTP id 39D3D208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfH3FDp (ORCPT
+        id S1726581AbfH3FPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:03:45 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35761 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfH3FDp (ORCPT
+        Fri, 30 Aug 2019 01:15:47 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:45744 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725901AbfH3FPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:03:45 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n4so2903093pgv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 22:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=l/SRc+T1+zG8Df0Y2qbqNAsBTtdjYH2T4Q4ixAT4EFU=;
-        b=OFE56oXW+++O90cUO7iBwxo6K51w+Om1VsIaoaHHQzpKaHBWZSLC+rswzE/DZVQi9R
-         5iAuTGDv3jBkFheNGCta6YauJ0qHNTP4Gr1MnVYiVBBeWvwd0p/QO9Aw4bWGHhN4fsml
-         buetKU86nGkMZHK3VJQGLHSdJjpInmuogEc20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=l/SRc+T1+zG8Df0Y2qbqNAsBTtdjYH2T4Q4ixAT4EFU=;
-        b=gFPdKHUePX8qKYVrYIEVNHO6nelS1ZWMoV1FyaMBgJQ6sJPbAWeUNx6BrsPIS6zuv1
-         GO/bRhiCU9eCoXqy3MdSsxMN7A1lWOrqIdsfpUUWst0jmCGXbdCfQS5N+aeq29qn3Mdh
-         25pGQ3t31vLA9Wt81FJCs22R/OTRwtKoU+yKAQMxQQ6f9alJH3JIvi08lvkvq8duzyhR
-         WWRhARqkaDoeuizd0lJyLDtcdUZ/LolmcGjmlBVvfKX/v8kRKQWZ/wDKUZRS+3yJkpzM
-         RMfbM1w2Gj11cqnc5mPKS00U5KTb78j854egk4QHQ5OumXHpnVhfnJ4MDViN80L9rjcU
-         Yg/A==
-X-Gm-Message-State: APjAAAXUoJ/iTd7hyqOU+SkrwBlYLKgegLdJQP/gCIhMhhm7mvfi2Qgm
-        neTTy2nzSCc5QVCfjx8hgfledQ==
-X-Google-Smtp-Source: APXvYqwqwBeN7KOSBghQiwN4xU+AiQkM1MRwhVSZNyPb3TA+PAAnyHv0/vecV7H7NX6Irh9G/XdLvg==
-X-Received: by 2002:a62:aa13:: with SMTP id e19mr15256774pff.37.1567141424316;
-        Thu, 29 Aug 2019 22:03:44 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m16sm1512892pff.140.2019.08.29.22.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 22:03:43 -0700 (PDT)
-Message-ID: <5d68ae2f.1c69fb81.bc783.5e84@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Aug 2019 01:15:46 -0400
+X-UUID: 89f3ea637db24791918a9be07a7734f7-20190830
+X-UUID: 89f3ea637db24791918a9be07a7734f7-20190830
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1931682608; Fri, 30 Aug 2019 13:15:42 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 13:15:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 13:15:34 +0800
+Message-ID: <1567142129.5942.1.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 01/32] dt-bindings: mediatek: add binding for mt8183
+ display
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 30 Aug 2019 13:15:29 +0800
+In-Reply-To: <1567090254-15566-2-git-send-email-yongqiang.niu@mediatek.com>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-2-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190830022402.214442-1-hungte@chromium.org>
-References: <5d67e673.1c69fb81.5f13b.62ee@mx.google.com> <20190830022402.214442-1-hungte@chromium.org>
-Cc:     hungte@chromium.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Samuel Holland <samuel@sholland.org>,
-        Allison Randal <allison@lohutok.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] firmware: google: check if size is valid when decoding VPD data
-To:     Hung-Te Lin <hungte@chromium.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 29 Aug 2019 22:03:42 -0700
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 40D01842456FDB7578DD54B7F9993BB4EE0E3C99E56B99BA4973B50E77C587A62000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Hung-Te Lin (2019-08-29 19:23:58)
-> The VPD implementation from Chromium Vital Product Data project used to
-> parse data from untrusted input without checking if the meta data is
-> invalid or corrupted. For example, the size from decoded content may
-> be negative value, or larger than whole input buffer. Such invalid data
-> may cause buffer overflow.
->=20
-> To fix that, the size parameters passed to vpd_decode functions should
-> be changed to unsigned integer (u32) type, and the parsing of entry
-> header should be refactored so every size field is correctly verified
-> before starting to decode.
->=20
-> Fixes: ad2ac9d5c5e0 ("firmware: Google VPD: import lib_vpd source files")
-> Signed-off-by: Hung-Te Lin <hungte@chromium.org>
+Hi, Yongqiang:
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  .../bindings/display/mediatek/mediatek,display.txt  | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
+> new file mode 100644
+> index 0000000..951d2a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
+> @@ -0,0 +1,21 @@
+> +Mediatek Display Device
+> +============================
+> +
+> +The Mediatek Display Device provides power control to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be one of:
+> +	- "mediatek,mt8183-display"
+
+I think this is "mediatek,mt8183-mmsys".
+
+Regards,
+CK
+
+> +
+> +The Display Device power name are defined in
+> +include\dt-bindings\power\mt*-power.h
+> +
+> +
+> +Example:
+> +
+> +display_components: dispsys@14000000 {
+> +	compatible = "mediatek,mt8183-display";
+> +	reg = <0 0x14000000 0 0x1000>;
+> +	power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +};
+> \ No newline at end of file
+
 
