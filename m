@@ -2,106 +2,127 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7791C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D3C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6AC23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="j+V6+/Z8"
+	by mail.kernel.org (Postfix) with ESMTP id A097E21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfH3PZc (ORCPT
+        id S1727963AbfH3P0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:25:32 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44499 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbfH3PZc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:25:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id i78so5007514qke.11
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 08:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uAGNj/k9sxhyWPF4gW8v9ANxItk70JmBhK3Bz890W+M=;
-        b=j+V6+/Z819VI1YZCoOnBj/oMDBF8SifHtR2Py7Q6rcAn92pGtORGovoGCON3Xa0lEX
-         mxAwlsSE96mMR4c61G9G8QRLocu2g29Ge8DsiPpZhLQtBn5g7rnvG1bZS0vRFyLLpUTi
-         KFDkNrI8kkq2QeMA60xq6RRi5XmiTP6vF7tokvFja6/cKXod0up2/W3LB6o9eFp4H/yY
-         LJ6JRhF31aQpNRTjiSXK9uHJasLwOO4iLkUiazLH6+SWDJCh1fQVNiKgaHLXlY6vO7W/
-         cdjf95wdC7m+IpXiXMrUqxD3WZVng2GUkXt8H/YEuy8WtKiRq/pMEFgtNh71FTkAJy5g
-         TwQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uAGNj/k9sxhyWPF4gW8v9ANxItk70JmBhK3Bz890W+M=;
-        b=cA3v8wCyiDjKAiz//WlcSH5oJsKSqTZW9ehffLLvndwhsxZ4oFjwcbF094M2WQ/zUG
-         qSUcgsl/DmBraMYxH5Q6YQBVJOvCt8eCx9iYSKVYPttleLNMoNV4ioXfVrOXV8gL4dbB
-         12kxQFLhY0BAdOfNYDzHPeMAWCJEiE5ced2e4e/c5mq3iDxekn4tFG3JzKZKkbRzg4Fn
-         Ifwjz74tAuP86r8gI7EjNPsOBtyUMOov2uBw5v/c+R4dajbJ1i4GRjzZRXmf8jLH9R4B
-         zLECOSD+FkMB7xe0/huBDw+UrjlVqz9D7sOR1xZX3WdSEOe6R3NaENMz8BoIr/ygoj/s
-         iPdA==
-X-Gm-Message-State: APjAAAVbMlLfePD+SzDKFCdrv4n1DKbRc0GxORal7MpLmQjl+6QhqpUI
-        XFrMAAYGbtKeTK4hRHu5u/yTAQ==
-X-Google-Smtp-Source: APXvYqw0EhdXHc1wpLtFj5TejUK0OxSVjZ2aoiu/qaTO83bFRR+7CanolrCjPltbXW/VvIZh7EuyQg==
-X-Received: by 2002:a37:4d0c:: with SMTP id a12mr15819201qkb.214.1567178731214;
-        Fri, 30 Aug 2019 08:25:31 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l8sm3559996qti.65.2019.08.30.08.25.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 08:25:30 -0700 (PDT)
-Message-ID: <1567178728.5576.32.camel@lca.pw>
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-From:   Qian Cai <cai@lca.pw>
-To:     Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 30 Aug 2019 11:25:28 -0400
-In-Reply-To: <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
-References: <1567177025-11016-1-git-send-email-cai@lca.pw>
-         <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 30 Aug 2019 11:26:03 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3961 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727135AbfH3P0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:26:03 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id DFDBD2D2AD8F25ECC514;
+        Fri, 30 Aug 2019 23:26:00 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 30 Aug 2019 23:26:00 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 30 Aug 2019 23:25:59 +0800
+Date:   Fri, 30 Aug 2019 23:25:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>
+Subject: Re: [PATCH v3 1/7] erofs: on-disk format should have explicitly
+ assigned numbers
+Message-ID: <20190830152511.GA39008@architecture4>
+References: <20190830032006.GA20217@architecture4>
+ <20190830033643.51019-1-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190830033643.51019-1-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-30 at 17:11 +0200, Eric Dumazet wrote:
+On Fri, Aug 30, 2019 at 11:36:37AM +0800, Gao Xiang wrote:
+> As Christoph claimed [1], on-disk format should have
+> explicitly assigned numbers. I have to change it.
 > 
-> On 8/30/19 4:57 PM, Qian Cai wrote:
-> > When running heavy memory pressure workloads, the system is throwing
-> > endless warnings below due to the allocation could fail from
-> > __build_skb(), and the volume of this call could be huge which may
-> > generate a lot of serial console output and cosumes all CPUs as
-> > warn_alloc() could be expensive by calling dump_stack() and then
-> > show_mem().
-> > 
-> > Fix it by silencing the warning in this call site. Also, it seems
-> > unnecessary to even print a warning at all if the allocation failed in
-> > __build_skb(), as it may just retransmit the packet and retry.
-> > 
-> 
-> Same patches are showing up there and there from time to time.
-> 
-> Why is this particular spot interesting, against all others not adding
-> __GFP_NOWARN ?
-> 
-> Are we going to have hundred of patches adding __GFP_NOWARN at various points,
-> or should we get something generic to not flood the syslog in case of memory
-> pressure ?
-> 
+> [1] https://lore.kernel.org/r/20190829095954.GB20598@infradead.org/
+> Reported-by: Christoph Hellwig <hch@infradead.org>
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-From my testing which uses LTP oom* tests. There are only 3 places need to be
-patched. The other two are in IOMMU code for both Intel and AMD. The place is
-particular interesting because it could cause the system with floating serial
-console output for days without making progress in OOM. I suppose it ends up in
-a looping condition that warn_alloc() would end up generating more calls into
-__build_skb() via ksoftirqd.
+...ignore this patchset. I will resend another incremental
+patchset to address what Christoph suggested yesterday...
+
+Thanks,
+Gao Xiang
+
+> ---
+> no change
+> 
+>  fs/erofs/erofs_fs.h | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index afa7d45ca958..2447ad4d0920 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -52,10 +52,10 @@ struct erofs_super_block {
+>   * 4~7 - reserved
+>   */
+>  enum {
+> -	EROFS_INODE_FLAT_PLAIN,
+> -	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
+> -	EROFS_INODE_FLAT_INLINE,
+> -	EROFS_INODE_FLAT_COMPRESSION,
+> +	EROFS_INODE_FLAT_PLAIN			= 0,
+> +	EROFS_INODE_FLAT_COMPRESSION_LEGACY	= 1,
+> +	EROFS_INODE_FLAT_INLINE			= 2,
+> +	EROFS_INODE_FLAT_COMPRESSION		= 3,
+>  	EROFS_INODE_LAYOUT_MAX
+>  };
+>  
+> @@ -181,7 +181,7 @@ struct erofs_xattr_entry {
+>  
+>  /* available compression algorithm types */
+>  enum {
+> -	Z_EROFS_COMPRESSION_LZ4,
+> +	Z_EROFS_COMPRESSION_LZ4	= 0,
+>  	Z_EROFS_COMPRESSION_MAX
+>  };
+>  
+> @@ -239,10 +239,10 @@ struct z_erofs_map_header {
+>   *                (di_advise could be 0, 1 or 2)
+>   */
+>  enum {
+> -	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN,
+> -	Z_EROFS_VLE_CLUSTER_TYPE_HEAD,
+> -	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD,
+> -	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED,
+> +	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN		= 0,
+> +	Z_EROFS_VLE_CLUSTER_TYPE_HEAD		= 1,
+> +	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD	= 2,
+> +	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED	= 3,
+>  	Z_EROFS_VLE_CLUSTER_TYPE_MAX
+>  };
+>  
+> -- 
+> 2.17.1
+> 
