@@ -2,343 +2,120 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AF8C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F9FC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1C721670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976E821670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 09:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HozWlQep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfH3Jmt (ORCPT
+        id S1727960AbfH3Jn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 05:42:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:57484 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfH3Jms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 05:42:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 722B4344;
-        Fri, 30 Aug 2019 02:42:47 -0700 (PDT)
-Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.144.41])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05BDD3F718;
-        Fri, 30 Aug 2019 02:42:46 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 11:42:45 +0200
-From:   Christoffer Dall <christoffer.dall@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v4 05/10] KVM: arm64: Support stolen time reporting via
- shared structure
-Message-ID: <20190830094245.GB5307@e113682-lin.lund.arm.com>
-References: <20190830084255.55113-1-steven.price@arm.com>
- <20190830084255.55113-6-steven.price@arm.com>
+        Fri, 30 Aug 2019 05:43:26 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:55973 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726969AbfH3Jn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 05:43:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A136332A9;
+        Fri, 30 Aug 2019 05:43:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 30 Aug 2019 05:43:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=xSMmHk
+        8zElgw/P9GO/Rx4Txs5yQjETOuxsESTLh73Xk=; b=HozWlQepDEdOiqmHdN+iB4
+        XDIiLG/bT+Mrp7NRjEn9tL2IvMjbKIXzKOU9xH5nTsG9mkl2MC/KNvkEWWg7232J
+        5oXQcNjFETuzzJalltAuOV5hMQ2wqqkw/l8ZIymJcUNDPKV75Oa8AYAsOt0qrEyY
+        Jz7BcoGWz6P3ymgFFX5EZ3aQNqHYvFVkckbZK1dNEdQ2PsUIh7rN+M0AvZcXgdeW
+        /u+PmmNDzRvE5qI9NRfXgmwi4OM1IvLKN1s9j47TGqS/6t+rtiCZLAoloYji1fks
+        025RIe1yvC7NsMHgPP2jyHlQruFw9GgVHm5rhX3rlW89ocw06+8x+AeP6feCbYVg
+        ==
+X-ME-Sender: <xms:uu9oXXxSWQ7nPhQRWgka53m4hrKouBXV0yFHfAOdQJ69-OzHUqIHlA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeigedgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
+    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedutd
+    elrdeijedriedurddvvdegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhes
+    ihguohhstghhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:uu9oXTh8mI8-iGGVM7AOVy7GfkMzxE_oFY8ZmHsia6epPGyCdiR7lg>
+    <xmx:uu9oXcUg0vib1F477xVc084he61Mbv6dWl3Sm2Ygv8HrVMu38Nm2nQ>
+    <xmx:uu9oXV37g9VeJ9h5SxrUST_yaeBYJ3EpBSUb0g7UOhzZh_hBX4zKjg>
+    <xmx:vO9oXe44d5mvUPOCOC2Ytc0JFh8YhX16FJkO2XrmKTiQ-IS-krwgPg>
+Received: from localhost (bzq-109-67-61-224.red.bezeqint.net [109.67.61.224])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7D7F88005A;
+        Fri, 30 Aug 2019 05:43:21 -0400 (EDT)
+Date:   Fri, 30 Aug 2019 12:43:19 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     andrew@lunn.ch, jiri@resnulli.us, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        allan.nielsen@microchip.com, ivecera@redhat.com,
+        f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190830094319.GA31789@splinter>
+References: <20190829175759.GA19471@splinter>
+ <20190829182957.GA17530@lunn.ch>
+ <20190829193613.GA23259@splinter>
+ <20190829.151201.940681219080864052.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830084255.55113-6-steven.price@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190829.151201.940681219080864052.davem@davemloft.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:42:50AM +0100, Steven Price wrote:
-> Implement the service call for configuring a shared structure between a
-> VCPU and the hypervisor in which the hypervisor can write the time
-> stolen from the VCPU's execution time by other tasks on the host.
+On Thu, Aug 29, 2019 at 03:12:01PM -0700, David Miller wrote:
+> From: Ido Schimmel <idosch@idosch.org>
+> Date: Thu, 29 Aug 2019 22:36:13 +0300
 > 
-> The hypervisor allocates memory which is placed at an IPA chosen by user
-> space. The hypervisor then updates the shared structure using
-> kvm_put_guest() to ensure single copy atomicity of the 64-bit value
-> reporting the stolen time in nanoseconds.
+> > I fully agree that we should make it easy for users to capture offloaded
+> > traffic, which is why I suggested patching libpcap. Add a flag to
+> > capable netdevs that tells libpcap that in order to capture all the
+> > traffic from this interface it needs to add a tc filter with a trap
+> > action. That way zero familiarity with tc is required from users.
 > 
-> Whenever stolen time is enabled by the guest, the stolen time counter is
-> reset.
+> Why not just make setting promisc mode on the device do this rather than
+> require all of this tc indirection nonsense?
 > 
-> The stolen time itself is retrieved from the sched_info structure
-> maintained by the Linux scheduler code. We enable SCHEDSTATS when
-> selecting KVM Kconfig to ensure this value is meaningful.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/arm/include/asm/kvm_host.h   | 20 +++++++++++
->  arch/arm64/include/asm/kvm_host.h | 21 +++++++++++-
->  arch/arm64/kvm/Kconfig            |  1 +
->  include/linux/kvm_types.h         |  2 ++
->  virt/kvm/arm/arm.c                | 11 ++++++
->  virt/kvm/arm/hypercalls.c         |  3 ++
->  virt/kvm/arm/pvtime.c             | 56 +++++++++++++++++++++++++++++++
->  7 files changed, 113 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-> index 5a0c3569ebde..5c401482d62d 100644
-> --- a/arch/arm/include/asm/kvm_host.h
-> +++ b/arch/arm/include/asm/kvm_host.h
-> @@ -39,6 +39,7 @@
->  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
->  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
-> +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
->  
->  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->  
-> @@ -329,6 +330,25 @@ static inline long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->  	return SMCCC_RET_NOT_SUPPORTED;
->  }
->  
-> +static inline long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
-> +{
-> +	return SMCCC_RET_NOT_SUPPORTED;
-> +}
-> +
-> +static inline int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +}
-> +
-> +static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +	return false;
-> +}
-> +
->  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
->  
->  struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 93b46d9526d0..1697e63f6dd8 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -44,6 +44,7 @@
->  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
->  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
-> +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
->  
->  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->  
-> @@ -338,8 +339,14 @@ struct kvm_vcpu_arch {
->  	/* True when deferrable sysregs are loaded on the physical CPU,
->  	 * see kvm_vcpu_load_sysregs and kvm_vcpu_put_sysregs. */
->  	bool sysregs_loaded_on_cpu;
-> -};
->  
-> +	/* Guest PV state */
-> +	struct {
-> +		u64 steal;
-> +		u64 last_steal;
-> +		gpa_t base;
-> +	} steal;
-> +};
->  /* Pointer to the vcpu's SVE FFR for sve_{save,load}_state() */
->  #define vcpu_sve_pffr(vcpu) ((void *)((char *)((vcpu)->arch.sve_state) + \
->  				      sve_ffr_offset((vcpu)->arch.sve_max_vl)))
-> @@ -479,6 +486,18 @@ int kvm_perf_init(void);
->  int kvm_perf_teardown(void);
->  
->  long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
-> +long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu);
-> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init);
-> +
-> +static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +	vcpu_arch->steal.base = GPA_INVALID;
-> +}
-> +
-> +static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +	return (vcpu_arch->steal.base != GPA_INVALID);
-> +}
->  
->  void kvm_set_sei_esr(struct kvm_vcpu *vcpu, u64 syndrome);
->  
-> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> index a67121d419a2..d8b88e40d223 100644
-> --- a/arch/arm64/kvm/Kconfig
-> +++ b/arch/arm64/kvm/Kconfig
-> @@ -39,6 +39,7 @@ config KVM
->  	select IRQ_BYPASS_MANAGER
->  	select HAVE_KVM_IRQ_BYPASS
->  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
-> +	select SCHEDSTATS
->  	---help---
->  	  Support hosting virtualized guest machines.
->  	  We don't support KVM with 16K page tables yet, due to the multiple
-> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
-> index bde5374ae021..1c88e69db3d9 100644
-> --- a/include/linux/kvm_types.h
-> +++ b/include/linux/kvm_types.h
-> @@ -35,6 +35,8 @@ typedef unsigned long  gva_t;
->  typedef u64            gpa_t;
->  typedef u64            gfn_t;
->  
-> +#define GPA_INVALID	(~(gpa_t)0)
-> +
->  typedef unsigned long  hva_t;
->  typedef u64            hpa_t;
->  typedef u64            hfn_t;
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index 35a069815baf..eaceb2d0f0c0 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -40,6 +40,10 @@
->  #include <asm/kvm_coproc.h>
->  #include <asm/sections.h>
->  
-> +#include <kvm/arm_hypercalls.h>
-> +#include <kvm/arm_pmu.h>
-> +#include <kvm/arm_psci.h>
-> +
->  #ifdef REQUIRES_VIRT
->  __asm__(".arch_extension	virt");
->  #endif
-> @@ -350,6 +354,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
->  
->  	kvm_arm_reset_debug_ptr(vcpu);
->  
-> +	kvm_arm_pvtime_vcpu_init(&vcpu->arch);
-> +
->  	return kvm_vgic_vcpu_init(vcpu);
->  }
->  
-> @@ -379,6 +385,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->  	kvm_vcpu_load_sysregs(vcpu);
->  	kvm_arch_vcpu_load_fp(vcpu);
->  	kvm_vcpu_pmu_restore_guest(vcpu);
-> +	if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
-> +		kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->  
->  	if (single_task_running())
->  		vcpu_clear_wfe_traps(vcpu);
-> @@ -644,6 +652,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
->  		 * that a VCPU sees new virtual interrupts.
->  		 */
->  		kvm_check_request(KVM_REQ_IRQ_PENDING, vcpu);
-> +
-> +		if (kvm_check_request(KVM_REQ_RECORD_STEAL, vcpu))
-> +			kvm_update_stolen_time(vcpu, false);
->  	}
->  }
->  
-> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-> index e2521e0d3978..3091a5d2e842 100644
-> --- a/virt/kvm/arm/hypercalls.c
-> +++ b/virt/kvm/arm/hypercalls.c
-> @@ -56,6 +56,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->  	case ARM_SMCCC_HV_PV_FEATURES:
->  		val = kvm_hypercall_pv_features(vcpu);
->  		break;
-> +	case ARM_SMCCC_HV_PV_TIME_ST:
-> +		val = kvm_hypercall_stolen_time(vcpu);
-> +		break;
->  	default:
->  		return kvm_psci_call(vcpu);
->  	}
-> diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
-> index 7887a61651c6..d9d0dbc6994b 100644
-> --- a/virt/kvm/arm/pvtime.c
-> +++ b/virt/kvm/arm/pvtime.c
-> @@ -3,8 +3,45 @@
->  
->  #include <linux/arm-smccc.h>
->  
-> +#include <asm/pvclock-abi.h>
-> +
->  #include <kvm/arm_hypercalls.h>
->  
-> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
-> +{
-> +	struct kvm *kvm = vcpu->kvm;
-> +	u64 steal;
-> +	u64 steal_le;
-> +	u64 offset;
-> +	int idx;
-> +	u64 base = vcpu->arch.steal.base;
-> +
-> +	if (base == GPA_INVALID)
-> +		return -ENOTSUPP;
-> +
-> +	/* Let's do the local bookkeeping */
-> +	steal = vcpu->arch.steal.steal;
-> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
-> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
-> +	vcpu->arch.steal.steal = steal;
-> +
-> +	steal_le = cpu_to_le64(steal);
-> +	idx = srcu_read_lock(&kvm->srcu);
-> +	if (init) {
-> +		struct pvclock_vcpu_stolen_time init_values = {
-> +			.revision = 0,
-> +			.attributes = 0
-> +		};
-> +		kvm_write_guest(kvm, base, &init_values,
-> +				sizeof(init_values));
-> +	}
-> +	offset = offsetof(struct pvclock_vcpu_stolen_time, stolen_time);
-> +	kvm_put_guest(kvm, base + offset, steal_le, u64);
+> That's the whole point of this conversation I thought?
 
-Let's hope we don't have thousands of memslots through which we have to
-do a linear scan on every vcpu load after this.  If that were the case,
-I think the memslot search path would have to be updated anyhow.
+As I understand it, the goal of this series is to be able to capture
+offloaded traffic.
 
-Otherwise looks reasonable to me.
+Currently, the only indication that drivers get when someone is running
+tcpdump/tshark/whatever over an interface is that it's is put in promisc
+mode. So this patches use it as an indication to trap all the traffic to
+the CPU and special case the bridge in order to prevent the driver from
+trapping packets when its ports are bridged. The same will have to be
+done for OVS and in any other (current or future) cases where promisc
+mode is needed to disable Rx filtering.
 
-Thanks,
+If there was another indication that these applications are running over
+an interface, would we be bothering with this new interpretation of
+promisc mode and special casing? I don't think so.
 
-    Christoffer
+We can instead teach libpcap that in order to capture offloaded traffic
+it should use this "tc indirection nonsense". Or turn on a new knob.
+This avoids the need to change each driver with this new special case
+logic.
 
-> +	srcu_read_unlock(&kvm->srcu, idx);
-> +
-> +	return 0;
-> +}
-> +
->  long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->  {
->  	u32 feature = smccc_get_arg1(vcpu);
-> @@ -12,6 +49,7 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->  
->  	switch (feature) {
->  	case ARM_SMCCC_HV_PV_FEATURES:
-> +	case ARM_SMCCC_HV_PV_TIME_ST:
->  		val = SMCCC_RET_SUCCESS;
->  		break;
->  	}
-> @@ -19,3 +57,21 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->  	return val;
->  }
->  
-> +long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
-> +{
-> +	int err;
-> +
-> +	/*
-> +	 * Start counting stolen time from the time the guest requests
-> +	 * the feature enabled.
-> +	 */
-> +	vcpu->arch.steal.steal = 0;
-> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
-> +
-> +	err = kvm_update_stolen_time(vcpu, true);
-> +
-> +	if (err)
-> +		return SMCCC_RET_NOT_SUPPORTED;
-> +
-> +	return vcpu->arch.steal.base;
-> +}
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+Also, what happens when I'm running these application without putting
+the interface in promisc mode? On an offloaded interface I would not be
+able to even capture packets addressed to my interface's MAC address.
+What happens when the interface is already in promisc mode (because of
+the bridge) and I'm again running tcpdump with '-p'? I will not be able
+to capture offloaded traffic despite the fact that the interface is
+already configured in promisc mode.
