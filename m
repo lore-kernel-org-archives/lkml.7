@@ -2,104 +2,92 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CABC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EA7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C2921874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="aW5e6lCR"
+	by mail.kernel.org (Postfix) with ESMTP id 16E352186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfH3DrP (ORCPT
+        id S1727967AbfH3Dsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:47:15 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35421 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbfH3DrP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:47:15 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u34so6234120qte.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 20:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NZw4Pw9NdpmFzMDAaoh2/CiCenjoO+xtgLvv0Q7UjN8=;
-        b=aW5e6lCRjh861Z3S8/UvOM5+PUm3WVunItFwmfs9SYpgePdO/KYGWZ47dixt5VhFtm
-         1kVdZbqNsj1LEHwaDVzHzfaRc3rNQQYqf0VDRSvRQ56mf3q9Y0jPxip06pGzOmD9ck4h
-         3FzkqA0wD0joegIt3qKZCHFmY1nxslDZTLAEMtu3F/YUHqbvsQT9uXjN21gHspy0TuJy
-         t+v8Uze+SpDRHn7Uxbh/KiXgjaeror/fUuloirQGThZ1HmjswxCjct6Nd1gvLwYcIJ1H
-         zeOasiMBhPrdvv35fHX8gvdYOXpMFQqRr63bFZ2fhLgwbsjRBZDJtwsuzf2KOXNA0vnE
-         yoew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NZw4Pw9NdpmFzMDAaoh2/CiCenjoO+xtgLvv0Q7UjN8=;
-        b=eccR1D+AkdXl1v5ThF7bp3RbcKP+TA86pc7w1E9Qi999x+WeIWCTOsBdBqQjBnqSlF
-         rwl3eTklWcGUHCyqI0P1sOyOp7/CUpEWyG+inTCBu8v6wnCaz1NQQ7Nr1bUKYU7DEBAl
-         q5p+ubCS0KlOYlqWFBFllGxMnNovbc3AhcIPLPa8gxCJwpceYVhsnOCpfxxOR5tvQrBS
-         chj7WbpHyuttR1x8pnLgmjS7jubEB4lVDgwPkQXRMoWyaI/pi4nnypyDLk4cagsEsNr+
-         yDmnGnx6pTn7BLMCfcKiYc4dGOLyUWXmEh5exVuVBQVNFqDBYYTLV00lwVNRMi27cLcN
-         k/wQ==
-X-Gm-Message-State: APjAAAXZuDMZvkfR8t9elgXkCBgm4mva2/Z03Wf1oFyJJRVWIA4E1wKu
-        +siDFHeEY7y2vBf9OfTiG1pECslak++cry6c6bCCtQ==
-X-Google-Smtp-Source: APXvYqxc02lc5CqJLnQbj16SE/wQ+yQVKYegZmYDf0KKwKgT/e/ILip5vbosJCfh9Aji6fhGDIDICLOVETBFTeiOx98=
-X-Received: by 2002:aed:24f4:: with SMTP id u49mr13618958qtc.110.1567136834352;
- Thu, 29 Aug 2019 20:47:14 -0700 (PDT)
+        Thu, 29 Aug 2019 23:48:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56948 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727410AbfH3Dsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 23:48:39 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9AA7A3082A6C;
+        Fri, 30 Aug 2019 03:48:39 +0000 (UTC)
+Received: from [10.72.12.92] (ovpn-12-92.pek2.redhat.com [10.72.12.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA6315C1D6;
+        Fri, 30 Aug 2019 03:48:35 +0000 (UTC)
+Subject: Re: [PATCH] virtio: Change typecasts in vring_init()
+To:     Matej Genci <matej.genci@nutanix.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190827152000.53920-1-matej.genci@nutanix.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e6aa7fa1-8f41-fc55-51b2-5f0052cfb2d0@redhat.com>
+Date:   Fri, 30 Aug 2019 11:48:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190829091232.15065-1-kai.heng.feng@canonical.com>
- <alpine.DEB.2.21.1908291351510.1938@nanos.tec.linutronix.de>
- <793CCD4F-35E0-46B9-B5D4-3D3233BA5D35@canonical.com> <alpine.DEB.2.21.1908292143300.1938@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1908292225000.1938@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908292225000.1938@nanos.tec.linutronix.de>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Fri, 30 Aug 2019 11:47:02 +0800
-Message-ID: <CAD8Lp46vG2TEAareYnLNLACkLOoNmsvUoFS64e+zgNfq0DH6EA@mail.gmail.com>
-Subject: Re: [RFD] x86/tsc: Loosen the requirements for watchdog - (was
- x86/hpet: Disable HPET on Intel Coffe Lake)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, harry.pan@intel.com,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>, Pu Wen <puwen@hygon.cn>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190827152000.53920-1-matej.genci@nutanix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 30 Aug 2019 03:48:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
 
-On Fri, Aug 30, 2019 at 5:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> So if we have to disable the HPET on Kaby Lake alltogether unless Intel
-> comes up with the clever fix, i.e. poking at the right registers, then I
-> think we should also lift the TSC watchdog restrictions on these machines
-> if they are single socket, which they are as the affected CPUs so far are
-> mobile and client types.
+On 2019/8/27 下午11:20, Matej Genci wrote:
+> Compilers such as g++ 7.3 complain about assigning void* variable to
+> a non-void* variable (like struct pointers) and pointer arithmetics
+> on void*.
 >
-> Also given the fact that we get more and more 'reduced' hardware exposed
-> via ACPI and we already dealt with quite some fallout with various related
-> issues due to that, I fear we need to bite this bullet anyway anytime soon.
+> Signed-off-by: Matej Genci <matej.genci@nutanix.com>
+> ---
+>  include/uapi/linux/virtio_ring.h | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
+> index 4c4e24c291a5..2c339b9e2923 100644
+> --- a/include/uapi/linux/virtio_ring.h
+> +++ b/include/uapi/linux/virtio_ring.h
+> @@ -168,10 +168,11 @@ static inline void vring_init(struct vring *vr, unsigned int num, void *p,
+>  			      unsigned long align)
+>  {
+>  	vr->num = num;
+> -	vr->desc = p;
+> -	vr->avail = p + num*sizeof(struct vring_desc);
+> -	vr->used = (void *)(((uintptr_t)&vr->avail->ring[num] + sizeof(__virtio16)
+> -		+ align-1) & ~(align - 1));
+> +	vr->desc = (struct vring_desc *)p;
+> +	vr->avail = (struct vring_avail *)((uintptr_t)p
+> +		+ num*sizeof(struct vring_desc));
 
-Thanks for the explanation here!
 
-My experience in this area is basically limited to the clock-related
-issues that I've sent your way recently, so I don't have deep wisdom
-to draw upon, but what you wrote here makes sense to me.
+It's better to let the code pass checkpath.pl here.
 
-If you can outline a testing procedure, we can test upcoming patches
-on Coffee Lake and Kaby Lake consumer laptops.
+Other looks good.
 
-Thanks,
-Daniel
+Thanks
+
+
+> +	vr->used = (struct vring_used *)(((uintptr_t)&vr->avail->ring[num]
+> +		+ sizeof(__virtio16) + align-1) & ~(align - 1));
+>  }
+>  
+>  static inline unsigned vring_size(unsigned int num, unsigned long align)
