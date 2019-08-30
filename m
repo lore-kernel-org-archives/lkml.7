@@ -2,135 +2,97 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A4FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0E3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F002186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77272186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DF35DWi/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cq6tFOjr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OFE56oXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfH3FCR (ORCPT
+        id S1727464AbfH3FDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:02:17 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49362 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfH3FCQ (ORCPT
+        Fri, 30 Aug 2019 01:03:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35761 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfH3FDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:02:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7AB7961B14; Fri, 30 Aug 2019 05:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567141334;
-        bh=fe+1CIFsLrsFmj7GnadvoGOHiiGzQrdsXLHYlpV+vnM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DF35DWi/vcIha8ZdCxzYGat7OgmKEDoWJ9P16AGIJunFqUn8gDuZY6RzkK1YBvQXc
-         OyzXUZlhXMt3ZkhRluU+RMIKQvCCnZL3QzcSJHghAiMqdzjXYjAdvWUm4jaKC9hywP
-         oxorZWI2p1t24zo3fb3J5k5M4pIcb3UjLU0ViFPg=
-Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: c-hbandi@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65CF3602FC;
-        Fri, 30 Aug 2019 05:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567141333;
-        bh=fe+1CIFsLrsFmj7GnadvoGOHiiGzQrdsXLHYlpV+vnM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cq6tFOjrdTDeySUCvbiv+pnJOqt1EA0f/z2kgaQPmN973eij2IW0UMUzos6pQ8aIZ
-         Dyj0sVSZ34RKvan+TEX75lLPeQqCeD70ezOD2PTF1BL6S9FMfmm0jI6fKZdlVzQeAV
-         zuAmz7WnqM0Xb9GteUde4UCbbtVEvZTEGsV+AQoE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65CF3602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
-From:   Harish Bandi <c-hbandi@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
-Subject: [PATCH v2] Bluetooth: hci_qca: wait for Pre shutdown complete event before sending the Power off pulse
-Date:   Fri, 30 Aug 2019 10:31:44 +0530
-Message-Id: <1567141304-24600-1-git-send-email-c-hbandi@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 30 Aug 2019 01:03:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n4so2903093pgv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 22:03:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=l/SRc+T1+zG8Df0Y2qbqNAsBTtdjYH2T4Q4ixAT4EFU=;
+        b=OFE56oXW+++O90cUO7iBwxo6K51w+Om1VsIaoaHHQzpKaHBWZSLC+rswzE/DZVQi9R
+         5iAuTGDv3jBkFheNGCta6YauJ0qHNTP4Gr1MnVYiVBBeWvwd0p/QO9Aw4bWGHhN4fsml
+         buetKU86nGkMZHK3VJQGLHSdJjpInmuogEc20=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=l/SRc+T1+zG8Df0Y2qbqNAsBTtdjYH2T4Q4ixAT4EFU=;
+        b=gFPdKHUePX8qKYVrYIEVNHO6nelS1ZWMoV1FyaMBgJQ6sJPbAWeUNx6BrsPIS6zuv1
+         GO/bRhiCU9eCoXqy3MdSsxMN7A1lWOrqIdsfpUUWst0jmCGXbdCfQS5N+aeq29qn3Mdh
+         25pGQ3t31vLA9Wt81FJCs22R/OTRwtKoU+yKAQMxQQ6f9alJH3JIvi08lvkvq8duzyhR
+         WWRhARqkaDoeuizd0lJyLDtcdUZ/LolmcGjmlBVvfKX/v8kRKQWZ/wDKUZRS+3yJkpzM
+         RMfbM1w2Gj11cqnc5mPKS00U5KTb78j854egk4QHQ5OumXHpnVhfnJ4MDViN80L9rjcU
+         Yg/A==
+X-Gm-Message-State: APjAAAXUoJ/iTd7hyqOU+SkrwBlYLKgegLdJQP/gCIhMhhm7mvfi2Qgm
+        neTTy2nzSCc5QVCfjx8hgfledQ==
+X-Google-Smtp-Source: APXvYqwqwBeN7KOSBghQiwN4xU+AiQkM1MRwhVSZNyPb3TA+PAAnyHv0/vecV7H7NX6Irh9G/XdLvg==
+X-Received: by 2002:a62:aa13:: with SMTP id e19mr15256774pff.37.1567141424316;
+        Thu, 29 Aug 2019 22:03:44 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id m16sm1512892pff.140.2019.08.29.22.03.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 22:03:43 -0700 (PDT)
+Message-ID: <5d68ae2f.1c69fb81.bc783.5e84@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190830022402.214442-1-hungte@chromium.org>
+References: <5d67e673.1c69fb81.5f13b.62ee@mx.google.com> <20190830022402.214442-1-hungte@chromium.org>
+Cc:     hungte@chromium.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Samuel Holland <samuel@sholland.org>,
+        Allison Randal <allison@lohutok.net>,
+        Colin Ian King <colin.king@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] firmware: google: check if size is valid when decoding VPD data
+To:     Hung-Te Lin <hungte@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 29 Aug 2019 22:03:42 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When SoC receives pre shut down command, it share the same
-with other COEX shared clients. So SoC needs a short time
-after sending VS pre shutdown command before turning off
-the regulators and sending the power off pulse. Along with
-short delay, needs to wait for command complete event for
-Pre shutdown VS command
+Quoting Hung-Te Lin (2019-08-29 19:23:58)
+> The VPD implementation from Chromium Vital Product Data project used to
+> parse data from untrusted input without checking if the meta data is
+> invalid or corrupted. For example, the size from decoded content may
+> be negative value, or larger than whole input buffer. Such invalid data
+> may cause buffer overflow.
+>=20
+> To fix that, the size parameters passed to vpd_decode functions should
+> be changed to unsigned integer (u32) type, and the parsing of entry
+> header should be refactored so every size field is correctly verified
+> before starting to decode.
+>=20
+> Fixes: ad2ac9d5c5e0 ("firmware: Google VPD: import lib_vpd source files")
+> Signed-off-by: Hung-Te Lin <hungte@chromium.org>
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
----
-Changes in V2:
-- Modified commit text.
----
- drivers/bluetooth/btqca.c   | 22 ++++++++++++++++++++++
- drivers/bluetooth/hci_qca.c |  5 +++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 8b33128..d48dc9e 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -99,6 +99,28 @@ static int qca_send_reset(struct hci_dev *hdev)
- 	return 0;
- }
- 
-+int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
-+{
-+	struct sk_buff *skb;
-+	int err;
-+
-+	bt_dev_dbg(hdev, "QCA pre shutdown cmd");
-+
-+	skb = __hci_cmd_sync_ev(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
-+				NULL, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
-+
-+	if (IS_ERR(skb)) {
-+		err = PTR_ERR(skb);
-+		bt_dev_err(hdev, "QCA preshutdown_cmd failed (%d)", err);
-+		return err;
-+	}
-+
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
-+
- static void qca_tlv_check_data(struct rome_config *config,
- 				const struct firmware *fw)
- {
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index ab4c18e..43df13c 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1367,6 +1367,11 @@ static int qca_power_off(struct hci_dev *hdev)
- {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 
-+	/* Perform pre shutdown command */
-+	qca_send_pre_shutdown_cmd(hdev);
-+
-+	usleep_range(8000, 10000);
-+
- 	qca_power_shutdown(hu);
- 	return 0;
- }
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
