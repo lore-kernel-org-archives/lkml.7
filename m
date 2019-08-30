@@ -2,300 +2,111 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76B1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC57C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88E421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2E421726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Bxf+31Bp"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="0tWMSg+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfH3IB1 (ORCPT
+        id S1728324AbfH3IBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:01:27 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62037 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbfH3IB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:01:27 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46KX442L0pzB09bM;
-        Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Bxf+31Bp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id QwA2671RsViN; Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46KX440RlJzB09bL;
-        Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567152084; bh=MrB0D1XRCQ1TDzjNZzXYKTbCynoXrd0Cy3NZgBAs/4I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Bxf+31BpxVR3fFhYfMDmWCPlemMdcoJ+Zq5uBcFJkVLyOoyNyD0BaIjE/2C2h2sY6
-         i7ICpfLRIVFEXXwlJn1ik5kRqfm3gFXQo3BkNPzSEjVl97+/bBh5QRM4z5lnYnj90f
-         oQ67+Bw3NRBJVjgIGrVRow4uV1F8JySSworxYysc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D5E78B8EB;
-        Fri, 30 Aug 2019 10:01:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 77KKYpnWQWBA; Fri, 30 Aug 2019 10:01:25 +0200 (CEST)
-Received: from [172.25.230.105] (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CA37F8B8E3;
-        Fri, 30 Aug 2019 10:01:24 +0200 (CEST)
-Subject: Re: [PATCH v5 3/5] powerpc/64: make buildable without CONFIG_COMPAT
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Allison Randal <allison@lohutok.net>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian@brauner.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>
-References: <90594004804c6a9b690b69bdf0e5c4d6c880c5f4.1567117050.git.msuchanek@suse.de>
- <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
- <20190830095451.47ab750f@naga>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c5795c3b-1df4-3a69-4cd9-fc67fcc3ae5e@c-s.fr>
-Date:   Fri, 30 Aug 2019 10:01:24 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 30 Aug 2019 04:01:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55055 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728232AbfH3IBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:01:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id k2so4841152wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xDWFOC5KIqBUnS5KsrM2GDBVfGw82n9BymZaCeLwnrQ=;
+        b=0tWMSg+ZCEeBjFWM+KTT8++sDU93IOoqfi78OtpLOYzGx5L6DqRT490amuDK/8IY3A
+         pi8I3hmd4hfEXFyWXXc3N4/L0XkzY5gsDvefa73RcNYXcXsMLUTEhEGgy7yLYZjSFMtj
+         lGd1jqIW2tkpwIbJyBN8vScRO/l1x+lAaxXfOFWu7Su19kQYp8N9T41hgufo8Ev5jz3f
+         vlPiW/Xp7sMVtKzdpENlIPKFCL7H5Fu9ISGCBT0OnHOdLDnQiFkAsa1jmW8kKaMtWcDZ
+         IUd6oNl9HT9RVQcrSDvg36v1WBdEcB7YKFXRtdQQl8pjSb2rLPhPBMoAXCSol4wZDm5Z
+         Foig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xDWFOC5KIqBUnS5KsrM2GDBVfGw82n9BymZaCeLwnrQ=;
+        b=eocChD86w/2j5KNnXtJftGmuRIgbL/aDPEvM6iPdSnx3lfdfwt7PkLERMzfr9LPn59
+         CAAltaYTDHYRjdlMqPI0UB1ePNQwZ8vJfbmRql5h0CgR9DblL4YdYRAc0V0h8tfnJpGi
+         sJ33zF0kAAZFdsUY7zaejIwxUfwuIXniGElAaSl9Q30+UUFWjVGTnujVbdDHjWWMKAC3
+         D/KiLOSsYJnMXq+1C+LY9Xrja2ztL8IAFJoddjCsf0h9Ii5QWaC7OL8PGXktxOwSF7d1
+         YQ9LwoI7X6JtxsAY9oYe7I38PuDiU2AfcXcHVbPpZjzQcFmmNkZ/f5uio1N/JlydRCDX
+         85LQ==
+X-Gm-Message-State: APjAAAU9irrLe2YeVSNSjnp6Ipc923sKgaYNiJdTmoVbYaukDb6KUbWY
+        e+WEAbfdqvLUQTy0PvwsRMuvIA==
+X-Google-Smtp-Source: APXvYqx+aypUiGiA41kuEqSHGWPSBA1IhTUH9hae5gxadfLmM/cYcrrCHWto4Rv6vNFVumxKXZVSpQ==
+X-Received: by 2002:a1c:ca02:: with SMTP id a2mr1076784wmg.127.1567152092914;
+        Fri, 30 Aug 2019 01:01:32 -0700 (PDT)
+Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
+        by smtp.gmail.com with ESMTPSA id j20sm9610535wre.65.2019.08.30.01.01.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 01:01:32 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 10:01:31 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     David Miller <davem@davemloft.net>
+Cc:     idosch@idosch.org, andrew@lunn.ch, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        allan.nielsen@microchip.com, ivecera@redhat.com,
+        f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190830080131.GQ2312@nanopsycho>
+References: <20190830063624.GN2312@nanopsycho>
+ <20190830.001223.669650763835949848.davem@davemloft.net>
+ <20190830072133.GP2312@nanopsycho>
+ <20190830.003225.292019185488425085.davem@davemloft.net>
 MIME-Version: 1.0
-In-Reply-To: <20190830095451.47ab750f@naga>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830.003225.292019185488425085.davem@davemloft.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 30/08/2019 à 09:54, Michal Suchánek a écrit :
-> On Fri, 30 Aug 2019 06:35:13 +0000 (UTC)
-> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> 
->> On 08/29/2019 10:28 PM, Michal Suchanek wrote:
->>> There are numerous references to 32bit functions in generic and 64bit
->>> code so ifdef them out.
+Fri, Aug 30, 2019 at 09:32:25AM CEST, davem@davemloft.net wrote:
+>From: Jiri Pirko <jiri@resnulli.us>
+>Date: Fri, 30 Aug 2019 09:21:33 +0200
+>
+>> Fri, Aug 30, 2019 at 09:12:23AM CEST, davem@davemloft.net wrote:
+>>>From: Jiri Pirko <jiri@resnulli.us>
+>>>Date: Fri, 30 Aug 2019 08:36:24 +0200
 >>>
->>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->>> ---
->>> v2:
->>> - fix 32bit ifdef condition in signal.c
->>> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
->>> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
->>> v3:
->>> - use IS_ENABLED and maybe_unused where possible
->>> - do not ifdef declarations
->>> - clean up Makefile
->>> v4:
->>> - further makefile cleanup
->>> - simplify is_32bit_task conditions
->>> - avoid ifdef in condition by using return
->>> v5:
->>> - avoid unreachable code on 32bit
->>> - make is_current_64bit constant on !COMPAT
->>> - add stub perf_callchain_user_32 to avoid some ifdefs
->>> ---
->>>    arch/powerpc/include/asm/thread_info.h |  4 ++--
->>>    arch/powerpc/kernel/Makefile           |  7 +++----
->>>    arch/powerpc/kernel/entry_64.S         |  2 ++
->>>    arch/powerpc/kernel/signal.c           |  3 +--
->>>    arch/powerpc/kernel/syscall_64.c       |  6 ++----
->>>    arch/powerpc/kernel/vdso.c             |  5 ++---
->>>    arch/powerpc/perf/callchain.c          | 13 +++++++++++--
->>>    7 files changed, 23 insertions(+), 17 deletions(-)
->>>    
->> [...]
->>
->>> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
->>> index c84bbd4298a0..881be5c4e9bb 100644
->>> --- a/arch/powerpc/perf/callchain.c
->>> +++ b/arch/powerpc/perf/callchain.c
->>> @@ -15,7 +15,7 @@
->>>    #include <asm/sigcontext.h>
->>>    #include <asm/ucontext.h>
->>>    #include <asm/vdso.h>
->>> -#ifdef CONFIG_PPC64
->>> +#ifdef CONFIG_COMPAT
->>>    #include "../kernel/ppc32.h"
->>>    #endif
->>>    #include <asm/pte-walk.h>
->>> @@ -291,7 +291,8 @@ static inline int current_is_64bit(void)
->>>    	 * interrupt stack, and the thread flags don't get copied over
->>>    	 * from the thread_info on the main stack to the interrupt stack.
->>>    	 */
->>> -	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
->>> +	return !IS_ENABLED(CONFIG_COMPAT) ||
->>> +		!test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
->>>    }
->>>    
->>>    #else  /* CONFIG_PPC64 */
->>> @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->>>    
->>>    #endif /* CONFIG_PPC64 */
->>>    
->>> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
->>>    /*
->>>     * Layout for non-RT signal frames
->>>     */
->>> @@ -482,6 +484,13 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->>>    		sp = next_sp;
->>>    	}
->>>    }
->>> +#else /* 32bit */
->>> +static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->>> +				   struct pt_regs *regs)
->>> +{
->>> +	(void)&read_user_stack_32; /* unused if !COMPAT */
->>
->> That looks pretty much like a hack.
->>
->> See possible alternative below.
->>
->>> +}
->>> +#endif /* 32bit */
->>>    
->>>    void
->>>    perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
->>>    
->>
->> ---
->>   arch/powerpc/perf/callchain.c | 62 +++++++++++++++++++------------------------
->>   1 file changed, 27 insertions(+), 35 deletions(-)
->>
->> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
->> index 881be5c4e9bb..1b169b32776a 100644
->> --- a/arch/powerpc/perf/callchain.c
->> +++ b/arch/powerpc/perf/callchain.c
->> @@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
->>   	return read_user_stack_slow(ptr, ret, 8);
->>   }
->>   
->> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
->> -{
->> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
->> -	    ((unsigned long)ptr & 3))
->> -		return -EFAULT;
->> -
->> -	pagefault_disable();
->> -	if (!__get_user_inatomic(*ret, ptr)) {
->> -		pagefault_enable();
->> -		return 0;
->> -	}
->> -	pagefault_enable();
->> -
->> -	return read_user_stack_slow(ptr, ret, 4);
->> -}
->> -
->>   static inline int valid_user_sp(unsigned long sp, int is_64)
->>   {
->>   	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
->> @@ -296,25 +280,10 @@ static inline int current_is_64bit(void)
->>   }
->>   
->>   #else  /* CONFIG_PPC64 */
->> -/*
->> - * On 32-bit we just access the address and let hash_page create a
->> - * HPTE if necessary, so there is no need to fall back to reading
->> - * the page tables.  Since this is called at interrupt level,
->> - * do_page_fault() won't treat a DSI as a page fault.
->> - */
->> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
->> -{
->> -	int rc;
->> -
->> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
->> -	    ((unsigned long)ptr & 3))
->> -		return -EFAULT;
->>   
->> -	pagefault_disable();
->> -	rc = __get_user_inatomic(*ret, ptr);
->> -	pagefault_enable();
->> -
->> -	return rc;
->> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
->> +{
->> +	return 0;
+>>>> The promiscuity is a way to setup the rx filter. So promics == rx filter
+>>>> off. For normal nics, where there is no hw fwd datapath,
+>>>> this coincidentally means all received packets go to cpu.
+>>>
+>>>You cannot convince me that the HW datapath isn't a "rx filter" too, sorry.
+>> 
+>> If you look at it that way, then we have 2: rx_filter and hw_rx_filter.
+>> The point is, those 2 are not one item, that is the point I'm trying to
+>> make :/
+>
+>And you can turn both of them off when I ask for promiscuous mode, that's
+>a detail of the device not a semantic issue.
 
+Well, bridge asks for promiscuous mode during enslave -> hw_rx_filter off
+When you, want to see all traffic in tcpdump -> rx_filter off
 
-Here it is
+So basically there are 2 flavours of promiscuous mode we have to somehow
+distinguish between, so the driver knows what to do.
 
-
->>   }
->>   
->>   static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
->> @@ -344,6 +313,30 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->>   
->>   #if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
->>   /*
->> + * On 32-bit we just access the address and let hash_page create a
->> + * HPTE if necessary, so there is no need to fall back to reading
->> + * the page tables.  Since this is called at interrupt level,
->> + * do_page_fault() won't treat a DSI as a page fault.
->> + */
->> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
->> +{
->> +	int rc;
->> +
->> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
->> +	    ((unsigned long)ptr & 3))
->> +		return -EFAULT;
->> +
->> +	pagefault_disable();
->> +	rc = __get_user_inatomic(*ret, ptr);
->> +	pagefault_enable();
->> +
->> +	if (IS_ENABLED(CONFIG_PPC32) || !rc)
->> +		return rc;
->> +
->> +	return read_user_stack_slow(ptr, ret, 4);
-> Which is not declared here. This is not intended to be the final state,
-> anyway.
-
-Yes it is declared here, see above
-
-Christophe
-
-> 
-> Thanks
-> 
-> Michal
->> +}
->> +
->> +/*
->>    * Layout for non-RT signal frames
->>    */
->>   struct signal_frame_32 {
->> @@ -488,7 +481,6 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->>   static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->>   				   struct pt_regs *regs)
->>   {
->> -	(void)&read_user_stack_32; /* unused if !COMPAT */
->>   }
->>   #endif /* 32bit */
->>   
+Nothe that the hw_rx_filter off is not something special to bridge.
+There is a usecase for this when no bridge is there, only TC filters for
+example.
