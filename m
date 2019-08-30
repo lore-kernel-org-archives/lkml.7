@@ -2,117 +2,211 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF97C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B84C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A78023407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5D223407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfH3RMv (ORCPT
+        id S1727993AbfH3RQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:12:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14658 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbfH3RMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:12:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 10:12:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="265378402"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by orsmga001.jf.intel.com with ESMTP; 30 Aug 2019 10:12:49 -0700
-Message-ID: <5ddd0306f42c2b53ffbd8ee8c9b948c1d529cf98.camel@intel.com>
-Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Fri, 30 Aug 2019 10:03:27 -0700
-In-Reply-To: <20190830083415.GI27757@arm.com>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
-         <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
-         <201908292224.007EB4D5@keescook> <20190830083415.GI27757@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 30 Aug 2019 13:16:03 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:46432 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727434AbfH3RQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:16:03 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 6DF902A22AA429166DF2;
+        Sat, 31 Aug 2019 01:16:00 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 01:15:59 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 31 Aug 2019 01:15:59 +0800
+Date:   Sat, 31 Aug 2019 01:15:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190830171510.GC107220@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
+ <20190829101545.GC20598@infradead.org>
+ <20190829105048.GB64893@architecture4>
+ <20190830163910.GB29603@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190830163910.GB29603@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-30 at 09:34 +0100, Dave Martin wrote:
-> On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
-> > On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
-> > > ELF program properties will needed for detecting whether to enable
-> > > optional architecture or ABI features for a new ELF process.
-> > > 
-> > > For now, there are no generic properties that we care about, so do
-> > > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > > 
-> > > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > > phdrs entry (if any), and notify each property to the arch code.
-> > > 
-> > > For now, the added code is not used.
-> > > 
-> > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> Thanks for the review.
-> 
-> Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
-> early-terminate the scan if we can, but my feeling so far was that the
-> scan is cheap, the number of properties is unlikely to be more than a
-> smallish integer, and the code separation benefits of just calling the
-> arch code for every property probably likely outweigh the costs of
-> having to iterate over every property.  We could always optimise it
-> later if necessary.
-> 
-> I need to double-check that there's no way we can get stuck in an
-> infinite loop with the current code, though I've not seen it in my
-> testing.  I should throw some malformed notes at it though.
+Hi Christoph,
 
-Here is my arch_parse_elf_property() and objdump of the property.
-The parser works fine.
+On Fri, Aug 30, 2019 at 09:39:10AM -0700, Christoph Hellwig wrote:
+> On Thu, Aug 29, 2019 at 06:50:48PM +0800, Gao Xiang wrote:
+> > > Please use an erofs_ prefix for all your functions.
+> > 
+> > It is already a static function, I have no idea what is wrong here.
+> 
+> Which part of all wasn't clear?  Have you looked at the prefixes for
+> most functions in the various other big filesystems?
+
+I will add erofs prefix to free_inode as you said.
+
+At least, all non-prefix functions in erofs are all static functions,
+it won't pollute namespace... I will add "erofs_" to other meaningful
+callbacks...And as you can see...
+
+cifs/cifsfs.c
+1303:cifs_init_inodecache(void)
+1509:   rc = cifs_init_inodecache();
+
+hpfs/super.c
+254:static int init_inodecache(void)
+771:    int err = init_inodecache();
+
+minix/inode.c
+84:static int __init init_inodecache(void)
+665:    int err = init_inodecache();
+
+isofs/inode.c
+88:static int __init init_inodecache(void)
+1580:   int err = init_inodecache();
+
+bfs/inode.c
+261:static int __init init_inodecache(void)
+468:    int err = init_inodecache();
+
+ext4/super.c
+1144:static int __init init_inodecache(void)
+6115:   err = init_inodecache();
+
+reiserfs/super.c
+666:static int __init init_inodecache(void)
+2606:   ret = init_inodecache();
+
+squashfs/super.c
+406:static int __init init_inodecache(void)
+430:    int err = init_inodecache();
+
+udf/super.c
+177:static int __init init_inodecache(void)
+232:    err = init_inodecache();
+
+qnx4/inode.c
+358:static int init_inodecache(void)
+399:    err = init_inodecache();
+
+ufs/super.c
+1463:static int __init init_inodecache(void)
+1517:   int err = init_inodecache();
+
+qnx6/inode.c
+618:static int init_inodecache(void)
+659:    err = init_inodecache();
+
+f2fs/super.c
+3540:static int __init init_inodecache(void)
+3572:   err = init_inodecache();
+
+
+> 
+> > > > +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
+> > > > +	if (is_inode_fast_symlink(inode))
+> > > > +		kfree(inode->i_link);
+> > > 
+> > > is_inode_fast_symlink only shows up in a later patch.  And really
+> > > obsfucates the check here in the only caller as you can just do an
+> > > unconditional kfree here - i_link will be NULL except for the case
+> > > where you explicitly set it.
+> > 
+> > I cannot fully understand your point (sorry about my English),
+> > I will reply you about this later.
+> 
+> With that I mean that you should:
+> 
+>  1) remove is_inode_fast_symlink and just opencode it in the few places
+>     using it
+>  2) remove the check in this place entirely as it is not needed
+>  3) remove the comment quoted above as it is more confusing than not
+>     having the comment
+
+Got it, thanks!
+
+> 
+> > > Is there any good reasons to use buffer heads like this in new code
+> > > vs directly using bios?
+> > 
+> > This page can save in bdev page cache, it contains not only the erofs
+> > superblock so it can be fetched in page cache later.
+> 
+> If you want it in the page cache why not use read_mapping_page or similar?
+
+It's reasonable, I will change as you suggested.
+(The difference is whether it has some buffer_head to the sb page or not...)
+
+> 
+> > > > +/* set up default EROFS parameters */
+> > > > +static void default_options(struct erofs_sb_info *sbi)
+> > > > +{
+> > > > +}
+> > > 
+> > > No need to add an empty function.
+> > 
+> > Later patch will fill this function.
+> 
+> Please only add the function in the patch actually adding the
+> functionality.
+
+That was my fault when spilting patches...considering
+it's an >7KLOC filesystem (maybe spilting the whole xfs or
+ext4 properly is more harder)... Anyway, that is my fault.
+
+> 
+> > > > +}
+> > > 
+> > > Why is this needed?  You can just free your sb privatte information in
+> > > ->put_super and wire up kill_block_super as the ->kill_sb method
+> > > directly.
+> > 
+> > See Al's comments,
+> > https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
+> 
+> With that code it makes sense.  In this paticular patch it does not.
+> So please add it only when actually needed.
+
+Same as above...
 
 Thanks,
-Yu-cheng
-
-
-
-
-int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
-          
-                   bool compat, struct arch_elf_state *state)
-{
-        if (type
-!= GNU_PROPERTY_X86_FEATURE_1_AND)
-                return -ENOENT;
-
-        if (datasz < sizeof(unsigned int))
-                return -ENOEXEC;
-
-        state->gnu_property = *(unsigned int *)data;
-        return 0;
-}
-
-Contents of section .note.gnu.property:
- 400338 04000000 30000000 05000000 474e5500  ....0.......GNU.
- 400348 020000c0 04000000 03000000 00000000  ................
- 400358 000001c0 04000000 00000000 00000000  ................
- 400368 010001c0 04000000 01000000 00000000  ................
+Gao Xiang
 
