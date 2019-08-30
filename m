@@ -2,147 +2,103 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F6C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7502EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD7D23431
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="folcv0CY"
+	by mail.kernel.org (Postfix) with ESMTP id 512DF23439
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 22:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfH3W3k (ORCPT
+        id S1728364AbfH3Wbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 18:29:40 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:41070 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbfH3W3k (ORCPT
+        Fri, 30 Aug 2019 18:31:41 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:12348 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbfH3Wbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 18:29:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BWWRszBDY8GYUUZj497FcR9Z0dm6vMXF/gAZdr1ItkU=; b=folcv0CYTG/fwfjtFT9od8gVs
-        LmEkdhrber88LNPUMfbnmY4rZ5fcd6bEa4DdOxmDoMu8xDExn/Ah5NsTeoI67i87J4KX+zvMgMHIb
-        Ws9JXOfrWIwDKAxjHZQtmgeB4RYPXtOCted2vh317YUbPEILBPMVpm3trknP9hAJMv6/Y2wgPA+WP
-        wNCmXpqm4dfbnsqB6hRtF87ZAG3KuEF6wLqrmulnjvI4Q/59G99z2HxGzlO9ADkFfPthetXTJumhD
-        23Mnjr5oNCzxiwqoWuV2HZnjQQPp2jL64KL9cYbdk5DXvRG6sWjdB3OTqaVm3UT3YlCBvws4YFgZW
-        XWmelzPCA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39464)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i3pOJ-00013m-HY; Fri, 30 Aug 2019 23:29:11 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i3pOE-0000Tw-MP; Fri, 30 Aug 2019 23:29:06 +0100
-Date:   Fri, 30 Aug 2019 23:29:06 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, bhelgaas@google.com, tglx@linutronix.de,
-        sakari.ailus@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] arm: fix page faults in do_alignment
-Message-ID: <20190830222906.GH13294@shell.armlinux.org.uk>
-References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
- <20190830133522.GZ13294@shell.armlinux.org.uk>
- <87d0gmwi73.fsf@x220.int.ebiederm.org>
- <20190830203052.GG13294@shell.armlinux.org.uk>
- <87y2zav01z.fsf@x220.int.ebiederm.org>
+        Fri, 30 Aug 2019 18:31:41 -0400
+IronPort-SDR: O05l+jUxCjmHsNnF4cxKCr8VXWBTKAFC8Gt2oD2R9os82WupN4uWgwtTMvGFRAK6aC/AT/xzYs
+ FzQYoY8LpXIZV7Zf2rkAmFo2DGEXxXQudUihYOkLtisI97iGJBAoc66jot8oBGxVkqSrB3NgME
+ YqjOP/QKpZBh+HiR3No+/M1ckKlKSbsNJbZXrUEYUfzKCdeDdngL/h/NEVee0gWT0I7grmBytB
+ KHtLOYtLPMmWarE3qprSJ6k3gTgCwhbdGpB1rWUzt5VfeQ7gv9z11Uaa/Q7rJHESLNg3I9JBey
+ 5xU=
+X-IronPort-AV: E=Sophos;i="5.64,447,1559548800"; 
+   d="scan'208";a="40928797"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa4.mentor.iphmx.com with ESMTP; 30 Aug 2019 14:31:40 -0800
+IronPort-SDR: Hhsgt2LVcsTRNobsyoISTMBeOSJZieSPCWyRNFLMy1hsywW6cmFcaqWUXH10I335KUWuOhbbxD
+ 0fZf++EvhI0MPbm5r23d7tfd+gb8SMlrZfmXYU0Z20Qlq6loZ4ezQf8kF7mcCipN1wyU19wORd
+ 8K+Ovc+OlFfui1qNsmC/SuiX0h+Vxo/gszHEdECWs4HckiTo6pxv0x0JsIrMQmfoj1seZlSsOy
+ jqoT383wp+HsoiKrNwQt3qaF6Mx59hW+LRrZGr/EmYctq/ITxKwn91AM4+1Gimkdrt/ch8P6QA
+ 510=
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     <shuah@kernel.org>, Jerry Hoemann <jerry.hoemann@hpe.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH] selftests: watchdog: cleanup whitespace in usage options
+Date:   Fri, 30 Aug 2019 18:31:33 -0400
+Message-ID: <1567204294-8840-1-git-send-email-george_davis@mentor.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2zav01z.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 04:02:48PM -0500, Eric W. Biederman wrote:
-> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
-> 
-> > On Fri, Aug 30, 2019 at 02:45:36PM -0500, Eric W. Biederman wrote:
-> >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
-> >> 
-> >> > On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
-> >> >> The function do_alignment can handle misaligned address for user and
-> >> >> kernel space. If it is a userspace access, do_alignment may fail on
-> >> >> a low-memory situation, because page faults are disabled in
-> >> >> probe_kernel_address.
-> >> >> 
-> >> >> Fix this by using __copy_from_user stead of probe_kernel_address.
-> >> >> 
-> >> >> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
-> >> >> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-> >> >
-> >> > NAK.
-> >> >
-> >> > The "scheduling while atomic warning in alignment handling code" is
-> >> > caused by fixing up the page fault while trying to handle the
-> >> > mis-alignment fault generated from an instruction in atomic context.
-> >> >
-> >> > Your patch re-introduces that bug.
-> >> 
-> >> And the patch that fixed scheduling while atomic apparently introduced a
-> >> regression.  Admittedly a regression that took 6 years to track down but
-> >> still.
-> >
-> > Right, and given the number of years, we are trading one regression for
-> > a different regression.  If we revert to the original code where we
-> > fix up, we will end up with people complaining about a "new" regression
-> > caused by reverting the previous fix.  Follow this policy and we just
-> > end up constantly reverting the previous revert.
-> >
-> > The window is very small - the page in question will have had to have
-> > instructions read from it immediately prior to the handler being entered,
-> > and would have had to be made "old" before subsequently being unmapped.
-> 
-> > Rather than excessively complicating the code and making it even more
-> > inefficient (as in your patch), we could instead retry executing the
-> > instruction when we discover that the page is unavailable, which should
-> > cause the page to be paged back in.
-> 
-> My patch does not introduce any inefficiencies.  It onlys moves the
-> check for user_mode up a bit.  My patch did duplicate the code.
-> 
-> > If the page really is unavailable, the prefetch abort should cause a
-> > SEGV to be raised, otherwise the re-execution should replace the page.
-> >
-> > The danger to that approach is we page it back in, and it gets paged
-> > back out before we're able to read the instruction indefinitely.
-> 
-> I would think either a little code duplication or a function that looks
-> at user_mode(regs) and picks the appropriate kind of copy to do would be
-> the best way to go.  Because what needs to happen in the two cases for
-> reading the instruction are almost completely different.
+Convert hard spaces to tabs in usage options.
 
-That is what I mean.  I'd prefer to avoid that with the large chunk of
-code.  How about instead adding a local replacement for
-probe_kernel_address() that just sorts out the reading, rather than
-duplicating all the code to deal with thumb fixup. 
+Suggested-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+---
+ tools/testing/selftests/watchdog/watchdog-test.c | 25 ++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-> > However, as it's impossible for me to contact the submitter, anything
-> > I do will be poking about in the dark and without any way to validate
-> > that it does fix the problem, so I think apart from reviewing of any
-> > patches, there's not much I can do.
-> 
-> I didn't realize your emails to him were bouncing.  That is odd.  Mine
-> don't appear to be.
-
-Hmm, so the fact I posted publically in reply to my reply with the MTA
-bounce message didn't give you a clue?
-
+diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
+index c35989ffbc6b..3fff1ee20a7f 100644
+--- a/tools/testing/selftests/watchdog/watchdog-test.c
++++ b/tools/testing/selftests/watchdog/watchdog-test.c
+@@ -70,18 +70,19 @@ static void term(int sig)
+ static void usage(char *progname)
+ {
+ 	printf("Usage: %s [options]\n", progname);
+-	printf(" -f, --file          Open watchdog device file\n");
+-	printf("                     Default is /dev/watchdog\n");
+-	printf(" -b, --bootstatus    Get last boot status (Watchdog/POR)\n");
+-	printf(" -d, --disable       Turn off the watchdog timer\n");
+-	printf(" -e, --enable        Turn on the watchdog timer\n");
+-	printf(" -h, --help          Print the help message\n");
+-	printf(" -p, --pingrate=P    Set ping rate to P seconds (default %d)\n", DEFAULT_PING_RATE);
+-	printf(" -t, --timeout=T     Set timeout to T seconds\n");
+-	printf(" -T, --gettimeout    Get the timeout\n");
+-	printf(" -n, --pretimeout=T  Set the pretimeout to T seconds\n");
+-	printf(" -N, --getpretimeout Get the pretimeout\n");
+-	printf(" -L, --gettimeleft   Get the time left until timer expires\n");
++	printf(" -f, --file\t\tOpen watchdog device file\n");
++	printf("\t\t\tDefault is /dev/watchdog\n");
++	printf(" -b, --bootstatus\tGet last boot status (Watchdog/POR)\n");
++	printf(" -d, --disable\t\tTurn off the watchdog timer\n");
++	printf(" -e, --enable\t\tTurn on the watchdog timer\n");
++	printf(" -h, --help\t\tPrint the help message\n");
++	printf(" -p, --pingrate=P\tSet ping rate to P seconds (default %d)\n",
++	       DEFAULT_PING_RATE);
++	printf(" -t, --timeout=T\tSet timeout to T seconds\n");
++	printf(" -T, --gettimeout\tGet the timeout\n");
++	printf(" -n, --pretimeout=T\tSet the pretimeout to T seconds\n");
++	printf(" -N, --getpretimeout\tGet the pretimeout\n");
++	printf(" -L, --gettimeleft\tGet the time left until timer expires\n");
+ 	printf("\n");
+ 	printf("Parameters are parsed left-to-right in real-time.\n");
+ 	printf("Example: %s -d -t 10 -p 5 -e\n", progname);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.7.4
+
