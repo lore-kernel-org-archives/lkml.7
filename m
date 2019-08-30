@@ -2,119 +2,112 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F8FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD72C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83AA323439
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DA52343B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567198210;
+	bh=+F7ljiSg6p5FWNKeDI6T/1PPD+xSpDlAYKC1QB46hI0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UJlmWc+CA3E0tVAKc8pRNl9NoNSRrEMGXW4lLKGRz+0WvcnN07a3Y/AXqpSsGK3kQ
+	 nI1KxSZAQgrL8H2BBDjMethEd3MlCTUQRSKaxmrZ06B/8MFu5OqyTvfEQV4pV37QfJ
+	 0yXft4spyWcHbrruFj1I244y+VCNYfMJxoTtfTIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfH3UrJ convert rfc822-to-8bit (ORCPT
+        id S1728135AbfH3UuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 16:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55832 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 16:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfH3UrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 16:47:09 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1727246AbfH3UuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 16:50:09 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1104523439;
-        Fri, 30 Aug 2019 20:47:07 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 16:47:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] ftrace: Fix NULL pointer dereference in
- t_probe_next()
-Message-ID: <20190830164706.453a119e@gandalf.local.home>
-In-Reply-To: <05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
-        <05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 258C123439;
+        Fri, 30 Aug 2019 20:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567198208;
+        bh=+F7ljiSg6p5FWNKeDI6T/1PPD+xSpDlAYKC1QB46hI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2d7DVqD9TskavURNZTbEB1iY1v0A5qusBehdR9V9DI2GTRw1T9+qOWAhs5lRRkDuN
+         8/s1Z64FbnjVvdSZO8S7ndWxbXSBfupq+SQ6/57SQ3/F0j/M8ygAy0TvGdy81uPh41
+         LrAPQ5tECRaUSOjvulcECL1rd1t31LTP5Fk6pAOg=
+Date:   Fri, 30 Aug 2019 13:50:07 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Austin Kim <austindh.kim@gmail.com>
+Cc:     urezki@gmail.com, guro@fb.com, rpenyaev@suse.de, mhocko@suse.com,
+        rick.p.edgecombe@intel.com, rppt@linux.ibm.com,
+        aryabinin@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vmalloc: move 'area->pages' after if statement
+Message-Id: <20190830135007.8b5949bd57975d687ff0a3f8@linux-foundation.org>
+In-Reply-To: <20190830035716.GA190684@LGEARND20B15>
+References: <20190830035716.GA190684@LGEARND20B15>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  4 Jul 2019 20:04:41 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+On Fri, 30 Aug 2019 12:57:16 +0900 Austin Kim <austindh.kim@gmail.com> wrote:
 
-
->  kernel/trace/ftrace.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> If !area->pages statement is true where memory allocation fails, 
+> area is freed.
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 7b037295a1f1..0791eafb693d 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -3093,6 +3093,10 @@ t_probe_next(struct seq_file *m, loff_t *pos)
->  		hnd = &iter->probe_entry->hlist;
->  
->  	hash = iter->probe->ops.func_hash->filter_hash;
+> In this case 'area->pages = pages' should not executed.
+> So move 'area->pages = pages' after if statement.
+> 
+> ...
+>
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2416,13 +2416,15 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+>  	} else {
+>  		pages = kmalloc_node(array_size, nested_gfp, node);
+>  	}
+> -	area->pages = pages;
+> -	if (!area->pages) {
 > +
-> +	if (!hash)
-> +		return NULL;
-> +
->  	size = 1 << hash->size_bits;
+> +	if (!pages) {
+>  		remove_vm_area(area->addr);
+>  		kfree(area);
+>  		return NULL;
+>  	}
 >  
->   retry:
+> +	area->pages = pages;
+> +
+>  	for (i = 0; i < area->nr_pages; i++) {
+>  		struct page *page;
+>  
 
-OK, I added this, but I'm also adding this on top:
+Fair enough.  But we can/should also do this?
 
--- Steve
-
-From 372e0d01da71c84dcecf7028598a33813b0d5256 Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Date: Fri, 30 Aug 2019 16:30:01 -0400
-Subject: [PATCH] ftrace: Check for empty hash and comment the race with
- registering probes
-
-The race between adding a function probe and reading the probes that exist
-is very subtle. It needs a comment. Also, the issue can also happen if the
-probe has has the EMPTY_HASH as its func_hash.
-
-Cc: stable@vger.kernel.org
-Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 80beed2cf0da..6200a6fe10e3 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3096,7 +3096,11 @@ t_probe_next(struct seq_file *m, loff_t *pos)
+--- a/mm/vmalloc.c~mm-vmalloc-move-area-pages-after-if-statement-fix
++++ a/mm/vmalloc.c
+@@ -2409,7 +2409,6 @@ static void *__vmalloc_area_node(struct
+ 	nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
+ 	array_size = (nr_pages * sizeof(struct page *));
  
- 	hash = iter->probe->ops.func_hash->filter_hash;
+-	area->nr_pages = nr_pages;
+ 	/* Please note that the recursion is strictly bounded. */
+ 	if (array_size > PAGE_SIZE) {
+ 		pages = __vmalloc_node(array_size, 1, nested_gfp|highmem_mask,
+@@ -2425,6 +2424,7 @@ static void *__vmalloc_area_node(struct
+ 	}
  
--	if (!hash)
-+	/*
-+	 * A probe being registered may temporarily have an empty hash
-+	 * and it's at the end of the func_probes list.
-+	 */
-+	if (!hash || hash == EMPTY_HASH)
- 		return NULL;
+ 	area->pages = pages;
++	area->nr_pages = nr_pages;
  
- 	size = 1 << hash->size_bits;
-@@ -4324,6 +4328,10 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
- 
- 	mutex_unlock(&ftrace_lock);
- 
-+	/*
-+	 * Note, there's a small window here that the func_hash->filter_hash
-+	 * may be NULL or empty. Need to be carefule when reading the loop.
-+	 */
- 	mutex_lock(&probe->ops.func_hash->regex_lock);
- 
- 	orig_hash = &probe->ops.func_hash->filter_hash;
--- 
-2.20.1
+ 	for (i = 0; i < area->nr_pages; i++) {
+ 		struct page *page;
+_
 
