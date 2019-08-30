@@ -2,146 +2,148 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FFAC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5A2C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6BB21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA802073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 10:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WdPO6sRd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j04hvyN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfH3Kh7 (ORCPT
+        id S1727993AbfH3KjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 06:37:59 -0400
-Received: from mail-eopbgr1410133.outbound.protection.outlook.com ([40.107.141.133]:36592
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727726AbfH3Kh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 06:37:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=myo/XAN0nzcSOft3yEQ1TLdXsICt2uxGOzX61FFy0dMphdEWk3Z2x7bjvRY0jsfv1KQecJd6x3WQj8n9J8tnCsz2BAohz4Rl/fliKrOy8s6luZ9K0S0X/VPVhS9yhVirGJCzgJwZvUc3XgTHEf1Ogz0+QF80TXDWRpCFrcqFjSXt2vl/kBbxLpH/Yxjtz77WmCJDBwV3IV+5urT1m5/TkyGn7qi9psWDXCoUYt17t0ymfFVi+F8NNNwFuPGUd+tslRPhgxI7Ck2wkmoevhIG91DwigpUXLGajHPe6trM1LFpPyrf3k5zBu/HQhyTNP0r80XVoSXzeAzb74tl3gzcMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/UeBxHP/Jn+1pGzEJc71uz1hEs4LNCdeqaXsoUKqmFg=;
- b=drK74o6Ok0Q7GPJS/yAmMitnacleT9SfhbCmpw1ZLr141CvL90NoBm9YOXXG0qRNN2nBckw/FUMnUsGIGk9ClgwtoRM2HJMR+PArfdMIM2CQ6HYqHzIjL9w+yM2KqACteCLFE8t3Sd0toWKZS+LXwMKYfBvJUsp3pP4DY6NlnllJPiLoyVA1JnRyz8JzAoQU3XE0gd5YiCVzGy4EmTmxy0bbbM9Mm/6DGG+j4PEGB3NFhpMtJ+Axc6qhNB2qjeTTVzvyOpJNkkNcJjjk8EKu4NDKA04U4+Qx9wU0lGi89K+qzdMv7ZvbYKLL3RmfX1JgUD73m+BPhceiXEjdc9UaVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Fri, 30 Aug 2019 06:39:03 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40359 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfH3KjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 06:39:03 -0400
+Received: by mail-vs1-f65.google.com with SMTP id i128so4455177vsc.7
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 03:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/UeBxHP/Jn+1pGzEJc71uz1hEs4LNCdeqaXsoUKqmFg=;
- b=WdPO6sRdPT1tveliNY/5v+cR+wKGDlKVKfRL24HWyG16JAcm/rNMVltKpc4v3iR61b7ukndrjY5KqSxsCXQKExMucyNk36XdHEtMfSWp2oHGGdmPiYti0A6O9pkR/XwNd6hL/pxqN5XOpQatXpT6fmdrHs8rzATo/oizLj0r2ug=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1707.jpnprd01.prod.outlook.com (52.133.163.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Fri, 30 Aug 2019 10:37:54 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::4409:a3fc:419e:8efd]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::4409:a3fc:419e:8efd%5]) with mapi id 15.20.2199.021; Fri, 30 Aug 2019
- 10:37:54 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1
- bindings
-Thread-Topic: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1
- bindings
-Thread-Index: AQHVIFaYoM1lViMuq0+eFn8a/8KA9acT/OeQ
-Date:   Fri, 30 Aug 2019 10:37:54 +0000
-Message-ID: <TY1PR01MB1770BF952221F50BBCDF3765C0BD0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc93960c-5c66-46de-67ec-08d72d361d8f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1707;
-x-ms-traffictypediagnostic: TY1PR01MB1707:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY1PR01MB1707D0A3BB30FE5FA77C4F8DC0BD0@TY1PR01MB1707.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0145758B1D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(256004)(8676002)(478600001)(413944005)(81166006)(81156014)(52536014)(5660300002)(486006)(229853002)(3846002)(86362001)(66476007)(6116002)(66066001)(66946007)(71200400001)(64756008)(71190400001)(66446008)(76116006)(54906003)(66556008)(44832011)(53546011)(6246003)(6506007)(25786009)(110136005)(446003)(186003)(74316002)(76176011)(316002)(305945005)(2906002)(53936002)(9686003)(8936002)(55016002)(4326008)(7736002)(26005)(33656002)(102836004)(11346002)(7696005)(14454004)(476003)(6436002)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1707;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 64sQkXBpsec2K889bUjnI9vLkevCvHjqs/gAzIbT7okKZtIo/4BgrOP8prSIdgwuYgfUAv+AWC1m2wiDOoY6I/8460uuXwQt9fFkAJpCmxk+L+MrYA/1HLzALaJZ2WHlX1WhAq1nFOHYT4U7D9L7hmg2XY56Yn2ShjHApW9PaXQntZWruWGsT+/ItZfLnINEFQizl3V3r2vOj8cC5jJZxMPCNIazmaolflOJx/jZ16PIuUeaH/52fath66cRgL4BMiicarOKxI5r1W7Aiil/CB3lFEJYEJYxr2StP9D3IEs3Y+XtsELIwKr8ZRt4OaNZMlhxYDEWg4eCtHlViuRbRAnsbnc6mPh5rysk2vSbcyaHyf2Iv4XEFkV27AFldELh+44qFDALW4dWXPZkLdBISWey8+wM3R6NLwD+rWUaE0Y=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/UGLkrJRvm+li0YZyHFEsmW2SjqLYvPQTm0FTUlv6Ag=;
+        b=j04hvyN72L+zDRpxCWzBS9vYgYaPDy1tVt4SfRR8Bg++NMXQKt+4ImKHJeWP/+L4+f
+         FsxNd8HSMpPK/H9A2pJjH88qCwKM39QTQ49uSVQbaxvvRHcHV0Yi2ueGmHw8hhb5lNZJ
+         9mb+mys0fDmWSR2WSvBvnmBENeXqQAk69lbbmA7s/5UDWRVm0fAqQ/sloezQoFx8XxwV
+         ZqWGjgaxPbEj0NRW3jQoQO2b99l5bTSvSk2pimXTSNcJD3tfqvA0TuoPnK6r2c9bfrzf
+         spLwuJryZa6UIdcvwpdkMTb80NQgntry5FDEO2x33aidLwWiqkQ5zWHs0Eg4pwlbgts5
+         4hSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/UGLkrJRvm+li0YZyHFEsmW2SjqLYvPQTm0FTUlv6Ag=;
+        b=I8C0ngnDaDPRoZrYf7rkUGx3q8MPaLtJovyyZf7cfY+PaxGp4DIpo7lWUNpcu4tsAr
+         J7VV5ITQU+DnDfN7b4/lOO+SWFlR65V7SiqXbT7XaNwbjCynUC3XCLMfQAh6p8v2dr87
+         nqPQ6fnkc6GdT1MRPypCs7w62OerzUBdn8yQN1GEISjhD9wflZI1nHnwE/3Am53KQBtW
+         5ndc6U8PytmjcLFI+35s3/TnKleNE3/8xLuen0othbGM5NTqDUrUISbmbT0KpnAWQjXh
+         jwGkLHKEKZCguQO56YwbTiSq0z9A7NMF/vojxWM0FmkTcr+WoX/+Pm5pb+HCJM5bBfMi
+         5QDQ==
+X-Gm-Message-State: APjAAAWkxj1D+FVWBoHZqo7UzfRdkEhd+OyKx2bsPWPj3RdDJ7hMQCEK
+        L20+6WuO2ukkL285AuW9QonMTAsJF3SW9Q1HgozuLA==
+X-Google-Smtp-Source: APXvYqyexb/mfNJJQsyEuU1xMvNLp6YAZf+F2QKjVy8WDgPjJur+u8KWulIE/o4fnV72MYujkJgPj7YRlPDTX5ADcM4=
+X-Received: by 2002:a67:347:: with SMTP id 68mr8224648vsd.35.1567161542239;
+ Fri, 30 Aug 2019 03:39:02 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc93960c-5c66-46de-67ec-08d72d361d8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 10:37:54.2656
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NKj1kuUURnWNgUKo6iJ3K6TH7MxTLNtXThn2mIWhjQYhtLU3GzGmrXE4xztPo5P79JSpsncjlVQR6fLSv0iz+Zqyhw8ve08j3rpDl1zVMAU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1707
+References: <20190828214620.66003-1-mka@chromium.org> <20190828214620.66003-2-mka@chromium.org>
+ <CAPDyKFr2R-ta5Xob12-6k=+mXXt0NowJ=dpLGJu10qhn7cB1HQ@mail.gmail.com>
+ <20190829171555.GD70797@google.com> <CAD=FV=VhAFGZusYac8hqYNZ9t+ipTZ5EAo5qY5+A8jA4xjw2vg@mail.gmail.com>
+ <CAPDyKFo-NkkYyNNxtU9PpP7aG5zRd-pXsxOujdN53J=uAezieA@mail.gmail.com>
+In-Reply-To: <CAPDyKFo-NkkYyNNxtU9PpP7aG5zRd-pXsxOujdN53J=uAezieA@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 30 Aug 2019 12:38:26 +0200
+Message-ID: <CAPDyKFp-p_iunzFd8vSuuP0ubd7WzPY4XOzCoo=EEFQ8rscWCw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: core: Run handlers for pending SDIO interrupts
+ on resume
+To:     Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear All,
+On Fri, 30 Aug 2019 at 08:08, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Thu, 29 Aug 2019 at 19:40, Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Aug 29, 2019 at 10:16 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > >
+> > > > In one way, this change makes sense as it adopts the legacy behavior,
+> > > > signaling "cached" SDIO IRQs also for the new SDIO irq work interface.
+> > > >
+> > > > However, there is at least one major concern I see with this approach.
+> > > > That is, in the execution path for sdio_signal_irq() (or calling
+> > > > wake_up_process() for the legacy path), we may end up invoking the
+> > > > SDIO func's ->irq_handler() callback, as to let the SDIO func driver
+> > > > to consume the SDIO IRQ.
+> > > >
+> > > > The problem with this is, that the corresponding SDIO func driver may
+> > > > not have been system resumed, when the ->irq_handler() callback is
+> > > > invoked.
+> > >
+> > > While debugging the the problem with btmrvl I found that this is
+> > > already the case without the patch, just not during resume, but when
+> > > suspending. The func driver suspends before the SDIO bus and
+> > > interrupts can keep coming in. These are processed while the func
+> > > driver is suspended, until the SDIO core starts dropping the
+> > > interrupts.
+> > >
+> > > And I think it is also already true at resume time: mmc_sdio_resume()
+> > > re-enables SDIO IRQs and disables dropping them.
+> >
+> > I would also note that this matches the design of the normal system
+> > suspend/resume functions.  Interrupts continue to be enabled even
+> > after the "suspend" call is made for a device.  Presumably this is so
+> > that the suspend function can make use of interrupts even if there is
+> > no other reason.
+>
+> I understand and you have a good point!
+>
+> However, in my experience, the most common generic case, is that it's
+> a bad idea to let a device process interrupts once they have been
+> suspended. This also applies to runtime suspend (via runtime PM).
+>
+> > If it's important for a device to stop getting
+> > interrupts after the "suspend" function is called then it's up to that
+> > device to re-configure the device to stop giving interrupts.
+>
+> Again, you have a very good point. The corresponding driver for the
+> device in question is responsible for dealing with this.
+>
+> Then, for this particular case, the SDIO func driver scenario, how
+> would that work?
+>
+> For example, assume that the SDIO func driver can't process IRQs after
+> its been system suspended, however it still wants the IRQs to be
+> re-kicked to consume them once it has been resumed?
+>
+> Or are you saying that the SDIO func driver for cases when IRQs can't
+> be consumed during system suspend, that is should call
+> sdio_release_irq() (then reclaim the IRQ once resumed)?
 
-This patch has been reviewed by Geert, Simon, and Rob, so I think it's ok t=
-o apply.
-Is anybody willing to take this patch?
+I have been thinking more about this. The above seems like a
+reasonable assumption to make. So, I started to hack and improve the
+SDIO IRQ management, again.
 
-Thanks,
-Fab
+Just to be clear, I like the approach Matthias has taken here, which
+means reading SDIO_CCCR_INTx register at system resume, to understand
+whether there are some SDIO IRQs that needs to be processed, however
+there are some more corner cases that needs to be covered as well.
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 11 June 2019 14:07
-> Subject: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1 =
-bindings
->=20
-> Document RZ/G2M (R8A774A1) SoC in the Renesas TMU bindings.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Do=
-cumentation/devicetree/bindings/timer/renesas,tmu.txt
-> index 13ad074..9dff7e5 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> @@ -10,6 +10,7 @@ Required Properties:
->=20
->    - compatible: must contain one or more of the following:
->      - "renesas,tmu-r8a7740" for the r8a7740 TMU
-> +    - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
->      - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
->      - "renesas,tmu-r8a7778" for the r8a7778 TMU
->      - "renesas,tmu-r8a7779" for the r8a7779 TMU
-> --
-> 2.7.4
+Let me post something on Monday, then we can continue our discussions
+and run some tests as well.
 
+Have nice weekend!
+Uffe
