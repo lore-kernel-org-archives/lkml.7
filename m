@@ -2,116 +2,127 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6618FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE979C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBCF21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17F6233FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 13:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="qDdOmGkl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pq/kg7Yc"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mEdc7Dis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfH3NYz (ORCPT
+        id S1727963AbfH3NZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 09:24:55 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38277 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727135AbfH3NYz (ORCPT
+        Fri, 30 Aug 2019 09:25:12 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45476 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3NZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 09:24:55 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id CEDC4216CA;
-        Fri, 30 Aug 2019 09:24:53 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 30 Aug 2019 09:24:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=ZOc9QF1XymxW3TThIgoaBqoQxx
-        9B1Byr0m0WbXALdyM=; b=qDdOmGklgM6I4mp1panEmbhQgcExvXkr5+hGR8R2o6
-        1Vez34FQS8/ePkcUAFMI0enr//V+VjBxUWbvqR6+76w7evFBjMYHymGj4/4sWEQU
-        AuojrZjwt8E5mb2BIdJMa8Wlhqv6pmDEHtm/Mn7cebfij2QyqG494vGrDeIFe5kG
-        Z+tuSvxt+MJnASxsK2WXL6zb694XHUG69fn0WTdMJa7LiceCPUizW5eyBpHmmjNq
-        yhFE4Bbezu+Ut7LhunVx9Zwl0bf6mj4y2sYN0/ASXp/yqG98dX3CaLIHfsX8kDij
-        D2Xh6wWm7bqDiUZaAqglyJtKYghQctsUT0UvWNIbS63w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ZOc9QF1XymxW3TThI
-        goaBqoQxx9B1Byr0m0WbXALdyM=; b=pq/kg7YcvTVNQycv6Qhe6z9rENNssGsv8
-        Pq3ES9eftm84D62HQxn0v1Ph0/YK0WlznoBrhqh3OEACOI0ynGqwUKIbBiXm6CD5
-        D4H2GwL99GuiSTDR4I282Y44Sbi28gOauZ3A6dadOZM/IztkOJA1p6MAA4VB6UoT
-        CM6nrsqrXvg/Rs+rqZOhpBc+rZDwrPR542VpYyck17V6b0ztYe3pjxKXkK/7m4oM
-        QW77d0ZQljJXJqppo7DOH/Devo5p5enIZMn8CXXwjxHd89H5OoT9tq6kR2HRhPCH
-        s4hr9LkwZUAemSLTZFzwu09bHv073hJXdabQEzC4hnHQcNA2e11Xw==
-X-ME-Sender: <xms:pCNpXZloFqCOHncUh7uMVRr78On8q-12xa807MTL_zHW5sIyTMV5kA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeigedgieegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhh
-    ihesshgrkhgrmhhotggthhhirdhjpheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucfkphepudegrdefrdejhedrudekudenucfrrghrrghmpehmrghilhhfrhhomhepohdq
-    thgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjphenucevlhhushhtvghrufhiiigvpe
-    dt
-X-ME-Proxy: <xmx:pCNpXe5e3bjKd5N115lHBgc6osDA2JBMjXp13-gxMkxaeo3M6g8MRA>
-    <xmx:pCNpXfiazfQAYpA1sfjqrHOCarJCp324Zqe7YDIOSaDUWeS4OHLZbg>
-    <xmx:pCNpXbHGzm8PIj8kalZ8J5KIussaj1NdDdssW7oFIGHdw5tfVXE1Mg>
-    <xmx:pSNpXbbdEtnmES80RSjZP-VwXVy8i_3tScO7vd02ReXBtmZgC91muw>
-Received: from workstation.flets-east.jp (ae075181.dynamic.ppp.asahi-net.or.jp [14.3.75.181])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AA446D6005E;
-        Fri, 30 Aug 2019 09:24:50 -0400 (EDT)
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     clemens@ladisch.de, tiwai@suse.de
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: update entry of firewire audio drivers
-Date:   Fri, 30 Aug 2019 22:24:46 +0900
-Message-Id: <20190830132446.5154-1-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.20.1
+        Fri, 30 Aug 2019 09:25:11 -0400
+Received: by mail-ed1-f66.google.com with SMTP id x19so7941871eda.12
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 06:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5Zj/8Y/Y7waYN+TCgDjpWoQ2JSAG8CGbnlMXmewzzjI=;
+        b=mEdc7Disgjzolfg3x9hn20PolxgZLBj70G4baazpIXB4ImfEgklyXg6dJB5u7NmmB5
+         Rcpm+OynmrhRpiFYRFCSadzfy0X3+A7fS/M7CpXhJI6NysbQgN4O95gTyCE2xPHhDaWc
+         wHQHb1StRwZcSNJ7ci1RbV+f/ER5Q0CYw8LLO/QR9lAnxGmUYdKhlMQGl8dH5qsdTIWQ
+         ot5QwdMa9ykqzcdx9pJTF+NMTk9mmwUwpwz+wX5LXe5SxzYCnnxyckT8M1OgXAPhVJJs
+         nKv+gMmwVs1vPcmL+fe87UB72l2NEO43NJBKb7393jw42mfzLGtWeocVKNCHfmcUkvcm
+         QNNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Zj/8Y/Y7waYN+TCgDjpWoQ2JSAG8CGbnlMXmewzzjI=;
+        b=B4MZ7lVUMe8JLM3y96qekr8kXnue+HTIUax6zIh1934q2Nlw2mgjT8rmMjMEgaTwh7
+         CRW50/gj3yIUODxVM7XmSfsMix3lNx4qkfzrSfsUbkP9DiRmI6vXX8QvppWAEXU5aCin
+         4zlU6IQyfdVApjWqigbFTOf/nqotHnCnyf3LjUJ6rDfn1KNRCt619iwimY4ku86M3xR5
+         vFmrPqfgLRnusqywlbGFF+7k+cze2vDXRezDydsqd4eWJ502ZibARJFp17nH2v9pAy79
+         Ix1wE5QthgwcsEdoyaGpbMzRuhC48Wll8rhL3/Ij5bcqgpmJXtnJZApaBhG9lPWtJgIm
+         3ucw==
+X-Gm-Message-State: APjAAAUiDau945ZGj1XUj5cZFwbizklXRILA3aL60Ws1FEFyW/H1Zs0D
+        Ny0WmLikidrG7Ejvx8bThtez0g==
+X-Google-Smtp-Source: APXvYqxK6DIqe/Pu2WQy6d+ysA0bul3FVt9tp8Trtu4kHKskfdjuWFLCmhkB2V9o5NAwZMgt2vBzSw==
+X-Received: by 2002:a05:6402:60d:: with SMTP id n13mr15479226edv.303.1567171510061;
+        Fri, 30 Aug 2019 06:25:10 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id h11sm253745edq.74.2019.08.30.06.25.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 06:25:09 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 9EB841023D2; Fri, 30 Aug 2019 16:25:13 +0300 (+03)
+Date:   Fri, 30 Aug 2019 16:25:13 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.2 51/76] x86/boot/compressed/64: Fix boot on
+ machines with broken E820 table
+Message-ID: <20190830132513.emsgzw6nty2blfv5@box>
+References: <20190829181311.7562-1-sashal@kernel.org>
+ <20190829181311.7562-51-sashal@kernel.org>
+ <20190829221723.eicsws3q7gp6nx37@box>
+ <20190830120638.GW5281@sasha-vm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830120638.GW5281@sasha-vm>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds myself as one of maintainers for firewire audio
-drivers and IEC 61883-1/6 packet streaming engine. I call them ALSA
-firewire stack as a whole.
+On Fri, Aug 30, 2019 at 08:06:38AM -0400, Sasha Levin wrote:
+> On Fri, Aug 30, 2019 at 01:17:23AM +0300, Kirill A. Shutemov wrote:
+> > On Thu, Aug 29, 2019 at 02:12:46PM -0400, Sasha Levin wrote:
+> > > From: "Kirill A. Shutemov" <kirill@shutemov.name>
+> > > 
+> > > [ Upstream commit 0a46fff2f9108c2c44218380a43a736cf4612541 ]
+> > > 
+> > > BIOS on Samsung 500C Chromebook reports very rudimentary E820 table that
+> > > consists of 2 entries:
+> > > 
+> > >   BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] usable
+> > >   BIOS-e820: [mem 0x00000000fffff000-0x00000000ffffffff] reserved
+> > > 
+> > > It breaks logic in find_trampoline_placement(): bios_start lands on the
+> > > end of the first 4k page and trampoline start gets placed below 0.
+> > > 
+> > > Detect underflow and don't touch bios_start for such cases. It makes
+> > > kernel ignore E820 table on machines that doesn't have two usable pages
+> > > below BIOS_START_MAX.
+> > > 
+> > > Fixes: 1b3a62643660 ("x86/boot/compressed/64: Validate trampoline placement against E820")
+> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > Signed-off-by: Borislav Petkov <bp@suse.de>
+> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: x86-ml <x86@kernel.org>
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203463
+> > > Link: https://lkml.kernel.org/r/20190813131654.24378-1-kirill.shutemov@linux.intel.com
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > 
+> > Please postpone backporting the patch (and into other trees). There's a
+> > fixup for it:
+> > 
+> > http://lore.kernel.org/r/20190826133326.7cxb4vbmiawffv2r@box
+> 
+> Sure. Should I just queue it up for a week or two later (along with the
+> fixes), or do you want to let me know when?
 
-6 years ago I joined in development for this category of drivers with
-heavy reverse-engineering tasks and over 100 models are now available
-from ALSA applications. IEEE 1394 bus itself and units on the bus are
-enough legacy but the development still continues.
+You can queue it up later (two weeks is fine) once the fixup hit Linus' tree.
 
-I have a plan to add drastic enhancement in kernel v5.5 and v5.6 period.
-This commit adds myself into MAINTAINERS so that developers and users
-can easily find active developer to post their issues, especially for
-regression.
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 24e29b2e53c9..8929a2ec75f7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6264,8 +6264,9 @@ S:	Maintained
- F:	drivers/hwmon/f75375s.c
- F:	include/linux/f75375s.h
- 
--FIREWIRE AUDIO DRIVERS
-+FIREWIRE AUDIO DRIVERS and IEC 61883-1/6 PACKET STREAMING ENGINE
- M:	Clemens Ladisch <clemens@ladisch.de>
-++M:	Takashi Sakamoto <o-takashi@sakamocchi.jp>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
- S:	Maintained
 -- 
-2.20.1
-
+ Kirill A. Shutemov
