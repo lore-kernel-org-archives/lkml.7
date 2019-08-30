@@ -4,99 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA35C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4539C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF8721874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C8D21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfH3MZW (ORCPT
+        id S1727945AbfH3M0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:25:22 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:55690 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfH3MZW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:25:22 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7UCPFGC027683, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3](maybeforged))
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7UCPFGC027683
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 30 Aug 2019 20:25:15 +0800
-Received: from laptop-alex (172.29.36.155) by RS-CAS02.realsil.com.cn
- (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
- 2019 20:05:45 +0800
-Date:   Fri, 30 Aug 2019 20:05:30 +0800
-From:   Alex Lu <alex_lu@realsil.com.cn>
-To:     Marcel Holtmann <marcel@holtmann.org>
-CC:     Johan Hedberg <johan.hedberg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Max Chou <max.chou@realtek.com>
-Subject: [PATCH 2/2] Bluetooth: btrtl: Add firmware version print
-Message-ID: <20190830120530.GA3299@laptop-alex>
+        Fri, 30 Aug 2019 08:26:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12247 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727603AbfH3M0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:26:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:26:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="198026136"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 30 Aug 2019 05:26:13 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 30 Aug 2019 15:26:12 +0300
+Date:   Fri, 30 Aug 2019 15:26:12 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] software node: Get reference to parent swnode
+ in get_parent op
+Message-ID: <20190830122612.GA1636@kuha.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-2-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Originating-IP: [172.29.36.155]
+In-Reply-To: <20190829101043.24963-2-sakari.ailus@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Lu <alex_lu@realsil.com.cn>
+On Thu, Aug 29, 2019 at 01:10:34PM +0300, Sakari Ailus wrote:
+> The software_node_get_parent() returned a pointer to the parent swnode,
+> but did not take a reference to it, leading the caller to put a reference
+> that was not taken. Take that reference now.
+> 
+> Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the
+> 		      firmware node framework")
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-This patch is used to print fw version for debug convenience
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
----
- drivers/bluetooth/btrtl.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> ---
+>  drivers/base/swnode.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index e7b3aa3bd55ad..a7cb41812cfda 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
+>  {
+>  	struct swnode *swnode = to_swnode(fwnode);
+>  
+> -	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
+> +	if (!swnode || !swnode->parent)
+> +		return NULL;
+> +
+> +	return fwnode_handle_get(&swnode->parent->fwnode);
+>  }
+>  
+>  static struct fwnode_handle *
+> -- 
+> 2.20.1
 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index b7487ab99eed..7219eb98d02d 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -151,6 +151,8 @@ static const struct id_table ic_id_table[] = {
- 	  .cfg_name = "rtl_bt/rtl8822b_config" },
- 	};
- 
-+static struct sk_buff *btrtl_read_local_version(struct hci_dev *hdev);
-+
- static const struct id_table *btrtl_match_ic(u16 lmp_subver, u16 hci_rev,
- 					     u8 hci_ver, u8 hci_bus)
- {
-@@ -368,6 +370,8 @@ static int rtl_download_firmware(struct hci_dev *hdev,
- 	int frag_len = RTL_FRAG_LEN;
- 	int ret = 0;
- 	int i;
-+	struct sk_buff *skb;
-+	struct hci_rp_read_local_version *rp;
- 
- 	dl_cmd = kmalloc(sizeof(struct rtl_download_cmd), GFP_KERNEL);
- 	if (!dl_cmd)
-@@ -406,6 +410,18 @@ static int rtl_download_firmware(struct hci_dev *hdev,
- 		data += RTL_FRAG_LEN;
- 	}
- 
-+	skb = btrtl_read_local_version(hdev);
-+	if (IS_ERR(skb)) {
-+		ret = PTR_ERR(skb);
-+		rtl_dev_err(hdev, "read local version failed");
-+		goto out;
-+	}
-+
-+	rp = (struct hci_rp_read_local_version *)skb->data;
-+	rtl_dev_info(hdev, "rtl: fw version 0x%04x%04x",
-+		     __le16_to_cpu(rp->hci_rev), __le16_to_cpu(rp->lmp_subver));
-+	kfree_skb(skb);
-+
- out:
- 	kfree(dl_cmd);
- 	return ret;
+thanks,
+
 -- 
-2.21.0
-
+heikki
