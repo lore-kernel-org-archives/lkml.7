@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B54EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A4C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692F623952
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61008238CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbfH3In2 (ORCPT
+        id S1728628AbfH3Inq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:43:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:56302 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 04:43:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:56258 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbfH3InY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:43:24 -0400
+        id S1727562AbfH3InT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:43:19 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABF1A344;
-        Fri, 30 Aug 2019 01:43:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F14C2344;
+        Fri, 30 Aug 2019 01:43:18 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9560C3F718;
-        Fri, 30 Aug 2019 01:43:21 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D46BB3F718;
+        Fri, 30 Aug 2019 01:43:16 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
@@ -39,9 +39,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Suzuki K Pouloze <suzuki.poulose@arm.com>,
         Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/10] arm/arm64: Provide a wrapper for SMCCC 1.1 calls
-Date:   Fri, 30 Aug 2019 09:42:53 +0100
-Message-Id: <20190830084255.55113-9-steven.price@arm.com>
+Subject: [PATCH v4 06/10] KVM: Allow kvm_device_ops to be const
+Date:   Fri, 30 Aug 2019 09:42:51 +0100
+Message-Id: <20190830084255.55113-7-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190830084255.55113-1-steven.price@arm.com>
 References: <20190830084255.55113-1-steven.price@arm.com>
@@ -52,76 +52,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SMCCC 1.1 calls may use either HVC or SMC depending on the PSCI
-conduit. Rather than coding this in every call site provide a macro
-which uses the correct instruction. The macro also handles the case
-where no PSCI conduit is configured returning a not supported error
-in res, along with returning the conduit used for the call.
-
-This allow us to remove some duplicated code and will be useful later
-when adding paravirtualized time hypervisor calls.
+Currently a kvm_device_ops structure cannot be const without triggering
+compiler warnings. However the structure doesn't need to be written to
+and, by marking it const, it can be read-only in memory. Add some more
+const keywords to allow this.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
 ---
- include/linux/arm-smccc.h | 44 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ include/linux/kvm_host.h | 4 ++--
+ virt/kvm/kvm_main.c      | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index e7f129f26ebd..eee1e832221d 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -303,6 +303,50 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
- #define SMCCC_RET_NOT_SUPPORTED			-1
- #define SMCCC_RET_NOT_REQUIRED			-2
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index bf0ae1825b9c..4e65f7566913 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1260,7 +1260,7 @@ extern unsigned int halt_poll_ns_grow_start;
+ extern unsigned int halt_poll_ns_shrink;
  
-+/* Like arm_smccc_1_1* but always returns SMCCC_RET_NOT_SUPPORTED.
-+ * Used when the PSCI conduit is not defined. The empty asm statement
-+ * avoids compiler warnings about unused variables.
-+ */
-+#define __fail_smccc_1_1(...)						\
-+	do {								\
-+		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
-+		asm ("" __constraints(__count_args(__VA_ARGS__)));	\
-+		if (___res)						\
-+			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
-+	} while (0)
-+
-+/*
-+ * arm_smccc_1_1_invoke() - make an SMCCC v1.1 compliant call
-+ *
-+ * This is a variadic macro taking one to eight source arguments, and
-+ * an optional return structure.
-+ *
-+ * @a0-a7: arguments passed in registers 0 to 7
-+ * @res: result values from registers 0 to 3
-+ *
-+ * This macro will make either an HVC call or an SMC call depending on the
-+ * current PSCI conduit. If no valid conduit is available then -1
-+ * (SMCCC_RET_NOT_SUPPORTED) is returned in @res.a0 (if supplied).
-+ *
-+ * The return value also provides the conduit that was used.
-+ */
-+#define arm_smccc_1_1_invoke(...) ({					\
-+		int method = psci_ops.conduit;				\
-+		switch (method) {					\
-+		case PSCI_CONDUIT_HVC:					\
-+			arm_smccc_1_1_hvc(__VA_ARGS__);			\
-+			break;						\
-+		case PSCI_CONDUIT_SMC:					\
-+			arm_smccc_1_1_smc(__VA_ARGS__);			\
-+			break;						\
-+		default:						\
-+			__fail_smccc_1_1(__VA_ARGS__);			\
-+			method = PSCI_CONDUIT_NONE;			\
-+			break;						\
-+		}							\
-+		method;							\
-+	})
-+
- /* Paravirtualised time calls (defined by ARM DEN0057A) */
- #define ARM_SMCCC_HV_PV_FEATURES				\
- 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+ struct kvm_device {
+-	struct kvm_device_ops *ops;
++	const struct kvm_device_ops *ops;
+ 	struct kvm *kvm;
+ 	void *private;
+ 	struct list_head vm_node;
+@@ -1313,7 +1313,7 @@ struct kvm_device_ops {
+ void kvm_device_get(struct kvm_device *dev);
+ void kvm_device_put(struct kvm_device *dev);
+ struct kvm_device *kvm_device_from_filp(struct file *filp);
+-int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type);
++int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type);
+ void kvm_unregister_device_ops(u32 type);
+ 
+ extern struct kvm_device_ops kvm_mpic_ops;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index c6a91b044d8d..75488ebb87c9 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3046,14 +3046,14 @@ struct kvm_device *kvm_device_from_filp(struct file *filp)
+ 	return filp->private_data;
+ }
+ 
+-static struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
++static const struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
+ #ifdef CONFIG_KVM_MPIC
+ 	[KVM_DEV_TYPE_FSL_MPIC_20]	= &kvm_mpic_ops,
+ 	[KVM_DEV_TYPE_FSL_MPIC_42]	= &kvm_mpic_ops,
+ #endif
+ };
+ 
+-int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type)
++int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type)
+ {
+ 	if (type >= ARRAY_SIZE(kvm_device_ops_table))
+ 		return -ENOSPC;
+@@ -3074,7 +3074,7 @@ void kvm_unregister_device_ops(u32 type)
+ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 				   struct kvm_create_device *cd)
+ {
+-	struct kvm_device_ops *ops = NULL;
++	const struct kvm_device_ops *ops = NULL;
+ 	struct kvm_device *dev;
+ 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
+ 	int type;
 -- 
 2.20.1
 
