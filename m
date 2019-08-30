@@ -2,123 +2,122 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5A3C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB5DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618122342E
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C142342E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfH3SOb (ORCPT
+        id S1728275AbfH3SOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:14:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62898 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727959AbfH3SOa (ORCPT
+        Fri, 30 Aug 2019 14:14:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35871 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbfH3SOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:14:30 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UI3IH1016923;
-        Fri, 30 Aug 2019 14:14:21 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uq7vqhwsd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 14:14:21 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7UI4s0t012126;
-        Fri, 30 Aug 2019 18:14:20 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 2ujvv7dh0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Aug 2019 18:14:20 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UIEJtD36045086
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 18:14:19 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4897AC05E;
-        Fri, 30 Aug 2019 18:14:19 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41DDAAC059;
-        Fri, 30 Aug 2019 18:14:16 +0000 (GMT)
-Received: from LeoBras.ibmuc.com (unknown [9.85.151.141])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Aug 2019 18:14:16 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Fri, 30 Aug 2019 14:14:42 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k18so7810817otr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 11:14:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tcZ7CbFDJuL2UIE4e1E/mRyvfTkPs0zewzMOwmkGiT4=;
+        b=ZOSDP37aDPF+p49nr/Gv1hu2TLa45LVS6+t7kN6/bo2+7Ys5ky7k9aAjsvWQyWcuA0
+         2j2iFXMxuvNFIY0+83dVBRiCn4rbZxpYzItwwoBWX8bUVeuIeZ5oJnGT6ZC+hRK1swoN
+         IrYkb+/ox9lvt55kUIsOLBAIAMKX1kerrjfPW4H+wh9c0yTARh7N6BdeFaeEvTVW2h5f
+         bSFyRZHiUy0dH5kGtqw0rIXJkpOEzYG0+O/Hi15cD2moR3oZIOICYzHmwIyWyo1a7Jg0
+         1wuaKNKCo2hn5i1P3TPpJzb2utnc2C/oM4pEGySOoJOS8N70ZBa/l39uARj5TINgbdbh
+         z9WQ==
+X-Gm-Message-State: APjAAAWSwrxnJB2v27WtvYOgEMGVgB+LyW8PCpEsjqYPSJqelWzuwwaP
+        v5bzgoVLai59KHtb9aNLIjPzml19
+X-Google-Smtp-Source: APXvYqzJrSypv8jdgqcjkdqz7JMqUKmism7bakP3K5KtbmwuRNzlmboECazuu8tNvKzgIcHkH/dRvw==
+X-Received: by 2002:a05:6830:130e:: with SMTP id p14mr13486506otq.339.1567188881552;
+        Fri, 30 Aug 2019 11:14:41 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id 34sm1469032ots.47.2019.08.30.11.14.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 11:14:40 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
+ userspace
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        James Smart <james.smart@broadcom.com>,
         linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH v4 1/2] netfilter: Terminate rule eval if protocol=IPv6 and ipv6 module is disabled
-Date:   Fri, 30 Aug 2019 15:13:53 -0300
-Message-Id: <20190830181354.26279-2-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190830181354.26279-1-leonardo@linux.ibm.com>
-References: <20190830181354.26279-1-leonardo@linux.ibm.com>
+References: <20190712180211.26333-1-sagi@grimberg.me>
+ <20190712180211.26333-4-sagi@grimberg.me> <20190822002328.GP9511@lst.de>
+ <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
+ <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
+ <20190826065639.GA11036@lst.de> <20190826075916.GA30396@kroah.com>
+ <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
+ <20190830062036.GA15257@kroah.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <73e3d2ca-33e0-3133-9dfb-62b07e5b09c4@grimberg.me>
+Date:   Fri, 30 Aug 2019 11:14:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908300176
+In-Reply-To: <20190830062036.GA15257@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If IPv6 is disabled on boot (ipv6.disable=1), but nft_fib_inet ends up
-dealing with a IPv6 packet, it causes a kernel panic in
-fib6_node_lookup_1(), crashing in bad_page_fault.
 
-The panic is caused by trying to deference a very low address (0x38
-in ppc64le), due to ipv6.fib6_main_tbl = NULL.
-BUG: Kernel NULL pointer dereference at 0x00000038
+>>>>>> You are correct that this information can be derived from sysfs, but the
+>>>>>> main reason why we add these here, is because in udev rule we can't
+>>>>>> just go ahead and start looking these up and parsing these..
+>>>>>>
+>>>>>> We could send the discovery aen with NVME_CTRL_NAME and have
+>>>>>> then have systemd run something like:
+>>>>>>
+>>>>>> nvme connect-all -d nvme0 --sysfs
+>>>>>>
+>>>>>> and have nvme-cli retrieve all this stuff from sysfs?
+>>>>>
+>>>>> Actually that may be a problem.
+>>>>>
+>>>>> There could be a hypothetical case where after the event was fired
+>>>>> and before it was handled, the discovery controller went away and
+>>>>> came back again with a different controller instance, and the old
+>>>>> instance is now a different discovery controller.
+>>>>>
+>>>>> This is why we need this information in the event. And we verify this
+>>>>> information in sysfs in nvme-cli.
+>>>>
+>>>> Well, that must be a usual issue with uevents, right?  Don't we usually
+>>>> have a increasing serial number for that or something?
+>>>
+>>> Yes we do, userspace should use it to order events.  Does udev not
+>>> handle that properly today?
+>>
+>> The problem is not ordering of events, its really about the fact that
+>> the chardev can be removed and reallocated for a different controller
+>> (could be a completely different discovery controller) by the time
+>> that userspace handles the event.
+> 
+> So?  You will have gotten the remove and then new addition uevent in
+> order showing you this.  So your userspace code knows that something
+> went away and then came back properly so you should be kept in sync.
 
-The kernel panic was reproduced in a host that disabled IPv6 on boot and
-have to process guest packets (coming from a bridge) using it's ip6tables.
+Still don't understand how this is ok...
 
-Terminate rule evaluation when packet protocol is IPv6 but the ipv6 module
-is not loaded.
+I have /dev/nvme0 represents a network endpoint that I would discover
+from, it is raising me an event to do a discovery operation (namely to
+issue an ioctl to it) so my udev code calls a systemd script.
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- net/netfilter/nft_fib_netdev.c | 3 +++
- 1 file changed, 3 insertions(+)
+By the time I actually get to do that, /dev/nvme0 represents now a new
+network endpoint (where the event is no longer relevant to). I would
+rather the discovery to explicitly fail than to give me something
+different, so we pass some arguments that we verify in the operation.
 
-diff --git a/net/netfilter/nft_fib_netdev.c b/net/netfilter/nft_fib_netdev.c
-index 2cf3f32fe6d2..a2e726ae7f07 100644
---- a/net/netfilter/nft_fib_netdev.c
-+++ b/net/netfilter/nft_fib_netdev.c
-@@ -14,6 +14,7 @@
- #include <linux/netfilter/nf_tables.h>
- #include <net/netfilter/nf_tables_core.h>
- #include <net/netfilter/nf_tables.h>
-+#include <net/ipv6.h>
- 
- #include <net/netfilter/nft_fib.h>
- 
-@@ -34,6 +35,8 @@ static void nft_fib_netdev_eval(const struct nft_expr *expr,
- 		}
- 		break;
- 	case ETH_P_IPV6:
-+		if (!ipv6_mod_enabled())
-+			break;
- 		switch (priv->result) {
- 		case NFT_FIB_RESULT_OIF:
- 		case NFT_FIB_RESULT_OIFNAME:
--- 
-2.20.1
-
+Its a stretch case, but it was raised by people as a potential issue.
