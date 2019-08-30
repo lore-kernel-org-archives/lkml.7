@@ -2,118 +2,115 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B006CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D00C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8157721726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567125962;
-	bh=c0Z7vK3gtHxVtiNB6cGmSFVoyYyfkh3Fb9aD2+lkTDM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=EpscRElKNyX5sddoCvkpYJJC57sdk4t7V2tnIIqtZI1qMN2WgCy7998gn7lyzkGlU
-	 HPCwvbFqD3O8ri45Uknl+l9/GhSMtfH4lkEckqDuMzOVb29Ussw7QVgDZ7br2btuD7
-	 lGmfSTqnX+giXWBX7KJcS1PV82BttqBUnUF1jvnQ=
+	by mail.kernel.org (Postfix) with ESMTP id 556CF2189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:50:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rnr4X0TQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfH3AqB (ORCPT
+        id S1727478AbfH3Auo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfH3AqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:46:01 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87B3A21726;
-        Fri, 30 Aug 2019 00:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567125960;
-        bh=c0Z7vK3gtHxVtiNB6cGmSFVoyYyfkh3Fb9aD2+lkTDM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SVwyjjgQjmBexDCnZ3AHRrP9daZi+VvYsUZBp8tg7of0Pw7UdGx/vlARw8e5M4C1n
-         EiizSA+NwAvtg38MGFMJf3Aj5UskdmE4M/Eq64yMNm+PB+FkrVD4B4fmQ/F7S+sgsw
-         5iV1fZ+kXi98wRSbIQ0Yh+5+EpNIj/hlSxWwe8t0=
-Subject: Re: [PATCH] selftests/seccomp: fix build on older kernels
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tycho Andersen <tycho@tycho.ws>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alakesh Haloi <alakesh.haloi@gmail.com>,
-        shuah <shuah@kernel.org>
-References: <20190826144302.7745-1-tycho@tycho.ws>
- <201908291003.005EB96606@keescook>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f01c3383-0184-9770-c72e-7fe08b552112@kernel.org>
-Date:   Thu, 29 Aug 2019 18:45:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <201908291003.005EB96606@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 29 Aug 2019 20:50:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34871 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbfH3Aun (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:50:43 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l14so4830436lje.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 17:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=xMuXLxwuJeSWopT/f8dXFbI5jVuji3StpvlKwxHupj4=;
+        b=rnr4X0TQdkwszhW4r53DgSGbfSyqjshLRLQ9ru9r0hiQjF6Pmzl6cFSGIXGZDyX8FM
+         kO4l69Gy3FILbmNq5bSUGsIpaZ9XaIHD/+YK6HPdgABmplST2YZNTLJo9RawuaCo+ute
+         7rBOt9fScpmIQdED0bS9ysnX6D/5oXmASshjL3akOMkCpUlDb0m3RuUipo7CfFf44g5O
+         NT/ccLrrYb5iZAFECZ3wB98QbOk+AWPIlhlBT8BwE0+tWyGIst3jCLaW5eI5KnWey2hK
+         qT8PWkNXjiYDmWcUscqudRpRLzArq1rvEq/ytQzRBj7ZXjV1OCAHSjD94QTSqLHQkDUW
+         ogiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xMuXLxwuJeSWopT/f8dXFbI5jVuji3StpvlKwxHupj4=;
+        b=TjpvYewI+6Wk0PNyndmVbIKzLS7dV0LTMJYBoYezLBUBCqa9WjWWauMzFYBw1U+pYB
+         ZH+ktZPiib9CoaT+dLWdnE51mYP/oBs6WOXlWqqNorb6tXWlvVMjcI0zSh2aaNJT2z0O
+         KOMW5/1Jb/qNujkqlVqeOToxuBuQPWzw0mEg4vKH/YCbFmsnBj1wQzpk+Vkoq98uEb6c
+         /bIpdj6XwtzbaaLFp5pNeUNG2MVJcEYJyyvnarJJF7brElKbnjmW0DQUd3xD2LX4oG6L
+         oqP67TlqwR2Pzm+PSyyMaX8/h3CnpmwXVqjVW6h1ErOZqy12wpTuh9o9wNq6580Kx72b
+         S/Gw==
+X-Gm-Message-State: APjAAAWj6B8nGzr3LUP4fI9hbBRN0Cqt4pWcFBA9DFSmxJmpWl3GblDq
+        rmOMOrrqN27xnQt/AExjQCPmwA==
+X-Google-Smtp-Source: APXvYqxL710fHxqeBsIPyilVGaM4NIUyDBx68X3IEtdE/LKXFPKtMM8GtBcX4pfo/aWdd1ZNaV62/g==
+X-Received: by 2002:a2e:9d9a:: with SMTP id c26mr7203774ljj.56.1567126241817;
+        Thu, 29 Aug 2019 17:50:41 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id f19sm628149lfk.43.2019.08.29.17.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 17:50:41 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     linux@armlinux.org.uk, ast@kernel.org, daniel@iogearbox.net,
+        yhs@fb.com, davem@davemloft.net, jakub.kicinski@netronome.com,
+        hawk@kernel.org, john.fastabend@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH RFC bpf-next 00/10] improve/fix cross-compilation for bpf samples
+Date:   Fri, 30 Aug 2019 03:50:27 +0300
+Message-Id: <20190830005037.24004-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 11:06 AM, Kees Cook wrote:
-> On Mon, Aug 26, 2019 at 08:43:02AM -0600, Tycho Andersen wrote:
->> The seccomp selftest goes to some length to build against older kernel
->> headers, viz. all the #ifdefs at the beginning of the file. 201766a20e30
->> ("ptrace: add PTRACE_GET_SYSCALL_INFO request") introduces some additional
->> macros, but doesn't do the #ifdef dance. Let's add that dance here to
->> avoid:
->>
->> gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
->> In file included from seccomp_bpf.c:51:
->> seccomp_bpf.c: In function ‘tracer_ptrace’:
->> seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_CLONE’?
->>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->>    __typeof__(_expected) __exp = (_expected); \
->>               ^~~~~~~~~
->> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>    ^~~~~~~~~
->> seccomp_bpf.c:1787:20: note: each undeclared identifier is reported only once for each function it appears in
->>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->>    __typeof__(_expected) __exp = (_expected); \
->>               ^~~~~~~~~
->> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>    ^~~~~~~~~
->> seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_EXIT’?
->>      : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
->>        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->>    __typeof__(_expected) __exp = (_expected); \
->>               ^~~~~~~~~
->> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>    ^~~~~~~~~
->> make: *** [Makefile:12: seccomp_bpf] Error 1
->>
->> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
->> Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-> 
-> Acked-by: Kees Cook <keescook@chromium.org>
-> 
-> Alakesh Haloi also sent a fix[1] for this. I prefer Tycho's solution
-> (one #ifndef and a Fixes line). Shuah, can you please apply this?
-> 
+This series contains mainly fixes/improvements for cross-compilation
+(also verified on native platform build), tested on arm, but intended
+for any arch.
 
-Kees,
+The several patches are related to llvm clang and should be out of this
+series or even fixed in another way, and here just to get comments:
+  arm: include: asm: swab: mask rev16 instruction for clang
+  arm: include: asm: unified: mask .syntax unified for clang
 
-Yes I will pick this up.
+Also, only for armv7, there is one more problem related to long and
+void type sizes for 32 bits, while the BPF LLVM back end still
+operates in 64 bit, but that's another story.
 
-thanks,
--- Shuah
+Smth related not only for cross-compilation and can have impact on other
+archs and build environments, so might be good idea to verify it in order
+to add appropriate changes, some warn options can be tuned, so comment.
+
+Ivan Khoronzhuk (10):
+  samples: bpf: Makefile: use --target from cross-compile
+  samples: bpf: Makefile: remove target for native build
+  libbpf: Makefile: add C/CXX/LDFLAGS to libbpf.so and test_libpf
+    targets
+  samples: bpf: use own EXTRA_CFLAGS for clang commands
+  samples: bpf: Makefile: use vars from KBUILD_CFLAGS to handle linux
+    headers
+  samples: bpf: makefile: fix HDR_PROBE
+  samples: bpf: add makefile.prog for separate CC build
+  samples: bpf: Makefile: base progs build on Makefile.progs
+  arm: include: asm: swab: mask rev16 instruction for clang
+  arm: include: asm: unified: mask .syntax unified for clang
+
+ arch/arm/include/asm/swab.h    |   3 +
+ arch/arm/include/asm/unified.h |   6 +-
+ samples/bpf/Makefile           | 177 +++++++++++++++++++--------------
+ samples/bpf/Makefile.prog      |  77 ++++++++++++++
+ samples/bpf/README.rst         |   7 ++
+ tools/lib/bpf/Makefile         |  11 +-
+ 6 files changed, 205 insertions(+), 76 deletions(-)
+ create mode 100644 samples/bpf/Makefile.prog
+
+-- 
+2.17.1
+
