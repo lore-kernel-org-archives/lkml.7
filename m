@@ -2,391 +2,100 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB5BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869CDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F0523407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567177822;
-	bh=4BB1cEzmD70L5AVjNRNBKOyKeVd7z2yXcehOc9fpF1Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pK3g00JSO+uLcP8dzU4AKB6cxOsoD637D7CtgcY6A2bQy0Dv1SQl4iAGNtSAfMgzy
-	 ElTmpKj4djp7OF0EYvgiTmLITJZjnOywK2PrH+W3Fe3+egRQ/Y4//PvYjORkxKwjhz
-	 rvfR68Eaua5oPMHAsC/p8Qq6IbOtwQwgMSh3Z+Ac=
+	by mail.kernel.org (Postfix) with ESMTP id 5BA5E23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0Mtxovh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfH3PKV (ORCPT
+        id S1728017AbfH3PMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbfH3PJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:09:25 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA8F23427;
-        Fri, 30 Aug 2019 15:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567177764;
-        bh=4BB1cEzmD70L5AVjNRNBKOyKeVd7z2yXcehOc9fpF1Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URGU++uURIftcLkIaUd3c+cMbk5jnsPFKW2EDPzQneDYoUV0YOwPLJ9k+p1yoW7sH
-         IJqoG74BLsLq0yNlBH30IeODK4YbpcN3SxH6otcXZNSppypZ6eJ/zxWDUnN89TFnaj
-         AmkVR41gsquN+4vgFTw3az/iZhT9BB8kGDkxqAdY=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 01/12] clk: gpio: Use DT way of specifying parents
-Date:   Fri, 30 Aug 2019 08:09:12 -0700
-Message-Id: <20190830150923.259497-2-sboyd@kernel.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190830150923.259497-1-sboyd@kernel.org>
-References: <20190830150923.259497-1-sboyd@kernel.org>
+        Fri, 30 Aug 2019 11:12:02 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:36478 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3PMB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:12:01 -0400
+Received: by mail-wr1-f45.google.com with SMTP id y19so7355335wrd.3;
+        Fri, 30 Aug 2019 08:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=76/UUed01Y3Y8i/aDowNMkQyy3LjmrVlq62x46O+5HI=;
+        b=B0Mtxovh7YJ1xZ64U7SiGekZ9o7RHn1C7kzg4weTyPz+1pkpuPjKUVgY8eY5lVYl9K
+         1S2+Z8UC8ZqTjtRFrfs9dnjTkEHQ/jZ13wgyzCCDCd7LBw+leUHYVLUPX5nTew6aZedz
+         VwQWtr3NeciSNUMC69YBebngNsOpYL2Ha3bz8IYfAB91TUQyd/E5LC20BK8ghQZ82IGO
+         x5HdFpGbpa+yvnKS5TBBj1ed6fr++5lxlFQ7N+0nnkILxUuQL4soAXP0u2WhLJHsuLi3
+         C7Fv/QuxM3LVzCFX/s3ankIJGLWRkQZo/APO6QBQezDPGzVoCdm1yO+t9ZlkOkxzAo0o
+         +M2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=76/UUed01Y3Y8i/aDowNMkQyy3LjmrVlq62x46O+5HI=;
+        b=Rw53OwmwE+GNKDpPIDqx1rrQIOgBzt01qh7RF4LMHj6gzxWbipFZCNcd1EWUDbhmLx
+         pp56RtkR39V4NXp6KcESrmsAhyCxTfrHjw8l3hdeEccsZ8jOra5WiydEMAWjh3c6EQAG
+         oSFgk2NyLlogQBI4/qMlADFtGbatQsEC4CLdWW80JRuw/rso1mIIDqDpRjpljhsmVB9S
+         6KlVrr2+HuMaxyMQj4t9QRcBPKSnZoZbZhevyn5ykDTVQZRGjA43k2Xl7l1u8dJFU6Yl
+         sUU0iSV+pStkj6PEFCmKzPnxa8OsCQq7r38FE9jlwb06yI7x9Nux+QMSfBdgshsy3aY3
+         zhMw==
+X-Gm-Message-State: APjAAAVIvahWxmDlOVb5IISZAEx5GXxO/b0dfxV2b6iz2+wqzzq/fP3P
+        0GSRhtCfh8YrVtzy+dcyPEdsZ60I
+X-Google-Smtp-Source: APXvYqzKBXu6wZXLHUG8+KW0xkXVfuQI1179U3Ts3qO5WmEIh6+JXMocNScNDvnxocLwtNECOiHZ4A==
+X-Received: by 2002:adf:e846:: with SMTP id d6mr19068750wrn.263.1567177919401;
+        Fri, 30 Aug 2019 08:11:59 -0700 (PDT)
+Received: from [192.168.8.147] (95.168.185.81.rev.sfr.net. [81.185.168.95])
+        by smtp.gmail.com with ESMTPSA id d69sm5515728wmd.4.2019.08.30.08.11.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 08:11:58 -0700 (PDT)
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1567177025-11016-1-git-send-email-cai@lca.pw>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
+Date:   Fri, 30 Aug 2019 17:11:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567177025-11016-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nobody has used the gpio clk registration functions nor the gpio clk_ops
-exposed by the basic gpio clk type. Let's remove all those APIs and move
-the gpio clk support into the C file. Since nothing is using the
-exported APIs, simplify the driver to be a platform driver that uses
-clk_parent_data to pick 0th or 1st cell of the node's clocks property.
 
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/clk/clk-gpio.c       | 171 ++++++++++++-----------------------
- include/linux/clk-provider.h |  38 --------
- 2 files changed, 58 insertions(+), 151 deletions(-)
 
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-index 9d930edd6516..4da9cf78d28e 100644
---- a/drivers/clk/clk-gpio.c
-+++ b/drivers/clk/clk-gpio.c
-@@ -28,6 +28,26 @@
-  * parent - fixed parent.  No clk_set_parent support
-  */
- 
-+/**
-+ * struct clk_gpio - gpio gated clock
-+ *
-+ * @hw:		handle between common and hardware-specific interfaces
-+ * @gpiod:	gpio descriptor
-+ *
-+ * Clock with a gpio control for enabling and disabling the parent clock
-+ * or switching between two parents by asserting or deasserting the gpio.
-+ *
-+ * Implements .enable, .disable and .is_enabled or
-+ * .get_parent, .set_parent and .determine_rate depending on which clk_ops
-+ * is used.
-+ */
-+struct clk_gpio {
-+	struct clk_hw	hw;
-+	struct gpio_desc *gpiod;
-+};
-+
-+#define to_clk_gpio(_hw) container_of(_hw, struct clk_gpio, hw)
-+
- static int clk_gpio_gate_enable(struct clk_hw *hw)
- {
- 	struct clk_gpio *clk = to_clk_gpio(hw);
-@@ -51,12 +71,11 @@ static int clk_gpio_gate_is_enabled(struct clk_hw *hw)
- 	return gpiod_get_value(clk->gpiod);
- }
- 
--const struct clk_ops clk_gpio_gate_ops = {
-+static const struct clk_ops clk_gpio_gate_ops = {
- 	.enable = clk_gpio_gate_enable,
- 	.disable = clk_gpio_gate_disable,
- 	.is_enabled = clk_gpio_gate_is_enabled,
- };
--EXPORT_SYMBOL_GPL(clk_gpio_gate_ops);
- 
- static int clk_sleeping_gpio_gate_prepare(struct clk_hw *hw)
- {
-@@ -111,67 +130,48 @@ static int clk_gpio_mux_set_parent(struct clk_hw *hw, u8 index)
- 	return 0;
- }
- 
--const struct clk_ops clk_gpio_mux_ops = {
-+static const struct clk_ops clk_gpio_mux_ops = {
- 	.get_parent = clk_gpio_mux_get_parent,
- 	.set_parent = clk_gpio_mux_set_parent,
- 	.determine_rate = __clk_mux_determine_rate,
- };
--EXPORT_SYMBOL_GPL(clk_gpio_mux_ops);
- 
--static struct clk_hw *clk_register_gpio(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents, struct gpio_desc *gpiod,
--		unsigned long flags, const struct clk_ops *clk_gpio_ops)
-+static struct clk_hw *clk_register_gpio(struct device *dev, u8 num_parents,
-+					struct gpio_desc *gpiod,
-+					const struct clk_ops *clk_gpio_ops)
- {
- 	struct clk_gpio *clk_gpio;
- 	struct clk_hw *hw;
- 	struct clk_init_data init = {};
- 	int err;
-+	const struct clk_parent_data gpio_parent_data[] = {
-+		{ .index = 0 },
-+		{ .index = 1 },
-+	};
- 
--	if (dev)
--		clk_gpio = devm_kzalloc(dev, sizeof(*clk_gpio),	GFP_KERNEL);
--	else
--		clk_gpio = kzalloc(sizeof(*clk_gpio), GFP_KERNEL);
--
-+	clk_gpio = devm_kzalloc(dev, sizeof(*clk_gpio),	GFP_KERNEL);
- 	if (!clk_gpio)
- 		return ERR_PTR(-ENOMEM);
- 
--	init.name = name;
-+	init.name = dev->of_node->name;
- 	init.ops = clk_gpio_ops;
--	init.flags = flags;
--	init.parent_names = parent_names;
-+	init.parent_data = gpio_parent_data;
- 	init.num_parents = num_parents;
- 
- 	clk_gpio->gpiod = gpiod;
- 	clk_gpio->hw.init = &init;
- 
- 	hw = &clk_gpio->hw;
--	if (dev)
--		err = devm_clk_hw_register(dev, hw);
--	else
--		err = clk_hw_register(NULL, hw);
--
--	if (!err)
--		return hw;
--
--	if (!dev) {
--		kfree(clk_gpio);
--	}
-+	err = devm_clk_hw_register(dev, hw);
-+	if (err)
-+		return ERR_PTR(err);
- 
--	return ERR_PTR(err);
-+	return hw;
- }
- 
--/**
-- * clk_hw_register_gpio_gate - register a gpio clock gate with the clock
-- * framework
-- * @dev: device that is registering this clock
-- * @name: name of this clock
-- * @parent_name: name of this clock's parent
-- * @gpiod: gpio descriptor to gate this clock
-- * @flags: clock flags
-- */
--struct clk_hw *clk_hw_register_gpio_gate(struct device *dev, const char *name,
--		const char *parent_name, struct gpio_desc *gpiod,
--		unsigned long flags)
-+static struct clk_hw *clk_hw_register_gpio_gate(struct device *dev,
-+						int num_parents,
-+						struct gpio_desc *gpiod)
- {
- 	const struct clk_ops *ops;
- 
-@@ -180,88 +180,36 @@ struct clk_hw *clk_hw_register_gpio_gate(struct device *dev, const char *name,
- 	else
- 		ops = &clk_gpio_gate_ops;
- 
--	return clk_register_gpio(dev, name,
--			(parent_name ? &parent_name : NULL),
--			(parent_name ? 1 : 0), gpiod, flags, ops);
-+	return clk_register_gpio(dev, num_parents, gpiod, ops);
- }
--EXPORT_SYMBOL_GPL(clk_hw_register_gpio_gate);
- 
--struct clk *clk_register_gpio_gate(struct device *dev, const char *name,
--		const char *parent_name, struct gpio_desc *gpiod,
--		unsigned long flags)
-+static struct clk_hw *clk_hw_register_gpio_mux(struct device *dev,
-+					       struct gpio_desc *gpiod)
- {
--	struct clk_hw *hw;
--
--	hw = clk_hw_register_gpio_gate(dev, name, parent_name, gpiod, flags);
--	if (IS_ERR(hw))
--		return ERR_CAST(hw);
--	return hw->clk;
-+	return clk_register_gpio(dev, 2, gpiod, &clk_gpio_mux_ops);
- }
--EXPORT_SYMBOL_GPL(clk_register_gpio_gate);
--
--/**
-- * clk_hw_register_gpio_mux - register a gpio clock mux with the clock framework
-- * @dev: device that is registering this clock
-- * @name: name of this clock
-- * @parent_names: names of this clock's parents
-- * @num_parents: number of parents listed in @parent_names
-- * @gpiod: gpio descriptor to gate this clock
-- * @flags: clock flags
-- */
--struct clk_hw *clk_hw_register_gpio_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents, struct gpio_desc *gpiod,
--		unsigned long flags)
--{
--	if (num_parents != 2) {
--		pr_err("mux-clock %s must have 2 parents\n", name);
--		return ERR_PTR(-EINVAL);
--	}
--
--	return clk_register_gpio(dev, name, parent_names, num_parents,
--			gpiod, flags, &clk_gpio_mux_ops);
--}
--EXPORT_SYMBOL_GPL(clk_hw_register_gpio_mux);
--
--struct clk *clk_register_gpio_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents, struct gpio_desc *gpiod,
--		unsigned long flags)
--{
--	struct clk_hw *hw;
--
--	hw = clk_hw_register_gpio_mux(dev, name, parent_names, num_parents,
--			gpiod, flags);
--	if (IS_ERR(hw))
--		return ERR_CAST(hw);
--	return hw->clk;
--}
--EXPORT_SYMBOL_GPL(clk_register_gpio_mux);
- 
- static int gpio_clk_driver_probe(struct platform_device *pdev)
- {
--	struct device_node *node = pdev->dev.of_node;
--	const char **parent_names, *gpio_name;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	const char *gpio_name;
- 	unsigned int num_parents;
- 	struct gpio_desc *gpiod;
--	struct clk *clk;
-+	struct clk_hw *hw;
- 	bool is_mux;
- 	int ret;
- 
-+	is_mux = of_device_is_compatible(node, "gpio-mux-clock");
-+
- 	num_parents = of_clk_get_parent_count(node);
--	if (num_parents) {
--		parent_names = devm_kcalloc(&pdev->dev, num_parents,
--					    sizeof(char *), GFP_KERNEL);
--		if (!parent_names)
--			return -ENOMEM;
--
--		of_clk_parent_fill(node, parent_names, num_parents);
--	} else {
--		parent_names = NULL;
-+	if (is_mux && num_parents != 2) {
-+		dev_err(dev, "mux-clock must have 2 parents\n");
-+		return -EINVAL;
- 	}
- 
--	is_mux = of_device_is_compatible(node, "gpio-mux-clock");
--
- 	gpio_name = is_mux ? "select" : "enable";
--	gpiod = devm_gpiod_get(&pdev->dev, gpio_name, GPIOD_OUT_LOW);
-+	gpiod = devm_gpiod_get(dev, gpio_name, GPIOD_OUT_LOW);
- 	if (IS_ERR(gpiod)) {
- 		ret = PTR_ERR(gpiod);
- 		if (ret == -EPROBE_DEFER)
-@@ -275,16 +223,13 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
- 	}
- 
- 	if (is_mux)
--		clk = clk_register_gpio_mux(&pdev->dev, node->name,
--				parent_names, num_parents, gpiod, 0);
-+		hw = clk_hw_register_gpio_mux(dev, gpiod);
- 	else
--		clk = clk_register_gpio_gate(&pdev->dev, node->name,
--				parent_names ?  parent_names[0] : NULL, gpiod,
--				0);
--	if (IS_ERR(clk))
--		return PTR_ERR(clk);
-+		hw = clk_hw_register_gpio_gate(dev, num_parents, gpiod);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
- 
--	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, hw);
- }
- 
- static const struct of_device_id gpio_clk_match_table[] = {
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 2ae7604783dd..32beac39e5a3 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -751,44 +751,6 @@ struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
- 		unsigned long flags);
- void clk_hw_unregister_composite(struct clk_hw *hw);
- 
--/**
-- * struct clk_gpio - gpio gated clock
-- *
-- * @hw:		handle between common and hardware-specific interfaces
-- * @gpiod:	gpio descriptor
-- *
-- * Clock with a gpio control for enabling and disabling the parent clock
-- * or switching between two parents by asserting or deasserting the gpio.
-- *
-- * Implements .enable, .disable and .is_enabled or
-- * .get_parent, .set_parent and .determine_rate depending on which clk_ops
-- * is used.
-- */
--struct clk_gpio {
--	struct clk_hw	hw;
--	struct gpio_desc *gpiod;
--};
--
--#define to_clk_gpio(_hw) container_of(_hw, struct clk_gpio, hw)
--
--extern const struct clk_ops clk_gpio_gate_ops;
--struct clk *clk_register_gpio_gate(struct device *dev, const char *name,
--		const char *parent_name, struct gpio_desc *gpiod,
--		unsigned long flags);
--struct clk_hw *clk_hw_register_gpio_gate(struct device *dev, const char *name,
--		const char *parent_name, struct gpio_desc *gpiod,
--		unsigned long flags);
--void clk_hw_unregister_gpio_gate(struct clk_hw *hw);
--
--extern const struct clk_ops clk_gpio_mux_ops;
--struct clk *clk_register_gpio_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents, struct gpio_desc *gpiod,
--		unsigned long flags);
--struct clk_hw *clk_hw_register_gpio_mux(struct device *dev, const char *name,
--		const char * const *parent_names, u8 num_parents, struct gpio_desc *gpiod,
--		unsigned long flags);
--void clk_hw_unregister_gpio_mux(struct clk_hw *hw);
--
- struct clk *clk_register(struct device *dev, struct clk_hw *hw);
- struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw);
- 
+On 8/30/19 4:57 PM, Qian Cai wrote:
+> When running heavy memory pressure workloads, the system is throwing
+> endless warnings below due to the allocation could fail from
+> __build_skb(), and the volume of this call could be huge which may
+> generate a lot of serial console output and cosumes all CPUs as
+> warn_alloc() could be expensive by calling dump_stack() and then
+> show_mem().
+> 
+> Fix it by silencing the warning in this call site. Also, it seems
+> unnecessary to even print a warning at all if the allocation failed in
+> __build_skb(), as it may just retransmit the packet and retry.
+> 
 
-base-commit: 5f9e832c137075045d15cd6899ab0505cfb2ca4b
--- 
-Sent by a computer through tubes
+Same patches are showing up there and there from time to time.
+
+Why is this particular spot interesting, against all others not adding __GFP_NOWARN ?
+
+Are we going to have hundred of patches adding __GFP_NOWARN at various points,
+or should we get something generic to not flood the syslog in case of memory pressure ?
 
