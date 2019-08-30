@@ -2,76 +2,170 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CEFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9792FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504F4208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567144864;
-	bh=SrGSiLDFW91bBqdMJGtwIIp+a53Jx9aWuCoLpC2wAKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QjUPB/mNWAXFxgGaXUagMBTXJniHChl6UKRj+C2BZBbcQlB05cRvkZZY1xQSm3ARl
-	 RPL1CsjCkuh9D8hGn1FjQc4L40ka1ovtS4ZKZscIZn4lJ2p7cIGua3ru7t205GGMBy
-	 kAZXTo9Ib1bsZYAV6qFcmlsc0JLLHKGb/TKcSm+M=
+	by mail.kernel.org (Postfix) with ESMTP id 6DE212186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfH3GBD (ORCPT
+        id S1727736AbfH3GBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:01:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57742 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfH3GBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:01:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A4AB4B682;
-        Fri, 30 Aug 2019 06:01:01 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 08:01:00 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v2 3/6] mm/memory_hotplug: Process all zones when
- removing memory
-Message-ID: <20190830060100.GP28313@dhcp22.suse.cz>
-References: <20190826101012.10575-1-david@redhat.com>
- <20190826101012.10575-4-david@redhat.com>
- <20190829153936.GJ28313@dhcp22.suse.cz>
- <c01ceaab-4032-49cd-3888-45838cb46e11@redhat.com>
- <20190829162704.GL28313@dhcp22.suse.cz>
- <b5a9f070-b43a-c21d-081b-9926b2007f5c@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5a9f070-b43a-c21d-081b-9926b2007f5c@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 30 Aug 2019 02:01:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58086 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbfH3GBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:01:32 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6A2D1308218D;
+        Fri, 30 Aug 2019 06:01:31 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-95.ams2.redhat.com [10.36.116.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A464600F8;
+        Fri, 30 Aug 2019 06:01:28 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 939B416E05; Fri, 30 Aug 2019 08:01:27 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     olvaffe@gmail.com, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: add worker for object release
+Date:   Fri, 30 Aug 2019 08:01:16 +0200
+Message-Id: <20190830060116.10476-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 30 Aug 2019 06:01:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 29-08-19 18:59:31, David Hildenbrand wrote:
-> On 29.08.19 18:27, Michal Hocko wrote:
-[...]
-> > No rush, really... It seems this is quite unlikely event as most hotplug
-> > usecases simply online memory before removing it later on.
-> > 
-> 
-> I can trigger it reliably right now while working/testing virtio-mem, so
-> I finally want to clean up this mess :) (has been on my list for a long
-> time). I'll try to hunt for the right commit id's that broke it.
+Move object release into a separate worker.  Releasing objects requires
+sending commands to the host.  Doing that in the dequeue worker will
+cause deadlocks in case the command queue gets filled up, because the
+dequeue worker is also the one which will free up slots in the command
+queue.
 
-f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to
-zones until online")
+Reported-by: Chia-I Wu <olvaffe@gmail.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h |  8 ++++++++
+ drivers/gpu/drm/virtio/virtgpu_gem.c | 27 +++++++++++++++++++++++++++
+ drivers/gpu/drm/virtio/virtgpu_kms.c |  6 ++++++
+ drivers/gpu/drm/virtio/virtgpu_vq.c  |  2 +-
+ 4 files changed, 42 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index fb35831ed351..314e02f94d9c 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -78,6 +78,7 @@ struct virtio_gpu_object {
+ 
+ struct virtio_gpu_object_array {
+ 	struct ww_acquire_ctx ticket;
++	struct list_head next;
+ 	u32 nents, total;
+ 	struct drm_gem_object *objs[];
+ };
+@@ -197,6 +198,10 @@ struct virtio_gpu_device {
+ 
+ 	struct work_struct config_changed_work;
+ 
++	struct work_struct obj_free_work;
++	spinlock_t obj_free_lock;
++	struct list_head obj_free_list;
++
+ 	struct virtio_gpu_drv_capset *capsets;
+ 	uint32_t num_capsets;
+ 	struct list_head cap_cache;
+@@ -246,6 +251,9 @@ void virtio_gpu_array_unlock_resv(struct virtio_gpu_object_array *objs);
+ void virtio_gpu_array_add_fence(struct virtio_gpu_object_array *objs,
+ 				struct dma_fence *fence);
+ void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs);
++void virtio_gpu_array_put_free_delayed(struct virtio_gpu_device *vgdev,
++				       struct virtio_gpu_object_array *objs);
++void virtio_gpu_array_put_free_work(struct work_struct *work);
+ 
+ /* virtio vg */
+ int virtio_gpu_alloc_vbufs(struct virtio_gpu_device *vgdev);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
+index b812094ae916..4c1f579edfb3 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_gem.c
++++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
+@@ -239,3 +239,30 @@ void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs)
+ 		drm_gem_object_put_unlocked(objs->objs[i]);
+ 	virtio_gpu_array_free(objs);
+ }
++
++void virtio_gpu_array_put_free_delayed(struct virtio_gpu_device *vgdev,
++				       struct virtio_gpu_object_array *objs)
++{
++	spin_lock(&vgdev->obj_free_lock);
++	list_add_tail(&objs->next, &vgdev->obj_free_list);
++	spin_unlock(&vgdev->obj_free_lock);
++	schedule_work(&vgdev->obj_free_work);
++}
++
++void virtio_gpu_array_put_free_work(struct work_struct *work)
++{
++	struct virtio_gpu_device *vgdev =
++		container_of(work, struct virtio_gpu_device, obj_free_work);
++	struct virtio_gpu_object_array *objs;
++
++	spin_lock(&vgdev->obj_free_lock);
++	while (!list_empty(&vgdev->obj_free_list)) {
++		objs = list_first_entry(&vgdev->obj_free_list,
++					struct virtio_gpu_object_array, next);
++		list_del(&objs->next);
++		spin_unlock(&vgdev->obj_free_lock);
++		virtio_gpu_array_put_free(objs);
++		spin_lock(&vgdev->obj_free_lock);
++	}
++	spin_unlock(&vgdev->obj_free_lock);
++}
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index 231c4e27b3b3..0b3cdb0d83b0 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -147,6 +147,11 @@ int virtio_gpu_init(struct drm_device *dev)
+ 	INIT_WORK(&vgdev->config_changed_work,
+ 		  virtio_gpu_config_changed_work_func);
+ 
++	INIT_WORK(&vgdev->obj_free_work,
++		  virtio_gpu_array_put_free_work);
++	INIT_LIST_HEAD(&vgdev->obj_free_list);
++	spin_lock_init(&vgdev->obj_free_lock);
++
+ #ifdef __LITTLE_ENDIAN
+ 	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_VIRGL))
+ 		vgdev->has_virgl_3d = true;
+@@ -226,6 +231,7 @@ void virtio_gpu_deinit(struct drm_device *dev)
+ {
+ 	struct virtio_gpu_device *vgdev = dev->dev_private;
+ 
++	flush_work(&vgdev->obj_free_work);
+ 	vgdev->vqs_ready = false;
+ 	flush_work(&vgdev->ctrlq.dequeue_work);
+ 	flush_work(&vgdev->cursorq.dequeue_work);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index ecf57df965b0..595fa6ec2d58 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -227,7 +227,7 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work)
+ 
+ 	list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
+ 		if (entry->objs)
+-			virtio_gpu_array_put_free(entry->objs);
++			virtio_gpu_array_put_free_delayed(vgdev, entry->objs);
+ 		list_del(&entry->list);
+ 		free_vbuf(vgdev, entry);
+ 	}
 -- 
-Michal Hocko
-SUSE Labs
+2.18.1
+
