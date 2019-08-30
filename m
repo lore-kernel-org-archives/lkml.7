@@ -2,72 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F631C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F69C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C1123428
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913D723717
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 18:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfH3Sqt (ORCPT
+        id S1728154AbfH3Sq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 14:46:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37592 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfH3Sqs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 14:46:48 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i3lv2-0003hq-O6; Fri, 30 Aug 2019 18:46:44 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Fri, 30 Aug 2019 14:46:59 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:42968 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727304AbfH3Sq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:46:59 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 6A8539DBA69EB7AA3A3A;
+        Sat, 31 Aug 2019 02:46:56 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 02:46:55 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 31 Aug 2019 02:46:54 +0800
+Date:   Sat, 31 Aug 2019 02:46:06 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: exfat: fix uninitialized variable ret
-Date:   Fri, 30 Aug 2019 19:46:44 +0100
-Message-Id: <20190830184644.15590-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 05/24] erofs: add inode operations
+Message-ID: <20190830184606.GA175612@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-6-gaoxiang25@huawei.com>
+ <20190829102426.GE20598@infradead.org>
+ <20190829115922.GG64893@architecture4>
+ <20190830164205.GD29603@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190830164205.GD29603@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Christoph,
 
-Currently there are error return paths in ffsReadFile that
-exit via lable err_out that return and uninitialized error
-return in variable ret. Fix this by initializing ret to zero.
+On Fri, Aug 30, 2019 at 09:42:05AM -0700, Christoph Hellwig wrote:
+> On Thu, Aug 29, 2019 at 07:59:22PM +0800, Gao Xiang wrote:
+> > On Thu, Aug 29, 2019 at 03:24:26AM -0700, Christoph Hellwig wrote:
+> > 
+> > []
+> > 
+> > > 
+> > > > +
+> > > > +		/* fill last page if inline data is available */
+> > > > +		err = fill_inline_data(inode, data, ofs);
+> > > 
+> > > Well, I think you should move the is_inode_flat_inline and
+> > > (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) checks from that
+> > > helper here, as otherwise you make everyone wonder why you'd always
+> > > fill out the inline data.
+> > 
+> > Currently, fill_inline_data() only fills for fast symlink,
+> > later we can fill any tail-end block (such as dir block)
+> > for our requirements.
+> 
+> So change it when that later changes actually come in.  And even then
+> having the checks outside the function is a lot more obvious.
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: c48c9f7ff32b ("staging: exfat: add exfat filesystem code to staging")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/exfat/exfat_super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Okay.
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 5b3c4dfe0ecc..6939aa4f25ee 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -771,7 +771,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- {
- 	s32 offset, sec_offset, clu_offset;
- 	u32 clu;
--	int ret;
-+	int ret = 0;
- 	sector_t LogSector;
- 	u64 oneblkread, read_bytes;
- 	struct buffer_head *tmp_bh = NULL;
--- 
-2.20.1
+> 
+> > And I think that is minor.
+> 
+> The problem is that each of these issues might appear minor on their
+> own.  But combined a lot of the coding style choices lead to code that
+> is more suitable an obsfucated code contest than the Linux kernel as
+> trying to understand even just a few places requires jumping through
+> tons of helpers with misleading names and spread over various files.
+> 
+> > The consideration is simply because iget_locked performs better
+> > than iget5_locked.
+> 
+> In what benchmark do the differences show up?
+
+In a word, no benchmark here, just because
+"unsigned long on 32-bit platforms is 4 bytes."
+but erofs nid is a 64-bit number.
+
+iget_locked will do find_inode_fast (no callback at all)
+rather than iget5_locked --> find_inode (test callback) ->
+            inode_insert5(set callback) for each new inode.
+
+For most 64-bit platforms, iget_locked is enough,
+32-bit platforms become rare...
+
+Thanks,
+Gao Xiang
 
