@@ -2,108 +2,142 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF852C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F210C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A773F23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eUSyPKka"
+	by mail.kernel.org (Postfix) with ESMTP id 4748B208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfH3DB1 (ORCPT
+        id S1727753AbfH3DBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:01:27 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33483 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727270AbfH3DB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:01:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KPPv3vlSz9sBp;
-        Fri, 30 Aug 2019 13:01:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567134084;
-        bh=ZGcKQcDuLMAiiPzUKHhHVk5LoTnjwVnTJ40ll8PejpY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eUSyPKkafOP5F0QPRq7X7JbSs5ehS5OlG1Ce6yIXgFXNJilHobUjJfc9XPZt/7VJi
-         pxtDV+wI8L77CS+eyQLhKgQ8f3JXWl4IJW1z3IOfpKzXR9X+FvfXaX7tod/UqtbC/2
-         6brk6EsUrTtSfzcbYMprPda/1d+mTRsRsnW3WafPTmyCEUuhBeIWEvTB000P/BrRwj
-         792srkFzT6eyNl8k52KO4cifK4fMesAmTrWZzPQSiR73M/4ggbAn1XstGBpNQQmIBY
-         r5JWjq64UvT0n8WLTbd5rVg1pMinag+SYRUCE5cl4PCyhoEC2Dzyk+G5VWKf+bPjNZ
-         wV+jlGsGcNyfg==
-Date:   Fri, 30 Aug 2019 13:01:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        David Howells <dhowells@redhat.com>
-Subject: linux-next: manual merge of the vfs tree with the fuse tree
-Message-ID: <20190830130119.446e7389@canb.auug.org.au>
+        Thu, 29 Aug 2019 23:01:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727066AbfH3DBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 23:01:50 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CC11BB19EE41FF813070;
+        Fri, 30 Aug 2019 11:01:45 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
+ 2019 11:01:39 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2 2/7] erofs: some marcos are much more readable as a function
+Date:   Fri, 30 Aug 2019 11:00:35 +0800
+Message-ID: <20190830030040.10599-2-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190830030040.10599-1-gaoxiang25@huawei.com>
+References: <20190830030040.10599-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Tn=2ZLbKUMqhULSfKru47vA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Tn=2ZLbKUMqhULSfKru47vA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+As Christoph suggested [1], these marcos are much
+more readable as a function.
 
-Hi all,
+[1] https://lore.kernel.org/r/20190829095954.GB20598@infradead.org/
+Reported-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+v2: no change, just resend in case of dependency problem;
 
-Today's linux-next merge of the vfs tree got a conflict in:
+ fs/erofs/erofs_fs.h | 24 ++++++++++++++++--------
+ fs/erofs/inode.c    |  4 ++--
+ fs/erofs/xattr.c    |  2 +-
+ 3 files changed, 19 insertions(+), 11 deletions(-)
 
-  fs/fuse/inode.c
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 2447ad4d0920..41e53b49a11b 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -168,16 +168,24 @@ struct erofs_xattr_entry {
+ 	char   e_name[0];       /* attribute name */
+ } __packed;
+ 
+-#define ondisk_xattr_ibody_size(count)	({\
+-	u32 __count = le16_to_cpu(count); \
+-	((__count) == 0) ? 0 : \
+-	sizeof(struct erofs_xattr_ibody_header) + \
+-		sizeof(__u32) * ((__count) - 1); })
++static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
++{
++	unsigned int icount = le16_to_cpu(d_icount);
++
++	if (!icount)
++		return 0;
++
++	return sizeof(struct erofs_xattr_ibody_header) +
++		sizeof(__u32) * (icount - 1);
++}
+ 
+ #define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
+-#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
+-	sizeof(struct erofs_xattr_entry) + \
+-	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
++
++static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
++{
++	return EROFS_XATTR_ALIGN(sizeof(struct erofs_xattr_entry) +
++				 e->e_name_len + le16_to_cpu(e->e_value_size));
++}
+ 
+ /* available compression algorithm types */
+ enum {
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 80f4fe919ee7..cf31554075c9 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -29,7 +29,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		struct erofs_inode_v2 *v2 = data;
+ 
+ 		vi->inode_isize = sizeof(struct erofs_inode_v2);
+-		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
++		vi->xattr_isize = erofs_xattr_ibody_size(v2->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v2->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+@@ -62,7 +62,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+ 
+ 		vi->inode_isize = sizeof(struct erofs_inode_v1);
+-		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
++		vi->xattr_isize = erofs_xattr_ibody_size(v1->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v1->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index a8286998a079..7ef8d4bb45cd 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -231,7 +231,7 @@ static int xattr_foreach(struct xattr_iter *it,
+ 	 */
+ 	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
+ 	if (tlimit) {
+-		unsigned int entry_sz = EROFS_XATTR_ENTRY_SIZE(&entry);
++		unsigned int entry_sz = erofs_xattr_entry_size(&entry);
+ 
+ 		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
+ 		if (unlikely(*tlimit < entry_sz)) {
+-- 
+2.17.1
 
-between commit:
-
-  1458e5e9f99a ("fuse: extract fuse_fill_super_common()")
-
-from the fuse tree and commit:
-
-  2ad9ab0f7429 ("vfs: Convert fuse to use the new mount API")
-  48ceb15f98c8 ("vfs: Move the subtype parameter into fuse")
-
-from the vfs tree.
-
-This is too much to work out, so I have effectively reverted the 2 vfs
-tree commits.
-
-I fixed it up (see above) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Tn=2ZLbKUMqhULSfKru47vA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1okX8ACgkQAVBC80lX
-0GzQuwf/bnDmW+NPdNxJXTcgZ9hm3O+JmDYt53J7xpjGVs8/t1oI5lki5r2r6iwJ
-5VlrVmIy6q90RSSNbXrPcjEitdi/sNuTyYsQw9gG5NBs7VkxQAneQnCQEmG26Gss
-LPBjkh1Mxtp90I5s12PJPBvlOiC2H++sqwpEfQalJFHQZU5Q5Uuzs8u8yjiLJZJD
-io8n+aM1K1XSMYKTC60fnwgWT8sT7H4sqYLHqPuZmnmR0eJqxw6+JUp+zQpXuBUz
-pAFBrGT1cypjbw75hrYIt7uu8UawpIUZ4Sx/AZVteOF5GaM2EoOl6bP0EoSkNzbL
-tGEJOxtnzhSeOiAeKrS4FM8yPDCs5A==
-=t/LM
------END PGP SIGNATURE-----
-
---Sig_/Tn=2ZLbKUMqhULSfKru47vA--
