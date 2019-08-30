@@ -2,118 +2,207 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61175C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662EAC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F3321721
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE0C22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567146225;
+	bh=eFs4UvYptjetSJttVh5WoztDFnBnEgLU+urvveUp3qk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mBLUf/uYXsr6owZ4M+fmnDutVozwIJyz5PF89W3CuMa12dju9hPkKaXKszvjy4y5s
+	 FFI6v6ro4wOwOjN+ZjvtLwJAer1MaK6udRel+7TznHqXUPWKIqy7vF7P7JHLIc3Jrf
+	 FuIidlW17pbuB9m2QWwq/Y/awWYBInQlIkdjHnIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfH3GWu (ORCPT
+        id S1727788AbfH3GXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:22:50 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:44507 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726090AbfH3GWt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:22:49 -0400
-X-UUID: 9c6850f9bd614fb3a57d21a7a3a9077a-20190830
-X-UUID: 9c6850f9bd614fb3a57d21a7a3a9077a-20190830
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1531351212; Fri, 30 Aug 2019 14:22:36 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 30 Aug
- 2019 14:22:34 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 14:22:34 +0800
-Message-ID: <1567146149.7317.40.camel@mhfsdcap03>
-Subject: Re: [PATCH 02/11] dt-bindings: phy-mtk-tphy: make the ref clock
- optional
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Date:   Fri, 30 Aug 2019 14:22:29 +0800
-In-Reply-To: <20190829192550.GA29881@bogus>
-References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
-         <a31d78484b64f853a16e7dcb16fae9fc0de45ebb.1566542696.git.chunfeng.yun@mediatek.com>
-         <20190829192550.GA29881@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 02:23:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38678 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726791AbfH3GXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:23:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B9049B643;
+        Fri, 30 Aug 2019 06:23:41 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 08:23:40 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190830062340.GQ28313@dhcp22.suse.cz>
+References: <20190827120923.GB7538@dhcp22.suse.cz>
+ <20190827121739.bzbxjloq7bhmroeq@box>
+ <20190827125911.boya23eowxhqmopa@box>
+ <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
+ <20190828075708.GF7386@dhcp22.suse.cz>
+ <20190828140329.qpcrfzg2hmkccnoq@box>
+ <20190828141253.GM28313@dhcp22.suse.cz>
+ <20190828144658.ar4fajfuffn6k2ki@black.fi.intel.com>
+ <20190828160224.GP28313@dhcp22.suse.cz>
+ <CAHbLzkr4qQKoDP+zsA1_dJcCQE0yfpeKUERMihdpp36awcXOyA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 98DB08F7F53AF6863050E9819BDD5FA46007C836A76BD5835C75A269FC4EE4DF2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkr4qQKoDP+zsA1_dJcCQE0yfpeKUERMihdpp36awcXOyA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 14:25 -0500, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 03:00:09PM +0800, Chunfeng Yun wrote:
-> > Make the ref clock optional, then we no need refer to a fixed-clock
-> > in DTS anymore when the clock of USB3 PHY comes from oscillator
-> > directly
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
-> >  1 file changed, 7 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > index d5b327f85fa2..1c18bf10b2fe 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > @@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
-> >  
-> >  Required properties (port (child) node):
-> >  - reg		: address and length of the register set for the port.
-> > -- clocks	: a list of phandle + clock-specifier pairs, one for each
-> > -		  entry in clock-names
-> > -- clock-names	: must contain
-> > -		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
-> > -			reference clock for SuperSpeed analog phy, sometimes is
-> > -			24M, 25M or 27M, depended on platform.
-> >  - #phy-cells	: should be 1 (See second example)
-> >  		  cell after port phandle is phy type from:
-> >  			- PHY_TYPE_USB2
-> > @@ -48,6 +42,13 @@ Required properties (port (child) node):
-> >  			- PHY_TYPE_SATA
-> >  
-> >  Optional properties (PHY_TYPE_USB2 port (child) node):
-> > +- clocks	: a list of phandle + clock-specifier pairs, one for each
-> > +		  entry in clock-names
-> > +- clock-names	: may contain
-> > +		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
-> > +			reference clock for SuperSpeed anolog phy, sometimes is
-> > +			24M, 25M or 27M, depended on platform.
+On Thu 29-08-19 10:03:21, Yang Shi wrote:
+> On Wed, Aug 28, 2019 at 9:02 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Wed 28-08-19 17:46:59, Kirill A. Shutemov wrote:
+> > > On Wed, Aug 28, 2019 at 02:12:53PM +0000, Michal Hocko wrote:
+> > > > On Wed 28-08-19 17:03:29, Kirill A. Shutemov wrote:
+> > > > > On Wed, Aug 28, 2019 at 09:57:08AM +0200, Michal Hocko wrote:
+> > > > > > On Tue 27-08-19 10:06:20, Yang Shi wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > On 8/27/19 5:59 AM, Kirill A. Shutemov wrote:
+> > > > > > > > On Tue, Aug 27, 2019 at 03:17:39PM +0300, Kirill A. Shutemov wrote:
+> > > > > > > > > On Tue, Aug 27, 2019 at 02:09:23PM +0200, Michal Hocko wrote:
+> > > > > > > > > > On Tue 27-08-19 14:01:56, Vlastimil Babka wrote:
+> > > > > > > > > > > On 8/27/19 1:02 PM, Kirill A. Shutemov wrote:
+> > > > > > > > > > > > On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
+> > > > > > > > > > > > > On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
+> > > > > > > > > > > > > > Unmapped completely pages will be freed with current code. Deferred split
+> > > > > > > > > > > > > > only applies to partly mapped THPs: at least on 4k of the THP is still
+> > > > > > > > > > > > > > mapped somewhere.
+> > > > > > > > > > > > > Hmm, I am probably misreading the code but at least current Linus' tree
+> > > > > > > > > > > > > reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
+> > > > > > > > > > > > > for fully mapped THP.
+> > > > > > > > > > > > Well, you read correctly, but it was not intended. I screwed it up at some
+> > > > > > > > > > > > point.
+> > > > > > > > > > > >
+> > > > > > > > > > > > See the patch below. It should make it work as intened.
+> > > > > > > > > > > >
+> > > > > > > > > > > > It's not bug as such, but inefficientcy. We add page to the queue where
+> > > > > > > > > > > > it's not needed.
+> > > > > > > > > > > But that adding to queue doesn't affect whether the page will be freed
+> > > > > > > > > > > immediately if there are no more partial mappings, right? I don't see
+> > > > > > > > > > > deferred_split_huge_page() pinning the page.
+> > > > > > > > > > > So your patch wouldn't make THPs freed immediately in cases where they
+> > > > > > > > > > > haven't been freed before immediately, it just fixes a minor
+> > > > > > > > > > > inefficiency with queue manipulation?
+> > > > > > > > > > Ohh, right. I can see that in free_transhuge_page now. So fully mapped
+> > > > > > > > > > THPs really do not matter and what I have considered an odd case is
+> > > > > > > > > > really happening more often.
+> > > > > > > > > >
+> > > > > > > > > > That being said this will not help at all for what Yang Shi is seeing
+> > > > > > > > > > and we need a more proactive deferred splitting as I've mentioned
+> > > > > > > > > > earlier.
+> > > > > > > > > It was not intended to fix the issue. It's fix for current logic. I'm
+> > > > > > > > > playing with the work approach now.
+> > > > > > > > Below is what I've come up with. It appears to be functional.
+> > > > > > > >
+> > > > > > > > Any comments?
+> > > > > > >
+> > > > > > > Thanks, Kirill and Michal. Doing split more proactive is definitely a choice
+> > > > > > > to eliminate huge accumulated deferred split THPs, I did think about this
+> > > > > > > approach before I came up with memcg aware approach. But, I thought this
+> > > > > > > approach has some problems:
+> > > > > > >
+> > > > > > > First of all, we can't prove if this is a universal win for the most
+> > > > > > > workloads or not. For some workloads (as I mentioned about our usecase), we
+> > > > > > > do see a lot THPs accumulated for a while, but they are very short-lived for
+> > > > > > > other workloads, i.e. kernel build.
+> > > > > > >
+> > > > > > > Secondly, it may be not fair for some workloads which don't generate too
+> > > > > > > many deferred split THPs or those THPs are short-lived. Actually, the cpu
+> > > > > > > time is abused by the excessive deferred split THPs generators, isn't it?
+> > > > > >
+> > > > > > Yes this is indeed true. Do we have any idea on how much time that
+> > > > > > actually is?
+> > > > >
+> > > > > For uncontented case, splitting 1G worth of pages (2MiB x 512) takes a bit
+> > > > > more than 50 ms in my setup. But it's best-case scenario: pages not shared
+> > > > > across multiple processes, no contention on ptl, page lock, etc.
+> > > >
+> > > > Any idea about a bad case?
+> > >
+> > > Not really.
+> > >
+> > > How bad you want it to get? How many processes share the page? Access
+> > > pattern? Locking situation?
+> >
+> > Let's say how hard a regular user can make this?
+> >
+> > > Worst case scenarion: no progress on splitting due to pins or locking
+> > > conflicts (trylock failure).
+> > >
+> > > > > > > With memcg awareness, the deferred split THPs actually are isolated and
+> > > > > > > capped by memcg. The long-lived deferred split THPs can't be accumulated too
+> > > > > > > many due to the limit of memcg. And, cpu time spent in splitting them would
+> > > > > > > just account to the memcgs who generate that many deferred split THPs, who
+> > > > > > > generate them who pay for it. This sounds more fair and we could achieve
+> > > > > > > much better isolation.
+> > > > > >
+> > > > > > On the other hand, deferring the split and free up a non trivial amount
+> > > > > > of memory is a problem I consider quite serious because it affects not
+> > > > > > only the memcg workload which has to do the reclaim but also other
+> > > > > > consumers of memory beucase large memory blocks could be used for higher
+> > > > > > order allocations.
+> > > > >
+> > > > > Maybe instead of drive the split from number of pages on queue we can take
+> > > > > a hint from compaction that is struggles to get high order pages?
+> > > >
+> > > > This is still unbounded in time.
+> > >
+> > > I'm not sure we should focus on time.
+> > >
+> > > We need to make sure that we don't overal system health worse. Who cares
+> > > if we have pages on deferred split list as long as we don't have other
+> > > user for the memory?
+> >
+> > We do care for all those users which do not want to get stalled when
+> > requesting that memory. And you cannot really predict that, right? So
+> > the sooner the better. Modulo time wasted for the pointless splitting of
+> > course. I am afraid defining the best timing here is going to be hard
+> > but let's focus on workloads that are known to generate partial THPs and
+> > see how that behaves.
 > 
-> How do you know the frequency when it is not present?
-It's always present, but sometimes it's always on by default (e.g. 48Mhz
-of U2 PHY), or comes from oscillator directly  (e.g. 26Mhz of U3 PHY),
-so not controlled by CCF, of course we can use a fixed-clock in latter
-case, it's useful to make it optional for these two cases.
+> I'm supposed we are just concerned by the global memory pressure
+> incurred by the excessive deferred split THPs. As long as no other
+> users for that memory we don't have to waste time to care about it.
+> So, I'm wondering why not we do harder in kswapd?
 
-Thanks
+kswapd is already late. There shouldn't be any need for the reclaim as
+long as there is a lot of memory that can be directly freed.
 
+> Currently, deferred split THPs get shrunk like slab. The number of
+> objects scanned is determined by some factors, i.e. scan priority,
+> shrinker->seeks, etc, to avoid over reclaim for filesystem caches to
+> avoid extra I/O. But, we don't have to worry about over reclaim for
+> deferred split THPs, right? We definitely could shrink them more
+> aggressively in kswapd context.
+
+This is certainly possible. I am just wondering why should we cram this
+into the reclaim when we have a reasonable trigger to do that.
+
+> For example, we could simply set shrinker->seeks to 0, now it is
+> DEFAULT_SEEKS.
 > 
-> > +
-> >  - mediatek,eye-src	: u32, the value of slew rate calibrate
-> >  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
-> >  - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
-> > -- 
-> > 2.23.0
-> > 
+> And, we also could consider boost water mark to wake up kswapd earlier
+> once we see excessive deferred split THPs accumulated.
 
+This has other side effect, right?
 
+-- 
+Michal Hocko
+SUSE Labs
