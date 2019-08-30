@@ -2,81 +2,98 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E29DC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18C7C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2FC22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C7021670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfH3MrD (ORCPT
+        id S1727961AbfH3Mr5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:47:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22344 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfH3MrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:47:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:47:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="332848662"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 30 Aug 2019 05:46:59 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i3gIr-0007aG-OJ; Fri, 30 Aug 2019 15:46:57 +0300
-Date:   Fri, 30 Aug 2019 15:46:57 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 05/10] device property: Add a function to obtain a
- node's prefix
-Message-ID: <20190830124657.GE2680@smile.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-6-sakari.ailus@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-6-sakari.ailus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 30 Aug 2019 08:47:57 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:48067 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfH3Mr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:47:57 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
+        by mail.holtmann.org (Postfix) with ESMTPSA id B7BB8CECDE;
+        Fri, 30 Aug 2019 14:56:41 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 2/2] Bluetooth: btrtl: Add firmware version print
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190830120530.GA3299@laptop-alex>
+Date:   Fri, 30 Aug 2019 14:47:54 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Max Chou <max.chou@realtek.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5F48FCE3-E0AF-458D-8560-DF0B1DB10CC9@holtmann.org>
+References: <20190830120530.GA3299@laptop-alex>
+To:     Alex Lu <alex_lu@realsil.com.cn>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:38PM +0300, Sakari Ailus wrote:
-> The prefix is used for printing purpose before a node, and it also works
-> as a separator between two nodes.
+Hi Alex,
 
-> +	/* Is this the root node? */
-> +	parent = fwnode_get_parent(fwnode);
-> +	if (!parent)
-> +		return "";
+> This patch is used to print fw version for debug convenience
+> 
+> Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
+> ---
+> drivers/bluetooth/btrtl.c | 16 ++++++++++++++++
+> 1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+> index b7487ab99eed..7219eb98d02d 100644
+> --- a/drivers/bluetooth/btrtl.c
+> +++ b/drivers/bluetooth/btrtl.c
+> @@ -151,6 +151,8 @@ static const struct id_table ic_id_table[] = {
+> 	  .cfg_name = "rtl_bt/rtl8822b_config" },
+> 	};
+> 
+> +static struct sk_buff *btrtl_read_local_version(struct hci_dev *hdev);
 > +
-> +	/* Is this 2nd node from the root? */
-> +	parent = fwnode_get_next_parent(parent);
-> +	if (!parent)
-
-Can we theoretically have a case when we got parent != NULL and thus taken
-reference, while the 2nd one is NULL and we leak reference here (and in all
-similar places)?
-
-> +		return "";
+> static const struct id_table *btrtl_match_ic(u16 lmp_subver, u16 hci_rev,
+> 					     u8 hci_ver, u8 hci_bus)
+> {
+> @@ -368,6 +370,8 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+> 	int frag_len = RTL_FRAG_LEN;
+> 	int ret = 0;
+> 	int i;
+> +	struct sk_buff *skb;
+> +	struct hci_rp_read_local_version *rp;
+> 
+> 	dl_cmd = kmalloc(sizeof(struct rtl_download_cmd), GFP_KERNEL);
+> 	if (!dl_cmd)
+> @@ -406,6 +410,18 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+> 		data += RTL_FRAG_LEN;
+> 	}
+> 
+> +	skb = btrtl_read_local_version(hdev);
+> +	if (IS_ERR(skb)) {
+> +		ret = PTR_ERR(skb);
+> +		rtl_dev_err(hdev, "read local version failed");
+> +		goto out;
+> +	}
 > +
-> +	fwnode_handle_put(parent);
+> +	rp = (struct hci_rp_read_local_version *)skb->data;
+> +	rtl_dev_info(hdev, "rtl: fw version 0x%04x%04x",
+> +		     __le16_to_cpu(rp->hci_rev), __le16_to_cpu(rp->lmp_subver));
+> +	kfree_skb(skb);
+> +
 
--- 
-With Best Regards,
-Andy Shevchenko
+if you really want to do this, then please re-order the code so that no forward declaration is needed.
 
+Regards
+
+Marcel
 
