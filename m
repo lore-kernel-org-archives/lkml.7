@@ -2,93 +2,140 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015BDC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3332C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A8D20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7516E21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 04:03:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oQs0gzkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfH3D6u (ORCPT
+        id S1726452AbfH3EDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:58:50 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:38479 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727410AbfH3D6s (ORCPT
+        Fri, 30 Aug 2019 00:03:32 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.2]:34183 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbfH3EDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:58:48 -0400
-X-UUID: 747e2d3313a34296bec46aca50fe9dcd-20190830
-X-UUID: 747e2d3313a34296bec46aca50fe9dcd-20190830
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 934813491; Fri, 30 Aug 2019 11:58:42 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 11:58:46 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 11:58:46 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v7 10/11] dt-bindings: pwm: update bindings for MT7629 SoC
-Date:   Fri, 30 Aug 2019 11:57:16 +0800
-Message-ID: <1567137437-10041-11-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
-References: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
+        Fri, 30 Aug 2019 00:03:31 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 1D1C4400C2F41
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 23:03:30 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3Y8IiZvFq90on3Y8IiLho5; Thu, 29 Aug 2019 23:03:30 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zz/0wpgN2ENh4FQXIHSRXfkBLUkCd7zskZL3on01EzE=; b=oQs0gzkJRMLi3VddvYsTgCuCS2
+        Zy0BSVb2v7chIF0n9k5a8APzIDvlfVkgmuxK85a6V5yOo4cvNNvw4sQ9mDVD3ODts8EPYTgWg64kq
+        NUaWGu0+9nvpU16wqnYE79GWGWmyAw/bwMh1ah2OIripkNO/tYtKzrSqeZ3eAYCLtIdAZPN0NJX75
+        okpqlC+fUwKLL4ouyLhKhshhNyqsyqDv/sXMC/+ZFVfxXzlQaLQiaFOOU7brW1GhZmL2D6cskj7iq
+        3X7yDXdgPiwx8OF+6Wn/Pv+M6e7KtUmlYr1jkuhT9VbiYAR8xGyVn6OELg47IbTzK3652Fnb85JsA
+        uVHdlg8A==;
+Received: from [189.152.216.116] (port=55676 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3Y8G-002GKz-VA; Thu, 29 Aug 2019 23:03:29 -0500
+Date:   Thu, 29 Aug 2019 23:03:27 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Rob Clark <robdclark@gmail.com>, Andy Gross <agross@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] iommu/qcom_iommu: Use struct_size() helper
+Message-ID: <20190830040327.GA6483@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 84B8AB9ACCE752F4C84D0758217D09B3294BF14AF89FEEF49750320A3844CF0F2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3Y8G-002GKz-VA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:55676
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-This updates bindings for MT7629 pwm controller.
+struct qcom_iommu_dev {
+	...
+        struct qcom_iommu_ctx   *ctxs[0];   /* indexed by asid-1 */
+};
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
+
+So, replace the following form:
+
+sizeof(*qcom_iommu) + (max_asid * sizeof(qcom_iommu->ctxs[0]))
+
+with:
+
+struct_size(qcom_iommu, ctxs, max_asid)
+
+Also, notice that, in this case, variable sz is not necessary,
+hence it is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
-Changes since v7:
-- add a missed Reviewed-by tag back from v1:
-https://patchwork.kernel.org/patch/10769381/
-Changes since v1:
-- add a Reviewed-by tag
+ drivers/iommu/qcom_iommu.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
----
- Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index ea95b490a913..c7bd5633d1eb 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -6,6 +6,7 @@ Required properties:
-    - "mediatek,mt7622-pwm": found on mt7622 SoC.
-    - "mediatek,mt7623-pwm": found on mt7623 SoC.
-    - "mediatek,mt7628-pwm": found on mt7628 SoC.
-+   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-  - reg: physical base address and length of the controller's registers.
-  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-    the cell format.
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index 3608f58f1ea8..c18168fd7fe7 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -801,7 +801,7 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
+ 	struct qcom_iommu_dev *qcom_iommu;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+-	int ret, sz, max_asid = 0;
++	int ret, max_asid = 0;
+ 
+ 	/* find the max asid (which is 1:1 to ctx bank idx), so we know how
+ 	 * many child ctx devices we have:
+@@ -809,9 +809,8 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
+ 	for_each_child_of_node(dev->of_node, child)
+ 		max_asid = max(max_asid, get_asid(child));
+ 
+-	sz = sizeof(*qcom_iommu) + (max_asid * sizeof(qcom_iommu->ctxs[0]));
+-
+-	qcom_iommu = devm_kzalloc(dev, sz, GFP_KERNEL);
++	qcom_iommu = devm_kzalloc(dev, struct_size(qcom_iommu, ctxs, max_asid),
++				  GFP_KERNEL);
+ 	if (!qcom_iommu)
+ 		return -ENOMEM;
+ 	qcom_iommu->num_ctxs = max_asid;
 -- 
-2.17.1
+2.23.0
 
