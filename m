@@ -2,121 +2,85 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C56C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1150EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2E92341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567177934;
-	bh=8V3NVUeMC2JfI4D6VRgLVlFPa41Ds+EvfqE2GvzzqKo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xZHv50iVd7vAaKNdZ4pAdD7GDJVtplz2iaoO/fmnsao8QmgRUR95yTL3mcET9ulEB
-	 TGrmz/QJH5d/wcU781y6zAulLEyDT4Xw5tO1qbkX8rDn7RKPJmm1pP7Q3Uk7sIUUct
-	 YYXcgMsXiOykGGFjUKrC4e3zWD5zn9UavorFHLdY=
+	by mail.kernel.org (Postfix) with ESMTP id D5F5023407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfH3PMN (ORCPT
+        id S1728194AbfH3PMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 11:12:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48628 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfH3PMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:12:13 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727948AbfH3PMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:12:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2BE23407;
-        Fri, 30 Aug 2019 15:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567177932;
-        bh=8V3NVUeMC2JfI4D6VRgLVlFPa41Ds+EvfqE2GvzzqKo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=x6EcA4t1bM+bXSxdaK3uC3DhfynKUEqlncFfHeSiRQH2WwF7W5aeTlsmXY0zxEDDg
-         gw8kzBQDDToOkKMgD+D43UY4nQpnMnH0iZczC3a3fEno6awttQTUhVqh9ssK0TD3OG
-         v2qPQ6jzlaH5BhEOQ6XtCrNsO1w/yoAJOyQwQa00=
-Subject: Re: [PATCH v2] selftests: watchdog: Add optional file argument
-To:     "George G. Davis" <george_davis@mentor.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>, shuah <shuah@kernel.org>
-References: <1567169597-10330-1-git-send-email-george_davis@mentor.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <197ee603-6ea7-a3c8-6b62-e3ba95433053@kernel.org>
-Date:   Fri, 30 Aug 2019 09:12:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 143BB881346;
+        Fri, 30 Aug 2019 15:12:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C4492100197A;
+        Fri, 30 Aug 2019 15:12:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190830145454.B91DF125411@zmta02.collab.prod.int.phx2.redhat.com>
+References: <20190830145454.B91DF125411@zmta02.collab.prod.int.phx2.redhat.com> <20190830085646.14740-1-hdanton@sina.com> <4384.1567174383@warthog.procyon.org.uk>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     dhowells@redhat.com, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Oops (request_key_auth_describe) while running cve-2016-7042 from LTP
 MIME-Version: 1.0
-In-Reply-To: <1567169597-10330-1-git-send-email-george_davis@mentor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <11907.1567177954.1@warthog.procyon.org.uk>
+Date:   Fri, 30 Aug 2019 16:12:34 +0100
+Message-ID: <11908.1567177954@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 30 Aug 2019 15:12:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 6:53 AM, George G. Davis wrote:
-> Some systems have multiple watchdog devices where the first device
-> registered is assigned to the /dev/watchdog device file. In order
-> to test other watchdog devices, add an optional file argument for
-> selecting non-default watchdog devices for testing.
-> 
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> ---
-> v1:
-> - https://lkml.org/lkml/2019/8/29/16
-> v2:
-> - Update printf for ENOENT case based on report from Eugeniu Rosca
-> ---
->   tools/testing/selftests/watchdog/watchdog-test.c | 19 ++++++++++++++++---
->   1 file changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-> index c2333c78cf04..9f17cae61007 100644
-> --- a/tools/testing/selftests/watchdog/watchdog-test.c
-> +++ b/tools/testing/selftests/watchdog/watchdog-test.c
-> @@ -19,7 +19,7 @@
->   
->   int fd;
->   const char v = 'V';
-> -static const char sopts[] = "bdehp:t:Tn:NL";
-> +static const char sopts[] = "bdehp:t:Tn:NLf:";
->   static const struct option lopts[] = {
->   	{"bootstatus",          no_argument, NULL, 'b'},
->   	{"disable",             no_argument, NULL, 'd'},
-> @@ -31,6 +31,7 @@ static const struct option lopts[] = {
->   	{"pretimeout",    required_argument, NULL, 'n'},
->   	{"getpretimeout",       no_argument, NULL, 'N'},
->   	{"gettimeleft",		no_argument, NULL, 'L'},
-> +	{"file",          required_argument, NULL, 'f'},
->   	{NULL,                  no_argument, NULL, 0x0}
->   };
->   
-> @@ -69,6 +70,7 @@ static void term(int sig)
->   static void usage(char *progname)
->   {
->   	printf("Usage: %s [options]\n", progname);
-> +	printf(" -f, --file          Open watchdog device file (default is /dev/watchdog)\n");
+Hillf Danton <hdanton@sina.com> wrote:
 
-Can you split this line into two printf's. Checkpatch doesn't like
-it.
+> 1, callee has no pre defined duty to help caller in general; they should not
+> try to do anything, however, to help their callers in principle due to
+> limited info on their hands IMO.
 
-printf(" -f, --file          Open watchdog device file\n");
-A second one below for default.
+Ah, no.  It's entirely reasonable for an API to specify that one of its
+methods will be called with one or more locks held - and that the method must
+be aware of this and may make use of this.
 
-On a separate note, I wish this usage block uses \t instead of spacing
-things out.
+> 3, no comment can be found in security/keys/request_key_auth.c about
+> the rcu already documented.
 
-thanks,
--- Shuah
+There is API documentation in Documentation/security/keys/core.rst.  If you
+look at about line 1538 onwards:
 
+  *  ``void (*describe)(const struct key *key, struct seq_file *p);``
 
+     This method is optional. It is called during /proc/keys reading to
+     summarise a key's description and payload in text form.
+
+     This method will be called with the RCU read lock held. rcu_dereference()
+     should be used to read the payload pointer if the payload is to be
+     accessed. key->datalen cannot be trusted to stay consistent with the
+     contents of the payload.
+
+     The description will not change, though the key's state may.
+
+     It is not safe to sleep in this method; the RCU read lock is held by the
+     caller.
+
+David
