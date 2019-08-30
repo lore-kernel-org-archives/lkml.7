@@ -2,211 +2,92 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B84C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FBCC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5D223407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CF023407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 17:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfH3RQD (ORCPT
+        id S1728107AbfH3RRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 13:16:03 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:46432 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727434AbfH3RQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 13:16:03 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 6DF902A22AA429166DF2;
-        Sat, 31 Aug 2019 01:16:00 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 31 Aug 2019 01:15:59 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 31 Aug 2019 01:15:59 +0800
-Date:   Sat, 31 Aug 2019 01:15:11 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Fri, 30 Aug 2019 13:17:32 -0400
+Received: from mga06.intel.com ([134.134.136.31]:29746 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727922AbfH3RRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:17:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 10:17:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="332917307"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 30 Aug 2019 10:17:31 -0700
+Date:   Fri, 30 Aug 2019 10:17:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Whitcroft <apw@canonical.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 03/24] erofs: add super block operations
-Message-ID: <20190830171510.GC107220@architecture4>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-4-gaoxiang25@huawei.com>
- <20190829101545.GC20598@infradead.org>
- <20190829105048.GB64893@architecture4>
- <20190830163910.GB29603@infradead.org>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] checkpatch: Remove obsolete period from "ambiguous SHA1"
+ query
+Message-ID: <20190830171731.GB15405@linux.intel.com>
+References: <20190830163103.15914-1-sean.j.christopherson@intel.com>
+ <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830163910.GB29603@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-On Fri, Aug 30, 2019 at 09:39:10AM -0700, Christoph Hellwig wrote:
-> On Thu, Aug 29, 2019 at 06:50:48PM +0800, Gao Xiang wrote:
-> > > Please use an erofs_ prefix for all your functions.
+On Fri, Aug 30, 2019 at 09:37:51AM -0700, Joe Perches wrote:
+> On Fri, 2019-08-30 at 09:31 -0700, Sean Christopherson wrote:
+> > Git dropped the period from its "ambiguous SHA1" error message in commit
+> > 0c99171ad2 ("get_short_sha1: mark ambiguity error for translation"),
+> > circa 2016.  Drop the period from checkpatch's associated query so as to
+> > match both the old and new error messages.
 > > 
-> > It is already a static function, I have no idea what is wrong here.
-> 
-> Which part of all wasn't clear?  Have you looked at the prefixes for
-> most functions in the various other big filesystems?
-
-I will add erofs prefix to free_inode as you said.
-
-At least, all non-prefix functions in erofs are all static functions,
-it won't pollute namespace... I will add "erofs_" to other meaningful
-callbacks...And as you can see...
-
-cifs/cifsfs.c
-1303:cifs_init_inodecache(void)
-1509:   rc = cifs_init_inodecache();
-
-hpfs/super.c
-254:static int init_inodecache(void)
-771:    int err = init_inodecache();
-
-minix/inode.c
-84:static int __init init_inodecache(void)
-665:    int err = init_inodecache();
-
-isofs/inode.c
-88:static int __init init_inodecache(void)
-1580:   int err = init_inodecache();
-
-bfs/inode.c
-261:static int __init init_inodecache(void)
-468:    int err = init_inodecache();
-
-ext4/super.c
-1144:static int __init init_inodecache(void)
-6115:   err = init_inodecache();
-
-reiserfs/super.c
-666:static int __init init_inodecache(void)
-2606:   ret = init_inodecache();
-
-squashfs/super.c
-406:static int __init init_inodecache(void)
-430:    int err = init_inodecache();
-
-udf/super.c
-177:static int __init init_inodecache(void)
-232:    err = init_inodecache();
-
-qnx4/inode.c
-358:static int init_inodecache(void)
-399:    err = init_inodecache();
-
-ufs/super.c
-1463:static int __init init_inodecache(void)
-1517:   int err = init_inodecache();
-
-qnx6/inode.c
-618:static int init_inodecache(void)
-659:    err = init_inodecache();
-
-f2fs/super.c
-3540:static int __init init_inodecache(void)
-3572:   err = init_inodecache();
-
-
-> 
-> > > > +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
-> > > > +	if (is_inode_fast_symlink(inode))
-> > > > +		kfree(inode->i_link);
-> > > 
-> > > is_inode_fast_symlink only shows up in a later patch.  And really
-> > > obsfucates the check here in the only caller as you can just do an
-> > > unconditional kfree here - i_link will be NULL except for the case
-> > > where you explicitly set it.
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  scripts/checkpatch.pl | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > 
-> > I cannot fully understand your point (sorry about my English),
-> > I will reply you about this later.
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 93a7edfe0f05..ef3642c53100 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -962,7 +962,7 @@ sub git_commit_info {
+> >  
+> >  	return ($id, $desc) if ($#lines < 0);
+> >  
+> > -	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous\./) {
+> > +	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous/) {
+> >  # Maybe one day convert this block of bash into something that returns
+> >  # all matching commit ids, but it's very slow...
+> >  #
 > 
-> With that I mean that you should:
+> Thanks.
 > 
->  1) remove is_inode_fast_symlink and just opencode it in the few places
->     using it
->  2) remove the check in this place entirely as it is not needed
->  3) remove the comment quoted above as it is more confusing than not
->     having the comment
+> Did git ever change to actually support human readable
+> messages in multiple languages?
 
-Got it, thanks!
+Yep, e.g.:
 
-> 
-> > > Is there any good reasons to use buffer heads like this in new code
-> > > vs directly using bios?
-> > 
-> > This page can save in bdev page cache, it contains not only the erofs
-> > superblock so it can be fetched in page cache later.
-> 
-> If you want it in the page cache why not use read_mapping_page or similar?
+  error: Kurzer SHA-1 745f ist mehrdeutig.
 
-It's reasonable, I will change as you suggested.
-(The difference is whether it has some buffer_head to the sb page or not...)
+> If so, this won't work for non-english output.
 
-> 
-> > > > +/* set up default EROFS parameters */
-> > > > +static void default_options(struct erofs_sb_info *sbi)
-> > > > +{
-> > > > +}
-> > > 
-> > > No need to add an empty function.
-> > 
-> > Later patch will fill this function.
-> 
-> Please only add the function in the patch actually adding the
-> functionality.
+Yep again.  The next check for 'fatal: ambiguous argument' obviously fails
+as well and checkpatch ends up using git's error message as the id and
+description.
 
-That was my fault when spilting patches...considering
-it's an >7KLOC filesystem (maybe spilting the whole xfs or
-ext4 properly is more harder)... Anyway, that is my fault.
-
-> 
-> > > > +}
-> > > 
-> > > Why is this needed?  You can just free your sb privatte information in
-> > > ->put_super and wire up kill_block_super as the ->kill_sb method
-> > > directly.
-> > 
-> > See Al's comments,
-> > https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
-> 
-> With that code it makes sense.  In this paticular patch it does not.
-> So please add it only when actually needed.
-
-Same as above...
-
-Thanks,
-Gao Xiang
-
+  ERROR: Please use git ... - ie: 'commit error: Kurze ("")'
