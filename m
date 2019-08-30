@@ -2,133 +2,214 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E3FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B776C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4522186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jpaA2SoC"
+	by mail.kernel.org (Postfix) with ESMTP id 393AA2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 11:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfH3L1G (ORCPT
+        id S1727928AbfH3L12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 07:27:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34428 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfH3L1G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 07:27:06 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UBOcKr117889;
-        Fri, 30 Aug 2019 11:26:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=msziLnocdvHcufQhecf1ndPoXYQpydYItB5DtxtqBys=;
- b=jpaA2SoCphPWyU2CtodN9hN9WGduAr03wluKxWZAhPa/t+mEzgqMOyQbmOzz+80mxBJW
- y+IbGti9rwDwrEpfNkjGQJnWMc96d5xzm/2WKKel5+PotG0xXF3Cn7OdY6dyHZYlKx75
- ZMyUFrRiOx/IexSmRGFi9fkx+X76nkpfVPUWZVTKFiOoLk+iMaW08PtN0i7wCpKe9qKb
- sn365sGpV9w0E39NUx1bI5rdyYmBY+Th/M9GpcTk6K8CJY/p7gHjCjXVbCsc+pQDp9sJ
- lp3++0CzVnYqUFIyWaqAwBY79e0VE2cEV0H1UTcfIDxp4C1z+DrA167sr6ochQ71PrXu /A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uq2w580df-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 11:26:47 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7UBNZ7j091929;
-        Fri, 30 Aug 2019 11:26:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2upc8xbmce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 11:26:46 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7UBQhS3007665;
-        Fri, 30 Aug 2019 11:26:43 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 30 Aug 2019 04:26:43 -0700
-Date:   Fri, 30 Aug 2019 14:26:12 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     devel@driverdev.osuosl.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190830112612.GF8372@kadam>
-References: <20190829095019.GA13557@kroah.com>
- <20190829103749.GA13661@infradead.org>
- <20190829111810.GA23393@kroah.com>
- <20190829151144.GJ23584@kadam>
- <20190829152757.GA125003@architecture4>
- <20190829154346.GK23584@kadam>
- <20190829155127.GA136563@architecture4>
- <20190829160441.GA141079@architecture4>
- <20190830083445.GL23584@kadam>
- <20190830084333.GA193084@architecture4>
+        Fri, 30 Aug 2019 07:27:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43820 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727326AbfH3L11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 07:27:27 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0D9633082A6C;
+        Fri, 30 Aug 2019 11:27:27 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-59.pek2.redhat.com [10.72.12.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 92F7A60605;
+        Fri, 30 Aug 2019 11:27:15 +0000 (UTC)
+Subject: Re: crash: `kmem -s` reported "kmem: dma-kmalloc-512: slab:
+ ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e" on a dumped vmcore
+From:   lijiang <lijiang@redhat.com>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Dave Young <dyoung@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Anderson <anderson@redhat.com>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "vgoyal@redhat.com" <vgoyal@redhat.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>
+References: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
+ <20190802010538.GA2202@dhcp-128-65.nay.redhat.com>
+ <5d91e856-01de-bc80-e4bc-497d57652072@amd.com>
+ <2d3c7ab8-0b83-4ef5-bb89-0c7c476265b3@redhat.com>
+ <467709e5-3f9e-85bd-60a8-255af71f3d4f@redhat.com>
+Message-ID: <9d2fa8a6-6b33-dd68-4dca-a84f7e68885f@redhat.com>
+Date:   Fri, 30 Aug 2019 19:27:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830084333.GA193084@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908300124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908300124
+In-Reply-To: <467709e5-3f9e-85bd-60a8-255af71f3d4f@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 30 Aug 2019 11:27:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 04:43:33PM +0800, Gao Xiang wrote:
-> Hi Dan,
+在 2019年08月17日 15:23, lijiang 写道:
+> 在 2019年08月11日 10:29, lijiang 写道:
+>> 在 2019年08月09日 06:37, Lendacky, Thomas 写道:
+>>> On 8/1/19 8:05 PM, Dave Young wrote:
+>>>> Add kexec cc list.
+>>>> On 08/01/19 at 11:02pm, lijiang wrote:
+>>>>> Hi, Tom
+>>>>>
+>>>>> Recently, i ran into a problem about SME and used crash tool to check the vmcore as follow:
+>>>>>
+>>>>> crash> kmem -s | grep -i invalid
+>>>>> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+>>>>> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+>>>>>
+>>>>> And the crash tool reported the above error, probably, the main reason is that kernel does not
+>>>>> correctly handle the first 640k region when SME is enabled.
+>>>>>
+>>>>> When SME is enabled, the kernel and initramfs images are loaded into the decrypted memory, and
+>>>>> the backup area(first 640k) is also mapped as decrypted, but the first 640k data is copied to
+>>>>> the backup area in purgatory(). Please refer to this file: arch/x86/purgatory/purgatory.c
+>>>>> ......
+>>>>> static int copy_backup_region(void)
+>>>>> {
+>>>>>          if (purgatory_backup_dest) {
+>>>>>                  memcpy((void *)purgatory_backup_dest,
+>>>>>                         (void *)purgatory_backup_src, purgatory_backup_sz);
+>>>>>          }
+>>>>>          return 0;
+>>>>> }
+>>>>> ......
+>>>>>
+>>>>> arch/x86/kernel/machine_kexec_64.c
+>>>>> ......
+>>>>> machine_kexec_prepare()->
+>>>>> arch_update_purgatory()->
+>>>>> .....
+>>>>>
+>>>>> Actually, the firs 640k area is encrypted in the first kernel when SME is enabled, here kernel
+>>>>> copies the first 640k data to the backup area in purgatory(), because the backup area is mapped
+>>>>> as decrypted, this copying operation makes that the first 640k data is decrypted(decoded) and
+>>>>> saved to the backup area, but probably kernel can not aware of SME in purgatory(), which causes
+>>>>> kernel mistakenly read out the first 640k.
+>>>>>
+>>>>> In addition, i hacked kernel code as follow:
+>>>>>
+>>>>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>>>>> index 7bcc92add72c..a51631d36a7a 100644
+>>>>> --- a/fs/proc/vmcore.c
+>>>>> +++ b/fs/proc/vmcore.c
+>>>>> @@ -377,6 +378,16 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>>>>>                                              m->offset + m->size - *fpos,
+>>>>>                                              buflen);
+>>>>>                          start = m->paddr + *fpos - m->offset;
+>>>>> +                       if (m->paddr == 0x73f60000) {//the backup area's start address:0x73f60000
+>>>>> +                               tmp = read_from_oldmem(buffer, tsz, &start,
+>>>>> +                                               userbuf, false);
+>>>>> +                       } else
+>>>>>                                  tmp = read_from_oldmem(buffer, tsz, &start,
+>>>>>                                                 userbuf, mem_encrypt_active());
+>>>>>                          if (tmp < 0)
+>>>>>
+>>>>> Here, i used the crash tool to check the vmcore, i can see that the backup area is decrypted,
+>>>>> except for the dma-kmalloc-512. So i suspect that kernel did not correctly read out the first
+>>>>> 640k data to backup area. Do you happen to know how to deal with the first 640k area in purgatory()
+>>>>> when SME is enabled? Any idea?
+>>>
+>>> I'm not all that familiar with kexec and purgatory, etc., but I think
+>>> that you want to setup the page table that is active when purgatory runs
+>>> so that the src and dest both have the SME encryption mask set in their
+>>> respective page table entries. This way, when the copy is performed,
+>>> everything is copied correctly. 
+>>
+>> Exactly. That's just what i was thinking.
+>>
 > 
-> On Fri, Aug 30, 2019 at 11:34:45AM +0300, Dan Carpenter wrote:
-> > On Fri, Aug 30, 2019 at 12:04:41AM +0800, Gao Xiang wrote:
-> > > Anyway, I'm fine to delete them all if you like, but I think majority of these
-> > > are meaningful.
-> > > 
-> > > data.c-		/* page is already locked */
-> > > data.c-		DBG_BUGON(PageUptodate(page));
-> > > data.c-
-> > > data.c:		if (unlikely(err))
-> > > data.c-			SetPageError(page);
-> > > data.c-		else
-> > > data.c-			SetPageUptodate(page);
-> > 
-> > If we cared about speed here then we would delete the DBG_BUGON() check
-> > because that's going to be expensive.  The likely/unlikely annotations
-> > should be used in places a reasonable person thinks it will make a
-> > difference to benchmarks.
+> I tried to setup the 1:1 mapping in the init_pgtable() with the memory encryption mask, but that still
+> did not correctly access the encrypted memory in purgatory(). I'm not sure whether i missed anything
+> else, i'm still digging into it.
 > 
-> DBG_BUGON will be a no-op ((void)x) in non-debugging mode,
 
-It expands to:
+As we know, kdump kernel will reuse the first 640k region, so the old content in the first 640k area will
+be copied to a backup area, which is done in purgatory(). When dumping the vmcore, kdump kernel will read
+the old content of the first 640k area from the backup area. 
 
-	((void)PageUptodate(page));
+According to above description, when SME is enabled in the first kernel, kernel has to setup the identity
+mapping for the first 640k area with encryption mask so that kernel can correctly access the old memory.
+And also setup the identity mapping for the backup region with encryption mask. But kdump kernel won't
+properly deal with the encrypted memory before SME is enabled, which causes the failure of kdump kernel
+boot.
 
-Calling PageUptodate() doesn't do anything, but it isn't free.  The
-time it takes to do that function call completely negates any speed up
-from using likely/unlikely.
+So i planed to setup the temporary mapping of page table with encryption mask for the first 640k area and
+backup region in purgatory().
 
-I'm really not trying to be a jerk...
+> I guess that should make the 1:1 mapping in the purgatory context instead of in init_pgtable(). Does
+> anyone happen to know how to make the 1:1 mapping with memory encryption mask in purgatory() context?
+> 
 
-regards,
-dan carpenter
+I have initiated the SME related code in purgatory(), and also got the value of sme_me_mask, but there
+are too many restrictions in purgatory() context, for example, i can not allocate memory for creating the
+temporary mapping of page table with encryption mask, which prevents my attempt. Any idea?
 
+> In addition, there is another way to avoid encrypting the first 640k area. When SME is enabled, do not
+> encrypt the first 640k area, let it skip this area. Do you happen to know how to do it? Tom.(btw: I tried
+> to do it, unfortunately, that failed.). But that also needs to make extra things when dumpping the vmcore(
+> need to dump the vmcore according to whether the first 640k area is encrypted).
+> 
+I rethought it, that could cause trouble for memory management.
+
+In addition, i will also try to copy the old memory in the first 640k area to backup area at the early boot
+stage of kdump kernel(and after SME is enabled). But, need to ensure that the old memory it not overwritten.
+
+Any suggestions will be appreciated. Thanks.
+
+Lianbo
+
+> Thanks.
+> Lianbo
+> 
+>>> Remember, encrypted data from one page
+>>> cannot be directly copied as unencrypted data and decrypted properly in
+>>> the new location (e.g. a page of zeroes encrypted at one address will not
+>>> appear the same as a page of zeroes encrypted at a different address).
+>>
+>> Yes, that's right. Thank you, Tom.
+>>
+>> I'm considering how to solve it, and i guess that probably it needs to properly deal with
+>> this problem in purgatory().
+>>
+>> Thanks.
+>> Lianbo
+>>
+>>>
+>>> Thanks,
+>>> Tom
+>>>
+>>>>>
+>>>>> BTW: I' curious the reason why the address of dma-kmalloc-512k always falls into the first 640k
+>>>>> region, and i did not see the same issue on another machine.
+>>>>>
+>>>>> Machine:
+>>>>> Serial Number 	diesel-sys9079-0001
+>>>>> Model           AMD Diesel (A0C)
+>>>>> CPU             AMD EPYC 7601 32-Core Processor
+>>>>>
+>>>>>
+>>>>> Background:
+>>>>> On x86_64, the first 640k region is special because of some historical reasons. And kdump kernel will
+>>>>> reuse the first 640k region, so kernel will back up(copy) the first 640k region to a backup area in
+>>>>> purgatory(), in order not to rewrite the old region(640k) in kdump kernel, which makes sure that kdump
+>>>>> can read out the old memory from vmcore.
+>>>>>
+>>>>>
+>>>>> Thanks.
+>>>>> Lianbo
