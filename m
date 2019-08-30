@@ -2,70 +2,44 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833EFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD932C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5823921726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DC521726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfH3OXq (ORCPT
+        id S1728166AbfH3OXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:23:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57568 "EHLO mx1.redhat.com"
+        Fri, 30 Aug 2019 10:23:53 -0400
+Received: from 8bytes.org ([81.169.241.247]:52526 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfH3OXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:23:45 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 390697BDB6;
-        Fri, 30 Aug 2019 14:23:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 871F71001925;
-        Fri, 30 Aug 2019 14:23:42 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov>
-References: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717352079.2204.16378075382991665807.stgit@warthog.procyon.org.uk>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/11] selinux: Implement the watch_key security hook [ver #7]
+        id S1728122AbfH3OXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:23:53 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 7DC43246; Fri, 30 Aug 2019 16:23:52 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 16:23:51 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/dma: fix for dereferencing before null checking
+Message-ID: <20190830142350.GC11578@8bytes.org>
+References: <1566611232-165399-1-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5366.1567175021.1@warthog.procyon.org.uk>
-Date:   Fri, 30 Aug 2019 15:23:41 +0100
-Message-ID: <5368.1567175021@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 30 Aug 2019 14:23:45 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566611232-165399-1-git-send-email-linyunsheng@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Smalley <sds@tycho.nsa.gov> wrote:
+On Sat, Aug 24, 2019 at 09:47:12AM +0800, Yunsheng Lin wrote:
+>  drivers/iommu/dma-iommu.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > +	u32 sid = cred_sid(current_cred());
-> 
-> How does this differ from current_sid()?
-> 
-> And has current_sid() not been converted to use selinux_cred()? Looks like
-> selinux_kernfs_init_security() also uses current_security() directly.
-
-It probably doesn't - okay I'll use that instead.
-
-David
+Applied, thanks.
