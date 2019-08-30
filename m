@@ -2,235 +2,141 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415A2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A23C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F225D21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A1521726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:43:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="N1tYV6Q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfH3AnG (ORCPT
+        id S1727433AbfH3An2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:43:06 -0400
-Received: from mga07.intel.com ([134.134.136.100]:23958 "EHLO mga07.intel.com"
+        Thu, 29 Aug 2019 20:43:28 -0400
+Received: from mx5.ucr.edu ([138.23.62.67]:62149 "EHLO mx5.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfH3AnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:43:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:43:05 -0700
-X-ExtLoop1: 1
+        id S1726988AbfH3An1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:43:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567125807; x=1598661807;
+  h=from:to:cc:subject:date:message-id;
+  bh=x/hPFWrb7N7daafIx/1mPp6kx5SsK9IpY+Su725vKIk=;
+  b=N1tYV6Q+rRrUbPit34iobzudLltLnh3O5jYYYY+MWL8eyMGExWA2poko
+   HJbyBNtTnX4eP2d7a/fAAWzKFjxYmRGmPnZoW7RITFHv9066Nvq8rwmws
+   7rLtBU8Q7ojvmJmzROv0+Utf5MFLukcBlA861/r7ewyeoVZBbe02as2Ja
+   Lxb7pU9uSpLcClyNadg6wVBWaXSz+wgGhhXGqKDHbjcBXgJkzD8IWNin6
+   22A6ubazKmiMadJLv1yuoq1nqh6Og1jukp5in2Q/wP4fg7WNt2FHNAQNH
+   WhRLw0+j+T/Hm08D7ecsn/okNurPK+PMjm4K11kImbmGGQd1zPnRK16GU
+   g==;
+IronPort-SDR: tt/zBWBmOETPkA5t0nki/U0jjsV9Zpb84fKaGOiaFCiSXjWFYEeTWPMuKf9sx8Hop78kNgd6Oh
+ vxRuptNpLxo1bS0sH1CkOHkoNQwGM3cEEe9K20PeRq6HtxoJ0IhtITk0qpgm3Gdqa5WB4KrSPc
+ RMTkImB/1wevfw8vwTUf3Ahnu2Tl3bMbAvAy/sSGwgEExIg524NWq3Z/qBGajaVmQOV1g/D1OT
+ n3oGpwmYFF8WC3/W8Rb8Pzl8iN6Z+bmXr4Q58dGcdUIqkghnqSxo9AFK2FaTm/ocH+CDRAFVq3
+ Qbk=
+IronPort-PHdr: =?us-ascii?q?9a23=3AnFOK9ROPCYOO9407G1sl6mtUPXoX/o7sNwtQ0K?=
+ =?us-ascii?q?IMzox0LfX/rarrMEGX3/hxlliBBdydt6sezbOI6Ou7BSQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagf79+Ngi6oATfu8UZj4ZvJbs6xw?=
+ =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
+ =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
+ =?us-ascii?q?mu87tnRRn1gyocKTU37H/YhdBxjKJDoRKuuRp/w5LPYIqIMPZyZ77Rcc8GSW?=
+ =?us-ascii?q?ZEWMtRUi1BApinb4sOCeoBMvtToZfkqVAToxu+BBejBOfyxTRVgnP707E23+?=
+ =?us-ascii?q?EnHArb3gIvAsgOvWzUotvrKakcX+O7wq7TwDnfc/9bwyvx5ZLUfhw9p/yHQL?=
+ =?us-ascii?q?J+cdDWyUkqDw7KjFSQqI3lPzOI0eQGrm+W7uphVOKvkWEnqh19riShy8o3l4?=
+ =?us-ascii?q?nGmpgVxkra+ipk3YY4PNu1Q1N4b968CJZcqT2WOo9sTs4hQ2xkojg2xqAJtJ?=
+ =?us-ascii?q?KhYSQHzJAqywbCZ/GGd4WE+AzvWeiRLDtimn5oeaizihS9/EWm1+byTNO70E?=
+ =?us-ascii?q?xQoSpAitTMs3cN2AHN5cWfUft9+1uh2S6I1wDO9uFIOUA0mrTfK54m2rMwk4?=
+ =?us-ascii?q?AcsUXHHiPvgEX2iLKaelwq+uS17+nqZq/qppCbN49zhQH+NrohltajDuQ/Nw?=
+ =?us-ascii?q?gCR2mb+eKi273/5UD1XqlGg/ksnqTasJ3WP9oXqrO2DgNPz4ou7xKyAy+j0N?=
+ =?us-ascii?q?sCnHkHKFxFeAiAj4jsI1zPIPH5DfeljFStjDtn2/7LM6b8AprRNHjPiqnucq?=
+ =?us-ascii?q?tg60JE0go80chf545ICrEGOP/zXk7xtNrFDh42KgC0wPjoCM971owAXWKCGb?=
+ =?us-ascii?q?GZMKzMvl+S/O4vIPeDZJUTuDnjL/gp/fnujWU2mQxVU7Ou2M4maWK4A/Mud1?=
+ =?us-ascii?q?SLYXPt2o9aOXoBpEwzQPG82w7KaiJae3vnB/F03To8Eo/zSNibSw=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2H9AQCncGhdh8fWVdFmHgEGBwaBVgY?=
+ =?us-ascii?q?LAYNXTBCNHYZeAQaLHxhxhXmDCYcfAQgBAQEMAQEtAgEBhD+CXCM3Bg4CAwg?=
+ =?us-ascii?q?BAQUBAQEBAQYEAQECEAEBAQgNCQgphUGCOimCYAsWFVJWPwEFATUiOYJHAYF?=
+ =?us-ascii?q?2FAWgA4EDPIwjM4hqAQgMgUkJAQiBIocehFmBEIEHg3VshA2DVoJEBIEuAQE?=
+ =?us-ascii?q?BlFCWBgEGAgGCDBSBcpJVJ4QwiRmLEwEthAehcgIKBwYPIYFFgXtNJYFsCoF?=
+ =?us-ascii?q?Eglweji0fM4EIi0yCVAE?=
+X-IPAS-Result: =?us-ascii?q?A2H9AQCncGhdh8fWVdFmHgEGBwaBVgYLAYNXTBCNHYZeA?=
+ =?us-ascii?q?QaLHxhxhXmDCYcfAQgBAQEMAQEtAgEBhD+CXCM3Bg4CAwgBAQUBAQEBAQYEA?=
+ =?us-ascii?q?QECEAEBAQgNCQgphUGCOimCYAsWFVJWPwEFATUiOYJHAYF2FAWgA4EDPIwjM?=
+ =?us-ascii?q?4hqAQgMgUkJAQiBIocehFmBEIEHg3VshA2DVoJEBIEuAQEBlFCWBgEGAgGCD?=
+ =?us-ascii?q?BSBcpJVJ4QwiRmLEwEthAehcgIKBwYPIYFFgXtNJYFsCoFEglweji0fM4EIi?=
+ =?us-ascii?q?0yCVAE?=
 X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="175442569"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.249.171.121]) ([10.249.171.121])
-  by orsmga008.jf.intel.com with ESMTP; 29 Aug 2019 17:43:04 -0700
-Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
-Cc:     "lkp@01.org" <lkp@01.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190520055434.GZ31424@shao2-debian>
- <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
- <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
- <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
- <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
- <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
- <81fb0e7d-1879-9267-83da-4671fec50920@linux.intel.com>
- <DM5PR13MB1851813BBEA446E25C5001C2B8F60@DM5PR13MB1851.namprd13.prod.outlook.com>
- <e29f82e0-6847-b264-300b-130bb31399d1@linux.intel.com>
- <b4e5ab18-6329-f22e-3962-230c965b0b5d@linux.intel.com>
- <491bd283-f607-3111-32ae-07294eda123d@linux.intel.com>
- <081447bc-69c5-aa45-8f85-29add0b83c15@linux.intel.com>
-Message-ID: <f46834cb-5429-2f2a-bf20-99f00afc36c1@linux.intel.com>
-Date:   Fri, 30 Aug 2019 08:43:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <081447bc-69c5-aa45-8f85-29add0b83c15@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="73765524"
+Received: from mail-pl1-f199.google.com ([209.85.214.199])
+  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:43:26 -0700
+Received: by mail-pl1-f199.google.com with SMTP id v4so2995877plp.23
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 17:43:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pUmojDYDL1a61kg6eynxQw3TTop/vKblfuVM8e3GTao=;
+        b=aKZnKKTVnhzAs0511DuOPaTTIh6Vxq1S0PDshZbrhaSEbupmJcipWlAJ1DiXj8d2bR
+         wwdiJpUV3ZE2vLMSVl9AevQraj3wBUqCqYsWIuZg4jhLku860nZV715U2b5fdqWFM1B2
+         /tVdQoTNk6PLYNyM/K8U0g8V9pJK5A5eQCwL+/VAWRWZKMVdihd5155SehzCWjFgrixc
+         6zFPa5qLP2bnqbTIP4RxWY2KkAelHqAO1N07WVyvf4cEbq7qu3pLjdZiwSAaYiokHG/B
+         E8LHHKalFjFjykjCatNz9PBR6oLSpmOzH07zrHV3JzTa9C/VrT+w35Psd0C3Qhx3fFqb
+         V+/Q==
+X-Gm-Message-State: APjAAAVFl8HSJr6gyrbLXDwPl3I3rk25vyuK6FNfgM9w1utsr9LvTl9s
+        qwiHvE/V/09hFWsinqaMfuE+LymdwGFbBmCwSY6kmImVLWnOdezN2kw6mmGS3c4sCpcJXW3m56v
+        HLsbHzaAzRA/x8BsUujanxKIvqg==
+X-Received: by 2002:a17:902:4581:: with SMTP id n1mr13190815pld.310.1567125806238;
+        Thu, 29 Aug 2019 17:43:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwc6/cUWPfDkfqfrO57m1Cx+08ZFPT0rsri0ogDcuq7WHFidY41roOHBxcCTPRfJirehBoShA==
+X-Received: by 2002:a17:902:4581:: with SMTP id n1mr13190790pld.310.1567125806046;
+        Thu, 29 Aug 2019 17:43:26 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id g26sm4151989pfi.103.2019.08.29.17.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 17:43:25 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        Andy Walls <awalls@md.metrocast.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [media] drivers/media/pci: Variable vbi.type could be uninitialized if macro v4l2_subdev_call set __result an error code
+Date:   Thu, 29 Aug 2019 17:43:59 -0700
+Message-Id: <20190830004359.22622-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Inside function compress_sliced_buf(), variable vbi.type is
+uninitialized if macro v4l2_subdev_call set __result an
+error code. However, vbi.type is used in the if statement
+without any check, which is potentially unsafe.
 
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/media/pci/ivtv/ivtv-vbi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 8/7/2019 3:56 PM, Xing Zhengjun wrote:
-> 
-> 
-> On 7/24/2019 1:17 PM, Xing Zhengjun wrote:
->>
->>
->> On 7/12/2019 2:42 PM, Xing Zhengjun wrote:
->>> Hi Trond,
->>>
->>>      I attached perf-profile part big changes, hope it is useful for 
->>> analyzing the issue.
->>
->> Ping...
-> 
-> ping...
-> 
-ping...
->>
->>>
->>>
->>> In testcase: fsmark
->>> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz 
->>> with 384G memory
->>> with following parameters:
->>>
->>>          iterations: 20x
->>>          nr_threads: 64t
->>>          disk: 1BRD_48G
->>>          fs: xfs
->>>          fs2: nfsv4
->>>          filesize: 4M
->>>          test_size: 80G
->>>          sync_method: fsyncBeforeClose
->>>          cpufreq_governor: performance
->>>
->>> test-description: The fsmark is a file system benchmark to test 
->>> synchronous write workloads, for example, mail servers workload.
->>> test-url: https://sourceforge.net/projects/fsmark/
->>>
->>> commit:
->>>    e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
->>>    0472e47660 ("SUNRPC: Convert socket page send code to use 
->>> iov_iter()")
->>>
->>> e791f8e9380d945e 0472e476604998c127f3c80d291
->>> ---------------- ---------------------------
->>>           %stddev     %change         %stddev
->>>               \          |                \
->>>      527.29           -22.6%     407.96        fsmark.files_per_sec
->>>        1.97 ± 11%      +0.9        2.88 ±  4% 
->>> perf-profile.calltrace.cycles-pp.smp_apic_timer_interrupt.apic_timer_interrupt.cpuidle_enter_state.do_idle.cpu_startup_entry 
->>>
->>>        0.00            +0.9        0.93 ±  4% 
->>> perf-profile.calltrace.cycles-pp.tcp_write_xmit.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages 
->>>
->>>        2.11 ± 10%      +0.9        3.05 ±  4% 
->>> perf-profile.calltrace.cycles-pp.apic_timer_interrupt.cpuidle_enter_state.do_idle.cpu_startup_entry.start_secondary 
->>>
->>>        5.29 ±  2%      +1.2        6.46 ±  7% 
->>> perf-profile.calltrace.cycles-pp.svc_recv.nfsd.kthread.ret_from_fork
->>>        9.61 ±  5%      +3.1       12.70 ±  2% 
->>> perf-profile.calltrace.cycles-pp.worker_thread.kthread.ret_from_fork
->>>        9.27 ±  5%      +3.1       12.40 ±  2% 
->>> perf-profile.calltrace.cycles-pp.process_one_work.worker_thread.kthread.ret_from_fork 
->>>
->>>       34.52 ±  4%      +3.3       37.78 ±  2% 
->>> perf-profile.calltrace.cycles-pp.ret_from_fork
->>>       34.52 ±  4%      +3.3       37.78 ±  2% 
->>> perf-profile.calltrace.cycles-pp.kthread.ret_from_fork
->>>        0.00            +3.4        3.41 ±  4% 
->>> perf-profile.calltrace.cycles-pp.memcpy_erms.memcpy_from_page._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg 
->>>
->>>        0.00            +3.4        3.44 ±  4% 
->>> perf-profile.calltrace.cycles-pp.memcpy_from_page._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg 
->>>
->>>        0.00            +3.5        3.54 ±  4% 
->>> perf-profile.calltrace.cycles-pp._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages 
->>>
->>>        2.30 ±  5%      +3.7        6.02 ±  3% 
->>> perf-profile.calltrace.cycles-pp.__rpc_execute.rpc_async_schedule.process_one_work.worker_thread.kthread 
->>>
->>>        2.30 ±  5%      +3.7        6.02 ±  3% 
->>> perf-profile.calltrace.cycles-pp.rpc_async_schedule.process_one_work.worker_thread.kthread.ret_from_fork 
->>>
->>>        1.81 ±  4%      +3.8        5.59 ±  4% 
->>> perf-profile.calltrace.cycles-pp.call_transmit.__rpc_execute.rpc_async_schedule.process_one_work.worker_thread 
->>>
->>>        1.80 ±  3%      +3.8        5.59 ±  3% 
->>> perf-profile.calltrace.cycles-pp.xprt_transmit.call_transmit.__rpc_execute.rpc_async_schedule.process_one_work 
->>>
->>>        1.73 ±  4%      +3.8        5.54 ±  4% 
->>> perf-profile.calltrace.cycles-pp.xs_tcp_send_request.xprt_transmit.call_transmit.__rpc_execute.rpc_async_schedule 
->>>
->>>        1.72 ±  4%      +3.8        5.54 ±  4% 
->>> perf-profile.calltrace.cycles-pp.xs_sendpages.xs_tcp_send_request.xprt_transmit.call_transmit.__rpc_execute 
->>>
->>>        0.00            +5.4        5.42 ±  4% 
->>> perf-profile.calltrace.cycles-pp.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages.xs_tcp_send_request 
->>>
->>>        0.00            +5.5        5.52 ±  4% 
->>> perf-profile.calltrace.cycles-pp.tcp_sendmsg.sock_sendmsg.xs_sendpages.xs_tcp_send_request.xprt_transmit 
->>>
->>>        0.00            +5.5        5.53 ±  4% 
->>> perf-profile.calltrace.cycles-pp.sock_sendmsg.xs_sendpages.xs_tcp_send_request.xprt_transmit.call_transmit 
->>>
->>>        9.61 ±  5%      +3.1       12.70 ±  2% 
->>> perf-profile.children.cycles-pp.worker_thread
->>>        9.27 ±  5%      +3.1       12.40 ±  2% 
->>> perf-profile.children.cycles-pp.process_one_work
->>>        6.19            +3.2        9.40 ±  4% 
->>> perf-profile.children.cycles-pp.memcpy_erms
->>>       34.53 ±  4%      +3.3       37.78 ±  2% 
->>> perf-profile.children.cycles-pp.ret_from_fork
->>>       34.52 ±  4%      +3.3       37.78 ±  2% 
->>> perf-profile.children.cycles-pp.kthread
->>>        0.00            +3.5        3.46 ±  4% 
->>> perf-profile.children.cycles-pp.memcpy_from_page
->>>        0.00            +3.6        3.56 ±  4% 
->>> perf-profile.children.cycles-pp._copy_from_iter_full
->>>        2.47 ±  4%      +3.7        6.18 ±  3% 
->>> perf-profile.children.cycles-pp.__rpc_execute
->>>        2.30 ±  5%      +3.7        6.02 ±  3% 
->>> perf-profile.children.cycles-pp.rpc_async_schedule
->>>        1.90 ±  4%      +3.8        5.67 ±  3% 
->>> perf-profile.children.cycles-pp.call_transmit
->>>        1.89 ±  3%      +3.8        5.66 ±  3% 
->>> perf-profile.children.cycles-pp.xprt_transmit
->>>        1.82 ±  4%      +3.8        5.62 ±  3% 
->>> perf-profile.children.cycles-pp.xs_tcp_send_request
->>>        1.81 ±  4%      +3.8        5.62 ±  3% 
->>> perf-profile.children.cycles-pp.xs_sendpages
->>>        0.21 ± 17%      +5.3        5.48 ±  4% 
->>> perf-profile.children.cycles-pp.tcp_sendmsg_locked
->>>        0.25 ± 18%      +5.3        5.59 ±  3% 
->>> perf-profile.children.cycles-pp.tcp_sendmsg
->>>        0.26 ± 16%      +5.3        5.60 ±  3% 
->>> perf-profile.children.cycles-pp.sock_sendmsg
->>>        1.19 ±  5%      +0.5        1.68 ±  3% 
->>> perf-profile.self.cycles-pp.get_page_from_freelist
->>>        6.10            +3.2        9.27 ±  4% 
->>> perf-profile.self.cycles-pp.memcpy_erms
->>>
->>>
->>> On 7/9/2019 10:39 AM, Xing Zhengjun wrote:
->>>> Hi Trond,
->>>>
->>>> On 7/8/2019 7:44 PM, Trond Myklebust wrote:
->>>>> I've asked several times now about how to interpret your results. 
->>>>> As far as I can tell from your numbers, the overhead appears to be 
->>>>> entirely contained in the NUMA section of your results.
->>>>> IOW: it would appear to be a scheduling overhead due to NUMA. I've 
->>>>> been asking whether or not that is a correct interpretation of the 
->>>>> numbers you published.
->>>> Thanks for your feedback. I used the same hardware and the same test 
->>>> parameters to test the two commits:
->>>>     e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use 
->>>> iov_iter_kvec()")
->>>>     0472e47660 ("SUNRPC: Convert socket page send code to use 
->>>> iov_iter()")
->>>>
->>>> If it is caused by NUMA, why only commit 0472e47660 throughput is 
->>>> decreased? The filesystem we test is NFS, commit 0472e47660 is 
->>>> related with the network, could you help to check if have any other 
->>>> clues for the regression. Thanks.
->>>>
->>>
->>
-> 
-
+diff --git a/drivers/media/pci/ivtv/ivtv-vbi.c b/drivers/media/pci/ivtv/ivtv-vbi.c
+index 3c156bc70fb4..e8140cab8c45 100644
+--- a/drivers/media/pci/ivtv/ivtv-vbi.c
++++ b/drivers/media/pci/ivtv/ivtv-vbi.c
+@@ -337,7 +337,7 @@ static u32 compress_raw_buf(struct ivtv *itv, u8 *buf, u32 size)
+ static u32 compress_sliced_buf(struct ivtv *itv, u32 line, u8 *buf, u32 size, u8 sav)
+ {
+ 	u32 line_size = itv->vbi.sliced_decoder_line_size;
+-	struct v4l2_decode_vbi_line vbi;
++	struct v4l2_decode_vbi_line vbi = {};
+ 	int i;
+ 	unsigned lines = 0;
+ 
 -- 
-Zhengjun Xing
+2.17.1
+
