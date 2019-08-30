@@ -2,101 +2,84 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D48FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA207C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341FB21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7235621670
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfH3GEE (ORCPT
+        id S1727562AbfH3GGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:04:04 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:11413 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726023AbfH3GED (ORCPT
+        Fri, 30 Aug 2019 02:06:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52250 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfH3GGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:04:03 -0400
-X-UUID: 0bb8e9de47134dc9a92a46aef0001209-20190830
-X-UUID: 0bb8e9de47134dc9a92a46aef0001209-20190830
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 755087413; Fri, 30 Aug 2019 14:03:43 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 30 Aug
- 2019 14:03:41 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 14:03:40 +0800
-Message-ID: <1567145015.7317.25.camel@mhfsdcap03>
-Subject: Re: [PATCH 01/11] dt-bindings: phy-mtk-tphy: add two optional
- properties for u2phy
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Date:   Fri, 30 Aug 2019 14:03:35 +0800
-In-Reply-To: <20190829192341.GA26293@bogus>
-References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
-         <20190829192341.GA26293@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 02:06:33 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i3a3I-00057o-9x; Fri, 30 Aug 2019 08:06:28 +0200
+Date:   Fri, 30 Aug 2019 08:06:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Philip Li <philip.li@intel.com>
+cc:     Borislav Petkov <bp@suse.de>, kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the backdoor
+ call with support for new instructions
+In-Reply-To: <20190830010349.GD857@intel.com>
+Message-ID: <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
+References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2> <201908292325.aLXyyzEx%lkp@intel.com> <20190829163353.GC2132@zn.tnic> <20190830010349.GD857@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 5AA85C5E3F8AB8BAF30077AD6CA7DC8A8920C263640F601AAF4EB182F919651B2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 14:23 -0500, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 03:00:08PM +0800, Chunfeng Yun wrote:
-> > Add two optional properties, one for J-K test, another for disconnect
-> > threshold, both of them can be used to debug disconnection issues.
-> 
-> Testing and debug properties aren't really things that belong in DT.
-They are not only for test and debug, but also used to tune default
-value for some platforms, I'll modify the description
+Philip,
 
-> 
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > index a5f7a4f0dbc1..d5b327f85fa2 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > @@ -52,6 +52,8 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
-> >  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
-> >  - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
-> >  - mediatek,bc12	: bool, enable BC12 of u2phy if support it
-> > +- mediatek,discth	: u32, the voltage of disconnect threshold
-> > +- mediatek,intr	: u32, the value of internal R (resistance)
-> 
-> These need units as defined in property-units.txt.
-They are in fact the choice index of different level, will modify it
+On Fri, 30 Aug 2019, Philip Li wrote:
 
-Thank you
+> > wanna test trees, I'd suggest simply testing TIP's tip/master branch
+> > which gets redone on a daily basis instead of testing patches in the
+> > tip-bot{,2} notification mails.
+>
+> Thanks Boris for the input. Besides the repo monitoring, we also check the patches
+> in mailing lists, and try to apply patch to a suitable base. Do you think we can
+> skip the mailing list of tip-bot{,2}?
 
-> 
-> >  
-> >  Example:
-> >  
-> > -- 
-> > 2.23.0
-> > 
+As I just explained in a reply to another random build failure caused by this.
 
+tip-bot2 is a notification mechanism to let people know that a particular
+patch has been merged into one of the tip tree branches. These mails are
+also properly threaded most of the time and reply to the patch which was
+sent to the mailing list.
 
+So yes, randomly picking patches from tip-bot2 is not useful at all. The
+mails contain the information to which tip branch the patch has been
+applied, so the only useful information for your bot is to select the
+branch which got the new patches and start testing on that one.
+
+Thanks,
+
+	tglx
