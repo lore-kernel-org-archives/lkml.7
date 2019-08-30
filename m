@@ -2,106 +2,132 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37554C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584BAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0466A21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567147136;
-	bh=yLlZhjwSi0FuvKlMUG546ftoSzWKYZ+7uxnKbjaNlfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2tb/b3iafFjDEBvryW/MP1AIwaZkcPONSREmDpV+3MKn0loDGIfl1hxp0kBrQlPre
-	 SHWrz2Sf5StEFvXG4HJrk/lRz93cLpwoqqMwx8NaC0z4M9oR2k3VqNEGrN6uWkcflB
-	 1Sc9tgd7zyPhyn59GYJHfUeNyM7PKPPjcBt1F5Ww=
+	by mail.kernel.org (Postfix) with ESMTP id 2FE1421726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfH3Giy (ORCPT
+        id S1728036AbfH3Gjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfH3Giy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:38:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3110021726;
-        Fri, 30 Aug 2019 06:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567147133;
-        bh=yLlZhjwSi0FuvKlMUG546ftoSzWKYZ+7uxnKbjaNlfI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gCLt8q9o1tBPTkQHLIpPKFInXPSt4tlS2vG+4/nt9o65BUHDqNCVq3b/GF9BlIsRI
-         wJlYFi8va6vbi4MLzR7ScDuUvYQQIvwX7VTL1MxtB6ETuEux3FCySErPdjCWB3GzL5
-         WgkC2sDv8eNi9OTb3fAwcO0RmgNyLkzKmrTCH+gw=
-Date:   Fri, 30 Aug 2019 08:38:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Peikan Tsai <peikantsai@gmail.com>, arve@android.com,
-        tkjos@android.com, maco@android.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] binder: Use kmem_cache for binder_thread
-Message-ID: <20190830063851.GG15257@kroah.com>
-References: <20190829054953.GA18328@mark-All-Series>
- <20190829064229.GA30423@kroah.com>
- <20190829135359.GB63638@google.com>
- <20190829152721.ttsyfwaeygmwmcu7@wittgenstein>
+        Fri, 30 Aug 2019 02:39:31 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3983 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726005AbfH3Gja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:39:30 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 965DF347AF6FC41C08BF;
+        Fri, 30 Aug 2019 14:39:27 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 30 Aug 2019 14:39:27 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 30 Aug 2019 14:39:26 +0800
+Date:   Fri, 30 Aug 2019 14:38:39 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190830063838.GA144157@architecture4>
+References: <20190829062340.GB3047@infradead.org>
+ <20190829063955.GA30193@kroah.com>
+ <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
+ <20190829103749.GA13661@infradead.org>
+ <20190829111810.GA23393@kroah.com>
+ <20190829151144.GJ23584@kadam>
+ <20190829152757.GA125003@architecture4>
+ <20190829154346.GK23584@kadam>
+ <cd38b645-2930-3e02-6c6a-5972ea02b537@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190829152721.ttsyfwaeygmwmcu7@wittgenstein>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <cd38b645-2930-3e02-6c6a-5972ea02b537@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 05:27:22PM +0200, Christian Brauner wrote:
-> On Thu, Aug 29, 2019 at 09:53:59AM -0400, Joel Fernandes wrote:
-> > On Thu, Aug 29, 2019 at 08:42:29AM +0200, Greg KH wrote:
-> > > On Thu, Aug 29, 2019 at 01:49:53PM +0800, Peikan Tsai wrote:
-> > [snip] 
-> > > > The allocated size for each binder_thread is 512 bytes by kzalloc.
-> > > > Because the size of binder_thread is fixed and it's only 304 bytes.
-> > > > It will save 208 bytes per binder_thread when use create a kmem_cache
-> > > > for the binder_thread.
-> > > 
-> > > Are you _sure_ it really will save that much memory?  You want to do
-> > > allocations based on a nice alignment for lots of good reasons,
-> > > especially for something that needs quick accesses.
+Hi Dan,
+
+On Fri, Aug 30, 2019 at 10:06:25AM +0800, Chao Yu wrote:
+> On 2019/8/29 23:43, Dan Carpenter wrote:
+> >> p.s. There are 2947 (un)likely places in fs/ directory.
 > > 
-> > Alignment can be done for slab allocations, kmem_cache_create() takes an
-> > align argument. I am not sure what the default alignment of objects is
-> > though (probably no default alignment). What is an optimal alignment in your
-> > view?
+> > I was complaining about you adding new pointless ones, not existing
+> > ones.  The likely/unlikely annotations are supposed to be functional and
+> > not decorative.  I explained this very clearly.
+> > 
+> > Probably most of the annotations in fs/ are wrong but they are also
+> > harmless except for the slight messiness.  However there are definitely
+> > some which are important so removing them all isn't a good idea.
 > 
-> Probably SLAB_HWCACHE_ALIGN would make most sense.
+> Hi Dan,
+> 
+> Could you please pick up one positive example using likely and unlikely
+> correctly? so we can follow the example, rather than removing them all blindly.
 
-This isn't memory accessing hardware, so I don't think it would, right?
+I'm also curious about that, what is the filesystem or kernel standard about
+likely/unlikely use (since I didn't find some documented standard so I used
+in my personal way, I think it is reasonable at least to cover all error
+handling paths), maybe I'm an _idiot_ as some earlier unfriendly word said
+somewhere so I'm too stupid to understand the implicit meaning of some document.
 
-Anyway, some actual performance tests need to be run to see if any of
-this make any difference at all please...
-
-thanks,
-
-greg k-h
-
-
+> 
+> Thanks,
 > 
 > > 
-> > > Did you test your change on a system that relies on binder and find any
-> > > speed improvement or decrease, and any actual memory savings?
-> > > 
-> > > If so, can you post your results?
+> >> If you like, I will delete them all.
 > > 
-> > That's certainly worth it and I thought of asking for the same, but spoke too
-> > soon!
-> 
-> Yeah, it'd be interesting to see what difference this actually makes. 
-> 
-> Christian
+> > But for erofs, I don't think that any of the likely/unlikely calls have
+> > been thought about so I'm fine with removing all of them in one go.
+
+Add a word (just a note), I don't think such kind of "any", "few", "all"
+words are meaningful without some explicit evidence. (e.g. such as EROFS
+have few error handling path. I don't think that is true and worth to
+give many details since EROFS code is here for more than one year.)
+
+Yes, EROFS is not prefectly, I have to admit, and I said similar words
+on other threads for many times if you decide to check each likely/unlikely
+line by line, I cannot say all unlikely/likely cases I wrote are reasonable
+(just as bug-free, I think no one can make such guarantee even for new code),
+but I can say the majority of them are reasonable in my personal understanding
+of likely/unlikely. And I can fix all your reports in time (but maybe some
+are not urgent at all.)
+
+In addition there will be endless discussions on detailed code since there are
+many personal tendencies from various people in it, as the saying goes "There
+are a thousand Hamlets in a thousand people's eyes. "
+
+Anyway, I have sent a patch to kill them all blindly as you like, so I think
+we can come to an agreement on it, but I still don't fully agree with your
+"for EROFS, I don't think that any of the likely/unlikely calls have been
+thought about" conclusion.
+
+Thanks,
+Gao Xiang
+
+> > 
+> > regards,
+> > dan carpenter
+> > 
+> > .
+> > 
