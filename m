@@ -2,93 +2,117 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5533C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB071C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E2C208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BA423439
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XKxQMKVi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Az1Gi5Tn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfH3Qk0 (ORCPT
+        id S1728423AbfH3Qki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:40:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48524 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbfH3QkY (ORCPT
+        Fri, 30 Aug 2019 12:40:38 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46701 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbfH3Qkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:40:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AT7c8Uf6oRKSCvH0T7rxwpH4EoIuzd5Fl8xv/gJGnw4=; b=XKxQMKVi9kAdTU+vbb0Unuz1w
-        1OC04HlMkxRWKs69JYntBAUF4Vq2rS9l2rajiJty/VLSOfmjDMy+0igRW96PttjZ1sVU4ZpTv/387
-        URunnMETnkxIuM82Rxm4Ch3c6EgKekyOk6PUM01SL5x0M70Gwdlqg/fz3lOS1cSnIsj0jJQEAQopu
-        LkT2Rihs462KZRs+vsR+k/TmnMtkm28eZgXiXoUJwS2Ll1xhYkJN1fpn+44WyZolCVtFv+DYTc6JK
-        F7IsP1hyzpQH9I9Ix7oOpfg+bKAuiOZusNnDVQsLRBCmrqavz6liyImmftILLHQIWu8d4n01QmuYH
-        J05OeGxHA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3jwb-0002a3-O7; Fri, 30 Aug 2019 16:40:13 +0000
-Date:   Fri, 30 Aug 2019 09:40:13 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 04/24] erofs: add raw address_space operations
-Message-ID: <20190830164013.GC29603@infradead.org>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-5-gaoxiang25@huawei.com>
- <20190829101721.GD20598@infradead.org>
- <20190829114610.GF64893@architecture4>
+        Fri, 30 Aug 2019 12:40:37 -0400
+Received: by mail-vs1-f66.google.com with SMTP id x20so5113702vsx.13
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 09:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FFEm8wnPyI70hvEmm2P3x6q7Jm7rJLu+QxiBEYWlIyU=;
+        b=Az1Gi5TnAI4hFvybyYWbK+kY5uHpzIYo+o2d4fFMkAR8JxEWt1+SHjs8JUveORST6i
+         Gd64ynQza92S8iVFSgaTo8l3iE4CvAdDU2coF4oOsqwwJfBiYQJKYwbUX8LujJTsiWTN
+         wi/cOSOreMTOdb7b3mAoHJSXPGD6fzpyWxLIT329lNx6TGkuBvPre2rtLkRs/tnbRsd1
+         +yM5KS/siWcWBOs/K2sslc+UzXBGW+Zc0vw3iaR0/r09ZilQiD9lJiKOkOw3ErAyZMNg
+         K/AIETEuQOm1nWHlRnf0RDYI2pN+ijMN3IZ8pd95grX2lJr0DFw7Bg6DqEyWjwEnWykb
+         pryQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FFEm8wnPyI70hvEmm2P3x6q7Jm7rJLu+QxiBEYWlIyU=;
+        b=b56oX76IS1mGlt+uXhOSHAjJFjZq7itCfSjjsOUoo1UoVS3WsWKwNhUs6nSMr4kRYs
+         sD7xks+MSNaVVQ22pY67iamZBuif8GY/ruFg5ui+4C50PZrffevYYnalIPcVm3k/FaQJ
+         ta2heelkUJsxKnyCnpr8R5K/5zEu94bjMPffXs4enaZiNrjd99EEDR8Ru7YO0XqicFgh
+         a5MVfq8JiC979ETtjVRrUo4F+JMqqaE80o1ED4zNumNyBoFvy8yJQtoyb6bUomtTOPm8
+         QxLTeaqHvsgTrIob2UokyYYQD2wg2cSX06DnOOjZDOlxZGolCah91uyz/3eXJGaQmKrY
+         dF1Q==
+X-Gm-Message-State: APjAAAX4QGnpYYxLLG22uC/LG1wgnOw7l4RohKEw9yFhdRfC/3GSwT2M
+        4YOPlGvD6skClbKmyXr5UGvoJfAdcMECpQrLtVNpUA==
+X-Google-Smtp-Source: APXvYqxSX6rgglBoPn04e5TToAhGtd/FXdxa1G/PbV8Cm/B9SvCHsyiX8a3uGPV5I0xaid3Rv899mDqEZOJRM5dDNMs=
+X-Received: by 2002:a67:b445:: with SMTP id c5mr4384433vsm.182.1567183236380;
+ Fri, 30 Aug 2019 09:40:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829114610.GF64893@architecture4>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <cover.1566907161.git.amit.kucheria@linaro.org>
+ <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
+ <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
+ <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com> <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com>
+ <CAHLCerMmBmS-59eywxkUJ+5-zSccx8Twx2=NELgBgShYhM7TOw@mail.gmail.com> <5d6946fa.1c69fb81.44ab7.8d72@mx.google.com>
+In-Reply-To: <5d6946fa.1c69fb81.44ab7.8d72@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Fri, 30 Aug 2019 22:10:24 +0530
+Message-ID: <CAHLCerNJpOEevZBvN6s4FiaD5C=1C4xNRHYjVNM=0HpGCuf9RQ@mail.gmail.com>
+Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
+ in tsens driver
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Brian Masney <masneyb@onstation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:46:11PM +0800, Gao Xiang wrote:
-> Hi Christoph,
-> 
-> On Thu, Aug 29, 2019 at 03:17:21AM -0700, Christoph Hellwig wrote:
-> > The actual address_space operations seem to largely duplicate
-> > the iomap versions.  Please use those instead.  Also I don't think
-> > any new file system should write up ->bmap these days.
-> 
-> iomap doesn't support tail-end packing inline data till now,
-> I think Chao and I told you and Andreas before [1].
-> 
-> Since EROFS keeps a self-contained driver for now, we will use
-> iomap if it supports tail-end packing inline data later.
+On Fri, Aug 30, 2019 at 9:25 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-08-30 04:32:54)
+> > On Thu, Aug 29, 2019 at 10:04 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > >
+> > > On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > > Can we get a known quantity of interrupts for a particular compatible
+> > > > string instead? Let's be as specific as possible. The index matters too,
+> > > > so please list them in the order that is desired.
+> > >
+> > > I *think* we can predict what platforms have uplow and critical
+> > > interrupts based on IP version currently[1]. For newer interrupt
+> > > types, we might need more fine-grained platform compatibles.
+> > >
+> > > [1] Caveat: this is based only on the list of platforms I've currently
+> > > looked at, there might be something internally that breaks these
+> > > rules.
+> >
+> > What do you think if we changed the wording to something like the following,
+> >
+> > - interrupt-names: Must be one of the following depending on IP version:
+> >    For compatibles qcom,msm8916-tsens, qcom,msm8974-tsens,
+> > qcom,qcs404-tsens, qcom,tsens-v1, use
+> >               interrupt-names = "uplow";
+> >    For compatibles qcom,msm8996-tsens, qcom,msm8998-tsens,
+> > qcom,sdm845-tsens, qcom,tsens-v2, use
+> >               interrupt-names = "uplow", "critical";
+>
+> Ok. I would still prefer YAML/JSON schema for this binding so that it's
+> much more explicit about numbers and the order of interrupts, etc.
 
-Well, so work with the maintainers to enhance the core kernel.  That
-is how Linux development works.  We've added various iomap enhancements
-for gfs in the last merge windows, and we've added more for the brand
-new zonefs file system we plan to merge for 5.4.
+OK, I'll look around for some examples.
