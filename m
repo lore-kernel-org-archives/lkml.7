@@ -2,113 +2,133 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D12C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D3D208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C325C208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:19:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKCR1YXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfH3FPr (ORCPT
+        id S1727023AbfH3FTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:15:47 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:45744 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725901AbfH3FPq (ORCPT
+        Fri, 30 Aug 2019 01:19:53 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36269 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfH3FTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:15:46 -0400
-X-UUID: 89f3ea637db24791918a9be07a7734f7-20190830
-X-UUID: 89f3ea637db24791918a9be07a7734f7-20190830
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1931682608; Fri, 30 Aug 2019 13:15:42 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 13:15:34 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 13:15:34 +0800
-Message-ID: <1567142129.5942.1.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 01/32] dt-bindings: mediatek: add binding for mt8183
- display
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 13:15:29 +0800
-In-Reply-To: <1567090254-15566-2-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-2-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 01:19:53 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so2920092pgm.3;
+        Thu, 29 Aug 2019 22:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1nctaoN3PaUf098PRZ6JFogZTWSv7+XUi6YwJP4fCAo=;
+        b=DKCR1YXjk42QY0bZpDUjncMm/nHWi8O87jMZLfrRO9o4C0nEVEuv/VZ+ymLqBVwONH
+         v2D/G+Nja5J3Ep3PXCkKQU5c0AYV+a+l0mhOUmF4XLAVooQ35ycFtDyO50pQ5TzA09e/
+         CB3MLBG7htyZ74WKCjb8pfVCJ8VCM4SpEFPlDMKUC4cyOmFtaYy8x9kTepngQP+FgN5u
+         FROcQQ6MP2CTox/uFHafR3YISBspQYruMf2zQw6b6X4XGCjiuT++WRHo8QEA8g1dM1c/
+         0k8jvpJoPAkFOX7tT4jLVYa61yWEIH4oydgjkvpPYaKliOSWtB3XQF7pqW2VnfiiGzl8
+         7qIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1nctaoN3PaUf098PRZ6JFogZTWSv7+XUi6YwJP4fCAo=;
+        b=qH71cPPA0zS5MdrprpbPLNLJQ/VbMg7DOTS42QqWOfKl2Hlste08yLNsDkF7G9A7Rj
+         iUbNGKkfWHqCmmhduwlfnb8I9o7Yvb1NOw590y0UkTFQd/C3mVizVfMi4M1Z0a2qpp0G
+         ZTR/WyUzjTXgINVZ4SB6WF8Z8fNXz5RrXMq+WrSWiA25XhXgatfW5enZXw8XO6YFJBox
+         Eadlem631AZIJwWs2UToWsb4QMjqae7+tYOlv82sh2wbAyIleLtYLnVkhr1Dcna/Zt9x
+         fwZCsOtGXTSGUn7eHjLCUATRo6kAzSbuiGTy6P7aRPE6BVXQEgfk3P2X46fY35pco6sM
+         V+YQ==
+X-Gm-Message-State: APjAAAW8WR5pC1CCKIPQLfb1PXMxjxQJEgYhbm2IlvUjbsdbf6OQ4mlQ
+        MViV5S8tzQNf2vwevEolbEM=
+X-Google-Smtp-Source: APXvYqwrlazBAEqMED3dDkkzhOf+gi/L0kA9lWE56MAUp8nBmFG+olBHMTwReevYZ5zmNCsMMcMVWQ==
+X-Received: by 2002:a63:724f:: with SMTP id c15mr11855879pgn.257.1567142392183;
+        Thu, 29 Aug 2019 22:19:52 -0700 (PDT)
+Received: from localhost ([175.223.26.233])
+        by smtp.gmail.com with ESMTPSA id f27sm3865245pgm.60.2019.08.29.22.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 22:19:51 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 14:19:48 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Joe Perches <joe@perches.com>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        frowand.list@gmail.com, sboyd@kernel.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v2] kunit: fix failure to build without printk
+Message-ID: <20190830051941.GA3598@jagdpanzerIV>
+References: <20190828093143.163302-1-brendanhiggins@google.com>
+ <20190828094929.GA14038@jagdpanzerIV>
+ <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 40D01842456FDB7578DD54B7F9993BB4EE0E3C99E56B99BA4973B50E77C587A62000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On (08/29/19 11:01), shuah wrote:
+[..]
+> Hi Sergey,
 > 
-> Update device tree binding documention for the display subsystem for
-> Mediatek MT8183 SOCs
+> What are the guidelines for using printk(). I recall some discussion
+> about not using printk(). I am seeing the following from checkpatch
+> script:
+
+Hello,
+
+> WARNING: Prefer [subsystem eg: netdev]_level([subsystem]dev, ... then
+> dev_level(dev, ... then pr_level(...  to printk(KERN_LEVEL ...
+> #105: FILE: include/kunit/test.h:343:
+> +	printk(KERN_LEVEL "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
 > 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  .../bindings/display/mediatek/mediatek,display.txt  | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
-> new file mode 100644
-> index 0000000..951d2a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
-> @@ -0,0 +1,21 @@
-> +Mediatek Display Device
-> +============================
-> +
-> +The Mediatek Display Device provides power control to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be one of:
-> +	- "mediatek,mt8183-display"
 
-I think this is "mediatek,mt8183-mmsys".
+Oh, right.
+So we sort of want people to use pr_err()/pr_info()/pr_"level"()
+because, otherwise, when people use plain printk(), they tend to
+forget to add KERN_LEVEL.
 
-Regards,
-CK
+In kunit case everything looks fine. KERN_LEVEL is there so I'm
+fine with the patch.
 
-> +
-> +The Display Device power name are defined in
-> +include\dt-bindings\power\mt*-power.h
-> +
-> +
-> +Example:
-> +
-> +display_components: dispsys@14000000 {
-> +	compatible = "mediatek,mt8183-display";
-> +	reg = <0 0x14000000 0 0x1000>;
-> +	power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +};
-> \ No newline at end of file
+You still can switch to pr_info()/pr_err()/pr_etc, just to make
+checkpatch happier, but that's up to you.
 
+> Is there supposed to be pr_level() - I can find dev_level()
 
+No, not really. pr_level() stands for pr_"debug"()/pr_"info"()/etc.
+
+E.g.
+
+#define pr_emerg(fmt, ...) \
+        printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_alert(fmt, ...) \
+        printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_crit(fmt, ...) \
+        printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_err(fmt, ...) \
+        printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_warning(fmt, ...) \
+        printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_warn pr_warning
+#define pr_notice(fmt, ...) \
+        printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_info(fmt, ...) \
+        printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+
+	-ss
