@@ -2,108 +2,69 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290F7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56253C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE015215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC01215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfH3Gyu (ORCPT
+        id S1727814AbfH3G4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:54:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40042 "EHLO mx1.redhat.com"
+        Fri, 30 Aug 2019 02:56:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61679 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfH3Gyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:54:50 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B9E2820ABB;
-        Fri, 30 Aug 2019 06:54:49 +0000 (UTC)
-Received: from ceranb (ovpn-204-112.brq.redhat.com [10.40.204.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 099B65C1D6;
-        Fri, 30 Aug 2019 06:54:46 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 08:54:45 +0200
-From:   Ivan Vecera <ivecera@redhat.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     David Miller <davem@davemloft.net>, idosch@idosch.org,
-        andrew@lunn.ch, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        allan.nielsen@microchip.com, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to
- dev->promiscuity.
-Message-ID: <20190830085445.1c28dc02@ceranb>
-In-Reply-To: <20190830063624.GN2312@nanopsycho>
-References: <20190829193613.GA23259@splinter>
-        <20190829.151201.940681219080864052.davem@davemloft.net>
-        <20190830053940.GL2312@nanopsycho>
-        <20190829.230233.287975311556641534.davem@davemloft.net>
-        <20190830063624.GN2312@nanopsycho>
+        id S1726590AbfH3G4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:56:30 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 23:56:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,446,1559545200"; 
+   d="scan'208";a="197975350"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 29 Aug 2019 23:56:28 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 30 Aug 2019 09:56:27 +0300
+Date:   Fri, 30 Aug 2019 09:56:27 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] software node: fixes for two smatch errors
+Message-ID: <20190830065627.GH5486@kuha.fi.intel.com>
+References: <20190829132116.76120-1-heikki.krogerus@linux.intel.com>
+ <20190830063224.GD15257@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 30 Aug 2019 06:54:50 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830063224.GD15257@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 08:36:24 +0200
-Jiri Pirko <jiri@resnulli.us> wrote:
+On Fri, Aug 30, 2019 at 08:32:24AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 29, 2019 at 04:21:14PM +0300, Heikki Krogerus wrote:
+> > Hi,
+> > 
+> > Both potentially unitialized variable errors.
+> > 
+> > Heikki Krogerus (2):
+> >   software node: Fix use of potentially uninitialized variable
+> >   software node: Fix use of potentially uninitialized variable
+> 
+> You can't send 2 different patches with identical subjects :(
+> 
+> Please make them unique as they should be doing different things.
 
-> Fri, Aug 30, 2019 at 08:02:33AM CEST, davem@davemloft.net wrote:
-> >From: Jiri Pirko <jiri@resnulli.us>
-> >Date: Fri, 30 Aug 2019 07:39:40 +0200
-> >  
-> >> Because the "promisc mode" would gain another meaning. Now how the
-> >> driver should guess which meaning the user ment when he setted it?
-> >> filter or trap?
-> >> 
-> >> That is very confusing. If the flag is the way to do this, let's
-> >> introduce another flag, like IFF_TRAPPING indicating that user
-> >> wants exactly this.  
-> >
-> >I don't understand how the meaning of promiscuous mode for a
-> >networking device has suddenly become ambiguous, when did this start
-> >happening?  
-> 
-> The promiscuity is a way to setup the rx filter. So promics == rx
-> filter off. For normal nics, where there is no hw fwd datapath,
-> this coincidentally means all received packets go to cpu.
-> But if there is hw fwd datapath, rx filter is still off, all rxed
-> packets are processed. But that does not mean they should be trapped
-> to cpu.
+Yes. I prepared these without thinking. Sorry about that.
 
-+1
-Promisc is Rx filtering option and should not imply that offloaded
-traffic is trapped to CPU.
+thanks,
 
-> Simple example:
-> I need to see slowpath packets, for example arps/stp/bgp/... that
-> are going to cpu, I do:
-> tcpdump -i swp1
-> 
-> I don't want to get all the traffic running over hw running this cmd.
-> This is a valid usecase.
-> 
-> To cope with hw fwd datapath devices, I believe that tcpdump has to
-> have notion of that. Something like:
-> 
-> tcpdump -i swp1 --hw-trapping-mode
-> 
-> The logic can be inverse:
-> tcpdump -i swp1
-> tcpdump -i swp1 --no-hw-trapping-mode
-> 
-> However, that would provide inconsistent behaviour between existing
-> and patched tcpdump/kernel.
-> 
-> All I'm trying to say, there are 2 flags
-> needed (if we don't use tc trap).
-
+-- 
+heikki
