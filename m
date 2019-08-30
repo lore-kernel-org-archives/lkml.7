@@ -2,141 +2,118 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A23C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B006CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A1521726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:43:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="N1tYV6Q+"
+	by mail.kernel.org (Postfix) with ESMTP id 8157721726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 00:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567125962;
+	bh=c0Z7vK3gtHxVtiNB6cGmSFVoyYyfkh3Fb9aD2+lkTDM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=EpscRElKNyX5sddoCvkpYJJC57sdk4t7V2tnIIqtZI1qMN2WgCy7998gn7lyzkGlU
+	 HPCwvbFqD3O8ri45Uknl+l9/GhSMtfH4lkEckqDuMzOVb29Ussw7QVgDZ7br2btuD7
+	 lGmfSTqnX+giXWBX7KJcS1PV82BttqBUnUF1jvnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfH3An2 (ORCPT
+        id S1727242AbfH3AqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 20:43:28 -0400
-Received: from mx5.ucr.edu ([138.23.62.67]:62149 "EHLO mx5.ucr.edu"
+        Thu, 29 Aug 2019 20:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbfH3An1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 20:43:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1567125807; x=1598661807;
-  h=from:to:cc:subject:date:message-id;
-  bh=x/hPFWrb7N7daafIx/1mPp6kx5SsK9IpY+Su725vKIk=;
-  b=N1tYV6Q+rRrUbPit34iobzudLltLnh3O5jYYYY+MWL8eyMGExWA2poko
-   HJbyBNtTnX4eP2d7a/fAAWzKFjxYmRGmPnZoW7RITFHv9066Nvq8rwmws
-   7rLtBU8Q7ojvmJmzROv0+Utf5MFLukcBlA861/r7ewyeoVZBbe02as2Ja
-   Lxb7pU9uSpLcClyNadg6wVBWaXSz+wgGhhXGqKDHbjcBXgJkzD8IWNin6
-   22A6ubazKmiMadJLv1yuoq1nqh6Og1jukp5in2Q/wP4fg7WNt2FHNAQNH
-   WhRLw0+j+T/Hm08D7ecsn/okNurPK+PMjm4K11kImbmGGQd1zPnRK16GU
-   g==;
-IronPort-SDR: tt/zBWBmOETPkA5t0nki/U0jjsV9Zpb84fKaGOiaFCiSXjWFYEeTWPMuKf9sx8Hop78kNgd6Oh
- vxRuptNpLxo1bS0sH1CkOHkoNQwGM3cEEe9K20PeRq6HtxoJ0IhtITk0qpgm3Gdqa5WB4KrSPc
- RMTkImB/1wevfw8vwTUf3Ahnu2Tl3bMbAvAy/sSGwgEExIg524NWq3Z/qBGajaVmQOV1g/D1OT
- n3oGpwmYFF8WC3/W8Rb8Pzl8iN6Z+bmXr4Q58dGcdUIqkghnqSxo9AFK2FaTm/ocH+CDRAFVq3
- Qbk=
-IronPort-PHdr: =?us-ascii?q?9a23=3AnFOK9ROPCYOO9407G1sl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0LfX/rarrMEGX3/hxlliBBdydt6sezbOI6Ou7BSQp2tWoiDg6aptCVh?=
- =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
- =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagf79+Ngi6oATfu8UZj4ZvJbs6xw?=
- =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
- =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
- =?us-ascii?q?mu87tnRRn1gyocKTU37H/YhdBxjKJDoRKuuRp/w5LPYIqIMPZyZ77Rcc8GSW?=
- =?us-ascii?q?ZEWMtRUi1BApinb4sOCeoBMvtToZfkqVAToxu+BBejBOfyxTRVgnP707E23+?=
- =?us-ascii?q?EnHArb3gIvAsgOvWzUotvrKakcX+O7wq7TwDnfc/9bwyvx5ZLUfhw9p/yHQL?=
- =?us-ascii?q?J+cdDWyUkqDw7KjFSQqI3lPzOI0eQGrm+W7uphVOKvkWEnqh19riShy8o3l4?=
- =?us-ascii?q?nGmpgVxkra+ipk3YY4PNu1Q1N4b968CJZcqT2WOo9sTs4hQ2xkojg2xqAJtJ?=
- =?us-ascii?q?KhYSQHzJAqywbCZ/GGd4WE+AzvWeiRLDtimn5oeaizihS9/EWm1+byTNO70E?=
- =?us-ascii?q?xQoSpAitTMs3cN2AHN5cWfUft9+1uh2S6I1wDO9uFIOUA0mrTfK54m2rMwk4?=
- =?us-ascii?q?AcsUXHHiPvgEX2iLKaelwq+uS17+nqZq/qppCbN49zhQH+NrohltajDuQ/Nw?=
- =?us-ascii?q?gCR2mb+eKi273/5UD1XqlGg/ksnqTasJ3WP9oXqrO2DgNPz4ou7xKyAy+j0N?=
- =?us-ascii?q?sCnHkHKFxFeAiAj4jsI1zPIPH5DfeljFStjDtn2/7LM6b8AprRNHjPiqnucq?=
- =?us-ascii?q?tg60JE0go80chf545ICrEGOP/zXk7xtNrFDh42KgC0wPjoCM971owAXWKCGb?=
- =?us-ascii?q?GZMKzMvl+S/O4vIPeDZJUTuDnjL/gp/fnujWU2mQxVU7Ou2M4maWK4A/Mud1?=
- =?us-ascii?q?SLYXPt2o9aOXoBpEwzQPG82w7KaiJae3vnB/F03To8Eo/zSNibSw=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2H9AQCncGhdh8fWVdFmHgEGBwaBVgY?=
- =?us-ascii?q?LAYNXTBCNHYZeAQaLHxhxhXmDCYcfAQgBAQEMAQEtAgEBhD+CXCM3Bg4CAwg?=
- =?us-ascii?q?BAQUBAQEBAQYEAQECEAEBAQgNCQgphUGCOimCYAsWFVJWPwEFATUiOYJHAYF?=
- =?us-ascii?q?2FAWgA4EDPIwjM4hqAQgMgUkJAQiBIocehFmBEIEHg3VshA2DVoJEBIEuAQE?=
- =?us-ascii?q?BlFCWBgEGAgGCDBSBcpJVJ4QwiRmLEwEthAehcgIKBwYPIYFFgXtNJYFsCoF?=
- =?us-ascii?q?Eglweji0fM4EIi0yCVAE?=
-X-IPAS-Result: =?us-ascii?q?A2H9AQCncGhdh8fWVdFmHgEGBwaBVgYLAYNXTBCNHYZeA?=
- =?us-ascii?q?QaLHxhxhXmDCYcfAQgBAQEMAQEtAgEBhD+CXCM3Bg4CAwgBAQUBAQEBAQYEA?=
- =?us-ascii?q?QECEAEBAQgNCQgphUGCOimCYAsWFVJWPwEFATUiOYJHAYF2FAWgA4EDPIwjM?=
- =?us-ascii?q?4hqAQgMgUkJAQiBIocehFmBEIEHg3VshA2DVoJEBIEuAQEBlFCWBgEGAgGCD?=
- =?us-ascii?q?BSBcpJVJ4QwiRmLEwEthAehcgIKBwYPIYFFgXtNJYFsCoFEglweji0fM4EIi?=
- =?us-ascii?q?0yCVAE?=
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="73765524"
-Received: from mail-pl1-f199.google.com ([209.85.214.199])
-  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 17:43:26 -0700
-Received: by mail-pl1-f199.google.com with SMTP id v4so2995877plp.23
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 17:43:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pUmojDYDL1a61kg6eynxQw3TTop/vKblfuVM8e3GTao=;
-        b=aKZnKKTVnhzAs0511DuOPaTTIh6Vxq1S0PDshZbrhaSEbupmJcipWlAJ1DiXj8d2bR
-         wwdiJpUV3ZE2vLMSVl9AevQraj3wBUqCqYsWIuZg4jhLku860nZV715U2b5fdqWFM1B2
-         /tVdQoTNk6PLYNyM/K8U0g8V9pJK5A5eQCwL+/VAWRWZKMVdihd5155SehzCWjFgrixc
-         6zFPa5qLP2bnqbTIP4RxWY2KkAelHqAO1N07WVyvf4cEbq7qu3pLjdZiwSAaYiokHG/B
-         E8LHHKalFjFjykjCatNz9PBR6oLSpmOzH07zrHV3JzTa9C/VrT+w35Psd0C3Qhx3fFqb
-         V+/Q==
-X-Gm-Message-State: APjAAAVFl8HSJr6gyrbLXDwPl3I3rk25vyuK6FNfgM9w1utsr9LvTl9s
-        qwiHvE/V/09hFWsinqaMfuE+LymdwGFbBmCwSY6kmImVLWnOdezN2kw6mmGS3c4sCpcJXW3m56v
-        HLsbHzaAzRA/x8BsUujanxKIvqg==
-X-Received: by 2002:a17:902:4581:: with SMTP id n1mr13190815pld.310.1567125806238;
-        Thu, 29 Aug 2019 17:43:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwc6/cUWPfDkfqfrO57m1Cx+08ZFPT0rsri0ogDcuq7WHFidY41roOHBxcCTPRfJirehBoShA==
-X-Received: by 2002:a17:902:4581:: with SMTP id n1mr13190790pld.310.1567125806046;
-        Thu, 29 Aug 2019 17:43:26 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id g26sm4151989pfi.103.2019.08.29.17.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 17:43:25 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Andy Walls <awalls@md.metrocast.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [media] drivers/media/pci: Variable vbi.type could be uninitialized if macro v4l2_subdev_call set __result an error code
-Date:   Thu, 29 Aug 2019 17:43:59 -0700
-Message-Id: <20190830004359.22622-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726014AbfH3AqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 20:46:01 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87B3A21726;
+        Fri, 30 Aug 2019 00:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567125960;
+        bh=c0Z7vK3gtHxVtiNB6cGmSFVoyYyfkh3Fb9aD2+lkTDM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SVwyjjgQjmBexDCnZ3AHRrP9daZi+VvYsUZBp8tg7of0Pw7UdGx/vlARw8e5M4C1n
+         EiizSA+NwAvtg38MGFMJf3Aj5UskdmE4M/Eq64yMNm+PB+FkrVD4B4fmQ/F7S+sgsw
+         5iV1fZ+kXi98wRSbIQ0Yh+5+EpNIj/hlSxWwe8t0=
+Subject: Re: [PATCH] selftests/seccomp: fix build on older kernels
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Tycho Andersen <tycho@tycho.ws>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alakesh Haloi <alakesh.haloi@gmail.com>,
+        shuah <shuah@kernel.org>
+References: <20190826144302.7745-1-tycho@tycho.ws>
+ <201908291003.005EB96606@keescook>
+From:   shuah <shuah@kernel.org>
+Message-ID: <f01c3383-0184-9770-c72e-7fe08b552112@kernel.org>
+Date:   Thu, 29 Aug 2019 18:45:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <201908291003.005EB96606@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inside function compress_sliced_buf(), variable vbi.type is
-uninitialized if macro v4l2_subdev_call set __result an
-error code. However, vbi.type is used in the if statement
-without any check, which is potentially unsafe.
+On 8/29/19 11:06 AM, Kees Cook wrote:
+> On Mon, Aug 26, 2019 at 08:43:02AM -0600, Tycho Andersen wrote:
+>> The seccomp selftest goes to some length to build against older kernel
+>> headers, viz. all the #ifdefs at the beginning of the file. 201766a20e30
+>> ("ptrace: add PTRACE_GET_SYSCALL_INFO request") introduces some additional
+>> macros, but doesn't do the #ifdef dance. Let's add that dance here to
+>> avoid:
+>>
+>> gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
+>> In file included from seccomp_bpf.c:51:
+>> seccomp_bpf.c: In function ‘tracer_ptrace’:
+>> seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_CLONE’?
+>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+>>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
+>>    __typeof__(_expected) __exp = (_expected); \
+>>               ^~~~~~~~~
+>> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
+>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+>>    ^~~~~~~~~
+>> seccomp_bpf.c:1787:20: note: each undeclared identifier is reported only once for each function it appears in
+>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+>>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
+>>    __typeof__(_expected) __exp = (_expected); \
+>>               ^~~~~~~~~
+>> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
+>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+>>    ^~~~~~~~~
+>> seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_EXIT’?
+>>      : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
+>>        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
+>>    __typeof__(_expected) __exp = (_expected); \
+>>               ^~~~~~~~~
+>> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
+>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+>>    ^~~~~~~~~
+>> make: *** [Makefile:12: seccomp_bpf] Error 1
+>>
+>> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+>> Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+> 
+> Acked-by: Kees Cook <keescook@chromium.org>
+> 
+> Alakesh Haloi also sent a fix[1] for this. I prefer Tycho's solution
+> (one #ifndef and a Fixes line). Shuah, can you please apply this?
+> 
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/media/pci/ivtv/ivtv-vbi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Kees,
 
-diff --git a/drivers/media/pci/ivtv/ivtv-vbi.c b/drivers/media/pci/ivtv/ivtv-vbi.c
-index 3c156bc70fb4..e8140cab8c45 100644
---- a/drivers/media/pci/ivtv/ivtv-vbi.c
-+++ b/drivers/media/pci/ivtv/ivtv-vbi.c
-@@ -337,7 +337,7 @@ static u32 compress_raw_buf(struct ivtv *itv, u8 *buf, u32 size)
- static u32 compress_sliced_buf(struct ivtv *itv, u32 line, u8 *buf, u32 size, u8 sav)
- {
- 	u32 line_size = itv->vbi.sliced_decoder_line_size;
--	struct v4l2_decode_vbi_line vbi;
-+	struct v4l2_decode_vbi_line vbi = {};
- 	int i;
- 	unsigned lines = 0;
- 
--- 
-2.17.1
+Yes I will pick this up.
 
+thanks,
+-- Shuah
