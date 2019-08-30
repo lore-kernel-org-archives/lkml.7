@@ -2,79 +2,80 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PLING_QUERY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506FEC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3BDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1149F21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D7B233FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqARl1b8"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="BK/+q4Ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfH3IFu (ORCPT
+        id S1728282AbfH3IGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:05:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38596 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfH3IFt (ORCPT
+        Fri, 30 Aug 2019 04:06:44 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43810 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfH3IGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:05:49 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e16so5998243wro.5
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:05:47 -0700 (PDT)
+        Fri, 30 Aug 2019 04:06:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q27so4628886lfo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 01:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=rasmusvillemoes.dk; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ljpav7cp0jQCcXvbtu+znGOpg/cjpMnD8tVzcIJZM3U=;
-        b=cqARl1b8o1qWpahsIaOF3U049kFqLEgTCiSqSir1tjOVGr12xcRjsf3fLLdFFzPahH
-         /c2+z82jmorUf+NUTiTTMdcAwc7XojOAlTCA2zEg/+ioO9jEBu5Yifhq8pm/grtMxxxS
-         vp029MRA0gVO8xvPQmGyX5Xec3c3losomUo9DIE+sYzKSd0/sxvTXI0kI6ItuCv8lPa4
-         79FqueXiTnc33GKkIYg6I03vvVhEfKIjoeU9S1iiBuAYtE+jyKHrRpWJWZHoiwCotB7/
-         hc12QzIrcdHkNjQtX14XrE2LT+VujJlyhb00rKG9oQNRbemqmtA/3l/XNlp/iO/oJwuP
-         1gkQ==
+        bh=l6zzYJYM7QGVQzakKPo5DCouz5vaM1VLR9vr/7r0mrM=;
+        b=BK/+q4KuJkEIjJTJUJ2S7jb1ppSxuJKOOTNSS6cyz88U6Z47pOdntEenfzc63oaz15
+         RhJHYxyYNKu7L9f360FCRgBOJmmEJKJft+jRTezQr8KZD+J+MmlKfxdH8q2X37SZg2nH
+         VF/+COeqVB08odAGg3f6mk4HNLNtCqFyY/mU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ljpav7cp0jQCcXvbtu+znGOpg/cjpMnD8tVzcIJZM3U=;
-        b=t3ZOnFD6blLDaxwYj2PTjPwajBsY1srkqpMjbCWkyiW46uFWG3BdVBVbeMfc3Ep7Qv
-         TVDiCcsXfXxbnmu4H6NuyCJNHCZ/nTe0PQU2n6R9wDCzikg0SEQ4OKA0aKJ/sY8IzAZM
-         ca35zoZJLVdcAgBGXqn1Z3vVRUl8hnwqofczdkMT0VbGTonSCf0bCo2H31YoMVNh1da0
-         9IWJ1Gh14Q9fpGLRBhRF9eKPPkjHCYNvsp4Glrvb9+cLv19VxZxmGdj+B4VUEs1STK+V
-         Fbb7kU+gRtOwjz/qQpCSA5APmdydQ9wbcxWsf/4/6439DK6KS8+n6DBdu9HN+rNHCLSp
-         gOxw==
-X-Gm-Message-State: APjAAAVNuDpzLyYyGkWHNr1uwnqYK8FipIHGhajHTi9jVV962tYLnTXz
-        IB3UFI9E4uHlhHl7bdIG2o9nPA==
-X-Google-Smtp-Source: APXvYqxTJNG20RJIdTPA3YfkECo8o2rMaAsKPaXHCnjnxBnsTCuivMK2A/r9MzNhLc6cP34/tDa1Pw==
-X-Received: by 2002:adf:db03:: with SMTP id s3mr17762359wri.214.1567152346692;
-        Fri, 30 Aug 2019 01:05:46 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id t8sm11299633wra.73.2019.08.30.01.05.45
+        bh=l6zzYJYM7QGVQzakKPo5DCouz5vaM1VLR9vr/7r0mrM=;
+        b=M+B4gkLDc3N0o3dxxV+rSO5Jd10nWghtvm0ILFTfi2ZGDa5fr5x2i/jglb34umXI1p
+         H+oIEyRNj3vgL5BFsrSn7OLXuCm1Zu2BUJJyuy/QyV6C4TJmhvZLTTDhrGm9rrJEyhx4
+         SpHwqMIVIw9q+Nx9Dcu9WryNv1eDdDsZJoWO5ZS1GXzWY0Ou3q2tvONUC1nkry93aQaR
+         BeY8WkbVcPHBv/igQudA0DIXOR7i5r/1R65p3JYfMLfWWJIefS3k3P0WN5nOYdiRQ/af
+         1trrEqAjQtoCp+Qr7ZBQPOXiFlmivGeMoN8lebQNdUhOuMAJtDRITKM00bfQ1ngGW1W4
+         5p5g==
+X-Gm-Message-State: APjAAAUlxHad6GqvCrYY8Dz2G83b/WNthVlmbAGTVqEL9gPGUwEtxS1/
+        e5Rqkt5MgLs5x67ZgL4NU1/CDg==
+X-Google-Smtp-Source: APXvYqw5wd5oass46uO/I/lDtzyCJj5XfvqCuJwWl10gZyA+cff6MM8IUly5q3mZQf/G+X2N+VQlvA==
+X-Received: by 2002:a19:ae1a:: with SMTP id f26mr8442234lfc.172.1567152401476;
+        Fri, 30 Aug 2019 01:06:41 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id u12sm492350lfl.86.2019.08.30.01.06.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 01:05:45 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] dt-bindings: soundwire: add bindings for Qcom
- controller
-To:     Vinod Koul <vkoul@kernel.org>, robh+dt@kernel.org
-Cc:     broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-5-srinivas.kandagatla@linaro.org>
- <20190823072831.GE2672@vkoul-mobl>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <2bf2d158-4028-8a5f-2c13-cab12ac165eb@linaro.org>
-Date:   Fri, 30 Aug 2019 09:05:44 +0100
+        Fri, 30 Aug 2019 01:06:41 -0700 (PDT)
+Subject: Re: [PATCH v2] scripts: coccinelle: check for !(un)?likely usage
+To:     Denis Efremov <efremov@linux.com>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Joe Perches <joe@perches.com>
+References: <20190825130536.14683-1-efremov@linux.com>
+ <20190829171013.22956-1-efremov@linux.com>
+ <d2f8cd31-f317-1b28-fb0a-bfb2cf689181@linux.com>
+ <alpine.DEB.2.21.1908300842060.2184@hadrien>
+ <7933d51f-5c2e-26a4-2dee-e13e61d0ac8c@linux.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <a327be9e-cd62-6c22-a9b0-ba0f9b295737@rasmusvillemoes.dk>
+Date:   Fri, 30 Aug 2019 10:06:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190823072831.GE2672@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <7933d51f-5c2e-26a4-2dee-e13e61d0ac8c@linux.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,202 +83,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 23/08/2019 08:28, Vinod Koul wrote:
-> On 13-08-19, 09:35, Srinivas Kandagatla wrote:
->> This patch adds bindings for Qualcomm soundwire controller.
->>
->> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
->> either integrated as part of WCD audio codecs via slimbus or
->> as part of SOC I/O.
+On 30/08/2019 08.56, Denis Efremov wrote:
 > 
-> Rob.. ?
 > 
+> On 30.08.2019 03:42, Julia Lawall wrote:
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
->>   1 file changed, 167 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
-
-Do you see any issues with the these bindings?
-
---srini
->> new file mode 100644
->> index 000000000000..436547f3b155
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
->> @@ -0,0 +1,167 @@
->> +Qualcomm SoundWire Controller Bindings
->> +
->> +
->> +This binding describes the Qualcomm SoundWire Controller along with its
->> +board specific bus parameters.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
->> +		    Example:
->> +			"qcom,soundwire-v1.3.0"
->> +			"qcom,soundwire-v1.5.0"
->> +			"qcom,soundwire-v1.6.0"
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: the base address and size of SoundWire controller
->> +		    address space.
->> +
->> +- interrupts:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should specify the SoundWire Controller IRQ
->> +
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: should be "iface" for SoundWire Controller interface clock
->> +
->> +- clocks:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should specify the SoundWire Controller interface clock
->> +
->> +- #sound-dai-cells:
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: must be 1 for digital audio interfaces on the controller.
->> +
->> +- qcom,dout-ports:
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: must be count of data out ports
->> +
->> +- qcom,din-ports:
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: must be count of data in ports
->> +
->> +- qcom,ports-offset1:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should specify payload transport window offset1 of each
->> +		    data port. Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-offset2:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should specify payload transport window offset2 of each
->> +		    data port. Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-sinterval-low:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be sample interval low of each data port.
->> +		    Out ports followed by In ports. Used for Sample Interval
->> +		    calculation.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-word-length:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be size of payload channel sample.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-block-pack-mode:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be 0 or 1 to indicate the block packing mode.
->> +		    0 to indicate Blocks are per Channel
->> +		    1 to indicate Blocks are per Port.
->> +		    Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-block-group-count:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be in range 1 to 4 to indicate how many sample
->> +		    intervals are combined into a payload.
->> +		    Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-lane-control:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be in range 0 to 7 to identify which	data lane
->> +		    the data port uses.
->> +		    Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-hstart:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be number identifying lowerst numbered coloum in
->> +		    SoundWire Frame, i.e. left edge of the Transport sub-frame
->> +		    for each port. Values between 0 and 15 are valid.
->> +		    Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,ports-hstop:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be number identifying highest numbered coloum in
->> +		    SoundWire Frame, i.e. the right edge of the Transport
->> +		    sub-frame for each port. Values between 0 and 15 are valid.
->> +		    Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +- qcom,dports-type:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: should be one of the following types
->> +		    0 for reduced port
->> +		    1 for simple ports
->> +		    2 for full port
->> +		    Out ports followed by In ports.
->> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> +Note:
->> +	More Information on detail of encoding of these fields can be
->> +found in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> += SoundWire devices
->> +Each subnode of the bus represents SoundWire device attached to it.
->> +The properties of these nodes are defined by the individual bindings.
->> +
->> += EXAMPLE
->> +The following example represents a SoundWire controller on DB845c board
->> +which has controller integrated inside WCD934x codec on SDM845 SoC.
->> +
->> +soundwire: soundwire@c85 {
->> +	compatible = "qcom,soundwire-v1.3.0";
->> +	reg = <0xc85 0x20>;
->> +	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
->> +	clocks = <&wcc>;
->> +	clock-names = "iface";
->> +	#sound-dai-cells = <1>;
->> +	qcom,dports-type = <0>;
->> +	qcom,dout-ports	= <6>;
->> +	qcom,din-ports	= <2>;
->> +	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
->> +	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
->> +	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
->> +
->> +	/* Left Speaker */
->> +	left{
->> +		....
->> +	};
->> +
->> +	/* Right Speaker */
->> +	right{
->> +		....
->> +	};
->> +};
->> -- 
->> 2.21.0
+>> On Thu, 29 Aug 2019, Denis Efremov wrote:
+>>
+>>> On 8/29/19 8:10 PM, Denis Efremov wrote:
+>>>> This patch adds coccinelle script for detecting !likely and
+>>>> !unlikely usage. These notations are confusing. It's better
+>>>> to replace !likely(x) with unlikely(!x) and !unlikely(x) with
+>>>> likely(!x) for readability.
+>>>
+>>> I'm not sure that this rule deserves the acceptance.
+>>> Just to want to be sure that "!unlikely(x)" and "!likely(x)"
+>>> are hard-readable is not only my perception and that they
+>>> become more clear in form "likely(!x)" and "unlikely(!x)" too.
+>>
+>> Is likely/unlikely even useful for anything once it is a subexpression?
+>>> julia
+>>
 > 
+> Well, as far as I understand it,
+
+Yes, and it could in fact make sense in cases like
+
+  if (likely(foo->bar) && unlikely(foo->bar->baz)) {
+     do_stuff_with(foo->bar->baz);
+     do_more_stuff();
+  }
+
+which the compiler could then compile as (of course actual code
+generation is always much more complicated due to things in the
+surrounding code)
+
+load foo->bar;
+test bar;
+if 0 goto skip;
+load bar->baz;
+test baz;
+if !0 goto far_away;
+skip:
+  ....
+
+so in the normal flow, neither branch is taken. If instead one wrote
+unlikely(foo->bar && foo->bar->baz), gcc doesn't really know why we
+expect the whole conjuntion to turn out false, so it could compile this
+as a jump when foo->bar turns out non-zero - i.e., in the normal case,
+we'd end up jumping.
+
+But as far as !(un)likely(), I agree that it's easier to read as a human
+if the ! operator is moved inside (and the "un" prefix stripped/added).
+Whether it deserves a cocci script I don't know.
+
+Rasmus
