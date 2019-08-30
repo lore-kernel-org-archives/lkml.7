@@ -2,106 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06388C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF4CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58192087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5DE2087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:13:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="n7fov0x4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfH3GMr (ORCPT
+        id S1727844AbfH3GNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:12:47 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:64684 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727156AbfH3GMq (ORCPT
+        Fri, 30 Aug 2019 02:13:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55495 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfH3GNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:12:46 -0400
-X-UUID: f23dc1529da6496e8313aee092cad3a8-20190830
-X-UUID: f23dc1529da6496e8313aee092cad3a8-20190830
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 885994755; Fri, 30 Aug 2019 14:11:49 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 14:11:47 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 14:11:47 +0800
-Message-ID: <1567145502.5942.15.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 24/32] drm/mediatek: add clock property check before
- get it
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 14:11:42 +0800
-In-Reply-To: <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 02:13:30 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g207so2018662wmg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 23:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mIaRAmZlXfrUjHkJ2pUtw5Qyx4E/Zd4jn5MOod/LYBs=;
+        b=n7fov0x47sWP5sCMWoI5rq1YKFAt3fENNVa7hKIxjXLPyJnd8Ua2g7xj1VBit6kbd3
+         0nqV2Wpe1JHoFm34DmXbVlz4YQnhNYhDVgcVou1/k5gnQVK8cEx2Fx4/jBSkORs+2TDh
+         OeoAMJ2WlkuQxBBMXzmwFi4/GC9V5Mcqk9thteQP9ci50ZH8BnW4UMEWftep4dQ1uXbd
+         JOUKUJq6uFY0O/97wiGWSrmElPY9Rg+FwGDE+TQmEk1HBIUKKCYgqhWvZqncBtegy3z1
+         CgPE78jUNUJ8/K+E+LKDCvr52JKo+Fp2Pj9ZdvinnLBxzNvPZWj6udtxls+BcGqURCET
+         VAOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mIaRAmZlXfrUjHkJ2pUtw5Qyx4E/Zd4jn5MOod/LYBs=;
+        b=h/ZZLT78/RQPXtChVHuNpfa+4y8cUTeXDTgmYDjR3W9CCahoKLO6kTY8pXATumv0VI
+         bF+mrUWOA70prdFXMd/4toDrSnowbiPx7XGZNp5W5+JIzSrK8Olpn6JWl+QSDjijHqzk
+         Zz8evP/RyEYpQoKrgNndy/SsZRRRnbSpGipLCzYI7NUXXayMaILDI93oTauUc9rS8mhA
+         ajzpXixZNKXsL4um3ZUj3JOuRePZrWegiCqWF0ZyAvtp+1cNMmebTRXx8stfrVDpZLZm
+         CDmpbCfk23v/wS6zPmVwz9U0f2CVtYChJC9tfvHs7uQ3NZZMjY++a47N9Pf3jsLaDggn
+         pgOA==
+X-Gm-Message-State: APjAAAUVIdGqLLGShQ6LjYeSLeYZvAqnYgnmBrU7fyBPDCpMj1yOpGIt
+        DaPDhe7kPISl//GrN/mC09M6lg==
+X-Google-Smtp-Source: APXvYqzgSjDY01QZirK6eSfj6ygsDQjdl74s3/VEjfgEpizF1MqSMoTDCtlSWInLYPaY73yFDtJ3WA==
+X-Received: by 2002:a05:600c:2245:: with SMTP id a5mr8590411wmm.53.1567145608620;
+        Thu, 29 Aug 2019 23:13:28 -0700 (PDT)
+Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
+        by smtp.gmail.com with ESMTPSA id j9sm3826665wrx.66.2019.08.29.23.13.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 23:13:28 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 08:13:27 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, allan.nielsen@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190830061327.GM2312@nanopsycho>
+References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
+ <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+ <20190829095100.GH2312@nanopsycho>
+ <20190829132611.GC6998@lunn.ch>
+ <20190829134901.GJ2312@nanopsycho>
+ <20190829143732.GB17864@lunn.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: AC63B56FAA0B5FFE3064F062EFE487F75FF6A0918ACADC649B94CFF7E07E14872000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829143732.GB17864@lunn.ch>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+Thu, Aug 29, 2019 at 04:37:32PM CEST, andrew@lunn.ch wrote:
+>> Wait, I believe there has been some misundestanding. Promisc mode is NOT
+>> about getting packets to the cpu. It's about setting hw filters in a way
+>> that no rx packet is dropped.
+>> 
+>> If you want to get packets from the hw forwarding dataplane to cpu, you
+>> should not use promisc mode for that. That would be incorrect.
+>
+>Hi Jiri
+>
+>I'm not sure a wireshark/tcpdump/pcap user would agree with you. They
+>want to see packets on an interface, so they use these tools. The fact
+>that the interface is a switch interface should not matter. The
+>switchdev model is that we try to hide away the interface happens to
+>be on a switch, you can just use it as normal. So why should promisc
+>mode not work as normal?
 
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+It does, disables the rx filter. Why do you think it means the same
+thing as "trap all to cpu"? Hw datapath was never considered by
+wireshark.
+
+In fact, I have usecase where I need to see only slow-path traffic by
+wireshark, not all packets going through hw. So apparently, there is a
+need of another wireshark option and perhaps another flag
+IFF_HW_TRAPPING?.
+
+tcpdump -i eth0
+tcpdump -i eth0 --no-promiscuous-mode
+tcpdump -i eth0 --hw-trapping-mode
+
+
 > 
-> This patch add clock property check before get it
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index a5a6689..effc24a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -657,10 +657,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  	for (i = 0; i < 10; i++)
->  		ddp->mutex[i].id = i;
->  
-> -	ddp->clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(ddp->clk)) {
-> -		dev_err(dev, "Failed to get clock\n");
-> -		return PTR_ERR(ddp->clk);
-> +	if (of_find_property(dev->of_node, "clocks", &i)) {
-> +		ddp->clk = devm_clk_get(dev, NULL);
-> +		if (IS_ERR(ddp->clk)) {
-> +			dev_err(dev, "Failed to get clock\n");
-> +			return PTR_ERR(ddp->clk);
-> +		}
-
-Only "mediatek,mt8133-disp-mutex" has no clock property. For other SoC,
-clock property is required. So I think this exception is just for
-mt8183.
-
-Regards,
-CK
-
->  	}
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-
+>> If you want to get packets from the hw forwarding dataplane to cpu, you
+>> should use tc trap action. It is there exactly for this purpose.
+>
+>Do you really think a wireshark/tcpdump/pcap user should need to use
+>tc trap for the special case the interface is a switch port? Doesn't that
+>break the switchdev model?
+>
+>tc trap is more about fine grained selection of packets. Also, it
+>seems like trapped packets are not forwarded, which is not what you
+>would expect from wireshark/tcpdump/pcap.
+>
+>      Andrew
