@@ -2,114 +2,144 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B7EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25BFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA6E22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XI5qcx7S"
+	by mail.kernel.org (Postfix) with ESMTP id 76BF421721
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 05:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfH3Fju (ORCPT
+        id S1728076AbfH3Fki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 01:39:50 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45718 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbfH3Fjt (ORCPT
+        Fri, 30 Aug 2019 01:40:38 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:45816 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725902AbfH3Fki (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 01:39:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U5dEHZ189185;
-        Fri, 30 Aug 2019 05:39:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Qq6jwZ95/VCzbf8MTVTBoT6xqQG43KMlrdM3Ju4DRCk=;
- b=XI5qcx7SPwl5Ogx+0wRdDZAGLwwN3bPXIDsFYxFWA3FqV1sUtTanp2i4xeXitINKZ3NB
- h4CcLK1NaW2jGasUfTLwDBmGjbPSXQhrHmbfCx2UMrUMrrwtTbcQWxL9LkUkQWOcBTtG
- XtaVC/81SnGHayiuAElfjHCeyBvFxOoW0iqSK/IVl5u5nCbdB0m9rIs7AOl8M4emSP/W
- Gu8H9/tYhtCKLdJucHDSqCr4JH0610mopRwJMRFmzEsAGY41rWHwDCYrqS/l5jS5Qd5c
- pBf/lWZx7PoWSIrY0Mn3w/1qe1IqQtThay8SGu6fbiU2VLrC+Pyywoko4GWsbNjbKYhQ pA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2upwufg00x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 05:39:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U5cAqw141957;
-        Fri, 30 Aug 2019 05:39:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2unvu11qmk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Aug 2019 05:39:47 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7U5dkal012253;
-        Fri, 30 Aug 2019 05:39:46 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 29 Aug 2019 22:39:46 -0700
-Date:   Thu, 29 Aug 2019 22:39:45 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Austin Kim <austindh.kim@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Initialize label array properly
-Message-ID: <20190830053945.GX5354@magnolia>
-References: <20190830053707.GA69101@LGEARND20B15>
+        Fri, 30 Aug 2019 01:40:38 -0400
+X-UUID: e3765b949a904a1ea0e241e9a73b7c84-20190830
+X-UUID: e3765b949a904a1ea0e241e9a73b7c84-20190830
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 92452426; Fri, 30 Aug 2019 13:40:34 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 13:40:32 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 30 Aug 2019 13:40:32 +0800
+Message-ID: <1567143627.5942.10.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 12/32] drm/mediatek: add mmsys private data for ddp
+ path config
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 30 Aug 2019 13:40:27 +0800
+In-Reply-To: <1567142858.5942.6.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-13-git-send-email-yongqiang.niu@mediatek.com>
+         <1567142858.5942.6.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830053707.GA69101@LGEARND20B15>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908300059
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908300059
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 63705600795A02F27505757BDD9CBCADFD9382BB26651453F850F28E9B4B8EDE2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 02:37:07PM +0900, Austin Kim wrote:
-> In case kernel stack variable is not initialized properly,
-> there is a risk of kernel information disclosure.
-> 
-> So, initialize 'char label[]' array with null characters.
+Hi, Yongqiang:
 
-Got a testcase for this?  At least a couple other filesystems implement
-this ioctl too, which means they all should be checked/tested on a
-regular basis.
-
---D
-
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> ---
->  fs/xfs/xfs_ioctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, 2019-08-30 at 13:27 +0800, CK Hu wrote:
+> Hi, Yongqiang:
 > 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 9ea5166..09b3bee 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -2037,7 +2037,7 @@ xfs_ioc_setlabel(
->  	char			__user *newlabel)
->  {
->  	struct xfs_sb		*sbp = &mp->m_sb;
-> -	char			label[XFSLABEL_MAX + 1];
-> +	char			label[XFSLABEL_MAX + 1] = {0};
->  	size_t			len;
->  	int			error;
->  
-> -- 
-> 2.6.2
+> On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > 
+> > This patch add mmsys private data for ddp path config
+> > all these register offset and value will be different in future SOC
+> > add these define into mmsys private data
+> > 	u32 ovl0_mout_en;
+> > 	u32 rdma1_sout_sel_in;
+> > 	u32 rdma1_sout_dsi0;
+> > 	u32 dpi0_sel_in;
+> > 	u32 dpi0_sel_in_rdma1;
+> > 	u32 dsi0_sel_in;
+> > 	u32 dsi0_sel_in_rdma1;
+> > 
+> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  4 ++
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 86 +++++++++++++++++++++++----------
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  5 ++
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c  |  3 ++
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  3 ++
+> >  5 files changed, 76 insertions(+), 25 deletions(-)
+> > 
 > 
+> [snip]
+> 
+> >  
+> >  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> > +			      const struct mtk_mmsys_reg_data *reg_data,
+> >  			      enum mtk_ddp_comp_id cur,
+> >  			      enum mtk_ddp_comp_id next)
+> >  {
+> >  	unsigned int addr, value, reg;
+> >  
+> > -	value = mtk_ddp_mout_en(cur, next, &addr);
+> > +	value = mtk_ddp_mout_en(reg_data, cur, next, &addr);
+> >  	if (value) {
+> >  		reg = readl_relaxed(config_regs + addr) | value;
+> >  		writel_relaxed(reg, config_regs + addr);
+> >  	}
+> >  
+> > -	mtk_ddp_sout_sel(config_regs, cur, next);
+> > +	value = mtk_ddp_sout_sel(reg_data, cur, next, &addr);
+> > +	if (value)
+> > +		writel_relaxed(value, config_regs + addr);
+> 
+> I think the register could be written inside mtk_ddp_sout_sel(), why do
+> you move out of that function?
+
+OK, after review other patch, I understand what you do here.
+You want to align the method of mtk_ddp_mout_en(), mtk_ddp_sout_sel(),
+and mtk_ddp_sel_in(). so modification in these three function would be
+the same style. So I think this alignment should be an independent patch
+before this patch.
+
+Regards,
+CK
+
+> 
+> Regards,
+> CK
+> 
+> >  
+> > -	value = mtk_ddp_sel_in(cur, next, &addr);
+> > +	value = mtk_ddp_sel_in(reg_data, cur, next, &addr);
+> >  	if (value) {
+> >  		reg = readl_relaxed(config_regs + addr) | value;
+> >  		writel_relaxed(reg, config_regs + addr);
+> > @@ -420,18 +455,19 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> >  }
+> >  
+> >  
+> >  
+> 
+
+
