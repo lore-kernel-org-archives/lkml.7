@@ -2,586 +2,157 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A13C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A22C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4AD2343D
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4822087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 23:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kUWX54lU"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="ASxDscvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfH3XTB (ORCPT
+        id S1728386AbfH3XXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 19:19:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34361 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbfH3XTB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 19:19:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id s21so17459452ioa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 16:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P8J01/EAVyRK3VJ3MaUx1xLzUlE5JyUjMH9q9tVtOmA=;
-        b=kUWX54lUDrTuq0GKwNh+Ib3vo8f/hLay9UM4yRX8nHz9Y3cXQonDE/h596QwVU5TeS
-         VSiO/+Q/0Rv8QcshZ2Fi0B+aNhdoLl363iD6+f9+66oaG3Vt6DKTcVmW054UwVEB0DeA
-         VrkWptg0IEiyywJ7ORnsAHVcbJaZMdNY2wPfl0p1ZbzfEEEv9OXzeiLFDnZnsDJgWG/X
-         dCeF4VsNVQ7EXVnoqGWx+CPV91DPZvdA4va+ezs5CcoQm7WhXSS+YWOnA015VijgFR1p
-         ETdbPvDHcug66eOdjfiMhONEfrd6mhC3GVOsdmrNwZ6OxgspULtYsJFm0+VhWPHBf5J9
-         PrTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P8J01/EAVyRK3VJ3MaUx1xLzUlE5JyUjMH9q9tVtOmA=;
-        b=Ie8rQ8TJzaZcrDXc3+EO37w7v288JsanJdGzWUTjRtlwHvQeKrIBs9p5fjjJb0BCct
-         FviZX2CPo5ago9WOhWMjaK21OqyD1zgzpJow8TmSYUAf+WaMBzies2Keam+Z++/k3UrF
-         ygHu3XEvWppmfaJ3bB0LZwenw2TeKpVWvOL9RSiy60xJKHOEbRADVNZowFxN8a8nzk/J
-         aqJvB/8kA4UoP+7034KdFDj+/27P5iH5ftqRj/bH4YGJ0phO0uRSk/W3OItpgtGw7ozO
-         EB49KvmePyBSfdI79gXYGLNh5rkcfb/O3YNEsnbOoEMMM4WGeBt3tQFnK5z9WD0b2ASi
-         M8hw==
-X-Gm-Message-State: APjAAAXsS/qEXW51bfhGSeug5F0144ehdFmdAqoj7mZUeYH2Swj+/mOp
-        h0KidV0ZFkYPcd/Rbg+Y5lqfudYPi+xE5/Qu2IM0dg==
-X-Google-Smtp-Source: APXvYqwM0v80oGAvv37h60UScn7BtXO/S3Rmk7eaZ540RvYkzJUXXLqKTtzde56UOpDoKM3H9oTZDKBjTWH7VbiQ8sY=
-X-Received: by 2002:a5e:a90f:: with SMTP id c15mr4259109iod.41.1567207138977;
- Fri, 30 Aug 2019 16:18:58 -0700 (PDT)
+        Fri, 30 Aug 2019 19:23:04 -0400
+Received: from mail-eopbgr820134.outbound.protection.outlook.com ([40.107.82.134]:37093
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728122AbfH3XXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 19:23:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U9EFpWljsoS0I60NPC9z02wlvDxfV8vrQIyuEWhfI1kv8PeQ/BR/DJ3DH2JhKOYooTQEv/NIs/8KjTaYv0Zi3BdeaVarbdBKtblhF3O9Bfi489OteObI+wxQnmhLAkTJdwGJYpxOP/7QaIPQtSR83grNBeRj0U3sIzM+azklvS2NtVHi2waN6QYh37z5yNkLQt1PETfnE0N9EHs2L0mB4EDy0qHb9sjSQx2r9KW1CkSm7RmxpsfOd+UHfnceNFs+VY+N9fCvXpSuxvd0oFDJoH8HhQ6PG/cwDK9g/Xx3FX0tSNwGgSl3/Go04R5s2huw6xXwLJDc7BslYJXp2b6fOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8Fu3u+qEIZ+r0p2rboBbLUphQGTsPs2OQ8XZw2gdyQ=;
+ b=h4oDGtyPEx4Znfy13Ar2k6ZpUpHBVJODdiYQrbiJwY+2dAbdK0q61ZeUDhbZo1+AC80X6ZFDRQrFFXYS8CIJF3GwP+y+v6eRFW6Y5I9sLRP5bXVyC3Lo90UR0mLD4SPdiVY2P4x76yUKiiewd6a4dfW4euQBRtw6zMD1yLO+zU4yJngwJnJxKMiT8SbuUAmwxNbPt5Vj0/z18Zq3qqs0Mc9jY4bFJ+fWeQx1EJMjfjEiLMEmy9siuvAC3OA2Y9qvOE/6J/EU2FCHOVGgsgs0UPzY1jFVC0bYMSMw6dOnHdvqK7yqYmlHA6PVWKjj+eOQcMD1K8j6lZCzJA9N9/Us4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 160.33.194.231) smtp.rcpttodomain=google.com smtp.mailfrom=sony.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8Fu3u+qEIZ+r0p2rboBbLUphQGTsPs2OQ8XZw2gdyQ=;
+ b=ASxDscvUcRLwCyT/LGD1PY1qw9hIPt5C+kVWTp1h2snMISr8rI+Ar1+pVsedQxrDvFE4jfyrUnGXy1KXuYAEOkH7gUT5vtCbbSzd6bu0H/nCUF2W+PJjpFXvb/qSCxgvXcUz8RG9JmN5WepUUE50WxlcmWa1ArVBV+rtVjxHOb8=
+Received: from BN4PR13CA0003.namprd13.prod.outlook.com (2603:10b6:403:3::13)
+ by MWHPR1301MB1968.namprd13.prod.outlook.com (2603:10b6:301:32::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.6; Fri, 30 Aug
+ 2019 23:23:00 +0000
+Received: from SN1NAM02FT048.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by BN4PR13CA0003.outlook.office365.com
+ (2603:10b6:403:3::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2241.5 via Frontend
+ Transport; Fri, 30 Aug 2019 23:23:00 +0000
+Authentication-Results: spf=pass (sender IP is 160.33.194.231)
+ smtp.mailfrom=sony.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=pass action=none header.from=sony.com;
+Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
+ 160.33.194.231 as permitted sender) receiver=protection.outlook.com;
+ client-ip=160.33.194.231; helo=usculsndmail04v.am.sony.com;
+Received: from usculsndmail04v.am.sony.com (160.33.194.231) by
+ SN1NAM02FT048.mail.protection.outlook.com (10.152.72.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2220.16 via Frontend Transport; Fri, 30 Aug 2019 23:22:59 +0000
+Received: from usculsndmail14v.am.sony.com (usculsndmail14v.am.sony.com [146.215.230.105])
+        by usculsndmail04v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x7UNMwcT002201;
+        Fri, 30 Aug 2019 23:22:58 GMT
+Received: from USCULXHUB05V.am.sony.com (usculxhub05v.am.sony.com [146.215.231.43])
+        by usculsndmail14v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x7UNMuZM010809;
+        Fri, 30 Aug 2019 23:22:57 GMT
+Received: from USCULXMSG01.am.sony.com ([fe80::b09d:6cb6:665e:d1b5]) by
+ USCULXHUB05V.am.sony.com ([146.215.231.43]) with mapi id 14.03.0439.000; Fri,
+ 30 Aug 2019 19:22:57 -0400
+From:   <Tim.Bird@sony.com>
+To:     <brendanhiggins@google.com>, <joe@perches.com>
+CC:     <shuah@kernel.org>, <sergey.senozhatsky.work@gmail.com>,
+        <kunit-dev@googlegroups.com>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <frowand.list@gmail.com>,
+        <sboyd@kernel.org>, <pmladek@suse.com>,
+        <sergey.senozhatsky@gmail.com>, <rostedt@goodmis.org>,
+        <rdunlap@infradead.org>, <sfr@canb.auug.org.au>
+Subject: RE: [PATCH v2] kunit: fix failure to build without printk
+Thread-Topic: [PATCH v2] kunit: fix failure to build without printk
+Thread-Index: AQHVXYOHSzY8I+qIqESnE7HuJlTJpKcQk8yAgAIK7gCAAMSnAIAA6NiAgAAj6AD//87t0IAAUmyAgAAEeID//8ADsA==
+Date:   Fri, 30 Aug 2019 23:22:43 +0000
+Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF977A8416@USCULXMSG01.am.sony.com>
+References: <20190828093143.163302-1-brendanhiggins@google.com>
+ <20190828094929.GA14038@jagdpanzerIV>
+ <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
+ <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
+ <20190830183821.GA30306@google.com>
+ <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977A8392@USCULXMSG01.am.sony.com>
+ <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
+ <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
+In-Reply-To: <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [146.215.228.6]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190826144740.10163-1-kan.liang@linux.intel.com> <20190826144740.10163-4-kan.liang@linux.intel.com>
-In-Reply-To: <20190826144740.10163-4-kan.liang@linux.intel.com>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Fri, 30 Aug 2019 16:18:47 -0700
-Message-ID: <CABPqkBTS8bRjSwOBm2HxtuDWhxeZrTGa_E8mqfRfEJPzX1BNhw@mail.gmail.com>
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown metrics
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:160.33.194.231;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(39860400002)(136003)(346002)(376002)(396003)(2980300002)(199004)(189003)(13464003)(54906003)(55846006)(2906002)(229853002)(55016002)(2486003)(6246003)(70586007)(8936002)(6116002)(5660300002)(70206006)(3846002)(8676002)(23676004)(246002)(305945005)(2876002)(86362001)(7736002)(37786003)(7416002)(336012)(486006)(47776003)(7696005)(426003)(11346002)(446003)(33656002)(4326008)(6666004)(53546011)(66066001)(186003)(102836004)(356004)(436003)(476003)(126002)(76176011)(14444005)(478600001)(26005)(110136005)(50466002)(106002)(316002)(5001870100001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR1301MB1968;H:usculsndmail04v.am.sony.com;FPR:;SPF:Pass;LANG:en;PTR:mail.sonyusa.com,mail04.sonyusa.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c726c06e-9f7c-44a7-65f4-08d72da0ffa2
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR1301MB1968;
+X-MS-TrafficTypeDiagnostic: MWHPR1301MB1968:
+X-Microsoft-Antispam-PRVS: <MWHPR1301MB19683449622542160106DE4EFDBD0@MWHPR1301MB1968.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0145758B1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: KdNBihewc4drTkG0hUbGOnDJJK01Kwmt05nF5krmDZM5dSYgEp05CAX96dDHSe+M7sCdio8ZON31NxtQ9KbAD2Nf+xu65rRR6qesEz42KxEoT1G32TszfrwNNppeT9EBbO1Q1ZGz6+hx6Wq9s/lmYSWUJwmuF7TMofZB8JyqD5TJkpV/ZCjBFc10qyNn7m1RDBS1A5JrlpHDkNJoGLpQRWW6CjaPQ8olytm4HKkKZdIC46ixk5ZWazuyfagXw/tgpsdE8P9Ix6h0TlE/yv9RmpR6PDjKYmdHngRIOKzHskYa2d0rDIiugrk1sKXD/75BQ95GYR3Elfos5wD10C5RJjEREH/B7qk+ssPDKKLbWvlLgco7V05WThy87m9fLq+aZQi2p7/1eayzojLt2xN3Mi8rTz+YSDCHz+rFYIKOL0A=
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2019 23:22:59.7108
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c726c06e-9f7c-44a7-65f4-08d72da0ffa2
+X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[160.33.194.231];Helo=[usculsndmail04v.am.sony.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1301MB1968
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Aug 26, 2019 at 7:48 AM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> Intro
-> =====
->
-> Icelake has support for measuring the four top level TopDown metrics
-> directly in hardware. This is implemented by an additional "metrics"
-> register, and a new Fixed Counter 3 that measures pipeline "slots".
->
-> Events
-> ======
->
-> We export four metric events as separate perf events, which map to
-> internal "metrics" counter register. Those events do not exist in
-> hardware, but can be allocated by the scheduler.
->
-There is another approach possible for supporting Topdown-style counters.
-Instead of trying to abstract them as separate events to the user and then
-trying to put them back together in the kernel and then using slots to scale
-them as counts, we could just expose them as is, i.e., structured counter
-values. The kernel already handles structured counter configs and exports
-the fields on the config via sysfs and the perf tool picks them up and can
-encode any event. We could have a similar approach for a counter
-value. It could have fields, unit, types. Perf stat would pick them up in
-the same manner. It would greatly simplify the kernel implementation.
-You would need to publish an pseudo-event code for each group of
-metrics. Note that I am not advocating expose the raw counter value.
-That way you would maintain one event code -> one "counter" on hw.
-The reset on read would also work. It would generate only one rdmsr
-per read without forcing any grouping. You would not need any grouping,
-or using slots under the hood to scale. If PERF_METRICS gets extended, you
-can just add another pseudo event code or umask.
-
-The PERF_METRICS events do not make real sense in isolation. The SLOTS
-scaling is hard to interpret. You can never profiling on PERF_METRICS event
-so keeping them grouped is okay.
-
-
-> For the event mapping we use a special 0x00 event code, which is
-> reserved for fake events. The metric events start from umask 0x10.
->
-> When setting up such events they point to the slots counter, and a
-> special callback, update_topdown_event(), reads the additional metrics
-> msr to generate the metrics. Then the metric is reported by multiplying
-> the metric (percentage) with slots.
->
-> This multiplication allows to easily keep a running count, for example
-> when the slots counter overflows, and makes all the standard tools, such
-> as a perf stat, work. They can do deltas of the values without needing
-> to know about percentages. This also simplifies accumulating the counts
-> of child events, which otherwise would need to know how to average
-> percent values.
->
-> All four metric events don't support sampling. Since they will be
-> handled specially for event update, a flag PERF_X86_EVENT_TOPDOWN is
-> introduced to indicate this case.
->
-> The slots event can support both sampling and counting.
-> For counting, the flag is also applied.
-> For sampling, it will be handled normally as other normal events.
->
-> Groups
-> ======
->
-> To avoid reading the METRICS register multiple times, the metrics and
-> slots value can only be updated by the first slots/metrics event in a
-> group. All active slots and metrics events will be updated one time.
->
-> Reset
-> ======
->
-> The PERF_METRICS and Fixed counter 3 have to be reset for each read,
-> because:
-> - The 8bit metrics ratio values lose precision when the measurement
->   period gets longer.
-> - The PERF_METRICS may report wrong value if its delta was less than
->   1/255 of SLOTS (Fixed counter 3).
->
-> Also, for counting, the -max_period is the initial value of the SLOTS.
-> The huge initial value will definitely trigger the issue mentioned
-> above. Force initial value as 0 for topdown and slots event counting.
->
-> NMI
-> ======
->
-> The METRICS register may be overflow. The bit 48 of STATUS register
-> will be set. If so, update all active slots and metrics events.
->
-> The update_topdown_event() has to read two registers separately. The
-> values may be modify by a NMI. PMU has to be disabled before calling the
-> function.
->
-> RDPMC
-> ======
->
-> RDPMC is temporarily disabled. The following patch will enable it.
->
-> Originally-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  arch/x86/events/core.c           |  10 ++
->  arch/x86/events/intel/core.c     | 230 ++++++++++++++++++++++++++++++-
->  arch/x86/events/perf_event.h     |  17 +++
->  arch/x86/include/asm/msr-index.h |   2 +
->  4 files changed, 255 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 54534ff00940..1ae23db5c2d7 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -76,6 +76,8 @@ u64 x86_perf_event_update(struct perf_event *event)
->         if (idx == INTEL_PMC_IDX_FIXED_BTS)
->                 return 0;
->
-> +       if (is_topdown_count(event) && x86_pmu.update_topdown_event)
-> +               return x86_pmu.update_topdown_event(event);
->         /*
->          * Careful: an NMI might modify the previous event value.
->          *
-> @@ -1003,6 +1005,10 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
->
->         max_count = x86_pmu.num_counters + x86_pmu.num_counters_fixed;
->
-> +       /* There are 4 TopDown metrics events. */
-> +       if (x86_pmu.intel_cap.perf_metrics)
-> +               max_count += 4;
-> +
->         /* current number of events already accepted */
->         n = cpuc->n_events;
->
-> @@ -1184,6 +1190,10 @@ int x86_perf_event_set_period(struct perf_event *event)
->         if (idx == INTEL_PMC_IDX_FIXED_BTS)
->                 return 0;
->
-> +       if (unlikely(is_topdown_count(event)) &&
-> +           x86_pmu.set_topdown_event_period)
-> +               return x86_pmu.set_topdown_event_period(event);
-> +
->         /*
->          * If we are way outside a reasonable range then just skip forward:
->          */
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index f4d6335a18e2..616313d7f3d7 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -247,6 +247,10 @@ static struct event_constraint intel_icl_event_constraints[] = {
->         FIXED_EVENT_CONSTRAINT(0x003c, 1),      /* CPU_CLK_UNHALTED.CORE */
->         FIXED_EVENT_CONSTRAINT(0x0300, 2),      /* CPU_CLK_UNHALTED.REF */
->         FIXED_EVENT_CONSTRAINT(0x0400, 3),      /* SLOTS */
-> +       METRIC_EVENT_CONSTRAINT(0x1000, 0),     /* Retiring metric */
-> +       METRIC_EVENT_CONSTRAINT(0x1100, 1),     /* Bad speculation metric */
-> +       METRIC_EVENT_CONSTRAINT(0x1200, 2),     /* FE bound metric */
-> +       METRIC_EVENT_CONSTRAINT(0x1300, 3),     /* BE bound metric */
->         INTEL_EVENT_CONSTRAINT_RANGE(0x03, 0x0a, 0xf),
->         INTEL_EVENT_CONSTRAINT_RANGE(0x1f, 0x28, 0xf),
->         INTEL_EVENT_CONSTRAINT(0x32, 0xf),      /* SW_PREFETCH_ACCESS.* */
-> @@ -267,6 +271,14 @@ static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
->         INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
->         INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
->         INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
-> +       /*
-> +        * The original Fixed Ctr 3 are shared from different metrics
-> +        * events. So use the extra reg to enforce the same
-> +        * configuration on the original register, but do not actually
-> +        * write to it.
-> +        */
-> +       INTEL_UEVENT_EXTRA_REG(0x0400, 0, -1L, TOPDOWN),
-> +       INTEL_UEVENT_TOPDOWN_EXTRA_REG(0x1000),
->         EVENT_EXTRA_END
->  };
->
-> @@ -2190,10 +2202,163 @@ static void intel_pmu_del_event(struct perf_event *event)
->                 intel_pmu_pebs_del(event);
->  }
->
-> +static inline bool is_metric_event(struct perf_event *event)
-> +{
-> +       return ((event->attr.config & ARCH_PERFMON_EVENTSEL_EVENT) == 0) &&
-> +               ((event->attr.config & INTEL_ARCH_EVENT_MASK) >= 0x1000)  &&
-> +               ((event->attr.config & INTEL_ARCH_EVENT_MASK) <= 0x1300);
-> +}
-> +
-> +static inline bool is_slots_event(struct perf_event *event)
-> +{
-> +       return (event->attr.config & INTEL_ARCH_EVENT_MASK) == 0x0400;
-> +}
-> +
-> +static inline bool is_topdown_event(struct perf_event *event)
-> +{
-> +       return is_metric_event(event) || is_slots_event(event);
-> +}
-> +
-> +static bool is_first_topdown_event_in_group(struct perf_event *event)
-> +{
-> +       struct perf_event *first = NULL;
-> +
-> +       if (is_topdown_event(event->group_leader))
-> +               first = event->group_leader;
-> +       else {
-> +               for_each_sibling_event(first, event->group_leader)
-> +                       if (is_topdown_event(first))
-> +                               break;
-> +       }
-> +
-> +       if (event == first)
-> +               return true;
-> +
-> +       return false;
-> +}
-> +
-> +static int icl_set_topdown_event_period(struct perf_event *event)
-> +{
-> +       struct hw_perf_event *hwc = &event->hw;
-> +       s64 left = local64_read(&hwc->period_left);
-> +
-> +       /*
-> +        * Clear PERF_METRICS and Fixed counter 3 in initialization.
-> +        * After that, both MSRs will be cleared for each read.
-> +        * Don't need to clear them again.
-> +        */
-> +       if (left == x86_pmu.max_period) {
-> +               wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
-> +               wrmsrl(MSR_PERF_METRICS, 0);
-> +               local64_set(&hwc->period_left, 0);
-> +       }
-> +
-> +       perf_event_update_userpage(event);
-> +
-> +       return 0;
-> +}
-> +
-> +static u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
-> +{
-> +       u32 val;
-> +
-> +       /*
-> +        * The metric is reported as an 8bit integer percentage
-> +        * suming up to 0xff.
-> +        * slots-in-metric = (Metric / 0xff) * slots
-> +        */
-> +       val = (metric >> ((idx - INTEL_PMC_IDX_FIXED_METRIC_BASE) * 8)) & 0xff;
-> +       return  mul_u64_u32_div(slots, val, 0xff);
-> +}
-> +
-> +static void __icl_update_topdown_event(struct perf_event *event,
-> +                                      u64 slots, u64 metrics)
-> +{
-> +       int idx = event->hw.idx;
-> +       u64 delta;
-> +
-> +       if (is_metric_idx(idx))
-> +               delta = icl_get_metrics_event_value(metrics, slots, idx);
-> +       else
-> +               delta = slots;
-> +
-> +       local64_add(delta, &event->count);
-> +}
-> +
-> +/*
-> + * Update all active Topdown events.
-> + * PMU has to be disabled before calling this function.
-> + */
-> +static u64 icl_update_topdown_event(struct perf_event *event)
-> +{
-> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +       struct perf_event *other;
-> +       u64 slots, metrics;
-> +       int idx;
-> +
-> +       /*
-> +        * Only need to update all events for the first
-> +        * slots/metrics event in a group
-> +        */
-> +       if (event && !is_first_topdown_event_in_group(event))
-> +               return 0;
-> +
-> +       /* read Fixed counter 3 */
-> +       rdpmcl((3 | 1<<30), slots);
-> +       if (!slots)
-> +               return 0;
-> +
-> +       /* read PERF_METRICS */
-> +       rdpmcl((1<<29), metrics);
-> +
-> +       for_each_set_bit(idx, cpuc->active_mask, INTEL_PMC_IDX_TD_BE_BOUND + 1) {
-> +               if (!is_topdown_idx(idx))
-> +                       continue;
-> +               other = cpuc->events[idx];
-> +               __icl_update_topdown_event(other, slots, metrics);
-> +       }
-> +
-> +       /*
-> +        * Check and update this event, which may have been cleared
-> +        * in active_mask e.g. x86_pmu_stop()
-> +        */
-> +       if (event && !test_bit(event->hw.idx, cpuc->active_mask))
-> +               __icl_update_topdown_event(event, slots, metrics);
-> +
-> +       /*
-> +        * To avoid the known issues as below, the PERF_METRICS and
-> +        * Fixed counter 3 are reset for each read.
-> +        * - The 8bit metrics ratio values lose precision when the
-> +        *   measurement period gets longer.
-> +        * - The PERF_METRICS may report wrong value if its delta was
-> +        *   less than 1/255 of Fixed counter 3.
-> +        */
-> +       wrmsrl(MSR_PERF_METRICS, 0);
-> +       wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
-> +
-> +       return slots;
-> +}
-> +
-> +static void intel_pmu_read_topdown_event(struct perf_event *event)
-> +{
-> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +
-> +       /* Only need to call update_topdown_event() once for group read. */
-> +       if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
-> +           !is_first_topdown_event_in_group(event))
-> +               return;
-> +
-> +       perf_pmu_disable(event->pmu);
-> +       x86_pmu.update_topdown_event(event);
-> +       perf_pmu_enable(event->pmu);
-> +}
-> +
->  static void intel_pmu_read_event(struct perf_event *event)
->  {
->         if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
->                 intel_pmu_auto_reload_read(event);
-> +       else if (is_topdown_count(event) && x86_pmu.update_topdown_event)
-> +               intel_pmu_read_topdown_event(event);
->         else
->                 x86_perf_event_update(event);
->  }
-> @@ -2401,6 +2566,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->                         intel_pt_interrupt();
->         }
->
-> +       /*
-> +        * Intel Perf mertrics
-> +        */
-> +       if (__test_and_clear_bit(48, (unsigned long *)&status)) {
-> +               handled++;
-> +               if (x86_pmu.update_topdown_event)
-> +                       x86_pmu.update_topdown_event(NULL);
-> +       }
-> +
->         /*
->          * Checkpointed counters can lead to 'spurious' PMIs because the
->          * rollback caused by the PMI will have cleared the overflow status
-> @@ -3312,6 +3486,42 @@ static int intel_pmu_hw_config(struct perf_event *event)
->         if (event->attr.type != PERF_TYPE_RAW)
->                 return 0;
->
-> +       /*
-> +        * Config Topdown slots and metric events
-> +        *
-> +        * The slots event on Fixed Counter 3 can support sampling,
-> +        * which will be handled normally in x86_perf_event_update().
-> +        *
-> +        * The metric events don't support sampling.
-> +        *
-> +        * For counting, topdown slots and metric events will be
-> +        * handled specially for event update.
-> +        * A flag PERF_X86_EVENT_TOPDOWN is applied for the case.
-> +        */
-> +       if (x86_pmu.intel_cap.perf_metrics && is_topdown_event(event)) {
-> +               if (is_metric_event(event) && is_sampling_event(event))
-> +                       return -EINVAL;
-> +
-> +               if (!is_sampling_event(event)) {
-> +                       if (event->attr.config1 != 0)
-> +                               return -EINVAL;
-> +                       if (event->attr.config & ARCH_PERFMON_EVENTSEL_ANY)
-> +                               return -EINVAL;
-> +                       /*
-> +                        * Put configuration (minus event) into config1 so that
-> +                        * the scheduler enforces through an extra_reg that
-> +                        * all instances of the metrics events have the same
-> +                        * configuration.
-> +                        */
-> +                       event->attr.config1 = event->hw.config &
-> +                                             X86_ALL_EVENT_FLAGS;
-> +                       event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
-> +
-> +                       if (is_metric_event(event))
-> +                               event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
-> +               }
-> +       }
-> +
->         if (!(event->attr.config & ARCH_PERFMON_EVENTSEL_ANY))
->                 return 0;
->
-> @@ -5040,6 +5250,8 @@ __init int intel_pmu_init(void)
->                 x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
->                 x86_pmu.lbr_pt_coexist = true;
->                 intel_pmu_pebs_data_source_skl(pmem);
-> +               x86_pmu.update_topdown_event = icl_update_topdown_event;
-> +               x86_pmu.set_topdown_event_period = icl_set_topdown_event_period;
->                 pr_cont("Icelake events, ");
->                 name = "icelake";
->                 break;
-> @@ -5096,10 +5308,17 @@ __init int intel_pmu_init(void)
->                  * counter, so do not extend mask to generic counters
->                  */
->                 for_each_event_constraint(c, x86_pmu.event_constraints) {
-> -                       if (c->cmask == FIXED_EVENT_FLAGS
-> -                           && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES
-> -                           && c->idxmsk64 != INTEL_PMC_MSK_FIXED_SLOTS) {
-> -                               c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-> +                       if (c->cmask == FIXED_EVENT_FLAGS) {
-> +                               /*
-> +                                * Don't extend topdown slots and metrics
-> +                                * events to generic counters.
-> +                                */
-> +                               if (c->idxmsk64 & INTEL_PMC_MSK_TOPDOWN) {
-> +                                       c->weight = hweight64(c->idxmsk64);
-> +                                       continue;
-> +                               }
-> +                               if (c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES)
-> +                                       c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
->                         }
->                         c->idxmsk64 &=
->                                 ~(~0ULL << (INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed));
-> @@ -5152,6 +5371,9 @@ __init int intel_pmu_init(void)
->         if (x86_pmu.counter_freezing)
->                 x86_pmu.handle_irq = intel_pmu_handle_irq_v4;
->
-> +       if (x86_pmu.intel_cap.perf_metrics)
-> +               x86_pmu.intel_ctrl |= 1ULL << 48;
-> +
->         return 0;
->  }
->
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index 37f17f55ef2d..7c59f08fadc0 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -40,6 +40,7 @@ enum extra_reg_type {
->         EXTRA_REG_LBR   = 2,    /* lbr_select */
->         EXTRA_REG_LDLAT = 3,    /* ld_lat_threshold */
->         EXTRA_REG_FE    = 4,    /* fe_* */
-> +       EXTRA_REG_TOPDOWN = 5,  /* Topdown slots/metrics */
->
->         EXTRA_REG_MAX           /* number of entries needed */
->  };
-> @@ -76,6 +77,12 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
->  #define PERF_X86_EVENT_EXCL_ACCT       0x0100 /* accounted EXCL event */
->  #define PERF_X86_EVENT_AUTO_RELOAD     0x0200 /* use PEBS auto-reload */
->  #define PERF_X86_EVENT_LARGE_PEBS      0x0400 /* use large PEBS */
-> +#define PERF_X86_EVENT_TOPDOWN         0x0800 /* Count Topdown slots/metrics events */
-> +
-> +static inline bool is_topdown_count(struct perf_event *event)
-> +{
-> +       return event->hw.flags & PERF_X86_EVENT_TOPDOWN;
-> +}
->
->  struct amd_nb {
->         int nb_id;  /* NorthBridge id */
-> @@ -509,6 +516,9 @@ struct extra_reg {
->                                0xffff, \
->                                LDLAT)
->
-> +#define INTEL_UEVENT_TOPDOWN_EXTRA_REG(event)  \
-> +       EVENT_EXTRA_REG(event, 0, 0xfcff, -1L, TOPDOWN)
-> +
->  #define EVENT_EXTRA_END EVENT_EXTRA_REG(0, 0, 0, 0, RSP_0)
->
->  union perf_capabilities {
-> @@ -524,6 +534,7 @@ union perf_capabilities {
->                  */
->                 u64     full_width_write:1;
->                 u64     pebs_baseline:1;
-> +               u64     perf_metrics:1;
->         };
->         u64     capabilities;
->  };
-> @@ -686,6 +697,12 @@ struct x86_pmu {
->          */
->         atomic_t        lbr_exclusive[x86_lbr_exclusive_max];
->
-> +       /*
-> +        * Intel perf metrics
-> +        */
-> +       u64             (*update_topdown_event)(struct perf_event *event);
-> +       int             (*set_topdown_event_period)(struct perf_event *event);
-> +
->         /*
->          * AMD bits
->          */
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index 78f3a5ebc1e2..460a419a7214 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -118,6 +118,8 @@
->  #define MSR_TURBO_RATIO_LIMIT1         0x000001ae
->  #define MSR_TURBO_RATIO_LIMIT2         0x000001af
->
-> +#define MSR_PERF_METRICS               0x00000329
-> +
->  #define MSR_LBR_SELECT                 0x000001c8
->  #define MSR_LBR_TOS                    0x000001c9
->  #define MSR_LBR_NHM_FROM               0x00000680
-> --
-> 2.17.1
->
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCcmVuZGFuIEhpZ2dpbnMgDQo+
+IA0KPiBPbiBGcmksIEF1ZyAzMCwgMjAxOSBhdCAzOjQ2IFBNIEpvZSBQZXJjaGVzIDxqb2VAcGVy
+Y2hlcy5jb20+IHdyb3RlOg0KPiA+DQo+ID4gT24gRnJpLCAyMDE5LTA4LTMwIGF0IDIxOjU4ICsw
+MDAwLCBUaW0uQmlyZEBzb255LmNvbSB3cm90ZToNCj4gPiA+ID4gRnJvbTogSm9lIFBlcmNoZXMN
+Cj4gPiBbXQ0KPiA+ID4gSU1ITyAlcFYgc2hvdWxkIGJlIGF2b2lkZWQgaWYgcG9zc2libGUuICBK
+dXN0IGJlY2F1c2UgcGVvcGxlIGFyZQ0KPiA+ID4gZG9pbmcgaXQgZG9lc24ndCBtZWFuIGl0IHNo
+b3VsZCBiZSB1c2VkIHdoZW4gaXQgaXMgbm90IG5lY2Vzc2FyeS4NCj4gPg0KPiA+IFdlbGwsIGFz
+IHRoZSBndXkgdGhhdCBjcmVhdGVkICVwViwgSSBvZiBjb3Vyc2UNCj4gPiBoYXZlIGEgZGlmZmVy
+ZW50IG9waW5pb24uDQo+ID4NCj4gPiA+ID4gIHRoZW4gd291bGRuJ3QgaXQgYmUgZWFzaWVyIHRv
+IHBhc3MgaW4gdGhlDQo+ID4gPiA+ID4ga2VybmVsIGxldmVsIGFzIGEgc2VwYXJhdGUgcGFyYW1l
+dGVyIGFuZCB0aGVuIHN0cmlwIG9mZiBhbGwgcHJpbnRrDQo+ID4gPiA+ID4gaGVhZGVycyBsaWtl
+IHRoaXM6DQo+ID4gPiA+DQo+ID4gPiA+IERlcGVuZHMgb24gd2hldGhlciBvciBub3QgeW91IGNh
+cmUgZm9yIG92ZXJhbGwNCj4gPiA+ID4gb2JqZWN0IHNpemUuICBDb25zb2xpZGF0ZWQgZm9ybWF0
+cyB3aXRoIHRoZQ0KPiA+ID4gPiBlbWJlZGRlZCBLRVJOXzxMRVZFTD4gbGlrZSBzdWdnZXN0ZWQg
+YXJlIHNtYWxsZXINCj4gPiA+ID4gb3ZlcmFsbCBvYmplY3Qgc2l6ZS4NCj4gPiA+DQo+ID4gPiBU
+aGlzIGlzIGFuIGFyZ3VtZW50IEkgY2FuIGFncmVlIHdpdGguICBJJ20gZ2VuZXJhbGx5IGluIGZh
+dm9yIG9mDQo+ID4gPiB0aGluZ3MgdGhhdCBsZXNzZW4ga2VybmVsIHNpemUgY3JlZXAuIDotKQ0K
+PiA+DQo+ID4gQXMgYW0gSS4NCj4gDQo+IFNvcnJ5LCB0byBiZSBjbGVhciwgd2UgYXJlIHRhbGtp
+bmcgYWJvdXQgdGhlIG9iamVjdCBzaXplIHBlbmFsdHkgZHVlDQo+IHRvIGFkZGluZyBhIHNpbmds
+ZSBwYXJhbWV0ZXIgdG8gYSBmdW5jdGlvbi4gSXMgdGhhdCByaWdodD8NCg0KTm90IGV4YWN0bHku
+ICBUaGUgYXJndW1lbnQgaXMgdGhhdCBwcmUtcGVuZGluZyB0aGUgZGlmZmVyZW50IEtFUk5fTEVW
+RUwNCnN0cmluZ3Mgb250byBmb3JtYXQgc3RyaW5ncyBjYW4gcmVzdWx0IGluIHNldmVyYWwgdmVy
+c2lvbnMgb2YgbmVhcmx5IGlkZW50aWNhbCBzdHJpbmdzDQpiZWluZyBjb21waWxlZCBpbnRvIHRo
+ZSBvYmplY3QgZmlsZS4gIEJ5IHBhcmFtZXRlcml6aW5nIHRoaXMgKHRoYXQgaXMsIGFkZGluZw0K
+JyVzJyBpbnRvIHRoZSBmb3JtYXQgc3RyaW5nLCBhbmQgcHV0dGluZyB0aGUgbGV2ZWwgaW50byB0
+aGUgc3RyaW5nIGFzIGFuIGFyZ3VtZW50KSwNCml0IHByZXZlbnRzIHRoaXMgZHVwbGljYXRpb24g
+b2YgZm9ybWF0IHN0cmluZ3MuDQoNCkkgaGF2ZW4ndCBzZWVuIHRoZSBkYXRhIG9uIGR1cGxpY2F0
+aW9uIG9mIGZvcm1hdCBzdHJpbmdzLCBhbmQgaG93IG11Y2ggdGhpcw0KYWZmZWN0cyBpdCwgYnV0
+IGxpdHRsZSB0aGluZ3MgY2FuIGFkZCB1cC4gIFdoZXRoZXIgaXQgbWF0dGVycyBpbiB0aGlzIGNh
+c2UgZGVwZW5kcw0Kb24gd2hldGhlciB0aGUgZm9ybWF0IHN0cmluZ3MgdGhhdCBrdW5pdCB1c2Vz
+IGFyZSBhbHNvIHVzZWQgZWxzZXdoZXJlIGluIHRoZSBrZXJuZWwsDQphbmQgd2hldGhlciB0aGVz
+ZSBzYW1lIGZvcm1hdCBzdHJpbmdzIGFyZSB1c2VkIHdpdGggbXVsdGlwbGUga2VybmVsIG1lc3Nh
+Z2UgbGV2ZWxzLg0KIC0tIFRpbQ0KDQo=
