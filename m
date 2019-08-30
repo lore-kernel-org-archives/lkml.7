@@ -2,100 +2,109 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452E3C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B44C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1582421670
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5AE22CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0UUia2/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfH3Mti (ORCPT
+        id S1727889AbfH3MxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:49:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47574 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfH3Mti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:49:38 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B562869EE1;
-        Fri, 30 Aug 2019 12:49:37 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C8C76092D;
-        Fri, 30 Aug 2019 12:49:29 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 14:49:27 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     alex.williamson@redhat.com, jiri@mellanox.com,
-        kwankhede@nvidia.com, davem@davemloft.net, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] mdev: Update sysfs documentation
-Message-ID: <20190830144927.7961193e.cohuck@redhat.com>
-In-Reply-To: <20190829111904.16042-6-parav@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190829111904.16042-1-parav@mellanox.com>
-        <20190829111904.16042-6-parav@mellanox.com>
-Organization: Red Hat GmbH
+        Fri, 30 Aug 2019 08:53:03 -0400
+Received: from mail-ed1-f47.google.com ([209.85.208.47]:36688 "EHLO
+        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfH3MxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:53:03 -0400
+Received: by mail-ed1-f47.google.com with SMTP id g24so7909459edu.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 05:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sJ9lwG3RTP+Jvi/HZawXrUdGY7AI93wOtzLOW9EdgGk=;
+        b=0UUia2/qGEF00d/i/y8PSkp/UHVDdyuDytcD3HFpzES8GBzFXkOL9FU2pcMd4H+ElV
+         fLO/0YNsUioOlhgtGrVm2aA+cR1Xs2RGMwH7kfxlPmxWH20wOW/kiVgtmacdjFVnJiFz
+         Fbme+Kzl3zTGMfgJKjQKJdnNS0Y0ffPZCaL2e6FYFzkyuEbr+SZk3F+X77cxn8+LuKLE
+         UAcHGrhi3U5XbblvhIMSuhUbZKm2d26JS+S/gC4cVAoG/jPA27zoU4muERx61y6Z/W4a
+         xoxkzuQleilkx70JqbhE0KETyo7dIKGiKxtHoAAnH2Dbp0RnhAYHheqYQb6Ru9LgYNfY
+         nMXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sJ9lwG3RTP+Jvi/HZawXrUdGY7AI93wOtzLOW9EdgGk=;
+        b=WgWNAoMSLbtocLsYZJBKWtiFp6jETF0N0jm0LurLwXcVv9IAdyH5F02KYCwuAtRRIW
+         0euB2W4A3WSkjEf6wvGiVAjHyWqBGGkJkDFgjcUy7BZbXKC/nWvCzylzCnt/sEwofj2X
+         2A+h/wZNsw31DUZwmFzHelmdYLDKsaNhOWj1C+2VPsi8sUFGcF3+EpvGBGxSPYITJnrj
+         b4wyadc1+4eCxWHYWHY+W8Sx/MyuVM1WbQ2r+M5dVVombnqAjJxpI9JyKCteEVot7FmF
+         2HvnxpPwr5PsLqR7z70VzVu4ctO1yQNc5By6uOKKhW/Dkme55AcGnJNR66O1ytrwiEhJ
+         1o/A==
+X-Gm-Message-State: APjAAAUvnFrWeSdB61Ct5dKPzuUNo/TZnHH0bQOGsO+c6hDHm2wbBc59
+        7y/UcGOi6BH+cCC4rayb5GFVSLtL8C0=
+X-Google-Smtp-Source: APXvYqzdkhhcak1xWdA+IKDsOWAlWIvSXkkrHP68LeLhE8lEQrCEEok6PsdDDqVswLNoQtlst9PvIg==
+X-Received: by 2002:a17:906:aeca:: with SMTP id me10mr13012730ejb.255.1567169581381;
+        Fri, 30 Aug 2019 05:53:01 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r23sm996022edx.1.2019.08.30.05.53.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 05:53:00 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 86ED61023D2; Fri, 30 Aug 2019 15:53:04 +0300 (+03)
+Date:   Fri, 30 Aug 2019 15:53:04 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190830125304.m6aouvq5ohkerfls@box>
+References: <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
+ <20190827120923.GB7538@dhcp22.suse.cz>
+ <20190827121739.bzbxjloq7bhmroeq@box>
+ <20190827125911.boya23eowxhqmopa@box>
+ <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
+ <20190828075708.GF7386@dhcp22.suse.cz>
+ <20190828140329.qpcrfzg2hmkccnoq@box>
+ <20190828141253.GM28313@dhcp22.suse.cz>
+ <20190828144658.ar4fajfuffn6k2ki@black.fi.intel.com>
+ <20190828160224.GP28313@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 30 Aug 2019 12:49:37 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828160224.GP28313@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 06:19:03 -0500
-Parav Pandit <parav@mellanox.com> wrote:
-
-> Updated documentation for optional read only sysfs attribute.
-
-I'd probably merge this into the patch introducing the attribute.
-
+On Wed, Aug 28, 2019 at 06:02:24PM +0200, Michal Hocko wrote:
+> > > 
+> > > Any idea about a bad case?
+> > 
+> > Not really.
+> > 
+> > How bad you want it to get? How many processes share the page? Access
+> > pattern? Locking situation?
 > 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  Documentation/driver-api/vfio-mediated-device.rst | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-> index 25eb7d5b834b..0ab03d3f5629 100644
-> --- a/Documentation/driver-api/vfio-mediated-device.rst
-> +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> @@ -270,6 +270,7 @@ Directories and Files Under the sysfs for Each mdev Device
->           |--- remove
->           |--- mdev_type {link to its type}
->           |--- vendor-specific-attributes [optional]
-> +         |--- alias [optional]
+> Let's say how hard a regular user can make this?
 
-"optional" implies "not always present" to me, not "might return a read
-error if not available". Don't know if there's a better way to tag
-this? Or make it really optional? :)
+It bumped to ~170 ms if each THP was mapped 5 times.
 
->  
->  * remove (write only)
->  
-> @@ -281,6 +282,10 @@ Example::
->  
->  	# echo 1 > /sys/bus/mdev/devices/$mdev_UUID/remove
->  
-> +* alias (read only)
-> +Whenever a parent requested to generate an alias, each mdev is assigned a unique
-> +alias by the mdev core. This file shows the alias of the mdev device.
+Adding ptl contention (tight loop of MADV_DONTNEED) in 3 processes that
+maps the page, the time to split bumped to ~740ms.
 
-It's not really the parent, but the vendor driver requesting this,
-right? Also, "each mdev" is a bit ambiguous, as this is only true for
-the subset of mdevs created via that driver. Lastly, if we stick with
-the "returns an error if not implemented" approach, that should also be
-mentioned here.
+Overally, it's reasonable to take ~100ms per GB of huge pages as rule of
+thumb.
 
-> +
->  Mediated device Hot plug
->  ------------------------
->  
-
+-- 
+ Kirill A. Shutemov
