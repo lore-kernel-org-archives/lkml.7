@@ -2,109 +2,173 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B44C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85CBC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5AE22CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0UUia2/q"
+	by mail.kernel.org (Postfix) with ESMTP id 9698D20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfH3MxD (ORCPT
+        id S1727968AbfH3MxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:53:03 -0400
-Received: from mail-ed1-f47.google.com ([209.85.208.47]:36688 "EHLO
-        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfH3MxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:53:03 -0400
-Received: by mail-ed1-f47.google.com with SMTP id g24so7909459edu.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 05:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sJ9lwG3RTP+Jvi/HZawXrUdGY7AI93wOtzLOW9EdgGk=;
-        b=0UUia2/qGEF00d/i/y8PSkp/UHVDdyuDytcD3HFpzES8GBzFXkOL9FU2pcMd4H+ElV
-         fLO/0YNsUioOlhgtGrVm2aA+cR1Xs2RGMwH7kfxlPmxWH20wOW/kiVgtmacdjFVnJiFz
-         Fbme+Kzl3zTGMfgJKjQKJdnNS0Y0ffPZCaL2e6FYFzkyuEbr+SZk3F+X77cxn8+LuKLE
-         UAcHGrhi3U5XbblvhIMSuhUbZKm2d26JS+S/gC4cVAoG/jPA27zoU4muERx61y6Z/W4a
-         xoxkzuQleilkx70JqbhE0KETyo7dIKGiKxtHoAAnH2Dbp0RnhAYHheqYQb6Ru9LgYNfY
-         nMXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sJ9lwG3RTP+Jvi/HZawXrUdGY7AI93wOtzLOW9EdgGk=;
-        b=WgWNAoMSLbtocLsYZJBKWtiFp6jETF0N0jm0LurLwXcVv9IAdyH5F02KYCwuAtRRIW
-         0euB2W4A3WSkjEf6wvGiVAjHyWqBGGkJkDFgjcUy7BZbXKC/nWvCzylzCnt/sEwofj2X
-         2A+h/wZNsw31DUZwmFzHelmdYLDKsaNhOWj1C+2VPsi8sUFGcF3+EpvGBGxSPYITJnrj
-         b4wyadc1+4eCxWHYWHY+W8Sx/MyuVM1WbQ2r+M5dVVombnqAjJxpI9JyKCteEVot7FmF
-         2HvnxpPwr5PsLqR7z70VzVu4ctO1yQNc5By6uOKKhW/Dkme55AcGnJNR66O1ytrwiEhJ
-         1o/A==
-X-Gm-Message-State: APjAAAUvnFrWeSdB61Ct5dKPzuUNo/TZnHH0bQOGsO+c6hDHm2wbBc59
-        7y/UcGOi6BH+cCC4rayb5GFVSLtL8C0=
-X-Google-Smtp-Source: APXvYqzdkhhcak1xWdA+IKDsOWAlWIvSXkkrHP68LeLhE8lEQrCEEok6PsdDDqVswLNoQtlst9PvIg==
-X-Received: by 2002:a17:906:aeca:: with SMTP id me10mr13012730ejb.255.1567169581381;
-        Fri, 30 Aug 2019 05:53:01 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r23sm996022edx.1.2019.08.30.05.53.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 05:53:00 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 86ED61023D2; Fri, 30 Aug 2019 15:53:04 +0300 (+03)
-Date:   Fri, 30 Aug 2019 15:53:04 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Message-ID: <20190830125304.m6aouvq5ohkerfls@box>
-References: <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
- <20190827120923.GB7538@dhcp22.suse.cz>
- <20190827121739.bzbxjloq7bhmroeq@box>
- <20190827125911.boya23eowxhqmopa@box>
- <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
- <20190828075708.GF7386@dhcp22.suse.cz>
- <20190828140329.qpcrfzg2hmkccnoq@box>
- <20190828141253.GM28313@dhcp22.suse.cz>
- <20190828144658.ar4fajfuffn6k2ki@black.fi.intel.com>
- <20190828160224.GP28313@dhcp22.suse.cz>
+        Fri, 30 Aug 2019 08:53:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:56142 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbfH3MxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:53:18 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 05:53:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="183793140"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 30 Aug 2019 05:53:15 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i3gOw-0007cr-9c; Fri, 30 Aug 2019 15:53:14 +0300
+Date:   Fri, 30 Aug 2019 15:53:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 07/10] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Message-ID: <20190830125314.GG2680@smile.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-8-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828160224.GP28313@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190829101043.24963-8-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 06:02:24PM +0200, Michal Hocko wrote:
-> > > 
-> > > Any idea about a bad case?
-> > 
-> > Not really.
-> > 
-> > How bad you want it to get? How many processes share the page? Access
-> > pattern? Locking situation?
+On Thu, Aug 29, 2019 at 01:10:40PM +0300, Sakari Ailus wrote:
+> Instead of implementing our own means of discovering parent nodes, node
+> names or counting how many parents a node has, use the newly added
+> functions in the fwnode API to obtain that information.
 > 
-> Let's say how hard a regular user can make this?
 
-It bumped to ~170 ms if each THP was mapped 5 times.
+Some style comments below.
+Nevertheless,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Adding ptl contention (tight loop of MADV_DONTNEED) in 3 processes that
-maps the page, the time to split bumped to ~740ms.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  lib/vsprintf.c | 38 ++++++++++++++++----------------------
+>  1 file changed, 16 insertions(+), 22 deletions(-)
+> 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b00b57f9f911f..a04a2167101ef 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -38,6 +38,7 @@
+>  #include <net/addrconf.h>
+>  #include <linux/siphash.h>
+>  #include <linux/compiler.h>
+> +#include <linux/property.h>
+>  #ifdef CONFIG_BLOCK
+>  #include <linux/blkdev.h>
+>  #endif
+> @@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+>  	return format_flags(buf, end, flags, names);
+>  }
+>  
+> -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+> -{
+> -	for ( ; np && depth; depth--)
+> -		np = np->parent;
+> -
+> -	return kbasename(np->full_name);
+> -}
+> -
+>  static noinline_for_stack
+> -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
 
-Overally, it's reasonable to take ~100ms per GB of huge pages as rule of
-thumb.
+> +char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
+> +			      char *end)
+
+I would leave it on one line.
+
+>  {
+>  	int depth;
+> -	const struct device_node *parent = np->parent;
+>  
+> -	/* special case for root node */
+> -	if (!parent)
+> -		return string_nocheck(buf, end, "/", default_str_spec);
+> +	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
+> +		struct fwnode_handle *__fwnode =
+> +			fwnode_get_nth_parent(fwnode, depth);
+
+Ditto if you name temporary variable like fw / fh / fn / etc.
+
+>  
+> -	for (depth = 0; parent->parent; depth++)
+> -		parent = parent->parent;
+> -
+> -	for ( ; depth >= 0; depth--) {
+> -		buf = string_nocheck(buf, end, "/", default_str_spec);
+> -		buf = string(buf, end, device_node_name_for_depth(np, depth),
+
+> +		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
+> +			     default_str_spec);
+> +		buf = string(buf, end, fwnode_get_name(__fwnode),
+>  			     default_str_spec);
+
+Ditto.
+
+> +
+> +		fwnode_handle_put(__fwnode);
+>  	}
+> +
+>  	return buf;
+>  }
+>  
+> @@ -1933,10 +1926,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  
+>  		switch (*fmt) {
+>  		case 'f':	/* full_name */
+> -			buf = device_node_gen_full_name(dn, buf, end);
+
+> +			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
+> +						      end);
+
+Ditto, disregard checkpatch.
+
+>  			break;
+>  		case 'n':	/* name */
+> -			p = kbasename(of_node_full_name(dn));
+> +			p = fwnode_get_name(of_fwnode_handle(dn));
+>  			precision = str_spec.precision;
+>  			str_spec.precision = strchrnul(p, '@') - p;
+>  			buf = string(buf, end, p, str_spec);
+> @@ -1946,7 +1940,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
+>  			break;
+>  		case 'P':	/* path-spec */
+> -			p = kbasename(of_node_full_name(dn));
+> +			p = fwnode_get_name(of_fwnode_handle(dn));
+>  			if (!p[1])
+>  				p = "/";
+>  			buf = string(buf, end, p, str_spec);
+> -- 
+> 2.20.1
+> 
 
 -- 
- Kirill A. Shutemov
+With Best Regards,
+Andy Shevchenko
+
+
