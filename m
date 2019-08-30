@@ -2,110 +2,87 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E14C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFD5C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FCA23426
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4EA23426
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfH3Ole convert rfc822-to-8bit (ORCPT
+        id S1728088AbfH3Opm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:41:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50472 "EHLO mx1.redhat.com"
+        Fri, 30 Aug 2019 10:45:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:33318 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfH3Ole (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:41:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A45901053717;
-        Fri, 30 Aug 2019 14:41:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F31AF414B;
-        Fri, 30 Aug 2019 14:41:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov>
-References: <21eb33e8-5624-0124-8690-bbea41a1b589@tycho.nsa.gov> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717352079.2204.16378075382991665807.stgit@warthog.procyon.org.uk>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/11] selinux: Implement the watch_key security hook [ver #7]
+        id S1727135AbfH3Opm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:45:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 307CB344;
+        Fri, 30 Aug 2019 07:45:41 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 657F23F703;
+        Fri, 30 Aug 2019 07:45:38 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 15:45:36 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>, eric@anholt.net,
+        linux-riscv@lists.infradead.org, frowand.list@gmail.com,
+        m.szyprowski@samsung.com, linux-arch@vger.kernel.org,
+        f.fainelli@gmail.com, will@kernel.org, devicetree@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com,
+        robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, phill@raspberryi.org,
+        mbrugger@suse.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        wahrenst@gmx.net, akpm@linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
+Message-ID: <20190830144536.GJ36992@arrakis.emea.arm.com>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+ <20190820145821.27214-2-nsaenzjulienne@suse.de>
+ <20190826070939.GD11331@lst.de>
+ <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <13307.1567176090.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 30 Aug 2019 15:41:30 +0100
-Message-ID: <13308.1567176090@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Fri, 30 Aug 2019 14:41:33 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-How about the attached instead, then?
+On Mon, Aug 26, 2019 at 03:46:52PM +0200, Nicolas Saenz Julienne wrote:
+> On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
+> > On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
+> > > Some architectures have platform specific DMA addressing limitations.
+> > > This will allow for hardware description code to provide the constraints
+> > > in a generic manner, so as for arch code to properly setup it's memory
+> > > zones and DMA mask.
+> > 
+> > I know this just spreads the arm code, but I still kinda hate it.
+> 
+> Rob's main concern was finding a way to pass the constraint from HW definition
+> to arch without widening fdt's architecture specific function surface. I'd say
+> it's fair to argue that having a generic mechanism makes sense as it'll now
+> traverse multiple archs and subsystems.
+> 
+> I get adding globals like this is not very appealing, yet I went with it as it
+> was the easier to integrate with arm's code. Any alternative suggestions?
 
-David
----
-commit 00444a695b35c602230ac2cabb4f1d7e94e3966d
-Author: David Howells <dhowells@redhat.com>
-Date:   Thu Aug 29 17:01:34 2019 +0100
+In some discussion with Robin, since it's just RPi4 that we are aware of
+having such requirement on arm64, he suggested that we have a permanent
+ZONE_DMA on arm64 with a default size of 1GB. It should cover all arm64
+SoCs we know of without breaking the single Image binary. The arch/arm
+can use its current mach-* support.
 
-    selinux: Implement the watch_key security hook
-    
-    Implement the watch_key security hook to make sure that a key grants the
-    caller View permission in order to set a watch on a key.
-    
-    For the moment, the watch_devices security hook is left unimplemented as
-    it's not obvious what the object should be since the queue is global and
-    didn't previously exist.
-    
-    Signed-off-by: David Howells <dhowells@redhat.com>
+I may like this more than the proposed early_init_dt_get_dma_zone_size()
+here which checks for specific SoCs (my preferred way was to build the
+mask from all buses described in DT but I hadn't realised the
+complications).
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 74dd46de01b6..88df06969bed 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -6533,6 +6533,17 @@ static int selinux_key_getsecurity(struct key *key, char **_buffer)
- 	*_buffer = context;
- 	return rc;
- }
-+
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+static int selinux_watch_key(struct key *key)
-+{
-+	struct key_security_struct *ksec = key->security;
-+	u32 sid = current_sid();
-+
-+	return avc_has_perm(&selinux_state,
-+			    sid, ksec->sid, SECCLASS_KEY, KEY_NEED_VIEW, NULL);
-+}
-+#endif
- #endif
- 
- #ifdef CONFIG_SECURITY_INFINIBAND
-@@ -6965,6 +6976,9 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(key_free, selinux_key_free),
- 	LSM_HOOK_INIT(key_permission, selinux_key_permission),
- 	LSM_HOOK_INIT(key_getsecurity, selinux_key_getsecurity),
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+	LSM_HOOK_INIT(watch_key, selinux_watch_key),
-+#endif
- #endif
- 
- #ifdef CONFIG_AUDIT
+-- 
+Catalin
