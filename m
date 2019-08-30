@@ -2,272 +2,167 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2995AC3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C7C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F360421897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B99D23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfH3Pnm (ORCPT
+        id S1728476AbfH3Pnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:43:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:34172 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfH3Pnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:43:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71040344;
-        Fri, 30 Aug 2019 08:43:40 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9729F3F703;
-        Fri, 30 Aug 2019 08:43:38 -0700 (PDT)
-Subject: Re: [PATCH 4/7] iommu/arm-smmu: Add global/context fault
- implementation hooks
-To:     Krishna Reddy <vdumpa@nvidia.com>
-Cc:     snikam@nvidia.com, thomasz@nvidia.com, jtukkinen@nvidia.com,
-        mperttunen@nvidia.com, praithatha@nvidia.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        talho@nvidia.com, yhsu@nvidia.com, linux-tegra@vger.kernel.org,
-        treding@nvidia.com, avanbrunt@nvidia.com,
-        linux-arm-kernel@lists.infradead.org
-References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
- <1567118827-26358-5-git-send-email-vdumpa@nvidia.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5ab7c402-344d-0967-2ecf-21e24ecd0a0f@arm.com>
-Date:   Fri, 30 Aug 2019 16:43:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 30 Aug 2019 11:43:52 -0400
+Received: from mx0b-00176a03.pphosted.com ([67.231.157.48]:50670 "EHLO
+        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727883AbfH3Pnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:43:50 -0400
+X-Greylist: delayed 4977 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Aug 2019 11:43:49 EDT
+Received: from pps.filterd (m0048205.ppops.net [127.0.0.1])
+        by m0048205.ppops.net-00176a03. (8.16.0.27/8.16.0.27) with SMTP id x7UEJM78038302;
+        Fri, 30 Aug 2019 10:20:52 -0400
+From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+To:     Seunghun Han <kkamagui@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Thread-Topic: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping
+ mechanism for supporting AMD's fTPM
+Thread-Index: AQHVXxlOrNmKX2KHXEaevQ/odv4D9acT5e0AgAAT9ID//79NoA==
+Date:   Fri, 30 Aug 2019 14:20:49 +0000
+Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
+References: <20190830095639.4562-1-kkamagui@gmail.com>
+ <20190830095639.4562-3-kkamagui@gmail.com> <20190830124334.GA10004@ziepe.ca>
+ <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+In-Reply-To: <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jTWpFeU5EY3pPVFV3WEdGd2NHUmhkR0ZjY205aGJXbHVaMXd3T1dRNE5E?=
+ =?utf-8?B?bGlOaTB6TW1RekxUUmhOREF0T0RWbFpTMDJZamcwWW1FeU9XVXpOV0pjYlhO?=
+ =?utf-8?B?bmMxeHRjMmN0TldNek9HSmpPRFl0WTJJek1TMHhNV1U1TFRobE16WXRZVFJq?=
+ =?utf-8?B?TTJZd1lqVTVPR0V6WEdGdFpTMTBaWE4wWERWak16aGlZemc0TFdOaU16RXRN?=
+ =?utf-8?B?VEZsT1MwNFpUTTJMV0UwWXpObU1HSTFPVGhoTTJKdlpIa3VkSGgwSWlCemVq?=
+ =?utf-8?B?MGlOREV5TVNJZ2REMGlNVE15TVRFMk5EZzBORGd5T0RneE16a3lJaUJvUFNK?=
+ =?utf-8?B?QmFEWlljSEowYkc0MmMwOHdWbkZHTVROelFUUTRhRlk1UmtFOUlpQnBaRDBp?=
+ =?utf-8?B?SWlCaWJEMGlNQ0lnWW04OUlqRWlJR05wUFNKalFVRkJRVVZTU0ZVeFVsTlNW?=
+ =?utf-8?B?VVpPUTJkVlFVRkZiME5CUVVKM1ZqVk5aVkJzTDFaQlpYVlhVSFZrWjFCUGNY?=
+ =?utf-8?B?bzJOVmtyTlRKQk9EWnlUVVJCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJTRUZCUVVGRVlVRlJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlJVRkJVVUZDUVVGQlFVWjBSMlZSZDBGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VW8wUVVGQlFtNUJSMVZCV0hkQ2FrRkhPRUZpWjBKdFFVZHJRVnBCUW14QlJ6?=
+ =?utf-8?B?UkJaRUZDY0VGSFJVRmlRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFXZEJRVUZCUVVGdVowRkJRVWRqUVZwUlFtWkJSMmRCWVZGQ2JrRkhaMEZp?=
+ =?utf-8?B?UVVJMVFVZE5RV0ozUW5WQlIxbEJZVkZDYTBGSFZVRmlaMEl3UVVkclFWbFJR?=
+ =?utf-8?B?bk5CUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJV?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVU5CUVVGQlFVRkRaVUZCUVVGYWQwSnNRVVk0UVdKblFu?=
+ =?utf-8?B?WkJSelJCWTBGQ01VRkhTVUZpUVVKd1FVZE5RVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUWtGQlFVRkJRVUZCUVVGSlFVRkJRVUZCUVQwOUlpOCtQQzl0?=
+ =?utf-8?B?WlhSaFBnPT0=?=
+x-dg-rorf: 
+x-originating-ip: [3.159.19.191]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1567118827-26358-5-git-send-email-vdumpa@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for supporting
+ AMD's fTPM
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908300147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 23:47, Krishna Reddy wrote:
-> Add global/context fault hooks to allow Nvidia SMMU implementation
-> handle faults across multiple SMMUs.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
-> ---
->   drivers/iommu/arm-smmu-nvidia.c | 127 ++++++++++++++++++++++++++++++++++++++++
->   drivers/iommu/arm-smmu.c        |   6 ++
->   drivers/iommu/arm-smmu.h        |   4 ++
->   3 files changed, 137 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
-> index a429b2c..b2a3c49 100644
-> --- a/drivers/iommu/arm-smmu-nvidia.c
-> +++ b/drivers/iommu/arm-smmu-nvidia.c
-> @@ -14,6 +14,10 @@
->   
->   #define NUM_SMMU_INSTANCES 3
->   
-> +static irqreturn_t nsmmu_context_fault_inst(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst);
-> +
->   struct nvidia_smmu {
->   	struct arm_smmu_device	smmu;
->   	int			num_inst;
-> @@ -87,12 +91,135 @@ static void nsmmu_tlb_sync(struct arm_smmu_device *smmu, int page,
->   		nsmmu_tlb_sync_wait(smmu, page, sync, status, i);
->   }
->   
-> +static irqreturn_t nsmmu_global_fault_inst(int irq,
-> +					       struct arm_smmu_device *smmu,
-> +					       int inst)
-> +{
-> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
-> +
-> +	gfsr = readl_relaxed(nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
-> +	gfsynr0 = readl_relaxed(nsmmu_page(smmu, inst, 0) +
-> +				ARM_SMMU_GR0_sGFSYNR0);
-> +	gfsynr1 = readl_relaxed(nsmmu_page(smmu, inst, 0) +
-> +				ARM_SMMU_GR0_sGFSYNR1);
-> +	gfsynr2 = readl_relaxed(nsmmu_page(smmu, inst, 0) +
-> +				ARM_SMMU_GR0_sGFSYNR2);
-> +
-> +	if (!gfsr)
-> +		return IRQ_NONE;
-> +
-> +	dev_err_ratelimited(smmu->dev,
-> +		"Unexpected global fault, this could be serious\n");
-> +	dev_err_ratelimited(smmu->dev,
-> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
-> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
-> +
-> +	writel_relaxed(gfsr, nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t nsmmu_global_fault(int irq, struct arm_smmu_device *smmu)
-> +{
-> +	int i;
-> +	irqreturn_t irq_ret = IRQ_NONE;
-> +
-> +	/* Interrupt line is shared between global and context faults.
-> +	 * Check for both type of interrupts on either fault handlers.
-> +	 */
-> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret = nsmmu_context_fault_inst(irq, smmu, 0, i);
-> +		if (irq_ret == IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret = nsmmu_global_fault_inst(irq, smmu, i);
-> +		if (irq_ret == IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
-> +static irqreturn_t nsmmu_context_fault_bank(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst)
-> +{
-> +	u32 fsr, fsynr, cbfrsynra;
-> +	unsigned long iova;
-> +
-> +	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
-> +	if (!(fsr & FSR_FAULT))
-> +		return IRQ_NONE;
-> +
-> +	fsynr = readl_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
-> +			      ARM_SMMU_CB_FSYNR0);
-> +	iova = readq_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
-> +			     ARM_SMMU_CB_FAR);
-> +	cbfrsynra = readl_relaxed(nsmmu_page(smmu, inst, 1) +
-> +				  ARM_SMMU_GR1_CBFRSYNRA(idx));
-> +
-> +	dev_err_ratelimited(smmu->dev,
-> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
-> +			    fsr, iova, fsynr, cbfrsynra, idx);
-> +
-> +	writel_relaxed(fsr, nsmmu_page(smmu, inst, smmu->numpage + idx) +
-> +			    ARM_SMMU_CB_FSR);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t nsmmu_context_fault_inst(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst)
-> +{
-> +	irqreturn_t irq_ret = IRQ_NONE;
-> +
-> +	/* Interrupt line shared between global and all context faults.
-> +	 * Check for faults across all contexts.
-> +	 */
-> +	for (idx = 0; idx < smmu->num_context_banks; idx++) {
-> +		irq_ret = nsmmu_context_fault_bank(irq, smmu, idx, inst);
-> +
-> +		if (irq_ret == IRQ_HANDLED)
-> +			break;
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
-> +static irqreturn_t nsmmu_context_fault(int irq,
-> +				       struct arm_smmu_device *smmu,
-> +				       int cbndx)
-> +{
-> +	int i;
-> +	irqreturn_t irq_ret = IRQ_NONE;
-> +
-> +	/* Interrupt line is shared between global and context faults.
-> +	 * Check for both type of interrupts on either fault handlers.
-> +	 */
-> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret = nsmmu_global_fault_inst(irq, smmu, i);
-> +		if (irq_ret == IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++) {
-> +		irq_ret = nsmmu_context_fault_inst(irq, smmu, cbndx, i);
-> +		if (irq_ret == IRQ_HANDLED)
-> +			return irq_ret;
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
->   static const struct arm_smmu_impl nsmmu_impl = {
->   	.read_reg = nsmmu_read_reg,
->   	.write_reg = nsmmu_write_reg,
->   	.read_reg64 = nsmmu_read_reg64,
->   	.write_reg64 = nsmmu_write_reg64,
->   	.tlb_sync = nsmmu_tlb_sync,
-> +	.global_fault = nsmmu_global_fault,
-> +	.context_fault = nsmmu_context_fault,
->   };
->   
->   struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index f5454e71..9cc532d 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -454,6 +454,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
->   	struct arm_smmu_device *smmu = smmu_domain->smmu;
->   	int idx = smmu_domain->cfg.cbndx;
->   
-> +	if (smmu->impl->context_fault)
-> +		return smmu->impl->context_fault(irq, smmu, idx);
-> +
->   	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
->   	if (!(fsr & FSR_FAULT))
->   		return IRQ_NONE;
-> @@ -475,6 +478,9 @@ static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
->   	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
->   	struct arm_smmu_device *smmu = dev;
->   
-> +	if (smmu->impl->global_fault)
-> +		return smmu->impl->global_fault(irq, smmu);
-
-Can't we just register impl->global_fault (if set) instead of 
-arm_smmu_global_fault as the handler when we first set up the IRQs in 
-arm_smmu_device_probe()?
-
-Ideally we'd do the same for the context banks as well, although we 
-might need an additional hook from which to request the secondary IRQs 
-that the main flow can't accommodate.
-
-Robin.
-
-> +
->   	gfsr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sGFSR);
->   	gfsynr0 = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sGFSYNR0);
->   	gfsynr1 = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sGFSYNR1);
-> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> index d3217f1..dec5e1a 100644
-> --- a/drivers/iommu/arm-smmu.h
-> +++ b/drivers/iommu/arm-smmu.h
-> @@ -17,6 +17,7 @@
->   #include <linux/io-64-nonatomic-hi-lo.h>
->   #include <linux/io-pgtable.h>
->   #include <linux/iommu.h>
-> +#include <linux/irqreturn.h>
->   #include <linux/mutex.h>
->   #include <linux/spinlock.h>
->   #include <linux/types.h>
-> @@ -340,6 +341,9 @@ struct arm_smmu_impl {
->   	int (*init_context)(struct arm_smmu_domain *smmu_domain);
->   	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
->   			 int status);
-> +	irqreturn_t (*global_fault)(int irq, struct arm_smmu_device *smmu);
-> +	irqreturn_t (*context_fault)(int irq, struct arm_smmu_device *smmu,
-> +				     int cbndx);
->   };
->   
->   static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
-> 
+PiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1pbnRl
+Z3JpdHktDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIFNldW5naHVuIEhh
+bg0KPiBTZW50OiBGcmlkYXksIEF1Z3VzdCAzMCwgMjAxOSA5OjU1IEFNDQo+IFRvOiBKYXNvbiBH
+dW50aG9ycGUgPGpnZ0B6aWVwZS5jYT4NCj4gQ2M6IEphcmtrbyBTYWtraW5lbiA8amFya2tvLnNh
+a2tpbmVuQGxpbnV4LmludGVsLmNvbT47IFBldGVyIEh1ZXdlDQo+IDxwZXRlcmh1ZXdlQGdteC5k
+ZT47IG9wZW4gbGlzdDpUUE0gREVWSUNFIERSSVZFUiA8bGludXgtDQo+IGludGVncml0eUB2Z2Vy
+Lmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2VybmVs
+QHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogRVhUOiBSZTogW1BBVENIIDIvMl0gdHBtOiB0
+cG1fY3JiOiBlbmhhbmNlIHJlc291cmNlIG1hcHBpbmcNCj4gbWVjaGFuaXNtIGZvciBzdXBwb3J0
+aW5nIEFNRCdzIGZUUE0NCj4gDQo+ID4NCj4gPiBPbiBGcmksIEF1ZyAzMCwgMjAxOSBhdCAwNjo1
+NjozOVBNICswOTAwLCBTZXVuZ2h1biBIYW4gd3JvdGU6DQo+ID4gPiBJIGdvdCBhbiBBTUQgc3lz
+dGVtIHdoaWNoIGhhZCBhIFJ5emVuIFRocmVhZHJpcHBlciAxOTUwWCBhbmQgTVNJDQo+ID4gPiBt
+YWluYm9hcmQsIGFuZCBJIGhhZCBhIHByb2JsZW0gd2l0aCBBTUQncyBmVFBNLiBNeSBtYWNoaW5l
+IHNob3dlZA0KPiBhbg0KPiA+ID4gZXJyb3IgbWVzc2FnZSBiZWxvdywgYW5kIHRoZSBmVFBNIGRp
+ZG4ndCB3b3JrIGJlY2F1c2Ugb2YgaXQuDQo+ID4gPg0KPiA+ID4gWyAgNS43MzIwODRdIHRwbV9j
+cmIgTVNGVDAxMDE6MDA6IGNhbid0IHJlcXVlc3QgcmVnaW9uIGZvciByZXNvdXJjZQ0KPiA+ID4g
+ICAgICAgICAgICAgIFttZW0gMHg3OWI0ZjAwMC0weDc5YjRmZmZmXSBbICA1LjczMjA4OV0gdHBt
+X2NyYjogcHJvYmUNCj4gPiA+IG9mIE1TRlQwMTAxOjAwIGZhaWxlZCB3aXRoIGVycm9yIC0xNg0K
+PiA+ID4NCj4gPiA+IFdoZW4gSSBzYXcgdGhlIGlvbWVtLCBJIGZvdW5kIHR3byBmVFBNIHJlZ2lv
+bnMgd2VyZSBpbiB0aGUgQUNQSSBOVlMNCj4gYXJlYS4NCj4gPiA+IFRoZSByZWdpb25zIGFyZSBi
+ZWxvdy4NCj4gPiA+DQo+ID4gPiA3OWEzOTAwMC03OWI2YWZmZiA6IEFDUEkgTm9uLXZvbGF0aWxl
+IFN0b3JhZ2UNCj4gPiA+ICAgNzliNGIwMDAtNzliNGJmZmYgOiBNU0ZUMDEwMTowMA0KPiA+ID4g
+ICA3OWI0ZjAwMC03OWI0ZmZmZiA6IE1TRlQwMTAxOjAwDQo+ID4gPg0KPiA+ID4gQWZ0ZXIgYW5h
+bHl6aW5nIHRoaXMgaXNzdWUsIEkgZm91bmQgdGhhdCBjcmJfbWFwX2lvKCkgZnVuY3Rpb24NCj4g
+PiA+IGNhbGxlZA0KPiA+ID4gZGV2bV9pb3JlbWFwX3Jlc291cmNlKCkgYW5kIGl0IGZhaWxlZC4g
+VGhlIEFDUEkgTlZTIGRpZG4ndCBhbGxvdyB0aGUNCj4gPiA+IFRQTSBDUkIgZHJpdmVyIHRvIGFz
+c2lnbiBhIHJlc291cmNlIGluIGl0IGJlY2F1c2UgYSBidXN5IGJpdCB3YXMgc2V0DQo+ID4gPiB0
+byB0aGUgQUNQSSBOVlMgYXJlYS4NCj4gPiA+DQo+ID4gPiBUbyBzdXBwb3J0IEFNRCdzIGZUUE0s
+IEkgYWRkZWQgYSBmdW5jdGlvbiB0byBjaGVjayBpbnRlcnNlY3RzDQo+ID4gPiBiZXR3ZWVuIHRo
+ZSBUUE0gcmVnaW9uIGFuZCBBQ1BJIE5WUyBiZWZvcmUgaXQgbWFwcGVkIHRoZSByZWdpb24uIElm
+DQo+ID4gPiBzb21lIGludGVyc2VjdHMgYXJlIGRldGVjdGVkLCB0aGUgZnVuY3Rpb24ganVzdCBj
+YWxscyBkZXZtX2lvcmVtYXAoKQ0KPiA+ID4gZm9yIGEgd29ya2Fyb3VuZC4gSWYgdGhlcmUgaXMg
+bm8gaW50ZXJzZWN0LCBpdCBjYWxscw0KPiBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKS4NCj4gPiA+
+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTZXVuZ2h1biBIYW4gPGtrYW1hZ3VpQGdtYWlsLmNvbT4N
+Cj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvY2hhci90cG0vdHBtX2NyYi5jIHwgMjUgKysrKysr
+KysrKysrKysrKysrKysrKystLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25z
+KCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gVGhpcyBzdGlsbCBzZWVtcyB0byByZXN1bHQg
+aW4gdHdvIGRyaXZlcnMgY29udHJvbGxpbmcgdGhlIHNhbWUgbWVtb3J5Lg0KPiA+IERvZXMgdGhp
+cyBjcmVhdGUgYnVncyBhbmQgcmFjZXMgZHVyaW5nIHJlc3VtZT8NCj4gPg0KPiA+IEphc29uDQo+
+IA0KPiBXaGVuIEkgdGVzdGVkIHRoaXMgcGF0Y2ggaW4gbXkgbWFjaGluZSwgaXQgc2VlbWVkIHRo
+YXQgQUNQSSBOVlMgd2FzIHNhdmVkDQo+IGFmdGVyIFRQTSBDUkIgZHJpdmVyIHNlbnQgIlRQTTJf
+U2h1dGRvd24oU1RBVEUpIiB0byB0aGUgZlRQTSB3aGlsZQ0KPiBzdXNwZW5kaW5nLiBUaGVuLCBB
+Q1BJIE5WUyB3YXMgcmVzdG9yZWQgd2hpbGUgcmVzdW1pbmcuDQo+IEFmdGVyIHJlc3VtaW5nLCBQ
+Q1JzIGRpZG4ndCBjaGFuZ2UgYW5kIFRQTTIgdG9vbHMgc3VjaCBhcyB0cG0yX3Bjcmxpc3QsDQo+
+IHRwbTJfZXh0ZW5kLCB0cG0yX2dldHJhbmRvbXMgd29ya2VkIHdlbGwuDQo+IFNvLCBhY2NvcmRp
+bmcgdG8gbXkgdGVzdCByZXN1bHQsIGl0IHNlZW1zIHRoYXQgdGhlIHBhdGNoIGRvZXNuJ3QgY3Jl
+YXRlIGJ1Z3MNCj4gYW5kIHJhY2UgZHVyaW5nIHJlc3VtZS4NCj4gDQo+IFNldW5naHVuDQoNClRo
+aXMgd2FzIGRpc2N1c3NlZCBlYXJsaWVyIG9uIHRoZSBsaXN0Lg0KVGhlIGNvbnNlbnN1cyB3YXMg
+dGhhdCwgd2hpbGUgc2FmZSBub3csIHRoaXMgd291bGQgYmUgZnJhZ2lsZSwgYW5kIHN1YmplY3Qg
+dG8gDQp1bmV4cGVjdGVkIGNoYW5nZXMgaW4gQUNQSS9OVlMsIGFuZCB3ZSByZWFsbHkgbmVlZCB0
+byB0ZWxsIE5WUyB0byBleGNsdWRlIHRoZQ0KcmVnaW9ucyBmb3IgbG9uZyB0ZXJtIHNhZmV0eS4N
+Cg0KQXMgc2VwYXJhdGUgaXNzdWVzLCB0aGUgcGF0Y2hlcyBkbyBub3Qgd29yayBhdCBhbGwgb24g
+c29tZSBvZiBteSBBTUQgc3lzdGVtcy4NCkZpcnN0LCB5b3Ugb25seSBmb3JjZSB0aGUgcmVtYXAg
+aWYgdGhlIG92ZXJsYXAgaXMgd2l0aCBOVlMsIGJ1dCBJIGhhdmUgc3lzdGVtcw0Kd2hlcmUgdGhl
+IG92ZXJsYXAgaXMgd2l0aCBvdGhlciByZXNlcnZlZCByZWdpb25zLiBZb3Ugc2hvdWxkIGZvcmNl
+IHRoZSByZW1hcA0KcmVnYXJkbGVzcywgYnV0IGlmIGl0IGlzIE5WUywgZ3JhYiB0aGUgc3BhY2Ug
+YmFjayBmcm9tIE5WUy4NCg0KU2Vjb25kLCB0aGUgcGF0Y2ggZXh0ZW5kcyB0aGUgd3JvbmcgYmVo
+YXZpb3Igb2YgdGhlIGN1cnJlbnQgZHJpdmVyIHRvIGJvdGgNCmJ1ZmZlciByZWdpb25zLiBJZiB0
+aGVyZSBpcyBhIGNvbmZsaWN0IGJldHdlZW4gd2hhdCB0aGUgZGV2aWNlJ3MgY29udHJvbA0KcmVn
+aXN0ZXIgc2F5cywgYW5kIHdoYXQgQUNQSSBzYXlzLCB0aGUgZXhpc3RpbmcgZHJpdmVyIGV4cGxp
+Y2l0bHkgInRydXN0cyB0aGUgQUNQSSIuDQpUaGlzIGlzIGp1c3Qgd3JvbmcuIFRoZSBhY3R1YWwg
+ZGV2aWNlIHdpbGwgdXNlIHRoZSBhcmVhcyBhcyBkZWZpbmVkIGJ5IGl0cw0KY29udHJvbCByZWdp
+c3RlcnMgcmVnYXJkbGVzcyBvZiB3aGF0IEFDUEkgc2F5cy4gSSB0YWxrZWQgdG8gTWljcm9zb2Z0
+LCBhbmQNCnRoZWlyIGRyaXZlciB0cnVzdHMgdGhlIGNvbnRyb2wgcmVnaXN0ZXIgdmFsdWVzLCBh
+bmQgZG9lc24ndCBldmVuIGxvb2sgYXQgdGhlDQpBQ1BJIHZhbHVlcy4NCg0KSW4gcHJhY3RpY2Us
+IEkgaGF2ZSB0ZXN0ZWQgc2V2ZXJhbCBzeXN0ZW1zIGluIHdoaWNoIHRoZSBkZXZpY2UgcmVnaXN0
+ZXJzIHNob3cNClRoZSBjb3JyZWN0IDRLIGJ1ZmZlcnMsIGJ1dCB0aGUgZHJpdmVyIGluc3RlYWQg
+dHJ1c3RzIHRoZSBBQ1BJIHZhbHVlcywgd2hpY2gNCmxpc3QganVzdCAxSyBidWZmZXJzLiAxSyBi
+dWZmZXJzIHdpbGwgbm90IHdvcmsgZm9yIGxhcmdlIHJlcXVlc3RzLCBhbmQgdGhlIA0KZGV2aWNl
+IGlzIGdvaW5nIHRvIHJlYWQgYW5kIHdyaXRlIHRoZSA0SyBidWZmZXJzIHJlZ2FyZGxlc3MuDQoN
+CmRhdmUNCg==
