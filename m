@@ -2,102 +2,106 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37554C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7761E21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0466A21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 06:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567147136;
+	bh=yLlZhjwSi0FuvKlMUG546ftoSzWKYZ+7uxnKbjaNlfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2tb/b3iafFjDEBvryW/MP1AIwaZkcPONSREmDpV+3MKn0loDGIfl1hxp0kBrQlPre
+	 SHWrz2Sf5StEFvXG4HJrk/lRz93cLpwoqqMwx8NaC0z4M9oR2k3VqNEGrN6uWkcflB
+	 1Sc9tgd7zyPhyn59GYJHfUeNyM7PKPPjcBt1F5Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfH3GiO (ORCPT
+        id S1727958AbfH3Giy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 02:38:14 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:59341 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727156AbfH3GiO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 02:38:14 -0400
-X-UUID: 52299a477fb840b4a5c534a8607efb75-20190830
-X-UUID: 52299a477fb840b4a5c534a8607efb75-20190830
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 312043307; Fri, 30 Aug 2019 14:38:12 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 14:38:10 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 14:38:10 +0800
-Message-ID: <1567147084.5942.24.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 32/32] drm/mediatek: add support for mediatek SOC
- MT8183
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 30 Aug 2019 14:38:04 +0800
-In-Reply-To: <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 30 Aug 2019 02:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbfH3Giy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 02:38:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3110021726;
+        Fri, 30 Aug 2019 06:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567147133;
+        bh=yLlZhjwSi0FuvKlMUG546ftoSzWKYZ+7uxnKbjaNlfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gCLt8q9o1tBPTkQHLIpPKFInXPSt4tlS2vG+4/nt9o65BUHDqNCVq3b/GF9BlIsRI
+         wJlYFi8va6vbi4MLzR7ScDuUvYQQIvwX7VTL1MxtB6ETuEux3FCySErPdjCWB3GzL5
+         WgkC2sDv8eNi9OTb3fAwcO0RmgNyLkzKmrTCH+gw=
+Date:   Fri, 30 Aug 2019 08:38:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peikan Tsai <peikantsai@gmail.com>, arve@android.com,
+        tkjos@android.com, maco@android.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] binder: Use kmem_cache for binder_thread
+Message-ID: <20190830063851.GG15257@kroah.com>
+References: <20190829054953.GA18328@mark-All-Series>
+ <20190829064229.GA30423@kroah.com>
+ <20190829135359.GB63638@google.com>
+ <20190829152721.ttsyfwaeygmwmcu7@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 3A53A6B57AF88A36690CA44703A5200786A336B147C0319BCC50C2D54FFA42BF2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829152721.ttsyfwaeygmwmcu7@wittgenstein>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Thu, Aug 29, 2019 at 05:27:22PM +0200, Christian Brauner wrote:
+> On Thu, Aug 29, 2019 at 09:53:59AM -0400, Joel Fernandes wrote:
+> > On Thu, Aug 29, 2019 at 08:42:29AM +0200, Greg KH wrote:
+> > > On Thu, Aug 29, 2019 at 01:49:53PM +0800, Peikan Tsai wrote:
+> > [snip] 
+> > > > The allocated size for each binder_thread is 512 bytes by kzalloc.
+> > > > Because the size of binder_thread is fixed and it's only 304 bytes.
+> > > > It will save 208 bytes per binder_thread when use create a kmem_cache
+> > > > for the binder_thread.
+> > > 
+> > > Are you _sure_ it really will save that much memory?  You want to do
+> > > allocations based on a nice alignment for lots of good reasons,
+> > > especially for something that needs quick accesses.
+> > 
+> > Alignment can be done for slab allocations, kmem_cache_create() takes an
+> > align argument. I am not sure what the default alignment of objects is
+> > though (probably no default alignment). What is an optimal alignment in your
+> > view?
 > 
-> This patch add support for mediatek SOC MT8183
-> 1.ovl_2l share driver with ovl
-> 2.rdma1 share drive with rdma0, but fifo size is different
-> 3.add mt8183 mutex private data, and mmsys private data
-> 4.add mt8183 main and external path module for crtc create
+> Probably SLAB_HWCACHE_ALIGN would make most sense.
+
+This isn't memory accessing hardware, so I don't think it would, right?
+
+Anyway, some actual performance tests need to be run to see if any of
+this make any difference at all please...
+
+thanks,
+
+greg k-h
+
+
 > 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c  | 18 +++++++++
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 27 ++++++++++++-
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c   | 69 ++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.h   |  1 +
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c   | 47 ++++++++++++++++++++++
->  5 files changed, 161 insertions(+), 1 deletion(-)
+> > 
+> > > Did you test your change on a system that relies on binder and find any
+> > > speed improvement or decrease, and any actual memory savings?
+> > > 
+> > > If so, can you post your results?
+> > 
+> > That's certainly worth it and I thought of asking for the same, but spoke too
+> > soon!
 > 
-
-[snip]
-
-> @@ -613,6 +658,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
->  	  .data = &mt2712_mmsys_driver_data},
->  	{ .compatible = "mediatek,mt8173-mmsys",
->  	  .data = &mt8173_mmsys_driver_data},
-> +	{ .compatible = "mediatek,mt8183-display",
-
-This should be "mediatek,mt8183-mmsys".
-
-Regards,
-CK
-
-> +	  .data = &mt8183_mmsys_driver_data},
->  	{ }
->  };
->  
-
-
+> Yeah, it'd be interesting to see what difference this actually makes. 
+> 
+> Christian
