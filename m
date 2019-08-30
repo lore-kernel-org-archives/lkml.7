@@ -2,138 +2,244 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C899C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C184C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CB7239C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jTGtFZaa"
+	by mail.kernel.org (Postfix) with ESMTP id D10BB2397E
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 08:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfH3Iew (ORCPT
+        id S1727985AbfH3IfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 04:34:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:60069 "EHLO ozlabs.org"
+        Fri, 30 Aug 2019 04:35:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:56004 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbfH3Iew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:34:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KXpb5KJPz9sML;
-        Fri, 30 Aug 2019 18:34:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567154089;
-        bh=9OJ8AufYKE/UYQvEH07V3RR2Rg0rrMtuziIYoRJkZRY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jTGtFZaae6vOUJlJTlW3fE0MeJlXfebAsIB3NRVa5uclMZX5B5Pzkd23/Wg7EjAQ2
-         A810/uiJUAJNJPYn+MxdLU4gun4B5NMcnND3vNPx3YzRT3GTcqAmZWWX+S+sOGOqqD
-         kHUDPkJcyK8VVt2uG2XCLXffE88IhQknEqB+ZxJnTKbwRdbztwkoyN0pocHXnqRLQI
-         EFhLTutebx+UlngX1FGnCUCBSeM7Ib1sKjHsCJF8hcGHPItiEVhC+jNOTY1fmJudJz
-         VggozfMorXdIoWq1PrL/sELIuvix5aj6JVw6EEA/IBa7jq4yrtVW2vI47HoLx9j1MX
-         mKXBku1GyIuUw==
-Date:   Fri, 30 Aug 2019 18:34:45 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Poirier <bpoirier@suse.com>,
-        Valdis =?UTF-8?B?S2zEk3RuaWVrcw==?= <valdis.kletnieks@vt.edu>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: linux-next: manual merge of the staging tree with the net-next and
- usb trees
-Message-ID: <20190830183445.7ee30c35@canb.auug.org.au>
+        id S1726653AbfH3IfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:35:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE18D344;
+        Fri, 30 Aug 2019 01:35:17 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 689183F718;
+        Fri, 30 Aug 2019 01:35:16 -0700 (PDT)
+Subject: Re: [PATCH v3 01/10] KVM: arm64: Document PV-time interface
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-2-steven.price@arm.com>
+ <20190829171548.xfk7i2bwnwl4w2po@kamzik.brq.redhat.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <22fc60f0-e3d5-900d-c067-007c39485ba9@arm.com>
+Date:   Fri, 30 Aug 2019 09:35:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7Rz0+Y84nhStRS26SvAVNmn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190829171548.xfk7i2bwnwl4w2po@kamzik.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7Rz0+Y84nhStRS26SvAVNmn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 29/08/2019 18:15, Andrew Jones wrote:
+> On Wed, Aug 21, 2019 at 04:36:47PM +0100, Steven Price wrote:
+>> Introduce a paravirtualization interface for KVM/arm64 based on the
+>> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
+>>
+>> This only adds the details about "Stolen Time" as the details of "Live
+>> Physical Time" have not been fully agreed.
+>>
+>> User space can specify a reserved area of memory for the guest and
+>> inform KVM to populate the memory with information on time that the host
+>> kernel has stolen from the guest.
+>>
+>> A hypercall interface is provided for the guest to interrogate the
+>> hypervisor's support for this interface and the location of the shared
+>> memory structures.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++++++++++++++
+>>  1 file changed, 100 insertions(+)
+>>  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+>>
+>> diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
+>> new file mode 100644
+>> index 000000000000..1ceb118694e7
+>> --- /dev/null
+>> +++ b/Documentation/virt/kvm/arm/pvtime.txt
+>> @@ -0,0 +1,100 @@
+>> +Paravirtualized time support for arm64
+>> +======================================
+>> +
+>> +Arm specification DEN0057/A defined a standard for paravirtualised time
+>> +support for AArch64 guests:
+>> +
+>> +https://developer.arm.com/docs/den0057/a
+>> +
+>> +KVM/arm64 implements the stolen time part of this specification by providing
+>> +some hypervisor service calls to support a paravirtualized guest obtaining a
+>> +view of the amount of time stolen from its execution.
+>> +
+>> +Two new SMCCC compatible hypercalls are defined:
+>> +
+>> +PV_FEATURES 0xC5000020
+>> +PV_TIME_ST  0xC5000022
+>> +
+>> +These are only available in the SMC64/HVC64 calling convention as
+>> +paravirtualized time is not available to 32 bit Arm guests. The existence of
+>> +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
+>> +mechanism before calling it.
+>> +
+>> +PV_FEATURES
+>> +    Function ID:  (uint32)  : 0xC5000020
+>> +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
+>> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
+>> +                              PV-time feature is supported by the hypervisor.
+>> +
+>> +PV_TIME_ST
+>> +    Function ID:  (uint32)  : 0xC5000022
+>> +    Return value: (int64)   : IPA of the stolen time data structure for this
+>> +                              (V)CPU. On failure:
+> 
+> Why the () around the V in VCPU?
 
-Hi all,
+There's nothing preventing the same mechanism being used without the
+virtualisation of CPUs. For example a hypervisor like Jailhouse could
+implement this interface even though there the CPU isn't being
+virtualised but is being handed over to the guest. Equally it is
+possible for firmware to provide the same mechanism (using the SMC64
+calling convention).
 
-Today's linux-next merge of the staging tree got conflicts in:
+Admittedly that's a little confusing here because the rest of this
+document is talking about KVM's implementation and normal hypervisors.
+So I'll drop the brackets.
 
-  drivers/staging/Kconfig
-  drivers/staging/Makefile
+>> +                              NOT_SUPPORTED (-1)
+>> +
+>> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
+>> +with inner and outer write back caching attributes, in the inner shareable
+>> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
+>> +meaningfully filled by the hypervisor (see structure below).
+>> +
+>> +PV_TIME_ST returns the structure for the calling VCPU.
+> 
+> The above sentence seems redundant here.
 
-between commits:
+It is an important detail that each VCPU must use PV_TIME_ST to fetch
+the address of the structure for that VCPU. E.g. It could have been
+implemented so that the hypercall took a VCPU number. So while redundant
+I do feel it's worth pointing this out explicitly.
 
-  955315b0dc8c ("qlge: Move drivers/net/ethernet/qlogic/qlge/ to drivers/st=
-aging/qlge/")
-  71ed79b0e4be ("USB: Move wusbcore and UWB to staging as it is obsolete")
+>> +
+>> +Stolen Time
+>> +-----------
+>> +
+>> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
+>> +
+>> +  Field       | Byte Length | Byte Offset | Description
+>> +  ----------- | ----------- | ----------- | --------------------------
+>> +  Revision    |      4      |      0      | Must be 0 for version 0.1
+>> +  Attributes  |      4      |      4      | Must be 0
+>> +  Stolen time |      8      |      8      | Stolen time in unsigned
+>> +              |             |             | nanoseconds indicating how
+>> +              |             |             | much time this VCPU thread
+>> +              |             |             | was involuntarily not
+>> +              |             |             | running on a physical CPU.
+>> +
+>> +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
+>> +will be present within a reserved region of the normal memory given to the
+>> +guest. The guest should not attempt to write into this memory. There is a
+>> +structure per VCPU of the guest.
+>> +
+>> +User space interface
+>> +====================
+>> +
+>> +User space can request that KVM provide the paravirtualized time interface to
+>> +a guest by creating a KVM_DEV_TYPE_ARM_PV_TIME device, for example:
+>> +
+>> +    struct kvm_create_device pvtime_device = {
+>> +            .type = KVM_DEV_TYPE_ARM_PV_TIME,
+>> +            .attr = 0,
+>> +            .flags = 0,
+>> +    };
+>> +
+>> +    pvtime_fd = ioctl(vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
+> 
+> The ioctl doesn't return the fd. If the ioctl returns zero the fd will be
+> in pvtime_device.fd.
 
-from the net-next and usb trees and commit:
+Good catch - I'm not sure quite why I wrote that. Anyway I've agreed to
+change the interface to operate on the VCPU device instead so this text
+is rewritten completely.
 
-  c48c9f7ff32b ("staging: exfat: add exfat filesystem code to staging")
+>> +
+>> +Creation of the device should be done after creating the vCPUs of the virtual
+>> +machine.
+> 
+> Or else what? Will an error be reported in that case?
 
-from the staging tree.
+This is now enforced by calling the ioctl on the VCPU device, so it's
+impossible to do in the wrong order.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+>> +
+>> +The IPA of the structures must be given to KVM. This is the base address
+>> +of an array of stolen time structures (one for each VCPU). The base address
+>> +must be page aligned. The size must be at least 64 * number of VCPUs and be a
+>> +multiple of PAGE_SIZE.
+>> +
+>> +The memory for these structures should be added to the guest in the usual
+>> +manner (e.g. using KVM_SET_USER_MEMORY_REGION).
+> 
+> Above it says the guest shouldn't attempt to write the memory. Should
+> KVM_MEM_READONLY be used with KVM_SET_USER_MEMORY_REGION for it?
 
---=20
-Cheers,
-Stephen Rothwell
+That is optional - the specification states the guest must not attempt
+to write to it - so marking it read-only for the guest should work fine
+with a conforming guest. But it's not required.
 
-diff --cc drivers/staging/Kconfig
-index fc1420f2a949,fbdc33874780..000000000000
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@@ -120,9 -118,6 +118,11 @@@ source "drivers/staging/kpc2000/Kconfig
- =20
-  source "drivers/staging/isdn/Kconfig"
- =20
- +source "drivers/staging/qlge/Kconfig"
- +
- +source "drivers/staging/wusbcore/Kconfig"
- +source "drivers/staging/uwb/Kconfig"
- +
-+ source "drivers/staging/exfat/Kconfig"
-+=20
-  endif # STAGING
-diff --cc drivers/staging/Makefile
-index b08ab677e49b,ca13f87b1e1b..000000000000
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@@ -49,7 -49,4 +49,7 @@@ obj-$(CONFIG_XIL_AXIS_FIFO)	+=3D axis-fif
-  obj-$(CONFIG_FIELDBUS_DEV)     +=3D fieldbus/
-  obj-$(CONFIG_KPC2000)		+=3D kpc2000/
-  obj-$(CONFIG_ISDN_CAPI)		+=3D isdn/
- +obj-$(CONFIG_QLGE)		+=3D qlge/
- +obj-$(CONFIG_UWB)		+=3D uwb/
- +obj-$(CONFIG_USB_WUSB)		+=3D wusbcore/
-+ obj-$(CONFIG_EXFAT_FS)		+=3D exfat/
+>> +
+>> +For example:
+>> +
+>> +    struct kvm_dev_arm_st_region region = {
+>> +            .gpa = <IPA of guest base address>,
+>> +            .size = <size in bytes>
+>> +    };
+>> +
+>> +    struct kvm_device_attr st_base = {
+>> +            .group = KVM_DEV_ARM_PV_TIME_PADDR,
+> 
+> This is KVM_DEV_ARM_PV_TIME_REGION in the code.
 
---Sig_/7Rz0+Y84nhStRS26SvAVNmn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Gah - I obviously missed that when I refactored to define the region
+rather than just the base address. Anyway this has all changed (again)
+because each VCPU has its own base address so the size is no longer
+necessary.
 
------BEGIN PGP SIGNATURE-----
+Thanks for the review,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1o36UACgkQAVBC80lX
-0GzgUggAlvhyLRTs12ZYfRL8uP2FsACfLiGBGKs7py8Acj/onxEI84OuCspxe8VH
-TlsRWV2Sf9JeFOsDv2tLGphZKM5rdXLSgxJIm5yVKpbMJmptOcVGyHaUbTzHg9X7
-oD2TpyMkFr1neO4nV+NAp9vKMyPe89IfLJz2ZSw5IrfyQ4ysW4//sAaieTdcC8Jy
-OGuUYlxRWs+D3Kwz3pGKGlD9WoTMtuX55AWBYDu1DLM23F/FPtGtJyfB7WSzrqZ4
-iVYDyG0dEuhvZyy7afPbuAI7O6kPeITddrt0uQwEOyO4FZg4n/C7UabtLLoYxETw
-Pb5HvjE5R4yHfe1OwSIx5lVJlrfO+A==
-=yPvP
------END PGP SIGNATURE-----
+Steve
 
---Sig_/7Rz0+Y84nhStRS26SvAVNmn--
+>> +            .attr = KVM_DEV_ARM_PV_TIME_ST,
+>> +            .addr = (u64)&region
+>> +    };
+>> +
+>> +    ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &st_base);
+>> -- 
+>> 2.20.1
+>>
+> 
+> Thanks,
+> drew 
+> 
+
