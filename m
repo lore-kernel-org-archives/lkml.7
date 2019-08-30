@@ -2,89 +2,257 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92B1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68252C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C3F2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DA92077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 07:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfH3HxU (ORCPT
+        id S1727781AbfH3Hy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 03:53:20 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:45343 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfH3HxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 03:53:20 -0400
-Received: from [172.20.10.2] (tmo-106-216.customers.d1-online.com [80.187.106.216])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B6BBBCECD9;
-        Fri, 30 Aug 2019 10:02:03 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190823103139.17687-1-megous@megous.com>
-Date:   Fri, 30 Aug 2019 09:53:16 +0200
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org
+        Fri, 30 Aug 2019 03:54:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50912 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726975AbfH3Hyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 03:54:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A1977AD7F;
+        Fri, 30 Aug 2019 07:54:53 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 09:54:51 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Allison Randal <allison@lohutok.net>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christian Brauner <christian@brauner.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Subject: Re: [PATCH v5 3/5] powerpc/64: make buildable without CONFIG_COMPAT
+Message-ID: <20190830095451.47ab750f@naga>
+In-Reply-To: <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
+References: <90594004804c6a9b690b69bdf0e5c4d6c880c5f4.1567117050.git.msuchanek@suse.de>
+        <8a755a692fb26b04aa4f95dccc20b076ef7dcf0c.1567146181.git.christophe.leroy@c-s.fr>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
-References: <20190823103139.17687-1-megous@megous.com>
-To:     megous@megous.com
-X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
+On Fri, 30 Aug 2019 06:35:13 +0000 (UTC)
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-> (Resend to add missing lists, sorry for the noise.)
+> On 08/29/2019 10:28 PM, Michal Suchanek wrote:
+> > There are numerous references to 32bit functions in generic and 64bit
+> > code so ifdef them out.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> > v2:
+> > - fix 32bit ifdef condition in signal.c
+> > - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> > - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> > v3:
+> > - use IS_ENABLED and maybe_unused where possible
+> > - do not ifdef declarations
+> > - clean up Makefile
+> > v4:
+> > - further makefile cleanup
+> > - simplify is_32bit_task conditions
+> > - avoid ifdef in condition by using return
+> > v5:
+> > - avoid unreachable code on 32bit
+> > - make is_current_64bit constant on !COMPAT
+> > - add stub perf_callchain_user_32 to avoid some ifdefs
+> > ---
+> >   arch/powerpc/include/asm/thread_info.h |  4 ++--
+> >   arch/powerpc/kernel/Makefile           |  7 +++----
+> >   arch/powerpc/kernel/entry_64.S         |  2 ++
+> >   arch/powerpc/kernel/signal.c           |  3 +--
+> >   arch/powerpc/kernel/syscall_64.c       |  6 ++----
+> >   arch/powerpc/kernel/vdso.c             |  5 ++---
+> >   arch/powerpc/perf/callchain.c          | 13 +++++++++++--
+> >   7 files changed, 23 insertions(+), 17 deletions(-)
+> >   
+> [...]
 > 
-> This series implements bluetooth support for Xunlong Orange Pi 3 board.
+> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> > index c84bbd4298a0..881be5c4e9bb 100644
+> > --- a/arch/powerpc/perf/callchain.c
+> > +++ b/arch/powerpc/perf/callchain.c
+> > @@ -15,7 +15,7 @@
+> >   #include <asm/sigcontext.h>
+> >   #include <asm/ucontext.h>
+> >   #include <asm/vdso.h>
+> > -#ifdef CONFIG_PPC64
+> > +#ifdef CONFIG_COMPAT
+> >   #include "../kernel/ppc32.h"
+> >   #endif
+> >   #include <asm/pte-walk.h>
+> > @@ -291,7 +291,8 @@ static inline int current_is_64bit(void)
+> >   	 * interrupt stack, and the thread flags don't get copied over
+> >   	 * from the thread_info on the main stack to the interrupt stack.
+> >   	 */
+> > -	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+> > +	return !IS_ENABLED(CONFIG_COMPAT) ||
+> > +		!test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+> >   }
+> >   
+> >   #else  /* CONFIG_PPC64 */
+> > @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+> >   
+> >   #endif /* CONFIG_PPC64 */
+> >   
+> > +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+> >   /*
+> >    * Layout for non-RT signal frames
+> >    */
+> > @@ -482,6 +484,13 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> >   		sp = next_sp;
+> >   	}
+> >   }
+> > +#else /* 32bit */
+> > +static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> > +				   struct pt_regs *regs)
+> > +{
+> > +	(void)&read_user_stack_32; /* unused if !COMPAT */  
 > 
-> The board uses AP6256 WiFi/BT 5.0 chip.
+> That looks pretty much like a hack.
 > 
-> Summary of changes:
+> See possible alternative below.
 > 
-> - add more delay to let initialize the chip
-> - let the kernel detect firmware file path
-> - add new compatible and update dt-bindings
-> - update Orange Pi 3 / H6 DTS
+> > +}
+> > +#endif /* 32bit */
+> >   
+> >   void
+> >   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+> >   
 > 
-> Please take a look.
+> ---
+>  arch/powerpc/perf/callchain.c | 62 +++++++++++++++++++------------------------
+>  1 file changed, 27 insertions(+), 35 deletions(-)
 > 
-> thank you and regards,
->  Ondrej Jirman
-> 
-> Ondrej Jirman (5):
->  dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
->  bluetooth: bcm: Add support for loading firmware for BCM4345C5
->  bluetooth: hci_bcm: Give more time to come out of reset
->  arm64: dts: allwinner: h6: Add pin configs for uart1
->  arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
-> 
-> .../bindings/net/broadcom-bluetooth.txt       |  1 +
-> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
-> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
-> drivers/bluetooth/btbcm.c                     |  3 +++
-> drivers/bluetooth/hci_bcm.c                   |  3 ++-
-> 5 files changed, 35 insertions(+), 1 deletion(-)
+> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> index 881be5c4e9bb..1b169b32776a 100644
+> --- a/arch/powerpc/perf/callchain.c
+> +++ b/arch/powerpc/perf/callchain.c
+> @@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+>  	return read_user_stack_slow(ptr, ret, 8);
+>  }
+>  
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> -{
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+> -
+> -	pagefault_disable();
+> -	if (!__get_user_inatomic(*ret, ptr)) {
+> -		pagefault_enable();
+> -		return 0;
+> -	}
+> -	pagefault_enable();
+> -
+> -	return read_user_stack_slow(ptr, ret, 4);
+> -}
+> -
+>  static inline int valid_user_sp(unsigned long sp, int is_64)
+>  {
+>  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+> @@ -296,25 +280,10 @@ static inline int current_is_64bit(void)
+>  }
+>  
+>  #else  /* CONFIG_PPC64 */
+> -/*
+> - * On 32-bit we just access the address and let hash_page create a
+> - * HPTE if necessary, so there is no need to fall back to reading
+> - * the page tables.  Since this is called at interrupt level,
+> - * do_page_fault() won't treat a DSI as a page fault.
+> - */
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> -{
+> -	int rc;
+> -
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+>  
+> -	pagefault_disable();
+> -	rc = __get_user_inatomic(*ret, ptr);
+> -	pagefault_enable();
+> -
+> -	return rc;
+> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+> +{
+> +	return 0;
+>  }
+>  
+>  static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> @@ -344,6 +313,30 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+>  
+>  #if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+>  /*
+> + * On 32-bit we just access the address and let hash_page create a
+> + * HPTE if necessary, so there is no need to fall back to reading
+> + * the page tables.  Since this is called at interrupt level,
+> + * do_page_fault() won't treat a DSI as a page fault.
+> + */
+> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> +{
+> +	int rc;
+> +
+> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> +	    ((unsigned long)ptr & 3))
+> +		return -EFAULT;
+> +
+> +	pagefault_disable();
+> +	rc = __get_user_inatomic(*ret, ptr);
+> +	pagefault_enable();
+> +
+> +	if (IS_ENABLED(CONFIG_PPC32) || !rc)
+> +		return rc;
+> +
+> +	return read_user_stack_slow(ptr, ret, 4);
+Which is not declared here. This is not intended to be the final state,
+anyway.
 
-all 5 patches have been applied to bluetooth-next tree.
+Thanks
 
-Regards
-
-Marcel
+Michal
+> +}
+> +
+> +/*
+>   * Layout for non-RT signal frames
+>   */
+>  struct signal_frame_32 {
+> @@ -488,7 +481,6 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>  static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>  				   struct pt_regs *regs)
+>  {
+> -	(void)&read_user_stack_32; /* unused if !COMPAT */
+>  }
+>  #endif /* 32bit */
+>  
 
