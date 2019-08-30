@@ -2,143 +2,131 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C732C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3758423407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C26820659
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567178345;
-	bh=vQfKaQCOOvRxsISEVm5YkqcibbR2NduhLMlGiVwylHM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=RTKu+noq/kejefb4/KAiawT/Ni9heEzQ00sSlp5PyEAtBSl8r3uJX4B9bZwMaFRsM
-	 MS4X7+BLU6bdyZhYIl9IOYrlfpQ+llCWAROnAkFnNuywLoWLMsXwjwFpBwTzU6pHEr
-	 Iu7Eg860b+m+iTMPiuKiLi8qUZNh6Qv+Vd3K833M=
+	s=default; t=1567178419;
+	bh=qyV0RCZJt0JTNnsp/PHNLEf674aXY77Jj6dQJAqmFmg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=N2CflFySrub+5T+oiwH/DGlk4NiufJt94I768aONfgT+Sg6dySD15eOXsqzYJaobL
+	 fcvTaUg996YxJiZsZ4kNFJfSsf5QmqJk2JlWyeWnbqe2ZYsXSEzp7eU6rviWJ304QJ
+	 oIiHsEedWRtY3YrABnnxnwGHXf/sXZWtuUMQh4nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfH3PTE (ORCPT
+        id S1728088AbfH3PUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:19:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
+        Fri, 30 Aug 2019 11:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfH3PTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:19:03 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727135AbfH3PUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 11:20:18 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C070E23407;
-        Fri, 30 Aug 2019 15:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B70523407;
+        Fri, 30 Aug 2019 15:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567178342;
-        bh=vQfKaQCOOvRxsISEVm5YkqcibbR2NduhLMlGiVwylHM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HUd34ltmgb0Kcr0QVXguoMwr0LOFCR3TLG8GlgiZA3Tc1NdjOPVZHMPV0y14johUM
-         s8uuapf3mG5hF9AGpHhRQ/nMiX+ZP/j/AzDX2WvC6yT87jRsC5olXOUMx27FKWxS7I
-         i5l4GgnM6wBjoYeLSttlJA3S3K2OPj7oOqCxuOSo=
-Subject: Re: [PATCH] selftests/seccomp: fix build on older kernels
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tycho Andersen <tycho@tycho.ws>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alakesh Haloi <alakesh.haloi@gmail.com>,
-        shuah <shuah@kernel.org>
-References: <20190826144302.7745-1-tycho@tycho.ws>
- <201908291003.005EB96606@keescook>
- <f01c3383-0184-9770-c72e-7fe08b552112@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <1a3e9d47-73f5-9cf5-e050-46a455b6a6cc@kernel.org>
-Date:   Fri, 30 Aug 2019 09:19:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <f01c3383-0184-9770-c72e-7fe08b552112@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        s=default; t=1567178416;
+        bh=qyV0RCZJt0JTNnsp/PHNLEf674aXY77Jj6dQJAqmFmg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kqYiYTxN/HlygbqB9rmptMSjs8Z8Y58lJfAEwgaYbn/xMzQuZki1khG63g3bmX9yx
+         UD9FCjQOdMUd+uccyJiPFHj0+T0D5IzBrlQolLucmUX2zoYvWXpEjitzo/VROlC2sN
+         4qsfJtWmDyhWQkS2Hq9QlPdFubWuV3zg4S5SzzFI=
+Date:   Sat, 31 Aug 2019 00:20:04 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 0/4] objtool,perf: Use shared x86 insn decoder
+Message-Id: <20190831002004.d570fcb7b611860e025dbdb2@kernel.org>
+In-Reply-To: <cover.1567118001.git.jpoimboe@redhat.com>
+References: <cover.1567118001.git.jpoimboe@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 6:45 PM, shuah wrote:
-> On 8/29/19 11:06 AM, Kees Cook wrote:
->> On Mon, Aug 26, 2019 at 08:43:02AM -0600, Tycho Andersen wrote:
->>> The seccomp selftest goes to some length to build against older kernel
->>> headers, viz. all the #ifdefs at the beginning of the file. 201766a20e30
->>> ("ptrace: add PTRACE_GET_SYSCALL_INFO request") introduces some 
->>> additional
->>> macros, but doesn't do the #ifdef dance. Let's add that dance here to
->>> avoid:
->>>
->>> gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
->>> In file included from seccomp_bpf.c:51:
->>> seccomp_bpf.c: In function ‘tracer_ptrace’:
->>> seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ 
->>> undeclared (first use in this function); did you mean 
->>> ‘PTRACE_EVENT_CLONE’?
->>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->>>    __typeof__(_expected) __exp = (_expected); \
->>>               ^~~~~~~~~
->>> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>>    ^~~~~~~~~
->>> seccomp_bpf.c:1787:20: note: each undeclared identifier is reported 
->>> only once for each function it appears in
->>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->>>    __typeof__(_expected) __exp = (_expected); \
->>>               ^~~~~~~~~
->>> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>>    ^~~~~~~~~
->>> seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ 
->>> undeclared (first use in this function); did you mean 
->>> ‘PTRACE_EVENT_EXIT’?
->>>      : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
->>>        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->>>    __typeof__(_expected) __exp = (_expected); \
->>>               ^~~~~~~~~
->>> seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
->>>    EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->>>    ^~~~~~~~~
->>> make: *** [Makefile:12: seccomp_bpf] Error 1
->>>
->>> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
->>> Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
->>
->> Acked-by: Kees Cook <keescook@chromium.org>
->>
->> Alakesh Haloi also sent a fix[1] for this. I prefer Tycho's solution
->> (one #ifndef and a Fixes line). Shuah, can you please apply this?
->>
-> 
-> Kees,
-> 
-> Yes I will pick this up.
-> 
-> thanks,
-> -- Shuah
+On Thu, 29 Aug 2019 17:41:17 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+
+> It's kind of silly that we have *three* identical copies of the x86 insn
+> decoder in the kernel tree.  Make it approximately 50% less silly by
+> reducing that number to two.
 > 
 
-Applied after fixing the following checkpatch error in the commit log:
+Sounds good to me ;)
 
-ERROR: Please use git commit description style 'commit <12+ chars of 
-sha1> ("<title line>")' - ie: 'commit 201766a20e30 ("ptrace: add 
-PTRACE_GET_SYSCALL_INFO request")'
-#82:
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Now reads as follows:
+Thanks,
 
-Commit 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-     introduces some additional macros, but doesn't do the #ifdef dance.
-     Let's add that dance here to avoid:
+> Josh Poimboeuf (4):
+>   objtool: Move x86 insn decoder to a common location
+>   perf: Update .gitignore file
+>   perf intel-pt: Remove inat.c from build dependency list
+>   perf intel-pt: Use shared x86 insn decoder
+> 
+>  .../{objtool => }/arch/x86/include/asm/inat.h |    0
+>  .../arch/x86/include/asm/inat_types.h         |    0
+>  .../{objtool => }/arch/x86/include/asm/insn.h |    0
+>  .../arch/x86/include/asm/orc_types.h          |    0
+>  tools/{objtool => }/arch/x86/lib/inat.c       |    0
+>  tools/{objtool => }/arch/x86/lib/insn.c       |    0
+>  .../arch/x86/lib/x86-opcode-map.txt           |    0
+>  .../arch/x86/tools/gen-insn-attr-x86.awk      |    0
+>  tools/objtool/Makefile                        |    4 +-
+>  tools/objtool/arch/x86/Build                  |    4 +-
+>  tools/objtool/arch/x86/decode.c               |    4 +-
+>  tools/objtool/sync-check.sh                   |   12 +-
+>  tools/perf/.gitignore                         |    3 +
+>  tools/perf/arch/x86/tests/insn-x86.c          |    2 +-
+>  tools/perf/arch/x86/util/archinsn.c           |    2 +-
+>  tools/perf/check-headers.sh                   |   11 +-
+>  tools/perf/util/intel-pt-decoder/Build        |   22 +-
+>  .../intel-pt-decoder/gen-insn-attr-x86.awk    |  392 ------
+>  tools/perf/util/intel-pt-decoder/inat.c       |   82 --
+>  tools/perf/util/intel-pt-decoder/inat.h       |  230 ----
+>  tools/perf/util/intel-pt-decoder/inat_types.h |   15 -
+>  tools/perf/util/intel-pt-decoder/insn.c       |  593 ---------
+>  tools/perf/util/intel-pt-decoder/insn.h       |  216 ----
+>  .../intel-pt-decoder/intel-pt-insn-decoder.c  |   10 +-
+>  .../util/intel-pt-decoder/x86-opcode-map.txt  | 1072 -----------------
+>  25 files changed, 34 insertions(+), 2640 deletions(-)
+>  rename tools/{objtool => }/arch/x86/include/asm/inat.h (100%)
+>  rename tools/{objtool => }/arch/x86/include/asm/inat_types.h (100%)
+>  rename tools/{objtool => }/arch/x86/include/asm/insn.h (100%)
+>  rename tools/{objtool => }/arch/x86/include/asm/orc_types.h (100%)
+>  rename tools/{objtool => }/arch/x86/lib/inat.c (100%)
+>  rename tools/{objtool => }/arch/x86/lib/insn.c (100%)
+>  rename tools/{objtool => }/arch/x86/lib/x86-opcode-map.txt (100%)
+>  rename tools/{objtool => }/arch/x86/tools/gen-insn-attr-x86.awk (100%)
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.c
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/inat.h
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/inat_types.h
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.c
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/insn.h
+>  delete mode 100644 tools/perf/util/intel-pt-decoder/x86-opcode-map.txt
+> 
+> -- 
+> 2.20.1
+> 
 
-thanks,
--- Shuah
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
