@@ -2,146 +2,96 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450C8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B47C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CAA208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30262186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 03:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfH3DCK (ORCPT
+        id S1727521AbfH3DQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 23:02:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727986AbfH3DCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 23:02:09 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EB337CD58521086E280E;
-        Fri, 30 Aug 2019 11:01:50 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
- 2019 11:01:42 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>,
+        Thu, 29 Aug 2019 23:16:33 -0400
+Received: from smtprelay0182.hostedemail.com ([216.40.44.182]:60515 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727213AbfH3DQc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 23:16:32 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 2BF0B1800EC3F;
+        Fri, 30 Aug 2019 03:16:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: music74_8ff1e63ca7e44
+X-Filterd-Recvd-Size: 2212
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 30 Aug 2019 03:16:29 +0000 (UTC)
+Message-ID: <5b2ecf5cec1a6aa3834e9af41886a7fcb18ae86a.camel@perches.com>
+Subject: Re: [PATCH v2 2/7] erofs: some marcos are much more readable as a
+ function
+From:   Joe Perches <joe@perches.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 4/7] erofs: kill __packed for on-disk structures
-Date:   Fri, 30 Aug 2019 11:00:37 +0800
-Message-ID: <20190830030040.10599-4-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190830030040.10599-1-gaoxiang25@huawei.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>
+Date:   Thu, 29 Aug 2019 20:16:27 -0700
+In-Reply-To: <20190830030040.10599-2-gaoxiang25@huawei.com>
 References: <20190830030040.10599-1-gaoxiang25@huawei.com>
+         <20190830030040.10599-2-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Christoph claimed "Please don't add __packed" [1],
-I have to remove all __packed except struct erofs_dirent here.
+On Fri, 2019-08-30 at 11:00 +0800, Gao Xiang wrote:
+> As Christoph suggested [1], these marcos are much
+> more readable as a function
 
-Note that all on-disk fields except struct erofs_dirent
-(12 bytes with a 8-byte nid) in EROFS are naturally aligned.
+s/marcos/macros/
+.
+[]
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+[]
+> @@ -168,16 +168,24 @@ struct erofs_xattr_entry {
+>  	char   e_name[0];       /* attribute name */
+>  } __packed;
+>  
+> -#define ondisk_xattr_ibody_size(count)	({\
+> -	u32 __count = le16_to_cpu(count); \
+> -	((__count) == 0) ? 0 : \
+> -	sizeof(struct erofs_xattr_ibody_header) + \
+> -		sizeof(__u32) * ((__count) - 1); })
+> +static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
+> +{
+> +	unsigned int icount = le16_to_cpu(d_icount);
+> +
+> +	if (!icount)
+> +		return 0;
+> +
+> +	return sizeof(struct erofs_xattr_ibody_header) +
+> +		sizeof(__u32) * (icount - 1);
 
-[1] https://lore.kernel.org/lkml/20190829095954.GB20598@infradead.org/
-Reported-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-new patch.
+Maybe use struct_size()?
 
- fs/erofs/erofs_fs.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+{
+	struct erofs_xattr_ibody_header *ibh;
+	unsigned int icount = le16_to_cpu(d_icount);
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 76edc595cc4a..43e427d28b1d 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -37,7 +37,7 @@ struct erofs_super_block {	/* off description */
- 	__le32 requirements;	/* 80  (aka. feature_incompat) */
- 
- 	__u8 reserved2[44];	/* 84 */
--} __packed;			/* 128 bytes */
-+};				/* 128 bytes */
- 
- /*
-  * erofs inode data mapping:
-@@ -89,12 +89,12 @@ struct erofs_inode_v1 {		/* off description */
- 
- 		/* for device files, used to indicate old/new device # */
- 		__le32 rdev;
--	} i_u __packed;
-+	} i_u;
- 	__le32 i_ino;		/* 20 only used for 32-bit stat compatibility */
- 	__le16 i_uid;		/* 24 */
- 	__le16 i_gid;		/* 26 */
- 	__le32 i_reserved2;	/* 28 */
--} __packed;			/* 32 bytes */
-+};				/* 32 bytes */
- 
- /* 32 bytes on-disk inode */
- #define EROFS_INODE_LAYOUT_V1   0
-@@ -116,7 +116,7 @@ struct erofs_inode_v2 {		/* off description */
- 
- 		/* for device files, used to indicate old/new device # */
- 		__le32 rdev;
--	} i_u __packed;
-+	} i_u;
- 
- 	/* only used for 32-bit stat compatibility */
- 	__le32 i_ino;		/* 20 only used for 32-bit stat compatibility */
-@@ -127,7 +127,7 @@ struct erofs_inode_v2 {		/* off description */
- 	__le32 i_ctime_nsec;	/* 40 */
- 	__le32 i_nlink;		/* 44 */
- 	__u8   i_reserved2[16];	/* 48 */
--} __packed;			/* 64 bytes */
-+};				/* 64 bytes */
- 
- #define EROFS_MAX_SHARED_XATTRS         (128)
- /* h_shared_count between 129 ... 255 are special # */
-@@ -149,7 +149,7 @@ struct erofs_xattr_ibody_header {
- 	__u8   h_shared_count;
- 	__u8   h_reserved2[7];
- 	__le32 h_shared_xattrs[0];      /* shared xattr id array */
--} __packed;
-+};
- 
- /* Name indexes */
- #define EROFS_XATTR_INDEX_USER              1
-@@ -166,7 +166,7 @@ struct erofs_xattr_entry {
- 	__le16 e_value_size;    /* size of attribute value */
- 	/* followed by e_name and e_value */
- 	char   e_name[0];       /* attribute name */
--} __packed;
-+};
- 
- static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
- {
-@@ -272,8 +272,8 @@ struct z_erofs_vle_decompressed_index {
- 		 * [1] - pointing to the tail cluster
- 		 */
- 		__le16 delta[2];
--	} di_u __packed;		/* 8 bytes */
--} __packed;
-+	} di_u;			/* 8 bytes */
-+};
- 
- #define Z_EROFS_VLE_LEGACY_INDEX_ALIGN(size) \
- 	(round_up(size, sizeof(struct z_erofs_vle_decompressed_index)) + \
--- 
-2.17.1
+	if (!icount)
+		return 0;
+
+	return struct_size(ibh, h_shared_xattrs, icount - 1);
+}
 
