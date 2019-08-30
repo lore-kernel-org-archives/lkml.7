@@ -2,119 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD76C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D2C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED2D23427
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567175215;
-	bh=yWzcaCkt9XVIzrbWWo/4tDyL/qMekNCK4plXFdMAR6o=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Fvd7Oxg9mFsgw/UpaX4p+fYVh3LDuFy9H478w8sNoCbRQ6fTCm66E562X0eY3WC4q
-	 O4dTEvTga/LgpJVr3oTgIi3JtBptTeeC71yUGDE5A07pgrh/f04Oc46ltEouodBAh9
-	 F9tIursVpDKXbMnY6iqLX2KXOAH/cfHvtRVl5qu4=
+	by mail.kernel.org (Postfix) with ESMTP id C60EB23427
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 14:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfH3O0y (ORCPT
+        id S1728057AbfH3O2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 10:26:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:33052 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 10:28:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:33102 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfH3O0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 10:26:54 -0400
+        id S1727751AbfH3O2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:28:01 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7556D344;
-        Fri, 30 Aug 2019 07:26:53 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 868E83F703;
-        Fri, 30 Aug 2019 07:26:51 -0700 (PDT)
-Subject: Re: [PATCH v2 00/20] Initial support for Marvell MMP3 SoC
-To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-References: <20190822092643.593488-1-lkundrak@v3.sk>
- <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
- <424d2881edcaf7cedbfa5cbbf2e73aaff5355df3.camel@v3.sk>
- <08a0e65e-4a80-f611-e36e-8e3f70fa8113@kernel.org>
- <481e832401c148baf222639f10f494b90dcd23c9.camel@v3.sk>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <faf7b7e8-48b0-ba58-51e6-cb6a5ee44dfc@kernel.org>
-Date:   Fri, 30 Aug 2019 15:26:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 743A0344;
+        Fri, 30 Aug 2019 07:28:00 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A12BC3F703;
+        Fri, 30 Aug 2019 07:27:56 -0700 (PDT)
+Subject: Re: [PATCH v8 7/7] iommu/vt-d: Use bounce buffer for untrusted
+ devices
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Lu Baolu' <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>,
+        "alan.cox@intel.com" <alan.cox@intel.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "pengfei.xu@intel.com" <pengfei.xu@intel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
+ <20190830071718.16613-8-baolu.lu@linux.intel.com>
+ <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <af54fa85-440a-52e4-cf6c-d2052ee9f385@arm.com>
+Date:   Fri, 30 Aug 2019 15:27:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <481e832401c148baf222639f10f494b90dcd23c9.camel@v3.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/08/2019 12:59, Lubomir Rintel wrote:
-> On Fri, 2019-08-23 at 10:42 +0100, Marc Zyngier wrote:
->> On 23/08/2019 08:21, Lubomir Rintel wrote:
->>> On Thu, 2019-08-22 at 11:31 +0100, Marc Zyngier wrote:
->>>> On 22/08/2019 10:26, Lubomir Rintel wrote:
->>>>> Hi, 
->>>>>
->>>>> this is a second spin of a patch set that adds support for the Marvell
->>>>> MMP3 processor. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad
->>>>> FZ-A1 tablet and Dell Wyse 3020 Tx0D thin clients. 
->>>>>
->>>>> Compared to v1, there's a handful of fixes in response to reviews. Patch
->>>>> 02/20 is new. Details in individual patches.
->>>>>  
->>>>> Apart from the adjustments in mach-mmp/, the patch makes necessary 
->>>>> changes to the irqchip driver and adds an USB2 PHY driver. The latter 
->>>>> has a dependency on the mach-mmp/ changes, so it can't be submitted 
->>>>> separately.
->>>>>  
->>>>> The patch set has been tested to work on Wyse Tx0D and not ruin MMP2 
->>>>> support on XO-1.75. 
->>>>
->>>> How do you want this series to be merged? I'm happy to take the irqchip
->>>> related patches as well as the corresponding DT change (once reviewed)
->>>> through my tree.
->>>
->>> I was hoping for the Arm SoC tree, because there are some dependencies
->>> (MMP3 USB PHY depends on MMP3 SoC).
->>>
->>> That said, the irqchip patches are rather independent and the only
->>> downside of them going in via a different tree will be that the other
->>> tree that will lack them won't boot on MMP3 (things will compile
->>> though). I don't know if that's okay. What's typically done in cases
->>> like these?
->>
->> I usually take the irqchip patches that can be built standalone (without
->> dependency on header files, for example). If you want them to go via
->> another tree, stick my
->>
->> 	Acked-by: Marc Zyngier <maz@kernel.org>
->>
->> on patches #6 through #9.
+On 30/08/2019 14:39, David Laight wrote:
+> From: Lu Baolu
+>> Sent: 30 August 2019 08:17
 > 
-> Actually, please go ahead and pick the irqchip patches into your tree.
+>> The Intel VT-d hardware uses paging for DMA remapping.
+>> The minimum mapped window is a page size. The device
+>> drivers may map buffers not filling the whole IOMMU
+>> window. This allows the device to access to possibly
+>> unrelated memory and a malicious device could exploit
+>> this to perform DMA attacks. To address this, the
+>> Intel IOMMU driver will use bounce pages for those
+>> buffers which don't fill whole IOMMU pages.
 > 
-> The rest of the patch set may need a couple more spins, and it will be
-> nice if it gets shorter.
+> Won't this completely kill performance?
 
-Applied to irqchip-next.
+Yes it will.
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Though hopefully by now we're all well aware that speed and security 
+being inversely proportional is the universal truth of modern computing.
+
+> I'd expect to see something for dma_alloc_coherent() (etc)
+> that tries to give the driver page sized buffers.
+
+Coherent DMA already works in PAGE_SIZE units under the covers (at least 
+in the DMA API implementations relevant here) - that's not an issue. The 
+problem is streaming DMA, where we have to give the device access to, 
+say, some pre-existing 64-byte data packet, from right in the middle of 
+who knows what else. Since we do not necessarily have control over the 
+who knows what else, the only universally-practical way to isolate the 
+DMA data is to copy it away to some safe sanitised page which we *do* 
+control, and make the actual DMA accesses target that.
+
+> Either that or the driver could allocate page sized buffers
+> even though it only passes fragments of these buffers to
+> the dma functions (to avoid excessive cache invalidates).
+
+Where, since we can't easily second-guess users' systems, "the driver" 
+turns out to be every DMA-capable driver, every subsystem-level buffer 
+manager, every userspace application which could possibly make use of 
+some kind of zero-copy I/O call...
+
+Compared to a single effectively-transparent implementation in a single 
+place at the lowest level with a single switch for the user to turn it 
+on or off depending on how security-critical their particular system is, 
+I know which approach I'd rather review, maintain and rely on.
+
+Robin.
+
+> Since you have to trust the driver, why not actually trust it?
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
