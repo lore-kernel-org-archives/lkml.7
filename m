@@ -2,94 +2,126 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E333BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289D0C3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E4F23407
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D931823405
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 15:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxMt6aFZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Q8Gtexvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbfH3POA (ORCPT
+        id S1728282AbfH3POL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 11:14:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50633 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfH3POA (ORCPT
+        Fri, 30 Aug 2019 11:14:11 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.119]:13857 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727754AbfH3POK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:14:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so7752279wml.0;
-        Fri, 30 Aug 2019 08:13:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=E7PGOYI8rGQ02S2EYAIX+ke+QGmp3N+PyvHdu2tcGW0=;
-        b=lxMt6aFZ+Lw+pV8L6Tw7ARsCnDOr7PbB+glpwcRzc2q1qIkDzbb5p1tnLGdRvaI1w1
-         aOSmZTZXJ1QpsRr+enlJX9lbTKL3sbQN0g5LbNoFRf1FFBBfB9bE7dW0YZnR7Gl9yKUY
-         HdfQNqzg02yXGQrZokOpEu7w/TEXTQhScgHNmyzs0x4zPNZXQ4e0fxOewhWtVYvFVrGP
-         6/SGvWgB0K0UrUmM/nFta7tFJafJ7N9TbYUO+/XYCt8ytYd6XgmD80Iyog6rapTorQTB
-         /bwb2YdlNd2T/ZLhdBjT55rbJkhpv4HKPjy5rxkWaDPgRp8N0u6G9pGm9YkLUjK7jxm/
-         LjoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=E7PGOYI8rGQ02S2EYAIX+ke+QGmp3N+PyvHdu2tcGW0=;
-        b=j+CHHRfw08TFqA+55/ib1sTpZ1cHtYzr0nJDLB00IFCvrwKRg5LDnKC09xTvoZvayj
-         pfuEQGq0Uyaf+LjmpZLRYqcK42eQcYKlbA+qD3V6BjwgTH+zRthHDf8oM7v4LPdsA2tM
-         h+Wp0nDiIr6YPmj9fDJr+3Ft6X40P3HZz4zRDt6xjvEgDYeeTA0H0EWUtVbq9q87GXTj
-         JtI9vH5c1it4VDvZPTgh/D8yXlyDQhNxnzHg2d3igxPPlnzYT9NyOP+0PHSwNBWKPfQB
-         Q0BxpOk96wBBLtpTyphra9d3rDrY+8MMsWmsA0JWzvbVnUFpA3foWrUqWOZ0kinEb2fM
-         pw5g==
-X-Gm-Message-State: APjAAAVrnQ1VScFXHU02IwqZUEAfWcy/U57rkqs0e2IBEwmEdvUp53M6
-        jId+02fIwbLjQokYDM3shIQ=
-X-Google-Smtp-Source: APXvYqxJyn0XZ/qM3MACfd810XJfxy3SvRZFOee7lYS28kbnXkUKguPS5L3ollXyo3A/ieoIGlEo7A==
-X-Received: by 2002:a1c:9950:: with SMTP id b77mr19687725wme.46.1567178038153;
-        Fri, 30 Aug 2019 08:13:58 -0700 (PDT)
-Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id q15sm5162920wrv.1.2019.08.30.08.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 08:13:57 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 17:13:56 +0200
-From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
-Subject: Re: [PATCH] leds: Move static keyword to the front of declarations
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1567178036.21498.0@gmail.com>
-In-Reply-To: <bdf6bc22-bc82-68ac-d3f2-4f3954d9e9e0@ti.com>
-References: <20190830090958.27108-1-kw@linux.com>
-        <bdf6bc22-bc82-68ac-d3f2-4f3954d9e9e0@ti.com>
-X-Mailer: geary/3.32.0
+        Fri, 30 Aug 2019 11:14:10 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 5AE7DD847C0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 10:14:08 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3ibIi1UG9dnCe3ibIiOwF7; Fri, 30 Aug 2019 10:14:08 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=iWq792KcXS/2A+twrWLq+wwvfaMRPzV7nWYS3alhSbE=; b=Q8Gtexvy8NYHoOZT7VETmAU0X1
+        r56Y7ZDWXUYNHHl4ooYOLV+ITZYoPgotMvg/ruCbwn3wWikfup9W6Nj7xjC/DKBjbwfT6V+9j8Z55
+        oFYjeHZkzvNVXuWM1oGWLomEB4zZkyuSehlmpBN7i5/Ea3vm4yCZMGO9C8dqfT7UmSLmHLAPgM8Z+
+        oz83a0+IBTd7UmLm67vxgjVtOZB+5Rmz6HMRg3nCkpeUnvcQfDz+ciBj8xas6vlBAYdoPb4Bg0MpE
+        J6u8hq2tzTYwelk/jlRicc2/OgrK2J0fW4J15FhA8m86muEsxwX3Z8bzCHncyG5rg6HTqnx62Gj7N
+        xC52HCgA==;
+Received: from [189.152.216.116] (port=33454 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3ibH-000BqF-92; Fri, 30 Aug 2019 10:14:07 -0500
+Date:   Fri, 30 Aug 2019 10:14:06 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] remoteproc: use struct_size() helper
+Message-ID: <20190830151406.GA23274@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3ibH-000BqF-92
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:33454
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Thank you for feedback.
-[...]
-> This file is missing in the subject.
-> 
-> Maybe break it out into a separate patch since they do not have 
-> dependencies on each other.
+struct fw_rsc_vdev {
+	...
+        struct fw_rsc_vdev_vring vring[0];
+} __packed;
 
-Will do.  Sorry about that.  I initially had these
-as separate patches, but after looking at who the
-maintainer is and thought that it perhaps makes
-sense to send as a single patch.  Good point.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-Krzysztof
+So, replace the following form:
 
+sizeof(*rsc) + rsc->num_of_vrings * sizeof(struct fw_rsc_vdev_vring)
+
+with:
+
+struct_size(rsc, vring, rsc->num_of_vrings)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/remoteproc/remoteproc_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 3c5fbbbfb0f1..d427b8208ad6 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -478,8 +478,8 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
+ 	char name[16];
+ 
+ 	/* make sure resource isn't truncated */
+-	if (sizeof(*rsc) + rsc->num_of_vrings * sizeof(struct fw_rsc_vdev_vring)
+-			+ rsc->config_len > avail) {
++	if (struct_size(rsc, vring, rsc->num_of_vrings) + rsc->config_len >
++			avail) {
+ 		dev_err(dev, "vdev rsc is truncated\n");
+ 		return -EINVAL;
+ 	}
+-- 
+2.23.0
 
