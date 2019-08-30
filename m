@@ -2,262 +2,98 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055CBC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8327FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43A221897
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543D321897
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 16:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucYHlmIQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h3Hti2HJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfH3QzX (ORCPT
+        id S1728324AbfH3Qzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 12:55:23 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:47065 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfH3QzX (ORCPT
+        Fri, 30 Aug 2019 12:55:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55256 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbfH3Qzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 12:55:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q139so4979122pfc.13;
-        Fri, 30 Aug 2019 09:55:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uxhSDhOFMCtubNyqUSOxE1i/AaCpvCejOjblYk0TE1E=;
-        b=ucYHlmIQfMOy4rBebqky9ZNDpR87gqWM7fE4aE8DaWQgigF+tmGjNm/AG6Nz6ZlIFq
-         rF5yyv0LKP8/4ZMZ1P4UB9JFKVU+rLlIOqNARIqg39zQO3bgauo6lQEp+7CQAmHb+QZM
-         j6KXhBhUb7QEYEr8bKfusnBMuNLIKK659KjTWZ79xJvE/OQOELIpJV1dblpQioe1oM59
-         03XtJbrMHObR7CjgirQPfFQgckq+wk94Glnl/B4PNkSzEUrJAxTSUYPh8dNQqbmBIkgp
-         dDznOZspm7/PTFB0xW2ezYSfLyXXfOA5rt536PH6WLgiD60two8J6KhCpUif4F7CGfpO
-         YzQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uxhSDhOFMCtubNyqUSOxE1i/AaCpvCejOjblYk0TE1E=;
-        b=kzQyWZtMFolz13NZcDfqWxQF6QE/bvbXUO4J7n3WyDoO4XLY9WDqa8uR8g6Owsmb5O
-         Ygn0R0T20pHx7RAXflBbm4zPfLuIo3Sqb8maWyGW2UnLctlGDo5eMEGcx3XIb3CqonVx
-         FItdMop8lW7VifEslzSkH/qKgb7zpWDjIBTuMha79lcYCqOLY6LyjYQY9RHhuDgfSP4l
-         Q89SyxZB4PUYlNcse2sehVMMxxtGw7z+Ky2SX5Beg+csJxDdyz28PZZ3eMfoHcb92TzJ
-         HLbd1rVe42E+Hc0CRQowLs5jwG+wwP3nXw6ZjS014+nAQD+FkW+GWjqu4DU79dGuRjDG
-         ZJgQ==
-X-Gm-Message-State: APjAAAV5amG47B1TC6gmD/PLTIorZAsbFIDf/6wZCoTdF59U5U75dwT8
-        3PZ1zC6/knj6vNoHPKLx05A=
-X-Google-Smtp-Source: APXvYqxEaDWsI/ocIUa/2mS17VU15m5rm/xcWpj4LHQlHr3vB0hgd5hstROn+FXtTQOU+U7oIwNHmg==
-X-Received: by 2002:a63:2447:: with SMTP id k68mr13985260pgk.219.1567184122078;
-        Fri, 30 Aug 2019 09:55:22 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o130sm11001167pfg.171.2019.08.30.09.55.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 09:55:21 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 09:55:20 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] watchdog: orion_wdt: use timer1 as a pretimeout
-Message-ID: <20190830165520.GJ7911@roeck-us.net>
-References: <20190829215224.27956-1-chris.packham@alliedtelesis.co.nz>
+        Fri, 30 Aug 2019 12:55:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5tlZ2AJFJvBfkQ9+HB/A14V0Nr0ngU+sXRXPgXv+PBY=; b=h3Hti2HJW1XQj8WFYW5QPnxq3
+        IFR5kBbNPZGUfJLZgkmP05rpU8kdnbpvD+FGCox/WaA3veCbBUk14Fo8QDppOCOnKanexpTcCpiIC
+        sE6OdPzOcn3dr2hQ3CHqWtqGye3D73Fhvq0Q17vVPtbBGqh/n5zn/4vnANjKz08CE7A/cFoQUGoK+
+        QAYOlb7eXFJYXO9Z2QKijMU6akEztn+q/Y5JPZP/3q07D2/M04Fi6WwQDEhKWs29h7U3KXFx3H23K
+        us6o/usVO3kjrh5OHnBglnCka42lTRpqePeoTQmgPzOXE/Zj/25p3KVTeSiYirbxV1MnU40j6IPKo
+        dF4fbKs+g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3kBR-00045V-TF; Fri, 30 Aug 2019 16:55:33 +0000
+Date:   Fri, 30 Aug 2019 09:55:33 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v8 20/24] erofs: introduce generic decompression backend
+Message-ID: <20190830165533.GA10909@infradead.org>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-21-gaoxiang25@huawei.com>
+ <20190830163534.GA29603@infradead.org>
+ <20190830165217.GB107220@architecture4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829215224.27956-1-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190830165217.GB107220@architecture4>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:52:24AM +1200, Chris Packham wrote:
-> The orion watchdog can either reset the CPU or generate an interrupt.
-> The interrupt would be useful for debugging as it provides panic()
-> output about the watchdog expiry, however if the interrupt is used the
-> watchdog can't reset the CPU in the event of being stuck in a loop with
-> interrupts disabled or if the CPU is prevented from accessing memory
-> (e.g. an unterminated DMA).
+On Sat, Aug 31, 2019 at 12:52:17AM +0800, Gao Xiang wrote:
+> Hi Christoph,
 > 
-> The Armada SoCs have spare timers that aren't currently used by the
-> Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
-> watchdog timer and provide the possibility of gathering debug before the
-> reset triggers.
+> On Fri, Aug 30, 2019 at 09:35:34AM -0700, Christoph Hellwig wrote:
+> > On Thu, Aug 15, 2019 at 12:41:51PM +0800, Gao Xiang wrote:
+> > > +static bool use_vmap;
+> > > +module_param(use_vmap, bool, 0444);
+> > > +MODULE_PARM_DESC(use_vmap, "Use vmap() instead of vm_map_ram() (default 0)");
+> > 
+> > And how would anyone know which to pick?
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> It has significant FIO benchmark difference on sequential read least on arm64...
+> I have no idea whether all platform vm_map_ram() behaves better than vmap(),
+> so I leave an option for users here...
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+vm_map_ram is supposed to generally behave better.  So if it doesn't
+please report that that to the arch maintainer and linux-mm so that
+they can look into the issue.  Having user make choices of deep down
+kernel internals is just a horrible interface.
 
-> ---
-> Changes in v6:
-> - Fix bitwise operation in armada375_stop()
-> - Add comment about 2nd interrupt being optional
-> Changes in v5:
-> - Group bit values with register addresses
-> - Address review comments from Gunter
-> Changes in v3:
-> - rebase against linux/master
-> Changes in v2:
-> - apply changes to armada-38x only
-> 
->  drivers/watchdog/orion_wdt.c | 66 +++++++++++++++++++++++++++++-------
->  1 file changed, 53 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-> index cdb0d174c5e2..1cccf8eb1c5d 100644
-> --- a/drivers/watchdog/orion_wdt.c
-> +++ b/drivers/watchdog/orion_wdt.c
-> @@ -35,7 +35,15 @@
->   * Watchdog timer block registers.
->   */
->  #define TIMER_CTRL		0x0000
-> -#define TIMER_A370_STATUS	0x04
-> +#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
-> +#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
-> +#define TIMER1_ENABLE_BIT	BIT(2)
-> +
-> +#define TIMER_A370_STATUS	0x0004
-> +#define WDT_A370_EXPIRED	BIT(31)
-> +#define TIMER1_STATUS_BIT	BIT(8)
-> +
-> +#define TIMER1_VAL_OFF		0x001c
->  
->  #define WDT_MAX_CYCLE_COUNT	0xffffffff
->  
-> @@ -43,9 +51,6 @@
->  #define WDT_A370_RATIO_SHIFT	5
->  #define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
->  
-> -#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
-> -#define WDT_A370_EXPIRED	BIT(31)
-> -
->  static bool nowayout = WATCHDOG_NOWAYOUT;
->  static int heartbeat = -1;		/* module parameter (seconds) */
->  
-> @@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
->  				   struct orion_watchdog *dev)
->  {
->  	int ret;
-> +	u32 val;
->  
->  	dev->clk = of_clk_get_by_name(pdev->dev.of_node, "fixed");
->  	if (IS_ERR(dev->clk))
-> @@ -168,10 +174,9 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
->  		return ret;
->  	}
->  
-> -	/* Enable the fixed watchdog clock input */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL,
-> -			 WDT_AXP_FIXED_ENABLE_BIT,
-> -			 WDT_AXP_FIXED_ENABLE_BIT);
-> +	/* Fix the wdt and timer1 clock freqency to 25MHz */
-> +	val = WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
->  
->  	dev->clk_rate = clk_get_rate(dev->clk);
->  	return 0;
-> @@ -183,6 +188,10 @@ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
->  	/* Reload watchdog duration */
->  	writel(dev->clk_rate * wdt_dev->timeout,
->  	       dev->reg + dev->data->wdt_counter_offset);
-> +	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-> +		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-> +		       dev->reg + TIMER1_VAL_OFF);
-> +
->  	return 0;
->  }
->  
-> @@ -194,13 +203,18 @@ static int armada375_start(struct watchdog_device *wdt_dev)
->  	/* Set watchdog duration */
->  	writel(dev->clk_rate * wdt_dev->timeout,
->  	       dev->reg + dev->data->wdt_counter_offset);
-> +	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-> +		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-> +		       dev->reg + TIMER1_VAL_OFF);
->  
->  	/* Clear the watchdog expiration bit */
->  	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
->  
->  	/* Enable watchdog timer */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
-> -						dev->data->wdt_enable_bit);
-> +	reg = dev->data->wdt_enable_bit;
-> +	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-> +		reg |= TIMER1_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, reg, reg);
->  
->  	/* Enable reset on watchdog */
->  	reg = readl(dev->rstout);
-> @@ -277,7 +291,7 @@ static int orion_stop(struct watchdog_device *wdt_dev)
->  static int armada375_stop(struct watchdog_device *wdt_dev)
->  {
->  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-> -	u32 reg;
-> +	u32 reg, mask;
->  
->  	/* Disable reset on watchdog */
->  	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-> @@ -287,7 +301,10 @@ static int armada375_stop(struct watchdog_device *wdt_dev)
->  	writel(reg, dev->rstout);
->  
->  	/* Disable watchdog timer */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-> +	mask = dev->data->wdt_enable_bit;
-> +	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
-> +		mask |= TIMER1_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
->  
->  	return 0;
->  }
-> @@ -349,7 +366,7 @@ static unsigned int orion_wdt_get_timeleft(struct watchdog_device *wdt_dev)
->  	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
->  }
->  
-> -static const struct watchdog_info orion_wdt_info = {
-> +static struct watchdog_info orion_wdt_info = {
->  	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
->  	.identity = "Orion Watchdog",
->  };
-> @@ -368,6 +385,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devid)
->  	return IRQ_HANDLED;
->  }
->  
-> +static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
-> +{
-> +	struct orion_watchdog *dev = devid;
-> +
-> +	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
-> +			 TIMER1_STATUS_BIT, 0);
-> +	watchdog_notify_pretimeout(&dev->wdt);
-> +	return IRQ_HANDLED;
-> +}
-> +
->  /*
->   * The original devicetree binding for this driver specified only
->   * one memory resource, so in order to keep DT backwards compatibility
-> @@ -589,6 +616,19 @@ static int orion_wdt_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	/* Optional 2nd interrupt for pretimeout */
-> +	irq = platform_get_irq(pdev, 1);
-> +	if (irq > 0) {
-> +		orion_wdt_info.options |= WDIOF_PRETIMEOUT;
-> +		ret = devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
-> +				       0, pdev->name, dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "failed to request IRQ\n");
-> +			goto disable_clk;
-> +		}
-> +	}
-> +
-> +
->  	watchdog_set_nowayout(&dev->wdt, nowayout);
->  	ret = watchdog_register_device(&dev->wdt);
->  	if (ret)
-> -- 
-> 2.23.0
-> 
+Please talk to maintainers of other bits of the kernel if you see issues
+and / or need enhancements.
