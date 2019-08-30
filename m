@@ -2,105 +2,107 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E23C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ECBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00DD222CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3238522CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 12:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfH3Mpb (ORCPT
+        id S1728178AbfH3Mp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 08:45:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:59676 "EHLO foss.arm.com"
+        Fri, 30 Aug 2019 08:45:57 -0400
+Received: from sauhun.de ([88.99.104.3]:53526 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfH3Mpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:45:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CD94337;
-        Fri, 30 Aug 2019 05:45:30 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 911AE3F246;
-        Fri, 30 Aug 2019 05:45:27 -0700 (PDT)
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-To:     Rob Herring <robh@kernel.org>, "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
- <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
- <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
-Date:   Fri, 30 Aug 2019 13:45:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727417AbfH3Mp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 08:45:57 -0400
+Received: from localhost (p54B335BE.dip0.t-ipconnect.de [84.179.53.190])
+        by pokefinder.org (Postfix) with ESMTPSA id 2E6DC2C0095;
+        Fri, 30 Aug 2019 14:45:55 +0200 (CEST)
+Date:   Fri, 30 Aug 2019 14:45:54 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: max77686: convert to devm_i2c_new_dummy_device()
+Message-ID: <20190830124554.GB2870@ninjato>
+References: <20190820154239.8230-1-wsa+renesas@sang-engineering.com>
+ <20190820154239.8230-2-wsa+renesas@sang-engineering.com>
+ <20190829205752.GL21922@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
+Content-Disposition: inline
+In-Reply-To: <20190829205752.GL21922@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
 
-On 27/08/2019 14:49, Rob Herring wrote:
-> On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
->> On 8/21/2019 10:17 PM, Rob Herring wrote:
->>> Why is this even in DT? AFAICT, this is all just CortexA57 core features
->>> (i.e. nothing Amazon specific). The core type and the ECC capabilities
->>> are discoverable.
->>
->> Added to the DT in order to easily enable/disable the driver.
-> 
-> That alone is not reason enough to put it in DT. From a DT
-> perspective, I have no idea what the whims of a OS maintainer are
-> regarding whether they want all this to be 1 driver or 2 drivers.
-> (IMO, it should be 1 as this is ECC for an A57. For a core and memory
-> controller, then 2 seems appropriate.)
-> 
->> You are
->> correct that they are CortexA57 core features and nothing Amazon
->> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
->> cortex revisions (e.g. A57) the register bitmap may change. Because of
->> that we added an Amazon compatible which corresponds to the specific
->> core we are using.
+--yEPQxsgoJgBvi8ip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think its that the instruction encoding is in the imp-def space that is important.
+On Thu, Aug 29, 2019 at 10:57:52PM +0200, Alexandre Belloni wrote:
+> On 20/08/2019 17:42:37+0200, Wolfram Sang wrote:
+> > I was about to simplify the call to i2c_unregister_device() when I
+> > realized that converting to devm_i2c_new_dummy_device() will simplify
+> > the driver a lot. So I took this approach.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > ---
+> > Build tested only, buildbot is happy, too.
+> >=20
+> > Please apply to your tree.
+> >=20
+>=20
+> I'm confused because I already applied:
+> https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit=
+/?h=3Drtc-next&id=3D7150710f3084de8d35ce3221eeae2caee8813f92
 
-CPU-implementers can add whatever registers they find useful here. A57 and A72 both
-implemented some ECC registers here. (They are not guaranteed to be the same, but I can't
-find any differences).
+The above was a mass conversion to i2c_new_dummy_device() to make sure
+all in-kernel users use the API returning an ERRPTR. Mass conversion to
+the devm_ variant of the same function was too troublesome.
 
-We need some information from DT because the TRM doesn't say what happens when you read
-from these registers on an A57 that doesn't have the 'optional ECC protection'. It could
-take an exception due to an unimplemented system register.
+With another series, I wanted to remove superfluous error checking of
+i2c_unregister_device() because it is NULL-ptr safe, like here:
 
-The imp-def instruction space may also be trapped by a higher exception level. KVM does
-this, and emulates these registers as if they were all undefined.
+> > -	if (info->rtc)
+> > -		i2c_unregister_device(info->rtc);
+
+But for these two RTC drivers, I figured moving to devm_* is way easier
+than fixing up the mass conversion result from coccinelle.
 
 
-Thanks,
+--yEPQxsgoJgBvi8ip
+Content-Type: application/pgp-signature; name="signature.asc"
 
-James
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1pGoIACgkQFA3kzBSg
+KbbdMQ//c3MTjmSg7hunKGDkz/mWkGCMB1YysqH/xm8AgkknadF9iWIjFxyuFMuB
+Kt+rNP8b1oaJqoIHZw38IVcUsf0Z+kNjOWEeMGJU327atwSaOX9X4uTnxNoMDgBS
+MiDsuaasGP9JnVeJbn4E4/bKuUUAGPGrz2cF2EvOO2qm55s3k1O4nT7NhrK0/Fla
+Tw8cB4KoDN/+0UjxearL5RAXcbBv8XOPc2d2jrR586O/NFiFUOlsE5JbsGOwPD45
+0X2SAKk4Ctka9jyI9C7yRB21tvLwelLOdHecb/Uh2pvnA+n08Z1PbWSnLa9nXPLa
+RQBqc/0fP0aE/d1pUSIuO0S5tvnHEcJvd8kg3XTzwMUv/hAUT9fFiIXnh5mWyec4
+agu2Yo39gLdlNiwPpvBewkPwrvjXIzdqAciQ9rg+sjDhfn/K0AWaSEQDL+bsp/Nq
+mcqq8rh72t2EChBfdengI0f/Vrr8Js+/snGs9R56kNkHU2e1Q+Fyd9lhvCc6grkh
+FwtL8z7jP2MF9DXS9Ivq9XggYOmey4BAiViu105Y/5C7ZOTWECOm6RUXUCEf/tZa
+PvRpQI3qcyFjbANBhfPb+hoDO1XzzWfw5gLivrwTrGccNwuqAdeY93Mzvxnb7nE3
+wVrQvSpAyEdwdNVvQjy1JnzZvAo6JM+iGnN4pMZoOPtEmaxUVEE=
+=QT51
+-----END PGP SIGNATURE-----
+
+--yEPQxsgoJgBvi8ip--
