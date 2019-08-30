@@ -2,86 +2,60 @@ Return-Path: <SRS0=2mSC=W2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEF0C3A59B
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFECC3A59B
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7820523439
-	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EC523429
+	for <linux-kernel@archiver.kernel.org>; Fri, 30 Aug 2019 20:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfH3UK2 (ORCPT
+        id S1728208AbfH3UOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 16:10:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33270 "EHLO mx1.redhat.com"
+        Fri, 30 Aug 2019 16:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfH3UK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 16:10:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728117AbfH3UOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 16:14:45 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4B81410C6983;
-        Fri, 30 Aug 2019 20:10:27 +0000 (UTC)
-Received: from treble (ovpn-123-26.rdu2.redhat.com [10.10.123.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C23D919C58;
-        Fri, 30 Aug 2019 20:10:23 +0000 (UTC)
-Date:   Fri, 30 Aug 2019 15:10:21 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 4/4] perf intel-pt: Use shared x86 insn decoder
-Message-ID: <20190830201021.utzjr6cs5hoxygyi@treble>
-References: <cover.1567118001.git.jpoimboe@redhat.com>
- <8a37e615d2880f039505d693d1e068a009358a2b.1567118001.git.jpoimboe@redhat.com>
- <20190830195937.GJ28011@kernel.org>
- <20190830200620.GK28011@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 970F823427;
+        Fri, 30 Aug 2019 20:14:44 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 16:14:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 0/2] ftrace: two fixes with func_probes handling
+Message-ID: <20190830161442.5bae24da@gandalf.local.home>
+In-Reply-To: <1565277255.xyq4vg2zkj.naveen@linux.ibm.com>
+References: <cover.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
+        <1565277255.xyq4vg2zkj.naveen@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190830200620.GK28011@kernel.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Fri, 30 Aug 2019 20:10:27 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> A fix, please lemme know if you're ok, so that I can fold both patches
-> so that we can keep it all bisect happy.
-> 
-> - Arnaldo
-> 
-> commit 423a2bf6e04aaecbeb5c2d5689cb3b832c240df0
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Fri Aug 30 17:01:58 2019 -0300
-> 
->     srcdir awk
->     
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/util/intel-pt-decoder/Build b/tools/perf/util/intel-pt-decoder/Build
-> index 1530f5cfd1b8..bc629359826f 100644
-> --- a/tools/perf/util/intel-pt-decoder/Build
-> +++ b/tools/perf/util/intel-pt-decoder/Build
-> @@ -1,7 +1,7 @@
->  perf-$(CONFIG_AUXTRACE) += intel-pt-pkt-decoder.o intel-pt-insn-decoder.o intel-pt-log.o intel-pt-decoder.o
->  
-> -inat_tables_script = ../../arch/x86/tools/gen-insn-attr-x86.awk
-> -inat_tables_maps = ../../arch/x86/lib/x86-opcode-map.txt
-> +inat_tables_script = $(srctree)/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> +inat_tables_maps = $(srctree)/tools/arch/x86/lib/x86-opcode-map.txt
->  
->  $(OUTPUT)util/intel-pt-decoder/inat-tables.c: $(inat_tables_script) $(inat_tables_maps)
->  	$(call rule_mkdir)
+On Thu, 08 Aug 2019 20:45:04 +0530
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
 
-Looks good to me.  Thanks for fixing these!
+> Naveen N. Rao wrote:
+> > Two patches addressing bugs in ftrace function probe handling. The first 
+> > patch addresses a NULL pointer dereference reported by LTP tests, while 
+> > the second one is a trivial patch to address a missing check for return 
+> > value, found by code inspection.  
+> 
+> Steven,
+> Can you please take a look at these patches?
+>
 
--- 
-Josh
+Sorry for the late reply, I've been traveling a lot lately. I'm looking
+at these now. I'm trying to see how they triggered a bug.
+
+-- Steve
