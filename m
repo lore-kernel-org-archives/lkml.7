@@ -2,115 +2,167 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43762C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6526CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C8D22D37
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVy1cPed"
+	by mail.kernel.org (Postfix) with ESMTP id 3287F22DA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567263778;
+	bh=PxrDdalpr9suwjOCDgI9j5W8+hzqZYotv3brVPaQt5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CV0jigpr6vzYCJQGeDPTBsHdbPlEIVS54UiKvcGWHDQHpoC4ZZtkLhTzxtq7rAAoX
+	 gfk8289ayAZ3+vYRNaTB9hLRjaFsYEX5rTR46s+A0yAb/ZKeH0Dk+b4rUjW/S0ohFy
+	 nDr71D+pRLL5zunwb+XzFtX0HitakmFtE6oDnrRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfHaPBx (ORCPT
+        id S1728425AbfHaPC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:01:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32954 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbfHaPBx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:01:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go14so4666948plb.0;
-        Sat, 31 Aug 2019 08:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wb/A0nLfYSOW2oh301mQSunagMCByFHKWhdM0f4nMws=;
-        b=BVy1cPedwKZIPpS9m31cRI6RXGHB3AfxEHnmky4WC//YrFjYix6lDPI0RP+F2X2uU/
-         nyLSgCVc2Y09hgNsy48NVWBdKogqMMoPk/asQ/sYdQeJQo3dg+fPM/g+3omdsNWN54pK
-         W1Jt7vZcA93fzjmCDP8qewc8OyuQzUvbRXQeKTSW4ynDOkvCYm7ugEIIVBg2ncVLmTvm
-         d0817ItdSSvMHYFC8HwOPA/jdHPKIwA8cdlY7dGxHjnSqwRsfcW+M4sZyLlj4t8BVdV/
-         W0Jxgv3uRjz24X0mroL49extd3AHnQnRzKT/PUtITWeJhbIy+D0Xc8V/25YDLAUw7SjQ
-         O2FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wb/A0nLfYSOW2oh301mQSunagMCByFHKWhdM0f4nMws=;
-        b=ftZa+eQ/Qo5G14jT3kxwEL0CECUL9X416oxiIK0oECeviJ0wV6VUSIjEtR78cCpzeu
-         fS52WCXnxZKm/8pHeVhhvya3mULf135MhPGRkvRJBUV0UuTstg+yWfccBoc/+Js2Ub0m
-         GEJAypKnGlbthKnJfbcWi5qJm3j804buf6prBZ4h8EJHw1oSQLFA8mtLBxNE2tWUNWbE
-         1qtyuz6YXuzppuKwWGkTXWDmJuoWvM34w1E3yfaZ/aMgPdaH5EvtVrj5jywocN5GIhbc
-         zDhOBDI+5/2pq/oEfO2bxJZ6t+FJxXuY5YTbbJhvhKkXeaQdlnVwb+eK4swC7+KRiH4d
-         NSRA==
-X-Gm-Message-State: APjAAAXss9HUaYQca9PTNwb4x+QzjWstbvp+uymtx7MBk3C1jJPWx12K
-        P2FxxxGKZVe07rYYLdH2TPY=
-X-Google-Smtp-Source: APXvYqz2mPcJCisbPMZtjM02edLEv+BRcy2qBwemiwWT87BNtWW7Vhq2Ak1XGaq47eCcsQNcu+ZOIQ==
-X-Received: by 2002:a17:902:1123:: with SMTP id d32mr21535084pla.218.1567263712480;
-        Sat, 31 Aug 2019 08:01:52 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id i9sm21212123pgo.46.2019.08.31.08.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 08:01:51 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 08:01:49 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        davem@davemloft.net
-Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
-Message-ID: <20190831150149.GB1692@localhost>
-References: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
- <20190829095825.2108-2-felipe.balbi@linux.intel.com>
- <20190829172509.GB2166@localhost>
- <20190829172848.GC2166@localhost>
- <87r253ulpn.fsf@gmail.com>
+        Sat, 31 Aug 2019 11:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728087AbfHaPC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 11:02:56 -0400
+Received: from zzz.localdomain (h184-61-154-48.mdsnwi.dsl.dynamic.tds.net [184.61.154.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ACF720870;
+        Sat, 31 Aug 2019 15:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567263775;
+        bh=PxrDdalpr9suwjOCDgI9j5W8+hzqZYotv3brVPaQt5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LiyfcK+Q7uipDrMq/ga2KPglA43UgWVvnrHVMHIXmhEEPYrA8sqzDGftKZyrNa/V2
+         iCdfe4eyAwbObOD3/akZv39EXva84QO8g3sNBwYPxMtohr44BiSojmdcQ8+NOZ7QXw
+         8M38zGvhNWGXv0h4fgaFHNPp7gAijMLsWHxu+cKU=
+Date:   Sat, 31 Aug 2019 10:02:51 -0500
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, Chao Yu <chao@kernel.org>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org
+Subject: Re: [PATCH] ext4 crypto: fix to check feature status before get
+ policy
+Message-ID: <20190831150251.GA528@zzz.localdomain>
+Mail-Followup-To: Chao Yu <yuchao0@huawei.com>, tytso@mit.edu,
+        adilger.kernel@dilger.ca, Chao Yu <chao@kernel.org>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org
+References: <20190804095643.7393-1-chao@kernel.org>
+ <f5186fae-ac58-a5f5-f9dc-b749ade7285d@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87r253ulpn.fsf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f5186fae-ac58-a5f5-f9dc-b749ade7285d@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:00:20AM +0300, Felipe Balbi wrote:
-> seems like this should be defined together with the other flags? If
-> that's the case, it seems like we would EXTTS and PEROUT masks.
+On Sat, Aug 31, 2019 at 06:32:28PM +0800, Chao Yu wrote:
+> Hi,
+> 
+> Is this change not necessary? A month has passed...
+> 
+> Thanks,
+> 
+> On 2019/8/4 17:56, Chao Yu wrote:
+> > From: Chao Yu <yuchao0@huawei.com>
+> > 
+> > When getting fscrypto policy via EXT4_IOC_GET_ENCRYPTION_POLICY, if
+> > encryption feature is off, it's better to return EOPNOTSUPP instead
+> > of ENODATA, so let's add ext4_has_feature_encrypt() to do the check
+> > for that.
+> > 
+> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > ---
+> >  fs/ext4/ioctl.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> > index 442f7ef873fc..bf87835c1237 100644
+> > --- a/fs/ext4/ioctl.c
+> > +++ b/fs/ext4/ioctl.c
+> > @@ -1112,9 +1112,11 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> >  		return -EOPNOTSUPP;
+> >  #endif
+> >  	}
+> > -	case EXT4_IOC_GET_ENCRYPTION_POLICY:
+> > +	case EXT4_IOC_GET_ENCRYPTION_POLICY: {
+> > +		if (!ext4_has_feature_encrypt(sb))
+> > +			return -EOPNOTSUPP;
+> >  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
+> > -
+> > +	}
+> >  	case EXT4_IOC_FSGETXATTR:
+> >  	{
+> >  		struct fsxattr fa;
+> > 
 
-Yes, let's make the meanings of the bit fields clear...
+Sorry, I was preoccupied with all the other fscrypt changes, and was thinking of
+waiting until 5.5 for this to avoid a potential extra merge conflict or a
+potentially breaking change.  Looking at this again though, the new ioctl
+FS_IOC_GET_ENCRYPTION_POLICY_EX *does* do the feature check, which doesn't match
+the documentation, which implies the check isn't done.  Also, f2fs does the
+check in FS_IOC_GET_ENCRYPTION_POLICY, so the filesystems are inconsistent.
 
---- ptp_clock.h ---
+So, it makes some sense to apply this now.  So I've gone ahead and applied the
+following to fscrypt.git#master, edited a bit from your original patch:
 
-/*
- * Bits of the ptp_extts_request.flags field:
- */
-#define PTP_ENABLE_FEATURE	BIT(0)
-#define PTP_RISING_EDGE		BIT(1)
-#define PTP_FALLING_EDGE	BIT(2)
-#define PTP_EXTTS_VALID_FLAGS	(PTP_ENABLE_FEATURE | \
-				 PTP_RISING_EDGE | \
-				 PTP_FALLING_EDGE)
+From 0642ea2409f3bfa105570e12854b8e2628db6835 Mon Sep 17 00:00:00 2001
+From: Chao Yu <yuchao0@huawei.com>
+Date: Sun, 4 Aug 2019 17:56:43 +0800
+Subject: [PATCH] ext4 crypto: fix to check feature status before get policy
 
-/*
- * Bits of the ptp_perout_request.flags field:
- */
-#define PTP_PEROUT_ONE_SHOT	BIT(0)
-#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
+When getting fscrypt policy via EXT4_IOC_GET_ENCRYPTION_POLICY, if
+encryption feature is off, it's better to return EOPNOTSUPP instead of
+ENODATA, so let's add ext4_has_feature_encrypt() to do the check for
+that.
 
-struct ptp_extts_request {
-	unsigned int flags;  /* Bit field of PTP_EXTTS_VALID_FLAGS. */
-};
+This makes it so that all fscrypt ioctls consistently check for the
+encryption feature, and makes ext4 consistent with f2fs in this regard.
 
-struct ptp_perout_request {
-	unsigned int flags;  /* Bit field of PTP_PEROUT_VALID_FLAGS. */
-};
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+[EB - removed unneeded braces, updated the documentation, and
+      added more explanation to commit message]
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ Documentation/filesystems/fscrypt.rst | 3 ++-
+ fs/ext4/ioctl.c                       | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
+index 4289c29d7c5a..8a0700af9596 100644
+--- a/Documentation/filesystems/fscrypt.rst
++++ b/Documentation/filesystems/fscrypt.rst
+@@ -562,7 +562,8 @@ FS_IOC_GET_ENCRYPTION_POLICY_EX can fail with the following errors:
+   or this kernel is too old to support FS_IOC_GET_ENCRYPTION_POLICY_EX
+   (try FS_IOC_GET_ENCRYPTION_POLICY instead)
+ - ``EOPNOTSUPP``: the kernel was not configured with encryption
+-  support for this filesystem
++  support for this filesystem, or the filesystem superblock has not
++  had encryption enabled on it
+ - ``EOVERFLOW``: the file is encrypted and uses a recognized
+   encryption policy version, but the policy struct does not fit into
+   the provided buffer
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index fe5a4b13f939..5703d607f5af 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -1113,6 +1113,8 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ #endif
+ 	}
+ 	case EXT4_IOC_GET_ENCRYPTION_POLICY:
++		if (!ext4_has_feature_encrypt(sb))
++			return -EOPNOTSUPP;
+ 		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
+ 
+ 	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
+-- 
+2.23.0
 
-Thanks,
-Richard
