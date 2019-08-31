@@ -2,106 +2,115 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C37BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897ABC41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA442377B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3722377D
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jVUY9VrA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="d7bhxDGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfHaGq2 (ORCPT
+        id S1726360AbfHaGs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 02:46:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfHaGq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 02:46:27 -0400
+        Sat, 31 Aug 2019 02:48:58 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:37274 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbfHaGs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 02:48:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KWT3ZplPKtK7Y/T0S67CqNjF7OkqyyNMh/wHljSWwiU=; b=jVUY9VrAda1+qJvsHySytQ2LdR
-        CxOnHDwJwePxIIeIiSRRi1BNQy/GFz/+L8HW8VrxUTdbiaeTu4HPJ01dlvWC1sytox74MsgkIMu4U
-        rO5vGPpPwJhe/HOB4fYKeU6k4WT4tC3qAXrwUNPZPBMfHbPwFw1u04hfBtBtjU0sF8xnD4fBIgZ6x
-        1AKcXWOSXiKAZJ7yLrWKlpwOOSEIK9OWG87iE4egH5TfrILcYnDPUccsl+ITYax6zE8mNohSFVUvs
-        fkfAyItPBOp60wDDZzJMNKNmkaRHCXqVtQ9oyEVd6dTq43Qh8F4QlIWRY77TJcIu7X8JfUduCnV4B
-        rOVylb0A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3x9M-0004oM-Sa; Sat, 31 Aug 2019 06:46:16 +0000
-Date:   Fri, 30 Aug 2019 23:46:16 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of
- fat/vfat
-Message-ID: <20190831064616.GA13286@infradead.org>
-References: <245727.1567183359@turing-police>
- <20190830164503.GA12978@infradead.org>
- <267691.1567212516@turing-police>
+        bh=rnTIfzRXS5Ir3AL9qhqZWwty0d60IscoDBzfov0jLUU=; b=d7bhxDGRoaRHuEc26WzHmmVfC/
+        ogQzkqh7yDgFK/luVkUpsOeqKZJ0qCMSmiDP5qL5Wrb/Y3R7XL4mkd6+Vpr6mMNM0n4wdoyGE9dZz
+        dugfTMV43zOzVFZzKnCYLvrCC1eAjpJk6TMBiL9sb2TY+1miRmCEERIAiSk685qrv2ZE=;
+Received: from p5dc58eeb.dip0.t-ipconnect.de ([93.197.142.235] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i3xBs-0007Yb-VQ; Sat, 31 Aug 2019 08:48:53 +0200
+Date:   Sat, 31 Aug 2019 08:48:52 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy
+ spi-cs-high to make display work again
+Message-ID: <20190831084852.5e726cfa@aktux>
+In-Reply-To: <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com>
+References: <cover.1562597164.git.hns@goldelico.com>
+        <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
+        <20190724194259.GA25847@bogus>
+        <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
+        <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
+        <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <267691.1567212516@turing-police>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 08:48:36PM -0400, Valdis Klētnieks wrote:
-> Explain how it's half-a**ed.  You worry about accidental mounting, meanwhile
-> down in the embedded space there are memory-constrained machines that
-> don't want separate vfat and exfat drivers sitting around in memory. If you
-> have a better patch that addresses both concerns, feel free to submit it.
+Hi,
 
-Since when did Linux kernel submissions become "show me a better patch"
-to reject something obviously bad?
+On Mon, 5 Aug 2019 12:29:19 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-As I said the right approach is to probably (pending comments from the
-actual fat maintainer) to merge exfat support into the existing fs/fat/
-codebase.  You obviously seem to disagree (and at the same time not).
-
-But using this as a pre-text of adding a non-disabled second fat16/32
-implementation and actually allowing that to build with no reason is
-just not how it works.
-
-> > done.  Given that you signed up as the maintainer for this what is your
-> > plan forward on it?  What development did you on the code and what are
-> > your next steps?
+> On Fri, Jul 26, 2019 at 12:43 AM Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:  
 > 
-> Well, the *original* plan was to get it into the tree someplace so it can get
-> review and updates from others.
+> > > I tried to convince Linus that this is the right way but he convinced
+> > > me that a fix that handles all cases does not exist.
+> > >
+> > > There seem to be embedded devices with older DTB (potentially in ROM)
+> > > which provide a plain 0 value for a gpios definition. And either with
+> > > or without spi-cs-high.
+> > >
+> > > Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
+> > > spi-cs-high was and must be interpreted as active low for these
+> > > devices. This leads to the inversion logic in code.
+> > >
+> > > AFAIR it boils down to the question if gpiolib and the bindings
+> > > should still support such legacy devices with out-of tree DTB,
+> > > but force in-tree DTS to add the legacy spi-cs-high property.
+> > >
+> > > Or if we should fix the 2 or 3 cases of in-tree legacy cases
+> > > and potentially break out-of tree DTBs.  
+> >
+> > If it is small number of platforms, then the kernel could handle those
+> > cases explicitly as needed.
+> >  
+> > > IMHO it is more general to keep the out-of-tree DTBs working
+> > > and "fix" what we can control (in-tree DTS).  
+> >
+> > If we do this, then we need to not call spi-cs-high legacy because
+> > we're stuck with it forever.  
+> 
+> I agree. The background on it is here:
+> https://lkml.org/lkml/2019/4/2/4
+> 
+> Not using the negatively defined (i.e. if it is no there, the line is
+> by default active low) spi-cs-high would break
+> PowerPC, who were AFAICT using this to ship devices.
+> 
+is this thing now just waiting for someone to do a s/legacy//?
 
-In other words you have no actual plan and no idea what to do and want to
-rely on "others" to do anything, but at the same time reject the
-comments from others how to do things right?
-
-> Given the amount of press the Microsoft
-> announcement had, we were *hoping* there would be some momentum and
-> people actually looking at the code and feeding me patches. I've gotten a
-> half dozen already today....
-
-And all of that you can easily do by just sending out a patch series.
-And maybe actually listening to comments.
-
-> Although if you prefer, it can just sit out-of-tree until I've got a perfect driver
-> without input or review from anybody.  But I can't think of *any* instance where
-> that model has actually worked.
-
-You generally get a lot of review and comments by posting to the mailing
-list.  But what really helps is to just do the very basic homework
-beforehand.  And it also really helps to have a plan what you want to
-do with a codebase you just copy and pasted from somewhere.
+Regards,
+Andreas
