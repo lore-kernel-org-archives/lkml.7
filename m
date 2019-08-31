@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2FDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08F7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812AD22D37
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B5C22D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfHaMa6 (ORCPT
+        id S1728309AbfHaMb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 08:30:58 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:54675 "EHLO
+        Sat, 31 Aug 2019 08:31:29 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:40269 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfHaMa6 (ORCPT
+        with ESMTP id S1727274AbfHaMb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 08:30:58 -0400
+        Sat, 31 Aug 2019 08:31:28 -0400
 Received: from marcel-macbook.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 7B147CECF0;
-        Sat, 31 Aug 2019 14:39:42 +0200 (CEST)
+        by mail.holtmann.org (Postfix) with ESMTPSA id 6CDCACECF0;
+        Sat, 31 Aug 2019 14:40:13 +0200 (CEST)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3 2/2] Bluetooth: btrtl: Add firmware version print
+Subject: Re: [PATCH 1/2] Bluetooth: btrtl: Remove redundant prefix from calls
+ to rtl_dev macros
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190831083602.GA10103@laptop-alex>
-Date:   Sat, 31 Aug 2019 14:30:55 +0200
+In-Reply-To: <20190831084030.GA10145@laptop-alex>
+Date:   Sat, 31 Aug 2019 14:31:27 +0200
 Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
         Max Chou <max.chou@realtek.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <F9786DAC-5298-4CC6-B197-FE57A43D6B5D@holtmann.org>
-References: <20190831083602.GA10103@laptop-alex>
+Message-Id: <1498CCC4-9780-4C49-9971-7B97E1A7BA4D@holtmann.org>
+References: <20190831084030.GA10145@laptop-alex>
 To:     Alex Lu <alex_lu@realsil.com.cn>
 X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,17 +46,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Alex,
 
-> This patch is used to print fw version for debug convenience
+> the rtl: or RTL: prefix in the string is pointless. The rtl_dev_* macros
+> already does that.
 > 
 > Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
 > ---
-> Changes in v3
->  - Remove the pointless rtl: prefix in the format string
-> Changes in v2
->  - Re-order the code so that no forward declaration is needed
-> 
-> drivers/bluetooth/btrtl.c | 56 ++++++++++++++++++++++++---------------
-> 1 file changed, 35 insertions(+), 21 deletions(-)
+> drivers/bluetooth/btrtl.c | 12 ++++++------
+> 1 file changed, 6 insertions(+), 6 deletions(-)
 
 patch has been applied to bluetooth-next tree.
 
