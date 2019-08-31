@@ -2,112 +2,150 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A87C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB205C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290AE23697
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:01:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uu5mdBXk"
+	by mail.kernel.org (Postfix) with ESMTP id B285023697
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfHaJBW (ORCPT
+        id S1727625AbfHaJGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 05:01:22 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36954 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfHaJBV (ORCPT
+        Sat, 31 Aug 2019 05:06:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54403 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfHaJGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 05:01:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xewVdUf11AxABQouRLx2CEX2BTZyyYycBHtYuCXEbi0=; b=Uu5mdBXkqKUK/Ypcu6rC0Qk+u
-        byBFetK6ZHj2DMTkbYDtyid4TNew0hBVlqJ6re++7zza3ijqLPq3YUur3QpLsbZ7t4VlTqfIjRFYX
-        ttY33DLlPd//YziDDT2S/2cPbYAE1jYRdEVGiVraLR2ljyvhSZ8Zzdsw/rgg0DXSuHm2aZPirlZNi
-        OoRtHP+6HSqGHx4BjWDXbi3fMKkgX991I3//IRvjj2C1p/yg32s0eK25AK27XpKT1pPAkSd64eA3E
-        gRHmAsjAoDdzUXFENvTTwv9M2BV8OOKwAXNo0YZ+kZ1CJkffHvnRVUb0Rqm7IugLIQ8dsOZEKRe/A
-        FPgvHEwlA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3zFk-0007T8-3v; Sat, 31 Aug 2019 09:01:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1AF71301747;
-        Sat, 31 Aug 2019 11:00:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 017BD29B2CD09; Sat, 31 Aug 2019 11:00:55 +0200 (CEST)
-Date:   Sat, 31 Aug 2019 11:00:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     stern@rowland.harvard.edu, akiyks@gmail.com,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        dlustig@nvidia.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, npiggin@gmail.com, paulmck@linux.ibm.com,
-        will.deacon@arm.com, paul.burton@mips.com
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
- and mips.
-Message-ID: <20190831090055.GH2369@hirez.programming.kicks-ass.net>
-References: <20190613134317.734881240@infradead.org>
+        Sat, 31 Aug 2019 05:06:20 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i3zKf-0006D1-R7; Sat, 31 Aug 2019 11:06:06 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D01681C07A5;
+        Sat, 31 Aug 2019 11:06:04 +0200 (CEST)
+Date:   Sat, 31 Aug 2019 09:06:04 -0000
+From:   "tip-bot2 for Josh Hunt" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel: Restrict period on Nehalem
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>, acme@kernel.org,
+        Josh Hunt <johunt@akamai.com>, bpuranda@akamai.com,
+        mingo@redhat.com, jolsa@redhat.com, tglx@linutronix.de,
+        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1566256411-18820-1-git-send-email-johunt@akamai.com>
+References: <1566256411-18820-1-git-send-email-johunt@akamai.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613134317.734881240@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <156724236470.10774.16768356657393096116.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 03:43:17PM +0200, Peter Zijlstra wrote:
-> Hi,
-> 
-> This all started when Andrea Parri found a 'surprising' behaviour for x86:
-> 
->   http://lkml.kernel.org/r/20190418125412.GA10817@andrea
-> 
-> Basically we fail for:
-> 
-> 	*x = 1;
-> 	atomic_inc(u);
-> 	smp_mb__after_atomic();
-> 	r0 = *y;
-> 
-> Because, while the atomic_inc() implies memory order, it
-> (surprisingly) does not provide a compiler barrier. This then allows
-> the compiler to re-order like so:
-> 
-> 	atomic_inc(u);
-> 	*x = 1;
-> 	smp_mb__after_atomic();
-> 	r0 = *y;
-> 
-> Which the CPU is then allowed to re-order (under TSO rules) like:
-> 
-> 	atomic_inc(u);
-> 	r0 = *y;
-> 	*x = 1;
-> 
-> And this very much was not intended.
-> 
-> This had me audit all the (strong) architectures that had weak
-> smp_mb__{before,after}_atomic: ia64, mips, sparc, s390, x86, xtensa.
-> 
-> Of those, only x86 and mips were affected. Looking at MIPS to solve this, led
-> to the other MIPS patches.
-> 
-> All these patches have been through 0day for quite a while.
-> 
-> Paul, how do you want to route the MIPS bits?
+The following commit has been merged into the perf/urgent branch of tip:
 
-Paul; afaict the MIPS patches still apply (ie. they've not made their
-way into Linus' tree yet).
+Commit-ID:     44d3bbb6f5e501b873218142fe08cdf62a4ac1f3
+Gitweb:        https://git.kernel.org/tip/44d3bbb6f5e501b873218142fe08cdf62a4ac1f3
+Author:        Josh Hunt <johunt@akamai.com>
+AuthorDate:    Mon, 19 Aug 2019 19:13:31 -04:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Fri, 30 Aug 2019 14:27:47 +02:00
 
-I thought you were going to take them?
+perf/x86/intel: Restrict period on Nehalem
+
+We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
+some cases when using perf:
+
+perfevents: irq loop stuck!
+WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
+...
+RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
+...
+Call Trace:
+<NMI>
+? perf_event_nmi_handler+0x2e/0x50
+? intel_pmu_save_and_restart+0x50/0x50
+perf_event_nmi_handler+0x2e/0x50
+nmi_handle+0x6e/0x120
+default_do_nmi+0x3e/0x100
+do_nmi+0x102/0x160
+end_repeat_nmi+0x16/0x50
+...
+? native_write_msr+0x6/0x20
+? native_write_msr+0x6/0x20
+</NMI>
+intel_pmu_enable_event+0x1ce/0x1f0
+x86_pmu_start+0x78/0xa0
+x86_pmu_enable+0x252/0x310
+__perf_event_task_sched_in+0x181/0x190
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+finish_task_switch+0x158/0x260
+__schedule+0x2f6/0x840
+? hrtimer_start_range_ns+0x153/0x210
+schedule+0x32/0x80
+schedule_hrtimeout_range_clock+0x8a/0x100
+? hrtimer_init+0x120/0x120
+ep_poll+0x2f7/0x3a0
+? wake_up_q+0x60/0x60
+do_epoll_wait+0xa9/0xc0
+__x64_sys_epoll_wait+0x1a/0x20
+do_syscall_64+0x4e/0x110
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fdeb1e96c03
+...
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: acme@kernel.org
+Cc: Josh Hunt <johunt@akamai.com>
+Cc: bpuranda@akamai.com
+Cc: mingo@redhat.com
+Cc: jolsa@redhat.com
+Cc: tglx@linutronix.de
+Cc: namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com
+Link: https://lkml.kernel.org/r/1566256411-18820-1-git-send-email-johunt@akamai.com
+---
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 648260b..e4c2cb6 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
+ 	return left;
+ }
+ 
++static u64 nhm_limit_period(struct perf_event *event, u64 left)
++{
++	return max(left, 32ULL);
++}
++
+ PMU_FORMAT_ATTR(event,	"config:0-7"	);
+ PMU_FORMAT_ATTR(umask,	"config:8-15"	);
+ PMU_FORMAT_ATTR(edge,	"config:18"	);
+@@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
+ 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
+ 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
++		x86_pmu.limit_period = nhm_limit_period;
+ 
+ 		mem_attr = nhm_mem_events_attrs;
+ 
