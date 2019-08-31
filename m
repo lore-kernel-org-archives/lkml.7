@@ -2,103 +2,103 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7AC41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD5DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE3A23717
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567216922;
-	bh=EH7UF4hE0hUphJlOsvXuyX+GyJDs8CBq8W6IzESMZnc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c7hvXBOn5qFOV3EMFPGOyQZT9C9wAfvuqaGINc7Bcqwh/MKNIf6QNrEr9zra0Bjvb
-	 l3EyL3whpDzkdVhEKrQ6qURczZ3S8Xn0FdrErmD4s//np+TB29p8vPrWtdVpTfcuir
-	 fI1YFRVs69yKlilMUXVC3LxuIK/s6+VtY4CaA/sw=
+	by mail.kernel.org (Postfix) with ESMTP id EC3B22343B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BmtM9QT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfHaCCC (ORCPT
+        id S1728332AbfHaCEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 22:02:02 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36947 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728246AbfHaCCB (ORCPT
+        Fri, 30 Aug 2019 22:04:32 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44980 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbfHaCEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 22:02:01 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w67so6677697lff.4
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:02:00 -0700 (PDT)
+        Fri, 30 Aug 2019 22:04:32 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so4121611plr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5gMwt6isAwVm7YJJXL3zlJvn3zNlFGgyGxV9A3cBnEc=;
-        b=SOrA9k8fOzCUHmFRfMqLCAdkYLAH+8RewUOAcE/to+bTCzJNInpxUKc/kug/GXXr8X
-         G14cx+KeOC32/pE2vKyqsTdpnJSc9rarN6X5cBfbPL7gHg5aUaNJuFwgEoOce2XeonMJ
-         6pUCmoV8rMRso0oYOnKp4D52/MEeR2IeeC97M=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=zKp+R2++ZW7vYFmoNUR8A5wlNJqeNnULOZAUz1UqSlk=;
+        b=BmtM9QT7x3OHnPhXRJ7wL/Pd4ecqOVF5NirfoHQHlQx/Elav8lNEhefX/wm8nIGJRi
+         fV4EdJuRGzap2GHd+vD/ARdNuPXtQSUKYi/rMRjD8I4RwNXKBIitbpt/2IA5ZRV+Ko9K
+         8iPQIPuFR4JxrYR9/L2cwkJ9bQSVdpLVG9qkf1tPfnMQWaEzLufOIu1hRoTNRD9S+2ZS
+         uvu3TBGPAbSZx5reXnBSRICqXr5+WNGAhxCBAU0H4RT4l3En9iKHcZ50UFDqS5hwW96v
+         WqIz5qrFt+cgvprBrRiwSnd3/WdH6T8JspMhJK4h/zEsT+dpEJywhukT0F+Y5l2We/00
+         beXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5gMwt6isAwVm7YJJXL3zlJvn3zNlFGgyGxV9A3cBnEc=;
-        b=QdFu/4bDkuzwxwSOFxWMpGipp/gJjtaAHRyY7gnNWcmzA7ls7gbGSdA0UwAL5cy78c
-         P0435cTMuX+vP65uabV+UE+x7MyVZz5YZt9YooaCO8KHkkL+B2kFxakDLiw3sPQ9XeP6
-         Cn5MW0zLdO2aADr5kBNHkI8CkVNnRr0cDehmkZoe1x2xnOpuUhNvd8RVS2AgpIO02RoA
-         S/DJJoGDwTV9EAWnDT3E/HLihFzV4J/5GzvBZbvER2YO+KAqIv8F/QDGZD7VDEpAQJjo
-         OkZ0+28B1E/jwE5nGtl6F/kGrTWhdll9c+kXtM8oFjMpMeFzC/OPbTQS893k3PKyS9Nc
-         SXxw==
-X-Gm-Message-State: APjAAAUpvRCOS9dkl2aGcK2rMU+yLlS45h7NxpzqCXHNe/TN0fW7oJaV
-        8wGq74Pz4rYvEmo9qDiCXxcFOhg2hUE=
-X-Google-Smtp-Source: APXvYqzDrajxaX6cdluibF8NSPFTGTH3QaBJzQoa6bw+uL/AJoHv/z5WKRDLRoORBEpgMQkFjAc/5g==
-X-Received: by 2002:ac2:4901:: with SMTP id n1mr11214503lfi.0.1567216919196;
-        Fri, 30 Aug 2019 19:01:59 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id w17sm519575lfl.43.2019.08.30.19.01.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2019 19:01:58 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id t14so8103016lji.4
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:01:58 -0700 (PDT)
-X-Received: by 2002:a2e:8507:: with SMTP id j7mr2974829lji.156.1567216917739;
- Fri, 30 Aug 2019 19:01:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=zKp+R2++ZW7vYFmoNUR8A5wlNJqeNnULOZAUz1UqSlk=;
+        b=MAYVG7iCbsi7R2qK6MNPZXZgU75wFCQNQ1ITZbNMOGq4YPhjlda82ZOhro4K6HjLYE
+         vV+xymgLN8qOUMubiOksaPJ8yUw+zTNX80eYMUDmNFa1IdgqsnUQHgU75j+sx/U6ui8P
+         8nBvKyrbtzCkMQ3PKTcYjhWxnKOjnulZDGI9AeoMe+dKIF2KXTR7aqPVXsg5CPAPly0+
+         /dBNJf0hHfPQzUVdcABe+vsQrLbW/gxVq2JSGqTBsTElpR3bGuwePqawrhR8c/QcSV9F
+         AX+igmzvY9g2J3ebDLSf5HrkCFRg9R4uNHR07z1wFl2DKwmJ/ApRGaUxmmiBDch1Ez1F
+         Xd+Q==
+X-Gm-Message-State: APjAAAVnb0FdCNLqsxm9073B0MyprVBreBC3TrkqUx/ur2n9CoprwOV3
+        8PXnAYuAv4TQQg4ZWCPpmF07zA==
+X-Google-Smtp-Source: APXvYqyomcceqFTqZJE7UZzkXFxj6XuIpOYDoJCJqoosAJW7N7akdJMUvYpMH+vTEGWMH6pjESCUgQ==
+X-Received: by 2002:a17:902:fa5:: with SMTP id 34mr19000900plz.285.1567217071865;
+        Fri, 30 Aug 2019 19:04:31 -0700 (PDT)
+Received: from localhost ([216.9.110.7])
+        by smtp.gmail.com with ESMTPSA id y13sm11526177pfb.48.2019.08.30.19.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2019 19:04:30 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 19:04:29 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Charles Papon <charles.papon.90@gmail.com>
+cc:     Christoph Hellwig <hch@infradead.org>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] riscv: kbuild: drop CONFIG_RISCV_ISA_C
+In-Reply-To: <CAMabmM+YX3L-J1GCvDaC9H66YMArfs6PuKCsE_dNMBtApOxZig@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1908301859230.16731@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1908061929230.19468@viisi.sifive.com> <CAEUhbmVTM2OUnX-gnBZw5oqU+1MwdYkErrOnA3NGJKh5gxULng@mail.gmail.com> <CAMabmMJ3beMcs38Boe11qcsQvqY+9u=2OqA0vCSKdL=n-cK9GQ@mail.gmail.com> <20190812150348.GH26897@infradead.org>
+ <CAMabmM+YX3L-J1GCvDaC9H66YMArfs6PuKCsE_dNMBtApOxZig@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au> <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au> <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au> <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
- <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au> <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
- <20190809061548.GA10530@gondor.apana.org.au> <20190830073906.GA4579@gondor.apana.org.au>
-In-Reply-To: <20190830073906.GA4579@gondor.apana.org.au>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 30 Aug 2019 19:01:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whnH09S73Nfo-HMH+V-Ew39+tZdEzaLUQo41PJEo=PZZw@mail.gmail.com>
-Message-ID: <CAHk-=whnH09S73Nfo-HMH+V-Ew39+tZdEzaLUQo41PJEo=PZZw@mail.gmail.com>
-Subject: Re: [GIT] Crypto Fixes for 5.3
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:39 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> This push fixes a potential crash in the ccp driver.
+Hi Charles,
 
-Btw, Herbert, can you add "pull" somewhere in your pull request email?
+On Tue, 13 Aug 2019, Charles Papon wrote:
 
-It could be in the subject line (ie change the "[GIT]" to "[GIT
-PULL]") but it could also be anywhere in the email body (ie a "please
-pull" or something like that).
+> > Because it it the unix platform baseline as stated in the patch.
+> I know that, but i'm looking for arguments why RVC could't be kept as
+> an option, especialy it is only an optimisation option without
+> behavioral/code changes.
+> 
+> That baseline make sense for heavy linux distributions, where you
+> expect everybody to compile with a baseline set of ISA extentions, to
+> make binary exchanges easier.
+> But for smaller systems, i do not see advantages having RVC forced.
 
-As it is, your pull requests don't actually trigger my search terms. I
-eventually get to them anyway (I do try to look at _all_ my emails),
-but it does mean that they don't get the priority action that other
-peoples pull requests do...
+OK - I agree with you.
 
-               Linus
+Still, I think it would be good if we made this option depend on other 
+more general kernel configuration parameters for smaller systems.  Will 
+think about this further.
+
+Thanks for commenting on this, and am looking forward to adding a VexRiscv 
+system to our kernel tests -
+
+
+- Paul
