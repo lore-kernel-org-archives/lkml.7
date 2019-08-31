@@ -2,86 +2,111 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5487FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6DCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD63217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DA822D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567254040;
+	bh=R7PKgZVs8LZzromlzQuOL+4NGSAf6K0NPvomYelKhWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BrV+X1divag9J6NcOpPdUqmynQzjVMH31a0aP6cf3zOIW7271wvuD+OSL8BppXNiz
+	 RWHAz+Rd4qN6hrY1wn+IqRrFyUMxuKEVV1EN7wfCCPZhOminB/3g3F3WQam7xsxqY4
+	 2LkDN974ZDAIbJQWZsbkt8EtnEr41PpZWM4gp1r0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfHaMTj (ORCPT
+        id S1728119AbfHaMUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 08:19:39 -0400
-Received: from sauhun.de ([88.99.104.3]:37884 "EHLO pokefinder.org"
+        Sat, 31 Aug 2019 08:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfHaMTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 08:19:38 -0400
-Received: from localhost (p5486C98B.dip0.t-ipconnect.de [84.134.201.139])
-        by pokefinder.org (Postfix) with ESMTPSA id CF5272C0093;
-        Sat, 31 Aug 2019 14:19:36 +0200 (CEST)
-Date:   Sat, 31 Aug 2019 14:19:36 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, peda@axentia.se, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com
-Subject: Re: [PATCH v3 0/9] i2c: add support for filters
-Message-ID: <20190831121936.GD1032@ninjato>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <20190712082044.6eteunzehyptsibk@M43218.corp.atmel.com>
- <867070c3-02c8-da1b-04d9-0a1b628577de@microchip.com>
- <20190829202817.GT3740@ninjato>
+        id S1726195AbfHaMUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 08:20:39 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CFE3217D7;
+        Sat, 31 Aug 2019 12:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567254037;
+        bh=R7PKgZVs8LZzromlzQuOL+4NGSAf6K0NPvomYelKhWk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JzwxQdwoqm28OGFuYSk9PzJy6XDBQl7LLNyw7VA+nqT+aEYytrvjkkm1IThIamprD
+         H4gQ6SFcvObpzYhtyFkB1XWjajELA3D8bwr+mOmQOqElCajQUdsj7UmSuNTDBrvwJK
+         REMMN4dDDQaPm94AIOakXwriHqHFmi9HvsNjabJ4=
+Date:   Sat, 31 Aug 2019 08:20:36 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Cc:     matthieu.baerts@tessares.net, aprout@ll.mit.edu, cpaasch@apple.com,
+        davem@davemloft.net, edumazet@google.com,
+        gregkh@linuxfoundation.org, jonathan.lemon@gmail.com,
+        jtl@netflix.com, linux-kernel@vger.kernel.org, mkubecek@suse.cz,
+        ncardwell@google.com, stable@vger.kernel.org, ycheng@google.com,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
+ retransmit queue
+Message-ID: <20190831122036.GY5281@sasha-vm>
+References: <529376a4-cf63-f225-ce7c-4747e9966938@tessares.net>
+ <20190824060351.3776-1-tim.froidcoeur@tessares.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sXc4Kmr5FA7axrvy"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190829202817.GT3740@ninjato>
+In-Reply-To: <20190824060351.3776-1-tim.froidcoeur@tessares.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 24, 2019 at 08:03:51AM +0200, Tim Froidcoeur wrote:
+>Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
+>triggers following stack trace:
+>
+>[25244.848046] kernel BUG at ./include/linux/skbuff.h:1406!
+>[25244.859335] RIP: 0010:skb_queue_prev+0x9/0xc
+>[25244.888167] Call Trace:
+>[25244.889182]  <IRQ>
+>[25244.890001]  tcp_fragment+0x9c/0x2cf
+>[25244.891295]  tcp_write_xmit+0x68f/0x988
+>[25244.892732]  __tcp_push_pending_frames+0x3b/0xa0
+>[25244.894347]  tcp_data_snd_check+0x2a/0xc8
+>[25244.895775]  tcp_rcv_established+0x2a8/0x30d
+>[25244.897282]  tcp_v4_do_rcv+0xb2/0x158
+>[25244.898666]  tcp_v4_rcv+0x692/0x956
+>[25244.899959]  ip_local_deliver_finish+0xeb/0x169
+>[25244.901547]  __netif_receive_skb_core+0x51c/0x582
+>[25244.903193]  ? inet_gro_receive+0x239/0x247
+>[25244.904756]  netif_receive_skb_internal+0xab/0xc6
+>[25244.906395]  napi_gro_receive+0x8a/0xc0
+>[25244.907760]  receive_buf+0x9a1/0x9cd
+>[25244.909160]  ? load_balance+0x17a/0x7b7
+>[25244.910536]  ? vring_unmap_one+0x18/0x61
+>[25244.911932]  ? detach_buf+0x60/0xfa
+>[25244.913234]  virtnet_poll+0x128/0x1e1
+>[25244.914607]  net_rx_action+0x12a/0x2b1
+>[25244.915953]  __do_softirq+0x11c/0x26b
+>[25244.917269]  ? handle_irq_event+0x44/0x56
+>[25244.918695]  irq_exit+0x61/0xa0
+>[25244.919947]  do_IRQ+0x9d/0xbb
+>[25244.921065]  common_interrupt+0x85/0x85
+>[25244.922479]  </IRQ>
+>
+>tcp_rtx_queue_tail() (called by tcp_fragment()) can call
+>tcp_write_queue_prev() on the first packet in the queue, which will trigger
+>the BUG in tcp_write_queue_prev(), because there is no previous packet.
+>
+>This happens when the retransmit queue is empty, for example in case of a
+>zero window.
+>
+>Patch is needed for 4.4, 4.9 and 4.14 stable branches.
 
---sXc4Kmr5FA7axrvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There needs to be a better explanation of why it's not needed
+upstream...
 
-
-> > What is the plan for this patch series?
->=20
-> I hope to review it this weekend and my hope it is good to go for 5.4.
-
-Series looks good basically. Just a few comments for some patches. See
-there.
-
-Thanks!
-
-
---sXc4Kmr5FA7axrvy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qZdgACgkQFA3kzBSg
-KbZsZA//f78QF1bYvAot77Sdun9f88jzno8Z7dYA6QF/uU2GL7npsGzJilGHp0bX
-18ft7DNi86YVPNglhutCWhlLDicMZOTe2fZkqrSX/w574Kq9TKadW4aCaVBkIyhj
-lvFP5lDSVQo9lHaXv+ocopAcFkKLlZ7KivZAXbOCAW9AwYF0l2bSC7FqVyJVYQOY
-8LEfUB0T4ZANnMuN2xn4S3OyTlidykhOy5rF+oppjpesIJ21zjSKwKLKKqz0eD2p
-vP4RcoEYvP+UvswkfMFeQ/nW8sSOOVi0lIpWPkRUwog9rHtZfVov8qd63r4/ftQK
-IEkQDXCmB+0oK5Dgz+FeIS7Hty6oJluLSpxLG1TTZ3W/716j2BrcrcTX7V0EoHGv
-YutKi0SD855I2bSWrk/O+P5Vor13a0oBVsu4WjRFbhO/Fzd3bIcZghILe3ty7um/
-US6WEMXpn0HRFPA2wdeBHfYWwGheN67Eovuxu24aPLF3G9GkTsaN38q4HCLfEZaf
-ofK5L+b2Tmb9O40aaXWIIZ5BwsI8STpT0LA0HS5zUh/j6y+3WRmKAaGA8tjDQUNz
-5GlQwcdvyBe8bsXSAqdFwR3r1mX3G9bC30hm2PX8DyCxQfgV7FJQjns44p3NKfHn
-5wPMNxUVEU2VsilefWifVBUwpdq8UxmPPJamPdY4sygrxOq+GK4=
-=4j4B
------END PGP SIGNATURE-----
-
---sXc4Kmr5FA7axrvy--
+--
+Thanks,
+Sasha
