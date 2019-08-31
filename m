@@ -2,153 +2,153 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B817C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689E723711
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B5E23711
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="C3WFmGxr"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JvpkIul1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfHaCAS (ORCPT
+        id S1728368AbfHaCBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 22:00:18 -0400
-Received: from mx1.ucr.edu ([138.23.248.2]:55880 "EHLO mx1.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728246AbfHaCAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 22:00:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1567216891; x=1598752891;
-  h=from:to:cc:subject:date:message-id;
-  bh=9g/JKp5foaxieSnROfbCL0H+QjD7in4dyY/WHzgkS8M=;
-  b=C3WFmGxrfxKUBM+iSR/+K4kgE91LeLXFUGiHfsJDFiDHyGU+hMhcINCE
-   qPQE7zR+TiFIUEP8CR83Lw6gcKEbQMVZfDHOBAayF4rDitc9CN1WOAlYq
-   5EfxOWM48cDeb3H8qm1uumt18jKXjnVIEqf8CxPXOOUfSIeGITcH5XFhI
-   9DqAeWeCqK9IVmbLmVGyc3V+6/BgTBLCTpHsTTbWE8lgburChdauhgc2q
-   f9eoAnZZZmJZcyZC/ZD8xxyET4KOvZ4cHsOC5b+gt5L3I1P2RyC2xBaK8
-   xcLJI9o7u6NCnHDdVhwh9dl0mvcVXHuZL1j5AEPyke+jdAdJBeIcFfRLB
-   g==;
-IronPort-SDR: kpZj9UYsrRM173jeb4/SigkcW3nLh4OumUd01CUrAELV+gKIvvz3T+lNKK+XLxC7bqyOa58gE5
- jO5gzXGw0hkvYva8YPN2w/9iTeXAGCpJ9BJEH89AOa8DJ7yIb00rMSwDheTXIv7D8Zy90v8Zn0
- NpS1hSY6k3xEV4oM7Ct0vFAQ+51HwmDHbo8lUey480CIi0ovzDQNKvbbX/E9iqqsa7IYIjFG/J
- hbvghSOOBehfAbsKpKFsFsQf7Ci6P0ZnH+yPKr8t11FH+DZmxf5CK5IA+yQLAbUnSIjtXTA+6a
- 6YQ=
-IronPort-PHdr: =?us-ascii?q?9a23=3AOX1LQR+yywVC3/9uRHKM819IXTAuvvDOBiVQ1K?=
- =?us-ascii?q?B42u4cTK2v8tzYMVDF4r011RmVBN+dsqwZwLeN+4nbGkU4qa6bt34DdJEeHz?=
- =?us-ascii?q?Qksu4x2zIaPcieFEfgJ+TrZSFpVO5LVVti4m3peRMNQJW2aFLduGC94iAPER?=
- =?us-ascii?q?vjKwV1Ov71GonPhMiryuy+4ZLebxhWiDanfL9/LRW7oQrRu8QYnIBvNrs/xh?=
- =?us-ascii?q?zVr3VSZu9Y33loJVWdnxb94se/4ptu+DlOtvwi6sBNT7z0c7w3QrJEAjsmNX?=
- =?us-ascii?q?s15NDwuhnYUQSP/HocXX4InRdOHgPI8Qv1Xpb1siv9q+p9xCyXNtD4QLwoRT?=
- =?us-ascii?q?iv6bpgRQT2gykbKTE27GDXitRxjK1FphKhuwd/yJPQbI2MKfZyYr/RcdYcSG?=
- =?us-ascii?q?pEX8ZRTDdBAoK6b4sAEuEPI/9WpJTzp1sPsxS+ARSjD/7rxjJGmnP62Ks32P?=
- =?us-ascii?q?kjHw7bxgwtB9IAvmrJotv7N6kcVvu4wLXUwTjZc/9bwyvx5JTOfxs8of+MR7?=
- =?us-ascii?q?Vwcc/JxEYtFgPEj1WQqZHiPziI0ekMs2ma7+p6WuKul2Irtw98ryOyxsgwkI?=
- =?us-ascii?q?nFnJwaxU3Z9Shgxos+ON62SFZjbNK6DJddszuWOoh2T884XW1kpSk3xqcYtZ?=
- =?us-ascii?q?KnYCQG0Ikryh/bZvCdbYSF7BLuWPyPLTp5nn5oer2yihCv+ka60OL8TNO70F?=
- =?us-ascii?q?NSoypAldnDq24C2gTI6siCVvt95kCh2SuT1wzL6uFLP0Q0la3DJp4k2LEwl5?=
- =?us-ascii?q?4TvV3bHi/yhUn6laGWels49uS08ejnbbLmppiTN49wlA7yKLghmsu6AeggMw?=
- =?us-ascii?q?gOWXaU+fik2bH94UH0RK9Gg/42n6XDrpzWOMsWqrSnDwNJzoov8xO/AC2n0N?=
- =?us-ascii?q?Qck3kHNlVFeBefgonpOlDOIOr3Dfajj1iwnjpm3O3GMaH7ApnXMHfMjarhca?=
- =?us-ascii?q?5n60FA0Aoz0cxf55VMB7EFIfLzXFLxtdPBAh86LQO02eDnB8t51o4FR2KPDb?=
- =?us-ascii?q?GWMLnIvV+L+O0vOe+Ma5ERuDrnLPgl/fHu3jcXg1gYKJioz5sKbzjsD+ZmKk?=
- =?us-ascii?q?TBOSHEn9wbV2oGo1xtH6TRlFSeXGsLND6JVKUm62R+V9qr?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2FJAACqgmddgMjWVdFlHgEGBwaBUwk?=
- =?us-ascii?q?LAYNXTBCNHYYMUAEBAQaLHxhxhXmDCYUkgXsBCAEBAQwBAS0CAQGEP4JbIzQ?=
- =?us-ascii?q?JDgIDCAEBBQEBAQEBBgQBAQIQAQEJDQkIJ4VDgjopgmALFhVSVj8BBQE1Ijm?=
- =?us-ascii?q?CRwGBdhSdPIEDPIwjM4hpAQgMgUkJAQiBIgGHHYRZgRCBB4Nuc4QNg1aCRAS?=
- =?us-ascii?q?BLgEBAY0+hxCWBQEGAgGCDBSBcpJTJ4IygX6JGTmKWgEtpXcCCgcGDyGBL4I?=
- =?us-ascii?q?RTSWBbAqBRIJ6ji0fM4EIjAGCVAE?=
-X-IPAS-Result: =?us-ascii?q?A2FJAACqgmddgMjWVdFlHgEGBwaBUwkLAYNXTBCNHYYMU?=
- =?us-ascii?q?AEBAQaLHxhxhXmDCYUkgXsBCAEBAQwBAS0CAQGEP4JbIzQJDgIDCAEBBQEBA?=
- =?us-ascii?q?QEBBgQBAQIQAQEJDQkIJ4VDgjopgmALFhVSVj8BBQE1IjmCRwGBdhSdPIEDP?=
- =?us-ascii?q?IwjM4hpAQgMgUkJAQiBIgGHHYRZgRCBB4Nuc4QNg1aCRASBLgEBAY0+hxCWB?=
- =?us-ascii?q?QEGAgGCDBSBcpJTJ4IygX6JGTmKWgEtpXcCCgcGDyGBL4IRTSWBbAqBRIJ6j?=
- =?us-ascii?q?i0fM4EIjAGCVAE?=
-X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
-   d="scan'208";a="5139730"
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 19:01:31 -0700
-Received: by mail-pl1-f200.google.com with SMTP id b23so5178956pls.8
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:00:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DDyvegdKp6MmZvQoeqYKTe4rMUcvHNSrG5Su6nBLcf4=;
-        b=qj9juewQOk1OfZTECMc0wUjtZ0xpZ5AHJ62YZoc6M2vut56Fh6K8XkdSuoN9+Rd382
-         pZqi7NY+tVsUZPBUrt+Ux4QOz2pqYOZDl99/6aldWNddJcpQhsb4ppzxTZt6FvjeiSx6
-         cU1uaVLunc4BSyiS1fHsJXZ3TdlCiJ2WwVQegGOZLc8bS4/zd/mFKcF962ufeGREc8K/
-         TIdGZivRmL1nuGXXx3jkMqbV0Ho1V8gWjW31OtAipffqqNygvVyvcWq/u25/8KyliA9b
-         RBEeOQ17dJgF3g9MxbahJRYhokPZmyhq0P8rHJqaGsnoQBnoU4j0/SVneTOkRy3+9N7n
-         HHhA==
-X-Gm-Message-State: APjAAAVO86UEGjRPiQR7TvkN0/jUfbs9optuTGWTf80GF6PLjQxr8Q82
-        XkTpWY5OXEcMZsA2601TXdSLtDkvO0Je/tJSQDKjSnJo0hGx0i12OwtkN4WweiZNM+HkQLVJM4L
-        GJwSaTcl/j5VHXz8bSoMP+X8YjQ==
-X-Received: by 2002:aa7:9495:: with SMTP id z21mr21413557pfk.220.1567216815848;
-        Fri, 30 Aug 2019 19:00:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy2BLuGlLGxCSNkEHMBr+Frsk42bOM599GwK6aw54HDOsHA5LvdnFEX6NldgYdsc89eYIHNdQ==
-X-Received: by 2002:aa7:9495:: with SMTP id z21mr21413519pfk.220.1567216815530;
-        Fri, 30 Aug 2019 19:00:15 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id 127sm7549594pfy.56.2019.08.30.19.00.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 19:00:14 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: dwmac-sun8i:  Variable "val" in function sun8i_dwmac_set_syscon() could be uninitialized
-Date:   Fri, 30 Aug 2019 19:00:48 -0700
-Message-Id: <20190831020049.6516-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 30 Aug 2019 22:01:46 -0400
+Received: from mail-eopbgr1300098.outbound.protection.outlook.com ([40.107.130.98]:21280
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728246AbfHaCBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 22:01:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=liNga97ZcJlWJhjRw44csq+CIF1vtthct6jXJSToCm5IVWJMqCD6HM6gZCqZBNS0KWR0kHFgbeveQCmT6FMhmqBSNIZdlRma2HKetlczr7ow4a1xsmdfNj20i7RpdwDFHUP+lZL5eBIwRCAusKl4dFX+Cp8HEc2xlGWiunuhK5mWJAbQh9Nq+wDkfKFDdFI1Dn9Fq2L22bQShFwW+60rBnVR9YYGuAL1ZQt6//ZhwCqyEgqxFW86AN/bKSiQs9FVUfvW4ORt2SVac4U8sTfgoFZTTfqXqzFdMy/HubpZ4WGc60LROU0ZVKMp4oaDmbESdlil384n8KDmV+tpajg25w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FTOeg8ivEO8FprdJugCquGVdA8LgdolKrd9VxjbhI0o=;
+ b=iOSkcwPNY8hyHlfEcZOyxBZQkJW4IqsandMluRjIPI02Zujt5ETHZFg3SfCucS1/+QzybfJY0Oouz6dG/xNq3qfVqYEEzucobhuswlgwx9KuyM62JzQfmwc9IEXFTTwVWdesyJQaTWxaLq/JijYB9kosA1C+k99pqI35QoFfubN3fcpYlci86/qw+vb73bL3P8Kh4Sa0DZVK2M/W82F6wHhFo46sFyWcZXTeoJVJiVqnhzl8h+TPonldifIFROXAgSmCX28OKGAR1xgnSb0rpSfTEV+zjwMVJTK/6zLRkOhW12yCzq+pKCntKpRCWhO2zXqWgU9/HqFWbUX1EsR5+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FTOeg8ivEO8FprdJugCquGVdA8LgdolKrd9VxjbhI0o=;
+ b=JvpkIul1I4TklH1b6ooB7oj4ViNZ7b5/xS2/17K2MdiM0DU3SaOxjVS4Uy2i5EbtMybi0XtBMUbFftFx4uQOHUqqXohFnMmh5H/N9qvkaIfMsnL3YyRckrPzqsBU5ekmZqEOstMxnz/qABX5v7519WNLrTGckmLUjHcyEN+In8c=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0170.APCP153.PROD.OUTLOOK.COM (10.170.189.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.2; Sat, 31 Aug 2019 02:00:56 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.006; Sat, 31 Aug 2019
+ 02:00:56 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels by
+ force upon suspend
+Thread-Topic: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels
+ by force upon suspend
+Thread-Index: AQHVVvngIm13qifSzE6BddexMOZgK6cJK+3ggAtlaXA=
+Date:   Sat, 31 Aug 2019 02:00:56 +0000
+Message-ID: <PU1P153MB0169EC39BD51EFF1FD3BB73CBFBC0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
+ <1566265863-21252-11-git-send-email-decui@microsoft.com>
+ <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:02:10.5815340Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9569c2bc-1aff-407a-a5da-655ff005400a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:5cbd:8ecd:62e5:20b7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 09b10d9e-c98c-4a85-4d3f-08d72db70fe0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0170;
+x-ms-traffictypediagnostic: PU1P153MB0170:|PU1P153MB0170:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB01709D30853FFA80FC1B9777BFBC0@PU1P153MB0170.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 014617085B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(189003)(199004)(76116006)(110136005)(2501003)(74316002)(8936002)(25786009)(4326008)(102836004)(478600001)(6246003)(229853002)(186003)(6116002)(8990500004)(53936002)(76176011)(71190400001)(71200400001)(1511001)(6506007)(55016002)(7696005)(9686003)(6436002)(14454004)(446003)(66946007)(10290500003)(66446008)(64756008)(66476007)(66556008)(86362001)(10090500001)(81156014)(14444005)(256004)(305945005)(81166006)(2906002)(22452003)(316002)(33656002)(99286004)(11346002)(476003)(486006)(2201001)(8676002)(46003)(52536014)(5660300002)(15650500001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0170;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lYKW8WemgNGZNO3OofiwvL6eCblTs81akiy/wmlC1aE9a/QpHKsUmBjZNWJAL8ynbsRhy/atTEkJDIEUw56Elg9SaKwkiMdTLFFyvd/dVtCn3pPQnZ8IuCK+M17elAHa6BDaTUB1vf7EbBswimqFMFT2PWTGFZEYmaVN4fvXDQoJVWthKhuoDcYrK3IYu04Z5AId/uWuJ9Ss00/S4p+PgrTXJ1BltbWOT6CrnofSZeFL6n3v1UZQs3LkWAOew2iGVcB1PKgSzobLIkwi4eUNdZkKOAbw0wxG1f1Bh78naInM3pPm4OV6X28UwaHkkWKbvXR2/rntSNCq4sB3UcmCmBTnCyBnNLYKooU4Y8DJp8po66VtIb0j+IDvwTKp7skkA5htejt0E4WiOLFetrRVjDxJ1zHo+Ja/k8FuwPgyzck=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09b10d9e-c98c-4a85-4d3f-08d72db70fe0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 02:00:56.1049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YcHP+UsPBYXNnI9M3l1OQk3pskd3xpj+ZVogPTbAItNSXbgeqJDJ4GfMUOMQ6nZNkXtJSUDHRcdS5SHNR7JH1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function sun8i_dwmac_set_syscon(), local variable "val" could
-be uninitialized if function regmap_field_read() returns -EINVAL.
-However, it will be used directly in the if statement, which
-is potentially unsafe.
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Friday, August 23, 2019 1:02 PM
+>=20
+> From: Dexuan Cui Sent: Monday, August 19, 2019 6:52 PM
+> >
+> > Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force for
+> > hibernation. There is no better method to clean up the channels since
+> > some of the channels may still be referenced by the userspace apps when
+> > hiberantin is triggered: in this case, the "rescind" fields of the
+>=20
+> s/hiberantin/hibernation/
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Thanks! Will fix this in v4.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 4083019c547a..f97a4096f8fc 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -873,7 +873,12 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 	int ret;
- 	u32 reg, val;
- 
--	regmap_field_read(gmac->regmap_field, &val);
-+	ret = regmap_field_read(gmac->regmap_field, &val);
-+	if (ret) {
-+		dev_err(priv->device, "Fail to read from regmap field.\n");
-+		return ret;
-+	}
-+
- 	reg = gmac->variant->default_syscon_value;
- 	if (reg != val)
- 		dev_warn(priv->device,
--- 
-2.17.1
+> > @@ -2091,6 +2127,25 @@ static int vmbus_acpi_add(struct acpi_device
+> *device)
+> >
+> >  static int vmbus_bus_suspend(struct device *dev)
+> >  {
+> > +	struct vmbus_channel *channel;
+> > +
+> > +	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
+> > +		/*
+> > +		 * We wait here until any channel offer is currently
+> > +		 * being processed.
+> > +		 */
+>=20
+> The wording of the comment is a bit off.  Maybe
+>=20
+> 		/*
+> 		 * We wait here until the completion of any channel
+> 		 * offers that are currently in progress.
+> 		 */
 
+Will use the better version this in v4.=20
+
+Thanks,
+-- Dexuan
