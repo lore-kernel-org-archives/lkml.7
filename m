@@ -2,79 +2,135 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87829C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7A3C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2CB23711
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567217411;
-	bh=+rpYjFz/gK9mI2ubcksMopnmlCrYO26/OTwsyxCeN5A=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=W/d2iedIp6+8DJwemn8aow2KvxmzzAQsCxb1U8d4iX+p0ytRYts5qGWif31Ry2eP6
-	 hntjMt4fsiyxnPa3UU3X7w1GFjoYqqbZqRlXBIwqJz1ykaxeUmz943iHr3+Ls2qW6P
-	 a+d19MMUbxJNxVw9T3ZU/C5DWNra7XJMy7G9otiA=
+	by mail.kernel.org (Postfix) with ESMTP id 344B823711
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfHaCKJ (ORCPT
+        id S1728331AbfHaCQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 22:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbfHaCKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 22:10:08 -0400
-Subject: Re: [GIT] Crypto Fixes for 5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567217407;
-        bh=+rpYjFz/gK9mI2ubcksMopnmlCrYO26/OTwsyxCeN5A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bC6MBoifjzLlzLjhGZ0x5f8U4Ph/Le5T2zYiLu5XdMnzU8oGLi9aGwaPcNRtLI40Y
-         tCFwp1kSxM3pvXVAwEziwrRIpLZKTQdqcsN+lLRZj4lAZI/72q3yjOc1D7DoiahRAf
-         gO/nPjkvLZx4Lf7oVbpSTnw0k8iBgiowrjsCGZ2E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190830073906.GA4579@gondor.apana.org.au>
-References: <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
- <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
- <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
- <20190809061548.GA10530@gondor.apana.org.au>
- <20190830073906.GA4579@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190830073906.GA4579@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 5871cd93692c8071fb9358daccb715b5081316ac
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e0f14b8ca3882988d15f0b1b853ae3c29d8c9a83
-Message-Id: <156721740767.9496.7852872597014015021.pr-tracker-bot@kernel.org>
-Date:   Sat, 31 Aug 2019 02:10:07 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Fri, 30 Aug 2019 22:16:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5258 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728271AbfHaCQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 22:16:07 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AE9B3C599C90EDFDA3D8;
+        Sat, 31 Aug 2019 10:16:04 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 31 Aug
+ 2019 10:16:02 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: convert inline_data in prior to
+ i_size_write
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190830153453.24684-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d441bdaa-5155-3144-cdfe-01e8dcc7eff2@huawei.com>
+Date:   Sat, 31 Aug 2019 10:16:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190830153453.24684-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 30 Aug 2019 17:39:06 +1000:
+On 2019/8/30 23:34, Jaegeuk Kim wrote:
+> This can guarantee inline_data has smaller i_size.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+So I guess "f2fs: fix to avoid corruption during inline conversion" didn't fix
+such corruption right, I guess checkpoint & SPO before i_size recovery will
+cause this issue?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e0f14b8ca3882988d15f0b1b853ae3c29d8c9a83
+	err = f2fs_convert_inline_inode(inode);
+	if (err) {
 
-Thank you!
+-->
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+		/* recover old i_size */
+		i_size_write(inode, old_size);
+		return err;
+
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+> ---
+>  fs/f2fs/file.c | 25 +++++++++----------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 08caaead6f16..a43193dd27cb 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -815,14 +815,20 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
+>  
+>  	if (attr->ia_valid & ATTR_SIZE) {
+>  		loff_t old_size = i_size_read(inode);
+> -		bool to_smaller = (attr->ia_size <= old_size);
+> +
+> +		if (attr->ia_size > MAX_INLINE_DATA(inode)) {
+> +			/* should convert inline inode here */
+
+Would it be better:
+
+/* should convert inline inode here in piror to i_size_write to avoid
+inconsistent status in between inline flag and i_size */
+
+Thanks,
+
+> +			err = f2fs_convert_inline_inode(inode);
+> +			if (err)
+> +				return err;
+> +		}
+>  
+>  		down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>  		down_write(&F2FS_I(inode)->i_mmap_sem);
+>  
+>  		truncate_setsize(inode, attr->ia_size);
+>  
+> -		if (to_smaller)
+> +		if (attr->ia_size <= old_size)
+>  			err = f2fs_truncate(inode);
+>  		/*
+>  		 * do not trim all blocks after i_size if target size is
+> @@ -830,24 +836,11 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
+>  		 */
+>  		up_write(&F2FS_I(inode)->i_mmap_sem);
+>  		up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> -
+>  		if (err)
+>  			return err;
+>  
+> -		if (!to_smaller) {
+> -			/* should convert inline inode here */
+> -			if (!f2fs_may_inline_data(inode)) {
+> -				err = f2fs_convert_inline_inode(inode);
+> -				if (err) {
+> -					/* recover old i_size */
+> -					i_size_write(inode, old_size);
+> -					return err;
+> -				}
+> -			}
+> -			inode->i_mtime = inode->i_ctime = current_time(inode);
+> -		}
+> -
+>  		down_write(&F2FS_I(inode)->i_sem);
+> +		inode->i_mtime = inode->i_ctime = current_time(inode);
+>  		F2FS_I(inode)->last_disk_size = i_size_read(inode);
+>  		up_write(&F2FS_I(inode)->i_sem);
+>  	}
+> 
