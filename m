@@ -2,114 +2,107 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C285FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0067C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92DF1217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="YJlXYID/"
+	by mail.kernel.org (Postfix) with ESMTP id BD30122D6D
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfHaNlu (ORCPT
+        id S1728073AbfHaN4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 09:41:50 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:11244 "EHLO mx.kolabnow.com"
+        Sat, 31 Aug 2019 09:56:20 -0400
+Received: from mga01.intel.com ([192.55.52.88]:18917 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfHaNlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 09:41:50 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id 7D537403FB;
-        Sat, 31 Aug 2019 15:41:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-transfer-encoding:mime-version:message-id:date:date
-        :subject:subject:from:from:received:received:received; s=
-        dkim20160331; t=1567258905; x=1569073306; bh=RVPkgbu0sxV6mcZJE0j
-        Oj7nmkVC+BNiaQ+8xHqgLNmM=; b=YJlXYID/w1UXyY4/Qpx9k/1UH1lvxS27JKB
-        72vjWrrJbs+ltJOrFmL7hPz6FU+gG91pIGJlbsMmd4tHvmtvJeVg9CnFF0d5Iwep
-        CYU1Ly40rHajx0W//Icob0D2hWH7kZgysrumuKMuT7vBZ9+ead5hUoG9mAYzufKK
-        zN4Ac75vUNzqI+Nz7/QRz/7MqW87WxogUZeDC6TqpRmIcRPDN+r9hwblkFYa2gfA
-        PxKTbRP2qeaWKUMHWPHk/IPf+cfxdifpZGDZpiBIoHAc358bxBX3xmi/X5lSOq95
-        0CcJF+86AKuq5g52XXGGMGwYvQfT706R1RwxGhW7jaUJibSfI2jz6nD4xxzKM9GE
-        mNZ+VxMasTVtwceyERpCujlUGJBdng+VG6AYwFBXWQe0KEUkRk1YQjmPRO2jm/LG
-        v5+9p6ufhuYzyVTAjPgS3EEKH/qMkwTq+2aemMpxFq7PCqx3Hw5w1bETuIeil4Ev
-        Cp4snbhf6LKjly2/AgK0rrfsCulrqyx59uX6+jiB9UADZJKFYBTAgxc1xBfVrC5B
-        lBdcEjsVve7wnhCWutZcVeMVasqh3gckFqThHpTGy69lbdZpF27NiPxBjjbmzyfU
-        B18phR57oiVK+UHsUltHnCsFbTi5er/SB7j+xylhGlguW5bu7OzAOEpugWWDIXZQ
-        Yo59BX4U=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Qoz9PPGpPg2l; Sat, 31 Aug 2019 15:41:45 +0200 (CEST)
-Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id BBA42403EB;
-        Sat, 31 Aug 2019 15:41:45 +0200 (CEST)
-Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
-        by int-mx001.mykolab.com (Postfix) with ESMTPS id 3591A246A;
-        Sat, 31 Aug 2019 15:41:45 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Federico Vaga <federico.vaga@vaga.pv.it>
-Subject: [PATCH] doc:lock: remove reference to clever use of read-write lock
-Date:   Sat, 31 Aug 2019 15:41:16 +0200
-Message-Id: <20190831134116.25417-1-federico.vaga@vaga.pv.it>
+        id S1726516AbfHaN4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 09:56:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Aug 2019 06:56:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,451,1559545200"; 
+   d="scan'208";a="198244965"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 31 Aug 2019 06:56:17 -0700
+Received: by lahna (sSMTP sendmail emulation); Sat, 31 Aug 2019 16:56:16 +0300
+Date:   Sat, 31 Aug 2019 16:56:16 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Thunderbolt changes for v5.4
+Message-ID: <20190831135616.GR3177@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the clever example about read-write lock because these type of
-lock is not reccomended anymore (according to the very same document).
-So there is no reason to teach cleaver things that people should not do.
+Hi Greg,
 
-(and by the way there was a little typo)
+The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
 
-Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
----
- Documentation/locking/spinlocks.rst | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
 
-diff --git a/Documentation/locking/spinlocks.rst b/Documentation/locking/spinlocks.rst
-index e93ec6645238..8053fd4c3544 100644
---- a/Documentation/locking/spinlocks.rst
-+++ b/Documentation/locking/spinlocks.rst
-@@ -106,7 +106,7 @@ and on other architectures it can be worse).
- 
- If you have a case where you have to protect a data structure across
- several CPU's and you want to use spinlocks you can potentially use
--cheaper versions of the spinlocks. IFF you know that the spinlocks are
-+cheaper versions of the spinlocks. If you know that the spinlocks are
- never used in interrupt handlers, you can use the non-irq versions::
- 
- 	spin_lock(&lock);
-@@ -139,18 +139,6 @@ on other CPU's, because an interrupt on another CPU doesn't interrupt the
- CPU that holds the lock, so the lock-holder can continue and eventually
- releases the lock).
- 
--Note that you can be clever with read-write locks and interrupts. For
--example, if you know that the interrupt only ever gets a read-lock, then
--you can use a non-irq version of read locks everywhere - because they
--don't block on each other (and thus there is no dead-lock wrt interrupts.
--But when you do the write-lock, you have to use the irq-safe version.
--
--For an example of being clever with rw-locks, see the "waitqueue_lock"
--handling in kernel/sched/core.c - nothing ever _changes_ a wait-queue from
--within an interrupt, they only read the queue in order to know whom to
--wake up. So read-locks are safe (which is good: they are very common
--indeed), while write-locks need to protect themselves against interrupts.
--
- 		Linus
- 
- ----
--- 
-2.21.0
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git tags/thunderbolt-for-v5.4
+
+for you to fetch changes up to dfda204198848b47bdb98ab83b94dbb7c7692b55:
+
+  ACPI / property: Add two new Thunderbolt property GUIDs to the list (2019-08-26 12:15:11 +0300)
+
+----------------------------------------------------------------
+thunderbolt: Changes for v5.4 merge window
+
+The biggest change is the addition of Intel Ice Lake integrated
+Thunderbolt support. There are also a couple of smaller changes like
+converting the driver to use better device property interface and use
+correct format string in service key attribute.
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      thunderbolt: Switch to use device_property_count_uXX()
+
+J. Bruce Fields (1):
+      thunderbolt: Show key using %*pE not %*pEp
+
+Mika Westerberg (8):
+      thunderbolt: Correct path indices for PCIe tunnel
+      thunderbolt: Move NVM upgrade support flag to struct icm
+      thunderbolt: Use 32-bit writes when writing ring producer/consumer
+      thunderbolt: Do not fail adding switch if some port is not implemented
+      thunderbolt: Hide switch attributes that are not set
+      thunderbolt: Expose active parts of NVM even if upgrade is not supported
+      thunderbolt: Add support for Intel Ice Lake
+      ACPI / property: Add two new Thunderbolt property GUIDs to the list
+
+ drivers/acpi/property.c        |   6 ++
+ drivers/thunderbolt/Makefile   |   2 +-
+ drivers/thunderbolt/ctl.c      |  23 ++++-
+ drivers/thunderbolt/eeprom.c   |   6 +-
+ drivers/thunderbolt/icm.c      | 194 +++++++++++++++++++++++++++++++++++++----
+ drivers/thunderbolt/nhi.c      | 134 +++++++++++++++++++++++++---
+ drivers/thunderbolt/nhi.h      |  22 +++++
+ drivers/thunderbolt/nhi_ops.c  | 179 +++++++++++++++++++++++++++++++++++++
+ drivers/thunderbolt/nhi_regs.h |  37 ++++++++
+ drivers/thunderbolt/switch.c   |  52 ++++++++---
+ drivers/thunderbolt/tb_msgs.h  |  16 +++-
+ drivers/thunderbolt/tunnel.c   |   4 +-
+ drivers/thunderbolt/xdomain.c  |   2 +-
+ include/linux/thunderbolt.h    |   2 +
+ 14 files changed, 624 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/thunderbolt/nhi_ops.c
