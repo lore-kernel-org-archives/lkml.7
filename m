@@ -3,106 +3,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A254C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BDDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04046217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E6A22DA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEx2KeZc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJhlWeQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfHaPL6 (ORCPT
+        id S1728274AbfHaPZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:11:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42871 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfHaPL5 (ORCPT
+        Sat, 31 Aug 2019 11:25:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36842 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfHaPZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:11:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y1so4655783plp.9;
-        Sat, 31 Aug 2019 08:11:57 -0700 (PDT)
+        Sat, 31 Aug 2019 11:25:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so9783373wrd.3;
+        Sat, 31 Aug 2019 08:25:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=wOS24Xc0XJB1BLMFfgH4jspAT3yw9GjM0Xt0KGOqZb8=;
-        b=UEx2KeZcdvICEAeiyO3aLM5q6TLcNNP2HyJd7qWWfgWR3LUY5CNoBq3bzYCDf6gmwW
-         IzLc59HVMuP9BTnHc9qHFptbh3fw9xOJnwBtXUnI6MRCwxReUcnS1vPpYBcwEFE3NcDs
-         kAICnbtx44CBoXh8UzN+f4B2tH7zanM2Tx83altPqvB17QE5aaC9mX9Hzz9bmCbMUdW8
-         gcKHYasTK+3/oTJwUOVZbYwpdTDcdOppNFINeCVnCLLEiQ+TqnwW6Ngp0ksG5yfdyXJr
-         6ddl68QtuijKTcKlBQM1x7twGQLsN3EwKYwkLc8vUnLTnYxqyMtZC36a6yP6W8pnTrb9
-         0Dvw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k25MOk7BOWPBFNnisijsXHS1mqf7Rp4KqkEnt9CsSGE=;
+        b=YJhlWeQzJpvO+RhGSsZ9l1YFjRR2EvmI1hmxLcGfXz4MOnUmRi3/GizZjvWZqqr4bv
+         bhXp/2Ulz7KoCwWq1SQlpxNxjadWO3Q5I4UqSP2UaVTAKsCn7v89p9BWEVDcxwBfMbXG
+         VX2j6JlukxUsiPUpMWAd6v8pGwXE3bYT5myNNvNfXrtFj48zpruuuGTmWdaYvCuQFJ1V
+         sQDIr3Ec9XlOuCr9Bd9LfRvYE4QXZOsK2sSnDSWbsltspIoB5TqT1TlqB9hYzjEnmo6S
+         60BeBx9HQfeIK/v3eJGQvpv8x35+l1FoeTuJ9aTBcX35kLP2JHoXCCsS+DBjCksbL1xA
+         7V5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wOS24Xc0XJB1BLMFfgH4jspAT3yw9GjM0Xt0KGOqZb8=;
-        b=EP+ZOrBYmSWPictFImSM1GJuxcPt4x1UM2/qC4ya8JNnlDej8/pXRG7XN8vUIdWIc5
-         EK8tuxPND9IcqnT7YmnxQ7utdZJtSmoKZDQeRaIIwFGtVO6LP8Z4TM2DDfbjR9QjLPBU
-         4h2CGddlOj/CtTeNBd5Z+YrdamIgdVbf3kXNTfoEkxZlqruKdsbch7ynK9MDNOMLViNQ
-         s3g3FoB1hOKX1DY06ZJVLUh7b94cthV2Y+pUUasHFEGCqXg2NsRhN5q4Q8osELtSXBwF
-         r8xg5cjnxuerakkqQgtPchf6T1PzRfVJrkGfHEDmTk66XkThYbhtHWMVOMZMFzYQMCNT
-         ce7A==
-X-Gm-Message-State: APjAAAXu0GzlrXcL7p04efK2GaUe10GA/1b/NrfeLjXu1G0pPaEzLucm
-        D2N2FypR4ECq7xdwm6AcUZrlbzA+
-X-Google-Smtp-Source: APXvYqzgNbpIN9VlSxpGHMugJ9IxHNR1qF/swya0LJHvfmOqZXHGTgBzcaog6lNeXzbXia/MO8mMYw==
-X-Received: by 2002:a17:902:581:: with SMTP id f1mr21112561plf.246.1567264317121;
-        Sat, 31 Aug 2019 08:11:57 -0700 (PDT)
-Received: from nishad ([106.51.235.3])
-        by smtp.gmail.com with ESMTPSA id y7sm1670483pfn.131.2019.08.31.08.11.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k25MOk7BOWPBFNnisijsXHS1mqf7Rp4KqkEnt9CsSGE=;
+        b=g9mEXqaCvqE2FII+ENOSZGXhhlujXn30nqTw0r844oflB2Qt0NRIOw7AvyXoUndvwa
+         e1xVfwLSlL8H3ndSEXkS8nnRbvdZw3dmkRKEVyKeaHOc/wPfK7fd688xaR/lSOCe2d1Q
+         +Ec9Q+bXVpGh+i6NKfdqy1wji4J1zCZ9beDS/HsrDNGBT5Ni+PCVyu4u/IVL71D09DG9
+         ADOn/nVbUAlzM38ZW1h+NhnZbBWYpvpNjlxNC3ylP+9dXmkr5UlXD6FPPFUPGxIoZzxc
+         UX0G+2JxcQghgHPNJ3IhCeIB5SZ2QpC1cie2LZrFn2fKJgxLe/tFhMoUoNBbJrtkNuSt
+         XLoA==
+X-Gm-Message-State: APjAAAWHPh4hQkLyuaZA+4z1+GMoxXra6v/wKwm3Ocl/lePTHV9hHqmU
+        6aJ4gdRxnyRh4JI6OSWHBME=
+X-Google-Smtp-Source: APXvYqwOHRHMb49iMaBn39bn+79g+BX0KA90yia2PdVU8C/rWtHVAJNXlrfK5a9034BCpZeKhhxwWg==
+X-Received: by 2002:adf:f584:: with SMTP id f4mr24335864wro.160.1567265102640;
+        Sat, 31 Aug 2019 08:25:02 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id m7sm20346388wmi.18.2019.08.31.08.25.01
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 31 Aug 2019 08:11:56 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 20:41:51 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: siano: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190831151147.GA7082@nishad>
+        Sat, 31 Aug 2019 08:25:01 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 17:25:00 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
+ condition
+Message-ID: <20190831152500.eg7xqo5ace6wu427@pali>
+References: <20190829165025.15750-1-efremov@linux.com>
+ <20190829165025.15750-9-efremov@linux.com>
+ <20190829175039.GA187474@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="p6pa6tjr5e2zkulj"
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190829175039.GA187474@dtor-ws>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header file related to Siano Mobile Silicon Digital TV.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
+--p6pa6tjr5e2zkulj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/media/common/siano/smsir.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thursday 29 August 2019 10:50:39 Dmitry Torokhov wrote:
+> On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
+> > "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already us=
+es
+> > unlikely() internally.
+>=20
+> The keyword here is _internally_.
+>=20
+> https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
+>=20
+> So please no.
 
-diff --git a/drivers/media/common/siano/smsir.h b/drivers/media/common/siano/smsir.h
-index b2c54c256e86..ada41d5c4e83 100644
---- a/drivers/media/common/siano/smsir.h
-+++ b/drivers/media/common/siano/smsir.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * SPDX-License-Identifier: GPL-2.0+
-  *
-  * Siano Mobile Silicon, Inc.
-  * MDTV receiver kernel modules.
--- 
-2.17.1
+Dmitry and I already rejected this patch, see also linked-list:
+https://lore.kernel.org/lkml/20190820111719.7blyk5jstgwde2ae@pali/
 
+> >=20
+> > Signed-off-by: Denis Efremov <efremov@linux.com>
+> > Cc: "Pali Roh=C3=A1r" <pali.rohar@gmail.com>
+> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Cc: Joe Perches <joe@perches.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-input@vger.kernel.org
+> > ---
+> >  drivers/input/mouse/alps.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
+> > index 34700eda0429..ed1661434899 100644
+> > --- a/drivers/input/mouse/alps.c
+> > +++ b/drivers/input/mouse/alps.c
+> > @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct ps=
+mouse *psmouse,
+> >  		/* On V2 devices the DualPoint Stick reports bare packets */
+> >  		dev =3D priv->dev2;
+> >  		dev2 =3D psmouse->dev;
+> > -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
+> > +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
+> >  		/* Register dev3 mouse if we received PS/2 packet first time */
+> >  		if (!IS_ERR(priv->dev3))
+> >  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+> > --=20
+> > 2.21.0
+> >=20
+>=20
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--p6pa6tjr5e2zkulj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXWqRSgAKCRCL8Mk9A+RD
+Umu+AKChsaP4CSHyL95PY6h8qfvy9VLlVgCgsJJM0b0+JaCmO8UiIbZc/5SHjz4=
+=btDG
+-----END PGP SIGNATURE-----
+
+--p6pa6tjr5e2zkulj--
