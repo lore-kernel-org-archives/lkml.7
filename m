@@ -2,112 +2,167 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDBFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95580C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636ED23717
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0C923431
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rMkOwl9K"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UrQaa9Yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfHaEVP (ORCPT
+        id S1726143AbfHaEhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 00:21:15 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3851 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfHaEVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 00:21:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d69f5ba0000>; Fri, 30 Aug 2019 21:21:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 30 Aug 2019 21:21:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 30 Aug 2019 21:21:14 -0700
-Received: from [10.25.72.86] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 31 Aug
- 2019 04:21:10 +0000
-Subject: Re: linux-next: build failure after merge of the pci tree
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Krzysztof Wilczynski <kw@linux.com>
-References: <20190830132311.7190ccc3@canb.auug.org.au>
- <CAErSpo618ewbJQHS3E3KWhTLe6T47u=Xjx9E-gYKMzjn=MmujA@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <9ae74244-f1e1-de7f-6d03-b2cca012f6fc@nvidia.com>
-Date:   Sat, 31 Aug 2019 09:51:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAErSpo618ewbJQHS3E3KWhTLe6T47u=Xjx9E-gYKMzjn=MmujA@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Sat, 31 Aug 2019 00:37:32 -0400
+Received: from mail-eopbgr1320090.outbound.protection.outlook.com ([40.107.132.90]:15614
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbfHaEhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 00:37:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nlHuC3nOHbpEl4gwQZQirP/vi/m979lh7hW8BbaYKo8O7IuAOqdizFzRAiOLs3FelMdpXhl4yAkeXL9KmxcrpYGAC8pFP2+GDjmiHHzeD2C5y6f7sdsq3vSCt8aPodLOIFLgt7hUTScJwmT8ahlQJj4pKvBtf8SdBU/EosdaSGeFPovW7AkgaORUHb31BV6oss8rfkfL62miEWTtDHcJKrub/zBgtGssoDrrWj+LXFBMJvHc7ewIp/4onOsgXdLrq47h8CEUqueekmMfk/Y1PQAtScM0yIbdL0X8GVdI0cTmuyE5kc1c3I1yh3TnIMx40+nOLKhc1Me+akNpoPLRew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KvsPc+Hvavab2WTycjhxbGxwjX+yYmpUlDey4rFh/0=;
+ b=lGDwyuQAHlzflTgfPK7vh0XGr+eXTWeDBGF4vZrF/6J6IQCwWE/ccTNN2d6w3gk37G6ZvtMyibwhk5l+PraLAI/FNJCioNjGzdsdE7xms0s7611OxskgV8FWCBI8plB4iw7EHMZ08ylGPQcHTu8MV3a6WYnzXKAb8ywW1HO8AFPojEc/epc+oANZ73Dz/mtCUYorjr/5JvxNvvg+JDqn56EtozZg/FqyJFaXwOijN+YKAgOFbMVX4bjZS7tRuio2BvLeotGVZpyV7Ag/vz7TPzlNYpExawxuBwJz/VkHvvOyhUugewWBEtv8+hHdC5MX9uunVk3QN8VSs8T7vAsZbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KvsPc+Hvavab2WTycjhxbGxwjX+yYmpUlDey4rFh/0=;
+ b=UrQaa9Ydh6gf2jGozJxHapKwpAREX8nsyg2UWa9oyadJ3cyYPs7ZYB5YHo2e6EZ6ziUYAWH5t6X7sBqKgtyYHHX6AnjYiIxvEmUKNbxE0LLUGxMyQ96Kezw4PzJHT5Mm7P+EJWWIfZZQpuBPe0uNIJ0d6+sKItnYWvrLz3E3ouQ=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0185.APCP153.PROD.OUTLOOK.COM (10.170.187.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.5; Sat, 31 Aug 2019 04:37:14 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.006; Sat, 31 Aug 2019
+ 04:37:14 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 12/12] Drivers: hv: vmbus: Resume after fixing up old
+ primary channels
+Thread-Topic: [PATCH v3 12/12] Drivers: hv: vmbus: Resume after fixing up old
+ primary channels
+Thread-Index: AQHVVvnhnZYV8iEJF0ORPS4BQ7lYm6cJMgUQgAty55A=
+Date:   Sat, 31 Aug 2019 04:37:14 +0000
+Message-ID: <PU1P153MB0169E3DD602FB575C346186DBFBC0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
+ <1566265863-21252-13-git-send-email-decui@microsoft.com>
+ <DM5PR21MB01370691E881D59773B9EF60D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB01370691E881D59773B9EF60D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567225275; bh=v1nWbEGKg2bagzwvzFTzbWWgbcaDsnbU7NOGZ26ZRm0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rMkOwl9KdKxTuY0EoQcyxmo/F5ZkGlBFzZzGPD52I0Pas74eDOkIfd/yNhI0IVHXm
-         tki3jTz+aygMviA6/G/XAQeezuTzDSW0j+u1XKpfo1ZcvfYN5FKOkLJIRZOtkdCBej
-         bdv3Rv51euBoBBjCfY8Hw0E0N4V18NtljTNZkbrZXHiGHyEY0sgYniFUOqautRhOwX
-         kG2hJdT/ka/8NyzumQqfBaBCcU8GXMW7sBob/MNTHZ0RTwvOHvDzSTxVS4BjV2vuZg
-         GBYkNuH0iYEBWwDzNfJKL56M8DXB4BWKa+6eeRBtzwqr9RVXb4GpbPmuoZ/jQc01BF
-         cPR1reB+okggg==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:25:01.1543000Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ed8325f3-7994-47a0-9ecc-2c1fc987ecca;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:5cbd:8ecd:62e5:20b7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2b049200-4eb6-4dbb-20a8-08d72dcce5e4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0185;
+x-ms-traffictypediagnostic: PU1P153MB0185:|PU1P153MB0185:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB01858CF1DA91DE0173813F66BFBC0@PU1P153MB0185.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 014617085B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(199004)(189003)(446003)(25786009)(10090500001)(10290500003)(76176011)(46003)(6246003)(102836004)(2501003)(14454004)(52536014)(99286004)(478600001)(71200400001)(4326008)(71190400001)(7696005)(81166006)(110136005)(9686003)(8936002)(66556008)(22452003)(316002)(476003)(256004)(6506007)(5660300002)(55016002)(53936002)(6436002)(66446008)(66946007)(86362001)(1511001)(81156014)(6116002)(66476007)(186003)(74316002)(8676002)(2201001)(76116006)(64756008)(305945005)(229853002)(33656002)(11346002)(7736002)(486006)(2906002)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0185;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4w0bc7t9H5p6HWAYahh/wb9IWZUel7maG7AdAEE5uDWCgAFtaAx7Srw3bX0+o60BGreND+CY12NwEa1kQs5WjlkqsB/gWTNa+KEP3RprWFrIJGQWESy2nZe6FuPFZXe+C9+DW/MlgaPRUR90YK2laEYxlRR3JwxskAwALnx14gHsO3N9BHrgF1J00qUVsuAYbE4WW/9bEcrITUuH6qqqzRXf7FopSewPs6BBaunsQkJTHUobSl9gbI06R8sXuSrzDfhMC9nskiYNaRDj4ANjt6x7WWVFWmiYlnos2ouwJco9u2EuR0fhvSvT+mi175OXmUSUcom7IdwK5EoFNv+Yka7O8ZGArlSFE6+yRilNH2CEj9FStKJftok5zgSCwjua5aAD5sGM2c3kU5yswRe7smK7Nh7xbOFyMNgiiTrpAGQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b049200-4eb6-4dbb-20a8-08d72dcce5e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 04:37:14.5188
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OXQraOrAgmugOlrcN4CU93WtkrvVt12mGRpW5C/zWKLfLgfINuIOBocJp1G2zLe2eHmFQsCONDZVqhqOI/WaBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/2019 6:00 PM, Bjorn Helgaas wrote:
-> [+cc Krzysztof]
-> 
-> On Thu, Aug 29, 2019 at 10:23 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> Hi all,
->>
->> After merging the pci tree, today's linux-next build (x86_64 allmodconfig)
->> failed like this:
->>
->> drivers/pci/controller/dwc/pcie-tegra194.c:24:10: fatal error: linux/pci-aspm.h: No such file or directory
->>     24 | #include <linux/pci-aspm.h>
->>        |          ^~~~~~~~~~~~~~~~~~
->>
->> Caused by commit
->>
->>    81564976b1a9 ("PCI: tegra: Add Tegra194 PCIe support")
->>
->> I have reverted that commit for todat.
-> 
-> Thanks, Stephen.
-> 
-> I *could* fix this by removing that include in the merge, since the
-> contents of linux/pci-aspm.h were moved into linux/pci.h by
-> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=7ce2e76a0420
-> 
-> But as far as I can tell, pcie-tegra194.c doesn't actually require
-> anything from linux/pci-aspm.h, so I'd rather amend the tegra194
-> commit https://git.kernel.org/cgit/linux/kernel/git/lpieralisi/pci.git/commit/?id=81564976b1a9
-> so it doesn't include pci-aspm.h in the first place.
-Thanks Bjorn for the reply.
-Yes. This header file is not required for now and can be removed.
-Is there any action required from my side for this?
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Friday, August 23, 2019 1:25 PM
+>=20
+> From: Dexuan Cui Sent: Monday, August 19, 2019 6:52  PM
+> > @@ -890,6 +937,11 @@ static void vmbus_onoffer(struct
+> > vmbus_channel_message_header *hdr)
+> >  				     false);
+> >  		print_hex_dump_debug("New vmbus offer: ",
+> DUMP_PREFIX_OFFSET,
+> >  				     16, 4, offer, offer_sz, false);
+> > +
+> > +		vmbus_setup_channel_state(oldchannel, offer);
+> > +
+> > +		check_ready_for_resume_event();
+>=20
+> This is the error case where the new offer didn't match some aspect of
+> the old offer.=20
 
-> 
-> Bjorn
-> 
+Actually, this is not an error: besides the RELID, the host can also change
+the offer->connection_id when it re-offers a device to the guest: so far,
+I only see this host behavior for the VF vmbus device, and in this case, th=
+e
+first vmbus_setup_channel_state() in vmbus_onoffer() is used to do the
+fix-up:
+    channel->sig_event =3D offer->connection_id;
+and later channel->sig_event is used in vmbus_set_event().
 
+Despite the host behavior, it looks the VF vmbus device still works fine,
+so (IMO) this is not an error. I'll write a separate email to report this t=
+o
+Hyper-V team.
+
+> Is the intent to proceed and use the new offer?=20
+Yes, since this is not an error.
+
+I'll add a comment before the "Mismatched offer from the host" for this.
+
+BTW, the 3 debug lines here output nothing, unless we enable the output
+by=20
+  cd /sys/kernel/debug/dynamic_debug/
+  echo 'file drivers/hv/channel_mgmt.c +p' > control
+.
+
+> I can see that check_ready_for_resume_event() has to be called in
+> the error case, otherwise the resume operation will hang forever, but=20
+> I'm not sure about setting up the channel state and then proceeding as
+> if all is good.
+> > +
+> > 		return;
+
+Thanks,
+-- Dexuan
