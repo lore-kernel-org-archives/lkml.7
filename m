@@ -2,68 +2,101 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73478C41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C17C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD702190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEE12190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 12:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfHaMNK (ORCPT
+        id S1727845AbfHaMNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 08:13:10 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59840 "EHLO fornost.hmeau.com"
+        Sat, 31 Aug 2019 08:13:11 -0400
+Received: from sauhun.de ([88.99.104.3]:37720 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfHaMNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726296AbfHaMNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 31 Aug 2019 08:13:10 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i42Fa-0005nJ-NJ; Sat, 31 Aug 2019 22:13:03 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 31 Aug 2019 22:12:59 +1000
-Date:   Sat, 31 Aug 2019 22:12:59 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: [GIT] Crypto Fixes for 5.3
-Message-ID: <20190831121259.GA16726@gondor.apana.org.au>
-References: <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
- <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
- <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
- <20190809061548.GA10530@gondor.apana.org.au>
- <20190830073906.GA4579@gondor.apana.org.au>
- <CAHk-=whnH09S73Nfo-HMH+V-Ew39+tZdEzaLUQo41PJEo=PZZw@mail.gmail.com>
+Received: from localhost (p5486C98B.dip0.t-ipconnect.de [84.134.201.139])
+        by pokefinder.org (Postfix) with ESMTPSA id B88592C0093;
+        Sat, 31 Aug 2019 14:13:08 +0200 (CEST)
+Date:   Sat, 31 Aug 2019 14:13:08 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Eugen.Hristev@microchip.com
+Cc:     peda@axentia.se, mark.rutland@arm.com,
+        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        Nicolas.Ferre@microchip.com
+Subject: Re: [PATCH v3 5/9] i2c: at91: add support for digital filtering
+Message-ID: <20190831121308.GB1032@ninjato>
+References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+ <1562678049-17581-6-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whnH09S73Nfo-HMH+V-Ew39+tZdEzaLUQo41PJEo=PZZw@mail.gmail.com>
+In-Reply-To: <1562678049-17581-6-git-send-email-eugen.hristev@microchip.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 07:01:42PM -0700, Linus Torvalds wrote:
->
-> It could be in the subject line (ie change the "[GIT]" to "[GIT
-> PULL]") but it could also be anywhere in the email body (ie a "please
-> pull" or something like that).
 
-Sure I'll do that for the next pull request.
+--V0207lvV8h4k8FAm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I used to have the word pull in my email body but since I switched
-over to git request-pull the pull word isn't there anymore.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
+> index a663a7a..62610af 100644
+> --- a/drivers/i2c/busses/i2c-at91-core.c
+> +++ b/drivers/i2c/busses/i2c-at91-core.c
+> @@ -68,6 +68,7 @@ static struct at91_twi_pdata at91rm9200_config = {
+>  	.has_unre_flag = true,
+>  	.has_alt_cmd = false,
+>  	.has_hold_field = false,
+> +	.has_dig_filtr = false,
+
+Hmm, 'false' is the default. Maybe not for this series, but it might
+make sense to clean up the driver afterwards removing the superfluous
+'false'. The precedence will make adding new properties much simpler.
+
+
+> +	dev->enable_dig_filt = of_property_read_bool(pdev->dev.of_node,
+> +						     "i2c-dig-filter");
+> +
+
+What do you think of the idea to introduce 'flags' to struct i2c_timings
+and parse the bindings in the core, too? Then you'd have sth like:
+
+	if (t->flags & I2C_TIMINGS_ANALOG_FILTER)
+
+Would that be useful for you?
+
+
+--V0207lvV8h4k8FAm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qZFAACgkQFA3kzBSg
+KbZy9Q/+INNWAz3JzNTnt9Wz4LY+CvF0A91qTijGhOFME8qnJRK/bGoupXNI66Nm
+mhn3iko1RoOsrBzEI1U4bc86Y6O2dZZMscDU8Kn5GanaK9OzMf9WLnRlapIrKg35
+HwC+M+XzDLTkwfFSGBAzA2m+Ud5bS9rzJ8svbrLBLov3x4dka8S+ZwLXH7mpW1b4
+80vHk8nqtJ3CUI9wzfUSBqkPxoszergUiqXW39VI12UBmY0BWY7swIcVoehErLvh
+o7hWyfuoKyhR+NQHkbcHfa4YAyzwILIzE+7OsYlyQXZvh4Wb2KgbMlyi3OldAvkw
+8JFJRHEMAjH9HiLpUr1uV+yabhhi7AxWtx3WEFMc0+/QB4Ed4lSgWKNM9LJmUV4t
+nJffamNfsMT6A9oNULQV3VaSYwM7G/f79h/SQLHIgmTjc9v4XXh9EOs5YhYEhfYE
+8tWeTOG4Lzg1BCn2FcDBUIChJcp1YKD+e0nsskqt1Sk9GUE6MU64h075JqZ1iDYM
+4wloxXGU09C6IahnAhx1HEFDi6Ym+oaWDGGhloqSh4cctuEOO75EaD0A01hEVgtk
+o3Qf4dWCC72yeKC5zn7GwTkUTZc66G703dKCXUUnQJ1bljY/8Z4Js2YrDpizfbai
+JmBYGOZw5ztqQt0x2N9QW78hvYoK3eotQ0bvwhHqPu59bbHVxbI=
+=z8HE
+-----END PGP SIGNATURE-----
+
+--V0207lvV8h4k8FAm--
