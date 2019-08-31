@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DDEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9027AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB4C22DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635FB22DA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbfHaKyN (ORCPT
+        id S1728366AbfHaKy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 06:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
+        Sat, 31 Aug 2019 06:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbfHaKyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 06:54:11 -0400
+        id S1727299AbfHaKyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 06:54:12 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CDF22D6D;
-        Sat, 31 Aug 2019 10:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 497ED23405;
+        Sat, 31 Aug 2019 10:54:11 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1i411F-0001J2-UQ; Sat, 31 Aug 2019 06:54:09 -0400
-Message-Id: <20190831105409.823751972@goodmis.org>
+        id 1i411G-0001KW-Ff; Sat, 31 Aug 2019 06:54:10 -0400
+Message-Id: <20190831105410.361305179@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sat, 31 Aug 2019 06:53:30 -0400
+Date:   Sat, 31 Aug 2019 06:53:33 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: [for-linus][PATCH 1/7] ftrace: Fix NULL pointer dereference in t_probe_next()
+        Joe Jin <joe.jin@oracle.com>, Denis Efremov <efremov@linux.com>
+Subject: [for-linus][PATCH 4/7] tracing: Make exported ftrace_set_clr_event non-static
 References: <20190831105329.122820332@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,76 +44,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Denis Efremov <efremov@linux.com>
 
-LTP testsuite on powerpc results in the below crash:
+The function ftrace_set_clr_event is declared static and marked
+EXPORT_SYMBOL_GPL(), which is at best an odd combination. Because the
+function was decided to be a part of API, this commit removes the static
+attribute and adds the declaration to the header.
 
-  Unable to handle kernel paging request for data at address 0x00000000
-  Faulting instruction address: 0xc00000000029d800
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE SMP NR_CPUS=2048 NUMA PowerNV
-  ...
-  CPU: 68 PID: 96584 Comm: cat Kdump: loaded Tainted: G        W
-  NIP:  c00000000029d800 LR: c00000000029dac4 CTR: c0000000001e6ad0
-  REGS: c0002017fae8ba10 TRAP: 0300   Tainted: G        W
-  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 28022422  XER: 20040000
-  CFAR: c00000000029d90c DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 0
-  ...
-  NIP [c00000000029d800] t_probe_next+0x60/0x180
-  LR [c00000000029dac4] t_mod_start+0x1a4/0x1f0
-  Call Trace:
-  [c0002017fae8bc90] [c000000000cdbc40] _cond_resched+0x10/0xb0 (unreliable)
-  [c0002017fae8bce0] [c0000000002a15b0] t_start+0xf0/0x1c0
-  [c0002017fae8bd30] [c0000000004ec2b4] seq_read+0x184/0x640
-  [c0002017fae8bdd0] [c0000000004a57bc] sys_read+0x10c/0x300
-  [c0002017fae8be30] [c00000000000b388] system_call+0x5c/0x70
+Link: http://lkml.kernel.org/r/20190704172110.27041-1-efremov@linux.com
 
-The test (ftrace_set_ftrace_filter.sh) is part of ftrace stress tests
-and the crash happens when the test does 'cat
-$TRACING_PATH/set_ftrace_filter'.
-
-The address points to the second line below, in t_probe_next(), where
-filter_hash is dereferenced:
-  hash = iter->probe->ops.func_hash->filter_hash;
-  size = 1 << hash->size_bits;
-
-This happens due to a race with register_ftrace_function_probe(). A new
-ftrace_func_probe is created and added into the func_probes list in
-trace_array under ftrace_lock. However, before initializing the filter,
-we drop ftrace_lock, and re-acquire it after acquiring regex_lock. If
-another process is trying to read set_ftrace_filter, it will be able to
-acquire ftrace_lock during this window and it will end up seeing a NULL
-filter_hash.
-
-Fix this by just checking for a NULL filter_hash in t_probe_next(). If
-the filter_hash is NULL, then this probe is just being added and we can
-simply return from here.
-
-Link: http://lkml.kernel.org/r/05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com
-
-Cc: stable@vger.kernel.org
-Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Fixes: f45d1225adb04 ("tracing: Kernel access to Ftrace instances")
+Reviewed-by: Joe Jin <joe.jin@oracle.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/trace_events.h | 1 +
+ kernel/trace/trace_events.c  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index eca34503f178..80beed2cf0da 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3095,6 +3095,10 @@ t_probe_next(struct seq_file *m, loff_t *pos)
- 		hnd = &iter->probe_entry->hlist;
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 5150436783e8..30a8cdcfd4a4 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -548,6 +548,7 @@ extern int trace_event_get_offsets(struct trace_event_call *call);
  
- 	hash = iter->probe->ops.func_hash->filter_hash;
-+
-+	if (!hash)
-+		return NULL;
-+
- 	size = 1 << hash->size_bits;
+ #define is_signed_type(type)	(((type)(-1)) < (type)1)
  
-  retry:
++int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+ int trace_set_clr_event(const char *system, const char *event, int set);
+ 
+ /*
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c7506bc81b75..648930823b57 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -787,7 +787,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 	return ret;
+ }
+ 
+-static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
++int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+ {
+ 	char *event = NULL, *sub = NULL, *match;
+ 	int ret;
 -- 
 2.20.1
 
