@@ -2,101 +2,112 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACA8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 08:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A87C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E3F2342E
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 08:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290AE23697
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uu5mdBXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfHaI5l (ORCPT
+        id S1726915AbfHaJBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 04:57:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6156 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726102AbfHaI5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 04:57:41 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B80689698DBCC816583C;
-        Sat, 31 Aug 2019 16:57:36 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sat, 31 Aug 2019
- 16:57:29 +0800
-Subject: Re: [PATCH v2 7/9] sparc64: numa: check the node id consistently for
- sparc64
-To:     David Miller <davem@davemloft.net>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <ralf@linux-mips.org>, <paul.burton@mips.com>,
-        <jhogan@kernel.org>, <jiaxun.yang@flygoat.com>,
-        <chenhc@lemote.com>, <akpm@linux-foundation.org>,
-        <rppt@linux.ibm.com>, <anshuman.khandual@arm.com>,
-        <tglx@linutronix.de>, <cai@lca.pw>, <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <nfont@linux.vnet.ibm.com>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <linuxarm@huawei.com>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-8-git-send-email-linyunsheng@huawei.com>
- <20190830.235337.570776316111294728.davem@davemloft.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <0195eb73-99ae-fec2-3e11-2cb9e6677926@huawei.com>
-Date:   Sat, 31 Aug 2019 16:57:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Sat, 31 Aug 2019 05:01:22 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36954 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfHaJBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 05:01:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xewVdUf11AxABQouRLx2CEX2BTZyyYycBHtYuCXEbi0=; b=Uu5mdBXkqKUK/Ypcu6rC0Qk+u
+        byBFetK6ZHj2DMTkbYDtyid4TNew0hBVlqJ6re++7zza3ijqLPq3YUur3QpLsbZ7t4VlTqfIjRFYX
+        ttY33DLlPd//YziDDT2S/2cPbYAE1jYRdEVGiVraLR2ljyvhSZ8Zzdsw/rgg0DXSuHm2aZPirlZNi
+        OoRtHP+6HSqGHx4BjWDXbi3fMKkgX991I3//IRvjj2C1p/yg32s0eK25AK27XpKT1pPAkSd64eA3E
+        gRHmAsjAoDdzUXFENvTTwv9M2BV8OOKwAXNo0YZ+kZ1CJkffHvnRVUb0Rqm7IugLIQ8dsOZEKRe/A
+        FPgvHEwlA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3zFk-0007T8-3v; Sat, 31 Aug 2019 09:01:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1AF71301747;
+        Sat, 31 Aug 2019 11:00:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 017BD29B2CD09; Sat, 31 Aug 2019 11:00:55 +0200 (CEST)
+Date:   Sat, 31 Aug 2019 11:00:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     stern@rowland.harvard.edu, akiyks@gmail.com,
+        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
+        dlustig@nvidia.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, npiggin@gmail.com, paulmck@linux.ibm.com,
+        will.deacon@arm.com, paul.burton@mips.com
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
+ and mips.
+Message-ID: <20190831090055.GH2369@hirez.programming.kicks-ass.net>
+References: <20190613134317.734881240@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190830.235337.570776316111294728.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613134317.734881240@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/31 14:53, David Miller wrote:
-> From: Yunsheng Lin <linyunsheng@huawei.com>
-> Date: Sat, 31 Aug 2019 13:58:21 +0800
+On Thu, Jun 13, 2019 at 03:43:17PM +0200, Peter Zijlstra wrote:
+> Hi,
 > 
->> According to Section 6.2.14 from ACPI spec 6.3 [1], the setting
->> of proximity domain is optional, as below:
+> This all started when Andrea Parri found a 'surprising' behaviour for x86:
 > 
-> What in the world does the ACPI spec have to do with sparc64 NUMA
-> node ID checking?
-
-I am not sure I understand your question fully here.
-
-Here is my issue when the bios does not implement the proximity domain
-of a device because the feature is optional according to the ACPI spec,
-the dev_to_node(dev) return -1, which causes out of bound access when
-using the value to get the device's cpu mask by calling cpumask_of_node.
-
-Did you mean sparc64 system does not has ACPI, the device's node id will
-not specified by ACPI, so the ACPI is unrelated here?
-
-Or did you mean the commit log is not clear enough to justify the change?
-
-Or did you mean this problem should be fixed in somewhere else?
-
-Any detail advice and suggestion will be very helpful, thanks.
-
+>   http://lkml.kernel.org/r/20190418125412.GA10817@andrea
 > 
-> .
+> Basically we fail for:
 > 
+> 	*x = 1;
+> 	atomic_inc(u);
+> 	smp_mb__after_atomic();
+> 	r0 = *y;
+> 
+> Because, while the atomic_inc() implies memory order, it
+> (surprisingly) does not provide a compiler barrier. This then allows
+> the compiler to re-order like so:
+> 
+> 	atomic_inc(u);
+> 	*x = 1;
+> 	smp_mb__after_atomic();
+> 	r0 = *y;
+> 
+> Which the CPU is then allowed to re-order (under TSO rules) like:
+> 
+> 	atomic_inc(u);
+> 	r0 = *y;
+> 	*x = 1;
+> 
+> And this very much was not intended.
+> 
+> This had me audit all the (strong) architectures that had weak
+> smp_mb__{before,after}_atomic: ia64, mips, sparc, s390, x86, xtensa.
+> 
+> Of those, only x86 and mips were affected. Looking at MIPS to solve this, led
+> to the other MIPS patches.
+> 
+> All these patches have been through 0day for quite a while.
+> 
+> Paul, how do you want to route the MIPS bits?
 
+Paul; afaict the MIPS patches still apply (ie. they've not made their
+way into Linus' tree yet).
+
+I thought you were going to take them?
