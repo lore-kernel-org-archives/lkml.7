@@ -2,109 +2,86 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EF8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A67C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EBE22DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45C022DA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfHaP6i (ORCPT
+        id S1728446AbfHaP74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfHaP6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:58:38 -0400
-Received: from oasis.local.home (rrcs-24-39-165-138.nys.biz.rr.com [24.39.165.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1614421874;
-        Sat, 31 Aug 2019 15:58:37 +0000 (UTC)
-Date:   Sat, 31 Aug 2019 11:58:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Wu <peter@lekensteyn.nl>
-Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH v2] docs: ftrace: clarify when tracing is disabled by
- the trace file
-Message-ID: <20190831115835.0a03b914@oasis.local.home>
-In-Reply-To: <20190831153500.7399-1-peter@lekensteyn.nl>
-References: <20190830175108.0ffa6ef1@gandalf.local.home>
-        <20190831153500.7399-1-peter@lekensteyn.nl>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 31 Aug 2019 11:59:56 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39667 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbfHaP74 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 11:59:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id u6so5583451edq.6
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 08:59:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wqHLN1Ubhfd+hVXSg+9EoM4u/DnI6dgG4zDin2xzzdE=;
+        b=l+/ej7XGl/fLdZgl2VlfgqGw9Ijvg2j4Op02EbALJBcDyp9Fn1KA25KdaPSh8LY86K
+         9T/DU9gFDgZlUgScL6BOgP26K1po6XohrGxTiN7jN1F/VGrTRsV2nLBGXzmbHKs1qdqR
+         q9fWWshEMUGr0npOR9gYHr5CYVcuXQoyVJVkeZtk8X6k7qBPXcJaU/j1wYI33i9zurnD
+         Jf/LHoaLSnzmB918QXnjYNKSDfvMNBpd3cPe2Lq/689LPC8Wo1m3ESiXrIs/YB8IZ481
+         M237uYUxQV/MPcaL2A2g7RrlJq3eXDFohaWHxR7TEUFOIgWKx0cFMqDXAE4VVap1NPc0
+         G/9Q==
+X-Gm-Message-State: APjAAAWkn5xVsGYgl8cATGd8jVxiB6Kwk39x8lfX1U0x72RKHspernpd
+        0UvMZBGLNOY4rimp9FqX/Ad6J85r8Mk=
+X-Google-Smtp-Source: APXvYqzHLoe8Itko54EKb5QriZRMLbcSRGHQmU9ZT1Sj29SDP46U7AIMRCXbyJgWLlui1m3TX9eVLQ==
+X-Received: by 2002:aa7:ccc4:: with SMTP id y4mr21735740edt.1.1567267194704;
+        Sat, 31 Aug 2019 08:59:54 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id w14sm1727714eda.69.2019.08.31.08.59.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 Aug 2019 08:59:54 -0700 (PDT)
+Subject: Re: [PATCH v3 06/11] wimax/i2400m: remove unlikely() from WARN*()
+ condition
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-wimax@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+References: <20190829165025.15750-6-efremov@linux.com>
+ <c9d3f0e1-d2c9-aedb-385c-82a8cb077253@web.de>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <4a064df8-9b44-8380-d7c5-8a94086c3a52@linux.com>
+Date:   Sat, 31 Aug 2019 18:59:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c9d3f0e1-d2c9-aedb-385c-82a8cb077253@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 31 Aug 2019 16:35:00 +0100
-Peter Wu <peter@lekensteyn.nl> wrote:
 
-> The current text could mislead the user into believing that only read()
-> disables tracing. Clarify that any open() call that requests read access
-> disables tracing.
+
+On 31.08.2019 14:25, Markus Elfring wrote:
+>>          pad_buf = i2400m_tx_fifo_push(i2400m, padding, 0, 0);
+>> -        if (unlikely(WARN_ON(pad_buf == NULL
+>> -                     || pad_buf == TAIL_FULL))) {
+>> +        if (WARN_ON(pad_buf == NULL || pad_buf == TAIL_FULL)) {
 > 
-> Link: https://lkml.kernel.org/r/CAADnVQ+hU6QOC_dPmpjnuv=9g4SQEeaMEMqXOS2WpMj=q=LdiQ@mail.gmail.com
-> Signed-off-by: Peter Wu <peter@lekensteyn.nl>
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-Jon care to take this in your tree?
-
-Thanks!
-
--- Steve
-
-> ---
-> v2: fix typo s/trace_file/trace_pipe/ (spotted by Steven)
-> ---
->  Documentation/trace/ftrace.rst | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+> How do you think about to use the following code variant?
 > 
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index f60079259669..e3060eedb22d 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -125,7 +125,8 @@ of ftrace. Here is a list of some of the key files:
->  
->  	This file holds the output of the trace in a human
->  	readable format (described below). Note, tracing is temporarily
-> -	disabled while this file is being read (opened).
-> +	disabled when the file is open for reading. Once all readers
-> +	are closed, tracing is re-enabled.
->  
->    trace_pipe:
->  
-> @@ -139,8 +140,9 @@ of ftrace. Here is a list of some of the key files:
->  	will not be read again with a sequential read. The
->  	"trace" file is static, and if the tracer is not
->  	adding more data, it will display the same
-> -	information every time it is read. This file will not
-> -	disable tracing while being read.
-> +	information every time it is read. Unlike the
-> +	"trace" file, opening this file for reading will not
-> +	temporarily disable tracing.
->  
->    trace_options:
->  
-> @@ -3153,7 +3155,10 @@ different. The trace is live.
->  
->  
->  Note, reading the trace_pipe file will block until more input is
-> -added.
-> +added. This is contrary to the trace file. If any process opened
-> +the trace file for reading, it will actually disable tracing and
-> +prevent new entries from being added. The trace_pipe file does
-> +not have this limitation.
->  
->  trace entries
->  -------------
+> +        if (WARN_ON(!pad_buf || pad_buf == TAIL_FULL)) {
+> 
 
+Well, I thought about it, because coccinelle warns about style here.
+But this condition looks more symmetric with direct comparison.
+I've decided that it will be better to save the original style.
+
+Thanks,
+Denis
