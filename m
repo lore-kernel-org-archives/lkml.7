@@ -2,92 +2,100 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE196C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF463C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967182187F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC3E22D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567284332;
+	bh=8JKzUaV2OuCtl9oURWjhYr6aJmrnqSh5Xzn10kpfuzY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ddwsPgus3/VcEErs74bEXEO9LGgdcl+dm+WgUm86888UkP3G3CgyXPy8TXR6oRjr5
+	 PivmqfobIQhRCiiStYYgr3pOvMBkU9Mf5SaiwEKw0l+EOPWNAbIhJes0k3NLtRWbbm
+	 2ZniLp1g3zV4bw+tcbFFLU8OiW3GXdn1dFiFfOVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfHaUcG (ORCPT
+        id S1728604AbfHaUpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 16:32:06 -0400
-Received: from smtprelay0062.hostedemail.com ([216.40.44.62]:41973 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728535AbfHaUcG (ORCPT
+        Sat, 31 Aug 2019 16:45:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46508 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728534AbfHaUpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 16:32:06 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id B1B09182CED28;
-        Sat, 31 Aug 2019 20:32:04 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sleet46_4c2e89b9f004e
-X-Filterd-Recvd-Size: 2290
-Received: from XPS-9350.home (unknown [47.151.137.30])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 31 Aug 2019 20:32:03 +0000 (UTC)
-Message-ID: <762056d9c081c40f3fc760c9af79d6851f0a65e5.camel@perches.com>
-Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
- condition
-From:   Joe Perches <joe@perches.com>
-To:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        Denis Efremov <efremov@linux.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-input@vger.kernel.org
-Date:   Sat, 31 Aug 2019 13:32:02 -0700
-In-Reply-To: <20190831152500.eg7xqo5ace6wu427@pali>
-References: <20190829165025.15750-1-efremov@linux.com>
-         <20190829165025.15750-9-efremov@linux.com>
-         <20190829175039.GA187474@dtor-ws> <20190831152500.eg7xqo5ace6wu427@pali>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Sat, 31 Aug 2019 16:45:31 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m3so5237148pgv.13
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 13:45:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Y+AmtBomDnWC/ZAcDYZsWdiJ2eoR1cTsyz9phCUc0P4=;
+        b=JgSeGcUBitfm92KGJ9u5xtRpypW+5MGZZuajaKrAkpIuNmFa8pCsIGqdhtQpnpKljf
+         TXUJm8BX81fHv3ykVhjGtu4hOwHuWRVM0ujm9PXeS3K9qlWcY0PqkmeYwTDMxJ9bx708
+         oIWpuRZSSMs6g1y99ThTwDCWV0+Nbo4+3lXiXIucIha6PfJHJ3rZVBfHsWjdycp6Vf9p
+         vYCBZvDBZM6+wBGkB0LY/EQeS6bLORjKKpX0ux4Uy//LZR/IsIB9RKlqijtGMVDulfIa
+         3gPwyNYz7ZTewIa8iEYC7PxdWSCE7BqEdhW6iWfU2OyawVksceOP2IMjZnb3k5fq3Z/R
+         ClxA==
+X-Gm-Message-State: APjAAAWusZ1KSTMnu39yfPsLnI0ZXQDJqY48bpnLajCjsElAKDgySbBS
+        aXmKXR+foTCm5Y56qREctN64CA==
+X-Google-Smtp-Source: APXvYqxtbR2t0QvkjD60vJ6+OgDU8PeSTlzkmqARJSsvDYH5NigQpRxtN+iK+gBH4bygl7xj9LN9lA==
+X-Received: by 2002:a63:10a:: with SMTP id 10mr18787046pgb.281.1567284330418;
+        Sat, 31 Aug 2019 13:45:30 -0700 (PDT)
+Received: from localhost ([2601:647:5b80:29f7:1bdd:d748:9a4e:8083])
+        by smtp.gmail.com with ESMTPSA id y8sm11984604pfe.146.2019.08.31.13.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Aug 2019 13:45:29 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 13:45:28 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+Subject: [GIT PULL] Please pull FPGA Manager changes for 5.4
+Message-ID: <20190831204528.GA23936@archbox>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-31 at 17:25 +0200, Pali Rohár wrote:
-> On Thursday 29 August 2019 10:50:39 Dmitry Torokhov wrote:
-> > On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
-> > > "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
-> > > unlikely() internally.
-> > 
-> > The keyword here is _internally_.
-> > 
-> > https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
-> > 
-> > So please no.
+The following changes since commit 2949dc443116a66fd1a92d9ef107be16cdd197cd:
 
-I think it poor form not to simply restate your original
-objection from 4 message levels below this link
+  dt-bindings: fpga: Consolidate bridge properties (2019-07-24 14:19:15 -0700)
 
-https://lists.gt.net/linux/kernel/2269724
+are available in the Git repository at:
 
-   Hm... I do not like this change. If I read code 
-    
-    if (unlikely(IS_ERR_OR_NULL(priv->dev3))) 
-    
-   then I know that it is really unlikely that condition will be truth and 
-   so this is some case of error/exception or something that normally does 
-   not happen too much. 
-    
-   But if I read code 
-    
-    if (IS_ERR_OR_NULL(priv->dev3)) 
-    
-   I know nothing about chance that this condition will be truth. Explicit 
-   unlikely in previous example give me more information. 
-    
-I alslo think this argument is dubious as it also applies
-to any IS_ERR and all the unlikely uses have been removed
-from those.
+  git://git.kernel.org/pub/scm/linux/kernel/git/mdf/linux-fpga.git/ tags/fpga-cvp-for-5.4
 
+for you to fetch changes up to e58915179f3f4a839ea3b9aeae1c1e13e98e33b1:
 
+  fpga: altera-cvp: Add Stratix10 (V2) Support (2019-08-24 11:38:29 -0700)
+
+----------------------------------------------------------------
+FPGA Manager changes for 5.4-rc1
+
+Here is the second set of changes for the 5.4 merge window.
+
+This patchset adds support for the v2 revision of Intel (Altera)'s CVP
+parts including the Stratix 10.
+
+All of this patches have been reviewed and been in the last few
+linux-next releases without issues.
+
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+
+----------------------------------------------------------------
+Thor Thayer (3):
+      fpga: altera-cvp: Discover Vendor Specific offset
+      fpga: altera-cvp: Preparation for V2 parts.
+      fpga: altera-cvp: Add Stratix10 (V2) Support
+
+ drivers/fpga/Kconfig      |   6 +-
+ drivers/fpga/altera-cvp.c | 339 ++++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 271 insertions(+), 74 deletions(-)
