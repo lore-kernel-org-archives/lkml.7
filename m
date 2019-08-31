@@ -2,86 +2,149 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A67C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F90C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45C022DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A24822D6D
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TIU+H/yO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfHaP74 (ORCPT
+        id S1728314AbfHaQLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:59:56 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39667 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbfHaP74 (ORCPT
+        Sat, 31 Aug 2019 12:11:40 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38755 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfHaQLk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:59:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id u6so5583451edq.6
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 08:59:55 -0700 (PDT)
+        Sat, 31 Aug 2019 12:11:40 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u190so8934381qkh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 09:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pe83f1owssXbd1TvMfyX2xKZ3JkailJMx6JMRxathC4=;
+        b=TIU+H/yOMnpGn4f4v+24auU9sX4hy0gWjCT/iynH+zgD+GPtnT6SE9ny570T0gLRMk
+         0ml9pEKDRRo2eZ2kG+5HTT0fV9htzXIkkiRbR6w1A7ugt2+AjdkWnYGC7gWrJKJXdGI4
+         fz0BWSH9c49yRtsw1IRL3kLXAOKsTxfSVLmDXdOPHw84f2BwHfkO+p1mshuc4QDhQ8W6
+         vngdXu21W6T5lFm5g4qWua78SIU1rki4+Yyirrw42M1zT6sO0WTJM5wjkRLSfKddnzK8
+         W72g3waK569Vj28dNoaKGxZhB0RbN8FFOr2fyS5OV2krkeyT41M8aotUi+vzA3pBVugm
+         I08w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wqHLN1Ubhfd+hVXSg+9EoM4u/DnI6dgG4zDin2xzzdE=;
-        b=l+/ej7XGl/fLdZgl2VlfgqGw9Ijvg2j4Op02EbALJBcDyp9Fn1KA25KdaPSh8LY86K
-         9T/DU9gFDgZlUgScL6BOgP26K1po6XohrGxTiN7jN1F/VGrTRsV2nLBGXzmbHKs1qdqR
-         q9fWWshEMUGr0npOR9gYHr5CYVcuXQoyVJVkeZtk8X6k7qBPXcJaU/j1wYI33i9zurnD
-         Jf/LHoaLSnzmB918QXnjYNKSDfvMNBpd3cPe2Lq/689LPC8Wo1m3ESiXrIs/YB8IZ481
-         M237uYUxQV/MPcaL2A2g7RrlJq3eXDFohaWHxR7TEUFOIgWKx0cFMqDXAE4VVap1NPc0
-         G/9Q==
-X-Gm-Message-State: APjAAAWkn5xVsGYgl8cATGd8jVxiB6Kwk39x8lfX1U0x72RKHspernpd
-        0UvMZBGLNOY4rimp9FqX/Ad6J85r8Mk=
-X-Google-Smtp-Source: APXvYqzHLoe8Itko54EKb5QriZRMLbcSRGHQmU9ZT1Sj29SDP46U7AIMRCXbyJgWLlui1m3TX9eVLQ==
-X-Received: by 2002:aa7:ccc4:: with SMTP id y4mr21735740edt.1.1567267194704;
-        Sat, 31 Aug 2019 08:59:54 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id w14sm1727714eda.69.2019.08.31.08.59.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 31 Aug 2019 08:59:54 -0700 (PDT)
-Subject: Re: [PATCH v3 06/11] wimax/i2400m: remove unlikely() from WARN*()
- condition
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-wimax@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-References: <20190829165025.15750-6-efremov@linux.com>
- <c9d3f0e1-d2c9-aedb-385c-82a8cb077253@web.de>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <4a064df8-9b44-8380-d7c5-8a94086c3a52@linux.com>
-Date:   Sat, 31 Aug 2019 18:59:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pe83f1owssXbd1TvMfyX2xKZ3JkailJMx6JMRxathC4=;
+        b=Sxo/hf4kvbC3DynEuNWZXUHDmDEpqsmh10uDvV2p7sKQmpi1HaULq9XCdrhMKVSdGT
+         v6B+7UFAvp9dYLo647WEt2MRs3C8q66BMzNsZLzIhS9iQEQybhdHypgtM4KYKMTZELa5
+         QggDhZ5QQdl+FSA4PB9+Aql1G7WdyEMKqkid/Si57CGDQUI7cV4LdAykJunzyl+qYWQt
+         TqoHKiqPmkkGy7954uVnY4U5CW5jdioC0cpcKnuxvKFk+qdv7GHel7Mny58qaCYBiSeI
+         psOw69pyXSVsNmaJOMHEiuKChuNsGyflXbDIGI9HMHIv2cXJ81oOOAbvfGbV5nUi10Tr
+         yggA==
+X-Gm-Message-State: APjAAAX5RXHoO5OgX3wtfNI5SkUxJt7QhsUYChm0imhZQ4kJpq27rONd
+        0fbedDERv0NcDsT7xF6MrXCLAkLFhFXCZzR+ZGvFjQ==
+X-Google-Smtp-Source: APXvYqxAQuJTy3tPDbVD0p9WMAUf9PV2yWyEY08GGHsce85dO2Y5kZoWOCzQdEqZySjprOclYCKijLT1bxvXd0aDnhg=
+X-Received: by 2002:a37:c403:: with SMTP id d3mr14148483qki.212.1567267899073;
+ Sat, 31 Aug 2019 09:11:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c9d3f0e1-d2c9-aedb-385c-82a8cb077253@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190826153028.32639-1-pjones@redhat.com>
+In-Reply-To: <20190826153028.32639-1-pjones@redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 31 Aug 2019 19:11:27 +0300
+Message-ID: <CAKv+Gu-JQMaFdfSAVzqskC143roHvw2OrMvuUMikYHoReNiDoA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't mapped.
+To:     Peter Jones <pjones@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Lyude Paul <lyude@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 26 Aug 2019 at 18:30, Peter Jones <pjones@redhat.com> wrote:
+>
+> Some machines generate a lot of event log entries.  When we're
+> iterating over them, the code removes the old mapping and adds a
+> new one, so once we cross the page boundary we're unmapping the page
+> with the count on it.  Hilarity ensues.
+>
+> This patch keeps the info from the header in local variables so we don't
+> need to access that page again or keep track of if it's mapped.
+>
+> Signed-off-by: Peter Jones <pjones@redhat.com>
+> Tested-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  include/linux/tpm_eventlog.h | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+> index 63238c84dc0..549dab0b56b 100644
+> --- a/include/linux/tpm_eventlog.h
+> +++ b/include/linux/tpm_eventlog.h
+> @@ -170,6 +170,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>         u16 halg;
+>         int i;
+>         int j;
+> +       u32 count, event_type;
+>
+>         marker = event;
+>         marker_start = marker;
+> @@ -190,16 +191,22 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>         }
+>
+>         event = (struct tcg_pcr_event2_head *)mapping;
+> +       /*
+> +        * the loop below will unmap these fields if the log is larger than
+> +        * one page, so save them here for reference.
+> +        */
+> +       count = event->count;
+> +       event_type = event->event_type;
+>
 
+These assignments should be using READ_ONCE(), since otherwise, the
+compiler may reload these quantities from memory anyway.
 
-On 31.08.2019 14:25, Markus Elfring wrote:
->>          pad_buf = i2400m_tx_fifo_push(i2400m, padding, 0, 0);
->> -        if (unlikely(WARN_ON(pad_buf == NULL
->> -                     || pad_buf == TAIL_FULL))) {
->> +        if (WARN_ON(pad_buf == NULL || pad_buf == TAIL_FULL)) {
-> 
-> How do you think about to use the following code variant?
-> 
-> +        if (WARN_ON(!pad_buf || pad_buf == TAIL_FULL)) {
-> 
+With that fixed,
 
-Well, I thought about it, because coccinelle warns about style here.
-But this condition looks more symmetric with direct comparison.
-I've decided that it will be better to save the original style.
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Thanks,
-Denis
+>         efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+>
+>         /* Check if event is malformed. */
+> -       if (event->count > efispecid->num_algs) {
+> +       if (count > efispecid->num_algs) {
+>                 size = 0;
+>                 goto out;
+>         }
+>
+> -       for (i = 0; i < event->count; i++) {
+> +       for (i = 0; i < count; i++) {
+>                 halg_size = sizeof(event->digests[i].alg_id);
+>
+>                 /* Map the digest's algorithm identifier */
+> @@ -256,8 +263,9 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>                 + event_field->event_size;
+>         size = marker - marker_start;
+>
+> -       if ((event->event_type == 0) && (event_field->event_size == 0))
+> +       if (event_type == 0 && event_field->event_size == 0)
+>                 size = 0;
+> +
+>  out:
+>         if (do_mapping)
+>                 TPM_MEMUNMAP(mapping, mapping_size);
+> --
+> 2.23.0.rc2
+>
