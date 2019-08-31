@@ -2,154 +2,253 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B800AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4748C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880E022D6D
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E1222D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="x8AzMV/d"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nxBWCbZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfHaQOf (ORCPT
+        id S1728341AbfHaQ0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 12:14:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37914 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfHaQOf (ORCPT
+        Sat, 31 Aug 2019 12:26:48 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:41668 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbfHaQ0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 12:14:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9z8D9olsBa3hBeUPiIp09Dt+Z4AIzLPp/yvlpDUFHX0=; b=x8AzMV/dBDLgnZtYgd5WXrHZz
-        J1Vzd0aVi/Gh9aR1ki4cBa4whG4Q1V/TmJqfGoj1lJq6kJjiuQYZNuorqmnCApb7upfCoptB6gJFD
-        /zr79bDqLAuwubXHH8RP3U+PR2AsznxNYYfZ9NHQiCRpZlqAOstpbqBJRljB9ZgYsPWBx+MKFxs80
-        ciDeDpUtS+sxAr9TXligHvyLa0o26gzbT/YjybHsFgge8Pvhl9sK46TsDOTJpa2DQeO8FEwa9a+0z
-        CL2B8ec8EvIDtdx769upaAGdaagvguVv1uK6k1FG6efrfImifDIpfCuqJdr+/hOsIv+Uv1FL8Ogb7
-        CPBOYqZeg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i45zj-0003On-Bp; Sat, 31 Aug 2019 16:12:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AF35F301A76;
-        Sat, 31 Aug 2019 18:12:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ADDA929B399D3; Sat, 31 Aug 2019 18:12:47 +0200 (CEST)
-Date:   Sat, 31 Aug 2019 18:12:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
-        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, nfont@linux.vnet.ibm.com,
-        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-Message-ID: <20190831161247.GM2369@hirez.programming.kicks-ass.net>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 31 Aug 2019 12:26:47 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7VGQ14v028152;
+        Sun, 1 Sep 2019 01:26:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7VGQ14v028152
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567268761;
+        bh=SLmzLQSSgz61XqmfX34aySvXBG0lEPr1RYwtTQ3yRZs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nxBWCbZcw9l/4NjxHH+8xdAgWNT6sIEBuw6rXKpR8OAXIAeEUihtiNs7FSwSIn9aJ
+         52el7fnPLRhAcnXi+5Bp9GAwDVcOYDXpwzhJr9aWLOUQr7PbW8nf4DnDpNM6lFQKj0
+         sxnPIFOJ6FDe/nDeNzvWSfTexWqJjwy6X8wk2Yl64GTAV99Y36j3O4kUEOcxiAlYVC
+         QTFwJ0djMR2VkXHBZjrY7hXlExkEm0kb8/WdkCKtzsDEOCoZXwrkHY0Pa0qWFPwGcR
+         VElrZ9ql/j9xz7HDjoTNZzRBlS0nZeC253HtmtuaCnXlFJHutKq1Ni0gtjrkoC4N95
+         oi68cjL3229bQ==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] kbuild: refactor scripts/Makefile.extrawarn
+Date:   Sun,  1 Sep 2019 01:25:54 +0900
+Message-Id: <20190831162555.31887-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 06:09:39PM +0800, Yunsheng Lin wrote:
-> 
-> 
-> On 2019/8/31 16:55, Peter Zijlstra wrote:
-> > On Sat, Aug 31, 2019 at 01:58:16PM +0800, Yunsheng Lin wrote:
-> >> According to Section 6.2.14 from ACPI spec 6.3 [1], the setting
-> >> of proximity domain is optional, as below:
-> >>
-> >> This optional object is used to describe proximity domain
-> >> associations within a machine. _PXM evaluates to an integer
-> >> that identifies a device as belonging to a Proximity Domain
-> >> defined in the System Resource Affinity Table (SRAT).
-> > 
-> > That's just words.. what does it actually mean?
-> 
-> It means the dev_to_node(dev) may return -1 if the bios does not
-> implement the proximity domain feature, user may use that value
-> to call cpumask_of_node and cpumask_of_node does not protect itself
-> from node id being -1, which causes out of bound access.
+Instead of the warning-[123] magic, let's accumulate compiler options
+to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
+easier to understand what is going on in this file.
 
-> >> @@ -69,6 +69,12 @@ extern const struct cpumask *cpumask_of_node(int node);
-> >>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
-> >>  static inline const struct cpumask *cpumask_of_node(int node)
-> >>  {
-> >> +	if (node >= nr_node_ids)
-> >> +		return cpu_none_mask;
-> >> +
-> >> +	if (node < 0 || !node_to_cpumask_map[node])
-> >> +		return cpu_online_mask;
-> >> +
-> >>  	return node_to_cpumask_map[node];
-> >>  }
-> >>  #endif
-> > 
-> > I _reallly_ hate this. Users are expected to use valid numa ids. Now
-> > we're adding all this checking to all users. Why do we want to do that?
-> 
-> As above, the dev_to_node(dev) may return -1.
-> 
-> > 
-> > Using '(unsigned)node >= nr_nods_ids' is an error.
-> 
-> 'node >= nr_node_ids' can be dropped if all user is expected to not call
-> cpumask_of_node with node id greater or equal to nr_nods_ids.
+This commit slightly changes the behavior, I think all of which are OK.
 
-you copied my typo :-)
+[1] Currently, cc-option calls are needlessly evaluated. For example,
+      warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+    needs evaluating only when W=3, but it is actually evaluated for
+    W=1, W=2 as well. With this commit, only relevant cc-option calls
+    will be evaluated. This is a slight optimization.
 
-> From what I can see, the problem can be fixed in three place:
-> 1. Make user dev_to_node return a valid node id even when proximity
->    domain is not set by bios(or node id set by buggy bios is not valid),
->    which may need info from the numa system to make sure it will return
->    a valid node.
-> 
-> 2. User that call cpumask_of_node should ensure the node id is valid
->    before calling cpumask_of_node, and user also need some info to
->    make ensure node id is valid.
-> 
-> 3. Make sure cpumask_of_node deal with invalid node id as this patchset.
-> 
-> Which one do you prefer to make sure node id is valid, or do you
-> have any better idea?
-> 
-> Any detail advice and suggestion will be very helpful, thanks.
+[2] Currently, unsupported level like W=4 is checked by:
+      $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+    This will no longer be checked, but I do not think it is a big
+    deal.
 
-1) because even it is not set, the device really does belong to a node.
-It is impossible a device will have magic uniform access to memory when
-CPUs cannot.
+[3] Currently, 4 Clang warnings (Winitializer-overrides, Wformat,
+    Wsign-compare, Wformat-zero-length) are shown by any of W=1, W=2,
+    and W=3. With this commit, they will be warned only by W=1. I
+    think this is a more correct behavior since each warning belongs
+    to only one group.
 
-2) is already true today, cpumask_of_node() requires a valid node_id.
+For understanding this commit correctly:
 
-3) is just wrong and increases overhead for everyone.
+We have 3 warning groups, W=1, W=2, and W=3. You may think W=3 has a
+higher level than W=1, but they are actually independent. If you like,
+you can combine them like W=13. To enable all the warnings, you can
+pass W=123. It is shown by 'make help', but not noticed much. Since we
+support W= combination, there should not exist intersection among the
+three groups. If we enable Winitializer-overrides for W=1, we do not
+need to for W=2 or W=3. This is the reason why I think the change [3]
+makes sense.
+
+The documentation says -Winitializer-overrides is enabled by default.
+(https://clang.llvm.org/docs/DiagnosticsReference.html#winitializer-overrides)
+We negate it by passing -Wno-initializer-overrides for the normal
+build, but we do not do that for W=1. This means, W=1 effectively
+enables -Winitializer-overrides by the clang's default. The same for
+the other three.
+
+Add comments in case people are confused with the code.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+---
+
+Changes in v3:
+  - Added yet more comments.
+    Fix grammatical mistake 'does' -> 'do'.
+
+Changes in v2:
+  - Added comments and more commit log
+
+ scripts/Makefile.extrawarn | 106 ++++++++++++++++++++-----------------
+ 1 file changed, 56 insertions(+), 50 deletions(-)
+
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index a74ce2e3c33e..d226c5fb13e2 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -1,14 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # ==========================================================================
+-#
+ # make W=... settings
+ #
+-# W=1 - warnings that may be relevant and does not occur too often
+-# W=2 - warnings that occur quite often but may still be relevant
+-# W=3 - the more obscure warnings, can most likely be ignored
+-#
+-# $(call cc-option, -W...) handles gcc -W.. options which
+-# are not supported by all versions of the compiler
++# There are three warning groups enabled by W=1, W=2, W=3.
++# They are independent, and can be combined like W=12 or W=123.
+ # ==========================================================================
+ 
+ KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
+@@ -17,58 +12,69 @@ ifeq ("$(origin W)", "command line")
+   export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
+ endif
+ 
+-ifdef KBUILD_ENABLE_EXTRA_GCC_CHECKS
+-warning-  := $(empty)
++#
++# W=1 - warnings which may be relevant and do not occur too often
++#
++ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+ 
+-warning-1 := -Wextra -Wunused -Wno-unused-parameter
+-warning-1 += -Wmissing-declarations
+-warning-1 += -Wmissing-format-attribute
+-warning-1 += -Wmissing-prototypes
+-warning-1 += -Wold-style-definition
+-warning-1 += -Wmissing-include-dirs
+-warning-1 += $(call cc-option, -Wunused-but-set-variable)
+-warning-1 += $(call cc-option, -Wunused-const-variable)
+-warning-1 += $(call cc-option, -Wpacked-not-aligned)
+-warning-1 += $(call cc-option, -Wstringop-truncation)
++KBUILD_CFLAGS += -Wextra -Wunused -Wno-unused-parameter
++KBUILD_CFLAGS += -Wmissing-declarations
++KBUILD_CFLAGS += -Wmissing-format-attribute
++KBUILD_CFLAGS += -Wmissing-prototypes
++KBUILD_CFLAGS += -Wold-style-definition
++KBUILD_CFLAGS += -Wmissing-include-dirs
++KBUILD_CFLAGS += $(call cc-option, -Wunused-but-set-variable)
++KBUILD_CFLAGS += $(call cc-option, -Wunused-const-variable)
++KBUILD_CFLAGS += $(call cc-option, -Wpacked-not-aligned)
++KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
+ # The following turn off the warnings enabled by -Wextra
+-warning-1 += -Wno-missing-field-initializers
+-warning-1 += -Wno-sign-compare
+-
+-warning-2 += -Wcast-align
+-warning-2 += -Wdisabled-optimization
+-warning-2 += -Wnested-externs
+-warning-2 += -Wshadow
+-warning-2 += $(call cc-option, -Wlogical-op)
+-warning-2 += -Wmissing-field-initializers
+-warning-2 += -Wsign-compare
+-warning-2 += $(call cc-option, -Wmaybe-uninitialized)
+-warning-2 += $(call cc-option, -Wunused-macros)
+-
+-warning-3 := -Wbad-function-cast
+-warning-3 += -Wcast-qual
+-warning-3 += -Wconversion
+-warning-3 += -Wpacked
+-warning-3 += -Wpadded
+-warning-3 += -Wpointer-arith
+-warning-3 += -Wredundant-decls
+-warning-3 += -Wswitch-default
+-warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+-
+-warning := $(warning-$(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+-warning += $(warning-$(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+-warning += $(warning-$(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+-
+-ifeq ("$(strip $(warning))","")
+-        $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+-endif
++KBUILD_CFLAGS += -Wno-missing-field-initializers
++KBUILD_CFLAGS += -Wno-sign-compare
+ 
+-KBUILD_CFLAGS += $(warning)
+ else
+ 
++# Some diagnostics enabled by default are noisy.
++# Suppress them by using -Wno... except for W=1.
++
+ ifdef CONFIG_CC_IS_CLANG
+ KBUILD_CFLAGS += -Wno-initializer-overrides
+ KBUILD_CFLAGS += -Wno-format
+ KBUILD_CFLAGS += -Wno-sign-compare
+ KBUILD_CFLAGS += -Wno-format-zero-length
+ endif
++
++endif
++
++#
++# W=2 - warnings which occur quite often but may still be relevant
++#
++ifneq ($(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
++
++KBUILD_CFLAGS += -Wcast-align
++KBUILD_CFLAGS += -Wdisabled-optimization
++KBUILD_CFLAGS += -Wnested-externs
++KBUILD_CFLAGS += -Wshadow
++KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
++KBUILD_CFLAGS += -Wmissing-field-initializers
++KBUILD_CFLAGS += -Wsign-compare
++KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
++KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
++
++endif
++
++#
++# W=3 - more obscure warnings, can most likely be ignored
++#
++ifneq ($(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
++
++KBUILD_CFLAGS += -Wbad-function-cast
++KBUILD_CFLAGS += -Wcast-qual
++KBUILD_CFLAGS += -Wconversion
++KBUILD_CFLAGS += -Wpacked
++KBUILD_CFLAGS += -Wpadded
++KBUILD_CFLAGS += -Wpointer-arith
++KBUILD_CFLAGS += -Wredundant-decls
++KBUILD_CFLAGS += -Wswitch-default
++KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
++
+ endif
+-- 
+2.17.1
+
