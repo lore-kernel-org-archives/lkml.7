@@ -2,171 +2,108 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7C2C41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C367EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9E222CF7
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FDC21670
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:18:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XcPoqKSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfHaKKS (ORCPT
+        id S1727298AbfHaKS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 06:10:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726650AbfHaKKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 06:10:17 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1A9E488D2CD023DF4C0A;
-        Sat, 31 Aug 2019 18:10:11 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 31 Aug 2019
- 18:10:04 +0800
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <nfont@linux.vnet.ibm.com>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
-Date:   Sat, 31 Aug 2019 18:09:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190831085539.GG2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        Sat, 31 Aug 2019 06:18:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21120 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbfHaKS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 06:18:27 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46LC3h1mPdz9v4gN;
+        Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=XcPoqKSs; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id yCN6EBBjj26Z; Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46LC3h0Ttpz9v4gL;
+        Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567246704; bh=qFMzlyfxCodFSC4zHAOz2kDQ77ypyGQHTBxTejDX1bI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=XcPoqKSsWPUOi2/+SwSxnbm73qCTTiXgUobkrwGvL7FHKduXJ5zNKAYV4Iq5g1pfI
+         w/kTNtJGAOmRI3kLJ+tHVsu2DOAOldn+6zYmMbAT40yHcGwTPYCSY9afpvXAvq6nYq
+         U3+BNQOwhYJ6mIMUb0To3O8ANNxbvwbwQUVl3ZGA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6828E8B7B9;
+        Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JaMaC9-f54tk; Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 33C698B789;
+        Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 551F06985C; Sat, 31 Aug 2019 10:18:23 +0000 (UTC)
+Message-Id: <cover.1567245404.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v2 00/10] Enable CONFIG_VMAP_STACK on PPC32
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        dja@axtens.net
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sat, 31 Aug 2019 10:18:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The purpose of this serie is to enable CONFIG_VMAP_STACK on PPC32.
 
+For the time being we have something working on 8xx.
 
-On 2019/8/31 16:55, Peter Zijlstra wrote:
-> On Sat, Aug 31, 2019 at 01:58:16PM +0800, Yunsheng Lin wrote:
->> According to Section 6.2.14 from ACPI spec 6.3 [1], the setting
->> of proximity domain is optional, as below:
->>
->> This optional object is used to describe proximity domain
->> associations within a machine. _PXM evaluates to an integer
->> that identifies a device as belonging to a Proximity Domain
->> defined in the System Resource Affinity Table (SRAT).
-> 
-> That's just words.. what does it actually mean?
+Further work I'm working on:
+- Fix stack overflow detection (doesn't work all the time yet, with the LKDTM STACK_EXHAUST test it hang).
+- Add support to powerpc 603
+- Add support to all book3s32
 
-It means the dev_to_node(dev) may return -1 if the bios does not
-implement the proximity domain feature, user may use that value
-to call cpumask_of_node and cpumask_of_node does not protect itself
-from node id being -1, which causes out of bound access.
+v2: added stack overflow detection.
 
-> 
->> This patch checks node id with the below case before returning
->> node_to_cpumask_map[node]:
->> 1. if node_id >= nr_node_ids, return cpu_none_mask
->> 2. if node_id < 0, return cpu_online_mask
->> 3. if node_to_cpumask_map[node_id] is NULL, return cpu_online_mask
->>
->> [1] https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->>  arch/x86/include/asm/topology.h | 6 ++++++
->>  arch/x86/mm/numa.c              | 2 +-
->>  2 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
->> index 4b14d23..f36e9c8 100644
->> --- a/arch/x86/include/asm/topology.h
->> +++ b/arch/x86/include/asm/topology.h
->> @@ -69,6 +69,12 @@ extern const struct cpumask *cpumask_of_node(int node);
->>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->>  static inline const struct cpumask *cpumask_of_node(int node)
->>  {
->> +	if (node >= nr_node_ids)
->> +		return cpu_none_mask;
->> +
->> +	if (node < 0 || !node_to_cpumask_map[node])
->> +		return cpu_online_mask;
->> +
->>  	return node_to_cpumask_map[node];
->>  }
->>  #endif
-> 
-> I _reallly_ hate this. Users are expected to use valid numa ids. Now
-> we're adding all this checking to all users. Why do we want to do that?
+Christophe Leroy (10):
+  powerpc/32: replace MTMSRD() by mtmsr
+  powerpc/32: Add EXCEPTION_PROLOG_0 in head_32.h
+  powerpc/32: prepare for CONFIG_VMAP_STACK
+  powerpc/8xx: Use alternative scratch registers in DTLB miss handler
+  powerpc/8xx: drop exception entries for non-existing exceptions
+  powerpc/8xx: move DataStoreTLBMiss perf handler
+  powerpc/8xx: split breakpoint exception
+  powerpc/8xx: Enable CONFIG_VMAP_STACK
+  powerpc: align stack to 2 * THREAD_SIZE with VMAP_STACK
+  powerpc/32: Add stack overflow detection with VMAP stack.
 
-As above, the dev_to_node(dev) may return -1.
+ arch/powerpc/Kconfig                   |   1 +
+ arch/powerpc/include/asm/processor.h   |   5 ++
+ arch/powerpc/include/asm/thread_info.h |  18 ++++
+ arch/powerpc/kernel/asm-offsets.c      |   5 ++
+ arch/powerpc/kernel/entry_32.S         |  37 +++++++--
+ arch/powerpc/kernel/head_32.S          |   4 +-
+ arch/powerpc/kernel/head_32.h          |  98 ++++++++++++++++++++--
+ arch/powerpc/kernel/head_8xx.S         | 145 ++++++++++++++++++---------------
+ arch/powerpc/kernel/setup_32.c         |   2 +-
+ arch/powerpc/kernel/setup_64.c         |   2 +-
+ arch/powerpc/kernel/vmlinux.lds.S      |   2 +-
+ arch/powerpc/perf/8xx-pmu.c            |  12 ++-
+ 12 files changed, 240 insertions(+), 91 deletions(-)
 
-> 
-> Using '(unsigned)node >= nr_nods_ids' is an error.
-
-'node >= nr_node_ids' can be dropped if all user is expected to not call
-cpumask_of_node with node id greater or equal to nr_nods_ids.
-
-From what I can see, the problem can be fixed in three place:
-1. Make user dev_to_node return a valid node id even when proximity
-   domain is not set by bios(or node id set by buggy bios is not valid),
-   which may need info from the numa system to make sure it will return
-   a valid node.
-
-2. User that call cpumask_of_node should ensure the node id is valid
-   before calling cpumask_of_node, and user also need some info to
-   make ensure node id is valid.
-
-3. Make sure cpumask_of_node deal with invalid node id as this patchset.
-
-Which one do you prefer to make sure node id is valid, or do you
-have any better idea?
-
-Any detail advice and suggestion will be very helpful, thanks.
-
-> 
->> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
->> index e6dad60..5e393d2 100644
->> --- a/arch/x86/mm/numa.c
->> +++ b/arch/x86/mm/numa.c
->> @@ -868,7 +868,7 @@ const struct cpumask *cpumask_of_node(int node)
->>  		dump_stack();
->>  		return cpu_none_mask;
->>  	}
->> -	if (node_to_cpumask_map[node] == NULL) {
->> +	if (node < 0 || !node_to_cpumask_map[node]) {
->>  		printk(KERN_WARNING
->>  			"cpumask_of_node(%d): no node_to_cpumask_map!\n",
->>  			node);
->> -- 
->> 2.8.1
->>
-> 
-> .
-> 
+-- 
+2.13.3
 
