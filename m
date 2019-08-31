@@ -2,108 +2,105 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C67C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D924C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90BE23426
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1752081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hlw78MeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfHaJRa (ORCPT
+        id S1728095AbfHaJSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 05:17:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6157 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbfHaJR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 05:17:29 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7FFAFC8D1225965FF1B8;
-        Sat, 31 Aug 2019 17:17:09 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 31 Aug 2019
- 17:17:01 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <darrick.wong@oracle.com>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v2] xfs: revise function comment for xfs_trans_ail_delete
-Date:   Sat, 31 Aug 2019 17:23:43 +0800
-Message-ID: <1567243423-59571-1-git-send-email-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 31 Aug 2019 05:18:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40818 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfHaJSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 05:18:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3eFAuIavvhkkXpaoSObdJRD+mB6l5THOKa3OP4PCgVA=; b=hlw78MeSadjwLy0PloSqG9Ser
+        9SJyTf8YOUD7Dnt1e/0ENTLCNRIUFnhrKJPDIdo4fX+N8C2P+kbjjXYZEqh2OnoLSF8wJwHLX6pG5
+        C1xHmeq+irT3+zbK/CB5QMMPPM9D+YLndA+rnQzRo+GJScoEiKPW6CEpRdzzAX1KmZhhtwq0uy2nH
+        vNkLzhNdRS1eGsgCgue3E1oP9pxa9ZVPU843RAMWOrI0XjwWUFsGiV3SlGDWW3cGQ3WvgtxlEuaNQ
+        QrCW6fIpLChDvEFDkm/bV9YQlqbmTE92U1RIF9+vKEc9Q5FOhi4j4nuaYT65n2tqRvNJuvoIoi69t
+        kS6pAstfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3zWG-0001jL-NR; Sat, 31 Aug 2019 09:18:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 08733301A76;
+        Sat, 31 Aug 2019 11:17:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EF24329B2CD15; Sat, 31 Aug 2019 11:18:02 +0200 (CEST)
+Date:   Sat, 31 Aug 2019 11:18:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
+ metrics
+Message-ID: <20190831091802.GI2369@hirez.programming.kicks-ass.net>
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-4-kan.liang@linux.intel.com>
+ <20190828151921.GD17205@worktop.programming.kicks-ass.net>
+ <fd95a255-4499-2907-8af9-d340f157da68@linux.intel.com>
+ <20190829135256.GW2369@hirez.programming.kicks-ass.net>
+ <cc2ee16d-b10f-a31e-7411-320e90413ceb@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc2ee16d-b10f-a31e-7411-320e90413ceb@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since xfs_trans_ail_delete_bulk no longer exists, revising the comment
-for new function xfs_trans_ail_delete.
+On Thu, Aug 29, 2019 at 12:56:02PM -0400, Liang, Kan wrote:
+> On 8/29/2019 9:52 AM, Peter Zijlstra wrote:
 
-Fix following warning:
-make W=1 fs/xfs/xfs_trans_ail.o
-fs/xfs/xfs_trans_ail.c:793: warning: Function parameter or member 
-'ailp' not described in 'xfs_trans_ail_delete'
-fs/xfs/xfs_trans_ail.c:793: warning: Function parameter or member
-'lip' not described in 'xfs_trans_ail_delete'
-fs/xfs/xfs_trans_ail.c:793: warning: Function parameter or member
-'shutdown_type' not described in 'xfs_trans_ail_delete'
+> > What what? The PERF_METRICS contents depends on the FIXCTR3 value ?!
+> 
+> Yes.
+> 
+> For current implementation, PERF_METRIC MSR is composed by four fields,
+> backend bound, frontend bound, bad speculation and retiring.
+> Each of the fields are populated using the below formula for eg:
+> PERF_METRIC[RETIRING] = (0xFF *
+> PERF_METRICS_RETIRING_INTERNAL_48bit_COUNTER)
+> / FIXCTR3
 
-Fixes:27af1bbf5244("xfs: remove xfs_trans_ail_delete_bulk")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- fs/xfs/xfs_trans_ail.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+So it really depends on the actual exposed FIXCTR3 _value_ to compute
+the PERF_METRIC field? *mind boggles*, that's really unspeakable crap.
+And this isn't documented anywhere afaict.
 
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 6ccfd75..6c43b66e 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -765,25 +765,20 @@ xfs_ail_delete_one(
- }
- 
--/**
-- * Remove a log items from the AIL
-+/*
-+ * xfs_trans_ail_delet - remove a log item from the AIL
-  *
-- * @xfs_trans_ail_delete_bulk takes an array of log items that all need to
-- * removed from the AIL. The caller is already holding the AIL lock, and done
-- * all the checks necessary to ensure the items passed in via @log_items are
-- * ready for deletion. This includes checking that the items are in the AIL.
-+ * @xfs_trans_ail_delete takes a log item that needs to be removed from the
-+ * AIL. The caller is already holding the AIL lock, and done all the checks
-+ * necessary to ensure the item passed in via @lip are ready for deletion.
-+ * This includes checking that the items are in the AIL.
-  *
-- * For each log item to be removed, unlink it  from the AIL, clear the IN_AIL
-- * flag from the item and reset the item's lsn to 0. If we remove the first
-- * item in the AIL, update the log tail to match the new minimum LSN in the
-- * AIL.
-+ * For the log item to be removed, call xfs_ail_delete_one to unlink it
-+ * from the AIL, clear the IN_AIL flag from the item and reset the item's
-+ * lsn to 0. If we remove the first item in the AIL, update the log tail
-+ * to match the new minimum LSN in the AIL.
-  *
-- * This function will not drop the AIL lock until all items are removed from
-- * the AIL to minimise the amount of lock traffic on the AIL. This does not
-- * greatly increase the AIL hold time, but does significantly reduce the amount
-- * of traffic on the lock, especially during IO completion.
-- *
-- * This function must be called with the AIL lock held.  The lock is dropped
-- * before returning.
-+ * This function must be called with the AIL lock held. The lock will be
-+ * dropped before returning.
-  */
- void
- xfs_trans_ail_delete(
--- 
-2.7.4
+I was thinking they've have an internal counter for the SLOTS value too,
+so the PERF_METRIC fields are indenpendent; which would be like 'sane'.
 
+Exposing the internal counters would've been _soooo_ much better, just
+add 4 more fixed counters and call it a day.
+
+> The METRICS_OVF indicates the overflow of any internal counters.
+
+OK, but I'm thinking that by that time the fraction in PERF_METRIC will
+be too coarse and we're loosing precision. Reconstruction will be
+inaccurate.
+
+> The internal counters only start counting from 0, which cannot be programmed
+> by SW. But resetting the PERF_METRIC would implicitly resetting the internal
+> counters.
+
+The only possible option given the choices.
