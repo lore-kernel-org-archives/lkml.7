@@ -2,149 +2,102 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0781AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496F0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E6422D37
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F81D22CE9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i91qLrry"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nsOW6T6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfHaUrS (ORCPT
+        id S1728579AbfHaUyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 16:47:18 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:41903 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728534AbfHaUrS (ORCPT
+        Sat, 31 Aug 2019 16:54:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40663 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbfHaUyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 16:47:18 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BFAA51FD4;
-        Sat, 31 Aug 2019 16:47:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sat, 31 Aug 2019 16:47:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=+frLwa
-        9As/r3CWMEqGvhe3Btzq5dsH8oIjUQ64CaE+0=; b=i91qLrrysYTub8GLpdBSIK
-        yM1d7+n425L4qomN3cysHKHjbWvOEvdY6QZ5KFklDCwKCA+S2glM0WP7FQaZyEw4
-        1GEtDzT/qWdAhm1obh+xzJIkvSyKnnz3siVCNdB3gfY2/9jd0lmRMjTTLYAaaBgu
-        azaYRfKfRE604t3bJkeElrFQ/rHnTep2XilAKvT6w1409ys1gDYGDGsAst7P+uce
-        dBRgL1w2FI4Wp4vG0tiYx5E3btZ0dlFkv/smbRYY9SpB8SCE7PV4FX0tkAVLjuh2
-        s3MbTZKkW3AZpn/k1q12kMr4FXI/watD2i5k2onmj0LRJjuhlX+kKHTmwbESfvAA
-        ==
-X-ME-Sender: <xms:0txqXfr9YZxVppTgEUM2ndWTKesZcHSSVbglD87gJEEl6LmBx08BEg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeiiedguddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkugho
-    ucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepje
-    ejrddufeekrddvgeelrddvtdelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgt
-    hhesihguohhstghhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:0txqXSfNGQ3CJIP359BUsh1AgzGxmazTmuzl3jzGNcY10Wx8hnXTnw>
-    <xmx:0txqXdgUE1IfFhihWSrcx6RM35825lvji4IWxoXSP3XAHTSdWvN_FQ>
-    <xmx:0txqXYL0KDmtPY_iHWxBgTvqjOPSHWo58RuTwDfXXM-vrgXscZoK1g>
-    <xmx:1NxqXaPK9pxVQVPIDfEsIjnTGTcU4hTO0J7I4BPFxnAKQD6xh3WEpQ>
-Received: from localhost (unknown [77.138.249.209])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 34415D60057;
-        Sat, 31 Aug 2019 16:47:14 -0400 (EDT)
-Date:   Sat, 31 Aug 2019 23:47:05 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     David Miller <davem@davemloft.net>, jiri@resnulli.us,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, allan.nielsen@microchip.com,
-        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190831204705.GA28380@splinter>
-References: <20190829175759.GA19471@splinter>
- <20190829182957.GA17530@lunn.ch>
- <20190829193613.GA23259@splinter>
- <20190829.151201.940681219080864052.davem@davemloft.net>
- <20190830094319.GA31789@splinter>
- <20190831193556.GB2647@lunn.ch>
+        Sat, 31 Aug 2019 16:54:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c3so10206214wrd.7
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 13:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vVpAvUDIIJB/rBiWdRSCp24noGQbpHdLhKRNzvEE/U4=;
+        b=nsOW6T6Ln7H6VoO1w0TdKL+n+bCxdQIg5mV76Up0msQFVNLwvZmlf44egKbADEp2/T
+         /QfnTIbzeVyGiKDdY4eR5ETL/U9c6HwLawqimpMtuWepi+TaJjXVff1nNLFAHMTYPkH/
+         wsrd36zt7GdmCrrN3xFmPQwRAZV8laLqDazcovK9H10t3nn89uicx22wJGA8yK4N9QCE
+         lRbFRL2+vIz5Q3CNumVrnlX+xygjtPKqNmudodf/I/oOZ+8NHMfc07REAE938MVz37ck
+         /swarB07BIgtGigOP4JZ2Og0bwZIiKR7JEPIxZTPw748Vu6uJbsFWYPdpKTWQCLl6Cf2
+         R0iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vVpAvUDIIJB/rBiWdRSCp24noGQbpHdLhKRNzvEE/U4=;
+        b=MtmyathDbqDuFiKLVzE3ViBaGCjz3XQ0Csv68U4UkBx5RRoZtJjXKBGFXBTgFRYr7I
+         2Du8hRtSjlQIth7XwRQyfGL4nPWoJq+cDb50f4eV6g667g/SyK1Evv00cQK7g2+Qmq5Q
+         DCRtXka4ydbXfNyjIAEwSp9QZYltaO6bhoj2WBC6MyIPIcobRYUx9TXuIon1RnFmYrs4
+         2JwB4FFoOutYogsFBYj36S+D1UtBYefkyuPqWuzkv1OpZ/Zc6xRtowJ6By9J7+1J83z5
+         QjPuGH+o8sct6V8BuAXxwVNGa+xEUCEmro4yYmGFmcMeYSqi0/HqWqyVhV9iMMDmN9dp
+         Dteg==
+X-Gm-Message-State: APjAAAX9eA/ivFZ5HGp3LenpP/FqY45XUwqAh93vdiWw6UIlwDS0M/I2
+        EgGvi7OV8r69YOKjNYWF09C2mGFxpMU6KG4ElB1Htg==
+X-Google-Smtp-Source: APXvYqwQwkYgQPi3E0gla+o/CkByrN5Hhlas0nQucIcmpMVvUtuqz0/TVYNL0niNk8F9o2kChIUPF8tg58wECmLSZqU=
+X-Received: by 2002:adf:9e09:: with SMTP id u9mr26622524wre.169.1567284862130;
+ Sat, 31 Aug 2019 13:54:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190831193556.GB2647@lunn.ch>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190827163204.29903-1-will@kernel.org> <20190828073052.GL2332@hirez.programming.kicks-ass.net>
+ <20190828141439.sqnpm5ff4tgyn66r@willie-the-truck> <201908281353.0EFD0776@keescook>
+ <CAKv+Gu_Q=o_6xDW_7YTd3J6psqs-o+qBxW4r9MXCBwjmsGpTbQ@mail.gmail.com> <201908311200.926B5C0F@keescook>
+In-Reply-To: <201908311200.926B5C0F@keescook>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 31 Aug 2019 23:54:11 +0300
+Message-ID: <CAKv+Gu899ZsEG43aSQ0nn9suHp-ekKeSMbPRb2OYwsAu=_Q93Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Rework REFCOUNT_FULL using atomic_fetch_* operations
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 09:35:56PM +0200, Andrew Lunn wrote:
-> > Also, what happens when I'm running these application without putting
-> > the interface in promisc mode? On an offloaded interface I would not be
-> > able to even capture packets addressed to my interface's MAC address.
-> 
-> Sorry for rejoining the discussion late. I've been travelling and i'm
-> now 3/4 of the way to Lisbon.
+On Sat, 31 Aug 2019 at 22:02, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sat, Aug 31, 2019 at 08:48:56PM +0300, Ard Biesheuvel wrote:
+> > It's been ~2 years since I looked at this code in detail, but IIRC, it
+> > looked like the inc-from-zero check was missing from the x86
+> > implementation because it requires a load/compare/increment/store
+> > sequence instead of a single increment instruction taking a memory
+> > operand. Was there more rationale at the time for omitting this
+> > particular case, and if so, was it based on a benchmark? Can we run it
+> > against this implementation as well?
+>
+> It was based on providing a protection against the pre-exploitation case
+> (overflow: "something bad is about to happen, let's stop it") rather
+> than the post-exploitation case (inc from zero, "something bad already
+> happened, eek") with absolutely the fewest possible extra cycles, as
+> various subsystem maintainers had zero tolerance for any measurable
+> changes in refcounting performance.
+>
 
-Hi Andrew,
+Ah, of course.
 
-Have fun!
+> I much prefer the full coverage, even if it's a tiny bit slower. And
+> based on the worse-case timings (where literally nothing else is
+> happening) it seems like these changes should be WELL under the noise.
+>
 
-> That statement i don't get. 
-
-What about the other statements?
-
-> If the frame has the MAC address of the interface, it has to be
-> delivered to the CPU. 
-
-So every packet that needs to be routed should be delivered to the CPU?
-Definitely not.
-
-> And so pcap will see it when running on the interface. I can pretty
-> much guarantee every DSA driver does that.
-
-I assume because you currently only consider L2 forwarding.
-
-> But to address the bigger picture. My understanding is that we want to
-> model offloading as a mechanism to accelerate what Linux can already
-> do. The user should not have to care about these accelerators. The
-> interface should work like a normal Linux interface. I can put an IP
-> address on it and ping a peer. I can run a dhcp client and get an IP
-> address from a dhcp server. I can add the interface to a bridge, and
-> packets will get bridged. I as a user should not need to care if this
-> is done in software, or accelerated by offloading it. I can add a
-> route, and if the accelerate knows about L3, it can accelerate that as
-> well. If not, the kernel will route it.
-
-Yep, and this is how it's all working today.
-
-> So if i run wireshark on an interface, i expect the interface will be
-> put into promisc mode and i see all packets ingressing the interface.
-> What the accelerator needs to do to achieve this, i as a user don't
-> care.
-> 
-> I can follow the argument that i won't necessarily see every
-> packet. But that is always true. For many embedded systems, the CPU is
-> too slow to receive at line rate, even when we are talking about 1G
-> links. Packets do get dropped. And i hope tcpdump users understand
-> that.
-> 
-> For me, having tcpdump use tc trap is just wrong. It breaks the model
-> that the user should not care about the accelerator. If anything, i
-> think the driver needs to translate cBPF which pcap passes to the
-> kernel to whatever internal format the accelerator can process. That
-> is just another example of using hardware acceleration.
-
-Look, this again boils down to what promisc mode means with regards to
-hardware offload. You want it to mean punt all traffic to the CPU? Fine.
-Does not seem like anyone will be switching sides anyway, so lets move
-forward. But the current approach is not good. Each driver needs to have
-this special case logic and the semantics of promisc mode change not
-only with regards to the value of the promisc counter, but also with
-regards to the interface's uppers. This is highly fragile and confusing.
-
-The approach taken in v2 makes much more sense. Add a new flag to
-accelerators and have the networking stack check it before putting the
-interface in promisc mode. Then the only thing drivers need to do is to
-instruct the accelerator to trap all traffic to the CPU.
+ Agreed.
