@@ -2,148 +2,112 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BDDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62402C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E6A22DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3796523429
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJhlWeQz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RT0v7UCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfHaPZF (ORCPT
+        id S1728366AbfHaP0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:25:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36842 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfHaPZF (ORCPT
+        Sat, 31 Aug 2019 11:26:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43988 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfHaP0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:25:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so9783373wrd.3;
-        Sat, 31 Aug 2019 08:25:03 -0700 (PDT)
+        Sat, 31 Aug 2019 11:26:33 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v12so6443549pfn.10;
+        Sat, 31 Aug 2019 08:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=k25MOk7BOWPBFNnisijsXHS1mqf7Rp4KqkEnt9CsSGE=;
-        b=YJhlWeQzJpvO+RhGSsZ9l1YFjRR2EvmI1hmxLcGfXz4MOnUmRi3/GizZjvWZqqr4bv
-         bhXp/2Ulz7KoCwWq1SQlpxNxjadWO3Q5I4UqSP2UaVTAKsCn7v89p9BWEVDcxwBfMbXG
-         VX2j6JlukxUsiPUpMWAd6v8pGwXE3bYT5myNNvNfXrtFj48zpruuuGTmWdaYvCuQFJ1V
-         sQDIr3Ec9XlOuCr9Bd9LfRvYE4QXZOsK2sSnDSWbsltspIoB5TqT1TlqB9hYzjEnmo6S
-         60BeBx9HQfeIK/v3eJGQvpv8x35+l1FoeTuJ9aTBcX35kLP2JHoXCCsS+DBjCksbL1xA
-         7V5w==
+        bh=RPm3wNYaAJfeMv33ykpRQXFtymYX8spAHZhOaV4FMtw=;
+        b=RT0v7UCg8XIW3feVMun1Z8EQMB0RJUFpGzxMw1XggaH7RCqWOLXKFdZBexNrg2V9so
+         ZRXTO8r/0Qv2fszYeE2mWC1o/eaOLIIx1M2tkYCvsOyjFWRxENzkL9+5fL0/vcFGj5Pu
+         wpue46UQhSslVUplYU1QWSQFC13RMGc+Iu8sl5t1kj3Apy/tTdHM9ZCn+pQrYBzxQ42r
+         cXcRbHVEa41cQyNUu5T1p6zTJNRrj+PWxt1J31sIuHQ2DPVnCzUq5bAHrc0XeL2aOPZY
+         UWKQIV/AYVtY1yVgjGAzVkN+YvuK0iE58R7XN2lCcwP8GUxYzH7LO6oHdFmYNdmXvEkE
+         5YUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k25MOk7BOWPBFNnisijsXHS1mqf7Rp4KqkEnt9CsSGE=;
-        b=g9mEXqaCvqE2FII+ENOSZGXhhlujXn30nqTw0r844oflB2Qt0NRIOw7AvyXoUndvwa
-         e1xVfwLSlL8H3ndSEXkS8nnRbvdZw3dmkRKEVyKeaHOc/wPfK7fd688xaR/lSOCe2d1Q
-         +Ec9Q+bXVpGh+i6NKfdqy1wji4J1zCZ9beDS/HsrDNGBT5Ni+PCVyu4u/IVL71D09DG9
-         ADOn/nVbUAlzM38ZW1h+NhnZbBWYpvpNjlxNC3ylP+9dXmkr5UlXD6FPPFUPGxIoZzxc
-         UX0G+2JxcQghgHPNJ3IhCeIB5SZ2QpC1cie2LZrFn2fKJgxLe/tFhMoUoNBbJrtkNuSt
-         XLoA==
-X-Gm-Message-State: APjAAAWHPh4hQkLyuaZA+4z1+GMoxXra6v/wKwm3Ocl/lePTHV9hHqmU
-        6aJ4gdRxnyRh4JI6OSWHBME=
-X-Google-Smtp-Source: APXvYqwOHRHMb49iMaBn39bn+79g+BX0KA90yia2PdVU8C/rWtHVAJNXlrfK5a9034BCpZeKhhxwWg==
-X-Received: by 2002:adf:f584:: with SMTP id f4mr24335864wro.160.1567265102640;
-        Sat, 31 Aug 2019 08:25:02 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id m7sm20346388wmi.18.2019.08.31.08.25.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 31 Aug 2019 08:25:01 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 17:25:00 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
- condition
-Message-ID: <20190831152500.eg7xqo5ace6wu427@pali>
-References: <20190829165025.15750-1-efremov@linux.com>
- <20190829165025.15750-9-efremov@linux.com>
- <20190829175039.GA187474@dtor-ws>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RPm3wNYaAJfeMv33ykpRQXFtymYX8spAHZhOaV4FMtw=;
+        b=cEg6DN0I9+Tbivxb7dB/gxzNJIbLu6O1eFB0Xpt5Ko3vyGIFIKynXhpCQPzCcW9baq
+         K6Hb7xDHkH42mp/2kSeRiGPKHSCu0ycMslpwbelTIXXsPktHvkDGBksVWNzCYLtcIMh7
+         sBARxC2NDRdryTR/TbliEC4gWzxjnxKTO5RVX5+eR/mhAIAGQzhzkimsBCBUxaNImRJ2
+         bDINH6/h5YRQtWxUqG2Jy/f5VQVMMPuRXzbvbTWDLx0NgvNVqAM8Pyfm9x2ZYRSyeaaR
+         ZRN+TPK3uh6Oy54vkoQ6YB5E1inPAElepoJdGmJwgc4V/I2k4AY5pTQ8ZMyZc3/bn5TE
+         jgyw==
+X-Gm-Message-State: APjAAAVRHiqMAzd+Bahx6ZDlzcqIVBkNBzzosk5I9d5i0MolyVPR0+HI
+        1zEh3pKT/BXR0mSAU32iRFM=
+X-Google-Smtp-Source: APXvYqyJqEFxeB6QZitGffSy1/9nDmFnIkSMbAmBdxvl613w1CBE+EMOAAgfFHTaVNzZDYLyc85W0g==
+X-Received: by 2002:a63:ec13:: with SMTP id j19mr17399821pgh.369.1567265192358;
+        Sat, 31 Aug 2019 08:26:32 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f188sm3094603pfa.170.2019.08.31.08.26.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 31 Aug 2019 08:26:31 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 08:26:30 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com,
+        robh+dt@kernel.org, jdelvare@suse.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: hwmon: Document ibm,cffps2
+ compatible string
+Message-ID: <20190831152630.GA8907@roeck-us.net>
+References: <1567192263-15065-1-git-send-email-eajames@linux.ibm.com>
+ <1567192263-15065-2-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="p6pa6tjr5e2zkulj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829175039.GA187474@dtor-ws>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1567192263-15065-2-git-send-email-eajames@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 30, 2019 at 02:11:01PM -0500, Eddie James wrote:
+> Document the compatible string for version 2 of the IBM CFFPS PSU.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
---p6pa6tjr5e2zkulj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to hwmon-next. Note that we'll still need review from a DT maintainer.
+I don't see any problems, but then who knows.
 
-On Thursday 29 August 2019 10:50:39 Dmitry Torokhov wrote:
-> On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
-> > "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already us=
-es
-> > unlikely() internally.
->=20
-> The keyword here is _internally_.
->=20
-> https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
->=20
-> So please no.
+Thanks,
+Guenter
 
-Dmitry and I already rejected this patch, see also linked-list:
-https://lore.kernel.org/lkml/20190820111719.7blyk5jstgwde2ae@pali/
-
-> >=20
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
-> > Cc: "Pali Roh=C3=A1r" <pali.rohar@gmail.com>
-> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Cc: Joe Perches <joe@perches.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: linux-input@vger.kernel.org
-> > ---
-> >  drivers/input/mouse/alps.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-> > index 34700eda0429..ed1661434899 100644
-> > --- a/drivers/input/mouse/alps.c
-> > +++ b/drivers/input/mouse/alps.c
-> > @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct ps=
-mouse *psmouse,
-> >  		/* On V2 devices the DualPoint Stick reports bare packets */
-> >  		dev =3D priv->dev2;
-> >  		dev2 =3D psmouse->dev;
-> > -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
-> > +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
-> >  		/* Register dev3 mouse if we received PS/2 packet first time */
-> >  		if (!IS_ERR(priv->dev3))
-> >  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
-> > --=20
-> > 2.21.0
-> >=20
->=20
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---p6pa6tjr5e2zkulj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXWqRSgAKCRCL8Mk9A+RD
-Umu+AKChsaP4CSHyL95PY6h8qfvy9VLlVgCgsJJM0b0+JaCmO8UiIbZc/5SHjz4=
-=btDG
------END PGP SIGNATURE-----
-
---p6pa6tjr5e2zkulj--
+> ---
+>  Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+> index f68a0a6..1036f65 100644
+> --- a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+> @@ -1,8 +1,10 @@
+> -Device-tree bindings for IBM Common Form Factor Power Supply Version 1
+> -----------------------------------------------------------------------
+> +Device-tree bindings for IBM Common Form Factor Power Supply Versions 1 and 2
+> +-----------------------------------------------------------------------------
+>  
+>  Required properties:
+> - - compatible = "ibm,cffps1";
+> + - compatible				: Must be one of the following:
+> +						"ibm,cffps1"
+> +						"ibm,cffps2"
+>   - reg = < I2C bus address >;		: Address of the power supply on the
+>  					  I2C bus.
+>  
