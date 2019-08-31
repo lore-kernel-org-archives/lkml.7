@@ -2,108 +2,192 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C367EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A5AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FDC21670
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F167721670
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XcPoqKSs"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mGEz3s2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfHaKS1 (ORCPT
+        id S1727672AbfHaKSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 06:18:27 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:21120 "EHLO pegase1.c-s.fr"
+        Sat, 31 Aug 2019 06:18:30 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22884 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfHaKS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726650AbfHaKS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 31 Aug 2019 06:18:27 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46LC3h1mPdz9v4gN;
+        by localhost (Postfix) with ESMTP id 46LC3h5tjmz9v4gQ;
         Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=XcPoqKSs; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=mGEz3s2l; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id yCN6EBBjj26Z; Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
+        with ESMTP id g8Av4qpDiGhZ; Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46LC3h0Ttpz9v4gL;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46LC3h4n07z9v4gL;
         Sat, 31 Aug 2019 12:18:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567246704; bh=qFMzlyfxCodFSC4zHAOz2kDQ77ypyGQHTBxTejDX1bI=;
-        h=From:Subject:To:Cc:Date:From;
-        b=XcPoqKSsWPUOi2/+SwSxnbm73qCTTiXgUobkrwGvL7FHKduXJ5zNKAYV4Iq5g1pfI
-         w/kTNtJGAOmRI3kLJ+tHVsu2DOAOldn+6zYmMbAT40yHcGwTPYCSY9afpvXAvq6nYq
-         U3+BNQOwhYJ6mIMUb0To3O8ANNxbvwbwQUVl3ZGA=
+        t=1567246704; bh=rxf93z5qMEHtNvbxiGJkHo2K1BdNkXlHaOOcHj7o/kU=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=mGEz3s2lL5g/paQt8VYoFTTIi0JlAC6CVMHs3/QyCEknX/p1znzPs4Bsbhv5CsnnG
+         10i3YJEHrCrh3cK4VDM/cTXSTrY0asBLGxpoFNoRHR0K/5ahizfCOIP+KVl1uGZcfA
+         d+dQpmfiBspFG9Ybk+8cFaAxfaVZZjzqkDEAClXo=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6828E8B7B9;
-        Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 094EB8B7B9;
+        Sat, 31 Aug 2019 12:18:26 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JaMaC9-f54tk; Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
+        with ESMTP id pvS47kUyVbmo; Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
 Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 33C698B789;
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AA3AA8B789;
         Sat, 31 Aug 2019 12:18:25 +0200 (CEST)
 Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 551F06985C; Sat, 31 Aug 2019 10:18:23 +0000 (UTC)
-Message-Id: <cover.1567245404.git.christophe.leroy@c-s.fr>
+        id 7093A6985C; Sat, 31 Aug 2019 10:18:25 +0000 (UTC)
+Message-Id: <13de91fe3511a205c6f344ac9dbd46eeeb7b8b37.1567245404.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1567245404.git.christophe.leroy@c-s.fr>
+References: <cover.1567245404.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v2 00/10] Enable CONFIG_VMAP_STACK on PPC32
+Subject: [RFC PATCH v2 01/10] powerpc/32: replace MTMSRD() by mtmsr
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         dja@axtens.net
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Sat, 31 Aug 2019 10:18:23 +0000 (UTC)
+Date:   Sat, 31 Aug 2019 10:18:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this serie is to enable CONFIG_VMAP_STACK on PPC32.
+On PPC32, MTMSRD() is simply defined as mtmsr.
 
-For the time being we have something working on 8xx.
+Replace MTMSRD(reg) by mtmsr reg in files dedicated to PPC32,
+this makes the code less obscure.
 
-Further work I'm working on:
-- Fix stack overflow detection (doesn't work all the time yet, with the LKDTM STACK_EXHAUST test it hang).
-- Add support to powerpc 603
-- Add support to all book3s32
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/entry_32.S | 18 +++++++++---------
+ arch/powerpc/kernel/head_32.h  |  4 ++--
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-v2: added stack overflow detection.
-
-Christophe Leroy (10):
-  powerpc/32: replace MTMSRD() by mtmsr
-  powerpc/32: Add EXCEPTION_PROLOG_0 in head_32.h
-  powerpc/32: prepare for CONFIG_VMAP_STACK
-  powerpc/8xx: Use alternative scratch registers in DTLB miss handler
-  powerpc/8xx: drop exception entries for non-existing exceptions
-  powerpc/8xx: move DataStoreTLBMiss perf handler
-  powerpc/8xx: split breakpoint exception
-  powerpc/8xx: Enable CONFIG_VMAP_STACK
-  powerpc: align stack to 2 * THREAD_SIZE with VMAP_STACK
-  powerpc/32: Add stack overflow detection with VMAP stack.
-
- arch/powerpc/Kconfig                   |   1 +
- arch/powerpc/include/asm/processor.h   |   5 ++
- arch/powerpc/include/asm/thread_info.h |  18 ++++
- arch/powerpc/kernel/asm-offsets.c      |   5 ++
- arch/powerpc/kernel/entry_32.S         |  37 +++++++--
- arch/powerpc/kernel/head_32.S          |   4 +-
- arch/powerpc/kernel/head_32.h          |  98 ++++++++++++++++++++--
- arch/powerpc/kernel/head_8xx.S         | 145 ++++++++++++++++++---------------
- arch/powerpc/kernel/setup_32.c         |   2 +-
- arch/powerpc/kernel/setup_64.c         |   2 +-
- arch/powerpc/kernel/vmlinux.lds.S      |   2 +-
- arch/powerpc/perf/8xx-pmu.c            |  12 ++-
- 12 files changed, 240 insertions(+), 91 deletions(-)
-
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 972b05504a0a..44716157c918 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -397,7 +397,7 @@ ret_from_syscall:
+ 	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
+ 	/* Note: We don't bother telling lockdep about it */
+ 	SYNC
+-	MTMSRD(r10)
++	mtmsr	r10
+ 	lwz	r9,TI_FLAGS(r2)
+ 	li	r8,-MAX_ERRNO
+ 	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)
+@@ -554,7 +554,7 @@ syscall_exit_work:
+ 	 */
+ 	ori	r10,r10,MSR_EE
+ 	SYNC
+-	MTMSRD(r10)
++	mtmsr	r10
+ 
+ 	/* Save NVGPRS if they're not saved already */
+ 	lwz	r4,_TRAP(r1)
+@@ -697,7 +697,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_SPE)
+ 	and.	r0,r0,r11	/* FP or altivec or SPE enabled? */
+ 	beq+	1f
+ 	andc	r11,r11,r0
+-	MTMSRD(r11)
++	mtmsr	r11
+ 	isync
+ 1:	stw	r11,_MSR(r1)
+ 	mfcr	r10
+@@ -826,7 +826,7 @@ ret_from_except:
+ 	/* Note: We don't bother telling lockdep about it */
+ 	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
+ 	SYNC			/* Some chip revs have problems here... */
+-	MTMSRD(r10)		/* disable interrupts */
++	mtmsr	r10		/* disable interrupts */
+ 
+ 	lwz	r3,_MSR(r1)	/* Returning to user mode? */
+ 	andi.	r0,r3,MSR_PR
+@@ -993,7 +993,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 	 */
+ 	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL & ~MSR_RI)
+ 	SYNC
+-	MTMSRD(r10)		/* clear the RI bit */
++	mtmsr	r10		/* clear the RI bit */
+ 	.globl exc_exit_restart
+ exc_exit_restart:
+ 	lwz	r12,_NIP(r1)
+@@ -1229,7 +1229,7 @@ do_resched:			/* r10 contains MSR_KERNEL here */
+ #endif
+ 	ori	r10,r10,MSR_EE
+ 	SYNC
+-	MTMSRD(r10)		/* hard-enable interrupts */
++	mtmsr	r10		/* hard-enable interrupts */
+ 	bl	schedule
+ recheck:
+ 	/* Note: And we don't tell it we are disabling them again
+@@ -1238,7 +1238,7 @@ recheck:
+ 	 */
+ 	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
+ 	SYNC
+-	MTMSRD(r10)		/* disable interrupts */
++	mtmsr	r10		/* disable interrupts */
+ 	lwz	r9,TI_FLAGS(r2)
+ 	andi.	r0,r9,_TIF_NEED_RESCHED
+ 	bne-	do_resched
+@@ -1247,7 +1247,7 @@ recheck:
+ do_user_signal:			/* r10 contains MSR_KERNEL here */
+ 	ori	r10,r10,MSR_EE
+ 	SYNC
+-	MTMSRD(r10)		/* hard-enable interrupts */
++	mtmsr	r10		/* hard-enable interrupts */
+ 	/* save r13-r31 in the exception frame, if not already done */
+ 	lwz	r3,_TRAP(r1)
+ 	andi.	r0,r3,1
+@@ -1331,7 +1331,7 @@ _GLOBAL(enter_rtas)
+ 	stw	r9,8(r1)
+ 	LOAD_REG_IMMEDIATE(r0,MSR_KERNEL)
+ 	SYNC			/* disable interrupts so SRR0/1 */
+-	MTMSRD(r0)		/* don't get trashed */
++	mtmsr	r0		/* don't get trashed */
+ 	li	r9,MSR_KERNEL & ~(MSR_IR|MSR_DR)
+ 	mtlr	r6
+ 	stw	r7, THREAD + RTAS_SP(r2)
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 8abc7783dbe5..b2ca8c9ffd8b 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -50,7 +50,7 @@
+ 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
+ #else
+ 	li	r10,MSR_KERNEL & ~(MSR_IR|MSR_DR) /* can take exceptions */
+-	MTMSRD(r10)			/* (except for mach check in rtas) */
++	mtmsr	r10			/* (except for mach check in rtas) */
+ #endif
+ 	stw	r0,GPR0(r11)
+ 	lis	r10,STACK_FRAME_REGS_MARKER@ha /* exception frame marker */
+@@ -80,7 +80,7 @@
+ 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
+ #else
+ 	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL & ~(MSR_IR|MSR_DR)) /* can take exceptions */
+-	MTMSRD(r10)			/* (except for mach check in rtas) */
++	mtmsr	r10			/* (except for mach check in rtas) */
+ #endif
+ 	lis	r10,STACK_FRAME_REGS_MARKER@ha /* exception frame marker */
+ 	stw	r2,GPR2(r11)
 -- 
 2.13.3
 
