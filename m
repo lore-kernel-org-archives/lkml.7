@@ -2,87 +2,123 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A55C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B795C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186B52342E
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:51:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z6QHLAgj"
+	by mail.kernel.org (Postfix) with ESMTP id 4F23923431
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbfHaAvK (ORCPT
+        id S1728474AbfHaAzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 20:51:10 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39833 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbfHaAvK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 20:51:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so4333781pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 17:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=1wQe6nOU+rm8Hxhio/8zXXhtjYpsRY4PCoDEXh11uU4=;
-        b=Z6QHLAgjM/qzsYesJS7JVXGXYcDJmCI28hBN9xNL0wH2Zpefv8aVty2b0WGbuVPeVd
-         w6XEzfxm987SdrLAui97QupWlgcfvsUyAmMrPDESqNxpdWl6YcbDo3dZu4zQTzjARYDT
-         wIgqLzV+q51DbUAFcmoyncxzXhN6T9gpFpHYBr0BaKpdrYNx2Ly8ppruAspzvLXKLRQG
-         Ij5i69SJPa+t1/exPKJ46wO54H7LPJ4r2aQ6uwmo7mrv+VRgCGbFL38nqixK5YmkEgLt
-         m9eEJptb2r6qlMGxfYyTq7NtJvTevRHwuKAuiN/RpyjFIwS7BM/YP40Oicdijw3RljG/
-         wIMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=1wQe6nOU+rm8Hxhio/8zXXhtjYpsRY4PCoDEXh11uU4=;
-        b=X0LKeYfXmNTS1vtGLyBuUDPB2mPy6BlP4sDia7KbX3+Srs/Yq62T27cpa26h2YwwRB
-         OvomZ1Y0/XqUFdTpwJ2/hUQoftuL08WRaXJe7eOSs4543OK2z8KSyiYncq5OPjkTn1Nn
-         CTCNGQ6QKyXN1nnab+TfCI7c8CEEXc9kCeDTXB4S/YsVN6M/ba/Eesnq973I1eBJg/NP
-         BneQN5vF/zBDMv3POTxJuqxEbhfleqYjQ4ePGa6LPbWvpE2TDtiN03q6VEF6RskmDbFL
-         OehqlqB+Tlsyhel1itG2l1SeHfu1mE7A86cxk58uyCp+bkrQJN6Aot3HW1ZwS8GKF0VA
-         bXGw==
-X-Gm-Message-State: APjAAAWVD7LDL9IzjgUz1bL05D/utcPg9VFgi/laWloVZI34j0o7U7M1
-        uG9xOXHillSGeKe8H5W5bnLyV/SFS34=
-X-Google-Smtp-Source: APXvYqzbEbim+0Iu1USz/ypElWV0TkMQXJw+Fa4PDaeM5FvZyrI/nJdpLnxouqdSqHdj9yMeReJyew==
-X-Received: by 2002:a17:90a:be06:: with SMTP id a6mr1305657pjs.92.1567212669878;
-        Fri, 30 Aug 2019 17:51:09 -0700 (PDT)
-Received: from localhost ([76.14.1.154])
-        by smtp.gmail.com with ESMTPSA id 138sm8932171pfw.78.2019.08.30.17.51.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 17:51:09 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 17:51:08 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
-In-Reply-To: <20190821092658.32764-1-yamada.masahiro@socionext.com>
-Message-ID: <alpine.DEB.2.21.9999.1908301748400.22348@viisi.sifive.com>
-References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 30 Aug 2019 20:55:39 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3984 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728251AbfHaAzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 20:55:39 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 6683374D304E71526AA5;
+        Sat, 31 Aug 2019 08:55:36 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 08:55:35 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 31 Aug 2019 08:55:35 +0800
+Date:   Sat, 31 Aug 2019 08:54:46 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190831005446.GA233871@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
+ <20190829101545.GC20598@infradead.org>
+ <20190829105048.GB64893@architecture4>
+ <20190830163910.GB29603@infradead.org>
+ <20190830171510.GC107220@architecture4>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190830171510.GC107220@architecture4>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Masahiro Yamada wrote:
+Hi Christoph,
 
-> Use the standard obj-y form to specify the sub-directories under
-> arch/riscv/. No functional change intended.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Sat, Aug 31, 2019 at 01:15:10AM +0800, Gao Xiang wrote:
 
-Thanks, queued for v5.4-rc1.
+[]
 
+> > 
+> > > > > +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
+> > > > > +	if (is_inode_fast_symlink(inode))
+> > > > > +		kfree(inode->i_link);
+> > > > 
+> > > > is_inode_fast_symlink only shows up in a later patch.  And really
+> > > > obsfucates the check here in the only caller as you can just do an
+> > > > unconditional kfree here - i_link will be NULL except for the case
+> > > > where you explicitly set it.
+> > > 
+> > > I cannot fully understand your point (sorry about my English),
+> > > I will reply you about this later.
+> > 
+> > With that I mean that you should:
+> > 
+> >  1) remove is_inode_fast_symlink and just opencode it in the few places
+> >     using it
+> >  2) remove the check in this place entirely as it is not needed
 
-- Paul
+Add some words about this suggestion since I'm addressing this place, it
+seems it could not (or I am not sure at least) be freed unconditionally
+
+	union {
+		struct pipe_inode_info	*i_pipe;
+		struct block_device	*i_bdev;
+		struct cdev		*i_cdev;
+		char			*i_link;
+		unsigned		i_dir_seq;
+	};
+
+while I saw what shmem did, it seems that they handle as follows:
+3636 static void shmem_free_in_core_inode(struct inode *inode)
+3637 {
+3638         if (S_ISLNK(inode->i_mode))
+3639                 kfree(inode->i_link);
+3640         kmem_cache_free(shmem_inode_cachep, SHMEM_I(inode));
+3641 }
+
+I think that would be some check on it to get it is a symlink (for
+i_dir_seq it seems unsafe).... I think the original check is ok but
+I will opencode it instead.
+
+Thanks,
+Gao Xiang
+
