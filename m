@@ -2,91 +2,90 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF92CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F58C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F58422DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4B022D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfHaPs7 (ORCPT
+        id S1728431AbfHaPui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfHaPs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:48:59 -0400
-Received: from oasis.local.home (rrcs-24-39-165-138.nys.biz.rr.com [24.39.165.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7134F22D37;
-        Sat, 31 Aug 2019 15:48:58 +0000 (UTC)
-Date:   Sat, 31 Aug 2019 11:48:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah.kh@samsung.com>
-Subject: Re: [PATCH] tracing: silence noisy warnings about struct inode
-Message-ID: <20190831114856.26b0a1d7@oasis.local.home>
-In-Reply-To: <20190831114633.0ea3a8ca@oasis.local.home>
-References: <27a4b48e-9a63-d04e-64a1-081c1f6cab36@infradead.org>
-        <20190831114633.0ea3a8ca@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 31 Aug 2019 11:50:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46237 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfHaPui (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 11:50:38 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z51so11399626edz.13;
+        Sat, 31 Aug 2019 08:50:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U3VxUoUQ9u6OvqsxWIcfgHA20dcK/6B+yxini8J+f3c=;
+        b=AfZiUAuCkdI0dPBv3wfNc93qQetOvDpgu/DUYEjl8Of2P3IpkjUZdC0vxWiDj1PRVj
+         6MYDpzeK00Oprc3mfcQp+G+/U9833AaGkYEgXc3cKLJ+Tq2nJd6CtqDca3lCJl0CfJN8
+         lu8XD+HhQFylBq+R+aOQ4IYDfMgsrHoaDAj1hjrt7/ZDY/HzhswaMueieIYWvxZBxjuO
+         6tP8kct1vwamSYr2FwxdWuopLGGlQAJuLYEAzDGO4MHKnA+HB5e16wIAOp3DtDPmtKzT
+         100ZlcuZ9YZufJ+Nn0WnPk0AVluh8+LUBBOiqoWUSrjnQIXtRwtCr5AkcgS7TW/wHv0H
+         /Mcg==
+X-Gm-Message-State: APjAAAXz1p6xQpnWPyLUjlsC2QvGYtpPycpPzWF5DI0eIAreDQmB6P9P
+        y/jNuMR4x+Xp9BlQvNzVuFJuhV5Q
+X-Google-Smtp-Source: APXvYqwLsBnt+ls3Ae2KJ8wNFQ6/qBxMpkKnH0LUKdIYH5srrOD+5H9LGSXSiGFDkZRqOIoF2/gjHQ==
+X-Received: by 2002:a17:906:9385:: with SMTP id l5mr17240507ejx.8.1567266636484;
+        Sat, 31 Aug 2019 08:50:36 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id w11sm706756eju.9.2019.08.31.08.50.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 Aug 2019 08:50:35 -0700 (PDT)
+Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
+ condition
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-input@vger.kernel.org
+References: <20190829165025.15750-1-efremov@linux.com>
+ <20190829165025.15750-9-efremov@linux.com> <20190829175039.GA187474@dtor-ws>
+ <20190831152500.eg7xqo5ace6wu427@pali>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <e1713d4e-c12e-8925-a93a-50da560c6c13@linux.com>
+Date:   Sat, 31 Aug 2019 18:50:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190831152500.eg7xqo5ace6wu427@pali>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 31 Aug 2019 11:46:33 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Thu, 29 Aug 2019 14:34:18 -0700
-> Randy Dunlap <rdunlap@infradead.org> wrote:
+On 31.08.2019 18:25, Pali Rohár wrote:
+> On Thursday 29 August 2019 10:50:39 Dmitry Torokhov wrote:
+>> On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
+>>> "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
+>>> unlikely() internally.
+>>
+>> The keyword here is _internally_.
+>>
+>> https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
+>>
+>> So please no.
 > 
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Fix 30 warnings for missing "struct inode" declaration (like these) by
-> > adding a forward reference for it.
-> > These warnings come from 'headers_check' (CONFIG_HEADERS_CHECK):
-> >   CC      include/trace/events/iomap.h.s
-> > 
-> > ./../include/trace/events/iomap.h:49:18: warning: 'struct inode' declared inside parameter list will not be visible outside of this definition or declaration
-> > ./../include/trace/events/iomap.h:77:18: warning: 'struct inode' declared inside parameter list will not be visible outside of this definition or declaration
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>  
+> Dmitry and I already rejected this patch, see also linked-list:
+> https://lore.kernel.org/lkml/20190820111719.7blyk5jstgwde2ae@pali/
+>
 
-Hmm, I don't have this in my tree (I Cc'd Shuah, because I mistaken it as iommu.h.
+Looks like this is a very long recurring story with this patch.
+Thanks, for the clarification.
 
-Please send this to the appropriate maintainer that added this file.
-
--- Steve
-
-> 
-> Thanks!
-> 
-> -- Steve
-> 
-> > ---
-> >  include/trace/events/iomap.h |    2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > --- linux-next-20190829.orig/include/trace/events/iomap.h
-> > +++ linux-next-20190829/include/trace/events/iomap.h
-> > @@ -44,6 +44,8 @@ DECLARE_EVENT_CLASS(iomap_page_class,
-> >  		  __entry->length)
-> >  )
-> >  
-> > +struct inode;
-> > +
-> >  #define DEFINE_PAGE_EVENT(name)		\
-> >  DEFINE_EVENT(iomap_page_class, name,	\
-> >  	TP_PROTO(struct inode *inode, struct page *page, unsigned long off, \  
-> 
-
+Regards,
+Denis
