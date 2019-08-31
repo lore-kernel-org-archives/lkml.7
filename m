@@ -2,139 +2,136 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2561FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833F0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF3222CE9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 20:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567284936;
-	bh=P63HerPObzTc938dm+zm3rH2+JwBChOwkiyQow1XcKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kaesB/0InI7r27aNzdJTqId8eqWuFmlKN0VwoePrmMd1ydykHqKbTvEMjjVjVqbyB
-	 fnYzD+nIyLZluusFGk0GdaHFPrhJmAOfAQZhPrET/q8fsK7n46j4Xy8jIDeYPGgfRO
-	 57W14+BGRuqfb+hG3wN4gsia8jZeR8OAUBW8HWyA=
+	by mail.kernel.org (Postfix) with ESMTP id 4E29F2190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pV/9auGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfHaUzd (ORCPT
+        id S1728581AbfHaVEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 16:55:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43163 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfHaUzd (ORCPT
+        Sat, 31 Aug 2019 17:04:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36475 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbfHaVEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 16:55:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u72so1082269pgb.10
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 13:55:32 -0700 (PDT)
+        Sat, 31 Aug 2019 17:04:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so5280616pgm.3;
+        Sat, 31 Aug 2019 14:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=JOkt1Xq1yrsHfK/1NpnOnxpeuczROWMDFL17g6IfVAA=;
+        b=pV/9auGEPtAoN12YoL+WtRizQy+cGjQu2nV8KDGbUbXYnlnNQFLkITroADOozo/bVk
+         3RR24DJpQDUxnJqfupZIw/meeyUoQ120UzhQP4/fevuzjLt1lEWt8IEldCxg7mQxgsta
+         Aha25WCZZ/gc7MaeqmiciWpYwcsNmYpf+Zl0M201YWCAJu7Ez/9Fa6fZf8CdpsDaggcC
+         sPMsPJZp9ciwcfq4v6bE0BnT0yp5q6Qq6CUMWCBMJulsMpLMVcmLGnFiNcnIewRsraaE
+         XtxK0jm/a+Yb4TZBG9PH9a+SU6z52+BGVNu4p7hIe+ex4CZ+yfoqM3yrfZRayCYZAmOA
+         ezWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iTsu+i5V+uOh4NWIxid/z2sWPR9ERFgbEIMqA93uhyQ=;
-        b=ZVf9AhTql7V2pCAEnGWITu2mOjRVxdCzHBR7IchamVIOG7NlDkNWuL9A4WB6UVhUnO
-         qOIQwHzQx2tOyc5i9Berj6if4m0H5kjLofyR+CrrrpGuDldvhXqvBn79xy2Ebjl5pGat
-         MlxRYfKmvEtfhZYkRfurhswBBaIyIkchVAxRdtVV4efg/aLmni9amCEIUuRnW8xcHT23
-         1sXYXggsF0uaF3Dgo3TIXOCO0sSJf6k8Ousge7GBVLed0UqKpCbsURyGalaZYiqQQR+I
-         k4YLk2Uqe8U8RxKcI6tc554b92z/e2tID1sWmUehlwkcvZ9xCmmjDRlbU7g2DguCht7l
-         oTsQ==
-X-Gm-Message-State: APjAAAWD50svlKXZfh/j21d/TAcjf6TYkA/3Ovr272hEucrVQLiiW/Yg
-        1m2dTy0jd0yCLuux2JBHbgRiZ9l+DUQ=
-X-Google-Smtp-Source: APXvYqygQvjD8Omqym2BxCXukxsDFhPW2JbUzw4XuQF5/NqX/nnnTIVk5zDdG1OX9uUE/0cVoSRW7g==
-X-Received: by 2002:a63:755e:: with SMTP id f30mr18700233pgn.246.1567284932358;
-        Sat, 31 Aug 2019 13:55:32 -0700 (PDT)
-Received: from localhost ([2601:647:5b80:29f7:1bdd:d748:9a4e:8083])
-        by smtp.gmail.com with ESMTPSA id m9sm11120055pfh.84.2019.08.31.13.55.30
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=JOkt1Xq1yrsHfK/1NpnOnxpeuczROWMDFL17g6IfVAA=;
+        b=XPqVjstYr3aFhr35e7wl034unS5hS0xeQQLUHGik5sXQv52rFC6QJPD05JvvQ0y7HC
+         j1LA4+xgcw586AsLvs7GbSs6i/hx9B27Nm/yHjikaET2CExJNMODNORkOu2pulmpdnP/
+         cPWBtXlGNCHiYFRBYPebKvjMqw5bVzUGnTpWPP9VGxy12t4kf09mIyOyJwX+8wnA4XQD
+         bwuzNWUwnXWTThgNOoAoOk8ymv+ffwBp2bx8kvKlVo1suciCKITVC7J/lKmT5+yp9s0d
+         IHTRPfC+abZITZeeynVo0NroL5pQVXVNBnFz/hC350tXV7kCML2Cv1oGPC13a2FWoyBx
+         /ARg==
+X-Gm-Message-State: APjAAAUGdL4kcG4cQFiCBJLu8KNElOkPglSts1vCFbvBHubIOf1SQ2Rh
+        PIXJ8RjWeeR2pVejyOt0YYQ=
+X-Google-Smtp-Source: APXvYqzdaNFWsM3zFbednYIknaU60A9528Id43oO8nAEdhY30GFnFt0YgFp5NBg0nx83Gr3h0aS3vA==
+X-Received: by 2002:a17:90a:8914:: with SMTP id u20mr5249657pjn.111.1567285443314;
+        Sat, 31 Aug 2019 14:04:03 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r28sm7774474pfg.62.2019.08.31.14.03.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 13:55:31 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 13:55:30 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 14/57] fpga: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190831205530.GA24385@archbox>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-15-swboyd@chromium.org>
+        Sat, 31 Aug 2019 14:03:59 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 14:03:56 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        Denis Efremov <efremov@linux.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
+ condition
+Message-ID: <20190831210356.GI187474@dtor-ws>
+References: <20190829165025.15750-1-efremov@linux.com>
+ <20190829165025.15750-9-efremov@linux.com>
+ <20190829175039.GA187474@dtor-ws>
+ <20190831152500.eg7xqo5ace6wu427@pali>
+ <762056d9c081c40f3fc760c9af79d6851f0a65e5.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-15-swboyd@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <762056d9c081c40f3fc760c9af79d6851f0a65e5.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:15:14AM -0700, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
+On Sat, Aug 31, 2019 at 01:32:02PM -0700, Joe Perches wrote:
+> On Sat, 2019-08-31 at 17:25 +0200, Pali Rohár wrote:
+> > On Thursday 29 August 2019 10:50:39 Dmitry Torokhov wrote:
+> > > On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
+> > > > "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
+> > > > unlikely() internally.
+> > > 
+> > > The keyword here is _internally_.
+> > > 
+> > > https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
+> > > 
+> > > So please no.
 > 
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
+> I think it poor form not to simply restate your original
+> objection from 4 message levels below this link
+
+Thank you for the lesson in etiquette, but I posted reference to the
+very message I wanted.
+
 > 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
+> https://lists.gt.net/linux/kernel/2269724
 > 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
-> 
-> Cc: Moritz Fischer <mdf@kernel.org>
-> Cc: linux-fpga@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Please apply directly to subsystem trees
-> 
->  drivers/fpga/zynq-fpga.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/fpga/zynq-fpga.c b/drivers/fpga/zynq-fpga.c
-> index 31ef38e38537..ee7765049607 100644
-> --- a/drivers/fpga/zynq-fpga.c
-> +++ b/drivers/fpga/zynq-fpga.c
-> @@ -578,10 +578,8 @@ static int zynq_fpga_probe(struct platform_device *pdev)
->  	init_completion(&priv->dma_done);
->  
->  	priv->irq = platform_get_irq(pdev, 0);
-> -	if (priv->irq < 0) {
-> -		dev_err(dev, "No IRQ available\n");
-> +	if (priv->irq < 0)
->  		return priv->irq;
-> -	}
->  
->  	priv->clk = devm_clk_get(dev, "ref_clk");
->  	if (IS_ERR(priv->clk)) {
-> -- 
-> Sent by a computer through tubes
-> 
-Applied to for-next. If all goes well I'll queue it for next PR.
+>    Hm... I do not like this change. If I read code 
+>     
+>     if (unlikely(IS_ERR_OR_NULL(priv->dev3))) 
+>     
+>    then I know that it is really unlikely that condition will be truth and 
+>    so this is some case of error/exception or something that normally does 
+>    not happen too much. 
+>     
+>    But if I read code 
+>     
+>     if (IS_ERR_OR_NULL(priv->dev3)) 
+>     
+>    I know nothing about chance that this condition will be truth. Explicit 
+>    unlikely in previous example give me more information. 
+>     
+> I alslo think this argument is dubious as it also applies
+> to any IS_ERR and all the unlikely uses have been removed
+> from those.
+
+No, if you read the reference I posted, the argument does not apply to
+all IS_ERR() instances. Majority of them are in probe() paths where we
+do not really care about likely/unlikely. Here we are dealing with
+IS_ERR in a [fairly] hot path.
+
+Thanks.
+
+-- 
+Dmitry
