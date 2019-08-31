@@ -2,100 +2,68 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C951CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A381C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9962F22DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413FB23407
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567268988;
-	bh=oCFqDXfnxrqpiBFRCwyD8nHXvoMvSjbxCsJhrxHTYqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NJe2MTtTOptIDEFlw93YNxcSfwNk2tFp5WG+KPsr+74fVUo+sFQjm9fa17U00LeIV
-	 KEXymf9raXchRrZpfmA6cL9+wJ87MgKmXPjcwGkxY+GbIDONhOPWCeXFzvOFEQVYju
-	 UXYLEBPJZAlP3J+JAmOlyeQs436G3b+sgg+dGAIc=
+	s=default; t=1567269910;
+	bh=vubgKTpg5td5IeaSwB94NLqghhYsAWgqbVw40GiyhJg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=LgFvcwf96It0Zm4618x33vnEnxy4/fsRivAYLQZeNPO9u0CAekYYe9oXCgNWW2d/B
+	 fUCNHnXL3EcRmCsfa0fYQf6/MU/exFlZWTxw/aOycSClSukO1+wtwMJk1lumEjFbj2
+	 Fj8H5EHZKxYfbPAponGcae2R5cnjKmyEd69j5kNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfHaQ3r (ORCPT
+        id S1728366AbfHaQpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 12:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51240 "EHLO mail.kernel.org"
+        Sat, 31 Aug 2019 12:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbfHaQ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 12:29:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2253522D37;
-        Sat, 31 Aug 2019 16:29:40 +0000 (UTC)
+        id S1728189AbfHaQpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 12:45:09 -0400
+Subject: Re: [GIT PULL] KVM fixes for Linux 5.3-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567268985;
-        bh=oCFqDXfnxrqpiBFRCwyD8nHXvoMvSjbxCsJhrxHTYqM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vX6b95IdsVrDjTXh55KZNhoPNMKUITWlit4Ldb9kHZhxWpNoqZwiOB5EF5DJcLfuZ
-         wmt8nfF1pggofVEAUJWY4K2cI3w83kg0ds8vBO0zGI/+b8iJT5NQEI4dH3G3L57NyD
-         AwNlHxXQFvARoZXdkRSB9gHwMtmjWPnHQrjl8Gx4=
-Date:   Sat, 31 Aug 2019 17:29:38 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/26] arm64: remove __iounmap
-Message-ID: <20190831162937.5ybulvaa4eq7mybs@willie-the-truck>
-References: <20190817073253.27819-1-hch@lst.de>
- <20190817073253.27819-20-hch@lst.de>
- <20190819073601.4yxjvmyjtpi7tk56@willie-the-truck>
- <20190830160515.GC26887@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830160515.GC26887@lst.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        s=default; t=1567269908;
+        bh=vubgKTpg5td5IeaSwB94NLqghhYsAWgqbVw40GiyhJg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=UJ1BchBbPQ751dZfaNv+ExXw4xwNDNOQXkBdtD8Ydi8jXJmm+u2nkl/VUkpVehri8
+         ytLMzWW9IIAJ98aVQwwufkA0EHBXxgDm1vyrF5uCrJt29k/6hkDm11pGtXViEQsd28
+         lMtGFrH26I1VZ4kGiG3z0N0Swtx6hUaC1X4VWe8Y=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190831022626.GA453351@flask>
+References: <20190831022626.GA453351@flask>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190831022626.GA453351@flask>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/virt/kvm/kvm tags/for-linus
+X-PR-Tracked-Commit-Id: 75ee23b30dc712d80d2421a9a547e7ab6e379b44
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 834354f642adfe7bb6d5dba5f7de6ecd3150fb2f
+Message-Id: <156726990822.25629.14623210787018605059.pr-tracker-bot@kernel.org>
+Date:   Sat, 31 Aug 2019 16:45:08 +0000
+To:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+The pull request you sent on Sat, 31 Aug 2019 04:26:26 +0200:
 
-On Fri, Aug 30, 2019 at 06:05:15PM +0200, Christoph Hellwig wrote:
-> On Mon, Aug 19, 2019 at 08:36:02AM +0100, Will Deacon wrote:
-> > On Sat, Aug 17, 2019 at 09:32:46AM +0200, Christoph Hellwig wrote:
-> > > No need to indirect iounmap for arm64.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/arm64/include/asm/io.h | 3 +--
-> > >  arch/arm64/mm/ioremap.c     | 4 ++--
-> > >  2 files changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > Not sure why we did it like this...
-> > 
-> > Acked-by: Will Deacon <will@kernel.org>
-> 
-> Can you just pick this one up through the arm64 tree for 5.4?
+> git://git.kernel.org/pub/scm/virt/kvm/kvm tags/for-linus
 
-Unfortunately, it doesn't apply because the tree you've based it on has
-removed ioremap_wt(). If you send a version based on mainline, I can
-queue it.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/834354f642adfe7bb6d5dba5f7de6ecd3150fb2f
 
-Cheers,
+Thank you!
 
-Will
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
