@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EE6C41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86C3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F18923697
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D4D23774
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfHaGAr (ORCPT
+        id S1726516AbfHaGAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 02:00:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49298 "EHLO huawei.com"
+        Sat, 31 Aug 2019 02:00:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49362 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725899AbfHaGAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 02:00:46 -0400
+        id S1726135AbfHaGAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 02:00:48 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CCA8FFE050212F500B61;
+        by Forcepoint Email with ESMTP id DFA271D7914D6E80DE7C;
         Sat, 31 Aug 2019 14:00:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 31 Aug 2019 14:00:34 +0800
+ 14.3.439.0; Sat, 31 Aug 2019 14:00:35 +0800
 From:   Yunsheng Lin <linyunsheng@huawei.com>
 To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
         <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
@@ -49,9 +48,9 @@ CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
         <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
         <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
         <linuxarm@huawei.com>
-Subject: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-Date:   Sat, 31 Aug 2019 13:58:16 +0800
-Message-ID: <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
+Subject: [PATCH v2 4/9] powerpc: numa: check the node id consistently for powerpc
+Date:   Sat, 31 Aug 2019 13:58:18 +0800
+Message-ID: <1567231103-13237-5-git-send-email-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
 References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
@@ -82,40 +81,33 @@ node_to_cpumask_map[node]:
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- arch/x86/include/asm/topology.h | 6 ++++++
- arch/x86/mm/numa.c              | 2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/topology.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 4b14d23..f36e9c8 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -69,6 +69,12 @@ extern const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index 2f7e1ea..217dc9b 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -17,9 +17,16 @@ struct device_node;
+ 
+ #include <asm/mmzone.h>
+ 
+-#define cpumask_of_node(node) ((node) == -1 ?				\
+-			       cpu_all_mask :				\
+-			       node_to_cpumask_map[node])
++static inline const struct cpumask *cpumask_of_node(int node)
++{
 +	if (node >= nr_node_ids)
 +		return cpu_none_mask;
 +
 +	if (node < 0 || !node_to_cpumask_map[node])
 +		return cpu_online_mask;
 +
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index e6dad60..5e393d2 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -868,7 +868,7 @@ const struct cpumask *cpumask_of_node(int node)
- 		dump_stack();
- 		return cpu_none_mask;
- 	}
--	if (node_to_cpumask_map[node] == NULL) {
-+	if (node < 0 || !node_to_cpumask_map[node]) {
- 		printk(KERN_WARNING
- 			"cpumask_of_node(%d): no node_to_cpumask_map!\n",
- 			node);
++	return node_to_cpumask_map[node];
++}
+ 
+ struct pci_bus;
+ #ifdef CONFIG_PCI
 -- 
 2.8.1
 
