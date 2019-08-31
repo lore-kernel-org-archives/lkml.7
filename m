@@ -2,238 +2,85 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC833C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE04C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 07:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C042377B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567234445;
-	bh=phMVB14HcCJE5I//vEPwpCl1sHGOTUwTR3bglMat3p4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q5j+4l3g9KLlDPIuU9DplDlV5SeuZhEmEVjGpu2+0+8plcNQfFc+PchERcL2H6AU3
-	 qdDPB2rHSwtM9kRcaBrfyovqdaj3ptzyzG80hLDQFLesAFFksdRL6aPRqnKMhQp/cW
-	 UOEWtDlfmSOskGBKeuGNNatKzuq+YTFOFnK5yyzc=
+	by mail.kernel.org (Postfix) with ESMTP id 8B3812343A
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 07:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jp9tm+Kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfHaGyE (ORCPT
+        id S1726184AbfHaHCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 02:54:04 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46888 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbfHaGyE (ORCPT
+        Sat, 31 Aug 2019 03:02:18 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39629 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfHaHCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 02:54:04 -0400
-Received: by mail-qk1-f194.google.com with SMTP id q7so150491qkn.13;
-        Fri, 30 Aug 2019 23:54:03 -0700 (PDT)
+        Sat, 31 Aug 2019 03:02:18 -0400
+Received: by mail-lf1-f65.google.com with SMTP id l11so6953455lfk.6;
+        Sat, 31 Aug 2019 00:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m/2mwcPUTcbtLsuJfl9HdCLC71499RQ0gH2tE2WJO4Y=;
-        b=WXQ1Wb9lgZHGuXMFm6qa1Qq+G2R95XN4q/7bxmPZr02Z6YyOqWuKHRWmwZZYInoKeI
-         6hX5bwD6unf0QEKT72HA4OLkiPYWvXKAsKq+b+bVDFrwPWsq/YPXu5f756SEMS3AY9QS
-         nVO8dLQa/HO4gLmsTcFYuxAb6kdcYxzpS5coRRIhiKztYU4NBI87PBWVxdGWzYiUV3u1
-         rX3BUQdCoM8k262+FojhdjQH3qTOU6sUsk+mTg0dAK+SWDMOHzZvSuJQR5rtUfCEkrsN
-         KBb9ZjZ6HRksjPqfyzUhPIe1OAf9NI/tCNE0bWr8BKoslHFjA3YoszFX+txXSrDjca3a
-         +aIg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BbEil1PHHGNsnFuRIRiobHI97i2Pp0iIHzaiuj3CnoY=;
+        b=jp9tm+Kp4Tyb7OiZuB7B6KvNV9Mc7zqG8cy/jYYrM0nvE4XxD+5YV2duKPoqFIsGHD
+         ii+7VgBxzrEERwSWguliGmaVxqDgwP0ukUrfc9Ot2YwleCIIU6Ca+AYutlPyER0bL6BY
+         zZJuOGfZJff/bkQMLJoXJ3LffN2+4MI3iMesVAjbsXFDiMaDWzQ0TNfNFsuQF5/aedcJ
+         LxvGRwzKPM16uO7uzbYcrGRPu94L3sgL55h7pWi6mpzzMqqK2OzYL30LnXpv/nik7KkD
+         gxWQvJOR4usAB8tVwFihO4iEEp6lqFKn19ToA7mhyRaU+Len0IW3MG2R6y7b0u5Qh0vX
+         qwSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m/2mwcPUTcbtLsuJfl9HdCLC71499RQ0gH2tE2WJO4Y=;
-        b=GI3+5Nsx0YByNOhN1GZB39A3ziaWD/jPBEirJKTE6tPI4jITi2NQVIDiiXr/IuyVa6
-         ofTvHJG8XbFcPt6HJPs1CSyb6GpDTXo8dkJJp29ppfqe+x7ARGvQaIUUIWRwq19Y4+yJ
-         aRUUPRoy6ZhgfRYufLWC8NzdaOfmhyL+q6mtAzUssa8Iig0ZEkbQLSX9wIlpwih1NIfm
-         N0nL9IoOfpN9QNDkB0qMda+/mt3A7jTgTyirxuLU8EIwV98YygqpWgs5mdwwSH02ufEU
-         jKiYrYX4xd2h97/X2F74DsyFcstHjJF31O06U1nHpHht2qEPS/uEmkEdv/IzwuuFLGQc
-         ECug==
-X-Gm-Message-State: APjAAAWN1YlZpPcY7/bmRa0i+AcWL/yZRo4WObH+QqRsdWnbv1rt1J7t
-        bfmsPOPe7Ts71zyNqTj8ekA=
-X-Google-Smtp-Source: APXvYqw48p2/EXTIHioZWwHoXLdZE2DAGomJJaQjpRPwIu97f9MVwCJjNDn8lmGnUL1auWJs0w1M2A==
-X-Received: by 2002:ae9:e413:: with SMTP id q19mr18929219qkc.227.1567234442714;
-        Fri, 30 Aug 2019 23:54:02 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::ca48])
-        by smtp.gmail.com with ESMTPSA id e17sm4171096qkn.61.2019.08.30.23.54.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 23:54:01 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 23:53:58 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
-        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        bpf@vger.kernel.org
-Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
- porportional controller
-Message-ID: <20190831065358.GF2263813@devbig004.ftw2.facebook.com>
-References: <20190614015620.1587672-1-tj@kernel.org>
- <20190614175642.GA657710@devbig004.ftw2.facebook.com>
- <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
- <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
- <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
- <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BbEil1PHHGNsnFuRIRiobHI97i2Pp0iIHzaiuj3CnoY=;
+        b=V9atq5i/LvKRQUhraeVeq60qVjCZNgSr3kCBQaAWYzKxa6NmS5VhpxFheyuvrgkXbH
+         EZV/cvVYdRcZ/mYI+mvFr+UVmRp7eipdIABGb/TgPDWbeN3jlIxKpruzHPulkKeynHfa
+         CzNNuEWAqVKMv84DGXIQFZ5FA8K+ry/NYyxodwLkScjr4D5Fk6BD4zJZOdXgT/60cMRz
+         9YJR1xw6+jUQZyATjDYRM/jmOTIjfyUI8Uf4aTVmonZMs5FHdCydMVIa93557sMtjz9K
+         6kxmnabdyVOwN6tSO4q9qmgi0CEtXKEuzN18y3Ij6myu+uME/urB0l97GlPwXFHbA1yu
+         FKPQ==
+X-Gm-Message-State: APjAAAXbHaTxliwsJhn5qhG0bpOqJJC8bVK42q7T18H4DFokdErW23BJ
+        zOzuMz56o0/YGBalRe1gLi2IBoQSyzEcpHNpSXQ=
+X-Google-Smtp-Source: APXvYqzHDgocjTFquji9oW1Fc5ePX1HS18INA/oyibnpxZQP10/I/wp0StbjEYLl3mSZW9NJKTImcX82lhMzytpLtt0=
+X-Received: by 2002:a19:428f:: with SMTP id p137mr11862296lfa.149.1567234935907;
+ Sat, 31 Aug 2019 00:02:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190829181231.5920-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190829181231.5920-1-yamada.masahiro@socionext.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sat, 31 Aug 2019 09:02:04 +0200
+Message-ID: <CANiq72neaWYEONu0Ww0enP2nU_KMCJuL5g0tzhgA0itCv-XpVg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: refactor scripts/Makefile.extrawarn
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Paolo.
+On Thu, Aug 29, 2019 at 8:13 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> +# W=1 - warnings that may be relevant and does not occur too often
 
-On Thu, Aug 22, 2019 at 10:58:22AM +0200, Paolo Valente wrote:
-> Ok, I tried with the parameters reported for a SATA SSD:
-> 
-> rpct=95.00 rlat=10000 wpct=95.00 wlat=20000 min=50.00 max=400.00
+s/does/do/
 
-Sorry, I should have explained it with a lot more details.
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-There are two things - the cost model and qos params.  The default SSD
-cost model parameters are derived by averaging a number of mainstream
-SSD parameters.  As a ballpark, this can be good enough because while
-the overall performance varied quite a bit from one ssd to another,
-the relative cost of different types of IOs wasn't drastically
-different.
-
-However, this means that the performance baseline can easily be way
-off from 100% depending on the specific device in use.  In the above,
-you're specifying min/max which limits how far the controller is
-allowed to adjust the overall cost estimation.  50% and 400% are
-numbers which may make sense if the cost model parameter is expected
-to fall somewhere around 100% - ie. if the parameters are for that
-specific device.
-
-In your script, you're using default model params but limiting vrate
-range.  It's likely that your device is significantly slower than what
-the default parameters are expecting.  However, because min vrate is
-limited to 50%, it doesn't throttle below 50% of the estimated cost,
-so if the device is significantly slower than that, nothing gets
-controlled.
-
-> and with a simpler configuration [1]: one target doing random reads
-
-And without QoS latency targets, the controller is purely going by
-queue depth depletion which works fine for many usual workloads such
-as larger reads and writes but isn't likely to serve low-concurrency
-latency-sensitive IOs well.
-
-> and only four interferers doing sequential reads, with all the
-> processes (groups) having the same weight.
-> 
-> But there seemed to be little or no control on I/O, because the target
-> got only 1.84 MB/s, against 1.15 MB/s without any control.
-> 
-> So I tried with rlat=1000 and rlat=100.
-
-And this won't do anything as all rlat/wlat does is regulating how the
-overall vrate should be adjusted and it's being min'd at 50%.
-
-> Control did improve, with same results for both values of rlat.  The
-> problem is that these results still seem rather bad, both in terms of
-> throughput guaranteed to the target and in terms of total throughput.
-> Here are results compared with BFQ (throughputs measured in MB/s):
-> 
->                            io.weight            BFQ
-> target's throughput        3.415                6.224        
-> total throughput           159.14               321.375
-
-So, what should have been configured is something like
-
-$ echo '8:0 enable=1 rpct=95 rlat=10000 wpct=95 wlat=20000' > /sys/fs/cgroup/io.cost.qos
-
-which just says "target 10ms p(95) read latency and 20ms p(95) write
-latency" without putting any restrictions on vrate range.
-
-With that, I got the following on Micron_1100_MTFDDAV256TBN which is a
-pretty old 256GB SATA drive.
-
-  Aggregated throughput:
-	   min         max         avg     std_dev     conf99%
-	266.73      275.71      271.38     4.05144     45.7635
-  Interfered total throughput:
-	   min         max         avg     std_dev
-	 9.608      13.008      10.941    0.664938
-
-During the run, iocost-monitor.py looked like the following.
-
-  sda RUN  per=40ms cur_per=2074.351:v1008.844 busy= +0 vrate= 59.85% params=ssd_dfl(CQ)
-			    active    weight      hweight% inflt% del_ms usages%
-  InterfererGroup0             *   100/  100  22.94/ 20.00   0.00  0*000 023:023:023
-  InterfererGroup1             *   100/  100  22.94/ 20.00   0.00  0*000 023:023:023
-  InterfererGroup2             *   100/  100  22.94/ 20.00   0.00  0*000 025:023:021
-  InterfererGroup3             *   100/  100  22.94/ 20.00   0.00  0*000 023:023:023
-  interfered                   *    36/  100   8.26/ 20.00   0.42  0*000 003:004:004
-
-Note that interfered is reported to only use 3-4% of the disk capacity
-while configured to consume 20%.  This is because with single
-concurrency 4k randread job, its ability to consume IO capacity is
-limited by the completion latency.
-
-10ms is pretty generous (ie. more work-conserving) target for SSDs.
-Let's say we're willing to tighten it to trade off total work for
-tighter latency.
-
-$ echo '8:0 enable=1 rpct=95 rlat=2500 wpct=95 wlat=5000' > /sys/fs/cgroup/io.cost.qos
-
-  Aggregated throughput:
-	   min         max         avg     std_dev     conf99%
-	147.06      172.18     154.608      11.783     133.096
-  Interfered total throughput:
-	   min         max         avg     std_dev
-	17.992       19.32      18.698    0.313105
-
-and the monitoring output
-
-  sda RUN  per=10ms cur_per=2927.152:v1556.138 busy= -2 vrate= 34.74% params=ssd_dfl(CQ)
-			    active    weight      hweight% inflt% del_ms usages%
-  InterfererGroup0             *   100/  100  20.00/ 20.00 386.11  0*000 070:020:020
-  InterfererGroup1             *   100/  100  20.00/ 20.00 386.11  0*000 070:020:020
-  InterfererGroup2             *   100/  100  20.00/ 20.00 386.11  0*000 070:020:020
-  InterfererGroup3             *   100/  100  20.00/ 20.00   0.00  0*000 020:020:020
-  interfered                   *   100/  100  20.00/ 20.00   1.21  0*000 010:014:017
-
-The followings happened.
-
-* The vrate is now hovering way lower.  The device is now doing less
-  total work to acheive tighter completion latencies.
-
-* The overall throughput dropped but interfered's utilization is now
-  significantly higher along with its bandwidth from lower completion
-  latencies.
-
-For reference:
-
-[Disabled]
-
-  Aggregated throughput:
-	   min         max         avg     std_dev     conf99%
-	493.98      511.37     502.808     9.52773     107.621
-  Interfered total throughput:
-	   min         max         avg     std_dev
-	 0.056       0.304       0.107   0.0691052
-
-[Enabled, no QoS config]
-
-  Aggregated throughput:
-	   min         max         avg     std_dev     conf99%
-	429.07      449.59     437.597     8.64952     97.7015
-  Interfered total throughput:
-	   min         max         avg     std_dev
-	 0.456        3.12        1.08    0.774318
-
-Thanks.
-
--- 
-tejun
+Cheers,
+Miguel
