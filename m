@@ -2,163 +2,140 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7522BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F4EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A5823431
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7742377B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cG4yS7h+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfHaGSs (ORCPT
+        id S1726489AbfHaGe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 02:18:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40562 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725953AbfHaGSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 02:18:47 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F0A4275DC8D547CF3F21;
-        Sat, 31 Aug 2019 14:00:41 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 31 Aug 2019 14:00:33 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
-CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <nfont@linux.vnet.ibm.com>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <linuxarm@huawei.com>
-Subject: [PATCH v2 0/9] check the node id consistently across different arches
-Date:   Sat, 31 Aug 2019 13:58:14 +0800
-Message-ID: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Sat, 31 Aug 2019 02:34:59 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45005 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfHaGe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 02:34:59 -0400
+Received: by mail-yw1-f68.google.com with SMTP id l79so3145934ywe.11;
+        Fri, 30 Aug 2019 23:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w5dRQc/V85HUSdK58SOuqLdOPIPqHI76KYRXadjhW1Q=;
+        b=cG4yS7h+dHwCqC7+1d/JcKh3/NJvSD6CdeEW76fj6dxOuSvT9LSkJ8Nw3jmjC0bhZ4
+         Sqx+lrDHzXK1l3xs8fjelflWht3rUg9LcY/+nBUGiZep0IuzstbMDRGUXyjzoHG7DxD/
+         FpLTH8v7U7hprKh92RiJ0SQhkoJWM2DpwrNuUDnbZXfWbVuLIira7NywHRNsESJFm/vM
+         vs/lvXv9Jn61eYBI4hYDyFFou9UMyxS8NTMnjWc4K+2gGiTsaYN980N8H6QvMgMYgx/R
+         FNMz2TizJuR2z4eFxtNyFMXeMJJNbhab1gIRpoX9peerBAO98/FPCgrsZ/v87KPz/xsk
+         mAhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w5dRQc/V85HUSdK58SOuqLdOPIPqHI76KYRXadjhW1Q=;
+        b=SAhACyWTsrEuC5zlLLgg3V9zGlziqLFjeyFkmcfef7RqNvOjWhUnO4m9qG2Aqwvohr
+         4nMiK+2CT4vvaIDJGPiSCxi2qg3sYpoOxcKYi5rQaC+icfbwZ9X3uhmClbziiqmnqhG3
+         a4fkgtfbzOiwlrjCWCvCkzuYJ80Tg0E69Uz8kgQYFUl4cXYPbQO+sdNMF36VfWfNHZan
+         EAzw/9UunA8h4QpXyI2RsmRwHxxVDeQkA7aicA8GJsEAr576zTiHNcryVBGeDIoTG0hU
+         7eBGxglZXgaITVoXw3vjwbYyJCAeKIzTIZEauD32EYDYqDU/dLcXSqVWDgjX147Y8ntW
+         kQuw==
+X-Gm-Message-State: APjAAAUC/+O2Bker0m3vb52ULUoIVpuzqNKBDP//jx7EfW+UHe0/DsTL
+        4n4ruG+8grPvRn1ckev2f4laF+1MmuxoTHAj030=
+X-Google-Smtp-Source: APXvYqxA5jrG+aw5cnWfvi5zFi4WHO9+wZCHT7+Yz6m0t7DUrxcUd6HDfyHU+ofMYTrsXauHYejNEsuIL56i7wezFkE=
+X-Received: by 2002:a81:6c8:: with SMTP id 191mr11928917ywg.181.1567233298135;
+ Fri, 30 Aug 2019 23:34:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com> <20190829101545.GC20598@infradead.org>
+ <20190829105048.GB64893@architecture4> <20190830163910.GB29603@infradead.org> <20190830171510.GC107220@architecture4>
+In-Reply-To: <20190830171510.GC107220@architecture4>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 31 Aug 2019 09:34:44 +0300
+Message-ID: <CAOQ4uxichLUsPyg5Fqg-pSL85oqoDFcQHZbzdrkXX_-kK=CjDQ@mail.gmail.com>
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Theodore Ts'o" <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to Section 6.2.14 from ACPI spec 6.3 [1], the
-setting of proximity domain is optional, as below:
+On Fri, Aug 30, 2019 at 8:16 PM Gao Xiang <gaoxiang25@huawei.com> wrote:
+>
+> Hi Christoph,
+>
+> On Fri, Aug 30, 2019 at 09:39:10AM -0700, Christoph Hellwig wrote:
+> > On Thu, Aug 29, 2019 at 06:50:48PM +0800, Gao Xiang wrote:
+> > > > Please use an erofs_ prefix for all your functions.
+> > >
+> > > It is already a static function, I have no idea what is wrong here.
+> >
+> > Which part of all wasn't clear?  Have you looked at the prefixes for
+> > most functions in the various other big filesystems?
+>
+> I will add erofs prefix to free_inode as you said.
+>
+> At least, all non-prefix functions in erofs are all static functions,
+> it won't pollute namespace... I will add "erofs_" to other meaningful
+> callbacks...And as you can see...
+>
+> cifs/cifsfs.c
+> 1303:cifs_init_inodecache(void)
+> 1509:   rc = cifs_init_inodecache();
+>
+> hpfs/super.c
+> 254:static int init_inodecache(void)
+> 771:    int err = init_inodecache();
+>
+> minix/inode.c
+> 84:static int __init init_inodecache(void)
+> 665:    int err = init_inodecache();
+>
 
-This optional object is used to describe proximity domain
-associations within a machine. _PXM evaluates to an integer
-that identifies a device as belonging to a Proximity Domain
-defined in the System Resource Affinity Table (SRAT).
+Hi Gao,
 
-When enabling KASAN and bios has not implemented the proximity
-domain of the hns3 device, there is a global-out-of-bounds error
-below:
+"They did it first" is never a good reply for code review comments.
+Nobody cares if you copy&paste code with init_inodecache().
+I understand why you thought static function names do not pollute
+the (linker) namespace, but they do pollute the global namespace.
 
-[   42.970381] ==================================================================
-[   42.977595] BUG: KASAN: global-out-of-bounds in __bitmap_weight+0x48/0xb0
-[   42.984370] Read of size 8 at addr ffff20008cdf8790 by task kworker/0:1/13
-[   42.991230]
-[   42.992712] CPU: 0 PID: 13 Comm: kworker/0:1 Tainted: G           O      5.2.0-rc4-g8bde06a-dirty #3
-[   43.001830] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS 2280-A CS V2.B050.01 08/08/2019
-[   43.011298] Workqueue: events work_for_cpu_fn
-[   43.015643] Call trace:
-[   43.018078]  dump_backtrace+0x0/0x1e8
-[   43.021727]  show_stack+0x14/0x20
-[   43.025031]  dump_stack+0xc4/0xfc
-[   43.028335]  print_address_description+0x178/0x270
-[   43.033113]  __kasan_report+0x164/0x1b8
-[   43.036936]  kasan_report+0xc/0x18
-[   43.040325]  __asan_load8+0x84/0xa8
-[   43.043801]  __bitmap_weight+0x48/0xb0
-[   43.047552]  hclge_init_ae_dev+0x988/0x1e78 [hclge]
-[   43.052418]  hnae3_register_ae_dev+0xcc/0x278 [hnae3]
-[   43.057467]  hns3_probe+0xe0/0x120 [hns3]
-[   43.061464]  local_pci_probe+0x74/0xf0
-[   43.065200]  work_for_cpu_fn+0x2c/0x48
-[   43.068937]  process_one_work+0x3c0/0x878
-[   43.072934]  worker_thread+0x400/0x670
-[   43.076670]  kthread+0x1b0/0x1b8
-[   43.079885]  ret_from_fork+0x10/0x18
-[   43.083446]
-[   43.084925] The buggy address belongs to the variable:
-[   43.090052]  numa_distance+0x30/0x40
-[   43.093613]
-[   43.095091] Memory state around the buggy address:
-[   43.099870]  ffff20008cdf8680: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 fa fa
-[   43.107078]  ffff20008cdf8700: fa fa fa fa 04 fa fa fa fa fa fa fa 00 fa fa fa
-[   43.114286] >ffff20008cdf8780: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
-[   43.121494]                          ^
-[   43.125230]  ffff20008cdf8800: 01 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-[   43.132439]  ffff20008cdf8880: fa fa fa fa fa fa fa fa 00 00 fa fa fa fa fa fa
-[   43.139646] ==================================================================
+free_inode() as a local function name is one of the worst examples
+for VFS namespace pollution.
 
-As suggested [2] by Michal Hocko:
-"if the specification really allows to provide NUMA_NO_NODE (-1) then
-the code really has to be prepared for that. And ideally all arches
-should deal with that."
+VFS code uses function names like those a lot in the global namespace, e.g.:
+clear_inode(),new_inode().
 
-This patchset checks the node id with the below case consistently
-across different arches in order to be compliant with spec and
-backward compatible as much as possible:
-1. if node_id < 0, return cpu_online_mask
-2. if node_id >= nr_node_ids, return cpu_none_mask
-3. if node_to_cpumask_map[node_id] is NULL, return cpu_online_mask
+For example from recent history of namespace collision caused by your line
+of thinking, see:
+e6fd2093a85d md: namespace private helper names
 
-Note:
-1. Only arm64 has been compile tested and tested on real board.
-2. x86 has been compile tested with defconfig.
-3. Other arch has not been compile tested or tested on real board.
+Besides, you really have nothing to loose from prefixing everything
+with erofs_, do you? It's better for review, for debugging...
 
-Changelog:
-V2: Change commit log as suggested by Michal Hocko, and make the change to
-    other arches as well.
-
-[1] https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-[2] https://patchwork.kernel.org/patch/11122823/
-
-Yunsheng Lin (9):
-  arm64: numa: check the node id consistently for arm64
-  x86: numa: check the node id consistently for x86
-  alpha: numa: check the node id consistently for alpha
-  powerpc: numa: check the node id consistently for powerpc
-  s390: numa: check the node id consistently for s390
-  sh: numa: check the node id consistently for sh
-  sparc64: numa: check the node id consistently for sparc64
-  mips: numa: check the node id consistently for mips ip27
-  mips: numa: check the node id consistently for mips loongson64
-
- arch/alpha/include/asm/topology.h                |  7 +++++--
- arch/arm64/include/asm/numa.h                    |  6 ++++++
- arch/arm64/mm/numa.c                             |  2 +-
- arch/mips/include/asm/mach-ip27/topology.h       | 15 ++++++++++++---
- arch/mips/include/asm/mach-loongson64/topology.h | 12 +++++++++++-
- arch/powerpc/include/asm/topology.h              | 13 ++++++++++---
- arch/s390/include/asm/topology.h                 |  6 ++++++
- arch/sh/include/asm/topology.h                   | 14 +++++++++++++-
- arch/sparc/include/asm/topology_64.h             | 16 +++++++++++++---
- arch/x86/include/asm/topology.h                  |  6 ++++++
- arch/x86/mm/numa.c                               |  2 +-
- 11 files changed, 84 insertions(+), 15 deletions(-)
-
--- 
-2.8.1
-
+Thanks,
+Amir.
