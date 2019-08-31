@@ -2,129 +2,114 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1790EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA00C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99B623717
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D8923429
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:25:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoHZR9AO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfHaCV7 (ORCPT
+        id S1728337AbfHaCZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 22:21:59 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:6810 "EHLO spam1.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728410AbfHaCV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 22:21:58 -0400
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam1.hygon.cn with ESMTP id x7V2L0jd005974;
-        Sat, 31 Aug 2019 10:21:00 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id x7V2KplQ015477;
-        Sat, 31 Aug 2019 10:20:51 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from pw-vbox.hygon.cn (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 31 Aug
- 2019 10:20:58 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <lenb@kernel.org>, <calvin.walton@kepstin.ca>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH v2] tools/power turbostat: Add support for Hygon Fam 18h (Dhyana) RAPL
-Date:   Sat, 31 Aug 2019 10:20:31 +0800
-Message-ID: <1567218031-4401-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Fri, 30 Aug 2019 22:25:32 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35083 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbfHaCZc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 22:25:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so3268662pfw.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=7GGohDtFIzadHRK9qlBFqyaUQq3IDsI0G9jsiYfLeIA=;
+        b=RoHZR9AOQVftWcIO7bJGMrXpE/nIQAT8sYbyqtg2OX3OIHuU2phYl0hwHj4mdbiT0a
+         TNsMxoc/4q8mV7q0Xoey9q8Xe6Wle8Q6ON3ZLZa6vp0DmpMJv6MeQ6ft1k7Xsv2WiXEM
+         TebXTKo2jnj03IX2x/qJoITVMqBgG/0wv4wkccAgpVdQWluZUGlspulf1nvMXTp6bGY9
+         aJQV6Q9OUheeO/VEhKnjWsZRpRElyvTVGP6yd4w/rbr/QrpYYncrWdw42YMqsarxdakS
+         rGyZ2bC9+g9TKghXv/05M+7KWnGZDe2j2v24mz5uZJVJmg+k9BzuAaUhT/l507oefGhM
+         giZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7GGohDtFIzadHRK9qlBFqyaUQq3IDsI0G9jsiYfLeIA=;
+        b=WHPR/gcacdyaSUdCOkWQEo606uITz1aE7h8XqRyeKWrEhSJ0vPJ3xJDaziOWJJivzb
+         Hszq0SMLCQdxwTfBGaIf7wqzXSVSRsGn51ACN07Cpclf1gjKnBgJp2aR+An7JvBYXgoe
+         j4ZATHzthwgsmlJX8XWGTkXWed47OVQHC/5VUajiiTKZJpPFZsEA2TAmKx2HyHuLJ0YK
+         8cEwMtEzFSDpuYwUC+Ws8ErQQ33MjxD7K9GN1EWTO5OUZsPNFVsXQWc4Hks6b48MsBVc
+         3vI44wW5CXcjaSw5ApaBtwGyvX4OaHwkP1eFGz7sGbHi0pBiZJY8NcZhlAkMqs8aFDuJ
+         NCeg==
+X-Gm-Message-State: APjAAAVGRtGv0pzYgz03Q19+OXPj2c8Jg/8uurjMV3e2R5qASbEiC5Jb
+        cQD8ImOnbQHLRDCBP5/rRyd4+ZmUdmY=
+X-Google-Smtp-Source: APXvYqwf/18nVOeRvdxzV0EYlJDBqTSPZ6dykzvlguaUwp12T3UpnfvaO5EsS7NXZ6aoekiVbIatOg==
+X-Received: by 2002:aa7:92d1:: with SMTP id k17mr20872378pfa.160.1567218331386;
+        Fri, 30 Aug 2019 19:25:31 -0700 (PDT)
+Received: from dell-inspiron ([117.220.112.196])
+        by smtp.gmail.com with ESMTPSA id s13sm8076449pfm.12.2019.08.30.19.25.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 30 Aug 2019 19:25:30 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 07:55:15 +0530
+From:   P SAI PRASANTH <saip2823@gmail.com>
+To:     gregkh@linuxfoundation.org, kim.jamie.bradley@gmail.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: rts5208: Fix checkpath warning
+Message-ID: <20190831022515.GA4917@dell-inspiron>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x7V2L0jd005974
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 9392bd98bba760be96ee ("tools/power turbostat: Add support for AMD
-Fam 17h (Zen) RAPL") and the commit 3316f99a9f1b68c578c5 ("tools/power
-turbostat: Also read package power on AMD F17h (Zen)") add AMD Fam 17h
-RAPL support.
+This patch fixes the following checkpath warning
+in the file drivers/staging/rts5208/rtsx_transport.c:546
 
-Hygon Family 18h(Dhyana) support RAPL in bit 14 of CPUID 0x80000007 EDX,
-and has MSRs RAPL_PWR_UNIT/CORE_ENERGY_STAT/PKG_ENERGY_STAT. So add Hygon
-Dhyana Family 18h support for RAPL.
+WARNING: line over 80 characters
++                               option = RTSX_SG_VALID | RTSX_SG_END |
+RTSX_SG_TRANS_DATA;
 
-Already tested on Hygon multi-node systems and it shows correct per-core
-energy usage and the total package power.
-
-Signed-off-by: Pu Wen <puwen@hygon.cn>
-Reviewed-by: Calvin Walton <calvin.walton@kepstin.ca>
+Signed-off-by: P SAI PRASANTH <saip2823@gmail.com>
 ---
- tools/power/x86/turbostat/turbostat.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Changes in v3:
+ -Fixes the following error in da59abd45efc
+  >> drivers/staging//rts5208/rtsx_transport.c:548:4: error: expected
+     ';' before 'rtsx_add_sg_tbl'
+       rtsx_add_sg_tbl(chip, (u32)addr, (u32)len, option);
+       ^~~~~~~~~~~~~~~
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 1cd28eb..d42f3f5 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -60,6 +60,7 @@ unsigned int do_irtl_hsw;
- unsigned int units = 1000000;	/* MHz etc */
- unsigned int genuine_intel;
- unsigned int authentic_amd;
-+unsigned int hygon_genuine;
- unsigned int max_level, max_extended_level;
- unsigned int has_invariant_tsc;
- unsigned int do_nhm_platform_info;
-@@ -1714,7 +1715,7 @@ void get_apic_id(struct thread_data *t)
- 	if (!DO_BIC(BIC_X2APIC))
- 		return;
+ drivers/staging/rts5208/rtsx_transport.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/rts5208/rtsx_transport.c b/drivers/staging/rts5208/rtsx_transport.c
+index 8277d78..3c67656 100644
+--- a/drivers/staging/rts5208/rtsx_transport.c
++++ b/drivers/staging/rts5208/rtsx_transport.c
+@@ -540,11 +540,10 @@ static int rtsx_transfer_sglist_adma(struct rtsx_chip *chip, u8 card,
  
--	if (authentic_amd) {
-+	if (authentic_amd || hygon_genuine) {
- 		unsigned int topology_extensions;
+ 			dev_dbg(rtsx_dev(chip), "DMA addr: 0x%x, Len: 0x%x\n",
+ 				(unsigned int)addr, len);
+-
++
++			option = RTSX_SG_VALID | RTSX_SG_TRANS_DATA;
+ 			if (j == (sg_cnt - 1))
+-				option = RTSX_SG_VALID | RTSX_SG_END | RTSX_SG_TRANS_DATA;
+-			else
+-				option = RTSX_SG_VALID | RTSX_SG_TRANS_DATA;
++				option |= RTSX_SG_END;
  
- 		if (max_extended_level < 0x8000001e)
-@@ -3803,6 +3804,7 @@ double get_tdp_amd(unsigned int family)
- {
- 	switch (family) {
- 	case 0x17:
-+	case 0x18:
- 	default:
- 		/* This is the max stock TDP of HEDT/Server Fam17h chips */
- 		return 250.0;
-@@ -3982,6 +3984,7 @@ void rapl_probe_amd(unsigned int family, unsigned int model)
+ 			rtsx_add_sg_tbl(chip, (u32)addr, (u32)len, option);
  
- 	switch (family) {
- 	case 0x17: /* Zen, Zen+ */
-+	case 0x18: /* Hygon Dhyana */
- 		do_rapl = RAPL_AMD_F17H | RAPL_PER_CORE_ENERGY;
- 		if (rapl_joules) {
- 			BIC_PRESENT(BIC_Pkg_J);
-@@ -4018,7 +4021,7 @@ void rapl_probe(unsigned int family, unsigned int model)
- {
- 	if (genuine_intel)
- 		rapl_probe_intel(family, model);
--	if (authentic_amd)
-+	if (authentic_amd || hygon_genuine)
- 		rapl_probe_amd(family, model);
- }
- 
-@@ -4600,6 +4603,8 @@ void process_cpuid()
- 		genuine_intel = 1;
- 	else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
- 		authentic_amd = 1;
-+	else if (ebx == 0x6f677948 && ecx == 0x656e6975 && edx == 0x6e65476e)
-+		hygon_genuine = 1;
- 
- 	if (!quiet)
- 		fprintf(outf, "CPUID(0): %.4s%.4s%.4s ",
 -- 
 2.7.4
 
