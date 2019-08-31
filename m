@@ -2,956 +2,252 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A197C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECDBC3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B3C2343A
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AAA2343B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWx/KDjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfHaAbL (ORCPT
+        id S1728481AbfHaAc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 20:31:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34406 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbfHaAbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 20:31:10 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8B1422D6A23
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 00:31:09 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id i19so8868096qtq.17
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 17:31:09 -0700 (PDT)
+        Fri, 30 Aug 2019 20:32:57 -0400
+Received: from mail-oi1-f172.google.com ([209.85.167.172]:38604 "EHLO
+        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbfHaAc4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 20:32:56 -0400
+Received: by mail-oi1-f172.google.com with SMTP id q8so6708127oij.5
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 17:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R5zRpMvXl5tdvXp8qNc1Y5+40P4IadJNdrDTuo+u54k=;
+        b=ZWx/KDjqblUecLISRrexlKe9MEgq8l+Fj1qWZtN8HshCvPPRh9EknQ42l+o8IXVKVt
+         3OLqSn4DpbKD9jg9wnkzBWkrhsCHI0Eena/MkmJpYnxN6MEaI2qGwUmL8kBz9fq/xSJh
+         F2XKIdRM7ff7LmRFgMsUoFkkgfrJVEE7AauC218D484jCO7jGn+46+OP0/TN8aJRZVlJ
+         da6rKsEkzmUeA1siPJbz00Lfk2ZqaMTyfgleCYCErY+2cOd5coY/DImMnY/zjF+5OKfL
+         IZGgj+InWczQK2Yn9QJrrmK/ZJp6j3/GmkjSB46EVdWN6D6L69mudG8DauRfslW+GtAU
+         7wAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=aUFOvHgE3+bdHTT+38EzqqvMLDZ/ZW+Cz/ro6H8XA3Y=;
-        b=iH1CGF8iUYJPXfrpmp9rkYkMXIA3EMoJJhV3AROeafRnsXyJRYhCyykNqOVpH7XleJ
-         zhEQ3LgtJnTQifLET5EZ6GXBwRoUZhfcvqukYEIqTk5/S6vnRsJ/rV+NEZsuKOY9WF6q
-         dgY1ryPpnRuRC2Reiw04OUT+hagJzmZPAPYJz0awVm5z7R3THtsmnH92ZRW6eq0jVAv/
-         of+uR74B+pQVgEHM9Dq9s5/YJ6XzDjphDCBWj9CA2ZHDYOdgy8zb/OERj3B0x9v1W/5n
-         nHOYFd3mB2mNVBIChH4qvHNMNgf73VdhV91MiH84N16fVZ6wEVH8E7N9CFqITrfaUjDE
-         cDgg==
-X-Gm-Message-State: APjAAAV2Q4eUqM0AEuYVYsS1aMYCRI8RjNEWfICUaGUHX7ak1t/Vd4tf
-        ZguNMM5JaGK/HOzO1AZc1HBapTkIPZfFDTkIHq6JTKSO4y6L8O2h9aa/FJfMQzyxH/coyYL0/YJ
-        vevXbqqwCun186HL9z86mtyu7
-X-Received: by 2002:a0c:f88b:: with SMTP id u11mr11437930qvn.99.1567211468418;
-        Fri, 30 Aug 2019 17:31:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyqJYR6K1/CrW2uJFVrYJbRpfTAVjl2fZcJdPGLG9rYYmzBoiF1acFGE7FgYR33xP77vrsBdg==
-X-Received: by 2002:a0c:f88b:: with SMTP id u11mr11437904qvn.99.1567211467954;
-        Fri, 30 Aug 2019 17:31:07 -0700 (PDT)
-Received: from dhcp-10-20-1-34.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id b130sm3852840qkc.100.2019.08.30.17.31.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 17:31:07 -0700 (PDT)
-Message-ID: <33afac9298855b3cbf96e97387f0c7e38d080ac8.camel@redhat.com>
-Subject: Re: [PATCH 05/26] drm/dp_mst: Add sideband down request tracing +
- selftests
-From:   Lyude Paul <lyude@redhat.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Alexandru Gheorghe <alexandru-cosmin.gheorghe@arm.com>,
-        Deepak Rawat <drawat@vmware.com>, linux-kernel@vger.kernel.org
-Date:   Fri, 30 Aug 2019 20:31:06 -0400
-In-Reply-To: <20190827171510.GF2112@phenom.ffwll.local>
-References: <20190718014329.8107-1-lyude@redhat.com>
-         <20190718014329.8107-6-lyude@redhat.com>
-         <20190813145048.GV7444@phenom.ffwll.local>
-         <70c42b3ae529d51c79b3ab9bb2c604549413d808.camel@redhat.com>
-         <20190827171510.GF2112@phenom.ffwll.local>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R5zRpMvXl5tdvXp8qNc1Y5+40P4IadJNdrDTuo+u54k=;
+        b=SBPMebncL6xTEg7POKfOAl1zZCtWL/p7Uo+ewLvSVs2Bl4XSbUGtirfWz9ElRVsQ0d
+         vviddOSe50w+NTNnlJhSjvNIdhhJ1eSMevwEQn7iu1IaQGvMpzA11DczjyWy3jD1BAox
+         tf14XTWhtZw3XgJCnzhlTQWy5qIVYNtTu55/bywH7jjnrzfLkgn7YU+IDAryoIEcTdIL
+         vzJiZVSD7G8CZ12kVWykWxFFbWJJKgWWwSbF/5X6Yy/Ggw50NnPUCcgMhnQLnwSkNbSn
+         I9Q46UC/hcIGahZMRpxYf23Salnms7v+wA/z7tu3ZbHqo2w+aAfwCa7vJC8EYMFBznKH
+         PoNQ==
+X-Gm-Message-State: APjAAAXBtQ7+oGgSGfSI1g3bWpLxUtKOoOcOmcCGAsxk4S3G8BX19Y3i
+        HXbdCSdm723Ins4Mq37CB1fyqdnHXlA8mWfeLxXNew==
+X-Google-Smtp-Source: APXvYqxJZEi/Dxkxa3n+4wUnkb77R9UV5lT+N0P4RpBwYMGFf54Kmy2bb4ZC1SsKKjPLi0Fo4u4pf1UfGFiaHZ44wFM=
+X-Received: by 2002:aca:c396:: with SMTP id t144mr12019732oif.172.1567211574645;
+ Fri, 30 Aug 2019 17:32:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+ <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
+ <CAGETcx_RL4hHHA2MFTVyV1ivgghaBZePROXpnC-UUJ7tcH4kSQ@mail.gmail.com> <CAL_JsqJB+41Sjxi-udYzw8sAq0myrcnxjSyzrxeEsoctZX6pbw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJB+41Sjxi-udYzw8sAq0myrcnxjSyzrxeEsoctZX6pbw@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 30 Aug 2019 17:32:18 -0700
+Message-ID: <CAGETcx9T_3GKgAj=3jANb=JAa5b5hP+r4CLVm9a2LYf2CQiH9Q@mail.gmail.com>
+Subject: Re: Adding depends-on DT binding to break cyclic dependencies
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two things below
+On Fri, Aug 30, 2019 at 7:35 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, Aug 29, 2019 at 11:58 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Thu, Aug 29, 2019 at 9:28 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Thu, Aug 22, 2019 at 1:55 AM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > Hi Rob,
+> > > >
+> > > > Frank, Greg and I got together during ELC and had an extensive and
+> > > > very productive discussion about my "postboot supplier state cleanup"
+> > > > patch series [1]. The three of us are on the same page now -- the
+> > > > series as it stands is the direction we want to go in, with some minor
+> > > > refactoring, documentation and naming changes.
+> > > >
+> > > > However, one of the things Frank is concerned about (and Greg and I
+> > > > agree) in the current patch series is that the "cyclic dependency
+> > > > breaking" logic has been pushed off to individual drivers using the
+> > > > edit_links() callback.
+> > >
+> > > I would think the core can detect this condition. There's nothing
+> > > device specific once you have the dependency tree. You still need to
+> > > know what device needs to probe first and the drivers are going to
+> > > have that knowledge anyways. So wouldn't it be enough to allow probe
+> > > to proceed for devices in the loop.
+> >
+> > The problem is that device links don't allow creating a cyclic
+> > dependency graph -- for good reasons. The last link in the cycle would
+> > be rejected. I don't think trying to change device link to allow
+> > cyclic links is the right direction to go in nor is it a can of worms
+> > I want to open.
+> >
+> > So, we'll need some other way of tracking the loop and then allowing
+> > only those devices in a loop to attempt probing even if their
+> > suppliers haven't probed. And then if a device ends up being in more
+> > than one loop, things could get even more complicated. And after one
+> > of the devices in the loop probes, we still need to somehow figure out
+> > the "bad" link and delete it so the last "good" link can be made
+> > before all the suppliers have their sync_state() called (because the
+> > "good" link hasn't been created yet). That all gets pretty messy. If
+> > we are never going to accept any DT changes, then I'd rather go with
+> > edit_links() and keep the complexity within the one off weird hardware
+> > where there are cycles instead of over complicating the driver core.
+>
+> If it is so complex, then it should not be in DT.
 
-On Tue, 2019-08-27 at 19:15 +0200, Daniel Vetter wrote:
-> On Tue, Aug 27, 2019 at 12:49:17PM -0400, Lyude Paul wrote:
-> > On Tue, 2019-08-13 at 16:50 +0200, Daniel Vetter wrote:
-> > > On Wed, Jul 17, 2019 at 09:42:28PM -0400, Lyude Paul wrote:
-> > > > Unfortunately the DP MST helpers do not have much in the way of
-> > > > debugging utilities. So, let's add some!
-> > > > 
-> > > > This adds basic debugging output for down sideband requests that we
-> > > > send
-> > > > from the driver, so that we can actually discern what's happening when
-> > > > sideband requests timeout. Note that with this commit, we'll be
-> > > > dumping
-> > > > out sideband requests under both of the following conditions:
-> > > > 
-> > > > - When the user has enabled DRM_UT_DP output, of course.
-> > > > - When the user has enabled DRM_UT_KMS or DRM_UT_DP, and a sideband
-> > > >   request has failed in some way. This will allow for developers to
-> > > > get
-> > > >   a basic idea of what's actually happening with failed modesets on
-> > > > MST,
-> > > >   without needing to have DRM_UT_DP explicitly enabled.
-> > > > 
-> > > > Since there wasn't really a good way of testing that any of this
-> > > > worked,
-> > > > I ended up writing simple selftests that lightly test sideband message
-> > > > encoding and decoding as well. Enjoy!
-> > > > 
-> > > > Cc: Juston Li <juston.li@intel.com>
-> > > > Cc: Imre Deak <imre.deak@intel.com>
-> > > > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > > > Cc: Harry Wentland <hwentlan@amd.com>
-> > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > > > ---
-> > > >  drivers/gpu/drm/drm_dp_mst_topology.c         | 308
-> > > > +++++++++++++++++-
-> > > >  .../gpu/drm/drm_dp_mst_topology_internal.h    |  24 ++
-> > > >  .../gpu/drm/selftests/drm_modeset_selftests.h |   1 +
-> > > >  .../drm/selftests/test-drm_dp_mst_helper.c    | 212 ++++++++++++
-> > > >  .../drm/selftests/test-drm_modeset_common.h   |   1 +
-> > > >  include/drm/drm_dp_mst_helper.h               |   2 +-
-> > > >  6 files changed, 543 insertions(+), 5 deletions(-)
-> > > >  create mode 100644 drivers/gpu/drm/drm_dp_mst_topology_internal.h
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > index 9e382117896d..defc5e09fb9a 100644
-> > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > @@ -36,6 +36,8 @@
-> > > >  #include <drm/drm_print.h>
-> > > >  #include <drm/drm_probe_helper.h>
-> > > >  
-> > > > +#include "drm_dp_mst_topology_internal.h"
-> > > > +
-> > > >  /**
-> > > >   * DOC: dp mst helper
-> > > >   *
-> > > > @@ -68,6 +70,8 @@ static int drm_dp_mst_register_i2c_bus(struct
-> > > > drm_dp_aux
-> > > > *aux);
-> > > >  static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_aux *aux);
-> > > >  static void drm_dp_mst_kick_tx(struct drm_dp_mst_topology_mgr *mgr);
-> > > >  
-> > > > +#define DBG_PREFIX "[dp_mst]"
-> > > > +
-> > > >  #define DP_STR(x) [DP_ ## x] = #x
-> > > >  
-> > > >  static const char *drm_dp_mst_req_type_str(u8 req_type)
-> > > > @@ -124,6 +128,43 @@ static const char *drm_dp_mst_nak_reason_str(u8
-> > > > nak_reason)
-> > > >  }
-> > > >  
-> > > >  #undef DP_STR
-> > > > +#define DP_STR(x) [DRM_DP_SIDEBAND_TX_ ## x] = #x
-> > > > +
-> > > > +static const char *drm_dp_mst_sideband_tx_state_str(int state)
-> > > > +{
-> > > > +	static const char * const sideband_reason_str[] = {
-> > > > +		DP_STR(QUEUED),
-> > > > +		DP_STR(START_SEND),
-> > > > +		DP_STR(SENT),
-> > > > +		DP_STR(RX),
-> > > > +		DP_STR(TIMEOUT),
-> > > > +	};
-> > > > +
-> > > > +	if (state >= ARRAY_SIZE(sideband_reason_str) ||
-> > > > +	    !sideband_reason_str[state])
-> > > > +		return "unknown";
-> > > > +
-> > > > +	return sideband_reason_str[state];
-> > > > +}
-> > > > +
-> > > > +static int
-> > > > +drm_dp_mst_rad_to_str(const u8 rad[8], u8 lct, char *out, size_t len)
-> > > > +{
-> > > > +	int i;
-> > > > +	u8 unpacked_rad[16];
-> > > > +
-> > > > +	for (i = 0; i < lct; i++) {
-> > > > +		if (i % 2)
-> > > > +			unpacked_rad[i] = rad[i / 2] >> 4;
-> > > > +		else
-> > > > +			unpacked_rad[i] = rad[i / 2] & BIT_MASK(4);
-> > > > +	}
-> > > > +
-> > > > +	/* TODO: Eventually add something to printk so we can format
-> > > > the rad
-> > > > +	 * like this: 1.2.3
-> > > > +	 */
-> > > 
-> > > 	lct *=2;
-> > > 
-> > > missing here? And yeah the todo would be sweet, but quite a bit more
-> > > typing I guess.
-> > > 
-> > > > +	return snprintf(out, len, "%*phC", lct, unpacked_rad);
-> > > > +}
-> > > >  
-> > > >  /* sideband msg handling */
-> > > >  static u8 drm_dp_msg_header_crc4(const uint8_t *data, size_t
-> > > > num_nibbles)
-> > > > @@ -256,8 +297,9 @@ static bool drm_dp_decode_sideband_msg_hdr(struct
-> > > > drm_dp_sideband_msg_hdr *hdr,
-> > > >  	return true;
-> > > >  }
-> > > >  
-> > > > -static void drm_dp_encode_sideband_req(struct
-> > > > drm_dp_sideband_msg_req_body *req,
-> > > > -				       struct drm_dp_sideband_msg_tx
-> > > > *raw)
-> > > > +void
-> > > > +drm_dp_encode_sideband_req(const struct drm_dp_sideband_msg_req_body
-> > > > *req,
-> > > > +			   struct drm_dp_sideband_msg_tx *raw)
-> > > >  {
-> > > >  	int idx = 0;
-> > > >  	int i;
-> > > > @@ -362,6 +404,249 @@ static void drm_dp_encode_sideband_req(struct
-> > > > drm_dp_sideband_msg_req_body *req,
-> > > >  	}
-> > > >  	raw->cur_len = idx;
-> > > >  }
-> > > > +EXPORT_SYMBOL_FOR_TESTS_ONLY(drm_dp_encode_sideband_req);
-> > > > +
-> > > > +/* Decode a sideband request we've encoded, mainly used for debugging
-> > > > */
-> > > > +int
-> > > > +drm_dp_decode_sideband_req(const struct drm_dp_sideband_msg_tx *raw,
-> > > > +			   struct drm_dp_sideband_msg_req_body *req)
-> > > > +{
-> > > > +	const u8 *buf = raw->msg;
-> > > > +	int i, idx = 0;
-> > > > +
-> > > > +	req->req_type = buf[idx++] & 0x7f;
-> > > > +	switch (req->req_type) {
-> > > > +	case DP_ENUM_PATH_RESOURCES:
-> > > > +	case DP_POWER_DOWN_PHY:
-> > > > +	case DP_POWER_UP_PHY:
-> > > 
-> > > OCD warning: the enum isn't ordered the same way here and in
-> > > drm_dp_encode_sideband_req().
-> > > 
-> > > > +		req->u.port_num.port_number = (buf[idx] >> 4) & 0xf;
-> > > > +		break;
-> > > > +	case DP_ALLOCATE_PAYLOAD:
-> > > > +		{
-> > > > +			struct drm_dp_allocate_payload *a =
-> > > > +				&req->u.allocate_payload;
-> > > > +
-> > > > +			a->number_sdp_streams = buf[idx] & 0xf;
-> > > > +			a->port_number = (buf[idx] >> 4) & 0xf;
-> > > > +
-> > > > +			a->vcpi = buf[++idx] & 0x7f;
-> > > 
-> > > Complain here if 0x80 is set?
-> > > 
-> > > > +
-> > > > +			a->pbn = buf[++idx] << 8;
-> > > > +			a->pbn |= buf[++idx];
-> > > > +
-> > > > +			idx++;
-> > > > +			for (i = 0; i < a->number_sdp_streams; i++) {
-> > > > +				a->sdp_stream_sink[i] =
-> > > > +					(buf[idx + (i / 2)] >> ((i %
-> > > > 2) ? 0 :
-> > > > 4)) & 0xf;
-> > > > +			}
-> > > > +		}
-> > > > +		break;
-> > > > +	case DP_QUERY_PAYLOAD:
-> > > > +		req->u.query_payload.port_number = (buf[idx] >> 4) &
-> > > > 0xf;
-> > > > +		req->u.query_payload.vcpi = buf[++idx] & 0x7f;
-> > > 
-> > > Same here for the highest bit?
-> > > 
-> > > > +		break;
-> > > > +	case DP_REMOTE_DPCD_READ:
-> > > > +		{
-> > > > +			struct drm_dp_remote_dpcd_read *r = &req-
-> > > > >u.dpcd_read;
-> > > > +
-> > > > +			r->port_number = (buf[idx] >> 4) & 0xf;
-> > > > +
-> > > > +			r->dpcd_address = (buf[idx] << 16) & 0xf0000;
-> > > > +			r->dpcd_address |= (buf[++idx] << 8) & 0xff00;
-> > > > +			r->dpcd_address |= buf[++idx] & 0xff;
-> > > > +
-> > > > +			r->num_bytes = buf[++idx];
-> > > > +		}
-> > > > +		break;
-> > > > +	case DP_REMOTE_DPCD_WRITE:
-> > > > +		{
-> > > > +			struct drm_dp_remote_dpcd_write *w =
-> > > > +				&req->u.dpcd_write;
-> > > > +
-> > > > +			w->port_number = (buf[idx] >> 4) & 0xf;
-> > > > +
-> > > > +			w->dpcd_address = (buf[idx] << 16) & 0xf0000;
-> > > > +			w->dpcd_address |= (buf[++idx] << 8) & 0xff00;
-> > > > +			w->dpcd_address |= buf[++idx] & 0xff;
-> > > > +
-> > > > +			w->num_bytes = buf[++idx];
-> > > > +
-> > > > +			w->bytes = kmemdup(&buf[++idx], w->num_bytes,
-> > > > +					   GFP_KERNEL);
-> > > 
-> > > But if we go really strict on validation we'd need to make sure we don't
-> > > walk past raw->cur_len ... probably not worth it?
-> > > 
-> > > > +			if (!w->bytes)
-> > > > +				return -ENOMEM;
-> > > > +		}
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_READ:
-> > > > +		{
-> > > > +			struct drm_dp_remote_i2c_read *r = &req-
-> > > > >u.i2c_read;
-> > > > +			struct drm_dp_remote_i2c_read_tx *tx;
-> > > > +			bool failed = false;
-> > > > +
-> > > > +			r->num_transactions = buf[idx] & 0x3;
-> > > > +			r->port_number = (buf[idx] >> 4) & 0xf;
-> > > > +			for (i = 0; i < r->num_transactions; i++) {
-> > > > +				tx = &r->transactions[i];
-> > > > +
-> > > > +				tx->i2c_dev_id = buf[++idx] & 0x7f;
-> > > > +				tx->num_bytes = buf[++idx];
-> > > > +				tx->bytes = kmemdup(&buf[++idx],
-> > > > +						    tx->num_bytes,
-> > > > +						    GFP_KERNEL);
-> > > > +				if (!tx->bytes) {
-> > > > +					failed = true;
-> > > > +					break;
-> > > > +				}
-> > > > +				idx += tx->num_bytes;
-> > > > +				tx->no_stop_bit = (buf[idx] >> 5) &
-> > > > 0x1;
-> > > > +				tx->i2c_transaction_delay = buf[idx] &
-> > > > 0xf;
-> > > > +			}
-> > > > +
-> > > > +			if (failed) {
-> > > > +				for (i = 0; i < r->num_transactions;
-> > > > i++)
-> > > > +					kfree(tx->bytes);
-> > > > +				return -ENOMEM;
-> > > > +			}
-> > > > +
-> > > > +			r->read_i2c_device_id = buf[++idx] & 0x7f;
-> > > > +			r->num_bytes_read = buf[++idx];
-> > > > +		}
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_WRITE:
-> > > > +		{
-> > > > +			struct drm_dp_remote_i2c_write *w = &req-
-> > > > >u.i2c_write;
-> > > > +
-> > > > +			w->port_number = (buf[idx] >> 4) & 0xf;
-> > > > +			w->write_i2c_device_id = buf[++idx] & 0x7f;
-> > > > +			w->num_bytes = buf[++idx];
-> > > > +			w->bytes = kmemdup(&buf[++idx], w->num_bytes,
-> > > > +					   GFP_KERNEL);
-> > > > +			if (!w->bytes)
-> > > > +				return -ENOMEM;
-> > > > +		}
-> > > > +		break;
-> > > > +	}
-> > > 
-> > > For safety: Should we validate cur_len here? Or return it, and let the
-> > > caller deal with any mismatches.
-> > > 
-> > > But I'm kinda leaning towards no safety here, since it's not dealing
-> > > with
-> > > any replies we get from the hw/externally, which might be used for
-> > > attacking us. If we later on have the same thing but for
-> > > drm_dp_sideband_parse_reply() then a lot more fun.
-> > > 
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_FOR_TESTS_ONLY(drm_dp_decode_sideband_req);
-> > > > +
-> > > > +void
-> > > > +drm_dp_dump_sideband_msg_req_body(const struct
-> > > > drm_dp_sideband_msg_req_body *req,
-> > > > +				  int indent, struct drm_printer
-> > > > *printer)
-> > > > +{
-> > > > +	int i;
-> > > > +
-> > > > +#define P(f, ...) drm_printf_indent(printer, indent, f,
-> > > > ##__VA_ARGS__)
-> > > > +	if (req->req_type == DP_LINK_ADDRESS) {
-> > > > +		/* No contents to print */
-> > > > +		P("type=%s\n", drm_dp_mst_req_type_str(req-
-> > > > >req_type));
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > > +	P("type=%s contents:\n", drm_dp_mst_req_type_str(req-
-> > > > >req_type));
-> > > > +	indent++;
-> > > > +
-> > > > +	switch (req->req_type) {
-> > > > +	case DP_ENUM_PATH_RESOURCES:
-> > > > +	case DP_POWER_DOWN_PHY:
-> > > > +	case DP_POWER_UP_PHY:
-> > > > +		P("port=%d\n", req->u.port_num.port_number);
-> > > > +		break;
-> > > > +	case DP_ALLOCATE_PAYLOAD:
-> > > > +		P("port=%d vcpi=%d pbn=%d sdp_streams=%d %*ph\n",
-> > > > +		  req->u.allocate_payload.port_number,
-> > > > +		  req->u.allocate_payload.vcpi, req-
-> > > > >u.allocate_payload.pbn,
-> > > > +		  req->u.allocate_payload.number_sdp_streams,
-> > > > +		  req->u.allocate_payload.number_sdp_streams,
-> > > > +		  req->u.allocate_payload.sdp_stream_sink);
-> > > > +		break;
-> > > > +	case DP_QUERY_PAYLOAD:
-> > > > +		P("port=%d vcpi=%d\n",
-> > > > +		  req->u.query_payload.port_number,
-> > > > +		  req->u.query_payload.vcpi);
-> > > > +		break;
-> > > > +	case DP_REMOTE_DPCD_READ:
-> > > > +		P("port=%d dpcd_addr=%05x len=%d\n",
-> > > > +		  req->u.dpcd_read.port_number, req-
-> > > > >u.dpcd_read.dpcd_address,
-> > > > +		  req->u.dpcd_read.num_bytes);
-> > > > +		break;
-> > > > +	case DP_REMOTE_DPCD_WRITE:
-> > > > +		P("port=%d addr=%05x len=%d: %*ph\n",
-> > > > +		  req->u.dpcd_write.port_number,
-> > > > +		  req->u.dpcd_write.dpcd_address,
-> > > > +		  req->u.dpcd_write.num_bytes, req-
-> > > > >u.dpcd_write.num_bytes,
-> > > > +		  req->u.dpcd_write.bytes);
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_READ:
-> > > > +		P("port=%d num_tx=%d id=%d size=%d:\n",
-> > > > +		  req->u.i2c_read.port_number,
-> > > > +		  req->u.i2c_read.num_transactions,
-> > > > +		  req->u.i2c_read.read_i2c_device_id,
-> > > > +		  req->u.i2c_read.num_bytes_read);
-> > > > +
-> > > > +		indent++;
-> > > > +		for (i = 0; i < req->u.i2c_read.num_transactions; i++)
-> > > > {
-> > > > +			const struct drm_dp_remote_i2c_read_tx *rtx =
-> > > > +				&req->u.i2c_read.transactions[i];
-> > > > +
-> > > > +			P("%d: id=%03d size=%03d no_stop_bit=%d
-> > > > tx_delay=%03d:
-> > > > %*ph\n",
-> > > > +			  i, rtx->i2c_dev_id, rtx->num_bytes,
-> > > > +			  rtx->no_stop_bit, rtx-
-> > > > >i2c_transaction_delay,
-> > > > +			  rtx->num_bytes, rtx->bytes);
-> > > > +		}
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_WRITE:
-> > > > +		P("port=%d id=%d size=%d: %*ph\n",
-> > > > +		  req->u.i2c_write.port_number,
-> > > > +		  req->u.i2c_write.write_i2c_device_id,
-> > > > +		  req->u.i2c_write.num_bytes, req-
-> > > > >u.i2c_write.num_bytes,
-> > > > +		  req->u.i2c_write.bytes);
-> > > > +		break;
-> > > > +	default:
-> > > > +		P("???\n");
-> > > > +		break;
-> > > > +	}
-> > > > +#undef P
-> > > > +}
-> > > > +EXPORT_SYMBOL_FOR_TESTS_ONLY(drm_dp_dump_sideband_msg_req_body);
-> > > > +
-> > > > +static inline void
-> > > > +drm_dp_mst_dump_sideband_msg_tx(struct drm_printer *p,
-> > > > +				const struct drm_dp_sideband_msg_tx
-> > > > *txmsg)
-> > > > +{
-> > > > +	struct drm_dp_sideband_msg_req_body req;
-> > > > +	char buf[64];
-> > > > +	int ret;
-> > > > +	int i;
-> > > > +
-> > > > +	drm_dp_mst_rad_to_str(txmsg->dst->rad, txmsg->dst->lct, buf,
-> > > > +			      sizeof(buf));
-> > > > +	drm_printf(p, "txmsg cur_offset=%x cur_len=%x seqno=%x
-> > > > state=%s
-> > > > path_msg=%d dst=%s\n",
-> > > > +		   txmsg->cur_offset, txmsg->cur_len, txmsg->seqno,
-> > > > +		   drm_dp_mst_sideband_tx_state_str(txmsg->state),
-> > > > +		   txmsg->path_msg, buf);
-> > > > +
-> > > > +	ret = drm_dp_decode_sideband_req(txmsg, &req);
-> > > > +	if (ret) {
-> > > > +		drm_printf(p, "<failed to decode sideband req: %d>\n",
-> > > > ret);
-> > > > +		return;
-> > > > +	}
-> > > > +	drm_dp_dump_sideband_msg_req_body(&req, 1, p);
-> > > > +
-> > > > +	switch (req.req_type) {
-> > > > +	case DP_REMOTE_DPCD_WRITE:
-> > > > +		kfree(req.u.dpcd_write.bytes);
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_READ:
-> > > > +		for (i = 0; i < req.u.i2c_read.num_transactions; i++)
-> > > > +			kfree(req.u.i2c_read.transactions[i].bytes);
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_WRITE:
-> > > > +		kfree(req.u.i2c_write.bytes);
-> > > > +		break;
-> > > > +	}
-> > > > +}
-> > > >  
-> > > >  static void drm_dp_crc_sideband_chunk_req(u8 *msg, u8 len)
-> > > >  {
-> > > > @@ -893,6 +1178,11 @@ static int drm_dp_mst_wait_tx_reply(struct
-> > > > drm_dp_mst_branch *mstb,
-> > > >  		}
-> > > >  	}
-> > > >  out:
-> > > > +	if (unlikely(ret == -EIO && drm_debug & (DRM_UT_DP |
-> > > > DRM_UT_KMS))) {
-> > > 
-> > > Hm I'd only check for DRM_UT_DP here.
+I'm talking about existing simple DT bindings that says what
+clocks/interconnects/regulators a device needs. Not sure what you mean
+by "it should not be in DT".
 
-Was going to go ahead with this, but realized it might not be a great idea.
-One of the reasons I went with DRM_UT_DP | DRM_UT_KMS here is because
-generally, I'd assume that (this is the case for me at least) DRM_UT_DP serves
-as a way to trace what's going on with DP, and DRM_UT_KMS is for non-atomic
-specific modesetting debug info. That being said, if we fail sending a message
-like PAYLOAD_ALLOCATE then the modeset itself is going to not work correctly
-and thus - the contents of failure would still be relevant to someone working
-on modesetting issues even if they're not interested in the entirity of what's
-going on between the sink and the source.
+> Things like
+> describing clocks at the gate/mux/divider level turned out to be too
+> complex to get right or complete, so we avoid that.
 
-That, and we were already printing when messages timed out under DRM_UT_KMS.
-Granted though, that printing was added well before I introduced DRM_UT_DP.
-However, I suppose I could just move that back to using DRM_DEBUG_KMS() and
-dump the sideband message seperately.
+Right, and this patch series has nothing to do with describing complex
+internals of a device.
 
-Maybe I'm overthinking this a bit, thoughts?
+>
+> > > Once 1 driver succeeds, then you
+> > > can enforce the dependencies on the rest.
+> > >
+> > > > The concern being, there are going to be multiple device specific ad
+> > > > hoc implementations to break a cyclic dependency. Also, if a device
+> > > > can be part of a cyclic dependency, the driver for that device has to
+> > > > check for specific system/products in which the device is part of a
+> > > > cyclic dependency (because it might not always be part of a cycle),
+> > > > and then potentially have cycle/product specific code to break the
+> > > > cycle (since the cycle can be different on each system/product).
+> > > >
+> > > > One way to avoid all of the device/driver specific code and simplify
+> > > > my patch series by a non-trivial amount would be by adding a
+> > > > "depends-on" DT binding that can ONLY be used to break cycles. We can
+> > > > document it as such and reject any attempts to use it for other
+> > > > purposes. When a depends-on property is present in a device node, that
+> > > > specific device's supplier list will be parsed ONLY from the
+> > > > depends-on property and the other properties won't be parsed for
+> > > > deriving dependency information for that device.
+> > >
+> > > Seems like only ignoring the dependencies with a cycle would be
+> > > sufficient.
+> >
+> > No, we need to only ignore the "bad" dependency. We can't ignore all
+> > the dependencies in the cycle because that would cause the suppliers
+> > to clean up the hardware state before the consumers are ready.
+>
+> I misunderstood. I now see this is back to duplicating all the data
+> that's already there which I've already said no to.
 
-> > > 
-> > > > +		struct drm_printer p = drm_debug_printer(DBG_PREFIX);
-> > > > +
-> > > > +		drm_dp_mst_dump_sideband_msg_tx(&p, txmsg);
-> > > > +	}
-> > > >  	mutex_unlock(&mgr->qlock);
-> > > >  
-> > > >  	return ret;
-> > > > @@ -1927,8 +2217,11 @@ static int process_single_tx_qlock(struct
-> > > > drm_dp_mst_topology_mgr *mgr,
-> > > >  	idx += tosend + 1;
-> > > >  
-> > > >  	ret = drm_dp_send_sideband_msg(mgr, up, chunk, idx);
-> > > > -	if (ret) {
-> > > > -		DRM_DEBUG_KMS("sideband msg failed to send\n");
-> > > > +	if (ret && unlikely(drm_debug & (DRM_UT_DP | DRM_UT_KMS))) {
-> > > 
-> > > Same.
-> > > 
-> > > > +		struct drm_printer p = drm_debug_printer(DBG_PREFIX);
-> > > > +
-> > > > +		drm_printf(&p, "sideband msg failed to send\n");
-> > > > +		drm_dp_mst_dump_sideband_msg_tx(&p, txmsg);
-> > > >  		return ret;
-> > > >  	}
-> > > >  
-> > > > @@ -1990,6 +2283,13 @@ static void drm_dp_queue_down_tx(struct
-> > > > drm_dp_mst_topology_mgr *mgr,
-> > > >  {
-> > > >  	mutex_lock(&mgr->qlock);
-> > > >  	list_add_tail(&txmsg->next, &mgr->tx_msg_downq);
-> > > > +
-> > > > +	if (unlikely(drm_debug & DRM_UT_DP)) {
-> > > 
-> > > Like you do here.
-> > > 
-> > > > +		struct drm_printer p = drm_debug_printer(DBG_PREFIX);
-> > > > +
-> > > > +		drm_dp_mst_dump_sideband_msg_tx(&p, txmsg);
-> > > > +	}
-> > > > +
-> > > >  	if (list_is_singular(&mgr->tx_msg_downq))
-> > > >  		process_single_down_tx_qlock(mgr);
-> > > >  	mutex_unlock(&mgr->qlock);
-> > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology_internal.h
-> > > > b/drivers/gpu/drm/drm_dp_mst_topology_internal.h
-> > > > new file mode 100644
-> > > > index 000000000000..eeda9a61c657
-> > > > --- /dev/null
-> > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology_internal.h
-> > > > @@ -0,0 +1,24 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0-only
-> > > > + *
-> > > > + * Declarations for DP MST related functions which are only used in
-> > > > selftests
-> > > > + *
-> > > > + * Copyright © 2018 Red Hat
-> > > > + * Authors:
-> > > > + *     Lyude Paul <lyude@redhat.com>
-> > > > + */
-> > > > +
-> > > > +#ifndef _DRM_DP_MST_HELPER_INTERNAL_H_
-> > > > +#define _DRM_DP_MST_HELPER_INTERNAL_H_
-> > > > +
-> > > > +#include <drm/drm_dp_mst_helper.h>
-> > > > +
-> > > > +void
-> > > > +drm_dp_encode_sideband_req(const struct drm_dp_sideband_msg_req_body
-> > > > *req,
-> > > > +			   struct drm_dp_sideband_msg_tx *raw);
-> > > > +int drm_dp_decode_sideband_req(const struct drm_dp_sideband_msg_tx
-> > > > *raw,
-> > > > +			       struct drm_dp_sideband_msg_req_body
-> > > > *req);
-> > > > +void
-> > > > +drm_dp_dump_sideband_msg_req_body(const struct
-> > > > drm_dp_sideband_msg_req_body *req,
-> > > > +				  int indent, struct drm_printer
-> > > > *printer);
-> > > > +
-> > > > +#endif /* !_DRM_DP_MST_HELPER_INTERNAL_H_ */
-> > > > diff --git a/drivers/gpu/drm/selftests/drm_modeset_selftests.h
-> > > > b/drivers/gpu/drm/selftests/drm_modeset_selftests.h
-> > > > index dec3ee3ec96f..1898de0b4a4d 100644
-> > > > --- a/drivers/gpu/drm/selftests/drm_modeset_selftests.h
-> > > > +++ b/drivers/gpu/drm/selftests/drm_modeset_selftests.h
-> > > > @@ -33,3 +33,4 @@ selftest(damage_iter_damage_one_outside,
-> > > > igt_damage_iter_damage_one_outside)
-> > > >  selftest(damage_iter_damage_src_moved,
-> > > > igt_damage_iter_damage_src_moved)
-> > > >  selftest(damage_iter_damage_not_visible,
-> > > > igt_damage_iter_damage_not_visible)
-> > > >  selftest(dp_mst_calc_pbn_mode, igt_dp_mst_calc_pbn_mode)
-> > > > +selftest(dp_mst_sideband_msg_req_decode,
-> > > > igt_dp_mst_sideband_msg_req_decode)
-> > > > diff --git a/drivers/gpu/drm/selftests/test-drm_dp_mst_helper.c
-> > > > b/drivers/gpu/drm/selftests/test-drm_dp_mst_helper.c
-> > > > index 51b2486ec917..ceca89babd65 100644
-> > > > --- a/drivers/gpu/drm/selftests/test-drm_dp_mst_helper.c
-> > > > +++ b/drivers/gpu/drm/selftests/test-drm_dp_mst_helper.c
-> > > > @@ -8,6 +8,7 @@
-> > > >  #include <drm/drm_dp_mst_helper.h>
-> > > >  #include <drm/drm_print.h>
-> > > >  
-> > > > +#include "../drm_dp_mst_topology_internal.h"
-> > > >  #include "test-drm_modeset_common.h"
-> > > >  
-> > > >  int igt_dp_mst_calc_pbn_mode(void *ignored)
-> > > > @@ -34,3 +35,214 @@ int igt_dp_mst_calc_pbn_mode(void *ignored)
-> > > >  
-> > > >  	return 0;
-> > > >  }
-> > > > +
-> > > > +static bool
-> > > > +sideband_msg_req_equal(const struct drm_dp_sideband_msg_req_body *in,
-> > > > +		       const struct drm_dp_sideband_msg_req_body *out)
-> > > > +{
-> > > > +	const struct drm_dp_remote_i2c_read_tx *txin, *txout;
-> > > > +	int i;
-> > > > +
-> > > > +	if (in->req_type != out->req_type)
-> > > > +		return false;
-> > > > +
-> > > > +	switch (in->req_type) {
-> > > > +	case DP_ENUM_PATH_RESOURCES:
-> > > > +	case DP_POWER_UP_PHY:
-> > > > +	case DP_POWER_DOWN_PHY:
-> > > > +	case DP_ALLOCATE_PAYLOAD:
-> > > > +	case DP_QUERY_PAYLOAD:
-> > > > +	case DP_REMOTE_DPCD_READ:
-> > > > +		return memcmp(in, out, sizeof(*in)) == 0;
-> > > 
-> > > Just memcmp the entire thing for everyrone (we assume kzalloc anyway),
-> > > and
-> > > then only have the additional checks for the few cases we need it? Would
-> > > slightly reduce the code.
-> > 
-> > Just realized also - this wouldn't work: remember that I2C_READ,
-> > DPCD_WRITE,
-> > and I2C_WRITE contain pointers which of course will be different even if
-> > the
-> > contents are the same. Unfortunately I don't think there's really a good
-> > solution for this, unless we want to just remove the pointers and store
-> > things
-> > within the down request struct itself
-> 
-> Uh ... disappoint :-/
-> 
-> Then at least put that into a comment, and maybe make this the default:
-> handler?
-> > > > +
-> > > > +	case DP_REMOTE_I2C_READ:
-> > > > +#define IN in->u.i2c_read
-> > > > +#define OUT out->u.i2c_read
-> > > > +		if (IN.num_bytes_read != OUT.num_bytes_read ||
-> > > > +		    IN.num_transactions != OUT.num_transactions ||
-> > > > +		    IN.port_number != OUT.port_number ||
-> > > > +		    IN.read_i2c_device_id != OUT.read_i2c_device_id)
-> > > > +			return false;
-> > > > +
-> > > > +		for (i = 0; i < IN.num_transactions; i++) {
-> > > > +			txin = &IN.transactions[i];
-> > > > +			txout = &OUT.transactions[i];
-> > > > +
-> > > > +			if (txin->i2c_dev_id != txout->i2c_dev_id ||
-> > > > +			    txin->no_stop_bit != txout->no_stop_bit ||
-> > > > +			    txin->num_bytes != txout->num_bytes ||
-> > > > +			    txin->i2c_transaction_delay !=
-> > > > +			    txout->i2c_transaction_delay)
-> > > > +				return false;
-> > > > +
-> > > > +			if (memcmp(txin->bytes, txout->bytes,
-> > > > +				   txin->num_bytes) != 0)
-> > > > +				return false;
-> > > > +		}
-> > > > +		break;
-> > > > +#undef IN
-> > > > +#undef OUT
-> > > > +
-> > > > +	case DP_REMOTE_DPCD_WRITE:
-> > > > +#define IN in->u.dpcd_write
-> > > > +#define OUT out->u.dpcd_write
-> > > > +		if (IN.dpcd_address != OUT.dpcd_address ||
-> > > > +		    IN.num_bytes != OUT.num_bytes ||
-> > > > +		    IN.port_number != OUT.port_number)
-> > > > +			return false;
-> > > > +
-> > > > +		return memcmp(IN.bytes, OUT.bytes, IN.num_bytes) == 0;
-> > > > +#undef IN
-> > > > +#undef OUT
-> > > > +
-> > > > +	case DP_REMOTE_I2C_WRITE:
-> > > > +#define IN in->u.i2c_write
-> > > > +#define OUT out->u.i2c_write
-> > > > +		if (IN.port_number != OUT.port_number ||
-> > > > +		    IN.write_i2c_device_id != OUT.write_i2c_device_id
-> > > > ||
-> > > > +		    IN.num_bytes != OUT.num_bytes)
-> > > > +			return false;
-> > > > +
-> > > > +		return memcmp(IN.bytes, OUT.bytes, IN.num_bytes) == 0;
-> > > > +#undef IN
-> > > > +#undef OUT
-> > > > +	}
-> > > > +
-> > > > +	return true;
-> > > > +}
-> > > > +
-> > > > +static int
-> > > > +__sideband_msg_req_encode_decode(int line,
-> > > > +				 struct drm_dp_sideband_msg_req_body
-> > > > *in,
-> > > > +				 struct drm_dp_sideband_msg_req_body
-> > > > *out)
-> > > > +{
-> > > > +	struct drm_printer p = drm_err_printer(pr_fmt());
-> > > > +	struct drm_dp_sideband_msg_tx txmsg;
-> > > > +	int i, ret;
-> > > > +	bool eq;
-> > > > +
-> > > > +	drm_dp_encode_sideband_req(in, &txmsg);
-> > > > +	ret = drm_dp_decode_sideband_req(&txmsg, out);
-> > > > +	if (ret < 0) {
-> > > > +		pr_err(pr_fmt("Failed to decode sideband request @
-> > > > line %d:
-> > > > %d\n"),
-> > > > +		       line, ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	eq = sideband_msg_req_equal(in, out);
-> > > > +	if (!eq) {
-> > > > +		pr_err(pr_fmt("Encode/decode @ line %d failed,
-> > > > expected:\n"),
-> > > > +		       line);
-> > > > +		drm_dp_dump_sideband_msg_req_body(in, 1, &p);
-> > > > +		pr_err(pr_fmt("Got:\n"));
-> > > > +		drm_dp_dump_sideband_msg_req_body(out, 1, &p);
-> > > > +	}
-> > > > +
-> > > > +	switch (in->req_type) {
-> > > > +	case DP_REMOTE_DPCD_WRITE:
-> > > > +		kfree(out->u.dpcd_write.bytes);
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_READ:
-> > > > +		for (i = 0; i < out->u.i2c_read.num_transactions; i++)
-> > > > +			kfree(out->u.i2c_read.transactions[i].bytes);
-> > > > +		break;
-> > > > +	case DP_REMOTE_I2C_WRITE:
-> > > > +		kfree(out->u.i2c_write.bytes);
-> > > > +		break;
-> > > > +	}
-> > > > +
-> > > > +	/* Clear everything but the req_type for the input */
-> > > > +	memset(&in->u, 0, sizeof(in->u));
-> > > > +
-> > > > +	/* Clear the output entirely */
-> > > > +	memset(out, 0, sizeof(*out));
-> > > > +
-> > > > +	return eq ? 0 : -EINVAL;
-> > > > +}
-> > > > +
-> > > > +int igt_dp_mst_sideband_msg_req_decode(void *unused)
-> > > > +{
-> > > > +	struct drm_dp_sideband_msg_req_body in = { 0 }, out = { 0 };
-> > > > +	u8 data[] = { 0xff, 0x0, 0xdd };
-> > > > +	int i;
-> > > > +
-> > > > +#define
-> > > > DO_TEST()                                                          \
-> > > > +	do
-> > > > {                                                               \
-> > > > +		if (__sideband_msg_req_encode_decode(__LINE__, &in,
-> > > > &out)) \
-> > > > +			return
-> > > > -EINVAL;                                    \
-> > > > +	} while (0)
-> > > 
-> > > I had a tiny wtf moment here until I realized this is a macro ... maybe
-> > > put the do on the first line and indent everything? Pure bikeshed to
-> > > help
-> > > the blind ...
-> > > 
-> > > > +
-> > > > +	in.req_type = DP_ENUM_PATH_RESOURCES;
-> > > > +	in.u.port_num.port_number = 5;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_POWER_UP_PHY;
-> > > > +	in.u.port_num.port_number = 5;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_POWER_DOWN_PHY;
-> > > > +	in.u.port_num.port_number = 5;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_ALLOCATE_PAYLOAD;
-> > > > +	in.u.allocate_payload.number_sdp_streams = 3;
-> > > > +	for (i = 0; i < in.u.allocate_payload.number_sdp_streams; i++)
-> > > > +		in.u.allocate_payload.sdp_stream_sink[i] = i + 1;
-> > > > +	DO_TEST();
-> > > > +	in.u.allocate_payload.port_number = 0xf;
-> > > > +	DO_TEST();
-> > > > +	in.u.allocate_payload.vcpi = 0x7f;
-> > > > +	DO_TEST();
-> > > > +	in.u.allocate_payload.pbn = U16_MAX;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_QUERY_PAYLOAD;
-> > > > +	in.u.query_payload.port_number = 0xf;
-> > > > +	DO_TEST();
-> > > > +	in.u.query_payload.vcpi = 0x7f;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_REMOTE_DPCD_READ;
-> > > > +	in.u.dpcd_read.port_number = 0xf;
-> > > > +	DO_TEST();
-> > > > +	in.u.dpcd_read.dpcd_address = 0xfedcb;
-> > > > +	DO_TEST();
-> > > > +	in.u.dpcd_read.num_bytes = U8_MAX;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_REMOTE_DPCD_WRITE;
-> > > > +	in.u.dpcd_write.port_number = 0xf;
-> > > > +	DO_TEST();
-> > > > +	in.u.dpcd_write.dpcd_address = 0xfedcb;
-> > > > +	DO_TEST();
-> > > > +	in.u.dpcd_write.num_bytes = ARRAY_SIZE(data);
-> > > > +	in.u.dpcd_write.bytes = data;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_REMOTE_I2C_READ;
-> > > > +	in.u.i2c_read.port_number = 0xf;
-> > > > +	DO_TEST();
-> > > > +	in.u.i2c_read.read_i2c_device_id = 0x7f;
-> > > > +	DO_TEST();
-> > > > +	in.u.i2c_read.num_transactions = 3;
-> > > > +	in.u.i2c_read.num_bytes_read = ARRAY_SIZE(data) * 3;
-> > > > +	for (i = 0; i < in.u.i2c_read.num_transactions; i++) {
-> > > > +		in.u.i2c_read.transactions[i].bytes = data;
-> > > > +		in.u.i2c_read.transactions[i].num_bytes =
-> > > > ARRAY_SIZE(data);
-> > > > +		in.u.i2c_read.transactions[i].i2c_dev_id = 0x7f & ~i;
-> > > > +		in.u.i2c_read.transactions[i].i2c_transaction_delay =
-> > > > 0xf &
-> > > > ~i;
-> > > > +	}
-> > > > +	DO_TEST();
-> > > > +
-> > > > +	in.req_type = DP_REMOTE_I2C_WRITE;
-> > > > +	in.u.i2c_write.port_number = 0xf;
-> > > > +	DO_TEST();
-> > > > +	in.u.i2c_write.write_i2c_device_id = 0x7f;
-> > > > +	DO_TEST();
-> > > > +	in.u.i2c_write.num_bytes = ARRAY_SIZE(data);
-> > > > +	in.u.i2c_write.bytes = data;
-> > > > +	DO_TEST();
-> > > > +
-> > > > +#undef DO_TEST
-> > > > +	return 0;
-> > > > +}
-> > > 
-> > > Extremely nice, more unit tests ftw!
-> > > 
-> > > With the nits somehow figured out: Reviewed-by: Daniel Vetter <
-> > > daniel.vetter@ffwll.ch>
-> > > 
-> > > > diff --git a/drivers/gpu/drm/selftests/test-drm_modeset_common.h
-> > > > b/drivers/gpu/drm/selftests/test-drm_modeset_common.h
-> > > > index 590bda35a683..0fcb8bbc6a1b 100644
-> > > > --- a/drivers/gpu/drm/selftests/test-drm_modeset_common.h
-> > > > +++ b/drivers/gpu/drm/selftests/test-drm_modeset_common.h
-> > > > @@ -40,5 +40,6 @@ int igt_damage_iter_damage_one_outside(void
-> > > > *ignored);
-> > > >  int igt_damage_iter_damage_src_moved(void *ignored);
-> > > >  int igt_damage_iter_damage_not_visible(void *ignored);
-> > > >  int igt_dp_mst_calc_pbn_mode(void *ignored);
-> > > > +int igt_dp_mst_sideband_msg_req_decode(void *ignored);
-> > > >  
-> > > >  #endif
-> > > > diff --git a/include/drm/drm_dp_mst_helper.h
-> > > > b/include/drm/drm_dp_mst_helper.h
-> > > > index c01f3ea72756..4c8d177e83e5 100644
-> > > > --- a/include/drm/drm_dp_mst_helper.h
-> > > > +++ b/include/drm/drm_dp_mst_helper.h
-> > > > @@ -293,7 +293,7 @@ struct drm_dp_remote_dpcd_write {
-> > > >  struct drm_dp_remote_i2c_read {
-> > > >  	u8 num_transactions;
-> > > >  	u8 port_number;
-> > > > -	struct {
-> > > > +	struct drm_dp_remote_i2c_read_tx {
-> > > >  		u8 i2c_dev_id;
-> > > >  		u8 num_bytes;
-> > > >  		u8 *bytes;
-> > > > -- 
-> > > > 2.21.0
-> > > > 
-> > -- 
-> > Cheers,
-> > 	Lyude Paul
-> > 
--- 
-Cheers,
-	Lyude Paul
+What I proposed earlier was using depends-on for all devices. And I'm
+glad you rejected it because I like my current set of patches better
+than the earlier one. The question here is whether we can allow this
+for the rare occasions where there is a cycle. Frank, Greg and I think
+it was a reasonable compromise when we talked about it in person.
 
+>
+> > > For example, consider a clock controller which has 2 clock
+> > > inputs from other clock controllers where one has a cycle and one
+> > > doesn't. Also consider it has a regulator dependency. We only need to
+> > > ignore the dependency for 1 of the clock inputs. The rest of the
+> > > dependencies should be honored.
+> >
+> > Agreed. In this case, if the device used the depends-on property,
+> > it'll have to list the 1 clock controller and the regulator.
+> >
+> > > > Frank, Greg and I like this usage model for a new depends-on DT
+> > > > binding. Is this something you'd be willing to accept?
+> > >
+> > > To do the above, it needs to be inverted.
+> >
+> > I understand you are basically asking for a "does-not-depend-on"
+> > property (like a black list). But I think a whitelist on the rare
+> > occasions that we need to override would give more flexibility than a
+> > blacklist. It'll also mean we don't have to check every supplier with
+> > the entire black list each time.
+>
+> So if we have 10 dependencies and 1 to ignore, we're going to list the
+> 9 dependencies? And if I want to know where the cycle is, I have to
+> figure out which 1 of the 10 dependencies you omitted. Pick black or
+> white list with what's going to be shortest in the common case.
+
+Sure, but how often are we even going to encounter these?
+
+> Also, when new dependencies are added to a node, we'd have to check
+> that the dependency is added to 'depends-on' (or was it not on
+> purpose).
+
+Even if it's a "doesnt-depend-on" you'll still have that confusion of
+whether the new dependency should be added to that blacklist.
+
+> > > Convince me that cycles are really a problem anywhere besides clocks.
+> >
+> > I wouldn't be surprised at all if interconnects end up with cyclic
+> > dependencies as support for more of them are added.
+>
+> Perhaps, though I'm doubtful the drivers for them could be both
+> required at probe and built as modules.
+
+This is 100% true/possible on SDM845. They are needed for some
+consumers to write to registers. And both the consumer and the
+interconnect provider can be loaded as modules. In fact, some paths in
+the provider is left on from boot so that the CPU and other devices
+can reach memory. You asked for examples of where else there could be
+cycles, I gave you one.
+
+> > > I'd be more comfortable with a clock specific property if we only need
+> > > it for clocks and I'm having a hard time imagining cycles for other
+> > > dependencies.
+> >
+> > I definitely don't want per-supplier type override. That's just making
+> > things too complicated and adding too many DT properties if we need to
+> > override more than clocks.
+>
+> I'm all for generic properties, but not if we only have hypothetical
+> cases for anything beyond clocks. I know clocks are a somewhat common
+> problem because it has come up before. I'm just asking for specific
+> example that's not clocks.
+
+I gave you another example above and you are just dismissing it saying
+it probably can't be a module, etc. Not sure what more I can tell.
+
+> Part of the problem is we can't really police how a generic property
+> is used. Maybe Linux is only using it for cycles, but then u-boot
+> folks may think it works well for other reasons.
+
+Any property could be misused. We can't control downstream stuff or
+other projects.
+
+> Maybe a dtc check
+> could mitigate that. Warn on any dependencies that are not a cycle.
+> Actually, you could add a check for any cycles first and then we can
+> see where all they exist.
+
+Sorry, I'm not going to sign up to make dtc changes to be able to add
+DT bindings.
+
+-Saravana
