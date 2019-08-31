@@ -2,112 +2,194 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56C2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 14:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCFDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC2922D6D
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 14:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBED22D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuCpBywj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfHaOvU (ORCPT
+        id S1728281AbfHaPBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 10:51:20 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:41214 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727501AbfHaOvU (ORCPT
+        Sat, 31 Aug 2019 11:01:25 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34224 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbfHaPBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 10:51:20 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7VEpInf005183
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 10:51:18 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7VEpDZ5013765
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 10:51:18 -0400
-Received: by mail-qt1-f197.google.com with SMTP id r10so10542980qte.4
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 07:51:18 -0700 (PDT)
+        Sat, 31 Aug 2019 11:01:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so5041735pgc.1;
+        Sat, 31 Aug 2019 08:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z3F2/OBM2r9MZXkNsTFN/E8FK5FABjqdMx5/AO1nG/g=;
+        b=CuCpBywjeSbor/AUATEjJGeahuzzcf61kGRBxkCn9VujZBwt1OH7GBtazWd8HWWZ9V
+         uxDdha5Hkvd2WhaTH8sAlRpaXL+Sdo0o7Mq89dpGqtnhSkfhlfaSXCQiFMNKFCu/Bp6W
+         TgTMsPUw+KHQzZ6efA51vBlWkuMvzoHQLk5ywEnngDLduCoJl7Rr0oZSTLAMfTIAb2md
+         V3xxwyGQzyfuXqA+dazV/1F+2tjLV/+qIwZV9MSlmmmkhlmyNmEWuVv0ze729MlqqPVF
+         MJcATu8EWdnyFLtZZcCmk8Epyiv0aVbE7/tlOz1AiUbSaSKe6B43hnp0MEY8b8g/jet+
+         gmdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=5EjZxYJscYNuvNb6edlHZxPzUbBbDiEEcqsYXybnt08=;
-        b=H1J0KAUn9N1ug0bYgZCL1eF1Vcg3gX1HWmdyheGtGQAO8jB1SbHGq2g2+jwmkSjPtM
-         v2yyz6B5uF29iV0GA5csoNL/jQwRH6mcIA6j0a++RvO8fui0ycYuV4TFWW++dmt7uBHZ
-         /6bQyV/EjFPFeQFhAKEYSQqHdWyu4a8ZyJvbDWGeHUAZx+hmmVlEDYUmOerjwHLf7lrn
-         8oBiO9mrHjSc/4pzhYeAb7QoTsc9ouCl+E3MFriJCp7CzHO8ns1+AxB2kpi4KPaxA+yC
-         cLQpun0pTus0fdurM2fr5oYzxmqI2Fts8AgUEiyDGqgwhyKR+bPgLOatwH4eTqdMBD3b
-         x6Ag==
-X-Gm-Message-State: APjAAAV4lFTT6dTVqJ5joNO9EegI1FCyaotoGjuk4vk3RmetuDx25Xif
-        GSzSkgxCjDBgdo6OqZnhy5WdvGQ5/m3cxyS+c41rHm8+sj2qdI33pPS4HyVcms7au9BKC9LO3gx
-        Mly65sRXO/O3HZuGmZL0iUqUfKzbeSNa+nNw=
-X-Received: by 2002:a0c:80c3:: with SMTP id 61mr13126693qvb.33.1567263073244;
-        Sat, 31 Aug 2019 07:51:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz1sUnNBvWbHzdh4FZf1lLowdBAXcm0Q4dIK5l8oWBSHpvQUvtg8jWOSrFA+cHyuD+ZWHE6ng==
-X-Received: by 2002:a0c:80c3:: with SMTP id 61mr13126676qvb.33.1567263072932;
-        Sat, 31 Aug 2019 07:51:12 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4340::ba0])
-        by smtp.gmail.com with ESMTPSA id q5sm1703965qte.38.2019.08.31.07.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 07:51:11 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
-In-Reply-To: <CAHp75Vc34bHCdsnd+FgzVgs7jjPeHsL6Np7VfEe7hnJ49xW3-A@mail.gmail.com>
-References: <245727.1567183359@turing-police> <20190830164503.GA12978@infradead.org> <267691.1567212516@turing-police> <20190831064616.GA13286@infradead.org> <295233.1567247121@turing-police>
- <CAHp75Vc34bHCdsnd+FgzVgs7jjPeHsL6Np7VfEe7hnJ49xW3-A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567263070_4251P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 31 Aug 2019 10:51:10 -0400
-Message-ID: <306635.1567263070@turing-police>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z3F2/OBM2r9MZXkNsTFN/E8FK5FABjqdMx5/AO1nG/g=;
+        b=clHX9lUVPqIYKEWV6rTHseRflnwi1Zx40KBCu0TgwBCfgTuOmruWmV6itHHpPM13rj
+         MGgvu5x8kA7ujZe/MV3Hg1ZNgHXwS3wCxHjMglcykhMr3NBKr22JLy3mBpmtUOXNORm3
+         YZVNOE+jm3l3JOHT1GzNgNA4fm4anaw2QQOqqOJ+3FxHi2Or1TRbdUwnsU1V66pSQ3od
+         /MLi7ityG8P3ZEbgLql5qDYH40b37rAGKhNqDj03xkS4HiT6gO66/gk9qeUhYa+C4IPZ
+         DQ28D7TMkVgnfS9f1M+E9mZtfhQ3XYzucApammrEMXfiMy8Z1II1tk4qNwlGWLCQz53X
+         5a2w==
+X-Gm-Message-State: APjAAAVnV4g9Cd7TWz/h2TAzzze098JAFs0RUh+sqUUmbJSWEva+lW1a
+        k+JudukHs+MTFVfoSQZSgZE=
+X-Google-Smtp-Source: APXvYqxXttPAlJ1qKQngtS+ANawEYl7YbL2EVX15AVZnZuJHMlbx6iKicR8YpvckL1STr06dOyGfww==
+X-Received: by 2002:a17:90a:17aa:: with SMTP id q39mr4272622pja.106.1567263683947;
+        Sat, 31 Aug 2019 08:01:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v18sm11994233pgl.87.2019.08.31.08.01.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 31 Aug 2019 08:01:23 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 08:01:22 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexander Amelkin <a.amelkin@yadro.com>,
+        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] watchdog/aspeed: add support for dual boot
+Message-ID: <20190831150122.GA7207@roeck-us.net>
+References: <20190828102402.13155-1-i.mikhaylov@yadro.com>
+ <20190828102402.13155-4-i.mikhaylov@yadro.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828102402.13155-4-i.mikhaylov@yadro.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567263070_4251P
-Content-Type: text/plain; charset=us-ascii
+On Wed, Aug 28, 2019 at 01:24:01PM +0300, Ivan Mikhaylov wrote:
+> Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
+> to clear out boot code source and re-enable access to the primary SPI flash
+> chip while booted via wdt2 from the alternate chip.
+> 
+> AST2400 datasheet says:
+> "In the 2nd flash booting mode, all the address mapping to CS0# would be
+> re-directed to CS1#. And CS0# is not accessible under this mode. To access
+> CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
+> register WDT30.bit[1]."
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 
-On Sat, 31 Aug 2019 17:24:47 +0300, Andy Shevchenko said:
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> Side note:
->
-> % git shortlog -n --no-merges -- fs/ext4 | grep '^[^ ]'
->
-> kinda faster and groups by name.
-
-Thanks... I rarely do statistical analyses of this sort of thing, so 'git
-shortlog' isn't on my list of most-used git subcommands...
-
---==_Exmh_1567263070_4251P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXWqJXQdmEQWDXROgAQKNjQ//VjH/tc4UUBMHJAAXtv9h79t7Ew5hPyFh
-DBosfIIbeVgQpGBTTxu7Fb8BhwDm6wv6VtJbaJ1MyAJorJv1Vw25Nn7C+O4S51ee
-YTcfaL1vbTuU7mSRWF6+3WIeOXO2kSsk07CKZARzWCdS+0ZrCNDvTkU9WzAb1hy3
-xhcPTZOnSveIi7iVdgUps5Dp1g9PYsTYwoAdyPTLcGGi9M0hgvLgHnBv+U35Z9XV
-Kj+l/vIIZqBkHqdX7Y65tfQDP1Btp/WWAkiUAtu8gSZGVEIQQMnQ0G4ntHsOBIl7
-3qd2e6WxJnx9CZHtMXoamRaVE1+hyiuPXLbcl1+sqekLOaQT/1YPzAiZ/Mt34M3L
-ayoyVEE6/P0sRsstYpc1PD3DqcGXXTJl+/gvONuwzNLqG0lNvNRUAtfIsqBlUDaf
-pNwTNuKez72RuOnBiLx/egdcBcXl7yDbaioX4EWg0YDSdtomGtT16YwWL3BqURwt
-kfEp/XXMmWHgIauXP5gx//dECGO9j/sD8iEHTqhuF4HcJVnTmAe/8Z2jRjpxe2iR
-ZaVA4K5luzllriFTu0O/YYdXqH1L5kygashj6Oui40+x/PPw2LROd/ANCRhYhVED
-muWQeELqhkTon3uwBECzyyHtKqj2TT1tSrABTq1B6YkSqMC2kP4QXL1ZolIl/y1t
-fEpIDwa+Y7A=
-=wbkw
------END PGP SIGNATURE-----
-
---==_Exmh_1567263070_4251P--
+> ---
+>  drivers/watchdog/aspeed_wdt.c | 65 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 64 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+> index cc71861e033a..125dbd349b00 100644
+> --- a/drivers/watchdog/aspeed_wdt.c
+> +++ b/drivers/watchdog/aspeed_wdt.c
+> @@ -53,6 +53,8 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+>  #define   WDT_CTRL_ENABLE		BIT(0)
+>  #define WDT_TIMEOUT_STATUS	0x10
+>  #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
+> +#define WDT_CLEAR_TIMEOUT_STATUS	0x14
+> +#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
+>  
+>  /*
+>   * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
+> @@ -165,6 +167,60 @@ static int aspeed_wdt_restart(struct watchdog_device *wdd,
+>  	return 0;
+>  }
+>  
+> +/* access_cs0 shows if cs0 is accessible, hence the reverted bit */
+> +static ssize_t access_cs0_show(struct device *dev,
+> +			       struct device_attribute *attr, char *buf)
+> +{
+> +	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
+> +	u32 status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+> +
+> +	return sprintf(buf, "%u\n",
+> +		      !(status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY));
+> +}
+> +
+> +static ssize_t access_cs0_store(struct device *dev,
+> +				struct device_attribute *attr, const char *buf,
+> +				size_t size)
+> +{
+> +	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
+> +	unsigned long val;
+> +
+> +	if (kstrtoul(buf, 10, &val))
+> +		return -EINVAL;
+> +
+> +	if (val)
+> +		writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
+> +		       wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
+> +
+> +	return size;
+> +}
+> +
+> +/*
+> + * This attribute exists only if the system has booted from the alternate
+> + * flash with 'alt-boot' option.
+> + *
+> + * At alternate flash the 'access_cs0' sysfs node provides:
+> + *   ast2400: a way to get access to the primary SPI flash chip at CS0
+> + *            after booting from the alternate chip at CS1.
+> + *   ast2500: a way to restore the normal address mapping from
+> + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
+> + *
+> + * Clearing the boot code selection and timeout counter also resets to the
+> + * initial state the chip select line mapping. When the SoC is in normal
+> + * mapping state (i.e. booted from CS0), clearing those bits does nothing for
+> + * both versions of the SoC. For alternate boot mode (booted from CS1 due to
+> + * wdt2 expiration) the behavior differs as described above.
+> + *
+> + * This option can be used with wdt2 (watchdog1) only.
+> + */
+> +static DEVICE_ATTR_RW(access_cs0);
+> +
+> +static struct attribute *bswitch_attrs[] = {
+> +	&dev_attr_access_cs0.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(bswitch);
+> +
+>  static const struct watchdog_ops aspeed_wdt_ops = {
+>  	.start		= aspeed_wdt_start,
+>  	.stop		= aspeed_wdt_stop,
+> @@ -306,9 +362,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
+> +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
+>  		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>  
+> +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
+> +		    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
+> +			wdt->wdd.groups = bswitch_groups;
+> +	}
+> +
+> +	dev_set_drvdata(dev, wdt);
+> +
+>  	return devm_watchdog_register_device(dev, &wdt->wdd);
+>  }
+>  
