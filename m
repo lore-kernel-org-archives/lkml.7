@@ -2,308 +2,221 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09440C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABCCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0C622D6D
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F64A22D6D
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWRgtwud"
+	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="eY/cvJkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfHaP2R (ORCPT
+        id S1728408AbfHaP33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:28:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35981 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfHaP2Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:28:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so818046pfr.3;
-        Sat, 31 Aug 2019 08:28:15 -0700 (PDT)
+        Sat, 31 Aug 2019 11:29:29 -0400
+Received: from mail-eopbgr780133.outbound.protection.outlook.com ([40.107.78.133]:25504
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726705AbfHaP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 11:29:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PKZUffk55mXxFeWNtOfbagtb7Jsxp8spVJcdNGreZDpjBMQyqtSbOisuY3/zvwIux8Fh/jvGKhInhoiMWmeUFWCttAS9uHIjWPY3xa0+5Xq8tNBCqeNJatgDRNGKAmu5G7X9PE/rVvUkTB29t/gaP4s+CvaCbmKFy53FQqaDr++5WMmR5K0Jvgu/UwbLRbMKCxZIbY8eh7BurPfbyeUaUUL0EiCPMj1ov2bG+zxZmEOQHzxI0L6bt7qxpMLNINgYlRfM5g43mro6brLoJfRljgpBkqBXTB8AtGqgJ5nVin4IuCnAj+Il66il/oxYaQ/f61lLFW7Z5a2HbeHQaXftug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eYWK8bdzhApNKmWetQUwNAxxhMneGrP1n4JLyuQfN9M=;
+ b=T5bd5SS51lOGp5gdl1VKIoqf5+axCPexekxXAxmpHe11QIKbq/xW65vG0yEWNSZvl1q7ULs2GgKUwhMSTFoA2Xw8CShb1INN+ndMPQ9KM7k56vUSRh7OwxNsIEs+mN87r+L+KAIS8vDSZvOJoerReFnoli750h8cCtkM4sUUIK9oOZaLPhoWeNE4xSK+DY3F64Y1RsO3xzZkYOYDDKE4BjPTo/gxSauu4VGA0bftXLl+CbgBsGMfjRRRX6oi9zHlNgEHZd7odQInvPMvGFLO1zhCFb0vIeUXc2o/zZ1iUbFfrtgFRygEK/ifpldD+P05OCiUNlOjFw72LYqE7PqMEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
+ dkim=pass header.d=fortanix.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zzIDZ/Y3p8mE/YfP5L16dMWmiE8dYK2diKs+M4D4Cgc=;
-        b=VWRgtwud29/jLxkWyt35yqG74YJ+cyqUHSWJ++dKjBJ96NRE15Gr7MU207xXof2hXl
-         ZvYZ+qN3FJ+vmMWGGrJLOMCAHCynfJ0wV7wlk93DAk/nu5RaZUUs7p9mMbrtLLNm4slA
-         2ZpF3n7qVqbcaBhD4MXwWax7PuXtIjdrGV6UKGcH3t48O0rmw1YMVW0qRUgOFcKKvhao
-         helFewJdV/zHLrC6a+tFh4/O2hwXJe7VVgYsBEzvtl6dVCuFHHE3FD5JaqWBwGaBKEVr
-         U+qmh9GVlmzdRFC5U5brqFFsSbXSUPFidcSVZlqEwbAme4m7x0LnVpOzLlEiOGcz5m5E
-         yPGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zzIDZ/Y3p8mE/YfP5L16dMWmiE8dYK2diKs+M4D4Cgc=;
-        b=UD2At86VSHO5uONf8zqVzx9X0NGjc5bac2dG8nR0zeeejBWp2h5HTPKS0SpWMSaAqq
-         4wPWE8LsTPRNnvNLzocWYTiDSl0oGvaOv4I5EQWu4yJ5S6lSjTfM8Qr6gyepcozQLuM4
-         d6DXctuvQhdgYFOLL9i6gIr0Em9HIry4xuQeA9XsqCcyvb15+/qo7AGSBLHxT5nfN+5n
-         W/395d4yaCHvIPgiKM9QmCLdWVcTVOTsuCjPmBeK1IR+dhE6H+ZZrBbquhFIbNIbKFsJ
-         XWgaEIk2rbRpu2GvL7WPtsDoYatM7VbfIEmsEnVzwxPfbtXW8WtE8qq1aMc/eGuwm+1T
-         1drA==
-X-Gm-Message-State: APjAAAVwQDcb2gCcn/O2PGP8UzwqZztD7LcRU3RPxo/fxEzYWm9RkzKQ
-        EkYSqPqKCRChhpBwO4e/Qe0=
-X-Google-Smtp-Source: APXvYqyAedlEYt09FSt6C+s32rSCfqEidrAj77ncA9rZ6m+ZCPnRSVQ2/hg/rkmSv4DjTtbdzRdk7Q==
-X-Received: by 2002:a17:90a:1916:: with SMTP id 22mr4476855pjg.62.1567265295363;
-        Sat, 31 Aug 2019 08:28:15 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a1sm7212452pgh.61.2019.08.31.08.28.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 31 Aug 2019 08:28:14 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 08:28:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com,
-        robh+dt@kernel.org, jdelvare@suse.com
-Subject: Re: [PATCH v2 3/3] pmbus: ibm-cffps: Add support for version 2 of
- the PSU
-Message-ID: <20190831152814.GA9950@roeck-us.net>
-References: <1567192263-15065-1-git-send-email-eajames@linux.ibm.com>
- <1567192263-15065-4-git-send-email-eajames@linux.ibm.com>
+ d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eYWK8bdzhApNKmWetQUwNAxxhMneGrP1n4JLyuQfN9M=;
+ b=eY/cvJkR3nXlCRVpoC60YTUBKmfryJiWqKVls7IRKvNG4WBw+Jh8Tm857jDJqsjGfn0Gky/L637MHY5h60Hr2sChEUJpTywT2mm0cU/rHC4CdSRHSgDQkMDQZLRhGFIqfxbAw4/dZvGyIigCrKwAvXfYYEzC1K50TQuVQPS1QxY=
+Received: from DM5PR1101MB2348.namprd11.prod.outlook.com (10.173.174.144) by
+ DM5PR1101MB2345.namprd11.prod.outlook.com (10.173.172.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Sat, 31 Aug 2019 15:29:22 +0000
+Received: from DM5PR1101MB2348.namprd11.prod.outlook.com
+ ([fe80::101c:56a0:673b:6410]) by DM5PR1101MB2348.namprd11.prod.outlook.com
+ ([fe80::101c:56a0:673b:6410%6]) with mapi id 15.20.2199.021; Sat, 31 Aug 2019
+ 15:29:22 +0000
+From:   Jethro Beekman <jethro@fortanix.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     Marek Vasut <marek.vasut@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: intel-spi: add support for Intel Cannon
+ Lake SPI flash
+Thread-Topic: [PATCH 2/2] mtd: spi-nor: intel-spi: add support for Intel
+ Cannon Lake SPI flash
+Thread-Index: AQHVX8ABRdU28yqEZUSYr3dEEhcW0acVQqAAgAAfk4A=
+Date:   Sat, 31 Aug 2019 15:29:21 +0000
+Message-ID: <74545c4c-a9fc-77c8-cb54-6fbf747f0eea@fortanix.com>
+References: <6cc18e41-82a6-942b-6d91-6297f73a33da@fortanix.com>
+ <20190831133616.GQ3177@lahna.fi.intel.com>
+In-Reply-To: <20190831133616.GQ3177@lahna.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR08CA0042.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::19) To DM5PR1101MB2348.namprd11.prod.outlook.com
+ (2603:10b6:3:a8::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jethro@fortanix.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [76.236.28.27]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b62da9fc-d6a8-40e3-a91c-08d72e27ff21
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(49563074)(7193020);SRVR:DM5PR1101MB2345;
+x-ms-traffictypediagnostic: DM5PR1101MB2345:
+x-microsoft-antispam-prvs: <DM5PR1101MB234522EFFCD56CF58C45D2F1AABC0@DM5PR1101MB2345.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 014617085B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(39830400003)(366004)(189003)(199004)(52116002)(102836004)(8676002)(76176011)(14454004)(2906002)(186003)(36756003)(305945005)(229853002)(6486002)(966005)(99286004)(486006)(5660300002)(3846002)(6116002)(4744005)(508600001)(99936001)(25786009)(6436002)(316002)(7736002)(6916009)(71200400001)(71190400001)(8936002)(66616009)(66946007)(53546011)(31696002)(66066001)(66476007)(7416002)(64756008)(26005)(66556008)(66446008)(4326008)(53936002)(54906003)(476003)(31686004)(256004)(2616005)(6246003)(6506007)(446003)(386003)(6512007)(81166006)(81156014)(86362001)(11346002)(6306002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1101MB2345;H:DM5PR1101MB2348.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fortanix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Y4GfR9/K0fz4tTBoufovE7kj9w52uyqQBrvba3p9nhKd5x4Mnk+TbIFmXzJVnRuXCam/tZ4Zkf8d/GojQ3iwirOH+ChQGrwM98vVLrRmG27ZBNiWFcj+lAGFVYPERKtFqoxyIMNfu8SitsyDwIBSIPl/mMZlDU23POPe6c0mzTq5RdwQQO++5OefMWp/g1+3ansGuqpAwcRMnY1MJTmxXNeZrMl3HX2s01foVd2B+9dgFripXgod0uczFDF1z3AG5q4Y5EJ5ShgjPLPvRNlYhsy1Mf7t6Ag9vuKB4shOxil4JCPuLj8lvHENd+j359txqpJCmLaIC52Yibp4e5z7aBhikV1a5CDyzZav9ppHXBnP3o9AgG17pB8IBW37cIU4iogEsRqPJLq70L9xVs1YcUccyQgdUpxSUelNl/oW1cU=
+x-ms-exchange-transport-forked: True
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms050204080808080401050302"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567192263-15065-4-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: fortanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b62da9fc-d6a8-40e3-a91c-08d72e27ff21
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 15:29:22.0150
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bzd1uCdvyzOLiDU8VePtK/EQbhsJtZXUKUriMjVI21JCVufDlfqRdIWmvLvL65EEFtBij6v6MtuFV9SP00NQFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2345
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 02:11:03PM -0500, Eddie James wrote:
-> Version 2 of the PSU supports a second page of data and changes the
-> format of the FW version. Use the devicetree binding to differentiate
-> between the version the driver should use.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+--------------ms050204080808080401050302
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Applied to hwmon-next.
+On 2019-08-31 06:36, Mika Westerberg wrote:
+> Looks like some white space damage. There are couple of similar below a=
+s
+> well.
 
-Thanks,
-Guenter
+Oops. I will fix this in a v2 or resend later.
 
-> ---
-> Changes since v1:
->  - use an enum for the version instead of integers 1, 2, etc
-> 
->  drivers/hwmon/pmbus/ibm-cffps.c | 110 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 88 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-> index ee2ee9e..d44745e 100644
-> --- a/drivers/hwmon/pmbus/ibm-cffps.c
-> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
-> @@ -12,6 +12,7 @@
->  #include <linux/leds.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/pmbus.h>
->  
->  #include "pmbus.h"
-> @@ -20,8 +21,9 @@
->  #define CFFPS_PN_CMD				0x9B
->  #define CFFPS_SN_CMD				0x9E
->  #define CFFPS_CCIN_CMD				0xBD
-> -#define CFFPS_FW_CMD_START			0xFA
-> -#define CFFPS_FW_NUM_BYTES			4
-> +#define CFFPS_FW_CMD				0xFA
-> +#define CFFPS1_FW_NUM_BYTES			4
-> +#define CFFPS2_FW_NUM_WORDS			3
->  #define CFFPS_SYS_CONFIG_CMD			0xDA
->  
->  #define CFFPS_INPUT_HISTORY_CMD			0xD6
-> @@ -52,6 +54,8 @@ enum {
->  	CFFPS_DEBUGFS_NUM_ENTRIES
->  };
->  
-> +enum versions { cffps1, cffps2 };
-> +
->  struct ibm_cffps_input_history {
->  	struct mutex update_lock;
->  	unsigned long last_update;
-> @@ -61,6 +65,7 @@ struct ibm_cffps_input_history {
->  };
->  
->  struct ibm_cffps {
-> +	enum versions version;
->  	struct i2c_client *client;
->  
->  	struct ibm_cffps_input_history input_history;
-> @@ -132,6 +137,8 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
->  	struct ibm_cffps *psu = to_psu(idxp, idx);
->  	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
->  
-> +	pmbus_set_page(psu->client, 0);
-> +
->  	switch (idx) {
->  	case CFFPS_DEBUGFS_INPUT_HISTORY:
->  		return ibm_cffps_read_input_history(psu, buf, count, ppos);
-> @@ -152,16 +159,36 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
->  		rc = snprintf(data, 5, "%04X", rc);
->  		goto done;
->  	case CFFPS_DEBUGFS_FW:
-> -		for (i = 0; i < CFFPS_FW_NUM_BYTES; ++i) {
-> -			rc = i2c_smbus_read_byte_data(psu->client,
-> -						      CFFPS_FW_CMD_START + i);
-> -			if (rc < 0)
-> -				return rc;
-> +		switch (psu->version) {
-> +		case cffps1:
-> +			for (i = 0; i < CFFPS1_FW_NUM_BYTES; ++i) {
-> +				rc = i2c_smbus_read_byte_data(psu->client,
-> +							      CFFPS_FW_CMD +
-> +								i);
-> +				if (rc < 0)
-> +					return rc;
-> +
-> +				snprintf(&data[i * 2], 3, "%02X", rc);
-> +			}
->  
-> -			snprintf(&data[i * 2], 3, "%02X", rc);
-> -		}
-> +			rc = i * 2;
-> +			break;
-> +		case cffps2:
-> +			for (i = 0; i < CFFPS2_FW_NUM_WORDS; ++i) {
-> +				rc = i2c_smbus_read_word_data(psu->client,
-> +							      CFFPS_FW_CMD +
-> +								i);
-> +				if (rc < 0)
-> +					return rc;
-> +
-> +				snprintf(&data[i * 4], 5, "%04X", rc);
-> +			}
->  
-> -		rc = i * 2;
-> +			rc = i * 4;
-> +			break;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
->  		goto done;
->  	default:
->  		return -EINVAL;
-> @@ -279,6 +306,8 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
->  			psu->led_state = CFFPS_LED_ON;
->  	}
->  
-> +	pmbus_set_page(psu->client, 0);
-> +
->  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
->  				       psu->led_state);
->  	if (rc < 0)
-> @@ -299,6 +328,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
->  	if (led_cdev->brightness == LED_OFF)
->  		return 0;
->  
-> +	pmbus_set_page(psu->client, 0);
-> +
->  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
->  				       CFFPS_LED_BLINK);
->  	if (rc < 0)
-> @@ -328,15 +359,32 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
->  		dev_warn(dev, "failed to register led class: %d\n", rc);
->  }
->  
-> -static struct pmbus_driver_info ibm_cffps_info = {
-> -	.pages = 1,
-> -	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> -		PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
-> -		PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
-> -		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
-> -		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
-> -	.read_byte_data = ibm_cffps_read_byte_data,
-> -	.read_word_data = ibm_cffps_read_word_data,
-> +static struct pmbus_driver_info ibm_cffps_info[] = {
-> +	[cffps1] = {
-> +		.pages = 1,
-> +		.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> +			PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
-> +			PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-> +			PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-> +			PMBUS_HAVE_STATUS_FAN12,
-> +		.read_byte_data = ibm_cffps_read_byte_data,
-> +		.read_word_data = ibm_cffps_read_word_data,
-> +	},
-> +	[cffps2] = {
-> +		.pages = 2,
-> +		.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> +			PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
-> +			PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-> +			PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-> +			PMBUS_HAVE_STATUS_FAN12,
-> +		.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT,
-> +		.read_byte_data = ibm_cffps_read_byte_data,
-> +		.read_word_data = ibm_cffps_read_word_data,
-> +	},
->  };
->  
->  static struct pmbus_platform_data ibm_cffps_pdata = {
-> @@ -347,12 +395,21 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  			   const struct i2c_device_id *id)
->  {
->  	int i, rc;
-> +	enum versions vs;
->  	struct dentry *debugfs;
->  	struct dentry *ibm_cffps_dir;
->  	struct ibm_cffps *psu;
-> +	const void *md = of_device_get_match_data(&client->dev);
-> +
-> +	if (md)
-> +		vs = (enum versions)md;
-> +	else if (id)
-> +		vs = (enum versions)id->driver_data;
-> +	else
-> +		vs = cffps1;
->  
->  	client->dev.platform_data = &ibm_cffps_pdata;
-> -	rc = pmbus_do_probe(client, id, &ibm_cffps_info);
-> +	rc = pmbus_do_probe(client, id, &ibm_cffps_info[vs]);
->  	if (rc)
->  		return rc;
->  
-> @@ -364,6 +421,7 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  	if (!psu)
->  		return 0;
->  
-> +	psu->version = vs;
->  	psu->client = client;
->  	mutex_init(&psu->input_history.update_lock);
->  	psu->input_history.last_update = jiffies - HZ;
-> @@ -405,13 +463,21 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  }
->  
->  static const struct i2c_device_id ibm_cffps_id[] = {
-> -	{ "ibm_cffps1", 1 },
-> +	{ "ibm_cffps1", cffps1 },
-> +	{ "ibm_cffps2", cffps2 },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(i2c, ibm_cffps_id);
->  
->  static const struct of_device_id ibm_cffps_of_match[] = {
-> -	{ .compatible = "ibm,cffps1" },
-> +	{
-> +		.compatible = "ibm,cffps1",
-> +		.data = (void *)cffps1
-> +	},
-> +	{
-> +		.compatible = "ibm,cffps2",
-> +		.data = (void *)cffps2
-> +	},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, ibm_cffps_of_match);
+>> +		ispi->sregs =3D NULL;
+>> +		ispi->pregs =3D ispi->base + CNL_PR;
+>> +		ispi->nregions =3D CNL_FREG_NUM;
+>> +		ispi->pr_num =3D CNL_PR_NUM;
+>=20
+> Does CNL really have a different number of PR and FR regions than the
+> previous generations?
+
+I'm using this as a reference:=20
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/3=
+00-series-chipset-pch-datasheet-vol-2.pdf=20
+=2E If you have more accurate information, please let me know.
+
+--
+Jethro Beekman | Fortanix
+
+
+--------------ms050204080808080401050302
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+Cx8wggUxMIIEGaADAgECAhBdZC9mIseKJlmxx1xn+g00MA0GCSqGSIb3DQEBCwUAMIGXMQsw
+CQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
+b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xODA5MTUwMDAw
+MDBaFw0xOTA5MTUyMzU5NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2pldGhyb0Bmb3J0YW5peC5j
+b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDRQDOQsroKjy2xAQCXLyqryJt4
+Xwj8hcweJCzOnjILKHIoWlOQ0b9yIbFLIWBRt/9zdxlE5ZabDVHnkIyhcVgtU/BA73e78Wx2
+LOObdg0wfs9U2CVRYhz2EPHFjGvkYKihItt69ye91hj1w7RKCrYC8KZGSZ/+sbkJzQdXVy32
+lxmiNEt17GNRebpkJCaFnznd6C2a8tBAS2Fa/UNyFdEs4eoRoYSKswclRhbe81aVhqY2hjcd
+O6puyyaYp5hkmau2UPih6OpRSOhbe6Tuebceg1yvumoVX3OZtGPS1VdQ+p0bxB0RE6gNs140
+ZKUhrvAJDETuGaaQD4A2/6ksLunjAgMBAAGjggHpMIIB5TAfBgNVHSMEGDAWgBSCr2yM+MX+
+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUsFUcmGtaJBU7/52LyTYHC/M+LscwDgYDVR0PAQH/
+BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUHAwQGCysGAQQBsjEBAwUC
+MBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEBATArMCkGCCsG
+AQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBL
+hklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlv
+bmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0
+dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
+U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNv
+bTAeBgNVHREEFzAVgRNqZXRocm9AZm9ydGFuaXguY29tMA0GCSqGSIb3DQEBCwUAA4IBAQB6
+v3tFEUSGv9+yY4wUjvcMyz3126nJrX5LkfEvrnCEpEiImECuoYvxOYNLYYynell7BQGtTaZg
+shMfDvwpy2isoi3w1AWAfbn6npnSKLzu0BMRvcCPWY8VPmePPizTqXoPkLwgTJfSaWkxMP1u
+rfL9S5NeRdkjwjHklX5IWuwwDu1hsKVZrxSSY2unCtvq67UHWz+z6rG1JQrP2YDfb98xun3y
+eLBNe/LFBNnGISbkT5q6D+e5c0bgzoH9nH4bsw3t8aDqJTfT3BqQdWr4pF05ODzzeOmEqeYE
+qGlD9hIL2AbmTZLjunAnARr6Fv7Sfqt23ptsGkmoZ9ZQNjT3TlwvMIIF5jCCA86gAwIBAgIQ
+apvhODv/K2ufAdXZuKdSVjANBgkqhkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNV
+BAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09N
+T0RPIENBIExpbWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRo
+b3JpdHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMCR0Ix
+GzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UE
+ChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYhUPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9
+NEjk6vW7rN/5sYFLIP1of3l0NKZ6fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+Ul
+NEQ1/5ErCsHq9x9aU/x1KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2
+qvGlnHJvijjI03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZ
+jrqck39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMBAAGj
+ggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNVHQ4EFgQUgq9s
+jPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+EQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9jcmwuY29tb2Rv
+Y2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEB
+BGUwYzA7BggrBgEFBQcwAoYvaHR0cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRk
+VHJ1c3RDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkq
+hkiG9w0BAQwFAAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+js
+QgwRGiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDcZoFD
+7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwpWZT89RY0wpJO
++2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNmNppI4ZNMUH4Tam85S1j6
+E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade2022O/tUU1gb4jfWCcyvB8czm12F
+gX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztveBdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiO
+SEmIDsS5N5w/8IW1Hva5hEFy6fDAfd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz
+/W3JlHaeI5iKFn4UJu1/cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSa
+m9V1niiCfOBe2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpO
+UvxhcsjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIxggQ1MIIEMQIBATCB
+rDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
+TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yi
+x4omWbHHXGf6DTQwDQYJYIZIAWUDBAIBBQCgggJZMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDgzMTE1MjkxN1owLwYJKoZIhvcNAQkEMSIEIKAcrUP+
+Bg7G+X3goGdc36740mLfi2rIHskfUfCzmvQkMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
+AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yix4omWbHH
+XGf6DTQwgb8GCyqGSIb3DQEJEAILMYGvoIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
+R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8g
+Q0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24g
+YW5kIFNlY3VyZSBFbWFpbCBDQQIQXWQvZiLHiiZZscdcZ/oNNDANBgkqhkiG9w0BAQEFAASC
+AQAFm4V+Fi5xt8LfitbvDyhONqauF7ARcq6FGawYNApBLmC9k96hvDVkNdPxt2bmRMhxBfDC
+cyHfIlhJazxpMqr+wZHcT6UTQjM5f4nBqgi2NkUPLNkRz9AOMBoyxZT2Sdsu3ZKv6UI4wk+J
+6hrQMVjObTU460GENOUDokBxXWa9QxpjWfyezsV4GHHX4z8I5O8LvyBCvdXrXiEVj+gRSuz2
+sQVCn/UGXrPOs/BQiVVjaiITGabhytYWhkHtb06yObEA7d2k52EGiqHcrVy2kCVOPz2gPva3
+I03ALcZXM22hR5l7urnUaVyoFPW7E6dsDKrCLU/z7H/9UCy6vPp6LfCmAAAAAAAA
+
+--------------ms050204080808080401050302--
