@@ -2,128 +2,120 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AB0C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A567C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443942190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567270126;
-	bh=8Mro9PvfbZMxhnsH/UQLgMPFUV8SjJviW6EtxlqPkjg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F0u/8bNyUtePx0QlSpzPJUS3uCHPkZsd8T4XeQNs7eYCgQ3cloI0olJFzbYVRHbXL
-	 rQT4ILoOQ/urCBxyqqe7mnnoJ8PEN8KEoNXjVy2f5ZujvE63o9k7JzIFWGJRVem79x
-	 tKtdHUhUbR0KFsyQxq6FWVuwN1ddJ7R6NwoaOo0w=
+	by mail.kernel.org (Postfix) with ESMTP id F405A2190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:49:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RsPLTrKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfHaQsp (ORCPT
+        id S1728431AbfHaQt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 12:48:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40767 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfHaQso (ORCPT
+        Sat, 31 Aug 2019 12:49:29 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7640 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfHaQt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 12:48:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v38so5683786edm.7;
-        Sat, 31 Aug 2019 09:48:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ztMy/qc6TZtxWztQakmFfR5mUH6yqYSc1RNJD7TlbZQ=;
-        b=s0DJ7pg3BA42rYndtdKLUHBIo9N2tWK9bc7/62X4w586Mz2sozc8X12oEH8IrZyxNC
-         c9iUvDNO2V1C+twP/W1CGx7WK8ay71ihd+CsYAtAPwDu4yRjPXZHOS0X+TKSfHX9t+mg
-         5xm4vdkVYN/Fyhh24QGD6KD7qweGTDz368CbcwpVFY9NoKiTaArhVMjsFiOQo3zZJHJj
-         95+ZUsHhGnjHyO6AJiDZ3GUoIbvny5RHVGZtFePhbaoA52BJTjRE+e6Ir2M7TOgTxIRp
-         I6uT+eun4MZ1pNDjHSJX5w8nJh6uTA68DBhc+TuI12nFYAg5x7u0I+5FYTREh7coDFCs
-         4TGg==
-X-Gm-Message-State: APjAAAX1hNbgDU3MD18mN5+nT/7/MxsnB5pScY7Hm+3xc8vyp1jsyG7e
-        LFlYwhW6d7LnxlFy/vrGpAOENLJgQwUIV8u4V86upA==
-X-Google-Smtp-Source: APXvYqyl4ibkLRkDUjYF8n0z5MtjgExy1a9DAIVq8L6fnpy7YHsbekFn804yrSKHc1SJcIQgcCR5/e/oZGJpW7b9VUQ=
-X-Received: by 2002:a50:bf4f:: with SMTP id g15mr21462355edk.92.1567270123028;
- Sat, 31 Aug 2019 09:48:43 -0700 (PDT)
+        Sat, 31 Aug 2019 12:49:28 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6aa51a0000>; Sat, 31 Aug 2019 09:49:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 31 Aug 2019 09:49:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sat, 31 Aug 2019 09:49:27 -0700
+Received: from [10.25.72.86] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 31 Aug
+ 2019 16:49:24 +0000
+Subject: Re: linux-next: build failure after merge of the pci tree
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Krzysztof Wilczynski <kw@linux.com>
+References: <20190830132311.7190ccc3@canb.auug.org.au>
+ <CAErSpo618ewbJQHS3E3KWhTLe6T47u=Xjx9E-gYKMzjn=MmujA@mail.gmail.com>
+ <9ae74244-f1e1-de7f-6d03-b2cca012f6fc@nvidia.com>
+ <20190831084917.GA27466@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <b4053e63-cfeb-9d38-d182-1fb88445474e@nvidia.com>
+Date:   Sat, 31 Aug 2019 22:19:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190325173232.216357-1-Yazen.Ghannam@amd.com>
- <SN6PR12MB26394D7FEE4582FD19860104F8230@SN6PR12MB2639.namprd12.prod.outlook.com>
- <SN6PR12MB2639ABA1421E220FF5813738F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
-In-Reply-To: <SN6PR12MB2639ABA1421E220FF5813738F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
-From:   Len Brown <lenb@kernel.org>
-Date:   Sat, 31 Aug 2019 12:48:32 -0400
-Message-ID: <CAJvTdKk28qQnVv-fMkd6dPGrbfYryp+7PRHgqyurLyavMHSGbw@mail.gmail.com>
-Subject: Re: [PATCH] tools/power turbostat: Make interval calculation per
- thread to reduce jitter
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190831084917.GA27466@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567270170; bh=/Z4mXFGx6fG9Ac342sfuiMn/y8zQuOXEAfS7/Y90TNc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=RsPLTrKm90s9P8+rMbRrYn/vbrRgtp9lQ1KzWS87HTmF1jhSy6rccVNuCScNiuF29
+         ZMJsy7UO5uBXyxF7f0KmYY7JKoJycN4PoJkfRPiR8o0O126FsNQCv4ubzertSD5ujW
+         Yr5POvEQBLMFF6BN/+be+8HTZhw3nntmdulSWfUVbodI6QdM4gCygG2KKg3Rq45nk7
+         ba6fUJq9XXSZ79X1V/5qljcSzFMZ1Q9sRtXfelUPzGHeeX1Bhr7PE9u6eAzGJAEJz6
+         lvh2kaGRoudK1UqcUAK69/YWZYO8ZVirwlWe9KHjhpaMASKFPTXU4xaWdENIV5i2tA
+         xSzNuvCqa7O7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yeah, I like this patch, and I have applied it.
+On 8/31/2019 2:19 PM, Lorenzo Pieralisi wrote:
+> On Sat, Aug 31, 2019 at 09:51:05AM +0530, Vidya Sagar wrote:
+>> On 8/30/2019 6:00 PM, Bjorn Helgaas wrote:
+>>> [+cc Krzysztof]
+>>>
+>>> On Thu, Aug 29, 2019 at 10:23 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>>
+>>>> Hi all,
+>>>>
+>>>> After merging the pci tree, today's linux-next build (x86_64 allmodconfig)
+>>>> failed like this:
+>>>>
+>>>> drivers/pci/controller/dwc/pcie-tegra194.c:24:10: fatal error: linux/pci-aspm.h: No such file or directory
+>>>>      24 | #include <linux/pci-aspm.h>
+>>>>         |          ^~~~~~~~~~~~~~~~~~
+>>>>
+>>>> Caused by commit
+>>>>
+>>>>     81564976b1a9 ("PCI: tegra: Add Tegra194 PCIe support")
+>>>>
+>>>> I have reverted that commit for todat.
+>>>
+>>> Thanks, Stephen.
+>>>
+>>> I *could* fix this by removing that include in the merge, since the
+>>> contents of linux/pci-aspm.h were moved into linux/pci.h by
+>>> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=7ce2e76a0420
+>>>
+>>> But as far as I can tell, pcie-tegra194.c doesn't actually require
+>>> anything from linux/pci-aspm.h, so I'd rather amend the tegra194
+>>> commit https://git.kernel.org/cgit/linux/kernel/git/lpieralisi/pci.git/commit/?id=81564976b1a9
+>>> so it doesn't include pci-aspm.h in the first place.
+>> Thanks Bjorn for the reply.
+>> Yes. This header file is not required for now and can be removed.
+>> Is there any action required from my side for this?
+> 
+> I updated my pci/tegra branch so that Bjorn can pull it.
+Thanks a lot Lorenzo and Bjorn.
 
-thanks!
--Len
+- Vidya Sagar
+> 
+> Lorenzo
+> 
 
-On Fri, Jun 7, 2019 at 12:28 PM Ghannam, Yazen <Yazen.Ghannam@amd.com> wrote:
->
-> > -----Original Message-----
-> > From: Ghannam, Yazen <Yazen.Ghannam@amd.com>
-> > Sent: Tuesday, April 23, 2019 12:53 PM
-> > To: Ghannam, Yazen <Yazen.Ghannam@amd.com>; linux-pm@vger.kernel.org; len.brown@intel.com
-> > Cc: linux-kernel@vger.kernel.org; Len Brown <lenb@kernel.org>
-> > Subject: RE: [PATCH] tools/power turbostat: Make interval calculation per thread to reduce jitter
-> >
-> > > -----Original Message-----
-> > > From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> On Behalf Of Ghannam, Yazen
-> > > Sent: Monday, March 25, 2019 12:33 PM
-> > > To: linux-pm@vger.kernel.org
-> > > Cc: Ghannam, Yazen <Yazen.Ghannam@amd.com>; linux-kernel@vger.kernel.org; lenb@kernel.org
-> > > Subject: [PATCH] tools/power turbostat: Make interval calculation per thread to reduce jitter
-> > >
-> > > From: Yazen Ghannam <yazen.ghannam@amd.com>
-> > >
-> > > Turbostat currently normalizes TSC and other values by dividing by an
-> > > interval. This interval is the delta between the start of one global
-> > > (all counters on all CPUs) sampling and the start of another. However,
-> > > this introduces a lot of jitter into the data.
-> > >
-> > > In order to reduce jitter, the interval calculation should be based on
-> > > timestamps taken per thread and close to the start of the thread's
-> > > sampling.
-> > >
-> > > Define a per thread time value to hold the delta between samples taken
-> > > on the thread.
-> > >
-> > > Use the timestamp taken at the beginning of sampling to calculate the
-> > > delta.
-> > >
-> > > Move the thread's beginning timestamp to after the CPU migration to
-> > > avoid jitter due to the migration.
-> > >
-> > > Use the global time delta for the average time delta.
-> > >
-> > > Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> > > ---
-> >
-> > Hi Len,
-> >
-> > Any comments on this patch?
-> >
->
-> Hi Len,
->
-> Just wanted to check in. Do you have any comments on this patch?
->
-> Thanks,
-> Yazen
-
-
-
--- 
-Len Brown, Intel Open Source Technology Center
