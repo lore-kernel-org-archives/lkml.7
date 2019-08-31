@@ -2,100 +2,115 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C965C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77151C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A29F22CE9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE3422CE9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567250418;
+	bh=hXei5bZ7WBN0X4Ji/gcuTN/I8JDxgNxSrJTH1V+inng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mSxSfmaGOb2oitZeN1KUXM7EVK6P0l1Qoljso0yL+UfsW+M3lsuyXbXxpflLXv2/I
+	 g7a8mABJajVSpUYUUGXj6bRMV1qluPOAKw2GOpj6T7iqOTsTs/esh8dJWvZ3ljIqip
+	 B+rGM5aLeY76zfzXX4t0mUwR84fW0LxPfxxPNI+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfHaLTF (ORCPT
+        id S1727501AbfHaLUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 07:19:05 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:59429 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfHaLTF (ORCPT
+        Sat, 31 Aug 2019 07:20:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34201 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfHaLUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 07:19:05 -0400
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7VBIhZf087789;
-        Sat, 31 Aug 2019 20:18:43 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
- Sat, 31 Aug 2019 20:18:43 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7VBIgAG087782
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 31 Aug 2019 20:18:43 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: es8316: Add clock control of MCLK
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>
-References: <20190829173205.11805-1-katsuhiro@katsuster.net>
- <20190829173205.11805-2-katsuhiro@katsuster.net>
- <20190830111817.GA5182@sirena.co.uk>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <ee38ca00-4146-49fe-21c0-af0578b1d65c@katsuster.net>
-Date:   Sat, 31 Aug 2019 20:18:42 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 31 Aug 2019 07:20:16 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a13so10597425qtj.1;
+        Sat, 31 Aug 2019 04:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LvmGRX4LOdsdUyhqS2DocPUCGusSGnHnPDwLS+tUYBw=;
+        b=PK/UUpMIz6vGKESR/qWrB73mE5YrMA3srDYvsuYkZrvinUDXGVxGQ5MG3gdvcVS07j
+         ZfANEcE/6el1beaQ4LSh3G1MTb05PufyP/OU6Q0VQOb2cDAcrIxDzvSZv+FYVzrntCvQ
+         tTWEaEuJyTtf8N2g7gXdNHT7+q8SLvbxI/heNodCYdg+heOHOoAdjPP4Vsu3obkzZWSe
+         H5W7JInfDelMo6SSnpOS6d0F9x0aIdjeq9YYKXaxhbj3w9W8nmYuGb4t7T/SW7pQKzB/
+         097wawu8tSWVKZF9uRH0rbsWAQ5AUeikdovBIDTVghW4ccY/51t6WwfqP70a9c4bACZh
+         jL9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LvmGRX4LOdsdUyhqS2DocPUCGusSGnHnPDwLS+tUYBw=;
+        b=XqbXTdgCk0QLUjU09c18Ppvk5AVQOuGwEWyovFBFhLiSBv+AZP5Lb8vgvqRpOUPYsS
+         I19cLFyA4qaSYnEWy+XeI/nhdcroYwEgg82J+4vo7lT1eY1iDlJpidarz+Ic3WYhsPun
+         wtc5/82vpJjK/LTiX+E08PNY1U8Uu+2lOgy8baWMqJTolSW33HJOysjsLu2nzduVo5IH
+         FfuIKtVyodwKhd0CxQ57EMb5eXWbKodUlRom782fpYpwaXJirlUcjEHL2ZeQlzxnKv4A
+         dxI9JOdFMp7jhNTxvvDmNgnd4Qp9Jnv9Rvdmz0zTAhVZCU0oSROaZKqgxLCyO+1BZ6Aw
+         0hYQ==
+X-Gm-Message-State: APjAAAV8VuD4LHHuMkoeOCWHz8x2+BOXt5UJFCZrGbNXj+PPKWP5wIuX
+        UnJsNMNjGDpVdZdn7dW8/4w=
+X-Google-Smtp-Source: APXvYqxlmdRha80klC3NPhknthgVd3QVg1cGBUKDxmEcoq0Bjs+/s8SS3U82mQXt9So7bUSlMmHy0A==
+X-Received: by 2002:ad4:4a92:: with SMTP id h18mr13034019qvx.235.1567250414665;
+        Sat, 31 Aug 2019 04:20:14 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::3986])
+        by smtp.gmail.com with ESMTPSA id t15sm1442361qti.12.2019.08.31.04.20.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 31 Aug 2019 04:20:13 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 04:20:10 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+Message-ID: <20190831112010.GG2263813@devbig004.ftw2.facebook.com>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+ <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+ <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+ <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+ <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
+ <20190831065358.GF2263813@devbig004.ftw2.facebook.com>
+ <73CA9E04-DD93-47E4-B0FE-0A12EC991DEF@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190830111817.GA5182@sirena.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73CA9E04-DD93-47E4-B0FE-0A12EC991DEF@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
+Hello,
 
-On 2019/08/30 20:18, Mark Brown wrote:
-> On Fri, Aug 30, 2019 at 02:32:04AM +0900, Katsuhiro Suzuki wrote:
+On Sat, Aug 31, 2019 at 09:10:26AM +0200, Paolo Valente wrote:
+> Hi Tejun,
+> thank you very much for this extra information, I'll try the
+> configuration you suggest.  In this respect, is this still the branch
+> to use
 > 
->> +	es8316->mclk = devm_clk_get(component->dev, "mclk");
->> +	if (PTR_ERR(es8316->mclk) == -EPROBE_DEFER)
->> +		return -EPROBE_DEFER;
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/tj/cgroup/+/refs/heads/review-iocost-v2
 > 
-> If we don't get a clock it'd be nice to at least log that in case
-> there's something wrong with the clock driver so that people have more
-> of a hint as to why things might be breaking.
-> 
+> also after the issue spotted two days ago [1]?
 
-OK, to change more user friendly.
+block/for-next is the branch which has all the updates.
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
 
->> +
->> +	if (es8316->mclk) {
->> +		ret = clk_prepare_enable(es8316->mclk);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
-> 
-> There's nothing that disables the clock on remove.
-> 
-> Otherwise this looks good.
-> 
-Thank you for reviewing. I'll fix it and send V2 patch set.
+Thanks.
 
-
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
-> 
-
-Best Regards,
-Katsuhiro Suzuki
+-- 
+tejun
