@@ -2,204 +2,103 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99274C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43F1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7795423697
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6D123426
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:13:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ECY/8G9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfHaJGV (ORCPT
+        id S1726453AbfHaJNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 05:06:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54404 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfHaJGU (ORCPT
+        Sat, 31 Aug 2019 05:13:18 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41064 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfHaJNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 05:06:20 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3zKf-0006D2-RA; Sat, 31 Aug 2019 11:06:05 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 713C51C0DCA;
-        Sat, 31 Aug 2019 11:06:05 +0200 (CEST)
-Date:   Sat, 31 Aug 2019 09:06:05 -0000
-From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/amd/ibs: Fix sample bias for dispatched micro-ops
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>, <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190826195730.30614-1-kim.phillips@amd.com>
-References: <20190826195730.30614-1-kim.phillips@amd.com>
+        Sat, 31 Aug 2019 05:13:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id j5so19000867ioj.8
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 02:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NjP1K4B+dJg4KiSw2tkIWX3jIArsrWzA1uaNHVJvlN0=;
+        b=ECY/8G9VMWkU8NkmeoAPTBGwZKyqTh/0buwe3wSCqSCkeqp3BzM+7oO/JHpnh/ommu
+         b8MdYwzPvfhgtrMkO1AdzVFJXguJZr/5FVKX1x/O4TuzWdsRnHe+ux5I4cpPIHEm1CY2
+         RGd3YR6AMNcRYvcJJHIW34c5Z9lsd95tzZwU/eTxnMfZSJNl8//BWonTqKt2sPPP9S52
+         U1WaxdM+pzKOjVj2OBaOw+FmDxGO2LN69kTyMOxCFvaDmRnWTqd/ydnN5Ba0Ejj5IrNo
+         rbHSzezZnygxAi09/2x950anFWbi6vQcxPowzXLJ/0apKokBCeOdyQEg05SDzZE7imaR
+         BN7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NjP1K4B+dJg4KiSw2tkIWX3jIArsrWzA1uaNHVJvlN0=;
+        b=eu/WXBEF4ibUESX9DX7ADfuND2mtNqGKcEPumAwdT+bAKKpNN6EFmZIiSwA/KRNpk4
+         jUqp24LwfN7rtIDPV8r/kDUGw1DdU+kVSq8CsFT6uyIudYR4R3QS6up5lbGjRpXYoXdv
+         r9VJqMifMOAXV3cYEyrpJepCGGJdh/k2mthoO6DR09T5nNWOIYHW80LfO/2AJD0oHLKK
+         p3k/D/nd5RJ4+OUqfjQEQp4ZB18cyYf0IexfaMvMlWtyIChZlx4Xpons/2Cnnb35ZgaL
+         QDwQamsYY2blGfGf5SdjrQSLpl3q6cKZVNZL/STe4HitJkIUrYil21sVXHgNgf85BzFd
+         oH7A==
+X-Gm-Message-State: APjAAAXZB85r1xW3dAucl0yDgW7Sb4lY0bOvPt9TPHckvv6cwE2tRZCa
+        JfqH1LszhybBtMu1UWusHF5b/NrVuOiwPcOEUMpDGw==
+X-Google-Smtp-Source: APXvYqzgFQdus/RgPacid4CblEeawTeMIW58koQjqbhYpmMZVkjjCI0tduXeqDr8KU1lQfZXxBYwIiESTrWT/w/O3ug=
+X-Received: by 2002:a5e:a90f:: with SMTP id c15mr6701972iod.41.1567242797252;
+ Sat, 31 Aug 2019 02:13:17 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156724236532.10782.17844013749559561663.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-4-kan.liang@linux.intel.com> <CABPqkBTS8bRjSwOBm2HxtuDWhxeZrTGa_E8mqfRfEJPzX1BNhw@mail.gmail.com>
+ <20190831003110.GA5447@tassilo.jf.intel.com>
+In-Reply-To: <20190831003110.GA5447@tassilo.jf.intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Sat, 31 Aug 2019 02:13:05 -0700
+Message-ID: <CABPqkBSPfZ6iQ_t1ESZf334q+dNVf=RvoNHdmKZSs5GLokbjFQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown metrics
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+Andi,
 
-Commit-ID:     0f4cd769c410e2285a4e9873a684d90423f03090
-Gitweb:        https://git.kernel.org/tip/0f4cd769c410e2285a4e9873a684d90423f03090
-Author:        Kim Phillips <kim.phillips@amd.com>
-AuthorDate:    Mon, 26 Aug 2019 14:57:30 -05:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 30 Aug 2019 14:27:47 +02:00
+On Fri, Aug 30, 2019 at 5:31 PM Andi Kleen <ak@linux.intel.com> wrote:
+>
+> > the same manner. It would greatly simplify the kernel implementation.
+>
+> I tried that originally. It was actually more complicated.
+>
+> You can't really do deltas on raw metrics, and a lot of the perf
+> infrastructure is built around deltas.
+>
+How is RAPL handled? No deltas there either. It uses the snapshot model.
+At each interval, perf stat just reads the current count, and does not compute
+a delta since previous read.
+With PERF_METRICS, the delta is always since previous read. If you read
+frequently enough you do not lose precision.
 
-perf/x86/amd/ibs: Fix sample bias for dispatched micro-ops
-
-When counting dispatched micro-ops with cnt_ctl=1, in order to prevent
-sample bias, IBS hardware preloads the least significant 7 bits of
-current count (IbsOpCurCnt) with random values, such that, after the
-interrupt is handled and counting resumes, the next sample taken
-will be slightly perturbed.
-
-The current count bitfield is in the IBS execution control h/w register,
-alongside the maximum count field.
-
-Currently, the IBS driver writes that register with the maximum count,
-leaving zeroes to fill the current count field, thereby overwriting
-the random bits the hardware preloaded for itself.
-
-Fix the driver to actually retain and carry those random bits from the
-read of the IBS control register, through to its write, instead of
-overwriting the lower current count bits with zeroes.
-
-Tested with:
-
-perf record -c 100001 -e ibs_op/cnt_ctl=1/pp -a -C 0 taskset -c 0 <workload>
-
-'perf annotate' output before:
-
- 15.70  65:   addsd     %xmm0,%xmm1
- 17.30        add       $0x1,%rax
- 15.88        cmp       %rdx,%rax
-              je        82
- 17.32  72:   test      $0x1,%al
-              jne       7c
-  7.52        movapd    %xmm1,%xmm0
-  5.90        jmp       65
-  8.23  7c:   sqrtsd    %xmm1,%xmm0
- 12.15        jmp       65
-
-'perf annotate' output after:
-
- 16.63  65:   addsd     %xmm0,%xmm1
- 16.82        add       $0x1,%rax
- 16.81        cmp       %rdx,%rax
-              je        82
- 16.69  72:   test      $0x1,%al
-              jne       7c
-  8.30        movapd    %xmm1,%xmm0
-  8.13        jmp       65
-  8.24  7c:   sqrtsd    %xmm1,%xmm0
-  8.39        jmp       65
-
-Tested on Family 15h and 17h machines.
-
-Machines prior to family 10h Rev. C don't have the RDWROPCNT capability,
-and have the IbsOpCurCnt bitfield reserved, so this patch shouldn't
-affect their operation.
-
-It is unknown why commit db98c5faf8cb ("perf/x86: Implement 64-bit
-counter support for IBS") ignored the lower 4 bits of the IbsOpCurCnt
-field; the number of preloaded random bits has always been 7, AFAICT.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: <x86@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Borislav Petkov" <bp@alien8.de>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: "Namhyung Kim" <namhyung@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/20190826195730.30614-1-kim.phillips@amd.com
----
- arch/x86/events/amd/ibs.c         | 13 ++++++++++---
- arch/x86/include/asm/perf_event.h | 12 ++++++++----
- 2 files changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 62f317c..5b35b7e 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -661,10 +661,17 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 
- 	throttle = perf_event_overflow(event, &data, &regs);
- out:
--	if (throttle)
-+	if (throttle) {
- 		perf_ibs_stop(event, 0);
--	else
--		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
-+	} else {
-+		period >>= 4;
-+
-+		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
-+		    (*config & IBS_OP_CNT_CTL))
-+			period |= *config & IBS_OP_CUR_CNT_RAND;
-+
-+		perf_ibs_enable_event(perf_ibs, hwc, period);
-+	}
- 
- 	perf_event_update_userpage(event);
- 
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 1392d5e..ee26e92 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -252,16 +252,20 @@ struct pebs_lbr {
- #define IBSCTL_LVT_OFFSET_VALID		(1ULL<<8)
- #define IBSCTL_LVT_OFFSET_MASK		0x0F
- 
--/* ibs fetch bits/masks */
-+/* IBS fetch bits/masks */
- #define IBS_FETCH_RAND_EN	(1ULL<<57)
- #define IBS_FETCH_VAL		(1ULL<<49)
- #define IBS_FETCH_ENABLE	(1ULL<<48)
- #define IBS_FETCH_CNT		0xFFFF0000ULL
- #define IBS_FETCH_MAX_CNT	0x0000FFFFULL
- 
--/* ibs op bits/masks */
--/* lower 4 bits of the current count are ignored: */
--#define IBS_OP_CUR_CNT		(0xFFFF0ULL<<32)
-+/*
-+ * IBS op bits/masks
-+ * The lower 7 bits of the current count are random bits
-+ * preloaded by hardware and ignored in software
-+ */
-+#define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
-+#define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
- #define IBS_OP_CNT_CTL		(1ULL<<19)
- #define IBS_OP_VAL		(1ULL<<18)
- #define IBS_OP_ENABLE		(1ULL<<17)
+>
+> To do the regular reset and not lose precision over time internally
+> you have to keep expanded counters anyways. And if you do that
+> you can just expose them to user space too, and have everything
+> in user space just work without any changes (except for the final
+> output)
+>
+> -Andi
+>
