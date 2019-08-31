@@ -2,136 +2,157 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833F0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C484C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E29F2190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8B22190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pV/9auGE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYMs+h7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfHaVEE (ORCPT
+        id S1728512AbfHaVbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 17:04:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36475 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbfHaVEE (ORCPT
+        Sat, 31 Aug 2019 17:31:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42317 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfHaVbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 17:04:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l21so5280616pgm.3;
-        Sat, 31 Aug 2019 14:04:04 -0700 (PDT)
+        Sat, 31 Aug 2019 17:31:42 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p3so5278054pgb.9;
+        Sat, 31 Aug 2019 14:31:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=JOkt1Xq1yrsHfK/1NpnOnxpeuczROWMDFL17g6IfVAA=;
-        b=pV/9auGEPtAoN12YoL+WtRizQy+cGjQu2nV8KDGbUbXYnlnNQFLkITroADOozo/bVk
-         3RR24DJpQDUxnJqfupZIw/meeyUoQ120UzhQP4/fevuzjLt1lEWt8IEldCxg7mQxgsta
-         Aha25WCZZ/gc7MaeqmiciWpYwcsNmYpf+Zl0M201YWCAJu7Ez/9Fa6fZf8CdpsDaggcC
-         sPMsPJZp9ciwcfq4v6bE0BnT0yp5q6Qq6CUMWCBMJulsMpLMVcmLGnFiNcnIewRsraaE
-         XtxK0jm/a+Yb4TZBG9PH9a+SU6z52+BGVNu4p7hIe+ex4CZ+yfoqM3yrfZRayCYZAmOA
-         ezWQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+MuizemRZBK7y4EPhOqkcNh+j3OitGqWAcLb/tYmDlY=;
+        b=TYMs+h7XCkfnxW83esvEWCGtDELyZlP8PT7UFYEOYvWJlufam6JCZZ41EigPpYgj+H
+         Rzh63zgCszHOICTd4uVZqVWkungT0vepiqQQCl/nQTxWDiCt9BMmgoAYswM889QuOJb+
+         svvv2J3bs3yJ1CrrHkrxYcoKmJvq5lpybFwgjMLKnn3pjiMp0FMTLYxFrtkq7QxjUTeE
+         uGsRPPmXTJ8McFUtRlfCx/jaLJi8/7IdMPKMn0vbAS4V+TCBsF0en1RJQgai/nipxFjQ
+         hQRXoJPP6DXGDl0ruz9HqR/X7zg54oZmH3WmW3yzLzWnoWYqcNhVtu40J6kn1bf8PSzG
+         5L7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=JOkt1Xq1yrsHfK/1NpnOnxpeuczROWMDFL17g6IfVAA=;
-        b=XPqVjstYr3aFhr35e7wl034unS5hS0xeQQLUHGik5sXQv52rFC6QJPD05JvvQ0y7HC
-         j1LA4+xgcw586AsLvs7GbSs6i/hx9B27Nm/yHjikaET2CExJNMODNORkOu2pulmpdnP/
-         cPWBtXlGNCHiYFRBYPebKvjMqw5bVzUGnTpWPP9VGxy12t4kf09mIyOyJwX+8wnA4XQD
-         bwuzNWUwnXWTThgNOoAoOk8ymv+ffwBp2bx8kvKlVo1suciCKITVC7J/lKmT5+yp9s0d
-         IHTRPfC+abZITZeeynVo0NroL5pQVXVNBnFz/hC350tXV7kCML2Cv1oGPC13a2FWoyBx
-         /ARg==
-X-Gm-Message-State: APjAAAUGdL4kcG4cQFiCBJLu8KNElOkPglSts1vCFbvBHubIOf1SQ2Rh
-        PIXJ8RjWeeR2pVejyOt0YYQ=
-X-Google-Smtp-Source: APXvYqzdaNFWsM3zFbednYIknaU60A9528Id43oO8nAEdhY30GFnFt0YgFp5NBg0nx83Gr3h0aS3vA==
-X-Received: by 2002:a17:90a:8914:: with SMTP id u20mr5249657pjn.111.1567285443314;
-        Sat, 31 Aug 2019 14:04:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id r28sm7774474pfg.62.2019.08.31.14.03.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 14:03:59 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 14:03:56 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        Denis Efremov <efremov@linux.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
- condition
-Message-ID: <20190831210356.GI187474@dtor-ws>
-References: <20190829165025.15750-1-efremov@linux.com>
- <20190829165025.15750-9-efremov@linux.com>
- <20190829175039.GA187474@dtor-ws>
- <20190831152500.eg7xqo5ace6wu427@pali>
- <762056d9c081c40f3fc760c9af79d6851f0a65e5.camel@perches.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+MuizemRZBK7y4EPhOqkcNh+j3OitGqWAcLb/tYmDlY=;
+        b=Mg+oYTDz6pQ3c4fbYDUjlhA1ktwqKKZz1XK5IrXcDYlfvS+ZIBRy6x0KdS/QAsMb3F
+         TGJZr77VjoBO2rks556penxCByCwli6WLacwtF8DzC9DWN5NeyJBZBVTr+b1zbN41peL
+         u031cy8MFve32hgG6Otsc4rSwFAAhX7lSxAtt3DPajKoF5lECyHGvynORiSQOi9SW3Nl
+         TfL5gWI9S2p3acr3xE0sT32zlXsWeR+690yVXnRLeKaBgL4ZwsRJimFBD9TCAYGtKgYk
+         ev1TRVrxdm2F3pLTM/l7AzHxF+hhc2+4MfOZ2qnN8Wp+QU4WMH3VQEjkHuYkfo5dy3+T
+         jfyw==
+X-Gm-Message-State: APjAAAUQjF4W2/ngDm2hXBe5i+0uBIxsTKxheDn1XZqBuHD31uusuWwu
+        yZwD/j9av5BBkS67Z2D8UvfUro3+
+X-Google-Smtp-Source: APXvYqx6dkz/egpBz/ct/gn7oOQDRpCEXLMhME5Je/qRTDtWscVFP6YpGe7O1hPZaouNPMMKrHAggg==
+X-Received: by 2002:aa7:908b:: with SMTP id i11mr24179327pfa.199.1567287101743;
+        Sat, 31 Aug 2019 14:31:41 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g14sm11062488pfb.150.2019.08.31.14.31.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 31 Aug 2019 14:31:40 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 14:31:39 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Fix a NULL-ptr-deref bug in
+ ath10k_usb_alloc_urb_from_pipe
+Message-ID: <20190831213139.GA32507@roeck-us.net>
+References: <20190804003101.11541-1-benquike@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <762056d9c081c40f3fc760c9af79d6851f0a65e5.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190804003101.11541-1-benquike@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 01:32:02PM -0700, Joe Perches wrote:
-> On Sat, 2019-08-31 at 17:25 +0200, Pali Rohár wrote:
-> > On Thursday 29 August 2019 10:50:39 Dmitry Torokhov wrote:
-> > > On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
-> > > > "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
-> > > > unlikely() internally.
-> > > 
-> > > The keyword here is _internally_.
-> > > 
-> > > https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
-> > > 
-> > > So please no.
+Hi,
+
+On Sat, Aug 03, 2019 at 08:31:01PM -0400, Hui Peng wrote:
+> The `ar_usb` field of `ath10k_usb_pipe_usb_pipe` objects
+> are initialized to point to the containing `ath10k_usb` object
+> according to endpoint descriptors read from the device side, as shown
+> below in `ath10k_usb_setup_pipe_resources`:
 > 
-> I think it poor form not to simply restate your original
-> objection from 4 message levels below this link
-
-Thank you for the lesson in etiquette, but I posted reference to the
-very message I wanted.
-
+> for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+>         endpoint = &iface_desc->endpoint[i].desc;
 > 
-> https://lists.gt.net/linux/kernel/2269724
+>         // get the address from endpoint descriptor
+>         pipe_num = ath10k_usb_get_logical_pipe_num(ar_usb,
+>                                                 endpoint->bEndpointAddress,
+>                                                 &urbcount);
+>         ......
+>         // select the pipe object
+>         pipe = &ar_usb->pipes[pipe_num];
 > 
->    Hm... I do not like this change. If I read code 
->     
->     if (unlikely(IS_ERR_OR_NULL(priv->dev3))) 
->     
->    then I know that it is really unlikely that condition will be truth and 
->    so this is some case of error/exception or something that normally does 
->    not happen too much. 
->     
->    But if I read code 
->     
->     if (IS_ERR_OR_NULL(priv->dev3)) 
->     
->    I know nothing about chance that this condition will be truth. Explicit 
->    unlikely in previous example give me more information. 
->     
-> I alslo think this argument is dubious as it also applies
-> to any IS_ERR and all the unlikely uses have been removed
-> from those.
+>         // initialize the ar_usb field
+>         pipe->ar_usb = ar_usb;
+> }
+> 
+> The driver assumes that the addresses reported in endpoint
+> descriptors from device side  to be complete. If a device is
+> malicious and does not report complete addresses, it may trigger
+> NULL-ptr-deref `ath10k_usb_alloc_urb_from_pipe` and
+> `ath10k_usb_free_urb_to_pipe`.
+> 
+> This patch fixes the bug by preventing potential NULL-ptr-deref.
+> 
+> Signed-off-by: Hui Peng <benquike@gmail.com>
+> Reported-by: Hui Peng <benquike@gmail.com>
+> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
 
-No, if you read the reference I posted, the argument does not apply to
-all IS_ERR() instances. Majority of them are in probe() paths where we
-do not really care about likely/unlikely. Here we are dealing with
-IS_ERR in a [fairly] hot path.
+This patch fixes CVE-2019-15099, which has CVSS scores of 7.5 (CVSS 3.0)
+and 7.8 (CVSS 2.0). Yet, I don't find it in the upstream kernel or in Linux
+next.
 
-Thanks.
+Is the patch going to be applied to the upstream kernel anytime soon ? If
+not, is there reason to believe that its severity may not be as high as the
+CVSS score indicates ?
 
--- 
-Dmitry
+Thanks,
+Guenter
+
+> ---
+>  drivers/net/wireless/ath/ath10k/usb.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/usb.c b/drivers/net/wireless/ath/ath10k/usb.c
+> index e1420f67f776..14d86627b47f 100644
+> --- a/drivers/net/wireless/ath/ath10k/usb.c
+> +++ b/drivers/net/wireless/ath/ath10k/usb.c
+> @@ -38,6 +38,10 @@ ath10k_usb_alloc_urb_from_pipe(struct ath10k_usb_pipe *pipe)
+>  	struct ath10k_urb_context *urb_context = NULL;
+>  	unsigned long flags;
+>  
+> +	/* bail if this pipe is not initialized */
+> +	if (!pipe->ar_usb)
+> +		return NULL;
+> +
+>  	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+>  	if (!list_empty(&pipe->urb_list_head)) {
+>  		urb_context = list_first_entry(&pipe->urb_list_head,
+> @@ -55,6 +59,10 @@ static void ath10k_usb_free_urb_to_pipe(struct ath10k_usb_pipe *pipe,
+>  {
+>  	unsigned long flags;
+>  
+> +	/* bail if this pipe is not initialized */
+> +	if (!pipe->ar_usb)
+> +		return NULL;
+> +
+>  	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+>  
+>  	pipe->urb_cnt++;
+> -- 
+> 2.22.0
+> 
