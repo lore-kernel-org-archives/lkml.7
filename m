@@ -2,122 +2,74 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28169C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AD9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FF822D37
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5091A23407
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfHaLjN (ORCPT
+        id S1727404AbfHaLoJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 07:39:13 -0400
-Received: from sauhun.de ([88.99.104.3]:37376 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfHaLjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 07:39:12 -0400
-Received: from localhost (p5486C98B.dip0.t-ipconnect.de [84.134.201.139])
-        by pokefinder.org (Postfix) with ESMTPSA id 4161A2C0093;
-        Sat, 31 Aug 2019 13:39:10 +0200 (CEST)
-Date:   Sat, 31 Aug 2019 13:39:09 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     peda@axentia.se, mark.rutland@arm.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com
-Subject: Re: [PATCH v3 2/9] dt-bindings: i2c: add bindings for i2c analog and
- digital filter
-Message-ID: <20190831113909.GA1032@ninjato>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
+        Sat, 31 Aug 2019 07:44:09 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3987 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726143AbfHaLoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 07:44:09 -0400
+Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 076821186AEDFA088919;
+        Sat, 31 Aug 2019 19:44:07 +0800 (CST)
+Received: from DGGEML532-MBS.china.huawei.com ([169.254.7.34]) by
+ DGGEML404-HUB.china.huawei.com ([fe80::b177:a243:7a69:5ab8%31]) with mapi id
+ 14.03.0439.000; Sat, 31 Aug 2019 19:44:03 +0800
+From:   maowenan <maowenan@huawei.com>
+To:     David Miller <davem@davemloft.net>,
+        "cpaasch@apple.com" <cpaasch@apple.com>
+CC:     "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tim.froidcoeur@tessares.net" <tim.froidcoeur@tessares.net>,
+        "matthieu.baerts@tessares.net" <matthieu.baerts@tessares.net>,
+        "aprout@ll.mit.edu" <aprout@ll.mit.edu>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "jtl@netflix.com" <jtl@netflix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "ncardwell@google.com" <ncardwell@google.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "ycheng@google.com" <ycheng@google.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
+ retransmit queue
+Thread-Topic: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
+ retransmit queue
+Thread-Index: AQHVX55YYqkinwCtOUunKpnrH9Dyz6cUAA+AgAEi0HA=
+Date:   Sat, 31 Aug 2019 11:44:02 +0000
+Message-ID: <F95AC9340317A84688A5F0DF0246F3F21AAAA8E1@dggeml532-mbs.china.huawei.com>
+References: <20190824060351.3776-1-tim.froidcoeur@tessares.net>
+        <400C4757-E7AD-4CCF-8077-79563EA869B1@gmail.com>
+        <20190830232657.GL45416@MacBook-Pro-64.local>
+ <20190830.192049.1447010488040109227.davem@davemloft.net>
+In-Reply-To: <20190830.192049.1447010488040109227.davem@davemloft.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.96.96]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
-Content-Disposition: inline
-In-Reply-To: <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tim 
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 09, 2019 at 01:19:33PM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
->=20
-> Some i2c controllers have a built-in digital or analog filter.
-> This is specifically required depending on the hardware PCB/board.
-> Some controllers also allow specifying the maximum width of the
-> spikes that can be filtered. The width length can be specified in nanosec=
-onds.
->=20
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentatio=
-n/devicetree/bindings/i2c/i2c.txt
-> index 44efafd..a2d31aa 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> @@ -55,6 +55,17 @@ wants to support one of the below features, it should =
-adapt the bindings below.
->  	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
->  	specification.
-> =20
-> +- i2c-ana-filter
-> +	Enable analog filter for i2c lines.
-> +
-> +- i2c-dig-filter
-> +	Enable digital filter for i2c lines.
-
-Would you be OK with writing out 'analog' and 'digital' in full form?
-The abrreviation doesn't save us much, I'd think, and I didn't find
-similar wording in existing bindings.
-
-> +
-> +- i2c-filter-width-ns
-> +	Width of spikes which can be filtered by either digital or analog
-> +	filters (i2c-ana-filtr or i2c-dig-filtr). This width is specified
-> +	in nanoseconds.
-> +
->  - interrupts
->  	interrupts used by the device.
-> =20
-> --=20
-> 2.7.4
->=20
-
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qXF0ACgkQFA3kzBSg
-KbbKJxAApyKizr/4AG2mt0cdPc6Pg5Q4whRHl0WPC6X1dG4zB0aR3btEB3esTmWY
-FCyB0bqxsn64ZFqHpSfnF6piDxSu7iNrtxh+ltx2j3E8SyaOASeP29gckhaJoSsH
-U2vUtPYg+I/9L6bCx8Kl6ZAf3EnXrRDFxIJU1lYGfeWbqXfrLNQgvtpcjx8jnADn
-YRDpyeezNLnD8Nz3h321Zt9d/dnkeW2kb6x78Sstg0MVEskiGY97dioCbCzR59C6
-QvAl4z/vlSMCOywBDplMKVpzYieCxD3IhE/BlydvvEwEgUmJuZWKfJDxURSuve4K
-kll9//TsFaSSDZd4mZICUiTJurdmCskq8GFV4GQQZEO/J9viPfj61lZmtl6diMcY
-eXHIWRWns+85mPJuKhdLpsCHv7Peki+u95K4lKOff4oErj9whAt1fEQ93vvz9oXF
-2ciZiio4Wx8KokmGl6usNgugA9JMxJtLbJ1sNIUmykCa4Wdso3E02k6vcF0L6Sfx
-uMEvNpxULD2zWe3yMX/LM2qkMjfadgloGJWaYI9KymKk9F5J9PjQ4GrXOCO1JmIq
-qtYFpzw3sJ5EksYq/p21JOFSAK0x/1Cw/pjTOUcsXVgaRstIwgm5k+Vatl9C111+
-JYRETvHiVYuj2qWUIboXY8TWkQuZaFCojPFv6e/kUQ6xgaPIIJA=
-=WvKa
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
+ Can you share the reproduce steps for this issue? C or syzkaller is ok.
+ Thanks a lot.
+ 
