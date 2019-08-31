@@ -2,161 +2,185 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B28C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7CFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2F02342E
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F226D2342E
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:12:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rAi89eYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfHaFL2 (ORCPT
+        id S1726402AbfHaFMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 01:11:28 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:35994 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfHaFL2 (ORCPT
+        Sat, 31 Aug 2019 01:12:14 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.163]:17831 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726251AbfHaFMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 01:11:28 -0400
-Received: from localhost.localdomain (c-67-168-100-174.hsd1.wa.comcast.net [67.168.100.174])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5E8BD20B7186;
-        Fri, 30 Aug 2019 22:11:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5E8BD20B7186
-From:   Jordan Hand <jorhand@linux.microsoft.com>
-To:     jarkko.sakkinen@linux.intel.com
-Cc:     Jordan Hand <jorhand@linux.microsoft.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] tpm: Parse event log from TPM2 ACPI table
-Date:   Fri, 30 Aug 2019 22:10:27 -0700
-Message-Id: <20190831051027.11544-1-jorhand@linux.microsoft.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 31 Aug 2019 01:12:14 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id C5C7A400D7A27
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 00:12:12 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3vgKisRIZ90on3vgKie1gj; Sat, 31 Aug 2019 00:12:12 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=l5m9qZpWXLR4ODSDzTimMTd+4s8KBNI1HDjixjbonmM=; b=rAi89eYuj/HxJdsXWRomKgfGnZ
+        10Vlq/M48zGVWN6ij0loJxUnQuGoDssCfotyPa1UzRbgOmdxs9DjSKYiLpQKF3Rx2sfn+8ty98xIe
+        DWOO33BoJXPRpLfWjGPp7pO78Hh1BQExHiKnkQftr9EU3sZxs3ht57sw5nV21WSGqZOkSGrvKLbeK
+        cLpWTenE0Fg76hRZd89Oy1oaHYOF7iOJbuZc6NCukFCu9NSxBK3V7+DerZt9G98+gdLbfVN6hLAX8
+        R+vWsSQB7hRSHKYlE+PwMVOoFlo9Kz7n8Qwn461oG7/blARB0224aPHGwqZCMJJj4Tso/Z8LWJDEa
+        TlXVcmPw==;
+Received: from [189.152.216.116] (port=35828 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3vgK-0038m2-DU; Sat, 31 Aug 2019 00:12:12 -0500
+To:     Michal Suchanek <msuchanek@suse.de>, linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190829120215.1977-1-msuchanek@suse.de>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough to
+ -Wimplicit-fallthrough=2
+Message-ID: <975cea02-a2db-c0b9-ba84-83a0ddadab0f@embeddedor.com>
+Date:   Sat, 31 Aug 2019 00:12:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190829120215.1977-1-msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3vgK-0038m2-DU
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:35828
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For systems with a TPM2 chip which use ACPI to expose event logs, retrieve the
-crypto-agile event log from the TPM2 ACPI table. The TPM2 table is defined
-in section 7.3 of the TCG ACPI Specification (see link).
 
-The TPM2 table is used by SeaBIOS in place of the TCPA table when the system's
-TPM is version 2.0 to denote (among other metadata) the location of the
-crypto-agile log.
 
-Link: https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
-Signed-off-by: Jordan Hand <jorhand@linux.microsoft.com>
----
- drivers/char/tpm/eventlog/acpi.c | 60 ++++++++++++++++++++++----------
- 1 file changed, 41 insertions(+), 19 deletions(-)
+On 8/29/19 7:02 AM, Michal Suchanek wrote:
+> From gcc documentation:
+> 
+> -Wimplicit-fallthrough=0
+>   disables the warning altogether.
+> -Wimplicit-fallthrough=1
+>   matches .* regular expression, any comment is used as fallthrough comment.
+> -Wimplicit-fallthrough=2
+>   case insensitively matches .*falls?[ \t-]*thr(ough|u).* regular expression.
+> -Wimplicit-fallthrough=3
+>   case sensitively matches one of the following regular expressions:
+>    -fallthrough
+>    @fallthrough@
+>    lint -fallthrough[ \t]*
+>    [ \t.!]*(ELSE,? |INTENTIONAL(LY)? )?
+>    FALL(S | |-)?THR(OUGH|U)[ \t.!]*(-[^\n\r]*)?
+>    [ \t.!]*(Else,? |Intentional(ly)? )?
+>    Fall((s | |-)[Tt]|t)hr(ough|u)[ \t.!]*(-[^\n\r]*)?
+>    [ \t.!]*([Ee]lse,? |[Ii]ntentional(ly)? )?
+>    fall(s | |-)?thr(ough|u)[ \t.!]*(-[^\n\r]*)?
+> -Wimplicit-fallthrough=4
+>   case sensitively matches one of the following regular expressions:
+>    -fallthrough
+>    @fallthrough@
+>    lint -fallthrough[ \t]*
+>    [ \t]*FALLTHR(OUGH|U)[ \t]*
+> -Wimplicit-fallthrough=5
+>   doesn’t recognize any comments as fallthrough comments, only attributes disable the warning.
+> 
+> In particular the default value of 3 does not match the comments like
+> /* falls through to do foobar */
+> generating suprious warnings on properly annotated code.
+> 
 
-diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-index 63ada5e53f13..38a8bcec1dd5 100644
---- a/drivers/char/tpm/eventlog/acpi.c
-+++ b/drivers/char/tpm/eventlog/acpi.c
-@@ -41,17 +41,23 @@ struct acpi_tcpa {
- 	};
- };
- 
-+/* If an event log is present, the TPM2 ACPI table will contain the full
-+ * trailer
-+ */
-+
- /* read binary bios log */
- int tpm_read_log_acpi(struct tpm_chip *chip)
- {
--	struct acpi_tcpa *buff;
-+	struct acpi_table_header *buff;
-+	struct acpi_tcpa *tcpa;
-+	struct acpi_tpm2_trailer *tpm2_trailer;
- 	acpi_status status;
- 	void __iomem *virt;
- 	u64 len, start;
-+	int log_type;
- 	struct tpm_bios_log *log;
--
--	if (chip->flags & TPM_CHIP_FLAG_TPM2)
--		return -ENODEV;
-+	bool is_tpm2 = chip->flags & TPM_CHIP_FLAG_TPM2;
-+	acpi_string table_sig;
- 
- 	log = &chip->log;
- 
-@@ -61,26 +67,42 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	if (!chip->acpi_dev_handle)
- 		return -ENODEV;
- 
--	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
--	status = acpi_get_table(ACPI_SIG_TCPA, 1,
--				(struct acpi_table_header **)&buff);
-+	/* Find TCPA or TPM2 entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-+	table_sig = is_tpm2 ? ACPI_SIG_TPM2 : ACPI_SIG_TCPA;
-+	status = acpi_get_table(table_sig, 1, &buff);
- 
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
--	switch(buff->platform_class) {
--	case BIOS_SERVER:
--		len = buff->server.log_max_len;
--		start = buff->server.log_start_addr;
--		break;
--	case BIOS_CLIENT:
--	default:
--		len = buff->client.log_max_len;
--		start = buff->client.log_start_addr;
--		break;
-+	if (!is_tpm2) {
-+		tcpa = (struct acpi_tcpa *)buff;
-+		switch (tcpa->platform_class) {
-+		case BIOS_SERVER:
-+			len = tcpa->server.log_max_len;
-+			start = tcpa->server.log_start_addr;
-+			break;
-+		case BIOS_CLIENT:
-+		default:
-+			len = tcpa->client.log_max_len;
-+			start = tcpa->client.log_start_addr;
-+			break;
-+		}
-+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	} else if (buff->length ==
-+		   sizeof(struct acpi_table_tpm2) +
-+		   sizeof(struct acpi_tpm2_trailer)) {
-+		tpm2_trailer = (struct acpi_tpm2_trailer *)buff;
-+
-+		len = tpm2_trailer.minimum_log_length;
-+		start = tpm2_trailer.log_address;
-+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-+	} else {
-+		return -ENODEV;
- 	}
-+
- 	if (!len) {
--		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-+		dev_warn(&chip->dev, "%s: %s log area empty\n",
-+			 __func__, table_sig);
- 		return -EIO;
- 	}
- 
-@@ -98,7 +120,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	memcpy_fromio(log->bios_event_log, virt, len);
- 
- 	acpi_os_unmap_iomem(virt, len);
--	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	return log_type;
- 
- err:
- 	kfree(log->bios_event_log);
--- 
-2.20.1
+NACK
 
+How many of those case do you see? if any...
+
+In any case, those comments can be easily transformed to:
+
+/* falls through - to do foobar */
+
+like in this case:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d2d833e0bf2bad221a955626b942b38312630894
+
+Also, notice that code in linux-next is already ahead... :
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e2079e93f562c7f7a030eb7642017ee5eabaaa10
+
+--
+Gustavo
