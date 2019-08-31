@@ -2,100 +2,111 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2453CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52A3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB67B2377B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="egkZEaQi"
+	by mail.kernel.org (Postfix) with ESMTP id 91A6F2377B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbfHaTgR (ORCPT
+        id S1728535AbfHaThN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 15:36:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46528 "EHLO vps0.lunn.ch"
+        Sat, 31 Aug 2019 15:37:13 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47493 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbfHaTgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 15:36:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=UxDD8aMUwVVgoe7UqZ9DMJsv9cEhFyQpEU8yg66URO0=; b=egkZEaQiBdt8ozaVJahm2oa6Ib
-        DaalqvmOcRDOnNXHQhn9GcB7hvpLn/Tx7MelIb284JVJ0OQ3gTzweFV63HiATnK03yekg5O7aV6iQ
-        kKKGcsUmEzLdbyfJFosN7UUjtsV1Un3H4UA9I9z19NUGltsehYMQinmtTDavT77xv4i0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i49AC-000162-Ku; Sat, 31 Aug 2019 21:35:56 +0200
-Date:   Sat, 31 Aug 2019 21:35:56 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     David Miller <davem@davemloft.net>, jiri@resnulli.us,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, allan.nielsen@microchip.com,
-        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190831193556.GB2647@lunn.ch>
-References: <20190829175759.GA19471@splinter>
- <20190829182957.GA17530@lunn.ch>
- <20190829193613.GA23259@splinter>
- <20190829.151201.940681219080864052.davem@davemloft.net>
- <20190830094319.GA31789@splinter>
+        id S1728481AbfHaThN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 15:37:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Aug 2019 12:37:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,451,1559545200"; 
+   d="scan'208";a="193677253"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga002.jf.intel.com with ESMTP; 31 Aug 2019 12:37:11 -0700
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 12:37:11 -0700
+Received: from hasmsx114.ger.corp.intel.com (10.184.198.65) by
+ fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 12:37:11 -0700
+Received: from hasmsx108.ger.corp.intel.com ([169.254.9.203]) by
+ HASMSX114.ger.corp.intel.com ([169.254.14.15]) with mapi id 14.03.0439.000;
+ Sat, 31 Aug 2019 22:37:08 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH -next] scsi: ufs: Use kmemdup in
+ ufshcd_read_string_desc()
+Thread-Topic: [PATCH -next] scsi: ufs: Use kmemdup in
+ ufshcd_read_string_desc()
+Thread-Index: AQHVX/llv2uTA5dhSUimOZqnT0VJc6cVpp5g
+Date:   Sat, 31 Aug 2019 19:37:07 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DCA9308@hasmsx108.ger.corp.intel.com>
+References: <20190831124424.18642-1-yuehaibing@huawei.com>
+In-Reply-To: <20190831124424.18642-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2U5NTBmYzAtYjVjYS00NDNmLWIzYjctNTRkNDU3MjI3MzJlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTlExUzdqYXVJN3pFXC9JemFkN3k5NDFUQjlTdHlHQ01RZmNuQTFSc1NtK28zM1dXejNWVWh0ektvTXI2K2dYREIifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.184.70.10]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830094319.GA31789@splinter>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Also, what happens when I'm running these application without putting
-> the interface in promisc mode? On an offloaded interface I would not be
-> able to even capture packets addressed to my interface's MAC address.
 
-Sorry for rejoining the discussion late. I've been travelling and i'm
-now 3/4 of the way to Lisbon.
 
-That statement i don't get. If the frame has the MAC address of the
-interface, it has to be delivered to the CPU. And so pcap will see it
-when running on the interface. I can pretty much guarantee every DSA
-driver does that.
+> Use kmemdup rather than duplicating its implementation
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+LGTM, ACK.
+Tomas
+ 
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
+> acf298da054c..6d5e2f5d8468 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -3309,12 +3309,11 @@ int ufshcd_read_string_desc(struct ufs_hba *hba,
+> u8 desc_index,
+>  		str[ret++] = '\0';
+> 
+>  	} else {
+> -		str = kzalloc(uc_str->len, GFP_KERNEL);
+> +		str = kmemdup(uc_str, uc_str->len, GFP_KERNEL);
+>  		if (!str) {
+>  			ret = -ENOMEM;
+>  			goto out;
+>  		}
+> -		memcpy(str, uc_str, uc_str->len);
+>  		ret = uc_str->len;
+>  	}
+>  out:
+> 
+> 
 
-But to address the bigger picture. My understanding is that we want to
-model offloading as a mechanism to accelerate what Linux can already
-do. The user should not have to care about these accelerators. The
-interface should work like a normal Linux interface. I can put an IP
-address on it and ping a peer. I can run a dhcp client and get an IP
-address from a dhcp server. I can add the interface to a bridge, and
-packets will get bridged. I as a user should not need to care if this
-is done in software, or accelerated by offloading it. I can add a
-route, and if the accelerate knows about L3, it can accelerate that as
-well. If not, the kernel will route it.
-
-So if i run wireshark on an interface, i expect the interface will be
-put into promisc mode and i see all packets ingressing the interface.
-What the accelerator needs to do to achieve this, i as a user don't
-care.
-
-I can follow the argument that i won't necessarily see every
-packet. But that is always true. For many embedded systems, the CPU is
-too slow to receive at line rate, even when we are talking about 1G
-links. Packets do get dropped. And i hope tcpdump users understand
-that.
-
-For me, having tcpdump use tc trap is just wrong. It breaks the model
-that the user should not care about the accelerator. If anything, i
-think the driver needs to translate cBPF which pcap passes to the
-kernel to whatever internal format the accelerator can process. That
-is just another example of using hardware acceleration.
-
-   Andrew
