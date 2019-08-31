@@ -2,95 +2,100 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F43AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2453CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EED23405
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB67B2377B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 19:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7zt88n/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="egkZEaQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfHaTYI (ORCPT
+        id S1728575AbfHaTgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 15:24:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33822 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfHaTYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 15:24:07 -0400
-Received: by mail-io1-f65.google.com with SMTP id s21so21131625ioa.1;
-        Sat, 31 Aug 2019 12:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oaHmXaw2yPz0umTTJFpjPjSHfSCisDn+J54HsZ0/sx0=;
-        b=Z7zt88n/JThY9/taLIJq8U2fmyGpaukSGv5zPuITP0JqqNAzadGRHkxYKrzu4YwCPl
-         tnlzxv9ywnEODjBhPKTnHbj7i0Ovtehj3MTb5+mmVZxUSfWY8qIos7HGSTHyburRa/uk
-         qU/v0ykpLj2O2Nk/tRX333lWpa0pjuh9JM0mH2rYZjPkhjikBNgyuV7RQNr64VYrDto8
-         5c/uVh40Gh3rXWlAbQWahkvSr5Wm5jX3m6+suXinwnXoQmqu2dZytId0Ut+NitMKaeaB
-         VquNn61XKb85Sg0iim7vmvHgO6b/SVJ52Qm/yk2OsXeAphfrRjbss2b7d6DQI1587XI/
-         gxrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oaHmXaw2yPz0umTTJFpjPjSHfSCisDn+J54HsZ0/sx0=;
-        b=gGtTB2h+p8KlT4NGilydU3I/zfOd883jBX0HGyjllNuDdLCuckaXFOWzhApDf44K6j
-         a6SHDwdpoEIg0Oko6x4QIvJz2srpqQng8ynYFX/EeJPqMZXC8MUu05mtKgTLWds0HXfb
-         1Nj8Lr/xweKPWqbBIVUs8BWWvAUYtYN4RwVgZAFAithixetmva2slR9uXZq7/heq0Zdh
-         wMIX7gC+sIz488CUYuNZlsIPqAtaQjqI1YrMyKewe8Kxag0cSnOxRCh1mnOTUi3T88Lp
-         iZXfWPhLJ1TMkcrVy8WC/3PtfUBrVPv9Ad7hCOpUPK8bIvdVyxQ0HPGcI2L6JxyeWkwu
-         rmgQ==
-X-Gm-Message-State: APjAAAXMBN9JttrnrNrtT7OxHHYsq3tvAL/2z+k9Qu3HXsT5V4kt2eW9
-        Zq6yjFSBcfBiI2gpCxv5RUIqiZal
-X-Google-Smtp-Source: APXvYqyp4+WUNod3hb3zn2ZiZKW54EA9jSMX+g5g51j9rn4vYxvGLCPN8yafHdoGPiaTB58QnWyczw==
-X-Received: by 2002:a5d:9842:: with SMTP id p2mr14054858ios.226.1567279446858;
-        Sat, 31 Aug 2019 12:24:06 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id 8sm8669250ion.26.2019.08.31.12.24.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 31 Aug 2019 12:24:06 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] bluetooth: bpa10x: change return value
-Date:   Sat, 31 Aug 2019 14:23:40 -0500
-Message-Id: <20190831192341.32539-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 31 Aug 2019 15:36:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46528 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728544AbfHaTgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 15:36:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UxDD8aMUwVVgoe7UqZ9DMJsv9cEhFyQpEU8yg66URO0=; b=egkZEaQiBdt8ozaVJahm2oa6Ib
+        DaalqvmOcRDOnNXHQhn9GcB7hvpLn/Tx7MelIb284JVJ0OQ3gTzweFV63HiATnK03yekg5O7aV6iQ
+        kKKGcsUmEzLdbyfJFosN7UUjtsV1Un3H4UA9I9z19NUGltsehYMQinmtTDavT77xv4i0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i49AC-000162-Ku; Sat, 31 Aug 2019 21:35:56 +0200
+Date:   Sat, 31 Aug 2019 21:35:56 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     David Miller <davem@davemloft.net>, jiri@resnulli.us,
+        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, allan.nielsen@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190831193556.GB2647@lunn.ch>
+References: <20190829175759.GA19471@splinter>
+ <20190829182957.GA17530@lunn.ch>
+ <20190829193613.GA23259@splinter>
+ <20190829.151201.940681219080864052.davem@davemloft.net>
+ <20190830094319.GA31789@splinter>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830094319.GA31789@splinter>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When returning from bpa10x_send_frame, it is necessary to propagate any
-potential errno returned from usb_submit_urb.
+> Also, what happens when I'm running these application without putting
+> the interface in promisc mode? On an offloaded interface I would not be
+> able to even capture packets addressed to my interface's MAC address.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/bluetooth/bpa10x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for rejoining the discussion late. I've been travelling and i'm
+now 3/4 of the way to Lisbon.
 
-diff --git a/drivers/bluetooth/bpa10x.c b/drivers/bluetooth/bpa10x.c
-index a0e84538cec8..1fa58c059cbf 100644
---- a/drivers/bluetooth/bpa10x.c
-+++ b/drivers/bluetooth/bpa10x.c
-@@ -337,7 +337,7 @@ static int bpa10x_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
- 
- 	usb_free_urb(urb);
- 
--	return 0;
-+	return err;
- }
- 
- static int bpa10x_set_diag(struct hci_dev *hdev, bool enable)
--- 
-2.17.1
+That statement i don't get. If the frame has the MAC address of the
+interface, it has to be delivered to the CPU. And so pcap will see it
+when running on the interface. I can pretty much guarantee every DSA
+driver does that.
 
+But to address the bigger picture. My understanding is that we want to
+model offloading as a mechanism to accelerate what Linux can already
+do. The user should not have to care about these accelerators. The
+interface should work like a normal Linux interface. I can put an IP
+address on it and ping a peer. I can run a dhcp client and get an IP
+address from a dhcp server. I can add the interface to a bridge, and
+packets will get bridged. I as a user should not need to care if this
+is done in software, or accelerated by offloading it. I can add a
+route, and if the accelerate knows about L3, it can accelerate that as
+well. If not, the kernel will route it.
+
+So if i run wireshark on an interface, i expect the interface will be
+put into promisc mode and i see all packets ingressing the interface.
+What the accelerator needs to do to achieve this, i as a user don't
+care.
+
+I can follow the argument that i won't necessarily see every
+packet. But that is always true. For many embedded systems, the CPU is
+too slow to receive at line rate, even when we are talking about 1G
+links. Packets do get dropped. And i hope tcpdump users understand
+that.
+
+For me, having tcpdump use tc trap is just wrong. It breaks the model
+that the user should not care about the accelerator. If anything, i
+think the driver needs to translate cBPF which pcap passes to the
+kernel to whatever internal format the accelerator can process. That
+is just another example of using hardware acceleration.
+
+   Andrew
