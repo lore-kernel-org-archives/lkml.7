@@ -2,137 +2,115 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B8C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43762C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E7A22DA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C8D22D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 15:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3bTo9nm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVy1cPed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfHaPBi (ORCPT
+        id S1728408AbfHaPBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 11:01:38 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43108 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbfHaPBh (ORCPT
+        Sat, 31 Aug 2019 11:01:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32954 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbfHaPBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 11:01:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u72so842733pgb.10;
-        Sat, 31 Aug 2019 08:01:37 -0700 (PDT)
+        Sat, 31 Aug 2019 11:01:53 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go14so4666948plb.0;
+        Sat, 31 Aug 2019 08:01:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pgmHg3ukoYkhaRQ72n0KiU687Zs7MhjBlJ4ipL0qwQE=;
-        b=B3bTo9nmMR/i7oh0IaQJj8OJoTDX+qoEGfM41Dt+zLDGc70vkBAsDR6WZJxYKyTByR
-         ToqEQBhAvFzUGcgZYhC06n26Dv3l5QCPzWBTSZ7jb38S47K+8Ow0peFxgaasP+Fz2JKG
-         /Xs4NfxIEhsZCMMcDQz0BBRKp9aJ2nq9R/odVV+jl+tDkopQs2p9N2JXnhi8626PsZiT
-         JKloU3LculAz8V+r9ktvuT31bx+7GtcIuN1aDVs+g4sAIn/cqmDwxzDeyW21Z4GON4hz
-         T7AIB3kalcAWUpCo78XZiuS0ACwNaYRjDOQmCLAGMe2ZUpdUd5gOEL9xIQ+CNCPoyOtK
-         ELEg==
+        bh=wb/A0nLfYSOW2oh301mQSunagMCByFHKWhdM0f4nMws=;
+        b=BVy1cPedwKZIPpS9m31cRI6RXGHB3AfxEHnmky4WC//YrFjYix6lDPI0RP+F2X2uU/
+         nyLSgCVc2Y09hgNsy48NVWBdKogqMMoPk/asQ/sYdQeJQo3dg+fPM/g+3omdsNWN54pK
+         W1Jt7vZcA93fzjmCDP8qewc8OyuQzUvbRXQeKTSW4ynDOkvCYm7ugEIIVBg2ncVLmTvm
+         d0817ItdSSvMHYFC8HwOPA/jdHPKIwA8cdlY7dGxHjnSqwRsfcW+M4sZyLlj4t8BVdV/
+         W0Jxgv3uRjz24X0mroL49extd3AHnQnRzKT/PUtITWeJhbIy+D0Xc8V/25YDLAUw7SjQ
+         O2FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pgmHg3ukoYkhaRQ72n0KiU687Zs7MhjBlJ4ipL0qwQE=;
-        b=aUaigWzHfaS+tkn+ielILEbzfFrH+w8EWbJmcFN2IRE9xORCsNvKLufmTrPstyYcTd
-         uWnOpt+bksQI0uQ3hIyuGUJuodmGfmwY5mrok7UyMW7aQAHjG46gN6tt2PPfy9EdY5wi
-         1shQ2Ut3PXqK/cVaK35XT5MG1dmlViteKvW1x9nLJHLsEGbv7NyDK3kQb7pTIjjMvWWR
-         rmDjnZck/i9F6LhQyPY96AvxpWhhua2OPGP4CDFg7zVO7zRN4e8g5XRVDQcb5xlz1Cv+
-         fX3JUu17/Zae9DjRsJrjLOxIASe459ejz9cOMDncPbexL+wlrYB0fCQINmxKk99QG9ad
-         bMOA==
-X-Gm-Message-State: APjAAAVTyb1WgIGTqx7RHfXagAxF6s52JWqMeX2TzTsqzOcwdX0jG5gq
-        3+EP7ngV/bbpnv+dFXd6cHR+A/0Z
-X-Google-Smtp-Source: APXvYqzxO5TxxgJX3+CZnA8sNzId2Ur3EJ1lJTqlYglz6V20PPBYoElyIToU51GXQcMExZzVIgyYcg==
-X-Received: by 2002:aa7:96dc:: with SMTP id h28mr24787013pfq.86.1567263697149;
-        Sat, 31 Aug 2019 08:01:37 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t70sm9610914pjb.2.2019.08.31.08.01.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 31 Aug 2019 08:01:36 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 08:01:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexander Amelkin <a.amelkin@yadro.com>,
-        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] aspeed/watchdog: Add access_cs0 option for
- alt-boot
-Message-ID: <20190831150135.GA7230@roeck-us.net>
-References: <20190828102402.13155-1-i.mikhaylov@yadro.com>
- <20190828102402.13155-5-i.mikhaylov@yadro.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wb/A0nLfYSOW2oh301mQSunagMCByFHKWhdM0f4nMws=;
+        b=ftZa+eQ/Qo5G14jT3kxwEL0CECUL9X416oxiIK0oECeviJ0wV6VUSIjEtR78cCpzeu
+         fS52WCXnxZKm/8pHeVhhvya3mULf135MhPGRkvRJBUV0UuTstg+yWfccBoc/+Js2Ub0m
+         GEJAypKnGlbthKnJfbcWi5qJm3j804buf6prBZ4h8EJHw1oSQLFA8mtLBxNE2tWUNWbE
+         1qtyuz6YXuzppuKwWGkTXWDmJuoWvM34w1E3yfaZ/aMgPdaH5EvtVrj5jywocN5GIhbc
+         zDhOBDI+5/2pq/oEfO2bxJZ6t+FJxXuY5YTbbJhvhKkXeaQdlnVwb+eK4swC7+KRiH4d
+         NSRA==
+X-Gm-Message-State: APjAAAXss9HUaYQca9PTNwb4x+QzjWstbvp+uymtx7MBk3C1jJPWx12K
+        P2FxxxGKZVe07rYYLdH2TPY=
+X-Google-Smtp-Source: APXvYqz2mPcJCisbPMZtjM02edLEv+BRcy2qBwemiwWT87BNtWW7Vhq2Ak1XGaq47eCcsQNcu+ZOIQ==
+X-Received: by 2002:a17:902:1123:: with SMTP id d32mr21535084pla.218.1567263712480;
+        Sat, 31 Aug 2019 08:01:52 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id i9sm21212123pgo.46.2019.08.31.08.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Aug 2019 08:01:51 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 08:01:49 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net
+Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
+Message-ID: <20190831150149.GB1692@localhost>
+References: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
+ <20190829095825.2108-2-felipe.balbi@linux.intel.com>
+ <20190829172509.GB2166@localhost>
+ <20190829172848.GC2166@localhost>
+ <87r253ulpn.fsf@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828102402.13155-5-i.mikhaylov@yadro.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <87r253ulpn.fsf@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:24:02PM +0300, Ivan Mikhaylov wrote:
-> The option for the ast2400/2500 to get access to CS0 at runtime.
-> 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+On Fri, Aug 30, 2019 at 11:00:20AM +0300, Felipe Balbi wrote:
+> seems like this should be defined together with the other flags? If
+> that's the case, it seems like we would EXTTS and PEROUT masks.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Yes, let's make the meanings of the bit fields clear...
 
-> ---
->  .../ABI/testing/sysfs-class-watchdog          | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
-> index 6317ade5ad19..675f9b537661 100644
-> --- a/Documentation/ABI/testing/sysfs-class-watchdog
-> +++ b/Documentation/ABI/testing/sysfs-class-watchdog
-> @@ -72,3 +72,37 @@ Description:
->  		It is a read/write file. When read, the currently assigned
->  		pretimeout governor is returned.  When written, it sets
->  		the pretimeout governor.
-> +
-> +What:		/sys/class/watchdog/watchdog1/access_cs0
-> +Date:		August 2019
-> +Contact:	Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-> +		Alexander Amelkin <a.amelkin@yadro.com>
-> +Description:
-> +		It is a read/write file. This attribute exists only if the
-> +		system has booted from the alternate flash chip due to
-> +		expiration of a watchdog timer of AST2400/AST2500 when
-> +		alternate boot function was enabled with 'aspeed,alt-boot'
-> +		devicetree option for that watchdog or with an appropriate
-> +		h/w strapping (for WDT2 only).
-> +
-> +		At alternate flash the 'access_cs0' sysfs node provides:
-> +			ast2400: a way to get access to the primary SPI flash
-> +				chip at CS0 after booting from the alternate
-> +				chip at CS1.
-> +			ast2500: a way to restore the normal address mapping
-> +				from (CS0->CS1, CS1->CS0) to (CS0->CS0,
-> +				CS1->CS1).
-> +
-> +		Clearing the boot code selection and timeout counter also
-> +		resets to the initial state the chip select line mapping. When
-> +		the SoC is in normal mapping state (i.e. booted from CS0),
-> +		clearing those bits does nothing for both versions of the SoC.
-> +		For alternate boot mode (booted from CS1 due to wdt2
-> +		expiration) the behavior differs as described above.
-> +
-> +		This option can be used with wdt2 (watchdog1) only.
-> +
-> +		When read, the current status of the boot code selection is
-> +		shown. When written with any non-zero value, it clears
-> +		the boot code selection and the timeout counter, which results
-> +		in chipselect reset for AST2400/AST2500.
+--- ptp_clock.h ---
+
+/*
+ * Bits of the ptp_extts_request.flags field:
+ */
+#define PTP_ENABLE_FEATURE	BIT(0)
+#define PTP_RISING_EDGE		BIT(1)
+#define PTP_FALLING_EDGE	BIT(2)
+#define PTP_EXTTS_VALID_FLAGS	(PTP_ENABLE_FEATURE | \
+				 PTP_RISING_EDGE | \
+				 PTP_FALLING_EDGE)
+
+/*
+ * Bits of the ptp_perout_request.flags field:
+ */
+#define PTP_PEROUT_ONE_SHOT	BIT(0)
+#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
+
+struct ptp_extts_request {
+	unsigned int flags;  /* Bit field of PTP_EXTTS_VALID_FLAGS. */
+};
+
+struct ptp_perout_request {
+	unsigned int flags;  /* Bit field of PTP_PEROUT_VALID_FLAGS. */
+};
+
+
+Thanks,
+Richard
