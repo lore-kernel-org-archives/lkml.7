@@ -2,123 +2,102 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB91C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 22:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 22:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8AF2187F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 22:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usspT5CN"
+	by mail.kernel.org (Postfix) with ESMTP id AF1002186A
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 22:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfHaWBM (ORCPT
+        id S1727332AbfHaW16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 18:01:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38251 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfHaWBM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 18:01:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so1467266wrx.5;
-        Sat, 31 Aug 2019 15:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0yEuPdy6ASwhJKW6dartSJLwpi4f/BFysZLH5JVYxHQ=;
-        b=usspT5CNIeKkij/GcInOZgg+MatRCVTjwWmcH7uzhoXLr1Q31xZbjVR3f32M733NWB
-         oQSOCwVGW10mx4B06Qj/+tTc0VbkQZereIr6FgzqaZvE6YWGWkRoeVCW6WIRMfS3XfSe
-         9fwKr6fLDsmZRHHKPvGbeSRx+p/CZknOtvo52GuHUQQuw1TO/HqsQNVZJIf2CuI2u66W
-         qF/xCvnPbUttO8OqlKrTyvXaqbYusMQRFbgDYIj9sRsnqa4BIP2SLazoe1HIEv9uLtvn
-         4nlKIn+pZhYkONhOhj0uIKENVT3hPrWW+ZM9nfSUet2JHAm6qXI+NFT2M68IjW8TOX/P
-         /mnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=0yEuPdy6ASwhJKW6dartSJLwpi4f/BFysZLH5JVYxHQ=;
-        b=dFU96JpxaqZyBEtrvqwdbtVMIwK8VMssryNsIX4YzwDOy8A8XNQT/jSAVAT9zKyEsQ
-         VeshssoygiFlrnHuJmJ7PjAzmOvDmef5vNf2xDrXpYqggd8g4UFIrgXh1fiPqrw0c01d
-         MwrSIutxvEAZs/70oE7cAanE2+AtLw9Lye+d+Q9ERxWErmZF6iweBXu3n2wZCKd2Wcb7
-         EfnUeGxRLBPTTe6rf3IoakIqMFBXDcgK9ykHl0IAZPtJA5BF5TITicnrJbQDTUj6aoFO
-         gS9XgToZo10OGeYlR/mNiWja4lrFp6/Q/kSPZbDF0BSUmsJSvhVKM5owdXxBqI/5DtbT
-         kATA==
-X-Gm-Message-State: APjAAAWzu30mxwTy9yCgA3REWyumkn6jRyuFrRoVp4vfNyzcQn3Rb384
-        r4ID/t9N9bSEIL7FdhM7NNg=
-X-Google-Smtp-Source: APXvYqwyvK5/VTscyfz6qINEgc49Nn/haWjIqp8NHL/RRmaNp+tow6fArj3i+Suc18bzKYioJTNwOQ==
-X-Received: by 2002:adf:fd41:: with SMTP id h1mr17693907wrs.315.1567288870126;
-        Sat, 31 Aug 2019 15:01:10 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id m19sm7370844wml.28.2019.08.31.15.01.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 15:01:09 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sara Sharon <sara.sharon@intel.com>,
-        Shaul Triebitz <shaul.triebitz@intel.com>,
-        Liad Kaufman <liad.kaufman@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: mvm: Move static keyword to the front of declarations
-Date:   Sun,  1 Sep 2019 00:01:08 +0200
-Message-Id: <20190831220108.10602-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 31 Aug 2019 18:27:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:54054 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfHaW15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 18:27:57 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Aug 2019 15:27:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,451,1559545200"; 
+   d="scan'208";a="211309903"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 31 Aug 2019 15:27:55 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1i4Bqd-0006W4-8s; Sun, 01 Sep 2019 06:27:55 +0800
+Date:   Sun, 1 Sep 2019 06:27:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     kbuild-all@01.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Seunghun Han <kkamagui@gmail.com>
+Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
+ supporting AMD's fTPM
+Message-ID: <201909010620.mIDwNGDO%lkp@intel.com>
+References: <20190830095639.4562-3-kkamagui@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830095639.4562-3-kkamagui@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declarations of
-he_if_types_ext_capa_sta and he_iftypes_ext_capa, and
-resolve the following compiler warnings that can be seen
-when building with warnings enabled (W=1):
+Hi Seunghun,
 
-drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:427:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+Thank you for the patch! Perhaps something to improve:
 
-drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:434:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+[auto build test WARNING on jss-tpmdd/next]
+[cannot apply to v5.3-rc6 next-20190830]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+url:    https://github.com/0day-ci/linux/commits/Seunghun-Han/Enhance-support-for-the-AMD-s-fTPM/20190901-042313
+base:   git://git.infradead.org/users/jjs/linux-tpmdd next
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/char/tpm/tpm_crb.c:457:29-32: WARNING: Suspicious code. resource_size is maybe missing with res
+
+vim +457 drivers/char/tpm/tpm_crb.c
+
+   452	
+   453	static void __iomem *crb_ioremap_resource(struct device *dev,
+   454						  const struct resource *res)
+   455	{
+   456		int rc;
+ > 457		resource_size_t size = res->end - res->start;
+   458	
+   459		/* Broken BIOS assigns command and response buffers in ACPI NVS region.
+   460		 * Check intersections between a resource and ACPI NVS for W/A.
+   461		 */
+   462		rc = region_intersects(res->start, size, IORESOURCE_MEM |
+   463				       IORESOURCE_BUSY, IORES_DESC_ACPI_NV_STORAGE);
+   464		if (rc != REGION_DISJOINT) {
+   465			dev_err(dev,
+   466				FW_BUG "Resource overlaps with a ACPI NVS. %pr\n",
+   467				res);
+   468			return devm_ioremap(dev, res->start, size);
+   469		}
+   470	
+   471		return devm_ioremap_resource(dev, res);
+   472	}
+   473	
+
 ---
-Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
-
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index d6499763f0dd..937a843fed56 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -424,14 +424,14 @@ int iwl_mvm_init_fw_regd(struct iwl_mvm *mvm)
- 	return ret;
- }
- 
--const static u8 he_if_types_ext_capa_sta[] = {
-+static const u8 he_if_types_ext_capa_sta[] = {
- 	 [0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
- 	 [2] = WLAN_EXT_CAPA3_MULTI_BSSID_SUPPORT,
- 	 [7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
- 	 [9] = WLAN_EXT_CAPA10_TWT_REQUESTER_SUPPORT,
- };
- 
--const static struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
-+static const struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
- 	{
- 		.iftype = NL80211_IFTYPE_STATION,
- 		.extended_capabilities = he_if_types_ext_capa_sta,
--- 
-2.22.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
