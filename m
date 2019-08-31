@@ -2,156 +2,163 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80258C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7522BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2BD23431
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:08:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pKEWbtp8"
+	by mail.kernel.org (Postfix) with ESMTP id 47A5823431
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 06:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfHaGI3 (ORCPT
+        id S1726453AbfHaGSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 02:08:29 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34429 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfHaGI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 02:08:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y135so5769949wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 23:08:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3NQT/+H/R/Gs9klh5utfpPtpga01Z/bPDqOTKDdobn4=;
-        b=pKEWbtp87WRZkEQMPoUvMKiZmvK2H8bkjGIN+0ebQE+E197iGUHa9IAGOWKmbsMfEq
-         tnOBAuY6AFPzlCfvboxOuNVBv0Ex1TGDpHIvyOdnATwBPrc7tJz7n0pv1isYTulaDwOm
-         qL0dcdbhLC1bCIMwgGTg80g+FerKedCkM++fyDd6epwt4AoHlNVwyuabMeLQsWySEPzM
-         tFxCP0d5W6dAAzjQaZUugV4qwX0/5N2ObXN/d/faL4BbZOAyEoErgPr/ZJonrOemhQNo
-         +WnvEbXtP3BnGCBrUI7jRzAWq/sWhqoEpDu4UKykoVggVB/INMt3GTobFset8lE/TgK5
-         tFEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3NQT/+H/R/Gs9klh5utfpPtpga01Z/bPDqOTKDdobn4=;
-        b=Yp716rdlbGB5CjcCgF8cP+ELzpWbksIiqIhePtTeFCkofSRNROqfptzgBhx1pK5kge
-         IfRHGnMwkD74IryfFo++x24Mpe7/fOwG8qJ99SAY8gR/CjWEfzCbOf4ITQAvLztdqLRQ
-         3TO05NVNLGBir2w+IxEI+XhUV29Q4P3qWidjRSo1lZnAXqgPRDHS4Xhecm9QO1Tsqxmt
-         u0iq5FLbxH9Yd3V+AFMVwrvezH2ZBkVwUWTgrfdKLW/2RekkzL/qgbd+Y5cozmJEzNOI
-         +9EDZ+Z2V186Tz1BeHAtTXaCcMVQ+s/G2e35wicZa1k4oLgBLHpWWa0a6hAcu7VevBNH
-         77YQ==
-X-Gm-Message-State: APjAAAV8xOzioc85ZsBjs7SWJr5IyDrwB/sPtdFJqN67DoezWRSy0j0N
-        5ViB96RJ0wBN8SXy2oPbVAs=
-X-Google-Smtp-Source: APXvYqxCnZpiqqgEQocPhfIsdjxHKdW2GUjXJL3ylDacBgc2XlgpLzU3zKXXzlQi6aeNVE6uAYLCGw==
-X-Received: by 2002:a1c:2b85:: with SMTP id r127mr7079242wmr.30.1567231706449;
-        Fri, 30 Aug 2019 23:08:26 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id l62sm14708814wml.13.2019.08.30.23.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 23:08:25 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
-Date:   Fri, 30 Aug 2019 23:05:31 -0700
-Message-Id: <20190831060530.43082-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190829062635.45609-1-natechancellor@gmail.com>
-References: <20190829062635.45609-1-natechancellor@gmail.com>
+        Sat, 31 Aug 2019 02:18:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40562 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725953AbfHaGSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 02:18:47 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F0A4275DC8D547CF3F21;
+        Sat, 31 Aug 2019 14:00:41 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 31 Aug 2019 14:00:33 +0800
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
+CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
+        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
+        <linux-alpha@vger.kernel.org>, <nfont@linux.vnet.ibm.com>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <linuxarm@huawei.com>
+Subject: [PATCH v2 0/9] check the node id consistently across different arches
+Date:   Sat, 31 Aug 2019 13:58:14 +0800
+Message-ID: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-with clang:
+According to Section 6.2.14 from ACPI spec 6.3 [1], the
+setting of proximity domain is optional, as below:
 
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-softirq.c:(.text+0x504): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-softirq.c:(.text+0x58c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-softirq.c:(.text+0x6c8): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-softirq.c:(.text+0x75c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-softirq.c:(.text+0x840): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
+This optional object is used to describe proximity domain
+associations within a machine. _PXM evaluates to an integer
+that identifies a device as belonging to a Proximity Domain
+defined in the System Resource Affinity Table (SRAT).
 
-clang can emit a working mcount symbol, __gnu_mcount_nc, when
-'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-broken and caused the kernel not to boot with '-pg' because the
-calling convention was not correct. Always build with '-meabi gnu'
-when using clang but ensure that '-pg' (which is added with
-CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
-cannot be added with it unless this is fixed (which means using
-clang 10.0.0 and newer).
+When enabling KASAN and bios has not implemented the proximity
+domain of the hns3 device, there is a global-out-of-bounds error
+below:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/35
-Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+[   42.970381] ==================================================================
+[   42.977595] BUG: KASAN: global-out-of-bounds in __bitmap_weight+0x48/0xb0
+[   42.984370] Read of size 8 at addr ffff20008cdf8790 by task kworker/0:1/13
+[   42.991230]
+[   42.992712] CPU: 0 PID: 13 Comm: kworker/0:1 Tainted: G           O      5.2.0-rc4-g8bde06a-dirty #3
+[   43.001830] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS 2280-A CS V2.B050.01 08/08/2019
+[   43.011298] Workqueue: events work_for_cpu_fn
+[   43.015643] Call trace:
+[   43.018078]  dump_backtrace+0x0/0x1e8
+[   43.021727]  show_stack+0x14/0x20
+[   43.025031]  dump_stack+0xc4/0xfc
+[   43.028335]  print_address_description+0x178/0x270
+[   43.033113]  __kasan_report+0x164/0x1b8
+[   43.036936]  kasan_report+0xc/0x18
+[   43.040325]  __asan_load8+0x84/0xa8
+[   43.043801]  __bitmap_weight+0x48/0xb0
+[   43.047552]  hclge_init_ae_dev+0x988/0x1e78 [hclge]
+[   43.052418]  hnae3_register_ae_dev+0xcc/0x278 [hnae3]
+[   43.057467]  hns3_probe+0xe0/0x120 [hns3]
+[   43.061464]  local_pci_probe+0x74/0xf0
+[   43.065200]  work_for_cpu_fn+0x2c/0x48
+[   43.068937]  process_one_work+0x3c0/0x878
+[   43.072934]  worker_thread+0x400/0x670
+[   43.076670]  kthread+0x1b0/0x1b8
+[   43.079885]  ret_from_fork+0x10/0x18
+[   43.083446]
+[   43.084925] The buggy address belongs to the variable:
+[   43.090052]  numa_distance+0x30/0x40
+[   43.093613]
+[   43.095091] Memory state around the buggy address:
+[   43.099870]  ffff20008cdf8680: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 fa fa
+[   43.107078]  ffff20008cdf8700: fa fa fa fa 04 fa fa fa fa fa fa fa 00 fa fa fa
+[   43.114286] >ffff20008cdf8780: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
+[   43.121494]                          ^
+[   43.125230]  ffff20008cdf8800: 01 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+[   43.132439]  ffff20008cdf8880: fa fa fa fa fa fa fa fa 00 00 fa fa fa fa fa fa
+[   43.139646] ==================================================================
 
-v1 -> v2:
+As suggested [2] by Michal Hocko:
+"if the specification really allows to provide NUMA_NO_NODE (-1) then
+the code really has to be prepared for that. And ideally all arches
+should deal with that."
 
-* Add Nick and Stefan's reviewed by tags
-* Move version check from Makefile to Kconfig. This prevents '-pg` from
-  ever being added if '-meabi gnu' would produce a non-booting kernel
-  and it allows clang 9.0.0 and earlier to build and link all*config
-  kernels because the function tracer can't be selected.
+This patchset checks the node id with the below case consistently
+across different arches in order to be compliant with spec and
+backward compatible as much as possible:
+1. if node_id < 0, return cpu_online_mask
+2. if node_id >= nr_node_ids, return cpu_none_mask
+3. if node_to_cpumask_map[node_id] is NULL, return cpu_online_mask
 
- arch/arm/Kconfig  | 2 +-
- arch/arm/Makefile | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Note:
+1. Only arm64 has been compile tested and tested on real board.
+2. x86 has been compile tested with defconfig.
+3. Other arch has not been compile tested or tested on real board.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index a98c7af50bf0..440ad41e77e4 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -83,7 +83,7 @@ config ARM
- 	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index a43fc753aa53..aa7023db66c7 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -115,6 +115,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
- CFLAGS_ABI	+=-funwind-tables
- endif
- 
-+ifeq ($(CONFIG_CC_IS_CLANG),y)
-+CFLAGS_ABI	+= -meabi gnu
-+endif
-+
- # Accept old syntax despite ".syntax unified"
- AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
- 
+Changelog:
+V2: Change commit log as suggested by Michal Hocko, and make the change to
+    other arches as well.
+
+[1] https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
+[2] https://patchwork.kernel.org/patch/11122823/
+
+Yunsheng Lin (9):
+  arm64: numa: check the node id consistently for arm64
+  x86: numa: check the node id consistently for x86
+  alpha: numa: check the node id consistently for alpha
+  powerpc: numa: check the node id consistently for powerpc
+  s390: numa: check the node id consistently for s390
+  sh: numa: check the node id consistently for sh
+  sparc64: numa: check the node id consistently for sparc64
+  mips: numa: check the node id consistently for mips ip27
+  mips: numa: check the node id consistently for mips loongson64
+
+ arch/alpha/include/asm/topology.h                |  7 +++++--
+ arch/arm64/include/asm/numa.h                    |  6 ++++++
+ arch/arm64/mm/numa.c                             |  2 +-
+ arch/mips/include/asm/mach-ip27/topology.h       | 15 ++++++++++++---
+ arch/mips/include/asm/mach-loongson64/topology.h | 12 +++++++++++-
+ arch/powerpc/include/asm/topology.h              | 13 ++++++++++---
+ arch/s390/include/asm/topology.h                 |  6 ++++++
+ arch/sh/include/asm/topology.h                   | 14 +++++++++++++-
+ arch/sparc/include/asm/topology_64.h             | 16 +++++++++++++---
+ arch/x86/include/asm/topology.h                  |  6 ++++++
+ arch/x86/mm/numa.c                               |  2 +-
+ 11 files changed, 84 insertions(+), 15 deletions(-)
+
 -- 
-2.23.0
+2.8.1
 
