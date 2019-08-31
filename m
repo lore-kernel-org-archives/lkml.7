@@ -2,105 +2,142 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3370C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 03:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A866C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 03:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E16723711
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 03:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0458523697
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 03:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PshT8Zyt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=typeblog-net.20150623.gappssmtp.com header.i=@typeblog-net.20150623.gappssmtp.com header.b="FxDkvpiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfHaDEW (ORCPT
+        id S1728332AbfHaDKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 23:04:22 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42906 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfHaDEW (ORCPT
+        Fri, 30 Aug 2019 23:10:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45638 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfHaDKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 23:04:22 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 26so3398741pfp.9;
-        Fri, 30 Aug 2019 20:04:21 -0700 (PDT)
+        Fri, 30 Aug 2019 23:10:32 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 4so896675pgm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 20:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MYGiEbsiokKiZ5MvOpc0AKjBaUE0xFO3Aa5RPowPPwY=;
-        b=PshT8ZytHxwcPCOM5tGaZycAo+7DMB9o6X2TuilJu8qmJuu+lDO5EThVnwX/fFyz02
-         U2ZEbBmvDNLFkmvXpGG5XjZACUvpt5QFpAcP58QitjZNBbQRIobrE8lKH/k2Y0OwDOhX
-         rfym6+ye7SMnGQp1YkF6TZJOxFPr/ciO8RREHtxTDFz8ZJtdTu+xER2AauuANEqyN/uK
-         eZY1/Y9inZxd2lEiWwygFQN5mzHRwmWfIHXqjTbpd/kpw5qu+HRWZOW4prwgJ9pHHt0x
-         SSvCWMOEHcPcCTK33W3xHcYYF6P1ac6/GWijr1HgQDgf84et4J7M0MvDxTW/HFTzG5fd
-         0xbQ==
+        d=typeblog-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xPp/KNeXkBz5eBYg4mT+UA0qSZaP/9dyi5AxdOhW8oY=;
+        b=FxDkvpiLmDCdVySmdKZFxU+2EWG20fKrRnf810YGsm3sKyNqJj1MWnVW0tk2eCnr3i
+         GLP+gnBwlz7OLbQitK8znNiv1RsFw6mxfxKzg/HaE4ObLZZ4iQZ8EBIAu2fKDwc6ZNy4
+         Fjoa89AzJ9MtWSGUjfmL4LuEyg/dkT/67EkioOiqmp2oWovIKYae/Athutb2V3Sz9GBJ
+         8v+Wy05IzpzJG9ctYb3A3G2xy4zUWzrynpWZx4O7enZAlazh7RTyiKqfRd7tOvHpkl3m
+         Zyt403oqlfbqEw3cJfLUGC7TjLFzICr1l2cy6Jr/7q4bJWHpJIQCq04Y+nthKCJqfpn8
+         jMWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MYGiEbsiokKiZ5MvOpc0AKjBaUE0xFO3Aa5RPowPPwY=;
-        b=cIRYvUvnT9ilM68ioPsR/q/4fn69W2Hb4NHLQIuntISB8B0u3TthKbCnid1qTpt0Vw
-         DQrBtFeWpYwZvLsb/RdbGm6jt+O2Vh7qpNQVszFLxNt4dTfS6pS+cAZD5RTQ/zb6DFOY
-         P9MKY3vnFLjcQ7IkcgYH/wzDaOLXb7xWGNAuCkcF8eiK4cUlXrGyxcVtJrOEUPny7VAb
-         tNLmxybWF3Oj6SQ2lTQ8+nj3YekisvHnkK9t2mNH12D+eI6PAYwkOvpCrn9yt0wfujln
-         RvTkvQcdhRbwo+arGk+QIh5azURTvnNLZ4hn2SZJd3O0s/+kI9ieJMOfzuUTWMc4Ouyl
-         QY1g==
-X-Gm-Message-State: APjAAAVwTw9JtJVU+XYR2j9pRZmc8+V83O+0S4vL3H6tIfltLTUksX9C
-        /FMuMLfojZv78e+zCIMjuqTqv6V4KN8=
-X-Google-Smtp-Source: APXvYqw908NMPegI5hirfkJRriAJql5dmlJKaNWGJ3VRrMbz/82bw4TzQpwpgyUD4S41HAFgtSrnSw==
-X-Received: by 2002:a63:c0d:: with SMTP id b13mr15380450pgl.420.1567220660925;
-        Fri, 30 Aug 2019 20:04:20 -0700 (PDT)
-Received: from localhost (g75.222-224-160.ppp.wakwak.ne.jp. [222.224.160.75])
-        by smtp.gmail.com with ESMTPSA id c13sm9423439pfi.17.2019.08.30.20.04.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xPp/KNeXkBz5eBYg4mT+UA0qSZaP/9dyi5AxdOhW8oY=;
+        b=aBE2TXZEVZXIVAX5OADhaKIWebUbabLm73WOQZf7K8D+SrPupxaLZkkO68tc9u33rQ
+         Cm4UGGTMkGuk6mJBejvDK4nTUvN+S/vXnrHD32OLoB1qMmt27T/+MagaJyymvtfU3sDC
+         V1FXe+bMA4noJWY+b1WMF3KhKnoX7LPGg6OJqPVmXA9HTsqWk6i5yhkY16oARSibXY83
+         CCntcedabKiWP/ft+aZX4GCOVzz2EOHxfqSnX8zw53zwzynxBijcrqK9RGvtzzzgnW5x
+         6wcPpjVkPpQMMWuJd0TwGvQEqJpJcowLYZoMqSz/mVxra5CQFwHtY1FepC60BscuIANg
+         fjcg==
+X-Gm-Message-State: APjAAAXgKxvH5VMxSCcziv83Yzkl/aPO6Yjeo98/pTFMPuy5cBEnh2tQ
+        s60LqVwIfVAf7zZ49YKhwT7+0A==
+X-Google-Smtp-Source: APXvYqyleC9XvInNiTuUuZU4vpeR5UtTD2SFLPqm9Q3cOcEE/uZaNhwkLgxs2UsAggMgWosJ1+NyAQ==
+X-Received: by 2002:a65:6406:: with SMTP id a6mr15168119pgv.393.1567221031768;
+        Fri, 30 Aug 2019 20:10:31 -0700 (PDT)
+Received: from peter-pc.home ([91.207.174.229])
+        by smtp.gmail.com with ESMTPSA id 185sm10961454pff.54.2019.08.30.20.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 20:04:20 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        devicetree@vger.kernel.org, openrisc@lists.librecores.org
-Subject: [PATCH 2/2] or1k: dts: Add ethoc device to SMP devicetree
-Date:   Sat, 31 Aug 2019 12:03:48 +0900
-Message-Id: <20190831030348.6920-3-shorne@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190831030348.6920-1-shorne@gmail.com>
-References: <20190831030348.6920-1-shorne@gmail.com>
+        Fri, 30 Aug 2019 20:10:30 -0700 (PDT)
+From:   Peter Cai <peter@typeblog.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Peter Cai <peter@typeblog.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
+Date:   Sat, 31 Aug 2019 11:09:14 +0800
+Message-Id: <20190831030916.13172-1-peter@typeblog.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the ethoc device configuration to the OpenRISC basic SMP
-device tree config.  This was tested with qemu.
+On GPD P2 Max, the firmware could not reset the touch panel correctly.
+The kernel needs to take on the job instead, but the GpioInt definition
+in DSDT specifies ActiveHigh while the GPIO pin should actually be
+ActiveLow.
 
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+We need to override the polarity defined by DSDT. The GPIO driver
+already allows defining polarity in acpi_gpio_params, but the option is
+not applied to GpioInt.
+
+This patch adds a new quirk that enables the polarity specified in
+acpi_gpio_params to also be applied to GpioInt.
+
+Signed-off-by: Peter Cai <peter@typeblog.net>
 ---
- arch/openrisc/boot/dts/simple_smp.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/openrisc/boot/dts/simple_smp.dts b/arch/openrisc/boot/dts/simple_smp.dts
-index defbb92714ec..71af0e117bfe 100644
---- a/arch/openrisc/boot/dts/simple_smp.dts
-+++ b/arch/openrisc/boot/dts/simple_smp.dts
-@@ -60,4 +60,10 @@
- 		clock-frequency = <20000000>;
- 	};
+v2: rebased to gpio/for-next, moved quirk out of the gpioint
+conditional.
+---
+ drivers/gpio/gpiolib-acpi.c   | 9 +++++++++
+ include/linux/gpio/consumer.h | 6 ++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index fdee8afa5339..ab16ea61a8fa 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -603,6 +603,15 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+ 			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
+ 			lookup->info.polarity = lookup->active_low;
+ 		}
++
++		/*
++		 * Override the polarity specified by GpioInt if
++		 * ACPI_GPIO_QUIRK_OVERRIDE_POLARITY is set.
++		 */
++		if (lookup->info.quirks & ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) {
++			dev_warn(&lookup->info.adev->dev, FW_BUG "Incorrect polarity specified by GpioInt, overriding.\n");
++			lookup->info.polarity = lookup->active_low;
++		}
+ 	}
  
-+	enet0: ethoc@92000000 {
-+		compatible = "opencores,ethoc";
-+		reg = <0x92000000 0x800>;
-+		interrupts = <4>;
-+		big-endian;
-+	};
+ 	return 1;
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index b70af921c614..7e9f24ebb085 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -622,6 +622,12 @@ struct acpi_gpio_mapping {
+  * get GpioIo type explicitly, this quirk may be used.
+  */
+ #define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
++/*
++ * Use the GPIO polarity (ActiveHigh / ActiveLow) from acpi_gpio_params
++ * for GpioInt as well. The default behavior is to use the one specified
++ * by GpioInt, which can be incorrect on some devices.
++ */
++#define ACPI_GPIO_QUIRK_OVERRIDE_POLARITY	BIT(2)
+ 
+ 	unsigned int quirks;
  };
 -- 
-2.21.0
+2.23.0
 
