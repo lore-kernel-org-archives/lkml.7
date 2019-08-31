@@ -2,136 +2,152 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE39FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94D8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8952723407
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEFC217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 13:05:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Kri2Ds8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfHaNDV (ORCPT
+        id S1728293AbfHaNFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 09:03:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:54233 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfHaNDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 09:03:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Aug 2019 06:03:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,451,1559545200"; 
-   d="scan'208";a="198237941"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 31 Aug 2019 06:03:18 -0700
-Received: by lahna (sSMTP sendmail emulation); Sat, 31 Aug 2019 16:03:17 +0300
-Date:   Sat, 31 Aug 2019 16:03:17 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: lockdep warning on thunderbolt docking
-Message-ID: <20190831130317.GL3177@lahna.fi.intel.com>
-References: <20190830125848.GA25929@owl.dominikbrodowski.net>
+        Sat, 31 Aug 2019 09:05:37 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:56629 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfHaNFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 09:05:37 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x7VD5TqB020331
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 22:05:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x7VD5TqB020331
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567256730;
+        bh=0xiVhnfMMmWO7lCRxWhVZrU4jkaKCy6a+KRY9o5Jbu4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Kri2Ds8ogcpZ2aBA93wUjYRsVQbbjbOWH2D6G/dOSdnKir2gS5V1TM/6yieK7qgKE
+         eVm0WFRanEcgOzQHud1R5JxHI/O6q1SNZe+IF7JhqcaWhqnM4LGq/UgH5CYVZv1h+r
+         MAkSGmVUQ/7JIt96MMoy4+U2cozp/24KxQvpcN/ccAcRXh9zC2MykC65Mfp5x6Kdwr
+         lc/bNeFNZxD+9mcf1HlekuYs9IXiFv+OET/PAMjbuU+4NClcpK9oGr9dRE68K0xgS5
+         WLkX9ap+KaS6hfWWQUGSrY0zCscNmDUMfjxMCass6xSgmQzB1X+q7KywlplZm1ZlF3
+         DYtxlHRFlESIA==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id b2so3175849uak.3
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 06:05:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAWDUVp2lJhnu/Vchoe0SNwd7OhR1MYUfPztjqpqbzVRIyk4x0BM
+        li6Co6E8MHeC7g2+S/qmudCVT3SVzBorjx/w3BI=
+X-Google-Smtp-Source: APXvYqzR9pk5p/4jleHhBZpmxoBL+K0heyBbkkV3l4/DuJMvaVfcKNJWdK4dQsrXO2z6et1E1AIQjB5xOdX55JpYFX4=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr10368580uao.121.1567256729042;
+ Sat, 31 Aug 2019 06:05:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830125848.GA25929@owl.dominikbrodowski.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
+ <20190826113526.GA23425@infradead.org> <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
+ <20190830155322.GA30046@infradead.org>
+In-Reply-To: <20190830155322.GA30046@infradead.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 31 Aug 2019 22:04:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR2JuZkdJGxO=f2hUxmQca5d7430NC-2hiqZwkJphJ9sA@mail.gmail.com>
+Message-ID: <CAK7LNAR2JuZkdJGxO=f2hUxmQca5d7430NC-2hiqZwkJphJ9sA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dominik,
+On Sat, Aug 31, 2019 at 12:53 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Tue, Aug 27, 2019 at 02:14:59PM +0900, Masahiro Yamada wrote:
+> > There is a small documentation about "Makefile" vs "Kbuild"
+> > in Documentation/kbuild/modules.rst section 3.2
+>
+> I know that part.
+>
+> >
+> > It is talking about external modules, but the benefit applies
+> > to arch/$(SRCARCH)/Kbuild as well.
+>
+> I fail to fully understand this part, though.
 
-On Fri, Aug 30, 2019 at 02:58:48PM +0200, Dominik Brodowski wrote:
-> When connecting a thunderbolt-enabled docking station to my work laptop,
-> the following lockdep warning is reported on v5.3.0-rc6+ as of Thursday
-> morning (can look up the exact git id if so required):
+Kbuild support two file names, "Makefile" and "Kbuild"
+for describing obj-y, obj-m, etc.
 
-Thanks for reporting. No need to dig for the commit ID.
+If both exist in the same directory, "Kbuild" takes precedence.
 
-I'll take a look at this next week.
+This is useful where we want to use "Makefile"
+for other purposes.
 
-> thunderbolt 0-1: new device found, vendor=0xd4 device=0xb070
-> thunderbolt 0-1: Dell WD19TB Thunderbolt Dock
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 5.3.0-rc6+ #1 Tainted: G                T
-> ------------------------------------------------------
-> pool-/usr/lib/b/1258 is trying to acquire lock:
-> 000000005ab0ad43 (pci_rescan_remove_lock){+.+.}, at: authorized_store+0xe8/0x210
-> 
-> but task is already holding lock:
-> 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
-> 
-> which lock already depends on the new lock.
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #1 (&tb->lock){+.+.}:
->        __mutex_lock+0xac/0x9a0
->        tb_domain_add+0x2d/0x130
->        nhi_probe+0x1dd/0x330
->        pci_device_probe+0xd2/0x150
->        really_probe+0xee/0x280
->        driver_probe_device+0x50/0xc0
->        bus_for_each_drv+0x84/0xd0
->        __device_attach+0xe4/0x150
->        pci_bus_add_device+0x4e/0x70
->        pci_bus_add_devices+0x2e/0x66
->        pci_bus_add_devices+0x59/0x66
->        pci_bus_add_devices+0x59/0x66
->        enable_slot+0x344/0x450
->        acpiphp_check_bridge.part.0+0x119/0x150
->        acpiphp_hotplug_notify+0xaa/0x140
->        acpi_device_hotplug+0xa2/0x3f0
->        acpi_hotplug_work_fn+0x1a/0x30
->        process_one_work+0x234/0x580
->        worker_thread+0x50/0x3b0
->        kthread+0x10a/0x140
->        ret_from_fork+0x3a/0x50
-> 
-> -> #0 (pci_rescan_remove_lock){+.+.}:
->        __lock_acquire+0xe54/0x1ac0
->        lock_acquire+0xb8/0x1b0
->        __mutex_lock+0xac/0x9a0
->        authorized_store+0xe8/0x210
->        kernfs_fop_write+0x125/0x1b0
->        vfs_write+0xc2/0x1d0
->        ksys_write+0x6c/0xf0
->        do_syscall_64+0x50/0x180
->        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
->        CPU0                    CPU1
->        ----                    ----
->   lock(&tb->lock);
->                                lock(pci_rescan_remove_lock);
->                                lock(&tb->lock);
->   lock(pci_rescan_remove_lock);
-> 
->  *** DEADLOCK ***
-> 5 locks held by pool-/usr/lib/b/1258:
->  #0: 000000003df1a1ad (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x4d/0x60
->  #1: 0000000095a40b02 (sb_writers#6){.+.+}, at: vfs_write+0x185/0x1d0
->  #2: 0000000017a7d714 (&of->mutex){+.+.}, at: kernfs_fop_write+0xf2/0x1b0
->  #3: 000000004f262981 (kn->count#208){.+.+}, at: kernfs_fop_write+0xfa/0x1b0
->  #4: 00000000bfb796b5 (&tb->lock){+.+.}, at: authorized_store+0x7c/0x210
-> 
-> stack backtrace:
-> CPU: 0 PID: 1258 Comm: pool-/usr/lib/b Tainted: G                T 5.3.0-rc6+ #1
-> 
-> 
-> Thanks,
-> 	Dominik
+For external modules, we use "Makefile" as a start point,
+so we often want to  describe obj-m in "Kbuild" instead of "Makefile".
+
+
+Similarly, arch/$(SRCARCH)/Makefile is very special
+in that it is included from the top-level Makefile,
+and specify arch-specific compiler flags etc.
+
+We can use arch/$(SRCARCH)/Kbuild
+to specify obj-y, obj-m.
+The top-level Makefile does not need to know
+the directory structure under arch/$(SRCARCH)/.
+
+This is logical separation.
+
+
+>
+> > arch/$(SRCARCH)/Makefile is included by the top Makefile
+> > to specify arch-specific compiler flags, etc.
+> >
+> > On the other hand, arch/$(SRCARCH)/Kbuild, if exists, is included
+> > when Kbuild actually descends into arch/$(SRCARCH)/.
+> >
+> > This allows you to hierarchize the sub-directories to visit
+> > instead of specifying everything in flat in arch/$(SRCARCH)/Makefile.
+>
+> Yes, but what is the plan in the long run?  arch/$(ARCH)/Makefile
+> is still a weird hodge-podge of overriding global variables and misc
+> Makefile targets, it now just has a tiny little work.
+
+There are lots of arch-specific build settings.
+We definitely need a place to describe them,
+hence arch/$(SRCARCH)/Makefile.
+
+
+>  Is there any
+> actual benefit from using Kbuild for the build process?
+
+For example, arch/x86/Kbuild is quite useful
+since there are many directories in arch/x86.
+
+riscv does not have many directories for now since it is a new architecture,
+but it will be useful when it will have more directories.
+
+
+>  Can we
+> eventually move the setting of variables in the Makefile into another
+> special purpose file?  Is the support for actually compiling kernel
+> source files from the arch/$(ARCH) Makefile eventually going away?
+
+No, I do not think so.
+
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
