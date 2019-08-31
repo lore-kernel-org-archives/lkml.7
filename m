@@ -4,151 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B817C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7AC41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B5E23711
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JvpkIul1"
+	by mail.kernel.org (Postfix) with ESMTP id CEE3A23717
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567216922;
+	bh=EH7UF4hE0hUphJlOsvXuyX+GyJDs8CBq8W6IzESMZnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c7hvXBOn5qFOV3EMFPGOyQZT9C9wAfvuqaGINc7Bcqwh/MKNIf6QNrEr9zra0Bjvb
+	 l3EyL3whpDzkdVhEKrQ6qURczZ3S8Xn0FdrErmD4s//np+TB29p8vPrWtdVpTfcuir
+	 fI1YFRVs69yKlilMUXVC3LxuIK/s6+VtY4CaA/sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfHaCBq (ORCPT
+        id S1728401AbfHaCCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 22:01:46 -0400
-Received: from mail-eopbgr1300098.outbound.protection.outlook.com ([40.107.130.98]:21280
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728246AbfHaCBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 22:01:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=liNga97ZcJlWJhjRw44csq+CIF1vtthct6jXJSToCm5IVWJMqCD6HM6gZCqZBNS0KWR0kHFgbeveQCmT6FMhmqBSNIZdlRma2HKetlczr7ow4a1xsmdfNj20i7RpdwDFHUP+lZL5eBIwRCAusKl4dFX+Cp8HEc2xlGWiunuhK5mWJAbQh9Nq+wDkfKFDdFI1Dn9Fq2L22bQShFwW+60rBnVR9YYGuAL1ZQt6//ZhwCqyEgqxFW86AN/bKSiQs9FVUfvW4ORt2SVac4U8sTfgoFZTTfqXqzFdMy/HubpZ4WGc60LROU0ZVKMp4oaDmbESdlil384n8KDmV+tpajg25w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FTOeg8ivEO8FprdJugCquGVdA8LgdolKrd9VxjbhI0o=;
- b=iOSkcwPNY8hyHlfEcZOyxBZQkJW4IqsandMluRjIPI02Zujt5ETHZFg3SfCucS1/+QzybfJY0Oouz6dG/xNq3qfVqYEEzucobhuswlgwx9KuyM62JzQfmwc9IEXFTTwVWdesyJQaTWxaLq/JijYB9kosA1C+k99pqI35QoFfubN3fcpYlci86/qw+vb73bL3P8Kh4Sa0DZVK2M/W82F6wHhFo46sFyWcZXTeoJVJiVqnhzl8h+TPonldifIFROXAgSmCX28OKGAR1xgnSb0rpSfTEV+zjwMVJTK/6zLRkOhW12yCzq+pKCntKpRCWhO2zXqWgU9/HqFWbUX1EsR5+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FTOeg8ivEO8FprdJugCquGVdA8LgdolKrd9VxjbhI0o=;
- b=JvpkIul1I4TklH1b6ooB7oj4ViNZ7b5/xS2/17K2MdiM0DU3SaOxjVS4Uy2i5EbtMybi0XtBMUbFftFx4uQOHUqqXohFnMmh5H/N9qvkaIfMsnL3YyRckrPzqsBU5ekmZqEOstMxnz/qABX5v7519WNLrTGckmLUjHcyEN+In8c=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0170.APCP153.PROD.OUTLOOK.COM (10.170.189.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.2; Sat, 31 Aug 2019 02:00:56 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.006; Sat, 31 Aug 2019
- 02:00:56 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels by
- force upon suspend
-Thread-Topic: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels
- by force upon suspend
-Thread-Index: AQHVVvngIm13qifSzE6BddexMOZgK6cJK+3ggAtlaXA=
-Date:   Sat, 31 Aug 2019 02:00:56 +0000
-Message-ID: <PU1P153MB0169EC39BD51EFF1FD3BB73CBFBC0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-11-git-send-email-decui@microsoft.com>
- <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:02:10.5815340Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9569c2bc-1aff-407a-a5da-655ff005400a;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:5cbd:8ecd:62e5:20b7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 09b10d9e-c98c-4a85-4d3f-08d72db70fe0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0170;
-x-ms-traffictypediagnostic: PU1P153MB0170:|PU1P153MB0170:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB01709D30853FFA80FC1B9777BFBC0@PU1P153MB0170.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 014617085B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(189003)(199004)(76116006)(110136005)(2501003)(74316002)(8936002)(25786009)(4326008)(102836004)(478600001)(6246003)(229853002)(186003)(6116002)(8990500004)(53936002)(76176011)(71190400001)(71200400001)(1511001)(6506007)(55016002)(7696005)(9686003)(6436002)(14454004)(446003)(66946007)(10290500003)(66446008)(64756008)(66476007)(66556008)(86362001)(10090500001)(81156014)(14444005)(256004)(305945005)(81166006)(2906002)(22452003)(316002)(33656002)(99286004)(11346002)(476003)(486006)(2201001)(8676002)(46003)(52536014)(5660300002)(15650500001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0170;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lYKW8WemgNGZNO3OofiwvL6eCblTs81akiy/wmlC1aE9a/QpHKsUmBjZNWJAL8ynbsRhy/atTEkJDIEUw56Elg9SaKwkiMdTLFFyvd/dVtCn3pPQnZ8IuCK+M17elAHa6BDaTUB1vf7EbBswimqFMFT2PWTGFZEYmaVN4fvXDQoJVWthKhuoDcYrK3IYu04Z5AId/uWuJ9Ss00/S4p+PgrTXJ1BltbWOT6CrnofSZeFL6n3v1UZQs3LkWAOew2iGVcB1PKgSzobLIkwi4eUNdZkKOAbw0wxG1f1Bh78naInM3pPm4OV6X28UwaHkkWKbvXR2/rntSNCq4sB3UcmCmBTnCyBnNLYKooU4Y8DJp8po66VtIb0j+IDvwTKp7skkA5htejt0E4WiOLFetrRVjDxJ1zHo+Ja/k8FuwPgyzck=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 30 Aug 2019 22:02:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36947 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728246AbfHaCCB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 22:02:01 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w67so6677697lff.4
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5gMwt6isAwVm7YJJXL3zlJvn3zNlFGgyGxV9A3cBnEc=;
+        b=SOrA9k8fOzCUHmFRfMqLCAdkYLAH+8RewUOAcE/to+bTCzJNInpxUKc/kug/GXXr8X
+         G14cx+KeOC32/pE2vKyqsTdpnJSc9rarN6X5cBfbPL7gHg5aUaNJuFwgEoOce2XeonMJ
+         6pUCmoV8rMRso0oYOnKp4D52/MEeR2IeeC97M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5gMwt6isAwVm7YJJXL3zlJvn3zNlFGgyGxV9A3cBnEc=;
+        b=QdFu/4bDkuzwxwSOFxWMpGipp/gJjtaAHRyY7gnNWcmzA7ls7gbGSdA0UwAL5cy78c
+         P0435cTMuX+vP65uabV+UE+x7MyVZz5YZt9YooaCO8KHkkL+B2kFxakDLiw3sPQ9XeP6
+         Cn5MW0zLdO2aADr5kBNHkI8CkVNnRr0cDehmkZoe1x2xnOpuUhNvd8RVS2AgpIO02RoA
+         S/DJJoGDwTV9EAWnDT3E/HLihFzV4J/5GzvBZbvER2YO+KAqIv8F/QDGZD7VDEpAQJjo
+         OkZ0+28B1E/jwE5nGtl6F/kGrTWhdll9c+kXtM8oFjMpMeFzC/OPbTQS893k3PKyS9Nc
+         SXxw==
+X-Gm-Message-State: APjAAAUpvRCOS9dkl2aGcK2rMU+yLlS45h7NxpzqCXHNe/TN0fW7oJaV
+        8wGq74Pz4rYvEmo9qDiCXxcFOhg2hUE=
+X-Google-Smtp-Source: APXvYqzDrajxaX6cdluibF8NSPFTGTH3QaBJzQoa6bw+uL/AJoHv/z5WKRDLRoORBEpgMQkFjAc/5g==
+X-Received: by 2002:ac2:4901:: with SMTP id n1mr11214503lfi.0.1567216919196;
+        Fri, 30 Aug 2019 19:01:59 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id w17sm519575lfl.43.2019.08.30.19.01.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2019 19:01:58 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id t14so8103016lji.4
+        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:01:58 -0700 (PDT)
+X-Received: by 2002:a2e:8507:: with SMTP id j7mr2974829lji.156.1567216917739;
+ Fri, 30 Aug 2019 19:01:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09b10d9e-c98c-4a85-4d3f-08d72db70fe0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 02:00:56.1049
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YcHP+UsPBYXNnI9M3l1OQk3pskd3xpj+ZVogPTbAItNSXbgeqJDJ4GfMUOMQ6nZNkXtJSUDHRcdS5SHNR7JH1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0170
+References: <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
+ <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au> <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
+ <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au> <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
+ <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au> <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+ <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au> <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
+ <20190809061548.GA10530@gondor.apana.org.au> <20190830073906.GA4579@gondor.apana.org.au>
+In-Reply-To: <20190830073906.GA4579@gondor.apana.org.au>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 30 Aug 2019 19:01:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whnH09S73Nfo-HMH+V-Ew39+tZdEzaLUQo41PJEo=PZZw@mail.gmail.com>
+Message-ID: <CAHk-=whnH09S73Nfo-HMH+V-Ew39+tZdEzaLUQo41PJEo=PZZw@mail.gmail.com>
+Subject: Re: [GIT] Crypto Fixes for 5.3
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Friday, August 23, 2019 1:02 PM
->=20
-> From: Dexuan Cui Sent: Monday, August 19, 2019 6:52 PM
-> >
-> > Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force for
-> > hibernation. There is no better method to clean up the channels since
-> > some of the channels may still be referenced by the userspace apps when
-> > hiberantin is triggered: in this case, the "rescind" fields of the
->=20
-> s/hiberantin/hibernation/
+On Fri, Aug 30, 2019 at 12:39 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> This push fixes a potential crash in the ccp driver.
 
-Thanks! Will fix this in v4.
+Btw, Herbert, can you add "pull" somewhere in your pull request email?
 
-> > @@ -2091,6 +2127,25 @@ static int vmbus_acpi_add(struct acpi_device
-> *device)
-> >
-> >  static int vmbus_bus_suspend(struct device *dev)
-> >  {
-> > +	struct vmbus_channel *channel;
-> > +
-> > +	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
-> > +		/*
-> > +		 * We wait here until any channel offer is currently
-> > +		 * being processed.
-> > +		 */
->=20
-> The wording of the comment is a bit off.  Maybe
->=20
-> 		/*
-> 		 * We wait here until the completion of any channel
-> 		 * offers that are currently in progress.
-> 		 */
+It could be in the subject line (ie change the "[GIT]" to "[GIT
+PULL]") but it could also be anywhere in the email body (ie a "please
+pull" or something like that).
 
-Will use the better version this in v4.=20
+As it is, your pull requests don't actually trigger my search terms. I
+eventually get to them anyway (I do try to look at _all_ my emails),
+but it does mean that they don't get the priority action that other
+peoples pull requests do...
 
-Thanks,
--- Dexuan
+               Linus
