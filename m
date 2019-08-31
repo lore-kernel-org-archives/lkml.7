@@ -2,195 +2,141 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026C0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 07:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D735C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 07:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65972378A
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 07:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE54E2342E
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 07:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c013Ad8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfHaHkV (ORCPT
+        id S1726718AbfHaHlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 03:40:21 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:47636 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfHaHkV (ORCPT
+        Sat, 31 Aug 2019 03:41:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33466 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfHaHlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 03:40:21 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id B3F8F25AE77;
-        Sat, 31 Aug 2019 17:40:18 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 92FBBE218F0; Sat, 31 Aug 2019 09:40:16 +0200 (CEST)
-Date:   Sat, 31 Aug 2019 09:40:16 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Nathan Huckleberry <nhuck@google.com>, edubezval@gmail.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Yoshihiro Kaneko <ykaneko0929@gmail.com>,
-        wsa+renesas@sang-engineering.com
-Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Fix Wshift-negative-value
-Message-ID: <20190831074016.nqjtvqf3lesyz77z@verge.net.au>
-References: <20190613211228.34092-1-nhuck@google.com>
- <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
- <82458318837ed1154a183be0b96337fc7809c645.camel@intel.com>
- <20190829131124.GA2437@kunai>
+        Sat, 31 Aug 2019 03:41:07 -0400
+Received: by mail-pl1-f195.google.com with SMTP id go14so4365512plb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 00:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=chnLX+5iIXcwerLGQG9r+UVsc2Dbf/r7ciZlTZZfaxM=;
+        b=c013Ad8yHXrmAwiNw5iVbA4XJlDGivjPRePYXI9dNS61w7oMN8cyokGOXoxgcrbI47
+         IbuGqLmCdrf5V9lLG0hfIO74OpBCRGSRw7KkNSPhODI8Y6ewmE00fLkCFOKa3T2Hqa82
+         /k7guerGe0N2XcMInzfYqd7frtmcRGRRJ1Cca3DwwA6md1SLuCKYhCwT0VjzGVsA6jMt
+         eKn6WkSy0KrJ9Crgzs3kDmfSs0iC0roIqUkeQtBUZyirAm4YrAIyVBCCm2yjmanhH6wQ
+         k20EwuJ2JCFCYiefeygA3J3cu6f9L2Ci6bKxYN8e2SHss7LRpTmUdgVfajS2RK9bN4in
+         fFqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=chnLX+5iIXcwerLGQG9r+UVsc2Dbf/r7ciZlTZZfaxM=;
+        b=erIdL+rnvi9tDuusqxcZzu+SIBJ+IsinwFW7WUL5KDOfsQnt7AgpEtPWf5NNiwdT3x
+         XX9beitvcn8tLJwg81Psa4NcRc1/WPNgz6H6qRTpSy+MV2Czg7YkSux5G2vdYiWgJZ3e
+         2lCSUlzpkAgWp2WJT+vXRpW/MwdrzdbQ1Rp7rYrtVWQs0s9mk7TVmZ+22s/rrLP5QFhy
+         Tn9O3jAElJkNqYpkIBjzCrWhlxBB56TC0jzJUSAzfqC/0q0xPk20XGdhgdukUW0JIuzi
+         iEDc1w3eVWkQHNonjJLJR/9WAAUAmywXUqzcRA6gKwFytcS9wr2yclfYK5w8mfLxMro0
+         Njog==
+X-Gm-Message-State: APjAAAW2eWhAzt8D/EnxZXNtFpJjlg7SAZd+jjmA84GP/yGUmxt0fShs
+        TFR4xPjKhgFdxOmi1avjUeg=
+X-Google-Smtp-Source: APXvYqwjFvvwezds47QrplR/PAzW94gzq1A5Vm/569IXQmNEszQ7QBsL9KdmlrszNriNG33UAQsV8A==
+X-Received: by 2002:a17:902:d24:: with SMTP id 33mr19860676plu.133.1567237266794;
+        Sat, 31 Aug 2019 00:41:06 -0700 (PDT)
+Received: from MeraComputer ([117.220.112.100])
+        by smtp.gmail.com with ESMTPSA id q132sm1526341pfq.16.2019.08.31.00.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Aug 2019 00:41:05 -0700 (PDT)
+Date:   Sat, 31 Aug 2019 13:10:55 +0530
+From:   Prakhar Sinha <prakharsinha2808@gmail.com>
+To:     gregkh@linuxfoundation.org, tobias.niessen@stud.uni-hannover.de,
+        kim.jamie.bradley@gmail.com, pakki001@umn.edu,
+        sabrina-gaube@web.de, nishkadg.linux@gmail.com,
+        qader.aymen@gmail.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rts5208: Fixed checkpatch warning.
+Message-ID: <20190831074055.GA10177@MeraComputer>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829131124.GA2437@kunai>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 03:11:24PM +0200, Wolfram Sang wrote:
-> On Wed, Aug 28, 2019 at 04:52:20PM +0800, Zhang Rui wrote:
-> > On Fri, 2019-06-14 at 12:52 +0200, Daniel Lezcano wrote:
-> > > Hi Nathan,
-> > > 
-> > > On 13/06/2019 23:12, Nathan Huckleberry wrote:
-> > > > Clang produces the following warning
-> > > > 
-> > > > vers/thermal/rcar_gen3_thermal.c:147:33: warning: shifting a
-> > > > negative
-> > > > signed value is undefined [-Wshift-negative-value] / (ptat[0] -
-> > > > ptat[2])) +
-> > > > FIXPT_INT(TJ_3); ^~~~~~~~~~~~~~~
-> > > > drivers/thermal/rcar_gen3_thermal.c:126:29
-> > > > note: expanded from macro 'FIXPT_INT' #define FIXPT_INT(_x) ((_x)
-> > > > <<
-> > > > FIXPT_SHIFT) ~~~~ ^ drivers/thermal/rcar_gen3_thermal.c:150:18:
-> > > > warning:
-> > > > shifting a negative signed value is undefined [-Wshift-negative-
-> > > > value]
-> > > > tsc->tj_t - FIXPT_INT(TJ_3)); ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-> > > > 
-> > > > Upon further investigating it looks like there is no real reason
-> > > > for
-> > > > TJ_3 to be -41. Usages subtract -41, code would be cleaner to just
-> > > > add.
-> > > 
-> > > All the code seems broken regarding the negative value shifting as
-> > > the
-> > > macros pass an integer:
-> > > 
-> > > eg.
-> > >         tsc->coef.a2 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
-> > >                                  tsc->tj_t - FIXPT_INT(ths_tj_1));
-> > > 
-> > > thcode[1] is always < than thcode[0],
-> > > 
-> > > thcode[1] - thcode[0] < 0
-> > > 
-> > > FIXPT_INT(thcode[1] - thcode[0]) is undefined
-> > > 
-> > > 
-> > > Is it done on purpose FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]) ?
-> > > 
-> > > Try developing the macro with the coef.a2 computation ...
-> > > 
-> > > The code quality of this driver could be better, it deserves a rework
-> > > IMHO ...
-> > > 
-> > > I suggest to revert:
-> > > 
-> > > 4eb39f79ef443fa566d36bd43f1f578d5c140305
-> > > bdc4480a669d476814061b4da6bb006f7048c8e5
-> > > 6a310f8f97bb8bc2e2bb9db6f49a1b8678c8d144
-> > > 
-> > > Rework the coefficient computation and re-introduce what was reverted
-> > > in
-> > > a nicer way.
-> > 
-> > Sounds reasonable to me.
-> > 
-> > Yoshihiro,
-> > can you please clarify on this? Or else I will revert the above commits
-> > first?
-> > 
-> > Also CC Wolfram Sang, the driver author.
-> 
-> CCing Simon Horman who worked with Kaneko-san on these changes.
+This patch solves the following checkpatch.pl's messages in
+drivers/staging/rts5208/sd.c
 
-Hi,
+WARNING: line over 80 characters
+4517: FILE: drivers/staging/rts5208/sd.c:4517:
++                                               sd_card->sd_lock_status &=
+~(SD_UNLOCK_POW_ON | SD_SDR_RST);
 
-I think that what has happened here is that these patches and moreover the
-driver has been through quite a few hands and I agree that zooming out and
-cleaning things up would make a lot of sense.  Personally I would take the
-approach of incrementally cleaning things up.  But I don't feel strongly
-about this.
+WARNING: line over 80 characters
+4518: FILE: drivers/staging/rts5208/sd.c:4518:
++                                               goto
+sd_execute_write_cmd_failed;
 
-As for the specific question about a negative constant, I don't know of a
-specific reason that approach was taken and I don't recall investigating it
-at the time.
+WARNING: line over 80 characters
+4522: FILE: drivers/staging/rts5208/sd.c:4522:
++                               sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON |
+SD_SDR_RST);
 
-Kind regards,
-Simon
+Signed-off-by: Prakhar Sinha <prakharsinha2808@gmail.com>
+---
+ drivers/staging/rts5208/sd.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-> 
-> > thanks,
-> > rui
-> > > 
-> > > 
-> > > > Fixes: 4eb39f79ef44 ("thermal: rcar_gen3_thermal: Update value of
-> > > > Tj_1")
-> > > > Cc: clang-built-linux@googlegroups.com
-> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/531
-> > > > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> > > > ---
-> > > >  drivers/thermal/rcar_gen3_thermal.c | 8 ++++----
-> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/thermal/rcar_gen3_thermal.c
-> > > > b/drivers/thermal/rcar_gen3_thermal.c
-> > > > index a56463308694..f4b4558c08e9 100644
-> > > > --- a/drivers/thermal/rcar_gen3_thermal.c
-> > > > +++ b/drivers/thermal/rcar_gen3_thermal.c
-> > > > @@ -131,7 +131,7 @@ static inline void
-> > > > rcar_gen3_thermal_write(struct rcar_gen3_thermal_tsc *tsc,
-> > > >  #define RCAR3_THERMAL_GRAN 500 /* mili Celsius */
-> > > >  
-> > > >  /* no idea where these constants come from */
-
-Regarding the line above, I believe the constant comes
-from the documentation.
-
-> > > > -#define TJ_3 -41
-> > > > +#define TJ_3 41
-> > > >  
-> > > >  static void rcar_gen3_thermal_calc_coefs(struct
-> > > > rcar_gen3_thermal_tsc *tsc,
-> > > >  					 int *ptat, const int *thcode,
-> > > > @@ -144,11 +144,11 @@ static void
-> > > > rcar_gen3_thermal_calc_coefs(struct rcar_gen3_thermal_tsc *tsc,
-> > > >  	 * the dividend (4095 * 4095 << 14 > INT_MAX) so keep it
-> > > > unscaled
-> > > >  	 */
-> > > >  	tsc->tj_t = (FIXPT_INT((ptat[1] - ptat[2]) * 157)
-> > > > -		     / (ptat[0] - ptat[2])) + FIXPT_INT(TJ_3);
-> > > > +		     / (ptat[0] - ptat[2])) - FIXPT_INT(TJ_3);
-> > > >  
-> > > >  	tsc->coef.a1 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[2]),
-> > > > -				 tsc->tj_t - FIXPT_INT(TJ_3));
-> > > > -	tsc->coef.b1 = FIXPT_INT(thcode[2]) - tsc->coef.a1 * TJ_3;
-> > > > +				 tsc->tj_t + FIXPT_INT(TJ_3));
-> > > > +	tsc->coef.b1 = FIXPT_INT(thcode[2]) + tsc->coef.a1 * TJ_3;
-> > > >  
-> > > >  	tsc->coef.a2 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
-> > > >  				 tsc->tj_t - FIXPT_INT(ths_tj_1));
-> > > > 
-> > > 
-> > > 
-> > 
-
+diff --git a/drivers/staging/rts5208/sd.c b/drivers/staging/rts5208/sd.c
+index a06045344301..7d6f2c56e740 100644
+--- a/drivers/staging/rts5208/sd.c
++++ b/drivers/staging/rts5208/sd.c
+@@ -4505,22 +4505,20 @@ int sd_execute_write_data(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+ 
+ 		dev_dbg(rtsx_dev(chip), "sd_lock_state = 0x%x, sd_card->sd_lock_status = 0x%x\n",
+ 			sd_lock_state, sd_card->sd_lock_status);
+-		if (sd_lock_state ^ (sd_card->sd_lock_status & SD_LOCKED)) {
++		if (sd_lock_state ^ (sd_card->sd_lock_status & SD_LOCKED))
+ 			sd_card->sd_lock_notify = 1;
+-			if (sd_lock_state &&
+-			    (sd_card->sd_lock_status & SD_LOCK_1BIT_MODE)) {
+-				sd_card->sd_lock_status |= (
+-					SD_UNLOCK_POW_ON | SD_SDR_RST);
+-				if (CHK_SD(sd_card)) {
+-					retval = reset_sd(chip);
+-					if (retval != STATUS_SUCCESS) {
+-						sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON | SD_SDR_RST);
+-						goto sd_execute_write_cmd_failed;
+-					}
+-				}
+-
+-				sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON | SD_SDR_RST);
++		if ((sd_lock_state & !(sd_card->sd_lock_status & SD_LOCKED)) &&
++		    (sd_card->sd_lock_status & SD_LOCK_1BIT_MODE)) {
++			sd_card->sd_lock_status |= (SD_UNLOCK_POW_ON |
++						    SD_SDR_RST);
++			if (CHK_SD(sd_card) &&
++			    reset_sd(chip) != STATUS_SUCCESS) {
++				sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON |
++							     SD_SDR_RST);
++				goto sd_execute_write_cmd_failed;
+ 			}
++			sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON |
++						     SD_SDR_RST);
+ 		}
+ 	}
+ 
+-- 
+2.20.1
 
