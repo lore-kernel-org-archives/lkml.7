@@ -2,101 +2,249 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54513C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4764C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2648421670
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="czS+OJhh"
+	by mail.kernel.org (Postfix) with ESMTP id 84D0722CE9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfHaK6j (ORCPT
+        id S1726650AbfHaLIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 06:58:39 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60712 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfHaK6i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 06:58:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7VAt6gS012369;
-        Sat, 31 Aug 2019 10:57:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=ozxVxnuhOlY8BW1RqOr9u3YWuE9zaJOBgn+uoApcv8w=;
- b=czS+OJhht/1HYcIw838trx7yLziM6sLYkilzvRpGO1UPTBNoOj82c4EBPcBLNPe8px7u
- STu04aDn26y26C0eaeB18B3O833x1zPr8QF+o2cFs2yGFHBav96r1SjmzIRaJXPmDlqY
- tr20ommYshXLk8YK2INTeHVUs6ZO9QLwO7tAn1MIETU4HAtsJrC2QCMBt4FldBAnfw2V
- 8wNO6jcWZ7jyKzWVwjruunLrC4aEzcCvToanK2KLZg+tAUWedDaj2cX5YTFLmS0vrhhT
- KiIxgXeAnDoLCHeSH1R/sI4Nvyw+UPiQS+fI0II7yznVdVItgojBy2m+f6UMiAk5IKpE 6Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uqqje006y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 31 Aug 2019 10:57:56 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7VArlar022869;
-        Sat, 31 Aug 2019 10:57:55 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2uqgqhyvmq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 31 Aug 2019 10:57:55 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7VAvh9D025043;
-        Sat, 31 Aug 2019 10:57:44 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 31 Aug 2019 03:57:43 -0700
-Date:   Sat, 31 Aug 2019 13:57:32 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
-Message-ID: <20190831105732.GH8372@kadam>
-References: <20190830032006.GA20217@architecture4>
- <20190830033643.51019-1-gaoxiang25@huawei.com>
- <20190830033643.51019-6-gaoxiang25@huawei.com>
- <20190830154650.GB11571@infradead.org>
- <20190830160415.GC69026@architecture4>
+        Sat, 31 Aug 2019 07:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfHaLIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 07:08:42 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E2AE22CE9;
+        Sat, 31 Aug 2019 11:08:40 +0000 (UTC)
+Date:   Sat, 31 Aug 2019 07:08:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] tracing: Various tracing fixes
+Message-ID: <20190831070839.3f7dbc33@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830160415.GC69026@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=786
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908310129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=847 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908310129
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 12:04:20AM +0800, Gao Xiang wrote:
-> I don't have some benchmark data for each unlikely/likely case (and I have
-> no idea "is that worth to take time to benchmark rather than do another more
-> useful stuffs"), so..I have to kill them all...
 
-We don't really require benchmarks, just that a reasonable person would
-think it might make a difference.
+Linus,
 
-regards,
-dan carpenter
+Small fixes and minor cleanups for Tracing
+
+ - Make exported ftrace function not static
+ - Fix NULL pointer dereference in reading probes as they are created
+ - Fix NULL pointer dereference in k/uprobe clean up path
+ - Various documentation fixes
+
+
+Please pull the latest trace-v5.3-rc6 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.3-rc6
+
+Tag SHA1: b0d99ebe7abd58ab40cd18b4d2ac26ca394909d1
+Head SHA1: c68c9ec1c52e5bcd221eb09bc5344ad4f407b204
+
+
+Denis Efremov (1):
+      tracing: Make exported ftrace_set_clr_event non-static
+
+Jakub Kicinski (1):
+      tracing: Correct kdoc formats
+
+Jisheng Zhang (1):
+      ftrace/x86: Remove mcount() declaration
+
+Naveen N. Rao (2):
+      ftrace: Fix NULL pointer dereference in t_probe_next()
+      ftrace: Check for successful allocation of hash
+
+Steven Rostedt (VMware) (1):
+      ftrace: Check for empty hash and comment the race with registering probes
+
+Xinpeng Liu (1):
+      tracing/probe: Fix null pointer dereference
+
+----
+ arch/x86/include/asm/ftrace.h |  1 -
+ include/linux/trace_events.h  |  1 +
+ kernel/trace/ftrace.c         | 17 +++++++++++++++++
+ kernel/trace/trace.c          | 26 ++++++++++++++------------
+ kernel/trace/trace_events.c   |  2 +-
+ kernel/trace/trace_probe.c    |  3 ++-
+ 6 files changed, 35 insertions(+), 15 deletions(-)
+---------------------------
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index 287f1f7b2e52..c38a66661576 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -16,7 +16,6 @@
+ #define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+ 
+ #ifndef __ASSEMBLY__
+-extern void mcount(void);
+ extern atomic_t modifying_ftrace_code;
+ extern void __fentry__(void);
+ 
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 5150436783e8..30a8cdcfd4a4 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -548,6 +548,7 @@ extern int trace_event_get_offsets(struct trace_event_call *call);
+ 
+ #define is_signed_type(type)	(((type)(-1)) < (type)1)
+ 
++int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+ int trace_set_clr_event(const char *system, const char *event, int set);
+ 
+ /*
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index eca34503f178..f9821a3374e9 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3095,6 +3095,14 @@ t_probe_next(struct seq_file *m, loff_t *pos)
+ 		hnd = &iter->probe_entry->hlist;
+ 
+ 	hash = iter->probe->ops.func_hash->filter_hash;
++
++	/*
++	 * A probe being registered may temporarily have an empty hash
++	 * and it's at the end of the func_probes list.
++	 */
++	if (!hash || hash == EMPTY_HASH)
++		return NULL;
++
+ 	size = 1 << hash->size_bits;
+ 
+  retry:
+@@ -4320,12 +4328,21 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 
+ 	mutex_unlock(&ftrace_lock);
+ 
++	/*
++	 * Note, there's a small window here that the func_hash->filter_hash
++	 * may be NULL or empty. Need to be carefule when reading the loop.
++	 */
+ 	mutex_lock(&probe->ops.func_hash->regex_lock);
+ 
+ 	orig_hash = &probe->ops.func_hash->filter_hash;
+ 	old_hash = *orig_hash;
+ 	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, old_hash);
+ 
++	if (!hash) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
+ 	ret = ftrace_match_records(hash, glob, strlen(glob));
+ 
+ 	/* Nothing found? */
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 525a97fbbc60..563e80f9006a 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1567,9 +1567,9 @@ update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
+ 
+ /**
+  * update_max_tr_single - only copy one trace over, and reset the rest
+- * @tr - tracer
+- * @tsk - task with the latency
+- * @cpu - the cpu of the buffer to copy.
++ * @tr: tracer
++ * @tsk: task with the latency
++ * @cpu: the cpu of the buffer to copy.
+  *
+  * Flip the trace of a single CPU buffer between the @tr and the max_tr.
+  */
+@@ -1767,7 +1767,7 @@ static void __init apply_trace_boot_options(void);
+ 
+ /**
+  * register_tracer - register a tracer with the ftrace system.
+- * @type - the plugin for the tracer
++ * @type: the plugin for the tracer
+  *
+  * Register a new plugin tracer.
+  */
+@@ -2230,9 +2230,9 @@ static bool tracing_record_taskinfo_skip(int flags)
+ /**
+  * tracing_record_taskinfo - record the task info of a task
+  *
+- * @task  - task to record
+- * @flags - TRACE_RECORD_CMDLINE for recording comm
+- *        - TRACE_RECORD_TGID for recording tgid
++ * @task:  task to record
++ * @flags: TRACE_RECORD_CMDLINE for recording comm
++ *         TRACE_RECORD_TGID for recording tgid
+  */
+ void tracing_record_taskinfo(struct task_struct *task, int flags)
+ {
+@@ -2258,10 +2258,10 @@ void tracing_record_taskinfo(struct task_struct *task, int flags)
+ /**
+  * tracing_record_taskinfo_sched_switch - record task info for sched_switch
+  *
+- * @prev - previous task during sched_switch
+- * @next - next task during sched_switch
+- * @flags - TRACE_RECORD_CMDLINE for recording comm
+- *          TRACE_RECORD_TGID for recording tgid
++ * @prev: previous task during sched_switch
++ * @next: next task during sched_switch
++ * @flags: TRACE_RECORD_CMDLINE for recording comm
++ *         TRACE_RECORD_TGID for recording tgid
+  */
+ void tracing_record_taskinfo_sched_switch(struct task_struct *prev,
+ 					  struct task_struct *next, int flags)
+@@ -3072,7 +3072,9 @@ static void trace_printk_start_stop_comm(int enabled)
+ 
+ /**
+  * trace_vbprintk - write binary msg to tracing buffer
+- *
++ * @ip:    The address of the caller
++ * @fmt:   The string format to write to the buffer
++ * @args:  Arguments for @fmt
+  */
+ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
+ {
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c7506bc81b75..648930823b57 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -787,7 +787,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 	return ret;
+ }
+ 
+-static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
++int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+ {
+ 	char *event = NULL, *sub = NULL, *match;
+ 	int ret;
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index dbef0d135075..fb6bfbc5bf86 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -895,7 +895,8 @@ void trace_probe_cleanup(struct trace_probe *tp)
+ 	for (i = 0; i < tp->nr_args; i++)
+ 		traceprobe_free_probe_arg(&tp->args[i]);
+ 
+-	kfree(call->class->system);
++	if (call->class)
++		kfree(call->class->system);
+ 	kfree(call->name);
+ 	kfree(call->print_fmt);
+ }
