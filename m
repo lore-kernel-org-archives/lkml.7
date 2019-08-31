@@ -2,107 +2,87 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE8FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDC6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9EB2342E
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567210640;
-	bh=BaRI7IwsAkJrLTQzGT8uAutIa3SlxHbAfQrue2wwro0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cc3p40/dmmh+OzbUKRleZn4AoWyPrPOzHQT5Smeyy6DWclKjjQt3G34shjTrHr1Ng
-	 Jo+4YtBH0Wr5WNtJrRtRWrHEx0AvpBufTThCQHzo3hza0laWOHCALdN0ckKQi21TZ5
-	 sDv6xXtxVETm56/My3J+b9SA7UY+s30TFQX1Fdyo=
+	by mail.kernel.org (Postfix) with ESMTP id 1B4A723439
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 00:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfHaART (ORCPT
+        id S1728456AbfHaASG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 20:17:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbfHaART (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 20:17:19 -0400
-Received: from zzz.localdomain (h184-61-154-48.mdsnwi.dsl.dynamic.tds.net [184.61.154.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B0E12342E;
-        Sat, 31 Aug 2019 00:17:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567210638;
-        bh=BaRI7IwsAkJrLTQzGT8uAutIa3SlxHbAfQrue2wwro0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2achGriRDM+zaayC37azxpTkHKrWmEdjmSaNVmFDlDq7wQKT+xVdwPl4KrTs/L4ba
-         /ICmb5Z0huUZs/5KbSAj8IMkWwUqbir0y16NFvRKF/De776e/oRdn2bvwK/Zri52Ep
-         UZZXeL8XWwkfR+aLempswLrD1Rq5OUu02/m9rbjA=
-Date:   Fri, 30 Aug 2019 19:17:15 -0500
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+5bda120b4032f831c57f@syzkaller.appspotmail.com>
-Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Subject: Re: WARNING: suspicious RCU usage in ext4_release_system_zone
-Message-ID: <20190831001715.GC22191@zzz.localdomain>
-Mail-Followup-To: syzbot <syzbot+5bda120b4032f831c57f@syzkaller.appspotmail.com>,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-References: <000000000000457d1405915a9f19@google.com>
+        Fri, 30 Aug 2019 20:18:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30886 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728240AbfHaASF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 30 Aug 2019 20:18:05 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7V06xuG072321;
+        Fri, 30 Aug 2019 20:18:03 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uqabf602m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Aug 2019 20:18:02 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7V09sml001615;
+        Sat, 31 Aug 2019 00:18:01 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ujvv75nxh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 31 Aug 2019 00:18:01 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7V0I1BD43909398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 31 Aug 2019 00:18:01 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2981DAC05E;
+        Sat, 31 Aug 2019 00:18:01 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59193AC05B;
+        Sat, 31 Aug 2019 00:17:59 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.207.220])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Sat, 31 Aug 2019 00:17:58 +0000 (GMT)
+References: <20190829200532.13545-1-prsriva@linux.microsoft.com> <20190829200532.13545-2-prsriva@linux.microsoft.com> <20190830052347.8032F2073F@mail.kernel.org>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Prakhar Srivastava <prsriva@linux.microsoft.com>,
+        linux-arm-msm@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jmorris@namei.org,
+        zohar@linux.ibm.com
+Subject: Re: [RFC][PATCH 1/1] Carry ima measurement log for arm64 via kexec_file_load
+In-reply-to: <20190830052347.8032F2073F@mail.kernel.org>
+Date:   Fri, 30 Aug 2019 21:17:55 -0300
+Message-ID: <87pnkmkx1o.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000457d1405915a9f19@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=751 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908310000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:28:08PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    ed858b88 Add linux-next specific files for 20190826
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=121b506c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ee8373cd9733e305
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5bda120b4032f831c57f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+5bda120b4032f831c57f@syzkaller.appspotmail.com
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.3.0-rc6-next-20190826 #73 Not tainted
-> -----------------------------
-> fs/ext4/block_validity.c:333 suspicious rcu_dereference_check() usage!
-> 
 
-#syz invalid
+Stephen Boyd <sboyd@kernel.org> writes:
+> A lot of this code looks DT generic. Can it be moved out of the arch
+> layer to drivers/of/?
 
-There was already a fix applied between ed858b88 and latest linux-next:
+Yes, if this code could be in drivers/of/ it would be great! Perhaps the
+ DT generic functions could go in drivers/of/fdt.c, and ones dealing
+ with IMA nodes/properties could go in drivers/of/fdt_ima.c?
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 003dc1dc2da3..f7bc914a74df 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -330,11 +330,13 @@ void ext4_release_system_zone(struct super_block *sb)
- {
- 	struct ext4_system_blocks *system_blks;
- 
-+	rcu_read_lock();
- 	system_blks = rcu_dereference(EXT4_SB(sb)->system_blks);
- 	rcu_assign_pointer(EXT4_SB(sb)->system_blks, NULL);
- 
- 	if (system_blks)
- 		call_rcu(&system_blks->rcu, ext4_destroy_system_zone);
-+	rcu_read_unlock();
- }
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
