@@ -2,185 +2,118 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7CFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60174C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F226D2342E
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rAi89eYu"
+	by mail.kernel.org (Postfix) with ESMTP id 31FC723774
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 05:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfHaFMO (ORCPT
+        id S1726130AbfHaFbt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 01:12:14 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.163]:17831 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726251AbfHaFMO (ORCPT
+        Sat, 31 Aug 2019 01:31:49 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:40167 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfHaFbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 01:12:14 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id C5C7A400D7A27
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 00:12:12 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3vgKisRIZ90on3vgKie1gj; Sat, 31 Aug 2019 00:12:12 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=l5m9qZpWXLR4ODSDzTimMTd+4s8KBNI1HDjixjbonmM=; b=rAi89eYuj/HxJdsXWRomKgfGnZ
-        10Vlq/M48zGVWN6ij0loJxUnQuGoDssCfotyPa1UzRbgOmdxs9DjSKYiLpQKF3Rx2sfn+8ty98xIe
-        DWOO33BoJXPRpLfWjGPp7pO78Hh1BQExHiKnkQftr9EU3sZxs3ht57sw5nV21WSGqZOkSGrvKLbeK
-        cLpWTenE0Fg76hRZd89Oy1oaHYOF7iOJbuZc6NCukFCu9NSxBK3V7+DerZt9G98+gdLbfVN6hLAX8
-        R+vWsSQB7hRSHKYlE+PwMVOoFlo9Kz7n8Qwn461oG7/blARB0224aPHGwqZCMJJj4Tso/Z8LWJDEa
-        TlXVcmPw==;
-Received: from [189.152.216.116] (port=35828 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3vgK-0038m2-DU; Sat, 31 Aug 2019 00:12:12 -0500
-To:     Michal Suchanek <msuchanek@suse.de>, linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <20190829120215.1977-1-msuchanek@suse.de>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough to
- -Wimplicit-fallthrough=2
-Message-ID: <975cea02-a2db-c0b9-ba84-83a0ddadab0f@embeddedor.com>
-Date:   Sat, 31 Aug 2019 00:12:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190829120215.1977-1-msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3vgK-0038m2-DU
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:35828
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Sat, 31 Aug 2019 01:31:48 -0400
+Received: from marcel-macpro.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 1A96ACECEA;
+        Sat, 31 Aug 2019 07:40:33 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2 2/2] Bluetooth: btrtl: Add firmware version print
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190830221356.GA9697@laptop-alex>
+Date:   Sat, 31 Aug 2019 07:31:46 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Max Chou <max.chou@realtek.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <F9C706F1-F1A2-4F6B-854B-020AC5D8C7F0@holtmann.org>
+References: <20190830221356.GA9697@laptop-alex>
+To:     Alex Lu <alex_lu@realsil.com.cn>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex,
 
-
-On 8/29/19 7:02 AM, Michal Suchanek wrote:
-> From gcc documentation:
+> This patch is used to print fw version for debug convenience
 > 
-> -Wimplicit-fallthrough=0
->   disables the warning altogether.
-> -Wimplicit-fallthrough=1
->   matches .* regular expression, any comment is used as fallthrough comment.
-> -Wimplicit-fallthrough=2
->   case insensitively matches .*falls?[ \t-]*thr(ough|u).* regular expression.
-> -Wimplicit-fallthrough=3
->   case sensitively matches one of the following regular expressions:
->    -fallthrough
->    @fallthrough@
->    lint -fallthrough[ \t]*
->    [ \t.!]*(ELSE,? |INTENTIONAL(LY)? )?
->    FALL(S | |-)?THR(OUGH|U)[ \t.!]*(-[^\n\r]*)?
->    [ \t.!]*(Else,? |Intentional(ly)? )?
->    Fall((s | |-)[Tt]|t)hr(ough|u)[ \t.!]*(-[^\n\r]*)?
->    [ \t.!]*([Ee]lse,? |[Ii]ntentional(ly)? )?
->    fall(s | |-)?thr(ough|u)[ \t.!]*(-[^\n\r]*)?
-> -Wimplicit-fallthrough=4
->   case sensitively matches one of the following regular expressions:
->    -fallthrough
->    @fallthrough@
->    lint -fallthrough[ \t]*
->    [ \t]*FALLTHR(OUGH|U)[ \t]*
-> -Wimplicit-fallthrough=5
->   doesn’t recognize any comments as fallthrough comments, only attributes disable the warning.
+> Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
+> ---
+> Changes in v2
+>  - Re-order the code so that no forward declaration is needed
 > 
-> In particular the default value of 3 does not match the comments like
-> /* falls through to do foobar */
-> generating suprious warnings on properly annotated code.
+> drivers/bluetooth/btrtl.c | 56 ++++++++++++++++++++++++---------------
+> 1 file changed, 35 insertions(+), 21 deletions(-)
 > 
+> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+> index b7487ab99eed..e32ef7c60a22 100644
+> --- a/drivers/bluetooth/btrtl.c
+> +++ b/drivers/bluetooth/btrtl.c
+> @@ -178,6 +178,27 @@ static const struct id_table *btrtl_match_ic(u16 lmp_subver, u16 hci_rev,
+> 	return &ic_id_table[i];
+> }
+> 
+> +static struct sk_buff *btrtl_read_local_version(struct hci_dev *hdev)
+> +{
+> +	struct sk_buff *skb;
+> +
+> +	skb = __hci_cmd_sync(hdev, HCI_OP_READ_LOCAL_VERSION, 0, NULL,
+> +			     HCI_INIT_TIMEOUT);
+> +	if (IS_ERR(skb)) {
+> +		rtl_dev_err(hdev, "HCI_OP_READ_LOCAL_VERSION failed (%ld)\n",
+> +			    PTR_ERR(skb));
+> +		return skb;
+> +	}
+> +
+> +	if (skb->len != sizeof(struct hci_rp_read_local_version)) {
+> +		rtl_dev_err(hdev, "HCI_OP_READ_LOCAL_VERSION event length mismatch\n");
+> +		kfree_skb(skb);
+> +		return ERR_PTR(-EIO);
+> +	}
+> +
+> +	return skb;
+> +}
+> +
+> static int rtl_read_rom_version(struct hci_dev *hdev, u8 *version)
+> {
+> 	struct rtl_rom_version_evt *rom_version;
+> @@ -368,6 +389,8 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+> 	int frag_len = RTL_FRAG_LEN;
+> 	int ret = 0;
+> 	int i;
+> +	struct sk_buff *skb;
+> +	struct hci_rp_read_local_version *rp;
+> 
+> 	dl_cmd = kmalloc(sizeof(struct rtl_download_cmd), GFP_KERNEL);
+> 	if (!dl_cmd)
+> @@ -406,6 +429,18 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+> 		data += RTL_FRAG_LEN;
+> 	}
+> 
+> +	skb = btrtl_read_local_version(hdev);
+> +	if (IS_ERR(skb)) {
+> +		ret = PTR_ERR(skb);
+> +		rtl_dev_err(hdev, "read local version failed");
+> +		goto out;
+> +	}
+> +
+> +	rp = (struct hci_rp_read_local_version *)skb->data;
+> +	rtl_dev_info(hdev, "rtl: fw version 0x%04x%04x",
+> +		     __le16_to_cpu(rp->hci_rev), __le16_to_cpu(rp->lmp_subver));
 
-NACK
+the rtl: prefix in the string is pointless. The rtl_dev_info already does that. So please remove that. And then send a patch that removes all the others from the rtl_dev_info users as well.
 
-How many of those case do you see? if any...
+Regards
 
-In any case, those comments can be easily transformed to:
+Marcel
 
-/* falls through - to do foobar */
-
-like in this case:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d2d833e0bf2bad221a955626b942b38312630894
-
-Also, notice that code in linux-next is already ahead... :
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e2079e93f562c7f7a030eb7642017ee5eabaaa10
-
---
-Gustavo
