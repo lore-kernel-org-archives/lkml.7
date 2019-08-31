@@ -2,90 +2,141 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C9CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0380C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311162190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="H8iNqYzI"
+	by mail.kernel.org (Postfix) with ESMTP id 9EAE62190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 11:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfHaLZt (ORCPT
+        id S1727177AbfHaL35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 07:25:49 -0400
-Received: from mout.web.de ([212.227.15.4]:59943 "EHLO mout.web.de"
+        Sat, 31 Aug 2019 07:29:57 -0400
+Received: from sauhun.de ([88.99.104.3]:37228 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbfHaLZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 07:25:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567250732;
-        bh=DlSYT66OBGSnfP54hw5m6cMRc+3G9rfSB8IiycTzpMQ=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=H8iNqYzIuwc760ymC/Vv6zX3wB99+7grkSCMQP+3aLK2q1/d4jABGD4KyHTLaLIVo
-         cK0nu7ELj7BWVoRDbb2Bs44rSEAhGd3WOAaStEgoVBeBJCvdjedgMSCLszJAP1vivi
-         cynexVHOKK4FKmYQeS5crSCEliVwBFoPpj5sVsAE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.129.60]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Ma2V5-1hkygd0s1v-00Ljuw; Sat, 31
- Aug 2019 13:25:32 +0200
-To:     Denis Efremov <efremov@linux.com>, linux-wimax@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-References: <20190829165025.15750-6-efremov@linux.com>
-Subject: Re: [PATCH v3 06/11] wimax/i2400m: remove unlikely() from WARN*()
- condition
-From:   Markus Elfring <Markus.Elfring@web.de>
-Message-ID: <c9d3f0e1-d2c9-aedb-385c-82a8cb077253@web.de>
-Date:   Sat, 31 Aug 2019 13:25:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        id S1726282AbfHaL35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 07:29:57 -0400
+Received: from localhost (p5486C98B.dip0.t-ipconnect.de [84.134.201.139])
+        by pokefinder.org (Postfix) with ESMTPSA id ED03B2C0093;
+        Sat, 31 Aug 2019 13:29:54 +0200 (CEST)
+Date:   Sat, 31 Aug 2019 13:29:51 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.3
+Message-ID: <20190831112948.GA1230@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20190829165025.15750-6-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:QikbVll1VSeuPMm1xi10fGh/8TTCw2yPksGd3fU1U0S/eSTxa96
- 0zR9QBW2ww+898hsKNDtv+adh0hArdS0l8JbzY5CCcWmNfSV7PzWGglw7QXjkD/jybdkDSO
- NIeqXeEBwWO9oR6z0v5fzqtrSHhhsK1amlPRsstbtolBLcv7P4qo3vZ25G037RssO9YK/6m
- eytLBKRQkGFTVb4vOe7Tw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Tf2oas2EQHg=:cy2tXNcN7R4SGquETxN1fK
- NzoDBVf9SkAVK8KeQ/EMCO2RHfHfZdLx3tXGxGO6zs0G+4HhRJVyXYS9lCuzUgSDW30AdhAMr
- EzGO53I+qyMgs9szpcmsedQrLjWmvft5g8EvaouMZZoA1y63ShwlErkJMuq/fFYZ8EJo+8SCx
- 2yi1bCrHgpREsPwBECXfpLBYzux8jdWjZei8dZOF7gFNY94wYi/iMQKNEdveIokInSEev5YYA
- amvVx/+/FTIatfhTzM+a9IQCsTicc2VwDQS6sv7gdi1ZaL22lVFNFw0v3SrQTBfLgZhUjG1Hf
- 1+4Xb4R7HvokRh51EjeyrCEQM7Qt5sEy4xlZ7N0RVfleq+mroBhnaiOukLFxKYi93wloTzbvU
- hK4c6b/hXwPQEp7CK5pcblpJpTbg9blL3ASc/rXcNQcFFt+ayhgGiJffX/XQxDSMR1r0mMwot
- 3WoqUsOJgwqiryqYYaowdM/rqZf2NruRGPi8WlESaMnyR8vO7PDdiQLkWHQew7YHh6MM1hnEQ
- acOtmqnqm2D9NnKu5FQ8SxTKy5/ieKW4gOiv/ArkUcQlA69HC8GV2b7AnGYykVIXh1IV1+Nca
- Me1wjI7GoQ0O2ozUnldNHW285577Jtk9Qj1QaAFbvEnLpiaJhRkQXpCx0i2RI2ehqIOklw8P7
- TdNmUOWyH1NT4H2I7cBH9+51IfU8FjLJP4LtFYQPeLXrrJraPNl/mpbCC3ZvW3bcUk/yNXcNp
- R/J0YtTMjWdK5KNuzFrsGxWvgPfufSB9n11fvtU5xCviTMfeddp5m7yZ9HhuvDjtYEOdb7KUQ
- uvdirpQNcPJoWNd1tmIKl7/ZcHuHYrT6e0JOhAVxQRiAZ1zUXJ70q0OiJ8unmk776qBsaa8e+
- wlVZO2/7cxrICHI7DzkYg+tcwMsZ6oXTmgP+KpE8uuszlxhPsVFWyA4sBhH+psMKuL/s80zhd
- G1ulWKQufELf+QV2vhyCk9POqQiHpqYJKrhf5ck4Szs6l1xQdLvqmpslgO5VXNkE4MqMoGaCS
- oy3RcLGdJ+6m9uirkX3d0HKLdWXV/yy4XohvQnvDZIKsfbJM2opNco6fmfPhoHf9lRCb444nT
- AJeNicHhEwJIhXnpfq1dY18HNzPMrwhnM2NWT2V2qqvEDB8x3VMKxkKhIfLcA89l+FiDEgwnv
- aMleK4ussKuBffwrw653jS3zWF9YJoFmWvZpS1+aTu7f+9tg==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  		pad_buf = i2400m_tx_fifo_push(i2400m, padding, 0, 0);
-> -		if (unlikely(WARN_ON(pad_buf == NULL
-> -				     || pad_buf == TAIL_FULL))) {
-> +		if (WARN_ON(pad_buf == NULL || pad_buf == TAIL_FULL)) {
 
-How do you think about to use the following code variant?
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-+		if (WARN_ON(!pad_buf || pad_buf == TAIL_FULL)) {
+Linus,
+
+I2C has a bunch of driver fixes and a core improvement to make the
+on-going API transition more robust.
+
+Pleas pull.
+
+Thanks,
+
+   Wolfram
 
 
-Regards,
-Markus
+The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+
+  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to abf4923e97c3abbbd1e59f0e13c7c214c93c6aaa:
+
+  i2c: mediatek: disable zero-length transfers for mt8183 (2019-08-30 15:06:17 +0200)
+
+----------------------------------------------------------------
+Andrew Cooks (1):
+      i2c: piix4: Fix port selection for AMD Family 16h Model 30h
+
+Andy Shevchenko (1):
+      i2c: i801: Avoid memory leak in check_acpi_smo88xx_device()
+
+Denis Efremov (1):
+      MAINTAINERS: i2c mv64xxx: Update documentation path
+
+Hsin-Yi Wang (1):
+      i2c: mediatek: disable zero-length transfers for mt8183
+
+Jarkko Nikula (1):
+      i2c: designware: Synchronize IRQs when unregistering slave client
+
+Lori Hikichi (1):
+      i2c: iproc: Stop advertising support of SMBUS quick cmd
+
+Wolfram Sang (1):
+      i2c: make i2c_unregister_device() ERR_PTR safe
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Geert Uytterhoeven (1):
+      (Rev.) i2c: make i2c_unregister_device() ERR_PTR safe
+
+Jean Delvare (1):
+      (Rev.) i2c: i801: Avoid memory leak in check_acpi_smo88xx_device()
+
+Pali Roh??r (1):
+      (Rev.) i2c: i801: Avoid memory leak in check_acpi_smo88xx_device()
+
+Qii Wang (1):
+      (Rev.) i2c: mediatek: disable zero-length transfers for mt8183
+
+Ray Jui (1):
+      (Rev.) i2c: iproc: Stop advertising support of SMBUS quick cmd
+
+ MAINTAINERS                               |  2 +-
+ drivers/i2c/busses/i2c-bcm-iproc.c        |  5 ++++-
+ drivers/i2c/busses/i2c-designware-slave.c |  1 +
+ drivers/i2c/busses/i2c-i801.c             | 15 ++++++++++++---
+ drivers/i2c/busses/i2c-mt65xx.c           | 11 ++++++++++-
+ drivers/i2c/busses/i2c-piix4.c            | 12 +++++-------
+ drivers/i2c/i2c-core-base.c               |  2 +-
+ 7 files changed, 34 insertions(+), 14 deletions(-)
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qWicACgkQFA3kzBSg
+KbaIHhAApRXiRuiIjNVd2TUteNcLHLndT0NQXFzePQF5t3Rj6YK+NgtRoZF9hOsm
+PG98zfbePqs8GoeaajMtdAYYzUnYMYfy8PgT3R7+T2mSNDHKcgy1b3N/RP8xbnMC
+RTbkidwpFByCiGjVezAY9c5DUpAGz/WlgWezWfmy7eIWTiUFhYiech8oZ6IRSzas
+2Y8B0THEQGgoUJ3Qnd2xFenviNZ5h+H7jr5ap4DsWz2u0mioRRDGPftosPLtgOCB
+KgmtdJsxMFIsoywQys7voEIlUNA+bjkyEaEjUpaF1liPKOxyXWjqQeIGAAgbb0T4
+p/MgncKeDdh2tkymh7AbSzSkV+2oitaQjBKCOuKjm54ujqVt6XRe8gyY8ElLwe0a
+YM5ytPWm15NiF4mXo3Wf6vRPsra3cnONWojjDKdysRpwLBQ5Rp2zww73fmyUSb5+
+DdlSXyZH+vPLUGX49xz6s5Kj8G8CFr1YVzuEEkoVWNtYztqvKwnL/Q9E46srKY1z
+fURgi0k4y+YTybjh0dc79qBmowbz6fdalX56t3KYv5wkThZ7c4yy/9h6WAIvJGcb
+pdIsuYBwMqVCvl2G9AdgIWbIi72pYrzbC2fvbyO4fniPUhnJfoFrXXfNmuf/npVk
+uI15YkOfH6PGH21Ra9FQInpi2B00F30CMyfPfUuyBDVJicqs5z8=
+=BHUY
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
