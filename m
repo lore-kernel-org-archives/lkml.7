@@ -2,167 +2,240 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95580C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678ACC3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0C923431
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UrQaa9Yd"
+	by mail.kernel.org (Postfix) with ESMTP id 3152E23431
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 04:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfHaEhc (ORCPT
+        id S1726267AbfHaEi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 00:37:32 -0400
-Received: from mail-eopbgr1320090.outbound.protection.outlook.com ([40.107.132.90]:15614
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfHaEhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 00:37:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nlHuC3nOHbpEl4gwQZQirP/vi/m979lh7hW8BbaYKo8O7IuAOqdizFzRAiOLs3FelMdpXhl4yAkeXL9KmxcrpYGAC8pFP2+GDjmiHHzeD2C5y6f7sdsq3vSCt8aPodLOIFLgt7hUTScJwmT8ahlQJj4pKvBtf8SdBU/EosdaSGeFPovW7AkgaORUHb31BV6oss8rfkfL62miEWTtDHcJKrub/zBgtGssoDrrWj+LXFBMJvHc7ewIp/4onOsgXdLrq47h8CEUqueekmMfk/Y1PQAtScM0yIbdL0X8GVdI0cTmuyE5kc1c3I1yh3TnIMx40+nOLKhc1Me+akNpoPLRew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/KvsPc+Hvavab2WTycjhxbGxwjX+yYmpUlDey4rFh/0=;
- b=lGDwyuQAHlzflTgfPK7vh0XGr+eXTWeDBGF4vZrF/6J6IQCwWE/ccTNN2d6w3gk37G6ZvtMyibwhk5l+PraLAI/FNJCioNjGzdsdE7xms0s7611OxskgV8FWCBI8plB4iw7EHMZ08ylGPQcHTu8MV3a6WYnzXKAb8ywW1HO8AFPojEc/epc+oANZ73Dz/mtCUYorjr/5JvxNvvg+JDqn56EtozZg/FqyJFaXwOijN+YKAgOFbMVX4bjZS7tRuio2BvLeotGVZpyV7Ag/vz7TPzlNYpExawxuBwJz/VkHvvOyhUugewWBEtv8+hHdC5MX9uunVk3QN8VSs8T7vAsZbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/KvsPc+Hvavab2WTycjhxbGxwjX+yYmpUlDey4rFh/0=;
- b=UrQaa9Ydh6gf2jGozJxHapKwpAREX8nsyg2UWa9oyadJ3cyYPs7ZYB5YHo2e6EZ6ziUYAWH5t6X7sBqKgtyYHHX6AnjYiIxvEmUKNbxE0LLUGxMyQ96Kezw4PzJHT5Mm7P+EJWWIfZZQpuBPe0uNIJ0d6+sKItnYWvrLz3E3ouQ=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0185.APCP153.PROD.OUTLOOK.COM (10.170.187.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.5; Sat, 31 Aug 2019 04:37:14 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.006; Sat, 31 Aug 2019
- 04:37:14 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 12/12] Drivers: hv: vmbus: Resume after fixing up old
- primary channels
-Thread-Topic: [PATCH v3 12/12] Drivers: hv: vmbus: Resume after fixing up old
- primary channels
-Thread-Index: AQHVVvnhnZYV8iEJF0ORPS4BQ7lYm6cJMgUQgAty55A=
-Date:   Sat, 31 Aug 2019 04:37:14 +0000
-Message-ID: <PU1P153MB0169E3DD602FB575C346186DBFBC0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-13-git-send-email-decui@microsoft.com>
- <DM5PR21MB01370691E881D59773B9EF60D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB01370691E881D59773B9EF60D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:25:01.1543000Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ed8325f3-7994-47a0-9ecc-2c1fc987ecca;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:5cbd:8ecd:62e5:20b7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b049200-4eb6-4dbb-20a8-08d72dcce5e4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0185;
-x-ms-traffictypediagnostic: PU1P153MB0185:|PU1P153MB0185:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB01858CF1DA91DE0173813F66BFBC0@PU1P153MB0185.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 014617085B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(199004)(189003)(446003)(25786009)(10090500001)(10290500003)(76176011)(46003)(6246003)(102836004)(2501003)(14454004)(52536014)(99286004)(478600001)(71200400001)(4326008)(71190400001)(7696005)(81166006)(110136005)(9686003)(8936002)(66556008)(22452003)(316002)(476003)(256004)(6506007)(5660300002)(55016002)(53936002)(6436002)(66446008)(66946007)(86362001)(1511001)(81156014)(6116002)(66476007)(186003)(74316002)(8676002)(2201001)(76116006)(64756008)(305945005)(229853002)(33656002)(11346002)(7736002)(486006)(2906002)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0185;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4w0bc7t9H5p6HWAYahh/wb9IWZUel7maG7AdAEE5uDWCgAFtaAx7Srw3bX0+o60BGreND+CY12NwEa1kQs5WjlkqsB/gWTNa+KEP3RprWFrIJGQWESy2nZe6FuPFZXe+C9+DW/MlgaPRUR90YK2laEYxlRR3JwxskAwALnx14gHsO3N9BHrgF1J00qUVsuAYbE4WW/9bEcrITUuH6qqqzRXf7FopSewPs6BBaunsQkJTHUobSl9gbI06R8sXuSrzDfhMC9nskiYNaRDj4ANjt6x7WWVFWmiYlnos2ouwJco9u2EuR0fhvSvT+mi175OXmUSUcom7IdwK5EoFNv+Yka7O8ZGArlSFE6+yRilNH2CEj9FStKJftok5zgSCwjua5aAD5sGM2c3kU5yswRe7smK7Nh7xbOFyMNgiiTrpAGQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 31 Aug 2019 00:38:57 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:53133 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725298AbfHaEi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 00:38:56 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tav9ztU_1567226330;
+Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Tav9ztU_1567226330)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 31 Aug 2019 12:38:50 +0800
+Subject: Re: [PATCH v5 3/3] vfio/pci: make use of irq_update_devid and
+ optimize irq ops
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
+        nanhai.zou@linux.alibaba.com
+References: <cover.1567151182.git.luoben@linux.alibaba.com>
+ <9a8b3fc5d82c3c46feb0de673fbe898cfd884d63.1567151182.git.luoben@linux.alibaba.com>
+ <20190830140616.090954b7@x1.home>
+From:   Ben Luo <luoben@linux.alibaba.com>
+Message-ID: <7b8967d8-8d03-5422-9222-f80778b59f6c@linux.alibaba.com>
+Date:   Sat, 31 Aug 2019 12:38:49 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b049200-4eb6-4dbb-20a8-08d72dcce5e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 04:37:14.5188
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OXQraOrAgmugOlrcN4CU93WtkrvVt12mGRpW5C/zWKLfLgfINuIOBocJp1G2zLe2eHmFQsCONDZVqhqOI/WaBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0185
+In-Reply-To: <20190830140616.090954b7@x1.home>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Friday, August 23, 2019 1:25 PM
->=20
-> From: Dexuan Cui Sent: Monday, August 19, 2019 6:52  PM
-> > @@ -890,6 +937,11 @@ static void vmbus_onoffer(struct
-> > vmbus_channel_message_header *hdr)
-> >  				     false);
-> >  		print_hex_dump_debug("New vmbus offer: ",
-> DUMP_PREFIX_OFFSET,
-> >  				     16, 4, offer, offer_sz, false);
-> > +
-> > +		vmbus_setup_channel_state(oldchannel, offer);
-> > +
-> > +		check_ready_for_resume_event();
->=20
-> This is the error case where the new offer didn't match some aspect of
-> the old offer.=20
 
-Actually, this is not an error: besides the RELID, the host can also change
-the offer->connection_id when it re-offers a device to the guest: so far,
-I only see this host behavior for the VF vmbus device, and in this case, th=
-e
-first vmbus_setup_channel_state() in vmbus_onoffer() is used to do the
-fix-up:
-    channel->sig_event =3D offer->connection_id;
-and later channel->sig_event is used in vmbus_set_event().
-
-Despite the host behavior, it looks the VF vmbus device still works fine,
-so (IMO) this is not an error. I'll write a separate email to report this t=
-o
-Hyper-V team.
-
-> Is the intent to proceed and use the new offer?=20
-Yes, since this is not an error.
-
-I'll add a comment before the "Mismatched offer from the host" for this.
-
-BTW, the 3 debug lines here output nothing, unless we enable the output
-by=20
-  cd /sys/kernel/debug/dynamic_debug/
-  echo 'file drivers/hv/channel_mgmt.c +p' > control
-.
-
-> I can see that check_ready_for_resume_event() has to be called in
-> the error case, otherwise the resume operation will hang forever, but=20
-> I'm not sure about setting up the channel state and then proceeding as
-> if all is good.
-> > +
-> > 		return;
-
-Thanks,
--- Dexuan
+ÔÚ 2019/8/31 ÉÏÎç4:06, Alex Williamson Ð´µÀ:
+> On Fri, 30 Aug 2019 16:42:06 +0800
+> Ben Luo <luoben@linux.alibaba.com> wrote:
+>
+>> When userspace (e.g. qemu) triggers a switch between KVM
+>> irqfd and userspace eventfd, only dev_id of irqaction
+>> (i.e. the "trigger" in this patch's context) will be
+>> changed, but a free-then-request-irq action is taken in
+>> current code. And, irq affinity setting in VM will also
+>> trigger a free-then-request-irq action, which actually
+>> changes nothing, but only need to bounce the irqbypass
+>> registraion in case that posted-interrupt is in use.
+>>
+>> This patch makes use of irq_update_devid() and optimize
+>> both cases above, which reduces the risk of losing interrupt
+>> and also cuts some overhead.
+>>
+>> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+>> ---
+>>   drivers/vfio/pci/vfio_pci_intrs.c | 124 ++++++++++++++++++++++++++------------
+>>   1 file changed, 87 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+>> index 3fa3f72..d3a93d7 100644
+>> --- a/drivers/vfio/pci/vfio_pci_intrs.c
+>> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
+>> @@ -284,70 +284,120 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
+>>   static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+>>   				      int vector, int fd, bool msix)
+>>   {
+>> +	struct eventfd_ctx *trigger = NULL;
+>>   	struct pci_dev *pdev = vdev->pdev;
+>> -	struct eventfd_ctx *trigger;
+>>   	int irq, ret;
+>>   
+>>   	if (vector < 0 || vector >= vdev->num_ctx)
+>>   		return -EINVAL;
+>>   
+>> +	if (fd >= 0) {
+>> +		trigger = eventfd_ctx_fdget(fd);
+>> +		if (IS_ERR(trigger)) {
+>> +			/* oops, going to disable this interrupt */
+>> +			dev_info(&pdev->dev,
+>> +				 "get ctx error on bad fd: %d for vector:%d\n",
+>> +				 fd, vector);
+> I think a user could trigger this maliciously as a denial of service by
+> simply providing a bogus file descriptor.  The user is informed of the
+> error by the return value, why do we need to spam the logs?
+Ah, you are right, I will remove this log in next version
+>> +		}
+>> +	}
+>> +
+>>   	irq = pci_irq_vector(pdev, vector);
+>>   
+>> +	/*
+>> +	 * 'trigger' is NULL or invalid, disable the interrupt
+>> +	 * 'trigger' is same as before, only bounce the bypass registration
+>> +	 * 'trigger' is a new invalid one, update it to irqaction and other
+> s/invalid/valid/
+sorry for typo :)
+>> +	 * data structures referencing to the old one; fallback to disable
+>> +	 * the interrupt on error
+>> +	 */
+>>   	if (vdev->ctx[vector].trigger) {
+>> -		free_irq(irq, vdev->ctx[vector].trigger);
+>> +		/*
+>> +		 * even if the trigger is unchanged we need to bounce the
+>> +		 * interrupt bypass connection to allow affinity changes in
+>> +		 * the guest to be realized.
+>> +		 */
+>>   		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+>> -		kfree(vdev->ctx[vector].name);
+>> -		eventfd_ctx_put(vdev->ctx[vector].trigger);
+>> -		vdev->ctx[vector].trigger = NULL;
+>> +
+>> +		if (vdev->ctx[vector].trigger == trigger) {
+>> +			/* avoid duplicated referencing to the same trigger */
+>> +			eventfd_ctx_put(trigger);
+>> +
+>> +		} else if (trigger && !IS_ERR(trigger)) {
+>> +			ret = irq_update_devid(irq,
+>> +					       vdev->ctx[vector].trigger, trigger);
+>> +			if (unlikely(ret)) {
+>> +				dev_info(&pdev->dev,
+>> +					 "update devid of %d (token %p) failed: %d\n",
+>> +					 irq, vdev->ctx[vector].trigger, ret);
+>> +				eventfd_ctx_put(trigger);
+>> +				free_irq(irq, vdev->ctx[vector].trigger);
+>> +				kfree(vdev->ctx[vector].name);
+>> +				eventfd_ctx_put(vdev->ctx[vector].trigger);
+>> +				vdev->ctx[vector].trigger = NULL;
+>> +				return ret;
+>> +			}
+>> +			eventfd_ctx_put(vdev->ctx[vector].trigger);
+>> +			vdev->ctx[vector].producer.token = trigger;
+>> +			vdev->ctx[vector].trigger = trigger;
+>> +
+>> +		} else {
+>> +			free_irq(irq, vdev->ctx[vector].trigger);
+>> +			kfree(vdev->ctx[vector].name);
+>> +			eventfd_ctx_put(vdev->ctx[vector].trigger);
+>> +			vdev->ctx[vector].trigger = NULL;
+>> +		}
+>>   	}
+>>   
+>>   	if (fd < 0)
+>>   		return 0;
+>> +	else if (IS_ERR(trigger))
+>> +		return PTR_ERR(trigger);
+>>   
+>> -	vdev->ctx[vector].name = kasprintf(GFP_KERNEL, "vfio-msi%s[%d](%s)",
+>> -					   msix ? "x" : "", vector,
+>> -					   pci_name(pdev));
+>> -	if (!vdev->ctx[vector].name)
+>> -		return -ENOMEM;
+>> +	if (!vdev->ctx[vector].trigger) {
+>> +		vdev->ctx[vector].name = kasprintf(GFP_KERNEL,
+>> +						   "vfio-msi%s[%d](%s)",
+>> +						   msix ? "x" : "", vector,
+>> +						   pci_name(pdev));
+>> +		if (!vdev->ctx[vector].name) {
+>> +			eventfd_ctx_put(trigger);
+>> +			return -ENOMEM;
+>> +		}
+>>   
+>> -	trigger = eventfd_ctx_fdget(fd);
+>> -	if (IS_ERR(trigger)) {
+>> -		kfree(vdev->ctx[vector].name);
+>> -		return PTR_ERR(trigger);
+>> -	}
+>> +		/*
+>> +		 * The MSIx vector table resides in device memory which may be
+>> +		 * cleared via backdoor resets. We don't allow direct access to
+>> +		 * the vector table so even if a userspace driver attempts to
+>> +		 * save/restore around such a reset it would be unsuccessful.
+>> +		 * To avoid this, restore the cached value of the message prior
+>> +		 * to enabling.
+>> +		 */
+>> +		if (msix) {
+>> +			struct msi_msg msg;
+>>   
+>> -	/*
+>> -	 * The MSIx vector table resides in device memory which may be cleared
+>> -	 * via backdoor resets. We don't allow direct access to the vector
+>> -	 * table so even if a userspace driver attempts to save/restore around
+>> -	 * such a reset it would be unsuccessful. To avoid this, restore the
+>> -	 * cached value of the message prior to enabling.
+>> -	 */
+>> -	if (msix) {
+>> -		struct msi_msg msg;
+>> +			get_cached_msi_msg(irq, &msg);
+>> +			pci_write_msi_msg(irq, &msg);
+>> +		}
+>>   
+>> -		get_cached_msi_msg(irq, &msg);
+>> -		pci_write_msi_msg(irq, &msg);
+>> -	}
+>> +		ret = request_irq(irq, vfio_msihandler, 0,
+>> +				  vdev->ctx[vector].name, trigger);
+>> +		if (ret) {
+>> +			kfree(vdev->ctx[vector].name);
+>> +			eventfd_ctx_put(trigger);
+>> +			return ret;
+>> +		}
+>>   
+>> -	ret = request_irq(irq, vfio_msihandler, 0,
+>> -			  vdev->ctx[vector].name, trigger);
+>> -	if (ret) {
+>> -		kfree(vdev->ctx[vector].name);
+>> -		eventfd_ctx_put(trigger);
+>> -		return ret;
+>> +		vdev->ctx[vector].producer.token = trigger;
+>> +		vdev->ctx[vector].producer.irq = irq;
+>> +		vdev->ctx[vector].trigger = trigger;
+>>   	}
+>>   
+>> -	vdev->ctx[vector].producer.token = trigger;
+>> -	vdev->ctx[vector].producer.irq = irq;
+>> +	/* setup bypass connection and make irte updated */
+>>   	ret = irq_bypass_register_producer(&vdev->ctx[vector].producer);
+>>   	if (unlikely(ret))
+>>   		dev_info(&pdev->dev,
+>>   		"irq bypass producer (token %p) registration fails: %d\n",
+>>   		vdev->ctx[vector].producer.token, ret);
+>>   
+>> -	vdev->ctx[vector].trigger = trigger;
+>> -
+>>   	return 0;
+>>   }
+>>   
