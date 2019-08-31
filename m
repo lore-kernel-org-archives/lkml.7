@@ -2,102 +2,90 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDE3C3A59B
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226F6C3A59B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6BB23429
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZpoWEnNQ"
+	by mail.kernel.org (Postfix) with ESMTP id EA6562343B
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 02:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfHaCcC (ORCPT
+        id S1728350AbfHaCuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 30 Aug 2019 22:32:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37526 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbfHaCcB (ORCPT
+        Fri, 30 Aug 2019 22:50:08 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45570 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfHaCuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 30 Aug 2019 22:32:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y9so5733747pfl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 30 Aug 2019 19:32:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=FBpAnnmFSQN+uWiLL2/GrqwNrDFmIljLv+JtnhGF5Sw=;
-        b=ZpoWEnNQU8H5ZKyt08S1tNqhM92cHgG1vmOz52sCpNxvSSQGGXfsESroJULNQ8q0JC
-         RxjP6qaM6Wdqg0858t9xNpKLfsSc6rYmWO88H0RYgVrFw/7p3VKUcKjpiRiGQHansYWl
-         9RTDBZH5d6J0QdFsMeL3CWFDBeUIkvWPShJQ97N3yevT/Gc2PrWbjLB5EQ91nGlavMaK
-         rZnYmkUFgjAMzAckgrcJ5i0KiZzUXx6TgNUqFhWbw8cTM4xy1dQr7HcPrXmCj3s0ZqO7
-         0DnIMdBwaCuIS+z2OuKjw0+VT55Cn22JZQ8GbIRJQFkBqJlfO51Sl5cf7FFH3dXEUhtb
-         Vtpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=FBpAnnmFSQN+uWiLL2/GrqwNrDFmIljLv+JtnhGF5Sw=;
-        b=Ut/XBgBKSbF8yGCO6SOJhCiUto4EaKPgPJbNHooETuGS3tmKvYzMxBEZNp/0jySMlW
-         Og43xJM/vRI1VsTo6YgfhSkFUq5mq9ldegjE4BqT4sOR1CpnW9juinSSl7f9X1XZpMbD
-         L5AdZOXY6Y3FgYFcicp+2unBazVARHNZFpek58swf7CAjoAaV5Q4h2YodqLt0QNO2qTG
-         2dxNmiD5z968/vmkK58FnS1gmgG3cSDa8wlAX2d8p6qqyRhwVA8i/wK4F0OloLpaSSZz
-         iFbCAmm9oFrorv4fHZmLs5BH1sCCkxmLnifmWJEdKtbZP5YLZbWNvfSnipogP9dzMJWn
-         pWGg==
-X-Gm-Message-State: APjAAAWJaqGZwzW/qRFzbudKzpuU/bHqdNInOZfcgkFxpo7vjByIw8Zn
-        J0+IqoVHnIvAMiEBrngVvW3rfQ==
-X-Google-Smtp-Source: APXvYqyI9inCd1df02N4PqNj0BWfnV1BgA+8YV6J4CbPMAGIwTTR8//GTnbP50aeqaDLYIzZdGo/qw==
-X-Received: by 2002:a65:500a:: with SMTP id f10mr15415728pgo.105.1567218720386;
-        Fri, 30 Aug 2019 19:32:00 -0700 (PDT)
-Received: from localhost ([216.9.110.7])
-        by smtp.gmail.com with ESMTPSA id a16sm9677276pfo.33.2019.08.30.19.31.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2019 19:31:59 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 19:31:58 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.3-rc7
-Message-ID: <alpine.DEB.2.21.9999.1908301929460.8525@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 30 Aug 2019 22:50:07 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E44451550EE28;
+        Fri, 30 Aug 2019 19:50:06 -0700 (PDT)
+Date:   Fri, 30 Aug 2019 19:50:04 -0700 (PDT)
+Message-Id: <20190830.195004.827507363244913502.davem@davemloft.net>
+To:     saeedm@mellanox.com
+Cc:     efremov@linux.com, linux-kernel@vger.kernel.org, joe@perches.com,
+        borisp@mellanox.com, netdev@vger.kernel.org, leon@kernel.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH v3 03/11] net/mlx5e: Remove unlikely() from WARN*()
+ condition
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <ad2ef15ddaec0033ce17d8ba252037ef70c7ac93.camel@mellanox.com>
+References: <20190829165025.15750-1-efremov@linux.com>
+        <20190829165025.15750-3-efremov@linux.com>
+        <ad2ef15ddaec0033ce17d8ba252037ef70c7ac93.camel@mellanox.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 30 Aug 2019 19:50:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+From: Saeed Mahameed <saeedm@mellanox.com>
+Date: Thu, 29 Aug 2019 21:23:30 +0000
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+> On Thu, 2019-08-29 at 19:50 +0300, Denis Efremov wrote:
+>> "unlikely(WARN_ON_ONCE(x))" is excessive. WARN_ON_ONCE() already uses
+>> unlikely() internally.
+>> 
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> Cc: Boris Pismenny <borisp@mellanox.com>
+>> Cc: Saeed Mahameed <saeedm@mellanox.com>
+>> Cc: Leon Romanovsky <leon@kernel.org>
+>> Cc: Joe Perches <joe@perches.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: netdev@vger.kernel.org
+>> ---
+>>  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git
+>> a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+>> b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+>> index 7833ddef0427..e5222d17df35 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+>> @@ -408,7 +408,7 @@ struct sk_buff *mlx5e_ktls_handle_tx_skb(struct
+>> net_device *netdev,
+>>  		goto out;
+>>  
+>>  	tls_ctx = tls_get_ctx(skb->sk);
+>> -	if (unlikely(WARN_ON_ONCE(tls_ctx->netdev != netdev)))
+>> +	if (WARN_ON_ONCE(tls_ctx->netdev != netdev))
+>>  		goto err_out;
+>>  
+>>  	priv_tx = mlx5e_get_ktls_tx_priv_ctx(tls_ctx);
+> 
+> Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+> 
+> Dave, you can take this one.
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.3-rc7
-
-for you to fetch changes up to a256f2e329df0773022d28df2c3d206b9aaf1e61:
-
-  RISC-V: Fix FIXMAP area corruption on RV32 systems (2019-08-28 15:30:12 -0700)
-
-----------------------------------------------------------------
-RISC-V updates for v5.3-rc7
-
-One significant fix for 32-bit RISC-V systems:
-
-- Fix the RV32 memory map to prevent userspace from corrupting the
-  FIXMAP area.  Without this patch, the system can crash very early
-  during the boot.
-
-----------------------------------------------------------------
-Anup Patel (1):
-      RISC-V: Fix FIXMAP area corruption on RV32 systems
-
- arch/riscv/include/asm/fixmap.h  |  4 ----
- arch/riscv/include/asm/pgtable.h | 12 ++++++++++--
- 2 files changed, 10 insertions(+), 6 deletions(-)
-
+Ok, applied to net-next as well as the UDP patch.
