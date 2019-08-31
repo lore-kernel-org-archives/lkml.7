@@ -2,124 +2,172 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EC2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A31EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685172190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163EF22DA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 16:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fS+2dRlM"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="raKOvxSu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfHaQqO (ORCPT
+        id S1728506AbfHaQqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 12:46:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32860 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbfHaQqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 12:46:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r17so8664753wme.0
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 09:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bWNyzY6frPd9AVvoBYLqQl+upEDUNdJLOAMB1R+T9tw=;
-        b=fS+2dRlMhE+Nq5glJysLmAuytzq9t4tg0oXMrARfiKlHHK7ICA88SF8nlV23LyVver
-         dZ7iD91N78LuBLyx36/IgB3mzS7pCjbMu0Burnkf9y8qaVzliT7X6jKR8Mkps5/hhljF
-         coeveC5lriwf0g1b01PlY3yav3r33RPaCOgRS7wd/DMXs+mIxBj/wk5zu7+sT7wxjGTr
-         fTHxhUPECasNXgXz79az5b4ChhtUd6Q2wxz6iuDKEqo+jjJiLwc9xdDZSusSWlvBgeJT
-         la19MgY9UhYxuhZ5wIeIVhMH0u3Loaw13hgns8mk//FxDYwBUuP/T2oWBLYXdu4kzfr5
-         c/rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bWNyzY6frPd9AVvoBYLqQl+upEDUNdJLOAMB1R+T9tw=;
-        b=UQrmAaNGTneniIwR30BVLSy8NziXKvBfZYwKVy51ptXGxvoxC2E5i52RLR6AatS214
-         31+TiZRx3VJ8Ih5pH4JMqJ8zDtzWrK5vKwLbGrnGWNEPYNRXSDor/NdzTl74X9OwS3/g
-         sWVivEIMLMhafYXcxYssQ1JXtv/pgxQTsUGgj2M9n1HkV7rmxlv8MCGRlEYAL0BVMEeL
-         5gwXhIAa0Z8cjWLN56+vn6xkzkJHA8bOPcuXadLmQOZQ6AsMFXThBWi1oq5u6xJokvKY
-         +RKZqUDIg0D/d3Ztqv0568N6Jd9xz5jr28TVOtHQPO8sTmR48MWKudzKu8JelzeGlT/O
-         AjiA==
-X-Gm-Message-State: APjAAAWiu35az3K1Z54v+jrusUn/qch/iwYq3Gb5sWmXksuDV2j9A0Zw
-        yFqPfv+G/Pm2FP7LnsVUIL6iO6Fnf0KJQXQ42Ig7Nw==
-X-Google-Smtp-Source: APXvYqw73e47gqPAFZzq9Fl8OhY84mjlhLrpWKD4cPQ2bmwO8nm9bJP4z3WDbiTuRuxz5sygO3s2fj/kXPbJhsfJbJY=
-X-Received: by 2002:a7b:cb8e:: with SMTP id m14mr26387918wmi.10.1567269971792;
- Sat, 31 Aug 2019 09:46:11 -0700 (PDT)
+        Sat, 31 Aug 2019 12:46:55 -0400
+Received: from mout.web.de ([212.227.15.4]:38549 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727615AbfHaQqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 12:46:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567269960;
+        bh=rm6OZE6ljUkECvv5QtQiOpGwZf85BXps+g793IIacr0=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=raKOvxSuxO0ebILYdQV2cnRxgQxF5DOMKENqU7Tu0URpWhrx2Wgn6EGvCUWUE041l
+         a9ajp1/qpuIRW7B0Ni1CM1JTTrRWmXocwzvr1oOeJEZ3nAsw/6TL/cinypKHTE1x6V
+         qCJqgU8IP8zqAwr2C+rwrI7oh7fttPRcs/w5qn3w=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.129.60]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MZDQ4-1hlThL3GXc-00KuZW; Sat, 31
+ Aug 2019 18:46:00 +0200
+Subject: Re: [PATCH v3 01/11] checkpatch: check for nested (un)?likely() calls
+To:     Denis Efremov <efremov@linux.com>, Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-rdma@vger.kernel.org,
+        linux-wimax@intel.com, linux-xfs@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        netdev@vger.kernel.org,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sean Paul <sean@poorly.run>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        xen-devel@lists.xenproject.org, Enrico Weigelt <lkml@metux.net>
+References: <20190829165025.15750-1-efremov@linux.com>
+ <0d9345ed-f16a-de0b-6125-1f663765eb46@web.de>
+ <689c8baf-2298-f086-3461-5cd1cdd191c6@linux.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <493a7377-2de9-1d44-cd8f-c658793d15db@web.de>
+Date:   Sat, 31 Aug 2019 18:45:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-References: <20190826153028.32639-1-pjones@redhat.com> <20190826153028.32639-2-pjones@redhat.com>
-In-Reply-To: <20190826153028.32639-2-pjones@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 31 Aug 2019 19:46:00 +0300
-Message-ID: <CAKv+Gu-MvRyq5ODkkMcT500iw6Di4CDWEfWh9-7pLkj425rPFA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] efi+tpm: don't traverse an event log with no events
-To:     Peter Jones <pjones@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Lyude Paul <lyude@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <689c8baf-2298-f086-3461-5cd1cdd191c6@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1L+cCQO3edmOUlVMXKxVQgZQYa4LR/jTtaG/k7hY0jvFzGA9G9q
+ HWi19KhhK9a1vfzvVYuIZawQquCygt1hO4oC97DaXB2ZpgVEbfkC8llW/u0M6xN9a3X8B9I
+ msvOrseLQDgMS/NsyS+xIVvd3tQVj5U9trfr++c3L1f40GywlStbhlVWFhc08RKBS9HMKBY
+ 58JLvN2HaG49gVs5HlMVw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VhEuvvzylo4=:3p6CN3+YeibT+QHrA0rJE8
+ jXp3wri957zlevWfHS/c+PS52+oWo953j5HMygod2ge3Y7CGMlcqgLO0MPO5RRIg7uUvPXVFM
+ 379jZoUE5kueE12x3p4ssfNT8Fm40bbR+jTrCXJDStbDnLTby7FA7IxOhxfbUc637M9qsaozq
+ FmM4+uZQ2lWEx+yu1wkEvI0kfMzEVrn5/vt7skK0+PeaH225xYdHu2LK2rf5RqoWu8WPSqfa2
+ wEeJbNm8BfqiB2vL6LEdRAXX8gyfoGnPJ5Qm1q41RgQV7RCNhtrZo+EHZA/vPMHB6Eq0ecXBj
+ LGuKKm+/SpFz1PzRYXO1QqR52QDdP4Cu35XBi2NP6Q844cSgBnw6RrzV/jW0EqOsVfU8z0Z5V
+ Sf3HRXof4ewon2caaE3aiSGdgbw5wQYBJLK3QUfnmJWr0InQHtd8qQQe1T3c/qgrcB5ABDIrf
+ GZy/9DqV5riGpZEJ9cZ+iM6InqL4SAVfUB2hhg7nwp5xXpCtIN6SuBm0bDDsPQDX2sfwE8guW
+ 0GyYcU2kOIqReqB2C0Hwlmv14+88GNDb2jQDqHdJjupiEI2Yz8Y3NjOW79mU0lD3Gk/L2fBCd
+ zb4qLY9yzm9g3uA1hQGeawT+B57gkJxHc+dfi8XXQp0jia5L+4/ZX35Lh+NHzVpgMBPseOtPI
+ /b/7AjeuTqZjq6tgNw8XpGjxQfSbObCUwWsAOPecaBheHriMYnCL6tGDaK+JYLOiqgcxR0vQ+
+ nMb69XF1HSE0FedQzM+J9aJpESm4upQtZxDAZcnJTKGdT48hXsDzreMgJjovpa3ZlK2YhNZCt
+ F1/HcTS8HDlnTxXJdzEMH7hHp7sAgT+KRAjvQ/md1wG4SHa4TzLWt4D/7V/nWZdX5z5JASkG8
+ RCC4i5tjqfEYUw5MSfN0VC4DMobYPN10nDg1RLFcy5AMm6VQm4DlXjKh649CAl2sqLMbyQJ4p
+ F2eVxN3UAlmeBgE0m9VQrV5QnQAQS5sRx/RrkYqe89C+NJXtR0us8uxiM5bm91xW6/0XsqPOF
+ SMz5D3ZDmyQbEtiW0w/3QmZRRq3m/3ThmGL6SL9syddVXqxfGKKP7+e0OVOsM/Bwb3dBknXVi
+ 3zKeeIsDo25gEweJ/VGnfXPS3N4kmuIMK4I3EA6n2MlCUwXo4Sj7301iqCInTCS8lIWlrORY3
+ 5vagzkLNsyXxrogrmB742zfdWZxWbG0lAmOIS9Xm7sNu3ydg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019 at 18:30, Peter Jones <pjones@redhat.com> wrote:
->
-> When there are no entries to put into the final event log, some machines
-> will return the template they would have populated anyway.  In this case
-> the nr_events field is 0, but the rest of the log is just garbage.
->
-> This patch stops us from trying to iterate the table with
-> __calc_tpm2_event_size() when the number of events in the table is 0.
->
-> Signed-off-by: Peter Jones <pjones@redhat.com>
-> Tested-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/firmware/efi/tpm.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-> index 1d3f5ca3eaa..be51ed17c6e 100644
-> --- a/drivers/firmware/efi/tpm.c
-> +++ b/drivers/firmware/efi/tpm.c
-> @@ -75,11 +75,15 @@ int __init efi_tpm_eventlog_init(void)
->                 goto out;
->         }
->
-> -       tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
-> -                                           + sizeof(final_tbl->version)
-> -                                           + sizeof(final_tbl->nr_events),
-> -                                           final_tbl->nr_events,
-> -                                           log_tbl->log);
-> +       tbl_size = 0;
-> +       if (final_tbl->nr_events != 0) {
-> +               void *events = (void *)efi.tpm_final_log
-> +                               + sizeof(final_tbl->version)
-> +                               + sizeof(final_tbl->nr_events);
+>>> +# nested likely/unlikely calls
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ($line =3D~ /\b(?:(?:un=
+)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_VALUE)?|WARN)/) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WA=
+RN("LIKELY_MISUSE",
+>>
+>> How do you think about to use the specification =E2=80=9C(?:IS_ERR(?:_(=
+?:OR_NULL|VALUE))?|WARN)=E2=80=9D
+>> in this regular expression?
+=E2=80=A6
+>    IS_ERR
+>    (?:_ <- Another atomic group just to show that '_' is a common prefix=
+?
 
-Please put a newline here
+Yes. - I hope that this specification detail can help a bit.
 
-With that fixed,
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>            Usually, Perl interpreter is very good at optimizing such thi=
+ngs.
 
-> +               tbl_size = tpm2_calc_event_log_size(events,
-> +                                                   final_tbl->nr_events,
-> +                                                   log_tbl->log);
-> +       }
->         memblock_reserve((unsigned long)final_tbl,
->                          tbl_size + sizeof(*final_tbl));
->         early_memunmap(final_tbl, sizeof(*final_tbl));
-> --
-> 2.23.0.rc2
->
+Would you like to help this software component by omitting a pair of
+non-capturing parentheses at the beginning?
+
+\b(?:un)?likely\s*
+
+
+Regards,
+Markus
