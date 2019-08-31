@@ -2,176 +2,171 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32B4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7C2C41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652322190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="PCiyfDiM"
+	by mail.kernel.org (Postfix) with ESMTP id AF9E222CF7
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 10:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfHaKDb (ORCPT
+        id S1727811AbfHaKKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 06:03:31 -0400
-Received: from mail-eopbgr810137.outbound.protection.outlook.com ([40.107.81.137]:62688
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        Sat, 31 Aug 2019 06:10:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6158 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726316AbfHaKDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 06:03:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iWKALqPwwfA2tY/l035q5lThPCi0a53jvNw0WhBXh76dCk7+vvbPJZGVuJLmOyIqWNNw43PbGAlRVGZlglcKdveDPIP8K0bmmIcmRpG+U39KN52yvE3dCSkVD3AxwoQIzIVTGKwjaJmAqGUfPuYpWsyw4dWaTgaAzCO6hSt8b/uuAwPNLqpXXaT/JvAcEf8GKvGQ1B+zP7whNGfJXKV6IYIBUTB/Vz+AoVDXugBKUuebVVXbZAKV2oPjvhhvB8wI5JTlpUNqow5zgxX3lywyap2erdFFvNx8u8gQF/73NUvjyn4BpbE9EwzJJ20CXIpFJAjZp85cB+zQNiUG5T/ULA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=su6ZDz8R7cM8ot7yjuxtZ5uL1rw8XaqPz8o881SO2yY=;
- b=StnZj+MutX7E3nScsV61byLr+125PM6CbtPOm7VhbbHyKSSLWb0IZwllnXPNhtey0SUJWtAVLubd+CGz32kSpG+AnPlPwV2Pg7efFCQlzmf/jnyuFXhsLEjWaymGD+KHQtOYIjGFL6U37X9O1KUEvPeZ1yVNm66kw5jqgouDHBLUFtzVaaHB1jbfJzrRcdaNtpRmRxjZo9FBT1uHsbmZliauaha2C0S0BjSZw6tYr4IIcDLeWoizO0kfd83+GQ7itZqq4+aIbuIDgK5HCjtnDe+v0SSEd5HM6ywfEBycKwEwz5PMSr3PBmfaQJJL+docNBzQrW2p87BURkWL0M1R3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=su6ZDz8R7cM8ot7yjuxtZ5uL1rw8XaqPz8o881SO2yY=;
- b=PCiyfDiMM1fXyKeY44gqAlsgGMHx/3HsZMzVieAxOf67ZSPISX/mX+7BpHvEZewJ/CbXIobut9HUHTmq78UbBcXsVmGfKupKqP8ySGw3Y/K81UQBR+vu33+kERl3If5qgRi5kYalle0mJu91qVGOWLcoXaB2uqZMw+KGaHvNyWI=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1312.namprd22.prod.outlook.com (10.172.63.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Sat, 31 Aug 2019 10:02:48 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2220.013; Sat, 31 Aug
- 2019 10:02:48 +0000
-From:   Paul Burton <paul.burton@mips.com>
+        id S1726650AbfHaKKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 06:10:17 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1A9E488D2CD023DF4C0A;
+        Sat, 31 Aug 2019 18:10:11 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 31 Aug 2019
+ 18:10:04 +0800
+Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
 To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "akiyks@gmail.com" <akiyks@gmail.com>,
-        "andrea.parri@amarulasolutions.com" 
-        <andrea.parri@amarulasolutions.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-        "dlustig@nvidia.com" <dlustig@nvidia.com>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "j.alglave@ucl.ac.uk" <j.alglave@ucl.ac.uk>,
-        "luc.maranget@inria.fr" <luc.maranget@inria.fr>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
- and mips.
-Thread-Topic: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
- and mips.
-Thread-Index: AQHVX+M9hlAL1dGeDUqOXDXZpSY6Xw==
-Date:   Sat, 31 Aug 2019 10:02:47 +0000
-Message-ID: <20190831100242.xhbgaodzbuqj5axy@pburton-laptop>
-References: <20190613134317.734881240@infradead.org>
- <20190831090055.GH2369@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190831090055.GH2369@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0289.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a5::13) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [78.144.179.23]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e3ef5e4-f975-4647-38bf-08d72dfa6028
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1312;
-x-ms-traffictypediagnostic: MWHPR2201MB1312:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MWHPR2201MB1312D0230E243DEE83D15D88C1BC0@MWHPR2201MB1312.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 014617085B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(39850400004)(366004)(396003)(136003)(346002)(189003)(199004)(102836004)(71190400001)(316002)(9686003)(58126008)(7416002)(53936002)(52116002)(1076003)(33716001)(71200400001)(229853002)(8936002)(25786009)(54906003)(6512007)(26005)(186003)(66556008)(6306002)(5660300002)(256004)(64756008)(66446008)(66946007)(66476007)(76176011)(6916009)(14444005)(486006)(476003)(966005)(66066001)(386003)(6506007)(8676002)(81156014)(81166006)(6486002)(446003)(2906002)(11346002)(6116002)(42882007)(3846002)(99286004)(7736002)(4326008)(14454004)(305945005)(6246003)(6436002)(478600001)(44832011)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1312;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: A++e+Qt+eVo9M7acDou/UeGX8LUh9CBpNoz+7A7Xous42DreTlY9a1wEEslAlxF4dis38e8buAetpw9JEOHl0p9Hm6fcmBqj1n1zr59MIwOEKSTeWs+A9xIQh3a4uWIt7GvGV98d7mv8kVqIKC5LW0zJOaWDlO8Xp1wtHFlAUjSFrtYl9H8Df+v3DUR57SxlyNHd8+lrXcfKat7+KMuEYBc/oi7lIMwfHJuRIV7wv/QsqClshGhZ2T9ivRbif+KKw27V2PXYQA3Et/J54Vt3S3dzDUsLsWuQW+bp2p4UJWQ382bBLgzbKreMnvFD/w8EJBvSAaBbL3jVmeL9Ad6S1OOnb0Njl5JtWjP6QRVvGqoW5d9+tSRiZ26+qNhxRRAL3uqwSODXozn89jlRH2Obxj6hi2FT/AWqw9nz4VTZCJI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4FC9B0A9B556AF4AACCAD20AED627196@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <nfont@linux.vnet.ibm.com>, <naveen.n.rao@linux.vnet.ibm.com>,
+        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
+        <linux-mips@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
+ <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
+ <20190831085539.GG2369@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
+Date:   Sat, 31 Aug 2019 18:09:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e3ef5e4-f975-4647-38bf-08d72dfa6028
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 10:02:47.7685
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lN+KdEmzoLPoQGJoujDNsD+GXd2TSuj4i6iSExtVbbXkQF5oXHvygbm6yvh6UP2YfKqt2D21DEP772y/s9+AeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1312
+In-Reply-To: <20190831085539.GG2369@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
 
-On Sat, Aug 31, 2019 at 11:00:55AM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 13, 2019 at 03:43:17PM +0200, Peter Zijlstra wrote:
-> > Hi,
-> >=20
-> > This all started when Andrea Parri found a 'surprising' behaviour for x=
-86:
-> >=20
-> >   http://lkml.kernel.org/r/20190418125412.GA10817@andrea
-> >=20
-> > Basically we fail for:
-> >=20
-> > 	*x =3D 1;
-> > 	atomic_inc(u);
-> > 	smp_mb__after_atomic();
-> > 	r0 =3D *y;
-> >=20
-> > Because, while the atomic_inc() implies memory order, it
-> > (surprisingly) does not provide a compiler barrier. This then allows
-> > the compiler to re-order like so:
-> >=20
-> > 	atomic_inc(u);
-> > 	*x =3D 1;
-> > 	smp_mb__after_atomic();
-> > 	r0 =3D *y;
-> >=20
-> > Which the CPU is then allowed to re-order (under TSO rules) like:
-> >=20
-> > 	atomic_inc(u);
-> > 	r0 =3D *y;
-> > 	*x =3D 1;
-> >=20
-> > And this very much was not intended.
-> >=20
-> > This had me audit all the (strong) architectures that had weak
-> > smp_mb__{before,after}_atomic: ia64, mips, sparc, s390, x86, xtensa.
-> >=20
-> > Of those, only x86 and mips were affected. Looking at MIPS to solve thi=
-s, led
-> > to the other MIPS patches.
-> >=20
-> > All these patches have been through 0day for quite a while.
-> >=20
-> > Paul, how do you want to route the MIPS bits?
->=20
-> Paul; afaict the MIPS patches still apply (ie. they've not made their
-> way into Linus' tree yet).
->=20
-> I thought you were going to take them?
 
-My apologies, between the linux-mips mailing list not being copied (so
-this didn't end up in patchwork) and my being away for my father's
-funeral this fell through the cracks.
+On 2019/8/31 16:55, Peter Zijlstra wrote:
+> On Sat, Aug 31, 2019 at 01:58:16PM +0800, Yunsheng Lin wrote:
+>> According to Section 6.2.14 from ACPI spec 6.3 [1], the setting
+>> of proximity domain is optional, as below:
+>>
+>> This optional object is used to describe proximity domain
+>> associations within a machine. _PXM evaluates to an integer
+>> that identifies a device as belonging to a Proximity Domain
+>> defined in the System Resource Affinity Table (SRAT).
+> 
+> That's just words.. what does it actually mean?
 
-I'll go apply them to mips-next for v5.4.
+It means the dev_to_node(dev) may return -1 if the bios does not
+implement the proximity domain feature, user may use that value
+to call cpumask_of_node and cpumask_of_node does not protect itself
+from node id being -1, which causes out of bound access.
 
-Thanks for following up again,
+> 
+>> This patch checks node id with the below case before returning
+>> node_to_cpumask_map[node]:
+>> 1. if node_id >= nr_node_ids, return cpu_none_mask
+>> 2. if node_id < 0, return cpu_online_mask
+>> 3. if node_to_cpumask_map[node_id] is NULL, return cpu_online_mask
+>>
+>> [1] https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
+>>
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> ---
+>>  arch/x86/include/asm/topology.h | 6 ++++++
+>>  arch/x86/mm/numa.c              | 2 +-
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+>> index 4b14d23..f36e9c8 100644
+>> --- a/arch/x86/include/asm/topology.h
+>> +++ b/arch/x86/include/asm/topology.h
+>> @@ -69,6 +69,12 @@ extern const struct cpumask *cpumask_of_node(int node);
+>>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+>>  static inline const struct cpumask *cpumask_of_node(int node)
+>>  {
+>> +	if (node >= nr_node_ids)
+>> +		return cpu_none_mask;
+>> +
+>> +	if (node < 0 || !node_to_cpumask_map[node])
+>> +		return cpu_online_mask;
+>> +
+>>  	return node_to_cpumask_map[node];
+>>  }
+>>  #endif
+> 
+> I _reallly_ hate this. Users are expected to use valid numa ids. Now
+> we're adding all this checking to all users. Why do we want to do that?
 
-    Paul
+As above, the dev_to_node(dev) may return -1.
+
+> 
+> Using '(unsigned)node >= nr_nods_ids' is an error.
+
+'node >= nr_node_ids' can be dropped if all user is expected to not call
+cpumask_of_node with node id greater or equal to nr_nods_ids.
+
+From what I can see, the problem can be fixed in three place:
+1. Make user dev_to_node return a valid node id even when proximity
+   domain is not set by bios(or node id set by buggy bios is not valid),
+   which may need info from the numa system to make sure it will return
+   a valid node.
+
+2. User that call cpumask_of_node should ensure the node id is valid
+   before calling cpumask_of_node, and user also need some info to
+   make ensure node id is valid.
+
+3. Make sure cpumask_of_node deal with invalid node id as this patchset.
+
+Which one do you prefer to make sure node id is valid, or do you
+have any better idea?
+
+Any detail advice and suggestion will be very helpful, thanks.
+
+> 
+>> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+>> index e6dad60..5e393d2 100644
+>> --- a/arch/x86/mm/numa.c
+>> +++ b/arch/x86/mm/numa.c
+>> @@ -868,7 +868,7 @@ const struct cpumask *cpumask_of_node(int node)
+>>  		dump_stack();
+>>  		return cpu_none_mask;
+>>  	}
+>> -	if (node_to_cpumask_map[node] == NULL) {
+>> +	if (node < 0 || !node_to_cpumask_map[node]) {
+>>  		printk(KERN_WARNING
+>>  			"cpumask_of_node(%d): no node_to_cpumask_map!\n",
+>>  			node);
+>> -- 
+>> 2.8.1
+>>
+> 
+> .
+> 
+
