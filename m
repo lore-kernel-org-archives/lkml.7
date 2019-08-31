@@ -2,110 +2,102 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCBEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32544C3A59F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DA52377D
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:16:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Rb418DWm"
+	by mail.kernel.org (Postfix) with ESMTP id 0A70123426
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfHaJQY (ORCPT
+        id S1727833AbfHaJQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 05:16:24 -0400
-Received: from mout.web.de ([212.227.15.3]:54289 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfHaJQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 05:16:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567242926;
-        bh=W42yxbYmQCv9tl6YPZs0YFC5fDpZrDuUEO40d5+J5IY=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=Rb418DWmi/RVbd8sECvNY7M6am3zzXtvu6Z8MKvDEcaqy80J5NzEeIsZquRc+o3+K
-         RcMPUbulCWil2CYSmPwWqfOWbsvJq8lYGIRKuYobskoTbIVH51G/a5nLZzGK7B0dUo
-         Ub/VAcIMteSPNk9yZ43wLPYl/AxtOIz+Ty7w1ZYE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.129.60]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MXHt7-1hjODj0cab-00WIUk; Sat, 31
- Aug 2019 11:15:26 +0200
-To:     Denis Efremov <efremov@linux.com>, Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, linux-rdma@vger.kernel.org,
-        linux-wimax@intel.com, linux-xfs@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        netdev@vger.kernel.org,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sean Paul <sean@poorly.run>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        xen-devel@lists.xenproject.org, Enrico Weigelt <lkml@metux.net>
-References: <20190829165025.15750-1-efremov@linux.com>
-Subject: Re: [PATCH v3 01/11] checkpatch: check for nested (un)?likely() calls
-From:   Markus Elfring <Markus.Elfring@web.de>
-Message-ID: <0d9345ed-f16a-de0b-6125-1f663765eb46@web.de>
-Date:   Sat, 31 Aug 2019 11:15:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Sat, 31 Aug 2019 05:16:44 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbfHaJQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 05:16:43 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 9EF652CB9F286DE110CA;
+        Sat, 31 Aug 2019 17:16:39 +0800 (CST)
+Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 17:16:39 +0800
+Received: from [127.0.0.1] (10.184.39.28) by dggeme764-chm.china.huawei.com
+ (10.3.19.110) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Sat, 31
+ Aug 2019 17:16:38 +0800
+Subject: Re: [PATCH] arm: fix page faults in do_alignment
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
+ <20190830133522.GZ13294@shell.armlinux.org.uk> <5D69D239.2080908@huawei.com>
+ <20190831075524.GI13294@shell.armlinux.org.uk>
+CC:     <ebiederm@xmission.com>, <kstewart@linuxfoundation.org>,
+        <gregkh@linuxfoundation.org>, <gustavo@embeddedor.com>,
+        <bhelgaas@google.com>, <tglx@linutronix.de>,
+        <sakari.ailus@linux.intel.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+Message-ID: <5D6A3AEC.7030709@huawei.com>
+Date:   Sat, 31 Aug 2019 17:16:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 MIME-Version: 1.0
-In-Reply-To: <20190829165025.15750-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qKSdXHHLYLKjlRCvxxm0CG4/ObWxvY7GHVNBMu8mxxGycRrayx8
- 4PbzO2dvqjNnF+AFg4bA1W4zmeQSpNZ7vt9DbPnL5lk34WKJYWD9NUPM0PlrCLMjYkm1F6U
- BXfMva6PP5qxs+6jegtT9nR1r+jzSjNeTTC2AqMHglXEtSWbQLq9Fa4eMsUVMGo2eepnDXr
- VwnOxGgwPijQTQTX/f+uw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nkNVUAuCw5k=:pAP5U5L7C1x2boPp1IRXmn
- D13IzlXT/kI0Odb0OEskHBv1fRCMj7J727enJOB+vAgZd2n6ZXAAaWlSqHLVcohKzncPx6QpO
- Jkkz3w/W/rmQNzfpoIhIUW3Uccf/fl14QBw5X5i4PyFGDK9jzI0Phtg8JML9FgdHalKCIpNWP
- o213QJNReSqJUzIClMxbcGq2voyTmxMmGEwBIXqC58OGwigFy7zuu2Fy5ondTj8F6i3gbb38h
- c6JrfIYpAxvFnO9nRMcO25oqflwZdAfHvFzJ2iu+3r8XsTgWukdxyVbMiL8ftz50QxC2DJqzq
- Ayqcpn0a9Y7cTytKg/qxVHdxdOIF48+PWbHaSEgzP4SLLOPElveDdWhJEc0vM5xdTU1Dqb7hM
- NcCaA0zHOKUIDqcYJ6jN44G6CZgVS/MFofCq8QcCo4GFiBNWMHS4cmZtOpUQJMXQuRbrwvm5s
- QLUFHQhzpAX2K0Aj8VIVILu1mHvF1oeAJg0lG6KqkOeZEm+Unicxfz9HErsixNGFodYh0D3/K
- Pus4ocado7zBlJoZThrgPZ8TvIHn8mX0WI7LW+JhXvD1rFkJmT4VMVuezkSvp3NJ9GaBnkiEN
- 2DsKyjBxY/6mcp9cg5MLZTh0zU4f7ZpgvIRT7mBBrJ5TGKKmZLH7U/Z5qQmwJz28iIVaVlH4p
- wK8w2niZej5noXMTOemcJJnIR+evko7BhWXbZHiUAALjl38emkz357bvLjEkVGm7h8qIAQyjv
- 9Ffe8YuiaY+tWayyEFK6qfYIHwGdEZNrYmIuX9tupSwJCJ8bCFsx9n7SNCZvSRm61MjQsWB76
- icYRtytGOYmCsolycXG6KEM734RMbdaPv2pCjSKPk80uNsPY10n0pxzKUpdSnG1O5lboelK/K
- +pQTb7oUbCkyxCvKMOBAo+HHvPT1QQcSGkQreepWbCChdY7O5TxdjvwnEYYPBYSyBIKA4j2t6
- gmzI4FQ5Tbv5lKlap9HBlQSeD5ynZnaeINJfHFu/XpQei9uMkeptC8IYqtcno5/KHj4gVLoN6
- dvIF455p6LB73n4l5ci1UNJB4L7BiFhMmqFWnfszzCVLZrOOA94053rwKZECu2B8PgnRB8RwQ
- RHR8X1QZRRFkw/YnadMqgavlvTg6QJ2wAh3pxzJ+iXjpxC1IgfnMhR3w1p3UqTC4whz3ngKbv
- qqUbKY+8ilN57KkwviQJZULRks7t3CtGMgptQJeouQnu6rZg==
+In-Reply-To: <20190831075524.GI13294@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.39.28]
+X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
+ dggeme764-chm.china.huawei.com (10.3.19.110)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +# nested likely/unlikely calls
-> +		if ($line =3D~ /\b(?:(?:un)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_V=
-ALUE)?|WARN)/) {
-> +			WARN("LIKELY_MISUSE",
+On 2019/8/31 15:55, Russell King - ARM Linux admin wrote:
+> On Sat, Aug 31, 2019 at 09:49:45AM +0800, Jing Xiangfeng wrote:
+>> On 2019/8/30 21:35, Russell King - ARM Linux admin wrote:
+>>> On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
+>>>> The function do_alignment can handle misaligned address for user and
+>>>> kernel space. If it is a userspace access, do_alignment may fail on
+>>>> a low-memory situation, because page faults are disabled in
+>>>> probe_kernel_address.
+>>>>
+>>>> Fix this by using __copy_from_user stead of probe_kernel_address.
+>>>>
+>>>> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
+>>>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>>>
+>>> NAK.
+>>>
+>>> The "scheduling while atomic warning in alignment handling code" is
+>>> caused by fixing up the page fault while trying to handle the
+>>> mis-alignment fault generated from an instruction in atomic context.
+>>
+>> __might_sleep is called in the function  __get_user which lead to that bug.
+>> And that bug is triggered in a kernel space. Page fault can not be generated.
+>> Right?
+> 
+> Your email is now fixed?
 
-How do you think about to use the specification =E2=80=9C(?:IS_ERR(?:_(?:O=
-R_NULL|VALUE))?|WARN)=E2=80=9D
-in this regular expression?
+Yeah, I just checked the mailbox, it is normal now.
 
-Regards,
-Markus
+> 
+> All of get_user(), __get_user(), copy_from_user() and __copy_from_user()
+> _can_ cause a page fault, which might need to fetch the page from disk.
+> All these four functions are equivalent as far as that goes - and indeed
+> as are their versions that write as well.
+> 
+> If the page needs to come from disk, all of these functions _will_
+> sleep.  If they are called from an atomic context, and the page fault
+> handler needs to fetch data from disk, they will attempt to sleep,
+> which will issue a warning.
+> 
+ I understand.
+
+	Thanks
+
