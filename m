@@ -2,103 +2,110 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43F1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCBEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6D123426
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DA52377D
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 09:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ECY/8G9V"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Rb418DWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfHaJNS (ORCPT
+        id S1727429AbfHaJQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 05:13:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41064 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfHaJNS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 05:13:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id j5so19000867ioj.8
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 02:13:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NjP1K4B+dJg4KiSw2tkIWX3jIArsrWzA1uaNHVJvlN0=;
-        b=ECY/8G9VMWkU8NkmeoAPTBGwZKyqTh/0buwe3wSCqSCkeqp3BzM+7oO/JHpnh/ommu
-         b8MdYwzPvfhgtrMkO1AdzVFJXguJZr/5FVKX1x/O4TuzWdsRnHe+ux5I4cpPIHEm1CY2
-         RGd3YR6AMNcRYvcJJHIW34c5Z9lsd95tzZwU/eTxnMfZSJNl8//BWonTqKt2sPPP9S52
-         U1WaxdM+pzKOjVj2OBaOw+FmDxGO2LN69kTyMOxCFvaDmRnWTqd/ydnN5Ba0Ejj5IrNo
-         rbHSzezZnygxAi09/2x950anFWbi6vQcxPowzXLJ/0apKokBCeOdyQEg05SDzZE7imaR
-         BN7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NjP1K4B+dJg4KiSw2tkIWX3jIArsrWzA1uaNHVJvlN0=;
-        b=eu/WXBEF4ibUESX9DX7ADfuND2mtNqGKcEPumAwdT+bAKKpNN6EFmZIiSwA/KRNpk4
-         jUqp24LwfN7rtIDPV8r/kDUGw1DdU+kVSq8CsFT6uyIudYR4R3QS6up5lbGjRpXYoXdv
-         r9VJqMifMOAXV3cYEyrpJepCGGJdh/k2mthoO6DR09T5nNWOIYHW80LfO/2AJD0oHLKK
-         p3k/D/nd5RJ4+OUqfjQEQp4ZB18cyYf0IexfaMvMlWtyIChZlx4Xpons/2Cnnb35ZgaL
-         QDwQamsYY2blGfGf5SdjrQSLpl3q6cKZVNZL/STe4HitJkIUrYil21sVXHgNgf85BzFd
-         oH7A==
-X-Gm-Message-State: APjAAAXZB85r1xW3dAucl0yDgW7Sb4lY0bOvPt9TPHckvv6cwE2tRZCa
-        JfqH1LszhybBtMu1UWusHF5b/NrVuOiwPcOEUMpDGw==
-X-Google-Smtp-Source: APXvYqzgFQdus/RgPacid4CblEeawTeMIW58koQjqbhYpmMZVkjjCI0tduXeqDr8KU1lQfZXxBYwIiESTrWT/w/O3ug=
-X-Received: by 2002:a5e:a90f:: with SMTP id c15mr6701972iod.41.1567242797252;
- Sat, 31 Aug 2019 02:13:17 -0700 (PDT)
+        Sat, 31 Aug 2019 05:16:24 -0400
+Received: from mout.web.de ([212.227.15.3]:54289 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfHaJQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 05:16:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567242926;
+        bh=W42yxbYmQCv9tl6YPZs0YFC5fDpZrDuUEO40d5+J5IY=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=Rb418DWmi/RVbd8sECvNY7M6am3zzXtvu6Z8MKvDEcaqy80J5NzEeIsZquRc+o3+K
+         RcMPUbulCWil2CYSmPwWqfOWbsvJq8lYGIRKuYobskoTbIVH51G/a5nLZzGK7B0dUo
+         Ub/VAcIMteSPNk9yZ43wLPYl/AxtOIz+Ty7w1ZYE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.129.60]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MXHt7-1hjODj0cab-00WIUk; Sat, 31
+ Aug 2019 11:15:26 +0200
+To:     Denis Efremov <efremov@linux.com>, Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-rdma@vger.kernel.org,
+        linux-wimax@intel.com, linux-xfs@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        netdev@vger.kernel.org,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sean Paul <sean@poorly.run>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        xen-devel@lists.xenproject.org, Enrico Weigelt <lkml@metux.net>
+References: <20190829165025.15750-1-efremov@linux.com>
+Subject: Re: [PATCH v3 01/11] checkpatch: check for nested (un)?likely() calls
+From:   Markus Elfring <Markus.Elfring@web.de>
+Message-ID: <0d9345ed-f16a-de0b-6125-1f663765eb46@web.de>
+Date:   Sat, 31 Aug 2019 11:15:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com> <CABPqkBTS8bRjSwOBm2HxtuDWhxeZrTGa_E8mqfRfEJPzX1BNhw@mail.gmail.com>
- <20190831003110.GA5447@tassilo.jf.intel.com>
-In-Reply-To: <20190831003110.GA5447@tassilo.jf.intel.com>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Sat, 31 Aug 2019 02:13:05 -0700
-Message-ID: <CABPqkBSPfZ6iQ_t1ESZf334q+dNVf=RvoNHdmKZSs5GLokbjFQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown metrics
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190829165025.15750-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:qKSdXHHLYLKjlRCvxxm0CG4/ObWxvY7GHVNBMu8mxxGycRrayx8
+ 4PbzO2dvqjNnF+AFg4bA1W4zmeQSpNZ7vt9DbPnL5lk34WKJYWD9NUPM0PlrCLMjYkm1F6U
+ BXfMva6PP5qxs+6jegtT9nR1r+jzSjNeTTC2AqMHglXEtSWbQLq9Fa4eMsUVMGo2eepnDXr
+ VwnOxGgwPijQTQTX/f+uw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nkNVUAuCw5k=:pAP5U5L7C1x2boPp1IRXmn
+ D13IzlXT/kI0Odb0OEskHBv1fRCMj7J727enJOB+vAgZd2n6ZXAAaWlSqHLVcohKzncPx6QpO
+ Jkkz3w/W/rmQNzfpoIhIUW3Uccf/fl14QBw5X5i4PyFGDK9jzI0Phtg8JML9FgdHalKCIpNWP
+ o213QJNReSqJUzIClMxbcGq2voyTmxMmGEwBIXqC58OGwigFy7zuu2Fy5ondTj8F6i3gbb38h
+ c6JrfIYpAxvFnO9nRMcO25oqflwZdAfHvFzJ2iu+3r8XsTgWukdxyVbMiL8ftz50QxC2DJqzq
+ Ayqcpn0a9Y7cTytKg/qxVHdxdOIF48+PWbHaSEgzP4SLLOPElveDdWhJEc0vM5xdTU1Dqb7hM
+ NcCaA0zHOKUIDqcYJ6jN44G6CZgVS/MFofCq8QcCo4GFiBNWMHS4cmZtOpUQJMXQuRbrwvm5s
+ QLUFHQhzpAX2K0Aj8VIVILu1mHvF1oeAJg0lG6KqkOeZEm+Unicxfz9HErsixNGFodYh0D3/K
+ Pus4ocado7zBlJoZThrgPZ8TvIHn8mX0WI7LW+JhXvD1rFkJmT4VMVuezkSvp3NJ9GaBnkiEN
+ 2DsKyjBxY/6mcp9cg5MLZTh0zU4f7ZpgvIRT7mBBrJ5TGKKmZLH7U/Z5qQmwJz28iIVaVlH4p
+ wK8w2niZej5noXMTOemcJJnIR+evko7BhWXbZHiUAALjl38emkz357bvLjEkVGm7h8qIAQyjv
+ 9Ffe8YuiaY+tWayyEFK6qfYIHwGdEZNrYmIuX9tupSwJCJ8bCFsx9n7SNCZvSRm61MjQsWB76
+ icYRtytGOYmCsolycXG6KEM734RMbdaPv2pCjSKPk80uNsPY10n0pxzKUpdSnG1O5lboelK/K
+ +pQTb7oUbCkyxCvKMOBAo+HHvPT1QQcSGkQreepWbCChdY7O5TxdjvwnEYYPBYSyBIKA4j2t6
+ gmzI4FQ5Tbv5lKlap9HBlQSeD5ynZnaeINJfHFu/XpQei9uMkeptC8IYqtcno5/KHj4gVLoN6
+ dvIF455p6LB73n4l5ci1UNJB4L7BiFhMmqFWnfszzCVLZrOOA94053rwKZECu2B8PgnRB8RwQ
+ RHR8X1QZRRFkw/YnadMqgavlvTg6QJ2wAh3pxzJ+iXjpxC1IgfnMhR3w1p3UqTC4whz3ngKbv
+ qqUbKY+8ilN57KkwviQJZULRks7t3CtGMgptQJeouQnu6rZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andi,
+> +# nested likely/unlikely calls
+> +		if ($line =3D~ /\b(?:(?:un)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_V=
+ALUE)?|WARN)/) {
+> +			WARN("LIKELY_MISUSE",
 
-On Fri, Aug 30, 2019 at 5:31 PM Andi Kleen <ak@linux.intel.com> wrote:
->
-> > the same manner. It would greatly simplify the kernel implementation.
->
-> I tried that originally. It was actually more complicated.
->
-> You can't really do deltas on raw metrics, and a lot of the perf
-> infrastructure is built around deltas.
->
-How is RAPL handled? No deltas there either. It uses the snapshot model.
-At each interval, perf stat just reads the current count, and does not compute
-a delta since previous read.
-With PERF_METRICS, the delta is always since previous read. If you read
-frequently enough you do not lose precision.
+How do you think about to use the specification =E2=80=9C(?:IS_ERR(?:_(?:O=
+R_NULL|VALUE))?|WARN)=E2=80=9D
+in this regular expression?
 
->
-> To do the regular reset and not lose precision over time internally
-> you have to keep expanded counters anyways. And if you do that
-> you can just expose them to user space too, and have everything
-> in user space just work without any changes (except for the final
-> output)
->
-> -Andi
->
+Regards,
+Markus
