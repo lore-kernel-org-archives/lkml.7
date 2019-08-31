@@ -2,137 +2,145 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86268C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 17:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB382C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 17:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B2D21852
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 17:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7463922D37
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 17:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="STgNSSqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfHaRn0 (ORCPT
+        id S1728419AbfHaRtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 13:43:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53948 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfHaRn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 13:43:26 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89A113D94D
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 17:43:25 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id v16so10883884qtp.14
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 10:43:25 -0700 (PDT)
+        Sat, 31 Aug 2019 13:49:09 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35446 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbfHaRtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 13:49:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g7so10006287wrx.2
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 10:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cdsMvOsDGpwgDD/vj4j7q/Nsn3f/GT/pd3p/c4qtgQk=;
+        b=STgNSSqWuaTPtQxfZUjAn6t/RpiHW3oNrjcOdPRjdyfpHakkqPNd5xjtzw++yrg7Io
+         xpICZNenr+GGhBmzUd4Q4hqDVtGMkEHAv5bCVIf41T5fw7e8udMSDVEBfFDAJdoKhuT9
+         Ai7mEXBuu/S91wUTCbBJLw/rhm3XaKWFnKbmi3Uu0A0rHeYizQIWsA4W8qJ9HS5QhzTp
+         zwXl82HIOZnnS1OWT2Q0ItKAQLsjcqoRwXIkFA5EnxI961fZ0h7RBi1RPq8NQaIiLktj
+         O3x6tt9IfQHaShCrONBgVDeJoM/dz8SucKYbdmmh7GuOyBbSlOk54tbIP/bKwN5gYLWE
+         wW7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cIHszIcXROJYsUB5SpC1UHCVwuIkppX7qGEFDj/5xo0=;
-        b=d3ZyVziITqVb84J3cOdIszQYkOMo3U1fj5Ha/Q754PZUILl5J1L8yHSTjDEGUILf4M
-         ZR2vP2dA9qsBnlrc4XKVPth/ly8PgAA9SmojGJ3dRJHGzlqJo1ll6jewZUNkcKoJbFU/
-         2/w0OMHQhLcXsInfWazmLL3Pb1I+0Ip51JBSCPlGHa+jexQFji3SpsH4l52cJwKKmS1x
-         ZRP8c+CRgvIt1sQ6/KDtWW8Vl92mwiQYLIPRtKyqyyKdh/RCqMsgz9Awk2Y8IrQzTy4p
-         +ndvRfAKs7m2ybjQ26hnGT8590zQAB08mvefZnYClYMZD5txs9EpFCgmaGxePO6fnzfU
-         siag==
-X-Gm-Message-State: APjAAAXGaV0VLNsqhs9HH6wyuh1j4K6s8gJS+VjDGcUxmOFmzpcKmF0t
-        ZKEWqbf9qu+/0ZHkdQdU8xFJrei40gFhbsAE1DtnVnpKg5ptwhnf3Oh0wQGSGKmBOlysO80Eeoj
-        ICjxwHx1BnzU9Rv49Vpca6pEJ
-X-Received: by 2002:a37:8204:: with SMTP id e4mr13824074qkd.281.1567273404563;
-        Sat, 31 Aug 2019 10:43:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyUVTZQ/NdVzrtHwlgWa3CZUvMoYBF799HKr9TzniFNFWi/Tj1PilrvJQdHknPVch1OD89j7A==
-X-Received: by 2002:a37:8204:: with SMTP id e4mr13824060qkd.281.1567273404418;
-        Sat, 31 Aug 2019 10:43:24 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
-        by smtp.gmail.com with ESMTPSA id g19sm2433415qtb.2.2019.08.31.10.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 10:43:23 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 13:43:19 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Matej Genci <matej.genci@nutanix.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] virtio: Change typecasts in vring_init()
-Message-ID: <20190831134218-mutt-send-email-mst@kernel.org>
-References: <20190827152000.53920-1-matej.genci@nutanix.com>
- <20190830095928-mutt-send-email-mst@kernel.org>
- <41b8eb4b-0d3b-f103-9ec4-332a903612ee@nutanix.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cdsMvOsDGpwgDD/vj4j7q/Nsn3f/GT/pd3p/c4qtgQk=;
+        b=YIo2c5vF35Q7MRpJamwHV/SbI30zJDpSGqviJszlh8QdbCFYmB/wgd1y4sIuoXR9+D
+         fbqoKcaAQ+AiJWOw7LZF+amepDD3pGV5k4zhbhYhA/grFUnna0gTBFKSQ8qYNvTh4y0l
+         nus6auRfsfy20lYNOXrgHG/ggZNCpa52LMoMv51QcTuY9X1iNQXeJC8iG8reixqn9YZO
+         R7YH0T+dvPIp1DBPc/4SFy3O+vlXOpjLytwjVEVuHoFvr5ksF0FsJXUY1J5IJkZg6aCV
+         5YsU9YkqYT+Flk+6OwAxrGmZwCPSb/JHAa1BDz2KQtcc8RW9ULzfFei1MwF42+50xtpJ
+         Z9Ng==
+X-Gm-Message-State: APjAAAUhjg6el50Y4WiARelTjqqoT5R5HZ5sM9JnLf+G+cxHMtW2EzHb
+        yVFSui42eROhpjOl8vPdt8OQuyAMmSeAwJItyU9u8w==
+X-Google-Smtp-Source: APXvYqyRhsVkyzGzSbN+QuHx3fD6W0lV9etQ/NGMSOU8sMC2hoVOy0wqveGIp/4xZrctLTm3XjEPz64psHiT+OBMN5g=
+X-Received: by 2002:adf:ec48:: with SMTP id w8mr1105602wrn.198.1567273747268;
+ Sat, 31 Aug 2019 10:49:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41b8eb4b-0d3b-f103-9ec4-332a903612ee@nutanix.com>
+References: <20190827163204.29903-1-will@kernel.org> <20190828073052.GL2332@hirez.programming.kicks-ass.net>
+ <20190828141439.sqnpm5ff4tgyn66r@willie-the-truck> <201908281353.0EFD0776@keescook>
+In-Reply-To: <201908281353.0EFD0776@keescook>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 31 Aug 2019 20:48:56 +0300
+Message-ID: <CAKv+Gu_Q=o_6xDW_7YTd3J6psqs-o+qBxW4r9MXCBwjmsGpTbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Rework REFCOUNT_FULL using atomic_fetch_* operations
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 05:58:23PM +0000, Matej Genci wrote:
-> On 8/30/2019 3:02 PM, Michael S. Tsirkin wrote:
-> > On Tue, Aug 27, 2019 at 03:20:57PM +0000, Matej Genci wrote:
-> >> Compilers such as g++ 7.3 complain about assigning void* variable to
-> >> a non-void* variable (like struct pointers) and pointer arithmetics
-> >> on void*.
-> >>
-> >> Signed-off-by: Matej Genci <matej.genci@nutanix.com>
-> >> ---
-> >>   include/uapi/linux/virtio_ring.h | 9 +++++----
-> >>   1 file changed, 5 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
-> >> index 4c4e24c291a5..2c339b9e2923 100644
-> >> --- a/include/uapi/linux/virtio_ring.h
-> >> +++ b/include/uapi/linux/virtio_ring.h
-> >> @@ -168,10 +168,11 @@ static inline void vring_init(struct vring *vr, unsigned int num, void *p,
-> >>   			      unsigned long align)
-> >>   {
-> >>   	vr->num = num;
-> >> -	vr->desc = p;
-> >> -	vr->avail = p + num*sizeof(struct vring_desc);
-> >> -	vr->used = (void *)(((uintptr_t)&vr->avail->ring[num] + sizeof(__virtio16)
-> >> -		+ align-1) & ~(align - 1));
-> >> +	vr->desc = (struct vring_desc *)p;
-> >> +	vr->avail = (struct vring_avail *)((uintptr_t)p
-> >> +		+ num*sizeof(struct vring_desc));
-> >> +	vr->used = (struct vring_used *)(((uintptr_t)&vr->avail->ring[num]
-> >> +		+ sizeof(__virtio16) + align-1) & ~(align - 1));
-> >>   }
-> >>   
-> >>   static inline unsigned vring_size(unsigned int num, unsigned long align)
-> > 
-> > I'm not really interested in building with g++, sorry.
-> > Centainly not if it makes code less robust by forcing
-> > casts where they weren't previously necessary.
-> 
-> Can you elaborate on how these casts make the code less robust?
+On Thu, 29 Aug 2019 at 00:03, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Aug 28, 2019 at 03:14:40PM +0100, Will Deacon wrote:
+> > On Wed, Aug 28, 2019 at 09:30:52AM +0200, Peter Zijlstra wrote:
+> > > On Tue, Aug 27, 2019 at 05:31:58PM +0100, Will Deacon wrote:
+> > > > Will Deacon (6):
+> > > >   lib/refcount: Define constants for saturation and max refcount values
+> > > >   lib/refcount: Ensure integer operands are treated as signed
+> > > >   lib/refcount: Remove unused refcount_*_checked() variants
+> > > >   lib/refcount: Move bulk of REFCOUNT_FULL implementation into header
+> > > >   lib/refcount: Improve performance of generic REFCOUNT_FULL code
+> > > >   lib/refcount: Consolidate REFCOUNT_{MAX,SATURATED} definitions
+>
+> BTW, can you repeat the timing details into the "Improve performance of
+> generic REFCOUNT_FULL code" patch?
+>
+> > > So I'm not a fan; I itch at the whole racy nature of this thing and I
+> > > find the code less than obvious. Yet, I have to agree it is exceedingly
+> > > unlikely the race will ever actually happen, I just don't want to be the
+> > > one having to debug it.
+> >
+> > FWIW, I think much the same about the version under arch/x86 ;)
+> >
+> > > I've not looked at the implementation much; does it do all the same
+> > > checks the FULL one does? The x86-asm one misses a few iirc, so if this
+> > > is similarly fast but has all the checks, it is in fact better.
+> >
+> > Yes, it passes all of the REFCOUNT_* tests in lkdtm [1] so I agree that
+> > it's an improvement over the asm version.
+> >
+> > > Can't we make this a default !FULL implementation?
+> >
+> > My concern with doing that is I think it would make the FULL implementation
+> > entirely pointless. I can't see anybody using it, and it would only exist
+> > as an academic exercise in handling the theoretical races. That's a change
+> > from the current situation where it genuinely handles cases which the
+> > x86-specific code does not and, judging by the Kconfig text, that's the
+> > only reason for its existence.
+>
+> Looking at timing details, the new implementation is close enough to the
+> x86 asm version that I would be fine to drop the x86-specific case
+> entirely as long as we could drop "FULL" entirely too -- we'd have _one_
+> refcount_t implementation: it would be both complete and fast.
+>
 
-If we ever change the variable types build will still pass
-because of the cast.
++1
 
-> They aren't necessary in C but I think being explicit can improve
-> readability as argued in
-> https://softwareengineering.stackexchange.com/a/275714
-> 
-> > 
-> > However, vring_init and vring_size are legacy APIs anyway,
-> > so I'd be happy to add ifndefs that will allow userspace
-> > simply hide these functions if it does not need them.
-> > 
-> 
-> I feel like my patch is a harmless way of allowing this header
-> to be used in C++ projects, but I'm happy to drop it in lieu of
-> the guards if you feel strongly about it.
-> 
-> Thanks.
-> Matej
+> However, I do think a defconfig image size comparison should be done as
+> part of that too. I think this implementation will be larger than the
+> x86 asm one (but not by any amount that I think is a problem).
+>
 
-Yea let's not even start.
+It's been ~2 years since I looked at this code in detail, but IIRC, it
+looked like the inc-from-zero check was missing from the x86
+implementation because it requires a load/compare/increment/store
+sequence instead of a single increment instruction taking a memory
+operand. Was there more rationale at the time for omitting this
+particular case, and if so, was it based on a benchmark? Can we run it
+against this implementation as well?
 
-> > 
-> >> -- 
-> >> 2.22.0
-> >>
-> 
+> I'd also note that the saturation speed is likely faster in this
+> implementation (i.e. the number of instructions between noticing the
+> wrap and setting the saturation value), as it is on the other side of
+> a branch instead of across a trap, trap handler lookup, and call. So
+> the race window should even be smaller (though I continue to think it
+> remains hard enough to hit as to make it a non-issue in all cases: if
+> you can schedule INT_MAX / 2 increments before a handful of instructions
+> resets it to INT_MAX / 2, I suspect there are much larger problems. :)
+>
+> --
+> Kees Cook
