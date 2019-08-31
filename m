@@ -2,157 +2,122 @@ Return-Path: <SRS0=k4ck=W3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C484C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31292C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 22:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8B22190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 21:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F372187F
+	for <linux-kernel@archiver.kernel.org>; Sat, 31 Aug 2019 22:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYMs+h7X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJ/i3mis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfHaVbm (ORCPT
+        id S1728523AbfHaV5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 17:31:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42317 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfHaVbm (ORCPT
+        Sat, 31 Aug 2019 17:57:17 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38652 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfHaV5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 17:31:42 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p3so5278054pgb.9;
-        Sat, 31 Aug 2019 14:31:42 -0700 (PDT)
+        Sat, 31 Aug 2019 17:57:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so10928742wme.3;
+        Sat, 31 Aug 2019 14:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+MuizemRZBK7y4EPhOqkcNh+j3OitGqWAcLb/tYmDlY=;
-        b=TYMs+h7XCkfnxW83esvEWCGtDELyZlP8PT7UFYEOYvWJlufam6JCZZ41EigPpYgj+H
-         Rzh63zgCszHOICTd4uVZqVWkungT0vepiqQQCl/nQTxWDiCt9BMmgoAYswM889QuOJb+
-         svvv2J3bs3yJ1CrrHkrxYcoKmJvq5lpybFwgjMLKnn3pjiMp0FMTLYxFrtkq7QxjUTeE
-         uGsRPPmXTJ8McFUtRlfCx/jaLJi8/7IdMPKMn0vbAS4V+TCBsF0en1RJQgai/nipxFjQ
-         hQRXoJPP6DXGDl0ruz9HqR/X7zg54oZmH3WmW3yzLzWnoWYqcNhVtu40J6kn1bf8PSzG
-         5L7Q==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AYOwNEwasq9ZeSJ1tPX4siPkH0OJNt6wmi5XPh6tDK0=;
+        b=AJ/i3mis8+vkGBYtlunuOHCXAG4O8vnpGO3SINmsB3D1igJM59m6N1qGCFoR3ZWiYT
+         +qMqyF6K2zbG1JvudVAbxWgSUVNz8oqsMuw6J11JvqklrJLU3KyAny8mNZnBAiNqxBZw
+         rm2ls2KADFRsIUQbWS4/O2aQj9cg+NCt/qvbP/pBdH+oAgnD2duVkr2fvLs4Dv2hoL/4
+         TY8wjE+VccJ5Dz0fNvc+UnxSUfidcC2yWEJP2nycJE85dN7mx40zlyWwuL3CVY6G/WJx
+         SHp2Xr2Gg60owC5FMmAKbXzzSWj/SxXzOaiVADFsaOLLtW9mIxI/EaD8K/DCefFO3mJ1
+         FyDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+MuizemRZBK7y4EPhOqkcNh+j3OitGqWAcLb/tYmDlY=;
-        b=Mg+oYTDz6pQ3c4fbYDUjlhA1ktwqKKZz1XK5IrXcDYlfvS+ZIBRy6x0KdS/QAsMb3F
-         TGJZr77VjoBO2rks556penxCByCwli6WLacwtF8DzC9DWN5NeyJBZBVTr+b1zbN41peL
-         u031cy8MFve32hgG6Otsc4rSwFAAhX7lSxAtt3DPajKoF5lECyHGvynORiSQOi9SW3Nl
-         TfL5gWI9S2p3acr3xE0sT32zlXsWeR+690yVXnRLeKaBgL4ZwsRJimFBD9TCAYGtKgYk
-         ev1TRVrxdm2F3pLTM/l7AzHxF+hhc2+4MfOZ2qnN8Wp+QU4WMH3VQEjkHuYkfo5dy3+T
-         jfyw==
-X-Gm-Message-State: APjAAAUQjF4W2/ngDm2hXBe5i+0uBIxsTKxheDn1XZqBuHD31uusuWwu
-        yZwD/j9av5BBkS67Z2D8UvfUro3+
-X-Google-Smtp-Source: APXvYqx6dkz/egpBz/ct/gn7oOQDRpCEXLMhME5Je/qRTDtWscVFP6YpGe7O1hPZaouNPMMKrHAggg==
-X-Received: by 2002:aa7:908b:: with SMTP id i11mr24179327pfa.199.1567287101743;
-        Sat, 31 Aug 2019 14:31:41 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g14sm11062488pfb.150.2019.08.31.14.31.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 31 Aug 2019 14:31:40 -0700 (PDT)
-Date:   Sat, 31 Aug 2019 14:31:39 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Hui Peng <benquike@gmail.com>
-Cc:     kvalo@codeaurora.org, davem@davemloft.net,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Fix a NULL-ptr-deref bug in
- ath10k_usb_alloc_urb_from_pipe
-Message-ID: <20190831213139.GA32507@roeck-us.net>
-References: <20190804003101.11541-1-benquike@gmail.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=AYOwNEwasq9ZeSJ1tPX4siPkH0OJNt6wmi5XPh6tDK0=;
+        b=byYESp64RnnmEWuug8cKG0CcGIQFArxEJNlCUXGAdjyTVop2pLjRCgHbmcZwoeq2qS
+         qbxlPckeI3zgrCX75EOfh/t2v4VNSS0kJvjC5H/CCEdgY9MZS414C1ERHyvjWajwkPpB
+         i37p2aEfLTs8uIqEjXDLqKOMbmK6xRnKk5QzgpOpe8bnnvhrp8rSPwXJWQLnpUqVCx2L
+         BoaJwnTclvvpPPZO5e6LrD0K4Z8NG7F+bzn8y8TPTetLimd6jTBNGzEOJ5SLCxbho1hv
+         F3DpjBKC5NUZNLxNuX6/4sliNkWWTad6auvYatjlSjALwT7En5Q9AovNZGM/mmJKy+E8
+         Akmg==
+X-Gm-Message-State: APjAAAU69MgD8f7N2jG3txC8rThx9ZMapnZdjQGa11Cr1Pxt7gSDA9gw
+        FJlBplgkbZLZTxP8VB+7O2c=
+X-Google-Smtp-Source: APXvYqxF8OnuJlVtDEZ2N/jealSjlLOGtlyQPVrn47WwZgo7igVRtfxdne/npBcKcgefeskRr2H8/A==
+X-Received: by 2002:a05:600c:2181:: with SMTP id e1mr10119664wme.117.1567288634393;
+        Sat, 31 Aug 2019 14:57:14 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id l9sm7713580wmi.29.2019.08.31.14.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Aug 2019 14:57:13 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ceph: Move static keyword to the front of declarations
+Date:   Sat, 31 Aug 2019 23:57:12 +0200
+Message-Id: <20190831215712.10148-1-kw@linux.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804003101.11541-1-benquike@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Move the static keyword to the front of declarations of
+snap_handle_length, handle_length and connected_handle_length,
+and resolve the following compiler warnings that can be seen
+when building with warnings enabled (W=1):
 
-On Sat, Aug 03, 2019 at 08:31:01PM -0400, Hui Peng wrote:
-> The `ar_usb` field of `ath10k_usb_pipe_usb_pipe` objects
-> are initialized to point to the containing `ath10k_usb` object
-> according to endpoint descriptors read from the device side, as shown
-> below in `ath10k_usb_setup_pipe_resources`:
-> 
-> for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
->         endpoint = &iface_desc->endpoint[i].desc;
-> 
->         // get the address from endpoint descriptor
->         pipe_num = ath10k_usb_get_logical_pipe_num(ar_usb,
->                                                 endpoint->bEndpointAddress,
->                                                 &urbcount);
->         ......
->         // select the pipe object
->         pipe = &ar_usb->pipes[pipe_num];
-> 
->         // initialize the ar_usb field
->         pipe->ar_usb = ar_usb;
-> }
-> 
-> The driver assumes that the addresses reported in endpoint
-> descriptors from device side  to be complete. If a device is
-> malicious and does not report complete addresses, it may trigger
-> NULL-ptr-deref `ath10k_usb_alloc_urb_from_pipe` and
-> `ath10k_usb_free_urb_to_pipe`.
-> 
-> This patch fixes the bug by preventing potential NULL-ptr-deref.
-> 
-> Signed-off-by: Hui Peng <benquike@gmail.com>
-> Reported-by: Hui Peng <benquike@gmail.com>
-> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+fs/ceph/export.c:38:2: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
-This patch fixes CVE-2019-15099, which has CVSS scores of 7.5 (CVSS 3.0)
-and 7.8 (CVSS 2.0). Yet, I don't find it in the upstream kernel or in Linux
-next.
+fs/ceph/export.c:88:2: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
-Is the patch going to be applied to the upstream kernel anytime soon ? If
-not, is there reason to believe that its severity may not be as high as the
-CVSS score indicates ?
+fs/ceph/export.c:90:2: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
-Thanks,
-Guenter
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
 
-> ---
->  drivers/net/wireless/ath/ath10k/usb.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/ath/ath10k/usb.c b/drivers/net/wireless/ath/ath10k/usb.c
-> index e1420f67f776..14d86627b47f 100644
-> --- a/drivers/net/wireless/ath/ath10k/usb.c
-> +++ b/drivers/net/wireless/ath/ath10k/usb.c
-> @@ -38,6 +38,10 @@ ath10k_usb_alloc_urb_from_pipe(struct ath10k_usb_pipe *pipe)
->  	struct ath10k_urb_context *urb_context = NULL;
->  	unsigned long flags;
->  
-> +	/* bail if this pipe is not initialized */
-> +	if (!pipe->ar_usb)
-> +		return NULL;
-> +
->  	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
->  	if (!list_empty(&pipe->urb_list_head)) {
->  		urb_context = list_first_entry(&pipe->urb_list_head,
-> @@ -55,6 +59,10 @@ static void ath10k_usb_free_urb_to_pipe(struct ath10k_usb_pipe *pipe,
->  {
->  	unsigned long flags;
->  
-> +	/* bail if this pipe is not initialized */
-> +	if (!pipe->ar_usb)
-> +		return NULL;
-> +
->  	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
->  
->  	pipe->urb_cnt++;
-> -- 
-> 2.22.0
-> 
+ fs/ceph/export.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 020d39a85ecc..b6bfa94332c3 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -35,7 +35,7 @@ struct ceph_nfs_snapfh {
+ static int ceph_encode_snapfh(struct inode *inode, u32 *rawfh, int *max_len,
+ 			      struct inode *parent_inode)
+ {
+-	const static int snap_handle_length =
++	static const int snap_handle_length =
+ 		sizeof(struct ceph_nfs_snapfh) >> 2;
+ 	struct ceph_nfs_snapfh *sfh = (void *)rawfh;
+ 	u64 snapid = ceph_snap(inode);
+@@ -85,9 +85,9 @@ static int ceph_encode_snapfh(struct inode *inode, u32 *rawfh, int *max_len,
+ static int ceph_encode_fh(struct inode *inode, u32 *rawfh, int *max_len,
+ 			  struct inode *parent_inode)
+ {
+-	const static int handle_length =
++	static const int handle_length =
+ 		sizeof(struct ceph_nfs_fh) >> 2;
+-	const static int connected_handle_length =
++	static const int connected_handle_length =
+ 		sizeof(struct ceph_nfs_confh) >> 2;
+ 	int type;
+ 
+-- 
+2.22.1
+
