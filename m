@@ -2,691 +2,146 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC735C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 04:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAE7C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 06:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60811233A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 04:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4732190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 06:12:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JjvKZdJd";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="aaU/HoU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbfIAEhF (ORCPT
+        id S1726934AbfIAGMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 00:37:05 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:50726 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfIAEhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 00:37:05 -0400
-Received: from [88.128.80.103] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1i4Hbi-00042y-2b; Sun, 01 Sep 2019 06:36:55 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Elon Zhang <zhangzj@rock-chips.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org,
-        manivannan.sadhasivam@linaro.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] arm64: dts: rockchip: Add support for TB-96AI board
-Date:   Sun, 01 Sep 2019 06:36:41 +0200
-Message-ID: <3671433.J3OatT8Kjo@phil>
-In-Reply-To: <20190805015755.26017-1-zhangzj@rock-chips.com>
-References: <20190805015755.26017-1-zhangzj@rock-chips.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Sun, 1 Sep 2019 02:12:19 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:30813 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfIAGMT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 02:12:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1567318419; x=1598854419;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=xDIrxnuXWQ5SQxL0XSqyl+/YK8l7jYoBkzAboLdB7VE=;
+  b=JjvKZdJdQ8M70KkNNUXe7z9L0g+2ENjlfHK83FuZVJbdQRtSyo0X2dip
+   G9cItrmGEFGIypUdUACCk02yUx++3kAclapu37c2tF8P5TxY4KRS+maye
+   j8YK8G1CHX8PD1Z1ZpCLx0kEZrL6hGITidc0MrLTmccFHQUz6L1wzebIp
+   iGEMkOVZ2KmZXMr1RpWHaC32nfhDJClmsFh7hMvV4nZXWtWTw1/4YdOYA
+   cStbtbRYOhZCplPKZ/yrHUPFjbETTfr+mqxcHyJXDYdtmKUJ3YGy67NI5
+   C2SNqZJD0hlY0JvW3X6H0Z0swoIZ+nFUXY1kSxUDsx878HvHZTikd0vgB
+   Q==;
+IronPort-SDR: nGWBAh5MvPz9/geSP9PqGbbiqwNG9pc6rlpJmR8AVUZRSgxDULt45PMrPxAOFOsseToHeGfMQr
+ HVPBcWzpw4Ekq81lduDVsBRtUxRieX8rmHrdPVtgKUoEZbT7BEuE/qVeWM9TRt7/uQOf/RYNS4
+ V7/Sh4abJXCfTc0DqasvClFr1swKcxYHSteSR0eymgzoai9kUC+3gf+hsMIRqCV4sIxAf6suVD
+ AkaAzJc+qA2C2oFU+/h11DMtJ/z13Vr96upqA7jXxUURnwb5r/QYydme8OTWF1cK+XDdgIUlDM
+ cSA=
+X-IronPort-AV: E=Sophos;i="5.64,454,1559491200"; 
+   d="scan'208";a="217681882"
+Received: from mail-by2nam05lp2057.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.57])
+  by ob1.hgst.iphmx.com with ESMTP; 01 Sep 2019 14:13:37 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fmBbrDU66ohPiPyqO2TMXdb4j3KGkSNg1tKIT/bq+RB6Ygz911IFx3UggpEiYEwwtViKJYlikk7zQD80WczlSkGg3gsOWKKnWzA62POYiFs+y17OsLgzeLCmbmpJMpNbNlQg1JfURg7dbTQsGSBDhY6+/k1C1CE1a4p2+hMKUfHjHPhC+vQmhdiQAdnA5MlrC5LciHyH+GwazAuJuSIixb6JPei2JnaLbLjPw1xzhG4gxDMuf2Rbvy63bfSHaZgEG23wZR6o0raCd1Uz7hhsGKqY4h6mKyU/C5mvRBqTveJC1quvXsrSkhR9UmRIUZLYpi+U0MIYfYewAqzT5VIsTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xDIrxnuXWQ5SQxL0XSqyl+/YK8l7jYoBkzAboLdB7VE=;
+ b=cBo8AUaqooVn42qE+fTpsK26MORCB/G1TpIJ54/uAVegkI56LOWSRDQ+LUDGobSIgJ3b2lpBzhV8sBCjoYxdFyMeOnQw4DT2Azz/aNeGiBmWYc1guYVctlP4ySAYQLh4UU8+jEoQHfDqGb+cWb1DrTglaxWDJWGWO1Nvrb+ZWazCU+/td4Byj8e7p6LGRg0osrpFiWFMxTZYLgcHaSby5eccwpzLtobvHO7BIe4uoHkma1aggqI4tXg4FOLWTKvtw7oXjQB/CwUrp2cV8TRxNfP+ZSjHgGKssS5TjNyuDvIkMFLIYczNdXUfL15kvgoJ/BFthPhRCeClx04pE1j9jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xDIrxnuXWQ5SQxL0XSqyl+/YK8l7jYoBkzAboLdB7VE=;
+ b=aaU/HoU0uUk9W/GiAFu6LjJjziGoeBIXX3XorH9/srTHcfS0mZ8hXWPAm/q2ucRH35pRh2v32QxtF5QSJQtrr+7JPW94kqAar9AAo3sSgZeqVejy2EqeB/3YSM4mriFdTQ6jQASqqvvVss9yd3R+sAf1A3tStJTc5c65T/6OgE4=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB7038.namprd04.prod.outlook.com (10.186.146.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.21; Sun, 1 Sep 2019 06:12:15 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9c2b:ac1b:67b8:f371]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9c2b:ac1b:67b8:f371%2]) with mapi id 15.20.2220.021; Sun, 1 Sep 2019
+ 06:12:15 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     Bean Huo <beanhuo@micron.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: RE: [PATCH v4 0/3] Qualcomm UFS device reset support
+Thread-Topic: [PATCH v4 0/3] Qualcomm UFS device reset support
+Thread-Index: AQHVXdVcVndtIrqA7kuEICogWXBJSKcWW9dA
+Date:   Sun, 1 Sep 2019 06:12:15 +0000
+Message-ID: <MN2PR04MB699135203C45147049130AB6FCBF0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190828191756.24312-1-bjorn.andersson@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4f4c177-a8f8-433f-fbbf-08d72ea35615
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR04MB7038;
+x-ms-traffictypediagnostic: MN2PR04MB7038:
+x-microsoft-antispam-prvs: <MN2PR04MB7038767175C3D7B6351513CEFCBF0@MN2PR04MB7038.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0147E151B5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(346002)(366004)(396003)(199004)(189003)(66066001)(6436002)(55016002)(9686003)(53936002)(7416002)(6506007)(102836004)(4326008)(25786009)(7696005)(76176011)(26005)(186003)(33656002)(71200400001)(71190400001)(6246003)(52536014)(5660300002)(81156014)(81166006)(86362001)(305945005)(7736002)(8936002)(6116002)(3846002)(74316002)(478600001)(4744005)(99286004)(2906002)(14454004)(229853002)(5024004)(8676002)(446003)(256004)(54906003)(110136005)(316002)(64756008)(486006)(476003)(66556008)(66476007)(66946007)(76116006)(11346002)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB7038;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vSw8AvMuxRtT+8s6+HCUKQRZFY8ao1Hizk4Beo4WkvXbhftWo405KIogPwvOndGQBUnChTN5QjdyN/ZMdaqd66tic98h1fGBfVLDJdis0YuFCQceEC3F62WsadklScs2195/nvjsM09YdYIm29KM08gRZUO5x2z5Y/AO0gOLMbWAejMul+xvYD1cXpMQFu7W6uqKXhIzooHJWunC1CNAzzuQBSa346YqMmbCWWnB2u0t/J3/IWv61OP4Jdd8rWa7SHq/5wKoCRnt3mo8ugzdPjQgiRypVi36c+EO31LQbCrYHJmLW7qQOjTmZ5lhEEImcGzkcuMPp0RDs0/aotpFei9l4CBUUKniCfHGosYr6Nvo+RPOJuSVrFBg7ouxTahe1APH3eenb6dHyh6YVo7K27nYGd3KWfoUQrw/P5vivOk=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4f4c177-a8f8-433f-fbbf-08d72ea35615
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 06:12:15.2951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7dZr/LZQH02AkKyOLgNt2NrzREMcqPo38ohwiHgtTKaBD06ko/5pF0ED60W7VccugN9O6OmIw5XZ8LIjSZ8bgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB7038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Elon,
+Hi,=20
+>=20
+> This series adds a new ufs vops to allow platform specific methods for
+> resetting an attached UFS device, then implements this for the
+> Qualcomm driver.
+> This reset seems to be necessary for the majority of Dragonboard845c
+> devices.
+>=20
+> Bean requested in v3 that a software fallback mechanism, using
+> UIC_CMD_DME_END_PT_RST. I have not been successful in validating
+> that this
+> works for me, so I'm postponing this effort and hoping we can add it
+> incrementally at a later time.
+This series looks good to me.
+Yeah - We can add and test the uic command bail-out once this is accepted.
 
-Am Montag, 5. August 2019, 03:57:55 CEST schrieb Elon Zhang:
-> Add devicetree support for RK3399Pro TB-96AI board, one of
-> the 96Boards family.
-> 
-> The TB-96AI board is a 96Boards Compute SOM design, launched
-> by Linaro, Rockchip and Beiqicloud.
-> 
-> More information can be obtained from the following websites:
-> 1.https://www.96boards.org/product/tb-96ai/
-> 2.http://t.rock-chips.com/
-> 3.http://www.beiqicloud.com/
-> 
-> This patch add basic node for the board and support booting up
-> to Fedora.
-> 
-> Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
-> ---
-> changes since v1:
-> - remove needless node
-> - using a standard LED formats for 96Boards
-> 
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3399pro-tb-96ai.dts   | 560 ++++++++++++++++++
->  2 files changed, 561 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 5f2687acbf94..3d6c8d4363b5 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -27,3 +27,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-tb-96ai.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
-> new file mode 100644
-> index 000000000000..767b37b854ba
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
-> @@ -0,0 +1,560 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399pro.dtsi"
-> +#include "rk3399-opp.dtsi"
-> +
-> +/ {
-> +	compatible = "beiqi,rk3399pro-tb-96ai", "rockchip,rk3399pro";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	xin32k: xin32k {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "xin32k";
-> +		#clock-cells = <0>;
-> +	};
-
-I would guess this 32kHz clock does originate from the rk809 below?
-If so please simply adjust the clock-output-names in it, so that
-it sources correctly.
-
-> +
-> +	vcc5v0_sys: vccsys {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc5v0_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +	};
-
-Please always try to construct a full regulator tree.
-(see debugfs/regulator/regulator_summary)
-
-Part of me doesn't want to believe that vcc5v0_sys is
-the root regulator getting the outside power supply ;-) .
-
-
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&work_led1>,<&work_led2>,<&work_led3>;
-> +
-> +		work_led1 {
-> +			gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-> +			label = "system_work_led1";
-> +			retain-state-suspended;
-> +		};
-> +
-> +		work_led2 {
-> +			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
-> +			label = "system_work_led2";
-> +			retain-state-suspended;
-> +		};
-> +
-> +		work_led3 {
-> +			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-> +			label = "system_work_led3";
-> +			retain-state-suspended;
-> +		};
-> +	};
-> +};
-> +
-> +&cpu_l0 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_l1 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_l2 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_l3 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_b0 {
-> +	cpu-supply = <&vdd_cpu_b>;
-> +};
-> +
-> +&cpu_b1 {
-> +	cpu-supply = <&vdd_cpu_b>;
-> +};
-> +
-> +&emmc_phy {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +	i2c-scl-rising-time-ns = <180>;
-> +	i2c-scl-falling-time-ns = <30>;
-> +	clock-frequency = <400000>;
-> +
-> +	rk809: pmic@20 {
-> +		compatible = "rockchip,rk809";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <RK_PC2 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-names = "default", "pmic-sleep",
-> +				"pmic-power-off", "pmic-reset";
-> +		pinctrl-0 = <&pmic_int_l>;
-> +		pinctrl-1 = <&soc_slppin_slp>, <&rk809_slppin_slp>;
-> +		pinctrl-2 = <&soc_slppin_gpio>, <&rk809_slppin_pwrdn>;
-> +		pinctrl-3 = <&soc_slppin_gpio>,<&rk809_slppin_null>;
-> +		rockchip,system-power-controller;
-> +		pmic-reset-func = <1>;
-
-That is not part of the binding I think
-
-> +		wakeup-source;
-> +		#clock-cells = <1>;
-> +		clock-output-names = "rk808-clkout1", "rk808-clkout2";
-> +
-> +		vcc1-supply = <&vcc5v0_sys>;
-> +		vcc2-supply = <&vcc5v0_sys>;
-> +		vcc3-supply = <&vcc5v0_sys>;
-> +		vcc4-supply = <&vcc5v0_sys>;
-> +		vcc5-supply = <&vcc_buck5>;
-> +		vcc6-supply = <&vcc_buck5>;
-> +		vcc7-supply = <&vcc3v3_sys>;
-> +		vcc8-supply = <&vcc3v3_sys>;
-> +		vcc9-supply = <&vcc5v0_sys>;
-> +
-> +		pwrkey {
-> +			status = "okay";
-> +		};
-> +
-> +		rtc {
-> +			status = "okay";
-> +		};
-
-There is no binding for either pwrkey nor rtc subnodes and
-I think the rtc device is just created  in any case, so you should just
-drop these nodes.
-
-
-> +		pinctrl_rk8xx: pinctrl_rk8xx {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			rk809_slppin_null: rk809_slppin_null {
-> +				pins = "gpio_slp";
-> +				function = "pin_fun0";
-> +			};
-> +
-> +			rk809_slppin_slp: rk809_slppin_slp {
-> +				pins = "gpio_slp";
-> +				function = "pin_fun1";
-> +			};
-> +
-> +			rk809_slppin_pwrdn: rk809_slppin_pwrdn {
-> +				pins = "gpio_slp";
-> +				function = "pin_fun2";
-> +			};
-> +
-> +			rk809_slppin_rst: rk809_slppin_rst {
-> +				pins = "gpio_slp";
-> +				function = "pin_fun3";
-> +			};
-> +		};
-
-There is a binding for rk805 pinctrl, but it looks way different than this.
-Please adapt and if necessary submit binding+code for rk809 first.
-
-See Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
-for reference.
-
-
-> +		regulators {
-> +			vdd_center: DCDC_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <750000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vdd_center";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <900000>;
-> +				};
-> +			};
-> +
-> +			vdd_cpu_l: DCDC_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <750000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-ramp-delay = <6001>;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vdd_cpu_l";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_ddr: DCDC_REG3 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-name = "vcc_ddr";
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc3v3_sys: DCDC_REG4 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vcc3v3_sys";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_buck5: DCDC_REG5 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <2200000>;
-> +				regulator-max-microvolt = <2200000>;
-> +				regulator-name = "vcc_buck5";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <2200000>;
-> +				};
-> +			};
-> +
-> +			vcca_0v9: LDO_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-name = "vcca_0v9";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_1v8: LDO_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +
-> +				regulator-name = "vcc_1v8";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1800000>;
-> +				};
-> +			};
-> +
-> +			vcc0v9_soc: LDO_REG3 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +
-> +				regulator-name = "vcc0v9_soc";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <900000>;
-> +				};
-> +			};
-> +
-> +			vcca_1v8: LDO_REG4 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +
-> +				regulator-name = "vcca_1v8";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vdd1v5_dvp: LDO_REG5 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1500000>;
-> +				regulator-max-microvolt = <1500000>;
-> +
-> +				regulator-name = "vdd1v5_dvp";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_1v5: LDO_REG6 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1500000>;
-> +				regulator-max-microvolt = <1500000>;
-> +
-> +				regulator-name = "vcc_1v5";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_3v0: LDO_REG7 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3000000>;
-> +
-> +				regulator-name = "vcc_3v0";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vccio_sd: LDO_REG8 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +
-> +				regulator-name = "vccio_sd";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_sd: LDO_REG9 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +
-> +				regulator-name = "vcc_sd";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc5v0_usb: SWITCH_REG1 {
-> +				regulator-min-microvolt = <5000000>;
-> +				regulator-max-microvolt = <5000000>;
-> +
-> +				regulator-name = "vcc5v0_usb";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vccio_3v3: SWITCH_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +
-> +				regulator-name = "vccio_3v3";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	vdd_cpu_b: regulator@1c {
-> +		compatible = "fcs,fan53555";
-> +		reg = <0x1c>;
-> +		vin-supply = <&vcc5v0_sys>;
-> +		pinctrl-0 = <&vsel1_gpio>;
-> +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-
-I don't think there is a vsel-gpios propety specified yet and the
-fan53555 driver cannot handle that pin yet.
-You could change that ;-)
-
-> +		regulator-name = "vdd_cpu_b";
-> +		regulator-min-microvolt = <712500>;
-> +		regulator-max-microvolt = <1500000>;
-> +		regulator-ramp-delay = <2300>;
-> +		fcs,suspend-voltage-selector = <1>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-initial-state = <3>;
-> +		regulator-state-mem {
-> +			regulator-off-in-suspend;
-> +		};
-> +	};
-> +
-> +	vdd_gpu: regulator@10 {
-> +		compatible = "fcs,fan53555";
-> +		status = "okay";
-> +		reg = <0x10>;
-> +		vin-supply = <&vcc5v0_sys>;
-> +		pinctrl-0 = <&vsel2_gpio>;
-> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
-> +		regulator-name = "vdd_gpu";
-> +		regulator-min-microvolt = <735000>;
-> +		regulator-max-microvolt = <1400000>;
-> +		regulator-ramp-delay = <2300>;
-> +		fcs,suspend-voltage-selector = <1>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-state-mem {
-> +			regulator-off-in-suspend;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c8 {
-> +	status = "okay";
-> +	i2c-scl-rising-time-ns = <345>;
-> +	i2c-scl-falling-time-ns = <11>;
-> +	clock-frequency = <100000>;
-> +};
-> +
-> +&io_domains {
-> +	status = "okay";
-> +	bt656-supply = <&vcca_1v8>; /* APIO2_VDD */
-> +	audio-supply = <&vcca_1v8>; /* APIO5_VDD */
-> +	sdmmc-supply = <&vccio_sd>; /* SDMMC0_VDD */
-> +	gpio1830-supply = <&vcc_1v8>; /* APIO4_VDD */
-> +};
-> +
-> +&pinctrl {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&npu_ref_clk>;
-> +
-> +	leds {
-> +		work_led1: work_led1 {
-> +			rockchip,pins =
-> +				<2 5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		work_led2: work_led2 {
-> +			rockchip,pins =
-> +				<2 4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		work_led3: work_led3 {
-> +			rockchip,pins =
-> +				<2 3 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	npu_clk {
-> +		npu_ref_clk: npu-ref-clk {
-> +			rockchip,pins =
-> +				<0 RK_PA2 1 &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pmic {
-> +		pmic_int_l: pmic-int-l {
-> +			rockchip,pins =
-> +				<1 RK_PC2 0 &pcfg_pull_up>;
-> +		};
-> +
-> +		soc_slppin_gpio: soc-slppin-gpio {
-> +			rockchip,pins =
-> +				<1 RK_PA5 0 &pcfg_output_low>;
-> +		};
-> +
-> +		soc_slppin_slp: soc-slppin-slp {
-> +			rockchip,pins =
-> +				<1 RK_PA5 1 &pcfg_pull_down>;
-> +		};
-> +
-> +		vsel1_gpio: vsel1-gpio {
-> +			rockchip,pins =
-> +				<1 RK_PC1 0 &pcfg_pull_down>;
-> +		};
-> +
-> +		vsel2_gpio: vsel2-gpio {
-> +			rockchip,pins =
-> +				<1 RK_PB6 0 &pcfg_pull_down>;
-> +		};
-> +	};
-> +
-> +	usb3 {
-> +		usb3_host_en: usb3-host-en {
-> +			rockchip,pins =
-> +				<2 RK_PA2 RK_FUNC_GPIO &pcfg_output_high>;
-> +		};
-> +	};
-> +};
-> +
-> +&pmu_io_domains {
-> +	status = "okay";
-> +	pmu1830-supply = <&vcc_1v8>;
-> +};
-> +
-> +&pwm0 {
-> +	status = "okay";
-> +};
-> +
-> +&pwm2 {
-> +	status = "okay";
-> +};
-> +
-> +&saradc {
-> +	status = "okay";
-> +	vref-supply = <&vcc_1v8>;
-> +};
-> +
-> +&sdhci {
-> +	bus-width = <8>;
-> +	mmc-hs400-1_8v;
-> +	non-removable;
-> +	keep-power-in-suspend;
-> +	mmc-hs400-enhanced-strobe;
-> +	status = "okay";
-> +};
-> +
-> +&tcphy1 {
-> +	status = "okay";
-> +};
-> +
-> +&tsadc {
-> +	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
-> +	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
-> +	status = "okay";
-> +};
-> +
-> +&u2phy1 {
-> +	status = "okay";
-> +
-> +	u2phy1_otg: otg-port {
-> +		status = "okay";
-> +	};
-> +
-> +	u2phy1_host: host-port {
-> +		phy-supply = <&vcc5v0_usb>;
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_xfer &uart0_cts>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host1_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host1_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd3_1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb3_host_en>;
-> +};
-> +
-> +&usbdrd_dwc3_0 {
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd_dwc3_1 {
-> +	snps,dis-u3-autosuspend-quirk;
-
-This property is neither part of the dwc3 driver,
-nor the dwc3 devicetree binding.
-
-> +	status = "okay";
-> +};
-> +
-> 
-
-
-Heiko
-
-
+Thanks,
+Avri
