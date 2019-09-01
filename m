@@ -2,349 +2,162 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F23EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A6DC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073BC21897
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567340810;
-	bh=AVBb9fwlaY46pT+JHEnrqQivMCDtxZanMzR2apeR6UE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tLQU4oUoQ5EmWoatdnIgqeNU4KtxYcesRn4Pb6hMjMUrzI+PgEjsVv1HIlX14dSTk
-	 TIDcDYgTtLrSyWBN4qBJqvurvcyhJpor/RvYYYT1ibDN0hlP7SXKDHNdSvG00qGwjr
-	 gY/NCC72wpMrH69VJTHGfUCRk8tOCMdFsj7A5FEk=
+	by mail.kernel.org (Postfix) with ESMTP id 2838722CF7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbfIAM0t (ORCPT
+        id S1728773AbfIAMmn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 08:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbfIAMYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 08:24:18 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E8A2377D;
-        Sun,  1 Sep 2019 12:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567340656;
-        bh=AVBb9fwlaY46pT+JHEnrqQivMCDtxZanMzR2apeR6UE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9TVSLOZo9yqtjHN9+o3OQNyyj+SJSJbVKeaT3ngD9Bdun5CGTd77bOiSKMlJomwd
-         xceAEe8Bx1FVgNaX094KFlDfWJJIBl/wa/Lgi9ihSuSxCANdkTc+1MQJn+20J+75PB
-         2swL3g12fEfcUaMPGHEXv5ZTWKvcSXiGQv+a2t/M=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 13/47] perf tools: Remove needless perf.h include directive from headers
-Date:   Sun,  1 Sep 2019 09:22:52 -0300
-Message-Id: <20190901122326.5793-14-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190901122326.5793-1-acme@kernel.org>
-References: <20190901122326.5793-1-acme@kernel.org>
+        Sun, 1 Sep 2019 08:42:43 -0400
+Received: from mail-oln040092066099.outbound.protection.outlook.com ([40.92.66.99]:25667
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728552AbfIAMmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 08:42:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jnkDoGbOiLE2qYg5gXIeThcVZohkw3lGTvhz1PSyyGjGEFFnI1WbuSQ2zVJNtTHt25Yf7jua2mdnUe1Kxil2VPX9rT7HfgWr3uSAW3I4TJKuIBeDDdvviCavTQhOb5GaDGDgE3HO6Ta9TkNcp1lD6+3YxK/G5pYfPp4bu+4Jguv0dM+fZFxkQJQyuTCUQ+9K4N8bOOvLj0/EsHnAWmHzxq5TBkAiyZrGWtaO4p0uOHMDk3cbAWjCJ9gc9a3rvuHiSYulElpL6QeTpTqeGTcu6CgRUTQ5cO7sy4C/eMpDLlJzIKl97jmCFP7quVdvVcIdaGG4oPw4ZAwT4fSQ+Od9AQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0ITTUGBEC6vuk6g7mp7xWMIQ1rcw343w+qmGi/CSXN4=;
+ b=A/Um0Sx3rT7R+NH/jMMDQ9i4at92DHAYtc+CULvek6i1W0VYU905Dv10N46TJx126Cj9GewHfxABY0x/kOt+t7Uw2TCsnbNaBF479p454SgnoI5CWywj1d1U4mJ2uH32VI96sGfa1LO1djzfG3YHcuMSFX7wzs43H3httFk25otCt/2Mr22eZbzIyDJhEYLwuCZB5krjwK5hzRN0q4gp5V5zqL8kALfA2khscFgF6wb75iKb7OxCqKXRihG7H1bxyvOYuiqS2Iurdq7u0xDnMi66xKZ8N15XlExN+UY23+hW26+IqvPi5RpOab19QPImS6nm5WU0XgaJxTp1NQEmCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HE1EUR01FT057.eop-EUR01.prod.protection.outlook.com
+ (10.152.0.60) by HE1EUR01HT143.eop-EUR01.prod.protection.outlook.com
+ (10.152.1.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.16; Sun, 1 Sep
+ 2019 12:42:36 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.0.52) by
+ HE1EUR01FT057.mail.protection.outlook.com (10.152.0.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.16 via Frontend Transport; Sun, 1 Sep 2019 12:42:36 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::a0ba:e766:2a23:2088]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::a0ba:e766:2a23:2088%3]) with mapi id 15.20.2199.021; Sun, 1 Sep 2019
+ 12:42:36 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH RFC 00/12] media: hantro: H264 fixes and improvements
+Thread-Topic: [PATCH RFC 00/12] media: hantro: H264 fixes and improvements
+Thread-Index: AQHVYMK7ybJvfQx/EkSu6izc1mlMgw==
+Date:   Sun, 1 Sep 2019 12:42:35 +0000
+Message-ID: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0401CA0044.eurprd04.prod.outlook.com
+ (2603:10a6:3:19::12) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:606DA59343B34EFEF8CB182B89E40F4A881915CACA35D383DD78BD24CA3E6686;UpperCasedChecksum:C161D1087CE68C10B779ECF33C07EB2BEA2C8B74F490B7E2BE85456961E50778;SizeAsReceived:7824;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [g+/LAtbl95M1BjUcmQx3COL8wA0E5cH9]
+x-microsoft-original-message-id: <20190901124220.23568-1-jonas@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119158)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1603102475)(1701031045);SRVR:HE1EUR01HT143;
+x-ms-traffictypediagnostic: HE1EUR01HT143:
+x-ms-exchange-purlcount: 4
+x-microsoft-antispam-message-info: MVD3DMTecQzPPjiEoJEGD+paIuZ71esNAB4okw3gkb4Yj8A+OYvxD4dhUpp6NUX/vAYs7VpYcdcn7WNGdmpGUrnbUcVkeIxRQLZTV+MeelGO2pOz798vs5iJhKmecvAyAA1ocg4wytYSfqN5LeHXHsNy0jcHBi/85t8/An+SqxS0D5kdJvgslNDfqLNvnT6X
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2db92e7f-9b8f-4b2b-834b-08d72ed9dd74
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 12:42:35.8942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+This series contains fixes and improvements for the hantro H264 decoder.
 
-Its not needed there, add it to the places that need it and were getting
-it via those headers.
+Patch 1-6 fixes issues and limitations observed when preparing support
+for field encoded content.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5yulx1u16vyd0zmrbg1tjhju@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-c2c.c            | 1 +
- tools/perf/builtin-diff.c           | 1 +
- tools/perf/builtin-record.c         | 1 +
- tools/perf/builtin-script.c         | 1 +
- tools/perf/builtin-stat.c           | 1 +
- tools/perf/builtin-trace.c          | 1 +
- tools/perf/perf.c                   | 1 +
- tools/perf/ui/browsers/hists.c      | 1 +
- tools/perf/ui/browsers/res_sample.c | 1 +
- tools/perf/ui/browsers/scripts.c    | 1 +
- tools/perf/ui/hist.c                | 1 +
- tools/perf/ui/tui/setup.c           | 1 +
- tools/perf/util/auxtrace.h          | 1 -
- tools/perf/util/callchain.c         | 1 +
- tools/perf/util/event.c             | 1 +
- tools/perf/util/event.h             | 1 -
- tools/perf/util/evlist.c            | 1 +
- tools/perf/util/evlist.h            | 1 -
- tools/perf/util/mmap.c              | 1 +
- tools/perf/util/session.c           | 1 +
- tools/perf/util/top.c               | 1 +
- 21 files changed, 18 insertions(+), 3 deletions(-)
+Patch 7 introduce new DPB entry flags that is used to signal how a reference
+frame is referenced. This information is needed to correctly build a
+reference list for field encoded content.
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 8335a4076a5a..25a5f186dfde 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -35,6 +35,7 @@
- #include "thread.h"
- #include "mem2node.h"
- #include "symbol.h"
-+#include "../perf.h"
- 
- struct c2c_hists {
- 	struct hists		hists;
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 51c37e53b3d8..ae4a8ebf90d2 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -6,6 +6,7 @@
-  * DSOs and symbol information, sort them and produce a diff.
-  */
- #include "builtin.h"
-+#include "perf.h"
- 
- #include "util/debug.h"
- #include "util/event.h"
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index bd2a0cc6eb52..56705d2a6bec 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -42,6 +42,7 @@
- #include "util/units.h"
- #include "util/bpf-event.h"
- #include "asm/bug.h"
-+#include "perf.h"
- 
- #include <errno.h>
- #include <inttypes.h>
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 37297b67905d..f3b31c6ed15f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -53,6 +53,7 @@
- #include <perf/evlist.h>
- #include "util/record.h"
- #include "util/util.h"
-+#include "perf.h"
- 
- #include <linux/ctype.h>
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 2741bcb049fb..fa4212dac9bb 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -41,6 +41,7 @@
-  */
- 
- #include "builtin.h"
-+#include "perf.h"
- #include "util/cgroup.h"
- #include <subcmd/parse-options.h>
- #include "util/parse-events.h"
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 6d9805a8791b..105695033ebc 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -51,6 +51,7 @@
- #include "string2.h"
- #include "syscalltbl.h"
- #include "rb_resort.h"
-+#include "../perf.h"
- 
- #include <errno.h>
- #include <inttypes.h>
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index a95a248a7421..237b9b3a1bf1 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -8,6 +8,7 @@
-  * perf top, perf record, perf report, etc.) are started.
-  */
- #include "builtin.h"
-+#include "perf.h"
- 
- #include "util/env.h"
- #include <subcmd/exec-cmd.h>
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 30547fdb0787..ccc37284860b 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -22,6 +22,7 @@
- #include "../../util/top.h"
- #include "../../util/thread.h"
- #include "../../arch/common.h"
-+#include "../../perf.h"
- 
- #include "../browsers/hists.h"
- #include "../helpline.h"
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 41a9d8923ec4..db3954fea74c 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -8,6 +8,7 @@
- #include "time-utils.h"
- #include "../util.h"
- #include "../../util/util.h"
-+#include "../../perf.h"
- #include <linux/time64.h>
- #include <linux/zalloc.h>
- 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 50e0c03171f2..e63f3778d75c 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "../../builtin.h"
-+#include "../../perf.h"
- #include "../../util/sort.h"
- #include "../../util/util.h"
- #include "../../util/hist.h"
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index e5fb64347b2c..ae29f16979ac 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -9,6 +9,7 @@
- #include "../util/sort.h"
- #include "../util/evsel.h"
- #include "../util/evlist.h"
-+#include "../perf.h"
- 
- /* hist period print (hpp) functions */
- 
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index 3ad0d3363ac6..2881982b483c 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -11,6 +11,7 @@
- #include "../../util/cache.h"
- #include "../../util/debug.h"
- #include "../../util/util.h"
-+#include "../../perf.h"
- #include "../browser.h"
- #include "../helpline.h"
- #include "../ui.h"
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 1fa8a965b03f..bc39cc5610a8 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -17,7 +17,6 @@
- #include <asm/bitsperlong.h>
- #include <asm/barrier.h>
- 
--#include "../perf.h"
- #include "event.h"
- #include "session.h"
- #include "debug.h"
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index dd6e01000385..a47d0e8c2434 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -28,6 +28,7 @@
- #include "callchain.h"
- #include "branch.h"
- #include "symbol.h"
-+#include "../perf.h"
- 
- #define CALLCHAIN_PARAM_DEFAULT			\
- 	.mode		= CHAIN_GRAPH_ABS,	\
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 7fa7a303e476..ef7fc574f701 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -30,6 +30,7 @@
- #include "stat.h"
- #include "session.h"
- #include "bpf-event.h"
-+#include "../perf.h"
- 
- #define DEFAULT_PROC_MAP_PARSE_TIMEOUT 500
- 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 4c0c5232bd41..f56d268f06e3 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -9,7 +9,6 @@
- #include <linux/perf_event.h>
- #include <perf/event.h>
- 
--#include "../perf.h"
- #include "build-id.h"
- #include "perf_regs.h"
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 253dd8dd0e12..71b231c7097f 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -17,6 +17,7 @@
- #include "debug.h"
- #include "units.h"
- #include "util.h"
-+#include "../perf.h"
- #include "asm/bug.h"
- #include "bpf-event.h"
- #include <signal.h>
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 16796de7af3f..ee288644e9e4 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -9,7 +9,6 @@
- #include <api/fd/array.h>
- #include <stdio.h>
- #include <internal/evlist.h>
--#include "../perf.h"
- #include "event.h"
- #include "evsel.h"
- #include "mmap.h"
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 5f3532e51ec9..28477ff5114e 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -16,6 +16,7 @@
- #include "debug.h"
- #include "event.h"
- #include "mmap.h"
-+#include "../perf.h"
- #include "util.h" /* page_size */
- 
- size_t perf_mmap__mmap_len(struct perf_mmap *map)
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 9eb843e5e6f0..82bd5d4361f0 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -29,6 +29,7 @@
- #include "sample-raw.h"
- #include "stat.h"
- #include "util.h"
-+#include "../perf.h"
- #include "arch/common.h"
- 
- #ifdef HAVE_ZSTD_SUPPORT
-diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
-index e5b690cf2898..51fb574998bb 100644
---- a/tools/perf/util/top.c
-+++ b/tools/perf/util/top.c
-@@ -12,6 +12,7 @@
- #include "parse-events.h"
- #include "symbol.h"
- #include "top.h"
-+#include "../perf.h"
- #include <inttypes.h>
- 
- #define SNPRINTF(buf, size, fmt, args...) \
+Patch 8 adds bits to handle field encoded content, this is a rough patch
+and should be reworked with proper code style and formatting.
+Please get back with feedback on how to improve this.
+
+The following samples from [1] are now playable with patch 1-8
+- H264_1080i-25-interlace_Kaesescheibchen.mkv
+- H264_10_1080i_50_AC3-Astra19.2_ProSieben_HD.ts
+- big_buck_bunny_1080p_H264_AAC_25fps_7200K.mp4
+- h264_tivo_sample.ts
+
+The rest of the patches refactors G1 H264 code to more closely match
+the code generated by my rockchip-vpu-regtool at [2] and then adds
+support for H264 decoding on RK3399/RK3328 using the VPU2 block.
+This code is early work and needs proper code style and formatting,
+I just wanted to share the early work and get some initial feedback.
+
+This series has been tested using ffmpeg v4l2 request hwaccel at [3] [4]
+
+[1] http://kwiboo.libreelec.tv/test/samples/
+[2] https://github.com/Kwiboo/rockchip-vpu-regtool
+[3] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.0.4
+[4] https://github.com/Kwiboo/FFmpeg/compare/4.0.4-Leia-18.4...45df99d31062e068073cf899dce559e334c9127f
+
+Regards,
+Jonas
+
+Jonas Karlman (12):
+  media: hantro: Fix H264 max frmsize supported on RK3288
+  media: hantro: Do not reorder H264 scaling list
+  media: hantro: Fix H264 motion vector buffer offset
+  media: hantro: Reduce H264 extra space for motion vectors
+  media: hantro: Remove now unused H264 pic_size
+  media: hantro: Set H264 FIELDPIC_FLAG_E flag correctly
+  media: uapi: h264: Add DPB entry field reference flags
+  media: hantro: Fix H264 decoding of field encoded content
+  media: hantro: Refactor G1 H264 code
+  media: hantro: Add support for H264 decoding on RK3399
+  media: hantro: Enable H264 decoding on RK3399
+  media: hantro: Enable H264 decoding on RK3328
+
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |  12 +
+ drivers/staging/media/hantro/Makefile         |   1 +
+ .../staging/media/hantro/hantro_g1_h264_dec.c | 685 +++++++++++-------
+ drivers/staging/media/hantro/hantro_h264.c    | 209 +++---
+ drivers/staging/media/hantro/hantro_hw.h      |  10 +-
+ drivers/staging/media/hantro/hantro_v4l2.c    |   6 +-
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |   4 +-
+ drivers/staging/media/hantro/rk3399_vpu_hw.c  |  24 +-
+ .../media/hantro/rk3399_vpu_hw_h264_dec.c     | 486 +++++++++++++
+ include/media/h264-ctrls.h                    |   4 +
+ 10 files changed, 1091 insertions(+), 350 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/rk3399_vpu_hw_h264_dec.c
+
 -- 
-2.21.0
+2.17.1
 
