@@ -2,180 +2,136 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D881C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 06:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21875C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 06:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6D3233A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 06:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68DC2190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 06:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIuk7Q+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfIAG4w (ORCPT
+        id S1728774AbfIAG7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 02:56:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39192 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbfIAG4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 02:56:51 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 077F2C057F23
-        for <linux-kernel@vger.kernel.org>; Sun,  1 Sep 2019 06:56:51 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id v16so12141384qtp.14
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 23:56:50 -0700 (PDT)
+        Sun, 1 Sep 2019 02:59:45 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44272 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfIAG7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 02:59:44 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so5630822pgl.11
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 23:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ksunGhRAcBahaT7W6iFOAG/wY/nv2ICL8Nw4My/hTvE=;
+        b=MIuk7Q+K0WGao5uA3+VT0F2UNG7iwCxqBSE3s47K4thfifDSTYwyUFGzXF/qoFpSBX
+         z3brLVeOyzjpV8s2XT1vH+xfHi3Xk5b/bNVvYDbcL7im++/PERMrJLdfY1eTyGKvxoGa
+         9eRAO748Aku/xxXieY04PW/9NSWhsVTk9dDiAesdTlqJ97ky109hWip/JU5/RI0xjc+k
+         ccUjrK3gp8td295bQnEGbwoPJf29paBnNDB+dBu3QGBDo80SiWzr2U4V9dc9I5oA5oR4
+         xCDChSYDqOBLbqsFNp1Db3FmpOlaJltxDG1YJPiAUxt+YmtWBB9VUPKMar0qExkrvx7D
+         HfNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UW9CVZWWp/DmXfhS0ymox5ZMSVNVKNMeicZiRHV6nTI=;
-        b=ZMYtPare0ibJapUE7lOzp9ultAZxLJwtycb0KgpaJpL1k2lHjuKrZh0kaO/kZlFd14
-         ilJhKLRcYpJghK/XlcATcq1uYHjYKu3ICp7Rz7VdDkCeaXBHUG4H7QB8aum/4mfP6nwh
-         gakEcSfXxulzbDYZVJsyIpLh79PpBxcetjlnogK3pTMFtXA32i/npWwoQUjjdfl2VbG7
-         WF24nPgub3iZPrjHimy7+tR0hIK12WDmjR/sc/fP83uYmLLD2LZKYXqthYoKKtVNckWN
-         ut2YVhct2J8MgIbDi7Z4u3xuUVCk3+bhc6LRlVzUNcAcpc0h1kkQkzG/b+vyHNlNui9C
-         Z9oQ==
-X-Gm-Message-State: APjAAAUtNYg5lrKU02pVDo2JfIx5/WNVXnVql9J1/DYb9d25xZs8k/Ae
-        oj7BSjY94DcxOkm/hnndRhAcAiJOPXraOv0RTR6Aiw4wJLbImQgQec3B91buKquBteqtGEtmoUM
-        nEx+xW85Najza/LiCRC1NbZ46
-X-Received: by 2002:a37:a411:: with SMTP id n17mr23142379qke.216.1567321010323;
-        Sat, 31 Aug 2019 23:56:50 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxPKZ+Vuh8zQ97EQPv9t8FqbPGIvcdvksLy9917GAkHcy++oRW46I0ZqIJtBQeoHzJyWxhR6w==
-X-Received: by 2002:a37:a411:: with SMTP id n17mr23142366qke.216.1567321010113;
-        Sat, 31 Aug 2019 23:56:50 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
-        by smtp.gmail.com with ESMTPSA id p59sm4831049qtd.75.2019.08.31.23.56.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ksunGhRAcBahaT7W6iFOAG/wY/nv2ICL8Nw4My/hTvE=;
+        b=qrX/SzyuLXN3IIHuhXCEtRIY8+3is1o2blpj4BtFGEQP16lgCsORoXeAEvYRzFi5IL
+         hTgIhpbH1TmadwJZn4caFaiTBomOmEd03UZO2JqgpCuVez/W7bMTe1e9q14lXC4YL+Pw
+         mDsO6cadnEC/8ic+BpOMkUxJ0BYfP17KRcuyHll6jGvQUPxtuaBQDLxdS3+njAX/AMvI
+         GeEUpFXyaa7tTbsxzXjDTgCBDcMvw1wYdUKj8XySxpeO/mnnHS6dte6QfjZFkkt1tSNl
+         sHa/PxysY1V5xm4jjQvvLjfYalWie9bpH9pdzYS6QwKwVHfJcV9gnn0ggWM+0SwvXrSc
+         ue4Q==
+X-Gm-Message-State: APjAAAXVE4i4xzRh3FCOgGhWkgL4iaZkx+o72rJk5yV7Q4gpIluxbQmm
+        9DdodWnZivUtWVZWbxk8R/I=
+X-Google-Smtp-Source: APXvYqyw3yfPJHl7dWO6wj8ONfTdvPpAfPr2Wvs2WIpDI5auHtERzSlOOZc8ng3grq9X4d+6S+qU9g==
+X-Received: by 2002:aa7:809a:: with SMTP id v26mr28118651pff.82.1567321184092;
+        Sat, 31 Aug 2019 23:59:44 -0700 (PDT)
+Received: from localhost.localdomain (ip-103-85-38-221.syd.xi.com.au. [103.85.38.221])
+        by smtp.gmail.com with ESMTPSA id i6sm3326055pfq.20.2019.08.31.23.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 23:56:49 -0700 (PDT)
-Date:   Sun, 1 Sep 2019 02:56:44 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190901024525-mutt-send-email-mst@kernel.org>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org>
- <20190830094059.c7qo5cxrp2nkrncd@steredhat>
+        Sat, 31 Aug 2019 23:59:43 -0700 (PDT)
+From:   Adam Zerella <adam.zerella@gmail.com>
+Cc:     Adam Zerella <adam.zerella@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/xen/efi: Fix EFI variable 'name' type conversion
+Date:   Sun,  1 Sep 2019 16:58:28 +1000
+Message-Id: <20190901065828.7762-1-adam.zerella@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830094059.c7qo5cxrp2nkrncd@steredhat>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:40:59AM +0200, Stefano Garzarella wrote:
-> On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
-> > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> > > Since virtio-vsock was introduced, the buffers filled by the host
-> > > and pushed to the guest using the vring, are directly queued in
-> > > a per-socket list. These buffers are preallocated by the guest
-> > > with a fixed size (4 KB).
-> > > 
-> > > The maximum amount of memory used by each socket should be
-> > > controlled by the credit mechanism.
-> > > The default credit available per-socket is 256 KB, but if we use
-> > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > > guest will continue to fill the vring with new 4 KB free buffers
-> > > to avoid starvation of other sockets.
-> > > 
-> > > This patch mitigates this issue copying the payload of small
-> > > packets (< 128 bytes) into the buffer of last packet queued, in
-> > > order to avoid wasting memory.
-> > > 
-> > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > 
-> > This is good enough for net-next, but for net I think we
-> > should figure out how to address the issue completely.
-> > Can we make the accounting precise? What happens to
-> > performance if we do?
-> > 
-> 
-> Since I'm back from holidays, I'm restarting this thread to figure out
-> how to address the issue completely.
-> 
-> I did a better analysis of the credit mechanism that we implemented in
-> virtio-vsock to get a clearer view and I'd share it with you:
-> 
->     This issue affect only the "host->guest" path. In this case, when the
->     host wants to send a packet to the guest, it uses a "free" buffer
->     allocated by the guest (4KB).
->     The "free" buffers available for the host are shared between all
->     sockets, instead, the credit mechanism is per-socket, I think to
->     avoid the starvation of others sockets.
->     The guests re-fill the "free" queue when the available buffers are
->     less than half.
-> 
->     Each peer have these variables in the per-socket state:
->        /* local vars */
->        buf_alloc        /* max bytes usable by this socket
->                            [exposed to the other peer] */
->        fwd_cnt          /* increased when RX packet is consumed by the
->                            user space [exposed to the other peer] */
->        tx_cnt 	        /* increased when TX packet is sent to the other peer */
-> 
->        /* remote vars  */
->        peer_buf_alloc   /* peer's buf_alloc */
->        peer_fwd_cnt     /* peer's fwd_cnt */
-> 
->     When a peer sends a packet, it increases the 'tx_cnt'; when the
->     receiver consumes the packet (copy it to the user-space buffer), it
->     increases the 'fwd_cnt'.
->     Note: increments are made considering the payload length and not the
->     buffer length.
-> 
->     The value of 'buf_alloc' and 'fwd_cnt' are sent to the other peer in
->     all packet headers or with an explicit CREDIT_UPDATE packet.
-> 
->     The local 'buf_alloc' value can be modified by the user space using
->     setsockopt() with optname=SO_VM_SOCKETS_BUFFER_SIZE.
-> 
->     Before to send a packet, the peer checks the space available:
->     	credit_available = peer_buf_alloc - (tx_cnt - peer_fwd_cnt)
->     and it will send up to credit_available bytes to the other peer.
-> 
-> Possible solutions considering Michael's advice:
-> 1. Use the buffer length instead of the payload length when we increment
->    the counters:
->   - This approach will account precisely the memory used per socket.
->   - This requires changes in both guest and host.
->   - It is not compatible with old drivers, so a feature should be negotiated.
-> 2. Decrease the advertised 'buf_alloc' taking count of bytes queued in
->    the socket queue but not used. (e.g. 256 byte used on 4K available in
->    the buffer)
->   - pkt->hdr.buf_alloc = buf_alloc - bytes_not_used.
->   - This should be compatible also with old drivers.
-> 
-> Maybe the second is less invasive, but will it be too tricky?
-> Any other advice or suggestions?
-> 
-> Thanks in advance,
-> Stefano
+This resolves a type conversion from 'char *' to 'unsigned short'.
+and static usage warning as hinted by Sparse.
 
-OK let me try to clarify.  The idea is this:
+Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
+---
+ arch/x86/xen/efi.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Let's say we queue a buffer of 4K, and we copy if len < 128 bytes.  This
-means that in the worst case (128 byte packets), each byte of credit in
-the socket uses up 4K/128 = 16 bytes of kernel memory. In fact we need
-to also account for the virtio_vsock_pkt since I think it's kept around
-until userspace consumes it.
-
-Thus given X buf alloc allowed in the socket, we should publish X/16
-credits to the other side. This will ensure the other side does not send
-more than X/16 bytes for a given socket and thus we won't need to
-allocate more than X bytes to hold the data.
-
-We can play with the copy break value to tweak this.
-
-
+diff --git a/arch/x86/xen/efi.c b/arch/x86/xen/efi.c
+index 0d3365cb64de..1d4eff6c6f06 100644
+--- a/arch/x86/xen/efi.c
++++ b/arch/x86/xen/efi.c
+@@ -118,8 +118,8 @@ static enum efi_secureboot_mode xen_efi_get_secureboot(void)
+ 	unsigned long size;
+ 
+ 	size = sizeof(secboot);
+-	status = efi.get_variable(L"SecureBoot", &efi_variable_guid,
+-				  NULL, &size, &secboot);
++	status = efi.get_variable((efi_char16_t *)L"SecureBoot",
++				  &efi_variable_guid, NULL, &size, &secboot);
+ 
+ 	if (status == EFI_NOT_FOUND)
+ 		return efi_secureboot_mode_disabled;
+@@ -128,8 +128,8 @@ static enum efi_secureboot_mode xen_efi_get_secureboot(void)
+ 		goto out_efi_err;
+ 
+ 	size = sizeof(setupmode);
+-	status = efi.get_variable(L"SetupMode", &efi_variable_guid,
+-				  NULL, &size, &setupmode);
++	status = efi.get_variable((efi_char16_t *)L"SetupMode",
++				  &efi_variable_guid, NULL, &size, &setupmode);
+ 
+ 	if (status != EFI_SUCCESS)
+ 		goto out_efi_err;
+@@ -139,8 +139,8 @@ static enum efi_secureboot_mode xen_efi_get_secureboot(void)
+ 
+ 	/* See if a user has put the shim into insecure mode. */
+ 	size = sizeof(moksbstate);
+-	status = efi.get_variable(L"MokSBStateRT", &shim_guid,
+-				  NULL, &size, &moksbstate);
++	status = efi.get_variable((efi_char16_t *)L"MokSBStateRT",
++				  &shim_guid, NULL, &size, &moksbstate);
+ 
+ 	/* If it fails, we don't care why. Default to secure. */
+ 	if (status != EFI_SUCCESS)
+@@ -158,7 +158,7 @@ static enum efi_secureboot_mode xen_efi_get_secureboot(void)
+ 	return efi_secureboot_mode_unknown;
+ }
+ 
+-void __init xen_efi_init(struct boot_params *boot_params)
++static void __init xen_efi_init(struct boot_params *boot_params)
+ {
+ 	efi_system_table_t *efi_systab_xen;
+ 
+-- 
+2.21.0
 
