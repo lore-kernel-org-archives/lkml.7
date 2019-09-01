@@ -2,216 +2,99 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B54C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B85C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323C52339D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A227B2190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfIAKSI (ORCPT
+        id S1728892AbfIAK0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 06:18:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46626 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728390AbfIAKSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 06:18:06 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC80DC049E23
-        for <linux-kernel@vger.kernel.org>; Sun,  1 Sep 2019 10:18:05 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id z20so7334575qtn.12
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 03:18:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=axJqbhswXeuOWGgZcXN6xzgPqVPx/M1YxoiXUe2de6s=;
-        b=e64sKCfzvXPDdXGD3u6XOE/TUsXIAgiXQOknoVbCwmrXUNlM697YdL8DfQzGxdM46M
-         1qXAyCYGkMxj3Th8c6OqFM8qgkN5xfe+R4f81NRtEstiC/fIa3xq6230t33ob3nLWHI9
-         K6fNTV3N9s+VopUs+KD+C2BgLl1NB3ztHSQ1O1QeF54HkdiTg6bqMlvnAPiVa/D/6yY2
-         Ot2CzKWhzQkcNQ81zgoUs+6xaklSP3gqaF1XPjxHytNHDsEgF+W8UaxAIZ6Hbp4JXWB3
-         HzTFNJfPum7sv/JeI4s+WTNTaYn8KVo0cmzmzELIWLYNUaLMRU4HoHoX0sFcdYFDDyb5
-         6D2Q==
-X-Gm-Message-State: APjAAAX53+04v38tlAJVhi6QxJ2MrI4zu0zSQOFu16wPb4tVpoQeRkma
-        T37nJiGx9Xd71oL/p3mzNQrJUp2XIFDvUBXIlIiOojZb5UiqGoPA6Wmyhvcj2B7jFYcpt9MhWYB
-        w49DjOpu2PJMViAWysvqdk/rN
-X-Received: by 2002:ac8:140e:: with SMTP id k14mr1730709qtj.43.1567333085151;
-        Sun, 01 Sep 2019 03:18:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzmBSko76tGrsjEVoDETjc5RIhvsiH7pkCTt5b9+kKolAiuij4rSE64EAbMBV9kXwEbUo1J/w==
-X-Received: by 2002:ac8:140e:: with SMTP id k14mr1730693qtj.43.1567333084878;
-        Sun, 01 Sep 2019 03:18:04 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
-        by smtp.gmail.com with ESMTPSA id s4sm5173520qkb.130.2019.09.01.03.18.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 03:18:03 -0700 (PDT)
-Date:   Sun, 1 Sep 2019 06:17:58 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190901061707-mutt-send-email-mst@kernel.org>
-References: <20190729114302-mutt-send-email-mst@kernel.org>
- <20190729161903.yhaj5rfcvleexkhc@steredhat>
- <20190729165056.r32uzj6om3o6vfvp@steredhat>
- <20190729143622-mutt-send-email-mst@kernel.org>
- <20190730093539.dcksure3vrykir3g@steredhat>
- <20190730163807-mutt-send-email-mst@kernel.org>
- <20190801104754.lb3ju5xjfmnxioii@steredhat>
- <20190801091106-mutt-send-email-mst@kernel.org>
- <20190801133616.sik5drn6ecesukbb@steredhat>
- <20190901025815-mutt-send-email-mst@kernel.org>
+        Sun, 1 Sep 2019 06:26:36 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47989 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbfIAK0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 06:26:36 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 7577382318; Sun,  1 Sep 2019 12:26:20 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 12:26:33 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] leds: is31fl32xx: Use struct_size() helper
+Message-ID: <20190901102633.GB29681@amd>
+References: <20190830181448.GA24483@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
 Content-Disposition: inline
-In-Reply-To: <20190901025815-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190830181448.GA24483@embeddedor>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 04:26:19AM -0400, Michael S. Tsirkin wrote:
-> On Thu, Aug 01, 2019 at 03:36:16PM +0200, Stefano Garzarella wrote:
-> > On Thu, Aug 01, 2019 at 09:21:15AM -0400, Michael S. Tsirkin wrote:
-> > > On Thu, Aug 01, 2019 at 12:47:54PM +0200, Stefano Garzarella wrote:
-> > > > On Tue, Jul 30, 2019 at 04:42:25PM -0400, Michael S. Tsirkin wrote:
-> > > > > On Tue, Jul 30, 2019 at 11:35:39AM +0200, Stefano Garzarella wrote:
-> > > > 
-> > > > (...)
-> > > > 
-> > > > > > 
-> > > > > > The problem here is the compatibility. Before this series virtio-vsock
-> > > > > > and vhost-vsock modules had the RX buffer size hard-coded
-> > > > > > (VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE = 4K). So, if we send a buffer smaller
-> > > > > > of 4K, there might be issues.
-> > > > > 
-> > > > > Shouldn't be if they are following the spec. If not let's fix
-> > > > > the broken parts.
-> > > > > 
-> > > > > > 
-> > > > > > Maybe it is the time to add add 'features' to virtio-vsock device.
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > Stefano
-> > > > > 
-> > > > > Why would a remote care about buffer sizes?
-> > > > > 
-> > > > > Let's first see what the issues are. If they exist
-> > > > > we can either fix the bugs, or code the bug as a feature in spec.
-> > > > > 
-> > > > 
-> > > > The vhost_transport '.stream_enqueue' callback
-> > > > [virtio_transport_stream_enqueue()] calls the virtio_transport_send_pkt_info(),
-> > > > passing the user message. This function allocates a new packet, copying
-> > > > the user message, but (before this series) it limits the packet size to
-> > > > the VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE (4K):
-> > > > 
-> > > > static int virtio_transport_send_pkt_info(struct vsock_sock *vsk,
-> > > > 					  struct virtio_vsock_pkt_info *info)
-> > > > {
-> > > >  ...
-> > > > 	/* we can send less than pkt_len bytes */
-> > > > 	if (pkt_len > VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE)
-> > > > 		pkt_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
-> > > > 
-> > > > 	/* virtio_transport_get_credit might return less than pkt_len credit */
-> > > > 	pkt_len = virtio_transport_get_credit(vvs, pkt_len);
-> > > > 
-> > > > 	/* Do not send zero length OP_RW pkt */
-> > > > 	if (pkt_len == 0 && info->op == VIRTIO_VSOCK_OP_RW)
-> > > > 		return pkt_len;
-> > > >  ...
-> > > > }
-> > > > 
-> > > > then it queues the packet for the TX worker calling .send_pkt()
-> > > > [vhost_transport_send_pkt() in the vhost_transport case]
-> > > > 
-> > > > The main function executed by the TX worker is
-> > > > vhost_transport_do_send_pkt() that picks up a buffer from the virtqueue
-> > > > and it tries to copy the packet (up to 4K) on it.  If the buffer
-> > > > allocated from the guest will be smaller then 4K, I think here it will
-> > > > be discarded with an error:
-> > > > 
-> > 
-> > I'm adding more lines to explain better.
-> > 
-> > > > static void
-> > > > vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
-> > > > 				struct vhost_virtqueue *vq)
-> > > > {
-> > 		...
-> > 
-> > 		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
-> > 					 &out, &in, NULL, NULL);
-> > 
-> > 		...
-> > 
-> > 		len = iov_length(&vq->iov[out], in);
-> > 		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, len);
-> > 
-> > 		nbytes = copy_to_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
-> > 		if (nbytes != sizeof(pkt->hdr)) {
-> > 			virtio_transport_free_pkt(pkt);
-> > 			vq_err(vq, "Faulted on copying pkt hdr\n");
-> > 			break;
-> > 		}
-> > 
-> > > >  ...
-> > > > 		nbytes = copy_to_iter(pkt->buf, pkt->len, &iov_iter);
-> > > 
-> > > isn't pck len the actual length though?
-> > > 
-> > 
-> > It is the length of the packet that we are copying in the guest RX
-> > buffers pointed by the iov_iter. The guest allocates an iovec with 2
-> > buffers, one for the header and one for the payload (4KB).
-> 
-> BTW at the moment that forces another kmalloc within virtio core. Maybe
-> vsock needs a flag to skip allocation in this case.  Worth benchmarking.
-> See virtqueue_use_indirect which just does total_sg > 1.
-> 
-> > 
-> > > > 		if (nbytes != pkt->len) {
-> > > > 			virtio_transport_free_pkt(pkt);
-> > > > 			vq_err(vq, "Faulted on copying pkt buf\n");
-> > > > 			break;
-> > > > 		}
-> > > >  ...
-> > > > }
-> > > > 
-> > > > 
-> > > > This series changes this behavior since now we will split the packet in
-> > > > vhost_transport_do_send_pkt() depending on the buffer found in the
-> > > > virtqueue.
-> > > > 
-> > > > We didn't change the buffer size in this series, so we still backward
-> > > > compatible, but if we will use buffers smaller than 4K, we should
-> > > > encounter the error described above.
-> 
-> So that's an implementation bug then? It made an assumption
-> of a 4K sized buffer? Or even PAGE_SIZE sized buffer?
 
-Assuming we miss nothing and buffers < 4K are broken,
-I think we need to add this to the spec, possibly with
-a feature bit to relax the requirement that all buffers
-are at least 4k in size.
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > > > 
-> > > > How do you suggest we proceed if we want to change the buffer size?
-> > > > Maybe adding a feature to "support any buffer size"?
-> > > > 
-> > > > Thanks,
-> > > > Stefano
-> > > 
-> > > 
-> > 
-> > -- 
+On Fri 2019-08-30 13:14:48, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+>=20
+> struct is31fl32xx_priv {
+> 	...
+>         struct is31fl32xx_led_data leds[0];
+> };
+>=20
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+>=20
+> So, replace the following function:
+>=20
+> static inline size_t sizeof_is31fl32xx_priv(int num_leds)
+> {
+>        return sizeof(struct is31fl32xx_priv) +
+>                      (sizeof(struct is31fl32xx_led_data) * num_leds);
+> }
+>=20
+> with:
+>=20
+> struct_size(priv, leds, count)
+>=20
+> This code was detected with the help of Coccinelle.
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1rnNkACgkQMOfwapXb+vIPxgCgpsICdNpvVqiE62UuGfp0t9A8
+QVQAn3e0reKEOTT22eUmr3FMkDGRBvUU
+=L98W
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
