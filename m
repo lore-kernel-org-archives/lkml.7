@@ -2,42 +2,47 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C02C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426A2C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98FA22CE9
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E84922CE9
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfIARYH (ORCPT
+        id S1729058AbfIARYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 13:24:07 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39115 "EHLO
+        Sun, 1 Sep 2019 13:24:18 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39184 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728570AbfIARYG (ORCPT
+        with ESMTP id S1728570AbfIARYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 13:24:06 -0400
+        Sun, 1 Sep 2019 13:24:18 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id D5A4181500; Sun,  1 Sep 2019 19:23:50 +0200 (CEST)
-Date:   Sun, 1 Sep 2019 19:24:03 +0200
+        id 86F49815E8; Sun,  1 Sep 2019 19:24:02 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 19:24:15 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Joe Perches <joe@perches.com>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH] scripts: coccinelle: check for !(un)?likely usage
-Message-ID: <20190901172403.GA1047@bug>
-References: <20190825130536.14683-1-efremov@linux.com>
- <b5bae2981e27d133b61d99b08ee60244bf7aabe3.camel@perches.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
+Message-ID: <20190901172414.GB1047@bug>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-2-jacopo@jmondi.org>
+ <20190815065635.GJ6133@paasikivi.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b5bae2981e27d133b61d99b08ee60244bf7aabe3.camel@perches.com>
+In-Reply-To: <20190815065635.GJ6133@paasikivi.fi.intel.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -46,86 +51,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> > This patch adds coccinelle script for detecting !likely and !unlikely
-> > usage. It's better to use unlikely instead of !likely and vice versa.
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -89,6 +89,10 @@ Optional properties
+> >    but a number of degrees counter clockwise. Typical values are 0 and 180
+> >    (upside down).
+> > 
+> > +- location: The camera device mounting position, relative to the device
+> > +  usage orientation. Possible values are:
+> > +  0 - Front camera. The image sensor is mounted on the front side of the device.
+> > +  1 - Back camera. The image sensor is mounted on the back side of the device.
 > 
-> Please explain _why_ is it better in the changelog.
+> Would it make sense to make this a little more generic? Such as s/image
+> sensor/ device/, for instance?
 > 
-> btw: there are relatively few uses like this in the kernel.
+> Is this also relevant for flash or lens devices?
 > 
-> $ git grep -P '!\s*(?:un)?likely\s*\(' | wc -l
-> 40
-> 
-> afaict: It may save 2 bytes of x86/64 object code.
-> 
-> For instance:
-> 
-> $ diff -urN kernel/tsacct.lst.old kernel/tsacct.lst.new|less
-> --- kernel/tsacct.lst.old       2019-08-25 09:21:39.936570183 -0700
-> +++ kernel/tsacct.lst.new       2019-08-25 09:22:20.774324886 -0700
-> @@ -24,158 +24,153 @@
->    15:  48 89 fb                mov    %rdi,%rbx
->         u64 time, delta;
->  
-> -       if (!likely(tsk->mm))
-> +       if (unlikely(tsk->mm))
+> Flash (torch) devices could be present, at least principle, without a
+> camera. There once was even such a Nokia phone, 1100 unless I'm mistaken.
+> :-)
 
-Are you sure this is equivalent?
+Well, I'd call them LEDs, not camera flashes ... if there's no camera. And IIRC 
+these devices had LEDs on top of the phone... so neither front nor back side.
 
 									Pavel
-
-
-
->    18:  4c 8d ab 28 02 00 00    lea    0x228(%rbx),%r13
->    1f:  e8 00 00 00 00          callq  24 <__acct_update_integrals+0x24>
->                         20: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
->    24:  4c 89 ef                mov    %r13,%rdi
->    27:  e8 00 00 00 00          callq  2c <__acct_update_integrals+0x2c>
->                         28: R_X86_64_PLT32      __asan_load8_noabort-0x4
-> -  2c:  4c 8b bb 28 02 00 00    mov    0x228(%rbx),%r15
-> -  33:  4d 85 ff                test   %r15,%r15
-> -  36:  74 34                   je     6c <__acct_update_integrals+0x6c>
-> +  2c:  48 83 bb 28 02 00 00    cmpq   $0x0,0x228(%rbx)
-> +  33:  00 
-> +  34:  75 34                   jne    6a <__acct_update_integrals+0x6a>
->                 return;
-> 
-> And here's a possible equivalent checkpatch test.
-> ---
->  scripts/checkpatch.pl | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 287fe73688f0..364603ad1a47 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -6529,6 +6529,24 @@ sub process {
->  			     "Using $1 should generally have parentheses around the comparison\n" . $herecurr);
->  		}
->  
-> +# !(likely|unlikely)(condition) use should be (unlikely|likely)(condition)
-> +		if ($perl_version_ok &&
-> +		    $line =~ /(\!\s*((?:un)?likely))\s*$balanced_parens/) {
-> +			my $match = $1;
-> +			my $type =  $2;
-> +			my $reverse;
-> +			if ($type eq "likely") {
-> +				$reverse = "unlikely";
-> +			} else {
-> +				$reverse = "likely";
-> +			}
-> +			if (WARN("LIKELY_MISUSE",
-> +				 "Prefer $reverse over $match\n" . $herecurr) &&
-> +			    $fix) {
-> +				$fixed[$fixlinenr] =~ s/\Q$match\E\s*\(/$reverse(/;
-> +			}
-> +		}
-> +
->  # whine mightly about in_atomic
->  		if ($line =~ /\bin_atomic\s*\(/) {
->  			if ($realfile =~ m@^drivers/@) {
-> 
-
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
