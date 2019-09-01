@@ -2,254 +2,193 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5E2C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434EEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002BD22D6D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16253217F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ima72ulx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rsad0/GC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfIATkq (ORCPT
+        id S1728850AbfIATnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 15:40:46 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37798 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfIATkp (ORCPT
+        Sun, 1 Sep 2019 15:43:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33321 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727517AbfIATnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 15:40:45 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s14so10831091qkm.4;
-        Sun, 01 Sep 2019 12:40:45 -0700 (PDT)
+        Sun, 1 Sep 2019 15:43:16 -0400
+Received: by mail-io1-f65.google.com with SMTP id z3so25229987iog.0;
+        Sun, 01 Sep 2019 12:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OD27Rm+Bt2yNE5YT4BHVzKJhuogHaM3MsPGPiR7+spk=;
-        b=ima72ulxzu1lpfjU5iLEEcYsEuR6lSu8sj3SAhPDmAeV/yz8636UOg/UwQGTpQW9ju
-         RORmkgO4PLvgNO04xZyACr1LA8TPHTyLpVhO71sAN9u7i9Ix0okURaf2yM5d9q7dF7jR
-         RkxVaGOl3DpTJZPNqxD4fEsS8Ubp3tJRdKq4K+CuQDUaUshaBrv8+uDzcELj1z1SS9N2
-         Prxg2EW8w4LSlw3jGOAKlYkQ7f9+bGWEAY8cjv/lCJ0QsbkuJNJDXU+H+vqAasvWugt/
-         fXDjK3AM4GvCx17D2Vt+eLpMRgKyV9YZLwkfj/EttFoBnyvwqEJktsKnYjQMxc38nMx8
-         uvkg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=h/xjXgWosxdQaufj8AvjAxM/bIsZfFnrMq3dRFuLwdo=;
+        b=rsad0/GCrnmZBp+UqxkKeFhd+h4i8NsbZcCGhY5zMeScdAsZb304z8Bd6RyWpB+MS/
+         92TkFv+KKtGYjfzlG862KUhWmkzp6ZIOdOb3QyYGt/iU6+UeDnDjVhwxVtZ46dNl/E6K
+         YiP9zUUCcH+AcbIgMkZWCkVqaXa4fkTXkCm6h8Xz1wPWQsJwoa3KNPLUnDO1OIYJn30z
+         im29DPjenTE/jFCe59EygMa4COZIg5RPWN+N954jeDQE3jkc3u1h7SIwsc+wyb7OYQiR
+         6r25cQwlG/MpXOOgrbSZoi2hPdnYjXeVEAYZ7h2EHyAGQPZvmW0I9fFLeP9gBCJg6Vg/
+         Qkpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OD27Rm+Bt2yNE5YT4BHVzKJhuogHaM3MsPGPiR7+spk=;
-        b=JI7muBLNxqJmLVID3CoNOwz8nkyj+kUXzkjL6m3QhARmK4Z1MpMdP0QyEwzYIDRo/o
-         5AIu/Wk0E2/kZgwb5Fnu4NenJH/BkrKMZyH4l8NTgc9D32FlTcx80WwUaKmaftfGxp9N
-         uLaOn3R6a8qEdvFMx6yq6diHvJV1egtf8KkmlMsoG6cjx9W9NwfpNotN9JRSXjQRmXQ8
-         KsSolPpGaiYEFF6ZrMvYZJOjix/zKQwgIh3Mp2wBRAvSaZfPOUUhctm9ecS7/9dQ2Fvb
-         6OGTqhS916sKMLLbzHX8BduSTCs+Rnbacfz/LRzMhQ+A+YRhF8oT/MGPDYIQhGPdKE/w
-         NK1A==
-X-Gm-Message-State: APjAAAWgJuII+dJv6iXWNPv35820OgAjj/tmggUUJDjKGFHtqQ6RrfZb
-        ZlRyrA7nfsry3PL29Za1OKI=
-X-Google-Smtp-Source: APXvYqyOYmBI836ipD04u39zI7P3iOtFLh9jCpIDDKdQYGd0cRyBJpvl8OWNpxC6NucAY2wY3bFqGg==
-X-Received: by 2002:a37:6713:: with SMTP id b19mr3119439qkc.301.1567366844520;
-        Sun, 01 Sep 2019 12:40:44 -0700 (PDT)
-Received: from localhost.localdomain ([2804:431:c7f0:efc1:5e96:9dff:fe82:cd03])
-        by smtp.gmail.com with ESMTPSA id r15sm5775731qtp.94.2019.09.01.12.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 12:40:43 -0700 (PDT)
-From:   Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
-To:     helen.koike@collabora.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Subject: [PATCH] media: vimc: Implement debayer control for mean window size
-Date:   Sun,  1 Sep 2019 16:40:31 -0300
-Message-Id: <20190901194032.16207-1-arthurmoraeslago@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=h/xjXgWosxdQaufj8AvjAxM/bIsZfFnrMq3dRFuLwdo=;
+        b=DZth8YDOqBbDwC3BZyWOWesx1xCV82YCdAAtXQ5F9P8VO2utx1JA3c38PC3Izu/zIf
+         3lV1ZGwH0zyvOPB4BIx8tL19+wwJ3iTgrUsH6V5qWqefDEpQ3ZVQw/R35b/GUNG3SFQ2
+         26t0wD6ovcIt1ByeaRURcgBTL0tkQWEyUCMalbaNkIso6iE9+N0Bx9Mlc5vup6nuotVO
+         tYDwZGd0EXNWZMJTfMl1WQCKCbBe6xtpq7mHLcjAwm02TgwCrM3ArDEyZz7AA1GQTfL9
+         Rp9R4o7Rt5DRGaBnaehnkNTbtOceq7OCfuD6FnJMWd/N12bvWVq+MUoqK803TuoTq+/2
+         ipLQ==
+X-Gm-Message-State: APjAAAUOI5RsKpFVwIdBbSOd2mnaknfvUnRJstoLzVZZs7DRlCnWIb4M
+        AABRy0PNYsJRh5DuTyx4ltsgVfBMVM9FUw==
+X-Google-Smtp-Source: APXvYqxGMt/XakV/ALegVpXkS8Go/WyaRTvdNdzYT5jhXUlyuq5uVic+caEkoIfyzyIn3KFzzSYw4Q==
+X-Received: by 2002:a5e:9805:: with SMTP id s5mr10833814ioj.195.1567366995067;
+        Sun, 01 Sep 2019 12:43:15 -0700 (PDT)
+Received: from [10.164.9.36] (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
+        by smtp.gmail.com with ESMTPSA id l13sm13688122iob.73.2019.09.01.12.43.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 01 Sep 2019 12:43:14 -0700 (PDT)
+Subject: Re: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
+To:     carnil@debian.org
+Cc:     stable@vger.kernel.org, mathias.payer@nebelwelt.net,
+        perex@perex.cz, tiwai@suse.com, gregkh@linuxfoundation.org,
+        wang6495@umn.edu, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20190830214649.27761-1-benquike@gmail.com>
+ <20190901125809.GA23334@eldamar.local>
+From:   Hui Peng <benquike@gmail.com>
+Message-ID: <df31a1f9-623a-aff6-fa7c-01eba3fd0f63@gmail.com>
+Date:   Sun, 1 Sep 2019 15:43:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190901125809.GA23334@eldamar.local>
+Content-Type: multipart/mixed;
+ boundary="------------C17843906CF228CD9BE7D7BA"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add mean window size parameter for debayer filter as a control in
-vimc-debayer.
+This is a multi-part message in MIME format.
+--------------C17843906CF228CD9BE7D7BA
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-vimc-debayer was patched to allow changing mean windows parameter
-of the filter without needing to reload the driver. The parameter
-can now be set using a v4l2-ctl control(mean_window_size).
 
-Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
-Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
-Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+On 9/1/19 8:58 AM, Salvatore Bonaccorso wrote:
+> On Fri, Aug 30, 2019 at 05:46:49PM -0400, Hui Peng wrote:
+>> The `uac_mixer_unit_descriptor` shown as below is read from the
+>> device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+>> accessed from index 0 to `bNrInPins` - 1, the current implementation
+>> assumes that descriptor is always valid (the length  of descriptor
+>> is no shorter than 5 + `bNrInPins`). If a descriptor read from
+>> the device side is invalid, it may trigger out-of-bound memory
+>> access.
+>>
+>> ```
+>> struct uac_mixer_unit_descriptor {
+>> 	__u8 bLength;
+>> 	__u8 bDescriptorType;
+>> 	__u8 bDescriptorSubtype;
+>> 	__u8 bUnitID;
+>> 	__u8 bNrInPins;
+>> 	__u8 baSourceID[];
+>> }
+>> ```
+>>
+>> This patch fixes the bug by add a sanity check on the length of
+>> the descriptor.
+>>
+>> CVE: CVE-2018-15117
+> FWIW, the correct CVE id should be probably CVE-2019-15117 here.
 
----
-This patch was made on top of Shuah Khan's patch (162623).
+Yes, the CVE id was wrong. I have updated it in the attached patch.
+
+> But there was already a patch queued and released in 5.2.10 and
+> 4.19.68 for this issue (as far I can see; is this correct?)
+
+Yes, it should have been fixed in those branches.
+
+But google asked me to back port it to v4.4.190 and v4.14.141.
+
+I have mentioned it in one previous email, but it was blocked by vger
+because it was sent in html format.
+
+Can you apply it to these 2 versions? (it applies to both versions)
+
 Thanks.
+
+> Regards,
+> Salvatore
+
+--------------C17843906CF228CD9BE7D7BA
+Content-Type: text/x-patch;
+ name="0001-Fix-an-OOB-bug-in-parse_audio_mixer_unit.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="0001-Fix-an-OOB-bug-in-parse_audio_mixer_unit.patch"
+
+From 09942398a53bbe730264b782673890d4a54068d0 Mon Sep 17 00:00:00 2001
+From: Hui Peng <benquike@gmail.com>
+Date: Fri, 30 Aug 2019 16:11:00 -0400
+Subject: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
+
+The `uac_mixer_unit_descriptor` shown as below is read from the
+device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+accessed from index 0 to `bNrInPins` - 1, the current implementation
+assumes that descriptor is always valid (the length  of descriptor
+is no shorter than 5 + `bNrInPins`). If a descriptor read from
+the device side is invalid, it may trigger out-of-bound memory
+access.
+
+```
+struct uac_mixer_unit_descriptor {
+	__u8 bLength;
+	__u8 bDescriptorType;
+	__u8 bDescriptorSubtype;
+	__u8 bUnitID;
+	__u8 bNrInPins;
+	__u8 baSourceID[];
+}
+```
+
+This patch fixes the bug by add a sanity check on the length of
+the descriptor.
+
+CVE: CVE-2019-15117
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
 ---
- drivers/media/platform/vimc/vimc-common.h  |  1 +
- drivers/media/platform/vimc/vimc-debayer.c | 81 ++++++++++++++++++----
- 2 files changed, 70 insertions(+), 12 deletions(-)
+ sound/usb/mixer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-index 5b2282de395c..547ff04a415e 100644
---- a/drivers/media/platform/vimc/vimc-common.h
-+++ b/drivers/media/platform/vimc/vimc-common.h
-@@ -19,6 +19,7 @@
- #define VIMC_CID_VIMC_BASE		(0x00f00000 | 0xf000)
- #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
- #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
-+#define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 1f7eb3816cd7..10ddec76f906 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1628,6 +1628,7 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
+ 	int pin, ich, err;
  
- #define VIMC_FRAME_MAX_WIDTH 4096
- #define VIMC_FRAME_MAX_HEIGHT 2160
-diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-index 6cee911bf149..aa3edeed96bc 100644
---- a/drivers/media/platform/vimc/vimc-debayer.c
-+++ b/drivers/media/platform/vimc/vimc-debayer.c
-@@ -11,17 +11,11 @@
- #include <linux/platform_device.h>
- #include <linux/vmalloc.h>
- #include <linux/v4l2-mediabus.h>
-+#include <media/v4l2-ctrls.h>
- #include <media/v4l2-subdev.h>
- 
- #include "vimc-common.h"
- 
--static unsigned int deb_mean_win_size = 3;
--module_param(deb_mean_win_size, uint, 0000);
--MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
--	"NOTE: the window size needs to be an odd number, as the main pixel "
--	"stays in the center of the window, otherwise the next odd number "
--	"is considered");
--
- #define IS_SINK(pad) (!pad)
- #define IS_SRC(pad)  (pad)
- 
-@@ -49,6 +43,8 @@ struct vimc_deb_device {
- 	u8 *src_frame;
- 	const struct vimc_deb_pix_map *sink_pix_map;
- 	unsigned int sink_bpp;
-+	unsigned int mean_win_size;
-+	struct v4l2_ctrl_handler hdl;
- };
- 
- static const struct v4l2_mbus_framefmt sink_fmt_default = {
-@@ -387,7 +383,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
- 	 * the top left corner of the mean window (considering the current
- 	 * pixel as the center)
- 	 */
--	seek = deb_mean_win_size / 2;
-+	seek = vdeb->mean_win_size / 2;
- 
- 	/* Sum the values of the colors in the mean window */
- 
-@@ -477,6 +473,33 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
- 
- }
- 
-+static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
-+					    unsigned int mean_win_size)
-+{
-+		if (vdeb->mean_win_size == mean_win_size)
-+			return;
-+		vdeb->mean_win_size = mean_win_size;
-+}
-+
-+static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct vimc_deb_device *vdeb =
-+		container_of(ctrl->handler, struct vimc_deb_device, hdl);
-+
-+	switch (ctrl->id) {
-+	case VIMC_CID_MEAN_WIN_SIZE:
-+		vimc_deb_s_mean_win_size(vdeb, ctrl->val);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
-+	.s_ctrl = vimc_deb_s_ctrl,
-+};
-+
- static void vimc_deb_release(struct v4l2_subdev *sd)
- {
- 	struct vimc_deb_device *vdeb =
-@@ -502,6 +525,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
- 	vimc_ent_sd_unregister(ved, &vdeb->sd);
- }
- 
-+static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
-+	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
-+	.id = VIMC_CID_VIMC_CLASS,
-+	.name = "VIMC Controls",
-+	.type = V4L2_CTRL_TYPE_CTRL_CLASS,
-+};
-+
-+static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
-+	.ops = &vimc_deb_ctrl_ops,
-+	.id = VIMC_CID_MEAN_WIN_SIZE,
-+	.name = "Mean window size",
-+	.type = V4L2_CTRL_TYPE_INTEGER,
-+	.min = 1,
-+	.max = 99,
-+	.step = 2,
-+	.def = 3,
-+};
-+
- int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
- {
- 	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-@@ -513,6 +554,16 @@ int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
- 	if (!vdeb)
- 		return -ENOMEM;
- 
-+	/* Create controls: */
-+	v4l2_ctrl_handler_init(&vdeb->hdl, 2);
-+	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
-+	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
-+	vdeb->sd.ctrl_handler = &vdeb->hdl;
-+	if (vdeb->hdl.error) {
-+		ret = vdeb->hdl.error;
-+		goto err_free_vdeb;
-+	}
-+
- 	/* Initialize ved and sd */
- 	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
- 				   vcfg->name,
-@@ -520,13 +571,12 @@ int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
- 				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
- 				   MEDIA_PAD_FL_SOURCE},
- 				   &vimc_deb_int_ops, &vimc_deb_ops);
--	if (ret) {
--		kfree(vdeb);
--		return ret;
--	}
-+	if (ret)
-+		goto err_free_hdl;
- 
- 	vdeb->ved.process_frame = vimc_deb_process_frame;
- 	vdeb->dev = &vimc->pdev.dev;
-+	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
- 
- 	/* Initialize the frame format */
- 	vdeb->sink_fmt = sink_fmt_default;
-@@ -541,4 +591,11 @@ int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
- 
- 	vcfg->ved = &vdeb->ved;
- 	return 0;
-+
-+err_free_hdl:
-+	v4l2_ctrl_handler_free(&vdeb->hdl);
-+err_free_vdeb:
-+	kfree(vdeb);
-+
-+	return ret;
- }
+ 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
++	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
+ 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
+ 		usb_audio_err(state->chip,
+ 			      "invalid MIXER UNIT descriptor %d\n",
 -- 
-2.23.0
+2.17.1
 
+
+--------------C17843906CF228CD9BE7D7BA--
