@@ -2,131 +2,93 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2AFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 14:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D957C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 14:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6604422CF7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 14:08:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCWJ0hsg"
+	by mail.kernel.org (Postfix) with ESMTP id 433662342C
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 14:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbfIAOId (ORCPT
+        id S1728949AbfIAOOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 10:08:33 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35042 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfIAOId (ORCPT
+        Sun, 1 Sep 2019 10:14:14 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:35295 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbfIAOOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 10:08:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id gn20so5403008plb.2;
-        Sun, 01 Sep 2019 07:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JPQn7evHwAIFUQeXNHFpGSBFL3fdvy+iWW2paQp4S8M=;
-        b=MCWJ0hsgzSN5UaUZHovyq4Rg62dozNlOmjOSV4kDAeFHyrxLyhBE+872oLqwjSzMfS
-         tdhB2GW3skNIRqR2O8foKq2UbHYMUOHY6RyzlK7OtGZALMzDSVtsaVTRrC8OOEvkU4u0
-         apKwfGtiKl573O9kHbWHt84lJBHyQNQjJihH/HB2aiz5Uu94e9DQGqNQVt76BuJEQd33
-         8W1tNFRB8kHV1AEBNvouTO1JN4oj2FeW0HUNuCFBEOIL1h6JSSLqQ8KnZ4mQnisBiOen
-         zR84OGxDrCF1NRJNOExM72sg8dvv4cuIg4mfrvMS1xYzgrssl52T8B2Vsrfsx6FEcY3A
-         dliw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JPQn7evHwAIFUQeXNHFpGSBFL3fdvy+iWW2paQp4S8M=;
-        b=hz+DgaDAYIOyI2mvIneP5kjQmwD9MBYca2c6v3sG3UodTLokbQ2AUP+ZGspv8jlFmS
-         fPRfvYRxtb6LmZ3xJU5dG+buM3ABeCuLCSBMo6DoDLVJakudIqwrT96NqXnMzPsZ4LhD
-         JFdRsfoRS1XZZZE+i9flWxFhWv3F6qYxhGEfPwIxj1zzFDwuoSGLh4fDi/wWtZLK2p/W
-         E5qvO1akPC3LdiS08BlizR5qpcqioH7tHGIQHrUqlQRpnU2Cxdo9O3AMXQstuZe6GnhU
-         PmQ8gAO34AEr3mWlfnyy+oeDTgtj84z1ufnwU6LKxIW0mJjz3rJ48LIdSNXwKMiYUyJ0
-         PsUA==
-X-Gm-Message-State: APjAAAXyZTLnvAqHi+qFtrTZ1LgMRhsTuByB1Y+bkU8U9WJd+HN/8z9f
-        il6lBUvC0+jqHtJhzQMGHbm/hlm4
-X-Google-Smtp-Source: APXvYqx6QwLwWBm5m9V9M4iM0czn+o3bSTA4lr19LvDJ4k33ZqbrZD/zfs0FTJrYnfx/49pqRiVUKQ==
-X-Received: by 2002:a17:902:9b8f:: with SMTP id y15mr26577918plp.194.1567346912108;
-        Sun, 01 Sep 2019 07:08:32 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v15sm13058296pfn.69.2019.09.01.07.08.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 01 Sep 2019 07:08:31 -0700 (PDT)
-Subject: Re: [PATCH] Fix a double free bug in rsi_91x_deinit
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Hui Peng <benquike@gmail.com>, security@kernel.org,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190819220230.10597-1-benquike@gmail.com>
- <20190831181852.GA22160@roeck-us.net>
- <87k1asqw87.fsf@kamboji.qca.qualcomm.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <385361d3-048e-9b3f-c749-aa5861e397e7@roeck-us.net>
-Date:   Sun, 1 Sep 2019 07:08:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 1 Sep 2019 10:14:14 -0400
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BD80E100005;
+        Sun,  1 Sep 2019 14:14:10 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] PCI: aardvark: Don't rely on jiffies while holding spinlock
+Date:   Sun,  1 Sep 2019 16:23:03 +0200
+Message-Id: <20190901142303.27815-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <87k1asqw87.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/19 1:03 AM, Kalle Valo wrote:
-> Guenter Roeck <linux@roeck-us.net> writes:
-> 
->> On Mon, Aug 19, 2019 at 06:02:29PM -0400, Hui Peng wrote:
->>> `dev` (struct rsi_91x_usbdev *) field of adapter
->>> (struct rsi_91x_usbdev *) is allocated  and initialized in
->>> `rsi_init_usb_interface`. If any error is detected in information
->>> read from the device side,  `rsi_init_usb_interface` will be
->>> freed. However, in the higher level error handling code in
->>> `rsi_probe`, if error is detected, `rsi_91x_deinit` is called
->>> again, in which `dev` will be freed again, resulting double free.
->>>
->>> This patch fixes the double free by removing the free operation on
->>> `dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
->>> used in `rsi_disconnect`, in that code path, the `dev` field is not
->>>   (and thus needs to be) freed.
->>>
->>> This bug was found in v4.19, but is also present in the latest version
->>> of kernel.
->>>
->>> Reported-by: Hui Peng <benquike@gmail.com>
->>> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
->>> Signed-off-by: Hui Peng <benquike@gmail.com>
->>
->> FWIW:
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>
->> This patch is listed as fix for CVE-2019-15504, which has a CVSS 2.0 score
->> of 10.0 (high) and CVSS 3.0 score of 9.8 (critical).
-> 
-> A double free in error path is considered as a critical CVE issue? I'm
-> very curious, why is that?
-> 
+advk_pcie_wait_pio() can be called while holding a spinlock (from
+pci_bus_read_config_dword()), then depends on jiffies in order to
+timeout while polling on PIO state registers. In the case the PIO
+transaction failed, the timeout will never happen and will also cause
+the cpu to stall.
 
-You'd have to ask the people assigning CVSS scores. However, if the memory
-was reallocated, that reallocated memory (which is still in use) is freed.
-Then all kinds of bad things can happen.
+This decrements a variable and wait instead of using jiffies.
 
-Guenter
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ drivers/pci/controller/pci-aardvark.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->> Are there any plans to apply this patch to the upstream kernel anytime
->> soon ?
-> 
-> I was on vacation last week and hence I have not been able to apply any
-> wireless patches. I should be able to catch up next week.
-> 
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..1fa6d04ad7aa 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -175,7 +175,8 @@
+ 	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+ 	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
+ 
+-#define PIO_TIMEOUT_MS			1
++#define PIO_RETRY_CNT			10
++#define PIO_RETRY_DELAY			100 /* 100 us*/
+ 
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+@@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
+ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+ {
+ 	struct device *dev = &pcie->pdev->dev;
+-	unsigned long timeout;
++	size_t i;
+ 
+-	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
+-
+-	while (time_before(jiffies, timeout)) {
++	for (i = 0; i < PIO_RETRY_CNT; ++i) {
+ 		u32 start, isr;
+ 
+ 		start = advk_readl(pcie, PIO_START);
+ 		isr = advk_readl(pcie, PIO_ISR);
+ 		if (!start && isr)
+ 			return 0;
++		udelay(PIO_RETRY_DELAY);
+ 	}
+ 
+ 	dev_err(dev, "config read/write timed out\n");
+-- 
+2.20.1
 
