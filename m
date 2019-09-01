@@ -2,119 +2,110 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EEDC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD22C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C14221881
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5FA21897
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnWRhXYU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WLtnQ4kb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfIAX2P (ORCPT
+        id S1729211AbfIAXbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 19:28:15 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45332 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbfIAX2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 19:28:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m2so11048742qki.12;
-        Sun, 01 Sep 2019 16:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wgz4pNzu4xMDyciaAAQpIen+rsuaRgPe2eC75rZgfnY=;
-        b=gnWRhXYUSMPA8TnCQdWDTsCWmx3OtvjNz56sd460qbNROrNVWnadKJUp9M1oTFxNTG
-         D0l1zTkugcmXF+CNiUkjVtx7Hv4SKuCA5/lUOTfqTpN1xSfyLpL3RoJUwAHKrpbHcdyK
-         EbyxxLew/r18jOlD1+WZZ6NpbKk1tvLMuJ2m82WPZ+0f7/+gtf3NY512SCUZejHFPEq1
-         Pzb9ORbhvqXhL67XOhcY01ZxIX0kA/53eNH/5xra5LiKLSSJVSHVC35zFth3o5R09qs9
-         ZffUEDVShpbh2I+1QnwAtcQqQQpB2VRqismAdIOAY5xn1c49LMMUZYfuofE1AkncXPjF
-         M/Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wgz4pNzu4xMDyciaAAQpIen+rsuaRgPe2eC75rZgfnY=;
-        b=WDfPXIIfDjTSHiXIxkOFn33GvZxSp84HOW41ucxpNjU05GMpDr8TB44/lLG7Mp39hr
-         im327D0ML/q0S8qmQwuKYKhgCoaCnu1R5pb6Goxh8d4aCAPdrUVy361M5Aoy1ggSGzGj
-         JopYJTrdpHy3sxNBN7gnBoMCSBBgOl/wDtJcd4T44cdZCoJ5JvqpMI+yxW6VQEZDVEnc
-         F+INLCeL4dkfkfe557VX3k+hpn4kLQTe7vD76+f+PbTGeFBG8rzzGZ2imn0A4Fkwb7ZI
-         Am7pYQGfCC2ckoJIA8eVoEKEoKGaYwoA5il600VgrenqAPrzHiCI4c4c4Uk2f0Vwt+Xo
-         9O0Q==
-X-Gm-Message-State: APjAAAVT7iKd31yiDnkHRe6CW6bSJsQWTyTdSYk3QwVEnsXre1tv4mUi
-        N0/dtJbKdSK5tVn1X34hx1MzLeM4
-X-Google-Smtp-Source: APXvYqzCPqhiZ9/ucEsgOsgMsuAXZ4vNrKb2zjjjxZQfHNUmMB+cXNRCvCA9jUIyqtfnYhRSb7DCkg==
-X-Received: by 2002:a37:aa58:: with SMTP id t85mr19395830qke.381.1567380489303;
-        Sun, 01 Sep 2019 16:28:09 -0700 (PDT)
-Received: from localhost.localdomain (200.146.53.87.dynamic.dialup.gvt.net.br. [200.146.53.87])
-        by smtp.gmail.com with ESMTPSA id p59sm5684085qtd.75.2019.09.01.16.28.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 16:28:08 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: [PATCH v2 4/4] Documentation:kernel-per-CPU-kthreads.txt: Remove reference to elevator=
-Date:   Sun,  1 Sep 2019 20:29:16 -0300
-Message-Id: <20190901232916.4692-5-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190901232916.4692-1-marcos.souza.org@gmail.com>
-References: <20190828011930.29791-5-marcos.souza.org@gmail.com>
- <20190901232916.4692-1-marcos.souza.org@gmail.com>
+        Sun, 1 Sep 2019 19:31:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53567 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728942AbfIAXbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 19:31:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46M8cT1bmzz9sPJ;
+        Mon,  2 Sep 2019 09:31:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567380697;
+        bh=yvwWYiQC+UmHvczUtkNqjLKuvX3b5tBigGh+McnD/GE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WLtnQ4kbBphOJyRyEz7AA/SFpFkcz+t3XXhyaPR3RhcZ2WhDM9BDKA4Yop26nP0rl
+         SXQBBXJC34QDM//czkiHWs2MFcbc2XUiQSCbbm9SEfnRjP03uA+oZItCj6hUdYfCXQ
+         qBVJ5Br6egrOlhs70aCf9AD2S9RkUP7svxM67kVeOr3dakEEaq96kj5CroGaeDylz3
+         3Hu3a2I3zJzl48Ao6anmyrBHXZ6hqx5BcxwSnXAW6DArJ1KwuEHyBraVTqdVeDayBG
+         GlpIkKzrYfbmv0sWA/0tn0IHWEuwYgYxPwiemh/in6TYNcD9xvlK1VY2vfZRE/Y79c
+         YUnmp6DPo5UUw==
+Date:   Mon, 2 Sep 2019 09:31:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Nosthoff <committed@heine.so>
+Subject: linux-next: Fixes tag needs some work in the battery tree
+Message-ID: <20190902093131.06f66c9f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/NpxQRVpHDJD68n3oZg+17+I";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This argument was not being considered since blk-mq was set by default,
-so removed this documentation to avoid confusion.
+--Sig_/NpxQRVpHDJD68n3oZg+17+I
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
----
- Documentation/admin-guide/kernel-per-CPU-kthreads.rst | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Hi all,
 
-diff --git a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-index 4f18456dd3b1..baeeba8762ae 100644
---- a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-+++ b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-@@ -274,9 +274,7 @@ To reduce its OS jitter, do any of the following:
- 		(based on an earlier one from Gilad Ben-Yossef) that
- 		reduces or even eliminates vmstat overhead for some
- 		workloads at https://lkml.org/lkml/2013/9/4/379.
--	e.	Boot with "elevator=noop" to avoid workqueue use by
--		the block layer.
--	f.	If running on high-end powerpc servers, build with
-+	e.	If running on high-end powerpc servers, build with
- 		CONFIG_PPC_RTAS_DAEMON=n.  This prevents the RTAS
- 		daemon from running on each CPU every second or so.
- 		(This will require editing Kconfig files and will defeat
-@@ -284,12 +282,12 @@ To reduce its OS jitter, do any of the following:
- 		due to the rtas_event_scan() function.
- 		WARNING:  Please check your CPU specifications to
- 		make sure that this is safe on your particular system.
--	g.	If running on Cell Processor, build your kernel with
-+	f.	If running on Cell Processor, build your kernel with
- 		CBE_CPUFREQ_SPU_GOVERNOR=n to avoid OS jitter from
- 		spu_gov_work().
- 		WARNING:  Please check your CPU specifications to
- 		make sure that this is safe on your particular system.
--	h.	If running on PowerMAC, build your kernel with
-+	g.	If running on PowerMAC, build your kernel with
- 		CONFIG_PMAC_RACKMETER=n to disable the CPU-meter,
- 		avoiding OS jitter from rackmeter_do_timer().
- 
--- 
-2.22.0
+In commit
 
+  b19aca4eb2d2 ("power: supply: sbs-battery: only return health when batter=
+y present")
+
+Fixes tag
+
+  Fixes: 76b16f4cdfb8 ("power: supply: sbs-battery: don't assume
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+In commit
+
+  38fa8b9f75ea ("power: supply: sbs-battery: use correct flags field")
+
+Fixes tag
+
+  Fixes: 76b16f4cdfb8 ("power: supply: sbs-battery: don't assume
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/NpxQRVpHDJD68n3oZg+17+I
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1sVNMACgkQAVBC80lX
+0GzSnQgAiTv/SojGYLDlG7Kfs+uXY72oLvltpkIGO0PqQygnLzixlOYs0WsJfUYC
+1lmtDd65RENj3qDyBb21Fl649b2SWlXgfEmVNGamGStQnB00zkGzdZchvFY6xeH6
+3ZJ9Bzc2rd2YpUb+V67CBDgLXxo6U/tbBiugWnZQsjCAhCJLSDurs0CRjBrs4sZD
+uTGAg2GlOKANrLmq1QcA/Qz5/xUUkj2KckK2HVUHwyB3N9ElbNoyQHL8jJ+ulE4t
+7v5hsrQ5xVTPFsR/136vHPktXGABa9vMksCrg8KMdXkq7kUc5Bccx+nTlGo7H1BQ
+hAWQWuHxdMslrQwdIohvPhspJVI7UA==
+=Fql/
+-----END PGP SIGNATURE-----
+
+--Sig_/NpxQRVpHDJD68n3oZg+17+I--
