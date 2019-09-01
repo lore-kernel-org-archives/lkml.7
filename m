@@ -2,90 +2,121 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AD7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 13:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A46C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 13:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97C121744
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 13:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jB9FDimY"
+	by mail.kernel.org (Postfix) with ESMTP id E3ADB23711
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 13:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567344960;
+	bh=0bT2CisJhmj2gPsy/ltUIH5GCfgLxKcF1mhLhOoVD90=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=GevAXzzZdCTZ4g3XHRfdDano/MTt9ifqoXIU1EV1yQjAca0AqyzjOQW75BK4UG/OO
+	 xuTj19GlMEb9n/DhJRb3QXC0U7PZoMSF4hFyQqMqgaodPo9VYIqisacyIIRwvnEGRQ
+	 Tfh6hjku8yjbosqJ1Nb3tATbXSz1ov/mUeq4Yfgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfIANTE (ORCPT
+        id S1728986AbfIANf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 09:19:04 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37123 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfIANTE (ORCPT
+        Sun, 1 Sep 2019 09:35:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42544 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726121AbfIANfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 09:19:04 -0400
-Received: by mail-io1-f68.google.com with SMTP id r4so8797264iop.4;
-        Sun, 01 Sep 2019 06:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Oy9vbVSjk4JRk5gZtaXEHlSIoXq+rSlaq2jhBh5Gric=;
-        b=jB9FDimYiKWkYoSdSws6i2oCvHgvDv9kst7x48wNIh1jRcOwL/68qaH3tPBKQt92vI
-         LBcSqlIFydSUHScYQ8/IzKNWJsLAO22qMtpcSNrvm6VxzE4I6devfchF/bSB9G+BfaoO
-         XtIs74xkt/ciyiMGazA4+2tuLegPkjzbmDAsVlC6ZGKiBi8EPGK59ldKYzsp/bUFVHwU
-         Wtlsim8pT2IDJTUUKtMSbfxTxVVY/3xfgFVFOna4t5+wKA+Gz4gQvkqEP0grMMiX4EXD
-         NaayUKBDI+4CAZ2ssU0xjpdTvusNCjXo3pI2XLI+wVrkZQ0Or4K7yQ/QIh7p1DB/60ff
-         wgxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Oy9vbVSjk4JRk5gZtaXEHlSIoXq+rSlaq2jhBh5Gric=;
-        b=C2jCrm1BdmHRQQwo2Pu0wVGL+nMubXSR8orARapq2gnn/vV2Mc1e1IkH7IQXpkrlCM
-         eJqfg9aLmBeAkLKtufAy6ntqmroYFMx4GrZkKqUbcUspMxeiqi6W3kaUB2tzUhCAp7dX
-         csV2nT7F18iETySSbuDCbAveuxwcavfpQ+R2ofpfSI7ZwDHHz46TtsgXdCl5c9hA/HaK
-         D5ttvAOCY9qvMgJZO23PyBvuzVKUPBPrm+m95NBqwgLmIH+dy503/rNkb/nMPkHtIybS
-         0mNY3oU4r/a41LMhALbu+lsCJtiWUdKVSo0w1ZCJXMa4T0/eFI40w0YHIpzMrGI0UxAl
-         JOwg==
-X-Gm-Message-State: APjAAAWscU5p/th2sjcTkf/wLb710XC94JmXqiRxFW0mUmLYcGx2s601
-        bZyxOA1hsv+4mKV+i5IcOaWMGCLU0cpAszCV0X0=
-X-Google-Smtp-Source: APXvYqxW5iZcY2aF9i2m1ABpcKzHtbm1+gFP5irmLny6GEH/tT20b38UfJjaTAm/6K6c5zO/0G+jSg9StO8YJE0DBrE=
-X-Received: by 2002:a5d:8c8b:: with SMTP id g11mr30622237ion.134.1567343943040;
- Sun, 01 Sep 2019 06:19:03 -0700 (PDT)
+        Sun, 1 Sep 2019 09:35:55 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x81DRSQg094812;
+        Sun, 1 Sep 2019 09:35:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ur60qkem4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 01 Sep 2019 09:35:31 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x81DVmJZ104656;
+        Sun, 1 Sep 2019 09:35:30 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ur60qkekr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 01 Sep 2019 09:35:30 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x81DYitX016837;
+        Sun, 1 Sep 2019 13:35:29 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01dal.us.ibm.com with ESMTP id 2uqgh6h915-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 01 Sep 2019 13:35:29 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x81DZST549807840
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 1 Sep 2019 13:35:28 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C238FB2064;
+        Sun,  1 Sep 2019 13:35:28 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82BAAB206B;
+        Sun,  1 Sep 2019 13:35:28 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.164.192])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun,  1 Sep 2019 13:35:28 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 2979316C033C; Sun,  1 Sep 2019 06:35:30 -0700 (PDT)
+Date:   Sun, 1 Sep 2019 06:35:30 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        SeongJae Park <sj38.park@gmail.com>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] tools: memory-model: add it to the Documentation body
+Message-ID: <20190901133530.GL4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <Pine.LNX.4.44L0.1907310947340.1497-100000@iolanthe.rowland.org>
+ <cb9785b7-ed43-b91a-7392-e50216bd5771@gmail.com>
+ <20190731202517.GF5913@linux.ibm.com>
+ <20190830113216.GE2369@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-From:   Jaafar Ali <jaafarkhalaf@gmail.com>
-Date:   Sun, 1 Sep 2019 16:13:03 +0300
-Message-ID: <CAF-0O_5TSO04M=0kdghhGKTs54QVEYn5mBh7e83EusFjS_Hg3Q@mail.gmail.com>
-Subject: cpuidle big_little driver on Odroid-xu4
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kgene@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        sam@ravnborg.org, linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830113216.GE2369@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-01_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909010158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Sylwester,
-Kernel 5.3rc1
-Hardware Odroid-XU4
-cpuidle-big_little driver for exynos 5422 of odroid-xu3/4 is not working.
-when I enable it in the defconfig , CONFIG_ARM_BIG_LITTLE_CPUIDLE=y,
-the device will not boot and the heartbeat blue LED stops.
-when the powerdown state[1] is removed form cpuidle-big_little driver
-or the function bl_enter_powerdown is disabled by early return, the
-kernel boots successfully and I can see cpuidle driver inside
-/sys/devices/system/cpu/cpuidle/current_driver
-both cpuidle-big_little power down state (exynos5420) and suspend
-stuff are using mcpm_cpu_suspend() which in turn calls
-mcpm_cpu_power_down() eventually.
-while suspend stuff is working correctly and the cpu can
-suspend/resume without problems, the cpuidle-bl is not working
-the few difference between suspend.c and cpuidle-big_little that I
-found are suspend.c do some more preparations such as storing resume
-entry point "mcpm_entry_point" into S5P_INFORM0, reset
-EXYNOS5420_CPU_STATE and save and restore some other registers.
-Can we repeat the scenario of suspend in cpuidle-big_little
+On Fri, Aug 30, 2019 at 01:32:16PM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 31, 2019 at 01:25:17PM -0700, Paul E. McKenney wrote:
+> > Looks like a pretty clear consensus thus far.  Any objections to keeping
+> > these .txt for the time being?
+> 
+> Obviously I'm a huge proponent of abandoning RST and an advocate for
+> normal .txt files ;-)
 
-Best Regards
--- 
-Jaafar Khalaf
+Oh?  I hadn't noticed.  ;-)
+
+							Thanx, Paul
