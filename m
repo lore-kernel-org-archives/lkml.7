@@ -2,564 +2,288 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4699C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DABC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF032190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE3221897
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pR+S9qpu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4iIHDm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfIAVER (ORCPT
+        id S1729079AbfIAVJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 17:04:17 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53282 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbfIAVER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 17:04:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1567371853; bh=qtLM+t5SGCemrSRsWJ/oDMWbs/OBXyriPG03WwIYeH4=;
-        h=Date:From:To:Cc:Subject:References:From;
-        b=pR+S9qpuFTIdANhj6Vq+zZ6GGI4z54OsLUJxWMKc3e7yOkj+fogzovvmHB00OP+wl
-         +/z3bP6cqqCa36vDjLSUm4RrK21kqZE9cwtHkRTtWK2NCyEf/CGVfOXQXjonhEFxZT
-         TnymfX1ANTYfcKhELvSIQNWG6agSs7voUcQoYOJw=
-Date:   Sun, 1 Sep 2019 23:04:13 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        nicolas.ferre@microchip.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 01/18] thermal: sun8i: add thermal driver for h6
-Message-ID: <20190901210413.zvjbfemloh3rwukb@core.my.home>
-Mail-Followup-To: Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
-        edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        nicolas.ferre@microchip.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190810052829.6032-2-tiny.windzz@gmail.com>
+        Sun, 1 Sep 2019 17:09:37 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:34466 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfIAVJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 17:09:37 -0400
+Received: by mail-vk1-f195.google.com with SMTP id h192so2533645vka.1;
+        Sun, 01 Sep 2019 14:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DfGhQUmQlwEd5V4oXs2IzZtixormXOqOwnL2xnoqQO4=;
+        b=W4iIHDm3oY7OJj5vFvVR6rgCLf7A7S7MGzlJdwjqJCtCj/5HTgpkyKsN4lo4tHF67e
+         1CsxJ/0OGCN+IxUtgowLlcTJ7u+POYL3KZ/fuqiy73EK2l+rdg2yXG2ASoRsthGTlft0
+         4soCnpf9aXNj/BPewuOGyB6JuuwbJ2y/xYaOQq4ilNGZ1DolmrkJhZIJl/S6OFJUUU/L
+         1O3sOl8ZUx1tk4TAA1WEEO0vLv3AMn7dT7sYVQYBc3YvDqrjsR4ucwhVswhLbPVob333
+         ZSxtdjcwpn82vAjnxntzbLF5lZs2hgOzWXsZ3v4dJrOtvvMFc4jvos05cB8fhyKV9M3l
+         JZ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DfGhQUmQlwEd5V4oXs2IzZtixormXOqOwnL2xnoqQO4=;
+        b=SSUiNXoMJmsNUk5XnHKQ3I5C/4RjJ63k3VXcFHcTc2Ac1FQo0ViCWaN08TZAUSi+Vg
+         URHHZoF6/7gQvRqIpjNVsjUqFLFQZmJ/o+2y278JjQ/PXzzVUSChrwGB8w0+lQCbXyGD
+         j1xosK6kyiRyoJhw9L+HbPgnV6ZxEbH8XGjaqqAilQTQEcFnLIVd8SPDPiLGmUIk+xt1
+         ITat57A2zqLHlatAYLts3570czqtJbj0P5KQOn+MuvhQjMW3vqtJkd+gM7sLRAMAwNe1
+         JbP8Sptc+c5sI0GJ1sTUlMBnbeXG46NK/7/M3O3Bg5plvCyZQ7OqfKeuL7tyjiH6HDhm
+         D58g==
+X-Gm-Message-State: APjAAAWKm+BwZ1xq6vNXBZ2jQTjv1H/PBTWy7BspzHM79wNxjx7+qmC6
+        xDnQ9y+bN+qmPglfAbzVRxqDJ5A3tfXAaAzqTRQ=
+X-Google-Smtp-Source: APXvYqxUJ0d83F1un8auPSzaixU7Q6Rx9eWc6bIv/wFgXZR9CSUY8ozE5mXQHw+YOzzdzYYeKAWZin+4xfIRSqeWi/o=
+X-Received: by 2002:a1f:d586:: with SMTP id m128mr12870062vkg.24.1567372175232;
+ Sun, 01 Sep 2019 14:09:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190810052829.6032-2-tiny.windzz@gmail.com>
+References: <20190901194032.16207-1-arthurmoraeslago@gmail.com>
+In-Reply-To: <20190901194032.16207-1-arthurmoraeslago@gmail.com>
+From:   =?UTF-8?B?TGHDrXMgUGM=?= <laispc19@gmail.com>
+Date:   Sun, 1 Sep 2019 18:09:23 -0300
+Message-ID: <CAG=BupUy+93XBz-6-oSDqm9+hGsxpQOwiGLt_Jgg4fouNfDE0w@mail.gmail.com>
+Subject: Re: [Lkcamp] [PATCH] media: vimc: Implement debayer control for mean
+ window size
+To:     Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+Cc:     helen.koike@collabora.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org, hverkuil-cisco@xs4all.nl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Sat, Aug 10, 2019 at 05:28:12AM +0000, Yangtao Li wrote:
-> This patch adds the support for allwinner thermal sensor, within
-> allwinner SoC. It will register sensors for thermal framework
-> and use device tree to bind cooling device.
-
-I've tested this driver on H6 SoC, and it reports temperatures that are
-way too high. It overestimates temperature by around 15-25°C.
-
-I'm measuring the SoC temperature with IR thermometer (it reports temperatures
-slightly lower than real ones 2-3°C, when measuring black surfaces).
-
-I've found out that ORing 0x2f to SUN50I_THS_CTRL0 will correct this.
-
-This value is undocummented, but present in BSP:
-
-See: https://megous.com/git/linux/tree/drivers/thermal/sunxi_thermal/sunxi_thermal_sensor/sunxi_ths_driver.h?h=h6-4.9-bsp#n561
-
-With this value set, the driver reports values 7°C above package temperature,
-which seems about right.
-
-regards,
-	o.
-
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Em dom, 1 de set de 2019 =C3=A0s 16:41, Arthur Moraes do Lago
+<arthurmoraeslago@gmail.com> escreveu:
+>
+> Add mean window size parameter for debayer filter as a control in
+> vimc-debayer.
+>
+> vimc-debayer was patched to allow changing mean windows parameter
+> of the filter without needing to reload the driver. The parameter
+> can now be set using a v4l2-ctl control(mean_window_size).
+>
+> Co-developed-by: La=C3=ADs Pessine do Carmo <laispc19@gmail.com>
+> Signed-off-by: La=C3=ADs Pessine do Carmo <laispc19@gmail.com>
+> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+>
 > ---
->  MAINTAINERS                     |   7 +
->  drivers/thermal/Kconfig         |  14 ++
->  drivers/thermal/Makefile        |   1 +
->  drivers/thermal/sun8i_thermal.c | 399 ++++++++++++++++++++++++++++++++
->  4 files changed, 421 insertions(+)
->  create mode 100644 drivers/thermal/sun8i_thermal.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 47800d32cfbc..89dc43f4064d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -682,6 +682,13 @@ L:	linux-crypto@vger.kernel.org
->  S:	Maintained
->  F:	drivers/crypto/sunxi-ss/
->  
-> +ALLWINNER THERMAL DRIVER
-> +M:	Yangtao Li <tiny.windzz@gmail.com>
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> +F:	drivers/thermal/sun8i_thermal.c
+> This patch was made on top of Shuah Khan's patch (162623).
+> Thanks.
+
+We refered to the patch ID from patchwork.kernel.org, but actually the
+patch series is named "Collapse vimc single monolithic driver".
+Thanks.
+
+> ---
+>  drivers/media/platform/vimc/vimc-common.h  |  1 +
+>  drivers/media/platform/vimc/vimc-debayer.c | 81 ++++++++++++++++++----
+>  2 files changed, 70 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/pl=
+atform/vimc/vimc-common.h
+> index 5b2282de395c..547ff04a415e 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -19,6 +19,7 @@
+>  #define VIMC_CID_VIMC_BASE             (0x00f00000 | 0xf000)
+>  #define VIMC_CID_VIMC_CLASS            (0x00f00000 | 1)
+>  #define VIMC_CID_TEST_PATTERN          (VIMC_CID_VIMC_BASE + 0)
+> +#define VIMC_CID_MEAN_WIN_SIZE         (VIMC_CID_VIMC_BASE + 1)
+>
+>  #define VIMC_FRAME_MAX_WIDTH 4096
+>  #define VIMC_FRAME_MAX_HEIGHT 2160
+> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/p=
+latform/vimc/vimc-debayer.c
+> index 6cee911bf149..aa3edeed96bc 100644
+> --- a/drivers/media/platform/vimc/vimc-debayer.c
+> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+> @@ -11,17 +11,11 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/v4l2-mediabus.h>
+> +#include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-subdev.h>
+>
+>  #include "vimc-common.h"
+>
+> -static unsigned int deb_mean_win_size =3D 3;
+> -module_param(deb_mean_win_size, uint, 0000);
+> -MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the m=
+ean.\n"
+> -       "NOTE: the window size needs to be an odd number, as the main pix=
+el "
+> -       "stays in the center of the window, otherwise the next odd number=
+ "
+> -       "is considered");
+> -
+>  #define IS_SINK(pad) (!pad)
+>  #define IS_SRC(pad)  (pad)
+>
+> @@ -49,6 +43,8 @@ struct vimc_deb_device {
+>         u8 *src_frame;
+>         const struct vimc_deb_pix_map *sink_pix_map;
+>         unsigned int sink_bpp;
+> +       unsigned int mean_win_size;
+> +       struct v4l2_ctrl_handler hdl;
+>  };
+>
+>  static const struct v4l2_mbus_framefmt sink_fmt_default =3D {
+> @@ -387,7 +383,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_de=
+vice *vdeb,
+>          * the top left corner of the mean window (considering the curren=
+t
+>          * pixel as the center)
+>          */
+> -       seek =3D deb_mean_win_size / 2;
+> +       seek =3D vdeb->mean_win_size / 2;
+>
+>         /* Sum the values of the colors in the mean window */
+>
+> @@ -477,6 +473,33 @@ static void *vimc_deb_process_frame(struct vimc_ent_=
+device *ved,
+>
+>  }
+>
+> +static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb=
+,
+> +                                           unsigned int mean_win_size)
+> +{
+> +               if (vdeb->mean_win_size =3D=3D mean_win_size)
+> +                       return;
+> +               vdeb->mean_win_size =3D mean_win_size;
+> +}
 > +
->  ALLWINNER VPU DRIVER
->  M:	Maxime Ripard <maxime.ripard@bootlin.com>
->  M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 9966364a6deb..f8b73b32b92d 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -262,6 +262,20 @@ config SPEAR_THERMAL
->  	  Enable this to plug the SPEAr thermal sensor driver into the Linux
->  	  thermal framework.
->  
-> +config SUN8I_THERMAL
-> +	tristate "Allwinner sun8i thermal driver"
-> +	depends on ARCH_SUNXI || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	depends on NVMEM
-> +	depends on OF
-> +	depends on RESET_CONTROLLER
-> +	help
-> +	  Support for the sun8i thermal sensor driver into the Linux thermal
-> +	  framework.
+> +static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +       struct vimc_deb_device *vdeb =3D
+> +               container_of(ctrl->handler, struct vimc_deb_device, hdl);
 > +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called sun8i-thermal.
+> +       switch (ctrl->id) {
+> +       case VIMC_CID_MEAN_WIN_SIZE:
+> +               vimc_deb_s_mean_win_size(vdeb, ctrl->val);
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +       return 0;
+> +}
 > +
->  config ROCKCHIP_THERMAL
->  	tristate "Rockchip thermal driver"
->  	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7f847a..fa6f8b206281 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -31,6 +31,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->  obj-y				+= broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
->  obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
-> +obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
->  obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
->  obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
->  obj-$(CONFIG_RCAR_GEN3_THERMAL)	+= rcar_gen3_thermal.o
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> new file mode 100644
-> index 000000000000..2ce36fa3fec3
-> --- /dev/null
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -0,0 +1,399 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Thermal sensor driver for Allwinner SOC
-> + * Copyright (C) 2019 Yangtao Li
-> + *
-> + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
-> + * Based on the work of Ondrej Jirman <megous@megous.com>
-> + * Based on the work of Josef Gajdusek <atx@atx.name>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-> +#include <linux/thermal.h>
-> +
-> +#define MAX_SENSOR_NUM	4
-> +
-> +#define SUN50I_H6_SENSOR_NUM	2
-> +#define SUN50I_H6_OFFSET	-2794
-> +#define SUN50I_H6_SCALE		-67
-> +
-> +#define FT_TEMP_MASK				GENMASK(11, 0)
-> +#define TEMP_CALIB_MASK				GENMASK(11, 0)
-> +#define TEMP_TO_REG				672
-> +#define CALIBRATE_DEFAULT			0x800
-> +
-> +#define SUN50I_THS_CTRL0			0x00
-> +#define SUN50I_H6_THS_ENABLE			0x04
-> +#define SUN50I_H6_THS_PC			0x08
-> +#define SUN50I_H6_THS_DIC			0x10
-> +#define SUN50I_H6_THS_DIS			0x20
-> +#define SUN50I_H6_THS_MFC			0x30
-> +#define SUN50I_H6_THS_TEMP_CALIB		0xa0
-> +#define SUN50I_H6_THS_TEMP_DATA			0xc0
-> +
-> +#define SUN50I_THS_CTRL0_T_ACQ(x)		((GENMASK(15, 0) & (x)) << 16)
-> +#define SUN50I_THS_FILTER_EN			BIT(2)
-> +#define SUN50I_THS_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
-> +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)		((GENMASK(19, 0) & (x)) << 12)
-> +#define SUN50I_H6_THS_DATA_IRQ_STS(x)		BIT(x)
-> +
-> +/* millidegree celsius */
-> +#define SUN50I_H6_FT_DEVIATION			7000
-> +
-> +struct ths_device;
-> +
-> +struct tsensor {
-> +	struct ths_device		*tmdev;
-> +	struct thermal_zone_device	*tzd;
-> +	int				id;
+> +static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops =3D {
+> +       .s_ctrl =3D vimc_deb_s_ctrl,
 > +};
 > +
-> +struct ths_device {
-> +	struct device				*dev;
-> +	struct regmap				*regmap;
-> +	struct reset_control			*reset;
-> +	struct clk				*bus_clk;
-> +	struct tsensor				sensor[MAX_SENSOR_NUM];
+>  static void vimc_deb_release(struct v4l2_subdev *sd)
+>  {
+>         struct vimc_deb_device *vdeb =3D
+> @@ -502,6 +525,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vi=
+mc_ent_config *vcfg)
+>         vimc_ent_sd_unregister(ved, &vdeb->sd);
+>  }
+>
+> +static const struct v4l2_ctrl_config vimc_deb_ctrl_class =3D {
+> +       .flags =3D V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
+> +       .id =3D VIMC_CID_VIMC_CLASS,
+> +       .name =3D "VIMC Controls",
+> +       .type =3D V4L2_CTRL_TYPE_CTRL_CLASS,
 > +};
 > +
-> +/* Temp Unit: millidegree Celsius */
-> +static int sun8i_ths_reg2temp(struct ths_device *tmdev,
-> +			      int reg)
-> +{
-> +	return (reg + SUN50I_H6_OFFSET) * SUN50I_H6_SCALE;
-> +}
-> +
-> +static int sun8i_ths_get_temp(void *data, int *temp)
-> +{
-> +	struct tsensor *s = data;
-> +	struct ths_device *tmdev = s->tmdev;
-> +	int val;
-> +
-> +	regmap_read(tmdev->regmap, SUN50I_H6_THS_TEMP_DATA +
-> +		    0x4 * s->id, &val);
-> +
-> +	/* ths have no data yet */
-> +	if (!val)
-> +		return -EAGAIN;
-> +
-> +	*temp = sun8i_ths_reg2temp(tmdev, val);
-> +	/*
-> +	 * XX - According to the original sdk, there are some platforms(rarely)
-> +	 * that add a fixed offset value after calculating the temperature
-> +	 * value. We can't simply put it on the formula for calculating the
-> +	 * temperature above, because the formula for calculating the
-> +	 * temperature above is also used when the sensor is calibrated. If
-> +	 * do this, the correct calibration formula is hard to know.
-> +	 */
-> +	*temp += SUN50I_H6_FT_DEVIATION;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct thermal_zone_of_device_ops ths_ops = {
-> +	.get_temp = sun8i_ths_get_temp,
+> +static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size =3D {
+> +       .ops =3D &vimc_deb_ctrl_ops,
+> +       .id =3D VIMC_CID_MEAN_WIN_SIZE,
+> +       .name =3D "Mean window size",
+> +       .type =3D V4L2_CTRL_TYPE_INTEGER,
+> +       .min =3D 1,
+> +       .max =3D 99,
+> +       .step =3D 2,
+> +       .def =3D 3,
 > +};
 > +
-> +static const struct regmap_config config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-> +};
+>  int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
+>  {
+>         struct v4l2_device *v4l2_dev =3D &vimc->v4l2_dev;
+> @@ -513,6 +554,16 @@ int vimc_deb_add(struct vimc_device *vimc, struct vi=
+mc_ent_config *vcfg)
+>         if (!vdeb)
+>                 return -ENOMEM;
+>
+> +       /* Create controls: */
+> +       v4l2_ctrl_handler_init(&vdeb->hdl, 2);
+> +       v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
+> +       v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NU=
+LL);
+> +       vdeb->sd.ctrl_handler =3D &vdeb->hdl;
+> +       if (vdeb->hdl.error) {
+> +               ret =3D vdeb->hdl.error;
+> +               goto err_free_vdeb;
+> +       }
 > +
-> +static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
-> +{
-> +	struct ths_device *tmdev = data;
-> +	int i, state;
+>         /* Initialize ved and sd */
+>         ret =3D vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
+>                                    vcfg->name,
+> @@ -520,13 +571,12 @@ int vimc_deb_add(struct vimc_device *vimc, struct v=
+imc_ent_config *vcfg)
+>                                    (const unsigned long[2]) {MEDIA_PAD_FL=
+_SINK,
+>                                    MEDIA_PAD_FL_SOURCE},
+>                                    &vimc_deb_int_ops, &vimc_deb_ops);
+> -       if (ret) {
+> -               kfree(vdeb);
+> -               return ret;
+> -       }
+> +       if (ret)
+> +               goto err_free_hdl;
+>
+>         vdeb->ved.process_frame =3D vimc_deb_process_frame;
+>         vdeb->dev =3D &vimc->pdev.dev;
+> +       vdeb->mean_win_size =3D vimc_deb_ctrl_mean_win_size.def;
+>
+>         /* Initialize the frame format */
+>         vdeb->sink_fmt =3D sink_fmt_default;
+> @@ -541,4 +591,11 @@ int vimc_deb_add(struct vimc_device *vimc, struct vi=
+mc_ent_config *vcfg)
+>
+>         vcfg->ved =3D &vdeb->ved;
+>         return 0;
 > +
-> +	regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
+> +err_free_hdl:
+> +       v4l2_ctrl_handler_free(&vdeb->hdl);
+> +err_free_vdeb:
+> +       kfree(vdeb);
 > +
-> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-> +
-> +		if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
-> +			/* clear data irq pending */
-> +			regmap_write(tmdev->regmap, SUN50I_H6_THS_DIS,
-> +				     SUN50I_H6_THS_DATA_IRQ_STS(i));
-> +
-> +			thermal_zone_device_update(tmdev->sensor[i].tzd,
-> +						   THERMAL_EVENT_UNSPECIFIED);
-> +		}
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int sun50i_ths_calibrate(struct ths_device *tmdev)
-> +{
-> +	struct nvmem_cell *calcell;
-> +	struct device *dev = tmdev->dev;
-> +	u16 *caldata;
-> +	size_t callen;
-> +	int ft_temp;
-> +	int i, ret = 0;
-> +
-> +	calcell = devm_nvmem_cell_get(dev, "calib");
-> +	if (IS_ERR(calcell)) {
-> +		if (PTR_ERR(calcell) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		/*
-> +		 * Even if the external calibration data stored in sid is
-> +		 * not accessible, the THS hardware can still work, although
-> +		 * the data won't be so accurate.
-> +		 *
-> +		 * The default value of calibration register is 0x800 for
-> +		 * every sensor, and the calibration value is usually 0x7xx
-> +		 * or 0x8xx, so they won't be away from the default value
-> +		 * for a lot.
-> +		 *
-> +		 * So here we do not return error if the calibartion data is
-> +		 * not available, except the probe needs deferring.
-> +		 */
-> +		goto out;
-> +	}
-> +
-> +	caldata = nvmem_cell_read(calcell, &callen);
-> +	if (IS_ERR(caldata)) {
-> +		ret = PTR_ERR(caldata);
-> +		goto out;
-> +	}
-> +
-> +	if (!caldata[0] || callen < 2 + 2 * SUN50I_H6_SENSOR_NUM) {
-> +		ret = -EINVAL;
-> +		goto out_free;
-> +	}
-> +
-> +	/*
-> +	 * efuse layout:
-> +	 *
-> +	 *	0   11  16	 32
-> +	 *	+-------+-------+-------+
-> +	 *	|temp|  |sensor0|sensor1|
-> +	 *	+-------+-------+-------+
-> +	 *
-> +	 * The calibration data on the H6 is the ambient temperature and
-> +	 * sensor values that are filled during the factory test stage.
-> +	 *
-> +	 * The unit of stored FT temperature is 0.1 degreee celusis.
-> +	 * Through the stored ambient temperature and the data read
-> +	 * by the sensor, after a certain calculation, the calibration
-> +	 * value to be compensated can be obtained.
-> +	 */
-> +	ft_temp = caldata[0] & FT_TEMP_MASK;
-> +
-> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-> +		int reg = (int)caldata[i + 1];
-> +		int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
-> +		int delta, cdata, offset;
-> +
-> +		/*
-> +		 * To calculate the calibration value:
-> +		 *
-> +		 * X(in Celsius) = Ts - ft_temp
-> +		 * delta = X * 10000 / TEMP_TO_REG
-> +		 * cdata = CALIBRATE_DEFAULT - delta
-> +		 *
-> +		 * cdata: calibration value
-> +		 */
-> +		delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
-> +		cdata = CALIBRATE_DEFAULT - delta;
-> +		if (cdata & ~TEMP_CALIB_MASK) {
-> +			/*
-> +			 * Calibration value more than 12-bit, but calibration
-> +			 * register is 12-bit. In this case, ths hardware can
-> +			 * still work without calibration, although the data
-> +			 * won't be so accurate.
-> +			 */
-> +			dev_warn(dev, "sensor%d is not calibrated.\n", i);
-> +
-> +			continue;
-> +		}
-> +
-> +		offset = (i % 2) << 4;
-> +		regmap_update_bits(tmdev->regmap,
-> +				   SUN50I_H6_THS_TEMP_CALIB + ((i >> 1) * 4),
-> +				   0xfff << offset,
-> +				   cdata << offset);
-> +	}
-> +
-> +out_free:
-> +	kfree(caldata);
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> +{
-> +	struct device *dev = tmdev->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
-> +	if (IS_ERR(tmdev->regmap))
-> +		return PTR_ERR(tmdev->regmap);
-> +
-> +	tmdev->reset = devm_reset_control_get(dev, 0);
-> +	if (IS_ERR(tmdev->reset))
-> +		return PTR_ERR(tmdev->reset);
-> +
-> +	tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> +	if (IS_ERR(tmdev->bus_clk))
-> +		return PTR_ERR(tmdev->bus_clk);
-> +
-> +	ret = reset_control_deassert(tmdev->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(tmdev->bus_clk);
-> +	if (ret)
-> +		goto assert_reset;
-> +
-> +	ret = sun50i_ths_calibrate(tmdev);
-> +	if (ret)
-> +		goto bus_disable;
-> +
-> +	return 0;
-> +
-> +bus_disable:
-> +	clk_disable_unprepare(tmdev->bus_clk);
-> +assert_reset:
-> +	reset_control_assert(tmdev->reset);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sun50i_h6_thermal_init(struct ths_device *tmdev)
-> +{
-> +	int val;
-> +
-> +	/*
-> +	 * clkin = 24MHz
-> +	 * T acquire = clkin / (x + 1)
-> +	 *           = 20us
-> +	 */
-> +	regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> +		     SUN50I_THS_CTRL0_T_ACQ(479));
-> +	/* average over 4 samples */
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> +		     SUN50I_THS_FILTER_EN |
-> +		     SUN50I_THS_FILTER_TYPE(1));
-> +	/* period = (x + 1) * 4096 / clkin; ~10ms */
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
-> +	/* enable sensor */
-> +	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
-> +	/* thermal data interrupt enable */
-> +	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_DIC, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sun8i_ths_register(struct ths_device *tmdev)
-> +{
-> +	struct thermal_zone_device *tzd;
-> +	int i;
-> +
-> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-> +		tmdev->sensor[i].tmdev = tmdev;
-> +		tmdev->sensor[i].id = i;
-> +		tmdev->sensor[i].tzd =
-> +			devm_thermal_zone_of_sensor_register(tmdev->dev,
-> +							     i,
-> +							     &tmdev->sensor[i],
-> +							     &ths_ops);
-> +		if (IS_ERR(tmdev->sensor[i].tzd))
-> +			return PTR_ERR(tzd);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sun8i_ths_probe(struct platform_device *pdev)
-> +{
-> +	struct ths_device *tmdev;
-> +	struct device *dev = &pdev->dev;
-> +	int ret, irq;
-> +
-> +	tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> +	if (!tmdev)
-> +		return -ENOMEM;
-> +
-> +	tmdev->dev = dev;
-> +	platform_set_drvdata(pdev, tmdev);
-> +
-> +	ret = sun8i_ths_resource_init(tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = sun50i_h6_thermal_init(tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sun8i_ths_register(tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Avoid entering the interrupt handler, the thermal device is not
-> +	 * registered yet, we deffer the registration of the interrupt to
-> +	 * the end.
-> +	 */
-> +	ret = devm_request_threaded_irq(dev, irq, NULL,
-> +					sun50i_h6_irq_thread,
-> +					IRQF_ONESHOT, "ths", tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
-> +}
-> +
-> +static int sun8i_ths_remove(struct platform_device *pdev)
-> +{
-> +	struct ths_device *tmdev = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(tmdev->bus_clk);
-> +	reset_control_assert(tmdev->reset);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_ths_match[] = {
-> +	{ .compatible = "allwinner,sun50i-h6-ths"},
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_ths_match);
-> +
-> +static struct platform_driver ths_driver = {
-> +	.probe = sun8i_ths_probe,
-> +	.remove = sun8i_ths_remove,
-> +	.driver = {
-> +		.name = "sun8i-thermal",
-> +		.of_match_table = of_ths_match,
-> +	},
-> +};
-> +module_platform_driver(ths_driver);
-> +
-> +MODULE_DESCRIPTION("Thermal sensor driver for Allwinner SOC");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.17.1
-> 
-> 
+> +       return ret;
+>  }
+> --
+> 2.23.0
+>
+>
 > _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Lkcamp mailing list
+> Lkcamp@lists.libreplanetbr.org
+> https://lists.libreplanetbr.org/mailman/listinfo/lkcamp
+
+
+
+--=20
+La=C3=ADs Pessine do Carmo
+Engenharia de Computa=C3=A7=C3=A3o 011 - USP S=C3=A3o Carlos
+
+  Membro Semear : Rob=C3=B3tica
