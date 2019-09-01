@@ -2,83 +2,50 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AF9C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 07:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D76C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 08:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2B822CF7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 07:58:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ypp3RiUn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R9tUyQ8R"
+	by mail.kernel.org (Postfix) with ESMTP id 8E1E322CF7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 08:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfIAH6G (ORCPT
+        id S1728838AbfIAIBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 03:58:06 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53810 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728625AbfIAH6G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 03:58:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 351C86076C; Sun,  1 Sep 2019 07:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567324685;
-        bh=974SjN6QZWsWEDFEeAki0OUAagPFk6IXJOeZ9hxmZG4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Ypp3RiUnaf4UjG4JFBRk0KtJJpq+c1ED0evTexNyC2Fq8qVxDSP//JtQmMLLLCBvR
-         WngVBWZlZmzdkStJYWoIfsAb7D2wAuyyagKLjIwWBzc0wNcCGK5jbrB+h3CxS80wgv
-         9WO8SkCHSv/GN2L+35EvRRTSARk0ydINGxSqiJjc=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C597D60271;
-        Sun,  1 Sep 2019 07:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567324684;
-        bh=974SjN6QZWsWEDFEeAki0OUAagPFk6IXJOeZ9hxmZG4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=R9tUyQ8RiV2L9eV9/tVYrtdLtEd8GnG4XU1+3GYiVtCYqcMqA3g9R7E24mlI21far
-         v9LSrRUnRzTH7l/2lFlZu3i1dgLYcxuOrNu8tYKNfJVlOcuqog6+fXPiemhWLSuOen
-         Y5f5pqwxaSMpyFHNMsGRmp4oX6V81fpyfuMJegy0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C597D60271
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Hui Peng <benquike@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] Fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe
-References: <20190804002905.11292-1-benquike@gmail.com>
-        <20190831180219.GA20860@roeck-us.net>
-        <CAKpmkkXyhuTviRfJG9dG-=Pt0KKdoHaxhXdvW9tSadOoKfnP1w@mail.gmail.com>
-Date:   Sun, 01 Sep 2019 10:58:00 +0300
-In-Reply-To: <CAKpmkkXyhuTviRfJG9dG-=Pt0KKdoHaxhXdvW9tSadOoKfnP1w@mail.gmail.com>
-        (Hui Peng's message of "Sat, 31 Aug 2019 14:16:53 -0400")
-Message-ID: <87o904qwhj.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Sun, 1 Sep 2019 04:01:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:40643 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbfIAIBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 04:01:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B3211227A8B; Sun,  1 Sep 2019 10:00:56 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 10:00:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@alien8.de>,
+        palmer@sifive.com, linux-riscv@lists.infradead.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/soc
+Message-ID: <20190901080055.GA12035@lst.de>
+References: <20190818082935.14869-1-hch@lst.de> <20190819060904.GA4841@zn.tnic> <20190819062619.GA20211@lst.de> <20190822062635.00f6e507@coco.lan> <alpine.DEB.2.21.9999.1908301951080.16731@viisi.sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1908301951080.16731@viisi.sifive.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hui Peng <benquike@gmail.com> writes:
+On Fri, Aug 30, 2019 at 07:53:17PM -0700, Paul Walmsley wrote:
+> There's already a MAINTAINERS entry that should cover drivers/soc/sifive.  
+> Probably it's not needed to add another one here.
 
-> The reason that this patch is still in the pending state is that it
-> has not reviewed by maintainers (they are not responding).
-> @Greg: can we apply it?
-
-Who is "we" in this case? But anyway, I'll review the patch and if it's
-ok I'll take it through my ath.git tree, as normal.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+So are you going to apply the original patch to the riscv tree?
+I dont want to keep this file lingering around as a force built part
+of the riscv build for another merge window.
