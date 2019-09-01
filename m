@@ -2,173 +2,584 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20CAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 01:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58BBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 02:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B082C2186A
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 01:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E8621897
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 02:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="TpitVzhj"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pjILNVNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfIABhc (ORCPT
+        id S1728610AbfIACGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 21:37:32 -0400
-Received: from sonic306-21.consmr.mail.gq1.yahoo.com ([98.137.68.84]:40180
-        "EHLO sonic306-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726903AbfIABhc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 21:37:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1567301850; bh=h5kluZPg6YyzYPkg7FMpxAkd2+TEu8mj8Oli0gjbxxI=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=TpitVzhjwc6MLeoUX8KU8Q9Ll99RNBscvIx+uFUKZSkMAuTqZAiffc213/IxmxDOmt7ApHV31XCEDGN8Mnxe95KMUI00JsRrW2zUp9no0QkAL9jlEwyuSljh9HOyL8O1sG/2iweJKA7rZbxcQdWPqWGARreDlt6rmvh6NtRyHqyU/5eN1lprTgv4XPgkvpWjFdhX1ftMCRWqLmseWpKwf6paEFvOKyKU3rwPWVZ3MUJgAaqz4yaGs06hEBSvKiyvOoq8BdqeI2uKQuMZMy0jECBq4abVZFDUYE+1ak/U9In6HYBltGc3ElrFV7NVGOuAiqGn85DRZa02WZkRemjU4w==
-X-YMail-OSG: ZIgHkTsVM1l.FexEeQECdoJ4yYg78ASs6dusnC1ouKz24a53THRr4H4_UMOujgG
- DdvjnX2M1bfH5rGKXD_KtMQ2dme4vPOly13MebourPvBgEIGL81xNsjTC9kxq6GehSi2T5B5Ift7
- 0WwL6mBZLcH2_7nmiQsFcnj0v9_2hx4EPB8v3S1CoaNNkb8kIQkbVwwNvpkt3Hrrw8u6YIk7VF35
- GRRDr8RjB7tc5y1m1Gbrxldsgwa_9XmBR98yPuOIdJAwK47nECLqmlaqbG6Qd8bTwGkvKyO2QSa9
- aZmD1kew7I_Nh22wAr_tjlIVECUQpFdtTybHE3BfgaRJ3KL0.nb_0Gf0kS5stu.Uop3SP1doHMZN
- Q0d62jbilxUGVZmXQIVYneljxLVFLVELS7Z8hYVYl83zp2qsAipxPozT3GqSxrsq.lv4ZP_xQ7w5
- phqAXPTB3JgdJItyfYsU1s3B8oCzn8wB9Nd6jrafgBwkQwUSqmw6AZ4FqBqzGnnaunQ5_4qXpX0u
- 0GWsGt4vcF1x61SzNRArrSzMOoKn7.0hN8th8AvmpMo251GDQLJyiRn6wNMaO2OGUwXYD2YfTALx
- F.X5Ze5AGXVI27GST1urU5CH8dzj0esKIkBOvJPOCA5V5NLgc2O0snD2X3Gfy67J6L0dRYI_CS2c
- BZd.Z0YZwcEsB2OOtCOWsnRTpZ8hsFAw3qptFcKu8QZsRRVUvGL_DAGvutQJNnAOFMV_sPC8SVid
- eOhDqlIzZj0OCahZWW1EBzLNAv8zcmsqcmtzQKh9SdFpFBBNlmSFaiPbGOyN6d56rjLFGXg_sLrk
- P1p0IsO8H28MguzCS7dsQMfRJiwprjBpIXKk_8VVK02XMIfcRXM9S_Zqcj.STs_E5.QbdzRdKvCa
- 7XkeGnJRpAqFpBsPowGArIfKditknctkK1k04UK7yAX0YM2tTcULjtFvZGUgT5Wrs4Cq4VtWYH32
- s7URbUA0FzxFUfaRht1QUhlKArv2lMoGuwXo6zMyF6J8xj1L1YSQ33g2ZmBQXIlVP_bEoeIOCmkz
- 8Lvom4CA7rboIiKHPE1Z0a_e16.Xbmm1CMmDr7Ze3qFYxKhDM3cyfit6xRFpmoCahbRu84jC0F28
- VwIAb4CM6pepF..Lnxg6desBjGIy87GafksQEBD_Z3qvIDYO.ojox..2QgFYhtIbRYaiFQQeNrJp
- EmbZCs0ErPWmD0xRrzWkNynH.5yBxDnELUFzRDDGGEMTb9hNdvq3CS_8ByyA0F02ahzpBWHh61f4
- zlViWVpRGCPFauj0khrq265Vk
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Sep 2019 01:37:30 +0000
-Received: by smtp412.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 24369f664944151e8107c236514cbc63;
-          Sun, 01 Sep 2019 01:37:26 +0000 (UTC)
-Date:   Sun, 1 Sep 2019 09:37:19 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of
- fat/vfat
-Message-ID: <20190901013715.GA8243@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <245727.1567183359@turing-police>
- <20190830164503.GA12978@infradead.org>
- <267691.1567212516@turing-police>
- <20190831064616.GA13286@infradead.org>
- <295233.1567247121@turing-police>
- <20190901010721.GG7777@dread.disaster.area>
+        Sat, 31 Aug 2019 22:06:33 -0400
+Received: from vps.xff.cz ([195.181.215.36]:43206 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727538AbfIACGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 22:06:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1567303590; bh=7KhoTyooAwT5WgVvu2mnLRyLJZxigkAs46qZpESqWnY=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=pjILNVNFTzHnNm0cAJTzluqDMnONzOe2A7r2s/aUYMOgNUKB1Z7gqcveOdSyHpsvG
+         nMv4+4c7nVRzNxeLPGwHFMY49sBfn+qKPtlPb+c4zeZObKFUAfSnmWANLhd18hgCxZ
+         ZTXu9XUWJD4YfD2ERuk50dMx1b0xWp5bWaRRhxlc=
+Date:   Sun, 1 Sep 2019 04:06:29 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        nicolas.ferre@microchip.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 01/18] thermal: sun8i: add thermal driver for h6
+Message-ID: <20190901020629.lpzkmjpjs5wgu6e7@core.my.home>
+Mail-Followup-To: Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
+        edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        nicolas.ferre@microchip.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+ <20190810052829.6032-2-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=gbk
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190901010721.GG7777@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190810052829.6032-2-tiny.windzz@gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Hello Yangtao,
 
-On Sun, Sep 01, 2019 at 11:07:21AM +1000, Dave Chinner wrote:
-> On Sat, Aug 31, 2019 at 06:25:21AM -0400, Valdis Kl??tnieks wrote:
-> > On Fri, 30 Aug 2019 23:46:16 -0700, Christoph Hellwig said:
-> > > Since when did Linux kernel submissions become "show me a better patch"
-> > > to reject something obviously bad?
-> > 
-> > Well, do you even have a *suggestion* for a better idea?  Other than "just rip
-> > it out"?  Keeping in mind that:
-> > 
-> > > As I said the right approach is to probably (pending comments from the
-> > > actual fat maintainer) to merge exfat support into the existing fs/fat/
-> > > codebase.  You obviously seem to disagree (and at the same time not).
-> > 
-> > At this point, there isn't any true consensus on whether that's the best
-> > approach at the current.
+On Sat, Aug 10, 2019 at 05:28:12AM +0000, Yangtao Li wrote:
+> This patch adds the support for allwinner thermal sensor, within
+> allwinner SoC. It will register sensors for thermal framework
+> and use device tree to bind cooling device.
 > 
-> Which, quite frankly, means it has been merged prematurely.
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  MAINTAINERS                     |   7 +
+>  drivers/thermal/Kconfig         |  14 ++
+>  drivers/thermal/Makefile        |   1 +
+>  drivers/thermal/sun8i_thermal.c | 399 ++++++++++++++++++++++++++++++++
+>  4 files changed, 421 insertions(+)
+>  create mode 100644 drivers/thermal/sun8i_thermal.c
 > 
-> Valdis - the model for getting a new filesystem merged is the one
-> taken by Orangefs. That was not merged through the staging tree,
-> it was reviewd via patches to linux-fsdevel that were iterated far
-> faster than the stable merge cycle allows, allowed all the cleanups
-> to be done independently of the feature work needed, the structural
-> changes we easy to discuss, quote, etc.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 47800d32cfbc..89dc43f4064d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -682,6 +682,13 @@ L:	linux-crypto@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/crypto/sunxi-ss/
+>  
+> +ALLWINNER THERMAL DRIVER
+> +M:	Yangtao Li <tiny.windzz@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> +F:	drivers/thermal/sun8i_thermal.c
+> +
+>  ALLWINNER VPU DRIVER
+>  M:	Maxime Ripard <maxime.ripard@bootlin.com>
+>  M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 9966364a6deb..f8b73b32b92d 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -262,6 +262,20 @@ config SPEAR_THERMAL
+>  	  Enable this to plug the SPEAr thermal sensor driver into the Linux
+>  	  thermal framework.
+>  
+> +config SUN8I_THERMAL
+> +	tristate "Allwinner sun8i thermal driver"
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	depends on NVMEM
+> +	depends on OF
+> +	depends on RESET_CONTROLLER
+> +	help
+> +	  Support for the sun8i thermal sensor driver into the Linux thermal
+> +	  framework.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called sun8i-thermal.
+> +
+>  config ROCKCHIP_THERMAL
+>  	tristate "Rockchip thermal driver"
+>  	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 74a37c7f847a..fa6f8b206281 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -31,6 +31,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+>  obj-y				+= broadcom/
+>  obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
+>  obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
+> +obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
+>  obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
+>  obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
+>  obj-$(CONFIG_RCAR_GEN3_THERMAL)	+= rcar_gen3_thermal.o
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> new file mode 100644
+> index 000000000000..2ce36fa3fec3
+> --- /dev/null
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -0,0 +1,399 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Thermal sensor driver for Allwinner SOC
+> + * Copyright (C) 2019 Yangtao Li
+> + *
+> + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
+> + * Based on the work of Ondrej Jirman <megous@megous.com>
+> + * Based on the work of Josef Gajdusek <atx@atx.name>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +#include <linux/thermal.h>
+> +
+> +#define MAX_SENSOR_NUM	4
+> +
+> +#define SUN50I_H6_SENSOR_NUM	2
+> +#define SUN50I_H6_OFFSET	-2794
+> +#define SUN50I_H6_SCALE		-67
+> +
+> +#define FT_TEMP_MASK				GENMASK(11, 0)
+> +#define TEMP_CALIB_MASK				GENMASK(11, 0)
+> +#define TEMP_TO_REG				672
+> +#define CALIBRATE_DEFAULT			0x800
+> +
+> +#define SUN50I_THS_CTRL0			0x00
+> +#define SUN50I_H6_THS_ENABLE			0x04
+> +#define SUN50I_H6_THS_PC			0x08
+> +#define SUN50I_H6_THS_DIC			0x10
+> +#define SUN50I_H6_THS_DIS			0x20
+> +#define SUN50I_H6_THS_MFC			0x30
+> +#define SUN50I_H6_THS_TEMP_CALIB		0xa0
+> +#define SUN50I_H6_THS_TEMP_DATA			0xc0
+> +
+> +#define SUN50I_THS_CTRL0_T_ACQ(x)		((GENMASK(15, 0) & (x)) << 16)
+> +#define SUN50I_THS_FILTER_EN			BIT(2)
+> +#define SUN50I_THS_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
+> +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)		((GENMASK(19, 0) & (x)) << 12)
+> +#define SUN50I_H6_THS_DATA_IRQ_STS(x)		BIT(x)
+> +
+> +/* millidegree celsius */
+> +#define SUN50I_H6_FT_DEVIATION			7000
+> +
+> +struct ths_device;
+> +
+> +struct tsensor {
+> +	struct ths_device		*tmdev;
+> +	struct thermal_zone_device	*tzd;
+> +	int				id;
+> +};
+> +
+> +struct ths_device {
+> +	struct device				*dev;
+> +	struct regmap				*regmap;
+> +	struct reset_control			*reset;
+> +	struct clk				*bus_clk;
+> +	struct tsensor				sensor[MAX_SENSOR_NUM];
+> +};
+> +
+> +/* Temp Unit: millidegree Celsius */
+> +static int sun8i_ths_reg2temp(struct ths_device *tmdev,
+> +			      int reg)
+> +{
+> +	return (reg + SUN50I_H6_OFFSET) * SUN50I_H6_SCALE;
+> +}
+> +
+> +static int sun8i_ths_get_temp(void *data, int *temp)
+> +{
+> +	struct tsensor *s = data;
+> +	struct ths_device *tmdev = s->tmdev;
+> +	int val;
+> +
+> +	regmap_read(tmdev->regmap, SUN50I_H6_THS_TEMP_DATA +
+> +		    0x4 * s->id, &val);
+> +
+> +	/* ths have no data yet */
+> +	if (!val)
+> +		return -EAGAIN;
+> +
+> +	*temp = sun8i_ths_reg2temp(tmdev, val);
+> +	/*
+> +	 * XX - According to the original sdk, there are some platforms(rarely)
+> +	 * that add a fixed offset value after calculating the temperature
+> +	 * value. We can't simply put it on the formula for calculating the
+> +	 * temperature above, because the formula for calculating the
+> +	 * temperature above is also used when the sensor is calibrated. If
+> +	 * do this, the correct calibration formula is hard to know.
+> +	 */
+> +	*temp += SUN50I_H6_FT_DEVIATION;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct thermal_zone_of_device_ops ths_ops = {
+> +	.get_temp = sun8i_ths_get_temp,
+> +};
+> +
+> +static const struct regmap_config config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.fast_io = true,
+> +};
+> +
+> +static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
+> +{
+> +	struct ths_device *tmdev = data;
+> +	int i, state;
+> +
+> +	regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
+> +
+> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
+> +
+> +		if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
+> +			/* clear data irq pending */
+> +			regmap_write(tmdev->regmap, SUN50I_H6_THS_DIS,
+> +				     SUN50I_H6_THS_DATA_IRQ_STS(i));
+> +
+> +			thermal_zone_device_update(tmdev->sensor[i].tzd,
+> +						   THERMAL_EVENT_UNSPECIFIED);
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int sun50i_ths_calibrate(struct ths_device *tmdev)
+> +{
+> +	struct nvmem_cell *calcell;
+> +	struct device *dev = tmdev->dev;
+> +	u16 *caldata;
+> +	size_t callen;
+> +	int ft_temp;
+> +	int i, ret = 0;
+> +
+> +	calcell = devm_nvmem_cell_get(dev, "calib");
+> +	if (IS_ERR(calcell)) {
+> +		if (PTR_ERR(calcell) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		/*
+> +		 * Even if the external calibration data stored in sid is
+> +		 * not accessible, the THS hardware can still work, although
+> +		 * the data won't be so accurate.
+> +		 *
+> +		 * The default value of calibration register is 0x800 for
+> +		 * every sensor, and the calibration value is usually 0x7xx
+> +		 * or 0x8xx, so they won't be away from the default value
+> +		 * for a lot.
+> +		 *
+> +		 * So here we do not return error if the calibartion data is
+> +		 * not available, except the probe needs deferring.
+> +		 */
+> +		goto out;
+> +	}
+> +
+> +	caldata = nvmem_cell_read(calcell, &callen);
+> +	if (IS_ERR(caldata)) {
+> +		ret = PTR_ERR(caldata);
+> +		goto out;
+> +	}
+> +
+> +	if (!caldata[0] || callen < 2 + 2 * SUN50I_H6_SENSOR_NUM) {
+> +		ret = -EINVAL;
+> +		goto out_free;
+> +	}
+> +
+> +	/*
+> +	 * efuse layout:
+> +	 *
+> +	 *	0   11  16	 32
+> +	 *	+-------+-------+-------+
+> +	 *	|temp|  |sensor0|sensor1|
+> +	 *	+-------+-------+-------+
+> +	 *
+> +	 * The calibration data on the H6 is the ambient temperature and
+> +	 * sensor values that are filled during the factory test stage.
+> +	 *
+> +	 * The unit of stored FT temperature is 0.1 degreee celusis.
+> +	 * Through the stored ambient temperature and the data read
+> +	 * by the sensor, after a certain calculation, the calibration
+> +	 * value to be compensated can be obtained.
+> +	 */
+> +	ft_temp = caldata[0] & FT_TEMP_MASK;
+> +
+> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
+> +		int reg = (int)caldata[i + 1];
+> +		int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
+> +		int delta, cdata, offset;
+> +
+> +		/*
+> +		 * To calculate the calibration value:
+> +		 *
+> +		 * X(in Celsius) = Ts - ft_temp
+> +		 * delta = X * 10000 / TEMP_TO_REG
+> +		 * cdata = CALIBRATE_DEFAULT - delta
+> +		 *
+> +		 * cdata: calibration value
+> +		 */
+> +		delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
+> +		cdata = CALIBRATE_DEFAULT - delta;
+> +		if (cdata & ~TEMP_CALIB_MASK) {
+> +			/*
+> +			 * Calibration value more than 12-bit, but calibration
+> +			 * register is 12-bit. In this case, ths hardware can
+> +			 * still work without calibration, although the data
+> +			 * won't be so accurate.
+> +			 */
+> +			dev_warn(dev, "sensor%d is not calibrated.\n", i);
+> +
+> +			continue;
+> +		}
+> +
+> +		offset = (i % 2) << 4;
+> +		regmap_update_bits(tmdev->regmap,
+> +				   SUN50I_H6_THS_TEMP_CALIB + ((i >> 1) * 4),
+> +				   0xfff << offset,
+> +				   cdata << offset);
+> +	}
+> +
+> +out_free:
+> +	kfree(caldata);
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> +{
+> +	struct device *dev = tmdev->dev;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct resource *mem;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, mem);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
+> +	if (IS_ERR(tmdev->regmap))
+> +		return PTR_ERR(tmdev->regmap);
+> +
+> +	tmdev->reset = devm_reset_control_get(dev, 0);
+> +	if (IS_ERR(tmdev->reset))
+> +		return PTR_ERR(tmdev->reset);
+> +
+> +	tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> +	if (IS_ERR(tmdev->bus_clk))
+> +		return PTR_ERR(tmdev->bus_clk);
+> +
+> +	ret = reset_control_deassert(tmdev->reset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(tmdev->bus_clk);
+> +	if (ret)
+> +		goto assert_reset;
+> +
+> +	ret = sun50i_ths_calibrate(tmdev);
+> +	if (ret)
+> +		goto bus_disable;
+> +
+> +	return 0;
+> +
+> +bus_disable:
+> +	clk_disable_unprepare(tmdev->bus_clk);
+> +assert_reset:
+> +	reset_control_assert(tmdev->reset);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sun50i_h6_thermal_init(struct ths_device *tmdev)
+> +{
+> +	int val;
+> +
+> +	/*
+> +	 * clkin = 24MHz
+> +	 * T acquire = clkin / (x + 1)
+> +	 *           = 20us
+> +	 */
 
-fs/orangefs/dir.c
- 61 static int do_readdir(struct orangefs_inode_s *oi,
- 62     struct orangefs_dir *od, struct dentry *dentry,
- 63     struct orangefs_kernel_op_s *op)
+I suggest something along the lines of:
 
-131 static int parse_readdir(struct orangefs_dir *od,
-132     struct orangefs_kernel_op_s *op)
+        /*                                                                                                                                                                                             
+         * T_acq = 20us                                                                                                                                                                                
+         * clkin = 24MHz                                                                                                                                                                               
+         *                                                                                                                                                                                             
+         * x = T_acq * clkin - 1                                                                                                                                                                       
+         *   = 479                                                                                                                                                                                     
+         */       
 
-189 static int fill_from_part(struct orangefs_dir_part *part,
-190     struct dir_context *ctx)
+Makes it much more clear how the value in SUN50I_THS_CTRL0_T_ACQ was
+arrived at and how to calculate a new one.
 
-fs/orangefs/file.c
- 19 static int flush_racache(struct inode *inode)
+> +	regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
+> +		     SUN50I_THS_CTRL0_T_ACQ(479));
+> +	/* average over 4 samples */
+> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
+> +		     SUN50I_THS_FILTER_EN |
+> +		     SUN50I_THS_FILTER_TYPE(1));
+> +	/* period = (x + 1) * 4096 / clkin; ~10ms */
 
- 48 ssize_t wait_for_direct_io(enum ORANGEFS_io_type type, struct inode *inode,
- 49     loff_t *offset, struct iov_iter *iter, size_t total_size,
- 50     loff_t readahead_size, struct orangefs_write_range *wr, int *index_return)
+As above, here I suggest:
 
-fs/orangefs/super.c
-304 
-305 int fsid_key_table_initialize(void)
-306 {
-307         return 0;
-308 }
-309 
-310 void fsid_key_table_finalize(void)
-311 {
-312 }
+        /*
+         * clkin = 24MHz
+         * filter_samples = 4
+         * period = 0.25s
+         *
+         * x = period * clkin / 4096 / filter_samples - 1
+         *   = 365
+         */
 
-----> no prefix and empty functions
+Also please change this to 365 from 58. I think 4 readings per second are
+enough. Certainly, 25 are a bit too much.
 
-fs/orangefs/xattr.c
- 31 static int is_reserved_key(const char *key, size_t size)
- 40 static inline int convert_to_internal_xattr_flags(int setxattr_flags)
- 54 static unsigned int xattr_key(const char *key)
+> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
+> +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
+> +	/* enable sensor */
+> +	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
+> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
+> +	/* thermal data interrupt enable */
+> +	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
+> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_DIC, val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun8i_ths_register(struct ths_device *tmdev)
+> +{
+> +	struct thermal_zone_device *tzd;
+> +	int i;
+> +
+> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
+> +		tmdev->sensor[i].tmdev = tmdev;
+> +		tmdev->sensor[i].id = i;
+> +		tmdev->sensor[i].tzd =
+> +			devm_thermal_zone_of_sensor_register(tmdev->dev,
+> +							     i,
+> +							     &tmdev->sensor[i],
+> +							     &ths_ops);
+> +		if (IS_ERR(tmdev->sensor[i].tzd))
+> +			return PTR_ERR(tzd);
 
+This should return PTR_ERR(tmdev->sensor[i].tzd). Otherwise this succeeds even
+if tz registration fails, and you get NULL pointer exception tryin to udpate
+nonexisting tz from the interrupt handler.
+
+regards,
+	Ondrej
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun8i_ths_probe(struct platform_device *pdev)
+> +{
+> +	struct ths_device *tmdev;
+> +	struct device *dev = &pdev->dev;
+> +	int ret, irq;
+> +
+> +	tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
+> +	if (!tmdev)
+> +		return -ENOMEM;
+> +
+> +	tmdev->dev = dev;
+> +	platform_set_drvdata(pdev, tmdev);
+> +
+> +	ret = sun8i_ths_resource_init(tmdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	ret = sun50i_h6_thermal_init(tmdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = sun8i_ths_register(tmdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Avoid entering the interrupt handler, the thermal device is not
+> +	 * registered yet, we deffer the registration of the interrupt to
+> +	 * the end.
+> +	 */
+> +	ret = devm_request_threaded_irq(dev, irq, NULL,
+> +					sun50i_h6_irq_thread,
+> +					IRQF_ONESHOT, "ths", tmdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ret;
+> +}
+> +
+> +static int sun8i_ths_remove(struct platform_device *pdev)
+> +{
+> +	struct ths_device *tmdev = platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(tmdev->bus_clk);
+> +	reset_control_assert(tmdev->reset);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_ths_match[] = {
+> +	{ .compatible = "allwinner,sun50i-h6-ths"},
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, of_ths_match);
+> +
+> +static struct platform_driver ths_driver = {
+> +	.probe = sun8i_ths_probe,
+> +	.remove = sun8i_ths_remove,
+> +	.driver = {
+> +		.name = "sun8i-thermal",
+> +		.of_match_table = of_ths_match,
+> +	},
+> +};
+> +module_platform_driver(ths_driver);
+> +
+> +MODULE_DESCRIPTION("Thermal sensor driver for Allwinner SOC");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.1
 > 
-> These are the sorts of problems we are having with EROFS right now,
-> even though it's been in staging for some time, and it's clear we
-> are already having them with exfat - fundamental architecture issues
-> have not yet been decided, and so there's likely major structural
-> change yet to be done.
 > 
-> That's stuff that is much more easily done and reveiwed by patches
-> on a mailing list. You don't need the code in the staging tree to
-> get this sort of thing done and, really, having it already merged
-> gets in the way of doing major structural change as it cannot be
-> rapidly iterated independently of the kernel dev cycle...
-> 
-> So when Christoph say:
-> 
-> > "Just rip it out"
-> 
-> what he is really saying is that Greg has jumped the jump and is -
-> yet again - fucking over filesystem developers because he's
-> taken the review process for a new filesystem out of hands _yet
-> again_.
-> 
-> He did this with POHMELFS, then Lustre, then EROFS - they all got
-> merged into stable over the objections of senior filesystem
-> developers.  The first two were an utter disaster, the latter is
-> rapidly turning into one.
-
-I don't know what "rapidly turning" means:
- This round I am working on all suggestions from fs developers;
- and I have been addressing what Christoph said for days, he hope that
- all functions should be prefixed with "erofs_" and I am doing.
-
-That is all.
-
-Thanks,
-Gao Xiang
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
