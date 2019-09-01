@@ -6,89 +6,70 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0032C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8376C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6522343A
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3905233A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:40:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RbnI8lhu"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="XMa2krbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfIAVjN (ORCPT
+        id S1729188AbfIAVkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 17:39:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:55427 "EHLO ozlabs.org"
+        Sun, 1 Sep 2019 17:40:47 -0400
+Received: from onstation.org ([52.200.56.107]:48144 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbfIAVjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 17:39:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728739AbfIAVkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 17:40:47 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46M66k2S9Sz9s4Y;
-        Mon,  2 Sep 2019 07:39:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567373951;
-        bh=yMQW3qUmXepccfDxCBertD88tyqdGjUJGx5OSU+KL4c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RbnI8lhu/qbIQOOTFGAoHeo/N1pocbzlTRuMA9O+g55AXwiEZsqSeqb0bUmWOJyWt
-         N8VLJjoRTHnlyuRr5gxBzhJQxvy6o2yrQY2dHi6cGfxzW9Zx069Oqk26XLW//J7MUc
-         YhS7zWDZdMBiRFXhwkJipwZZzn6TNIJHv6e6ol/MRQFW4IsoCYkL4lB7EsdhpAIzCk
-         FxTVDEMNz8KW8ceuembRj/8+E0wXFyicvU43Nrrdha7Wn/CtOOD82DxuWmk0UN7ssm
-         8OOnjFhVpYfS1JPUnvtgwVx5QQL83itRr4BN/LTiuR/lWTRDw5+4hDyZUuxPnfwfGp
-         vhMQ+0FRuMtTg==
-Date:   Mon, 2 Sep 2019 07:39:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: linux-next: Fixes tag needs some work in the kselftest tree
-Message-ID: <20190902073909.7fc3fe5e@canb.auug.org.au>
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 00BAB3E993;
+        Sun,  1 Sep 2019 21:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1567374046;
+        bh=yFlCHaBNAh10QurQOZiU1mvxCHhFWTKUbESMNHsI3oM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XMa2krbQak5fj5lyPbJuEKxTSFxIEGMzFR6NbZINT4gbbsTd2Qq1G2J1kUB++owJO
+         Sb4idiBvJ08LgumuEeD+bA0zz9/R9n+pypLtqswcMqM0IjMa9MEnRiNI57ldFSPFsC
+         4X0cl5mvKy9evzvJ7T1i/DrrnPW6f5aiCI50bxNo=
+Date:   Sun, 1 Sep 2019 17:40:45 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, sean@poorly.run, bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, robh+dt@kernel.org, airlied@linux.ie,
+        daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, jcrouse@codeaurora.org
+Subject: Re: [PATCH v7 0/7] qcom: add OCMEM support
+Message-ID: <20190901214045.GA14321@onstation.org>
+References: <20190823121637.5861-1-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lQuXVG845SLzv5YTftfRu/Y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823121637.5861-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lQuXVG845SLzv5YTftfRu/Y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Rob C / Sean P,
 
-Hi all,
+On Fri, Aug 23, 2019 at 05:16:30AM -0700, Brian Masney wrote:
+> This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
+> that is needed in order to support some a3xx and a4xx-based GPUs
+> upstream. This is based on Rob Clark's patch series that he submitted
+> in October 2015 and I am resubmitting updated patches with his
+> permission. See the individual patches for the changelog.
 
-In commit
+I talked to Bjorn in person at the Embedded Linux Conference over a
+week ago about this series. He thinks that this series should go through
+your tree. I assume it's too late for the upcoming merge window, which
+is fine. I just want to make sure that this series gets picked up for
+the following merge window.
 
-  c321d43b8da1 ("selftests/seccomp: fix build on older kernels")
+I just sent out a fix for a compiler error on MIPS as a separate patch:
+https://lore.kernel.org/lkml/20190901213037.25889-1-masneyb@onstation.org/
 
-Fixes tag
-
-  Fixes: Commit 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-
-has these problem(s):
-
-  - leading word 'Commit' unexpected
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lQuXVG845SLzv5YTftfRu/Y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1sOn0ACgkQAVBC80lX
-0GzO1Af8C6MuqWMq3qv3Nyko8iwjoWqVqJigFt/sGL5mbco6xXi7dBCfvaO/ZSNd
-s7PQVUMIXAskdQDQNd6Bj6gqsOybF8+neJW9m40BWy9NefvRlAkFP2+tBkJkVyh2
-XxaVhLDzrLmHY5oGR4CbWZpw0n2vUfn23iYPpuFtzn+83Dc1hnigoR/bsujZcvWB
-9jRBZ26z2b7GHi7AUfWkc/j3NTzH/O0NfCf5kUZg5m/3BA+jaIkilOUviMK6dADB
-K7T2H4a6irMpg/2z8TStp9BL6hWl/7RcatRSuK8zmj497CDaxPCBZxSaKpNKeGr0
-r6EZ85hh88b0jjzOyvJtb6XBTbFD5g==
-=pm2Y
------END PGP SIGNATURE-----
-
---Sig_/lQuXVG845SLzv5YTftfRu/Y--
+Brian
