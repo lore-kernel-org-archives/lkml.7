@@ -2,196 +2,157 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A5BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30591C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 18:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D93421897
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UhF6ktKK";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kpvtcnOT"
+	by mail.kernel.org (Postfix) with ESMTP id 03B03206BA
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 18:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbfIARoe (ORCPT
+        id S1729061AbfIASCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 13:44:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42328 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbfIARob (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 13:44:31 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 38AE060A00; Sun,  1 Sep 2019 17:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567359870;
-        bh=t+W7GhUSBFkf6UXKVCmzE61u9r7x9uMCJGn4pNUAeh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhF6ktKKHUDAwqzHf9/nw8hSRMcToVsV/uFr/zbQif9t7LpIcHtVpdcW+zwSBVupj
-         F4yfE+eKDC8fyI5z7kqY02W+7A2WYvZeltCWmvZOSbgSyDuaaav/jzkwGnCIJ09Uui
-         s4Z7i53F2XDoq4af7vUl99afgdOmK8P/pELe2ZO0=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Sun, 1 Sep 2019 14:02:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46436 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726727AbfIASCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 14:02:52 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 238546086B;
-        Sun,  1 Sep 2019 17:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567359869;
-        bh=t+W7GhUSBFkf6UXKVCmzE61u9r7x9uMCJGn4pNUAeh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kpvtcnOT5TJfns8fVfSImC2N8zsL1yy5+ZB0i+4NOkSNRsuMX0XyIB9siEL0dvtMx
-         pdmUEkwBloi5qfdgrnVzSoKKIM7jarm1wP7x5UOsrd+7w8Dsw1kjf0aKFrfa4ezRoK
-         8da/KvUBgxlvqIjy1zUZw0LoAtsYfHtqdAhFTCEY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 238546086B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 2/2] dt-bindings: reset: pdc: Convert PDC Global bindings to yaml
-Date:   Sun,  1 Sep 2019 23:14:07 +0530
-Message-Id: <20190901174407.30756-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190901174407.30756-1-sibis@codeaurora.org>
-References: <20190901174407.30756-1-sibis@codeaurora.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 0FB287FDCD
+        for <linux-kernel@vger.kernel.org>; Sun,  1 Sep 2019 18:02:52 +0000 (UTC)
+Received: by mail-qt1-f200.google.com with SMTP id v16so13431529qtp.14
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 11:02:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NtIlrG6bXqato3AHyRhqkP1r1EyQzXXXF+1WVjQfhrI=;
+        b=jHw2p6VqOdOrYqsjQ+GQl2p/kG4ibqg0hnOL6sR7yp6EsUnM1PuVZQvKOij7iSmg2F
+         wRl7CI+Uxpr81w5rcOPHhIj8A8I9mPY6qzM1npvXTQnTY6lJVFXexxjJLjeEEgwRSpMk
+         aj9QJf8xS6fo1dPQJJXCaVNirVw5hyb6cHGxfgUxIfvYaUIEB0Vmz+mmZ8NhLq5PW/9f
+         BeFkLrC1GossL1aTQVrh1JIDL01bk25+760L7W+AU4kp0EoQqrfp5e7YB+nD+Bh20anu
+         Bem7lUE/yz3kWCnAlnAOMyN5icEaC6NBihISh34ouL+mHUo1wWJQr45ATMC1VeNon00t
+         vauA==
+X-Gm-Message-State: APjAAAXVY+ZvRjN0z7AgfUmUJlDpEUwvWnmBXaWxHogahvFMtM3FWrRV
+        mbNu5sQeSbS8l3/ffOwnvwsCVvfrOKfMQOyopR8BqBz3r98pnkF2nq/hByWE2gI6ubYL4eX4Ocl
+        eCM9dIKhkmy9w5yI/LtoDO7C5
+X-Received: by 2002:a37:480d:: with SMTP id v13mr24849058qka.295.1567360971410;
+        Sun, 01 Sep 2019 11:02:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyRyGzOcE8hglKRycEb420hPDRNv3fnUOZqre0cmbUtVArhzSlANFmNqbwZR2kZ23xgEdav+Q==
+X-Received: by 2002:a37:480d:: with SMTP id v13mr24849044qka.295.1567360971215;
+        Sun, 01 Sep 2019 11:02:51 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
+        by smtp.gmail.com with ESMTPSA id i20sm5379783qkk.67.2019.09.01.11.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 11:02:49 -0700 (PDT)
+Date:   Sun, 1 Sep 2019 14:02:44 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, jgg@ziepe.ca
+Subject: Re: [PATCH V5 0/9] Fixes for vhost metadata acceleration
+Message-ID: <20190901140220-mutt-send-email-mst@kernel.org>
+References: <20190809054851.20118-1-jasowang@redhat.com>
+ <20190810134948-mutt-send-email-mst@kernel.org>
+ <360a3b91-1ac5-84c0-d34b-a4243fa748c4@redhat.com>
+ <20190812054429-mutt-send-email-mst@kernel.org>
+ <663be71f-f96d-cfbc-95a0-da0ac6b82d9f@redhat.com>
+ <20190819162733-mutt-send-email-mst@kernel.org>
+ <9325de4b-1d79-eb19-306e-e7a8fa8cc1a5@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9325de4b-1d79-eb19-306e-e7a8fa8cc1a5@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert PDC Global bindings to yaml and add SC7180 PDC global to the list
-of possible bindings.
+On Tue, Aug 20, 2019 at 10:29:32AM +0800, Jason Wang wrote:
+> 
+> On 2019/8/20 上午5:08, Michael S. Tsirkin wrote:
+> > On Tue, Aug 13, 2019 at 04:12:49PM +0800, Jason Wang wrote:
+> > > On 2019/8/12 下午5:49, Michael S. Tsirkin wrote:
+> > > > On Mon, Aug 12, 2019 at 10:44:51AM +0800, Jason Wang wrote:
+> > > > > On 2019/8/11 上午1:52, Michael S. Tsirkin wrote:
+> > > > > > On Fri, Aug 09, 2019 at 01:48:42AM -0400, Jason Wang wrote:
+> > > > > > > Hi all:
+> > > > > > > 
+> > > > > > > This series try to fix several issues introduced by meta data
+> > > > > > > accelreation series. Please review.
+> > > > > > > 
+> > > > > > > Changes from V4:
+> > > > > > > - switch to use spinlock synchronize MMU notifier with accessors
+> > > > > > > 
+> > > > > > > Changes from V3:
+> > > > > > > - remove the unnecessary patch
+> > > > > > > 
+> > > > > > > Changes from V2:
+> > > > > > > - use seqlck helper to synchronize MMU notifier with vhost worker
+> > > > > > > 
+> > > > > > > Changes from V1:
+> > > > > > > - try not use RCU to syncrhonize MMU notifier with vhost worker
+> > > > > > > - set dirty pages after no readers
+> > > > > > > - return -EAGAIN only when we find the range is overlapped with
+> > > > > > >      metadata
+> > > > > > > 
+> > > > > > > Jason Wang (9):
+> > > > > > >      vhost: don't set uaddr for invalid address
+> > > > > > >      vhost: validate MMU notifier registration
+> > > > > > >      vhost: fix vhost map leak
+> > > > > > >      vhost: reset invalidate_count in vhost_set_vring_num_addr()
+> > > > > > >      vhost: mark dirty pages during map uninit
+> > > > > > >      vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
+> > > > > > >      vhost: do not use RCU to synchronize MMU notifier with worker
+> > > > > > >      vhost: correctly set dirty pages in MMU notifiers callback
+> > > > > > >      vhost: do not return -EAGAIN for non blocking invalidation too early
+> > > > > > > 
+> > > > > > >     drivers/vhost/vhost.c | 202 +++++++++++++++++++++++++-----------------
+> > > > > > >     drivers/vhost/vhost.h |   6 +-
+> > > > > > >     2 files changed, 122 insertions(+), 86 deletions(-)
+> > > > > > This generally looks more solid.
+> > > > > > 
+> > > > > > But this amounts to a significant overhaul of the code.
+> > > > > > 
+> > > > > > At this point how about we revert 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> > > > > > for this release, and then re-apply a corrected version
+> > > > > > for the next one?
+> > > > > If possible, consider we've actually disabled the feature. How about just
+> > > > > queued those patches for next release?
+> > > > > 
+> > > > > Thanks
+> > > > Sorry if I was unclear. My idea is that
+> > > > 1. I revert the disabled code
+> > > > 2. You send a patch readding it with all the fixes squashed
+> > > > 3. Maybe optimizations on top right away?
+> > > > 4. We queue *that* for next and see what happens.
+> > > > 
+> > > > And the advantage over the patchy approach is that the current patches
+> > > > are hard to review. E.g.  it's not reasonable to ask RCU guys to review
+> > > > the whole of vhost for RCU usage but it's much more reasonable to ask
+> > > > about a specific patch.
+> > > 
+> > > Ok. Then I agree to revert.
+> > > 
+> > > Thanks
+> > Great, so please send the following:
+> > - revert
+> > - squashed and fixed patch
+> 
+> 
+> Just to confirm, do you want me to send a single series or two?
+> 
+> Thanks
+> 
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- .../bindings/reset/qcom,pdc-global.txt        | 52 -------------------
- .../bindings/reset/qcom,pdc-global.yaml       | 47 +++++++++++++++++
- 2 files changed, 47 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
- create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
+One is fine.
 
-diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-deleted file mode 100644
-index a62a492843e70..0000000000000
---- a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--PDC Global
--======================================
--
--This binding describes a reset-controller found on PDC-Global (Power Domain
--Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
--
--Required properties:
--- compatible:
--	Usage: required
--	Value type: <string>
--	Definition: must be:
--		    "qcom,sdm845-pdc-global"
--
--- reg:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: must specify the base address and size of the register
--	            space.
--
--- #reset-cells:
--	Usage: required
--	Value type: <uint>
--	Definition: must be 1; cell entry represents the reset index.
--
--Example:
--
--pdc_reset: reset-controller@b2e0000 {
--	compatible = "qcom,sdm845-pdc-global";
--	reg = <0xb2e0000 0x20000>;
--	#reset-cells = <1>;
--};
--
--PDC reset clients
--======================================
--
--Device nodes that need access to reset lines should
--specify them as a reset phandle in their corresponding node as
--specified in reset.txt.
--
--For a list of all valid reset indices see
--<dt-bindings/reset/qcom,sdm845-pdc.h>
--
--Example:
--
--modem-pil@4080000 {
--	...
--
--	resets = <&pdc_reset PDC_MODEM_SYNC_RESET>;
--	reset-names = "pdc_reset";
--
--	...
--};
-diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml b/Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
-new file mode 100644
-index 0000000000000..d7d8cec9419fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/qcom,pdc-global.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm PDC Global
-+
-+maintainers:
-+  - Sibi Sankar <sibis@codeaurora.org>
-+
-+description:
-+  The bindings describes the reset-controller found on PDC-Global (Power Domain
-+  Controller) block for Qualcomm Technologies Inc SoCs.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: on SC7180 SoCs the following compatibles must be specified
-+        items:
-+          - const: "qcom,sc7180-pdc-global"
-+          - const: "qcom,sdm845-pdc-global"
-+
-+      - description: on SDM845 SoCs the following compatibles must be specified
-+        items:
-+          - const: "qcom,sdm845-pdc-global"
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pdc_reset: reset-controller@b2e0000 {
-+      compatible = "qcom,sdm845-pdc-global";
-+      reg = <0xb2e0000 0x20000>;
-+      #reset-cells = <1>;
-+    };
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+MST
