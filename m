@@ -2,74 +2,94 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EBFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44CCC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E17C21874
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9551721874
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hGvfoVM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbfIATLN (ORCPT
+        id S1729233AbfIATLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 15:11:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59664 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbfIATLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 15:11:13 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CD4818535D;
-        Sun,  1 Sep 2019 19:11:12 +0000 (UTC)
-Received: from localhost (ovpn-112-7.rdu2.redhat.com [10.10.112.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E6A15D9D6;
-        Sun,  1 Sep 2019 19:11:10 +0000 (UTC)
-Date:   Sun, 01 Sep 2019 12:11:09 -0700 (PDT)
-Message-Id: <20190901.121109.1164811815017267709.davem@redhat.com>
-To:     christophe.jaillet@wanadoo.fr
-Cc:     yuehaibing@huawei.com, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, tbogendoerfer@suse.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] net: seeq: Fix the function used to release some
- memory in an error handling path
-From:   David Miller <davem@redhat.com>
-In-Reply-To: <20190831071751.1479-1-christophe.jaillet@wanadoo.fr>
-References: <20190831071751.1479-1-christophe.jaillet@wanadoo.fr>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sun, 1 Sep 2019 15:11:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33444 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728930AbfIATLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 15:11:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eZ1ZYS5stKR+NtN8D5MKkGEXnpoTWC1z1t4HtiysR9w=; b=hGvfoVM73YXqpFce9oaZN3wtT
+        bFzTvtvxkRoBIReE+FNAosoUPJBaJsCVjel4r/poWl3gkCHpzvhMw8pAv2OOD0n4Y1fErtGow3Uk4
+        +UZN4bRJCbqHn3dAo5PC3htQSM2YtY6cQpGOQaZVcJXpfI3wfz1uaixuPHzyIo7xeExwVT9VQMenF
+        jc/vd+qfpyqF37f7qSvFdtd5cCqe1I9j+vXG/e+OUvlBL9a4N8JhaEvtnsEmJ2vEPHt7PJpUrl6ok
+        FOuTacDmTWSDIKI33gEAGHWIF1Ol5C7Gwe2zxQAVwpIOMNolB5mOVoM7KeLEc+uMY5GcC4lbdHeoL
+        u+eBRftCA==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4VFw-0000o6-7u; Sun, 01 Sep 2019 19:11:20 +0000
+Subject: Re: [PATCH v3] arch/microblaze: add support for get_user() of size 8
+ bytes
+To:     monstr@monstr.eu, Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Steven J. Magnani" <steve@digidescorp.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <5a3e440f-4ec5-65d7-b2a4-c57fec0df973@infradead.org>
+ <CAHk-=wg4mE8pSEdWViqJBC9Teh8h1c9LrqqP6=_g8ud5hvkfmA@mail.gmail.com>
+ <4ef41a92-56d2-3973-8926-084891c965ee@monstr.eu>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <97a9bc55-82d5-0389-7be6-c9c7c58c5545@infradead.org>
+Date:   Sun, 1 Sep 2019 12:11:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <4ef41a92-56d2-3973-8926-084891c965ee@monstr.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sun, 01 Sep 2019 19:11:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Date: Sat, 31 Aug 2019 09:17:51 +0200
-
-> In commit 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv"),
-> a call to 'get_zeroed_page()' has been turned into a call to
-> 'dma_alloc_coherent()'. Only the remove function has been updated to turn
-> the corresponding 'free_page()' into 'dma_free_attrs()'.
-> The error hndling path of the probe function has not been updated.
+On 9/1/19 10:33 AM, Michal Simek wrote:
+> Hi,
 > 
-> Fix it now.
+> On 01. 09. 19 19:07, Linus Torvalds wrote:
+>> On Sun, Sep 1, 2019 at 7:55 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>>
+>>> What is a reasonable path for having this patch merged?
+>>> I have sent several emails to Micahl Simek but he seems to have
+>>> dropped active maintenance of arch/microblaze/.
+>>
+>> Yeah, I haven't gotten a pull request from him since March, and that
+>> was a trivial fixup.
+>>
+>> I guess I'll apply it. I'm not sure why you _care_ about microblaze, but ...
 > 
-> Rename the corresponding label to something more in line.
+> I am still around. The reason why I didn't send any pull request was
+> simply there were no patches. For 5.4 there will be some patches.
 > 
-> Fixes: 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Randy: I found one email which was sent July and this thread when I had
+> vacation. I will take a look at both tmr. If there is something else
+> please resend.
 
-Applied.
+Good to hear that you are still around.
+I'll let you know if I find other lost patches.
 
-> If 'dma_alloc_coherent()' fails, maybe the message in printk could be
-> improved. The comment above may also not be relevant.
-
-Memory allocation failures already give a stack backtrack down deep in the
-memory allocators, therefore printing messages at allocation call sites
-are veboten.
+thanks.
+-- 
+~Randy
