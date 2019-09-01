@@ -2,273 +2,118 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7DCC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 07:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C9BC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 07:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93AF822CF7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 07:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420AF22CF7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 07:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="BAZ6J2wQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QfGIqeG+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MK9cZIdS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfIAHya (ORCPT
+        id S1728886AbfIAHzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 03:54:30 -0400
-Received: from sonic313-21.consmr.mail.gq1.yahoo.com ([98.137.65.84]:38923
-        "EHLO sonic313-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725887AbfIAHya (ORCPT
+        Sun, 1 Sep 2019 03:55:55 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53430 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfIAHzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 03:54:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1567324468; bh=J79Y2G0I1TVmLSwHXC2+aHwiZC3n4iAsXF26Qi7Ltf0=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=BAZ6J2wQqaturspfP9wEbdbIUBOw6uu3evfEmM/odzvUE02SzB1pthpkbT4SAz4QAgLhOauNApdTpQxLCfDj/b3339ticFXo0WAZE+x/QhlCwCT2wzx01vKs63ER4QCRDPQxg8JsEAe5y8NG9zpVDjtnFDWK0or/jdRVDpUCFHPL35s06avCO+2esleo+5qP75md25Qtnc6QFGaLR0KD02i9m77yJgBGR3QlLmYLuALZyH/7Fr6H+f7Ua+mgGnbS+NT9JDhEPkKhIvRxIbzRk8wSrYq1SzeGHv/Yy7Lw3V+WGo1kzewumAF3YQBgwYbII8zMJL1ReALf2YgpIrTRng==
-X-YMail-OSG: IK5Sy_QVM1lsoz686qqnQ5aOLnuon34Ax7CkeDH4ttkQ_2w7F1nFqX4BN1OWbyz
- jnJ1Ek4ZlDGe0OXj9WCXiYeUUGb4h9Kah3DKqTr3GZDjfqga3q.SIMXB87RMpNAx0DQB0pqiBizX
- nZQQIVpl1HFYR_ySgFv0JpjBx7u87JBJ.TNsGJTLhYDtIHXmE_sfrBt8nqM58AftBvPcN68E1lnr
- x2DWvzSeFilm5JxLOCPR4S1PFz0lMXvpXh7iZlro5IKdtw.VPVg1r9zY.g4SeM6UdsO10Lcu_9dE
- G6hpmL.yKptifXABfGNOLsoqaIhWlpJjM2bnH6CuE1xfrHcyaeJ.3ADn8DXtyFaq40jcDKC5lg0W
- Qzn.cI6XbrNIChJ2FOg6uVy6wiTNufR_1LnuExnin2ZZlGKqZsFEhDeEMfjxjFNi2KqSsf3hmdh1
- etirIOJDoGaxF9yvzMHiLhLk5DImk.JhhrYpHLmY7D.kqDBNl6eW_Kx6uo3T8Gdo9_02OcQ9npP4
- gEI6dLUVj4rCWd.vJk71txkifQ1E5.Id89giamJSzIqGHYWFjAAMKEE0N0ChEY4yaReJ2GMU1rRe
- 8ts7AjVhMTkMQLQrZqZ6t_yI45dgvrznWE29_nfXA8DGA_LYpEtah66oi_gwr8k1OqsC9Ns413ck
- oyjVtmRP1LTyiNQ1NAOEpLfOaF5lk0SJxVGEqUwsEfFJtVfGOlNnocSj2hSlFxlInttwDKUBiIcE
- x8xZQhvQnxoLNKuvUQ7ZC4qVHwkitv3XyrMlrYLUsT.FFmk79y3WbIQQofklKNHsdJE11nz98Zan
- ejomns5l8femmbSjXLgp8BuFn8k6qlNzjbi0R4A2jcMhskVLw5l3XAGd24IwkTVAyuyF3XD1cy5K
- PVBr_MUNSoAwS8BTwfmHFZYJADov.xJb65DbHT1IKaBgT8Duaqat1a3O2r1iSxAu8BQRAKBYH16F
- DTxQsqQuoMg5ig9uCRlMjdjQhDq7SKvAlY.Ai41NdEXM7k13TdZHMemzWn7fcM2Q9GTndtBdqeF1
- gG9FMjpU9kQI.h5XtrrlfHUthGYajGPCTCQgjanHWW5tjXVYPH30Ll.EZVaz_2LJg4wFFUJDE3Ck
- vB3Dgi_KxHC7QkeueFaGIGjCWWbGPUEGJrbxaalSFHcVsESfvRmP6SH598uAXyMXgICb66u.ImIQ
- I.YOt3dSwgilTMKfauLcOj6IE2IdxGnwB9DIinsQS5KS3U7gSZkS0cSPmdZn49mSzKQGO_jxsA17
- AZg34rGP8S4Bin7CUHHJJdXkSoYdM.hfDK6w-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Sep 2019 07:54:28 +0000
-Received: by smtp409.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 91e90752a14b0d45ad1c1695aa749d56;
-          Sun, 01 Sep 2019 07:54:24 +0000 (UTC)
-Date:   Sun, 1 Sep 2019 15:54:11 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190901075240.GA2938@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-2-gaoxiang25@huawei.com>
- <20190829095954.GB20598@infradead.org>
+        Sun, 1 Sep 2019 03:55:54 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D4992607EB; Sun,  1 Sep 2019 07:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567324553;
+        bh=Q8AFvlCqM8riRdgz/ITzP8CxLVE9Flu8eH1HtXTq798=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=QfGIqeG+/i7+GoSzsPwmM6vwzGmH9cly81z6HP8VXvKScy01D0wfMcF5EufUch4qb
+         eDfCT8fWLo2tZluhTaeAiDiDp5mTs0ciLJ2t4YUGd6xfWWN3TodLXu7jsRq+rxyyuE
+         R4t9Nb9ILLjoj/Ibs08k9cxZLYuWI9eaknegb7Iw=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 179F76076A;
+        Sun,  1 Sep 2019 07:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567324552;
+        bh=Q8AFvlCqM8riRdgz/ITzP8CxLVE9Flu8eH1HtXTq798=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=MK9cZIdSPGuA3OlBYVxHbVcFYDKNeN01bYliE9iEreD30MgarxdjgKvFveKOIb4z8
+         D0HKCIx09Bf3IZcv/cmP+geov5Q6exWhpJGqgq9pJHUmLmA26J903XSHg+EJZ5Hei7
+         v0wHIIm4t772JMKbYz9Si0/TuMwUSQEUC5tzHqVk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 179F76076A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Hui Peng <benquike@gmail.com>, davem@davemloft.net,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe
+References: <20190804002905.11292-1-benquike@gmail.com>
+        <20190831180219.GA20860@roeck-us.net>
+Date:   Sun, 01 Sep 2019 10:55:48 +0300
+In-Reply-To: <20190831180219.GA20860@roeck-us.net> (Guenter Roeck's message of
+        "Sat, 31 Aug 2019 11:02:19 -0700")
+Message-ID: <87sgpgqwl7.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829095954.GB20598@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Guenter Roeck <linux@roeck-us.net> writes:
 
-Sorry about my first response, sincerely...
-Here is my redo-ed comments to all your suggestions...
+> On Sat, Aug 03, 2019 at 08:29:04PM -0400, Hui Peng wrote:
+>> The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
+>> are initialized to point to the containing `ath6kl_usb` object
+>> according to endpoint descriptors read from the device side, as shown
+>> below in `ath6kl_usb_setup_pipe_resources`:
+>> 
+>> for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+>> 	endpoint = &iface_desc->endpoint[i].desc;
+>> 
+>> 	// get the address from endpoint descriptor
+>> 	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
+>> 						endpoint->bEndpointAddress,
+>> 						&urbcount);
+>> 	......
+>> 	// select the pipe object
+>> 	pipe = &ar_usb->pipes[pipe_num];
+>> 
+>> 	// initialize the ar_usb field
+>> 	pipe->ar_usb = ar_usb;
+>> }
+>> 
+>> The driver assumes that the addresses reported in endpoint
+>> descriptors from device side  to be complete. If a device is
+>> malicious and does not report complete addresses, it may trigger
+>> NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
+>> `ath6kl_usb_free_urb_to_pipe`.
+>> 
+>> This patch fixes the bug by preventing potential NULL-ptr-deref.
+>> 
+>> Signed-off-by: Hui Peng <benquike@gmail.com>
+>> Reported-by: Hui Peng <benquike@gmail.com>
+>> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+>
+> I don't see this patch in the upstream kernel or in -next.
+>
+> At the same time, it is supposed to fix CVE-2019-15098, which has
+> a CVSS v2.0 score of 7.8 (high).
+>
+> Is this patch going to be applied to the upstream kernel ?
 
-On Thu, Aug 29, 2019 at 02:59:54AM -0700, Christoph Hellwig wrote:
-> > --- /dev/null
-> > +++ b/fs/erofs/erofs_fs.h
-> > @@ -0,0 +1,316 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
-> > +/*
-> > + * linux/fs/erofs/erofs_fs.h
-> 
-> Please remove the pointless file names in the comment headers.
+Lately I have been very busy and I have not had a chance to apply ath6kl
+nor ath10k patches. This patch is on my queue and my plan is to go
+through my patch queue next week.
 
-Has already fixed in the latest version, and I will resend
-the whole v9 addressing all suggestions from you these days...
-
-However it's somewhat hard to spilt the whole code prefectly
-since erofs is ~7KLOC code and linux-fsdevel mailing list
-have some limitation, I have spilted it in the form of features...
-
-> 
-> > +struct erofs_super_block {
-> > +/*  0 */__le32 magic;           /* in the little endian */
-> > +/*  4 */__le32 checksum;        /* crc32c(super_block) */
-> > +/*  8 */__le32 features;        /* (aka. feature_compat) */
-> > +/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
-> 
-> Please remove all the byte offset comments.  That is something that can
-> easily be checked with gdb or pahole.
-
-fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-2-hsiangkao@aol.com/
-
-> 
-> > +/* 64 */__u8 volume_name[16];   /* volume name */
-> > +/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
-> > +
-> > +/* 84 */__u8 reserved2[44];
-> > +} __packed;                     /* 128 bytes */
-> 
-> Please don't add __packed.  In this case I think you don't need it
-> (but double check with pahole), but even if you would need it using
-> proper padding fields and making sure all fields are naturally aligned
-> will give you much better code generation on architectures that don't
-> support native unaligned access.
-
-fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-5-hsiangkao@aol.com/
-
-> 
-> > +/*
-> > + * erofs inode data mapping:
-> > + * 0 - inode plain without inline data A:
-> > + * inode, [xattrs], ... | ... | no-holed data
-> > + * 1 - inode VLE compression B (legacy):
-> > + * inode, [xattrs], extents ... | ...
-> > + * 2 - inode plain with inline data C:
-> > + * inode, [xattrs], last_inline_data, ... | ... | no-holed data
-> > + * 3 - inode compression D:
-> > + * inode, [xattrs], map_header, extents ... | ...
-> > + * 4~7 - reserved
-> > + */
-> > +enum {
-> > +	EROFS_INODE_FLAT_PLAIN,
-> 
-> This one doesn't actually seem to be used.
-
-It could be better has a name though, because 1) erofs.mkfs uses this
-definition explicitly, and we keep this on-disk definition erofs_fs.h
-file up with erofs-utils.
-
-2) For kernel use, first we have,
-   datamode < EROFS_INODE_LAYOUT_MAX; and
-   !erofs_inode_is_data_compressed, so there are only two mode here,
-        1) EROFS_INODE_FLAT_INLINE,
-        2) EROFS_INODE_FLAT_PLAIN
-   if its datamode isn't EROFS_INODE_FLAT_INLINE (tail-end block packing),
-   it should be EROFS_INODE_FLAT_PLAIN.
-
-   The detailed logic in erofs_read_inode and
-   erofs_map_blocks_flatmode....
-
-> 
-> > +	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
-> 
-> why are we adding a legacy field to a brand new file system?
-
-The difference is just EROFS_INODE_FLAT_COMPRESSION_LEGACY doesn't
-have z_erofs_map_header, so it only supports default (4k clustersize)
-fixed-sized output compression rather than per-file setting, nothing
-special at all...
-
-> 
-> > +	EROFS_INODE_FLAT_INLINE,
-> > +	EROFS_INODE_FLAT_COMPRESSION,
-> > +	EROFS_INODE_LAYOUT_MAX
-> 
-> It seems like these come from the on-disk format, in which case they
-> should have explicit values assigned to them.
-
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-3-hsiangkao@aol.com/
-
-> 
-> Btw, I think it generally helps file system implementation quality
-> if you use a separate header for the on-disk structures vs in-memory
-> structures, as that keeps it clear in everyones mind what needs to
-> stay persistent and what can be chenged easily.
-
-All fields in this file are on-disk representation by design
-(no logic for in-memory presentation).
-
-> 
-> > +static bool erofs_inode_is_data_compressed(unsigned int datamode)
-> > +{
-> > +	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-> > +		return true;
-> > +	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-> > +}
-> 
-> This looks like a really obsfucated way to write:
-> 
-> 	return datamode == EROFS_INODE_FLAT_COMPRESSION ||
-> 		datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-6-hsiangkao@aol.com/
-
-> 
-> > +/* 28 */__le32 i_reserved2;
-> > +} __packed;
-> 
-> Sane comment as above.
-
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-5-hsiangkao@aol.com/
-
-> 
-> > +
-> > +/* 32 bytes on-disk inode */
-> > +#define EROFS_INODE_LAYOUT_V1   0
-> > +/* 64 bytes on-disk inode */
-> > +#define EROFS_INODE_LAYOUT_V2   1
-> > +
-> > +struct erofs_inode_v2 {
-> > +/*  0 */__le16 i_advise;
-> 
-> Why do we have two inode version in a newly added file system?
-
-There is no new or old, both can be used for the current EROFS in one image.
-
-v2 is an exhanced on-disk inode form, it has 64 bytes,
-v1 is more reduced one, which is already suitable for Android use case.
-
-> 
-> > +#define ondisk_xattr_ibody_size(count)	({\
-> > +	u32 __count = le16_to_cpu(count); \
-> > +	((__count) == 0) ? 0 : \
-> > +	sizeof(struct erofs_xattr_ibody_header) + \
-> > +		sizeof(__u32) * ((__count) - 1); })
-> 
-> This would be much more readable as a function.
-
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-4-hsiangkao@aol.com/
-> 
-> > +#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
-> > +	sizeof(struct erofs_xattr_entry) + \
-> > +	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
-> 
-> Same here.
-
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-4-hsiangkao@aol.com/
-
-> 
-> > +/* available compression algorithm types */
-> > +enum {
-> > +	Z_EROFS_COMPRESSION_LZ4,
-> > +	Z_EROFS_COMPRESSION_MAX
-> > +};
-> 
-> Seems like an on-disk value again that should use explicitly assigned
-> numbers.
-
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-3-hsiangkao@aol.com/
-
-Thanks,
-Gao Xiang
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
