@@ -6,45 +6,36 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5740C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F21C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4A522CE9
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1863A22CE9
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 17:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfIARZB (ORCPT
+        id S1729087AbfIARZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 13:25:01 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39401 "EHLO
+        Sun, 1 Sep 2019 13:25:50 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39672 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728570AbfIARZA (ORCPT
+        with ESMTP id S1728570AbfIARZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 13:25:00 -0400
+        Sun, 1 Sep 2019 13:25:50 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B003281716; Sun,  1 Sep 2019 19:24:44 +0200 (CEST)
-Date:   Sun, 1 Sep 2019 19:24:57 +0200
+        id 7EBC5817A5; Sun,  1 Sep 2019 19:25:34 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 19:25:47 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190901172457.GC1047@bug>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190814224340.GD5015@pendragon.ideasonboard.com>
- <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
- <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
- <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
- <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
+To:     Mihai Carabas <mihai.carabas@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, ashok.raj@intel.com,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+        patrick.colp@oracle.com, kanth.ghatraju@oracle.com,
+        Jon.Grimm@amd.com, Thomas.Lendacky@amd.com
+Subject: Re: [PATCH] Parallel microcode update in Linux
+Message-ID: <20190901172547.GD1047@bug>
+References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
+In-Reply-To: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,41 +44,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> >>>>> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> >>>>>      value down. A value of zero stops the motion if one is in progress
-> >>>>>      and has no effect otherwise.
-> >>>>>
-> >>>>> +``V4L2_CID_LOCATION (integer)``
-> >>>>
-> >>>> Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
-> >>>
-> >>> Probably a better name, if a bit long. But we might need other location
-> >>> controls in the future (e.g. flash location), so CID_LOCATION is just too
-> >>> generic.
-> >>
-> > 
-> > Thanks for the feedback.
-> > 
-> >> Note that the location defines themselves can most likely be used with any
-> >> LOCATION control, so V4L2_LOCATION_FRONT would be fine with any control.
-> >>
-> > 
-> > What do you think instead of the control type? Would a single integer
-> > control do or an integer menu one would be better? I see merit in both
-> > proposals actually...
+> +       u64 p0, p1;
+>         int ret;
 > 
-> Single integer. It's read-only, so it just reports the location.
+>         atomic_set(&late_cpus_in,  0);
+>         atomic_set(&late_cpus_out, 0);
 > 
-> It would be different if this was a writable control: then you need to
-> know which locations are possible to set, and that requires a menu type.
+> +       p0 = rdtsc_ordered();
+> +
+>         ret = stop_machine_cpuslocked(__reload_late, NULL, cpu_online_mask);
+> +
+> +       p1 = rdtsc_ordered();
+> +
+>         if (ret > 0)
+>                 microcode_check();
 > 
-> But it doesn't make sense to set the location from software. However, the
-> location might change as a result of other changes: e.g. if the camera
-> has motor control of the tilt and the tilt changes from forward facing to
-> downward facing, then the driver might change the location from FRONT
-> to DOWN. A convoluted example perhaps, but this is just brainstorming.
+>         pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
+> 
+> +       pr_info("p0: %lld, p1: %lld, diff: %lld\n", p0, p1, p1 - p0);
+> +
+>         return ret;
+>  }
+> 
+> We have used a machine with a broken microcode in BIOS and no microcode in
+> initramfs (to bypass early loading).
+> 
+> Here are the results for parallel loading (we made two measurements):
 
-There are phones with exactly such camera setup. And yes, it makes sense to be writable
-in that case, as software can move the camera in such case.
+> [   18.197760] microcode: updated to revision 0x200005e, date = 2019-04-02
+> [   18.201225] x86/CPU: CPU features have changed after loading microcode, but might not take effect.
+> [   18.201230] microcode: Reload completed, microcode revision: 0x200005e
+> [   18.201232] microcode: p0: 118138123843052, p1: 118138153732656, diff: 29889604
 
-										Pavel
+> Here are the results of serial loading:
+> 
+> [   17.542518] microcode: updated to revision 0x200005e, date = 2019-04-02
+> [   17.898365] x86/CPU: CPU features have changed after loading microcode, but might not take effect.
+> [   17.898370] microcode: Reload completed, microcode revision: 0x200005e
+> [   17.898372] microcode: p0: 149220216047388, p1: 149221058945422, diff: 842898034
+> 
+> One can see that the difference is an order magnitude.
+
+Well, that's impressive, but it seems to finish 300 msec later? Where does that difference
+come from / how much real time do you gain by this?
+
+Best regards,
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
