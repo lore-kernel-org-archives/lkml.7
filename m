@@ -2,124 +2,174 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBBBC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 09:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95900C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C6A2339D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 09:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="MfPXUqTO"
+	by mail.kernel.org (Postfix) with ESMTP id 6693E21874
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfIAJje (ORCPT
+        id S1728687AbfIAKEk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 05:39:34 -0400
-Received: from sonic301-21.consmr.mail.gq1.yahoo.com ([98.137.64.147]:43818
-        "EHLO sonic301-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728610AbfIAJjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 05:39:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1567330771; bh=cHlH9WiAvjL21Ab1gMYZyJ5FOMKVRsvNZyUnXUBAmGo=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=MfPXUqTOfnneZL37s56uLRiVNXb/M4DXFFztSTMa06uZCQZkBANnS/h23XQpTSBDtq4fX3ZbBa+MLYGk7VEX3qZlVauR8E30nfpxh+lJ7EaSQMU8fyDTStFsS2EiCGTe6Xbc/haS5SM4+JEeF4ctnKcyc5F3crKT+wZCLfYdsIKxyBRwwJkiuv4GDfOiM8Js6o14Z7hwHJcswVwU0/xmO1XjyHBGoOUt8gem91Sdpdn0KKMkAjzGqVMXpIgnH8e5TyDqm+fpxeRljp6+MdHyN26uGARwyWc3y1F9azzgMMmJPzOtQNqStk3CunWFaf3+RU1Yd+JrdRs2ce/j16AveQ==
-X-YMail-OSG: tSsyId0VM1l6cGeulFe5p.tIwPmQXn8GOW_0lfxtbeyd1dMhHMVsQe_1t5dK3Lt
- ko3BaUa_o4XZSFIu.kaZeAiY63TfQZm9KmR8YiQmo1IHijjm3GWJqgn_QFnfkzQ0r.CIBkS63ZsH
- IOgB_98F3LollxWzIK3aLQf_CpGhoV0YT2mXc4NGiqFYBPa3m4HsA4cGwX9DRrpxXy3wtUR1sfuu
- 34ahEtxknsFvV.X4PFRBA3RZzofOLZmI9sfsun9kzDkBBLg5cb0dbrDBkRuu6za_HsdajtIR6Zd9
- krkQ0uXsy3sbEAFQYIL9tZaO2f0M9r_hIa0oeiHdAWlAYitb_9Ko2SkDs7bab7ynbp79EIoBeSP5
- eLk2PTuXclDo4PZqM1K1q4wujCp91nRVwGep9MomW3mSpXH9CVWqY0SRt7FfitdtjGi0EjRv6f1G
- 2bda9S.Sy7DQhpvqr0_vsGVIltWxF_7eA5rmbFr3.Lr0EDkf.wnelI5YEjM0eK.294dmbF7aCz_j
- BdMITfDdCI6uZjZI1zuqH_dQiCtpiOei9WMJtjidNhPtPTUBgCM11GIGUZ_VefFblu0vWK9FJKOk
- HKsx7DPe7N4KKrBbJf7JoOwvOKZyM_uFcS73dQDLCuS5gIOW_lHA4aPK4G7uoH6MaIXYkbYY1HbP
- K4FPwbWLefVj1ykMhTADONRuR6XrKC6djnY5jXIvnK4dQIXT_UXzPZntALaCRK1yom0lnIYtlNzs
- .2tXMLetoh7OV6FgGEMKA4W6y1_mmtOKTcLKKwA0KnDdJJ9HygI6rsgmXB_e141l68v.Oy_z4FQx
- MS32vW3.2QpkntNrxZDVgIT067.WKaWjrKDYK2efCKOISecfqjE10HGJBkXwSgdjIx93DBN0MiuB
- A8kfCSEMN1dhfjhx0WACWuiHe9D_LuKFovc2YV.ibQememms0F42dk5IYD5XdEUl3Zpxi3ZrJlul
- vXXu9qrpbiuA0rcmV8m1NKLVVySAuLr67znzTgltqT0TLRi5iIWqSWK7YiVJxg8u2c8eWvgNQMou
- k1U6aA9hBup7vFmS0OWDlUxlCZ0X.l7QYtVzH9nwmvlfgYGXB13PsHUWNCcOjGMX9EN0lIlp4G_d
- QWxEpmjJRQYS6xGzDM2EcDJ1bQa2iPmXFR57PLwnPk4tPBSrq7G54eAJZ4ECX6APRNu5vq1UqZHj
- HUJ.86x2dwrX50ZrF.x9nFhSQg8yRXxI4FXU4vfVFqLOQ06LMyrLVbfzECR4JNYvp4ZWtvS1Ln.N
- j8URE72BAnOj8gsGP4BF.0W6ZAdJAtAf5J7m9ZKsoW3tQddU1VB0uTa5poSs14fXke9TKNxOu6ti
- wGSD2i7hN41nw
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Sep 2019 09:39:31 +0000
-Received: by smtp401.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 682a89ffe636f493a8dcfa91a6749f63;
-          Sun, 01 Sep 2019 09:39:26 +0000 (UTC)
-Date:   Sun, 1 Sep 2019 17:39:13 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v6 06/24] erofs: support special inode
-Message-ID: <20190901093912.GB6267@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-7-gaoxiang25@huawei.com>
- <20190829102503.GF20598@infradead.org>
+        Sun, 1 Sep 2019 06:04:40 -0400
+Received: from mail-oln040092065091.outbound.protection.outlook.com ([40.92.65.91]:33311
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728390AbfIAKEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 06:04:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YkbehVc7oP/dh9Cps3Ox79sWtE5xjnwgI7pxhpTOZ1YV0wNviIt0HQotyDMf1UvOxivJSIKaLQAQKb+Y8U4uluXZ7v9CudLEQ+dHTH0znJdDS6q6sms0qvti+ZAoGtmQswwv4aMLo34t6Q6gtantJ8jDeLR47lch6cckTXa8u6xfJT49nOZFPL9XLCDYFHSkyKSTa9iBP9Y/lf+T0hCtexE8QHZ9rIyeZ2O8y5B+sCUaxAhoKovNeuFU+yCuvMWNmsJDQEQPNkR7JH/yWc0IMjcjOnhrIQvKYH1tnWo8Ndu5vwmvbRxy2ggazTm+FRoxWggQmWZAD9n6R4R61jY6bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HaavbiEG3ZX9MFpUhrwDr9aaAj5KgWam58l2xiiE6eQ=;
+ b=l6sIMC+Bb89eVWvxW1RB5egb4YTTxLdfcWVoaLo9fCA+zKXwvk17cgChbUGzKKqOacaKoMgDKgWjOWOpc9X2pcDHYV4qYUsM4QE1maIqeGyjMy3qxnepQMhi/j5ceuzJXRNLQrkSdrdrm098VgllknEPf6NZD7RlWxce0PfhXhRbiJOXm+NVfbbkyffvfZ7iOIVtr3r6xbXrxSHlez5bq8WC9wc3Q46h4pm1gaX1HmWZi7MsUvNLa2rYdN3LDrZwFfMb5Rdr1zMYgZDuF+lIR3fFFf9C19Gj3PFGFVlBKGptGsVskZI6ow66yUBcTLSrX/Y2Og0/E4vo3PnIeD3DEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HE1EUR01FT007.eop-EUR01.prod.protection.outlook.com
+ (10.152.0.51) by HE1EUR01HT185.eop-EUR01.prod.protection.outlook.com
+ (10.152.1.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2220.16; Sun, 1 Sep
+ 2019 10:03:53 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.0.57) by
+ HE1EUR01FT007.mail.protection.outlook.com (10.152.1.243) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.16 via Frontend Transport; Sun, 1 Sep 2019 10:03:53 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::a0ba:e766:2a23:2088]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::a0ba:e766:2a23:2088%3]) with mapi id 15.20.2199.021; Sun, 1 Sep 2019
+ 10:03:53 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "tzungbi@chromium.org" <tzungbi@chromium.org>,
+        "zhengxing@rock-chips.com" <zhengxing@rock-chips.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jeffy.chen@rock-chips.com" <jeffy.chen@rock-chips.com>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "cain.cai@rock-chips.com" <cain.cai@rock-chips.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "eddie.cai@rock-chips.com" <eddie.cai@rock-chips.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "dgreid@chromium.org" <dgreid@chromium.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH] drm: dw-hdmi-i2s: enable audio clock in audio_startup
+Thread-Topic: [PATCH] drm: dw-hdmi-i2s: enable audio clock in audio_startup
+Thread-Index: AQHVXiJ4olMh5nfx9ESKyNNc1nttD6cWnNeA
+Date:   Sun, 1 Sep 2019 10:03:53 +0000
+Message-ID: <HE1PR06MB4011FA45247F186BB83DFF04ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <20190829042957.150929-1-cychiang@chromium.org>
+In-Reply-To: <20190829042957.150929-1-cychiang@chromium.org>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P191CA0002.EURP191.PROD.OUTLOOK.COM (2603:10a6:3:cf::12)
+ To HE1PR06MB4011.eurprd06.prod.outlook.com (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:16C72D0C8AB52BEE626484D0B0E852CFFB509B27838AC274E6A26036719DAA6B;UpperCasedChecksum:118D8592DF4188344C2A8E08D26BEBCC14626A9511864823E42993A4B8E11281;SizeAsReceived:8542;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [+npBKufwFZGj9FtjgXjbVb5NfZd1lCOJ]
+x-microsoft-original-message-id: <4c191c41-1e7a-0fd5-e4c8-f5df55a92fc4@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR01HT185;
+x-ms-traffictypediagnostic: HE1EUR01HT185:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-message-info: qId+/Ijj75PN1F7VHwgSPyHM6ytGrwqcE0kM9ZL5GN8eIY6LX1+kkIR0e+NM1JiunrCQDeVb7SFyzTa+RWRxARj/pD6QUH0dzyd3QsN5jiDmSt4uDgLLOuIRlZQrkcuJwZBNfYfbzgoKIjqzvmmkecbCX0YzGKnjEGWiHIufvHMeNxLmyb2OAnEnpQUOmrYz
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <0218E2ADABBE9D4DBD0D6B875F7CFEE1@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829102503.GF20598@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a8ec63f-234b-4be1-5cad-08d72ec3b1b5
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 10:03:53.5265
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On 2019-08-29 06:29, Cheng-Yi Chiang wrote:
+> In the designware databook, the sequence of enabling audio clock and
+> setting format is not clearly specified.
+> Currently, audio clock is enabled in the end of hw_param ops after
+> setting format.
+>
+> On some monitors, there is a possibility that audio does not come out.
+> Fix this by enabling audio clock in audio_startup ops
+> before hw_param ops setting format.
+>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> index 5cbb71a866d5..08b4adbb1ddc 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> @@ -69,6 +69,14 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
+>  	hdmi_write(audio, conf0, HDMI_AUD_CONF0);
+>  	hdmi_write(audio, conf1, HDMI_AUD_CONF1);
+>  
+> +	return 0;
+> +}
+> +
+> +static int dw_hdmi_i2s_audio_startup(struct device *dev, void *data)
+> +{
+> +	struct dw_hdmi_i2s_audio_data *audio = data;
+> +	struct dw_hdmi *hdmi = audio->hdmi;
+> +
+>  	dw_hdmi_audio_enable(hdmi);
+>  
+>  	return 0;
+> @@ -105,6 +113,7 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+>  }
+>  
+>  static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
+> +	.audio_startup = dw_hdmi_i2s_audio_startup,
 
-On Thu, Aug 29, 2019 at 03:25:03AM -0700, Christoph Hellwig wrote:
-> On Fri, Aug 02, 2019 at 08:53:29PM +0800, Gao Xiang wrote:
-> > This patch adds to support special inode, such as
-> > block dev, char, socket, pipe inode.
-> > 
-> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> > ---
-> >  fs/erofs/inode.c | 27 +++++++++++++++++++++++++--
-> >  1 file changed, 25 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-> > index b6ea997bc4ae..637bf6e4de44 100644
-> > --- a/fs/erofs/inode.c
-> > +++ b/fs/erofs/inode.c
-> > @@ -34,7 +34,16 @@ static int read_inode(struct inode *inode, void *data)
-> >  		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
-> >  
-> >  		inode->i_mode = le16_to_cpu(v2->i_mode);
-> > -		vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-> > +		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
-> > +		    S_ISLNK(inode->i_mode))
-> > +			vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-> > +		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
-> > +			inode->i_rdev =
-> > +				new_decode_dev(le32_to_cpu(v2->i_u.rdev));
-> > +		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
-> > +			inode->i_rdev = 0;
-> > +		else
-> > +			return -EIO;
-> 
-> Please use a switch statement when dealing with the file modes to
-> make everything easier to read.
+A small white space nit, there should be a tab and not space to align the equal sign above.
+Also this patch do not cleanly apply to drm-misc-next or linux-next after
+fc1ca6e01d0a "drm/bridge: dw-hdmi-i2s: add .get_eld support" was merged.
 
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-18-hsiangkao@aol.com/
+This patch does fix an issue I have observed on my Rockchip devices where audio would not always
+came out after switching between audio streams having different rate and channels parameters.
+I used to carry [1] to fix that issue, but this seems like a more sane fix.
 
-Thanks,
-Gao Xiang
+[1] https://github.com/Kwiboo/linux-rockchip/commit/4862e4044532b8b480fa3a0faddc197586623808
+
+With above fixed,
+
+Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+
+Regards,
+Jonas
+
+>  	.hw_params	= dw_hdmi_i2s_hw_params,
+>  	.audio_shutdown	= dw_hdmi_i2s_audio_shutdown,
+>  	.get_dai_id	= dw_hdmi_i2s_get_dai_id,
 
