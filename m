@@ -2,181 +2,151 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9285C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACEDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8013222D6D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567375325;
-	bh=5Jemhp2lj9/ZQGI4LXDaoA+GALLU78MTTZMQS0wCH3M=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=nFciR8RnmqonUw6zb0bnVHcZKmZ/nzuBiZPdChIl5o81JkRQ+zrONw2jvwowT2KIK
-	 S9C85u3WVc+OqA+9IYEk86ukK5QHmWlT/X8pu61w+T16Xz+j7CwOSu3PfSh0mbJ+dj
-	 Z8XSBVcmPKS8FECdJtgG6TGn0TX1FH3qAdxjv1V0=
+	by mail.kernel.org (Postfix) with ESMTP id BCB0621897
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfIAWCE (ORCPT
+        id S1729148AbfIAWng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 18:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbfIAWCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 18:02:04 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B1A821897;
-        Sun,  1 Sep 2019 22:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567375323;
-        bh=5Jemhp2lj9/ZQGI4LXDaoA+GALLU78MTTZMQS0wCH3M=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XmwJkLPBgjplyzLEch8BUQyWULZn07GtOYgNWmh1hH+lNMEPiv1+aHCod3XdVT9k5
-         gVrR0Rr9BwZR+VOTzOGrl/Jx/XRzv+ioAQdTGs0BGCbyoWZaHKeqiP9V4viOq7BAhX
-         HZxZZz5Wksm6qHOX+gyVdt3Fg/28Au+cIKoLEAOY=
-Message-ID: <1567375321.5282.12.camel@kernel.org>
-Subject: Re: [PATCH] tracing: Fix histogram referencing a variable
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Date:   Sun, 01 Sep 2019 17:02:01 -0500
-In-Reply-To: <20190826224434.385bc6b5@gandalf.local.home>
-References: <20190826224434.385bc6b5@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 1 Sep 2019 18:43:36 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49409 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728942AbfIAWng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 18:43:36 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 251FA3610F5;
+        Mon,  2 Sep 2019 08:43:31 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i4YZF-00035I-RZ; Mon, 02 Sep 2019 08:43:29 +1000
+Date:   Mon, 2 Sep 2019 08:43:29 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of
+ fat/vfat
+Message-ID: <20190901224329.GH7777@dread.disaster.area>
+References: <245727.1567183359@turing-police>
+ <20190830164503.GA12978@infradead.org>
+ <267691.1567212516@turing-police>
+ <20190831064616.GA13286@infradead.org>
+ <295233.1567247121@turing-police>
+ <20190901010721.GG7777@dread.disaster.area>
+ <339527.1567309047@turing-police>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <339527.1567309047@turing-police>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=J70Eh1EUuV4A:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=K2SI45MAujIxdphGjPIA:9
+        a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On Mon, 2019-08-26 at 22:44 -0400, Steven Rostedt wrote:
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+On Sat, Aug 31, 2019 at 11:37:27PM -0400, Valdis Klētnieks wrote:
+> On Sun, 01 Sep 2019 11:07:21 +1000, Dave Chinner said:
+> > Totally irrelevant to the issue at hand. You can easily co-ordinate
+> > out of tree contributions through a github tree, or a tree on
+> > kernel.org, etc.
 > 
-> I performed a three way histogram with the following commands:
+> Well.. I'm not personally wedded to the staging tree.  I'm just interested in
+> getting a driver done and upstreamed with as little pain as possible. :)
+
+Understood - I'm trying to head off you guys getting delayed
+by sitting for a year in the staging tree polishing a turd and not
+addressing the things that really need to be done first...
+
+> Is there any preference for github versus kernel.org?  I can set up a github
+> tree on my own, no idea who needs to do what for a kernel.org tree.
+
+What ever is most convenient for you to manage and co-ordinate. :P
+
+> Also, this (from another email of yours) was (at least to me) the most useful
+> thing said so far:
 > 
-> echo 'irq_lat u64 lat pid_t pid' > synthetic_events
-> echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
-> echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
-> echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
-> echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
-> echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger 
-> echo 1 > events/synthetic/wake_lat/enable 
+> > look at what other people have raised w.r.t. to that filesystem -
+> > on-disk format validation, re-implementation of largely generic
+> > code, lack of namespacing of functions leading to conflicts with
+> > generic/VFS functionality, etc.
 > 
+> All of which are now on the to-do list, thanks.
+> 
+> Now one big question:
+> 
+> Should I heave all the vfat stuff overboard and make a module that
+> *only* does exfat, or is there enough interest in an extended FAT module
+> that does vfat and extfat, in which case the direction should be to re-align
+> this module's code with vfat?
 
-Thanks for digging into this and providing a patch.  Looking into it
-myself, I think the problem is actually in the alias-creation code
-(which gets invoked for where you do irqlat=$irqlat).  In that code,
-the alias's var_ref_idx is always 0, so you get whatever's there rather
-than the correct value if it should be something other than 0.
+I don't know the details of the exfat spec or the code to know what
+the best approach is. I've worked fairly closely with Christoph for
+more than a decade - you need to think about what he says rather
+than /how he says it/ because there's a lot of thought and knowledge
+behind his reasoning. Hence if I were implementing exfat and
+Christoph was saying "throw it away and extend fs/fat"
+then that's what I'd be doing.
 
-The patch below fixes that - I used your original commit message but
-changed the last sentence and the offending commit that introduced the
-problem, and of course the one-line code change is different too.  Let
-me know if that works for you.
+A lot of this is largely risk management - there's a good chance
+that the people developing the code move on after the project is
+done and merged, which leaves the people like Christoph with the
+burden of long term code maintenance for that filesystem. There's
+enough crusty, old, largely unmaintained filesystem code already,
+and we don't want more. Implementing exfat on top of fs/fat kills
+two birds with one stone - it modernises the fs/fat code base and
+brings new functionality that will have more developers interested
+in maintaining it over the long term. So from an overall filesystem
+maintenance perspective, building on top of fs/fat makes a lot of
+sense to a kernel filesystem developer...
 
-Thanks,
+This is not a judgement on the quality of the existing exfat code
+or it's developers - it's just that there are very good reasons for
+building on existing codebase rather than creating a whole new code
+base that has very similar functionality.
 
-Tom
+That's my total involvement in this - I don't really care about
+exfat at all - my stake in this is to improve the development,
+review and merge process being undertaken. We have a history of lax
+review, poor processes and really shitty code being merged into the
+kernel and I've been on the cleanup squad for a few of them over the
+past couple of years. That's a burnout vector, so it's in the
+interests of my own sanity (and fs developers) to set standards and
+precedence to prevent more trainwrecks from happening before the
+train even leaves the station...
 
+> > That's the choice you have to make now: listen to the reviewers
+> > saying "resolve the fundamental issues before goign any further",
+> 
+> Well... *getting* a laundry list of what the reviewers see as the fundamental
+> issues is the first step in resolving them ;)
 
-[PATCH] tracing: Make sure variable reference alias has correct var_ref_idx
+You won't get them all at once. You'll get something new every round
+of review as the bigger issues are worked out, the reviewers become
+more familiar with the code and notice more detailed/subtle
+issues. Most filesystem reviews start with developers trying to
+understand the on-disk structure and architecture rather that focus
+on whitespace and code cleanliness. Cleaning up the code can be done
+after we work through all the structural issues...
 
-Original changelog from Steve Rostedt (except last sentence which
-explains the problem, and the Fixes: tag):
+Cheers,
 
-I performed a three way histogram with the following commands:
-
-echo 'irq_lat u64 lat pid_t pid' > synthetic_events
-echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
-echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
-echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
-echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
-echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger
-echo 1 > events/synthetic/wake_lat/enable
-
-Basically I wanted to see:
-
- hrtimer_start (calling function tick_sched_timer)
-
-Note:
-
-  # grep tick_sched_timer /proc/kallsyms
-ffffffff81200580 t tick_sched_timer
-
-And save the time of that, and then record sched_waking if it is called
-in interrupt context and with the same pid as the hrtimer_start, it
-will record the latency between that and the waking event.
-
-I then look at when the task that is woken is scheduled in, and record
-the latency between the wakeup and the task running.
-
-At the end, the wake_lat synthetic event will show the wakeup to
-scheduled latency, as well as the irq latency in from hritmer_start to
-the wakeup. The problem is that I found this:
-
-          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
-          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
-          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
-          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
-          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
-          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
-          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
-          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
-
-The irqlat seemed quite large! Investigating this further, if I had
-enabled the irq_lat synthetic event, I noticed this:
-
-          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
-          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
-
-Notice that the timestamp of the irq_lat "249.429308" is awfully
-similar to the reported irqlat variable. In fact, all instances were
-like this. It appeared that:
-
-  irqlat=$irqlat
-
-Wasn't assigning the old $irqlat to the new irqlat variable, but
-instead was assigning the $irqts to it.
-
-The issue is that assigning the old $irqlat to the new irqlat variable
-creates a variable reference alias, but the alias creation code
-forgets to make sure the alias uses the same var_ref_idx to access the
-reference.
-
-Cc: stable@vger.kernel.org
-Fixes: 7e8b88a30b085 ("tracing: Add hist trigger support for variable reference aliases")
-Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/trace/trace_events_hist.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 65e7d071ed28..dbefd59ba944 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2785,6 +2785,8 @@ static struct hist_field *create_alias(struct hist_trigger_data *hist_data,
- 		return NULL;
- 	}
- 
-+	alias->var_ref_idx = var_ref->var_ref_idx;
-+
- 	return alias;
- }
- 
+Dave.
 -- 
-2.14.1
-
-
+Dave Chinner
+david@fromorbit.com
