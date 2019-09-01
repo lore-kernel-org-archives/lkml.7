@@ -2,145 +2,105 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDEEC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 00:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E475FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 00:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE14A22D37
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 00:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567296469;
-	bh=P5RbwRHQDN4mj8PbOE7mNbYp6W1+Z0WX/Kbt1x30H3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0noth+J1gkG1mcgDX0ECcHfcusIJycIcyyb/v8hC44qlO63oO7vp/8TlETEG6FTi1
-	 8FneOXWrc5OGT1ylB5CSHhUSCEq09G9E+yQlxOWDzkCEOuDXJIizm2kA+mccjBa0sI
-	 E2R77Gh6QtGx3xLMzI5jCQotCrqpKLKJTDXNCyzM=
+	by mail.kernel.org (Postfix) with ESMTP id B863722CE9
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 00:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eBz5M1QV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfIAAHt (ORCPT
+        id S1728616AbfIAAwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 20:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfIAAHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 20:07:48 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99E1821874;
-        Sun,  1 Sep 2019 00:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567296467;
-        bh=P5RbwRHQDN4mj8PbOE7mNbYp6W1+Z0WX/Kbt1x30H3U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nIodCGlvlGmztTC9dA21Btd7algx1Eqt2oPUvJmufwJ64JYkfGVoK8AE/MFX3Q88e
-         fhLiqeERD09ylTAMrwLQklegzsoL2x326rRqeYwHMOU1/6zGfnHbGwp1oOVG9Ap7wp
-         EvcGfXg0YPf/bR+tw0zt2cQ1JtLxpxHkTWAIp0OM=
-Date:   Sat, 31 Aug 2019 20:07:46 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc:     Tim Froidcoeur <tim.froidcoeur@tessares.net>, aprout@ll.mit.edu,
-        cpaasch@apple.com, davem@davemloft.net, edumazet@google.com,
-        gregkh@linuxfoundation.org, jonathan.lemon@gmail.com,
-        jtl@netflix.com, linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        ncardwell@google.com, stable@vger.kernel.org, ycheng@google.com,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
- retransmit queue
-Message-ID: <20190901000746.GA5281@sasha-vm>
-References: <529376a4-cf63-f225-ce7c-4747e9966938@tessares.net>
- <20190824060351.3776-1-tim.froidcoeur@tessares.net>
- <20190831122036.GY5281@sasha-vm>
- <35cd974b-2b31-4f86-d53d-8e9516d4077e@tessares.net>
+        Sat, 31 Aug 2019 20:52:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56238 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfIAAwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 31 Aug 2019 20:52:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jXXM66EKtvmEAYvb1Llji9/A136eINaxlL5uqBe0OBY=; b=eBz5M1QVpKJZMQDzXUQ9MXhMT
+        rIK2EkzUbSraojFclMxJ7OU+sf7tbq9mwzo0REl3yaDUt2YpbGdUBXr1PBULu2aic9sZuNzSPwoCp
+        owngjkSk9HrwVrtscNCYj+aZ/17/cGG88hXmrwj3PKy0BJCvg4ElKAVolJU/MnnAZSwlpMqAmc62e
+        AMUhgpKdATQQ056Kf77qv58BUxrXE6ktixwa0beiRV9gpk+ZAtbCCa1VAH88gCyyf5jTc6PxLSazv
+        wV7o8Fq43JPBfe5nZRIUcQcvYRvRzMraHjUnFk9kNgyg6rLAwcalK0UgYckSGwX3KhjlxftyTplES
+        EIwb3V+yg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4E69-0007JD-OE; Sun, 01 Sep 2019 00:52:05 +0000
+Date:   Sat, 31 Aug 2019 17:52:05 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190901005205.GA2431@bombadil.infradead.org>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
+ <20190828194607.GB6590@bombadil.infradead.org>
+ <20190829073921.GA21880@dhcp22.suse.cz>
+ <0100016ce39e6bb9-ad20e033-f3f4-4e6d-85d6-87e7d07823ae-000000@email.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <35cd974b-2b31-4f86-d53d-8e9516d4077e@tessares.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0100016ce39e6bb9-ad20e033-f3f4-4e6d-85d6-87e7d07823ae-000000@email.amazonses.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 03:14:35PM +0200, Matthieu Baerts wrote:
->Hi Sasha,
->
->Thank you for your reply!
->
->On 31/08/2019 14:20, Sasha Levin wrote:
->> On Sat, Aug 24, 2019 at 08:03:51AM +0200, Tim Froidcoeur wrote:
->>> Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
->>> triggers following stack trace:
->>>
->>> [25244.848046] kernel BUG at ./include/linux/skbuff.h:1406!
->>> [25244.859335] RIP: 0010:skb_queue_prev+0x9/0xc
->>> [25244.888167] Call Trace:
->>> [25244.889182]  <IRQ>
->>> [25244.890001]  tcp_fragment+0x9c/0x2cf
->>> [25244.891295]  tcp_write_xmit+0x68f/0x988
->>> [25244.892732]  __tcp_push_pending_frames+0x3b/0xa0
->>> [25244.894347]  tcp_data_snd_check+0x2a/0xc8
->>> [25244.895775]  tcp_rcv_established+0x2a8/0x30d
->>> [25244.897282]  tcp_v4_do_rcv+0xb2/0x158
->>> [25244.898666]  tcp_v4_rcv+0x692/0x956
->>> [25244.899959]  ip_local_deliver_finish+0xeb/0x169
->>> [25244.901547]  __netif_receive_skb_core+0x51c/0x582
->>> [25244.903193]  ? inet_gro_receive+0x239/0x247
->>> [25244.904756]  netif_receive_skb_internal+0xab/0xc6
->>> [25244.906395]  napi_gro_receive+0x8a/0xc0
->>> [25244.907760]  receive_buf+0x9a1/0x9cd
->>> [25244.909160]  ? load_balance+0x17a/0x7b7
->>> [25244.910536]  ? vring_unmap_one+0x18/0x61
->>> [25244.911932]  ? detach_buf+0x60/0xfa
->>> [25244.913234]  virtnet_poll+0x128/0x1e1
->>> [25244.914607]  net_rx_action+0x12a/0x2b1
->>> [25244.915953]  __do_softirq+0x11c/0x26b
->>> [25244.917269]  ? handle_irq_event+0x44/0x56
->>> [25244.918695]  irq_exit+0x61/0xa0
->>> [25244.919947]  do_IRQ+0x9d/0xbb
->>> [25244.921065]  common_interrupt+0x85/0x85
->>> [25244.922479]  </IRQ>
->>>
->>> tcp_rtx_queue_tail() (called by tcp_fragment()) can call
->>> tcp_write_queue_prev() on the first packet in the queue, which will
->>> trigger
->>> the BUG in tcp_write_queue_prev(), because there is no previous packet.
->>>
->>> This happens when the retransmit queue is empty, for example in case of a
->>> zero window.
->>>
->>> Patch is needed for 4.4, 4.9 and 4.14 stable branches.
->>
->> There needs to be a better explanation of why it's not needed
->> upstream...
->
->Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()") was not a
->simple cherry-pick of the original one from master (b617158dc096)
->because there is a specific TCP rtx queue only since v4.15. For more
->details, please see the commit message of b617158dc096 ("tcp: be more
->careful in tcp_fragment()").
->
->The BUG() is hit due to the specific code added to versions older than
->v4.15. The comment in skb_queue_prev() (include/linux/skbuff.h:1406),
->just before the BUG_ON() somehow suggests to add a check before using
->it, what Tim did.
->
->In master, this code path causing the issue will not be taken because
->the implementation of tcp_rtx_queue_tail() is different:
->
->    tcp_fragment() → tcp_rtx_queue_tail() → tcp_write_queue_prev() →
->skb_queue_prev() → BUG_ON()
->
->Because this patch is specific to versions older than the two last
->stable ones but still linked to the network architecture, who can review
->and approve it? :)
+On Fri, Aug 30, 2019 at 05:41:46PM +0000, Christopher Lameter wrote:
+> On Thu, 29 Aug 2019, Michal Hocko wrote:
+> > > There are many places in the kernel which assume alignment.  They break
+> > > when it's not supplied.  I believe we have a better overall system if
+> > > the MM developers provide stronger guarantees than the MM consumers have
+> > > to work around only weak guarantees.
+> >
+> > I absolutely agree. A hypothetical benefit of a new implementation
+> > doesn't outweigh the complexity the existing code has to jump over or
+> > worse is not aware of and it is broken silently. My general experience
+> > is that the later is more likely with a large variety of drivers we have
+> > in the tree and odd things they do in general.
+> 
+> The current behavior without special alignment for these caches has been
+> in the wild for over a decade. And this is now coming up?
 
-Thanks for the explanation. I've changed the commit message to include
-this explanation and queued it for 4.4, 4.9 and 4.14.
+In the wild ... and rarely enabled.  When it is enabled, it may or may
+not be noticed as data corruption, or tripping other debugging asserts.
+Users then turn off the rare debugging option.
 
---
-Thanks,
-Sasha
+> There is one case now it seems with a broken hardware that has issues and
+> we now move to an alignment requirement from the slabs with exceptions and
+> this and that?
+
+Perhaps you could try reading what hasa been written instead of sticking
+to a strawman of your own invention?
+
+> If there is an exceptional alignment requirement then that needs to be
+> communicated to the allocator. A special flag or create a special
+> kmem_cache or something.
+
+The only way I'd agree to that is if we deliberately misalign every
+allocation that doesn't have this special flag set.  Because right now,
+breakage happens everywhere when these debug options are enabled, and
+the very people who need to be helped are being hurt by the debugging.
