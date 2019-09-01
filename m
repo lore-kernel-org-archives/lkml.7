@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E810AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 15:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDEAC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 15:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B84522339D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 15:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6472342C
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 15:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0W+y/PB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkl0Ipvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfIAPSo (ORCPT
+        id S1729043AbfIAPS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 11:18:44 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38550 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfIAPSo (ORCPT
+        Sun, 1 Sep 2019 11:18:57 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37150 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfIAPS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 11:18:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u190so10487324qkh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 08:18:43 -0700 (PDT)
+        Sun, 1 Sep 2019 11:18:56 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so13104619qto.4
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 08:18:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=OsjVf8G0s3dVgmEdOE8Dx0us8DE7z4NJfbB1KbthVmg=;
-        b=C0W+y/PBXjw0rAELJ20N+uFzbatYs1xSFZ817U+ZXNpPdIkFc53RC8u6A0khk4UYHo
-         l3yUxbZs7z9netIwk/tTHfMvQterDuylRutg1uWqrJ0OEG4dnVrnuLrnP55SOzLUgEBS
-         keoJzz9wDqetWyevSAHU7eRyoJjkZ/idmtd8deeB7ngkBRs38cHwDYhnao3fhubDrGr7
-         RGDGDYb4h8dqxh+9B5X2WLgtjFTePfCnXkkMtAKsHVzs/KuLiGI38RNMVZ59hCVqkqku
-         zA6HkGi128IIgdLp4cstOpbucxbC3DYePe3AC/m3C2QSQgc4g6litwIqCwxUWPteVxdr
-         45/Q==
+        bh=OLV1GEvowhQxcMk1RK/g6Egx7Q3ZRjMvVdb1THmpULw=;
+        b=pkl0IpvbRJGuwLyqoqvdMHhN6cLvyvVR0WsRhMurWnHsH8oUZ+nvjYbVTr6Kla6VoY
+         WuMz/qV1vUugFzu1TdcRLp52rJEm8h/AsMqOPywaC55ilRRtpOaT2z7oHitVeKj134b+
+         grw4Rf0thm7FCT8neEbaVBMuIX0sXL7UC7/cragVUWl4iG48jEpAi9A8lzzIsdQosXCo
+         RYWHAWFz/h3X0GRbLuRDoqmTjM79eQHW96dlVMhOUnvoic2AAwTKJ6ozKXdJX03Y3bpM
+         OVF7pKoyNMlH2EME8hRCQKnm+2ok4EgvN700+Z8JGgpdNjRXutuY5KoxMiTBCtfOJSLX
+         cUkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OsjVf8G0s3dVgmEdOE8Dx0us8DE7z4NJfbB1KbthVmg=;
-        b=Q3PfylLo+dtOSroKDnwqbCol2W41wJ8G2OMicT5bl6L7T8aBYv6wYylLxVgyorlX6u
-         pXN8J2VxKwlZouJ9yMSE52HwqpbT9Oas1eoMJ1GM0Bguy9d1UVX1G78JbgvxD3Hxagov
-         aVUi5Ba13XhszB0RZoxLcudMSuwNBZK5lTEmxypmLJ7Rk02k/b1MJbfKN75na7QVa9dJ
-         rhzhmRc72VYrnXeNlUy2vbqIhmCOTy4qFJUJkkfzxAz6EAgC4+G78+xHIgERLqkIQPZR
-         AqHjuhAPDgNlYjJPX2mFi7LY+IxTilB8iKkZnxN37Hk/K7Uu4vsrrLnnRyVjoc/Hzrbt
-         +yUg==
-X-Gm-Message-State: APjAAAVBi9PozmWtthYt5PAntZq/1su6k73tjPIbmoZiH1opSB2JVX/b
-        iLm0Z8LZxS3Mx8cdJj8PTz4=
-X-Google-Smtp-Source: APXvYqy//9NRrFDr+ViD3Uval7M1pLVi3Cj6fFqKYtssPykSGJrsJSqh3XLyWFAQILazLeTAiReuNQ==
-X-Received: by 2002:a05:620a:15b9:: with SMTP id f25mr1564398qkk.230.1567351123330;
-        Sun, 01 Sep 2019 08:18:43 -0700 (PDT)
+        bh=OLV1GEvowhQxcMk1RK/g6Egx7Q3ZRjMvVdb1THmpULw=;
+        b=OoGi0l+IFtwrH2m3mDvS34BRgI7K36iN3o8u0JlpQd0cc6jeif4YeHYsO7a3zuOIm3
+         Z3HsML1lZgX1BkWiLZ5X4ZADFlenVlT2DDozPdCHyw1GhzO/Gy7/mozdpsY85nzOfO8b
+         S2vxpkSxUwA20JNZAcnbkFQCIRafm1vELVWEU7udkGArtJkzvL3yW/2N9hMqzaD8+gPn
+         BO20c+yCX9RwxKpJIk/aOgIKT/KQvGbGhTWL6hBqugrvpOTemCuGFgZTVtiqkHa1AH9y
+         EfIesc6J6xCU67ZET3Pk97jp1xibpjQygYxwfsMRjvKialspVaNm0kM22GXx3yAPP1w+
+         SBnQ==
+X-Gm-Message-State: APjAAAXyMtOf+Gs92G2lAZZUggDI8h5qg7u7um1PZ0+Ucwbt0YEViWee
+        87D8MuVHP9BDaRgKtzW63aBWsVAE
+X-Google-Smtp-Source: APXvYqzPblDg9KdI9oGpvtHen/WrqZBfvydxTS0c6EGOt/wWsPWMyu/0FjQZwXOJROPTfb85u41T5Q==
+X-Received: by 2002:ad4:41c6:: with SMTP id a6mr16022762qvq.49.1567351135625;
+        Sun, 01 Sep 2019 08:18:55 -0700 (PDT)
 Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id i12sm5284588qki.122.2019.09.01.08.18.42
+        by smtp.gmail.com with ESMTPSA id b17sm1139496qtb.57.2019.09.01.08.18.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 08:18:42 -0700 (PDT)
+        Sun, 01 Sep 2019 08:18:54 -0700 (PDT)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9FE7B41146; Sun,  1 Sep 2019 12:18:40 -0300 (-03)
-Date:   Sun, 1 Sep 2019 12:18:40 -0300
+        id 29D2141146; Sun,  1 Sep 2019 12:18:53 -0300 (-03)
+Date:   Sun, 1 Sep 2019 12:18:53 -0300
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -69,14 +69,14 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 3/4] perf tests: Add libperf automated test
-Message-ID: <20190901151840.GN28011@kernel.org>
+Subject: Re: [PATCH 4/4] libperf: Add missing event.h into install rule
+Message-ID: <20190901151853.GO28011@kernel.org>
 References: <20190901124822.10132-1-jolsa@kernel.org>
- <20190901124822.10132-4-jolsa@kernel.org>
+ <20190901124822.10132-5-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901124822.10132-4-jolsa@kernel.org>
+In-Reply-To: <20190901124822.10132-5-jolsa@kernel.org>
 X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,42 +84,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, Sep 01, 2019 at 02:48:21PM +0200, Jiri Olsa escreveu:
-> Adding libperf build test.
+Em Sun, Sep 01, 2019 at 02:48:22PM +0200, Jiri Olsa escreveu:
+> So it's properly installed.
 
-Thanks, applied. And also added a note that this is used when one does
-a:
+Thanks, applied.
 
-  $ make -C tools/perf built-test
+- Arnaldo
  
-> Link: http://lkml.kernel.org/n/tip-r1be6tz02ay0bf2729a7xwjk@git.kernel.org
+> Link: http://lkml.kernel.org/n/tip-7e989xk9ykmd60db9lym5uc6@git.kernel.org
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/perf/tests/make | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  tools/perf/lib/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index 17ee3facfd4d..128a0d801ac1 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-> @@ -327,6 +327,10 @@ make_kernelsrc_tools:
->  	(make -C ../../tools $(PARALLEL_OPT) $(K_O_OPT) perf) > $@ 2>&1 && \
->  	test -x $(KERNEL_O)/tools/perf/perf && rm -f $@ || (cat $@ ; false)
+> diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+> index a67efb8d9d39..e325c0503dc6 100644
+> --- a/tools/perf/lib/Makefile
+> +++ b/tools/perf/lib/Makefile
+> @@ -146,6 +146,7 @@ install_headers:
+>  		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
+>  		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
+>  		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644);
+> +		$(call do_install,include/perf/event.h,$(prefix)/include/perf,644);
 >  
-> +make_libperf:
-> +	@echo "- make -C lib";
-> +	make -C lib clean >$@ 2>&1; make -C lib >>$@ 2>&1 && rm $@
-> +
->  FEATURES_DUMP_FILE := $(FULL_O)/BUILD_TEST_FEATURE_DUMP
->  FEATURES_DUMP_FILE_STATIC := $(FULL_O)/BUILD_TEST_FEATURE_DUMP_STATIC
->  
-> @@ -365,5 +369,5 @@ $(foreach t,$(run),$(if $(findstring make_static,$(t)),\
->  			$(eval $(t) := $($(t)) FEATURES_DUMP=$(FEATURES_DUMP_FILE))))
->  endif
->  
-> -.PHONY: all $(run) $(run_O) tarpkg clean make_kernelsrc make_kernelsrc_tools
-> +.PHONY: all $(run) $(run_O) tarpkg clean make_kernelsrc make_kernelsrc_tools make_libperf
->  endif # ifndef MK
+>  install_pkgconfig: $(LIBPERF_PC)
+>  	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
 > -- 
 > 2.21.0
 
