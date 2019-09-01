@@ -2,168 +2,146 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8AFC41514
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 20:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86559C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 20:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C414522D6D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 20:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567368829;
-	bh=/pnvx7fXx7aB1zSkYAkxF9Mb5HZf517huqG1qnH5axI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KQtszxHXFPqFCDGoMdffnwdLjUXwZOtUAEQCewHCbfeH3GKzgNj5Iw2tTH4DS1Dq0
-	 CmOa7S9s2P7iQt6bsPsP8bJskRUqckYKXcRy+tTe3BGfJpB5Zf9HFL3XPUECugXFEB
-	 K9MZLQ+ZXqnc/arZFcocNNyrch/8xKWDBpe7MPkY=
+	by mail.kernel.org (Postfix) with ESMTP id 4FF2021897
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 20:35:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvxfW2Rt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfIAUNt (ORCPT
+        id S1728961AbfIAUfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 16:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbfIAUNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 16:13:48 -0400
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A502190F;
-        Sun,  1 Sep 2019 20:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567368827;
-        bh=/pnvx7fXx7aB1zSkYAkxF9Mb5HZf517huqG1qnH5axI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mSiJ+hOpiK/RShw6XMEbQRYgTXLzW6Tnnp6Hhkj0PLRAxKjid60xN0JKf+LVRgupq
-         kA/l60HntRllYA+gZCJlw9v+wwjJa4iLD7ENFJLRTA8pRz9tXirk4wpBMehfOUvFmX
-         pmLvbGI9BgQpt9NRwebMeEUMlZ1RGmPH5wMreTzw=
-Received: by earth.universe (Postfix, from userid 1000)
-        id AB50B3C0B7F; Sun,  1 Sep 2019 22:13:44 +0200 (CEST)
-Date:   Sun, 1 Sep 2019 22:13:44 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Romain Izard <romain.izard.pro@gmail.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] power: supply: register HWMON devices with valid names
-Message-ID: <20190901201344.i2c26f4wrnle6kfa@earth.universe>
-References: <20190830131556.10021-1-romain.izard.pro@gmail.com>
+        Sun, 1 Sep 2019 16:35:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37155 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfIAUfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 16:35:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y9so7689877pfl.4
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 13:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UMz9j13CPipWdVYjch4adDtFWXAtjYrNSKsSdKhSILc=;
+        b=mvxfW2Rt8/0uJ/cwQTEzc73ZEEki9DlUFiE5zlUcm3w4ZfNRAEYIWuarl+f8hwy6JY
+         5DFaenL7to7Y3eZdBjobZpoLP5jUacAsTXheeGrznPYzl1I6PTTul1/dKs4tyHj82I41
+         5io3t1x3adYBQBDjUbpL2Jy8v/kPnnjL22wlnPAi2hZpWpbDEjYZolEVXPJRsLBvMxDa
+         az1bUoS+nkrh8YpQaxjLf+OadAonPIdMpPoMRJc69s67xUVpGcUNGBx7Z26Q6iAUdD+9
+         PQBZnrrtuzCX41GtyguSJU4y75FDfcWA1Dx6wRXpx65hEnMTh+dHJg1xb3AXyuzaLLKl
+         n8BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UMz9j13CPipWdVYjch4adDtFWXAtjYrNSKsSdKhSILc=;
+        b=l8ZgbAd9h8PiC+kNiBeagQSSNyAUzHWqjdDNT9mbRHZfVdH8oGqjCRExMEibGdx/vL
+         cOtRCdsTejeZrShSxTerllt2xic2csylxjBrqpPFdaqBNQEa2Lw3WCmUdngqB8JTIrHm
+         V6ZVj9n6A+Eim5K1wLXTNvqGgyiCsQpoocpAZPpwynMQ4kZop1HHNw3aGQd9OP5XMksj
+         LlL2afxFFJ2MtWY4ecLtXpmqNIsRpmBKnInwaORk3rgXly8nkS82AUsRdP3jkWtFWsm0
+         kh+h3GuOkxRoEIaWkvLLAlkhVnvWL1bFX2O4rVyQAPpcN4ee1LMxztoJbNPwhbMy1HaY
+         QDvg==
+X-Gm-Message-State: APjAAAVReWoUcL/KUwysKeDAvkmx8aXbnaaysscvZJj1tlXWNi6FqhqM
+        9atmAhwJWop1+mcOvjvjAJg=
+X-Google-Smtp-Source: APXvYqzDuqMnY2mVqsHstoNFhTFtZtR0N4sRPNa9WtkN7E4Z8qlDxM2h2ZN0mOnp1q1WaDWiylowGA==
+X-Received: by 2002:a65:640a:: with SMTP id a10mr21967201pgv.338.1567370119245;
+        Sun, 01 Sep 2019 13:35:19 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r4sm8176158pji.7.2019.09.01.13.35.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 01 Sep 2019 13:35:18 -0700 (PDT)
+Subject: Re: [PATCH 2/3] pagewalk: separate function pointers from iterator
+ data
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?Q?Thomas_Hellstr=c3=b6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+References: <20190828141955.22210-1-hch@lst.de>
+ <20190828141955.22210-3-hch@lst.de> <20190901184530.GA18656@roeck-us.net>
+ <20190901193601.GB5208@mellanox.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <b26ac5ae-a90c-7db5-a26c-3ace2f1530c7@roeck-us.net>
+Date:   Sun, 1 Sep 2019 13:35:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c4buasnye3oatj63"
-Content-Disposition: inline
-In-Reply-To: <20190830131556.10021-1-romain.izard.pro@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190901193601.GB5208@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/1/19 12:36 PM, Jason Gunthorpe wrote:
+> On Sun, Sep 01, 2019 at 11:45:30AM -0700, Guenter Roeck wrote:
+>> On Wed, Aug 28, 2019 at 04:19:54PM +0200, Christoph Hellwig wrote:
+>>> The mm_walk structure currently mixed data and code.  Split out the
+>>> operations vectors into a new mm_walk_ops structure, and while we
+>>> are changing the API also declare the mm_walk structure inside the
+>>> walk_page_range and walk_page_vma functions.
+>>>
+>>> Based on patch from Linus Torvalds.
+>>>
+>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>> Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+>>> Reviewed-by: Steven Price <steven.price@arm.com>
+>>> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>>
+>> When building csky:defconfig:
+>>
+>> In file included from mm/madvise.c:30:
+>> mm/madvise.c: In function 'madvise_free_single_vma':
+>> arch/csky/include/asm/tlb.h:11:11: error:
+>> 	invalid type argument of '->' (have 'struct mmu_gather')
+> 
+> I belive the macros above are missing brackets.. Can you confirm the
+> below takes care of things? I'll add a patch if so
+> 
 
---c4buasnye3oatj63
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good catch. Yes, that fixes the build problem.
 
-Hi,
+Guenter
 
-On Fri, Aug 30, 2019 at 03:15:56PM +0200, Romain Izard wrote:
-> With the introduction of the HWMON compatibility layer to the power
-> supply framework in Linux 5.3, all power supply devices' names can be
-> used directly to create HWMON devices with the same names.
->=20
-> But HWMON has rules on allowable names that are different from those
-> used in the power supply framework. The dash character is forbidden, as
-> it is used by the libsensors library in userspace as a separator,
-> whereas this character is used in the device names in more than half of
-> the existing power supply drivers. This last case is consistent with the
-> typical naming usage with MFD and Device Tree.
->=20
-> This leads to warnings in the kernel log, with the format:
->=20
-> power_supply gpio-charger: hwmon: \
-> 	'gpio-charger' is not a valid name attribute, please fix
->=20
-> Add a protection to power_supply_add_hwmon_sysfs() that replaces any
-> dash in the device name with an underscore when registering with the
-> HWMON framework. Other forbidden characters (star, slash, space, tab,
-> newline) are not replaced, as they are not in common use.
->=20
-> Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
-> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> ---
+> diff --git a/arch/csky/include/asm/tlb.h b/arch/csky/include/asm/tlb.h
+> index 8c7cc097666f04..fdff9b8d70c811 100644
+> --- a/arch/csky/include/asm/tlb.h
+> +++ b/arch/csky/include/asm/tlb.h
+> @@ -8,14 +8,14 @@
+>   
+>   #define tlb_start_vma(tlb, vma) \
+>   	do { \
+> -		if (!tlb->fullmm) \
+> -			flush_cache_range(vma, vma->vm_start, vma->vm_end); \
+> +		if (!(tlb)->fullmm) \
+> +			flush_cache_range(vma, (vma)->vm_start, (vma)->vm_end); \
+>   	}  while (0)
+>   
+>   #define tlb_end_vma(tlb, vma) \
+>   	do { \
+> -		if (!tlb->fullmm) \
+> -			flush_tlb_range(vma, vma->vm_start, vma->vm_end); \
+> +		if (!(tlb)->fullmm) \
+> +			flush_tlb_range(vma, (vma)->vm_start, (vma)->vm_end); \
+>   	}  while (0)
+>   
+>   #define tlb_flush(tlb) flush_tlb_mm((tlb)->mm)
+> 
+> Thanks,
+> Jason
+> 
 
-Thanks, queued.
-
--- Sebastian
-
->=20
-> v2: Remove a superfluous cast
->=20
->  drivers/power/supply/power_supply_hwmon.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/su=
-pply/power_supply_hwmon.c
-> index 51fe60440d12..75cf861ba492 100644
-> --- a/drivers/power/supply/power_supply_hwmon.c
-> +++ b/drivers/power/supply/power_supply_hwmon.c
-> @@ -284,6 +284,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply =
-*psy)
->  	struct device *dev =3D &psy->dev;
->  	struct device *hwmon;
->  	int ret, i;
-> +	const char *name;
-> =20
->  	if (!devres_open_group(dev, power_supply_add_hwmon_sysfs,
->  			       GFP_KERNEL))
-> @@ -334,7 +335,19 @@ int power_supply_add_hwmon_sysfs(struct power_supply=
- *psy)
->  		}
->  	}
-> =20
-> -	hwmon =3D devm_hwmon_device_register_with_info(dev, psy->desc->name,
-> +	name =3D psy->desc->name;
-> +	if (strchr(name, '-')) {
-> +		char *new_name;
-> +
-> +		new_name =3D devm_kstrdup(dev, name, GFP_KERNEL);
-> +		if (!new_name) {
-> +			ret =3D -ENOMEM;
-> +			goto error;
-> +		}
-> +		strreplace(new_name, '-', '_');
-> +		name =3D new_name;
-> +	}
-> +	hwmon =3D devm_hwmon_device_register_with_info(dev, name,
->  						psyhw,
->  						&power_supply_hwmon_chip_info,
->  						NULL);
-> --=20
-> 2.17.1
->=20
-
---c4buasnye3oatj63
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1sJngACgkQ2O7X88g7
-+pp5aQ/+LkCU4NbcIvbNQMwVtFJ9tfxLqOZCeGxHvfwPlHAE3e+dvGDaX4A6e8JJ
-b6a42lqoxZTM4EEr9M9NMOJiLcqeQHrl0R684pGWkv/CbRGt1W3IWRS0/aDC+EUE
-6i4NdmXdmNuB3tjV4OmINIGQp2i2Yoa6+k4RJ/gI1yyQZgKTIiOI78FfHe433gm3
-o4VYnIAy4VK/jfxdgJm1A/LcGXeG5yDxLRMMzIqtEZ5bTdrMN48YSv6SNdC9XG7M
-0qccPbg+uW+dozdr7wRLizMF8makESodVz97Y/Dsa5daLB8u++gUB/f9WvKXo9FG
-xZ4gyJYXwZec67So/I/+Vz2szkWfawj8GjUfGIAz+s7weaHa96PwXu3TYKeJQaTT
-FTYCnNGivZfeBGZSdfcgIt0onCTBKLX893DvC4hiTTjFOqLYtuwPLgjFLJpZAxJx
-XHJpkju7+YVf4mue81+l/i81y0M/Y6klPYXFFU2WvI/E2DvZX7GTNTRA7hCtnZzZ
-T9xCzGT8GnaNn1FK7zSHZgJfqvksYEff7er///+OaZ3n4Vs0htIdb6JEWOLcqqlx
-vnrA5bVg1IbOIUaEcfdEx5PamKGXWSi3L6u31A7zTj7QwLy8Qj1V/kTZpThBqRfD
-NZHovFCL2zhvQ/Xvt33U5rGnSnAL33WJ2AOYUGE6K9Ttixgo5Fo=
-=HuKa
------END PGP SIGNATURE-----
-
---c4buasnye3oatj63--
