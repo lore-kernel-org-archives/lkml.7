@@ -2,91 +2,104 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FE1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 18:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0153BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 18:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726CA215EA
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 18:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8D622CF7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 18:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="eq6vzzUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbfIASXC (ORCPT
+        id S1729192AbfIASX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 14:23:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:51418 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729138AbfIASXB (ORCPT
+        Sun, 1 Sep 2019 14:23:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32995 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729064AbfIASX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 14:23:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id a13so16057641ioh.18
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 11:23:01 -0700 (PDT)
+        Sun, 1 Sep 2019 14:23:26 -0400
+Received: by mail-lj1-f194.google.com with SMTP id z17so10885956ljz.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 11:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eRqNO50sqHwmWj5P/z58Oe0GaZOHE7FRmJRU0BNdRwA=;
+        b=eq6vzzUPapsds+MIIuvqwfoZXAY0z41n2/7fdowjYx2O5oU38D0z/W/9glcxHRQa2e
+         WYf410OXkTry4hw084nNU6/X7cFg1locgtY1vqUfOpwr826VafO+TCzi/6t+ttlshkC+
+         Sijt9vi6vCi5dE6sI0/8gicWxGp5RchwTfcn7sp2LKVu62LRHYFb14OqYn/1pJpGmPef
+         Aj7b+7Bjar191/oCxIVpcgP7PF40d+4DN5npPXMykV6beMkf4rgkProguELGZMDzpeLM
+         PrbjKM3rbaqyDlThN1cmN4fO3M5I2yb3ZTA5WYMWuKdsF5nZiMa/eBim7YPJaP48caWx
+         hkkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=nuF/NvQUPru9tAlC0mm8ctMiLuI0uuXct3/25gBy3VU=;
-        b=q2Eulr7fZoqTHsXTk7Q1kBv6/rxYTwnEsJGBzQOzs9d+xNNDhE6gKh4p/DizN3yiqd
-         wXNgsOY++TDRViW/0jGlXNQWLnWTMPeIkRqXApvMoGKAoxjHu1lhUWEjtlZ0lM1sU5EV
-         uV7hsdWzdze1aHcnM+yJc6plX792hu/casu/iqPnNh9zhLfttfxN2PIHmdPHggmt7sl4
-         BznFpukJV9L8s8JDX9jfDYZpGOktb/ajAbGvIaqnjPdB+wpH1w3GtoH7tDd0/UatC1Is
-         5GanlyNGR/eUQvky/0rvjp6oOGGYJPLLVMQcyCY5IQ1IzzyXPB+DhZxBoCiDTCzQ8zF1
-         CVUQ==
-X-Gm-Message-State: APjAAAWih17pixXxhIYVkLs8dZROfwLtnZ9vxIAXsCsyO+kjmDnJSeKr
-        wcd44fYN+Qlqi/waVlZge6htKwNcVF6nzDdATaDZalWG17fg
-X-Google-Smtp-Source: APXvYqxx1JUJRFI65w6pHYwBvLIZxZYDddDgdFCblHTcdGM//eA3cmcidNDkcKZhgDPRTq/ohBQfHqUnNU60eqT/NjGvpKx0FZJx
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eRqNO50sqHwmWj5P/z58Oe0GaZOHE7FRmJRU0BNdRwA=;
+        b=qly6EPzWAc78iKi/30Km/J/Z+hzEbypv1l+kYtkieUec/ffA0Assd0fODlVz0HADDI
+         z2ymSq/otDQ5Y3uGCQb5657tZVUu3P2bvKvKI+V03dTNMhRB5GjeUdprl2ZaEMJYk1ma
+         4yr3rRXMd7HhYgp0ckKX+4bRsHgyS06PxFDd4kdv+ij99w0pnU/aOenOojFOadntphWD
+         ujPx8YiVR15HxGqM6GAz/em3AhLsDGCffw+NuVfziTjSjA1g+63gpHTFtfGMmthLEQFZ
+         yznRvj7akA4LHNDjr1YLpx4EHASzKrD7N+uMgcfKOgxXW0vocga7kPFkSAm85ESV8cW4
+         cXQw==
+X-Gm-Message-State: APjAAAUv7Os0mVRDL3/rU+hBtIeJy0HKW5seF3CI+HbCgFff2yOgUjs5
+        RzOI6D0AgpKtymxtm/cWmTWmeMYbLT6IrR16FFWD
+X-Google-Smtp-Source: APXvYqxR838XZ/vlMKbRK5g41cM9jK0LAXal1wmVLKOlFPo3+6Zm04hAQdB16tAZbBIQ1PFDnVj27P0uotkvqRNwnFI=
+X-Received: by 2002:a05:651c:93:: with SMTP id 19mr14338697ljq.0.1567362204210;
+ Sun, 01 Sep 2019 11:23:24 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8599:: with SMTP id f25mr3677451ioj.265.1567362180985;
- Sun, 01 Sep 2019 11:23:00 -0700 (PDT)
-Date:   Sun, 01 Sep 2019 11:23:00 -0700
-In-Reply-To: <000000000000b7a14105913fcca8@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000083a86059181f20b@google.com>
-Subject: Re: WARNING in __mark_chain_precision (2)
-From:   syzbot <syzbot+c8d66267fd2b5955287e@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, arvid.brodin@alten.se, ast@kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        daniel@iogearbox.net, davem@davemloft.net,
-        gregkh@linuxfoundation.org, hawk@kernel.org,
-        jakub.kicinski@netronome.com, jic23@kernel.org,
-        john.fastabend@gmail.com, kafai@fb.com, knaack.h@gmx.de,
-        kstewart@linuxfoundation.org, lars@metafoo.de,
-        linus.walleij@linaro.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        netdev@vger.kernel.org, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, pmeerw@pmeerw.net, rfontana@redhat.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190901155205.16877-1-colin.king@canonical.com>
+In-Reply-To: <20190901155205.16877-1-colin.king@canonical.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Sun, 1 Sep 2019 14:23:12 -0400
+Message-ID: <CAHC9VhR-dBHz_8=OH-8YbidMOO_ecqjioorUTr1GFDV1tTqCJw@mail.gmail.com>
+Subject: Re: [PATCH] netlabel: remove redundant assignment to pointer iter
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sun, Sep 1, 2019 at 11:52 AM Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Pointer iter is being initialized with a value that is never read and
+> is being re-assigned a little later on. The assignment is redundant
+> and hence can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  net/netlabel/netlabel_kapi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit e786741ff1b52769b044b7f4407f39cd13ee5d2d
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu Jul 11 22:36:02 2019 +0000
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-     Merge tag 'staging-5.3-rc1' of  
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+> diff --git a/net/netlabel/netlabel_kapi.c b/net/netlabel/netlabel_kapi.c
+> index 2b0ef55cf89e..409a3ae47ce2 100644
+> --- a/net/netlabel/netlabel_kapi.c
+> +++ b/net/netlabel/netlabel_kapi.c
+> @@ -607,7 +607,7 @@ static struct netlbl_lsm_catmap *_netlbl_catmap_getnode(
+>   */
+>  int netlbl_catmap_walk(struct netlbl_lsm_catmap *catmap, u32 offset)
+>  {
+> -       struct netlbl_lsm_catmap *iter = catmap;
+> +       struct netlbl_lsm_catmap *iter;
+>         u32 idx;
+>         u32 bit;
+>         NETLBL_CATMAP_MAPTYPE bitmap;
+> --
+> 2.20.1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11958f12600000
-start commit:   47ee6e86 selftests/bpf: remove wrong nhoff in flow dissect..
-git tree:       bpf-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13958f12600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15958f12600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=c8d66267fd2b5955287e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d26ebc600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127805ca600000
-
-Reported-by: syzbot+c8d66267fd2b5955287e@syzkaller.appspotmail.com
-Fixes: e786741ff1b5 ("Merge tag 'staging-5.3-rc1' of  
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+paul moore
+www.paul-moore.com
