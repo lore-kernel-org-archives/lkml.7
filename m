@@ -2,50 +2,59 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D76C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 08:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA2DC41514
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 08:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1E322CF7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 08:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC97B2339D
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 08:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfIAIBC (ORCPT
+        id S1728900AbfIAICe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 04:01:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:40643 "EHLO verein.lst.de"
+        Sun, 1 Sep 2019 04:02:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:40658 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbfIAIBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 04:01:02 -0400
+        id S1727083AbfIAICd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 04:02:33 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id B3211227A8B; Sun,  1 Sep 2019 10:00:56 +0200 (CEST)
-Date:   Sun, 1 Sep 2019 10:00:55 +0200
+        id F351D227A8A; Sun,  1 Sep 2019 10:02:27 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 10:02:27 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@alien8.de>,
-        palmer@sifive.com, linux-riscv@lists.infradead.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/soc
-Message-ID: <20190901080055.GA12035@lst.de>
-References: <20190818082935.14869-1-hch@lst.de> <20190819060904.GA4841@zn.tnic> <20190819062619.GA20211@lst.de> <20190822062635.00f6e507@coco.lan> <alpine.DEB.2.21.9999.1908301951080.16731@viisi.sifive.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        openrisc@lists.librecores.org, linux-mtd@lists.infradead.org,
+        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 24/26] riscv: use the generic ioremap code
+Message-ID: <20190901080227.GB12035@lst.de>
+References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-25-hch@lst.de> <alpine.DEB.2.21.9999.1908171421560.4130@viisi.sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1908301951080.16731@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1908171421560.4130@viisi.sifive.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 07:53:17PM -0700, Paul Walmsley wrote:
-> There's already a MAINTAINERS entry that should cover drivers/soc/sifive.  
-> Probably it's not needed to add another one here.
+On Sat, Aug 17, 2019 at 02:22:15PM -0700, Paul Walmsley wrote:
+> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Tested-by: Paul Walmsley <paul.walmsley@sifive.com> # rv32, rv64 boot
+> Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # arch/riscv
 
-So are you going to apply the original patch to the riscv tree?
-I dont want to keep this file lingering around as a force built part
-of the riscv build for another merge window.
+Can you also take a look at the patch adding the generic code?
