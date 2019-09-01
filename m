@@ -2,62 +2,111 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FDFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DC1C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FC722CF7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890F92339D
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFFi1AKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfIAMuL (ORCPT
+        id S1728888AbfIAM6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 08:50:11 -0400
-Received: from elvis.franken.de ([193.175.24.41]:50146 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfIAMuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 08:50:11 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1i4PJ2-0004Kv-00; Sun, 01 Sep 2019 14:50:08 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 62FDCC277F; Sun,  1 Sep 2019 14:49:59 +0200 (CEST)
-Date:   Sun, 1 Sep 2019 14:49:59 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
+        Sun, 1 Sep 2019 08:58:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36324 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbfIAM6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 08:58:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p13so11968095wmh.1;
+        Sun, 01 Sep 2019 05:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UxrLHy0xZer5ID4RHyuCqHzVGteGB4HlcmZdUjqBSL4=;
+        b=mFFi1AKPSaWngSR9jtj9CgHSiMvJGrF/gJcubSZhAcKoIP8k1Tn8h0Xb2H4MMpoY98
+         ATkbzsIdx1azRsSUQ70wuqo1zjiARoeps830lySXrbXba0w/4YFfdVhXcwZWkp0fwtZ6
+         4WglBbXxLbyMehj5WsfIYCts15phqU9Ikqg/BP4/TfHTzcM2JNPQJypm7uNUOziVH0sZ
+         fXFLOcK+r3mR7aLL1ySTmKoDMh11++IJL8l6Zqo6fsPJK95dJqStyWxcu8GDibJGBIRl
+         JWlw3CgAMpfVSNAYHeq22BCm/95o+gxuBq72xJamkbYhxobYL6BUwc31VcC7CDbf30pO
+         kV1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UxrLHy0xZer5ID4RHyuCqHzVGteGB4HlcmZdUjqBSL4=;
+        b=t4TwZcwUgeqOariipRNDuQNkUzdmZCWcaS6cDkh05G+dz+iSgX0r4KVXde1li3yh1j
+         nME+s169KuKcNYYioJj4stPVQYkqjbI6x4sBOwvFPKSK6eALCQ9PMbXjm7WNoJ+MiSIV
+         9H4NGrK/j0Zhb3Gr5Y97ELAfW1aGChyMqnJf+aI3PZ7R4/Rk1ypc3MLLsw0RzTw3QtwG
+         0myFIIguKRmi5tAPTGhNs3MYNOa/zVewX8lpT2xaSXD1ToHbF2yYS0YfepkBnKeb8j9D
+         mUVhDSDfXia5YXlcrNlPKnNuQ38BSpiAV2mlHQAUnZHeZRy/sMluz4xCS/GZcWNVrU+I
+         TMVw==
+X-Gm-Message-State: APjAAAXnTwWVRJsq+stAV2uEYYSHi8vqmwX4GrGo82yJA+VjQsdGiNg4
+        Zn4VbICbhwIEyBr+13A0liSBcx+lAts=
+X-Google-Smtp-Source: APXvYqwpCH+B/lBvHkPsK4oranhfJRg2I6GN/bqGm9Vi9ZAArUYI1ZCHKIDT0o2hYlbk+wWuHH2+QQ==
+X-Received: by 2002:a7b:cb8e:: with SMTP id m14mr30808692wmi.10.1567342691150;
+        Sun, 01 Sep 2019 05:58:11 -0700 (PDT)
+Received: from eldamar (host85-134-dynamic.30-79-r.retail.telecomitalia.it. [79.30.134.85])
+        by smtp.gmail.com with ESMTPSA id r190sm15294524wmf.0.2019.09.01.05.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 05:58:09 -0700 (PDT)
+Date:   Sun, 1 Sep 2019 14:58:09 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     stable@vger.kernel.org,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wenwen Wang <wang6495@umn.edu>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] W1 drivers for devices used in SGI systems
-Message-ID: <20190901124959.GA4164@alpha.franken.de>
-References: <20190831082623.15627-1-tbogendoerfer@suse.de>
+Subject: Re: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
+Message-ID: <20190901125809.GA23334@eldamar.local>
+References: <20190830214649.27761-1-benquike@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190831082623.15627-1-tbogendoerfer@suse.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190830214649.27761-1-benquike@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 10:26:20AM +0200, Thomas Bogendoerfer wrote:
-> These patches add two W1 drivers. One is a driver for the W1 master in
-> SGI ASICs, which is used in various machine starting with SGI Origin systems. 
-> The other is a W1 slave driver for Dallas/Maxim EPROM devices used
-> in the same type of SGI machines.
-> [..]
+On Fri, Aug 30, 2019 at 05:46:49PM -0400, Hui Peng wrote:
+> The `uac_mixer_unit_descriptor` shown as below is read from the
+> device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+> accessed from index 0 to `bNrInPins` - 1, the current implementation
+> assumes that descriptor is always valid (the length  of descriptor
+> is no shorter than 5 + `bNrInPins`). If a descriptor read from
+> the device side is invalid, it may trigger out-of-bound memory
+> access.
+> 
+> ```
+> struct uac_mixer_unit_descriptor {
+> 	__u8 bLength;
+> 	__u8 bDescriptorType;
+> 	__u8 bDescriptorSubtype;
+> 	__u8 bUnitID;
+> 	__u8 bNrInPins;
+> 	__u8 baSourceID[];
+> }
+> ```
+> 
+> This patch fixes the bug by add a sanity check on the length of
+> the descriptor.
+> 
+> CVE: CVE-2018-15117
 
-Greg,
+FWIW, the correct CVE id should be probably CVE-2019-15117 here.
 
-I've posted this the first time end of may, asked maintainer about
-status, reposted it and so on. So far no feedback from the W1
-subsystem maintainer. I have other patchsets needing this changes,
-so I'm asking you, if you could take these patches for 5.4 ?
+But there was already a patch queued and released in 5.2.10 and
+4.19.68 for this issue (as far I can see; is this correct?)
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Regards,
+Salvatore
