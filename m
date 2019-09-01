@@ -2,87 +2,107 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D791C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2080AC41514
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A3621874
+	by mail.kernel.org (Postfix) with ESMTP id EA54821881
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqg/I6iS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbfIAX1H (ORCPT
+        id S1729240AbfIAX17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 19:27:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33543 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbfIAX1H (ORCPT
+        Sun, 1 Sep 2019 19:27:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37789 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728942AbfIAX16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 19:27:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id 5so16960166ion.0
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 16:27:06 -0700 (PDT)
+        Sun, 1 Sep 2019 19:27:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so13922833qto.4;
+        Sun, 01 Sep 2019 16:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Y8jkqSuPFdPnoX723SsaKyeUfWimpBxUfbqYRxBxDds=;
+        b=jqg/I6iShn3Fg6wz7IPpDO6qfKvnGjG2bs1mVk/ks7ZLF3YNdQogYTmen+Yv/ECfsl
+         b26GM+tx2oAPQQvo+b1FMPNrgw1J7xxhgJgKQwq6KtPlqCYezstGNqjOTp3mCM6nsbSk
+         TqxyskcQNRpZZlw5da9rfEzaWMIi6C9nB7mBDWAvNy4OKhCbENRIVmNRA2d6CFwi0lVT
+         wxg0UO3LY2N3Q8EHT2bbkAagkD07yVaBp7qyQfSkP1AJOYJC9Mj6LM0RumhzWibkT2To
+         xWA+YXl87CMnk7HXufPPy0qvmsTtNq9UFbUZZ81McQJxvPvLX6OoE57+leVxHK7hawwo
+         9pGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=J9R5UWhJGlCe+z3+nucL39myfoeuGM8nvHYUB/xY98o=;
-        b=Sis/apjqDjq4+0ctLcsfdHfl5Z+vK2cVPSMxd34jEy6qT1bQNTA/APU+oPAataQ4I4
-         AfCLmNIADnnEnYa6JRNDBBBVkoxXna5rA31E6cfdWclDbjbLU6F4kh1cOn9yzmdciI2s
-         +AyPbGJ6pQanWQSsC9xP9Od/F8XWCFQbWeH1Yr7M4Dt/0o6JKSw7+6pLoVLYL48vg1Cw
-         XzAAPgCTf4itnnCwD5HcFFRyrs7ml4A0CX70S3sazCvgVEcfyNoAkBPcrM/pDjlfr0yv
-         sg7F41DJHy+jT73QXMfCRxbpNRRNEYhPeiuOfuBq0wBNQtt4KMU3ii7azMp9CRHsM+98
-         Cdig==
-X-Gm-Message-State: APjAAAXe4mJPzyzEZY+GW2A2nANlN271ARTZz00jvUrqskcdgLedvrhh
-        BbjU+c+jiBfVOp2Fufcy8zgzeqzw0/V7PJMpQzjme00eWtra
-X-Google-Smtp-Source: APXvYqyItaafiwMkd1H+5kjnZ9JNOwQM6ej3KsrARUzXzizMl0n0yT36VjMczsAumjk+Tr6sic7s729hxL6NhVHhebXTsUgQIsul
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Y8jkqSuPFdPnoX723SsaKyeUfWimpBxUfbqYRxBxDds=;
+        b=fx+pk/bQp+M0BT8poLkfWkP7ACOJTnr7W76SokEkxNgfpdt8J/8hBB9r/c1UUROlIV
+         5bNk1ew9CHX4u9LbPNaOM1COdPuy5xbhioOcKCSr2V9lEB77D27CUCwimZJwFulF1wxn
+         12QJSRDIpoOc8GHA9Ry4q2l2xYOn7ffiGt64sZMUGEmLtL6AEggw9zeTDB+c7nFgrJ+l
+         DiMxt0cfFKC1URX1U0ikVwcxOUlnMWvS4cuYjDDAvJcDTyUDLVHT7sDhR4UK/zllsTtD
+         zXYXjPoT6EdD6Axjyzm8xTEQi7TQK6jsAINfH1OPqDdN5cUz+tic33vxg/ODtI/5PtcF
+         Cpsg==
+X-Gm-Message-State: APjAAAUY1rPcoITNrlrwLjX7iNh6rC3s8rvNyeWdUbRpjzwa2sdHdH5m
+        kPkQD/3ivtK4F6rJmClq9hqeVgUw
+X-Google-Smtp-Source: APXvYqzco0F9EmfwZ/1kHDU11uj+Zergy+gM1PfzN4m+wpbd41/LhwlIA3Oie2Df8OwMN0E0BZ9Feg==
+X-Received: by 2002:a0c:9c0e:: with SMTP id v14mr5422669qve.84.1567380477080;
+        Sun, 01 Sep 2019 16:27:57 -0700 (PDT)
+Received: from localhost.localdomain (200.146.53.87.dynamic.dialup.gvt.net.br. [200.146.53.87])
+        by smtp.gmail.com with ESMTPSA id p59sm5684085qtd.75.2019.09.01.16.27.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 16:27:55 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        axboe@kernel.dk
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Subject: [PATCH v2 0/4] Remove elevator kernel parameter
+Date:   Sun,  1 Sep 2019 20:29:12 -0300
+Message-Id: <20190901232916.4692-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190828011930.29791-5-marcos.souza.org@gmail.com>
+References: <20190828011930.29791-5-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8f41:: with SMTP id x1mr7358100iop.191.1567380426244;
- Sun, 01 Sep 2019 16:27:06 -0700 (PDT)
-Date:   Sun, 01 Sep 2019 16:27:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000088cdb2059186312f@google.com>
-Subject: kernel panic: stack is corrupted in lock_release (2)
-From:   syzbot <syzbot+97deee97cf14574b96d0@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Since the last RESEND[1], I found that I used an old block/for-next to base my
+changes. This version is just a rebase over
+8ba64588ef2136ff7561fb2047d53debed8a7b56 ("Merge branch 'for-5.4/libata' into
+for-next"), solving minor conflicts.
 
-syzbot found the following crash on:
+Original cover letter:
+After the first patch sent[2], together with some background from Jens[3], this
+patchset aims to remove completely elevator kernel parameter, since it is not
+being used since blk-mq was set by default.
 
-HEAD commit:    dd7078f0 enetc: Add missing call to 'pci_free_irq_vectors(..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=115fe0fa600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2a6a2b9826fdadf9
-dashboard link: https://syzkaller.appspot.com/bug?extid=97deee97cf14574b96d0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f7c2fe600000
+Along with elevator code, some documentation was also updated to remove elevator
+references.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+97deee97cf14574b96d0@syzkaller.appspotmail.com
+[1]: https://lkml.org/lkml/2019/8/27/1648
+[2]: https://lkml.org/lkml/2019/7/12/1008
+[3]: https://lkml.org/lkml/2019/7/13/232
 
-Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
-lock_release+0x866/0x960 kernel/locking/lockdep.c:4435
-CPU: 0 PID: 9965 Comm: syz-executor.0 Not tainted 5.3.0-rc6+ #182
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Marcos Paulo de Souza (4):
+  block: elevator.c: Remove now unused elevator= argument
+  kernel-parameters.txt: Remove elevator argument
+  Documenation: switching-sched: Remove notes about elevator argument
+  Documentation:kernel-per-CPU-kthreads.txt: Remove reference to
+    elevator=
 
+ Documentation/admin-guide/kernel-parameters.txt    |  6 ------
+ .../admin-guide/kernel-per-CPU-kthreads.rst        |  8 +++-----
+ Documentation/block/switching-sched.rst            |  4 ----
+ block/elevator.c                                   | 14 --------------
+ 4 files changed, 3 insertions(+), 29 deletions(-)
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-- 
+2.22.0
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
