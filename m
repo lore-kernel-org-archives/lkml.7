@@ -2,178 +2,97 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571B5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 11:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB99C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 11:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA8F22CE9
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 11:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C293622CE9
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 11:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNkmgSDR"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bkdN6BO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfIALZM (ORCPT
+        id S1728552AbfIAL3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 07:25:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37216 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfIALZL (ORCPT
+        Sun, 1 Sep 2019 07:29:17 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45355 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfIAL3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 07:25:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d16so11795085wme.2;
-        Sun, 01 Sep 2019 04:25:09 -0700 (PDT)
+        Sun, 1 Sep 2019 07:29:16 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v12so8549012oic.12;
+        Sun, 01 Sep 2019 04:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=01HPTey408UCBL639ZxLYtnZytu5ResDsXDWNRYopFs=;
-        b=uNkmgSDRj0aCeJn8wLr/V5uo7ANHZI0Ir4fFw+tfD1CApEj8Mh/wK0Ze7wqdsdBTwD
-         wKWWEheNTcNp0sLjO2N31rD5C/mAyePd5I7tPCw+uazWklSplQpGR8VILBdNyVTG1EKy
-         x38I63zw9kYwo6PFRwKZyMWg6l3Z74zmSEaE4RXuSFukNISKQDboWeB8EAD5yrS+hfRN
-         dBNbudRWyt/FYS5Ire4D12/nCZX29mdcqnjnQpH42mVJ2xlBHRdGvB2PLhH/6QTKYCNe
-         DnUIsqnWL3uxsBg0t21xLKaRb609UUIlp8hgs52Bo9OTq4DscFhMg6CpMHf6BBQujP37
-         U7/g==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DjNYoP0TZjOYpbU4nYIgEpFHwbIKmPPLiFzVEjdvaZg=;
+        b=bkdN6BO8eAl30cWYew33QHGFT9cJopCCWlD/vsFFjQaGz3Fc9EjQZ4W/ukbLppZV2P
+         Zg9MvFarnFdjh9jp06N9mwJjvs7IKsXhhc7JTFb9AenAojzTgNiTBRGE0v7hXusB0Qg7
+         b17iL8zwOQ2XgKagS1q4RHVeuaNhOjSajZH8WKsArRWkywx+0A69Fui74XQtKwzyvJpS
+         uRM1U8i23COUJLo7/cQeuM3vRiEQrU3JytSkE/CjSid0Ol1HkKoH/pytDodkRbgFFBls
+         qFgih7cva/RE8Tq6BCxXLe8jJjnrokgKTZk/Rh8NqVS8drzarN/QKLjHSPZzufu6rv1N
+         RJrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=01HPTey408UCBL639ZxLYtnZytu5ResDsXDWNRYopFs=;
-        b=sOguh9vnIqWTuurRgsk9KYNhHvjNWrVdD95hx1Lwv3x4QlbnYik/a8GUV2EP2ROIB4
-         5v2hEsvNwPNmFr96a2y+6tZZivu/gXMI0VnsZnMCKz/jnu1UdUfzL3Pg/r75ZvB90v4I
-         wViMxXHDov9jpBiPZfEL/FqE48dA7LDgj7eWlUd3C/wWQXL+cy45GwZt2bDeeRVJv/IQ
-         Lh+MmIb0i4UxNNFp1kOcJM44T/PQH1CnioB7PMq8gzQTwfTzEEDLsSeTNzgLtisyD9oe
-         6OGkqH1mP7z8ONX8OkjNvVUJ89IcFJrXTcLJxsX8hJgkzo+qP5Z09nf9CgUh5QUn+pM5
-         92RQ==
-X-Gm-Message-State: APjAAAW1uAb0y5/yZtFT4lg7QyONRDhsvp4c7e5WKfdXJGQ+dX/Jm541
-        0ORbobWVmVbZaaXuYkg793Bv4sf9q3r54A==
-X-Google-Smtp-Source: APXvYqy1j+qHgGkl142BUZQL/cgCiSDmmOxkvewbJoqW69rnrk6CVgyUWdrQETI/0pc6am1fndsuUg==
-X-Received: by 2002:a7b:c7c2:: with SMTP id z2mr28564345wmk.33.1567337109185;
-        Sun, 01 Sep 2019 04:25:09 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id x5sm747241wrg.69.2019.09.01.04.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 04:25:08 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH] PCI: Remove unused includes and superfluous struct declaration
-Date:   Sun,  1 Sep 2019 13:25:06 +0200
-Message-Id: <20190901112506.8469-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DjNYoP0TZjOYpbU4nYIgEpFHwbIKmPPLiFzVEjdvaZg=;
+        b=V7U2pmQi8uXg6y4nLU34le6GzD/ms5HMG4X8OrCSL2oudhOQhTj+NZgEEX0oKPyqy6
+         B3tK1Rdyn9gcQlLPX+eCArudU7QiBWps1F6mmjk4aR/fgXvGehnXZDuMlr9S0/XQ6Z4v
+         76wXCOojxJI9sKhVQupSYaeOOKKfjaMa5OADl1jeTUX8qrhg37pz9HlRYAe2GRCnWrYq
+         BKPC3qDO88hQxizFZ8c7MzGQ/0oCnuJbdfO85MmEGQpCjvDXjqbUyBwtUbmuDyQexJtI
+         //DtjNz3QegqN9/X+9Hu0yoT6573dD0k9brIoKpDCs638tGZNPMq5QLWqPfv7M1aNmcE
+         tQcg==
+X-Gm-Message-State: APjAAAUWYErSBfVxmZ2+THPDSrGdMAS9jr+7QmeJ1M6hd59IFbwLaBif
+        qZ8V3Z76c4EniNDZ1M/MkWhnLRiEuxD/uk3SUgM=
+X-Google-Smtp-Source: APXvYqxxXKXRUZLMHQgk0XoewqNh98k6Y0rpItgSJzPuoeBuz1EBdkqcp55bFlX0B41vfDbAAe9Icj/tVYTN6vp7Ft8=
+X-Received: by 2002:a05:6808:b14:: with SMTP id s20mr15778496oij.15.1567337355596;
+ Sun, 01 Sep 2019 04:29:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190901105410.23567-1-repk@triplefau.lt>
+In-Reply-To: <20190901105410.23567-1-repk@triplefau.lt>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sun, 1 Sep 2019 13:29:04 +0200
+Message-ID: <CAFBinCD96nJBPnyNgWA6CgwE2kZrkXB3-cgbV9aQLB=JtbrN2w@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: meson_saradc: Fix memory allocation order
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Elie Roudninski <xademax@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove <linux/pci.h> and <linux/msi.h> from being included
-directly as part of the include/linux/of_pci.h, and remove
-superfluous declaration of struct of_phandle_args.
+On Sun, Sep 1, 2019 at 12:45 PM Remi Pommarel <repk@triplefau.lt> wrote:
+>
+> meson_saradc's irq handler uses priv->regmap so make sure that it is
+> allocated before the irq get enabled.
+>
+> This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
+> managed resources are freed in the inverted order they had been
+> allocated, priv->regmap was freed before the spurious fake irq that
+> CONFIG_DEBUG_SHIRQ adds called the handler.
+>
 
-Move users of include <linux/of_pci.h> to include <linux/pci.h>
-and <linux/msi.h> directly rather than rely on both being
-included transitively through <linux/of_pci.h>.
+Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to
+interrupt mode")
+> Reported-by: Elie Roudninski <xademax@gmail.com>
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/iommu/of_iommu.c                          | 2 ++
- drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
- drivers/pci/controller/pci-aardvark.c             | 1 +
- drivers/pci/pci.c                                 | 1 +
- drivers/pci/probe.c                               | 1 +
- include/linux/of_pci.h                            | 4 +---
- 6 files changed, 7 insertions(+), 3 deletions(-)
+thank you for fixing this!
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 614a93aa5305..026ad2b29dcd 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -8,6 +8,8 @@
- #include <linux/export.h>
- #include <linux/iommu.h>
- #include <linux/limits.h>
-+#include <linux/pci.h>
-+#include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_iommu.h>
- #include <linux/of_pci.h>
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d3156446ff27..7a9bef993e57 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/pci_regs.h>
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index fc0fe4d4de49..3a05f6ca95b0 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -16,6 +16,7 @@
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-+#include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 484e35349565..571e7e00984b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/init.h>
-+#include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_pci.h>
- #include <linux/pci.h>
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 169943f17a4c..11b11a652d18 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -7,6 +7,7 @@
- #include <linux/delay.h>
- #include <linux/init.h>
- #include <linux/pci.h>
-+#include <linux/msi.h>
- #include <linux/of_device.h>
- #include <linux/of_pci.h>
- #include <linux/pci_hotplug.h>
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 21a89c4880fa..7929b4c0e886 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -2,11 +2,9 @@
- #ifndef __OF_PCI_H
- #define __OF_PCI_H
- 
--#include <linux/pci.h>
--#include <linux/msi.h>
-+#include <linux/types.h>
- 
- struct pci_dev;
--struct of_phandle_args;
- struct device_node;
- 
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
--- 
-2.23.0
 
+Martin
