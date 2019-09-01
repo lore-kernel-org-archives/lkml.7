@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA2CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9BDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB1F22CF7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B95233A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfIAMp7 convert rfc822-to-8bit (ORCPT
+        id S1729025AbfIAMqC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 08:45:59 -0400
-Received: from mail-oln040092066020.outbound.protection.outlook.com ([40.92.66.20]:10208
+        Sun, 1 Sep 2019 08:46:02 -0400
+Received: from mail-oln040092066063.outbound.protection.outlook.com ([40.92.66.63]:31138
         "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728853AbfIAMpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728966AbfIAMpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Sep 2019 08:45:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IgPdZ65o9PUh0GU7XP0HjX1G0PPXSq7Onrq2HETUvptWXrknvl+Rh7CL9Hrc/tcWi/omJvY9SOaHXOBoY03toOob+DRaSjIBERmDHmcE5MtotbhtS3grEOHIV0rldREm6web9TtQdEByY3XmjWnCGRLUbgUIfeFvHspmj4yWPZTsvTuHUbg6ev7H61024f1CtemlNhttnVk/I3l80YrWstc6MBihauRt6IkGMFULabVjpW5BTmFV3QD9NzRNCfSM3vXPmBl3lu9upEwHfp0YmRdBHmmylpzilL6iaI1Cz3qbGfpu5lp8Jnx8kg5UwoB7Oh9XwFG34Y1EXmo8LCw8AQ==
+ b=aa6SgPDw3JxYw63s98gxvWA87VXpc1kCsSjsR5opeWB1tqEvvaw7/7tiCmPBLTduPkZz8z+YMc4+muP4PGvXdCmFB8q+479TdP467Qj/wNKaBhoTFml7GeP5Ne4Zg4/tfHFUMci3SJxlXXf2mdKJa3tcpsW43gQHZCm8WFWCpqxo2hIHvp4BKXCfP1L+kPkUSZKsyjaDoVpwazB87ojquj3KHMWbFUJSv984j4yhVTd8h6leiTWD8t4x0ULBjK51HVMf1vTFhKqlpbqTqM8C3FuVeI6ik52gZLRsc7EFlcSmBvpIPo80Pc97MkIspzALsq+bkdCmOMvW9/gGgY+stw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eeQvnvWDchEPDYP1XlV2FhNDP12tzl1tsCGA/GSddII=;
- b=ZJ64Eya7gRzKy30Ri10G/Fp2bj4L1iI5mMYZhop5RPRySa7+EOlueszaH0uDZpYn4ZxhfzIQBwNXlywLRhVRoWRHqtqhReUuNONP4W18irvjYbtC2mKLBqN0RwEeAJrTiovsChF1cmvW/63h/X+xfd6RPpjAjWoykpPGuu5tod367Q0cF2PqAZHAcD0OSy7kQfY5TQM4yUqR35L6emo/OE67kZus9wkbqqTX6QR+lGq6gmx9CsSGMe4ZH41MEHF4IgkQe9U0umkFF9ONmtbcj2y+XOf0Ir3gsYjKQ6mdEvb11aXtQ9ZI0VprmDq1DCFFVNCcgEudaFa9vi/Ee4tMlQ==
+ bh=o8OdwLZClbhokNrThfabP4V76IDMHBx3M+1/BTxEekA=;
+ b=DpudoiwkDj8417PTy+bbOQQMXOr4lWAnBCBJGeAySXwrELWTxwtGdwons2oUVb6tzB7409gW3Ua0nGxGMkeYgv+MiZbnZhA2tdMC0OnyP73Z5YUelTJ/lcQbhtMl+qxjl5ZJB/jSh44N2hbKM1rxPL5P9WyyJXAMXdKHfGHXjrDm6uCBtlyhw37Eo5qUG+XQVBElbnc5rWY3R7ag48ILbjLSekMEckQboYIWSI685Scr8N06Q9iWouOI0sjtdZFXghRfFkqMEZWXPr1yXGj0B5cMR1DXz3NUH10V+Cg0fpB+cDCk5y3V1yrJXPXzW66ffU2qU4abPQ3YhqwWSQf1Lw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from HE1EUR01FT057.eop-EUR01.prod.protection.outlook.com
- (10.152.0.55) by HE1EUR01HT092.eop-EUR01.prod.protection.outlook.com
- (10.152.0.224) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2220.16; Sun, 1 Sep
+ (10.152.0.51) by HE1EUR01HT012.eop-EUR01.prod.protection.outlook.com
+ (10.152.0.79) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.16; Sun, 1 Sep
  2019 12:45:49 +0000
 Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.0.52) by
  HE1EUR01FT057.mail.protection.outlook.com (10.152.0.208) with Microsoft SMTP
@@ -54,11 +55,11 @@ CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         <linux-rockchip@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Jonas Karlman <jonas@kwiboo.se>
-Subject: [RFC 12/12] media: hantro: Enable H264 decoding on RK3328
-Thread-Topic: [RFC 12/12] media: hantro: Enable H264 decoding on RK3328
-Thread-Index: AQHVYMMuvZQ1uHpGmUOTBIxTdNJunA==
-Date:   Sun, 1 Sep 2019 12:45:49 +0000
-Message-ID: <HE1PR06MB401121228D13FA596BE8ADDFACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Subject: [RFC 11/12] media: hantro: Enable H264 decoding on RK3399
+Thread-Topic: [RFC 11/12] media: hantro: Enable H264 decoding on RK3399
+Thread-Index: AQHVYMMuDWI6fDhY3EmqNKbABGOY+w==
+Date:   Sun, 1 Sep 2019 12:45:48 +0000
+Message-ID: <HE1PR06MB4011DF6F06FEACAACFC164ADACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
 References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
  <20190901124531.23645-1-jonas@kwiboo.se>
 In-Reply-To: <20190901124531.23645-1-jonas@kwiboo.se>
@@ -69,57 +70,89 @@ X-MS-TNEF-Correlator:
 x-clientproxiedby: HE1PR05CA0343.eurprd05.prod.outlook.com
  (2603:10a6:7:92::38) To HE1PR06MB4011.eurprd06.prod.outlook.com
  (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:DC266DF213D4E8D0C3D1E2D5093F387F19B067E3DACF8FC4F0FD73990B771076;UpperCasedChecksum:E97356B334C780799DD41F7BE53990FD24D9A7535924EA69093E283C4EFCFD1A;SizeAsReceived:7859;Count:50
+x-incomingtopheadermarker: OriginalChecksum:58F41166596F3235D42F35F244D9FADAB9DFBCD681998D37F5038BFB7FAB7343;UpperCasedChecksum:78D786937ABD3FE721B438A70BBDB1E29F071D4732E5CF2F2516808C47EBBB22;SizeAsReceived:7869;Count:50
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
-x-tmn:  [Bw5RG+BkWMYsEZmrCEi5JTjBEQh81nv2]
-x-microsoft-original-message-id: <20190901124531.23645-12-jonas@kwiboo.se>
+x-tmn:  [Npb4J8fwhDbhb3THSmEmVeB5RCLOHBzp]
+x-microsoft-original-message-id: <20190901124531.23645-11-jonas@kwiboo.se>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 50
 x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR01HT092;
-x-ms-traffictypediagnostic: HE1EUR01HT092:
-x-microsoft-antispam-message-info: Y9PxsReJX/uTvNX1wro58uPrZhxU5sMjtjaMPhDuFUBUo3xD04L6Ad8i3MIDn8b59KnUe+P0wGM+5FxiYBlItIg05QFanmQJzXKF6L3n2p4lFS4+wsypv+2Sv8oaxd7i3ZdQdi6BaBBJe+bM6R8bJRzStM68F09wZAxFWlOqGlKiSOnjAQnfCWvIx7l4Pz42
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR01HT012;
+x-ms-traffictypediagnostic: HE1EUR01HT012:
+x-microsoft-antispam-message-info: E+7qlAlWBj3QHNnWiqiHGGeolCvQW93cyqiOUAje7uyy7robQiFQ/sazoZAKzSdVUWN91A1o650/J2c0ybsythqLp3rHlVGPf7sjEShXumXiUqS/b7oOtedNktaBbVaFpDmPJ8zanZ219XDfepcukkNXSrj8PsY7UyqKtTKIHC2hq51/nhTu3OzXQkdaFECP
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87e5dc36-64a0-491d-f921-08d72eda5107
+X-MS-Exchange-CrossTenant-Network-Message-Id: bea6cdcd-96a9-48ec-af10-08d72eda509b
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 12:45:49.6349
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 12:45:48.9836
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT092
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK3328 SoC has the same decoder IP block as RK3399,
-lets enable H264 decoding on RK3328.
+The RK3399 SoC has two VPU blocks capable of H264 decoding, VPU2 and RKVDEC,
+this enables support for H264 decoding using the VPU2 block.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/staging/media/hantro/rk3399_vpu_hw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/media/hantro/rk3399_vpu_hw.c | 21 +++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/staging/media/hantro/rk3399_vpu_hw.c b/drivers/staging/media/hantro/rk3399_vpu_hw.c
-index 47ca51b75a0d..08b965129377 100644
+index 14d14bc6b12b..47ca51b75a0d 100644
 --- a/drivers/staging/media/hantro/rk3399_vpu_hw.c
 +++ b/drivers/staging/media/hantro/rk3399_vpu_hw.c
-@@ -232,7 +232,8 @@ const struct hantro_variant rk3328_vpu_variant = {
- 	.dec_offset = 0x400,
+@@ -60,6 +60,19 @@ static const struct hantro_fmt rk3399_vpu_dec_fmts[] = {
+ 		.fourcc = V4L2_PIX_FMT_NV12,
+ 		.codec_mode = HANTRO_MODE_NONE,
+ 	},
++	{
++		.fourcc = V4L2_PIX_FMT_H264_SLICE,
++		.codec_mode = HANTRO_MODE_H264_DEC,
++		.max_depth = 2,
++		.frmsize = {
++			.min_width = 48,
++			.max_width = 4096,
++			.step_width = H264_MB_DIM,
++			.min_height = 48,
++			.max_height = 2304,
++			.step_height = H264_MB_DIM,
++		},
++	},
+ 	{
+ 		.fourcc = V4L2_PIX_FMT_MPEG2_SLICE,
+ 		.codec_mode = HANTRO_MODE_MPEG2_DEC,
+@@ -161,6 +174,12 @@ static const struct hantro_codec_ops rk3399_vpu_codec_ops[] = {
+ 		.init = hantro_jpeg_enc_init,
+ 		.exit = hantro_jpeg_enc_exit,
+ 	},
++	[HANTRO_MODE_H264_DEC] = {
++		.run = rk3399_vpu_h264_dec_run,
++		.reset = rk3399_vpu_dec_reset,
++		.init = hantro_h264_dec_init,
++		.exit = hantro_h264_dec_exit,
++	},
+ 	[HANTRO_MODE_MPEG2_DEC] = {
+ 		.run = rk3399_vpu_mpeg2_dec_run,
+ 		.reset = rk3399_vpu_dec_reset,
+@@ -196,7 +215,7 @@ const struct hantro_variant rk3399_vpu_variant = {
  	.dec_fmts = rk3399_vpu_dec_fmts,
  	.num_dec_fmts = ARRAY_SIZE(rk3399_vpu_dec_fmts),
--	.codec = HANTRO_MPEG2_DECODER | HANTRO_VP8_DECODER,
-+	.codec = HANTRO_MPEG2_DECODER | HANTRO_VP8_DECODER |
-+		 HANTRO_H264_DECODER,
+ 	.codec = HANTRO_JPEG_ENCODER | HANTRO_MPEG2_DECODER |
+-		 HANTRO_VP8_DECODER,
++		 HANTRO_VP8_DECODER | HANTRO_H264_DECODER,
  	.codec_ops = rk3399_vpu_codec_ops,
- 	.irqs = rk3328_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3328_irqs),
+ 	.irqs = rk3399_irqs,
+ 	.num_irqs = ARRAY_SIZE(rk3399_irqs),
 -- 
 2.17.1
 
