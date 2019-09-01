@@ -2,102 +2,87 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADB0C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763AEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F26C22CE9
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F42D23431
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="MY7eT/Sw"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MvCuz7UY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfIAVax (ORCPT
+        id S1729128AbfIAVca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 17:30:53 -0400
-Received: from onstation.org ([52.200.56.107]:48100 "EHLO onstation.org"
+        Sun, 1 Sep 2019 17:32:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51329 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728773AbfIAVax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 17:30:53 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1728519AbfIAVca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 17:32:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 78BEA3E993;
-        Sun,  1 Sep 2019 21:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1567373452;
-        bh=Zamozm0CnNg3m9y2HsnLTS1dXVZIfN56PD4UedvYoz0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MY7eT/Sw7QTSp8Ub9ouPBLRLKMK4EDxpfb/wOds4fJogOnuNENG7xFfcDOYkKOeoX
-         35sXYnZQ0dfCxCd3AiY2uF3vYi3epuB+4rdIJqAc4WlZwHBPeUt0ZZ++XFU7ieAmZq
-         BnbsFScUwPYY7LCk4V/ydR90ErsDmUSrJ0H5IicE=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robdclark@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH] soc: qcom: ocmem: add missing includes
-Date:   Sun,  1 Sep 2019 17:30:37 -0400
-Message-Id: <20190901213037.25889-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46M5yz2zQHz9s4Y;
+        Mon,  2 Sep 2019 07:32:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567373548;
+        bh=1ZAnkpw6JSe9YanCuQYfIuIdHuGTrE01UvUQJ8a0Khg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MvCuz7UYgpqesGbF6nEZSXJmUFGDEcEJq60NUxfbqxfGPfUttJFKrSsnwsDIJZFDp
+         0PhBVXyAvTIU00Ef2X8Rk0qjMDhbQP80cjDlUkdnqbIPzvAC1RD91P4NfGRkf96wZx
+         mHyzgpu/v0CZ8yegoPz4o3qWIpxznd4vMoMWTkFUxZ7yBv7+vjac0QG9puVF3165WB
+         tOhy8b+2eS9FqwGDzpQEijmO6x40RNAEq0Li8YeQ6FADZqcxvcQXwIeUQW9/d38NPG
+         7WKcvkabD0oVCcYN9gJ6wn+x+lrTYkWnUdzfXIutoAohbnF+n9SfbCV6emjLav82B+
+         cqPxTuPOjIdvw==
+Date:   Mon, 2 Sep 2019 07:32:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the tpmdd tree
+Message-ID: <20190902073227.34b86449@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/y0nNvpMqCucxQ.H9ZB5L.+x";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kbuild bot reported the following compiler errors when compiling on
-MIPS with CONFIG_QCOM_OCMEM disabled:
+--Sig_/y0nNvpMqCucxQ.H9ZB5L.+x
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-  In file included from <command-line>:0:0:
-  >> include/soc/qcom/ocmem.h:43:49: warning: 'struct device' declared
-     inside parameter list will not be visible outside of this
-     definition or declaration
-      static inline struct ocmem *of_get_ocmem(struct device *dev)
-                                                      ^~~~~~
-     include/soc/qcom/ocmem.h: In function 'of_get_ocmem':
-  >> include/soc/qcom/ocmem.h:45:9: error: implicit declaration of
-     function 'ERR_PTR' [-Werror=implicit-function-declaration]
-       return ERR_PTR(-ENODEV);
-              ^~~~~~~
-  >> include/soc/qcom/ocmem.h:45:18: error: 'ENODEV' undeclared (first
-     use in this function)
-       return ERR_PTR(-ENODEV);
+Hi all,
 
-Add the proper includes to fix the compiler errors.
+Commit
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reported-by: kbuild test robot <lkp@intel.com>
----
-My OCMEM series [1] hasn't landed upstream yet so let me know if you
-want me to squash this into the existing patch set. I made this a
-separate patch so that the Reported-by could be included. The kbuild
-report is at [2].
+  8dbcb44f392e ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for int=
+errupts")
 
-[1] https://lore.kernel.org/lkml/20190823121637.5861-1-masneyb@onstation.org/
-[2] https://lists.01.org/pipermail/kbuild-all/2019-August/063530.html
+is missing a Signed-off-by from its committer.
 
- include/soc/qcom/ocmem.h | 3 +++
- 1 file changed, 3 insertions(+)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/include/soc/qcom/ocmem.h b/include/soc/qcom/ocmem.h
-index a0ae336ba78b..02a8bc2677b1 100644
---- a/include/soc/qcom/ocmem.h
-+++ b/include/soc/qcom/ocmem.h
-@@ -9,6 +9,9 @@
-  * Copyright (C) 2015 Red Hat. Author: Rob Clark <robdclark@gmail.com>
-  */
- 
-+#include <linux/device.h>
-+#include <linux/err.h>
-+
- #ifndef __OCMEM_H__
- #define __OCMEM_H__
- 
--- 
-2.21.0
+--Sig_/y0nNvpMqCucxQ.H9ZB5L.+x
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1sOOsACgkQAVBC80lX
+0GyBhwf7BeaK9LJNy8ZnZQgu30tG8rhg0hL8IA4eQSxmDcI4vRSh6Xc1+Rvte0X4
+w+AddLeC7YFdQgp2CopFBBVA0uJEXyoXY+jrjAE+OcYuRcSoXaWL0TSfMOWC//SY
+t9x8f5ng5njISf18J5CwtlKkffQ4fpq9s+NkwZpYfHpx8PaYCGs0TufKV40E3Lph
+JxmJUyGgW3eKnAqzrJZp7b8vc0p+dctsvcDzynTr9cnvSJSiproYiyeYJaA+IIa5
+nKzcVZQKUg0no0sk2M96o0Iy7GyiyI5s9hR/MMSvrqdXsv4zJNDxe0+ufHI7fTEU
+YrLK4BXooJjhQF6zr1atcCD5HR/1WQ==
+=9D7y
+-----END PGP SIGNATURE-----
+
+--Sig_/y0nNvpMqCucxQ.H9ZB5L.+x--
