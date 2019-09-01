@@ -2,68 +2,116 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09434C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACDC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBA321897
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 21:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FA621897
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:00:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLmisM7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbfIAVyn (ORCPT
+        id S1729137AbfIAWA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 17:54:43 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43695 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729059AbfIAVyn (ORCPT
+        Sun, 1 Sep 2019 18:00:56 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42481 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729031AbfIAWA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 17:54:43 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l22so1499207qtp.10;
-        Sun, 01 Sep 2019 14:54:42 -0700 (PDT)
+        Sun, 1 Sep 2019 18:00:56 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t12so13728992qtp.9;
+        Sun, 01 Sep 2019 15:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:in-reply-to:references:date:message-id:subject:to
+         :cc;
+        bh=UKA15vT+m8YRLmhhsX9/oISzmEZatdOOezmmaqeFIF4=;
+        b=jLmisM7gCTaVd7a5Qdlh1z+0evpGnTKGGczuFGB8/eJcpF9oDVzGzMTeQdGyyB/Jhk
+         kIoVPu0HQ0X9sKS54vwy3/jGqFmbOaU7ji2cTVsngQoRy1lhoyY+SZJiGxIlOIi/eoxU
+         42xp+GP2urIGwezXlVh1zdCp54A9RkrSZ56gCVmhcU2w4JWQrL5bRso7gdpDTlUTR1sb
+         Qay+A5L2A3aQdZLnMPVBYCMk+6dyxlUsMKaASuFHz4/ks272LKlSSmmrhdI5mAbrAjJr
+         Bz/Fv2izpWKzKjn01+j+Ar/oOMqG0l/qnOFETbZmVKQ5ZuyV08sJSVaCqbVm4r5AY0Nu
+         oAAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+        h=x-gm-message-state:mime-version:from:in-reply-to:references:date
          :message-id:subject:to:cc;
-        bh=yoa9z48eCwymrwFIpuIwZA+XOPr3C5xOvId1XpBfXw0=;
-        b=he58hn93nLDLV2+w3quqMZh8uwidt9lfoFhXlgYK+UbYX20D7qV6g4aWy9kpbGIvUM
-         ZFlXwGtWLvxIXZrl3SpYcVaUTywTV2HUsGT42ve3SpGqNF6cVI/5oq9WSb89Qr9GpSv3
-         XMm8CQgJpj5JgphEv5LPtORPQD9LDHeax2j1jB+veckE+j39qJikIS98TnyxWb4AQq7H
-         pd6k2tdzt4rwtDh4D5jg04CgMXAv1gubYzp3KAYo55LGrf3h0o42JNk4AdX3l0oM+xxc
-         LZgWEUyrEhOY7t1lL6IZAeZoVu9x1Io94cU1R3CMftdgPcknmNWx2kOS9hSU65giTW09
-         FJbQ==
-X-Gm-Message-State: APjAAAXRwccJ/qn3R/JJVU6J24apNNtWUsb17qzaXlwKMMLZBARcLsQ0
-        /QyO4bN6wiBTEldAJ8LKFuHeSpK6vP3gEePH6SYEQg==
-X-Google-Smtp-Source: APXvYqyKOLx7UfOosw3gNC35cwPOvzEjcNmk7PyMQtMFOxAFOzHDnzrsfJyIypvmxEOYW0qmZR/0n86RMBXj9LhTJ8k=
-X-Received: by 2002:aed:2842:: with SMTP id r60mr16334981qtd.142.1567374881894;
- Sun, 01 Sep 2019 14:54:41 -0700 (PDT)
+        bh=UKA15vT+m8YRLmhhsX9/oISzmEZatdOOezmmaqeFIF4=;
+        b=n1ROAro7OLhZmisDRDs3Z3uVMXDXVK/TiLEr9qRoSF4UvQ+Z1/iN60ik8pFWinmbMH
+         pNEjb2wPV8aUh3hMW48ox8p9bsua0PL7cfJdAJzHVqIku3Yc53/ZIMhwzNZLJvoGHgw3
+         XJ+woUW5ObHvGQfoiGQmfWwNp2cHDkuaLfNbH5L++DUiK8Ttqz62b+2ig7mHZniOc29r
+         FPvESIow4S3CnoVkN9lcgAnsjzaURhABuR7JXrz8hCkFbrMA7k9TeVFSM8Y3NexVB48y
+         OlkIEtvJybtagiS1rFnEFfOcMx0XQxwJTmjkIrQdFT94Uo42ENHJlFtQI2zs8Kg+M6Qa
+         X1SQ==
+X-Gm-Message-State: APjAAAX/frkwNzvNi9gaPyVkgqYphFzl/4ieBbf6h7H8reKmWptM98As
+        lejoVpomgFPE8ZyrQ89t7LiiV8jiJmC3LWi2uoY=
+X-Google-Smtp-Source: APXvYqw3MR9vAHMqYcjYt/cd5sx035C6fZj0PxGqHfZS7tijA7/1A7jT3dyJjczK8LzjZLrGkbkXoIloLeWmUxdx8Pk=
 MIME-Version: 1.0
-References: <20190902071848.6cc2ca04@canb.auug.org.au>
-In-Reply-To: <20190902071848.6cc2ca04@canb.auug.org.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 1 Sep 2019 23:54:25 +0200
-Message-ID: <CAK8P3a2hiR5pFyPqK5QHuS_oRLJRyiY9drFsGjFWbq56w7fCqw@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the asm-generic tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-Received: by 2002:ac8:ec9:: with SMTP id w9mr24676918qti.95.1567375254859;
+ Sun, 01 Sep 2019 15:00:54 -0700 (PDT)
+Received: from 329980741037 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 2 Sep 2019 00:00:54 +0200
+From:   John S Gruber <JohnSGruber@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20190731054627.5627-2-jhubbard@nvidia.com>
+References: <20190731054627.5627-2-jhubbard@nvidia.com>
+Date:   Mon, 2 Sep 2019 00:00:54 +0200
+Message-ID: <CAPotdmSPExAuQcy9iAHqX3js_fc4mMLQOTr5RBGvizyCOPcTQQ@mail.gmail.com>
+Subject: [PATCH V2] x86/boot: Fix regression--secure boot info loss from
+ bootparam sanitizing
+To:     john.hubbard@gmail.com
+Cc:     "John S. Gruber" <JohnSGruber@gmail.com>, bp@alien8.de,
+        hpa@zytor.com, jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
+        stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 1, 2019 at 11:19 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   adea510eaf35 ("__div64_const32(): improve the generic C version")
->
-> is missing a Signed-off-by from its committer.
+From: "John S. Gruber" <JohnSGruber@gmail.com>
 
-Fixed, thanks for pointing it out!
+commit a90118c445cc ("x86/boot: Save fields explicitly, zero out everything
+else") now zeros the secure boot information passed by the boot loader or
+by the kernel's efi handover mechanism.  Include boot-params.secure_boot
+in the preserve field list.
 
-      Arnd
+I noted a change in my computers between running signed 5.3-rc4 and 5.3-rc6
+with signed kernels using the efi handoff protocol with grub. The kernel
+log message "Secure boot enabled" becomes "Secure boot could not be
+determined". The efi_main function in arch/x86/boot/compressed/eboot.c sets
+this field early but it is subsequently zeroed by the above referenced
+commit in the file arch/x86/include/asm/bootparam_utils.h
+
+Fixes: commit a90118c445cc ("x86/boot: Save fields explicitly, zero
+out everything else")
+Signed-off-by: John S. Gruber <JohnSGruber@gmail.com>
+---
+
+Adjusted the patch for John Hubbard's comments.
+
+ arch/x86/include/asm/bootparam_utils.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/bootparam_utils.h
+b/arch/x86/include/asm/bootparam_utils.h
+index 9e5f3c7..981fe92 100644
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -70,6 +70,7 @@ static void sanitize_boot_params(struct boot_params
+*boot_params)
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(secure_boot),
+ 			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(e820_table),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
+-- 
+2.7.4
