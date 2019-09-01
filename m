@@ -2,120 +2,161 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568ADC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDFC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3044A215EA
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AD422D6D
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rMTJ4Ebb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbfIAT3a (ORCPT
+        id S1729225AbfIATgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 15:29:30 -0400
-Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:57598 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728930AbfIAT33 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 15:29:29 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id C7543180192E9;
-        Sun,  1 Sep 2019 19:29:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: train89_1848890063c10
-X-Filterd-Recvd-Size: 3603
-Received: from XPS-9350.home (unknown [47.151.137.30])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  1 Sep 2019 19:29:26 +0000 (UTC)
-Message-ID: <bb9f29988f3258281956680ff39c3e19e37dc0b8.camel@perches.com>
-Subject: [PATCH] checkpatch: Make git output use LANGUAGE=en_US.utf8
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 01 Sep 2019 12:29:25 -0700
-In-Reply-To: <2c0595c97811044a45e3d482e752d5877a14c06d.camel@perches.com>
-References: <20190830163103.15914-1-sean.j.christopherson@intel.com>
-         <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
-         <20190830171731.GB15405@linux.intel.com>
-         <a8afdbf13db47e7650473c7f71384f177f3dff59.camel@perches.com>
-         <2c0595c97811044a45e3d482e752d5877a14c06d.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Sun, 1 Sep 2019 15:36:08 -0400
+Received: from mail-eopbgr150047.outbound.protection.outlook.com ([40.107.15.47]:28815
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729048AbfIATgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 15:36:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IRx+xDt+QXpX15PkwJZXGu6XhaUEcMqgggJ5ZJ00B6ydMMaaP1UwyMifMsrPl+UU5dl7IaiHNcJrtgEVtXTz2gwDCsc+n1nFsEf9H20uVIa5Vgz8ZktrgkGOoVc+Gb8rRyVkF3Rg3dKJY0xSBBq4HvP4UQ0t51uESOzbP0iOcnQxwVLvsEZ4YeH29C+1JdZfvtMXT8G37DRGCYDJJUtfS1K6SSES9zwkh6P1IXbPZNBiNu3BSRT80/+ZZj6qzvUVtoTXUQDYRhmhoTyg58HC/iVmiECoNWcidBQ/tckrmOyleOdWHBPsSxzJjhWQnLkIi7LRSkmwJik9UgJr1+WbIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5GuMWTKasVdinIcBryJlCnAHqCnqXJdRbQDfdlcgBuQ=;
+ b=X9X7aHkn1hbO2vYLEiwoDNzoJ/UYlHcYLT1eKmDQFB+CVK2upOd7+rAPays32wfvEwsnOAM7/VGvrMj4wraod/qBwpIye+W1WVDKWQHDcbessf6TV0tcEkXUDKHUXe7kpvhHfigORUH6hksUxI6axqgEjCdRGjfW6aDPYBkSQqE4MRf1cfnh0ehdgACj/UjnhzcXb53qDTIVAB7eo7Ui46NIVHVjyBtG2VsIQx4tP1Kg0nBRS1Q//oEBd/P44CQrSzBk4tWa5YG9FfYM/wFT1WMHaVgTNobj1g/BZiRHl4N9LreqmzEHm4MB7hX1kUKDzZZ+QeS3zeS4Bal9f30aQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5GuMWTKasVdinIcBryJlCnAHqCnqXJdRbQDfdlcgBuQ=;
+ b=rMTJ4EbbiO8BOY1nPBdL6HpvkT9U4Ie4gm0woMoxBjAO062yjy28cQl4ahYdtDOj9m6G4yhWND8RFi3Pti+PsI+0H61A2RferZa2qxa+f0P6Pis/jYp9Nl8IJY426qpyCKOxjhkr6x+HDflMHtJEi1TcW/veLYGb3afIOmm1e+M=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5407.eurprd05.prod.outlook.com (20.177.63.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Sun, 1 Sep 2019 19:36:04 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2220.020; Sun, 1 Sep 2019
+ 19:36:04 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: Re: [PATCH 2/3] pagewalk: separate function pointers from iterator
+ data
+Thread-Topic: [PATCH 2/3] pagewalk: separate function pointers from iterator
+ data
+Thread-Index: AQHVXauzoOyMGt/Rm0+/Xu8LAWoHTqcXL4MAgAAOHoA=
+Date:   Sun, 1 Sep 2019 19:36:04 +0000
+Message-ID: <20190901193601.GB5208@mellanox.com>
+References: <20190828141955.22210-1-hch@lst.de>
+ <20190828141955.22210-3-hch@lst.de> <20190901184530.GA18656@roeck-us.net>
+In-Reply-To: <20190901184530.GA18656@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR07CA0034.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::47) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.168.164.202]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b0e66951-a2b0-4fd6-683c-08d72f13a071
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5407;
+x-ms-traffictypediagnostic: VI1PR05MB5407:
+x-microsoft-antispam-prvs: <VI1PR05MB5407325816E8C3007A00F570CFBF0@VI1PR05MB5407.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:773;
+x-forefront-prvs: 0147E151B5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(136003)(366004)(346002)(189003)(199004)(25786009)(4326008)(6512007)(6436002)(6246003)(6486002)(1076003)(7416002)(53936002)(6916009)(33656002)(14444005)(36756003)(256004)(71190400001)(71200400001)(86362001)(64756008)(66556008)(66476007)(7736002)(8676002)(81166006)(81156014)(5660300002)(2906002)(66946007)(55236004)(66446008)(229853002)(99286004)(446003)(14454004)(11346002)(386003)(6506007)(186003)(6116002)(52116002)(26005)(102836004)(3846002)(76176011)(316002)(486006)(54906003)(305945005)(8936002)(66066001)(2616005)(476003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5407;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2H/j1oARbAJtKOVJKSQqJFFv+h6ipUsCvwwYYdm5zqVKw9Ez2G3SnEsBEpNA1CndH0AeiDkhf08CI4ehmWa0hZGrUEmrADuqazImYReADHhm1bEf4ZWEvhCnzq0CaEdJftpumTSwfzAizQN+wKB0rOGr7oa60gdVSk45kKHwARrgIM3wudPiMatpNUSnmgCsbyc5Rdjv9/rFrjyg0qY5sfO3SvBLZONOpZ6vEqP0e0k+lAXlwiARdFHKUIw2UPAftubwAJMZDS69tfI0iMLqvUXv0g/an5S/l/x0zoDgc0BlIpSxn2I8jZta3mOT5YOupE/U8P1WuCRKBfQ4LsRtjUiSOAiqrwCWVuWnbEOTsNVIhVgogjOC3I3+iKJGduedyxcmxTshXtNEmnXLsL7mcqAEEYpIyhy1s3P4mSPKosY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <AC51C72B4393ED4E95D4C3B5363384DE@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0e66951-a2b0-4fd6-683c-08d72f13a071
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 19:36:04.0184
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rjv2JEheY8Wkh8x2OIbus5T2sUEVI1CMh3ek2LTXnsSK/pgZ67NLwEUsSdSdp+IY0O9IL3rR5B+IEKKscsrK6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5407
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-git output parsing depends on the language being en_US english.
+On Sun, Sep 01, 2019 at 11:45:30AM -0700, Guenter Roeck wrote:
+> On Wed, Aug 28, 2019 at 04:19:54PM +0200, Christoph Hellwig wrote:
+> > The mm_walk structure currently mixed data and code.  Split out the
+> > operations vectors into a new mm_walk_ops structure, and while we
+> > are changing the API also declare the mm_walk structure inside the
+> > walk_page_range and walk_page_vma functions.
+> >=20
+> > Based on patch from Linus Torvalds.
+> >=20
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+> > Reviewed-by: Steven Price <steven.price@arm.com>
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>=20
+> When building csky:defconfig:
+>=20
+> In file included from mm/madvise.c:30:
+> mm/madvise.c: In function 'madvise_free_single_vma':
+> arch/csky/include/asm/tlb.h:11:11: error:
+> 	invalid type argument of '->' (have 'struct mmu_gather')
 
-Make the backtick execution of all `git <foo>` commands set the
-LANGUAGE of the process to en_US.utf8 before executing the actual
-command using `export LANGUAGE=en_US.utf8; git <foo>`.
+I belive the macros above are missing brackets.. Can you confirm the
+below takes care of things? I'll add a patch if so
 
-Because the command is executed in a child process, the parent
-LANGUAGE is unchanged.
+diff --git a/arch/csky/include/asm/tlb.h b/arch/csky/include/asm/tlb.h
+index 8c7cc097666f04..fdff9b8d70c811 100644
+--- a/arch/csky/include/asm/tlb.h
++++ b/arch/csky/include/asm/tlb.h
+@@ -8,14 +8,14 @@
+=20
+ #define tlb_start_vma(tlb, vma) \
+ 	do { \
+-		if (!tlb->fullmm) \
+-			flush_cache_range(vma, vma->vm_start, vma->vm_end); \
++		if (!(tlb)->fullmm) \
++			flush_cache_range(vma, (vma)->vm_start, (vma)->vm_end); \
+ 	}  while (0)
+=20
+ #define tlb_end_vma(tlb, vma) \
+ 	do { \
+-		if (!tlb->fullmm) \
+-			flush_tlb_range(vma, vma->vm_start, vma->vm_end); \
++		if (!(tlb)->fullmm) \
++			flush_tlb_range(vma, (vma)->vm_start, (vma)->vm_end); \
+ 	}  while (0)
+=20
+ #define tlb_flush(tlb) flush_tlb_mm((tlb)->mm)
 
-Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Joe Perches <joe@perches.com>
----
- scripts/checkpatch.pl | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index f4b6127ff469..113c017cc8e7 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -62,6 +62,8 @@ my $conststructsfile = "$D/const_structs.checkpatch";
- my $typedefsfile = "";
- my $color = "auto";
- my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
-+# git output parsing needs US English output, so first set backtick child process LANGUAGE
-+my $git_command ='export LANGUAGE=en_US.UTF-8; git';
- 
- sub help {
- 	my ($exitcode) = @_;
-@@ -918,7 +920,7 @@ sub seed_camelcase_includes {
- 	$camelcase_seeded = 1;
- 
- 	if (-e ".git") {
--		my $git_last_include_commit = `git log --no-merges --pretty=format:"%h%n" -1 -- include`;
-+		my $git_last_include_commit = `${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
- 		chomp $git_last_include_commit;
- 		$camelcase_cache = ".checkpatch-camelcase.git.$git_last_include_commit";
- 	} else {
-@@ -946,7 +948,7 @@ sub seed_camelcase_includes {
- 	}
- 
- 	if (-e ".git") {
--		$files = `git ls-files "include/*.h"`;
-+		$files = `${git_command} ls-files "include/*.h"`;
- 		@include_files = split('\n', $files);
- 	}
- 
-@@ -970,7 +972,7 @@ sub git_commit_info {
- 
- 	return ($id, $desc) if ((which("git") eq "") || !(-e ".git"));
- 
--	my $output = `git log --no-color --format='%H %s' -1 $commit 2>&1`;
-+	my $output = `${git_command} log --no-color --format='%H %s' -1 $commit 2>&1`;
- 	$output =~ s/^\s*//gm;
- 	my @lines = split("\n", $output);
- 
-@@ -1020,7 +1022,7 @@ if ($git) {
- 		} else {
- 			$git_range = "-1 $commit_expr";
- 		}
--		my $lines = `git log --no-color --no-merges --pretty=format:'%H %s' $git_range`;
-+		my $lines = `${git_command} log --no-color --no-merges --pretty=format:'%H %s' $git_range`;
- 		foreach my $line (split(/\n/, $lines)) {
- 			$line =~ /^([0-9a-fA-F]{40,40}) (.*)$/;
- 			next if (!defined($1) || !defined($2));
-
-
+Thanks,
+Jason
