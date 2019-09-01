@@ -2,124 +2,131 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F99C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05708C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F272187F
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD1D2190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rqcNBBOf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvbCWRi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfIADkP (ORCPT
+        id S1728658AbfIADzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 23:40:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59396 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfIADkP (ORCPT
+        Sat, 31 Aug 2019 23:55:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46583 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727538AbfIADzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 23:40:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Cc:Subject:From:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oCApBRnlYw3+yzwJ3ybINzbSrgzbb2xvvxZOpSTpA3Y=; b=rqcNBBOfFzF+E7Y+wWWsElfz9
-        fvDGc+2uMkExl6hJkVMjVNoM5pLCx3z+aIcax2YveZjqMYkhDrkr1RsbJt4wf6T6P3xKPW1ergL0i
-        7+Q9IHtu+jkBQlL/6m12sLueL3InXD410YD8kZ8TwJshJGr8MqIpJWNZxQOk2SSLji/Ruh5Oydenr
-        IN/3GqTOlqYWlb9BPzYV1nqnZElq0OjAeRy9LyCGdmv0amr2deM+R5js9VKTwkFQ4TqM5eK83UBop
-        YMxWZEB6kYE1ArxUvL+diFBEwN0mUoqv5WQzixRP6vLVqD6LUQQtfgBV4YdvuYH6fNIhsioH+OzhI
-        LC1dkrDQw==;
-Received: from [2601:1c0:6200:6e8::4f71]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4Gil-0003pM-P5; Sun, 01 Sep 2019 03:40:07 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH RESEND] arch/microblaze: add support for get_user() of size 8
- bytes
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        "Steven J. Magnani" <steve@digidescorp.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-Message-ID: <99f83474-3e71-4325-ddff-cf23a172b984@infradead.org>
-Date:   Sat, 31 Aug 2019 20:40:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 31 Aug 2019 23:55:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m3so5502465pgv.13
+        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 20:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rM4/B5ti8MD5RWMkbfuov3t3TeAxvKUOwZsakQ31f/8=;
+        b=GvbCWRi9bOpKxv2irCLvNtD3I+yrw0CRmQ4TtBQ56jkDMI20EhR/J03mc0cOfxMvYc
+         O6slHWDdlrr3z2KZw7eG39++Dg/a0zbTpaxyZkofVcQzkvTIIvDVS0Pb5vFhyv49HNm6
+         wEW2iJ2JDewdl7kR/j4iCa9V17iiVka4mtiOpQV5zS0CW2cBVADJ8Y3Vq8dXh83baKHR
+         +pj/uR6kAKWNF94Je5JrWzQjHLbzI6YiVec0AuPvw3vvJc67DKVZwiYbxPAlps7nEvHG
+         buNj/niT6Kb86D4HzwRnvrg7BHLKPrL+0HIPzqE+DRYSv9uV96utaP6Dz97o2+tgmrpR
+         RfPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rM4/B5ti8MD5RWMkbfuov3t3TeAxvKUOwZsakQ31f/8=;
+        b=NrT2xcHsmKgwuuEiP+EVnRbAKg2zKlE50lrQSzo8FqoWAW1l471g3/UvetHwNJF7w0
+         8CqOp+ZwORrjU4ZsFsGt6FqeZyK3GXm39GdcpYivc6AZU6ixWAi8pwSZIS84ILMfyiam
+         9BHJkB8RpH2UOjWvShrIpKYt9dtURvH/FIEFo/U/ENTM5Ru2NDPwMA3RwJSHg/xoOvh/
+         o3XX2NSpDZkH1J0c2mhVekKeqgkmtfvIXC83R3C6srnmyP8f8iENPTMEOXi7ET+beUII
+         oaF/nc70Ciuse4z1sNg6wRrl6nHvHUcgVtoHbM7Hl68yWF6H1IG0Zvm134zs7kXDfaWB
+         Ygew==
+X-Gm-Message-State: APjAAAX9E8dO8s55/GSIQkol8fj99m4c9rTIKaJXT116xVVcFv8B46FH
+        UI5OPv9OVvWtwjVGSfs+imU=
+X-Google-Smtp-Source: APXvYqzg6PQVRQDwMAi/jtxI2KEEei5TgYAFXyWnF/TwlafkRnFvUtA6huTHRkxdJTo+F62RBeJxMw==
+X-Received: by 2002:a17:90a:86c3:: with SMTP id y3mr5213630pjv.66.1567310148403;
+        Sat, 31 Aug 2019 20:55:48 -0700 (PDT)
+Received: from localhost.localdomain ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id q33sm5988120pgb.79.2019.08.31.20.55.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Aug 2019 20:55:47 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     yamada.masahiro@socionext.com, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] genirq: move debugfs option to kernel hacking
+Date:   Sun,  1 Sep 2019 11:55:39 +0800
+Message-Id: <20190901035539.2957-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Just like the other generic debug options, move the irq one to
+'Kernel hacking' menu.
 
-arch/microblaze/ is missing support for get_user() of size 8 bytes,
-so add it by using __copy_from_user().
-
-Fixes these build errors:
-   drivers/infiniband/core/uverbs_main.o: In function `ib_uverbs_write':
-   drivers/infiniband/core/.tmp_gl_uverbs_main.o:(.text+0x13a4): undefined reference to `__user_bad'
-   drivers/android/binder.o: In function `binder_thread_write':
-   drivers/android/.tmp_gl_binder.o:(.text+0xda6c): undefined reference to `__user_bad'
-   drivers/android/.tmp_gl_binder.o:(.text+0xda98): undefined reference to `__user_bad'
-   drivers/android/.tmp_gl_binder.o:(.text+0xdf10): undefined reference to `__user_bad'
-   drivers/android/.tmp_gl_binder.o:(.text+0xe498): undefined reference to `__user_bad'
-   drivers/android/binder.o:drivers/android/.tmp_gl_binder.o:(.text+0xea78): more undefined references to `__user_bad' follow
-
-'make allmodconfig' now builds successfully for arch/microblaze/.
-
-Fixes: 538722ca3b76 ("microblaze: fix get_user/put_user side-effects")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Steven J. Magnani <steve@digidescorp.com>
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Leon Romanovsky <leonro@mellanox.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Doug Ledford <dledford@redhat.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
-What is a reasonable path for having this patch merged?
-Leon Romanovsky <leonro@mellanox.com> has tested it.
-I have sent several emails to Micahl Simek but he seems to have
-dropped active maintenance of arch/microblaze/.
+ kernel/irq/Kconfig | 12 ------------
+ lib/Kconfig.debug  | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 12 deletions(-)
 
- arch/microblaze/include/asm/uaccess.h |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- lnx-53-rc3.orig/arch/microblaze/include/asm/uaccess.h
-+++ lnx-53-rc3/arch/microblaze/include/asm/uaccess.h
-@@ -186,6 +186,9 @@ extern long __user_bad(void);
- 			__get_user_asm("lw", __gu_addr, __gu_val,	\
- 				       __gu_err);			\
- 			break;						\
-+		case 8:							\
-+			__gu_err = __copy_from_user(&__gu_val, __gu_addr, 8);\
-+			break;						\
- 		default:						\
- 			__gu_err = __user_bad();			\
- 			break;						\
-@@ -212,6 +215,9 @@ extern long __user_bad(void);
- 	case 4:								\
- 		__get_user_asm("lw", (ptr), __gu_val, __gu_err);	\
- 		break;							\
-+	case 8:								\
-+		__gu_err = __copy_from_user(&__gu_val, ptr, 8);		\
-+		break;							\
- 	default:							\
- 		/* __gu_val = 0; __gu_err = -EINVAL;*/ __gu_err = __user_bad();\
- 	}								\
+diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
+index f92d9a687372..4684c44e0390 100644
+--- a/kernel/irq/Kconfig
++++ b/kernel/irq/Kconfig
+@@ -123,18 +123,6 @@ config SPARSE_IRQ
+ 	    out the interrupt descriptors in a more NUMA-friendly way. )
+ 
+ 	  If you don't know what to do here, say N.
+-
+-config GENERIC_IRQ_DEBUGFS
+-	bool "Expose irq internals in debugfs"
+-	depends on DEBUG_FS
+-	default n
+-	---help---
+-
+-	  Exposes internal state information through debugfs. Mostly for
+-	  developers and debugging of hard to diagnose interrupt problems.
+-
+-	  If you don't know what to do here, say N.
+-
+ endmenu
+ 
+ config GENERIC_IRQ_MULTI_HANDLER
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 5960e2980a8a..c2fb63b4263b 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2142,6 +2142,17 @@ config IO_STRICT_DEVMEM
+ 
+ 	  If in doubt, say Y.
+ 
++config GENERIC_IRQ_DEBUGFS
++	bool "Expose irq internals to userspace via debugfs"
++	depends on DEBUG_FS
++	default n
++	---help---
++
++	  Exposes internal state information through debugfs. Mostly for
++	  developers and debugging of hard to diagnose interrupt problems.
++
++	  If you don't know what to do here, say N.
++
+ source "arch/$(SRCARCH)/Kconfig.debug"
+ 
+ endmenu # Kernel hacking
+-- 
+2.20.1
 
