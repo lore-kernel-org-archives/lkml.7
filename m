@@ -2,136 +2,124 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFE6C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F99C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E3023426
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F272187F
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 03:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rqcNBBOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfIADhh (ORCPT
+        id S1728673AbfIADkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 31 Aug 2019 23:37:37 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:51050 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727538AbfIADhh (ORCPT
+        Sat, 31 Aug 2019 23:40:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59396 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbfIADkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 31 Aug 2019 23:37:37 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x813bZgE000957
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 23:37:35 -0400
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x813bU43009565
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 23:37:35 -0400
-Received: by mail-qk1-f200.google.com with SMTP id m2so12018777qkk.10
-        for <linux-kernel@vger.kernel.org>; Sat, 31 Aug 2019 20:37:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=ydhN3Zp44Nu3CzxHTEXAf4iY4jzb23b8YjDdP2BxiiM=;
-        b=A0u0LBTmVlFp7mM+wVGs9szuM11r2Y5Vr69RIsluUcCCOmwunJ3K+14Bur7m6WPVD0
-         kFqYLnSQOBS0tKYk9P6ITJO7l7zLxJuMQimkQCd3OBZ8vZHlMJOTa3Tl7Re7flduT4EH
-         3cQHIV0QHe9BXqtGlVMUomoFzGwZcg6jem29l4eX9O+ZvTlgKMPwWYGDQKmBZgCpXZtc
-         WyU0u3znB//0udTFYEUU5/DWqKxFaVRS5YIkW8BE9iETS8q2JEP0uc0qJhWZmeFivmFk
-         5HuRRTRzWLkZ+aLlkENmkDULIczjHZvKJiiTjqFG+M/aH7UoZJ/0htVicKcwFtqnkoMP
-         JHfA==
-X-Gm-Message-State: APjAAAUFcT8pQoy6HrA0h8U35pQfDJk+zVY0qNToKvokvz4NPygOndXv
-        B+i3kmD4PcO277/hBg+bdqPmwuerpW2+E8G//veSb4wHvoyEJDqaZHL7vqZlK+tVlcjPu7fD6S7
-        uD3aCQTD17QOViJefIu4RikpyIFDu2qlUba8=
-X-Received: by 2002:ac8:42c4:: with SMTP id g4mr23192825qtm.228.1567309050454;
-        Sat, 31 Aug 2019 20:37:30 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzdbEq5WvB8OWvM4ln+gCz5eDg2qSDFppv92WU5CgIKxhPekUVxbz1sJQpBcWAbWCMyHaActg==
-X-Received: by 2002:ac8:42c4:: with SMTP id g4mr23192811qtm.228.1567309050186;
-        Sat, 31 Aug 2019 20:37:30 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4340::ba0])
-        by smtp.gmail.com with ESMTPSA id n187sm5288044qkc.98.2019.08.31.20.37.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2019 20:37:28 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
-In-Reply-To: <20190901010721.GG7777@dread.disaster.area>
-References: <245727.1567183359@turing-police> <20190830164503.GA12978@infradead.org> <267691.1567212516@turing-police> <20190831064616.GA13286@infradead.org> <295233.1567247121@turing-police>
- <20190901010721.GG7777@dread.disaster.area>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567309047_4251P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+        Sat, 31 Aug 2019 23:40:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Cc:Subject:From:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oCApBRnlYw3+yzwJ3ybINzbSrgzbb2xvvxZOpSTpA3Y=; b=rqcNBBOfFzF+E7Y+wWWsElfz9
+        fvDGc+2uMkExl6hJkVMjVNoM5pLCx3z+aIcax2YveZjqMYkhDrkr1RsbJt4wf6T6P3xKPW1ergL0i
+        7+Q9IHtu+jkBQlL/6m12sLueL3InXD410YD8kZ8TwJshJGr8MqIpJWNZxQOk2SSLji/Ruh5Oydenr
+        IN/3GqTOlqYWlb9BPzYV1nqnZElq0OjAeRy9LyCGdmv0amr2deM+R5js9VKTwkFQ4TqM5eK83UBop
+        YMxWZEB6kYE1ArxUvL+diFBEwN0mUoqv5WQzixRP6vLVqD6LUQQtfgBV4YdvuYH6fNIhsioH+OzhI
+        LC1dkrDQw==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4Gil-0003pM-P5; Sun, 01 Sep 2019 03:40:07 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH RESEND] arch/microblaze: add support for get_user() of size 8
+ bytes
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        "Steven J. Magnani" <steve@digidescorp.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+Message-ID: <99f83474-3e71-4325-ddff-cf23a172b984@infradead.org>
+Date:   Sat, 31 Aug 2019 20:40:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 31 Aug 2019 23:37:27 -0400
-Message-ID: <339527.1567309047@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567309047_4251P
-Content-Type: text/plain; charset=us-ascii
+From: Randy Dunlap <rdunlap@infradead.org>
 
-On Sun, 01 Sep 2019 11:07:21 +1000, Dave Chinner said:
-> Totally irrelevant to the issue at hand. You can easily co-ordinate
-> out of tree contributions through a github tree, or a tree on
-> kernel.org, etc.
+arch/microblaze/ is missing support for get_user() of size 8 bytes,
+so add it by using __copy_from_user().
 
-Well.. I'm not personally wedded to the staging tree.  I'm just interested in
-getting a driver done and upstreamed with as little pain as possible. :)
+Fixes these build errors:
+   drivers/infiniband/core/uverbs_main.o: In function `ib_uverbs_write':
+   drivers/infiniband/core/.tmp_gl_uverbs_main.o:(.text+0x13a4): undefined reference to `__user_bad'
+   drivers/android/binder.o: In function `binder_thread_write':
+   drivers/android/.tmp_gl_binder.o:(.text+0xda6c): undefined reference to `__user_bad'
+   drivers/android/.tmp_gl_binder.o:(.text+0xda98): undefined reference to `__user_bad'
+   drivers/android/.tmp_gl_binder.o:(.text+0xdf10): undefined reference to `__user_bad'
+   drivers/android/.tmp_gl_binder.o:(.text+0xe498): undefined reference to `__user_bad'
+   drivers/android/binder.o:drivers/android/.tmp_gl_binder.o:(.text+0xea78): more undefined references to `__user_bad' follow
 
-Is there any preference for github versus kernel.org?  I can set up a github
-tree on my own, no idea who needs to do what for a kernel.org tree.
+'make allmodconfig' now builds successfully for arch/microblaze/.
 
-Also, this (from another email of yours) was (at least to me) the most useful
-thing said so far:
+Fixes: 538722ca3b76 ("microblaze: fix get_user/put_user side-effects")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Steven J. Magnani <steve@digidescorp.com>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Doug Ledford <dledford@redhat.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+---
+What is a reasonable path for having this patch merged?
+Leon Romanovsky <leonro@mellanox.com> has tested it.
+I have sent several emails to Micahl Simek but he seems to have
+dropped active maintenance of arch/microblaze/.
 
-> look at what other people have raised w.r.t. to that filesystem -
-> on-disk format validation, re-implementation of largely generic
-> code, lack of namespacing of functions leading to conflicts with
-> generic/VFS functionality, etc.
+ arch/microblaze/include/asm/uaccess.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-All of which are now on the to-do list, thanks.
+--- lnx-53-rc3.orig/arch/microblaze/include/asm/uaccess.h
++++ lnx-53-rc3/arch/microblaze/include/asm/uaccess.h
+@@ -186,6 +186,9 @@ extern long __user_bad(void);
+ 			__get_user_asm("lw", __gu_addr, __gu_val,	\
+ 				       __gu_err);			\
+ 			break;						\
++		case 8:							\
++			__gu_err = __copy_from_user(&__gu_val, __gu_addr, 8);\
++			break;						\
+ 		default:						\
+ 			__gu_err = __user_bad();			\
+ 			break;						\
+@@ -212,6 +215,9 @@ extern long __user_bad(void);
+ 	case 4:								\
+ 		__get_user_asm("lw", (ptr), __gu_val, __gu_err);	\
+ 		break;							\
++	case 8:								\
++		__gu_err = __copy_from_user(&__gu_val, ptr, 8);		\
++		break;							\
+ 	default:							\
+ 		/* __gu_val = 0; __gu_err = -EINVAL;*/ __gu_err = __user_bad();\
+ 	}								\
 
-Now one big question:
-
-Should I heave all the vfat stuff overboard and make a module that
-*only* does exfat, or is there enough interest in an extended FAT module
-that does vfat and extfat, in which case the direction should be to re-align
-this module's code with vfat?
-
-> That's the choice you have to make now: listen to the reviewers
-> saying "resolve the fundamental issues before goign any further",
-
-Well... *getting* a laundry list of what the reviewers see as the fundamental
-issues is the first step in resolving them ;)
-
-
-
---==_Exmh_1567309047_4251P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXWs89gdmEQWDXROgAQKZYA//VanZme910x03PXbB6eZJIFNkl0Ii0sHW
-AGGKa0skVNf+/uwf0kL25WoaCFjgEFrZmEP+w1yU+rv3aQ8zzconLLsxwEX0V0PT
-t7KzGcGHewKMv+56bMSpDE1CIHwwlOIARcz9SpoQ669CuudQbfILkrOW19DqxBYQ
-OBBZgdPPd3+jcoYb8EcYl3HIAfoAYn6EWpyo8qjP70xrfl/iICA2AUyZUnSIEHPT
-LLyBbDeb0tFNYNHk4/+82OIOh1BglgmHZmTmM8jKUSAAYEINHHRUpoyuOWWXSBY0
-3gvjmsooCFUQxsCfVXLjXCwvYZqU/9IlNsWvfGLK+rfwS9Huzx1mSvqsBLp78vN/
-63gGH5eR7yvq1f1hPl2l33QTvJCjCnT58OLZU9TlwAleqkSsyDCHj+vtVF8jyB91
-r/80bJyfG0CklcVPOsVXF1UkoVdty4V+EHVb3rK9D/UM4z8a8I43xjR1NJf8F5Jm
-W8lht0MkT8I+Y6ibapQTg9ZfBpzcyH0edZ0cTbX/4u92EaMVcvx0n8O2uhAxT2GV
-WPQJAj/b46xLW39OSbZAxSdLxTth908x49EhzIa5bMMFKFOfCg7Mzu6a4e5elQjP
-dTPvjTgNQLBML8I8B8+ZE581WOzRGusKzq7v2//dpKg0NbxEhThVgPG9aoWUmrgX
-6wdwmWFjcQQ=
-=zNgs
------END PGP SIGNATURE-----
-
---==_Exmh_1567309047_4251P--
