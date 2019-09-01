@@ -2,134 +2,87 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D791C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38D12184D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A3621874
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfIAXOE (ORCPT
+        id S1729214AbfIAX1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 19:14:04 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:50174 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729037AbfIAXOE (ORCPT
+        Sun, 1 Sep 2019 19:27:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:33543 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728942AbfIAX1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 19:14:04 -0400
-Received: from mr3.cc.vt.edu (mr3.cc.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x81NE2g6004901
-        for <linux-kernel@vger.kernel.org>; Sun, 1 Sep 2019 19:14:02 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x81NDvSJ022928
-        for <linux-kernel@vger.kernel.org>; Sun, 1 Sep 2019 19:14:02 -0400
-Received: by mail-qt1-f199.google.com with SMTP id y13so5002045qtn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 16:14:02 -0700 (PDT)
+        Sun, 1 Sep 2019 19:27:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id 5so16960166ion.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 16:27:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=qgYkPX+GTgX0rONC/65E9DiuSKcDLCwYEWFWrUp3ruo=;
-        b=MqMaPtl6VhTWUG35FiZqcj5KeSl2iXV+9ctd4K/FRpSSTfiKbZRsdvDRwSBC0y0npo
-         ccA3/j9VJ5mTKSbxrgAs3MscwCY9YYIu6pu8OskhghY+Wqbbe4ks0uLFa8c7xiKtCuKO
-         dj9JaCmicJUaxaINSpB7h/CzaFHIyaD+O0R/GUpHRZuYBbwC3Y9yCc7ETWojbdSCvzOP
-         VCJS0EC2Skkv/6jIOvlJ/6TFfKAEWweKkdG4ZaF0xYRyLXn8A5XFNOCApx8SbF3zppJR
-         Ftzi0Teb4ez+eUTywku1zt/zdKm/R3ctUAxN6Pq3VJ7yKT8LhplOLfhSliJVvyp23eL2
-         EtSg==
-X-Gm-Message-State: APjAAAWZ/AFMyN4p68mn7iUy9+ykaT6h2yUJyVwvJy8L+L2Oox/MN6BE
-        sG+s/NTnOGJWAoiThQ0oXdfhFYAu64qr/lfFYvYScwvqCH1Fmp7QQh1KVHcfrlpQrQQq/Stnkp7
-        0044WyNxHzMxVsq6bjjjtM+KBvp1M0A2dtOQ=
-X-Received: by 2002:ac8:4787:: with SMTP id k7mr8209628qtq.58.1567379637359;
-        Sun, 01 Sep 2019 16:13:57 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyunIhRucdRAhnWWiCsn7LEaA3Hw9XKbWjoYwW0GfwgecsORPB15PIaonHnEYoXVhnjx0eMbQ==
-X-Received: by 2002:ac8:4787:: with SMTP id k7mr8209612qtq.58.1567379637096;
-        Sun, 01 Sep 2019 16:13:57 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4340::ba0])
-        by smtp.gmail.com with ESMTPSA id o124sm5601412qke.66.2019.09.01.16.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 16:13:55 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
-In-Reply-To: <20190901224329.GH7777@dread.disaster.area>
-References: <245727.1567183359@turing-police> <20190830164503.GA12978@infradead.org> <267691.1567212516@turing-police> <20190831064616.GA13286@infradead.org> <295233.1567247121@turing-police> <20190901010721.GG7777@dread.disaster.area> <339527.1567309047@turing-police>
- <20190901224329.GH7777@dread.disaster.area>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567379634_4251P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 01 Sep 2019 19:13:54 -0400
-Message-ID: <389078.1567379634@turing-police>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=J9R5UWhJGlCe+z3+nucL39myfoeuGM8nvHYUB/xY98o=;
+        b=Sis/apjqDjq4+0ctLcsfdHfl5Z+vK2cVPSMxd34jEy6qT1bQNTA/APU+oPAataQ4I4
+         AfCLmNIADnnEnYa6JRNDBBBVkoxXna5rA31E6cfdWclDbjbLU6F4kh1cOn9yzmdciI2s
+         +AyPbGJ6pQanWQSsC9xP9Od/F8XWCFQbWeH1Yr7M4Dt/0o6JKSw7+6pLoVLYL48vg1Cw
+         XzAAPgCTf4itnnCwD5HcFFRyrs7ml4A0CX70S3sazCvgVEcfyNoAkBPcrM/pDjlfr0yv
+         sg7F41DJHy+jT73QXMfCRxbpNRRNEYhPeiuOfuBq0wBNQtt4KMU3ii7azMp9CRHsM+98
+         Cdig==
+X-Gm-Message-State: APjAAAXe4mJPzyzEZY+GW2A2nANlN271ARTZz00jvUrqskcdgLedvrhh
+        BbjU+c+jiBfVOp2Fufcy8zgzeqzw0/V7PJMpQzjme00eWtra
+X-Google-Smtp-Source: APXvYqyItaafiwMkd1H+5kjnZ9JNOwQM6ej3KsrARUzXzizMl0n0yT36VjMczsAumjk+Tr6sic7s729hxL6NhVHhebXTsUgQIsul
+MIME-Version: 1.0
+X-Received: by 2002:a5e:8f41:: with SMTP id x1mr7358100iop.191.1567380426244;
+ Sun, 01 Sep 2019 16:27:06 -0700 (PDT)
+Date:   Sun, 01 Sep 2019 16:27:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000088cdb2059186312f@google.com>
+Subject: kernel panic: stack is corrupted in lock_release (2)
+From:   syzbot <syzbot+97deee97cf14574b96d0@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567379634_4251P
-Content-Type: text/plain; charset=us-ascii
+Hello,
 
-On Mon, 02 Sep 2019 08:43:29 +1000, Dave Chinner said:
+syzbot found the following crash on:
 
-> I don't know the details of the exfat spec or the code to know what
-> the best approach is. I've worked fairly closely with Christoph for
-> more than a decade - you need to think about what he says rather
-> than /how he says it/ because there's a lot of thought and knowledge
-> behind his reasoning. Hence if I were implementing exfat and
-> Christoph was saying "throw it away and extend fs/fat"
-> then that's what I'd be doing.
+HEAD commit:    dd7078f0 enetc: Add missing call to 'pci_free_irq_vectors(..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=115fe0fa600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2a6a2b9826fdadf9
+dashboard link: https://syzkaller.appspot.com/bug?extid=97deee97cf14574b96d0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f7c2fe600000
 
-Again, I'm not ruling that out if that's the consensus direction. After all,
-the goal is to merge a working driver - and for that, I need to produce
-something that the file system maintainers will be willing to merge, which
-means doing it in a way they want it...
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+97deee97cf14574b96d0@syzkaller.appspotmail.com
 
-Hopefully next week a few other people will weigh in with what they prefer as
-far as approach goes.  Only definite statement I've heard so far was
-Christoph's...
-
-> and we don't want more. Implementing exfat on top of fs/fat kills
-> two birds with one stone - it modernises the fs/fat code base and
-> brings new functionality that will have more developers interested
-> in maintaining it over the long term.
-
-Any recommendations on how to approach that?   Clone the current fs/fat code
-and develop on top of that, or create a branch of it and on occasion do the
-merging needed to track further fs/fat development?
-
-Mostly asking for workflow suggestions - what's known to work well for this
-sort of situation, where we know we won't be merging until we have several
-thousand lines of new code?  And any "don't do <this> or you'll regret it
-later" advice is also appreciated. :)
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
+lock_release+0x866/0x960 kernel/locking/lockdep.c:4435
+CPU: 0 PID: 9965 Comm: syz-executor.0 Not tainted 5.3.0-rc6+ #182
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
---==_Exmh_1567379634_4251P
-Content-Type: application/pgp-signature
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXWxQsgdmEQWDXROgAQIEChAAkp7n5MxBSc3LAt80yIYEqpOUllyAzLk+
-se7lfnDiTSO/4D9ByufM6MDCfpGMCXn09h1yO/iltQ2gZZ0DfQuQdTIL1579v9u6
-/fFvMnxcRmILRQt8rJw1arjPJcWHUjO97HcFh1e3rA7d7Om3I3fU9nwd/OVrZfiS
-/GiSLHrBtRGvir/YJsiTIb6Sguv7TB+sKKekUVOCmT2h/zsLC1ElOnW0MiL8R8bq
-ROT4IkyBZQFanoRLC9aQbDqGVl+wn7QRGXHXpsvixEG4pyj9oxHFpMBvXOOC2fTU
-fElyh8gjzIJ2H6ZW6anGgTpY+W0ZnzZDMXfVBP+6uEmrfPQ/oWB2GUzpaiXeB7hb
-su6eaJcACwm5Tza8mwwIoCNjhP6Bg+dDOuCneeAKon9/FTl2d2/u5cUNoj5+rWSI
-9xZf1Anxv5BsOwunzkWIH5lcni8X/Wbm2bBWU4BDOQYooFiLaLlwfWxHtj9UGBGC
-AN3HzUW/p4Uc4NsSwFQ67VgZWTMEvmfG4x6IRIZOY27lDlJoZBV86Cw7VXdQ0HLq
-1w5k91HR9gslP4/qYsecH45VpvbjIakTC+eehE5iTtkJyZBkvEK7E6OOBdQemVM9
-QMg7V7IQJV9+3VLnaItG07kxZPijXGNeB4i76Sj4cz5otcGhMSjFPxNzfQ1ycTwF
-E9Vtf9AVaoE=
-=JCXU
------END PGP SIGNATURE-----
-
---==_Exmh_1567379634_4251P--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
