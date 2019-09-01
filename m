@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3CDC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC91C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847252342E
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D722377D
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567340664;
-	bh=RY/3bYZ+IqaZ2913dmp0OSm78TrC+CYgG/wSVjjHK8I=;
+	s=default; t=1567340667;
+	bh=euylgx4DEH+JxcNcNulJzXxRtpvvnOVOENsLorfNFq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBKliSIfB2HT3/x2BUE1mFm8eP0uFaGayckF8nd2PeY8T4liXSwnjLLWTQpUEhBX0
-	 SLNTb72EsvLCTGfXQI9MChUSMWg+Kupykzj3fYsirjjFEPPp1van1CsZZ7Lt52vPqg
-	 Z8yID1QFRLFO/QyOVLnFkzXxkfbJ1czXNaCte0u0=
+	b=e125C/SBq0W4lbAu5S9GAiBYTUZPZ6aFQ2EVLWZkYMBORC6vDSgQ1e6AfMKhS+dSH
+	 WFmXQyAc4GHVeQMy8QGkKOet+CHGhIEGzYJY+7LRXPSAiu8fGiQ53R5j6kD0JSg0bv
+	 BrDzijTPVfxrOk/p1d0fxTt/GzDm7RWy/UURvX1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfIAMYX (ORCPT
+        id S1729028AbfIAMYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 08:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
+        Sun, 1 Sep 2019 08:24:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728994AbfIAMYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 08:24:20 -0400
+        id S1729003AbfIAMYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 08:24:22 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 231CF23429;
-        Sun,  1 Sep 2019 12:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B08622377B;
+        Sun,  1 Sep 2019 12:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567340659;
-        bh=RY/3bYZ+IqaZ2913dmp0OSm78TrC+CYgG/wSVjjHK8I=;
+        s=default; t=1567340661;
+        bh=euylgx4DEH+JxcNcNulJzXxRtpvvnOVOENsLorfNFq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHBCOM1cdXn25RPJ8+EKWFvFPArKb3BYyli8Gz6rBFh9Q0vwRoj/9PH12A1LRYT1Y
-         MAUXCGkfRiGReOkGjRPkcj/MdXq5SFsRwTbeTylG8IkdU1CxAo0p31aswouQk/0LwB
-         gnbzAvV0eQ1OHU7jX7jj/lS+lQmNY73OL4IME1V8=
+        b=sSJJAtyvtHBJ23WbwypgLRMYDp94lt5oDNLcNpEdfwPx+Vm59KT2rvCAR3jKJFmo+
+         SN8sCLdD/dqU/WY6L6YGADdaQYjmZbEak4IhEFxG5/iM2bV0syqLaeF5/xbOa/OuYy
+         03daAJE3hc0T1GlDxG/9+5HEeErfbXLCiECzKaB8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 14/47] perf tools: Remove perf.h from source files not needing it
-Date:   Sun,  1 Sep 2019 09:22:53 -0300
-Message-Id: <20190901122326.5793-15-acme@kernel.org>
+Subject: [PATCH 15/47] perf tools: Remove debug.h from header files not needing it
+Date:   Sun,  1 Sep 2019 09:22:54 -0300
+Message-Id: <20190901122326.5793-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190901122326.5793-1-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
@@ -62,613 +62,331 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-With the movement of lots of stuff out of perf.h to other headers we
-ended up not needing it in lots of places, remove it from those places.
+And fix the fallout, adding it to places that must have it since they
+use its definitions.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-c718m0sxxwp73lp9d8vpihb4@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-1s3jel4i26chq2g0lydoz7i3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/perf_regs.c               | 1 -
- tools/perf/arch/x86/tests/intel-cqm.c                  | 1 -
- tools/perf/arch/x86/util/archinsn.c                    | 1 -
- tools/perf/arch/x86/util/tsc.c                         | 1 -
- tools/perf/bench/numa.c                                | 1 -
- tools/perf/bench/sched-messaging.c                     | 1 -
- tools/perf/bench/sched-pipe.c                          | 1 -
- tools/perf/builtin-bench.c                             | 1 -
- tools/perf/builtin-buildid-cache.c                     | 1 -
- tools/perf/builtin-buildid-list.c                      | 1 -
- tools/perf/builtin-config.c                            | 2 --
- tools/perf/builtin-ftrace.c                            | 1 -
- tools/perf/builtin-help.c                              | 1 -
- tools/perf/builtin-inject.c                            | 1 -
- tools/perf/builtin-list.c                              | 2 --
- tools/perf/builtin-probe.c                             | 1 -
- tools/perf/scripts/perl/Perf-Trace-Util/Context.c      | 1 -
- tools/perf/scripts/python/Perf-Trace-Util/Context.c    | 1 -
- tools/perf/tests/hists_common.c                        | 1 -
- tools/perf/tests/hists_cumulate.c                      | 1 -
- tools/perf/tests/hists_filter.c                        | 1 -
- tools/perf/tests/hists_link.c                          | 1 -
- tools/perf/tests/hists_output.c                        | 1 -
- tools/perf/ui/browser.c                                | 1 -
- tools/perf/util/bpf-loader.c                           | 1 -
- tools/perf/util/bpf-prologue.c                         | 1 -
- tools/perf/util/branch.c                               | 1 -
- tools/perf/util/cacheline.c                            | 1 -
- tools/perf/util/cgroup.c                               | 1 -
- tools/perf/util/cpumap.c                               | 1 -
- tools/perf/util/debug.c                                | 2 --
- tools/perf/util/event.c                                | 1 -
- tools/perf/util/genelf.c                               | 1 -
- tools/perf/util/genelf_debug.c                         | 1 -
- tools/perf/util/header.c                               | 1 -
- tools/perf/util/intel-pt.c                             | 1 -
- tools/perf/util/parse-branch-options.c                 | 1 -
- tools/perf/util/parse-events.c                         | 1 -
- tools/perf/util/scripting-engines/trace-event-perl.c   | 1 -
- tools/perf/util/scripting-engines/trace-event-python.c | 1 -
- tools/perf/util/svghelper.c                            | 1 -
- tools/perf/util/thread.c                               | 1 -
- tools/perf/util/time-utils.c                           | 1 -
- tools/perf/util/trace-event-info.c                     | 1 -
- tools/perf/util/trace-event-parse.c                    | 1 -
- tools/perf/util/trace-event-read.c                     | 1 -
- tools/perf/util/trace-event-scripting.c                | 1 -
- tools/perf/util/util.c                                 | 1 -
- 48 files changed, 51 deletions(-)
+ tools/perf/arch/arm/util/auxtrace.c          | 1 +
+ tools/perf/arch/arm/util/cs-etm.c            | 1 +
+ tools/perf/arch/x86/tests/perf-time-to-tsc.c | 1 +
+ tools/perf/tests/code-reading.c              | 1 +
+ tools/perf/tests/keep-tracking.c             | 1 +
+ tools/perf/tests/mmap-basic.c                | 1 +
+ tools/perf/tests/sw-clock.c                  | 2 ++
+ tools/perf/tests/switch-tracking.c           | 1 +
+ tools/perf/tests/task-exit.c                 | 1 +
+ tools/perf/ui/browsers/annotate.c            | 1 +
+ tools/perf/ui/browsers/hists.c               | 1 +
+ tools/perf/ui/hist.c                         | 1 +
+ tools/perf/util/auxtrace.h                   | 2 +-
+ tools/perf/util/config.c                     | 1 +
+ tools/perf/util/hist.c                       | 1 +
+ tools/perf/util/llvm-utils.h                 | 2 +-
+ tools/perf/util/metricgroup.c                | 2 ++
+ tools/perf/util/python.c                     | 1 +
+ tools/perf/util/record.c                     | 1 +
+ tools/perf/util/session.c                    | 1 +
+ tools/perf/util/sort.c                       | 1 +
+ tools/perf/util/stat.c                       | 1 +
+ tools/perf/util/trigger.h                    | 1 -
+ 23 files changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index f14102b85509..e9c436eeffc9 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -4,7 +4,6 @@
- #include <regex.h>
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index 41b78f74599f..0a6e75b8777a 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -9,6 +9,7 @@
  #include <linux/zalloc.h>
  
--#include "../../perf.h"
- #include "../../util/perf_regs.h"
- #include "../../util/debug.h"
+ #include "../../util/auxtrace.h"
++#include "../../util/debug.h"
+ #include "../../util/evlist.h"
+ #include "../../util/pmu.h"
+ #include "cs-etm.h"
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 9644e2d405f7..b74fd408d496 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -15,6 +15,7 @@
+ #include <linux/zalloc.h>
  
-diff --git a/tools/perf/arch/x86/tests/intel-cqm.c b/tools/perf/arch/x86/tests/intel-cqm.c
-index 2a105e3b2ad1..3b5cc3373821 100644
---- a/tools/perf/arch/x86/tests/intel-cqm.c
-+++ b/tools/perf/arch/x86/tests/intel-cqm.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "tests/tests.h"
--#include "perf.h"
- #include "cloexec.h"
- #include "debug.h"
+ #include "cs-etm.h"
++#include "../../util/debug.h"
+ #include "../../util/record.h"
+ #include "../../util/auxtrace.h"
+ #include "../../util/cpumap.h"
+diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+index 02776109ba46..2d1f4713b728 100644
+--- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
++++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+@@ -9,6 +9,7 @@
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
+ 
++#include "debug.h"
+ #include "parse-events.h"
  #include "evlist.h"
-diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
-index 4237bb2e7fa2..62e8e1820132 100644
---- a/tools/perf/arch/x86/util/archinsn.c
-+++ b/tools/perf/arch/x86/util/archinsn.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "perf.h"
- #include "archinsn.h"
- #include "util/intel-pt-decoder/insn.h"
- #include "machine.h"
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index a6ba45d0db6e..c5197a15119b 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -5,7 +5,6 @@
- #include <linux/stddef.h>
- #include <linux/perf_event.h>
+ #include "evsel.h"
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index fe671b860086..c4b73bb4b113 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -11,6 +11,7 @@
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
  
--#include "../../../perf.h"
- #include <linux/types.h>
- #include <asm/barrier.h>
- #include "../../../util/debug.h"
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 513cb2f2fa32..62b8ef4bcb1f 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -9,7 +9,6 @@
- /* For the CLR_() macros */
++#include "debug.h"
+ #include "parse-events.h"
+ #include "evlist.h"
+ #include "evsel.h"
+diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
+index 2af6faf1bbd6..c758798d3774 100644
+--- a/tools/perf/tests/keep-tracking.c
++++ b/tools/perf/tests/keep-tracking.c
+@@ -5,6 +5,7 @@
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
+ 
++#include "debug.h"
+ #include "parse-events.h"
+ #include "evlist.h"
+ #include "evsel.h"
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 7327694fbde0..fe91350fd5ab 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -5,6 +5,7 @@
  #include <pthread.h>
- 
--#include "../perf.h"
- #include "../builtin.h"
- #include <subcmd/parse-options.h>
- #include "../util/cloexec.h"
-diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-index f9d7641ae833..c63eb9a46346 100644
---- a/tools/perf/bench/sched-messaging.c
-+++ b/tools/perf/bench/sched-messaging.c
-@@ -10,7 +10,6 @@
-  *
-  */
- 
--#include "../perf.h"
- #include "../util/util.h"
- #include <subcmd/parse-options.h>
- #include "../builtin.h"
-diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-index 0591be008f2a..35b07f197d48 100644
---- a/tools/perf/bench/sched-pipe.c
-+++ b/tools/perf/bench/sched-pipe.c
-@@ -9,7 +9,6 @@
-  *  http://people.redhat.com/mingo/cfs-scheduler/tools/pipe-test-1m.c
-  * Ported to perf by Hitoshi Mitake <mitake@dcl.info.waseda.ac.jp>
-  */
--#include "../perf.h"
- #include "../util/util.h"
- #include <subcmd/parse-options.h>
- #include "../builtin.h"
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index b8e7c38ef221..c06fe21c8613 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -16,7 +16,6 @@
-  *  futex ... Futex performance
-  *  epoll ... Event poll performance
-  */
--#include "perf.h"
- #include <subcmd/parse-options.h>
- #include "builtin.h"
- #include "bench/bench.h"
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index 7dde3ef0398f..9e756004ef28 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -14,7 +14,6 @@
- #include <errno.h>
- #include <unistd.h>
- #include "builtin.h"
--#include "perf.h"
- #include "namespaces.h"
- #include "util/cache.h"
- #include "util/debug.h"
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index f403e19488b5..72bdc0eba990 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -1,4 +1,3 @@
--// SPDX-License-Identifier: GPL-2.0
- /*
-  * builtin-buildid-list.c
-  *
-diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index 6c1284c87aaa..edfc8f76f1bd 100644
---- a/tools/perf/builtin-config.c
-+++ b/tools/perf/builtin-config.c
-@@ -7,8 +7,6 @@
-  */
- #include "builtin.h"
- 
--#include "perf.h"
--
- #include "util/cache.h"
- #include <subcmd/parse-options.h>
- #include "util/util.h"
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 565db782c1b9..7374f86833fd 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -6,7 +6,6 @@
-  */
- 
- #include "builtin.h"
--#include "perf.h"
- 
- #include <errno.h>
- #include <unistd.h>
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index a83af92fb0d1..641d4a3f93c3 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -4,7 +4,6 @@
-  *
-  * Builtin help command
-  */
--#include "perf.h"
- #include "util/config.h"
- #include "builtin.h"
- #include <subcmd/exec-cmd.h>
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 040142581d20..ae46de46e826 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -8,7 +8,6 @@
-  */
- #include "builtin.h"
- 
--#include "perf.h"
- #include "util/color.h"
- #include "util/evlist.h"
- #include "util/evsel.h"
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index e0312a1c4792..dca0d33c1343 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -10,8 +10,6 @@
-  */
- #include "builtin.h"
- 
--#include "perf.h"
--
- #include "util/parse-events.h"
- #include "util/cache.h"
- #include "util/pmu.h"
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 3d0ffd41fb55..f45fd7e9723e 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -16,7 +16,6 @@
- #include <stdlib.h>
- #include <string.h>
- 
--#include "perf.h"
- #include "builtin.h"
- #include "namespaces.h"
- #include "util/strlist.h"
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Context.c b/tools/perf/scripts/perl/Perf-Trace-Util/Context.c
-index ead521dd8d79..25c47d23a130 100644
---- a/tools/perf/scripts/perl/Perf-Trace-Util/Context.c
-+++ b/tools/perf/scripts/perl/Perf-Trace-Util/Context.c
-@@ -19,7 +19,6 @@
- #include "EXTERN.h"
- #include "perl.h"
- #include "XSUB.h"
--#include "../../../perf.h"
- #include "../../../util/trace-event.h"
- 
- #ifndef PERL_UNUSED_VAR
-diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-index 217568bc29ce..0b7096847991 100644
---- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-+++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-@@ -6,7 +6,6 @@
-  */
- 
- #include <Python.h>
--#include "../../../perf.h"
- #include "../../../util/trace-event.h"
- 
- #if PY_MAJOR_VERSION < 3
-diff --git a/tools/perf/tests/hists_common.c b/tools/perf/tests/hists_common.c
-index 469958cd7fe0..96ad95d3f338 100644
---- a/tools/perf/tests/hists_common.c
-+++ b/tools/perf/tests/hists_common.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <inttypes.h>
--#include "perf.h"
- #include "util/debug.h"
- #include "util/map.h"
- #include "util/symbol.h"
-diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
-index 1f3de85ae18b..93af420ad2e4 100644
---- a/tools/perf/tests/hists_cumulate.c
-+++ b/tools/perf/tests/hists_cumulate.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "perf.h"
- #include "util/debug.h"
- #include "util/event.h"
- #include "util/map.h"
-diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
-index a274716fc438..41dede2f40d8 100644
---- a/tools/perf/tests/hists_filter.c
-+++ b/tools/perf/tests/hists_filter.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "perf.h"
- #include "util/debug.h"
- #include "util/map.h"
- #include "util/symbol.h"
-diff --git a/tools/perf/tests/hists_link.c b/tools/perf/tests/hists_link.c
-index b25383aa2e6e..012fe8ac0b24 100644
---- a/tools/perf/tests/hists_link.c
-+++ b/tools/perf/tests/hists_link.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "perf.h"
- #include "tests.h"
- #include "debug.h"
- #include "symbol.h"
-diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
-index 009888adf4b3..07f4ca0704fb 100644
---- a/tools/perf/tests/hists_output.c
-+++ b/tools/perf/tests/hists_output.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "perf.h"
- #include "util/debug.h"
- #include "util/event.h"
- #include "util/map.h"
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index c797a853d3a0..f93d40b1c203 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -2,7 +2,6 @@
- #include "../util/util.h"
- #include "../util/string2.h"
- #include "../util/config.h"
--#include "../perf.h"
- #include "libslang.h"
- #include "ui.h"
- #include "util.h"
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 80a828e75cf6..c1a57323e25d 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -14,7 +14,6 @@
- #include <linux/string.h>
- #include <linux/zalloc.h>
- #include <errno.h>
--#include "perf.h"
- #include "debug.h"
- #include "evlist.h"
- #include "bpf-loader.h"
-diff --git a/tools/perf/util/bpf-prologue.c b/tools/perf/util/bpf-prologue.c
-index 77e4891e17b0..09e6c76e1c3b 100644
---- a/tools/perf/util/bpf-prologue.c
-+++ b/tools/perf/util/bpf-prologue.c
-@@ -8,7 +8,6 @@
-  */
- 
- #include <bpf/libbpf.h>
--#include "perf.h"
- #include "debug.h"
- #include "bpf-loader.h"
- #include "bpf-prologue.h"
-diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index a4fce2729e50..02d6d839ff24 100644
---- a/tools/perf/util/branch.c
-+++ b/tools/perf/util/branch.c
-@@ -1,4 +1,3 @@
--#include "perf.h"
- #include "util/util.h"
- #include "util/debug.h"
- #include "util/branch.h"
-diff --git a/tools/perf/util/cacheline.c b/tools/perf/util/cacheline.c
-index 9361d3f61f75..e98b5250a517 100644
---- a/tools/perf/util/cacheline.c
-+++ b/tools/perf/util/cacheline.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "cacheline.h"
--#include "../perf.h"
- #include <unistd.h>
- 
- #ifdef _SC_LEVEL1_DCACHE_LINESIZE
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index f73599f271ff..96a931c6f728 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "../perf.h"
- #include <subcmd/parse-options.h>
- #include "evsel.h"
- #include "cgroup.h"
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index b9301e7e9c76..a22c1114e880 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <api/fs/fs.h>
--#include "../perf.h"
- #include "cpumap.h"
- #include "debug.h"
- #include "event.h"
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index 3780fe42453b..c822c5943340 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /* For general debugging purposes */
- 
--#include "../perf.h"
--
- #include <inttypes.h>
- #include <string.h>
- #include <stdarg.h>
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index ef7fc574f701..54169ad335c7 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -1,4 +1,3 @@
--// SPDX-License-Identifier: GPL-2.0
- #include <dirent.h>
- #include <errno.h>
- #include <fcntl.h>
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index bc32f405b26e..f9f18b8b1df9 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -23,7 +23,6 @@
- #include <dwarf.h>
- #endif
- 
--#include "perf.h"
- #include "genelf.h"
- #include "../util/jitdump.h"
- #include <linux/compiler.h>
-diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
-index 995e490c17fa..30e9f618f6cd 100644
---- a/tools/perf/util/genelf_debug.c
-+++ b/tools/perf/util/genelf_debug.c
-@@ -24,7 +24,6 @@
- #include <err.h>
- #include <dwarf.h>
- 
--#include "perf.h"
- #include "genelf.h"
- #include "../util/jitdump.h"
- 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index d252124f926d..20fb06162fd4 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -26,7 +26,6 @@
- #include "evsel.h"
- #include "header.h"
- #include "memswap.h"
--#include "../perf.h"
- #include "trace-event.h"
- #include "session.h"
- #include "symbol.h"
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 825a6a3b03a1..825e3690940d 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -12,7 +12,6 @@
- #include <linux/types.h>
- #include <linux/zalloc.h>
- 
--#include "../perf.h"
- #include "session.h"
- #include "machine.h"
- #include "memswap.h"
-diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
-index 4ed20c833d44..1430437b9d51 100644
---- a/tools/perf/util/parse-branch-options.c
-+++ b/tools/perf/util/parse-branch-options.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "perf.h"
- #include "util/debug.h"
- #include <subcmd/parse-options.h>
- #include "util/parse-branch-options.h"
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 9101568946d2..5f1ba6820cdd 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -10,7 +10,6 @@
- #include <fcntl.h>
- #include <sys/param.h>
- #include "term.h"
--#include "../perf.h"
- #include "evlist.h"
- #include "evsel.h"
- #include <subcmd/parse-options.h>
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 01ebf10b8bf4..800e82d35230 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -34,7 +34,6 @@
- #include <EXTERN.h>
- #include <perl.h>
- 
--#include "../../perf.h"
- #include "../callchain.h"
- #include "../machine.h"
- #include "../map.h"
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 78c8bc9380bd..abfde356be18 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -31,7 +31,6 @@
- #include <linux/compiler.h>
- #include <linux/time64.h>
- 
--#include "../../perf.h"
- #include "../counts.h"
- #include "../debug.h"
- #include "../callchain.h"
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index fef0f8a40e2f..582f4a69cd48 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -20,7 +20,6 @@
  #include <perf/cpumap.h>
  
- #include "env.h"
--#include "perf.h"
- #include "svghelper.h"
- #include "cpumap.h"
- 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index dbcb9cfb0f2f..5ba1601e8860 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "../perf.h"
- #include <errno.h>
- #include <stdlib.h>
- #include <stdio.h>
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index c2abc259b51d..9796a2e43f67 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -10,7 +10,6 @@
- #include <math.h>
- #include <linux/ctype.h>
- 
--#include "perf.h"
- #include "debug.h"
- #include "time-utils.h"
- #include "session.h"
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index 2f8a0601a546..d63d542b2cde 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -20,7 +20,6 @@
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- 
--#include "../perf.h"
- #include "trace-event.h"
- #include <api/fs/tracing_path.h>
++#include "debug.h"
+ #include "evlist.h"
  #include "evsel.h"
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index b3982e1bb4c5..8e31a63045c3 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -7,7 +7,6 @@
- #include <string.h>
- #include <errno.h>
+ #include "thread_map.h"
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index c5f1a9f83380..97694a040986 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -5,8 +5,10 @@
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <sys/mman.h>
++#include <linux/string.h>
  
--#include "../perf.h"
- #include "debug.h"
- #include "trace-event.h"
+ #include "tests.h"
++#include "util/debug.h"
+ #include "util/evsel.h"
+ #include "util/evlist.h"
+ #include "util/cpumap.h"
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index b63f02768724..4bed15aee1a8 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -8,6 +8,7 @@
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
  
-diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-index 13c1cf60d1bc..b6c0db068be0 100644
---- a/tools/perf/util/trace-event-read.c
-+++ b/tools/perf/util/trace-event-read.c
-@@ -15,7 +15,6 @@
- #include <unistd.h>
- #include <errno.h>
- 
--#include "../perf.h"
- #include "util.h"
- #include "trace-event.h"
- #include "debug.h"
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index dfd2640c763a..714581b0de65 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -10,7 +10,6 @@
- #include <string.h>
- #include <errno.h>
- 
--#include "../perf.h"
- #include "debug.h"
- #include "trace-event.h"
- #include <linux/zalloc.h>
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 44211e483fbf..607daec22943 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -1,5 +1,4 @@
++#include "debug.h"
+ #include "parse-events.h"
+ #include "evlist.h"
+ #include "evsel.h"
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index d79a22e2d8be..0e0e0627184e 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -1,4 +1,5 @@
  // SPDX-License-Identifier: GPL-2.0
--#include "../perf.h"
- #include "util.h"
- #include "debug.h"
- #include "namespaces.h"
++#include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "target.h"
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index e633eb42550d..715601f5fce3 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -4,6 +4,7 @@
+ #include "../ui.h"
+ #include "../util.h"
+ #include "../../util/annotate.h"
++#include "../../util/debug.h"
+ #include "../../util/hist.h"
+ #include "../../util/sort.h"
+ #include "../../util/map.h"
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index ccc37284860b..a14dda74f43a 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -11,6 +11,7 @@
+ #include <linux/time64.h>
+ #include <linux/zalloc.h>
+ 
++#include "../../util/debug.h"
+ #include "../../util/callchain.h"
+ #include "../../util/evsel.h"
+ #include "../../util/evlist.h"
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index ae29f16979ac..bf90ce5b2cdf 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -4,6 +4,7 @@
+ #include <linux/compiler.h>
+ 
+ #include "../util/callchain.h"
++#include "../util/debug.h"
+ #include "../util/hist.h"
+ #include "../util/util.h"
+ #include "../util/sort.h"
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index bc39cc5610a8..b5ac24c770d4 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -19,7 +19,6 @@
+ 
+ #include "event.h"
+ #include "session.h"
+-#include "debug.h"
+ 
+ union perf_event;
+ struct perf_session;
+@@ -614,6 +613,7 @@ void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts)
+ }
+ 
+ #else
++#include "debug.h"
+ 
+ static inline struct auxtrace_record *
+ auxtrace_record__init(struct evlist *evlist __maybe_unused,
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 042ffbc8c53f..eb5308c41ed1 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -18,6 +18,7 @@
+ #include "util/hist.h"  /* perf_hist_config */
+ #include "util/llvm-utils.h"   /* perf_llvm_config */
+ #include "config.h"
++#include "debug.h"
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index e0b149673a88..adae4134e972 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "callchain.h"
++#include "debug.h"
+ #include "build-id.h"
+ #include "hist.h"
+ #include "map.h"
+diff --git a/tools/perf/util/llvm-utils.h b/tools/perf/util/llvm-utils.h
+index bf3f3f4c4fe2..7878a0e3fa98 100644
+--- a/tools/perf/util/llvm-utils.h
++++ b/tools/perf/util/llvm-utils.h
+@@ -6,7 +6,7 @@
+ #ifndef __LLVM_UTILS_H
+ #define __LLVM_UTILS_H
+ 
+-#include "debug.h"
++#include <stdbool.h>
+ 
+ struct llvm_param {
+ 	/* Path of clang executable */
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index aaf55444f81b..33f5e2101874 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -6,6 +6,7 @@
+ /* Manage metrics and groups of metrics from JSON files */
+ 
+ #include "metricgroup.h"
++#include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "strbuf.h"
+@@ -18,6 +19,7 @@
+ #include "strlist.h"
+ #include <assert.h>
+ #include <linux/ctype.h>
++#include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include <subcmd/parse-options.h>
+ 
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 9dd83871aafe..9b350482c403 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -5,6 +5,7 @@
+ #include <poll.h>
+ #include <linux/err.h>
+ #include <perf/cpumap.h>
++#include "debug.h"
+ #include "evlist.h"
+ #include "callchain.h"
+ #include "evsel.h"
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index c67a51397bc7..ccad796bce5f 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "cpumap.h"
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 82bd5d4361f0..a72774e4463f 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -12,6 +12,7 @@
+ #include <sys/mman.h>
+ #include <perf/cpumap.h>
+ 
++#include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "memswap.h"
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 83eb3fa6f941..23d0ab7c801c 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -4,6 +4,7 @@
+ #include <regex.h>
+ #include <linux/mman.h>
+ #include <linux/time64.h>
++#include "debug.h"
+ #include "sort.h"
+ #include "hist.h"
+ #include "cacheline.h"
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index f6eb6af5f151..f4a1edcec7b2 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -3,6 +3,7 @@
+ #include <inttypes.h>
+ #include <math.h>
+ #include "counts.h"
++#include "debug.h"
+ #include "stat.h"
+ #include "target.h"
+ #include "evlist.h"
+diff --git a/tools/perf/util/trigger.h b/tools/perf/util/trigger.h
+index 88223bc7c82b..33e997f9ccc8 100644
+--- a/tools/perf/util/trigger.h
++++ b/tools/perf/util/trigger.h
+@@ -2,7 +2,6 @@
+ #ifndef __TRIGGER_H_
+ #define __TRIGGER_H_ 1
+ 
+-#include "util/debug.h"
+ #include "asm/bug.h"
+ 
+ /*
 -- 
 2.21.0
 
