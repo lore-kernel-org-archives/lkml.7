@@ -2,99 +2,94 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B85C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77A7C41514
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A227B2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEBC233A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 10:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbfIAK0g (ORCPT
+        id S1728808AbfIAKpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 06:26:36 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47989 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728644AbfIAK0g (ORCPT
+        Sun, 1 Sep 2019 06:45:52 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:60867 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbfIAKpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 06:26:36 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 7577382318; Sun,  1 Sep 2019 12:26:20 +0200 (CEST)
-Date:   Sun, 1 Sep 2019 12:26:33 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] leds: is31fl32xx: Use struct_size() helper
-Message-ID: <20190901102633.GB29681@amd>
-References: <20190830181448.GA24483@embeddedor>
+        Sun, 1 Sep 2019 06:45:51 -0400
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id EFF7460004;
+        Sun,  1 Sep 2019 10:45:47 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>,
+        Elie Roudninski <xademax@gmail.com>
+Subject: [PATCH] iio: adc: meson_saradc: Fix memory allocation order
+Date:   Sun,  1 Sep 2019 12:54:10 +0200
+Message-Id: <20190901105410.23567-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Content-Disposition: inline
-In-Reply-To: <20190830181448.GA24483@embeddedor>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+meson_saradc's irq handler uses priv->regmap so make sure that it is
+allocated before the irq get enabled.
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
+managed resources are freed in the inverted order they had been
+allocated, priv->regmap was freed before the spurious fake irq that
+CONFIG_DEBUG_SHIRQ adds called the handler.
 
-On Fri 2019-08-30 13:14:48, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
->=20
-> struct is31fl32xx_priv {
-> 	...
->         struct is31fl32xx_led_data leds[0];
-> };
->=20
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
->=20
-> So, replace the following function:
->=20
-> static inline size_t sizeof_is31fl32xx_priv(int num_leds)
-> {
->        return sizeof(struct is31fl32xx_priv) +
->                      (sizeof(struct is31fl32xx_led_data) * num_leds);
-> }
->=20
-> with:
->=20
-> struct_size(priv, leds, count)
->=20
-> This code was detected with the help of Coccinelle.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reported-by: Elie Roudninski <xademax@gmail.com>
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ drivers/iio/adc/meson_saradc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+index 7b28d045d271..7b27306330a3 100644
+--- a/drivers/iio/adc/meson_saradc.c
++++ b/drivers/iio/adc/meson_saradc.c
+@@ -1219,6 +1219,11 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
++	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
++					     priv->param->regmap_config);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
+ 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+ 	if (!irq)
+ 		return -EINVAL;
+@@ -1228,11 +1233,6 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+-					     priv->param->regmap_config);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
+-
+ 	priv->clkin = devm_clk_get(&pdev->dev, "clkin");
+ 	if (IS_ERR(priv->clkin)) {
+ 		dev_err(&pdev->dev, "failed to get clkin\n");
+-- 
+2.20.1
 
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1rnNkACgkQMOfwapXb+vIPxgCgpsICdNpvVqiE62UuGfp0t9A8
-QVQAn3e0reKEOTT22eUmr3FMkDGRBvUU
-=L98W
------END PGP SIGNATURE-----
-
---3uo+9/B/ebqu+fSQ--
