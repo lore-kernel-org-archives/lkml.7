@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BDBC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655A4C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC392377F
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E8A23697
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567340658;
-	bh=wvL+Evt9KA/rLqyZNsJgxJFu88geXdXhIaL9asGCKpM=;
+	s=default; t=1567340661;
+	bh=FQyZII0a2nZMQJpdAHRQYdZjNXwRqJN56ndS27mxPcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQVvRP8WIPEsL9HhT+A9ntgDJyXnQvcaBLMtc3FqliJtXMCbTt63cOj8o7arqwba8
-	 uf4Z5SORXmLJR/wTQS6n/i0EwcztZf6S8LspF4fZkJbU9KA2zMxyAPLH33wrsaLJO9
-	 Xx6chpshc5ovSoiO+AfC6lzJjsKPBoWFMUR4MjtU=
+	b=VD/lA9xoF//fuk+1BDFcGj9q1EfpIK7T4KzvDv3fhJYAhWUgcQzG7b57B59O/VeGw
+	 7E0rwHy8yPM5CYcvp4b2AziYvWKtcP4njRuX8vhc6X8JN7UVMGHmtvkiHi4EyGyOYD
+	 4buYDAA1k6rCXlx5trbJn60Qyy+DE1/tvUmtIMaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfIAMYK (ORCPT
+        id S1728998AbfIAMYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 08:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        Sun, 1 Sep 2019 08:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728937AbfIAMYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 08:24:06 -0400
+        id S1728983AbfIAMYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 08:24:14 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8D22343A;
-        Sun,  1 Sep 2019 12:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA0F2342E;
+        Sun,  1 Sep 2019 12:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567340645;
-        bh=wvL+Evt9KA/rLqyZNsJgxJFu88geXdXhIaL9asGCKpM=;
+        s=default; t=1567340654;
+        bh=FQyZII0a2nZMQJpdAHRQYdZjNXwRqJN56ndS27mxPcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avDC8f3ZkU9gVjM/VCNfyHT3kAWZsx1fo/5uOJZCUG5IVqiKNaqM/8ZAA1CHSo8bO
-         AhJWxX06KMZWkKlzn1Cemcmn679ipRyREHtlKDZ8b6i6Cxe3P6KfWOCPWMHblY7ohx
-         qm2heUCX/EPhdjr5qaN1muVsaCNQ6c/xIqmlkjVc=
+        b=mzJ7W1ZrvF+HXkcNPsQSwP9aKyTMkqnulk6GDQS1HgTEXIgdEYQzE4HCPhOrbcC5J
+         rB+qTf0rP5elyNv9ECX+k4sWWbLmLzfDdSHg+ubi+E2dcq/A6yCT1pfy4UjuH86on4
+         ILPbXSHOds5jS3fjQ4qjTxlsOY+KL15V5PQN6tsM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,12 +46,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH 09/47] perf tools: Remove needless libtraceevent include directives
-Date:   Sun,  1 Sep 2019 09:22:48 -0300
-Message-Id: <20190901122326.5793-10-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 12/47] perf time-utils: Adopt rdclock() from perf.h
+Date:   Sun,  1 Sep 2019 09:22:51 -0300
+Message-Id: <20190901122326.5793-13-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190901122326.5793-1-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
@@ -64,61 +62,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Remove traceevent/event-parse.h and traceevent/trace-seq.h from places
-where it is not needed.
-
-Should avoid rebuilding those files when these traceevent headers get
-changed.
+Seems to be a better place for this function to live, further shrinking
+the hodge-podge that perf.h was.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: https://lkml.kernel.org/n/tip-26hn75jn9rdealn4uqtzend6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0zzt1u9rpyjukdy1ccr2u5r9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-timechart.c | 1 -
- tools/perf/util/session.c      | 1 -
- tools/perf/util/trace-event.h  | 1 -
- 3 files changed, 3 deletions(-)
+ tools/perf/builtin-stat.c    | 1 +
+ tools/perf/perf.h            | 9 ---------
+ tools/perf/util/event.c      | 1 +
+ tools/perf/util/time-utils.h | 9 +++++++++
+ 4 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 1ff81a790931..1a74499f3311 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -10,7 +10,6 @@
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a7e8c26635db..2741bcb049fb 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -62,6 +62,7 @@
+ #include "util/string2.h"
+ #include "util/metricgroup.h"
+ #include "util/target.h"
++#include "util/time-utils.h"
+ #include "util/top.h"
+ #include "asm/bug.h"
  
- #include <errno.h>
- #include <inttypes.h>
--#include <traceevent/event-parse.h>
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 7a1a92127b9b..74014033df60 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -2,17 +2,8 @@
+ #ifndef _PERF_PERF_H
+ #define _PERF_PERF_H
  
- #include "builtin.h"
- #include "util/color.h"
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 13486bcf74a0..9eb843e5e6f0 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -4,7 +4,6 @@
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
--#include <traceevent/event-parse.h>
- #include <api/fs/fs.h>
+-#include <time.h>
+ #include <stdbool.h>
  
- #include <byteswap.h>
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 258d79071d81..2e158387b3d7 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -3,7 +3,6 @@
- #define _PERF_UTIL_TRACE_EVENT_H
+-static inline unsigned long long rdclock(void)
+-{
+-	struct timespec ts;
+-
+-	clock_gettime(CLOCK_MONOTONIC, &ts);
+-	return ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+-}
+-
+ #ifndef MAX_NR_CPUS
+ #define MAX_NR_CPUS			2048
+ #endif
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index c9d1f83c747a..7fa7a303e476 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -21,6 +21,7 @@
+ #include "strlist.h"
+ #include "thread.h"
+ #include "thread_map.h"
++#include "time-utils.h"
+ #include <linux/ctype.h>
+ #include "map.h"
+ #include "symbol.h"
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 72a42ea1d513..4f42988eb2f7 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -3,6 +3,7 @@
+ #define _TIME_UTILS_H_
  
- #include <traceevent/event-parse.h>
--#include <traceevent/trace-seq.h>
- #include "parse-events.h"
+ #include <stddef.h>
++#include <time.h>
+ #include <linux/types.h>
  
- struct machine;
+ struct perf_time_interval {
+@@ -34,4 +35,12 @@ int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
+ 
+ int fetch_current_timestamp(char *buf, size_t sz);
+ 
++static inline unsigned long long rdclock(void)
++{
++	struct timespec ts;
++
++	clock_gettime(CLOCK_MONOTONIC, &ts);
++	return ts.tv_sec * 1000000000ULL + ts.tv_nsec;
++}
++
+ #endif
 -- 
 2.21.0
 
