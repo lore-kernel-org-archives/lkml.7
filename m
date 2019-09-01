@@ -2,77 +2,162 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB1FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFD6C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32BC206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBEA217D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 22:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="mAzKb4qB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfIAWsH (ORCPT
+        id S1729191AbfIAW6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 18:48:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:38095 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729163AbfIAWsH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 18:48:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id m5so3972117ioj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 15:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=oZ7PvWIwxMv1/cng7QdJTXniFprQdIabY+CLNCeHUIU=;
-        b=PUjj9mzUHnubmoqJhGnC6SEa5mpbU+u2bbnC3C9ykAv3wLsqL0vWBgqDCzwVkDj1JO
-         VG+TUwxXBKv7H1vLAfBf7q3jpZJQJ1cdYtH978YUGeh50HUUKUt1UHVQ2+SsuiSZjWiM
-         px409RxSMjmdU6e9nIUJ7saCCMx5IV46m4KqPY+MW0Du3O/hs3haXCZ581pq9ssMGj73
-         b9Lt3wiNygvG167mRv3TkTfUAVEZdgnq1cObVi7Lpw/LXiY0CJFfHyuTKrcXPaVqgeX8
-         pQ5HyiwFisePL3Tz8ujR1eNKmP1TvoI0Rz8hqhqvgt4ZopvoA1GE42hqZLwcEgbzMGTH
-         0YRw==
-X-Gm-Message-State: APjAAAWIScThQZuThK32+TpXoEk3nHJjuhss4hi0OxCOP4b+MZCgnCb4
-        fhwyRIuHVqqB5RV5Ab5HqWoJSfVYO0XW1frpsD+BpVTcijdU
-X-Google-Smtp-Source: APXvYqxkOy9L/u3bMqXmgBaNVgEPTyYoJ1rsnAf2MDiw2d4CjHtOj2tKqoco+5DF2ypE6mSFR8x5mj40pTs1NqPNpKaYBkhbyw9g
-MIME-Version: 1.0
-X-Received: by 2002:a6b:d006:: with SMTP id x6mr30154654ioa.218.1567378086214;
- Sun, 01 Sep 2019 15:48:06 -0700 (PDT)
-Date:   Sun, 01 Sep 2019 15:48:06 -0700
-In-Reply-To: <0000000000009b3b80058af452ae@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000ec274059185a63e@google.com>
-Subject: Re: kernel panic: stack is corrupted in __lock_acquire (4)
-From:   syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Sun, 1 Sep 2019 18:58:48 -0400
+Received: from vern.gendns.com ([98.142.107.122]:37370 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729048AbfIAW6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 18:58:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=q5I8hNXYUTOVr6qJJGD6VgyFndq2TJGOuDuT4GVouDk=; b=mAzKb4qBMqscx40J8SieYVnJ4w
+        CDyosjONCebl6PiNzSRwIofpGAlYPNofqndaEpMvvk8lvwe1w7fsvH83Tujs96moLqifpQyJnux87
+        wkDWpRnJlKNZKRAlU8KfmigT6KsWTrRXB191TcLia30td2qHcwWP7Kx7ukmkiz0M15VlJFNVc0ULE
+        0i33kJnUTMUabzPKXh/lStK2yp9qJZzXMgkqG5NbNR7IRdZ7K76ic7jvivuq8pxkNa2OBX6iHRWrE
+        8ExsjK/beLyVM8HARyLDpaSa9bEjk8e82W+tGip6D4fkuhu5c2yyjRBihjeei/PfeAmTvYXu6CACe
+        o0IHTW0w==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:58390 helo=freyr.lechnology.com)
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1i4Ynz-000351-RK; Sun, 01 Sep 2019 18:58:43 -0400
+From:   David Lechner <david@lechnology.com>
+To:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org
+Cc:     David Lechner <david@lechnology.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: [PATCH v3 0/6] counter: new TI eQEP driver
+Date:   Sun,  1 Sep 2019 17:58:21 -0500
+Message-Id: <20190901225827.12301-1-david@lechnology.com>
+X-Mailer: git-send-email 2.17.1
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+This series adds device tree bindings and a new counter driver for the Texas
+Instruments Enhanced Quadrature Encoder Pulse (eQEP).
 
-HEAD commit:    38320f69 Merge branch 'Minor-cleanup-in-devlink'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13d74356600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1bbf70b6300045af
-dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1008b232600000
+As mentioned in one of the commit messages, to start with, the driver only
+supports reading the current counter value and setting the min/max values.
+Other features can be added as the counter subsystem gains support for them.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
+v3 changes:
+- Minor changes to device tree bindings (style and generic node name)
+- Drop action in initializer
+- Fix ordering of pm runtime disable
+v2 changes:
+- New patch to move TI PWMSS driver from drivers/pwm/ to drivers/bus/
+- Device tree bindings converted to .yaml format
+- Device tree clock renamed from "fck" to "sysclkout"
+- Dropped unused index and strobe signals from counter driver
+- Added synapses and actions to counter driver
+- Fixed base in of kstrtouint()
+- Clarifications in commit messages
 
-Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
-__lock_acquire+0x36fa/0x4c30 kernel/locking/lockdep.c:3907
-CPU: 0 PID: 8662 Comm: syz-executor.4 Not tainted 5.3.0-rc6+ #153
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+This series has been tested on a BeagleBone Blue with the following script:
+
+#!/usr/bin/env python3
+
+from os import path
+from time import sleep
+
+COUNTER_PATH = '/sys/bus/counter/devices'
+COUNTERS = ['counter0', 'counter1', 'counter2']
+COUNT0 = 'count0'
+COUNT = 'count'
+FUNCTION = 'function'
+CEILING = 'ceiling'
+FLOOR = 'floor'
+ENABLE = 'enable'
+
+cnts = []
+
+for c in COUNTERS:
+    function_path = path.join(COUNTER_PATH, c, COUNT0, FUNCTION)
+    with open(function_path, 'w') as f:
+        f.write('quadrature x4')
+    floor_path = path.join(COUNTER_PATH, c, COUNT0, FLOOR)
+    with open(floor_path, 'w') as f:
+        f.write(str(0))
+    ceiling_path = path.join(COUNTER_PATH, c, COUNT0, CEILING)
+    with open(ceiling_path, 'w') as f:
+        f.write(str(0xffffffff))
+    enable_path = path.join(COUNTER_PATH, c, COUNT0, ENABLE)
+    with open(enable_path, 'w') as f:
+        f.write('1')
+
+    cnt_path = path.join(COUNTER_PATH, c, COUNT0, COUNT)
+    cnts.append(open(cnt_path, 'r'))
+
+while True:
+    for c in cnts:
+        c.seek(0)
+        val = int(c.read())
+        if val >= 0x80000000:
+            val -= 0x100000000
+        print(val, end=' ')
+    print()
+    sleep(1)
+
+David Lechner (6):
+  bus/ti-pwmss: move TI PWMSS driver from PWM to bus subsystem
+  dt-bindings: counter: new bindings for TI eQEP
+  counter: new TI eQEP driver
+  ARM: dts: am33xx: Add nodes for eQEP
+  ARM: dts: am335x-boneblue: Enable eQEP
+  ARM: dts: am335x-boneblue: Use of am335x-osd335x-common.dtsi
+
+ .../devicetree/bindings/counter/ti-eqep.yaml  |  50 ++
+ MAINTAINERS                                   |   6 +
+ arch/arm/boot/dts/am335x-boneblue.dts         | 146 +++---
+ arch/arm/boot/dts/am33xx-l4.dtsi              |  27 +
+ drivers/bus/Kconfig                           |   9 +
+ drivers/bus/Makefile                          |   1 +
+ drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} |   0
+ drivers/counter/Kconfig                       |  11 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/ti-eqep.c                     | 473 ++++++++++++++++++
+ drivers/pwm/Kconfig                           |   9 -
+ drivers/pwm/Makefile                          |   1 -
+ 12 files changed, 634 insertions(+), 100 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.yaml
+ rename drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} (100%)
+ create mode 100644 drivers/counter/ti-eqep.c
+
+-- 
+2.17.1
 
