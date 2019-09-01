@@ -2,193 +2,276 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DB5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFDFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 20:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2A9233A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fc4aT5+u"
+	by mail.kernel.org (Postfix) with ESMTP id 181A722CF7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 20:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567368721;
+	bh=QlXmttwlCxH6Ab1wpfZuCW03XfOrxXj8aSMRY6GQGDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PcIzegAIUkGTk4OtZSV5lgh/06Rj+ABW7D3YhuUIyyIxryQgnLtHYV8pnd2B1Nis7
+	 8wVSzGACkbD01KEN4JgSq0z21fwDDXOgE/ByefTgjbrHTZ+ukAGrDbFSnb9BoHd1w0
+	 i/b6Hcllp/cEtzR72bnVKJrcyh0sL1u1c1LVTVA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfIATtt (ORCPT
+        id S1729113AbfIAUMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 15:49:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50565 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbfIATtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 15:49:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c10so466250wmc.0
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 12:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=1t8RKux0b3auTyo3EU4Fjza8Z8XyMBYSPlq98c5flic=;
-        b=Fc4aT5+uP8DK3G5DqiX1PVV2U0OR5puONXiG36iLvcBgC5k9t3q5XjF75IRYjbbgxy
-         aIQkqrvX4ndW8RUayuyDYvIjx2aJFf4TbnI5pGadB7iNwZVsE9UD2tEN1XOCo0rbrhcv
-         ZgpnWW44RXkXooQLApzTxaK7xFfdgGHLw/sVzVJU09l6RwHZNWQUEI+ATBYN5Wb9TyNf
-         6GqU/CikpFvNy+g7jzE+5M0EjQxcTmWk7OxrDi3nsCaQSjwHkqB6LQwt4aT7oiBYLIxf
-         6qDyXfNfW77+yBUX8CoAfE7CQ6o8jwkqMD4aM/C2jBoTtRzavn8XletlmQJbR7vske2S
-         bvMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=1t8RKux0b3auTyo3EU4Fjza8Z8XyMBYSPlq98c5flic=;
-        b=dmOh1MWzxVA1gyO1xgET0VTRLenltqnchQEaGqNg1smdwlkHrd3zHvaw8WDY2i1j0A
-         ByHCWa1T2BlFwKUNGDkuNXsKSjJRMlgq2uUze+Vo4YqdfA9Jncketq1uQGHuTKS5Fmrg
-         zeWvXJLS/CvAMg7KhcHwl3AcRi3CGJekxnrsMOoISgR1AQPuNojge9dX+DnJ0VkDbM+5
-         1013URNhr1ovIOcdh8OIyqg7MVMKsq+6WFH0Ms9spfAm9P1NVmMsyDbq+G22+1S7EnzP
-         vHIedRjhlntZHKxd5GgSQ8RC4h+oHNbHKyu8Hmbyy7vq9TYJv4bbMqrQNXSblxO6CiB6
-         cZUQ==
-X-Gm-Message-State: APjAAAVKKz2ejo6Zqydxfc2EQH2HWSov5sbzOtO/Gq5ctVA/VtjVEgVN
-        s51WvwJx4vPHetADumR2b38=
-X-Google-Smtp-Source: APXvYqxlFS6lvb5mBA/RJA/yrpoHPmKtHhrVFCS4pgKnF8Uke2A+7VWsTMCrKWkhLoaeJouFKBHi7w==
-X-Received: by 2002:a7b:c857:: with SMTP id c23mr33536520wml.51.1567367386985;
-        Sun, 01 Sep 2019 12:49:46 -0700 (PDT)
-Received: from noxium ([86.124.23.129])
-        by smtp.gmail.com with ESMTPSA id f75sm17153683wmf.2.2019.09.01.12.49.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2019 12:49:46 -0700 (PDT)
-Message-ID: <5124dd295d2b5fb934ad567fbe19b2f6b37a8372.camel@gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Set SAI Channel Mode to Output Mode
-From:   Cosmin-Gabriel Samoila <gabrielcsmo@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>, broonie@kernel.org
-Cc:     festevam@gmail.com, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        shengjiu.wang@nxp.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, timur@kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Date:   Sun, 01 Sep 2019 22:49:44 +0300
-In-Reply-To: <20190830225514.5283-1-daniel.baluta@nxp.com>
-References: <20190830225514.5283-1-daniel.baluta@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Sun, 1 Sep 2019 16:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfIAUL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 16:11:59 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5C1C2190F;
+        Sun,  1 Sep 2019 20:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567368718;
+        bh=QlXmttwlCxH6Ab1wpfZuCW03XfOrxXj8aSMRY6GQGDA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TKp9+xURL8QcWlqaaha3B2ZJxAdbGf1M77IcuYDPcynjHWF8f8r75/RrjEWoQLP8m
+         LK5BSrw2z1Vx764ZH4Qs/410jviGTL6alEJ7KCDVL0ykaRwEWfSoIxVPkTitGdtvYV
+         XaVQXzRcXi0bq96OzfWYx5UevM9bV8dP/ldB9w0s=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 7741D3C0B7F; Sun,  1 Sep 2019 22:11:55 +0200 (CEST)
+Date:   Sun, 1 Sep 2019 22:11:55 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" 
+        <a.zummo@towertech.it>, linux-pm@vger.kernel.org,
+        Josef Friedl <josef.friedl@speed.at>,
+        linux-kernel@vger.kernel.org,
+        Tianping Fang <tianping.fang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 11/13] power: reset: add driver for mt6323 poweroff
+Message-ID: <20190901201155.dyaxncuixq7vvdbh@earth.universe>
+References: <20190818135611.7776-1-frank-w@public-files.de>
+ <20190818135611.7776-12-frank-w@public-files.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3hahqm2gkodncklw"
+Content-Disposition: inline
+In-Reply-To: <20190818135611.7776-12-frank-w@public-files.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me!
 
-Best regards,
-Cosmin
+--3hahqm2gkodncklw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2019-08-31 at 01:55 +0300, Daniel Baluta wrote:
-> From SAI datasheet:
-> 
-> CHMOD, configures if transmit data pins are configured for TDM mode
-> or Output mode.
-> 	* (0) TDM mode, transmit data pins are tri-stated when slots
-> are
-> 	masked or channels are disabled.
-> 	* (1) Output mode, transmit data pins are never tri-stated and
-> 	will output zero when slots are masked or channels are
-> disabled.
-> 
-> When data pins are tri-stated, there is noise on some channels
-> when FS clock value is high and data is read while fsclk is
-> transitioning from high to low.
-> 
-> Fix this by setting CHMOD to Output Mode so that pins will output
-> zero
-> when slots are masked or channels are disabled.
-> 
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Hi,
+
+On Sun, Aug 18, 2019 at 03:56:09PM +0200, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+>=20
+> add poweroff driver for mt6323 and make Makefile and Kconfig-Entries
+>=20
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
->  sound/soc/fsl/fsl_sai.c | 15 ++++++++++++---
->  sound/soc/fsl/fsl_sai.h |  2 ++
->  2 files changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index e896b577b1f7..b9daab0eb6eb 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -467,6 +467,12 @@ static int fsl_sai_hw_params(struct
-> snd_pcm_substream *substream,
->  
->  	val_cr4 |= FSL_SAI_CR4_FRSZ(slots);
->  
-> +	/*
-> +	 * set CHMOD to Output Mode so that transmit data pins will
-> +	 * output zero when slots are masked or channels are disabled
-> +	 */
-> +	val_cr4 |= FSL_SAI_CR4_CHMOD;
-> +
->  	/*
->  	 * For SAI master mode, when Tx(Rx) sync with Rx(Tx) clock,
-> Rx(Tx) will
->  	 * generate bclk and frame clock for Tx(Rx), we should set
-> RCR4(TCR4),
-> @@ -477,7 +483,8 @@ static int fsl_sai_hw_params(struct
-> snd_pcm_substream *substream,
->  	if (!sai->is_slave_mode) {
->  		if (!sai->synchronous[TX] && sai->synchronous[RX] &&
-> !tx) {
->  			regmap_update_bits(sai->regmap,
-> FSL_SAI_TCR4(ofs),
-> -				FSL_SAI_CR4_SYWD_MASK |
-> FSL_SAI_CR4_FRSZ_MASK,
-> +				FSL_SAI_CR4_SYWD_MASK |
-> FSL_SAI_CR4_FRSZ_MASK |
-> +				FSL_SAI_CR4_CHMOD_MASK,
->  				val_cr4);
->  			regmap_update_bits(sai->regmap,
-> FSL_SAI_TCR5(ofs),
->  				FSL_SAI_CR5_WNW_MASK |
-> FSL_SAI_CR5_W0W_MASK |
-> @@ -486,7 +493,8 @@ static int fsl_sai_hw_params(struct
-> snd_pcm_substream *substream,
->  				~0UL - ((1 << channels) - 1));
->  		} else if (!sai->synchronous[RX] && sai-
-> >synchronous[TX] && tx) {
->  			regmap_update_bits(sai->regmap,
-> FSL_SAI_RCR4(ofs),
-> -				FSL_SAI_CR4_SYWD_MASK |
-> FSL_SAI_CR4_FRSZ_MASK,
-> +				FSL_SAI_CR4_SYWD_MASK |
-> FSL_SAI_CR4_FRSZ_MASK |
-> +				FSL_SAI_CR4_CHMOD_MASK,
->  				val_cr4);
->  			regmap_update_bits(sai->regmap,
-> FSL_SAI_RCR5(ofs),
->  				FSL_SAI_CR5_WNW_MASK |
-> FSL_SAI_CR5_W0W_MASK |
-> @@ -497,7 +505,8 @@ static int fsl_sai_hw_params(struct
-> snd_pcm_substream *substream,
->  	}
->  
->  	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
-> -			   FSL_SAI_CR4_SYWD_MASK |
-> FSL_SAI_CR4_FRSZ_MASK,
-> +			   FSL_SAI_CR4_SYWD_MASK |
-> FSL_SAI_CR4_FRSZ_MASK |
-> +			   FSL_SAI_CR4_CHMOD_MASK,
->  			   val_cr4);
->  	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx, ofs),
->  			   FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK
-> |
-> diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-> index f96f8d97489d..1e3b4a6889a8 100644
-> --- a/sound/soc/fsl/fsl_sai.h
-> +++ b/sound/soc/fsl/fsl_sai.h
-> @@ -119,6 +119,8 @@
->  #define FSL_SAI_CR4_FRSZ_MASK	(0x1f << 16)
->  #define FSL_SAI_CR4_SYWD(x)	(((x) - 1) << 8)
->  #define FSL_SAI_CR4_SYWD_MASK	(0x1f << 8)
-> +#define FSL_SAI_CR4_CHMOD	BIT(5)
-> +#define FSL_SAI_CR4_CHMOD_MASK	GENMASK(5, 5)
->  #define FSL_SAI_CR4_MF		BIT(4)
->  #define FSL_SAI_CR4_FSE		BIT(3)
->  #define FSL_SAI_CR4_FSP		BIT(1)
+> changes since v5: split out mfd/mt6397/core.h
+> changes since v4: none
+> changes since v3: none
+> changes since v2: none (=3Dv2 part 5)
+> ---
 
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  drivers/power/reset/Kconfig           | 10 +++
+>  drivers/power/reset/Makefile          |  1 +
+>  drivers/power/reset/mt6323-poweroff.c | 97 +++++++++++++++++++++++++++
+>  3 files changed, 108 insertions(+)
+>  create mode 100644 drivers/power/reset/mt6323-poweroff.c
+>=20
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index a564237278ff..c721939767eb 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -140,6 +140,16 @@ config POWER_RESET_LTC2952
+>  	  This driver supports an external powerdown trigger and board power
+>  	  down via the LTC2952. Bindings are made in the device tree.
+> =20
+> +config POWER_RESET_MT6323
+> +       bool "MediaTek MT6323 power-off driver"
+> +       depends on MFD_MT6397
+> +       help
+> +         The power-off driver is responsible for externally shutdown down
+> +         the power of a remote MediaTek SoC MT6323 is connected to throu=
+gh
+> +         controlling a tiny circuit BBPU inside MT6323 RTC.
+> +
+> +         Say Y if you have a board where MT6323 could be found.
+> +
+>  config POWER_RESET_QNAP
+>  	bool "QNAP power-off driver"
+>  	depends on OF_GPIO && PLAT_ORION
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index 85da3198e4e0..da37f8b851dc 100644
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) +=3D gpio-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) +=3D gpio-restart.o
+>  obj-$(CONFIG_POWER_RESET_HISI) +=3D hisi-reboot.o
+>  obj-$(CONFIG_POWER_RESET_MSM) +=3D msm-poweroff.o
+> +obj-$(CONFIG_POWER_RESET_MT6323) +=3D mt6323-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_QCOM_PON) +=3D qcom-pon.o
+>  obj-$(CONFIG_POWER_RESET_OCELOT_RESET) +=3D ocelot-reset.o
+>  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) +=3D piix4-poweroff.o
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/=
+mt6323-poweroff.c
+> new file mode 100644
+> index 000000000000..1caf43d9e46d
+> --- /dev/null
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Power off through MediaTek PMIC
+> + *
+> + * Copyright (C) 2018 MediaTek Inc.
+> + *
+> + * Author: Sean Wang <sean.wang@mediatek.com>
+> + *
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/mfd/mt6397/rtc.h>
+> +
+> +struct mt6323_pwrc {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	u32 base;
+> +};
+> +
+> +static struct mt6323_pwrc *mt_pwrc;
+> +
+> +static void mt6323_do_pwroff(void)
+> +{
+> +	struct mt6323_pwrc *pwrc =3D mt_pwrc;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +
+> +	ret =3D regmap_read_poll_timeout(pwrc->regmap,
+> +					pwrc->base + RTC_BBPU, val,
+> +					!(val & RTC_BBPU_CBUSY),
+> +					MTK_RTC_POLL_DELAY_US,
+> +					MTK_RTC_POLL_TIMEOUT);
+> +	if (ret)
+> +		dev_err(pwrc->dev, "failed to write BBPU: %d\n", ret);
+> +
+> +	/* Wait some time until system down, otherwise, notice with a warn */
+> +	mdelay(1000);
+> +
+> +	WARN_ONCE(1, "Unable to power off system\n");
+> +}
+> +
+> +static int mt6323_pwrc_probe(struct platform_device *pdev)
+> +{
+> +	struct mt6397_chip *mt6397_chip =3D dev_get_drvdata(pdev->dev.parent);
+> +	struct mt6323_pwrc *pwrc;
+> +	struct resource *res;
+> +
+> +	pwrc =3D devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
+> +	if (!pwrc)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pwrc->base =3D res->start;
+> +	pwrc->regmap =3D mt6397_chip->regmap;
+> +	pwrc->dev =3D &pdev->dev;
+> +	mt_pwrc =3D pwrc;
+> +
+> +	pm_power_off =3D &mt6323_do_pwroff;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mt6323_pwrc_remove(struct platform_device *pdev)
+> +{
+> +	if (pm_power_off =3D=3D &mt6323_do_pwroff)
+> +		pm_power_off =3D NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mt6323_pwrc_dt_match[] =3D {
+> +	{ .compatible =3D "mediatek,mt6323-pwrc" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6323_pwrc_dt_match);
+> +
+> +static struct platform_driver mt6323_pwrc_driver =3D {
+> +	.probe          =3D mt6323_pwrc_probe,
+> +	.remove         =3D mt6323_pwrc_remove,
+> +	.driver         =3D {
+> +		.name   =3D "mt6323-pwrc",
+> +		.of_match_table =3D mt6323_pwrc_dt_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(mt6323_pwrc_driver);
+> +
+> +MODULE_DESCRIPTION("Poweroff driver for MT6323 PMIC");
+> +MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 2.17.1
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--3hahqm2gkodncklw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1sJgcACgkQ2O7X88g7
++ppiQw/+LtS6wsjmh6ARgHlsOn/nsSf21K7xA0uk3UPYy7muMYmP6wsTQ5cRqjK2
+W1XrHqKmlSknV0QKhOC9CGxqy5y61hiECNUYF6iXKMOIdx4k7u4hlfRQoAAOw5Ya
+97lFTQvD4Obi7Fp8l+zaNmbfYSIEL6Ah2MHH+ol9RBTRxnY1esdIOpcuyuOJfir4
+LIYeJv+/oBF+xqixgomZKOHh8Xw1xq6yJQgxAs6LBoawvE6v2S+er1GgmKR/t6r4
+fEYOTH2dlN51bHqSBs5mhyUik/LCW+RdOnpKA+H7A1vogxWoyLqhU0sFrvbCsTAD
+o7GSFWFwN+26XZ8vwFn0q8D/1YSXebCtLdU73fGik3+jo1bGylR49dzq4bBUZAnT
+jo4AQvYCdhPkysuS0qelA7NeiVbcnAuv8wUA2Pdq7uDbomGNRSMMgKATHGMaPIXN
+MhUsgLiet8tdJ7ywcf/MYB4yp98OeFsvBQmJ+PQqFp0896FAvaJrRVIfja9uKWvc
+dPgJDF1ZZRj6h3R1K+IogGroroj/gexcftWbCS2k8u8Euj7A2yYxqxJ33dlkdmyh
+1NFZXaR5fy4X9VyYMKrEzT+hvr0nbjdSdaHbng0IzV4x6GLWxatC5Q/QknHJGhx5
+deKN8AEX3jCS4JJBxsLILjEpyc+T0CijPJTTveQDzhAN8WMGPBM=
+=gn38
+-----END PGP SIGNATURE-----
+
+--3hahqm2gkodncklw--
