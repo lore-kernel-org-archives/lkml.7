@@ -2,88 +2,134 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50698C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51DC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C790217D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="IFcmqtyK"
+	by mail.kernel.org (Postfix) with ESMTP id C38D12184D
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 23:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfIAXAf (ORCPT
+        id S1729184AbfIAXOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 19:00:35 -0400
-Received: from vern.gendns.com ([98.142.107.122]:37864 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbfIAXAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 19:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Mw4Ou9jJRH99s/5bIjTk6rAEeKRC/iwpKbRJ0owwWEM=; b=IFcmqtyKFdOUZVr9m4W858u0Ht
-        BzCIeo6PLqsUeORSBMZHVexsgPEnTBiuSO8dGyhwf8HjSkpcD+ICTZI4TOLIcnEO0vtLe7oSzcfs6
-        75sFXjKIdHaFVQpcogjRqAcuotivmWMPbEnavIzEwfKnVIaSluH5dIZdAuVLZJ5s5rzuWVxugQLTm
-        +6eEh7RtJ8/5pgivcnTMM5WT6mEDl66m5+PkjCzido9cjZ+hqMGyMlMb7T7wYW23ygzzx+15vEvuD
-        eLHtlBMYZ/b93CCWoiLdFa8w5zw4x7n602w3Q5sD45gfnGWUYdh/nvdhAl0PCFw94TCFx5O7iZLlP
-        vFklHYsA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:58464 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1i4Ypl-0003Yq-8x; Sun, 01 Sep 2019 19:00:33 -0400
-Subject: Re: [PATCH] counter: fix devm_platform_ioremap_resource.cocci
- warnings
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-References: <alpine.DEB.2.21.1908091139270.2946@hadrien>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <feb69ac5-137f-7665-d8bd-2288e5beeb5e@lechnology.com>
-Date:   Sun, 1 Sep 2019 18:00:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908091139270.2946@hadrien>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Sun, 1 Sep 2019 19:14:04 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:50174 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729037AbfIAXOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 19:14:04 -0400
+Received: from mr3.cc.vt.edu (mr3.cc.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x81NE2g6004901
+        for <linux-kernel@vger.kernel.org>; Sun, 1 Sep 2019 19:14:02 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x81NDvSJ022928
+        for <linux-kernel@vger.kernel.org>; Sun, 1 Sep 2019 19:14:02 -0400
+Received: by mail-qt1-f199.google.com with SMTP id y13so5002045qtn.6
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 16:14:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=qgYkPX+GTgX0rONC/65E9DiuSKcDLCwYEWFWrUp3ruo=;
+        b=MqMaPtl6VhTWUG35FiZqcj5KeSl2iXV+9ctd4K/FRpSSTfiKbZRsdvDRwSBC0y0npo
+         ccA3/j9VJ5mTKSbxrgAs3MscwCY9YYIu6pu8OskhghY+Wqbbe4ks0uLFa8c7xiKtCuKO
+         dj9JaCmicJUaxaINSpB7h/CzaFHIyaD+O0R/GUpHRZuYBbwC3Y9yCc7ETWojbdSCvzOP
+         VCJS0EC2Skkv/6jIOvlJ/6TFfKAEWweKkdG4ZaF0xYRyLXn8A5XFNOCApx8SbF3zppJR
+         Ftzi0Teb4ez+eUTywku1zt/zdKm/R3ctUAxN6Pq3VJ7yKT8LhplOLfhSliJVvyp23eL2
+         EtSg==
+X-Gm-Message-State: APjAAAWZ/AFMyN4p68mn7iUy9+ykaT6h2yUJyVwvJy8L+L2Oox/MN6BE
+        sG+s/NTnOGJWAoiThQ0oXdfhFYAu64qr/lfFYvYScwvqCH1Fmp7QQh1KVHcfrlpQrQQq/Stnkp7
+        0044WyNxHzMxVsq6bjjjtM+KBvp1M0A2dtOQ=
+X-Received: by 2002:ac8:4787:: with SMTP id k7mr8209628qtq.58.1567379637359;
+        Sun, 01 Sep 2019 16:13:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyunIhRucdRAhnWWiCsn7LEaA3Hw9XKbWjoYwW0GfwgecsORPB15PIaonHnEYoXVhnjx0eMbQ==
+X-Received: by 2002:ac8:4787:: with SMTP id k7mr8209612qtq.58.1567379637096;
+        Sun, 01 Sep 2019 16:13:57 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4340::ba0])
+        by smtp.gmail.com with ESMTPSA id o124sm5601412qke.66.2019.09.01.16.13.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 16:13:55 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
+In-Reply-To: <20190901224329.GH7777@dread.disaster.area>
+References: <245727.1567183359@turing-police> <20190830164503.GA12978@infradead.org> <267691.1567212516@turing-police> <20190831064616.GA13286@infradead.org> <295233.1567247121@turing-police> <20190901010721.GG7777@dread.disaster.area> <339527.1567309047@turing-police>
+ <20190901224329.GH7777@dread.disaster.area>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1567379634_4251P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Date:   Sun, 01 Sep 2019 19:13:54 -0400
+Message-ID: <389078.1567379634@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/19 4:41 AM, Julia Lawall wrote:
-> From: kbuild test robot <lkp@intel.com>
-> 
->   Use devm_platform_ioremap_resource helper which wraps
->   platform_get_resource() and devm_ioremap_resource() together.
-> 
-> Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-> 
-> Fixes: 78958c294246 ("counter: new TI eQEP driver")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-> ---
-> 
+--==_Exmh_1567379634_4251P
+Content-Type: text/plain; charset=us-ascii
 
-Included this change in v2 of the "counter: new TI eQEP driver" series.
+On Mon, 02 Sep 2019 08:43:29 +1000, Dave Chinner said:
 
-Thanks.
+> I don't know the details of the exfat spec or the code to know what
+> the best approach is. I've worked fairly closely with Christoph for
+> more than a decade - you need to think about what he says rather
+> than /how he says it/ because there's a lot of thought and knowledge
+> behind his reasoning. Hence if I were implementing exfat and
+> Christoph was saying "throw it away and extend fs/fat"
+> then that's what I'd be doing.
+
+Again, I'm not ruling that out if that's the consensus direction. After all,
+the goal is to merge a working driver - and for that, I need to produce
+something that the file system maintainers will be willing to merge, which
+means doing it in a way they want it...
+
+Hopefully next week a few other people will weigh in with what they prefer as
+far as approach goes.  Only definite statement I've heard so far was
+Christoph's...
+
+> and we don't want more. Implementing exfat on top of fs/fat kills
+> two birds with one stone - it modernises the fs/fat code base and
+> brings new functionality that will have more developers interested
+> in maintaining it over the long term.
+
+Any recommendations on how to approach that?   Clone the current fs/fat code
+and develop on top of that, or create a branch of it and on occasion do the
+merging needed to track further fs/fat development?
+
+Mostly asking for workflow suggestions - what's known to work well for this
+sort of situation, where we know we won't be merging until we have several
+thousand lines of new code?  And any "don't do <this> or you'll regret it
+later" advice is also appreciated. :)
+
+
+--==_Exmh_1567379634_4251P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXWxQsgdmEQWDXROgAQIEChAAkp7n5MxBSc3LAt80yIYEqpOUllyAzLk+
+se7lfnDiTSO/4D9ByufM6MDCfpGMCXn09h1yO/iltQ2gZZ0DfQuQdTIL1579v9u6
+/fFvMnxcRmILRQt8rJw1arjPJcWHUjO97HcFh1e3rA7d7Om3I3fU9nwd/OVrZfiS
+/GiSLHrBtRGvir/YJsiTIb6Sguv7TB+sKKekUVOCmT2h/zsLC1ElOnW0MiL8R8bq
+ROT4IkyBZQFanoRLC9aQbDqGVl+wn7QRGXHXpsvixEG4pyj9oxHFpMBvXOOC2fTU
+fElyh8gjzIJ2H6ZW6anGgTpY+W0ZnzZDMXfVBP+6uEmrfPQ/oWB2GUzpaiXeB7hb
+su6eaJcACwm5Tza8mwwIoCNjhP6Bg+dDOuCneeAKon9/FTl2d2/u5cUNoj5+rWSI
+9xZf1Anxv5BsOwunzkWIH5lcni8X/Wbm2bBWU4BDOQYooFiLaLlwfWxHtj9UGBGC
+AN3HzUW/p4Uc4NsSwFQ67VgZWTMEvmfG4x6IRIZOY27lDlJoZBV86Cw7VXdQ0HLq
+1w5k91HR9gslP4/qYsecH45VpvbjIakTC+eehE5iTtkJyZBkvEK7E6OOBdQemVM9
+QMg7V7IQJV9+3VLnaItG07kxZPijXGNeB4i76Sj4cz5otcGhMSjFPxNzfQ1ycTwF
+E9Vtf9AVaoE=
+=JCXU
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1567379634_4251P--
