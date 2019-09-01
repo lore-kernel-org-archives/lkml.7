@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3360C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0159CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED1C23431
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE8C233A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 12:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567340737;
-	bh=raDTg3MAW4NbyxyYo1teojICdn0LkjGo5Mt+i0oO+eI=;
+	s=default; t=1567340740;
+	bh=7sZC3zR6PxYnna7Srm6q29xaecca2ewl0CO9rvADhF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H6tgvNxHkaIjqc80YmpNBrDFUi1IEbpfu7RSJle6O35+prgQnYhKL9STvnoLutosB
-	 OcrZmQ3qr66DLYpzOSozSafkhaY5V+0lDbvbApTXZOyJm8QGLoqR2RSzexJmwUfLob
-	 6hu8rHOI2d7uxvi6Vakan53HdUgxErKuSNxcgs28=
+	b=MIeKRbbFW1PzqvrYRShQQ3aARy2IdxZi8rgwTjwAVS9h7XW2YiDMXz+h52YWrkgr+
+	 r1CsI6afrnDrRfhnKAJmpZPgGaPtr4l7sQozhkLYx8EnTHvu32eWaJRw3G4xSJj7IQ
+	 nwLwBYHbL5QWF4kHNPufOPEGZ9YlHtrt/O0r6Ur4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfIAMZg (ORCPT
+        id S1728886AbfIAMZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 08:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
+        Sun, 1 Sep 2019 08:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbfIAMZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 08:25:33 -0400
+        id S1726903AbfIAMZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 08:25:37 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F9721897;
-        Sun,  1 Sep 2019 12:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 461702342C;
+        Sun,  1 Sep 2019 12:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567340731;
-        bh=raDTg3MAW4NbyxyYo1teojICdn0LkjGo5Mt+i0oO+eI=;
+        s=default; t=1567340735;
+        bh=7sZC3zR6PxYnna7Srm6q29xaecca2ewl0CO9rvADhF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEZQtctWsBzuIN5Ts4J3Hu1lSPUlZxE8vHj7RrTLeRn7GLYyLccr55DeOVXwahpaA
-         ByZGNopSVYgf14T5t7H6ObVrKk79YdShLy7lBO40JV47HIWAOIl9R+wwGs1S51CoZb
-         4/+asqan3eUkiVHdFm5BTSY3cWd6F7suaoMxd6lc=
+        b=fExwJuHPr0dSnwhPxRhnZ/V8nxlEhzYUz1uIXl0UioVCJ7TZvrkEBfAvfG/c5+WGb
+         eDoCdQTQG5+ODCKfXfdVXFxGFKRvl+e5eWgkoxy3TAdtJKUoonDP+qhoFH3vRWRx56
+         /QEvObKHJyOO2/sTlhBorGtzcvIu4L7emBSdiMrc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, x86@kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 40/47] perf metricgroup: Support multiple events for metricgroup
-Date:   Sun,  1 Sep 2019 09:23:19 -0300
-Message-Id: <20190901122326.5793-41-acme@kernel.org>
+Subject: [PATCH 41/47] objtool: Move x86 insn decoder to a common location
+Date:   Sun,  1 Sep 2019 09:23:20 -0300
+Message-Id: <20190901122326.5793-42-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190901122326.5793-1-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
@@ -64,297 +64,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Some uncore metrics don't work as expected. For example, on
-cascadelakex:
+The kernel tree has three identical copies of the x86 instruction
+decoder.  Two of them are in the tools subdir.
 
-  root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_BANDWIDTH.TOTAL -a -- sleep 1
+The tools subdir is supposed to be completely standalone and separate
+from the kernel.  So having at least one copy of the kernel decoder in
+the tools subdir is unavoidable.  However, we don't need *two* of them.
 
-   Performance counter stats for 'system wide':
+Move objtool's copy of the decoder to a shared location, so that perf
+will also be able to use it.
 
-           1841092      unc_m_pmm_rpq_inserts
-           3680816      unc_m_pmm_wpq_inserts
-
-       1.001775055 seconds time elapsed
-
-  root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_READ_LATENCY -a -- sleep 1
-
-   Performance counter stats for 'system wide':
-
-         860649746      unc_m_pmm_rpq_occupancy.all
-           1840557      unc_m_pmm_rpq_inserts
-       12790627455      unc_m_clockticks
-
-       1.001773348 seconds time elapsed
-
-No metrics 'UNC_M_PMM_BANDWIDTH.TOTAL' or 'UNC_M_PMM_READ_LATENCY' are
-reported.
-
-The issue is, the case of an alias expanding to mulitple events is not
-supported, typically the uncore events.  (see comments in
-find_evsel_group()).
-
-For UNC_M_PMM_BANDWIDTH.TOTAL in above example, the expanded event group
-is '{unc_m_pmm_rpq_inserts,unc_m_pmm_wpq_inserts}:W', but the actual
-events passed to find_evsel_group are:
-
-  unc_m_pmm_rpq_inserts
-  unc_m_pmm_rpq_inserts
-  unc_m_pmm_rpq_inserts
-  unc_m_pmm_rpq_inserts
-  unc_m_pmm_rpq_inserts
-  unc_m_pmm_rpq_inserts
-  unc_m_pmm_wpq_inserts
-  unc_m_pmm_wpq_inserts
-  unc_m_pmm_wpq_inserts
-  unc_m_pmm_wpq_inserts
-  unc_m_pmm_wpq_inserts
-  unc_m_pmm_wpq_inserts
-
-For this multiple events case, it's not supported well.
-
-This patch introduces a new field 'metric_leader' in struct evsel. The
-first event is considered as a metric leader. For the rest of same
-events, they point to the first event via it's metric_leader field in
-struct evsel.
-
-This design is for adding the counting results of all same events to the
-first event in group (the metric_leader).
-
-With this patch,
-
-  root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_BANDWIDTH.TOTAL -a -- sleep 1
-
-   Performance counter stats for 'system wide':
-
-           1842108      unc_m_pmm_rpq_inserts     #    337.2 MB/sec  UNC_M_PMM_BANDWIDTH.TOTAL
-           3682209      unc_m_pmm_wpq_inserts
-
-       1.001819706 seconds time elapsed
-
-  root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_READ_LATENCY -a -- sleep 1
-
-   Performance counter stats for 'system wide':
-
-         861970685      unc_m_pmm_rpq_occupancy.all #    219.4 ns  UNC_M_PMM_READ_LATENCY
-           1842772      unc_m_pmm_rpq_inserts
-       12790196356      unc_m_clockticks
-
-       1.001749103 seconds time elapsed
-
-Now we can see the correct metrics 'UNC_M_PMM_BANDWIDTH.TOTAL' and
-'UNC_M_PMM_READ_LATENCY'.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20190828055932.8269-5-yao.jin@linux.intel.com
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: x86@kernel.org
+Link: http://lore.kernel.org/lkml/55b486b88f6bcd0c9a2a04b34f964860c8390ca8.1567118001.git.jpoimboe@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.h       |  1 +
- tools/perf/util/metricgroup.c | 84 ++++++++++++++++++-----------------
- tools/perf/util/stat-shadow.c | 27 +++++++++--
- 3 files changed, 68 insertions(+), 44 deletions(-)
+ tools/{objtool => }/arch/x86/include/asm/inat.h      |  0
+ .../{objtool => }/arch/x86/include/asm/inat_types.h  |  0
+ tools/{objtool => }/arch/x86/include/asm/insn.h      |  0
+ tools/{objtool => }/arch/x86/include/asm/orc_types.h |  0
+ tools/{objtool => }/arch/x86/lib/inat.c              |  0
+ tools/{objtool => }/arch/x86/lib/insn.c              |  0
+ tools/{objtool => }/arch/x86/lib/x86-opcode-map.txt  |  0
+ .../arch/x86/tools/gen-insn-attr-x86.awk             |  0
+ tools/objtool/Makefile                               |  4 ++--
+ tools/objtool/arch/x86/Build                         |  4 ++--
+ tools/objtool/arch/x86/decode.c                      |  4 ++--
+ tools/objtool/sync-check.sh                          | 12 ++++++------
+ 12 files changed, 12 insertions(+), 12 deletions(-)
+ rename tools/{objtool => }/arch/x86/include/asm/inat.h (100%)
+ rename tools/{objtool => }/arch/x86/include/asm/inat_types.h (100%)
+ rename tools/{objtool => }/arch/x86/include/asm/insn.h (100%)
+ rename tools/{objtool => }/arch/x86/include/asm/orc_types.h (100%)
+ rename tools/{objtool => }/arch/x86/lib/inat.c (100%)
+ rename tools/{objtool => }/arch/x86/lib/insn.c (100%)
+ rename tools/{objtool => }/arch/x86/lib/x86-opcode-map.txt (100%)
+ rename tools/{objtool => }/arch/x86/tools/gen-insn-attr-x86.awk (100%)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index fd60caced4fc..68321d10eb2d 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -168,6 +168,7 @@ struct evsel {
- 	const char *		metric_expr;
- 	const char *		metric_name;
- 	struct evsel		**metric_events;
-+	struct evsel		*metric_leader;
- 	bool			collect_stat;
- 	bool			weak_group;
- 	bool			percore;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index f474a29f1b69..a7c0424dbda3 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -90,57 +90,61 @@ struct egroup {
- 	const char *metric_unit;
- };
+diff --git a/tools/objtool/arch/x86/include/asm/inat.h b/tools/arch/x86/include/asm/inat.h
+similarity index 100%
+rename from tools/objtool/arch/x86/include/asm/inat.h
+rename to tools/arch/x86/include/asm/inat.h
+diff --git a/tools/objtool/arch/x86/include/asm/inat_types.h b/tools/arch/x86/include/asm/inat_types.h
+similarity index 100%
+rename from tools/objtool/arch/x86/include/asm/inat_types.h
+rename to tools/arch/x86/include/asm/inat_types.h
+diff --git a/tools/objtool/arch/x86/include/asm/insn.h b/tools/arch/x86/include/asm/insn.h
+similarity index 100%
+rename from tools/objtool/arch/x86/include/asm/insn.h
+rename to tools/arch/x86/include/asm/insn.h
+diff --git a/tools/objtool/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
+similarity index 100%
+rename from tools/objtool/arch/x86/include/asm/orc_types.h
+rename to tools/arch/x86/include/asm/orc_types.h
+diff --git a/tools/objtool/arch/x86/lib/inat.c b/tools/arch/x86/lib/inat.c
+similarity index 100%
+rename from tools/objtool/arch/x86/lib/inat.c
+rename to tools/arch/x86/lib/inat.c
+diff --git a/tools/objtool/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
+similarity index 100%
+rename from tools/objtool/arch/x86/lib/insn.c
+rename to tools/arch/x86/lib/insn.c
+diff --git a/tools/objtool/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+similarity index 100%
+rename from tools/objtool/arch/x86/lib/x86-opcode-map.txt
+rename to tools/arch/x86/lib/x86-opcode-map.txt
+diff --git a/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+similarity index 100%
+rename from tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
+rename to tools/arch/x86/tools/gen-insn-attr-x86.awk
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 88158239622b..8c9b9adc67ef 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -33,7 +33,7 @@ all: $(OBJTOOL)
  
--static bool record_evsel(int *ind, struct evsel **start,
--			 int idnum,
--			 struct evsel **metric_events,
--			 struct evsel *ev)
--{
--	metric_events[*ind] = ev;
--	if (*ind == 0)
--		*start = ev;
--	if (++*ind == idnum) {
--		metric_events[*ind] = NULL;
--		return true;
--	}
--	return false;
--}
--
- static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				      const char **ids,
- 				      int idnum,
- 				      struct evsel **metric_events)
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
++	    -I$(srctree)/tools/arch/$(ARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+@@ -60,7 +60,7 @@ $(LIBSUBCMD): fixdep FORCE
+ clean:
+ 	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL)
+ 	$(Q)find $(OUTPUT) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+-	$(Q)$(RM) $(OUTPUT)arch/x86/lib/inat-tables.c $(OUTPUT)fixdep
++	$(Q)$(RM) $(OUTPUT)arch/x86/inat-tables.c $(OUTPUT)fixdep
+ 
+ FORCE:
+ 
+diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+index b998412c017d..7c5004008e97 100644
+--- a/tools/objtool/arch/x86/Build
++++ b/tools/objtool/arch/x86/Build
+@@ -1,7 +1,7 @@
+ objtool-y += decode.o
+ 
+-inat_tables_script = arch/x86/tools/gen-insn-attr-x86.awk
+-inat_tables_maps = arch/x86/lib/x86-opcode-map.txt
++inat_tables_script = ../arch/x86/tools/gen-insn-attr-x86.awk
++inat_tables_maps = ../arch/x86/lib/x86-opcode-map.txt
+ 
+ $(OUTPUT)arch/x86/lib/inat-tables.c: $(inat_tables_script) $(inat_tables_maps)
+ 	$(call rule_mkdir)
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 0567c47a91b1..a62e032863a8 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -8,8 +8,8 @@
+ 
+ #define unlikely(cond) (cond)
+ #include <asm/insn.h>
+-#include "lib/inat.c"
+-#include "lib/insn.c"
++#include "../../../arch/x86/lib/inat.c"
++#include "../../../arch/x86/lib/insn.c"
+ 
+ #include "../../elf.h"
+ #include "../../arch.h"
+diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+index 1470e74e9d66..66f1575b80f3 100755
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -2,21 +2,21 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ FILES='
+-arch/x86/lib/insn.c
+-arch/x86/lib/inat.c
+-arch/x86/lib/x86-opcode-map.txt
+-arch/x86/tools/gen-insn-attr-x86.awk
+-arch/x86/include/asm/insn.h
+ arch/x86/include/asm/inat.h
+ arch/x86/include/asm/inat_types.h
++arch/x86/include/asm/insn.h
+ arch/x86/include/asm/orc_types.h
++arch/x86/lib/inat.c
++arch/x86/lib/insn.c
++arch/x86/lib/x86-opcode-map.txt
++arch/x86/tools/gen-insn-attr-x86.awk
+ '
+ 
+ check()
  {
--	struct evsel *ev, *start = NULL;
--	int ind = 0;
-+	struct evsel *ev;
-+	int i = 0;
-+	bool leader_found;
+ 	local file=$1
  
- 	evlist__for_each_entry (perf_evlist, ev) {
--		if (ev->collect_stat)
--			continue;
--		if (!strcmp(ev->name, ids[ind])) {
--			if (record_evsel(&ind, &start, idnum,
--					 metric_events, ev))
--				return start;
-+		if (!strcmp(ev->name, ids[i])) {
-+			if (!metric_events[i])
-+				metric_events[i] = ev;
- 		} else {
--			/*
--			 * We saw some other event that is not
--			 * in our list of events. Discard
--			 * the whole match and start again.
--			 */
--			ind = 0;
--			start = NULL;
--			if (!strcmp(ev->name, ids[ind])) {
--				if (record_evsel(&ind, &start, idnum,
--						 metric_events, ev))
--					return start;
-+			if (++i == idnum) {
-+				/* Discard the whole match and start again */
-+				i = 0;
-+				memset(metric_events, 0,
-+				       sizeof(struct evsel *) * idnum);
-+				continue;
-+			}
-+
-+			if (!strcmp(ev->name, ids[i]))
-+				metric_events[i] = ev;
-+			else {
-+				/* Discard the whole match and start again */
-+				i = 0;
-+				memset(metric_events, 0,
-+				       sizeof(struct evsel *) * idnum);
-+				continue;
- 			}
- 		}
- 	}
--	/*
--	 * This can happen when an alias expands to multiple
--	 * events, like for uncore events.
--	 * We don't support this case for now.
--	 */
--	return NULL;
-+
-+	if (i != idnum - 1) {
-+		/* Not whole match */
-+		return NULL;
-+	}
-+
-+	metric_events[idnum] = NULL;
-+
-+	for (i = 0; i < idnum; i++) {
-+		leader_found = false;
-+		evlist__for_each_entry(perf_evlist, ev) {
-+			if (!leader_found && (ev == metric_events[i]))
-+				leader_found = true;
-+
-+			if (leader_found &&
-+			    !strcmp(ev->name, metric_events[i]->name)) {
-+				ev->metric_leader = metric_events[i];
-+			}
-+		}
-+	}
-+
-+	return metric_events[0];
+-	diff $file ../../$file > /dev/null ||
++	diff ../$file ../../$file > /dev/null ||
+ 		echo "Warning: synced file at 'tools/objtool/$file' differs from latest kernel version at '$file'"
  }
- 
- static int metricgroup__setup_events(struct list_head *groups,
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 696d263f6eb6..70c87fdb2a43 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -31,6 +31,8 @@ struct saved_value {
- 	int cpu;
- 	struct runtime_stat *stat;
- 	struct stats stats;
-+	u64 metric_total;
-+	int metric_other;
- };
- 
- static int saved_value_cmp(struct rb_node *rb_node, const void *entry)
-@@ -212,6 +214,7 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
- {
- 	int ctx = evsel_context(counter);
- 	u64 count_ns = count;
-+	struct saved_value *v;
- 
- 	count *= counter->scale;
- 
-@@ -266,9 +269,15 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
- 		update_runtime_stat(st, STAT_APERF, ctx, cpu, count);
- 
- 	if (counter->collect_stat) {
--		struct saved_value *v = saved_value_lookup(counter, cpu, true,
--							   STAT_NONE, 0, st);
-+		v = saved_value_lookup(counter, cpu, true, STAT_NONE, 0, st);
- 		update_stats(&v->stats, count);
-+		if (counter->metric_leader)
-+			v->metric_total += count;
-+	} else if (counter->metric_leader) {
-+		v = saved_value_lookup(counter->metric_leader,
-+				       cpu, true, STAT_NONE, 0, st);
-+		v->metric_total += count;
-+		v->metric_other++;
- 	}
- }
- 
-@@ -729,10 +738,10 @@ static void generic_metric(struct perf_stat_config *config,
- 	char *n, *pn;
- 
- 	expr__ctx_init(&pctx);
--	expr__add_id(&pctx, name, avg);
- 	for (i = 0; metric_events[i]; i++) {
- 		struct saved_value *v;
- 		struct stats *stats;
-+		u64 metric_total = 0;
- 
- 		if (!strcmp(metric_events[i]->name, "duration_time")) {
- 			stats = &walltime_nsecs_stats;
-@@ -744,6 +753,9 @@ static void generic_metric(struct perf_stat_config *config,
- 				break;
- 			stats = &v->stats;
- 			scale = 1.0;
-+
-+			if (v->metric_other)
-+				metric_total = v->metric_total;
- 		}
- 
- 		n = strdup(metric_events[i]->name);
-@@ -757,8 +769,15 @@ static void generic_metric(struct perf_stat_config *config,
- 		pn = strchr(n, ' ');
- 		if (pn)
- 			*pn = 0;
--		expr__add_id(&pctx, n, avg_stats(stats)*scale);
-+
-+		if (metric_total)
-+			expr__add_id(&pctx, n, metric_total);
-+		else
-+			expr__add_id(&pctx, n, avg_stats(stats)*scale);
- 	}
-+
-+	expr__add_id(&pctx, name, avg);
-+
- 	if (!metric_events[i]) {
- 		const char *p = metric_expr;
  
 -- 
 2.21.0
