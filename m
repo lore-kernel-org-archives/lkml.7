@@ -2,193 +2,238 @@ Return-Path: <SRS0=SHWF=W4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434EEC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B18C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16253217F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rsad0/GC"
+	by mail.kernel.org (Postfix) with ESMTP id 44E82217F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Sep 2019 19:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfIATnQ (ORCPT
+        id S1728888AbfIATpu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 15:43:16 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33321 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727517AbfIATnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 15:43:16 -0400
-Received: by mail-io1-f65.google.com with SMTP id z3so25229987iog.0;
-        Sun, 01 Sep 2019 12:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language;
-        bh=h/xjXgWosxdQaufj8AvjAxM/bIsZfFnrMq3dRFuLwdo=;
-        b=rsad0/GCrnmZBp+UqxkKeFhd+h4i8NsbZcCGhY5zMeScdAsZb304z8Bd6RyWpB+MS/
-         92TkFv+KKtGYjfzlG862KUhWmkzp6ZIOdOb3QyYGt/iU6+UeDnDjVhwxVtZ46dNl/E6K
-         YiP9zUUCcH+AcbIgMkZWCkVqaXa4fkTXkCm6h8Xz1wPWQsJwoa3KNPLUnDO1OIYJn30z
-         im29DPjenTE/jFCe59EygMa4COZIg5RPWN+N954jeDQE3jkc3u1h7SIwsc+wyb7OYQiR
-         6r25cQwlG/MpXOOgrbSZoi2hPdnYjXeVEAYZ7h2EHyAGQPZvmW0I9fFLeP9gBCJg6Vg/
-         Qkpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language;
-        bh=h/xjXgWosxdQaufj8AvjAxM/bIsZfFnrMq3dRFuLwdo=;
-        b=DZth8YDOqBbDwC3BZyWOWesx1xCV82YCdAAtXQ5F9P8VO2utx1JA3c38PC3Izu/zIf
-         3lV1ZGwH0zyvOPB4BIx8tL19+wwJ3iTgrUsH6V5qWqefDEpQ3ZVQw/R35b/GUNG3SFQ2
-         26t0wD6ovcIt1ByeaRURcgBTL0tkQWEyUCMalbaNkIso6iE9+N0Bx9Mlc5vup6nuotVO
-         tYDwZGd0EXNWZMJTfMl1WQCKCbBe6xtpq7mHLcjAwm02TgwCrM3ArDEyZz7AA1GQTfL9
-         Rp9R4o7Rt5DRGaBnaehnkNTbtOceq7OCfuD6FnJMWd/N12bvWVq+MUoqK803TuoTq+/2
-         ipLQ==
-X-Gm-Message-State: APjAAAUOI5RsKpFVwIdBbSOd2mnaknfvUnRJstoLzVZZs7DRlCnWIb4M
-        AABRy0PNYsJRh5DuTyx4ltsgVfBMVM9FUw==
-X-Google-Smtp-Source: APXvYqxGMt/XakV/ALegVpXkS8Go/WyaRTvdNdzYT5jhXUlyuq5uVic+caEkoIfyzyIn3KFzzSYw4Q==
-X-Received: by 2002:a5e:9805:: with SMTP id s5mr10833814ioj.195.1567366995067;
-        Sun, 01 Sep 2019 12:43:15 -0700 (PDT)
-Received: from [10.164.9.36] (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
-        by smtp.gmail.com with ESMTPSA id l13sm13688122iob.73.2019.09.01.12.43.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 01 Sep 2019 12:43:14 -0700 (PDT)
-Subject: Re: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
-To:     carnil@debian.org
-Cc:     stable@vger.kernel.org, mathias.payer@nebelwelt.net,
-        perex@perex.cz, tiwai@suse.com, gregkh@linuxfoundation.org,
-        wang6495@umn.edu, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20190830214649.27761-1-benquike@gmail.com>
- <20190901125809.GA23334@eldamar.local>
-From:   Hui Peng <benquike@gmail.com>
-Message-ID: <df31a1f9-623a-aff6-fa7c-01eba3fd0f63@gmail.com>
-Date:   Sun, 1 Sep 2019 15:43:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190901125809.GA23334@eldamar.local>
-Content-Type: multipart/mixed;
- boundary="------------C17843906CF228CD9BE7D7BA"
+        Sun, 1 Sep 2019 15:45:50 -0400
+Received: from mail-oln040092069063.outbound.protection.outlook.com ([40.92.69.63]:49476
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727517AbfIATpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 15:45:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U1Elgu7k0/oBR/M8IOrURjqGIFu/3Ad4WJ+4jvRaBcOK9+DHvCnw0OMRbJMDgjZlSFwQHLKYtbnL33YARkw/g9LoDyvSLtTLaZ9S4vPOfsYaFy7CD2u6/6XzPuIzVhDkdWVadMrqKQdn9ngqNgjpBL1Yv13kBLviLt8P5mTVTzIWtJpKuSlxwYTU4atYp22NecSbTyGbTWz3eeejqkfNzkFZrSY9ixbdcZKRK4PFbrtzGvuANcpkDSe6VIwmwgF/Z+r5c4j+h5cZvnVAoAUOmFMpjXmgivDrR/2v5FjLLZnHX31x8wFNHOYQ7Fz1drfSHvUfKUr2KbgS2+WHRIfeQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sy+h9dGgpqBZDdNXfiew8pXgljbeqEKgQUFSHCbJuKs=;
+ b=QimhlmSrF0nnHwv7MnH+Dztf9xQGAlRL+mZeFEVCWV0dF+HcUXDR0BdY8HwEgon2IzOYB7eu31CG8hKQHlVW7NcYl0y1sm6MhIESBq/nK6xkDt/mRKgFWH0Kx9rZD+djalB5adqWaxYYgNMSR1iwStGpw1GF98QE/zd5vEs+D/U8kNyiC4icjY61WFmKEz9PQ0S93m0lbrWDXXB6fD2a2CmERAIewc9H2ijb67pXxOg71lAJlv5DA0WoP4JtiYwKL0dB0w6YetO61UN4VAcXhWF444kUOyennKQ4CKsdvMui8fYnk3cXpKIxRa+CPjKcPksEWieBoI8Eod8Ej0tYlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HE1EUR02FT064.eop-EUR02.prod.protection.outlook.com
+ (10.152.10.52) by HE1EUR02HT181.eop-EUR02.prod.protection.outlook.com
+ (10.152.11.168) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2220.16; Sun, 1 Sep
+ 2019 19:45:44 +0000
+Received: from DB6PR06MB4007.eurprd06.prod.outlook.com (10.152.10.56) by
+ HE1EUR02FT064.mail.protection.outlook.com (10.152.11.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.16 via Frontend Transport; Sun, 1 Sep 2019 19:45:44 +0000
+Received: from DB6PR06MB4007.eurprd06.prod.outlook.com
+ ([fe80::ed3f:186c:c80e:a861]) by DB6PR06MB4007.eurprd06.prod.outlook.com
+ ([fe80::ed3f:186c:c80e:a861%6]) with mapi id 15.20.2220.021; Sun, 1 Sep 2019
+ 19:45:38 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH] media: cec-notifier: debounce reporing of invalid phys addr
+Thread-Topic: [PATCH] media: cec-notifier: debounce reporing of invalid phys
+ addr
+Thread-Index: AQHVYP3UbaEdlTgPCkCkJn46bctZzQ==
+Date:   Sun, 1 Sep 2019 19:45:38 +0000
+Message-ID: <DB6PR06MB400724D0DD41B208D405F44FACBF0@DB6PR06MB4007.eurprd06.prod.outlook.com>
+Accept-Language: sv-SE, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0182.eurprd05.prod.outlook.com
+ (2603:10a6:3:f8::30) To DB6PR06MB4007.eurprd06.prod.outlook.com
+ (2603:10a6:6:4e::32)
+x-incomingtopheadermarker: OriginalChecksum:7D3D6E5167D2AAF743DE7054CE3304A050C3D2299F610E0C4D70CF771E4CD177;UpperCasedChecksum:25398339B97843CC48445190B866DC93DD792A6AAEF8C4A424316E7967345795;SizeAsReceived:7433;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [Cu5Pcf39T3hnZn1jQVLXN3RsjGTNpELd]
+x-microsoft-original-message-id: <20190901194524.7071-1-jonas@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR02HT181;
+x-ms-traffictypediagnostic: HE1EUR02HT181:
+x-microsoft-antispam-message-info: Hkpp38fj0ynMQDUMcQzkTiPXRvh9Zg0Dwl3wrb0XEQMiKj+Xxc6szMn4+vXYqZT67/kNuZ3+8uAllziKLNTqxM8KpZA+UPyt/y40Pgw8N7S4B6nH8E/h3RXSWSxkPLSCDAGxj6s4gdRffdAR0O8fVMj2QlAQXFeMc7PD6jySD2Bz/pdXr+p0J2MAtdWMhREg
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3d9b19b-b679-4078-7a96-08d72f14f6c4
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2019 19:45:38.5595
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------C17843906CF228CD9BE7D7BA
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+When EDID is refreshed, HDMI cable is unplugged/replugged or
+an AVR is power cycled the CEC phys addr gets invalidated.
 
+This can cause some disruption of CEC communication when
+adapter is being reconfigured.
 
-On 9/1/19 8:58 AM, Salvatore Bonaccorso wrote:
-> On Fri, Aug 30, 2019 at 05:46:49PM -0400, Hui Peng wrote:
->> The `uac_mixer_unit_descriptor` shown as below is read from the
->> device side. In `parse_audio_mixer_unit`, `baSourceID` field is
->> accessed from index 0 to `bNrInPins` - 1, the current implementation
->> assumes that descriptor is always valid (the length  of descriptor
->> is no shorter than 5 + `bNrInPins`). If a descriptor read from
->> the device side is invalid, it may trigger out-of-bound memory
->> access.
->>
->> ```
->> struct uac_mixer_unit_descriptor {
->> 	__u8 bLength;
->> 	__u8 bDescriptorType;
->> 	__u8 bDescriptorSubtype;
->> 	__u8 bUnitID;
->> 	__u8 bNrInPins;
->> 	__u8 baSourceID[];
->> }
->> ```
->>
->> This patch fixes the bug by add a sanity check on the length of
->> the descriptor.
->>
->> CVE: CVE-2018-15117
-> FWIW, the correct CVE id should be probably CVE-2019-15117 here.
+Add a debounce option that can be used to debounce setting
+an invalid phys addr.
 
-Yes, the CVE id was wrong. I have updated it in the attached patch.
+Power off AVR (debounce = 0):
+[  101.536866] cec-dw_hdmi: new physical address f.f.f.f
+[  102.495686] cec-dw_hdmi: new physical address 2.1.0.0
+[  102.495913] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
+[  102.628574] cec-dw_hdmi: config: la 1 pa 2.1.0.0
+[  105.130115] cec-dw_hdmi: new physical address f.f.f.f
+[  106.979705] cec-dw_hdmi: new physical address 2.1.0.0
+[  106.979872] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
+[  107.112399] cec-dw_hdmi: config: la 1 pa 2.1.0.0
+[  108.979408] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
+[  109.205386] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
 
-> But there was already a patch queued and released in 5.2.10 and
-> 4.19.68 for this issue (as far I can see; is this correct?)
+Power on AVR (debounce = 0):
+[  158.398447] cec-dw_hdmi: new physical address f.f.f.f
+[  161.977714] cec-dw_hdmi: new physical address 2.1.0.0
+[  161.978766] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
+[  162.115624] cec-dw_hdmi: config: la 1 pa 2.1.0.0
+[  162.402750] cec-dw_hdmi: new physical address f.f.f.f
+[  162.403389] cec-dw_hdmi: cec_transmit_msg_fh: adapter is unconfigured
+[  162.886757] cec-dw_hdmi: new physical address 2.1.0.0
+[  162.886964] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
+[  163.510725] cec-dw_hdmi: config: la 1 pa 2.1.0.0
+[  173.034200] cec-dw_hdmi: message 10 89 02 05 timed out
 
-Yes, it should have been fixed in those branches.
+Power off AVR (debounce = 5000):
+[  251.720471] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
+[  251.922432] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
 
-But google asked me to back port it to v4.4.190 and v4.14.141.
+Power on AVR (debounce = 5000):
+[  291.154262] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
+[  291.296199] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
 
-I have mentioned it in one previous email, but it was blocked by vger
-because it was sent in html format.
+Using a debounce of 5000 ms reconfiguring can be avoided.
 
-Can you apply it to these 2 versions? (it applies to both versions)
-
-Thanks.
-
-> Regards,
-> Salvatore
-
---------------C17843906CF228CD9BE7D7BA
-Content-Type: text/x-patch;
- name="0001-Fix-an-OOB-bug-in-parse_audio_mixer_unit.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-Fix-an-OOB-bug-in-parse_audio_mixer_unit.patch"
-
-From 09942398a53bbe730264b782673890d4a54068d0 Mon Sep 17 00:00:00 2001
-From: Hui Peng <benquike@gmail.com>
-Date: Fri, 30 Aug 2019 16:11:00 -0400
-Subject: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
-
-The `uac_mixer_unit_descriptor` shown as below is read from the
-device side. In `parse_audio_mixer_unit`, `baSourceID` field is
-accessed from index 0 to `bNrInPins` - 1, the current implementation
-assumes that descriptor is always valid (the length  of descriptor
-is no shorter than 5 + `bNrInPins`). If a descriptor read from
-the device side is invalid, it may trigger out-of-bound memory
-access.
-
-```
-struct uac_mixer_unit_descriptor {
-	__u8 bLength;
-	__u8 bDescriptorType;
-	__u8 bDescriptorSubtype;
-	__u8 bUnitID;
-	__u8 bNrInPins;
-	__u8 baSourceID[];
-}
-```
-
-This patch fixes the bug by add a sanity check on the length of
-the descriptor.
-
-CVE: CVE-2019-15117
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- sound/usb/mixer.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/cec/cec-core.c     |  4 ++++
+ drivers/media/cec/cec-notifier.c | 23 ++++++++++++++++++++++-
+ drivers/media/cec/cec-priv.h     |  1 +
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 1f7eb3816cd7..10ddec76f906 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1628,6 +1628,7 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
- 	int pin, ich, err;
+diff --git a/drivers/media/cec/cec-core.c b/drivers/media/cec/cec-core.c
+index 9c610e1e99b8..c5094fd9b664 100644
+--- a/drivers/media/cec/cec-core.c
++++ b/drivers/media/cec/cec-core.c
+@@ -28,6 +28,10 @@ static bool debug_phys_addr;
+ module_param(debug_phys_addr, bool, 0644);
+ MODULE_PARM_DESC(debug_phys_addr, "add CEC_CAP_PHYS_ADDR if set");
  
- 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
-+	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
- 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
- 		usb_audio_err(state->chip,
- 			      "invalid MIXER UNIT descriptor %d\n",
++int cec_debounce;
++module_param_named(debounce, cec_debounce, int, 0644);
++MODULE_PARM_DESC(debounce, "debounce invalid phys addr");
++
+ static dev_t cec_dev_t;
+ 
+ /* Active devices */
+diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
+index 4d82a5522072..0157d468cfe4 100644
+--- a/drivers/media/cec/cec-notifier.c
++++ b/drivers/media/cec/cec-notifier.c
+@@ -12,11 +12,14 @@
+ #include <linux/list.h>
+ #include <linux/kref.h>
+ #include <linux/of_platform.h>
++#include <linux/workqueue.h>
+ 
+ #include <media/cec.h>
+ #include <media/cec-notifier.h>
+ #include <drm/drm_edid.h>
+ 
++#include "cec-priv.h"
++
+ struct cec_notifier {
+ 	struct mutex lock;
+ 	struct list_head head;
+@@ -28,11 +31,25 @@ struct cec_notifier {
+ 	void (*callback)(struct cec_adapter *adap, u16 pa);
+ 
+ 	u16 phys_addr;
++	struct delayed_work work;
+ };
+ 
+ static LIST_HEAD(cec_notifiers);
+ static DEFINE_MUTEX(cec_notifiers_lock);
+ 
++static void cec_notifier_delayed_work(struct work_struct *work)
++{
++	struct cec_notifier *n =
++		container_of(to_delayed_work(work), struct cec_notifier, work);
++
++	mutex_lock(&n->lock);
++	if (n->callback)
++		n->callback(n->cec_adap, n->phys_addr);
++	else if (n->cec_adap)
++		cec_s_phys_addr(n->cec_adap, n->phys_addr, false);
++	mutex_unlock(&n->lock);
++}
++
+ struct cec_notifier *
+ cec_notifier_get_conn(struct device *hdmi_dev, const char *conn_name)
+ {
+@@ -62,6 +79,7 @@ cec_notifier_get_conn(struct device *hdmi_dev, const char *conn_name)
+ 	}
+ 	n->phys_addr = CEC_PHYS_ADDR_INVALID;
+ 
++	INIT_DELAYED_WORK(&n->work, cec_notifier_delayed_work);
+ 	mutex_init(&n->lock);
+ 	kref_init(&n->kref);
+ 	list_add_tail(&n->head, &cec_notifiers);
+@@ -172,9 +190,12 @@ void cec_notifier_set_phys_addr(struct cec_notifier *n, u16 pa)
+ 	if (n == NULL)
+ 		return;
+ 
++	cancel_delayed_work_sync(&n->work);
+ 	mutex_lock(&n->lock);
+ 	n->phys_addr = pa;
+-	if (n->callback)
++	if (cec_debounce > 0 && pa == CEC_PHYS_ADDR_INVALID)
++		schedule_delayed_work(&n->work, msecs_to_jiffies(cec_debounce));
++	else if (n->callback)
+ 		n->callback(n->cec_adap, n->phys_addr);
+ 	else if (n->cec_adap)
+ 		cec_s_phys_addr(n->cec_adap, n->phys_addr, false);
+diff --git a/drivers/media/cec/cec-priv.h b/drivers/media/cec/cec-priv.h
+index 7bdf855aaecd..65176294fcf0 100644
+--- a/drivers/media/cec/cec-priv.h
++++ b/drivers/media/cec/cec-priv.h
+@@ -27,6 +27,7 @@ static inline bool msg_is_raw(const struct cec_msg *msg)
+ 
+ /* cec-core.c */
+ extern int cec_debug;
++extern int cec_debounce;
+ int cec_get_device(struct cec_devnode *devnode);
+ void cec_put_device(struct cec_devnode *devnode);
+ 
 -- 
 2.17.1
 
-
---------------C17843906CF228CD9BE7D7BA--
