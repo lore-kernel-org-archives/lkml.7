@@ -2,128 +2,189 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6189C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439FCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46E421897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B346216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="l6E1gl8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfIBSo1 (ORCPT
+        id S1726961AbfIBSqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbfIBSo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:44:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE3AC216C8;
-        Mon,  2 Sep 2019 18:44:25 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 20:44:23 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Sep 2 (exfat)
-Message-ID: <20190902184423.GA5697@kroah.com>
-References: <20190902224310.208575dc@canb.auug.org.au>
- <cecc2af6-7ef6-29f6-569e-b591365e45ad@infradead.org>
- <20190902174631.GB31445@kroah.com>
- <13e2db80-0c89-0f36-6876-f9639f0d30ab@infradead.org>
- <f7f8f751e77578edb88c0d9888930de3f3b60670.camel@perches.com>
+        Mon, 2 Sep 2019 14:46:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51487 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfIBSqB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:46:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id k1so15561813wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 11:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gbv8DVb1rpLkpDqApLaTwYoA0SQ/zWkULUB+jO4dP28=;
+        b=l6E1gl8FRLj/yEk6uV+en7+oI2klMala2wWtBXuyWlDL7Fs4KbdGIEvB/wiRwmP2l0
+         bH2JcWM5ZJTw3Bu9kl+SYHXoC6It0ndDSXAZvrdYvtOimTR6DRK3fBI/Wx0usTgT/b03
+         kWyHAPSyORfRWJ3VAa9ENKxMfzumeQEZMgsBJMJ0w2vSOLH52EAZnLKMqEk7dbRX+C/2
+         k9amfuy7onIoXqAGGHQGEIZoEUl20VySD60l+c8OUSQo2mOrH5AQO3REXNfJidHPH7mI
+         tqd1cQBH+7yoINuY7RoQjKWdb2tfEEwI/A3oyTtq7mvXalTcDRzBN6PeKa6ziHb6H9FW
+         56ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gbv8DVb1rpLkpDqApLaTwYoA0SQ/zWkULUB+jO4dP28=;
+        b=ms9ZwstQM5iShxt8IAA5adxH1ycjSZfifdTtEXHiRB8/u+BF/jcPnxHRfF5iHM0psW
+         JVntlgaB+LrTMlyyuBAz4+6cTdUvg4cuAht7ctQQSqEM2RrdS1ECXB4AYOAJeCoWOv26
+         LNooapBJ4evufb8sjaqBT0oiYi79CTEPHsV6TK7HxogZxSWI/ub3EdfRhghUbgtJqBi9
+         Sc2FBAG/25wjfrb1ZEnAgIpT2VeC8vBos6s/rONH9O7zUaaeI+5PzZVpqaReYVk4PHwA
+         G3wRjGkk8QbKmiU12ak+NH6TteupnL2BA8j0loG5la+rz6r0n96idkfNsMoZayohjfB4
+         na2w==
+X-Gm-Message-State: APjAAAWsl7D5qSllXg8DjWIdl0ckAdmvfQgm/BDk5y4SWf6AhvP4rg0N
+        +oH469HxYrgx/MEMf5SndM3Z/g==
+X-Google-Smtp-Source: APXvYqz/R1TcZT6kyCoqMKCXVcRH7hUURx8AEQ7PLdZRgdVZ0PM8TpaI1iN7Top+9ETPw9lUAgx85w==
+X-Received: by 2002:a1c:9805:: with SMTP id a5mr605930wme.119.1567449959287;
+        Mon, 02 Sep 2019 11:45:59 -0700 (PDT)
+Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
+        by smtp.gmail.com with ESMTPSA id q192sm3602237wme.23.2019.09.02.11.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 11:45:58 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 20:45:57 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     David Miller <davem@davemloft.net>, idosch@idosch.org,
+        andrew@lunn.ch, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190902184557.GB2312@nanopsycho>
+References: <20190829193613.GA23259@splinter>
+ <20190829.151201.940681219080864052.davem@davemloft.net>
+ <20190830053940.GL2312@nanopsycho>
+ <20190829.230233.287975311556641534.davem@davemloft.net>
+ <20190830063624.GN2312@nanopsycho>
+ <20190902174229.uur7r7duq4dvbnqq@lx-anielsen.microsemi.net>
+ <20190902175124.GA2312@nanopsycho>
+ <20190902180519.ytbs6x2dx5z23hys@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f7f8f751e77578edb88c0d9888930de3f3b60670.camel@perches.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190902180519.ytbs6x2dx5z23hys@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:11:45AM -0700, Joe Perches wrote:
-> On Mon, 2019-09-02 at 11:07 -0700, Randy Dunlap wrote:
-> > On 9/2/19 10:46 AM, Greg KH wrote:
-> > > On Mon, Sep 02, 2019 at 10:39:39AM -0700, Randy Dunlap wrote:
-> > > > On 9/2/19 5:43 AM, Stephen Rothwell wrote:
-> > > > > Hi all,
-> > > > > 
-> > > > > News: I will only be doing 2 more releases before I leave for Kernel
-> > > > > Summit (there may be some reports on Thursday, but I doubt I will have
-> > > > > time to finish the full release) and then no more until Sept 30.
-> > > > > 
-> > > > > Changes since 20190830:
-> > > > > 
-> > > > 
-> > > > Hi,
-> > > > I am seeing lots of exfat build errors when CONFIG_BLOCK is not set/enabled.
-> > > > Maybe its Kconfig should also say
-> > > > 	depends on BLOCK
-> > > > ?
-> > > 
-> > > Here's what I committed to my tree:
-> > > 
-> > > 
-> > > From e2b880d3d1afaa5cad108c29be3e307b1917d195 Mon Sep 17 00:00:00 2001
-> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Date: Mon, 2 Sep 2019 19:45:06 +0200
-> > > Subject: staging: exfat: make exfat depend on BLOCK
-> > > 
-> > > This should fix a build error in some configurations when CONFIG_BLOCK
-> > > is not selected.  Also properly set the dependancy for no FAT support at
-> > > the same time.
-> > > 
-> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > > Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > That works. Thanks.
-> > Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-> > 
-> > > ---
-> > >  drivers/staging/exfat/Kconfig | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-> > > index f52129c67f97..290dbfc7ace1 100644
-> > > --- a/drivers/staging/exfat/Kconfig
-> > > +++ b/drivers/staging/exfat/Kconfig
-> > > @@ -1,11 +1,13 @@
-> > >  config EXFAT_FS
-> > >  	tristate "exFAT fs support"
-> > > +	depends on BLOCK
-> > >  	select NLS
-> > >  	help
-> > >  	  This adds support for the exFAT file system.
-> > >  
-> > >  config EXFAT_DONT_MOUNT_VFAT
-> > >  	bool "Prohibit mounting of fat/vfat filesysems by exFAT"
-> > > +	depends on EXFAT_FS
-> > >  	default y
-> > >  	help
-> > >  	  By default, the exFAT driver will only mount exFAT filesystems, and refuse
-> 
-> I think this last one is backwards and should be
-> 
-> config EXFAT_ALLOW_MOUNT_VFAT
-> and
-> default n
+Mon, Sep 02, 2019 at 08:05:20PM CEST, allan.nielsen@microchip.com wrote:
+>The 09/02/2019 19:51, Jiri Pirko wrote:
+>> External E-Mail
+>> 
+>> 
+>> Mon, Sep 02, 2019 at 07:42:31PM CEST, allan.nielsen@microchip.com wrote:
+>> >Hi Jiri,
+>> >
+>> >Sorry for joining the discussion this late, but I have been without mail access
+>> >for the last few days.
+>> >
+>> >
+>> >The 08/30/2019 08:36, Jiri Pirko wrote:
+>> >> Fri, Aug 30, 2019 at 08:02:33AM CEST, davem@davemloft.net wrote:
+>> >> >From: Jiri Pirko <jiri@resnulli.us>
+>> >> >Date: Fri, 30 Aug 2019 07:39:40 +0200
+>> >> >
+>> >> >> Because the "promisc mode" would gain another meaning. Now how the
+>> >> >> driver should guess which meaning the user ment when he setted it?
+>> >> >> filter or trap?
+>> >> >> 
+>> >> >> That is very confusing. If the flag is the way to do this, let's
+>> >> >> introduce another flag, like IFF_TRAPPING indicating that user wants
+>> >> >> exactly this.
+>> >> >
+>> >> >I don't understand how the meaning of promiscuous mode for a
+>> >> >networking device has suddenly become ambiguous, when did this start
+>> >> >happening?
+>> >> 
+>> >> The promiscuity is a way to setup the rx filter. So promics == rx filter
+>> >> off. For normal nics, where there is no hw fwd datapath,
+>> >> this coincidentally means all received packets go to cpu.
+>> >> But if there is hw fwd datapath, rx filter is still off, all rxed packets
+>> >> are processed. But that does not mean they should be trapped to cpu.
+>> >> 
+>> >> Simple example:
+>> >> I need to see slowpath packets, for example arps/stp/bgp/... that
+>> >> are going to cpu, I do:
+>> >> tcpdump -i swp1
+>> >
+>> >How is this different from "tcpdump -p -i swp1"
+>> >
+>> >> I don't want to get all the traffic running over hw running this cmd.
+>> >> This is a valid usecase.
+>> >> 
+>> >> To cope with hw fwd datapath devices, I believe that tcpdump has to have
+>> >> notion of that. Something like:
+>> >> 
+>> >> tcpdump -i swp1 --hw-trapping-mode
+>> >> 
+>> >> The logic can be inverse:
+>> >> tcpdump -i swp1
+>> >> tcpdump -i swp1 --no-hw-trapping-mode
+>> >> 
+>> >> However, that would provide inconsistent behaviour between existing and
+>> >> patched tcpdump/kernel.
+>> >> 
+>> >> All I'm trying to say, there are 2 flags
+>> >> needed (if we don't use tc trap).
+>> >
+>> >I have been reading through this thread several times and I still do not get it.
+>> >
+>> >As far as I understand you are arguing that we need 3 modes:
+>> >
+>> >- tcpdump -i swp1
+>> 
+>> Depends on default. Promisc is on.
+>> 
+>> 
+>> >- tcpdump -p -i swp1
+>> 
+>> All traffic that is trapped to the cpu by default, not promisc means
+>> only mac of the interface (if bridge for example haven't set promisc
+>> already) and special macs. So host traffic (ip of host), bgp, arp, nsnd,
+>> etc.
+>
+>In the case where the interface is enslaved to a bridge, it is put into promisc
+>mode, which means that "tcpdump -i swp1" and "tcpdump -p -i swp1" give the same
+>result, right?
+>
+>Is this desirable?
 
-This is just a "bandage" for now, it should be fixed properly by ripping
-out the code wherever possible and making this the default functionality
-anyway.  This just keeps the code from breaking existing working systems
-if users accidentally build this module.
+Yes, that is correct and expected. It it might not be bridged, depends
+on a usecase.
 
-thanks,
 
-greg k-h
+>
+>> >- tcpdump -i swp1 --hw-trapping-mode
+>> 
+>> Promisc is on, all traffic received on the port and pushed to cpu. User
+>> has to be careful because in case of mlxsw this can lead to couple
+>> hundred gigabit traffic going over limited pci bandwidth (gigabits).
+>> 
+>> 
+>> >
+>> >Would you mind provide an example of the traffic you want to see in the 3 cases
+>> >(or the traffic which you do not want to see).
+>> >
+>> >/Allan
+>> >
+>> 
+>
+>-- 
+>/Allan
