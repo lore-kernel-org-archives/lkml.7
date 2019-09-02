@@ -2,93 +2,164 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32849C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FA0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACF52190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894EE21883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567431581;
-	bh=4uCCPoqa13/RLW5WN9BgtrAoz0KI0HBKdy74iwyKi3g=;
-	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
-	b=LehOU9Nh8zvdiAFN89rGeQSwdumEJG2zbICzdDsrSMMqhI1NeS23Ugesvl7sboQwG
-	 l7y4S904i/QvDUyaM0H8Gs1Qhtsq6Vpa2RZbsdnLNKBTDa8Pnmqq0nFi/5wJgRnShc
-	 Eie+dDa9KzJuCkYBcD6zdlznQn9ZAV9uK9DScQ/M=
+	s=default; t=1567431590;
+	bh=ZiGaougWl2E7HrykH0YZgIN0PC4Kkmp8BA73m/gO3WI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dgn0ov/KRFVcoNvVIsW/0lZR/isT3ykorgi4IMED3cdRPzL+gakZV/g8HUBlTsI9o
+	 IeyJM+bWGAjJXzksYU+VWkf8NbfbLG1QkCE4b5+UTOTqy92oRvjZSRp0aCXFSZiP1T
+	 9cBxu/nPoVLEOdgsol6gTg06xSHv9bh1ZGaO+ezA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731409AbfIBNjg (ORCPT
+        id S1731450AbfIBNjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:39:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40860 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731280AbfIBNjR (ORCPT
+        Mon, 2 Sep 2019 09:39:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35432 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731194AbfIBNjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:39:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t9so14651346wmi.5;
-        Mon, 02 Sep 2019 06:39:15 -0700 (PDT)
+        Mon, 2 Sep 2019 09:39:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g7so14103711wrx.2;
+        Mon, 02 Sep 2019 06:39:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:subject:references
-         :in-reply-to:cc:cc:to;
-        bh=mdMEyHANWr3uFXlguLTgUNjt9G7yervbWu2Ux/GAB0I=;
-        b=onPidkbw27Hed+VSSexQp04PD9a75u/z6+9x03Of/I5z2M6BV8nGOnRAy3Qtf6YBv9
-         Tpnw3xz2jrelpXitQGccpp+QzlFAFtGiUkuMBfYUtwx/2LhzLoR/VF/uFOJtFCtf641L
-         vxmq6m+oEQULMEGh/zvi1waoaBypTGEWBXreQRQTU5hoU82VeZPOC/Ll2taQ1Te6isYf
-         5Wfj05I/t+GnykDN01ROqVbYTMlEsjzelPY1TUFUi39iPRqB4z2uGlxQW96Mn/o3hPl1
-         GgjZRIFZRhMFdpuHGCYFIdU/NaJfRU/ivE8t0o5/CvHtRjUcxAEzeLk67AlCHIJ8ZVJP
-         A2qw==
-X-Gm-Message-State: APjAAAXClDoub0xi1hJH5pJmiztGMrM46CAs1WyZPsxf/NlsanGi+max
-        dSEt76TY+9j7IbQRQw7dBQ==
-X-Google-Smtp-Source: APXvYqwMzwv1OFbk9jMbIrvjNPmwN4pGid61E7yY74F5cVWue5sDTckRsA9VxA03xcI175B+qRSeCw==
-X-Received: by 2002:a7b:c84e:: with SMTP id c14mr36008947wml.46.1567431554729;
-        Mon, 02 Sep 2019 06:39:14 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rl1/ze6kx/CUskXwTtnQLspfVQPuMYTtTqShk05XrUg=;
+        b=VaAk/s64C/XajP01q5KRSXCkcByra439P07kQUDRBR2xM4O+USdWHTRMaHWeAYnaT+
+         LSINNNgqC+0S6mKs3NabrR77n4DUr1P1PfWbkQ+q2JGqRkYp1g2wYZbSNMJAsEhElE83
+         kITdW3LiQA5VDPhVKdkuhPV3QejdzRvHtz54cF3bijPPLxX2FIKHs2+OPZCnTfMukkMj
+         Xyce4hwIFvQ6AZmypbM1QP1Yi9S2IjUY+OkYH0/SOpXniOvTs5Oup7tmiY4VuYHBSojl
+         mdIJHzTTjM95xZs6+Wybr42njwUil8WmEBTvQ5hczZ0KYsh142FAIW6E4ZXyVfxbgXQu
+         yOeg==
+X-Gm-Message-State: APjAAAUhrYaEbkoPaJNFf2gqdq7S65Yj61LnQFjAL5EIkh1jbRfT/vDV
+        3QYaPyzX1G//vrzyiAr8pQ==
+X-Google-Smtp-Source: APXvYqzsx1OHwq+enNcfrXd5T9LqvLOZuQM8cwOivIUua3i7l9LEHS3ykllvG2e6KcWTCqGzGABwWA==
+X-Received: by 2002:adf:e784:: with SMTP id n4mr20000809wrm.144.1567431546044;
+        Mon, 02 Sep 2019 06:39:06 -0700 (PDT)
 Received: from localhost ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id i73sm5116549wmg.33.2019.09.02.06.39.13
+        by smtp.gmail.com with ESMTPSA id a16sm7279173wmg.5.2019.09.02.06.39.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 06:39:14 -0700 (PDT)
-Message-ID: <5d6d1b82.1c69fb81.de44.60b9@mx.google.com>
-Date:   Mon, 02 Sep 2019 14:39:13 +0100
+        Mon, 02 Sep 2019 06:39:05 -0700 (PDT)
+Message-ID: <5d6d1b79.1c69fb81.29f0d.e042@mx.google.com>
+Date:   Mon, 02 Sep 2019 14:39:04 +0100
 From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: Remove unused includes and superfluous struct declaration
-References: <20190901112506.8469-1-kw@linux.com>
-In-Reply-To: <20190901112506.8469-1-kw@linux.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-To:     Krzysztof Wilczynski <kw@linux.com>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        mark.rutland@arm.com, leoyang.li@nxp.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+References: <20190830091720.41156-1-biwen.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830091720.41156-1-biwen.li@nxp.com>
+X-Mutt-References: <20190830091720.41156-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  1 Sep 2019 13:25:06 +0200, Krzysztof Wilczynski wrote:
-> Remove <linux/pci.h> and <linux/msi.h> from being included
-> directly as part of the include/linux/of_pci.h, and remove
-> superfluous declaration of struct of_phandle_args.
+On Fri, Aug 30, 2019 at 05:17:19PM +0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - interrupt-output-pin: string type
+>   - quartz-load-capacitance: integer type
+>   - quartz-drive-strength: integer type
+>   - quartz-low-jitter: bool type
+>   - wakeup-source: bool type
 > 
-> Move users of include <linux/of_pci.h> to include <linux/pci.h>
-> and <linux/msi.h> directly rather than rely on both being
-> included transitively through <linux/of_pci.h>.
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
->  drivers/iommu/of_iommu.c                          | 2 ++
->  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
->  drivers/pci/controller/pci-aardvark.c             | 1 +
->  drivers/pci/pci.c                                 | 1 +
->  drivers/pci/probe.c                               | 1 +
->  include/linux/of_pci.h                            | 4 +---
->  6 files changed, 7 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 31 +++++++++++++++++++
+>  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
 > 
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..d83359990bd7 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,41 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>  
+> +- interrupt-output-pin: The interrupt output pin must be
+> +  "NONE", "INTA" or "INTB", default value is "NONE"
+> +
+> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
+> +	PCF85263_QUARTZCAP_7pF		[0]
+> +	PCF85263_QUARTZCAP_6pF		[1]
+> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
 
-Acked-by: Rob Herring <robh@kernel.org>
+We have a common property for this. Use it.
+
+> +
+> +- quartz-drive-strength: Drive strength for the quartz:
+> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
+> +	PCF85263_QUARTZDRIVE_LOW	[1]
+> +	PCF85263_QUARTZDRIVE_HIGH	[2]
+> +
+> +- quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+
+These 2  need vendor prefixes.
+
+> +
+> +- wakeup-source: Boolean property, mark the chip as a wakeup source,
+> +  independently of the availability of an IRQ line connected to the SoC.
+> +  This is useful if the IRQ line is connected to a PMIC or other circuit
+> +  that can power up the device rather than to a normal SOC interrupt.
+> +
+>  Example:
+>  
+>  pcf85363: pcf85363@51 {
+>  	compatible = "nxp,pcf85363";
+>  	reg = <0x51>;
+> +
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +	#include <dt-bindings/rtc/pcf85363.h>
+> +	wakeup-source;
+> +	interrupt-output-pin = "INTA";
+> +	quartz-load-capacitance = <PCF85363_QUARTZCAP_12p5pF>;
+> +	quartz-drive-strength = <PCF85363_QUARTZDRIVE_LOW>;
+> +	quartz-low-jitter;
+>  };
+>  
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+> new file mode 100644
+> index 000000000000..2c06c28eb5ff
+> --- /dev/null
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
+> +
+> +/* Quartz capacitance */
+> +#define PCF85363_QUARTZCAP_7pF		0
+> +#define PCF85363_QUARTZCAP_6pF		1
+> +#define PCF85363_QUARTZCAP_12p5pF	2
+> +
+> +/* Quartz drive strength */
+> +#define PCF85363_QUARTZDRIVE_NORMAL	0
+> +#define PCF85363_QUARTZDRIVE_LOW	1
+> +#define PCF85363_QUARTZDRIVE_HIGH	2
+> +
+> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> -- 
+> 2.17.1
+> 
 
