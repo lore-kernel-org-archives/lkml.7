@@ -2,121 +2,87 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E619C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6DEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBC720644
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2BC6215EA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbfIBJCR (ORCPT
+        id S1730814AbfIBJF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:02:17 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20508 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730445AbfIBJCR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:02:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-194-rYYILk2VO0WqBm185IgfAA-1; Mon, 02 Sep 2019 10:02:09 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 2 Sep 2019 10:02:09 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 2 Sep 2019 10:02:09 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: RE: objtool warning "uses BP as a scratch register" with clang-9
-Thread-Topic: objtool warning "uses BP as a scratch register" with clang-9
-Thread-Index: AQHVX1Liqj9VEXOMQ0SdqQ13OMpYJacYF/rQ
-Date:   Mon, 2 Sep 2019 09:02:08 +0000
-Message-ID: <e3111f698ba342ca8893f65610990624@AcuMS.aculab.com>
-References: <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
- <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
- <20190828152226.r6pl64ij5kol6d4p@treble>
- <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
- <20190829173458.skttfjlulbiz5s25@treble>
- <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
- <CAK8P3a1K5HgfACmJXr4dTTwDJFz5BeSCCa3RQWYbXGE-2q4TJQ@mail.gmail.com>
- <CAHk-=whuUdqrh2=LLNfRiW6oadx0zzGVkvqyx_O1cGLa2U6Jjg@mail.gmail.com>
- <20190830150208.jyk7tfzznqimc6ow@treble>
- <CAHk-=wgqAcRU99Dp20+ZAux7Mdgbnw5deOguwOjdCJY0eNnSkA@mail.gmail.com>
- <20190830164927.a2czlphx4ho3rhhf@treble>
-In-Reply-To: <20190830164927.a2czlphx4ho3rhhf@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 2 Sep 2019 05:05:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39448 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730361AbfIBJF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:05:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BA11FAC4A;
+        Mon,  2 Sep 2019 09:05:25 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id C80201E406C; Mon,  2 Sep 2019 10:56:28 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 10:56:28 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [block/for-next] writeback: don't access page->mapping directly
+ in track_foreign_dirty TP
+Message-ID: <20190902085628.GC14207@quack2.suse.cz>
+References: <20190830233954.GC2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-X-MC-Unique: rYYILk2VO0WqBm185IgfAA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830233954.GC2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zaCBQb2ltYm9ldWYNCj4gU2VudDogMzAgQXVndXN0IDIwMTkgMTc6NDkNCj4gT24g
-RnJpLCBBdWcgMzAsIDIwMTkgYXQgMDg6NDg6NDlBTSAtMDcwMCwgTGludXMgVG9ydmFsZHMgd3Jv
-dGU6DQo+ID4gT24gRnJpLCBBdWcgMzAsIDIwMTkgYXQgODowMiBBTSBKb3NoIFBvaW1ib2V1ZiA8
-anBvaW1ib2VAcmVkaGF0LmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gRm9yIEtBU0FOLCB0aGUg
-Q2xhbmcgdGhyZXNob2xkIGZvciBpbnNlcnRpbmcgbWVtc2V0KCkgaXMgKjIqIGNvbnNlY3V0aXZl
-DQo+ID4gPiB3cml0ZXMgaW5zdGVhZCBvZiAxNy4gIElzbid0IHRoYXQgbGlrZWx5IHRvIGNhdXNl
-IHRlYXJpbmctcmVsYXRlZA0KPiA+ID4gc3VycHJpc2VzPw0KPiA+DQo+ID4gVGVhcmluZyBpc24n
-dCBsaWtlbHkgdG8gYmUgYSBwcm9ibGVtLg0KPiA+DQo+ID4gSXQncyBub3QgbGlrZSBtZW1jcHko
-KSBkb2VzIGJ5dGUtYnktYnl0ZSBjb3BpZXMuIElmIHlvdSBwYXNzIGl0IGENCj4gPiB3b3JkLWFs
-aWduZWQgcG9pbnRlciwgaXQgd2lsbCBkbyB3b3JkLWFsaWduZWQgYWNjZXNzZXMgc2ltcGx5IGZv
-cg0KPiA+IHBlcmZvcm1hbmNlIHJlYXNvbnMuDQo+ID4NCj4gPiBFdmVuIG9uIHg4Niwgd2hlcmUg
-d2UgdXNlICJyZXAgbW92c2IiLCB3ZSAoYSkgdGVuZCB0byBkaXNhYmxlIGl0IGZvcg0KPiA+IHNt
-YWxsIGNvcGllcyBhbmQgKGIpIGl0IHR1cm5zIG91dCB0aGF0IG1pY3JvY29kZSB0aGF0IGRvZXMg
-dGhlDQo+ID4gb3B0aW1pemVkIG1vdnNiICh3aGljaCBpcyB0aGUgb25seSBjYXNlIHdlIHVzZSBp
-dCkgcHJvYmFibHkgZW5kcyB1cA0KPiA+IGRvaW5nIGF0b21pYyB0aGluZ3MgYW55d2F5LiBOb3Rl
-IHRoZSAicHJvYmFibHkiLiBJIGRvbid0IGhhdmUNCj4gPiBtaWNyb2NvZGUgc291cmNlIGNvZGUs
-IGJ1dCB0aGVyZSBhcmUgb3RoZXIgaW5kaWNhdGlvbnMgbGlrZSAid2Uga25vdw0KPiA+IGl0IGRv
-ZXNuJ3QgdGFrZSBpbnRlcnJ1cHRzIG9uIGEgYnl0ZS1wZXItYnl0ZSBsZXZlbCwgb25seSBvbiB0
-aGUNCj4gPiBjYWNoZWxpbmUgbGV2ZWwiLg0KPiANCj4gVGhlIG1pY3JvY29kZSBhcmd1bWVudCBp
-cyBub3QgYWxsIHRoYXQgY29tZm9ydGluZyA6LSkNCj4gDQo+IEFsc28gd2hhdCBhYm91dCB1bmFs
-aWduZWQgYWNjZXNzZXMsIGUuZy4gaWYgYSBzdHJ1Y3QgbWVtYmVyIGlzbid0IG9uIGENCj4gd29y
-ZCBib3VuZGFyeT8gIEFybmQncyBnb2Rib2x0IGxpbmsgc2hvd2VkIHRob3NlIGNhbiBnZXQgY29t
-YmluZWQgdG9vLg0KDQpJJ2QgZ3Vlc3MgdGhhdCBpdCBoYXMgdG8gJ2NvbXBsZXRlJyBhIHBhcnRp
-YWwgY29weS4NCkFmdGVyIGFsbCB0aGVyZSBhcmUgbm8gbWlkLWluc3RydWN0aW9uIGludGVycnVw
-dCBzdGF0ZXMgc28gdGhlIGludGVycnVwdA0KcmV0dXJucyB0byBhIG5ldyAncmVwIG1vdnNiJyBp
-bnN0cnVjdGlvbiAodGhlIGlzciBjYW4gY2hhbmdlIHNpL2RpL2N4KS4NCkVpdGhlciB0aGUgc291
-cmNlLCBvciBkZXN0aW5hdGlvbiBpcyBhbG1vc3QgY2VydGFpbmx5IGNhY2hlIGxpbmUgYWxpZ25l
-ZC4NCg0KPiBJIGRvbid0IHNlZSB4ODYgbWVtY3B5KCkgZG9pbmcgYW55IGRlc3RpbmF0aW9uIGFs
-aWdubWVudCBjaGVja3MuDQoNCkkgZG9uJ3QgdGhpbmsgYW55b25lIGhhcyB0cmllZCB0byBpbnN0
-cnVtZW50IHdoZXRoZXIgaXQgaXMgYmV0dGVyIHRvDQpkbyBtaXNhbGlnbmVkIHJlYWRzIG9yIHdy
-aXRlcyAoYW5kIGl0IHByb2JhYmx5IGRlcGVuZHMgb24gdGhlIGNwdSkuDQpUaGUgY29kZSB3aWxs
-IHByb2JhYmx5IGJlIG1vcmUgY3JpdGljYWwgb24gdGhlIHJlYWRzLg0KVGhlIHJlYWwgZ2FpbiB3
-aWxsIGJlIHdoZW4gdGhlIHNvdXJjZSBhbmQgZGVzdGluYXRpb24gaGF2ZSB0aGUgc2FtZQ0KbWlz
-LWFsaWdubWVudC4NCg0KLi4uDQo+ID4gU28gaXQncyBwcm9iYWJseSBub3QgYW4gaXNzdWUgZnJv
-bSBhIHRlYXJpbmcgc3RhbmRwb2ludCAtIGJ1dCBpdA0KPiA+IHdvcnJpZXMgbWUgYmVjYXVzZSBv
-ZiAidGhpcyBoYXMgdG8gYmUgYSBsZWFmIGZ1bmN0aW9uIiBraW5kIG9mIGlzc3Vlcw0KPiA+IHdo
-ZXJlIHdlIG1heSBiZSB1c2luZyBpbmRpdmlkdWFsIHN0b3JlcyBvbiBwdXJwb3NlLiBXZSBkbyBo
-YXZlIHRoaW5ncw0KPiA+IGxpa2UgdGhhdC4NCj4gDQo+IEl0IHNvdW5kcyBsaWtlIGV2ZXJ5Ym9k
-eSdzIGluIGFncmVlbWVudCB0aGF0IHJlcGxhY2luZyBhY2Nlc3NlcyB3aXRoDQo+IG1lbXNldC9t
-ZW1jcHkgaXMgYmFkIGluIGEga2VybmVsIGNvbnRleHQuICBTaG91bGQgd2UgcHVzaCBmb3IgYSBu
-ZXcNCj4gZmluZS1ncmFpbmVkIGNvbXBpbGVyIG9wdGlvbiB0byBkaXNhYmxlIGl0Pw0KDQpJJ20g
-bm90IHN1cmUgaXQgaXMgYSBnb29kIGlkZWEgaW4gQU5ZIGNvbnRleHQuDQpJdCBzZWVtcyBsaWtl
-IHNvbWV0aGluZyB0aGUgY29tcGlsZXIgcGVvcGxlIGhhcyBkaXNjb3ZlcmVkIHRoZXkgY2FuIGRv
-DQp3aXRob3V0IGFjdHVhbGx5IGRlY2lkaW5nIHdoZXRoZXIgaXQgaXMgdXNlZnVsLg0KDQoJRGF2
-aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
-IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
-ODYgKFdhbGVzKQ0K
+On Fri 30-08-19 16:39:54, Tejun Heo wrote:
+> page->mapping may encode different values in it and page_mapping()
+> should always be used to access the mapping pointer.
+> track_foreign_dirty tracepoint was incorrectly accessing page->mapping
+> directly.  Use page_mapping() instead.  Also, add NULL checks while at
+> it.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reported-by: Jan Kara <jack@suse.cz>
+> Fixes: 3a8e9ac89e6a ("writeback: add tracepoints for cgroup foreign writebacks")
 
+I can see Jens already picked this up so this is just informative: The patch
+now looks good to me.
+
+								Honza
+
+> ---
+>  include/trace/events/writeback.h |    5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+> index 3dc9fb9e7c78..3a27335fce2c 100644
+> --- a/include/trace/events/writeback.h
+> +++ b/include/trace/events/writeback.h
+> @@ -251,9 +251,12 @@ TRACE_EVENT(track_foreign_dirty,
+>  	),
+>  
+>  	TP_fast_assign(
+> +		struct address_space *mapping = page_mapping(page);
+> +		struct inode *inode = mapping ? mapping->host : NULL;
+> +
+>  		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
+>  		__entry->bdi_id		= wb->bdi->id;
+> -		__entry->ino		= page->mapping->host->i_ino;
+> +		__entry->ino		= inode ? inode->i_ino : 0;
+>  		__entry->memcg_id	= wb->memcg_css->id;
+>  		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
+>  		__entry->page_cgroup_ino = page->mem_cgroup->css.cgroup->kn->id.ino;
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
