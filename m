@@ -5,47 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF516C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE72C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC5022CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8095E21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfIBISD (ORCPT
+        id S1730333AbfIBIQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:18:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56348 "EHLO
+        Mon, 2 Sep 2019 04:16:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56254 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730329AbfIBIQ4 (ORCPT
+        with ESMTP id S1730186AbfIBIQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:16:56 -0400
+        Mon, 2 Sep 2019 04:16:45 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i4hW5-0008EW-Hl; Mon, 02 Sep 2019 10:16:49 +0200
+        id 1i4hVr-00084K-9e; Mon, 02 Sep 2019 10:16:35 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D50DF1C0DFD;
-        Mon,  2 Sep 2019 10:16:42 +0200 (CEST)
-Date:   Mon, 02 Sep 2019 08:16:42 -0000
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BAB551C0DE7;
+        Mon,  2 Sep 2019 10:16:31 +0200 (CEST)
+Date:   Mon, 02 Sep 2019 08:16:31 -0000
+From:   "tip-bot2 for Tzvetomir Stoyanov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Update .gitignore file
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, x86@kernel.org,
+Subject: [tip: perf/core] libtraceevent: Remove tep_register_trace_clock()
+Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Patrick McLean <chutzpah@gentoo.org>,
+        linux-trace-devel@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <03acbc6c2fbc72054861f6c301875db75db33030.1567118001.git.jpoimboe@redhat.com>
-References: <03acbc6c2fbc72054861f6c301875db75db33030.1567118001.git.jpoimboe@redhat.com>
+In-Reply-To: <20190801074959.22023-3-tz.stoyanov@gmail.com>
+References: <20190801074959.22023-3-tz.stoyanov@gmail.com>
 MIME-Version: 1.0
-Message-ID: <156741220276.17392.15406327721555583989.tip-bot2@tip-bot2>
+Message-ID: <156741219163.17323.14033610247704028113.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,43 +63,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     58993fb2c5115e93c52058e25f9b2ff289374870
-Gitweb:        https://git.kernel.org/tip/58993fb2c5115e93c52058e25f9b2ff289374870
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Thu, 29 Aug 2019 17:41:19 -05:00
+Commit-ID:     5d6552ab3b71fac48a9c7452c7014d37ca80b17f
+Gitweb:        https://git.kernel.org/tip/5d6552ab3b71fac48a9c7452c7014d37ca80b17f
+Author:        Tzvetomir Stoyanov <tstoyanov@vmware.com>
+AuthorDate:    Mon, 05 Aug 2019 16:43:14 -04:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 31 Aug 2019 22:27:52 -03:00
+CommitterDate: Sat, 31 Aug 2019 22:19:28 -03:00
 
-perf: Update .gitignore file
+libtraceevent: Remove tep_register_trace_clock()
 
-After a "make tools/perf", git reports the following untracked files:
+The tep_register_trace_clock() API is used to instruct the traceevent
+library how to print the event time stamps. As event print interface if
+redesigned, this API is not needed any more.  The new event print API is
+flexible and the user can specify how the time stamps are printed.
 
-  tools/perf/feature/
-  tools/perf/fixdep
-  tools/perf/libtraceevent-dynamic-list
-
-Add these generated files to perf's .gitignore file.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: x86@kernel.org
-Link: http://lore.kernel.org/lkml/03acbc6c2fbc72054861f6c301875db75db33030.1567118001.git.jpoimboe@redhat.com
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-3-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.195042846@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/.gitignore | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/traceevent/event-parse-local.h |  2 --
+ tools/lib/traceevent/event-parse.c       | 11 -----------
+ tools/lib/traceevent/event-parse.h       |  1 -
+ 3 files changed, 14 deletions(-)
 
-diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-index 3e5135d..bf1252d 100644
---- a/tools/perf/.gitignore
-+++ b/tools/perf/.gitignore
-@@ -34,3 +34,6 @@ arch/*/include/generated/
- trace/beauty/generated/
- pmu-events/pmu-events.c
- pmu-events/jevents
-+feature/
-+fixdep
-+libtraceevent-dynamic-list
+diff --git a/tools/lib/traceevent/event-parse-local.h b/tools/lib/traceevent/event-parse-local.h
+index 6e58ee1..cee4698 100644
+--- a/tools/lib/traceevent/event-parse-local.h
++++ b/tools/lib/traceevent/event-parse-local.h
+@@ -81,8 +81,6 @@ struct tep_handle {
+ 
+ 	/* cache */
+ 	struct tep_event *last_event;
+-
+-	char *trace_clock;
+ };
+ 
+ void tep_free_event(struct tep_event *event);
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index d1085aa..bb22238 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -393,16 +393,6 @@ int tep_override_comm(struct tep_handle *tep, const char *comm, int pid)
+ 	return _tep_register_comm(tep, comm, pid, true);
+ }
+ 
+-int tep_register_trace_clock(struct tep_handle *tep, const char *trace_clock)
+-{
+-	tep->trace_clock = strdup(trace_clock);
+-	if (!tep->trace_clock) {
+-		errno = ENOMEM;
+-		return -1;
+-	}
+-	return 0;
+-}
+-
+ struct func_map {
+ 	unsigned long long		addr;
+ 	char				*func;
+@@ -7057,7 +7047,6 @@ void tep_free(struct tep_handle *tep)
+ 		free_handler(handle);
+ 	}
+ 
+-	free(tep->trace_clock);
+ 	free(tep->events);
+ 	free(tep->sort_events);
+ 	free(tep->func_resolver);
+diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
+index cf7f302..d438ee4 100644
+--- a/tools/lib/traceevent/event-parse.h
++++ b/tools/lib/traceevent/event-parse.h
+@@ -435,7 +435,6 @@ int tep_set_function_resolver(struct tep_handle *tep,
+ void tep_reset_function_resolver(struct tep_handle *tep);
+ int tep_register_comm(struct tep_handle *tep, const char *comm, int pid);
+ int tep_override_comm(struct tep_handle *tep, const char *comm, int pid);
+-int tep_register_trace_clock(struct tep_handle *tep, const char *trace_clock);
+ int tep_register_function(struct tep_handle *tep, char *name,
+ 			  unsigned long long addr, char *mod);
+ int tep_register_print_string(struct tep_handle *tep, const char *fmt,
