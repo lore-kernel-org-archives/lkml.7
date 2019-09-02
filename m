@@ -2,104 +2,89 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A85C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74648C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF6320644
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4t36eTz"
+	by mail.kernel.org (Postfix) with ESMTP id 550632173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730895AbfIBJGv (ORCPT
+        id S1730907AbfIBJH6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:06:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36499 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730657AbfIBJGu (ORCPT
+        Mon, 2 Sep 2019 05:07:58 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:37068 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730663AbfIBJH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:06:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y19so13184926wrd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0GID28MOVw3IqgOtjsXJT38X0mktzIfxk7qKPFjEw8Y=;
-        b=B4t36eTzRUg10X2oYdNxqdht2V8mmilid7efZANO7l/f0AtKhN/HTTcWldm5et9WB/
-         D8zgaoG3x9ANGJmSrXDSeKvaanVJl5cIdOJK7Mmk0Luvj35cpHGC5V5EjWHwfStmeMea
-         yl2kob86RjHU0biSFMF/44xWdj07sODUCQygtk4Rb6fff9NaNPfs27G1QGJcCYTaGF3c
-         uw74a3Ro9TE0GVaEjpfh4jgmUZPWIK+RBo4/r5OwH477Z3OWl7dj4KxLtm4qrfAwgzew
-         65ia/DVRC1GBFpzPQTH0iMAuFW8lrYm66R2B1LtFF96qrkoPG1dgNXVg+6mZhjv29f8f
-         99bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0GID28MOVw3IqgOtjsXJT38X0mktzIfxk7qKPFjEw8Y=;
-        b=qRzt8oFbdr6xqdYtRL7iYkiSgP1JScAjbZwpX9c5AZ6OUHr5PR+PtZ3/lY3BrgUbje
-         L2TLYZTPpnm+GJVpOJTF02721zDaM/Fty6FNvAZB4p/43NhBCVyABgeOtb7ocKOAtBke
-         ow2g8Qcw1Q7ksFiF4f8ii4AOv1GCBIG0epf6iEkKHIbpa9GrdG9B5VQgLqs1RW/s0WIn
-         GG1rF6TJpG26NjzhFhGoldNjUXqs0vDTkwyXvXdPXAIqlTtGjinMyCHXHASaWA0VQSvf
-         oAfvSAm8tCcKFKgqI2eOTZBe2WPChjXfgp0pmmVTRumHzp4s2XnKfTJ0TO8K7qTD/Cy5
-         y//Q==
-X-Gm-Message-State: APjAAAXQLDuN3YM9C/msZIVJN+6NBLOc0AlSyF3AHkuwpKqRA0FImMWS
-        bIyWeeC4wKrguJKQ2ORZPqGnmA==
-X-Google-Smtp-Source: APXvYqyGchDBpbIV0gXn9irGSUfGOAygOBZe+P22P17+hvKlBQgWDe2vziKLR0WrBSi+Ty7HtNTYKA==
-X-Received: by 2002:adf:d1a4:: with SMTP id w4mr36364617wrc.331.1567415208695;
-        Mon, 02 Sep 2019 02:06:48 -0700 (PDT)
-Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id n14sm49290434wra.75.2019.09.02.02.06.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 02:06:48 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:06:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] video: backlight: tosa_lcd: drop check because
- i2c_unregister_device() is NULL safe
-Message-ID: <20190902090646.GE32232@dell>
-References: <20190820153439.7638-1-wsa+renesas@sang-engineering.com>
+        Mon, 2 Sep 2019 05:07:58 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-45-pWetoKX2MVuDKeOGTbmj9Q-1; Mon, 02 Sep 2019 10:07:53 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 2 Sep 2019 10:07:53 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 2 Sep 2019 10:07:53 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Rasmus Villemoes' <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Petr Mladek <pmladek@suse.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] printf: add support for printing symbolic error codes
+Thread-Topic: [PATCH] printf: add support for printing symbolic error codes
+Thread-Index: AQHVX4Vhxwh8/eMOVEunFKpvvE2RyacYHAyQ
+Date:   Mon, 2 Sep 2019 09:07:53 +0000
+Message-ID: <d5cd47d8f2344ddfa88a34eab5cceb81@AcuMS.aculab.com>
+References: <20190830214655.6625-1-linux@rasmusvillemoes.dk>
+ <64a000cc3b0fcd7c99b5cd41b0db7f1b5e9e6db7.camel@perches.com>
+ <9fecd3a9-e1ae-a1f9-a0c5-f5db3430c81d@rasmusvillemoes.dk>
+ <92108c09c37a9355566b579db152a05e19f54ccf.camel@perches.com>
+ <516ab378-e79a-4e1c-8099-ccb22dfd5508@rasmusvillemoes.dk>
+In-Reply-To: <516ab378-e79a-4e1c-8099-ccb22dfd5508@rasmusvillemoes.dk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820153439.7638-1-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: pWetoKX2MVuDKeOGTbmj9Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019, Wolfram Sang wrote:
-
-> No need to check the argument of i2c_unregister_device() because the
-> function itself does it.
+From: Rasmus Villemoes
+> Sent: 30 August 2019 23:51
+...
+> > But why not just extend check_pointer_msg?
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> Build tested only, buildbot is happy, too.
-> 
-> Please apply to your tree.
-> 
->  drivers/video/backlight/tosa_lcd.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Partly because that would rely on all %p<foo> actually eventually
+> passing ptr through to that (notably plain %p does not), partly because
+> the way check_pointer_msg works means that it has to return a string for
+> its caller to print - which is ok when the errcode is found, but breaks
+> if it needs to format a decimal. It can't even snprintf() to a stack
+> buffer and return that, because, well, you can't do that, and it would
+> be a silly recursive snprintf anyway.
 
-Applied, thanks.
+Perhaps you could use NULL or "" to mean 'just print the value'.
+Then you might manage to use the test for NULL to print the errno strings.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
