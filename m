@@ -2,73 +2,73 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E9EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BF9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344C621881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC59220820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="dy+t1ysN";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="YWqPfaY7"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="y4oVkVxZ";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="TPPJWO+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfIBMeB (ORCPT
+        id S1731673AbfIBMd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:34:01 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:28348 "EHLO
+        Mon, 2 Sep 2019 08:33:59 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:40270 "EHLO
         mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731670AbfIBMeA (ORCPT
+        by vger.kernel.org with ESMTP id S1731634AbfIBMd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:34:00 -0400
+        Mon, 2 Sep 2019 08:33:57 -0400
 Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x82CUjqb029663;
-        Mon, 2 Sep 2019 05:33:53 -0700
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x82CUiGn029652;
+        Mon, 2 Sep 2019 05:33:47 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=pfpt0818;
- bh=eT5ARylE0PPIGqS6JRb8G0U3D3rvi556maazBgeCjFU=;
- b=dy+t1ysNoJ5vO4Bq30yGrWi3AmKAxxbI3SvOhgj2b8msbsP/CkxcCIEKtLS50HSIRYqG
- nXXESwWmxB1Rf2fCoy3brF226+MBe5BMUULD4xpeA4Ts2wMTBtungbG43R0KJv89Z9Wn
- uTwZk8OPuVoz71kyHbvEXNz/pa5DkQYA/H4wM7/Tbh05g6Ol3KwhBZ4AXPEDg5HpSqW/
- ts1jyzuj2AT9HY3Wvszo5Yh2MTBu+z49gybBGtGck7AaqFZribivOEq2o9x4sM/c7nFQ
- zaIqHyy10cUsIqUBH9IUDhNiRRnBbtkYWe2XraDswwE5VA0CqJ7XVcq4uZxzS6OiNGzq Xw== 
+ bh=b4H7jvs/togG3+26Ds/1XqTEtiHB5CxN8IOMuJN/PBo=;
+ b=y4oVkVxZ7+oIYj9pcUjoDOHfaTkDqf4EEVIscH1ET3KyFxXSR3MXtiO1TDhV+8rRi3gg
+ N4U/cjYRWq9wgv5eXD3T3F9DuohOfSxwkMYjqn6oTJLjs4cOu3umUihTgu7d1oGBNnvQ
+ +Rb80mZjWkFTk5PZQpdbNxo4z0eYPX9gJt0hZSWk2WHqzMucUkE7ZkvuyIbz/kvUtkhG
+ B0JbcCbtRGkyIFKwryeIVfyMJ/c/UBENG0/WhKRYdoWMIV+BEwvlONsP2kJV+56udZBg
+ zRhTtuRT42LXPp8ICoWDz3Q8kElUxtMcp2Ll3T6NZNTZbBMkUbLNXOFYCIptqJHKN3o8 7Q== 
 Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2uqrdm603k-1
+        by mx0b-0016f401.pphosted.com with ESMTP id 2uqrdm6038-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Sep 2019 05:33:53 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
+        Mon, 02 Sep 2019 05:33:46 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH03.marvell.com
  (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 2 Sep
- 2019 05:33:51 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.55) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 2 Sep 2019 05:33:50 -0700
+ 2019 05:33:44 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.57) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 2 Sep 2019 05:33:44 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eNyw7VF3iW87LXF8cmAE5O4PWhvxTAHksEVpk5LijtkkGP0ZdgQEB5ceNbNCDr1ZAjwJjO3E0GM7xNEHPcKgW5A2oRygSuiucqK47iHV67Ypz7uq1Ocs1cYijucqrjYhW/X7O8MhxuHn5kD9gQ8RVmLa2Fdf9dJMoISjBOD2K2wulEfPBHi6yyxA4VpIPIbyU4nKo/TpvvRueYEHx8zbAb22iLtOaFWy1/htKeFp1jeXQT/BWKjOGzNKDg2ub0hBM+l/IeglPEtqsq/yNIAodZ/VPJFFmCScfUUb53zUj+lrztX4Y020mhUbeMq53RfMJ7B0LFYJj3JedHisMec1/g==
+ b=FJ8IK76AaNDEDq0bdPHC0MdZtXZc17mBTsSxs2GifHP2xYFXdLPE+SLFl5HtaRsc0U5hlePYv92vf0Y+Jp0/RP9pLma9UGLcYXHJ4xaTTNAZWUcnnQGCMFnI0PGq8CGI3JZbZ+D5GFsdEjOxqIPRHTv9WS34ib85/k24Vc8emafBae3V0OV/x9fxPIvU88elbuGLzb1YlTVwyeBB9jQU4wTRJ7TRMQljUXmy8V9NlTQxgMW2u2Ezfp88N0qncUx5JgKmsN1LOrewZYqsS0KZKErJ6hYGap3Ejfk2OS8Lo5symVM2HroIUHPkxJsm9x0oOpvBc+NKl1IrF8wSrnb8ew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eT5ARylE0PPIGqS6JRb8G0U3D3rvi556maazBgeCjFU=;
- b=Oht0Dw9e5iBZ5+USPp1k8qkTwprCYgDksq7YBaLZ38uzCBy+633alCsFnGZqlHkHjn3fRPimvYRUD6d7gEEI8eZc7dnAmOLRam+os0z+UxjTQnnvFRJFfUt/j4U3Cm2kL1QqXRxpYf1y3XQucbWyKinMhDSlvfH5LDgG7jWq1pIpJ8uifUt8ofZLerRvSUINCILbj1MNCNmgFLxXqy30B/t4yi7eP6CplHPPOFsoiWF0rKgnBVV5YrG5gZP88O8xP5gaF1LA2j//ZigUyi5yBwG4WKnfIE6jx9RZImaQKiWrhHyBlEFGSaTs8t9VjVezs84DELs20P4gfsp90nejUQ==
+ bh=b4H7jvs/togG3+26Ds/1XqTEtiHB5CxN8IOMuJN/PBo=;
+ b=FaIGAQy+J2lg8/v89bqdc6pFUnN26At9W+tGOnrNdo161GvGPdi8uFboMXv+LRvRFtzkX5derVOfyLwA/wqJtg0XjisUJArIBioAF/rXQDZesZjN1STtuI70wWNemfenHPeln8VVSstIj4pkdO4nYtQRy6R547X/fAU68NinykHrMzZyTNSoXZDz349x5KrgAAAkp/8lT5mv/P3MaAMHSRw/rb+1Ktvfnd/5GVM8cXCRgqPO8xeFte69HM7auj+h9vvYFdKSDiQrBsa1ntonR5bOcjuYvm3PzlSWmds86Vi0C8g5ZOXcAnf502EIm9R+HYex/z4EviNSJHDVTPq0qg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
  dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eT5ARylE0PPIGqS6JRb8G0U3D3rvi556maazBgeCjFU=;
- b=YWqPfaY7qmSlCqnQKCHpXJJjrWOAtu4VpnGiwvXZqyoDwNMM7l2sHRWiu9gnovBBxtqGZabTF7xvsAokLHLz3rJPan5gOOyvMxogYYnJWNmBEPR9gQtwpvikJ4ZHR/cUak732FkshfU2TRA6fsgQXN9hn55Etw/l07tK8X0JqCk=
+ bh=b4H7jvs/togG3+26Ds/1XqTEtiHB5CxN8IOMuJN/PBo=;
+ b=TPPJWO+K2YmJuXIQySizy7VWquG9YLBK5tB3mUF2dGfSaeDg0oUrnhrtyRK6PwQiyYaoNP2xsPWaQheJGuto4EdKhjyI+DEIxBNBCtDgyMfqdbvNGWfufSG19OA0h4PNxpA+1iLPNBfXRtYs8OGss5Bt6/vA1N7ut3Of1el7aU4=
 Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
  MN2PR18MB2480.namprd18.prod.outlook.com (20.179.82.22) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Mon, 2 Sep 2019 12:33:49 +0000
+ 15.20.2220.20; Mon, 2 Sep 2019 12:33:43 +0000
 Received: from MN2PR18MB3408.namprd18.prod.outlook.com
  ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
  ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2220.013; Mon, 2 Sep 2019
- 12:33:49 +0000
+ 12:33:43 +0000
 From:   Robert Richter <rrichter@marvell.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -77,11 +77,13 @@ CC:     Robert Richter <rrichter@marvell.com>,
         James Morse <james.morse@arm.com>,
         "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/5] MAINTAINERS: update EDAC's reviewer entry
-Thread-Topic: [PATCH 5/5] MAINTAINERS: update EDAC's reviewer entry
-Thread-Index: AQHVYYqr018fZ7kvpEWL1+5AuK3XQg==
-Date:   Mon, 2 Sep 2019 12:33:49 +0000
-Message-ID: <20190902123216.9809-6-rrichter@marvell.com>
+Subject: [PATCH 2/5] EDAC, mc_sysfs: Change dev_ch_attribute->channel to
+ unsigned int
+Thread-Topic: [PATCH 2/5] EDAC, mc_sysfs: Change dev_ch_attribute->channel to
+ unsigned int
+Thread-Index: AQHVYYqoelFrxSu3pkCoThr/UzCw6g==
+Date:   Mon, 2 Sep 2019 12:33:43 +0000
+Message-ID: <20190902123216.9809-3-rrichter@marvell.com>
 References: <20190902123216.9809-1-rrichter@marvell.com>
 In-Reply-To: <20190902123216.9809-1-rrichter@marvell.com>
 Accept-Language: en-US
@@ -95,28 +97,28 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-originating-ip: [31.208.96.227]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 083237a3-3f95-4960-daf2-08d72fa1ce1b
+x-ms-office365-filtering-correlation-id: 8a5a06b4-4ed7-40ff-16ce-08d72fa1ca7f
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2480;
 x-ms-traffictypediagnostic: MN2PR18MB2480:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB24809F9D10BA12FC0677BE32D9BE0@MN2PR18MB2480.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-microsoft-antispam-prvs: <MN2PR18MB248083C28DB32D986E62CEAED9BE0@MN2PR18MB2480.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:510;
 x-forefront-prvs: 01480965DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39850400004)(396003)(136003)(366004)(199004)(189003)(6486002)(8676002)(186003)(110136005)(81166006)(81156014)(71190400001)(66066001)(6506007)(386003)(1076003)(71200400001)(26005)(6512007)(4744005)(53936002)(256004)(478600001)(50226002)(54906003)(86362001)(36756003)(8936002)(52116002)(66556008)(66476007)(486006)(5660300002)(64756008)(66446008)(11346002)(2616005)(4326008)(316002)(476003)(2906002)(7736002)(76176011)(6436002)(305945005)(6116002)(3846002)(99286004)(102836004)(14454004)(446003)(66946007)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2480;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39850400004)(396003)(136003)(366004)(199004)(189003)(6486002)(8676002)(186003)(110136005)(81166006)(81156014)(71190400001)(66066001)(6506007)(386003)(1076003)(71200400001)(26005)(6512007)(4744005)(53936002)(256004)(478600001)(50226002)(54906003)(86362001)(36756003)(8936002)(14444005)(52116002)(66556008)(66476007)(486006)(5660300002)(64756008)(66446008)(11346002)(2616005)(4326008)(316002)(476003)(2906002)(7736002)(76176011)(6436002)(305945005)(6116002)(3846002)(99286004)(102836004)(14454004)(446003)(66946007)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2480;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: marvell.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3AZIqllSYG6pa60ZulnBu4qjdUcsliLuRb5iUXpRcO/YXZbqyGJvmBzTMmaOlBpiW7bsKjFExzAmJfIAY1e5rjF6YDGfIl/cQpSHEHPCZ+33ZXLXKCCD5caWde891HAcdJn5wZ1dYTZGkImSvKp5gq28m0B23lKCASvF26v+sK4lU57GOeODO1zAkLeHZ9Z4ws/Rml/e2fv522WaafdsNwd0vV+aRZpReS3Z3GFJUDCvh/jHKPlroVCRwLzZnTQrCOx7+Z+4KfQxdVcH8YicIhV6UL74tr2wNWNPJaT7ROTCXkk5YfYoplMr9hdlMf/RhHNFbtfUfBldKhzYPdB24m4/7EvtVDMiQ19mPN82KCdb1GolFauLegLbvSB0IiUP1p4PYf1G2X5UkQYXbVfJLfhUpmo4tHPZjkseo3q8P4g=
+x-microsoft-antispam-message-info: f++YGtZrtZ4HxfzSd5PROVdEKToYtqaTMw8FN+q16eolOZq/cgsLZzXg7J5WNDC5mZo18muXFEJBHW7OR/qP4VTN1b2qWctn1skCzob+iazGVcageAlaj6bxRcYPvD8jYIIJTmbdBDtyO//V44HnErrGUo0iPTSiNqhzCb7CgKXcvC8WcOWm46H2Y5K+dY8Ljh0jPbuvryTswnSAlukDofQ0kP+sUZ+1PUE43i8mFnAYctd7gsgaOhjAvTULhg2JOCfZT12EhlDi6XtoogLJdDF/3ZTfS+iWl/1WYRNFYgU3L8ClxA6qvy0K7wE16eiFLfkbzNaJa5ePlNDUYzPvyDJgXBqvDDOQvdhLwNUsaCffeIF/E4h0KAOiKV8pTKyU6yAyfrDlogUMvvTiQcyrj4S8uq/gDth10xvTd9EZN7I=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 083237a3-3f95-4960-daf2-08d72fa1ce1b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 12:33:49.3494
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a5a06b4-4ed7-40ff-16ce-08d72fa1ca7f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 12:33:43.2779
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: muPGUNjntKO2LUn76FgmwDk6ufPJgRnsTZlz9lNdMQfHZYZeSwi2Cbu2+tOkNMatpl6+c7iJ/MJVyjq9fAPU3Q==
+X-MS-Exchange-CrossTenant-userprincipalname: 8m3m5jI2bbcRrzPMReQm7dSj4F3T+/onN0iLquWe7PKhKjk3uiZN5WoRatQ7IFREbBgTxt6T3X0+m8+8Fekigg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2480
 X-OriginatorOrg: marvell.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
@@ -126,28 +128,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I did some significant work with code in edac_mc.c and ghes_edac.c
-already, so I guess I can probably helping out a bit as code reviewer
-here.
+Struct member dev_ch_attribute->channel is always used as unsigned
+int. Change type to unsigned int to avoid type casts.
 
 Signed-off-by: Robert Richter <rrichter@marvell.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/edac/edac_mc_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 97912d8333a9..79d2ae8519e3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5788,6 +5788,7 @@ M:	Borislav Petkov <bp@alien8.de>
- M:	Mauro Carvalho Chehab <mchehab@kernel.org>
- M:	Tony Luck <tony.luck@intel.com>
- R:	James Morse <james.morse@arm.com>
-+R:	Robert Richter <rrichter@marvell.com>
- L:	linux-edac@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-=
-next
- S:	Supported
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 640b9419623e..4eb8c5ceb973 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -131,7 +131,7 @@ static const char * const edac_caps[] =3D {
+=20
+ struct dev_ch_attribute {
+ 	struct device_attribute attr;
+-	int channel;
++	unsigned int channel;
+ };
+=20
+ #define DEVICE_CHANNEL(_name, _mode, _show, _store, _var) \
 --=20
 2.20.1
 
