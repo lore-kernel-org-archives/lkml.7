@@ -2,98 +2,109 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7D1C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7D4C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6AD217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p63qBkbf"
+	by mail.kernel.org (Postfix) with ESMTP id A378E21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730947AbfIBJK7 (ORCPT
+        id S1730961AbfIBJLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:10:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51398 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730015AbfIBJK7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:10:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id k1so13680620wmi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=F+R1VokAMpRs9tEY/DwWMta9ZH4Twx4r2rQIJQM1G/I=;
-        b=p63qBkbfBV6lM1WU5vBh/cE2qcf9fweRiYXdO/0wTiXgPKpFTvAtxCAzFOWh1eLBsA
-         7+Vwfn6FbEbdu/HKroatQsZTneRFwAbHDcJfek36BDZtE8iFedFMxEioiM8YRSOaFrS1
-         arJ9ZHt7P/19Dhl362GkEpEJ/vTzur/yebCX63WS2fUleJaEYFzlH7o9qaAtnEl1pSML
-         fZYAvXQQaAeoGRw6W8QFFH3+CByWxgP+jtSI3MTjyZ/OJhKyIdFAjEFmcnuczQws4Hia
-         L/hM0i4xkAN3yl/gnqaDHSdAwyigHY0j0XP1V+EIirNSPMaYNejTT2wqgzkEwBwxLA0x
-         i8uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=F+R1VokAMpRs9tEY/DwWMta9ZH4Twx4r2rQIJQM1G/I=;
-        b=WZiozTbGG2emY12GMlagvknAzOEuJhKIn01VSlf1qtBocCH4JbBlO+4GZf9FAS2gXY
-         2x1Jen8Nl9kD6r/qLgpmv8HEIrQuaA55nAIfkeQI+6mEojuImAUPgH3KVPb9mqlDbRHb
-         Yx+7I/v+M70uGcGrCYLFaZQmIzo0r6AKj0MY5w+KIMEknndg9vmTYbPSFWK9xVTtG50w
-         UY2C+RNom7KVrbGqOfevA2SKlgR+RlW+8z70vfuuNkFwc7fKd/vpQ3Yw8zHMvpxLcs8R
-         JUsnMY6L/5KDzm5qYfwrS4I9VyjZruKxiPf58+AcihB3OUDVtJ5XHa5RaDwWDyshiEhx
-         pTqg==
-X-Gm-Message-State: APjAAAVJ7voAb6N7j1uXX+G1MyczY51pCgjj3rQoGLz6EqZhoz83uNRC
-        nRvko9Hfm9C2YIuNG5rULP9scpBWIUDjWQ==
-X-Google-Smtp-Source: APXvYqwFRKtM/WYAg/TV5ot4eMnd9RM3Jn9GeeEoncMi/2YqmCEYkjAamqX3AC04cglaU9fc5336gw==
-X-Received: by 2002:a1c:a796:: with SMTP id q144mr26533342wme.15.1567415456793;
-        Mon, 02 Sep 2019 02:10:56 -0700 (PDT)
-Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id q26sm905084wmf.45.2019.09.02.02.10.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 02:10:56 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:10:54 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: intel-lpss: Use MODULE_SOFTDEP() instead of
- implicit request
-Message-ID: <20190902091054.GF32232@dell>
-References: <20190821083712.4635-1-andriy.shevchenko@linux.intel.com>
+        Mon, 2 Sep 2019 05:11:04 -0400
+Received: from shell.v3.sk ([90.176.6.54]:41884 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730015AbfIBJLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:11:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id EDC08CE718;
+        Mon,  2 Sep 2019 11:11:00 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id OkqU5dSpAxIO; Mon,  2 Sep 2019 11:10:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id B94ADD8CED;
+        Mon,  2 Sep 2019 11:10:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id FVUC0wSz7RId; Mon,  2 Sep 2019 11:10:53 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 91A20CE718;
+        Mon,  2 Sep 2019 11:10:52 +0200 (CEST)
+Message-ID: <ca0213fd439a2b569e0d3bdb000712ee62ff4836.camel@v3.sk>
+Subject: Re: [PATCH] pxa168fb: Fix the function used to release some memory
+ in an error handling path
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        b.zolnierkie@samsung.com, yuehaibing@huawei.com
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Mon, 02 Sep 2019 11:10:46 +0200
+In-Reply-To: <20190831100024.3248-1-christophe.jaillet@wanadoo.fr>
+References: <20190831100024.3248-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190821083712.4635-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Andy Shevchenko wrote:
+On Sat, 2019-08-31 at 12:00 +0200, Christophe JAILLET wrote:
+> In the probe function, some resources are allocated using 'dma_alloc_wc()',
+> they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
+> 
+> We already use 'dma_free_wc()' in the remove function, but not in the
+> error handling path of the probe function.
+> 
+> Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
+> PAGE_ALIGNed.
+> 
+> Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-> There is no need to handle optional module request in the driver
-> when user space tools has that feature for ages.
-> 
-> Replace custom code by MODULE_SOFTDEP() macro to let user space know
-> that we would like to have the DMA driver loaded first, if any.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+
+Thanks,
+Lubo
+
 > ---
->  drivers/mfd/intel-lpss.c | 29 ++++++++---------------------
->  1 file changed, 8 insertions(+), 21 deletions(-)
+> The change about PAGE_ALIGN should probably be part of a separate commit.
+> However, git history for this driver is really quiet. If you think it
+> REALLY deserves a separate patch, either split it by yourself or axe this
+> part of the patch. I won't bother resubmitting for this lonely cleanup.
+> Hoping for your understanding.
+> ---
+>  drivers/video/fbdev/pxa168fb.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
+> index 1410f476e135..1fc50fc0694b 100644
+> --- a/drivers/video/fbdev/pxa168fb.c
+> +++ b/drivers/video/fbdev/pxa168fb.c
+> @@ -766,8 +766,8 @@ static int pxa168fb_probe(struct platform_device *pdev)
+>  failed_free_clk:
+>  	clk_disable_unprepare(fbi->clk);
+>  failed_free_fbmem:
+> -	dma_free_coherent(fbi->dev, info->fix.smem_len,
+> -			info->screen_base, fbi->fb_start_dma);
+> +	dma_free_wc(fbi->dev, info->fix.smem_len,
+> +		    info->screen_base, fbi->fb_start_dma);
+>  failed_free_info:
+>  	kfree(info);
+>  
+> @@ -801,7 +801,7 @@ static int pxa168fb_remove(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  
+> -	dma_free_wc(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
+> +	dma_free_wc(fbi->dev, info->fix.smem_len,
+>  		    info->screen_base, info->fix.smem_start);
+>  
+>  	clk_disable_unprepare(fbi->clk);
 
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
