@@ -2,65 +2,180 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4B4C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6170C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA4B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7468205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfIBN64 (ORCPT
+        id S1730977AbfIBOAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:58:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:21910 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730136AbfIBN64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:58:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:58:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="183315151"
-Received: from doblerbe-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.53.100])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Sep 2019 06:58:53 -0700
-Date:   Mon, 2 Sep 2019 16:58:51 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the tpmdd tree
-Message-ID: <20190902135851.tej2nj2poa2gskcs@linux.intel.com>
-References: <20190902073227.34b86449@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902073227.34b86449@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+        Mon, 2 Sep 2019 10:00:52 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57573 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730383AbfIBOAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:00:52 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i4msv-00055J-K2; Mon, 02 Sep 2019 16:00:45 +0200
+Message-ID: <1567432843.3666.6.camel@pengutronix.de>
+Subject: Re: [PATCH 02/12] media: hantro: Do not reorder H264 scaling list
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Mon, 02 Sep 2019 16:00:43 +0200
+In-Reply-To: <HE1PR06MB40116C92C3D52C5957EF48E9ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB40116C92C3D52C5957EF48E9ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 07:32:27AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commit
-> 
->   8dbcb44f392e ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts")
-> 
-> is missing a Signed-off-by from its committer.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+Hi Jonas,
 
-Thanks, fixed.
+On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:
+> Scaling list supplied from userspace using ffmpeg and libva-v4l2-request
+> is already in matrix order and can be used without applying the inverse
+> scanning process.
 
-/Jarkko
+"in matrix order" is equivalent to "in raster scan order"?
+
+Could you add this requirement to the
+V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX documentation?
+
+> The HW also only support 8x8 scaling list for the Y component, indices 0
+> and 3 in the scaling list supplied from userspace.
+> 
+> Remove reordering and write the scaling matrix in an order expected by
+> the VPU, also only allocate memory for the two 8x8 lists used.
+> 
+> Fixes: a9471e25629b ("media: hantro: Add core bits to support H264 decoding")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  drivers/staging/media/hantro/hantro_h264.c | 64 +++++++---------------
+>  1 file changed, 20 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+> index 0d758e0c0f99..e2d01145ac4f 100644
+> --- a/drivers/staging/media/hantro/hantro_h264.c
+> +++ b/drivers/staging/media/hantro/hantro_h264.c
+> @@ -20,7 +20,7 @@
+>  /* Size with u32 units. */
+>  #define CABAC_INIT_BUFFER_SIZE		(460 * 2)
+>  #define POC_BUFFER_SIZE			34
+> -#define SCALING_LIST_SIZE		(6 * 16 + 6 * 64)
+> +#define SCALING_LIST_SIZE		(6 * 16 + 2 * 64)
+
+This changes the size of struct hantro_h264_dec_priv_tbl. Did this
+describe the auxiliary buffer format incorrectly before?
+
+>  #define POC_CMP(p0, p1) ((p0) < (p1) ? -1 : 1)
+>  
+> @@ -194,57 +194,33 @@ static const u32 h264_cabac_table[] = {
+>  	0x1f0c2517, 0x1f261440
+>  };
+>  
+> -/*
+> - * NOTE: The scaling lists are in zig-zag order, apply inverse scanning process
+> - * to get the values in matrix order. In addition, the hardware requires bytes
+> - * swapped within each subsequent 4 bytes. Both arrays below include both
+> - * transformations.
+> - */
+> -static const u32 zig_zag_4x4[] = {
+> -	3, 2, 7, 11, 6, 1, 0, 5, 10, 15, 14, 9, 4, 8, 13, 12
+> -};
+> -
+> -static const u32 zig_zag_8x8[] = {
+> -	3, 2, 11, 19, 10, 1, 0, 9, 18, 27, 35, 26, 17, 8, 7, 6,
+> -	15, 16, 25, 34, 43, 51, 42, 33, 24, 23, 14, 5, 4, 13, 22, 31,
+> -	32, 41, 50, 59, 58, 49, 40, 39, 30, 21, 12, 20, 29, 38, 47, 48,
+> -	57, 56, 55, 46, 37, 28, 36, 45, 54, 63, 62, 53, 44, 52, 61, 60
+> -};
+> -
+>  static void
+>  reorder_scaling_list(struct hantro_ctx *ctx)
+>  {
+>  	const struct hantro_h264_dec_ctrls *ctrls = &ctx->h264_dec.ctrls;
+>  	const struct v4l2_ctrl_h264_scaling_matrix *scaling = ctrls->scaling;
+> -	const size_t num_list_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4);
+> -	const size_t list_len_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4[0]);
+> -	const size_t num_list_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8);
+> -	const size_t list_len_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8[0]);
+>  	struct hantro_h264_dec_priv_tbl *tbl = ctx->h264_dec.priv.cpu;
+> -	u8 *dst = tbl->scaling_list;
+> -	const u8 *src;
+> -	int i, j;
+> -
+> -	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_4x4) != list_len_4x4);
+> -	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_8x8) != list_len_8x8);
+> -	BUILD_BUG_ON(ARRAY_SIZE(tbl->scaling_list) !=
+> -		     num_list_4x4 * list_len_4x4 +
+> -		     num_list_8x8 * list_len_8x8);
+> -
+> -	src = &scaling->scaling_list_4x4[0][0];
+> -	for (i = 0; i < num_list_4x4; ++i) {
+> -		for (j = 0; j < list_len_4x4; ++j)
+> -			dst[zig_zag_4x4[j]] = src[j];
+> -		src += list_len_4x4;
+> -		dst += list_len_4x4;
+> +	u32 *dst = (u32 *)tbl->scaling_list;
+> +	u32 i, j, tmp;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(scaling->scaling_list_4x4); i++) {
+> +		for (j = 0; j < ARRAY_SIZE(scaling->scaling_list_4x4[0]) / 4; j++) {
+> +			tmp = (scaling->scaling_list_4x4[i][4 * j + 0] << 24) |
+> +			      (scaling->scaling_list_4x4[i][4 * j + 1] << 16) |
+> +			      (scaling->scaling_list_4x4[i][4 * j + 2] << 8) |
+> +			      (scaling->scaling_list_4x4[i][4 * j + 3]);
+> +			*dst++ = tmp;
+> +		}
+
+This looks like it could use swab32().
+
+>  	}
+>  
+> -	src = &scaling->scaling_list_8x8[0][0];
+> -	for (i = 0; i < num_list_8x8; ++i) {
+> -		for (j = 0; j < list_len_8x8; ++j)
+> -			dst[zig_zag_8x8[j]] = src[j];
+> -		src += list_len_8x8;
+> -		dst += list_len_8x8;
+> +	for (i = 0; i < ARRAY_SIZE(scaling->scaling_list_8x8); i += 3) {
+> +		for (j = 0; j < ARRAY_SIZE(scaling->scaling_list_8x8[0]) / 4; j++) {
+> +			tmp = (scaling->scaling_list_8x8[i][4 * j + 0] << 24) |
+> +			      (scaling->scaling_list_8x8[i][4 * j + 1] << 16) |
+> +			      (scaling->scaling_list_8x8[i][4 * j + 2] << 8) |
+> +			      (scaling->scaling_list_8x8[i][4 * j + 3]);
+> +			*dst++ = tmp;
+> +		}
+
+After this change, the second 8x8 scaling list has moved to a different
+offset. Is this where the hardware has always been looking for it, or is
+there a change missing in another place?
+
+regards
+Philipp
