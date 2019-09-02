@@ -2,88 +2,144 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDFFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7568FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B4621882
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E882168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfIBNC3 (ORCPT
+        id S1730244AbfIBNDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:02:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49166 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729770AbfIBNC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:02:29 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id ADB4628CB08
-Message-ID: <f204a408f980f3ae0cfb859acdc765cdc1c0ff01.camel@collabora.com>
-Subject: Re: [PATCH RFC 00/12] media: hantro: H264 fixes and improvements
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Sep 2019 10:02:14 -0300
-In-Reply-To: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 2 Sep 2019 09:03:39 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:4404 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729672AbfIBNDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:03:39 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 6A3C43110C48CBDD4B54;
+        Mon,  2 Sep 2019 21:03:37 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 2 Sep 2019 21:03:37 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 2 Sep 2019 21:03:36 +0800
+Date:   Mon, 2 Sep 2019 21:02:45 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-erofs@lists.ozlabs.org>
+Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
+Message-ID: <20190902130245.GC17916@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-2-gaoxiang25@huawei.com>
+ <20190829095954.GB20598@infradead.org>
+ <20190901075240.GA2938@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190902124521.GA22153@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190902124521.GA22153@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+Hi Christoph,
 
-Thanks for the series, I'll be reviewing this shortly.
+On Mon, Sep 02, 2019 at 05:45:21AM -0700, Christoph Hellwig wrote:
+> On Sun, Sep 01, 2019 at 03:54:11PM +0800, Gao Xiang wrote:
+> > It could be better has a name though, because 1) erofs.mkfs uses this
+> > definition explicitly, and we keep this on-disk definition erofs_fs.h
+> > file up with erofs-utils.
+> > 
+> > 2) For kernel use, first we have,
+> >    datamode < EROFS_INODE_LAYOUT_MAX; and
+> >    !erofs_inode_is_data_compressed, so there are only two mode here,
+> >         1) EROFS_INODE_FLAT_INLINE,
+> >         2) EROFS_INODE_FLAT_PLAIN
+> >    if its datamode isn't EROFS_INODE_FLAT_INLINE (tail-end block packing),
+> >    it should be EROFS_INODE_FLAT_PLAIN.
+> > 
+> >    The detailed logic in erofs_read_inode and
+> >    erofs_map_blocks_flatmode....
+> 
+> Ok.  At least the explicit numbering makes this a little more obvious
+> now.  What seems fairly odd is that there are only various places that
+> check for some inode layouts/formats but nothing that does a switch
+> over all of them.
 
-On Sun, 2019-09-01 at 12:42 +0000, Jonas Karlman wrote:
-> This series contains fixes and improvements for the hantro H264 decoder.
-> 
-> Patch 1-6 fixes issues and limitations observed when preparing support
-> for field encoded content.
-> 
-> Patch 7 introduce new DPB entry flags that is used to signal how a reference
-> frame is referenced. This information is needed to correctly build a
-> reference list for field encoded content.
-> 
-> Patch 8 adds bits to handle field encoded content, this is a rough patch
-> and should be reworked with proper code style and formatting.
-> Please get back with feedback on how to improve this.
-> 
-> The following samples from [1] are now playable with patch 1-8
-> - H264_1080i-25-interlace_Kaesescheibchen.mkv
-> - H264_10_1080i_50_AC3-Astra19.2_ProSieben_HD.ts
-> - big_buck_bunny_1080p_H264_AAC_25fps_7200K.mp4
-> - h264_tivo_sample.ts
-> 
-> The rest of the patches refactors G1 H264 code to more closely match
-> the code generated by my rockchip-vpu-regtool at [2] and then adds
-> support for H264 decoding on RK3399/RK3328 using the VPU2 block.
-> This code is early work and needs proper code style and formatting,
-> I just wanted to share the early work and get some initial feedback.
-> 
-> This series has been tested using ffmpeg v4l2 request hwaccel at [3] [4]
-> 
+(Maybe not explicitly for this part....)
 
-What boards have you tested this on?
+erofs_map_blocks_flatmode()
+...
+ 97         nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
+ 98         lastblk = nblocks - is_inode_flat_inline(inode);
+                                ^ here
+...
+
+Believe me EROFS_INODE_FLAT_PLAIN is used widely for EROFS images....
+(if EROFS_INODE_FLAT_INLINE tail-end packing is not suitable and
+ no compression....)
+
+> 
+> > > why are we adding a legacy field to a brand new file system?
+> > 
+> > The difference is just EROFS_INODE_FLAT_COMPRESSION_LEGACY doesn't
+> > have z_erofs_map_header, so it only supports default (4k clustersize)
+> > fixed-sized output compression rather than per-file setting, nothing
+> > special at all...
+> 
+> It still seems odd to add a legacy field to a brand new file system.
+
+Since 4.19 EROFS only supports EROFS_INODE_FLAT_COMPRESSION_LEGACY
+(per-filesystem setting), we'd like to introduce per-file setting and
+more configration for future requirements....
+
+> 
+> > > structures, as that keeps it clear in everyones mind what needs to
+> > > stay persistent and what can be chenged easily.
+> > 
+> > All fields in this file are on-disk representation by design
+> > (no logic for in-memory presentation).
+> 
+> Ok, make sense.    Maybe add a note to the top of the file comment
+> that this is the on-disk format.
+> 
+> One little oddity is that erofs_inode_is_data_compressed is here, while
+> is_inode_flat_inline is in internal.h.  There are arguments for either
+> place, but I'd suggest to keep the related macros together.
+
+(Just my personal thought... erofs_inode_is_data_compressed operates
+ondisk field like datamode (because we have 2 datamode for compression,
+need to wrap them to judge if the file is compressed...)
+so it stays at erofs_fs.h... is_inode_flat_inline operates in-memory
+struct inode so it in internal.h....)
 
 Thanks,
-Ezequiel
+Gao Xiang
 
