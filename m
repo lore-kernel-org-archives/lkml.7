@@ -2,103 +2,92 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ADEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7134C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE6C21883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567463667;
-	bh=zxlvym5oukUFwGFmYoTL3hfULUu15glsaWNaltuAHQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eh809494eba8gYHkPqbIXgcWdJ2uYFJEz2a+WS+lQf+QaB3T1cOtx2wozDwwplvST
-	 JAxcTDEQ0VY8ZTk6+YqD6boDFKBu2/l+O5OcPxILR1wuT3JnLgb9kFlp0TZyxCcwWl
-	 vDldi90C6JaPLzEhAHDRYbY86cLFTDHfXx3P035k=
+	by mail.kernel.org (Postfix) with ESMTP id B0DEF20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfIBWe1 (ORCPT
+        id S1727792AbfIBWgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 18:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfIBWe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 18:34:26 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95E3C20828;
-        Mon,  2 Sep 2019 22:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567463665;
-        bh=zxlvym5oukUFwGFmYoTL3hfULUu15glsaWNaltuAHQk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2VF1hCrTx8UXbNVzbEJTQBDYiDTWB3w3Ox0RHaYOY5RRhQ5V/j+ozlBJxChYpApF4
-         Drfuru1BaFWEKuzaJP2l2CTB/an/+V9HKHXtFLAO9tNDzoFWVL68on8utckiXIRLxr
-         Ye/no9smui7FCfY4IYYzP824+yi2GfONsyQWSi2Y=
-Date:   Mon, 2 Sep 2019 17:34:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Message-ID: <20190902223424.GJ7013@google.com>
-References: <1566359059-4844-1-git-send-email-wenwen@cs.uga.edu>
- <CAJZ5v0gm3Mv0-6fVe+7v4Kd49xG6W=TXcxfTJthpe9o46n4EEQ@mail.gmail.com>
+        Mon, 2 Sep 2019 18:36:54 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:47755 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbfIBWgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 18:36:54 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A57DF1BF207;
+        Mon,  2 Sep 2019 22:36:50 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 00:36:50 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] clocksource: atmel-st: Variable sr in
+ at91rm9200_timer_interrupt() could be uninitialized
+Message-ID: <20190902223650.GJ21922@piout.net>
+References: <20190902222946.20548-1-yzhai003@ucr.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gm3Mv0-6fVe+7v4Kd49xG6W=TXcxfTJthpe9o46n4EEQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190902222946.20548-1-yzhai003@ucr.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:19:58PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Aug 21, 2019 at 5:44 AM Wenwen Wang <wenwen@cs.uga.edu> wrote:
-> >
-> > In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-> > acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-> > it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-> > memory leak. To fix this issue, free 'entry' before returning 0.
-> >
-> > Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means
-> > "not connected"")
-> >
-> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+On 02/09/2019 15:29:46-0700, Yizhuo wrote:
+> Inside function at91rm9200_timer_interrupt(), variable sr could
+> be uninitialized if regmap_read() fails. However, sr is used
+
+Could you elaborate on how this could fail?
+
+> to decide the control flow later in the if statement, which is
+> potentially unsafe. We could check the return value of
+> regmap_read() and print an error here.
 > 
-> Bjorn, any more comments?
+> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+> ---
+>  drivers/clocksource/timer-atmel-st.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clocksource/timer-atmel-st.c b/drivers/clocksource/timer-atmel-st.c
+> index ab0aabfae5f0..061a3f27847e 100644
+> --- a/drivers/clocksource/timer-atmel-st.c
+> +++ b/drivers/clocksource/timer-atmel-st.c
+> @@ -48,8 +48,14 @@ static inline unsigned long read_CRTR(void)
+>  static irqreturn_t at91rm9200_timer_interrupt(int irq, void *dev_id)
+>  {
+>  	u32 sr;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap_st, AT91_ST_SR, &sr);
+> +	if (ret) {
+> +		pr_err("Fail to read AT91_ST_SR.\n");
+> +		return ret;
+> +	}
+>  
+> -	regmap_read(regmap_st, AT91_ST_SR, &sr);
+>  	sr &= irqmask;
+>  
+>  	/*
+> -- 
+> 2.17.1
+> 
 
-Nope, looks fine to me.
-
-> > ---
-> >  drivers/acpi/pci_irq.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-> > index d2549ae..dea8a60 100644
-> > --- a/drivers/acpi/pci_irq.c
-> > +++ b/drivers/acpi/pci_irq.c
-> > @@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
-> >                  * No IRQ known to the ACPI subsystem - maybe the BIOS /
-> >                  * driver reported one, then use it. Exit in any case.
-> >                  */
-> > -               if (!acpi_pci_irq_valid(dev, pin))
-> > +               if (!acpi_pci_irq_valid(dev, pin)) {
-> > +                       kfree(entry);
-> >                         return 0;
-> > +               }
-> >
-> >                 if (acpi_isa_register_gsi(dev))
-> >                         dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
-> > --
-> > 2.7.4
-> >
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
