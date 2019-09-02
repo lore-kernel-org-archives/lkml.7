@@ -4,97 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032AEC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B2EC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C936A21874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3815C21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbfIBIdX (ORCPT
+        id S1729971AbfIBIdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:33:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2568 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbfIBIck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:32:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:32:40 -0700
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="194005747"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:32:35 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id C102920B44;
-        Mon,  2 Sep 2019 11:32:33 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i4hlQ-0005JV-6q; Mon, 02 Sep 2019 11:32:40 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v4 02/11] software node: Make argument to to_software_node const
-Date:   Mon,  2 Sep 2019 11:32:31 +0300
-Message-Id: <20190902083240.20367-3-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 2 Sep 2019 04:33:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60406 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729722AbfIBIdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:33:52 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i4hmV-0001ln-NX; Mon, 02 Sep 2019 08:33:48 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     harry.wentland@amd.com, sunpeng.li@amd.com,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] drm/amd/display: Restore backlight brightness after system resume
+Date:   Mon,  2 Sep 2019 16:33:42 +0800
+Message-Id: <20190902083342.27393-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-to_software_node() does not need to modify the fwnode_handle it operates
-on; therefore make it const. This allows passing a const fwnode_handle to
-to_software_node().
+Laptops with AMD APU doesn't restore display backlight brightness after
+system resume.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+This issue started when DC was introduced.
+
+Let's use BL_CORE_SUSPENDRESUME so the backlight core calls
+update_status callback after system resume to restore the backlight
+level.
+
+Tested on Dell Inspiron 3180 (Stoney Ridge) and Dell Latitude 5495
+(Raven Ridge).
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/base/swnode.c    | 4 ++--
- include/linux/property.h | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a7cb41812cfda..951e7efd47c23 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
- 	return swnode;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 1b0949dd7808..183ef18ac6f3 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2111,6 +2111,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
  }
  
--const struct software_node *to_software_node(struct fwnode_handle *fwnode)
-+const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
- {
--	struct swnode *swnode = to_swnode(fwnode);
-+	const struct swnode *swnode = to_swnode(fwnode);
- 
- 	return swnode ? swnode->node : NULL;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 5a910ad795910..421c76e53708d 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -418,7 +418,8 @@ struct software_node {
+ static const struct backlight_ops amdgpu_dm_backlight_ops = {
++	.options = BL_CORE_SUSPENDRESUME,
+ 	.get_brightness = amdgpu_dm_backlight_get_brightness,
+ 	.update_status	= amdgpu_dm_backlight_update_status,
  };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
--const struct software_node *to_software_node(struct fwnode_handle *fwnode);
-+const struct software_node *
-+to_software_node(const struct fwnode_handle *fwnode);
- struct fwnode_handle *software_node_fwnode(const struct software_node *node);
- 
- int software_node_register_nodes(const struct software_node *nodes);
 -- 
-2.20.1
+2.17.1
 
