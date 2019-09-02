@@ -2,95 +2,102 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE250C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D1DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C558B22DD6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABAA22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l4oUO988"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HYdjMmlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbfIBICj (ORCPT
+        id S1730093AbfIBICT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:02:39 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58302 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730036AbfIBICT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Sep 2019 04:02:19 -0400
-Received: from pendragon.ideasonboard.com (231.125-247-81.adsl-dyn.isp.belgacom.be [81.247.125.231])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6D2A0303;
-        Mon,  2 Sep 2019 10:02:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1567411337;
-        bh=9LpLDBZKeRKxbRTdwGzHizcveEKiifXyzbvf6jL+liQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l4oUO988Hlc4uTdtzaHPaZBcV30LXMyIR1ns7Ywb9XZhhkX6dXKaawv+8gDacGTqR
-         pX6ZkK0asuMtPvXmXgwPYY3LdyNOirfYSlhJpz6yUaj65XTRlet3PMwl3d40Pom9Yt
-         rq3DS4oYOEZlq5VQHWw7i6i2ZUbG4fZRQKf4k5Ug=
-Date:   Mon, 2 Sep 2019 11:02:11 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
-Message-ID: <20190902080211.GD4777@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-2-jacopo@jmondi.org>
- <20190815065635.GJ6133@paasikivi.fi.intel.com>
- <20190901172414.GB1047@bug>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190901172414.GB1047@bug>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:51320 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729675AbfIBICR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:02:17 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 77A6AC042B;
+        Mon,  2 Sep 2019 08:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567411337; bh=KCQxzNKdPciLpCzMYFXS00/1ZDMQ64xO5mQOdoiRlGM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=HYdjMmlVNEx7t25t6pVED8QCg0+TQDguvdDqz0LGkr0e+OGsJS1KM6jXBTH1ozyIz
+         qmLuh6wHWGOv2Uap6+PPZbkpXu+5L+jwCaeoATwOq82tRFrWan9qpiq1+Q659CwxaS
+         jZtHlE8ekB7iare0mdQRydJJOtr0FUTm4ddzLjwuZpjdSJOL9TLzdoC+xHTX+adZRP
+         HyBrBrTE57gvnDSZVyDpJOCAhVkH5AdSCFpi25Qx+0tum2GSFr/nuFxNWvVOYgDodk
+         2tk2Ro96NIEhzHLqX47ATUWr3vMG3O7WIjkkpXmpsCUBg/4uVFk/nPCEhLnqGjuOUf
+         9S2RJAdxE9gHA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 307C4A006C;
+        Mon,  2 Sep 2019 08:02:15 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 03/13] net: stmmac: Do not return error code in TC Initialization
+Date:   Mon,  2 Sep 2019 10:01:45 +0200
+Message-Id: <04b637681f523e26fdc61c31e72d1a90d2b3a2b6.1567410970.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
+References: <cover.1567410970.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
+References: <cover.1567410970.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+As we can still use the remaining TC callbacks, e.g. CBS. We should not
+fail in the initialization only because RX Parser is not available.
 
-On Sun, Sep 01, 2019 at 07:24:15PM +0200, Pavel Machek wrote:
-> > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > @@ -89,6 +89,10 @@ Optional properties
-> > >    but a number of degrees counter clockwise. Typical values are 0 and 180
-> > >    (upside down).
-> > > 
-> > > +- location: The camera device mounting position, relative to the device
-> > > +  usage orientation. Possible values are:
-> > > +  0 - Front camera. The image sensor is mounted on the front side of the device.
-> > > +  1 - Back camera. The image sensor is mounted on the back side of the device.
-> > 
-> > Would it make sense to make this a little more generic? Such as s/image
-> > sensor/ device/, for instance?
-> > 
-> > Is this also relevant for flash or lens devices?
-> > 
-> > Flash (torch) devices could be present, at least principle, without a
-> > camera. There once was even such a Nokia phone, 1100 unless I'm mistaken.
-> > :-)
-> 
-> Well, I'd call them LEDs, not camera flashes ... if there's no camera. And IIRC 
-> these devices had LEDs on top of the phone... so neither front nor back side.
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-I would go for the name "torch" in that case. It really depends on the
-device, but in any case, the torch LEDs would have a location (and we
-would possibly need to expand this property to
-include the top, bottom, left and right sides).
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index 6c305b6ecad0..8dbbbf181ada 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -243,8 +243,9 @@ static int tc_init(struct stmmac_priv *priv)
+ 	struct dma_features *dma_cap = &priv->dma_cap;
+ 	unsigned int count;
+ 
++	/* Fail silently as we can still use remaining features, e.g. CBS */
+ 	if (!dma_cap->frpsel)
+-		return -EINVAL;
++		return 0;
+ 
+ 	switch (dma_cap->frpbs) {
+ 	case 0x0:
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
