@@ -2,159 +2,107 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8B5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA13DC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F335F21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="V44PZDyw";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="QRPe4Eql"
+	by mail.kernel.org (Postfix) with ESMTP id BF58121883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731647AbfIBMd5 (ORCPT
+        id S1730124AbfIBMeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:33:57 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:36040 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731239AbfIBMd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:33:57 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x82CUi8f029655;
-        Mon, 2 Sep 2019 05:33:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=pfpt0818; bh=uBmY5dTFsCXMaS7sGGYqtq3IuV82FYsBA6M+q41w5eU=;
- b=V44PZDywdOc3/QTu1YQ9e7Z19VpvvxskyvSmx3fOCxZ5+gUMEN9oOXh/kk4atOMD9jeq
- GlqyZnptm5IimO+2iBBwG0X0KpREWFaZTVtKpAxHdXMfRqqCGuH1mDQBw8QYBzF9FGMl
- Aw/0dMew++5rujXzX7t2UzrtnJF/+J828afyWrMNPc5/NBZQ2myQ918e+oCxDCxnm74j
- O7ArnDqHWkhrf8IhqAmUtKo1bnqMTafJ8uk7mK3DByEXJCgGX12BYYL/np9mSTMv8cYw
- 3yxoEKoTI/nEeFjagqzUhUJvkOQYMJ3iZvGIBy/8fs8HIcuUtP24VXj+MNu6cRgpVRwF Rw== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2uqrdm6032-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Sep 2019 05:33:42 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 2 Sep
- 2019 05:33:40 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.55) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 2 Sep 2019 05:33:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K4DjnjzJCqcIQIsEksknoVHSzYBxW/1cGgBYJei3V4U3FSvHu/ptfCdfaoVI42T4DHQMTIhCp6RGVuYccCF4hfObAa62W8ZR8eOP7jf9/Acg3mPS0B+V+GEUzBGp9tJqKZCzZf3gglY3zSEMskbjl2Zde6MpJI6pl3ikS9+ytNN4RfZGeabAsApchdv8I4gul7j1wujdg7CPZHIzG36JYbRqryiqbwZjQah5P8icyXlf+xSMIhJ3tTHpRLnHh2a8MPYALwVrOYbzTe0Zjbf6QVLZbQYlM0lDOkG3Gd1CISPYd1UlpzyDaPLJdq3pKELwFDF+pnzaeBpBLZyajopNAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uBmY5dTFsCXMaS7sGGYqtq3IuV82FYsBA6M+q41w5eU=;
- b=R35Qc8bBiw841a75KXJ7h1+6k3JgTDwCXHVdmywGDs+kJpoGTAL+nxkofpANi0ok+zOI9g2ApNLwo5S8F8pYxJfq7BpO+iIjmq6yguXCpCWsGU7UHgeFq2KQ9FJvJZV1fDUwHzE5ZkxScfT/axOZYWGo3JCNSC21lFnyIDL2XdVKLgrJPTmQxyOmL4aPjy7Pq9JjXIGZQweFrPISBBMet4p2jdkWXOPtWUY9uBXpW/sbDYQw5Jremu5c7BrfgnLV0EC5leYeR10veiRGokVYhRwmpwEpuz4RxPIxZ1SdJXGD2aD15Clbw3dE+bZ9dhi7pgBNW4m5u+k0/DSdRMFu5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uBmY5dTFsCXMaS7sGGYqtq3IuV82FYsBA6M+q41w5eU=;
- b=QRPe4EqlUYBNft+jkN20YLf9WL0YNcp/tDWMVxox059bjwal6WtE/UvzK5F6jUNbT7WiklH1Kczg5dst384sonO06VD7F6U8IW4U24jnFxwlepQLa0CI192XPc5rvHYDhF4wwwXrEPYfWozQgHb7umuf/7JQf0+eVNwioZlK41k=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB2480.namprd18.prod.outlook.com (20.179.82.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Mon, 2 Sep 2019 12:33:38 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2220.013; Mon, 2 Sep 2019
- 12:33:38 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-CC:     Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/5] EDAC: Small cleanups and fixes
-Thread-Topic: [PATCH 0/5] EDAC: Small cleanups and fixes
-Thread-Index: AQHVYYqlHQakqotENk2zP2XSi91fOQ==
-Date:   Mon, 2 Sep 2019 12:33:38 +0000
-Message-ID: <20190902123216.9809-1-rrichter@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR07CA0027.eurprd07.prod.outlook.com
- (2603:10a6:7:66::13) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e6a59efa-e79f-49c5-c61f-08d72fa1c777
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2480;
-x-ms-traffictypediagnostic: MN2PR18MB2480:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB2480E215A937E8E23A22438AD9BE0@MN2PR18MB2480.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01480965DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39850400004)(396003)(136003)(366004)(199004)(189003)(6486002)(8676002)(186003)(110136005)(81166006)(81156014)(71190400001)(66066001)(6506007)(386003)(1076003)(71200400001)(966005)(26005)(6512007)(6306002)(53936002)(256004)(478600001)(50226002)(54906003)(86362001)(36756003)(8936002)(14444005)(52116002)(66556008)(66476007)(486006)(5660300002)(64756008)(66446008)(2616005)(4326008)(316002)(476003)(2906002)(7736002)(6436002)(305945005)(6116002)(3846002)(99286004)(102836004)(14454004)(66946007)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2480;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ae+XQIyfZLK3NZr3lsdnm6NBj93A3ddKHbOFBEnosE95HAG46oXNB/C+6322NM88/MR64cI6oFo4iz1f0E/XEDCgcMNGOwr8GQ6ecebVYPzBx5wKqRXQIBe5RevHqyNdi7zKJrsPqBV5c6YR6LUfVG0Fih46p7AwlZNB5m4cS2cQ9AHNY4edO51b4zPkSNcEcSpPr9q3OeRr15J0UERoQrLG/oxI5FrK7B+R9A7W5LBuIcSnzihyIZAklrnY84Libh0BHRVN6cJtCnRN/7lCL9kG7kaAzgmQxEumNp1yDqlyzGji+/Ux1E5L5fPZxgR5DxlPm5kbNxzH+U8YPMwDSH1TwyFB6tK2/W4KIhxYJ8IWURK1taWFpyCDE+iN3cGf604kaSl5UWBAuKAOFtzQ7N53oZF7gkzYBw36aTBNQHk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Sep 2019 08:34:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28972 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729942AbfIBMeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:34:36 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 05:34:35 -0700
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="183299004"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 05:34:33 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 3D7FD20B48; Mon,  2 Sep 2019 15:34:31 +0300 (EEST)
+Date:   Mon, 2 Sep 2019 15:34:31 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 04/11] device property: Add functions for accessing
+ node's parents
+Message-ID: <20190902123431.GK5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-5-sakari.ailus@linux.intel.com>
+ <20190902101426.GB2680@smile.fi.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6a59efa-e79f-49c5-c61f-08d72fa1c777
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 12:33:38.5406
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z+0kMEaE8lwXSb9euXJ0lXUAF73GmvG/cVk+lagtCm2zMsBIVn05c32bHCxbaOGF13UwBMPNDos4ep/LJEeRqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2480
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-02_04:2019-08-29,2019-09-02 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902101426.GB2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A bunch of cleanups and fixes for issues found while working with the
-code. Changes are individual and independent from each other. They can
-be applied separately (only #4 depends on #3).
+Hi Andy,
 
-Also updating the reviewer's entry as I will be able to do some
-reviews for edac code.
+On Mon, Sep 02, 2019 at 01:14:26PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 02, 2019 at 11:32:33AM +0300, Sakari Ailus wrote:
+> > Add two convenience functions for accessing node's parents:
+> > 
+> > fwnode_count_parents() returns the number of parent nodes a given node
+> > has. fwnode_get_nth_parent() returns node's parent at a given distance
+> > from the node itself.
+> > 
+> 
+> Much better now, thanks!
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> though one question below.
 
-Note that patch #3 is an updated version of a patch reviewed before:
+Thanks!
 
- https://lore.kernel.org/patchwork/patch/1093466/
+...
 
-Some references to ml discussions that are related to this series:
+> > +/**
+> > + * fwnode_get_nth_parent - Return an nth parent of a node
+> > + * @fwnode: The node the parent of which is requested
+> > + * @depth: Distance of the parent from the node
+> > + *
+> > + * Returns the nth parent of a node. If @depth is 0, the functionality is
+> > + * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
+> > + * and so on.
+> > + *
+> > + * The caller is responsible for calling fwnode_handle_put() for the returned
+> > + * node.
+> > + */
+> > +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
+> > +					    unsigned int depth)
+> > +{
+> > +	unsigned int i;
+> > +
+> > +	fwnode_handle_get(fwnode);
+> > +
+> > +	for (i = 0; i < depth && fwnode; i++)
+> > +		fwnode = fwnode_get_next_parent(fwnode);
+> > +
+> 
+> If 'fnode == NULL' and 'i < depth', shan't we return some kind of error?
 
- https://lore.kernel.org/patchwork/patch/1093480/#1312590
- https://lore.kernel.org/patchwork/patch/1093466/#1310572
+How about adding to the comment, after the first sentence of the
+description:
 
-Robert Richter (5):
-  EDAC: Prefer 'unsigned int' to bare use of 'unsigned'
-  EDAC, mc_sysfs: Change dev_ch_attribute->channel to unsigned int
-  EDAC, mc_sysfs: Remove pointless gotos
-  EDAC, mc_sysfs: Make debug messages consistent
-  MAINTAINERS: update EDAC's reviewer entry
+	If there is no parent at the requested depth, NULL is returned.
 
- MAINTAINERS                  |  1 +
- drivers/edac/edac_mc.c       | 20 ++++----
- drivers/edac/edac_mc.h       |  6 +--
- drivers/edac/edac_mc_sysfs.c | 91 ++++++++++++++++--------------------
- drivers/edac/ghes_edac.c     |  2 +-
- drivers/edac/i5100_edac.c    | 16 ++++---
- include/linux/edac.h         | 10 ++--
- 7 files changed, 69 insertions(+), 77 deletions(-)
-
---=20
-2.20.1
-
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
