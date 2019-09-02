@@ -2,131 +2,145 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F3AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5F8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3672C21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F5821881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WhFDP2/I"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LStOEI5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbfIBKtu (ORCPT
+        id S1731241AbfIBKuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:49:50 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58524 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730785AbfIBKtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:49:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82AhO5Q179751;
-        Mon, 2 Sep 2019 10:48:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=09Q4/fYIG9MJvMP7nWj77FfKeGU7L5Yn85N83DxgLrw=;
- b=WhFDP2/IAFKDzmMK9FZuHXS9XTbT4hEwmQUa11WiaO3/aF1lXTAz2fg60WkvRhW9xu61
- NbVJutLwz31Bsu26lfKGgBIpmuZ42eYeBy4GGqKylL5CGB2VGsh1OYy9jTVEtEOm8nCC
- vSC0m6W/cTepEIcAS4EU4zn82WmiA4t+18S9hgtWJfkd4Kjilj7TfLJ6c/Co9RpjV51i
- 9kf7AQOXcKFOr9U2juvglD7sXzrWHYaR88Tbg6U2aIwzuG1RTLe+55BjMoA/P6G/EDez
- G4z6lfHa7BMgFMDi7i34PZ3Ajd1d2gcK8WW9qX4tlmnOUrhRZp8H/acP+ZevWCPFriOu ig== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2us1cbg2j3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Sep 2019 10:48:18 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82Am2Y7174602;
-        Mon, 2 Sep 2019 10:48:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2uryv530x6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Sep 2019 10:48:18 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x82AmGK4023171;
-        Mon, 2 Sep 2019 10:48:17 GMT
-Received: from [10.175.163.45] (/10.175.163.45)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 02 Sep 2019 03:48:16 -0700
-Subject: Re: [PATCH v2] cpuidle-haltpoll: vcpu hotplug support
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20190829151027.9930-1-joao.m.martins@oracle.com>
- <20190829152714.GA15616@amt.cnet>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <5df5b2b1-11ce-9b1a-dd4a-8fe32e491543@oracle.com>
-Date:   Mon, 2 Sep 2019 11:48:06 +0100
-MIME-Version: 1.0
-In-Reply-To: <20190829152714.GA15616@amt.cnet>
-Content-Type: text/plain; charset=utf-8
+        Mon, 2 Sep 2019 06:50:03 -0400
+Received: from mail-eopbgr10056.outbound.protection.outlook.com ([40.107.1.56]:55940
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731192AbfIBKuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:50:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cOSaw6d5v4TJKE3QcmR6vQCM0LCKSmwHqA2EJu6FDTlzl6emgs1E5ssnc7roHwEJ4X6ABwL6UHelRl+H4/t7dYKEliBbSmKiYCiCH47qjrsZ6vu1N9hz9vkHXD9+gszi7v2JEpzRDi7n5fzo2TV5c9Z2O488HgIDwVu77jEDFCOvhmGT4OuuxRCNP5SjWqOxc3y6STIo6rEQO240ingnxPU77+3GcyKIHTv2uLIP5+ICOtCq+qDagCxV7sQbc6iWQeqNtliZA5jen2IA61aoQuMkH3t0U1oNTL+WSjiSXWuTCeAmT32lmjUk0e0CZD2Oz9Ta/or1og0Zeog8O8Z/Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NuhtYnzfhusV9OxQzs2EJk2b74vyp3IHqOmQDca5lIU=;
+ b=MYG6+QkVdsaw/9TPUGPPMXnrJkttxymtyy7B4DOEhAg8cm6/hN7snWPvsHQjSOD+cK0g5+iDj+rJ9DkSYZS7is9oOPsqEs3Po+KXBGFSF6OxWdyL0b8falvrirT5CXuV0thtqIvZQSbIlo6gfhc/RMXa4H+M94vAjjBvNIfjaVgdEJYToXaW5nOGP74PPRvK+bfGTgfDWoUUOl+ToC7Ex9Yv8YyaTJi1NMzPnhSDqal0ykLomuuIf+MPiYlDCccnbxuUbZubKpLb5kcuQkz1oe2djCMBu3xG1GWhLorOFnzQCWc2wV6aexWwC+nBKzGGpOdStnGGkc+vch+55u/+/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NuhtYnzfhusV9OxQzs2EJk2b74vyp3IHqOmQDca5lIU=;
+ b=LStOEI5qrkwACLMAvFu3m/mIYvoWYZfd286tcwYqSgtrMHjxRteNlFYjkQVCPD9rlqXiaGoyG6Il1ok7yP2VxH9eFmXG5PQYanag5CG6H6YwERnLswecZ1+OPvBz543Fag4XHEs+6KpGcveiZbAIxmoHMO2jDpJ5Mru2mEH9xOE=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4895.eurprd05.prod.outlook.com (20.177.51.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.21; Mon, 2 Sep 2019 10:49:58 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2220.020; Mon, 2 Sep 2019
+ 10:49:58 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: Re: [PATCH 2/3] pagewalk: separate function pointers from iterator
+ data
+Thread-Topic: [PATCH 2/3] pagewalk: separate function pointers from iterator
+ data
+Thread-Index: AQHVXauzoOyMGt/Rm0+/Xu8LAWoHTqcXL4MAgAAOHoCAABCOAIAAm4cAgAAjgICAAC/DAA==
+Date:   Mon, 2 Sep 2019 10:49:58 +0000
+Message-ID: <20190902104955.GB20@mellanox.com>
+References: <20190828141955.22210-1-hch@lst.de>
+ <20190828141955.22210-3-hch@lst.de> <20190901184530.GA18656@roeck-us.net>
+ <20190901193601.GB5208@mellanox.com>
+ <b26ac5ae-a90c-7db5-a26c-3ace2f1530c7@roeck-us.net>
+ <20190902055156.GA24116@mellanox.com> <20190902075859.GA29137@lst.de>
+In-Reply-To: <20190902075859.GA29137@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909020124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909020123
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR01CA0036.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:69::49) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53469947-dbde-4e13-b9a6-08d72f934c4a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4895;
+x-ms-traffictypediagnostic: VI1PR05MB4895:
+x-microsoft-antispam-prvs: <VI1PR05MB489527A66C2397AAEF7ECBABCFBE0@VI1PR05MB4895.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(189003)(86362001)(186003)(4326008)(478600001)(8936002)(36756003)(7736002)(305945005)(71190400001)(71200400001)(256004)(6512007)(14454004)(6436002)(81166006)(81156014)(8676002)(53936002)(316002)(26005)(102836004)(14444005)(33656002)(2906002)(6246003)(76176011)(54906003)(6506007)(386003)(66476007)(66556008)(64756008)(66446008)(6116002)(66946007)(3846002)(52116002)(11346002)(476003)(2616005)(486006)(25786009)(446003)(7416002)(229853002)(6486002)(1076003)(6916009)(66066001)(99286004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4895;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u3yP2zgBzHURzB9tJhA+7SX5ivEUZ0RwAuvSIBwod6Bd4lLddC4gbzx0hy6BMQ0J95S7RoGfD0g3pLQr2JC/bRymEarJ8YJNgSORJfdff/McSAcw9b9WGBNZfWssEbXPHpkp9dhdEJK13FAFjAZ/+dEvcrwm9/q9T53DX52cJxyNl+Zf3dTbut0QBcrQzdeqe8Swh0hYsA7pBVna8gGdrcXTLx7HcSIpICLuqhhnFluxAQFgiogiebCNpqA0z0DDRdAHgpdW7496NDEIxLYpG3g2kRbn9S/Wfw9PJVKRz4r6C8GwnrCSUpulA+z90xoQCks/SisPGGGWUt9bWxYrGIaU1vgTYg6vH3CPaHZ+6BxSYrtA6oI8T84CH659PiWsYNNyEb1pFhJGXnHJyrExflI8ahMKyQMy2UpG38+GUkQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <0E3FE41A0CB6E74EA4443B039BEC2BBA@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53469947-dbde-4e13-b9a6-08d72f934c4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:49:58.5176
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RTe3Biu3LyLvl9twoKSud2kxcqiUkNu2AhofwoPNFB8QguKsCxVLpcMVPik5vMe3ojKyoPMtKKtBFh6I85bq9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4895
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 4:27 PM, Marcelo Tosatti wrote:
-> On Thu, Aug 29, 2019 at 04:10:27PM +0100, Joao Martins wrote:
->> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
->> past the online ones and thus fail to register the idle driver.
->> This is because cpuidle_add_sysfs() will return with -ENODEV as a
->> consequence from get_cpu_device() return no device for a non-existing
->> CPU.
->>
->> Instead switch to cpuidle_register_driver() and manually register each
->> of the present cpus through cpuhp_setup_state() callback and future
->> ones that get onlined. This mimmics similar logic that intel_idle does.
->>
->> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
->> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
->> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->> ---
->> v2:
->> * move cpus_read_unlock() right after unregistering all cpuidle_devices;
->> (Marcello Tosatti)
->> * redundant usage of cpuidle_unregister() when only
->> cpuidle_unregister_driver() suffices; (Marcelo Tosatti)
->> * cpuhp_setup_state() returns a state (> 0) on success with CPUHP_AP_ONLINE_DYN
->> thus we set @ret to 0
+On Mon, Sep 02, 2019 at 09:58:59AM +0200, Christoph Hellwig wrote:
+> On Mon, Sep 02, 2019 at 05:51:58AM +0000, Jason Gunthorpe wrote:
+> > On Sun, Sep 01, 2019 at 01:35:16PM -0700, Guenter Roeck wrote:
+> > > > I belive the macros above are missing brackets.. Can you confirm th=
+e
+> > > > below takes care of things? I'll add a patch if so
+> > > >=20
+> > >=20
+> > > Good catch. Yes, that fixes the build problem.
+> >=20
+> > I added this to the hmm tree to fix it:
+>=20
+> This looks good.  Although I still haven't figure out how this is
+> related to the pagewalk changes to start with..
 
-[ ... ]
+It is this hunk:
 
-> 
-> Reviewed-by: Marcelo Tosatti <mtosatti@redhat.com>
-> 
-Thanks!
+@@ -481,7 +461,10 @@ static int madvise_free_single_vma(struct
+vm_area_struct *vma,
+ 	       update_hiwater_rss(mm);
+=20
+	mmu_notifier_invalidate_range_start(&range);
+-	madvise_free_page_range(&tlb, vma, range.start, range.end);
++	tlb_start_vma(&tlb, vma);
++	walk_page_range(vma->vm_mm, range.start, range.end,
++                       &madvise_free_walk_ops, &tlb);
++			tlb_end_vma(&tlb, vma);
 
-Meanwhile upon re-reading cpuhp_setup_state() I found out the teardown/offlining
-and haltpoll_uninit() could be a bit simplified. So I sent out a new version[0],
-but didn't add your Rb because there's was some very slight functional changes.
+&tlb does not expand properly in the csky tlb_start_vma macro, and
+previously it was just tlb
 
-[0] https://lore.kernel.org/kvm/20190902104031.9296-1-joao.m.martins@oracle.com/
-
-	Joao
+Jason
