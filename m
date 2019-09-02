@@ -2,135 +2,154 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172CAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DBBC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6A4217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3902173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2esWECa"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i+i/DkaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbfIBLkF (ORCPT
+        id S1730974AbfIBLkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:40:05 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34667 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfIBLkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:40:04 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so15397769edb.1;
-        Mon, 02 Sep 2019 04:40:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=19JF+f4JLTae925R7+YX2DVuxawWCqQAPMge5Gu5oHw=;
-        b=X2esWECaq2DkfG1LPPXs1Ig8CeBBiRTiStBw0egxO+PPZm+f6teGFn33ECnAWGeihV
-         ZXwj2NT+ZnbaXd+/Li16HXLCzm2eJn6eqV4MPvtDBiQvp0MiDs/srCuzk1AglsxZxf2c
-         G9bodG0ZtADatATr/zkfoTpqJXUsKMMgyjrpyK0Z5mxF7G0eQ6VoJAsU0pjqOKhsxcUc
-         s1B0Xh/fx1XeZj+9WoHJ7YcF5ovkNNZu7CJ46OYWy74mE7DEiTCrTh+1wDEmtiI7V6jw
-         vxk70fAeRnleMPFlzSuka4TwCvmT0/NZd92RnMtlBkkzECYLo8jZxDi9u65vRF1xI+69
-         ag0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=19JF+f4JLTae925R7+YX2DVuxawWCqQAPMge5Gu5oHw=;
-        b=kae1ik5IqBMprNssKSlxRXZ5BQ4pMkbXboBgIjKt/tlIpszLr1BB2JQznWIBXzP8rf
-         aMysAEfzusAIsp6OdrOVHeInrZNFyG6PilqiUnSCiwEYLU4EGaAwWiFCjmbhfvd1tuHN
-         AiJPrGOPzLhsrO8hPotYBApu344EuIXAL7sAgd4gH1AuIrXLYIcMzKHT9c1rz3F5sNMM
-         EZgpTAmDBLyDCpkZHR1OTu2fTBWaI39zivCpq3v+pZTklv/OwouAfvj05E/3IYjk56zE
-         qDcWXu32qC9Z0Lbppl+bIhFTM0U1mGQe/avnbkz34AdAujgmHjHxFfAjLxHUoyZ7kZcM
-         N8fg==
-X-Gm-Message-State: APjAAAXPPThq0UqG5f6ZFOQCFxop01mZ+l7haCEBRe6lajE2VQ4pFJ8F
-        +5wbNZIp+AN/1XmbW3JarOk=
-X-Google-Smtp-Source: APXvYqxkySTv/vbJWnKDsK+uWOXBxEWirXQJTF0Li6dUXZGlewF3Be8Bt2SBdS+jnmoYyPG08pgI5w==
-X-Received: by 2002:aa7:da54:: with SMTP id w20mr23290367eds.52.1567424402711;
-        Mon, 02 Sep 2019 04:40:02 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id v8sm911608ejk.29.2019.09.02.04.40.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 04:40:01 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 13:40:00 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 4/6] PCI: tegra: Add support to enable slot regulators
-Message-ID: <20190902114000.GG19263@ulmo>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-5-vidyas@nvidia.com>
+        Mon, 2 Sep 2019 07:40:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:41109 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbfIBLkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 07:40:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MSn91xDnz9sDQ;
+        Mon,  2 Sep 2019 21:40:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567424413;
+        bh=YtBEn8N30LNig4IjM3QSpseznRYqbL0O14mcZ15x0/k=;
+        h=Date:From:To:Cc:Subject:From;
+        b=i+i/DkaBxJ+/ummk7mmRsfrU3c9NMQt9egwJ/BygIxh0SfgsClGY+6CunnOiC+h8g
+         fNd5EHxk5z8WX/6vGKvPP54x7V/W+00P3HVeL/40SBIVp7YVvmawIfp6LnQ/ieOPYz
+         IZuw2UneUmNoVJnJCgh6hqX5ZTyVeP09nJh6OJiGKanwCwl1idAcBFqCkwpWWasIAZ
+         g+w7f6caXiKRxPXiUM7o7Hz0KjIPEhB9taoGDuG5W2CvAnGZA4+ATMdqXbTF1NPFQa
+         BpNe3yEWZhrNV27QTLCv+KKPAyWKqaGUtTUHUFbT06hgKXleOcO/BDSAAx2A2AaE62
+         NFfJGPo9J6X3w==
+Date:   Mon, 2 Sep 2019 21:40:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Michal Simek <monstr@monstr.eu>
+Subject: linux-next: build failure after merge of the powerpc tree
+Message-ID: <20190902214011.2a5400c9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9/eUdp+dLtKXvemk"
-Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-5-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="Sig_/x/Web=1e7njmi=+goy5cmBW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---9/eUdp+dLtKXvemk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/x/Web=1e7njmi=+goy5cmBW
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 28, 2019 at 10:58:48PM +0530, Vidya Sagar wrote:
-> Add support to get regulator information of 3.3V and 12V supplies of a PC=
-Ie
-> slot from the respective controller's device-tree node and enable those
-> supplies. This is required in platforms like p2972-0000 where the supplies
-> to x16 slot owned by C5 controller need to be enabled before attempting to
-> enumerate the devices.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V3:
-> * Added a dev_err() print for failure case of tegra_pcie_get_slot_regulat=
-ors() API
-> * Modified to make 100ms sleep valid only if at least one of the regulato=
-r handles exist
->=20
-> V2:
-> * Addressed review comments from Thierry Reding and Andrew Murray
-> * Handled failure case of devm_regulator_get_optional() for -ENODEV clean=
-ly
->=20
->  drivers/pci/controller/dwc/pcie-tegra194.c | 83 ++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
+Hi all,
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+After merging the powerpc tree, today's linux-next build (powerpc
+ppc44x_defconfig) failed like this:
 
---9/eUdp+dLtKXvemk
-Content-Type: application/pgp-signature; name="signature.asc"
+arch/powerpc/mm/dma-noncoherent.c: In function 'atomic_pool_init':
+arch/powerpc/mm/dma-noncoherent.c:128:9: error: implicit declaration of fun=
+ction 'dma_atomic_pool_init'; did you mean 'atomic_pool_init'? [-Werror=3Di=
+mplicit-function-declaration]
+  128 |  return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERN=
+EL));
+      |         ^~~~~~~~~~~~~~~~~~~~
+      |         atomic_pool_init
+
+Caused by commit
+
+  f2902a2fb40c ("powerpc: use the generic dma coherent remap allocator")
+
+interacting with commit
+
+  8e3a68fb55e0 ("dma-mapping: make dma_atomic_pool_init self-contained")
+
+from the dma-mapping tree.
+
+I have applied the following patch for today (I did the microblaze
+update as well):
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 2 Sep 2019 21:23:11 +1000
+Subject: [PATCH] merge fixes for "dma-mapping: make dma_atomic_pool_init se=
+lf-contained"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/microblaze/mm/consistent.c   | 6 ------
+ arch/powerpc/mm/dma-noncoherent.c | 6 ------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/arch/microblaze/mm/consistent.c b/arch/microblaze/mm/consisten=
+t.c
+index 0e0f733eb846..8c5f0c332d8b 100644
+--- a/arch/microblaze/mm/consistent.c
++++ b/arch/microblaze/mm/consistent.c
+@@ -56,10 +56,4 @@ void *cached_kernel_address(void *ptr)
+=20
+ 	return (void *)(addr & ~UNCACHED_SHADOW_MASK);
+ }
+-#else /* CONFIG_MMU */
+-static int __init atomic_pool_init(void)
+-{
+-	return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERNEL));
+-}
+-postcore_initcall(atomic_pool_init);
+ #endif /* CONFIG_MMU */
+diff --git a/arch/powerpc/mm/dma-noncoherent.c b/arch/powerpc/mm/dma-noncoh=
+erent.c
+index 4272ca5e8159..2a82984356f8 100644
+--- a/arch/powerpc/mm/dma-noncoherent.c
++++ b/arch/powerpc/mm/dma-noncoherent.c
+@@ -122,9 +122,3 @@ void arch_dma_prep_coherent(struct page *page, size_t s=
+ize)
+=20
+ 	flush_dcache_range(kaddr, kaddr + size);
+ }
+-
+-static int __init atomic_pool_init(void)
+-{
+-	return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERNEL));
+-}
+-postcore_initcall(atomic_pool_init);
+--=20
+2.23.0.rc1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/x/Web=1e7njmi=+goy5cmBW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/5AACgkQ3SOs138+
-s6GrjA/+MtsbQCfp8LKNLtXIAB9YZZ4egzdAnTHcT5Q8avyAv+spu6XTF4QUYTXr
-ddGsqMuqZb6GFzPuALVW538dPpZJNbxKj2SAYXX8R+peSTCLi7q2iYbVRLXy87LX
-bfa1a2ZvUB6QCbUyjtrVrGxJ7qMznfRH8GRaIkRPzvYhs9vceoSdUMstxfwdV+lo
-5BO0x3mbWxm1EclBwHt+6DG0DYSLn7jmXYKJMc2Vly9Kuw3tApOyM2iHuiAs8zTO
-9BmHFzKa88QsF/7Uk11rpFc2AnCbsn8nSTXbyRwebGhOMbosBVLgGhlt43trzHiM
-uuYjh7UNfeHKQ2I9qmbaze/TaDC8kJcbCsNyxZkFBpiGmtFYyt8t59sEDVlm8gtl
-bq0UQGhV5hn77I8KY5j0nQoRAlcZUrfg959QvIvTq3wq7YXnPXxmbniSEJceAzuL
-aU2PJ2hbygWQgjmeuvB8lTXxEMhv/RfzIUVS1NnPSq02vjOGihf7prSN8F6VAoom
-HoUXgjQVEAdU/lo3nBuJt977fv5zVH7cOEgG6aJMpqPbFNvk4rm+QuYB5ED8+mDY
-Dvssm1YWsZe64dSgdY8XpD7/Vvbe0RTHu1dSXsC5KjhfTKkHlfjJm3xia/HyjDwD
-OYJPDbss7TA8RH64Wgczu1N7WQVfvDv2q5wdqHmA/f9EasuG4j8=
-=UhQc
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1s/5sACgkQAVBC80lX
+0Gz0zgf/W3JfSnlkCR8lJac0CEFjaarGLtBWuja8iV+5IdU3ryRxLwWk34wMByPt
+ZbOZsr1Y2bIeE7fjHLiUOFQ18uesK4EvrnVae9sFWD5KFRTDnuXxVwKIXAZmo+GS
+pZE2W/tW13cjbFu7MwWm7d4PCwZjhajMLCYLLm08gtKYE/LwlsGvwtixr3zPYG5p
+sgARuWLFGJ95x8wyJ3KhIy/5MQgljB/SpJ1Rbzq3b5JhH8Tj2RfWegVlB5qW7o+D
+TvoyGzeySQQ+ypGSpp9oqnYjDI1fShWQjgW106mCOHMI3xk0+/yfvBRTEa4b96Lh
+RgneIWhy93djrOsgDPytsy0nZNBJ9Q==
+=b7OS
 -----END PGP SIGNATURE-----
 
---9/eUdp+dLtKXvemk--
+--Sig_/x/Web=1e7njmi=+goy5cmBW--
