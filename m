@@ -2,71 +2,170 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5DCC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0D9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC44216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A7421882
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:35:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgoZsB17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfIBNf0 (ORCPT
+        id S1730715AbfIBNfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:35:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:8380 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730417AbfIBNfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:35:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:35:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="211688788"
-Received: from doblerbe-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.53.100])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Sep 2019 06:35:21 -0700
-Date:   Mon, 2 Sep 2019 16:35:20 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org,
-        Alexey Klimov <aklimov@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Remove duplicate code from caps_show() in
- tpm-sysfs.c
-Message-ID: <20190902133520.evot6o35vr3bz5vq@linux.intel.com>
-References: <20190829143807.30647-1-jarkko.sakkinen@linux.intel.com>
- <20190830160902.iip5jr4yiqcjpz45@cantor>
+        Mon, 2 Sep 2019 09:35:52 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50438 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730626AbfIBNfw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:35:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c10so2722580wmc.0;
+        Mon, 02 Sep 2019 06:35:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4IZYZ9SbbmiPIjFQQI3+tSC3aTTev4F8DX/N/W2gHEU=;
+        b=WgoZsB17OsI8b1BPxf2haYOv230TxFH5zo/P7pAa6FFCwGCxOCHDi3jZZFjE+kJQRq
+         1Bj8+IRGAbpqLrYL3MJdHGgzQySVIeT7b+gSj0wgfopR+sJ4pGvVDj/DhLfQ/fURh5Tb
+         WXx90oCHGaYyg7BPNIF4vk3mK8rwvM9Llan4vwVrBdLszjUCoO69N/puRqhwiXQ4sSYO
+         m1UUWZrhvgzcakY1vZAqz41vOPSg12J2JKhY+d9R911YteyvdGgaUnKK0Ke/aHMvsrlU
+         CUvEbhystl1J0cxR8QN4nWJK/kSI9yQkQp6ny2Akh2lzoIBuoqFoOXhGAvyYZHH7tuR7
+         ym5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4IZYZ9SbbmiPIjFQQI3+tSC3aTTev4F8DX/N/W2gHEU=;
+        b=KzZ3jjUBQmLnhvNDRdTsEpIerVQ0S0oHzcfJeLCYyUj8+EahsW7Ie1rblXqZFbfH+v
+         yMFJx5rqa07uP/PnS8816uCjEiM0dcz6wEYp5dY+v0MSMF1lZAlth88s+mq3Cz0t1MmI
+         B88lqHtwy5Ie3Xl152s7mJDdPIhCybwqVx9cZnbjoHqMKUZ1oglon9+1o3PLUiqMiIPd
+         MTorI5QdZYgH6DaQmz4uBaHpmCMH1KSjjOAo6omS6sDTAvdMLQI+02giXCyCPVIee4mx
+         l8nbFOwR5pKrpTnD/sqv/KRj6yI6dlTmozSaPsk8jg0zN1A9y3qCpemAStzibGpOn6Df
+         oMtQ==
+X-Gm-Message-State: APjAAAWazOjJqdpvsF5GB06Wc2GCEezflRo0vsliNRdqRY67xTGSyi2D
+        Vb5n2D95K37Jh/o/FPB92cM=
+X-Google-Smtp-Source: APXvYqwzsJg7dJuqKEwIzVF50xAcslHhSLNS1ZuTGK9sjM8Uo68LREuLh2tlKO5iFRAzdobmqPoP9g==
+X-Received: by 2002:a7b:cd17:: with SMTP id f23mr36832272wmj.177.1567431349811;
+        Mon, 02 Sep 2019 06:35:49 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:eecb:7400:8425:c99f:73d7:9637])
+        by smtp.gmail.com with ESMTPSA id f75sm21640290wmf.2.2019.09.02.06.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 06:35:49 -0700 (PDT)
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
+Cc:     Erwan Velu <e.velu@criteo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Luwei Kang <luwei.kang@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH] tools/power/x86/turbostat: Reporting EPB as per Intel's spec
+Date:   Mon,  2 Sep 2019 15:35:07 +0200
+Message-Id: <20190902133509.24534-1-e.velu@criteo.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830160902.iip5jr4yiqcjpz45@cantor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:09:02AM -0700, Jerry Snitselaar wrote:
-> On Thu Aug 29 19, Jarkko Sakkinen wrote:
-> +	/* TPM 1.1 */
-> > +	if (tpm1_getcap(chip, TPM_CAP_VERSION_1_1, &cap,
-> > +			"attempting to determine the 1.1 version",
-> > +			sizeof(cap.version1))) {
-> > +		version = &cap.version1;
-:> 
-> Actually looking at this again, this seems wrong. The version
-> assignment here should be below this if, or in an else block, yes?
+The actual code is reporting the EPB mode by considering a single value,
+while Intel's specfication defines ranges.
 
-Absolutely is in a wrong place.
+This patch is about to report the EPB by considering ranges of energy_policy
+to actually report the state of the processor.
 
-I sent an updated patch:
+This avoids reporting a "custom" value while the specification describes
+an explicit state of the processor for each value.
 
-https://patchwork.kernel.org/patch/11126741/
+0-3  : Maximum performance
+4-7  : Balanced Performance
+8-11 : Balanced Efficiency
+12-15: Powersave
 
-/Jarkko
+This patch also introduce ENERGY_PERF_BIAS_MIN_POWERSAVE.
+The first 3 performance profiles (ENERGY_PERF_BIAS_PERFORMANCE,
+ENERGY_PERF_BIAS_BALANCE_PERFORMANCE, ENERGY_PERF_BIAS_BALANCE_POWERSAVE) where defined
+by the lowest value of the associate range while ENERGY_PERF_BIAS_POWERSAVE was
+defined by the greatest value.
+
+This was a little bit inconsistent and made more difficult to report EPB value per range.
+
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+---
+ arch/x86/include/asm/msr-index.h      |  1 +
+ tools/power/x86/turbostat/turbostat.c | 23 ++++++++++-------------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 271d837d69a8..120073dfb195 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -596,6 +596,7 @@
+ #define ENERGY_PERF_BIAS_BALANCE_PERFORMANCE	4
+ #define ENERGY_PERF_BIAS_NORMAL			6
+ #define ENERGY_PERF_BIAS_BALANCE_POWERSAVE	8
++#define ENERGY_PERF_BIAS_MIN_POWERSAVE		12
+ #define ENERGY_PERF_BIAS_POWERSAVE		15
+ 
+ #define MSR_IA32_PACKAGE_THERM_STATUS		0x000001b1
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 75fc4fb9901c..9fa73b468f7e 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3552,6 +3552,7 @@ dump_sysfs_pstate_config(void)
+ int print_epb(struct thread_data *t, struct core_data *c, struct pkg_data *p)
+ {
+ 	unsigned long long msr;
++	unsigned int perf_bias_value;
+ 	char *epb_string;
+ 	int cpu;
+ 
+@@ -3572,20 +3573,16 @@ int print_epb(struct thread_data *t, struct core_data *c, struct pkg_data *p)
+ 	if (get_msr(cpu, MSR_IA32_ENERGY_PERF_BIAS, &msr))
+ 		return 0;
+ 
+-	switch (msr & 0xF) {
+-	case ENERGY_PERF_BIAS_PERFORMANCE:
++	 // Reporting perf_bias_performance as per intel specification
++	perf_bias_value = msr & 0xF;
++	epb_string = "powersave";
++	if (perf_bias_value < ENERGY_PERF_BIAS_BALANCE_PERFORMANCE)
+ 		epb_string = "performance";
+-		break;
+-	case ENERGY_PERF_BIAS_NORMAL:
+-		epb_string = "balanced";
+-		break;
+-	case ENERGY_PERF_BIAS_POWERSAVE:
+-		epb_string = "powersave";
+-		break;
+-	default:
+-		epb_string = "custom";
+-		break;
+-	}
++	else if (perf_bias_value < ENERGY_PERF_BIAS_BALANCE_POWERSAVE)
++		epb_string = "balanced performance";
++	else if (perf_bias_value < ENERGY_PERF_BIAS_MIN_POWERSAVE)
++		epb_string = "balanced efficiency";
++
+ 	fprintf(outf, "cpu%d: MSR_IA32_ENERGY_PERF_BIAS: 0x%08llx (%s)\n", cpu, msr, epb_string);
+ 
+ 	return 0;
+-- 
+2.21.0
+
