@@ -2,147 +2,97 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DATE_IN_FUTURE_Q_PLUS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22217C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720E2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04CD8217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473D8217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfIBKGV (ORCPT
+        id S1730522AbfIBKGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:06:21 -0400
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:19842 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbfIBKGU (ORCPT
+        Mon, 2 Sep 2019 06:06:53 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:2317 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729741AbfIBKGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:06:20 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td9ff90b8f0ac14014b177c@ACLMS1.advantech.com.tw>;
- Mon, 2 Sep 2019 18:06:17 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <bichan.lu@advantech.com.tw>, <jia.sui@advantech.com.cn>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v6,1/1] hwmon: (nct7904) Fix incorrect temperature limitation register setting of LTD.
-Date:   Mon, 18 Jun 2085 15:57:19 +0000
-Message-ID: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Sep 2019 06:06:53 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tb8bwnz_1567418808;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tb8bwnz_1567418808)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 02 Sep 2019 18:06:49 +0800
+Subject: Re: [PATCH][V2] ocfs2: remove deadcode on variable tmp_oh check
+To:     Colin King <colin.king@canonical.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>, ocfs2-devel@oss.oracle.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190902093434.27739-1-colin.king@canonical.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <3ea5b370-8373-8ea7-9c2b-49218fcd0fd4@linux.alibaba.com>
+Date:   Mon, 2 Sep 2019 18:06:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.63]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+In-Reply-To: <20190902093434.27739-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
 
-According to kernel hwmon sysfs-interface documentation, temperature
-critical max value, typically greater than corresponding temp_max values.
-Thus, reads the LTD_HV_HL (LTD HIGH VALUE HIGH LIMITATION) and LTD_LV_HL
-(LTD LOW VALUE HIGH LIMITATION) for case hwmon_temp_crit and
-hwmon_temp_crit_hyst. Reads the LTD_HV_LL (HIGH VALUE LOW LIMITATION)
-and LTD_LV_LL (LOW VALUE LOW LIMITATION) for case hwmon_temp_max
-and hwmon_temp_max_hyst.
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
----
+On 19/9/2 17:34, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> At the end of ocfs2_inode_lock_tracker tmp_oh is true because an
+> earlier check on tmp_oh being false returns out of the function.
+> Since tmp_oh is true, the function will always return 1 so remove
+> the redundant check and return of 0.
+> 
+> Also update description in comment, return -EINVAL and not -1.
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Changes in v6:
-- Fix incorrect temperature limitation register setting of LTD.
-Changes in v5:
-- Squashed subsequent fixes of three patches into one patch.
-Changes in v4:
-- Fix the incorrect return value of case hwmon_fan_min in function "nct7904_write_fan".
-- Fix the confused calculation of case hwmon_fan_min in function
-Changes in v3:
-- Squashed subsequent fixes of patches into one patch.
-
--- Fix bad fallthrough in various switch statements.
--- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
--- Fix incorrect register setting of voltage.
--- Fix incorrect register bit mapping of temperature alarm.
--- Fix wrong return code 0x1fff in function nct7904_write_fan.
--- Delete wrong comment in function nct7904_write_in.
--- Fix wrong attribute names for temperature.
--- Fix wrong registers setting for temperature.
-
-Changes in v2:
-- Fix bad fallthrough in various switch statements.
-- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
----
- drivers/hwmon/nct7904.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 76372f20d71a..ce688ab4fce2 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -398,22 +398,22 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 		}
- 		return 0;
- 	case hwmon_temp_max:
--		reg1 = LTD_HV_HL_REG;
-+		reg1 = LTD_HV_LL_REG;
- 		reg2 = TEMP_CH1_W_REG;
- 		reg3 = DTS_T_CPU1_W_REG;
- 		break;
- 	case hwmon_temp_max_hyst:
--		reg1 = LTD_LV_HL_REG;
-+		reg1 = LTD_LV_LL_REG;
- 		reg2 = TEMP_CH1_WH_REG;
- 		reg3 = DTS_T_CPU1_WH_REG;
- 		break;
- 	case hwmon_temp_crit:
--		reg1 = LTD_HV_LL_REG;
-+		reg1 = LTD_HV_HL_REG;
- 		reg2 = TEMP_CH1_C_REG;
- 		reg3 = DTS_T_CPU1_C_REG;
- 		break;
- 	case hwmon_temp_crit_hyst:
--		reg1 = LTD_LV_LL_REG;
-+		reg1 = LTD_LV_HL_REG;
- 		reg2 = TEMP_CH1_CH_REG;
- 		reg3 = DTS_T_CPU1_CH_REG;
- 		break;
-@@ -507,22 +507,22 @@ static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
- 
- 	switch (attr) {
- 	case hwmon_temp_max:
--		reg1 = LTD_HV_HL_REG;
-+		reg1 = LTD_HV_LL_REG;
- 		reg2 = TEMP_CH1_W_REG;
- 		reg3 = DTS_T_CPU1_W_REG;
- 		break;
- 	case hwmon_temp_max_hyst:
--		reg1 = LTD_LV_HL_REG;
-+		reg1 = LTD_LV_LL_REG;
- 		reg2 = TEMP_CH1_WH_REG;
- 		reg3 = DTS_T_CPU1_WH_REG;
- 		break;
- 	case hwmon_temp_crit:
--		reg1 = LTD_HV_LL_REG;
-+		reg1 = LTD_HV_HL_REG;
- 		reg2 = TEMP_CH1_C_REG;
- 		reg3 = DTS_T_CPU1_C_REG;
- 		break;
- 	case hwmon_temp_crit_hyst:
--		reg1 = LTD_LV_LL_REG;
-+		reg1 = LTD_LV_HL_REG;
- 		reg2 = TEMP_CH1_CH_REG;
- 		reg3 = DTS_T_CPU1_CH_REG;
- 		break;
--- 
-2.17.1
-
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> ---
+> 
+> V2: Fix typo of function name in description.
+>     Update description in comment as noted by Joseph Qi
+> 
+> ---
+>  fs/ocfs2/dlmglue.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+> index ad594fef2ab0..640eee2bb903 100644
+> --- a/fs/ocfs2/dlmglue.c
+> +++ b/fs/ocfs2/dlmglue.c
+> @@ -2626,7 +2626,8 @@ void ocfs2_inode_unlock(struct inode *inode,
+>   *
+>   * return < 0 on error, return == 0 if there's no lock holder on the stack
+>   * before this call, return == 1 if this call would be a recursive locking.
+> - * return == -1 if this lock attempt will cause an upgrade which is forbidden.
+> + * return == -EINVAL if this lock attempt will cause an upgrade which is
+> + * forbidden.
+>   *
+>   * When taking lock levels into account,we face some different situations.
+>   *
+> @@ -2712,7 +2713,7 @@ int ocfs2_inode_lock_tracker(struct inode *inode,
+>  			return status;
+>  		}
+>  	}
+> -	return tmp_oh ? 1 : 0;
+> +	return 1;
+>  }
+>  
+>  void ocfs2_inode_unlock_tracker(struct inode *inode,
+> 
