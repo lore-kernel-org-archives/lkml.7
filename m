@@ -2,97 +2,150 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4021DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E28C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E69215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ddESnutp"
+	by mail.kernel.org (Postfix) with ESMTP id 9D86021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567412466;
+	bh=BbZKUhNFpw8vqDlmoSyZ7Qmvj6Kb+53Fk7hn/ROwkJo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=imfjPOyVhZUd+iDKQoxIn2fdiiEySbAcgnbJvo+wXY4vya+kd6T9c0UtvXog1NekX
+	 /jItJcECqLqG9ZTxMok//nf5LiCIOPZDDBjG3XFl1xGPXXVOrMl6VV81oMG0KxabMP
+	 DTHELGyEGbIA7iZx/VP1L+4eijJx9+BE7EJE8ESM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbfIBITw (ORCPT
+        id S1730128AbfIBIVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:19:52 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58484 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729964AbfIBITv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:19:51 -0400
-Received: from pendragon.ideasonboard.com (231.125-247-81.adsl-dyn.isp.belgacom.be [81.247.125.231])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54748303;
-        Mon,  2 Sep 2019 10:19:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1567412389;
-        bh=5HBvswllGaiODYjSIoZK0GflOekHiZSNfmmM72aXnHo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ddESnutpxySaQ/3OkWOw3E0FVnOw68ZIr0ANYsVmiRXVIziGPIOVS4k0hcZquq8yP
-         tcAbH9x6nM6+Tf7h3nu9gNOw0JjmVEcqqIrA6IH2Lp9iEVehsHh3/GILJbqOIeEFQ3
-         RHnEDJc/VTN463sjn5hHj4hojUwkb9SHET+w1x28=
-Date:   Mon, 2 Sep 2019 11:19:42 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190902081942.GE4777@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190814224340.GD5015@pendragon.ideasonboard.com>
- <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
- <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
- <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
- <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
- <20190901172457.GC1047@bug>
- <20190902080002.GC4777@pendragon.ideasonboard.com>
- <20190902080657.GC15850@amd>
+        Mon, 2 Sep 2019 04:21:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:50152 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729408AbfIBIVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:21:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A799028;
+        Mon,  2 Sep 2019 01:21:04 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3032B3F71A;
+        Mon,  2 Sep 2019 01:21:03 -0700 (PDT)
+Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup
+ capable GPIOs
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     swboyd@chromium.org, evgreen@chromium.org,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
+        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
+        rnayak@codeaurora.org
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-4-ilina@codeaurora.org>
+ <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
+ <20190830155853.GA5224@codeaurora.org>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <11d14b08-27ae-d25a-6056-55c1cfbd89b1@kernel.org>
+Date:   Mon, 2 Sep 2019 09:21:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190830155853.GA5224@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190902080657.GC15850@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 10:06:57AM +0200, Pavel Machek wrote:
-> >>> Single integer. It's read-only, so it just reports the location.
-> >>> 
-> >>> It would be different if this was a writable control: then you need to
-> >>> know which locations are possible to set, and that requires a menu type.
-> >>> 
-> >>> But it doesn't make sense to set the location from software. However, the
-> >>> location might change as a result of other changes: e.g. if the camera
-> >>> has motor control of the tilt and the tilt changes from forward facing to
-> >>> downward facing, then the driver might change the location from FRONT
-> >>> to DOWN. A convoluted example perhaps, but this is just brainstorming.
-> >> 
-> >> There are phones with exactly such camera setup. And yes, it makes
-> >> sense to be writable in that case, as software can move the camera in
-> >> such case.
-> > 
-> > Out of curiosity, what phones are those ?
+On 30/08/2019 16:58, Lina Iyer wrote:
+> On Fri, Aug 30 2019 at 08:50 -0600, Marc Zyngier wrote:
+>> [Please use my kernel.org address in the future. The days of this
+>> arm.com address are numbered...]
+>>
+> Sure, will update and repost.
 > 
-> This one:
+>> On 29/08/2019 19:11, Lina Iyer wrote:
+>>> Introduce a new domain for wakeup capable GPIOs. The domain can be
+>>> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
+>>> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
+>>> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
+>>> corresponding PDC interrupt as its parent.
+>>>
+>>> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
+>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>>> ---
+>>>  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
+>>>  include/linux/soc/qcom/irq.h |  34 ++++++++++++
+>>>  2 files changed, 129 insertions(+), 9 deletions(-)
+>>>  create mode 100644 include/linux/soc/qcom/irq.h
+>>>
+
+[...]
+
+>>> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
+>>> new file mode 100644
+>>> index 000000000000..73239917dc38
+>>> --- /dev/null
+>>> +++ b/include/linux/soc/qcom/irq.h
+>>> @@ -0,0 +1,34 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>> +
+>>> +#ifndef __QCOM_IRQ_H
+>>> +#define __QCOM_IRQ_H
+>>> +
+>>> +#include <linux/irqdomain.h>
+>>> +
+>>> +#define GPIO_NO_WAKE_IRQ	~0U
+>>> +
+>>> +/**
+>>> + * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
+>>> + * capable interrupts by different interrupt controllers.
+>>> + *
+>>> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
+>>> + *                                  interrupt configuration is done at PDC
+>>> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
+>>> + */
+>>> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
+>>> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
+>>
+>> Any reason why you're starting at bit 17? The available range in from
+>> bit 16... But overall, it would be better if you expressed it as:
+>>
+>> #define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP	(IRQ_DOMAIN_FLAG_NONCORE << 0)
+>> #define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP (IRQ_DOMAIN_FLAG_NONCORE << 1)
+>>
+> Okay.
 > 
-> https://www.samsung.com/global/galaxy/galaxy-a80/
+>>> +
+>>> +/**
+>>> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
+>>> + *                                configuration
+>>> + * @parent: irq domain
+>>> + *
+>>> + * This QCOM specific irq domain call returns if the interrupt controller
+>>> + * requires the interrupt be masked at the child interrupt controller.
+>>> + */
+>>> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
+>>> +{
+>>> +	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
+>>> +}
+>>> +
+>>> +#endif
+>>>
+>>
+>> But most of this file isn't used by this patch, so maybe it should be
+>> moved somewhere else...
+>>
+> Apart from creating the domain, this is not used here, but a separate
+> patch seemed excessive. Let me know if you have any suggestions.
 
-Interesting device. I'm not sure we should control that through a
-location control though, as it seems there's more than the rotation of
-the camera involved. In any case I wouldn't care about it for now, and
-turn the location control from read-only to read-write later if needed.
-We need more information and more thought to support that use case.
+My personal preference would be to move it into the patch that actually
+makes use of this.
 
+	M.
 -- 
-Regards,
-
-Laurent Pinchart
+Jazz is not dead, it just smells funny...
