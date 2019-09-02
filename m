@@ -2,86 +2,132 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F14C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C550FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2968B217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567424817;
-	bh=3AeKxO0ddoJuqHSrvWoZKyJIKicbcRXMYvMJTXIXUkk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=opbReC6/SwA8HgvSwaoDJa453lZOh45Nms8Yt+56HwW5FNn4kL5uBzgiiQzlfg24+
-	 BG8+rUCUS2UCHzAk4JqFvt3bdTaLmhRMWQHVRQJJb3km/UDpKlLMG3Dqovc2KKwDfr
-	 a1Rh2RT69hURd4RX7ct9QDSEzNQB5JvQo/ad50AU=
+	by mail.kernel.org (Postfix) with ESMTP id 9CD1F2168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:48:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OJsk6o+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbfIBLq4 (ORCPT
+        id S1731173AbfIBLsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
+        Mon, 2 Sep 2019 07:48:35 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57051 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731082AbfIBLqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:46:53 -0400
-Received: from localhost (smbhubinfra01.hotspot.hub-one.net [213.174.99.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729690AbfIBLsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 07:48:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E502173E;
-        Mon,  2 Sep 2019 11:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567424813;
-        bh=3AeKxO0ddoJuqHSrvWoZKyJIKicbcRXMYvMJTXIXUkk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NOMkxTlpJiSLb1t19p8ePomtZzXLnK4x7mAVZFT8P7TxQHbZFafWmBozeYUnuejtq
-         /eOWS2ZMDmVO8GQXvizOvHzE6hm6197vIi4dqfTSIv0d20lU7Z+FLnZdxIbxoOTY9g
-         3PAH/y/1afdQCcMAszgWphcDBNYpBesP/6mPdFb0=
-Date:   Mon, 2 Sep 2019 13:46:50 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas
- for the generic watchdog bindings
-Message-ID: <20190902114650.w65ya7mgfsyu275x@flea>
-References: <20190821143835.7294-1-mripard@kernel.org>
- <20190830164811.GA7911@roeck-us.net>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MSyj35rkz9s7T;
+        Mon,  2 Sep 2019 21:48:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567424913;
+        bh=RfRlld/uLGo2JdTLLuUxgj3kFdxGvnj6knbdWYv1y7Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OJsk6o+KJfxrS0sd3aTCp6PWxC9Abs7I766QR7kqhVQt3KP7l0DRDTWtZFdCcrwTs
+         169BULZ6N1lQpI3LLZPzBfc1w+VjGvzcU9vofjFkZBWvu0zB4We0doYeotTfVso1nC
+         676gHKyuZs0fRFhAH4js+VBugIgITRX3v+iKpp77m1Kl3Enb3fUfO81393pzUOpwtp
+         R0fcSR2ai6UFZFvdgJTd9L4+YtYkRhfXrigjOV9a2b07dtGu0yvP6tv9mMQIPu2Dvk
+         es05LCA0gxQPUz4dCSrLtq1PvyptuyUAxwLDwk4DztPDEjw23A6emkMhPPTzkz101e
+         MpydAX3ncrSbg==
+Date:   Mon, 2 Sep 2019 21:48:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: linux-next: manual merge of the akpm-current tree with the risc-v
+ tree
+Message-ID: <20190902214828.1c6f27ac@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830164811.GA7911@roeck-us.net>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; boundary="Sig_/b_xC9QUrPrrV6q/nNK=XH2G";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenther,
+--Sig_/b_xC9QUrPrrV6q/nNK=XH2G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 30, 2019 at 09:48:11AM -0700, Guenter Roeck wrote:
-> On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The watchdogs have a bunch of generic properties that are needed in a
-> > device tree. Add a YAML schemas for those.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Hi all,
 
-Thanks for reviewing this, which tree should this go through? Yours or Rob's?
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-Maxime
+  arch/riscv/Kconfig
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+between commit:
+
+  d95f1a542c3d ("RISC-V: Implement sparsemem")
+
+from the risc-v tree and commit:
+
+  f6a9089b8915 ("riscv: make mmap allocation top-down by default")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/riscv/Kconfig
+index 572599cbf750,87dc5370becb..000000000000
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@@ -56,7 -54,18 +56,19 @@@ config RISC
+  	select EDAC_SUPPORT
+  	select ARCH_HAS_GIGANTIC_PAGE
+  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+ +	select SPARSEMEM_STATIC if 32BIT
++ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
++ 	select HAVE_ARCH_MMAP_RND_BITS
++=20
++ config ARCH_MMAP_RND_BITS_MIN
++ 	default 18 if 64BIT
++ 	default 8
++=20
++ # max bits determined by the following formula:
++ #  VA_BITS - PAGE_SHIFT - 3
++ config ARCH_MMAP_RND_BITS_MAX
++ 	default 24 if 64BIT # SV39 based
++ 	default 17
+ =20
+  config MMU
+  	def_bool y
+
+--Sig_/b_xC9QUrPrrV6q/nNK=XH2G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1tAYwACgkQAVBC80lX
+0Gx4qAf/QOrNMD3q4Szf59s/KK8KkfnIgf++Sg+bgEutj90F79SdgjFwfDm5SvE3
+FSYmJsu7/Oot7wWKxPXZh5ThdbPfOtEhRhkj7Co/7tB3M+3oLsM31nVRjUvfzEqn
+5ct6ZW/fkJwjc8nn0dcVORT9oEahRx3nz3oAsFblH1oTmNEZb3KfBhCk2quSPP2q
+r/mQsUmXmznJaWmQqjKlAxMFshw61rCP9YVoXkV5eaHh+FDndlv2WglyKnw0fA6m
+antt6j4cRFdzvO8hd4CkRoo1/PIe+m1kMZaWN6Nug/zJIiCTFXA9EpWaJFuYe+jA
+yJvgOfg2hBnaoYAQoUmhLRe1pqLLQA==
+=UEcZ
+-----END PGP SIGNATURE-----
+
+--Sig_/b_xC9QUrPrrV6q/nNK=XH2G--
