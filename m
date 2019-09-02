@@ -2,131 +2,109 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3063DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7CCC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE4F21897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE60822CF7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:04:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pECNXKuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfIBECM (ORCPT
+        id S1729070AbfIBEEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 00:02:12 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:31969 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728329AbfIBECL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 00:02:11 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tb3eA21_1567396916;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Tb3eA21_1567396916)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 02 Sep 2019 12:01:58 +0800
-From:   Ben Luo <luoben@linux.alibaba.com>
-To:     tglx@linutronix.de, alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org, tao.ma@linux.alibaba.com,
-        gerry@linux.alibaba.com, nanhai.zou@linux.alibaba.com
-Subject: [PATCH v6 1/3] genirq: enhance error recovery code in free irq
-Date:   Mon,  2 Sep 2019 12:01:50 +0800
-Message-Id: <d2d582fc17b7a469f9e7294fe0f868a8ed168c0d.1567394624.git.luoben@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1567394624.git.luoben@linux.alibaba.com>
-References: <cover.1567394624.git.luoben@linux.alibaba.com>
-In-Reply-To: <cover.1567394624.git.luoben@linux.alibaba.com>
-References: <cover.1567394624.git.luoben@linux.alibaba.com>
+        Mon, 2 Sep 2019 00:04:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:41893 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfIBEEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 00:04:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MGg82cSpz9sDQ;
+        Mon,  2 Sep 2019 14:04:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567397061;
+        bh=1Yo6uY9vYsCcKQ0uEW9Q12DJgkCErmeFn5PqfY/sKWw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pECNXKuf+e03cUscTqogf6/7IWR1KEnyVVEIWtbwLmaJrnR5t8Fum9SESkXoSqGbu
+         /7E/16FVZPfsWwuOZzD6dXMiPr5Nu6XP9csLbHioCMDU+FjwvnqNnePzjHHZr3H6BD
+         mu7kpT9xozaJ+irKQIhceQoJsKiYbfK8thaIJecKLL63pB2brr9fcTPG7aJZw6juy9
+         0GU3DvL6Cy0KftGeiGmpp6IAuxyFr3b6EIvwlxfqJnypr9xI5Oq1d4iJDCcWLXgb36
+         BKpehzOc4YyYY25TAZFKTbAGQXiKSIuoaerz2ixr3WJNpzCZTjMEI/KJ/Jxipi12ga
+         n6lGqXF87bjeQ==
+Date:   Mon, 2 Sep 2019 14:04:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: linux-next: manual merge of the sound-asoc tree with the jc_docs
+ tree
+Message-ID: <20190902140419.110a2c03@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/A.PmcI=jXekuU.+wnbKcZUc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__free_irq()/__free_percpu_irq() need to return if called from IRQ
-context because the interrupt handler loop runs with desc->lock dropped
-and dev_id can be subject to load and store tearing. Also move WARNs
-out of lock region and print out dev_id to help debugging.
+--Sig_/A.PmcI=jXekuU.+wnbKcZUc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
----
- kernel/irq/manage.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+Hi all,
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index e8f7f17..10ec3e9 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1690,7 +1690,10 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 	struct irqaction *action, **action_ptr;
- 	unsigned long flags;
- 
--	WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
-+	if (WARN(in_interrupt(),
-+		 "Trying to free IRQ %d (dev_id %p) from IRQ context!\n",
-+		 irq, dev_id))
-+		return NULL;
- 
- 	mutex_lock(&desc->request_mutex);
- 	chip_bus_lock(desc);
-@@ -1705,10 +1708,11 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 		action = *action_ptr;
- 
- 		if (!action) {
--			WARN(1, "Trying to free already-free IRQ %d\n", irq);
- 			raw_spin_unlock_irqrestore(&desc->lock, flags);
- 			chip_bus_sync_unlock(desc);
- 			mutex_unlock(&desc->request_mutex);
-+			WARN(1, "Trying to free already-free IRQ %d (dev_id %p)\n",
-+			     irq, dev_id);
- 			return NULL;
- 		}
- 
-@@ -2286,7 +2290,10 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
- 	struct irqaction *action;
- 	unsigned long flags;
- 
--	WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
-+	if (WARN(in_interrupt(),
-+		 "Trying to free IRQ %d (dev_id %p) from IRQ context!\n",
-+		 irq, dev_id))
-+		return NULL;
- 
- 	if (!desc)
- 		return NULL;
-@@ -2295,14 +2302,17 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
- 
- 	action = desc->action;
- 	if (!action || action->percpu_dev_id != dev_id) {
--		WARN(1, "Trying to free already-free IRQ %d\n", irq);
--		goto bad;
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+		WARN(1, "Trying to free already-free IRQ (dev_id %p) %d\n",
-+		     dev_id, irq);
-+		return NULL;
- 	}
- 
- 	if (!cpumask_empty(desc->percpu_enabled)) {
--		WARN(1, "percpu IRQ %d still enabled on CPU%d!\n",
--		     irq, cpumask_first(desc->percpu_enabled));
--		goto bad;
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+		WARN(1, "percpu IRQ %d (dev_id %p) still enabled on CPU%d!\n",
-+		     irq, dev_id, cpumask_first(desc->percpu_enabled));
-+		return NULL;
- 	}
- 
- 	/* Found it - now remove it from the list of entries: */
-@@ -2317,10 +2327,6 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
- 	irq_chip_pm_put(&desc->irq_data);
- 	module_put(desc->owner);
- 	return action;
--
--bad:
--	raw_spin_unlock_irqrestore(&desc->lock, flags);
--	return NULL;
- }
- 
- /**
--- 
-1.8.3.1
+Today's linux-next merge of the sound-asoc tree got a conflict in:
 
+  Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
+
+between commit:
+
+  aa95b4a960ab ("docs: fix a couple of new broken references")
+
+from the jc_docs tree and commit:
+
+  8a99f76ac1a5 ("ASoC: dt-bindings: Convert Allwinner A33 codec to a schema=
+")
+
+from the sound-asoc tree.
+
+I fixed it up (the latter removed the file, so I did that) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/A.PmcI=jXekuU.+wnbKcZUc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1slMMACgkQAVBC80lX
+0Gwv7QgAlJTP91u6YFVM1OZHrQUcYdIhXRuRZ88Y2tZJ2bTnNG+uFLsw30IXLaui
+Cdn97hQQ92IO23G37CeD/bpwafX4cxZHEz89aQJf1Zl7ndhIcE4r5nFeqcLKrMKE
+EYtf9Abv/mNgVLHr8fDVcHEfcbEex2Am/osceWRnhuw//VWcW9iDdnYi65VdIWmI
+1HGNeo37pglnhM2yzEHP3f07YC9U2prljT9BeOOXrP8y1opXuNHmIyNBWyG1whdt
+fspIp4PotXUEI/BezliBYCs0gvHGLoCgtEE0YYuhj3NURAisY2CyIkdGTI7Bkg9y
+aBtJ/W7dvXLaDrnLtakDu0nGnI/pDg==
+=b7Yz
+-----END PGP SIGNATURE-----
+
+--Sig_/A.PmcI=jXekuU.+wnbKcZUc--
