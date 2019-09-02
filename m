@@ -2,135 +2,90 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F8BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33F5C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2B822DBF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C0522DBF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567458501;
-	bh=s9W7m9n2kMALyK7KmGbZwDquYZXEzWR6eyYkv2dm2f8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FwCnv90xc+a33ttr/SYkJZwuTQOoZtIMOmQSSUicGoNBK00habsqjH6XYNPLqzDR/
-	 XDOiYSkqlPh/vWxmWGauwNNRyJRYdWOM5kuWaHmWISZjXVIdKUulB+KD4aCqTU5gMK
-	 CrR1T8gJpfWK2vBmnPMG7nqSgyPumD9dM9T3ZyI0=
+	s=default; t=1567458665;
+	bh=qX20IVLvUSWOzNkJj+sBxx54B1HMotDbCAEmajym6B4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=opm/776HDzmgSb09m+cSpjpp675AmuZJDYXItHVOMDheTh6+HcUxCOAyZJI+EsaRr
+	 aK9aqHZmlvf+g8ORByjv5lztzGfVoVBH4jfEDT/2OQCd1Sawh5uGOdGC/FAsyEoD7d
+	 a50FGGJqvBrs6ri8dPyQnHA7t696Krq8bQZ87JyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfIBVIV (ORCPT
+        id S1727499AbfIBVLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:08:21 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35669 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfIBVIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:08:20 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 100so14719013otn.2;
-        Mon, 02 Sep 2019 14:08:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=huTQD+G6wSs8hXbu4stIdO9xW+9jjAIMQ/j2IBKOSLs=;
-        b=kGdy5a6AxvT29kVSZ2Kida0dWzlyvLm2AgBkZrYN9pf7HnDv9MfF345a+0CKCigvWF
-         CL1bNb8UEGH3t3ws7yGOul2dULhL3pS7ar+AiP3+x0p4oDRTngpwPOv5IVz+/CYiJOAx
-         fY2Z2JUgCvs7HiQLDLSzMlBEBK95cG2gt3OnQMP7a+8sKU3vnvPuHS3UgzW9c1X/vNSd
-         Bi39o+TKfx1+fltm4JGm3yZ7OzMo0B9K8L5AKm2mgYZ3AA2+IH2BYHP7Xz7Jk+eax+dK
-         0w6g7FSG38HxRssA7lEMRA4o6cpBpZs28wKiYpZO/wM787ILchCaQJ805OuTghwHzvMn
-         wacw==
-X-Gm-Message-State: APjAAAXLxzdB5swd05MTJqInq8SQCSgIM3hFSrkFATmawv8Ny7j+qTog
-        UhN1UZ2SdtbwqCCK9ZGINA4xg6364tcjiaMojAI=
-X-Google-Smtp-Source: APXvYqyI27hb2RWcNRadfCbRlDtIXktARg70zP5FAIcXUKIjdX66KnAXJFj+Kt7ssn8uG1C93zycuqAbTk3HFoTJ7d8=
-X-Received: by 2002:a05:6830:154:: with SMTP id j20mr26200025otp.266.1567458499533;
- Mon, 02 Sep 2019 14:08:19 -0700 (PDT)
+        Mon, 2 Sep 2019 17:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbfIBVLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:11:04 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE26E20870;
+        Mon,  2 Sep 2019 21:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567458663;
+        bh=qX20IVLvUSWOzNkJj+sBxx54B1HMotDbCAEmajym6B4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AD5eFMS4HiX4X1/0G9Dh521nWKDrI33a0LGJ0QWlqf8kqJtJGwk+ofVyNT7IeCGfl
+         Im9W9rMBG81wLTIm2kTSbYoxtjkXIiRrPWYKaSy4KyVxMQEWteJ9LBElPao4m4VEYW
+         tpe6XC5372WqFaPwj4r+5pjb3N8k7cK0+9491v18=
+Date:   Mon, 2 Sep 2019 16:11:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: Move ATS declarations to linux/pci.h
+Message-ID: <20190902211100.GH7013@google.com>
+References: <20190830150756.21305-1-kw@linux.com>
+ <20190830161840.GA9733@infradead.org>
 MIME-Version: 1.0
-References: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
- <20190722023530.67676-2-skunberg.kelsey@gmail.com> <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
- <20190722182929.GA203187@google.com>
-In-Reply-To: <20190722182929.GA203187@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 2 Sep 2019 23:08:08 +0200
-Message-ID: <CAJZ5v0iF=TxxD_gCJfaZzORTrcu+2StJE1_vhthB70jxqCkHuw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ACPI: Remove acpi_has_method() call from acpi_adxl.c
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, bjorn@helgaas.com,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830161840.GA9733@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the delayed reply.
+On Fri, Aug 30, 2019 at 09:18:40AM -0700, Christoph Hellwig wrote:
+> On Fri, Aug 30, 2019 at 05:07:56PM +0200, Krzysztof Wilczynski wrote:
+> > Move ATS function prototypes from include/linux/pci-ats.h to
+> > include/linux/pci.h so users only need to include <linux/pci.h>:
+> 
+> Why is that so important?  Very few PCI(e) device drivers use ATS,
+> so keeping it out of everyones include hell doesn't seem all bad.
 
-On Mon, Jul 22, 2019 at 8:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Tony (original author), Borislav (merged original patch)]
->
-> On Mon, Jul 22, 2019 at 10:31:11AM +0200, Rafael J. Wysocki wrote:
-> > On Mon, Jul 22, 2019 at 4:36 AM Kelsey Skunberg
-> > <skunberg.kelsey@gmail.com> wrote:
-> > >
-> > > acpi_check_dsm() will already return an error if the DSM method does not
-> > > exist. Checking if the DSM method exists before the acpi_check_dsm() call
-> > > is not needed. Remove acpi_has_method() call to avoid additional work.
-> > >
-> > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > > ---
-> > >  drivers/acpi/acpi_adxl.c | 5 -----
-> > >  1 file changed, 5 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/acpi_adxl.c b/drivers/acpi/acpi_adxl.c
-> > > index 13c8f7b50c46..89aac15663fd 100644
-> > > --- a/drivers/acpi/acpi_adxl.c
-> > > +++ b/drivers/acpi/acpi_adxl.c
-> > > @@ -148,11 +148,6 @@ static int __init adxl_init(void)
-> > >                 return -ENODEV;
-> > >         }
-> > >
-> > > -       if (!acpi_has_method(handle, "_DSM")) {
-> > > -               pr_info("No DSM method\n");
-> >
-> > And why is printing the message not useful?
-> >
-> > > -               return -ENODEV;
-> > > -       }
-> > > -
-> > >         if (!acpi_check_dsm(handle, &adxl_guid, ADXL_REVISION,
-> > >                             ADXL_IDX_GET_ADDR_PARAMS |
-> > >                             ADXL_IDX_FORWARD_TRANSLATE)) {
->
-> The next line of context (not included in the patch):
->
->                pr_info("DSM method does not support forward translate\n");
->
-> IMHO kernel messages that are just a constant string, with no context
-> or variable part (device ID, path, error code, etc) are questionable
-> in general.  Is there any dev_printk()-like thing that takes an
-> acpi_handle?  Seems like that would be useful for cases like this.
->
-> This message *does* include an "ADXL: " prefix (from the pr_fmt
-> definition), and from reading the code you can see that the only
-> possible method is "\_SB.ADXL._DSM".
->
-> There's nothing an end user can do with these messages, so I suspect
-> their value is for debugging during platform bringup, and it would be
-> sufficient to drop the first one (as Kelsey's patch does) and change
-> the second one like this:
->
-> -              pr_info("DSM method does not support forward translate\n");
-> +              pr_info("%s DSM missing or does not support forward translate\n",
-> +                      path);
+This was my idea, and it wasn't a good one, sorry.
 
-You have a point, but then I would expect the changelog to mention that.
+The ATS, PRI, and PASID interfaces are all sort of related and are
+used only by the IOMMU drivers, so it probably makes sense to put them
+all together.  Right now the ATS stuff is in linux/pci.h and PRI/PASID
+stuff is in linux/pci-ats.h.  Maybe the right thing would be to move
+the ATS stuff to pci-ats.h.
 
-As it stands, the patch does more than the changelog says, which isn't nice.
+I previously moved it from pci-ats.h to pci.h with ff9bee895c4d ("PCI:
+Move ATS declarations to linux/pci.h so they're all together") with
+the excuse of putting the external ATS interfaces next to
+pci_ats_init().  But that really looks like it was a mistake because
+pci_ats_init() is a PCI-internal thing and its declaration should
+probably be in drivers/pci/pci.h instead.
+
+There's also a useless "struct pci_ats" forward declaration in
+linux/pci.h that I should have removed with d544d75ac96a ("PCI: Embed
+ATS info directly into struct pci_dev").
+
+Bjorn
