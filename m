@@ -2,66 +2,155 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE187C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD4FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981B221883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E9021897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567450994;
+	bh=AWHxitr0Uqz89QQHhmQrpQCAfo/5quYPk/oro2ST544=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sdJ6HfdVESgvwiZ/9i5B40WDGBSP63LvVRcLSwG1JzQhCZ3kyAyZKXfl/1bHNKjOg
+	 ASxGyU8R4lj+S/rfdyryBqGkukrAQHM5u6LXftRQpDmhrpSQR9EEGha3yfljX6qpLU
+	 P8wDlCbAZ8grX/RQbGDxVVJiie0AzpGD01JEC4dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfIBTDB (ORCPT
+        id S1727042AbfIBTDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:03:01 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35780 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfIBTDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:03:01 -0400
-Received: from localhost (unknown [63.64.162.234])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A571C15404E28;
-        Mon,  2 Sep 2019 12:03:00 -0700 (PDT)
-Date:   Mon, 02 Sep 2019 12:03:00 -0700 (PDT)
-Message-Id: <20190902.120300.174900457187536042.davem@davemloft.net>
-To:     benwei@fb.com
-Cc:     sam@mendozajonas.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH net-next] net/ncsi: support unaligned payload size in
- NC-SI cmd handler
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CH2PR15MB368619179F403EAE47FD61F7A3BE0@CH2PR15MB3686.namprd15.prod.outlook.com>
-References: <CH2PR15MB368619179F403EAE47FD61F7A3BE0@CH2PR15MB3686.namprd15.prod.outlook.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 02 Sep 2019 12:03:00 -0700 (PDT)
+        Mon, 2 Sep 2019 15:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbfIBTDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:03:13 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FCAF21883;
+        Mon,  2 Sep 2019 19:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567450992;
+        bh=AWHxitr0Uqz89QQHhmQrpQCAfo/5quYPk/oro2ST544=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VdztqFnanBJ+cfAc0ZvtQvOHoJv2wyldc2LIgPq0RJoaP+hKu8STi0QWt5wZskbEW
+         qNDLzm8ld0+lleK8yX5hziJ/rS4EDp05uB66fJIJnnf6+LVQY8SEvCCwFBnZ9dNdTz
+         9gdPhw2MoB5qAfMm6rG97SCnUlnBegKA0FiHCpBs=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A84963C0B7F; Mon,  2 Sep 2019 21:03:09 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 21:03:09 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] power: supply: max17042_battery: Fix a typo in function
+ names
+Message-ID: <20190902190309.yshdhrswhemdf7yb@earth.universe>
+References: <20190721160328.24660-1-christophe.jaillet@wanadoo.fr>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="geki2nibjgyihtcm"
+Content-Disposition: inline
+In-Reply-To: <20190721160328.24660-1-christophe.jaillet@wanadoo.fr>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Wei <benwei@fb.com>
-Date: Mon, 2 Sep 2019 02:46:52 +0000
 
-> Update NC-SI command handler (both standard and OEM) to take into
-> account of payload paddings in allocating skb (in case of payload
-> size is not 32-bit aligned).
-> 
-> The checksum field follows payload field, without taking payload
-> padding into account can cause checksum being truncated, leading to
-> dropped packets.
-> 
-> Signed-off-by: Ben Wei <benwei@fb.com>
+--geki2nibjgyihtcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you have to align and add padding, I do not see where you are
-clearing out that padding memory to make sure it is initialized.
+Hi,
 
-You do comparisons with 'payload' but make adjustments to 'len'.
+On Sun, Jul 21, 2019 at 06:03:28PM +0200, Christophe JAILLET wrote:
+> It is likely that 'max10742_[un]lock_model()' functions should be
+> 'max17042_[un]lock_model()'
+> (0 and 7 switched in 10742)
+>=20
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
 
-The logic is very confusing.
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/max17042_battery.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supp=
+ly/max17042_battery.c
+> index 581c6bd23388..da3904822929 100644
+> --- a/drivers/power/supply/max17042_battery.c
+> +++ b/drivers/power/supply/max17042_battery.c
+> @@ -511,7 +511,7 @@ static inline void max17042_override_por(struct regma=
+p *map,
+>  		regmap_write(map, reg, value);
+>  }
+> =20
+> -static inline void max10742_unlock_model(struct max17042_chip *chip)
+> +static inline void max17042_unlock_model(struct max17042_chip *chip)
+>  {
+>  	struct regmap *map =3D chip->regmap;
+> =20
+> @@ -519,7 +519,7 @@ static inline void max10742_unlock_model(struct max17=
+042_chip *chip)
+>  	regmap_write(map, MAX17042_MLOCKReg2, MODEL_UNLOCK2);
+>  }
+> =20
+> -static inline void max10742_lock_model(struct max17042_chip *chip)
+> +static inline void max17042_lock_model(struct max17042_chip *chip)
+>  {
+>  	struct regmap *map =3D chip->regmap;
+> =20
+> @@ -577,7 +577,7 @@ static int max17042_init_model(struct max17042_chip *=
+chip)
+>  	if (!temp_data)
+>  		return -ENOMEM;
+> =20
+> -	max10742_unlock_model(chip);
+> +	max17042_unlock_model(chip);
+>  	max17042_write_model_data(chip, MAX17042_MODELChrTbl,
+>  				table_size);
+>  	max17042_read_model_data(chip, MAX17042_MODELChrTbl, temp_data,
+> @@ -589,7 +589,7 @@ static int max17042_init_model(struct max17042_chip *=
+chip)
+>  		temp_data,
+>  		table_size);
+> =20
+> -	max10742_lock_model(chip);
+> +	max17042_lock_model(chip);
+>  	kfree(temp_data);
+> =20
+>  	return ret;
+> --=20
+> 2.20.1
+>=20
+
+--geki2nibjgyihtcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tZ20ACgkQ2O7X88g7
++priMg//R7FBlaET+kgtJlE1Iw8yaVuXLYkOfpjDXo4asEFbs5SPxrD4VyTWAXTs
+McaDNnlAmVs5kinXneVN8LMYdU6MstWi0a3eV/5JYxGGMkvf9eBMOsqFvP6JOcsG
+bypNfnKdLbuhaxC5ZjHLRK/D3b9oZ6nSBqBZjHvRQt4lIeqmTyNw/z0XaHqLhVHU
+/eI6Y+FSx+v1agf+ycRfCOoIP95ZEEsxeBZLhe+aBlnUjD9WzmU4VZwmTM0PkmZt
+Xq6xvkp6WezD4QihyOx911i08KHSMuxBQu6kd5eXQW+T0IdcIDQpbp8WD7pzOjrY
+Gz9xE9f7T3kEjm4FRlBbGZe92X7GVpltqW/qOoeD1y87JbPAHNlLWkjv55KgysLK
+yfnB+mbSetnlZ/lBnmLaeQnyzNJowykvqveQYJO4t+iO4dEFmplTAFS9syZcTicF
+g0fAJWY4W9DZSLLQEG+f1PlxyaCwvabQpOTeQsHuPAc6FnA9ChxWePnoho9Y72Kk
+GNx50V4/KS3A5agpyQ0JwfY9Jz48sZ0wHz6gEnccNeobzoxGYLgOJjDwLw1EtRv9
+ACr3y/SbzjltKqjC5PgYHCfRESlCTXV7Ngt5Q1ZErvqH5ZeBnZwAhzV9hqY1shTc
+07x8g4NyCMzsq07FOSbNqRZgvk6vEXk+gmNohoLLSlXlt916Bss=
+=QS8p
+-----END PGP SIGNATURE-----
+
+--geki2nibjgyihtcm--
