@@ -2,143 +2,111 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57430C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E7BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA0620820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8C920820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+TiADkq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B6461RqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfIBNL7 (ORCPT
+        id S1730885AbfIBNNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:11:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33443 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729768AbfIBNL7 (ORCPT
+        Mon, 2 Sep 2019 09:13:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35202 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729690AbfIBNNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:11:59 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so3930706pfl.0;
-        Mon, 02 Sep 2019 06:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dKBlu/uJD1E27uZkZUHPL5g33kiGPBY8pyXH2GoFqbo=;
-        b=g+TiADkqSxyb/cFMNoxRYD9JtVAeM20eO8vWnTPdjiTrAzflpVTr562UTnmhs6LdBZ
-         9v3MuQD3iIpsSBISydHCOSAx4e1k5h4Y3fbH+6W/XjQe6Q9KIbSXIG1zeFGkE8/skka/
-         3yAn+kBdD3qA9Gs8hcmql1Yx5jp7/b8Jc/OHNN+8NQsPOB3ZvH/thUoshvlBlNIqtO9t
-         TeJmm3qrkAcituxpSsGyXwm+gqlUCg77JrFBukRh80qlVlWR7aKh6kUEgjOPp6q2rorQ
-         oG8dAm0XlpG3hYi4SpDkG8Tuw8VRh64RwXcplmh8Yz59Y7wEUpOr1DOZcj2LGnXtJgWf
-         14YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dKBlu/uJD1E27uZkZUHPL5g33kiGPBY8pyXH2GoFqbo=;
-        b=YQGjRaML6cGIZ4kNkBLHPTe660fLsNofUt9KQyAcRUUsohtQ6CRYcbKD+wfmWL7Po5
-         2+aVEovP56z509Oi6yhsj4GCTIn5vmLgK1K2Qi3otlw/25UiRHu/I/oFOUgs77dniLp+
-         Mq7iE4BI1VjQeEChajeyueUpZelu8gK6z5moDRiKjsPboQ+UTiUNDsUMIa0zNZ4qK8Gc
-         ZJlN0hAOb6pqmnv4eACHq61BsF5aoKE3a9zYymQ0EegJ7O4ywaU1ZiM/2quQtq5Uj/Yp
-         YOhdQlff+8YaO+b2fnGlnI29Q+F0ZHRiThMDwkcPWn30FZsGtFpCn6xrbosmjxhqh14V
-         kpNg==
-X-Gm-Message-State: APjAAAVKoS6KqltFqGp+vR76N7daJ4kK5QBUIi1d3ierMnnDJiexMsEy
-        T33S94zki6XHksuvGjOcdtDXZJOh
-X-Google-Smtp-Source: APXvYqzrc7KbiqBdBBaqp5St91rHSUbyTY5rJ6vPrnD+ayy4FMR7weVumUG3nZNutBhZRgjgraJCpQ==
-X-Received: by 2002:a63:c006:: with SMTP id h6mr24997331pgg.290.1567429918514;
-        Mon, 02 Sep 2019 06:11:58 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f188sm9374682pfa.170.2019.09.02.06.11.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 06:11:57 -0700 (PDT)
-Subject: Re: linux-next: Tree for Aug 30
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190831003613.7540b2d7@canb.auug.org.au>
- <20190901182226.GA20315@roeck-us.net> <20190902075520.GB28967@lst.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <937bab44-f2fd-6b4c-48ee-7aedc142d9d8@roeck-us.net>
-Date:   Mon, 2 Sep 2019 06:11:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 09:13:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WUT2tiM88hPNkRtYXbHex8vC4m/OZCxIoGmn21PiEzg=; b=B6461RqGBtBH0KvXzaW8gyE1di
+        GNR0A4uyyj8ExfMELYP3VZkyAGwY6+begEERVgg7lTlpC0MJuiW7f8kqUm2GgK6gMnmLcNPDcrkmh
+        z3MxWlMA7p8dH+gac4nQqy46dF0HtEaYLr57yX90WRs51OeH5NH825iZp70lz03vDITtknrHmGZyT
+        zPmNPVQwbUonkMu/pkmu2tKa/HiQScOjFywXrII680+PS8FHxVj+Z91/w8g71hstuq/AQJfgaklzv
+        men9DAHq4czBJLy8Q1O/YWZSAlbjfdVDjU1o111d7b1N4Ynuaao5JCOn1pDg1pEPV3h+GPKO0Qya5
+        jj8KCK9A==;
+Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4m8l-0000VK-Cr; Mon, 02 Sep 2019 13:13:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        gross@suse.com, boris.ostrovsky@oracle.com
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 12/13] swiotlb-xen: merge xen_unmap_single into xen_swiotlb_unmap_page
+Date:   Mon,  2 Sep 2019 15:03:38 +0200
+Message-Id: <20190902130339.23163-13-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190902130339.23163-1-hch@lst.de>
+References: <20190902130339.23163-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190902075520.GB28967@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 12:55 AM, Christoph Hellwig wrote:
-> On Sun, Sep 01, 2019 at 11:22:26AM -0700, Guenter Roeck wrote:
->> On Sat, Aug 31, 2019 at 12:36:13AM +1000, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20190829:
->>>
->>> The compiler-attributes tree gained a build failure for which I reverted
->>> a commit.
->>>
->>> The arm-soc tree gained a conflict against the arm tree.
->>>
->>> The csky tree gained a conflict against the dma-mapping tree.
->>>
->>> The fuse tree gained a conflict against the fsverity tree.
->>>
->>> The vfs tree gained conflicts against the fuse tree.
->>>
->>> The pci tree gained a build failure for which I revereted a commit.
->>>
->>> The net-next tree still had its build failure for which I applied a patch.
->>> It also gained a conflict against the net tree.
->>>
->>> The regulator tree still has its build failure for which I reverted
->>> a commit.
->>>
->>> The keys tree still has its build failure so I used the version from
->>> next-20190828.
->>>
->>> The driver-core tree lost its build failure.
->>>
->>> The staging tree got conflicts against the net-next and usb trees.
->>>
->>> The akpm-current tree gained a build failure due to an interaction with
->>> the hmm tree for which I applied a patch.
->>>
->>
->> Something in the fixup patch seems to be wrong. I get the following
->> error with sh4 boot tests when booting from usb.
->>
->> sm501-usb sm501-usb: OHCI Unrecoverable Error, disabled
->> sm501-usb sm501-usb: HC died; cleaning up
->>
->> Unfortunately, bisect doesn't help much (see below). Reverting the fixup
->> patch as well as the offending patch (plus a context patch) alone does
->> not help either. Further analysis shows that the problem exists since
->> at least next-20190823. Another round of bisect on next-20190827 suggests
->> another culprit (see second bisect below). Reverting all the offending
->> patches doesn't help either, though, only result in a different error.
->>
->> usb 1-1: new full-speed USB device number 2 using sm501-usb
->> sm501-usb sm501-usb: DMA map on device without dma_mask
->>
->> With that, I am giving up. Copying Christoph as he appears to be heavily
->> involved in the patch series causing the problems.
-> 
-> What was the last tree you tested that works perfectly?
-> 
-next-20190822
+No need for a no-op wrapper.
 
-Guenter
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+---
+ drivers/xen/swiotlb-xen.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index 95911ff9c11c..384304a77020 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -414,9 +414,8 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+  * After this call, reads by the cpu to the buffer are guaranteed to see
+  * whatever the device wrote there.
+  */
+-static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
+-			     size_t size, enum dma_data_direction dir,
+-			     unsigned long attrs)
++static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	phys_addr_t paddr = xen_bus_to_phys(dev_addr);
+ 
+@@ -430,13 +429,6 @@ static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
+ 		swiotlb_tbl_unmap_single(hwdev, paddr, size, dir, attrs);
+ }
+ 
+-static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+-			    size_t size, enum dma_data_direction dir,
+-			    unsigned long attrs)
+-{
+-	xen_unmap_single(hwdev, dev_addr, size, dir, attrs);
+-}
+-
+ static void
+ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
+ 		size_t size, enum dma_data_direction dir)
+@@ -477,7 +469,8 @@ xen_swiotlb_unmap_sg(struct device *hwdev, struct scatterlist *sgl, int nelems,
+ 	BUG_ON(dir == DMA_NONE);
+ 
+ 	for_each_sg(sgl, sg, nelems, i)
+-		xen_unmap_single(hwdev, sg->dma_address, sg_dma_len(sg), dir, attrs);
++		xen_swiotlb_unmap_page(hwdev, sg->dma_address, sg_dma_len(sg),
++				dir, attrs);
+ 
+ }
+ 
+-- 
+2.20.1
 
