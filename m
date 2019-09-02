@@ -6,56 +6,100 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286D0C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972E6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101B5208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8D2216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfIBRvq (ORCPT
+        id S1726802AbfIBRz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 13:51:46 -0400
-Received: from emh07.mail.saunalahti.fi ([62.142.5.117]:33488 "EHLO
-        emh07.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfIBRvq (ORCPT
+        Mon, 2 Sep 2019 13:55:29 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:65501 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfIBRz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 13:51:46 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-83-161-nat.elisa-mobile.fi [85.76.83.161])
-        by emh07.mail.saunalahti.fi (Postfix) with ESMTP id DF51BB0335;
-        Mon,  2 Sep 2019 20:51:42 +0300 (EEST)
-Date:   Mon, 2 Sep 2019 20:51:42 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
-        maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.co, devicetree@vger.kernel.org
-Subject: Re: [PATCH 02/13] MIPS: Loongson64: Sepreate loongson2ef/loongson64
- code
-Message-ID: <20190902175142.GB4339@darkstar.musicnaut.iki.fi>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-3-jiaxun.yang@flygoat.com>
- <20190827220506.GK30291@darkstar.musicnaut.iki.fi>
- <c03045cd-25df-a3b9-3b3b-cf09b7fdd3fa@flygoat.com>
+        Mon, 2 Sep 2019 13:55:29 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: MAKZapXI/brCzKTAggHur1oxx5MEehc5gkNmGo6a/bkD8t2WLAyz5cuvNV2XjWv1zYJc4C3H40
+ 5Us4QwCDeBylBXs295NjtRhpiKUgeXmx1kBUBhjva12/zPNDlaTSuBy/Z7pR9b77KyMwhBellT
+ 1uNEoyTA2KdlzIwoHHplLqfOBdH4S7ktTVr8M8s4wgxSiHR8c8YTH0j8oQ9Wo583YPkaL4DEEK
+ cLb+DbvgBzqd4+OKk+EUP9bivbmEPu7PfrthHruMae/Z7WgcJ/jQ2jbz9X/d2GtKPJePix6G0X
+ zsE=
+X-IronPort-AV: E=Sophos;i="5.64,460,1559545200"; 
+   d="scan'208";a="44600008"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Sep 2019 10:55:28 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 2 Sep 2019 10:55:28 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 2 Sep 2019 10:55:27 -0700
+Date:   Mon, 2 Sep 2019 19:55:27 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Ido Schimmel <idosch@idosch.org>,
+        David Miller <davem@davemloft.net>, <jiri@resnulli.us>,
+        <horatiu.vultur@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <UNGLinuxDriver@microchip.com>, <ivecera@redhat.com>,
+        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190902175526.72gsb4c4hoswd4ds@lx-anielsen.microsemi.net>
+References: <20190829175759.GA19471@splinter>
+ <20190829182957.GA17530@lunn.ch>
+ <20190829193613.GA23259@splinter>
+ <20190829.151201.940681219080864052.davem@davemloft.net>
+ <20190830094319.GA31789@splinter>
+ <20190831193556.GB2647@lunn.ch>
+ <20190831204705.GA28380@splinter>
+ <20190901184819.GA24673@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c03045cd-25df-a3b9-3b3b-cf09b7fdd3fa@flygoat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190901184819.GA24673@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 08:37:34AM +0800, Jiaxun Yang wrote:
-> On 2019/8/28 上午6:05, Aaro Koskinen wrote:
-> Hi Aaro,
-> >You need to update lemote2f_defconfig with his patch.
-> 
-> How to generate this config? We should not edit it manually right?
+The 09/01/2019 20:48, Andrew Lunn wrote:
+> > Look, this again boils down to what promisc mode means with regards to
+> > hardware offload. You want it to mean punt all traffic to the CPU? Fine.
+> > Does not seem like anyone will be switching sides anyway, so lets move
+> > forward. But the current approach is not good. Each driver needs to have
+> > this special case logic and the semantics of promisc mode change not
+> > only with regards to the value of the promisc counter, but also with
+> > regards to the interface's uppers. This is highly fragile and confusing.
+> Yes, i agree. We want one function, in the core, which handles all the
+> different uppers. Maybe 2, if we need to consider L2 and L3 switches
+> differently.
+Are you suggesting that we continue the path in v3, but add a utility function
+to determinate if the interface needs to go into promisc mode (taking the
+bridge stats, the promisc counter, and the upper devices into account).
 
-It's possible to edit changed symbols by hand. Minimal defconfigs are
-generated with "make savedefconfig".
+Or are you suggest that we like Ido go back to v2?
 
-A.
+/Allan
+
