@@ -2,113 +2,219 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976F7C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A394C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771AA21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555252173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JE+rTGDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbfIBIjP (ORCPT
+        id S1730716AbfIBIjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:39:15 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39753 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729870AbfIBIjP (ORCPT
+        Mon, 2 Sep 2019 04:39:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38479 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729870AbfIBIjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:39:15 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w144so2900505oia.6;
-        Mon, 02 Sep 2019 01:39:14 -0700 (PDT)
+        Mon, 2 Sep 2019 04:39:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l11so4263623wrx.5;
+        Mon, 02 Sep 2019 01:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=84tNa0LJ5qNP8ceq2AHt9GMRkk+XoKF4Wbr0EYQvIpE=;
+        b=JE+rTGDd3vfb9wVcnjiTAQ6VJuKqNZw1kp4lvjPYJQleCdZutoksvcSMrlbLlijgCD
+         eA0G7FMldjru0uK1XH4l74xGOPEmK3pJ1sPHZkOIrZr4BS6wnRxvwBqRoz9XiIQerESa
+         jX+iX5JReRbNpB+qIm2TIK6sWuVMsKA0S0XMYbWYNcj2+SuMNh2YzUcPN3Ivu6DSSW3b
+         rT05eDiPQfsvIDsgAW75tfQ1C52HqBA7opRcNIzA1Vmi/6sQ/3QfMZ+3+lgjZDe3fbDE
+         oOkXpLo2mcwKwq9a0L+APjev3rJXds2O1xredJzBH0qz936K/dnrmcjHVT3Q0ByGdP97
+         xxgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9ZpqrbK70Ld5mnKoMYiYvVEM2pi/doZB4O7a3wLCqTI=;
-        b=QctrxUtq1+doQV/xAxEv4gggNNifMs4r25MsynktzW5aP5WnEzSREJ4FqRiudPq2TX
-         B+DnQtQG5AlnUvRd3Gla1Kxb9K69WNIGbpXAUp9PFKek95Gj+x8Q87IYKfgBWc7d1mTV
-         NBV6RJPPh9ggNxSmeTWFu37Ua4306n+8Yuvf9LLtmhVqGNtWQDkrHxkK/m7UYCd4tqCK
-         e9exvOe22ALOCJcK3N1+4Vd1AvIXOeaI9cu2lpgDeWsmyesmAKg4tAPDIDT1rbMM6W8z
-         +zz/5QJtOAP2SGTjQDpzVi3Hmn/AjjqoDfnOOOfyswvmjD9YYQGXhJaZIW32SNm4gIX+
-         lQSg==
-X-Gm-Message-State: APjAAAWSv2TBn8Koi9bwX5PXLNJxYP/28uPr9wDy+jzSKuLICM+skxBz
-        Fh4U6j0aGZk88/prup63wONvBk5+enDd6DYcQGw=
-X-Google-Smtp-Source: APXvYqw++tYM+EEWK5AjkQiIj1oaLed6Hs8B/zga9tEOOV5NUPQZIfJRhnU/MTMKvV5E2rk1cdLAKGCNmS1sgYwW9UQ=
-X-Received: by 2002:aca:fc53:: with SMTP id a80mr1306498oii.131.1567413554435;
- Mon, 02 Sep 2019 01:39:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=84tNa0LJ5qNP8ceq2AHt9GMRkk+XoKF4Wbr0EYQvIpE=;
+        b=FYWDRnhcv8JMIpaGwtRaGbDlr553sJ5NDhPk7C7p0BWT89JtVuqWzqiGEdFBKBvfjh
+         7mV84UEFxqR99nNWFk2e/CsSHWAMq8gdrd3K8zkFUfzuywC1zbd71pYeqyYD7rurTmkv
+         bLXhWlKQBvqEBq0j4aDWzuXZLqwGY+Dgn4F7/H+ZeXii17ZG0AabURdUPlo4IhJ/yy5c
+         DCNrSEPtkcPdhFnEwI7DXJuUaOK1KJhZEviolenb/n+MDWrbScqO3wb03wYgpHA1LtIT
+         35iO+Vq4QDGQ/KoMpPBciiNRudLmEquKJuffXLbLuO2Eqvq/fw9ygtODSej8WX4ACzSW
+         nalA==
+X-Gm-Message-State: APjAAAUa3TR6P6WNRmjlMyBi0uV8bk5q+4AGELDARMO4QbZbJCOGC1ll
+        D1BiLc86foYVMuOkxvxdRVE=
+X-Google-Smtp-Source: APXvYqw8kmUFZTdml86OFk4ExnbC4on8hvb43jeEB+SHfHs0C2+GnjIN7wyw+xxJ23zIcyfbPlXgSw==
+X-Received: by 2002:a5d:6a45:: with SMTP id t5mr33771273wrw.228.1567413555153;
+        Mon, 02 Sep 2019 01:39:15 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id b18sm17854812wro.34.2019.09.02.01.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 01:39:14 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 09:39:12 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190902083912.GA9069@stefanha-x1.localdomain>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
+ <20190830094059.c7qo5cxrp2nkrncd@steredhat>
+ <20190901024525-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY1PR01MB1770BF952221F50BBCDF3765C0BD0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190902083224.mn5agbxf5akhhoqg@verge.net.au>
-In-Reply-To: <20190902083224.mn5agbxf5akhhoqg@verge.net.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 2 Sep 2019 10:39:03 +0200
-Message-ID: <CAMuHMdVuj1w_bQVPySpspk4OJPN1cNSF-JW6XKExTEdZbtALgw@mail.gmail.com>
-Subject: Re: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
-To:     Simon Horman <horms@verge.net.au>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Content-Disposition: inline
+In-Reply-To: <20190901024525-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 10:32 AM Simon Horman <horms@verge.net.au> wrote:
-> On Fri, Aug 30, 2019 at 10:37:54AM +0000, Fabrizio Castro wrote:
-> > This patch has been reviewed by Geert, Simon, and Rob, so I think it's ok to apply.
-> > Is anybody willing to take this patch?
->
-> <2c> I think Geert can take this </2c>
 
-If the timer people won't take it for v5.4, I can queue it in renesas-devel
-for v5.5, in my branch for DT binding updates for subsystems that are
-less DT-centric.
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Sent: 11 June 2019 14:07
-> > > Subject: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
-> > >
-> > > Document RZ/G2M (R8A774A1) SoC in the Renesas TMU bindings.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> > > index 13ad074..9dff7e5 100644
-> > > --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> > > +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> > > @@ -10,6 +10,7 @@ Required Properties:
-> > >
-> > >    - compatible: must contain one or more of the following:
-> > >      - "renesas,tmu-r8a7740" for the r8a7740 TMU
-> > > +    - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
-> > >      - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
-> > >      - "renesas,tmu-r8a7778" for the r8a7778 TMU
-> > >      - "renesas,tmu-r8a7779" for the r8a7779 TMU
+On Sun, Sep 01, 2019 at 02:56:44AM -0400, Michael S. Tsirkin wrote:
+> On Fri, Aug 30, 2019 at 11:40:59AM +0200, Stefano Garzarella wrote:
+> > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
+> > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
+> > > > Since virtio-vsock was introduced, the buffers filled by the host
+> > > > and pushed to the guest using the vring, are directly queued in
+> > > > a per-socket list. These buffers are preallocated by the guest
+> > > > with a fixed size (4 KB).
+> > > >=20
+> > > > The maximum amount of memory used by each socket should be
+> > > > controlled by the credit mechanism.
+> > > > The default credit available per-socket is 256 KB, but if we use
+> > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > > > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > > > guest will continue to fill the vring with new 4 KB free buffers
+> > > > to avoid starvation of other sockets.
+> > > >=20
+> > > > This patch mitigates this issue copying the payload of small
+> > > > packets (< 128 bytes) into the buffer of last packet queued, in
+> > > > order to avoid wasting memory.
+> > > >=20
+> > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > >=20
+> > > This is good enough for net-next, but for net I think we
+> > > should figure out how to address the issue completely.
+> > > Can we make the accounting precise? What happens to
+> > > performance if we do?
+> > >=20
+> >=20
+> > Since I'm back from holidays, I'm restarting this thread to figure out
+> > how to address the issue completely.
+> >=20
+> > I did a better analysis of the credit mechanism that we implemented in
+> > virtio-vsock to get a clearer view and I'd share it with you:
+> >=20
+> >     This issue affect only the "host->guest" path. In this case, when t=
+he
+> >     host wants to send a packet to the guest, it uses a "free" buffer
+> >     allocated by the guest (4KB).
+> >     The "free" buffers available for the host are shared between all
+> >     sockets, instead, the credit mechanism is per-socket, I think to
+> >     avoid the starvation of others sockets.
+> >     The guests re-fill the "free" queue when the available buffers are
+> >     less than half.
+> >=20
+> >     Each peer have these variables in the per-socket state:
+> >        /* local vars */
+> >        buf_alloc        /* max bytes usable by this socket
+> >                            [exposed to the other peer] */
+> >        fwd_cnt          /* increased when RX packet is consumed by the
+> >                            user space [exposed to the other peer] */
+> >        tx_cnt 	        /* increased when TX packet is sent to the other=
+ peer */
+> >=20
+> >        /* remote vars  */
+> >        peer_buf_alloc   /* peer's buf_alloc */
+> >        peer_fwd_cnt     /* peer's fwd_cnt */
+> >=20
+> >     When a peer sends a packet, it increases the 'tx_cnt'; when the
+> >     receiver consumes the packet (copy it to the user-space buffer), it
+> >     increases the 'fwd_cnt'.
+> >     Note: increments are made considering the payload length and not the
+> >     buffer length.
+> >=20
+> >     The value of 'buf_alloc' and 'fwd_cnt' are sent to the other peer in
+> >     all packet headers or with an explicit CREDIT_UPDATE packet.
+> >=20
+> >     The local 'buf_alloc' value can be modified by the user space using
+> >     setsockopt() with optname=3DSO_VM_SOCKETS_BUFFER_SIZE.
+> >=20
+> >     Before to send a packet, the peer checks the space available:
+> >     	credit_available =3D peer_buf_alloc - (tx_cnt - peer_fwd_cnt)
+> >     and it will send up to credit_available bytes to the other peer.
+> >=20
+> > Possible solutions considering Michael's advice:
+> > 1. Use the buffer length instead of the payload length when we increment
+> >    the counters:
+> >   - This approach will account precisely the memory used per socket.
+> >   - This requires changes in both guest and host.
+> >   - It is not compatible with old drivers, so a feature should be negot=
+iated.
+> > 2. Decrease the advertised 'buf_alloc' taking count of bytes queued in
+> >    the socket queue but not used. (e.g. 256 byte used on 4K available in
+> >    the buffer)
+> >   - pkt->hdr.buf_alloc =3D buf_alloc - bytes_not_used.
+> >   - This should be compatible also with old drivers.
+> >=20
+> > Maybe the second is less invasive, but will it be too tricky?
+> > Any other advice or suggestions?
+> >=20
+> > Thanks in advance,
+> > Stefano
+>=20
+> OK let me try to clarify.  The idea is this:
+>=20
+> Let's say we queue a buffer of 4K, and we copy if len < 128 bytes.  This
+> means that in the worst case (128 byte packets), each byte of credit in
+> the socket uses up 4K/128 =3D 16 bytes of kernel memory. In fact we need
+> to also account for the virtio_vsock_pkt since I think it's kept around
+> until userspace consumes it.
+>=20
+> Thus given X buf alloc allowed in the socket, we should publish X/16
+> credits to the other side. This will ensure the other side does not send
+> more than X/16 bytes for a given socket and thus we won't need to
+> allocate more than X bytes to hold the data.
+>=20
+> We can play with the copy break value to tweak this.
 
-Gr{oetje,eeting}s,
+This seems like a reasonable solution.  Hopefully the benchmark results
+will come out okay too.
 
-                        Geert
+Stefan
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1s1TAACgkQnKSrs4Gr
+c8gLsQf/X+M+3+I6vdXaOQqa3p6XuU6eKcoPYS3AZKsgf2/Hu7lfjlaFu1me49Qx
+eoM5VhsaVIzCfF7TJgUthcFsoG+nAc1sc+TPm16rBnDArLUHGMrny6LTZHGmkvi2
+HxnjGjLD/1CNxeeyL3HDyyzkKtG32surnGULXLKqW/599PQxHDq+QXSWysC8QTX7
+MKE3vc7zIpRh7PiXbPdh4IH8UUeHdEbdYrRoaK0uiXN47vUFOUdM1t8iMG1u/C8t
+8X3f/wnHGl7Z6k+QH/3SMme3xihN0/F/TQW8PqyZdUMB7I+X5URicB4ECRpQ3dgE
+c0cux2rhFpAIui9MpqD7+fagnhksmw==
+=wVO3
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
