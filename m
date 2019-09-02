@@ -2,121 +2,86 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CD7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0B6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B09206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869382173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:07:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o5N4kGu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731240AbfIBOG4 (ORCPT
+        id S1731333AbfIBOHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:06:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48752 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726766AbfIBOG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:06:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8DC1FABE9;
-        Mon,  2 Sep 2019 14:06:53 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 4659BDA796; Mon,  2 Sep 2019 16:07:12 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 16:07:12 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     dsterba@suse.cz, Joe Perches <joe@perches.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190902140712.GV2752@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Pavel Machek <pavel@denx.de>,
-        Joe Perches <joe@perches.com>, Gao Xiang <gaoxiang25@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-2-gaoxiang25@huawei.com>
- <20190829095954.GB20598@infradead.org>
- <20190829103252.GA64893@architecture4>
- <67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com>
- <20190830120714.GN2752@twin.jikos.cz>
- <20190902084303.GC19557@amd>
+        Mon, 2 Sep 2019 10:07:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52316 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731174AbfIBOHe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:07:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UZlFjh/Vr9Y31t3ktL+M4T4Quj9vWJpWpfcm5JWxNvk=; b=o5N4kGu1qDfvTB+SBbnjxBYpM
+        bwHQFCjDy+miyB51bUwzUtfR9edjA79YYPQtlU4XS8cXuG+vjbh9p1GTGQHWsafyEn09a+V+j4nLu
+        A9ZPFem6ubH/H3SKh07Sk3QO+Y+cc26LHNEFwU/jhhWf0L2HXG1K6qrcLvg80iSW0oPWEhOWkyAfB
+        zA6v9kY1xJnXbd0Bv8bBV4PH3t+1lzShgZWfUGytIIhqnPKAQrIAQlsYy4lHyjxzJQlrXKI6i8eLG
+        xgWngyP27BOrC0GjXXxMDgw32c8EcbRdlckZxgxG75wsej9LY7IQOezl2Ud7F+3W8JncK9vYZZSMN
+        HiauCYaNg==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4mzR-0007kT-PX; Mon, 02 Sep 2019 14:07:29 +0000
+Subject: Re: [PATCH v3] arch/microblaze: add support for get_user() of size 8
+ bytes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Steven J. Magnani" <steve@digidescorp.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <5a3e440f-4ec5-65d7-b2a4-c57fec0df973@infradead.org>
+ <CAHk-=wg4mE8pSEdWViqJBC9Teh8h1c9LrqqP6=_g8ud5hvkfmA@mail.gmail.com>
+ <CAHk-=whH+Wzj+h0WzgdLMu+xtFddokoVy8dWWvEJqJRGA_HLmw@mail.gmail.com>
+ <6184ffdd-30bf-668a-cdee-88cc8eb2ead7@infradead.org>
+ <98c83922-6ab1-98ca-7682-7796ae1facf4@infradead.org>
+ <CAHk-=wg7BwJ7jFXxj5ZOU5VOw4Eg74TpTzip4P+LEJTYbZVhng@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8d17e0ae-5017-b883-96c0-ec4ebdfb4ab5@infradead.org>
+Date:   Mon, 2 Sep 2019 07:07:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902084303.GC19557@amd>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <CAHk-=wg7BwJ7jFXxj5ZOU5VOw4Eg74TpTzip4P+LEJTYbZVhng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 10:43:03AM +0200, Pavel Machek wrote:
-> > > > Rather than they didn't run "gdb" or "pahole" and change it by mistake.
-> > > 
-> > > I think Christoph is not right here.
-> > > 
-> > > Using external tools for validation is extra work
-> > > when necessary for understanding the code.
-> > 
-> > The advantage of using the external tools that the information about
-> > offsets is provably correct ...
+On 9/1/19 9:58 PM, Linus Torvalds wrote:
+> On Sun, Sep 1, 2019 at 7:10 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> I guess we need a way to coerce that to call get_user_1(),
+>> such as a typecast.  This _seems_ to work (i.e., call get_user_1()):
 > 
-> No. gdb tells you what the actual offsets _are_.
-
-Ok, reading your reply twice, I think we have different perspectives. I
-don't trust the comments.
-
-The tool I had in mind is pahole that parses dwarf information about the
-structures, the same as gdb does. The actual value of the struct members
-is the thing that needs to be investigated in memory dumps or disk image
-dumps.
-
-> > > The expected offset is somewhat valuable, but
-> > > perhaps the form is a bit off given the visual
-> > > run-in to the field types.
-> > > 
-> > > The extra work with this form is manipulating all
-> > > the offsets whenever a structure change occurs.
-> > 
-> > ... while this is error prone.
+> No, I oversimplified.
 > 
-> While the comment tells you what they _should be_.
+> Try this slightly modified patch instead.
+> 
 
-That's exactly the source of confusion and bugs. For me an acceptable
-way of asserting that a value has certain offset is a build check, eg.
-like
+Yes, that builds cleanly.
 
-BUILD_BUG_ON(strct my_superblock, magic, 16);
+thanks.
+-- 
+~Randy
