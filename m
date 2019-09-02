@@ -2,109 +2,87 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03F8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30DEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C7A2168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:28:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="L9WqNTw+"
+	by mail.kernel.org (Postfix) with ESMTP id C92EA21897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567434558;
+	bh=qS7UPgrmprA04ZntrRGMNyglYbePTv9KWY3MKBDZSLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dyn6UcUTMUXYVIlnqAWIHmVfh3RbkgoCMpli7RW5o7t3EM70GTeM9AkxCYuk/1DyU
+	 WBXb24a0eiic1gvLr9TFmbC8Bk7nMa/4nVYp4FuO+2lLsMejifEK1+modHJkz6ma9Y
+	 lR4UaZtZxrrK0X7eGENwrU8jg+RcIBSmjnBN0G0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfIBO2E (ORCPT
+        id S1731491AbfIBO3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:28:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41092 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731491AbfIBO2E (ORCPT
+        Mon, 2 Sep 2019 10:29:18 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44281 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfIBO3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:28:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j16so14228481wrr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 07:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=kBVMTQuhk+T7Ukw/iH6Fv/Si0UxRiFoyQ0dMHE7QvtM=;
-        b=L9WqNTw+lDeQxnmb4IBnSlhQIEjQQEHc41KpOvIKTg6KVy2yoNjjF0Nnh3im22NzGk
-         B1poC8Zm7MmUme/s/QoCtqp0DafVLacWOZEh5oskcW/M7zO5kFYB6UxIHq70UbftB7Cc
-         TEph3W3dL/+LRVqc2I8bppCzfEKyrw508B/tK1tYfnj9x2njqYPQgcc+pBV9dYyKbmc8
-         OHjH6PIRyCmCv0FlRzLxz9mzECWspMpHzmY+XPxFfpyULlu5qe/H+oh3WzaOE+4XATKq
-         t2x36xBsjphwNv1CWin4JiOBDvPgqEE/uB89obbyhs3POIn212EVTMEbej0ZRBfw4STQ
-         Pj0w==
+        Mon, 2 Sep 2019 10:29:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 30so3296995wrk.11;
+        Mon, 02 Sep 2019 07:29:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=kBVMTQuhk+T7Ukw/iH6Fv/Si0UxRiFoyQ0dMHE7QvtM=;
-        b=JaXu1K2TfjdxvMBHAnSQQ15KxrmktRbNKtLVH0zs9YCFpF/mkznRxy8g3op80eYKo9
-         bazEiX3JbfYtXBql9dOdH6APx/RKJnoFD44GQ7pM4JHII7JI3uzzFgL19NHIVtX7UTlU
-         vNmOQaNon4jHJduEVATaxiuZLuPHzxSGkXH7ImzsWe2hWQX5Sx8eiZ7WKej0DGiOY1nt
-         uUfs7lJhvWydoWuR2UJPsAiqJvkWoBdyt0/5+VFEzHL+psn3crDpE5gKHD2/xhj2puLc
-         a+8bDORi8Iyws2R0xs6QSiKFaPqftTCbGWpBnlGzhQJtx+rpV95A+JYngdfJpwD1b52A
-         02vQ==
-X-Gm-Message-State: APjAAAU5hvMs6HBGpK0uNjqIGg0sCYMVw+iAi2Xc51LhjkyJmKT2f93E
-        rVqneZXxtc9f6/NiX5v1QwwLUugKB/OXRLbM
-X-Google-Smtp-Source: APXvYqyO397vHhfCskHh8cwMyoUd3jnZFHXaYs4K0biXoMFfjgiE/4hfNFZBtUyw7CEUYPc6j/Am4g==
-X-Received: by 2002:a5d:4d81:: with SMTP id b1mr38731050wru.27.1567434481989;
-        Mon, 02 Sep 2019 07:28:01 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id f18sm16202373wrx.85.2019.09.02.07.28.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 07:28:01 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] serial: core: Use cons->index for preferred console registration
-Date:   Mon,  2 Sep 2019 16:27:59 +0200
-Message-Id: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DjYd27e5rUrA0mFadxSqkNYgMFL3Biunt8BWTcHyQek=;
+        b=OaFlLxenZ+Vm2UjyPrGkK2ueFEVZYdL1wGIbk7VZVXSCfDPxeYg9TZen5SnweM6wRt
+         iXS84cDlFO5vEcT+hhREU5d75GWq3T1z8oKphnNF4addQVpEKEPZjRyObMLtfgBwiber
+         3aWDD2p52JNnjF9X1pdlmvJlyCnuB63YwIyrVcmTGePi+0eBkbMqHbjZSGOjk4EYYyz6
+         cajBMEFBCZu1i2LqfL/SgZo01Mete/Povew8wTJu6UvSgI8E3lFwkDbG246Vng6gdLvV
+         FevINGF20oFX40X209LK8Vo8yXNyqDVcsin1Hlq1cfvzCUbjnZUVEyB1/++O2tYJDcXf
+         S1Bw==
+X-Gm-Message-State: APjAAAUfmhYvagRz07m6pIHcmxHlPXR/Yt8IMkEEwpOlLP1V5pwwOs2K
+        I+eQWAY/p8DQtgzi7MTkvA==
+X-Google-Smtp-Source: APXvYqzW/GN1ey91R5BmJA5pnLC5WiMXFYRMPae9O7nnw0okaF9xqO9oDPIM4raCO3nV0T/6K8Ptrw==
+X-Received: by 2002:adf:bc84:: with SMTP id g4mr36664702wrh.135.1567434555598;
+        Mon, 02 Sep 2019 07:29:15 -0700 (PDT)
+Received: from localhost ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id f13sm13885177wrq.3.2019.09.02.07.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 07:29:14 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 15:29:14 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] hwmon: (as370-hwmon) Add DT bindings for
+ Synaptics  AS370 PVT
+Message-ID: <20190902142914.GA3170@bogus>
+References: <20190827113214.13773d45@xhacker.debian>
+ <20190827113337.384457f6@xhacker.debian>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827113337.384457f6@xhacker.debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reason for this patch is xilinx_uartps driver which create one dynamic
-instance per IP with unique major and minor combinations. drv->nr is in
-this case all the time setup to 1. That means that uport->line is all the
-time setup to 0 and drv->tty_driver->name_base is doing shift in name to
-for example ttyPS3.
+On Tue, 27 Aug 2019 03:44:57 +0000, Jisheng Zhang wrote:
+> Add device tree bindings for Synaptics AS370 PVT sensors.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  Documentation/devicetree/bindings/hwmon/as370.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/as370.txt
+> 
 
-register_console() is looping over console_cmdline array and looking for
-proper name/index combination which is in our case ttyPS/3.
-That's why every instance of driver needs to be registered with proper
-combination of name/number (ttyPS/3). Using uport->line is doing
-registration with ttyPS/0 which is wrong that's why proper console index
-should be used which is in cons->index field.
-
-Also it is visible that recording console should be done based on
-information about console not about the port but in most cases numbers are
-the same and xilinx_uartps is only one exception now.
-
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-
- drivers/tty/serial/serial_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 4223cb496764..5ec447a4c5c3 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2825,7 +2825,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
- 		lockdep_set_class(&uport->lock, &port_lock_key);
- 	}
- 	if (uport->cons && uport->dev)
--		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
-+		of_console_check(uport->dev->of_node, uport->cons->name,
-+				 uport->cons->index);
- 
- 	uart_configure_port(drv, state, uport);
- 
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
