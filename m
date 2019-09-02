@@ -2,49 +2,50 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7459C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD78C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CC7215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8BA2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfIBIQf (ORCPT
+        id S1730149AbfIBIQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:16:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56137 "EHLO
+        Mon, 2 Sep 2019 04:16:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56165 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729950AbfIBIQe (ORCPT
+        with ESMTP id S1730055AbfIBIQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:16:34 -0400
+        Mon, 2 Sep 2019 04:16:36 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i4hVj-00080R-Bk; Mon, 02 Sep 2019 10:16:27 +0200
+        id 1i4hVi-0007yd-Cs; Mon, 02 Sep 2019 10:16:26 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E7EF61C0DE7;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 032061C0DF3;
         Mon,  2 Sep 2019 10:16:26 +0200 (CEST)
-Date:   Mon, 02 Sep 2019 08:16:26 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+Date:   Mon, 02 Sep 2019 08:16:25 -0000
+From:   "tip-bot2 for Kyle Meyer" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf header: Move CPUINFO_PROC to the only file
- where it is used
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] libperf: Warn when exceeding MAX_NR_CPUS in cpumap
+Cc:     Kyle Meyer <kyle.meyer@hpe.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-ars2j5m3if3gypsvkbbijucq@git.kernel.org>
-References: <tip-ars2j5m3if3gypsvkbbijucq@git.kernel.org>
+In-Reply-To: <20190827214352.94272-8-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190827214352.94272-8-meyerk@stormcage.eag.rdlabs.hpecorp.net>
 MIME-Version: 1.0
-Message-ID: <156741218675.17293.4112902995246071094.tip-bot2@tip-bot2>
+Message-ID: <156741218591.17286.11105173064357616868.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,109 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     a77494026309711a5f1e4b078e353cd46c2dad9f
-Gitweb:        https://git.kernel.org/tip/a77494026309711a5f1e4b078e353cd46c2dad9f
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Thu, 29 Aug 2019 14:40:28 -03:00
+Commit-ID:     df552793493ff83b2b7289389d29d417b3ef6d6d
+Gitweb:        https://git.kernel.org/tip/df552793493ff83b2b7289389d29d417b3ef6d6d
+Author:        Kyle Meyer <meyerk@hpe.com>
+AuthorDate:    Tue, 27 Aug 2019 16:43:52 -05:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Thu, 29 Aug 2019 17:38:32 -03:00
 
-perf header: Move CPUINFO_PROC to the only file where it is used
+libperf: Warn when exceeding MAX_NR_CPUS in cpumap
 
-To reduce perf-sys.h and eventually nuke it.
+Display a warning when attempting to profile more than MAX_NR_CPU CPUs.
+This patch should not change any behavior.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ars2j5m3if3gypsvkbbijucq@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Link: http://lore.kernel.org/lkml/20190827214352.94272-8-meyerk@stormcage.eag.rdlabs.hpecorp.net
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/perf-sys.h    | 44 +---------------------------------------
- tools/perf/util/header.c | 18 ++++++++++++++++-
- 2 files changed, 18 insertions(+), 44 deletions(-)
+ tools/perf/lib/cpumap.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/perf-sys.h b/tools/perf/perf-sys.h
-index 3eb7a39..6ffb0fb 100644
---- a/tools/perf/perf-sys.h
-+++ b/tools/perf/perf-sys.h
-@@ -10,50 +10,6 @@
- #include <linux/perf_event.h>
- #include <asm/barrier.h>
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index 2834753..1f0e6f3 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -100,6 +100,9 @@ struct perf_cpu_map *perf_cpu_map__read(FILE *file)
+ 		if (prev >= 0) {
+ 			int new_max = nr_cpus + cpu - prev - 1;
  
--#ifdef __powerpc__
--#define CPUINFO_PROC	{"cpu"}
--#endif
--
--#ifdef __s390__
--#define CPUINFO_PROC	{"vendor_id"}
--#endif
--
--#ifdef __sh__
--#define CPUINFO_PROC	{"cpu type"}
--#endif
--
--#ifdef __hppa__
--#define CPUINFO_PROC	{"cpu"}
--#endif
--
--#ifdef __sparc__
--#define CPUINFO_PROC	{"cpu"}
--#endif
--
--#ifdef __alpha__
--#define CPUINFO_PROC	{"cpu model"}
--#endif
--
--#ifdef __arm__
--#define CPUINFO_PROC	{"model name", "Processor"}
--#endif
--
--#ifdef __mips__
--#define CPUINFO_PROC	{"cpu model"}
--#endif
--
--#ifdef __arc__
--#define CPUINFO_PROC	{"Processor"}
--#endif
--
--#ifdef __xtensa__
--#define CPUINFO_PROC	{"core ID"}
--#endif
--
--#ifndef CPUINFO_PROC
--#define CPUINFO_PROC	{ "model name", }
--#endif
--
- static inline int
- sys_perf_event_open(struct perf_event_attr *attr,
- 		      pid_t pid, int cpu, int group_fd,
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index dd2bb08..d252124 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -436,7 +436,25 @@ static int __write_cpudesc(struct feat_fd *ff, const char *cpuinfo_proc)
- static int write_cpudesc(struct feat_fd *ff,
- 		       struct evlist *evlist __maybe_unused)
- {
-+#if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
-+#define CPUINFO_PROC	{ "cpu", }
-+#elif defined(__s390__)
-+#define CPUINFO_PROC	{ "vendor_id", }
-+#elif defined(__sh__)
-+#define CPUINFO_PROC	{ "cpu type", }
-+#elif defined(__alpha__) || defined(__mips__)
-+#define CPUINFO_PROC	{ "cpu model", }
-+#elif defined(__arm__)
-+#define CPUINFO_PROC	{ "model name", "Processor", }
-+#elif defined(__arc__)
-+#define CPUINFO_PROC	{ "Processor", }
-+#elif defined(__xtensa__)
-+#define CPUINFO_PROC	{ "core ID", }
-+#else
-+#define CPUINFO_PROC	{ "model name", }
-+#endif
- 	const char *cpuinfo_procs[] = CPUINFO_PROC;
-+#undef CPUINFO_PROC
- 	unsigned int i;
++			WARN_ONCE(new_max >= MAX_NR_CPUS, "Perf can support %d CPUs. "
++							  "Consider raising MAX_NR_CPUS\n", MAX_NR_CPUS);
++
+ 			if (new_max >= max_entries) {
+ 				max_entries = new_max + MAX_NR_CPUS / 2;
+ 				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+@@ -192,6 +195,9 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+ 			end_cpu = start_cpu;
+ 		}
  
- 	for (i = 0; i < ARRAY_SIZE(cpuinfo_procs); i++) {
++		WARN_ONCE(end_cpu >= MAX_NR_CPUS, "Perf can support %d CPUs. "
++						  "Consider raising MAX_NR_CPUS\n", MAX_NR_CPUS);
++
+ 		for (; start_cpu <= end_cpu; start_cpu++) {
+ 			/* check for duplicates */
+ 			for (i = 0; i < nr_cpus; i++)
