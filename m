@@ -2,103 +2,120 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FC3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5494C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6CB21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BA721744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRfjxNgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfIBPnC (ORCPT
+        id S1726130AbfIBPnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:43:02 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:51844 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfIBPnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:43:02 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 539BF47A9E3273CCD727;
-        Mon,  2 Sep 2019 23:22:33 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 2 Sep 2019 23:22:33 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 2 Sep 2019 23:22:30 +0800
-Date:   Mon, 2 Sep 2019 23:21:39 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     <dsterba@suse.cz>, Chao Yu <chao@kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
-Message-ID: <20190902152139.GB179615@architecture4>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
- <20190815044155.88483-12-gaoxiang25@huawei.com>
- <20190902125711.GA23462@infradead.org>
- <20190902130644.GT2752@suse.cz>
- <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
- <20190902142037.GW2752@twin.jikos.cz>
- <20190902150640.GA23089@infradead.org>
+        Mon, 2 Sep 2019 11:43:33 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42739 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfIBPnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 11:43:33 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t12so15994168qtp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 08:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m9XP5nIZMFuLEvytrkaRg1Divk5b4NiiJacy/t5k+NQ=;
+        b=nRfjxNgEJHwsLswXpBj7r+R6znfxzh13Quxvt3Q6D0cxUbIoJ2LG2u72BN1byeLND1
+         +Sjom77W0ZXYVqOQtSn4Iv2CMNRVlkUHwOgq5rB+wrUAIXs85Qb525pdStSmxtCN1jwD
+         mj3VThvJvHUQ01e9gYQnSdVfy41q4hQYe9mJWmb61GjyOOYR/bKR0PS879crltUnRcSH
+         Asrjz2930JN7eXMAKKZ7mTplbqydyfxL/hq5UnmeIhyd0eeMHic0j0ep1ZV4taSmnugM
+         OCRXjAUm84shD9fzMssf5F/hiCLouNN+5CXGTFfgomiQogKE3X0Ej87q2ZSek57lK1AX
+         Gp9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m9XP5nIZMFuLEvytrkaRg1Divk5b4NiiJacy/t5k+NQ=;
+        b=FSBwTYl4PA1dVzauF1mJpS1JG1nWFgJfN6X0vxpSFDK8QjPqEdvpqmBEyi+dwfQbZK
+         kanPcBpq+zVT3tdyURSC4DaZGS6SiSSId3961+zFvB9dyeg7itbvODiaWJ/5BG+xYOA3
+         RHZGLDFtnXJi31LZyR28IurlMtR4X78FPmUhmk0vdS9lUg7Yfd7AWD0hMatn5Zn4G/J0
+         V882r0k6D/41xYMT1pn1Xu2qnULqwGQoRPxEqABxhVjSKcz34K8eE56Jks8E0hM7q/9D
+         1LgbUc4Ue1+8/+BRu+eVn+pzNlmHMu2KJydh0D34e1xlYUCqe/ZlrUYwOqtIZ+UgauDX
+         PcHg==
+X-Gm-Message-State: APjAAAWf7PCOBX2Lmk0sncQpAldajcJvncpZtJe0MZcdPaTwnpHFWP6I
+        6o1dszqu5FOwHoz0PMrRuPxjcpu8
+X-Google-Smtp-Source: APXvYqzPeMEqGetfuhf3I5OMIZQdt5bB6219X4/Ta+M5U1EBKWmuyzcwNwB/4U8bOc1jn382A/JfAA==
+X-Received: by 2002:ac8:690:: with SMTP id f16mr27952678qth.202.1567439012424;
+        Mon, 02 Sep 2019 08:43:32 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id d133sm2054151qkg.31.2019.09.02.08.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 08:43:31 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D6D1041146; Mon,  2 Sep 2019 12:43:29 -0300 (-03)
+Date:   Mon, 2 Sep 2019 12:43:29 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 3/3] perf stat: Add --per-numa agregation support
+Message-ID: <20190902154329.GE8396@kernel.org>
+References: <20190902121255.536-1-jolsa@kernel.org>
+ <20190902121255.536-4-jolsa@kernel.org>
+ <bdf81661-4c70-797f-51f2-726f4458d812@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902150640.GA23089@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <bdf81661-4c70-797f-51f2-726f4458d812@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-On Mon, Sep 02, 2019 at 08:06:40AM -0700, Christoph Hellwig wrote:
-> On Mon, Sep 02, 2019 at 04:20:37PM +0200, David Sterba wrote:
-> > Oh right, I think the reasons are historical and that we can remove the
-> > options nowadays. From the compatibility POV this should be safe, with
-> > ACLs compiled out, no tool would use them, and no harm done when the
-> > code is present but not used.
-> > 
-> > There were some efforts by embedded guys to make parts of kernel more
-> > configurable to allow removing subsystems to reduce the final image
-> > size. In this case I don't think it would make any noticeable
-> > difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
-> > while the whole module is over 1.3MiB.
+Em Mon, Sep 02, 2019 at 06:13:17PM +0300, Alexey Budankov escreveu:
 > 
-> Given that the erofs folks have an actual use case for it I think
-> it is fine to keep the options, I just wanted to ensure this wasn't
-> copy and pasted for no good reason.  Note that for XFS we don't have
-> an option for xattrs, as those are integral to a lot of file system
-> features.  WE have an ACL option mostly for historic reasons.
+> On 02.09.2019 15:12, Jiri Olsa wrote:
+> > Adding new --per-numa option to aggregate counts per NUMA
+> > nodes for system-wide mode measurements.
+> > 
+> > You can specify --per-numa in live mode:
+> > 
+> >   # perf stat  -a -I 1000 -e cycles --per-numa
+> >   #           time numa   cpus             counts unit events
+> 
+> It might probably better have 'node' instead of 'numa' as in the 
+> option name '--per-node' as in the table header, like this:
 
-Add a word, xattr is necessary for Android, but ACL is not.
-I'm fine with killing these two, but EROFS can be used in
-more wider embedded scenerios (other than Android), I have
-no idea xattrs is useful for those embedded devices...
+Agreed
 
-Thanks,
-Gao Xiang
+> 
+>     #           time node     cpus             counts unit events
+>          1.000542550 0        20          6,202,097      cycles
+>          1.000542550 1        20            639,559      cycles
+>          2.002040063 0        20          7,412,495      cycles
+>          2.002040063 1        20          2,185,577      cycles
+>          3.003451699 0        20          6,508,917      cycles
+>          3.003451699 1        20            765,607      cycles
+>    ...
+> 
+> BR,
+> Alexey
 
+-- 
+
+- Arnaldo
