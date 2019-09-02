@@ -2,207 +2,79 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B58C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13DEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB42420644
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78086208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SGnGV0+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfIBRhQ (ORCPT
+        id S1726697AbfIBRjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 13:37:16 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:57764 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfIBRhQ (ORCPT
+        Mon, 2 Sep 2019 13:39:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51242 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfIBRjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 13:37:16 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i4qGO-0002zA-3H; Mon, 02 Sep 2019 11:37:12 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i4qGM-0001qg-UC; Mon, 02 Sep 2019 11:37:11 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, bhelgaas@google.com, tglx@linutronix.de,
-        sakari.ailus@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
-        <20190830133522.GZ13294@shell.armlinux.org.uk>
-        <87d0gmwi73.fsf@x220.int.ebiederm.org>
-        <20190830203052.GG13294@shell.armlinux.org.uk>
-        <87y2zav01z.fsf@x220.int.ebiederm.org>
-        <20190830222906.GH13294@shell.armlinux.org.uk>
-Date:   Mon, 02 Sep 2019 12:36:56 -0500
-In-Reply-To: <20190830222906.GH13294@shell.armlinux.org.uk> (Russell King's
-        message of "Fri, 30 Aug 2019 23:29:06 +0100")
-Message-ID: <87mufmioqv.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 2 Sep 2019 13:39:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hEGWoA2tYnse4FOhsxlEH/jFHn84yJrgUujZ+4IiIa0=; b=SGnGV0+pbDM5rhHxiPkQ4xpwq
+        x1hSrK8wB/eqxQj3w8PwB2x4+zvIj6JAHzC+MizEH1JZoXlBabDFBRikErFoxpY+2tFaqzqyZxCb7
+        zshjdYup4vA0RmXnCa+RP/n2e7uT3KgxbWASVCh4pYb9Y3W+dZlIAkVCkCkJMPZ39uRtU24LuyrPr
+        uKv77MJGwrZ9gHUYW3bggdXVm69N9NSDZS6EIxtpHmZ8ge9WW99zy6Azz1FdaUJXeFfLVcH1p94fw
+        MTym2Yo6Tk26Cv5APe8XiGV4gtZYylywthwojnHyPQzlDd8gA9Q85UPLZBAu9oSaKOUqIgyv5uALy
+        fq5BSxPWw==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4qIm-0004GB-Di; Mon, 02 Sep 2019 17:39:40 +0000
+Subject: Re: linux-next: Tree for Sep 2 (exfat)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20190902224310.208575dc@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cecc2af6-7ef6-29f6-569e-b591365e45ad@infradead.org>
+Date:   Mon, 2 Sep 2019 10:39:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1i4qGM-0001qg-UC;;;mid=<87mufmioqv.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19m9YGitx9H8/ZuABLUqkLN/nGTTjlMCgw=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] arm: fix page faults in do_alignment
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20190902224310.208575dc@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+On 9/2/19 5:43 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> News: I will only be doing 2 more releases before I leave for Kernel
+> Summit (there may be some reports on Thursday, but I doubt I will have
+> time to finish the full release) and then no more until Sept 30.
+> 
+> Changes since 20190830:
+> 
 
-> On Fri, Aug 30, 2019 at 04:02:48PM -0500, Eric W. Biederman wrote:
->> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
->> 
->> > On Fri, Aug 30, 2019 at 02:45:36PM -0500, Eric W. Biederman wrote:
->> >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
->> >> 
->> >> > On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
->> >> >> The function do_alignment can handle misaligned address for user and
->> >> >> kernel space. If it is a userspace access, do_alignment may fail on
->> >> >> a low-memory situation, because page faults are disabled in
->> >> >> probe_kernel_address.
->> >> >> 
->> >> >> Fix this by using __copy_from_user stead of probe_kernel_address.
->> >> >> 
->> >> >> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
->> >> >> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
->> >> >
->> >> > NAK.
->> >> >
->> >> > The "scheduling while atomic warning in alignment handling code" is
->> >> > caused by fixing up the page fault while trying to handle the
->> >> > mis-alignment fault generated from an instruction in atomic context.
->> >> >
->> >> > Your patch re-introduces that bug.
->> >> 
->> >> And the patch that fixed scheduling while atomic apparently introduced a
->> >> regression.  Admittedly a regression that took 6 years to track down but
->> >> still.
->> >
->> > Right, and given the number of years, we are trading one regression for
->> > a different regression.  If we revert to the original code where we
->> > fix up, we will end up with people complaining about a "new" regression
->> > caused by reverting the previous fix.  Follow this policy and we just
->> > end up constantly reverting the previous revert.
->> >
->> > The window is very small - the page in question will have had to have
->> > instructions read from it immediately prior to the handler being entered,
->> > and would have had to be made "old" before subsequently being unmapped.
->> 
->> > Rather than excessively complicating the code and making it even more
->> > inefficient (as in your patch), we could instead retry executing the
->> > instruction when we discover that the page is unavailable, which should
->> > cause the page to be paged back in.
->> 
->> My patch does not introduce any inefficiencies.  It onlys moves the
->> check for user_mode up a bit.  My patch did duplicate the code.
->> 
->> > If the page really is unavailable, the prefetch abort should cause a
->> > SEGV to be raised, otherwise the re-execution should replace the page.
->> >
->> > The danger to that approach is we page it back in, and it gets paged
->> > back out before we're able to read the instruction indefinitely.
->> 
->> I would think either a little code duplication or a function that looks
->> at user_mode(regs) and picks the appropriate kind of copy to do would be
->> the best way to go.  Because what needs to happen in the two cases for
->> reading the instruction are almost completely different.
->
-> That is what I mean.  I'd prefer to avoid that with the large chunk of
-> code.  How about instead adding a local replacement for
-> probe_kernel_address() that just sorts out the reading, rather than
-> duplicating all the code to deal with thumb fixup.
+Hi,
+I am seeing lots of exfat build errors when CONFIG_BLOCK is not set/enabled.
+Maybe its Kconfig should also say
+	depends on BLOCK
+?
 
-So something like this should be fine?
-
-Jing Xiangfeng can you test this please?  I think this fixes your issue
-but I don't currently have an arm development box where I could test this.
-
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index 04b36436cbc0..b07d17ca0ae5 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -767,6 +767,23 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
- 	return NULL;
- }
- 
-+static inline unsigned long
-+copy_instr(bool umode, void *dst, unsigned long instrptr, size_t size)
-+{
-+	unsigned long result;
-+	if (umode) {
-+		void __user *src = (void *)instrptr;
-+		result = copy_from_user(dst, src, size);
-+	} else {
-+		void *src = (void *)instrptr;
-+		result = probe_kernel_read(dst, src, size);
-+	}
-+	/* Convert short reads into -EFAULT */
-+	if ((result >= 0) && (result < size))
-+		result = -EFAULT;
-+	return result;
-+}
-+
- static int
- do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- {
-@@ -778,22 +795,24 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	u16 tinstr = 0;
- 	int isize = 4;
- 	int thumb2_32b = 0;
-+	bool umode;
- 
- 	if (interrupts_enabled(regs))
- 		local_irq_enable();
- 
- 	instrptr = instruction_pointer(regs);
-+	umode = user_mode(regs);
- 
- 	if (thumb_mode(regs)) {
--		u16 *ptr = (u16 *)(instrptr & ~1);
--		fault = probe_kernel_address(ptr, tinstr);
-+		unsigned long tinstrptr = instrptr & ~1;
-+		fault = copy_instr(umode, &tinstr, tinstrptr, 2);
- 		tinstr = __mem_to_opcode_thumb16(tinstr);
- 		if (!fault) {
- 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
- 			    IS_T32(tinstr)) {
- 				/* Thumb-2 32-bit */
- 				u16 tinst2 = 0;
--				fault = probe_kernel_address(ptr + 1, tinst2);
-+				fault = copy_instr(umode, &tinst2, tinstrptr + 2, 2);
- 				tinst2 = __mem_to_opcode_thumb16(tinst2);
- 				instr = __opcode_thumb32_compose(tinstr, tinst2);
- 				thumb2_32b = 1;
-@@ -803,7 +822,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 			}
- 		}
- 	} else {
--		fault = probe_kernel_address((void *)instrptr, instr);
-+		fault = copy_instr(umode, &instr, instrptr, 4);
- 		instr = __mem_to_opcode_arm(instr);
- 	}
- 
-@@ -812,7 +831,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 		goto bad_or_fault;
- 	}
- 
--	if (user_mode(regs))
-+	if (umode)
- 		goto user;
- 
- 	ai_sys += 1;
+-- 
+~Randy
