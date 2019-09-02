@@ -7,85 +7,89 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB14BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4F7C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839BA20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A92215EA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQA/R7ER"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bcV4yk+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfIBJGA (ORCPT
+        id S1730868AbfIBJGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:06:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44430 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730361AbfIBJGA (ORCPT
+        Mon, 2 Sep 2019 05:06:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36372 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730852AbfIBJGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:06:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 30so2227040wrk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:05:58 -0700 (PDT)
+        Mon, 2 Sep 2019 05:06:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p13so13775869wmh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=jsEBeFFNvFaPm+UINQ8FKKE9kI76YVop7KZk/SgIN0w=;
-        b=EQA/R7ER71h6q2L0q6RyD91BLLw2kzWILEICeJVIqMMoaPHkQfzCy4GrQ9R5sBh0A1
-         BjOBfnt6KrqiZ0OutIgU+RMQ09MN5jKZtdJA0dsG3V8suQ8tVyr/dj1aiudZ+fxB/DDe
-         vX87A/djueXnHzTheatGtTPNSbGoQvJoLH5PhcZeJ1U41Rmp1tfFywm65VbahANHD7q5
-         u9aVEyX61rZgbeFkaNPvkmJTyfsJVCxn26LtnrUK2P559KiRyUFqVKQrj9bonn6XeO4x
-         kDCfeE46xu39tfh4otV173ZC9Pg0stVfkSFPhpGkggefW/nSFj5ZKOaLEQFKq/U+sapt
-         aOvA==
+        bh=vk932Vys+CLH+PYMQTmQanJUcuUkUcICT2MwDqcBiS0=;
+        b=bcV4yk+rItw9l/wFE0TxyB6pGn6AtTSM3Im/W7tDmwgW4iSgB900K3KyOPutdgN6zN
+         7/WGFxLcArKGSKqo91waD5u2mSNV4DuJdI56yZy9qdlqsM90vtC+NKu4NXQv3zTFzBI7
+         1H+blzZV7GnO/UVjFLteAdOH6YuoUm52fUY/aLX+ALMjEI5fjOWPQCtQSpesesY3dcFj
+         P0xoYOhOj//gzXFkR+oCaoWBchYxqbCYHIgA7AmkwxqgXvHHgN9S66VtdJayU2kYWLTE
+         X+vVmWuQfZl+6I5Smhm/BWG3++sYBZwFCXkChZP24bpfxB3mCwdEOST5raA9ICdtlg+e
+         BBpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=jsEBeFFNvFaPm+UINQ8FKKE9kI76YVop7KZk/SgIN0w=;
-        b=FNZnHTUK9hIYLhgBfGeh3KFmfR0YAwHEU/smG9ZQE7J7A8XbhYeEjbkTyE5Nx9Dwe4
-         cft2EDbX061DmkeOUziYUyK9BE9+9nrzR9QoKoEvKyd6LoqmzxXktlOXtMQK7QBsh+ZS
-         WrqpEzsfj9vVmFHe+QqvHLmPR6mQwp+BVINPq8X3v+GvwSlQJmW6s1ClGFYP6WD9vDbB
-         /puhXgtZ/IbcZUTB8oe81krUnEclfY1I5Bs6v6CxEllcFyJvEJ5zB7wpTvu8Uo7SyNTn
-         BA8cBPxXPquSvGczivq7qwvUunkPoMBYfGutKy+Ou/WUAe8IMTbhVeyLmYISSo2FZHYs
-         QDiw==
-X-Gm-Message-State: APjAAAV0a+RDCXrhjntBfXqqp4nn1crkaSRguQsF6hk1SJrgR59CQOOy
-        JSwmEXCpMjb9cnAnbjoO8mzthA==
-X-Google-Smtp-Source: APXvYqy3AlQzIqFirHwiqt0lgMFigNByRSNqVI0P1nO7V1nkPNQl8F2riQFP7gj6w0mv3ltiUhT2fA==
-X-Received: by 2002:a5d:678a:: with SMTP id v10mr9934885wru.145.1567415158006;
-        Mon, 02 Sep 2019 02:05:58 -0700 (PDT)
+        bh=vk932Vys+CLH+PYMQTmQanJUcuUkUcICT2MwDqcBiS0=;
+        b=QtDHOTUu6gTp0wzvqFKUjk/pRBQYpFaQjYnxNQQKh7bmehDp8VShrpPFUbHeoOq6Eo
+         wbDtWJ5yY560p7yKfrmd6NhvqnDejQo8QeuTQBbq6qM5HAcoJ35aYLaFxFHKjMtLB9uW
+         5aXzmjOEUDqwJ080bj2+cNzio4krugf6gKsrilqL++ZXvGHYo7U+G+qsCFrkGlfX0GBr
+         Gk877+AcaJD2+MPjNQKW88YKzaZYWkCnwtru71OEvBXXyhCAEwFDnqM2+HjYo6sp6fW4
+         3QYUIW5HgKGxcn4xo0kcevYJPHVzf5OFjITT0HlL81IbXeZV6JBlNgHiFvA7dn5tK2Fr
+         H18g==
+X-Gm-Message-State: APjAAAWyPkMTBBghAq/rKaAj2sqzH1IVLvWw02V3dfMrVd6SWkZBb2Ay
+        z1BYJpk67TTB8HTLQDb5DBc1FxI+bEPhJA==
+X-Google-Smtp-Source: APXvYqx8mEwUka9hFdAHZ+mM1+uEWXF2IMYesgnoygQVOr1y5o+xLgB2s8OyHyPVf/1hH0+E4zsA1Q==
+X-Received: by 2002:a1c:80ca:: with SMTP id b193mr563102wmd.171.1567415189114;
+        Mon, 02 Sep 2019 02:06:29 -0700 (PDT)
 Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id h125sm32172794wmf.31.2019.09.02.02.05.57
+        by smtp.gmail.com with ESMTPSA id e3sm9942559wrh.12.2019.09.02.02.06.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 02:05:57 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:05:56 +0100
+        Mon, 02 Sep 2019 02:06:28 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 10:06:27 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: sm501: Include the GPIO driver header
-Message-ID: <20190902090556.GC32232@dell>
-References: <20190820103715.7489-1-linus.walleij@linaro.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: htc-i2cpld: drop check because
+ i2c_unregister_device() is NULL safe
+Message-ID: <20190902090627.GD32232@dell>
+References: <20190820153443.7812-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820103715.7489-1-linus.walleij@linaro.org>
+In-Reply-To: <20190820153443.7812-1-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019, Linus Walleij wrote:
+On Tue, 20 Aug 2019, Wolfram Sang wrote:
 
-> This driver creates a gpio chip so it needs to include the
-> appropriate header <linux/gpio/driver.h> explicitly rather
-> than implicitly.
+> No need to check the argument of i2c_unregister_device() because the
+> function itself does it.
 > 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  drivers/mfd/sm501.c | 1 +
->  1 file changed, 1 insertion(+)
+> Build tested only, buildbot is happy, too.
+> 
+> Please apply to your tree.
+> 
+>  drivers/mfd/htc-i2cpld.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
 Applied, thanks.
 
