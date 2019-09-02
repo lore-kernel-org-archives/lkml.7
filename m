@@ -2,147 +2,91 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C261DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2507BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC702087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DB121897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567435861;
-	bh=71pLWk8MdR2BOEmIJHJ2tEkCtIxRrDQMnHh6cQ1w+II=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dyaTRmxyJsgpQo3UkyaUy7bwsT5iW9EHnR6HLLrkylduoebSu5OruSx6Z7EZWIljZ
-	 /ek1lyxhkUUMIHI+lPnuICefDJltnFZCjb4mpk+/Vqn14F+b2+7SO2BxFmCkIqhJSa
-	 7QKYXSaJ8bIo5Ismp5FmhxGdAMzNvfYbfWXe7gUQ=
+	s=default; t=1567435943;
+	bh=6PSO/nxxH6E7rH4POLfZSbmsPfvvw27+rlFFBiJXDXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gDZQfAajxorWrI+5h7TVr5FNhMZ1Cc172/4fzGEBDVZly1IlqjVLMlX+hL9oR11/u
+	 WyiapI7Z+TVabH35oqrhFNQaTdUIvzQIaGDMr41zN7GtncSAcHHt2RYbWdaJ3dBSAI
+	 m9c7AcRm7OWns1Uj82TpZd0LxF6fFm7mqAhDlPJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfIBOvB (ORCPT
+        id S1731704AbfIBOwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbfIBOvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:51:00 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B09021897;
-        Mon,  2 Sep 2019 14:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567435859;
-        bh=71pLWk8MdR2BOEmIJHJ2tEkCtIxRrDQMnHh6cQ1w+II=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IgOfV4zJAO/gl7avGfHCcrRz75Z2bQ1g9P9ui20ZUBezasAoKLWDdlsReZA7CMq/w
-         JKIIGcOPRcKEYYq/ICfGNHIZPsixxf1hEekeWvtMzGzUemhrvZ1K0XpBhzVE426Q+d
-         X8H4Zfu+NGjbrqNPqJY8dlFGlZGlmLWjoqoH6xpc=
-Received: by mail-qk1-f171.google.com with SMTP id 4so12705744qki.6;
-        Mon, 02 Sep 2019 07:50:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAUc/mdsB9gLx+F8ByRjesmkL+KhXHXOa0nJUFpCxCdaWXBRyj8F
-        kWMa0vFCHDpQiWqlOT8nY28RYo0//RznoO8S2g==
-X-Google-Smtp-Source: APXvYqyh28Ow2UJPekS8IlWnjRcGuFquE4h1Btq6Udon+B5ixZMsP3odA9iep7SfJTniUSqfAkbwkbi3IhdjZEq0KtU=
-X-Received: by 2002:a37:8905:: with SMTP id l5mr29175066qkd.152.1567435858286;
- Mon, 02 Sep 2019 07:50:58 -0700 (PDT)
+        Mon, 2 Sep 2019 10:52:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42623 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731124AbfIBOwV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:52:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b16so14296451wrq.9;
+        Mon, 02 Sep 2019 07:52:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rF1ShMFaoBoIJKVAItfKLBMp/S6IYg6UKeE556VZUPk=;
+        b=QJ7ujCczJ/qOPsKCQJUSQVa8EAnyud60MITW1KyuxcoJejA0NM6kJhzMyYva1IreDk
+         0DvnBBQ/kEfLESFF38HRslIA9OOxxqnPbAfSGJejaY+HEIFRW8Bjd79ALeiavtrND3Tn
+         l2FGwrQlMvANDC9LBsXknTw+WFuV3MdVbT/aWs/4VDIYxpzF/TkyluViefdnNsMEB7Zd
+         CXBGs6YzPqOqlpYDEKVl+QK1TL9nWhHi/siO8Qj6GsUu4x/r6GzpmcINEctsH9LGQPx5
+         pfSPNuF35BT+s2gf7SOWqi7FNZFwtIt+Ey28sEXil5UFAa5oTf9phhCLqD25lxPborvy
+         tEcg==
+X-Gm-Message-State: APjAAAWY9+FUcl/xflaLer9w77OCpFim3gVoDFaSohDyTtS/MhnEF2El
+        icYa208lXp3qZI7A+ppLFashXH4xTw==
+X-Google-Smtp-Source: APXvYqwZiS+dbPMJ03rNFquz/jLokONAQC3oPFpXJZ5lBJnRoFoxcmGQRYbJnW7E5Yk7B5rvfbQ0Cw==
+X-Received: by 2002:adf:eccb:: with SMTP id s11mr34456316wro.351.1567435939910;
+        Mon, 02 Sep 2019 07:52:19 -0700 (PDT)
+Received: from localhost ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id r18sm15631350wmh.6.2019.09.02.07.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 07:52:19 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 15:52:18 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Nicolas Pitre <nico@linaro.org>,
+        Sebastian Capella <sebcape@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH 1/5] dt-bindings: arm: idle-states: Use "e.g." and "i.e."
+ consistently
+Message-ID: <20190902145218.GA12862@bogus>
+References: <20190830150302.20551-1-geert+renesas@glider.be>
+ <20190830150302.20551-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-12-jiaxun.yang@flygoat.com> <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
- <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com> <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
-In-Reply-To: <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 2 Sep 2019 15:50:47 +0100
-X-Gmail-Original-Message-ID: <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com>
-Message-ID: <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com>
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830150302.20551-2-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 9:41 PM Paul Burton <paul.burton@mips.com> wrote:
->
-> Hi guys,
->
-> On Tue, Aug 27, 2019 at 10:18:46PM +0800, Jiaxun Yang wrote:
-> > On 2019/8/27 =E4=B8=8B=E5=8D=888:45, Rob Herring wrote:
-> > > On Tue, Aug 27, 2019 at 3:55 AM Jiaxun Yang <jiaxun.yang@flygoat.com>=
- wrote:
-> > > > diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.y=
-aml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..410d896a0078
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-> > > > @@ -0,0 +1,38 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > Dual license for new bindings please:
-> > >
-> > > (GPL-2.0-only OR BSD-2-Clause)
-> > >
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Loongson CPUs bindings
-> > > > +
-> > > > +maintainers:
-> > > > +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > > +
-> > > > +description: |+
-> > > > +  The device tree allows to describe the layout of CPUs in a syste=
-m through
-> > > > +  the "cpus" node, which in turn contains a number of subnodes (ie=
- "cpu")
-> > > > +  defining properties for every cpu.
-> > > > +
-> > > > +  Bindings for CPU nodes follow the Devicetree Specification, avai=
-lable from:
-> > > > +
-> > > > +  https://www.devicetree.org/specifications/
-> > > > +
-> > > > +properties:
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +    description: |
-> > > > +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-> > > Is this definition specific to Loongson CPUs or all MIPS?
-> >
-> > Currently it's specific to Loongson CPU only, as other processors may u=
-sing
-> > different method to express CPU map.
-> >
-> > Different from Arm, MIPS family of processors seems less uniform and ha=
-ve
-> > their own designs.
-> >
-> > For this point, we'd better ask Paul's opinion.
->
-> In general on MIPS we detect CPU properties at runtime from coprocessor
-> 0 registers & similar sources of information, so there's not really a
-> need to specify anything about the CPU in devicetree.
+On Fri, 30 Aug 2019 17:02:58 +0200, Geert Uytterhoeven wrote:
+> Replace abbreviations "eg" and "ie" by "e.g." resp. "i.e." for
+> consistency.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/arm/idle-states.txt      | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
 
-We thought the same thing initially for Arm... Mostly what is in DT is
-not what is discoverable. Are clock speeds, power domains, low power
-states, etc. all discoverable?
-
-> For example here
-> you say yourself that the value for this property can be read from
-> EBase.CPUNum - so why specify it in DT?
-
-To map DT nodes to cores?
+Applied, thanks.
 
 Rob
