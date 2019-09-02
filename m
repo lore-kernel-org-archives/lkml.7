@@ -2,297 +2,278 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9936C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90038C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D3B21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Vbc7Idkw"
+	by mail.kernel.org (Postfix) with ESMTP id 6351021897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567449121;
+	bh=48saDu2OkRopU+sxbZhDbOY5dlUZqXFHW7UlD0wi3PE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zAADapEIQIJAOZX+EEkuPetTC5cDp85twJnGn5WQvhGG9MqcSocbcu9tpmD+m3JH/
+	 o9wXysMlY/rHKGHeUS5wua8DSMenVIZMI3b/uH8LPEFXDbN80dmstdyMn6SN65nFsS
+	 C7sdglVQOtF3zy1gpFxgG9V+eVV4NATz2tTMQvk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfIBSbM (ORCPT
+        id S1726866AbfIBScA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:31:12 -0400
-Received: from mail-eopbgr780109.outbound.protection.outlook.com ([40.107.78.109]:47904
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbfIBSbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:31:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OOr8ZozrNVmcEHHkq6G/C4mZdKMwNHEEjLxLQyXS+qgv7U0ZWxpB6OGXNnNwjLVSpXlWxLMd6yNg6e0/oBDOVysFOQcp7VClnpzZRP6iKjcw2XZejUUoj4WPFcupsdRoGSQV2QwYReIX81P64lXHMnlTU264B5B2DnVMhJDUBpl+VVvHK9WmwJ2G11PX6paU9sNSjdmlspE7W0XGhAS2mycyzfCOgKrd8ikvccqeD4MhkKmly+xFlh9esh3rl0b1Ll1Vt5uM3ZnwmZSXFywNuB4ffXUAAi1PH5zVrohLHsX+N2M7UWekAuVIKQVK7xowpQ8DwzvHnKrBLGEIGR6+5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=To79tY3ix1/oNfDFT0JHqI5fxsXwY9E5N4KqXXMd/cA=;
- b=NY0hsPYgX0bSpYgjVXzosstlhwnDlsV1nM6sA/hATs2nW62QxrWecpaDV0EeT47PmEVLo7goQxjrYb2cLQzFTBpFBN3SIeUjj2NWFL1z35OjsjCJpvcJQpCD243OUyFWPKKGLbdkKtd/lMaBU15HSxJgsT+wp5ffenAvfCrrYM9zhhMSsmVBKyJy+kneuN8fYS3GgCLARu4m/i7UDzpBcxvC1/dq98Wn7LSg93Smzk/qlVI1aehF1cueVDw7ykm3JW5mn/galkeunZoA4KkC+Ku0WINxw4deUZY5WTVFNxvbRHthIE3hMphMr0EdvWDhmtYyPNBy2J1fJXvZgCL1Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=To79tY3ix1/oNfDFT0JHqI5fxsXwY9E5N4KqXXMd/cA=;
- b=Vbc7IdkwvKHMTn8EuMhWXacZRTqctyb/i8qsvm4Jcrtr6vCAnLi6iYWewXl8bh8smxP/U7IVWI4ZqEVu3QgqAxF3xWuVyqUNL2MW9wsZaXq+w17N3CMS5BozoX9GM9GksieSMVBQj3JBHEm7Fj835bEbN3V/2etogJrcsfcLlM0=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0746.namprd21.prod.outlook.com (10.173.172.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.2; Mon, 2 Sep 2019 18:31:04 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%7]) with mapi id 15.20.2263.004; Mon, 2 Sep 2019
- 18:31:04 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     brandonbonaby94 <brandonbonaby94@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>
-CC:     brandonbonaby94 <brandonbonaby94@gmail.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 1/2] drivers: hv: vmbus: Introduce latency testing
-Thread-Topic: [PATCH v4 1/2] drivers: hv: vmbus: Introduce latency testing
-Thread-Index: AQHVXiGfEjQiwJAAUUSuhPy9R77jpacYsoRQ
-Date:   Mon, 2 Sep 2019 18:31:04 +0000
-Message-ID: <DM5PR21MB0137F04798C30379AD6CE553D7BE0@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <cover.1567047549.git.brandonbonaby94@gmail.com>
- <da1ab5c98ce902ec181a799d8d1f040e8cc39af6.1567047549.git.brandonbonaby94@gmail.com>
-In-Reply-To: <da1ab5c98ce902ec181a799d8d1f040e8cc39af6.1567047549.git.brandonbonaby94@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-02T18:31:01.9987192Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ec03a290-63c0-4a12-9ef5-bb6e537269b2;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8b732316-f5c2-44ec-ba6e-08d72fd3b67c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0746;
-x-ms-traffictypediagnostic: DM5PR21MB0746:|DM5PR21MB0746:|DM5PR21MB0746:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB07465713B165DB52E6855186D7BE0@DM5PR21MB0746.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01480965DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(1511001)(11346002)(476003)(76116006)(2906002)(22452003)(316002)(4326008)(66476007)(66556008)(486006)(64756008)(66446008)(5660300002)(52536014)(66946007)(25786009)(229853002)(53936002)(76176011)(7736002)(102836004)(2501003)(6116002)(6436002)(55016002)(14454004)(99286004)(305945005)(3846002)(6506007)(66066001)(9686003)(71200400001)(74316002)(7696005)(446003)(10090500001)(110136005)(81156014)(81166006)(8676002)(186003)(33656002)(8936002)(256004)(478600001)(54906003)(8990500004)(86362001)(6246003)(10290500003)(26005)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0746;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: m25gqZtyFtlDVePDHtj2MI0Ip3jRG+oERfgP0QQ2JCksYq7wQAA5iMHejUYALhy8CdtSzpkhgFU0jKM0QQPDJiHHXq3uYYcu63x5UKX4pxqhSVszIbuHdq3paNyHg+onUiD0ecLpFpeqyz+uAERG5U74FvlIz3AOQcahjgT0Tre8OzqYJoFzKJgrw/bwd5nwT9dmIEyTKy6sfRV1dL7IJrrxJw9+dip1goF1Ge6UB9Ki0+C6v301Rs4BparVB8iSAul0P5E2R50OmmTgg7KPmynun9NbYk5b/2rQ17hH+1j8slgNAnxae8ivNcpNKJOAgiCF1ARP64ILo81th8iBozDC9XTEJJ1OLuk122OKK8akzh/h563mfmf1v/J5JF7oh7TsJLJBKcEth7NKdZIg3fIbbLlo39e4TCNatw/7nDk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Sep 2019 14:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbfIBScA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:32:00 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2962521881;
+        Mon,  2 Sep 2019 18:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567449118;
+        bh=48saDu2OkRopU+sxbZhDbOY5dlUZqXFHW7UlD0wi3PE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=miD21iyEUekwktVZZ1bEp9935D61M7B5jcopxRBrKKx91pdjd6emSo8YJxNqqo5dC
+         8USM0BlcKBxWQvAdETU6YcHrmYHKBAtl1cBet4ri3kb0WZaapCQz3A2AAB2VAEuL61
+         jVRCvb9BSR5k8STMh7b+hWPFCys8nzX6kkqhiBso=
+Received: by earth.universe (Postfix, from userid 1000)
+        id B210C3C0B7F; Mon,  2 Sep 2019 20:31:55 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 20:31:55 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Richard Tresidder <rtresidd@electromag.com.au>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        andrew.smirnov@gmail.com, Guenter Roeck <groeck@chromium.org>,
+        david@lechnology.com, Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rfontana@redhat.com, allison@lohutok.net,
+        Baolin Wang <baolin.wang@linaro.org>, linux-pm@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/1] power/supply/sbs-battery: Fix confusing battery
+ status when idle or empty
+Message-ID: <20190902183155.6nugohjfr3pktxve@earth.universe>
+References: <1564452025-12673-1-git-send-email-rtresidd@electromag.com.au>
+ <CAHX4x87gVfmKVmj2O_riwV57Qb8X-MtKCUp6e=3UYuii4TVg0Q@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b732316-f5c2-44ec-ba6e-08d72fd3b67c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 18:31:04.1267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: s9vMOjmW74dza1Wa6vOc0za2hDW1cnEck+T+Xr5KrZAbr2K3c9YGOkYjBbiItR1DQjMUJGwZlqAzksXWNf0fzaeSvI0h27NdDizQ8tbcmEA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0746
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="c5jfoqaruz4rn6pk"
+Content-Disposition: inline
+In-Reply-To: <CAHX4x87gVfmKVmj2O_riwV57Qb8X-MtKCUp6e=3UYuii4TVg0Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Wednesday, August 28=
-, 2019 9:24 PM
+
+--c5jfoqaruz4rn6pk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Looks good to me, but needs to be split (one patch adding STATUS_EMPTY
+to the power-supply core and one patch fixing sbs-battery driver).
+
+-- Sebastian
+
+On Thu, Aug 01, 2019 at 12:34:18PM -0600, Nick Crews wrote:
+> Thanks Richard, I still would like some more opinions
+> on this changing the userspace experience, but LGTM
+> otherwise.
 >=20
-> Introduce user specified latency in the packet reception path
-> By exposing the test parameters as part of the debugfs channel
-> attributes. We will control the testing state via these attributes.
+> Reviewed-by: Nick Crews <ncrews@chromium.org>
 >=20
-> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
-> ---
-> diff --git a/Documentation/ABI/testing/debugfs-hyperv
-> b/Documentation/ABI/testing/debugfs-hyperv
-> new file mode 100644
-> index 000000000000..0903e6427a2d
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/debugfs-hyperv
-> @@ -0,0 +1,23 @@
-> +What:           /sys/kernel/debug/hyperv/<UUID>/fuzz_test_state
-> +Date:           August 2019
-> +KernelVersion:  5.3
+> On Mon, Jul 29, 2019 at 8:00 PM Richard Tresidder
+> <rtresidd@electromag.com.au> wrote:
+> >
+> > When a battery or batteries in a system are in parallel then one or more
+> > may not be providing any current to the system.
+> > This fixes an incorrect status indication of FULL for the battery simply
+> > because it wasn't discharging at that point in time.
+> > The battery will now be flagged as NOT CHARGING.
+> > Have also added the additional check for the battery FULL DISCHARGED fl=
+ag
+> > which will now flag a status of EMPTY.
+> >
+> > Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+> > ---
+> >
+> > Notes:
+> >     power/supply/sbs-battery: Fix confusing battery status when idle or=
+ empty
+> >
+> >     When a battery or batteries in a system are in parallel then one or=
+ more
+> >     may not be providing any current to the system.
+> >     This fixes an incorrect status indication of FULL for the battery s=
+imply
+> >     because it wasn't discharging at that point in time.
+> >     The battery will now be flagged as NOT CHARGING.
+> >     Have also added the additional check for the battery FULL DISCHARGE=
+D flag
+> >     which will now flag a status of EMPTY.
+> >
+> >     v2: Missed a later merge that should have been included in original=
+ patch
+> >     v3: Refactor the sbs_status_correct function to capture all the sta=
+tes for
+> >         normal operation rather than being spread across multile functi=
+ons.
+> >     v4: Remove unnecessary brackets, rename sbs_status_correct to
+> >         sbs_correct_battery_status
+> >
+> >  drivers/power/supply/power_supply_sysfs.c |  2 +-
+> >  drivers/power/supply/sbs-battery.c        | 46 ++++++++++++-----------=
+--------
+> >  include/linux/power_supply.h              |  1 +
+> >  3 files changed, 19 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/=
+supply/power_supply_sysfs.c
+> > index f37ad4e..305e833 100644
+> > --- a/drivers/power/supply/power_supply_sysfs.c
+> > +++ b/drivers/power/supply/power_supply_sysfs.c
+> > @@ -51,7 +51,7 @@
+> >  };
+> >
+> >  static const char * const power_supply_status_text[] =3D {
+> > -       "Unknown", "Charging", "Discharging", "Not charging", "Full"
+> > +       "Unknown", "Charging", "Discharging", "Not charging", "Full", "=
+Empty"
+> >  };
+> >
+> >  static const char * const power_supply_charge_type_text[] =3D {
+> > diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/=
+sbs-battery.c
+> > index 048d205..3ed70d4 100644
+> > --- a/drivers/power/supply/sbs-battery.c
+> > +++ b/drivers/power/supply/sbs-battery.c
+> > @@ -283,7 +283,7 @@ static int sbs_write_word_data(struct i2c_client *c=
+lient, u8 address,
+> >         return 0;
+> >  }
+> >
+> > -static int sbs_status_correct(struct i2c_client *client, int *intval)
+> > +static int sbs_correct_battery_status(struct i2c_client *client, int *=
+status)
+> >  {
+> >         int ret;
+> >
+> > @@ -293,16 +293,18 @@ static int sbs_status_correct(struct i2c_client *=
+client, int *intval)
+> >
+> >         ret =3D (s16)ret;
+> >
+> > -       /* Not drawing current means full (cannot be not charging) */
+> > -       if (ret =3D=3D 0)
+> > -               *intval =3D POWER_SUPPLY_STATUS_FULL;
+> > -
+> > -       if (*intval =3D=3D POWER_SUPPLY_STATUS_FULL) {
+> > -               /* Drawing or providing current when full */
+> > -               if (ret > 0)
+> > -                       *intval =3D POWER_SUPPLY_STATUS_CHARGING;
+> > -               else if (ret < 0)
+> > -                       *intval =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> > +       if (ret > 0)
+> > +               *status =3D POWER_SUPPLY_STATUS_CHARGING;
+> > +       else if (ret < 0)
+> > +               *status =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> > +       else {
+> > +               /* Current is 0, so how full is the battery? */
+> > +               if (*status & BATTERY_FULL_CHARGED)
+> > +                       *status =3D POWER_SUPPLY_STATUS_FULL;
+> > +               else if (*status & BATTERY_FULL_DISCHARGED)
+> > +                       *status =3D POWER_SUPPLY_STATUS_EMPTY;
+> > +               else
+> > +                       *status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+> >         }
+> >
+> >         return 0;
+> > @@ -421,14 +423,9 @@ static int sbs_get_battery_property(struct i2c_cli=
+ent *client,
+> >                         return 0;
+> >                 }
+> >
+> > -               if (ret & BATTERY_FULL_CHARGED)
+> > -                       val->intval =3D POWER_SUPPLY_STATUS_FULL;
+> > -               else if (ret & BATTERY_DISCHARGING)
+> > -                       val->intval =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> > -               else
+> > -                       val->intval =3D POWER_SUPPLY_STATUS_CHARGING;
+> > -
+> > -               sbs_status_correct(client, &val->intval);
+> > +               ret =3D sbs_correct_battery_status(client, &val->intval=
+);
+> > +               if (ret < 0)
+> > +                       return ret;
+> >
+> >                 if (chip->poll_time =3D=3D 0)
+> >                         chip->last_state =3D val->intval;
+> > @@ -773,20 +770,11 @@ static void sbs_delayed_work(struct work_struct *=
+work)
+> >
+> >         ret =3D sbs_read_word_data(chip->client, sbs_data[REG_STATUS].a=
+ddr);
+> >         /* if the read failed, give up on this work */
+> > -       if (ret < 0) {
+> > +       if (ret < 0 || sbs_correct_battery_status(chip->client, &ret) <=
+ 0) {
+> >                 chip->poll_time =3D 0;
+> >                 return;
+> >         }
+> >
+> > -       if (ret & BATTERY_FULL_CHARGED)
+> > -               ret =3D POWER_SUPPLY_STATUS_FULL;
+> > -       else if (ret & BATTERY_DISCHARGING)
+> > -               ret =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> > -       else
+> > -               ret =3D POWER_SUPPLY_STATUS_CHARGING;
+> > -
+> > -       sbs_status_correct(chip->client, &ret);
+> > -
+> >         if (chip->last_state !=3D ret) {
+> >                 chip->poll_time =3D 0;
+> >                 power_supply_changed(chip->power_supply);
+> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> > index 28413f7..8fb10ec 100644
+> > --- a/include/linux/power_supply.h
+> > +++ b/include/linux/power_supply.h
+> > @@ -37,6 +37,7 @@ enum {
+> >         POWER_SUPPLY_STATUS_DISCHARGING,
+> >         POWER_SUPPLY_STATUS_NOT_CHARGING,
+> >         POWER_SUPPLY_STATUS_FULL,
+> > +       POWER_SUPPLY_STATUS_EMPTY,
+> >  };
+> >
+> >  /* What algorithm is the charger using? */
+> > --
+> > 1.8.3.1
+> >
 
-Given the way the timing works for adding code to the Linux kernel,
-the earliest your new code will be included is 5.4.  The merge window
-for 5.4 will open in two weeks, so your code would need to be accepted
-by then to be included in 5.4.  Otherwise, it won't make it until the next
-merge window, which would be for 5.5.  I would suggest changing this
-(and the others below) to 5.4 for now, but you might have to change to
-5.5 if additional revisions are needed.
+--c5jfoqaruz4rn6pk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> +Description:    Fuzz testing status of a vmbus device, whether its in an=
- ON
-> +                state or a OFF state
-> +Users:          Debugging tools
-> +
-> +What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_buffer_i=
-nterrupt_delay
-> +Date:           August 2019
-> +KernelVersion:  5.3
-> +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> +Description:    Fuzz testing buffer interrupt delay value between 0 - 10=
-00
-> +		 microseconds (inclusive).
-> +Users:          Debugging tools
-> +
-> +What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_message_=
-delay
-> +Date:           August 2019
-> +KernelVersion:  5.3
-> +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> +Description:    Fuzz testing message delay value between 0 - 1000 micros=
-econds
-> +		 (inclusive).
-> +Users:          Debugging tools
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b1bc9c87838b..6931a4eeaac0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7460,6 +7460,7 @@ F:	include/uapi/linux/hyperv.h
->  F:	include/asm-generic/mshyperv.h
->  F:	tools/hv/
->  F:	Documentation/ABI/stable/sysfs-bus-vmbus
-> +F:	Documentation/ABI/testing/debugfs-hyperv
->=20
->  HYPERBUS SUPPORT
->  M:	Vignesh Raghavendra <vigneshr@ti.com>
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 9a59957922d4..d97437ba0626 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -29,4 +29,11 @@ config HYPERV_BALLOON
->  	help
->  	  Select this option to enable Hyper-V Balloon driver.
->=20
-> +config HYPERV_TESTING
-> +        bool "Hyper-V testing"
-> +        default n
-> +        depends on HYPERV && DEBUG_FS
-> +        help
-> +          Select this option to enable Hyper-V vmbus testing.
-> +
->  endmenu
-> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> index a1eec7177c2d..d754bd86ca47 100644
-> --- a/drivers/hv/Makefile
-> +++ b/drivers/hv/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_HYPERV)		+=3D hv_vmbus.o
->  obj-$(CONFIG_HYPERV_UTILS)	+=3D hv_utils.o
->  obj-$(CONFIG_HYPERV_BALLOON)	+=3D hv_balloon.o
-> +obj-$(CONFIG_HYPERV_TESTING)	+=3D hv_debugfs.o
+-----BEGIN PGP SIGNATURE-----
 
-There's an additional complexity here that I failed to describe to
-you in my previous comments.  :-(    The above line makes the
-hv_debugfs code part of the main Linux OS image -- i.e., the
-vmlinuz file that gets installed into /boot, such that if hv_debugfs
-is built, it is always loaded into the memory of the running system.
-That's OK, but we should consider the alternative, which is to
-make the hv_debugfs code part of the hv_vmbus module that
-is specified a bit further down in the same Makefile.   A module
-is installed into /lib/modules/<kernel version>/kernel, and
-is only loaded into memory on the running system if something
-actually references code in the module.  This approach helps avoid
-loading code into memory that isn't actually used.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tYBsACgkQ2O7X88g7
++prZLhAAidogLtBQ44eP7QxfyURYuiKdZclVMhxhhkscUe9w8AWjMC+JDXGQH7T7
++il73UYNc0xlGicZIrBV5DRRWSJfhLAUVt+cpeYkGrzVUiEeNa0KYUPu96J49C8s
+GSZnsQDLkt4kG+FOgRIRh/hu18G3GmMJ4qvFoNObGTTXa3OwjZCf3f5ML2yaseTL
+R1UOl1SMkdN7fmTozjUxeLb/gd/LDja8bZDRcFgGu5BoP6Ju7+IKfvHyLAISCZo5
+iQJIH1MR+spTGf3wIUB3NLbjAHw5qCUnY/f9oSuEvA4LJuPMK1LH6lXHJJbYaf7v
+XpBG8iYmabY6YuLf8pc5zKNU1Amft+KogbkSV8Jd6eN4T2UcKC9K7yzPtN1cRSe/
+1I1VS3d+LFbYS8Fz4D8Phb671edRedClecAhFY3D/FEdi0/H68RglMnl5Ugp/5NW
+L6uuo5xk4xTvQ6kH6zivLcaDHEQjjoJEeG5zTycHCvzj1lU6iJVmwHc8B2+A7wk4
+3Fzq8rM90tw6LwnKQIuicURJuzlE2X04h7GF/p9Iq/43sAAbVyk+q94kbu5eqvns
+l1GzJCO53rlouRTebzzzCBj2eX+GjfNgMcVMpi1wi4LVM0Sdh6VqTdnMVuPS3N8y
+uWHQr+Cqbglggr3yIry3h5F4iWR1jr9eGFu2OaiE3sSTbusXvQM=
+=d3Rd
+-----END PGP SIGNATURE-----
 
-Whether code is built as a separate module or is just built into
-the main vmlinuz file is also controlled by the .config file setting.
-For example, CONFIG_HYPERV=3Dm says to treat hv_vmbus as a
-separate module, while CONFIG_HYPERV=3Dy says to build the
-hv_vmbus module directly into the vmlinuz file even though the
-Makefile constructs it as a module.
-
-Making hv_debugfs part of the hv_vmbus module is generally better
-than just building it into the main vmlinuz because it's best to include
-only things that must always be present in the main vmlinuz file.
-hv_debugfs doesn't have any reason it needs to always be present.
-By comparison, hv_balloon is included in the main vmlinuz, which
-might be due to it dealing with memory mgmt and needing to be
-in the vmlinuz image, but I'm not sure.
-
-You can make hv_debugfs part of the hv_vmbus module with this line
-placed after the line specifying hv_vmbus_y, instead of the line you
-currently have:
-
-hv_vmbus-$(CONFIG_HYPERV_TESTING)       +=3D hv_debugfs.o
-
-> +
-> +static int hv_debugfs_delay_set(void *data, u64 val)
-> +{
-> +	int ret =3D 0;
-> +
-> +	if (val >=3D 1 && val <=3D 1000)
-> +		*(u32 *)data =3D val;
-> +	else if (val =3D=3D 0)
-> +		*(u32 *)data =3D 0;
-
-I think this "else if" clause can be folded into the first
-"if" statement by just checking "val >=3D 0".
-
-> +	else
-> +		ret =3D -EINVAL;
-> +
-> +	return ret;
-> +}
-> +
-
-> +/* Remove dentry associated with released hv device */
-> +void hv_debug_rm_dev_dir(struct hv_device *dev)
-> +{
-> +	if (!IS_ERR(hv_debug_root))
-> +		debugfs_remove_recursive(dev->debug_dir);
-> +}
-
-This function is the first of five functions that are called by
-code outside of hv_debugfs.c.   You probably saw the separate
-email from the kbuild test robot showing a build error on each
-of these five functions.  Here's why.
-
-When CONFIG_HYPERV=3Dm is set, and hv_vmbus is built as a
-module, there are references to the five functions from the
-module to your hv_debugfs that is built as core code in
-vmlinuz.  By default, Linux does not allow such core code to
-be called by modules.   Core code must add a statement like:
-
-EXPORT_SYMBOL_GPL(hv_debug_rm_dev_dir);
-
-to allow the module to call it.   This gives the code writer
-a very minimal amount of scope control.  However, if you build=20
-hv_debugfs as part of the module hv_vmbus, and the only
-references to the five functions are within the module hv_vmbus,
-then the EXPORT statements aren't needed because all
-references are internal to the hv_vmbus module.  But if
-you envision a function like hv_debug_delay_test() being
-called by other Hyper-V drivers that are outside the
-hv_vmbus module, then you will need the EXPORT statement
-at least for that function.
-
-You probably have your .config file setup with
-CONFIG_HYPERV=3Dy.  In that case, the hv_vmbus module is
-built-in to the kernel, so you didn't get the errors reported
-by the kbuild test robot.  When testing new code, it's a
-good practice to build with the HYPERV settings set to
-'m' to make sure that any issues with module references
-get flushed out and fixed.
-
-Michael
+--c5jfoqaruz4rn6pk--
