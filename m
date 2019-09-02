@@ -2,314 +2,139 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EF9C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9407CC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9BC217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBCB22DBF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YivH4ogz"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="CvN1p/Tf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfIBKnR (ORCPT
+        id S1730943AbfIBKon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:43:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43464 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730013AbfIBKnR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:43:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82AdEn1163436;
-        Mon, 2 Sep 2019 10:41:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=w+G+MVA2YN07SA3UzChr+LYUeDR77rQPujOEa86rr/M=;
- b=YivH4ogzTkrVZ4L/v7Zsi3AicDuo49zoVJeXpXOn2MMKZ7HZvvaH9OnkGas7dbNc7cyj
- zI2JDeB1COr6kzMc/ePUPo23okASg63RjKXv3uleXjgwuXaJqryOU6rFJlQJgptXS3I1
- CHam049rqgEB79plAMDFpvIB9N9/z3G2Nb6MxYDGScqYgi8hczcHBlPOOhd/PnXwkcvO
- sUU9woMbp+QCtGfftZajX7zo5kttShWsDEWAp4LpTdW2I2jtVZOhm7/KLOD1IU1e0YJE
- WTFeEGo9AgVxBbJp2V8HFfyiqsfbDEsI0r+SmQar68HvHAePbhi7QQg7wTygHlTtUIv8 ig== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2us1d7816c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Sep 2019 10:41:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82AcAaB014454;
-        Mon, 2 Sep 2019 10:41:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2urww6ds8y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Sep 2019 10:41:33 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x82AfTDZ020042;
-        Mon, 2 Sep 2019 10:41:29 GMT
-Received: from paddy.uk.oracle.com (/10.175.163.45)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 02 Sep 2019 03:41:27 -0700
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     kvm@vger.kernel.org
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH v3] cpuidle-haltpoll: vcpu hotplug support
-Date:   Mon,  2 Sep 2019 11:40:31 +0100
-Message-Id: <20190902104031.9296-1-joao.m.martins@oracle.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 2 Sep 2019 06:44:43 -0400
+Received: from mail-eopbgr30093.outbound.protection.outlook.com ([40.107.3.93]:53733
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729805AbfIBKon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:44:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zr4/vLjCOXAVt+vsTmFnJk2l1IJ2XmBcJJm0RXeC1Ivr/wY5azbZkOI66QKg74bHwS1Dtc65LkCkUVjOqeS1G5JqIz4SO7Pu6R47I1ZUpJAgwfE2SHCtVf/dOvDJ4457gGew7B3t6aZbiWYy5sTMkqmw+9ItOTe67KdmWLyn6He2M34qH7C3rA/hvwg7UIpLYedA1/bDoT2X2lkGY8zHRIi+6nKSkM9UMgSkiYALtexEfVDI5lLRAh34LoXZK77SgZG72mqXDvfU+NFf04BlLOOHfoNYVuhna2Fd/nmFONWTewVmw2+LbdK/0Rs9PTOfKeJjHHOUMn1Nh0Y6PJuYzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qjcgeCccopkLIYkE3Vz/2o6S+cAJUVa3vGAZnqppsDE=;
+ b=Nw4+Q9D2JA6EYA3qmW9XIr/hr7crzLiCjSiKC33pxCD7yusHfAWOfgDTcMyQTHmgNBNaiFIKGFa0F9m96ZbApWYseW0En3cWrissoysdYANcg5KPrWxIT5qatGMJ1u/CVfwn7RN0lszmlpIARGFceZQVfgoTQBDut1BV/P+rPQR2t3zDTN52S6wyakERhPkLbGAb/hSxu37mzd0kzEBUhcvbiX4DSZv76+OHVhk8sr+ArQpOfvJcW279gMY56qcKaj+WZqdVotmWk2mbEftyKFRoZayQIowcD/wvljafWh12KGbPJOA5MvSp+jvF/TJRU+kNg0kvAjXcr7WNt1H5tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qjcgeCccopkLIYkE3Vz/2o6S+cAJUVa3vGAZnqppsDE=;
+ b=CvN1p/TfsAev1SG3kFBtp89uZVooLmh6S1wLBxvSkl2C9eGRqs/OECjTSCjz2rckOje1tfSQ8aZVtvJ74UOp+7B5LuOkTTwz4fxWT0OPy3C47acjxEC2R51lcRqB44kMW7UqHta4Ne+jZTXVj6gld/Yhc/FyRE+tMXJZg1B1DhE=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3322.eurprd02.prod.outlook.com (52.134.66.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Mon, 2 Sep 2019 10:44:24 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::e12b:afcb:73e1:5d09]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::e12b:afcb:73e1:5d09%7]) with mapi id 15.20.2220.022; Mon, 2 Sep 2019
+ 10:44:24 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pierre-yves.mordret@st.com" <pierre-yves.mordret@st.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: i2c: at91: add new compatible
+Thread-Topic: [PATCH v4 1/9] dt-bindings: i2c: at91: add new compatible
+Thread-Index: AQHVYXbgQNi7wM4M0k26eRDJy0qMmKcYM9GA
+Date:   Mon, 2 Sep 2019 10:44:23 +0000
+Message-ID: <47d618da-263f-199c-3cc6-35e8f8c6015d@axentia.se>
+References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
+ <1567418773-2427-2-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1567418773-2427-2-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1P191CA0004.EURP191.PROD.OUTLOOK.COM (2603:10a6:3:cf::14)
+ To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a0c883a-e295-4524-9846-08d72f9284e3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3322;
+x-ms-traffictypediagnostic: DB3PR0202MB3322:
+x-microsoft-antispam-prvs: <DB3PR0202MB3322F8949921980EF6F7BCA9BCBE0@DB3PR0202MB3322.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39830400003)(396003)(136003)(366004)(199004)(189003)(7416002)(508600001)(86362001)(2501003)(14454004)(71190400001)(2616005)(11346002)(2201001)(486006)(31696002)(446003)(6436002)(36756003)(229853002)(102836004)(476003)(305945005)(7736002)(256004)(71200400001)(2906002)(65806001)(6506007)(53546011)(65956001)(66066001)(14444005)(386003)(6512007)(3846002)(316002)(53936002)(52116002)(66446008)(8676002)(6246003)(64756008)(66556008)(66476007)(81156014)(58126008)(81166006)(31686004)(4326008)(26005)(8936002)(66946007)(76176011)(110136005)(99286004)(5660300002)(186003)(25786009)(6116002)(6486002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3322;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qWchiUQCpgrOcfnr7mkhWgtGbhwcpbjo2qfOXSjqO3EepeWY9P4OkrnchnrBJXiQ4MnqJvdtQRQ8FbhRrNr/pj0GNq2chRTSg87U/cwUJHoe+7dZvHvErapvwUNCHlm+WbczndtTxG/+EY43f9wGmy+90th/18W1h1lROjfYAYxnmLWXXQz8de4SqB2VJQrnx44Orcgo5YIfBFLelI1C93ygO44zUJxUU5QYu9KF3lo6y02CcElamvq98aV85H/ArVJUpSmuPdIUDQBtQsUIgwkiMJYhYScnRcKTlGKVXruC6/oj7kt7E0AzH0WlfK/4NnmsbFp/zywU1rbcwNjp0P+Hf3qjvk3B71COp5agQ6WNVJdE6J56j1Aw7x6uQDUb14s+BoiJ6uNAxMTPKhnORfJshxlBoDphwiiXYZMRqxc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A70DBC8FDE72D94789EC5E96294C2FF8@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909020122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909020122
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a0c883a-e295-4524-9846-08d72f9284e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:44:24.0671
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o3Bnt387iAhyCz6g/l8eEDIx2oO0y7XcZ3P1fuwAPdEiKrnPVALqY5pgv7Ve2RFN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3322
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
-past the online ones and thus fail to register the idle driver.
-This is because cpuidle_add_sysfs() will return with -ENODEV as a
-consequence from get_cpu_device() return no device for a non-existing
-CPU.
-
-Instead switch to cpuidle_register_driver() and manually register each
-of the present cpus through cpuhp_setup_state() callbacks and future
-ones that get onlined or offlined. This mimmics similar logic that
-intel_idle does.
-
-Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
-Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
----
-v3:
-* register the teardown callback for correct handling of hotunplug
-and error cases. In case cpuhp_setup_state calls fails (e.g. in one of
-the cpus that it invoked the callback) it will then call the teardown of
-the previously enabled devices; so no need to handle that manually in
-haltpoll_uninit().
-* use the cpuhp_setup_state() returned dyn allocated state when it
-succeeds. And use that state in haltpoll_unint() to call
-cpuhp_remove_state() instead of looping online cpus manually. This
-is because cpuhp_remove_state() invokes the teardown/offline callback.
-* fix subsystem name to 'cpuidle' instead of 'idle' in cpuhp_setup_state()
-
-v2:
-* move cpus_read_unlock() after unregistering all cpuidle_devices;
-(Marcello Tosatti)
-* redundant usage of cpuidle_unregister() when only
-cpuidle_unregister_driver() suffices; (Marcelo Tosatti)
-* cpuhp_setup_state() returns a state (> 0) for CPUHP_AP_ONLINE_DYN
----
- arch/x86/include/asm/cpuidle_haltpoll.h |  4 +-
- arch/x86/kernel/kvm.c                   | 18 +++----
- drivers/cpuidle/cpuidle-haltpoll.c      | 68 +++++++++++++++++++++++--
- include/linux/cpuidle_haltpoll.h        |  4 +-
- 4 files changed, 73 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpuidle_haltpoll.h b/arch/x86/include/asm/cpuidle_haltpoll.h
-index ff8607d81526..c8b39c6716ff 100644
---- a/arch/x86/include/asm/cpuidle_haltpoll.h
-+++ b/arch/x86/include/asm/cpuidle_haltpoll.h
-@@ -2,7 +2,7 @@
- #ifndef _ARCH_HALTPOLL_H
- #define _ARCH_HALTPOLL_H
- 
--void arch_haltpoll_enable(void);
--void arch_haltpoll_disable(void);
-+void arch_haltpoll_enable(unsigned int cpu);
-+void arch_haltpoll_disable(unsigned int cpu);
- 
- #endif
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 8d150e3732d9..a9b6c4e2446d 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -880,32 +880,26 @@ static void kvm_enable_host_haltpoll(void *i)
- 	wrmsrl(MSR_KVM_POLL_CONTROL, 1);
- }
- 
--void arch_haltpoll_enable(void)
-+void arch_haltpoll_enable(unsigned int cpu)
- {
- 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
--		printk(KERN_ERR "kvm: host does not support poll control\n");
--		printk(KERN_ERR "kvm: host upgrade recommended\n");
-+		pr_err_once("kvm: host does not support poll control\n");
-+		pr_err_once("kvm: host upgrade recommended\n");
- 		return;
- 	}
- 
--	preempt_disable();
- 	/* Enable guest halt poll disables host halt poll */
--	kvm_disable_host_haltpoll(NULL);
--	smp_call_function(kvm_disable_host_haltpoll, NULL, 1);
--	preempt_enable();
-+	smp_call_function_single(cpu, kvm_disable_host_haltpoll, NULL, 1);
- }
- EXPORT_SYMBOL_GPL(arch_haltpoll_enable);
- 
--void arch_haltpoll_disable(void)
-+void arch_haltpoll_disable(unsigned int cpu)
- {
- 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL))
- 		return;
- 
--	preempt_disable();
- 	/* Enable guest halt poll disables host halt poll */
--	kvm_enable_host_haltpoll(NULL);
--	smp_call_function(kvm_enable_host_haltpoll, NULL, 1);
--	preempt_enable();
-+	smp_call_function_single(cpu, kvm_enable_host_haltpoll, NULL, 1);
- }
- EXPORT_SYMBOL_GPL(arch_haltpoll_disable);
- #endif
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index 9ac093dcbb01..56d8ab814466 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -11,12 +11,16 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/cpu.h>
- #include <linux/cpuidle.h>
- #include <linux/module.h>
- #include <linux/sched/idle.h>
- #include <linux/kvm_para.h>
- #include <linux/cpuidle_haltpoll.h>
- 
-+static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-+static enum cpuhp_state haltpoll_hp_state;
-+
- static int default_enter_idle(struct cpuidle_device *dev,
- 			      struct cpuidle_driver *drv, int index)
- {
-@@ -46,6 +50,46 @@ static struct cpuidle_driver haltpoll_driver = {
- 	.state_count = 2,
- };
- 
-+static int haltpoll_cpu_online(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev;
-+
-+	dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-+	if (!dev->registered) {
-+		dev->cpu = cpu;
-+		if (cpuidle_register_device(dev)) {
-+			pr_notice("cpuidle_register_device %d failed!\n", cpu);
-+			return -EIO;
-+		}
-+		arch_haltpoll_enable(cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int haltpoll_cpu_offline(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev;
-+
-+	dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-+	if (dev->registered) {
-+		arch_haltpoll_disable(cpu);
-+		cpuidle_unregister_device(dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void haltpoll_uninit(void)
-+{
-+	if (haltpoll_hp_state)
-+		cpuhp_remove_state(haltpoll_hp_state);
-+	cpuidle_unregister_driver(&haltpoll_driver);
-+
-+	free_percpu(haltpoll_cpuidle_devices);
-+	haltpoll_cpuidle_devices = NULL;
-+}
-+
- static int __init haltpoll_init(void)
- {
- 	int ret;
-@@ -56,17 +100,31 @@ static int __init haltpoll_init(void)
- 	if (!kvm_para_available())
- 		return 0;
- 
--	ret = cpuidle_register(&haltpoll_driver, NULL);
--	if (ret == 0)
--		arch_haltpoll_enable();
-+	ret = cpuidle_register_driver(drv);
-+	if (ret < 0)
-+		return ret;
-+
-+	haltpoll_cpuidle_devices = alloc_percpu(struct cpuidle_device);
-+	if (haltpoll_cpuidle_devices == NULL) {
-+		cpuidle_unregister_driver(drv);
-+		return -ENOMEM;
-+	}
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "cpuidle/haltpoll:online",
-+				haltpoll_cpu_online, haltpoll_cpu_offline);
-+	if (ret < 0) {
-+		haltpoll_uninit();
-+	} else {
-+		haltpoll_hp_state = ret;
-+		ret = 0;
-+	}
- 
- 	return ret;
- }
- 
- static void __exit haltpoll_exit(void)
- {
--	arch_haltpoll_disable();
--	cpuidle_unregister(&haltpoll_driver);
-+	haltpoll_uninit();
- }
- 
- module_init(haltpoll_init);
-diff --git a/include/linux/cpuidle_haltpoll.h b/include/linux/cpuidle_haltpoll.h
-index fe5954c2409e..d50c1e0411a2 100644
---- a/include/linux/cpuidle_haltpoll.h
-+++ b/include/linux/cpuidle_haltpoll.h
-@@ -5,11 +5,11 @@
- #ifdef CONFIG_ARCH_CPUIDLE_HALTPOLL
- #include <asm/cpuidle_haltpoll.h>
- #else
--static inline void arch_haltpoll_enable(void)
-+static inline void arch_haltpoll_enable(unsigned int cpu)
- {
- }
- 
--static inline void arch_haltpoll_disable(void)
-+static inline void arch_haltpoll_disable(unsigned int cpu)
- {
- }
- #endif
--- 
-2.17.1
-
+T24gMjAxOS0wOS0wMiAxMjoxMSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IA0K
+PiBBZGQgY29tcGF0aWJsZSBmb3IgbmV3IE1pY3JvY2hpcCBTb0MsIHNhbTl4NjANCj4gDQo+IFJl
+dmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBTaWduZWQtb2ZmLWJ5
+OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQgfCAzICsr
+LQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJj
+LWF0OTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5
+MS50eHQNCj4gaW5kZXggYjdjZWMxNy4uMjIxMGY0MyAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQNCj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQNCj4gQEAgLTMsNyAr
+Myw4IEBAIEkyQyBmb3IgQXRtZWwgcGxhdGZvcm1zDQo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzIDoN
+Cj4gIC0gY29tcGF0aWJsZSA6IE11c3QgYmUgImF0bWVsLGF0OTFybTkyMDAtaTJjIiwgImF0bWVs
+LGF0OTFzYW05MjYxLWkyYyIsDQo+ICAgICAgICJhdG1lbCxhdDkxc2FtOTI2MC1pMmMiLCAiYXRt
+ZWwsYXQ5MXNhbTlnMjAtaTJjIiwgImF0bWVsLGF0OTFzYW05ZzEwLWkyYyIsDQo+IC0gICAgICJh
+dG1lbCxhdDkxc2FtOXg1LWkyYyIsICJhdG1lbCxzYW1hNWQ0LWkyYyIgb3IgImF0bWVsLHNhbWE1
+ZDItaTJjIg0KPiArICAgICAiYXRtZWwsYXQ5MXNhbTl4NS1pMmMiLCAiYXRtZWwsc2FtYTVkNC1p
+MmMiLCAiYXRtZWwsc2FtYTVkMi1pMmMiIG9yDQo+ICsgICAgICJtaWNyb2NoaXAsc2FtOXg2MC1p
+MmMiDQoNCklJVUMsIHRoaXMgbGlzdCBzaG91bGQgaWRlYWxseSBiZSByZWZvcm1hdHRlZCB3aXRo
+IG9uZSBjb21wYXRpYmxlIHBlciBsaW5lLg0KDQpTaWRlIG5vdGU7IHVuZm9ydHVuYXRlIG5hbWlu
+ZyB3aXRoIFNBTTl4NjAsIHdoZW4gdGhlcmUgaXMgYSBwcmVleGlzdGluZyA5MjYwDQpmaXR0aW5n
+IHRoZSAid2lsZGNhcmQiIChBRkFJQ1QsIGl0J3Mgbm90IGEgd2lsZGNhcmQgaW4gdGhpcyBjYXNl
+LCBidXQgaXQgc3VyZQ0KbG9va3MgbGlrZSBvbmUpLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+ICAt
+IHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGgg
+b2YgbWVtb3J5IG1hcHBlZA0KPiAgICAgICByZWdpb24uDQo+ICAtIGludGVycnVwdHM6IGludGVy
+cnVwdCBudW1iZXIgdG8gdGhlIGNwdS4NCj4gDQoNCg==
