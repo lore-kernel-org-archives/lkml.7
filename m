@@ -2,246 +2,176 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6814C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D597C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A16220820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C85820820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbfIBMUG (ORCPT
+        id S1731545AbfIBMUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:20:06 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:38665 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731362AbfIBMUG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:20:06 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4lJPidnY3zaKO4lJTiXfJA; Mon, 02 Sep 2019 14:20:03 +0200
-Subject: Re: [PATCH] media: vimc: Implement debayer control for mean window
- size
-To:     Arthur Moraes do Lago <arthurmoraeslago@gmail.com>,
-        helen.koike@collabora.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-References: <20190901194032.16207-1-arthurmoraeslago@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1f8d96c2-d722-9c95-2430-0e682ee39be7@xs4all.nl>
-Date:   Mon, 2 Sep 2019 14:19:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 08:20:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18247 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729893AbfIBMUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:20:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 05:20:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="181862938"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Sep 2019 05:20:32 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i4lJu-0001cz-O7; Mon, 02 Sep 2019 15:20:30 +0300
+Date:   Mon, 2 Sep 2019 15:20:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        robhkernel.org@smile.fi.intel.com, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+Message-ID: <20190902122030.GE2680@smile.fi.intel.com>
+References: <cover.1566975410.git.rahul.tanwar@linux.intel.com>
+ <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
+ <20190828150951.GS2680@smile.fi.intel.com>
+ <e4a1fd0a-b179-92dd-fb81-22d9d7465a33@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190901194032.16207-1-arthurmoraeslago@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfL+tFWScq3neTRYZZcX9g3aAPOh411yY376aOszh+CUvHUKx/6NVGdDv9SGRK/HG8RMoSfvvHuFu0U6MLr9/l8RQv7E3gMmljtyr/hI3bxgkQRv0EFEf
- fhw1vSJjsLv+Or310qyCmrZWNoz9CZcNU1b3ClxdyXB6KXfVEBFDejl17twGbdDCa97PI2420KjumpqmDMWJ6YoK5gSed5VnLOk51eD+GqnlY0GKvmMSyJgi
- 3+/8uj2ilqpL+fKwIX7+iW3T0cu3SbLjgqUh7yg7wAaXgsRUlCXDOrhLCjmq2hmct53m8nB90pRyWWLdbT8JCsH3BFJSjA0mTNipvIAL5fpxLabNvOTsw4/p
- RogTPsZf9CE41J91scBDECm+qr5yTQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4a1fd0a-b179-92dd-fb81-22d9d7465a33@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/19 9:40 PM, Arthur Moraes do Lago wrote:
-> Add mean window size parameter for debayer filter as a control in
-> vimc-debayer.
+On Mon, Sep 02, 2019 at 03:43:13PM +0800, Tanwar, Rahul wrote:
+> On 28/8/2019 11:09 PM, Andy Shevchenko wrote:
+> > On Wed, Aug 28, 2019 at 03:00:17PM +0800, Rahul Tanwar wrote:
+
+> > >   drivers/clk/intel/Kconfig       |  13 +
+> > >   drivers/clk/intel/Makefile      |   4 +
+> > Any plans what to do with existing x86 folder there?
+
+> I checked the x86 folder. This driver's clock controller IP is totally
+> different than other clock drivers inside x86. So having a common
+> driver source is not a option. It is of course possible to move this
+> driver inside x86 folder. Please let me know if you think moving
+> this driver inside x86 folder makes more sense.
+
+I'm talking about unambiguous folder where we keep Intel's drivers.
+With your series it will be confusing x86 vs intel.
+
+> > > +/*
+> > > + * Calculate formula:
+> > > + * rate = (prate * mult + (prate * frac) / frac_div) / div
+> > > + */
+> > > +static unsigned long
+> > > +intel_pll_calc_rate(unsigned long prate, unsigned int mult,
+> > > +		    unsigned int div, unsigned int frac, unsigned int frac_div)
+> > > +{
+> > > +	u64 crate, frate, rate64;
+> > > +
+> > > +	rate64 = prate;
+> > > +	crate = rate64 * mult;
+> > > +
+> > > +	if (frac) {
+> > This seems unnecessary.
+> > I think you would like to check for frac_div instead?
+> > Though I would rather to use frac = 0, frac_div = 1 and drop this conditional
+> > completely.
+
+> frac_div value is fixed to BIT(24) i.e. always a non zero value. mult & div
+> are directly read from registers and by design the register values for
+> mult & div is also always a non zero value. However, frac can logically
+> be zero. So, I still find if (frac) condition most suitable here.
+
+Then it's simple not needed.
+
+> > > +		frate = rate64 * frac;
+> > > +		do_div(frate, frac_div);
+> > > +		crate += frate;
+> > > +	}
+> > > +	do_div(crate, div);
+> > > +
+> > > +	return (unsigned long)crate;
+
+> > > +	hw = &pll->hw;
+> > Seems redundant temporary variable.
 > 
-> vimc-debayer was patched to allow changing mean windows parameter
-> of the filter without needing to reload the driver. The parameter
-> can now be set using a v4l2-ctl control(mean_window_size).
+> Agree, will update in v2.
+
+Though in another method you have similar pattern. So, perhaps you may leave it
+for sake of consistency with patterns.
+
+> > > +	pr_debug("Add clk: %s, id: %u\n", clk_hw_get_name(hw), id);
+> > Is this useful?
+
+> Yes, IMO, this proves very useful for system wide clock issues
+> debugging during bootup.
+
+You may use function tracer for that.
+
+> > Does val == 0 follows the table, i.e. makes div == 1?
 > 
-> Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
-> Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
-> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+> 0 val means output clock is ref clock i.e. div ==1. Agree that adding
+> .val = 0, .div =1 entry will make it more clear & complete.
 > 
-> ---
-> This patch was made on top of Shuah Khan's patch (162623).
-> Thanks.
-> ---
->  drivers/media/platform/vimc/vimc-common.h  |  1 +
->  drivers/media/platform/vimc/vimc-debayer.c | 81 ++++++++++++++++++----
->  2 files changed, 70 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-> index 5b2282de395c..547ff04a415e 100644
-> --- a/drivers/media/platform/vimc/vimc-common.h
-> +++ b/drivers/media/platform/vimc/vimc-common.h
-> @@ -19,6 +19,7 @@
->  #define VIMC_CID_VIMC_BASE		(0x00f00000 | 0xf000)
->  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
->  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
-> +#define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
->  
->  #define VIMC_FRAME_MAX_WIDTH 4096
->  #define VIMC_FRAME_MAX_HEIGHT 2160
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index 6cee911bf149..aa3edeed96bc 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -11,17 +11,11 @@
->  #include <linux/platform_device.h>
->  #include <linux/vmalloc.h>
->  #include <linux/v4l2-mediabus.h>
-> +#include <media/v4l2-ctrls.h>
->  #include <media/v4l2-subdev.h>
->  
->  #include "vimc-common.h"
->  
-> -static unsigned int deb_mean_win_size = 3;
-> -module_param(deb_mean_win_size, uint, 0000);
-> -MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
-> -	"NOTE: the window size needs to be an odd number, as the main pixel "
-> -	"stays in the center of the window, otherwise the next odd number "
-> -	"is considered");
-> -
->  #define IS_SINK(pad) (!pad)
->  #define IS_SRC(pad)  (pad)
->  
-> @@ -49,6 +43,8 @@ struct vimc_deb_device {
->  	u8 *src_frame;
->  	const struct vimc_deb_pix_map *sink_pix_map;
->  	unsigned int sink_bpp;
-> +	unsigned int mean_win_size;
-> +	struct v4l2_ctrl_handler hdl;
->  };
->  
->  static const struct v4l2_mbus_framefmt sink_fmt_default = {
-> @@ -387,7 +383,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
->  	 * the top left corner of the mean window (considering the current
->  	 * pixel as the center)
->  	 */
-> -	seek = deb_mean_win_size / 2;
-> +	seek = vdeb->mean_win_size / 2;
->  
->  	/* Sum the values of the colors in the mean window */
->  
-> @@ -477,6 +473,33 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
->  
->  }
->  
-> +static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
-> +					    unsigned int mean_win_size)
-> +{
-> +		if (vdeb->mean_win_size == mean_win_size)
-> +			return;
-> +		vdeb->mean_win_size = mean_win_size;
-> +}
-> +
-> +static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct vimc_deb_device *vdeb =
-> +		container_of(ctrl->handler, struct vimc_deb_device, hdl);
-> +
-> +	switch (ctrl->id) {
-> +	case VIMC_CID_MEAN_WIN_SIZE:
-> +		vimc_deb_s_mean_win_size(vdeb, ctrl->val);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
-> +	.s_ctrl = vimc_deb_s_ctrl,
-> +};
-> +
->  static void vimc_deb_release(struct v4l2_subdev *sd)
->  {
->  	struct vimc_deb_device *vdeb =
-> @@ -502,6 +525,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->  	vimc_ent_sd_unregister(ved, &vdeb->sd);
->  }
->  
-> +static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
-> +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
-> +	.id = VIMC_CID_VIMC_CLASS,
-> +	.name = "VIMC Controls",
-> +	.type = V4L2_CTRL_TYPE_CTRL_CLASS,
-> +};
-> +
-> +static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
-> +	.ops = &vimc_deb_ctrl_ops,
-> +	.id = VIMC_CID_MEAN_WIN_SIZE,
-> +	.name = "Mean window size",
+> > > +	{ .val = 0, .div = 1 },
+> > > +	{ .val = 1, .div = 2 },
+> > > +	{ .val = 2, .div = 3 },
 
-Should be "Mean Window Size". We follow English capitalization rules for titles
-for the control names.
+1
 
-> +	.type = V4L2_CTRL_TYPE_INTEGER,
-> +	.min = 1,
-> +	.max = 99,
+> > > +	{ .val = 3, .div = 4 },
+> > > +	{ .val = 4, .div = 5 },
+> > > +	{ .val = 5, .div = 6 },
 
-This seems unreasonably large. I'm not sure what is a typical maximum, but
-I suspect it will be very much smaller than 99.
+1
 
-Make sure you do a streaming test with this control with both the min and max values.
+> > > +	{ .val = 6, .div = 8 },
+> > > +	{ .val = 7, .div = 10 },
+> > > +	{ .val = 8, .div = 12 },
 
-Does v4l2-compliance pass?
+2
 
-Regards,
+> > > +	{ .val = 9, .div = 16 },
+> > > +	{ .val = 10, .div = 20 },
+> > > +	{ .val = 11, .div = 24 },
 
-	Hans
+4
 
-> +	.step = 2,
-> +	.def = 3,
-> +};
-> +
->  int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->  {
->  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-> @@ -513,6 +554,16 @@ int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->  	if (!vdeb)
->  		return -ENOMEM;
->  
-> +	/* Create controls: */
-> +	v4l2_ctrl_handler_init(&vdeb->hdl, 2);
-> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
-> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
-> +	vdeb->sd.ctrl_handler = &vdeb->hdl;
-> +	if (vdeb->hdl.error) {
-> +		ret = vdeb->hdl.error;
-> +		goto err_free_vdeb;
-> +	}
-> +
->  	/* Initialize ved and sd */
->  	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
->  				   vcfg->name,
-> @@ -520,13 +571,12 @@ int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->  				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
->  				   MEDIA_PAD_FL_SOURCE},
->  				   &vimc_deb_int_ops, &vimc_deb_ops);
-> -	if (ret) {
-> -		kfree(vdeb);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		goto err_free_hdl;
->  
->  	vdeb->ved.process_frame = vimc_deb_process_frame;
->  	vdeb->dev = &vimc->pdev.dev;
-> +	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
->  
->  	/* Initialize the frame format */
->  	vdeb->sink_fmt = sink_fmt_default;
-> @@ -541,4 +591,11 @@ int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->  
->  	vcfg->ved = &vdeb->ved;
->  	return 0;
-> +
-> +err_free_hdl:
-> +	v4l2_ctrl_handler_free(&vdeb->hdl);
-> +err_free_vdeb:
-> +	kfree(vdeb);
-> +
-> +	return ret;
->  }
-> 
+> > > +	{ .val = 12, .div = 32 },
+> > > +	{ .val = 13, .div = 40 },
+> > > +	{ .val = 14, .div = 48 },
+
+8
+
+> > > +	{ .val = 15, .div = 64 },
+
+16
+
+
+So, now we see the pattern:
+
+	div = val < 3 ? (val + 1) : (1 << ((val - 3) / 3));
+
+So, can we eliminate table?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
