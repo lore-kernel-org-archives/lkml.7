@@ -2,134 +2,116 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F778C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B694EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0B52173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9488121744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbfIBOTb (ORCPT
+        id S1731436AbfIBOTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:19:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50316 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfIBOTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:19:31 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 173AB28C285
-Subject: Re: [PATCH v2] merge_config.sh: Check error codes from make
-To:     Jon Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190819200650.18156-1-broonie@kernel.org>
- <b744485d-3e57-469f-5573-6d8a32ba0aef@nvidia.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <260e4eeb-d492-1056-5c60-d7ae8a176bc0@collabora.com>
-Date:   Mon, 2 Sep 2019 15:19:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 10:19:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59558 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726438AbfIBOTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:19:49 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 323292FC0905CA677613;
+        Mon,  2 Sep 2019 22:19:47 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Sep 2019
+ 22:19:37 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <antoine.tenart@bootlin.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <pvanleeuwen@insidesecure.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: inside-secure - Fix build error without CONFIG_PCI
+Date:   Mon, 2 Sep 2019 22:19:10 +0800
+Message-ID: <20190902141910.1080-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <b744485d-3e57-469f-5573-6d8a32ba0aef@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2019 15:06, Jon Hunter wrote:
-> 
-> On 19/08/2019 21:06, Mark Brown wrote:
->> When we execute make after merging the configurations we ignore any
->> errors it produces causing whatever is running merge_config.sh to be
->> unaware of any failures.  This issue was noticed by Guillaume Tucker
->> while looking at problems with testing of clang only builds in KernelCI
->> which caused Kbuild to be unable to find a working host compiler.
->>
->> This implementation was suggested by Yamada-san.
->>
->> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->> Reported-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->> Signed-off-by: Mark Brown <broonie@kernel.org>
->> ---
-> 
-> I have noticed some recent build failures on -next and the bisect is 
-> pointing to this commit. I have been looking at why this commit is 
-> making the builds fail and I see a few different things going on ...
-> 
-> 1. By using 'set -e', if grep fails to find a kconfig option in the   
->    resulting config file, then script exits silently without reporting 
->    which option it failed to find. Hence, it is unclear what triggered 
->    the failure. This may happen when options are being disabled.
-> 
-> 2. If an option is disabled by the config fragment that happens to be a 
->    parent of other kconfig options, then although the parent and 
->    children are disabled correctly, the script may fail because it no 
->    longer finds the children in the resulting config file. A specific 
->    example, here is CONFIG_NFS_V4. We disable this option due to 
->    issues with some host machines we use, and disabling this also 
->    disables CONFIG_NFS_V4_1 and CONFIG_NFS_V4_2. Now if all 3 of these 
->    options are enabled by default in the base config file, such as the 
->    case in the ARM64 defconfig, then disabling CONFIG_NFS_V4 in the 
->    config fragment causes merge_config.sh to fail because  
->    CONFIG_NFS_V4_1 and CONFIG_NFS_V4_2 are not defined at all in 
->    the resulting config. This causes grep to fail to find these and 
->    hence causes the script to terminate. In the resulting config file we 
->    just have '# CONFIG_NFS_V4 is not set'. I am not sure if there is an 
->    easy way to determine if a missing config option is legitimate or 
->    not. 
-> 
-> A simple way to test the above is ...
-> 
->  $ export ARCH=arm64
->  $ echo "CONFIG_NFS_V4=n" > kfrag                                                                                                                                                   
->  $ ./scripts/kconfig/merge_config.sh arch/arm64/configs/defconfig kfrag 
-> 
-> If the intent is to catch errors returned by make, then one simple fix would be ...
-> 
-> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
-> index bec246719aea..63c8565206a4 100755
-> --- a/scripts/kconfig/merge_config.sh
-> +++ b/scripts/kconfig/merge_config.sh
-> @@ -179,7 +179,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
->  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
->  
->         REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
-> -       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
-> +       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || true)
->         if [ "x$REQUESTED_VAL" != "x$ACTUAL_VAL" ] ; then
->                 echo "Value requested for $CFG not in final .config"
->                 echo "Requested value:  $REQUESTED_VAL"
-> 
-> 
-> I have been using merge_config.sh to enable and disable various options
-> we need for testing for sometime now and so would hope I am not doing
-> anything out of the ordinary here. 
-> 
-> Let me know your thoughts.
+If CONFIG_PCI is not set, building fails:
 
-I've added you to another thread with a fix I sent last week for
-the same issue.
+rivers/crypto/inside-secure/safexcel.c: In function safexcel_request_ring_irq:
+drivers/crypto/inside-secure/safexcel.c:944:9: error: implicit declaration of function pci_irq_vector;
+ did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
+   irq = pci_irq_vector(pci_pdev, irqid);
+         ^~~~~~~~~~~~~~
 
-The way I addressed it with "echo" was to explicitly return an
-empty line as that is essentially what is then being used to
-compare the config values.  I guess "true" also works in
-practice.
+Use #ifdef block to guard this.
 
-My understanding is that "set -e" was added primarily to catch
-errors returned by the make command.  The config value checks
-with grep have always been warnings that don't cause errors, so I
-would assume that it should stay like this until there's a
-conscious decision to change this behaviour.
+Fixes: 625f269a5a7a ("crypto: inside-secure - add support for PCI based FPGA development board")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/crypto/inside-secure/safexcel.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-Thanks,
-Guillaume
+diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
+index e12a2a3..c23fe34 100644
+--- a/drivers/crypto/inside-secure/safexcel.c
++++ b/drivers/crypto/inside-secure/safexcel.c
+@@ -937,7 +937,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+ 	int ret, irq;
+ 	struct device *dev;
+ 
+-	if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
++#if IS_ENABLED(CONFIG_PCI)
++	if (is_pci_dev) {
+ 		struct pci_dev *pci_pdev = pdev;
+ 
+ 		dev = &pci_pdev->dev;
+@@ -947,7 +948,10 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+ 				irqid, irq);
+ 			return irq;
+ 		}
+-	} else if (IS_ENABLED(CONFIG_OF)) {
++	} else
++#endif
++	{
++#if IS_ENABLED(CONFIG_OF)
+ 		struct platform_device *plf_pdev = pdev;
+ 		char irq_name[6] = {0}; /* "ringX\0" */
+ 
+@@ -960,6 +964,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+ 				irq_name, irq);
+ 			return irq;
+ 		}
++#endif
+ 	}
+ 
+ 	ret = devm_request_threaded_irq(dev, irq, handler,
+@@ -1137,7 +1142,8 @@ static int safexcel_probe_generic(void *pdev,
+ 
+ 	safexcel_configure(priv);
+ 
+-	if (IS_ENABLED(CONFIG_PCI) && priv->version == EIP197_DEVBRD) {
++#if IS_ENABLED(CONFIG_PCI)
++	if (priv->version == EIP197_DEVBRD) {
+ 		/*
+ 		 * Request MSI vectors for global + 1 per ring -
+ 		 * or just 1 for older dev images
+@@ -1153,6 +1159,7 @@ static int safexcel_probe_generic(void *pdev,
+ 			return ret;
+ 		}
+ 	}
++#endif
+ 
+ 	/* Register the ring IRQ handlers and configure the rings */
+ 	priv->ring = devm_kcalloc(dev, priv->config.rings,
+-- 
+2.7.4
+
+
