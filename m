@@ -2,99 +2,129 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C7DC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FCEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CA721670
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F0721670
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nbvNbHK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfIBObZ (ORCPT
+        id S1731583AbfIBOcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:31:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:47430 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfIBObZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:31:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 07:31:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="183321293"
-Received: from doblerbe-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.53.100])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Sep 2019 07:31:22 -0700
-Date:   Mon, 2 Sep 2019 17:31:21 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org
-Subject: [GIT PULL] tpmdd updates for Linux v5.4
-Message-ID: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+        Mon, 2 Sep 2019 10:32:08 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19936 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfIBOcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:32:08 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6d27e90000>; Mon, 02 Sep 2019 07:32:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 02 Sep 2019 07:32:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 02 Sep 2019 07:32:07 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Sep
+ 2019 14:32:05 +0000
+Subject: Re: [PATCH 1/1] merge_config.sh: ignore unwanted grep errors
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@collabora.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <4f92e9b3a88e60c8b5962504d77bc596442b0a40.1567023309.git.guillaume.tucker@collabora.com>
+ <b1dc3c40-b658-211e-811c-e13083303d48@collabora.com>
+ <a302a6fe-8f22-9ae6-559f-5b2ad13d5b05@nvidia.com>
+ <b4631303-37b8-2bc8-8e97-59f8b50ac60f@collabora.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <cb711681-40fb-80df-e471-565b542b5197@nvidia.com>
+Date:   Mon, 2 Sep 2019 15:32:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <b4631303-37b8-2bc8-8e97-59f8b50ac60f@collabora.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567434730; bh=KH9Jg3M4ifqInqwXdTh4WMqj4GdLJCQtwJZ2nFakiLk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nbvNbHK+H84R9pSM/bXkyEQBRQxobWUnJFhvMvAXgINOARFE/gMxTjb4IQD/ZoEyf
+         HGWWJoU7K5Du710yBn6r0fV5bNSXdfI56+vD5W/7l1yPSNNj8lKejf/mwYiv0KpxTG
+         v1IOdMQadAcjOzjnYeIVUOW3oZUvldjI56Xqc+wRx2gmMV/FQK/9aJHm/JjQMdnBf3
+         7Sn4B3o73RbEbvoC8P1gH12c1Q44eLh//U+KrsHjCiA8Vvx3kZlfCJsGt4l4tqUD7V
+         nb9MfDfxlsCP5SUhTWaGbMZMvyXT+opXMlkWfsT7fKUc8A9ViVWuO0oxcj1mLFW5zD
+         bP115hP+AsBWA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
 
-A new driver for fTPM living inside ARM TEE was added this round. In
-addition to that, there is three bug fixes and one clean up.
+On 02/09/2019 15:26, Guillaume Tucker wrote:
+> On 02/09/2019 15:21, Jon Hunter wrote:
+>>
+>> On 02/09/2019 15:14, Guillaume Tucker wrote:
+>>> + Jon Hunter who hit a similar issue
+>>
+>> Thanks for adding me.
+>>
+>>> On 28/08/2019 21:19, Guillaume Tucker wrote:
+>>>> The merge_config.sh script verifies that all the config options have
+>>>> their expected value in the resulting file and prints any issues as
+>>>> warnings.  These checks aren't intended to be treated as errors given
+>>>> the current implementation.  However, since "set -e" was added, if the
+>>>> grep command to look for a config option does not find it the script
+>>>> will then abort prematurely.
+>>>>
+>>>> Handle the case where the grep exit status is non-zero by setting
+>>>> ACTUAL_VAL to an empty string to restore previous functionality.
+>>>>
+>>>> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
+>>>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+>>>> ---
+>>>>  scripts/kconfig/merge_config.sh | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+>>>> index d924c51d28b7..d673268d414b 100755
+>>>> --- a/scripts/kconfig/merge_config.sh
+>>>> +++ b/scripts/kconfig/merge_config.sh
+>>>> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+>>>>  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
+>>>>  
+>>>>  	REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
+>>>> -	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
+>>>> +	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || echo)
+>>
+>> Shouldn't this just be 'true' instead of 'echo'?
+> 
+> I just explained why I used "echo" on your thread.  Essentially,
+> I think both can be used but "echo" made more sense to me because
+> the script is then using the output string from the command
+> rather than the exit status.
 
-/Jarkko
+Yes just saw that. However, I don't think that using 'echo' is
+necessary. The grep command does not output anything and so the variable
+will essentially be an empty string, we just need to ensure that no
+error is returned from the command. In cases such as these I always use
+'true' in conjunction with grep.
 
-The following changes since commit 8fb8e9e46261e0117cb3cffb6dd8bb7e08f8649b:
+Cheers
+Jon
 
-  Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-08-30 09:23:45 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190902
-
-for you to fetch changes up to e8bd417aab0c72bfb54465596b16085702ba0405:
-
-  tpm/tpm_ftpm_tee: Document fTPM TEE driver (2019-09-02 17:08:35 +0300)
-
-----------------------------------------------------------------
-tpmdd updates for Linux v5.4
-
-----------------------------------------------------------------
-Jarkko Sakkinen (1):
-      tpm: Remove a deprecated comments about implicit sysfs locking
-
-Lukas Bulwahn (1):
-      MAINTAINERS: fix style in KEYS-TRUSTED entry
-
-Sasha Levin (2):
-      tpm/tpm_ftpm_tee: A driver for firmware TPM running inside TEE
-      tpm/tpm_ftpm_tee: Document fTPM TEE driver
-
-Stefan Berger (2):
-      tpm_tis_core: Turn on the TPM before probing IRQ's
-      tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- Documentation/security/tpm/index.rst               |   1 +
- Documentation/security/tpm/tpm_ftpm_tee.rst        |  27 ++
- MAINTAINERS                                        |   2 +-
- drivers/char/tpm/Kconfig                           |   5 +
- drivers/char/tpm/Makefile                          |   1 +
- drivers/char/tpm/tpm-chip.c                        |   7 +-
- drivers/char/tpm/tpm-sysfs.c                       |   7 -
- drivers/char/tpm/tpm_ftpm_tee.c                    | 350 +++++++++++++++++++++
- drivers/char/tpm/tpm_ftpm_tee.h                    |  40 +++
- drivers/char/tpm/tpm_tis_core.c                    |   3 +
- 11 files changed, 432 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
- create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
- create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
+-- 
+nvpublic
