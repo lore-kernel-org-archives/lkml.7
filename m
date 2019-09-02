@@ -2,37 +2,38 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A11C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2A3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8ACE21883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD3921882
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730947AbfIBN5a (ORCPT
+        id S1731052AbfIBN5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:57:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:52288 "EHLO mga11.intel.com"
+        Mon, 2 Sep 2019 09:57:34 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40636 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730136AbfIBN5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730919AbfIBN5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Sep 2019 09:57:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:57:29 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:57:29 -0700
 X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="183314992"
+   d="scan'208";a="266027120"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:57:27 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:57:27 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 9E27A20B48;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id A10BF20B86;
         Mon,  2 Sep 2019 16:57:25 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i4mpo-00067D-GN; Mon, 02 Sep 2019 16:57:32 +0300
+        id 1i4mpo-00067I-Ix; Mon, 02 Sep 2019 16:57:32 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
@@ -40,10 +41,12 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v5 00/11] Device property improvements, add %pfw format specifier
-Date:   Mon,  2 Sep 2019 16:57:21 +0300
-Message-Id: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 02/11] software node: Make argument to to_software_node const
+Date:   Mon,  2 Sep 2019 16:57:23 +0300
+Message-Id: <20190902135732.23455-3-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,102 +54,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+to_software_node() does not need to modify the fwnode_handle it operates
+on; therefore make it const. This allows passing a const fwnode_handle to
+to_software_node().
 
-This set adds functionality into the device property API (counting a
-node's parents as well as obtaining its name) in order to support printing
-fwnode names using a new conversion specifier "%pfw". The names that are
-produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-two supported modifiers ("f" and "P").
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/swnode.c    | 4 ++--
+ include/linux/property.h | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Printing a node's name is something that's been available on OF for a long
-time and if something is converted to device property API (such as the
-V4L2 fwnode framework) it always got removed of a nice feature that was
-sometimes essential in debugging. With this set, that no longer is the
-case.
-
-since v4:
-
-- Improved documentation for fwnode_get_nth_parent().
-
-- Removed comma from the guardian entry in fwnode_pointer() testcase.
-
-since v3:
-
-- Remove underscores in argument name of fwnode_count_parents().
-
-- Re-introduce "%pO?" error string.
-
-- Unwrap a call to string() in fwnode_string().
-
-- Removed a useless Depends-on: on a patch that was merged long ago.
-
-- Unwrap a Fixes: line.
-
-- Added a patch to move fwnode_get_parent() up to make the review of the
-  following patch easier.
-
-since v2:
-
-- Better comments in acpi_fwnode_get_name_prefix().
-
-- Added swnode implementation.
-
-- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
-  parent swnode in get_parent op")
-
-- Make argument to to_software_node() const (a new patch)
-
-- Factored out confusingly named kobject_string() that had a single
-  caller.
-
-- Cleaner fwnode_count_parents() implementation (as discussed in review).
-
-- Made fwnode_count_parents() argument const.
-
-- Added tests (last patch in the set).
-
-since v1:
-
-- Add patch to remove support for %pf and %pF (depends on another patch
-  removing all use of %pf and %pF) (now 4th patch)
-
-- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-
-- Align kerneldoc style with the rest of drivers/base/property.c (no extra
-  newline after function name)
-
-- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-
-- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
-  by "w")
-
-Sakari Ailus (11):
-  software node: Get reference to parent swnode in get_parent op
-  software node: Make argument to to_software_node const
-  device property: Move fwnode_get_parent() up
-  device property: Add functions for accessing node's parents
-  device property: Add fwnode_get_name for returning the name of a node
-  device property: Add a function to obtain a node's prefix
-  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-  lib/vsprintf: Make use of fwnode API to obtain node names and
-    separators
-  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-  lib/test_printf: Add tests for %pfw printk modifier
-
- Documentation/core-api/printk-formats.rst | 34 ++++++---
- drivers/acpi/property.c                   | 48 +++++++++++++
- drivers/base/property.c                   | 83 +++++++++++++++++++--
- drivers/base/swnode.c                     | 55 +++++++++++++-
- drivers/of/property.c                     | 16 +++++
- include/linux/fwnode.h                    |  4 ++
- include/linux/property.h                  |  8 ++-
- lib/test_printf.c                         | 37 ++++++++++
- lib/vsprintf.c                            | 88 ++++++++++++++---------
- scripts/checkpatch.pl                     |  4 +-
- 10 files changed, 319 insertions(+), 58 deletions(-)
-
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index a7cb41812cfda..951e7efd47c23 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
+ 	return swnode;
+ }
+ 
+-const struct software_node *to_software_node(struct fwnode_handle *fwnode)
++const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
+ {
+-	struct swnode *swnode = to_swnode(fwnode);
++	const struct swnode *swnode = to_swnode(fwnode);
+ 
+ 	return swnode ? swnode->node : NULL;
+ }
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 5a910ad795910..421c76e53708d 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -418,7 +418,8 @@ struct software_node {
+ };
+ 
+ bool is_software_node(const struct fwnode_handle *fwnode);
+-const struct software_node *to_software_node(struct fwnode_handle *fwnode);
++const struct software_node *
++to_software_node(const struct fwnode_handle *fwnode);
+ struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+ 
+ int software_node_register_nodes(const struct software_node *nodes);
 -- 
 2.20.1
 
