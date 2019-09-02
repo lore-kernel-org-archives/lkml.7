@@ -2,109 +2,128 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93538C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AC6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662DA2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567404600;
-	bh=A7Zmfk+4gzP+U9J4aAkExL3X+eu5y33xAx9wJWo7fsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XzfydMPwFqNQRpAptGtqMP6bv6WfjJ4g5X1tszujSkNcMPnk2xiLrbgwtLrFsrYEZ
-	 b3MlBF/F7RpXR1nNgvcdnMac62uT/OT+1qQt+tRnAgT0GQpPFr3+PuG2b273CUMJdi
-	 oCNpcJ5/Gy+E6QLjQUX9rqk3YzpP+0ptHrEOYfnk=
+	by mail.kernel.org (Postfix) with ESMTP id C905F22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:15:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K3syjr2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfIBGJ7 (ORCPT
+        id S1729502AbfIBGPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 02:09:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725839AbfIBGJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 02:09:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CDD63B04F;
-        Mon,  2 Sep 2019 06:09:57 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 08:09:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     =?utf-8?B?67CV7IOB7Jqw?= <sangwoo2.park@lge.com>
-Cc:     hannes@cmpxchg.org, arunks@codeaurora.org, guro@fb.com,
-        richard.weiyang@gmail.com, glider@google.com, jannh@google.com,
-        dan.j.williams@intel.com, akpm@linux-foundation.org,
-        alexander.h.duyck@linux.intel.com, rppt@linux.vnet.ibm.com,
-        gregkh@linuxfoundation.org, janne.huttunen@nokia.com,
-        pasha.tatashin@soleen.com, vbabka@suse.cz, osalvador@suse.de,
-        mgorman@techsingularity.net, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] mm: Add nr_free_highatomimic to fix incorrect
- watermatk routine
-Message-ID: <20190902060955.GB14028@dhcp22.suse.cz>
-References: <1567157153-22024-1-git-send-email-sangwoo2.park@lge.com>
- <20190830110907.GC28313@dhcp22.suse.cz>
- <OF7501D4D5.8C005EEB-ON49258469.00192B40-49258469.00192B40@lge.com>
+        Mon, 2 Sep 2019 02:15:01 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:22448 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729415AbfIBGPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 02:15:01 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8264pmb026548;
+        Sun, 1 Sep 2019 23:14:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0818; bh=G+tb34DLVI/GaywJTNbYC1jeXErBz+Ms/6koVGt7RTU=;
+ b=K3syjr2bCax7AufTwpWHSbhbUxU5VYIwQEGesdU+fjDriqoSzEFdkr2JUq977PDcmeX7
+ uuc14vje7aiqve851BL7WogZtLYTz0XWArF5xGzBtOTHm80fceTgWCY1i7TJDxdLR7b6
+ aQY2phvHAnpFQvujyc1ht8rSzxumpnnrgGexiwo+0sAxrDgW+277R4zSow83oGnV1nPm
+ n5ZqLh6CVeEy1Z2ukXY74mOeELiVxKdof9BJYbxbnBJJCtbuNk4cHveoXOVAI/8v+L69
+ 5KyB0KUP69rHZi7jXrl8CNGPgOIVe4M9ILgvYaNvF6rzGe4VoN50GIuCpyvOKgDZ7C2b 6g== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2uqrdm52ma-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 01 Sep 2019 23:14:30 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Sun, 1 Sep
+ 2019 23:14:27 -0700
+Received: from maili.marvell.com (10.93.176.43) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Sun, 1 Sep 2019 23:14:27 -0700
+Received: from jerin-lab.marvell.com (jerin-lab.marvell.com [10.28.34.14])
+        by maili.marvell.com (Postfix) with ESMTP id BA3533F703F;
+        Sun,  1 Sep 2019 23:14:23 -0700 (PDT)
+From:   <jerinj@marvell.com>
+To:     <netdev@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Martin KaFai Lau" <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF JIT for ARM64" <bpf@vger.kernel.org>,
+        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     Jerin Jacob <jerinj@marvell.com>
+Subject: [PATCH bpf-next] arm64: bpf: optimize modulo operation
+Date:   Mon, 2 Sep 2019 11:44:48 +0530
+Message-ID: <20190902061448.28252-1-jerinj@marvell.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <OF7501D4D5.8C005EEB-ON49258469.00192B40-49258469.00192B40@lge.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-02_02:2019-08-29,2019-09-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 02-09-19 13:34:54, 박상우 wrote:
-> >On Fri 30-08-19 18:25:53, Sangwoo wrote:
-> >> The highatomic migrate block can be increased to 1% of Total memory.
-> >> And, this is for only highorder ( > 0 order). So, this block size is
-> >> excepted during check watermark if allocation type isn't alloc_harder.
-> >>
-> >> It has problem. The usage of highatomic is already calculated at
-> NR_FREE_PAGES.
-> >> So, if we except total block size of highatomic, it's twice minus size of
-> allocated
-> >> highatomic.
-> >> It's cause allocation fail although free pages enough.
-> >>
-> >> We checked this by random test on my target(8GB RAM).
-> >>
-> >>  Binder:6218_2: page allocation failure: order:0, mode:0x14200ca
-> (GFP_HIGHUSER_MOVABLE), nodemask=(null)
-> >>  Binder:6218_2 cpuset=background mems_allowed=0
-> >
-> >How come this order-0 sleepable allocation fails? The upstream kernel
-> >doesn't fail those allocations unless the process context is killed by
-> >the oom killer.
-> 
-> Most calltacks are zsmalloc, as shown below.
+From: Jerin Jacob <jerinj@marvell.com>
 
-What makes those allocations special so that they fail unlike any other
-normal order-0 requests? Also do you see the same problem with the
-current upstream kernel? Is it possible this is an Android specific
-issue?
+Optimize modulo operation instruction generation by
+using single MSUB instruction vs MUL followed by SUB
+instruction scheme.
 
->  Call trace:
->   dump_backtrace+0x0/0x1f0
->   show_stack+0x18/0x20
->   dump_stack+0xc4/0x100
->   warn_alloc+0x100/0x198
->   __alloc_pages_nodemask+0x116c/0x1188
->   do_swap_page+0x10c/0x6f0
->   handle_pte_fault+0x12c/0xfe0
->   handle_mm_fault+0x1d0/0x328
->   do_page_fault+0x2a0/0x3e0
->   do_translation_fault+0x44/0xa8
->   do_mem_abort+0x4c/0xd0
->   el1_da+0x24/0x84
->   __arch_copy_to_user+0x5c/0x220
->   binder_ioctl+0x20c/0x740
->   compat_SyS_ioctl+0x128/0x248
->   __sys_trace_return+0x0/0x4
+Signed-off-by: Jerin Jacob <jerinj@marvell.com>
+---
+ arch/arm64/net/bpf_jit.h      | 3 +++
+ arch/arm64/net/bpf_jit_comp.c | 6 ++----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/net/bpf_jit.h b/arch/arm64/net/bpf_jit.h
+index cb7ab50b7657..eb73f9f72c46 100644
+--- a/arch/arm64/net/bpf_jit.h
++++ b/arch/arm64/net/bpf_jit.h
+@@ -171,6 +171,9 @@
+ /* Rd = Ra + Rn * Rm */
+ #define A64_MADD(sf, Rd, Ra, Rn, Rm) aarch64_insn_gen_data3(Rd, Ra, Rn, Rm, \
+ 	A64_VARIANT(sf), AARCH64_INSN_DATA3_MADD)
++/* Rd = Ra - Rn * Rm */
++#define A64_MSUB(sf, Rd, Ra, Rn, Rm) aarch64_insn_gen_data3(Rd, Ra, Rn, Rm, \
++	A64_VARIANT(sf), AARCH64_INSN_DATA3_MSUB)
+ /* Rd = Rn * Rm */
+ #define A64_MUL(sf, Rd, Rn, Rm) A64_MADD(sf, Rd, A64_ZR, Rn, Rm)
+ 
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index f5b437f8a22b..cdc79de0c794 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -409,8 +409,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
+ 			break;
+ 		case BPF_MOD:
+ 			emit(A64_UDIV(is64, tmp, dst, src), ctx);
+-			emit(A64_MUL(is64, tmp, tmp, src), ctx);
+-			emit(A64_SUB(is64, dst, dst, tmp), ctx);
++			emit(A64_MSUB(is64, dst, dst, tmp, src), ctx);
+ 			break;
+ 		}
+ 		break;
+@@ -516,8 +515,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
+ 	case BPF_ALU64 | BPF_MOD | BPF_K:
+ 		emit_a64_mov_i(is64, tmp2, imm, ctx);
+ 		emit(A64_UDIV(is64, tmp, dst, tmp2), ctx);
+-		emit(A64_MUL(is64, tmp, tmp, tmp2), ctx);
+-		emit(A64_SUB(is64, dst, dst, tmp), ctx);
++		emit(A64_MSUB(is64, dst, dst, tmp, tmp2), ctx);
+ 		break;
+ 	case BPF_ALU | BPF_LSH | BPF_K:
+ 	case BPF_ALU64 | BPF_LSH | BPF_K:
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
