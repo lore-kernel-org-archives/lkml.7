@@ -2,142 +2,113 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453F5C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18625C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF4921874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE97F21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="EU0ACbEH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uDQx1bIc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYu84DUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbfIBIeY (ORCPT
+        id S1730339AbfIBIe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:34:24 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:53545 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729722AbfIBIeX (ORCPT
+        Mon, 2 Sep 2019 04:34:56 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34477 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729602AbfIBIez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:34:23 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7C8FA21E97;
-        Mon,  2 Sep 2019 04:34:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 02 Sep 2019 04:34:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=hMX0v7CVKYm4kqWEV/5zzQLKbi7
-        6ItOnSoow9qKgaMA=; b=EU0ACbEHdb4vy1KVDI47ff3Q+7n+IuOrLXYx7hpNr99
-        k65FClt1YVal3bcGmWXNjX+nqF5YsuQRpbxxp/QMkCHR4Pz9t6hAq8Ck7V9qTXBK
-        PgGcM8X0B2+DLOahZHq+7kCKZ4LwbBpOw6IY3xGd39mb511RqlvgdhZVxDh1KDRV
-        y/yp1Tf0FDqexJ8klWnz2EhFj4Di1mbZz9M6WHShHhYt4XWMI4Nctya9Bzd25h22
-        78DeUl4iY02kEQJ08oaDO7VAAuxhxKrDAJANm8igF9/a2e4qsGtQAmY3nXRgxfQK
-        zy45DqsY3lEHgRo47Mb91XxgNolD9ZI7E7/K1yIkAhw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=hMX0v7
-        CVKYm4kqWEV/5zzQLKbi76ItOnSoow9qKgaMA=; b=uDQx1bIc9jLTQVHqo9w/iI
-        AZwn/Yu9Q+mIGCynEzM3cyre5Ax7AXkQ5rNI3YMOu1s63ZrMecGWNoW81UJ6Uny0
-        4KCLRWapBo5hD5V4zaBdTO0ZzR41pu4ObgLJAz0RJ3+krwl6AFFwuF4h3XMXASfS
-        SLEbJW7uF9SdSqRg2QGrA3ZZOsx2EZ3eeNJgavjZ+bu+VcfcIZMTd56Qg3Wj3n7g
-        ntNFG7woqPqRDOU2m9zMPeDnCXssFy0Pcb4XBw8iNEsFcluocbhkMfc1bgwu9FqH
-        VSMhLoCOIJnJtSDtBjTdAWtu7mRHhMOxuF/eCwCxikIZXM6fq2nmfOmmaxVk0wKg
-        ==
-X-ME-Sender: <xms:DdRsXdxEDnRDkeGVpEmsKuwtPRPDTlMSKHmyzwGj-W87BfP0eFjrRA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejtddgtdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepvfgrkhgr
-    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
-    hjpheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudegrdefrdejhedr
-    udekudenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmh
-    hotggthhhirdhjphenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:DdRsXZnma0Cuao4jLQWnXvqn4nJNAA7ZadOPmowzV9vCYaVSdITycA>
-    <xmx:DdRsXaGuKbFSXbqWEsh9k_hXTpNCgiiis6JUAnsPiFmIOYrys-Bepw>
-    <xmx:DdRsXRWgo1RK_IWUlqa5jZ0zs5MnA6xZNkzjKKL5_Thaou9DVF2cyg>
-    <xmx:DtRsXcB7l1PPWjV1Rsx97xSXelYPDucE5U2q0MU2L6Py1kFBT4esjg>
-Received: from workstation (ae075181.dynamic.ppp.asahi-net.or.jp [14.3.75.181])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E8F408005B;
-        Mon,  2 Sep 2019 04:34:19 -0400 (EDT)
-Date:   Mon, 2 Sep 2019 17:34:17 +0900
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     clemens@ladisch.de, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: update entry of firewire audio drivers
-Message-ID: <20190902083416.GA14883@workstation>
-Mail-Followup-To: Takashi Iwai <tiwai@suse.de>, clemens@ladisch.de,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190830132446.5154-1-o-takashi@sakamocchi.jp>
- <s5h4l1xl5im.wl-tiwai@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5h4l1xl5im.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Sep 2019 04:34:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so7145227pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uFmY0zGFn+EQnA57VOg3VeO9qiRTqjJoOe1gdV98IwA=;
+        b=cYu84DUjPTKSgEfeLZtea5ZEO+oEaJLALl1KB7muOH5m/fFs57yP+LCBWA6ArhPio2
+         WkWh2wrJ47bV5YbLwT4iwCqb0Ai/rODNnzr2DLp/L4oyyVLmYnl8diGTiWZcLmPts4RT
+         Fvycb5VDcIqhCDQUwOkf5B/KrPFRGEDMpFQ0ye36mXAuIE2ktSav4aoIKXNO5UKgjCs9
+         XeRU/NPTPSKO6SIsAXPP6l9CAopbF2aMh6wQABGv4Bll8xPxRW8O0MHHWhR31XaYpl8N
+         rSDNcLd/VdJKmITmEkdXcJB0iI2uADXabuFqj6oUAtUumdu4JVui5i97iRe4w4fSGhL9
+         VORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uFmY0zGFn+EQnA57VOg3VeO9qiRTqjJoOe1gdV98IwA=;
+        b=Wb1oMuwOUaojbCGhCkokGzPqaDtdrE/wHiwtR4O0IB6wrnz/CyvwTjt8ua48dyE2+V
+         DE+BJFGtNmTaHzaB/F9RhHpEXHuyjvlie++f81x6tcD5nt+LtEPBzIpQtNFEphzUPy4y
+         HadX+Y/Ws0zoukU7UcaIVwNBa4Dgv5B0s6/7VuXDfmKqCVIzFTZhMX4d1jbK2MIbaPGB
+         SNmT8XYWVJkALdL3QVwsV8mpBgmA1vb6XFaEKxlxD5GOAeGZk7WxnjxsCDnTfL1Y9n0m
+         Xpp5CxlnBEHolGlRLx5dRfRiudUG5v/qXwqRINNPa7GhhcwqpdzOJ+6RWsskYzuhR69+
+         TSbA==
+X-Gm-Message-State: APjAAAU5kh67rT4WpYGjEaYYT7JR5PvK4DBPM2Hr6GLrlf5m3rw0BDz0
+        dQ5xKmsa6m4UAuKa5s78ENw=
+X-Google-Smtp-Source: APXvYqykyTr1V1UXoAhEng9PvF5ygE64bFW8pzDF90EN8gbWoiWOHtdCIKRzyJWgs9NYY7KHzCPF3A==
+X-Received: by 2002:a63:184b:: with SMTP id 11mr25468636pgy.112.1567413294974;
+        Mon, 02 Sep 2019 01:34:54 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([49.207.50.39])
+        by smtp.gmail.com with ESMTPSA id g9sm6977813pjl.0.2019.09.02.01.34.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Sep 2019 01:34:53 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org
+Cc:     xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, sabyasachi.linux@gmail.com,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH v2] swiotlb-xen: Convert to use macro
+Date:   Mon,  2 Sep 2019 14:09:58 +0530
+Message-Id: <1567413598-4477-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 05:27:13PM +0200, Takashi Iwai wrote:
-> On Fri, 30 Aug 2019 15:24:46 +0200,
-> Takashi Sakamoto wrote:
-> > 
-> > This commit adds myself as one of maintainers for firewire audio
-> > drivers and IEC 61883-1/6 packet streaming engine. I call them ALSA
-> > firewire stack as a whole.
-> > 
-> > 6 years ago I joined in development for this category of drivers with
-> > heavy reverse-engineering tasks and over 100 models are now available
-> > from ALSA applications. IEEE 1394 bus itself and units on the bus are
-> > enough legacy but the development still continues.
-> > 
-> > I have a plan to add drastic enhancement in kernel v5.5 and v5.6 period.
-> > This commit adds myself into MAINTAINERS so that developers and users
-> > can easily find active developer to post their issues, especially for
-> > regression.
-> > 
-> > Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> 
-> Applied now (with a typo correction -- a superfluous '+' was added).
-> Thanks.
-> 
-> 
-> Takashi
+Rather than using static int max_dma_bits, this
+can be coverted to use as macro.
+
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+---
+ drivers/xen/swiotlb-xen.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index ae1df49..d1eced5 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -38,6 +38,7 @@
+ #include <asm/xen/page-coherent.h>
  
-Oops, thanks for your care to my typo...
+ #include <trace/events/swiotlb.h>
++#define MAX_DMA_BITS 32
+ /*
+  * Used to do a quick range check in swiotlb_tbl_unmap_single and
+  * swiotlb_tbl_sync_single_*, to see if the memory was in fact allocated by this
+@@ -114,8 +115,6 @@ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
+ 	return 0;
+ }
+ 
+-static int max_dma_bits = 32;
+-
+ static int
+ xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs)
+ {
+@@ -135,7 +134,7 @@ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
+ 				p + (i << IO_TLB_SHIFT),
+ 				get_order(slabs << IO_TLB_SHIFT),
+ 				dma_bits, &dma_handle);
+-		} while (rc && dma_bits++ < max_dma_bits);
++		} while (rc && dma_bits++ < MAX_DMA_BITS);
+ 		if (rc)
+ 			return rc;
+ 
+-- 
+1.9.1
 
-> > ---
-> >  MAINTAINERS | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 24e29b2e53c9..8929a2ec75f7 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -6264,8 +6264,9 @@ S:	Maintained
-> >  F:	drivers/hwmon/f75375s.c
-> >  F:	include/linux/f75375s.h
-> >  
-> > -FIREWIRE AUDIO DRIVERS
-> > +FIREWIRE AUDIO DRIVERS and IEC 61883-1/6 PACKET STREAMING ENGINE
-> >  M:	Clemens Ladisch <clemens@ladisch.de>
-> > ++M:	Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> >  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-> >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
-> >  S:	Maintained
-> > -- 
-> > 2.20.1
-> > 
-
-
-Regards
-
-Takashi Sakamoto
