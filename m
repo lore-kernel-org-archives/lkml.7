@@ -2,78 +2,140 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_ADSP_ALL,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AD2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABF2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F3F21883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250892339D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567450673;
+	bh=b9q+F0oWgfqJemt7YPpgOVkZgFWsUthBT+dsjYcADps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TFJZU8kLDaqDWGUVOHFp+mYjOQOxaL8tIdagmwbxNcE6lIFY1atDpEVVKO4WIIUZO
+	 XC3IvZtn394ODjdjF82FS5o/kjvkkdb9BtjoZSL83ImHuc13WcSjd49jVyXRz6un2C
+	 nTDqLRzm5WE4DIRMAg3m82sS/N87b28XeBt58EY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfIBSxK (ORCPT
+        id S1726974AbfIBS5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:53:10 -0400
-Received: from valentin-vidic.from.hr ([94.229.67.141]:45073 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfIBSxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:53:10 -0400
-X-Greylist: delayed 575 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Sep 2019 14:53:09 EDT
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id 9533E3A32A; Mon,  2 Sep 2019 20:43:27 +0200 (CEST)
-From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Subject: [PATCH] staging: exfat: use BIT macro for defining sizes
-Date:   Mon,  2 Sep 2019 20:43:19 +0200
-Message-Id: <20190902184319.11971-1-vvidic@valentin-vidic.from.hr>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Sep 2019 14:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbfIBS5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:57:51 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01CC21883;
+        Mon,  2 Sep 2019 18:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567450670;
+        bh=b9q+F0oWgfqJemt7YPpgOVkZgFWsUthBT+dsjYcADps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ucpxDPnqMNLEOYNQMdQBWre8nDFaw9ck65PeaIpDMfwUfFUwrMihvqEmmMYa/BVXl
+         5Rdh7dHeDnogDtM0cLGYdirddDYjHO5mLHnX5h6LtyNcLgi0I9Jy24FPrOhAa4gusP
+         0woltmtq1NHGubwcHsx2KafCSlPBVJyWvLGv8hxE=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 8B3A03C0B7F; Mon,  2 Sep 2019 20:57:47 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 20:57:47 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+Cc:     od@zcrc.me, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] power/supply: ingenic-battery: Don't change scale if
+ there's only one
+Message-ID: <20190902185747.mt3jku4gfosfu4wz@earth.universe>
+References: <20190723024554.9248-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="edm47sjsxpx3tepz"
+Content-Disposition: inline
+In-Reply-To: <20190723024554.9248-1-paul@crapouillou.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes checkpatch.pl warning:
 
-  CHECK: Prefer using the BIT macro
+--edm47sjsxpx3tepz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
----
- drivers/staging/exfat/exfat.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index bae180e10609..f71d4e8c0c8e 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -163,8 +163,8 @@
- #define HIGH_INDEX_BIT	(8)
- #define HIGH_INDEX_MASK	(0xFF00)
- #define LOW_INDEX_BIT	(16-HIGH_INDEX_BIT)
--#define UTBL_ROW_COUNT	(1<<LOW_INDEX_BIT)
--#define UTBL_COL_COUNT	(1<<HIGH_INDEX_BIT)
-+#define UTBL_ROW_COUNT	BIT(LOW_INDEX_BIT)
-+#define UTBL_COL_COUNT	BIT(HIGH_INDEX_BIT)
- 
- static inline u16 get_col_index(u16 i)
- {
-@@ -690,7 +690,7 @@ struct exfat_mount_options {
- };
- 
- #define EXFAT_HASH_BITS		8
--#define EXFAT_HASH_SIZE		(1UL << EXFAT_HASH_BITS)
-+#define EXFAT_HASH_SIZE		BIT(EXFAT_HASH_BITS)
- 
- /*
-  * EXFAT file system in-core superblock data
--- 
-2.20.1
+On Mon, Jul 22, 2019 at 10:45:54PM -0400, Paul Cercueil wrote:
+> The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
+> range, or in low-precision mode with a 7.5V range. The code in place in
+> this driver will select the proper scale according to the maximum
+> voltage of the battery.
+>=20
+> The JZ4770 however only has one mode, with a 6.6V range. If only one
+> scale is available, there's no need to change it (and nothing to change
+> it to), and trying to do so will fail with -EINVAL.
+>=20
+> Fixes commit fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery
+> driver.")
 
+There is a standard format for this. It should be
+
+Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
+
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Cc: stable@vger.kernel.org
+
+Also it would be nice to have an Acked-by from Artur.
+
+-- Sebastian
+
+>  drivers/power/supply/ingenic-battery.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/suppl=
+y/ingenic-battery.c
+> index 35816d4b3012..5a53057b4f64 100644
+> --- a/drivers/power/supply/ingenic-battery.c
+> +++ b/drivers/power/supply/ingenic-battery.c
+> @@ -80,6 +80,10 @@ static int ingenic_battery_set_scale(struct ingenic_ba=
+ttery *bat)
+>  	if (ret !=3D IIO_AVAIL_LIST || scale_type !=3D IIO_VAL_FRACTIONAL_LOG2)
+>  		return -EINVAL;
+> =20
+> +	/* Only one (fractional) entry - nothing to change */
+> +	if (scale_len =3D=3D 2)
+> +		return 0;
+> +
+>  	max_mV =3D bat->info.voltage_max_design_uv / 1000;
+> =20
+>  	for (i =3D 0; i < scale_len; i +=3D 2) {
+> --=20
+> 2.21.0.593.g511ec345e18
+>=20
+
+--edm47sjsxpx3tepz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tZigACgkQ2O7X88g7
++pqIeA//bbrrfgxWrAbtsrO9ZahirCLvKBApSmv0pQQ7flaauiQiUxUNcDDnEVU/
+aAty+Pta0ZUOsFm9xfGWLYB1qU0jyRvv2mBaCZRpr3W/K2fs8dLJSPXbVcgOYElz
+0FdU5p72ksy2gr0vhPO++SccNNJYxVvCTs7ihiEpp2w6MVkcLLKfPPn8JsmteoJA
+ZtsbYcRJr3I8z2VMhe0oT2xbAq9h9N/VCdZqccEDgIh3pvReEVXNyfgvZ+3BdZ3T
+89eDpFST/XY9PZyWtlfBi18GEzd9Y9VQPgJro95/n1JoxmLOCyd0Bmh3Nc1Wykhv
+E1aEgvI3tjiufbpaY8Oy2SoXEKG8nR77hCMw8wEswnpcqvaFPNNExEj3HtEWGaJC
+Atyw/dppgRneeOgLXfxaIKqGHjyOTIZ/Q3Wm7CqHmQFAOHTcnQ48NRG0JjXzrxqO
+0ykLvhHfpQ64xYAfzY5CdKCKplHQs7dt8ql2+y+GCg6rOYpRl6pgcSCaaEqV1u2a
+L+Iu58ykLla3OXfniDl7ZywkhA+ssWjUUmjf0uf1ZC3EgiPA8bEaIZ+6AqaYpCES
+QdXX6VJEaoh9RbdbADMXp+5dk/3xXSTffFxncwUZoT2Jy37Pb0Kim8lB10v4TASo
+3GLpSDnixlny9WEapyG9oMC76dh1sZtQ6Bf/Ca5TgXAh+HwkBQI=
+=ANOV
+-----END PGP SIGNATURE-----
+
+--edm47sjsxpx3tepz--
