@@ -2,126 +2,184 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED058C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B21C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE25217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3E621881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:01:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ajaCCb0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbfIBJ6P (ORCPT
+        id S1730695AbfIBKBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:58:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:51350 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730538AbfIBJ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:58:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B025428;
-        Mon,  2 Sep 2019 02:58:13 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 776463F246;
-        Mon,  2 Sep 2019 02:58:11 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:58:06 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     bhelgaas@google.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, andrew.murray@arm.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
-        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
-        hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] Amazon's Annapurna Labs DT-based PCIe host
- controller driver
-Message-ID: <20190902095806.GA14841@e121166-lin.cambridge.arm.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
+        Mon, 2 Sep 2019 06:01:08 -0400
+Received: from mail-eopbgr1400107.outbound.protection.outlook.com ([40.107.140.107]:36928
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729690AbfIBKBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:01:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=es6TV4oT86Gtl8j/Fmg5F6jQEN6XUmTsCJ+xgGDYn/4gO3bE0qamorG7HE+3C2yAcLihwUvC87poQs3IJHaFPSfnfJmapsbDAw+APTEZ/Ie+VD8gOzrmtnCK5ciPLKFgQ9YWSV5DQEvu4y7OrD+l0L35UTJLY5tXcW3chvPump7T8UQy3LaCRhWwZx8eZHRzBvy15hk++ab4GaVImA8bZA9e24wrs0TewrGkD005bfyXgWTDjay2OyLPurDeJ+BdiI4aeVcYZZNWHLaLIWo/xpfRJfELgtiyxdoPo8HXp2KaHbeFEJcleqVky8Z7zCDpr0bAX+fI4D0PyZjS/fK0Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Iam/u8neA1QK/hQi10l6PmBSmzZ3CW4Q7I9tAe6wFwc=;
+ b=T1a0+tdf2Ij2/Cs841tuUEzhf6JzRZVSNU/mqZn3q1Q8yQj+kAj+x/Yj5HaM99Rd1fKIyZPkCAb9SZGzBsQrsQ1TlXan0TboE5xXAitAwtjBrnYTR0Ek48O1PhBEuGcm11KnJzqJ9GwkMpJlOWxCrRAjSenDZZVaujE/V0s6N5H/E3VGgwLN+m8YtukB3FkHOIm9VMeNevFlgp7PFzy1a9m0sAH402ngcFg9zv8k0EoxKoBRjRIcH7L6hfZy+H7pz0gEdPj6JZOm8jo//crCLDQNxnBCEROXa71E3qvkYNR0eGQ2qIXXj51bLBVUxWOBFekIT9hA0cp88ViIlbYmkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Iam/u8neA1QK/hQi10l6PmBSmzZ3CW4Q7I9tAe6wFwc=;
+ b=ajaCCb0bWNFhAR8EfqtVSA6JKem3+p6UXBozMo7pM46airEK13HqZwZ8N1J+nE+5j2xCK5tYFovEVg6LJeEP2HDwIiBeuDfDy3s5JpBtSB650D/M4OUjrnh929DK6tmd78fMEsyPwcsge9+B6g9JwJu//hnVXrLPto+tKr5YFes=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1594.jpnprd01.prod.outlook.com (52.133.161.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Mon, 2 Sep 2019 10:01:01 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::4409:a3fc:419e:8efd]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::4409:a3fc:419e:8efd%5]) with mapi id 15.20.2220.022; Mon, 2 Sep 2019
+ 10:01:01 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>,
+        "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
+Subject: RE: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
+Thread-Topic: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
+Thread-Index: AQHVXc+RlrcIOAtYlU6wFCg32X69c6cSQLOAgAXt1BA=
+Date:   Mon, 2 Sep 2019 10:01:01 +0000
+Message-ID: <TY1PR01MB17700DA7BEC8DA3AA32BEA53C0BE0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_Jsq+5FMHK4W4UQU24g+rm3CLjnhRcB29skygRB++GaJyM0A@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+5FMHK4W4UQU24g+rm3CLjnhRcB29skygRB++GaJyM0A@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f948ce04-1668-4099-add8-08d72f8c7608
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1594;
+x-ms-traffictypediagnostic: TY1PR01MB1594:|TY1PR01MB1594:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB1594504F63D6E4DD4235AC0BC0BE0@TY1PR01MB1594.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(346002)(376002)(396003)(39860400002)(136003)(366004)(199004)(189003)(446003)(7696005)(8676002)(186003)(110136005)(81166006)(81156014)(9686003)(66066001)(53546011)(6506007)(74316002)(71200400001)(71190400001)(26005)(54906003)(33656002)(8936002)(256004)(478600001)(86362001)(6246003)(14444005)(7416002)(66556008)(66476007)(486006)(5660300002)(64756008)(66446008)(11346002)(966005)(316002)(44832011)(476003)(2906002)(76116006)(102836004)(7736002)(76176011)(6436002)(305945005)(14454004)(55016002)(6116002)(3846002)(99286004)(52536014)(229853002)(53936002)(6306002)(4326008)(66946007)(25786009)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1594;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:3;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +dj83F7+2yVDqTvF/tZqYG7S4/p6FCgeoakzqIAsQKrMajtUe18Uzj6xIfR2U34i0pt1plff4MJ4kqdDaPwMvKyrXXUZ+DIFu4wPKde1No61rBW7+Jxs0SKTSA3EcLf1tEyVtTCDbOm3oEEHjygyKU6Sp1H+C7veEbeFVbrTpBMTa0IAwcKwLzLom7iETR8e06Dosmn8yaa9Agl0YZxqwFIrlHSzj2f8lZ3K9rp97JHI21e8HynDVKi9uLQkVBPX/RPC1b0bgVSOHiuWJ0TRLhEpsOlpMX9nbo1O2qrd1JLBVOVpJ8EZSrysL5CXZH9IBKzrzA6BUJrKWk465QxYZnkG2kLKeCy40LCrr5eOIS7teduMBCmo281tGFhnt+98scdlMr3wBZ5Cu8em3oB/tBlGMiMwfVbiLzB1mUILh7I=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f948ce04-1668-4099-add8-08d72f8c7608
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:01:01.2285
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rne7QRVDvKgRW6nvvL+LXs+C8wxghq8yHG1n2Ozjz6gJbz3Q9zbMt2WyiJ14e9tPPCRraG7Kueh8eRXPQ26QXmUCUFBKoS1AIQ+SuIoAm6c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1594
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:35:40PM +0300, Jonathan Chocron wrote:
-> This series adds support for Amazon's Annapurna Labs DT-based PCIe host
-> controller driver.
-> Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
-> 
-> Changes since v3:
-> - Removed PATCH 8/8 since the usage of the PCI flags will be discussed
->   in the upcoming LPC
-> - Align commit subject with the folder convention
-> - Added explanation regarding ECAM "overload" mechanism
-> - Switched to read/write{_relaxed} APIs
-> - Modified a dev_err to dev_dbg
-> - Removed unnecessary variable
-> - Removed driver details from dt-binding description
-> - Changed to SoC specific compatibles
-> - Fixed typo in a commit message
-> - Added comment regarding MSI in the MSI-X quirk
-> 
-> Changes since v2:
-> - Added al_pcie_controller_readl/writel() wrappers
-> - Reorganized local vars in several functions according to reverse
->   tree structure
-> - Removed unnecessary check of ret value
-> - Changed return type of al_pcie_config_prepare() from int to void
-> - Removed check if link is up from probe() [done internally in
->   dw_pcie_rd/wr_conf()]
-> 
-> Changes since v1:
-> - Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
-> - Fixed different message/comment/print wordings
-> - Added panic stacktrace to commit message of MSI-x quirk patch
-> - Changed to pci_warn() instead of dev_warn()
-> - Added unit_address after node_name in dt-binding
-> - Updated Kconfig help description
-> - Used GENMASK and FIELD_PREP/GET where appropriate
-> - Removed leftover field from struct al_pcie and moved all ptrs to
->   the beginning
-> - Re-wrapped function definitions and invocations to use fewer lines
-> - Change %p to %px in dbg prints in rd/wr_conf() functions
-> - Removed validation that the port is configured to RC mode (as this is
->   added generically in PATCH 7/8)
-> - Removed unnecessary variable initializations
-> - Swtiched to %pR for printing resources
-> 
-> 
-> Ali Saidi (1):
->   PCI: Add ACS quirk for Amazon Annapurna Labs root ports
-> 
-> Jonathan Chocron (6):
->   PCI: Add Amazon's Annapurna Labs vendor ID
->   PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
->   PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
->     Root Port
->   dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
->   PCI: dwc: al: Add support for DW based driver type
->   PCI: dwc: Add validation that PCIe core is set to correct mode
-> 
->  .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
->  MAINTAINERS                                   |   3 +-
->  drivers/pci/controller/dwc/Kconfig            |  12 +
->  drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
->  .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
->  .../pci/controller/dwc/pcie-designware-host.c |   8 +
->  drivers/pci/quirks.c                          |  37 ++
->  drivers/pci/vpd.c                             |  16 +
->  include/linux/pci_ids.h                       |   2 +
->  9 files changed, 496 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
-
-Hi Jonathan,
-
-are you going to send a v5 for this series ? If we should consider
-it for v5.4 I expect it to be on the list this week as soon as possible.
-
-Thanks,
-Lorenzo
+SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9iIEhl
+cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMjkgQXVndXN0IDIwMTkgMTY6MjcN
+Cj4gVG86IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvOF0gQWRkIGR1YWwtTFZEUyBwYW5lbCBzdXBwb3J0
+IHRvIEVLODc0DQo+IA0KPiBPbiBXZWQsIEF1ZyAyOCwgMjAxOSBhdCAxOjM2IFBNIEZhYnJpemlv
+IENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPg0K
+PiA+IERlYXIgQWxsLA0KPiA+DQo+ID4gdGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBkdWFs
+LUxWRFMgcGFuZWwgSURLLTIxMjFXUg0KPiA+IGZyb20gQWR2YW50ZWNoOg0KPiA+IGh0dHBzOi8v
+YnV5LmFkdmFudGVjaC5ldS9EaXNwbGF5cy9FbWJlZGRlZC1MQ0QtS2l0cy1IaWdoLUJyaWdodG5l
+c3MvbW9kZWwtSURLLTIxMjFXUi1LMkZIQTJFLmh0bQ0KPiA+DQo+ID4gVjMgYXBwcm9hY2hlcyB0
+aGUgcHJvYmxlbSBpbiBhIGNvbXBsZXRlbHkgZGlmZmVyZW50IHdheSwgd2Ugbm93DQo+ID4gaGF2
+ZSB0d28gbmV3IHByb3BlcnRpZXMgdG8gbWFyayB0aGUgcG9ydHMgaW4gdGhlIERUIGFzIHJlY2Vp
+dmluZw0KPiA+IGV2ZW4gcGl4ZWxzIGFuZCBvZGQgcGl4ZWxzOiBkdWFsLWx2ZHMtZXZlbi1waXhl
+bHMgYW5kIGR1YWwtbHZkcy1vZGQtcGl4ZWxzLA0KPiA+IHdoaWNoIG1lYW5zIGRldmljZSBkcml2
+ZXJzIHNob3VsZCBub3QgdXNlIGJyaWRnZSBzcGVjaWZpYyBvciBwYW5lbA0KPiA+IHNwZWNpZmlj
+IGR1YWxfbGluayBmbGFncy4gQWxzbywgaW4gdGhpcyBjYXNlIHRoZSBEVCBkZXNjcmliZXMgdGhl
+DQo+ID4gY29ubmVjdGlvbiBmdWxseS4NCj4gPg0KPiA+IEluIG9yZGVyIGZvciB0aGUgc29sdXRp
+b24gdG8gYmUgZ2VuZXJpYywgSSBoYXZlIGV4cG9ydGVkIGEgbmV3IGhlbHBlcg0KPiA+IChkcm1f
+b2ZfbHZkc19nZXRfZHVhbF9saW5rX2NvbmZpZ3VyYXRpb24pIHRvIHdhbGsgdGhlIGRldmljZSB0
+cmVlLA0KPiA+IGFuZCBmaWd1cmUgb3V0IGlmIHRoZSBjb25uZWN0aW9uIGlzIGR1YWwtTFZEUy4g
+VGhlIHNhbWUgaGVscGVyIGdpdmVzDQo+ID4gaW5mb3JtYXRpb24gYWJvdXQgdGhlIGNvbmZpZ3Vy
+YXRpb24gb2YgdGhlIGNvbm5lY3Rpb24uIElmIFB4IGlzIGNvbm5lY3RlZA0KPiA+IHRvIGEgcG9y
+dCBleHBlY3RpbmcgZXZlbiBwaXhlbHMgYW5kIFB5IGlzIGNvbm5lY3RlZCB0byBhIHBvcnQgZXhw
+ZWN0aW5nDQo+ID4gb2RkIHBpeGVscywgdGhlbiB0aGUgaGVscGVyIHJldHVybnMgRFJNX0xWRFNf
+RFVBTF9MSU5LX0VWRU5fT0REX1BJWEVMUw0KPiA+IChsaWtlIGluIHRoZSBleGFtcGxlIGJlbG93
+KSwgb3RoZXJ3aXNlIGl0IHJldHVybnMNCj4gPiBEUk1fTFZEU19EVUFMX0xJTktfT0REX0VWRU5f
+UElYRUxTLg0KPiA+DQo+ID4NCj4gPiAgLS0tLS0tLS0gICAgICAgICAgICBkdWFsLWx2ZHMtZXZl
+bi1waXhlbHMgIC0tLS0tLS0tDQo+ID4gfCAgICAgICAgfC0tLS0gICAgICAgICAgICAgICAgICAg
+ICAgICAgLS0tLXwgICAgICAgIHwNCj4gPiB8ICAgICAgICB8IFB4IHwtLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tPnwgUG4gfCAgICAgICAgfA0KPiA+IHwgICAgICAgIHwtLS0tICAgICAgICAgICAgICAg
+ICAgICAgICAgIC0tLS18ICAgICAgICB8DQo+ID4gfCBTT1VSQ0UgfCAgICAgICAgICAgZHVhbC1s
+dmRzLW9kZC1waXhlbHMgIHwgIFNJTksgIHwNCj4gPiB8ICAgICAgICB8LS0tLSAgICAgICAgICAg
+ICAgICAgICAgICAgICAtLS0tfCAgICAgICAgfA0KPiA+IHwgICAgICAgIHwgUHkgfC0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0+fCBQbSB8ICAgICAgICB8DQo+ID4gfCAgICAgICAgfC0tLS0gICAgICAg
+ICAgICAgICAgICAgICAgICAgLS0tLXwgICAgICAgIHwNCj4gPiAgLS0tLS0tLS0gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tDQo+ID4NCj4gPiBUaGUgZGV2aWNlIGRy
+aXZlciBmb3IgdGhlIGVuY29kZXIgdGhlbiB3aWxsIHdvcmsgb3V0IGlmIHdpdGggdGhlIGN1cnJl
+bnQNCj4gPiB3aXJpbmcgdGhlIHBpeGVscyBuZWVkIHN3YXBwaW5nIG9yIG5vdC4NCj4gPg0KPiA+
+IFRoZSBzYW1lIHNvbHV0aW9uIHdvcmtzIGZvciBib3RoIHBhbmVscyBhbmQgYnJpZGdlcy4NCj4g
+Pg0KPiA+IFNpbmNlIHRoZSBEVCBkZXNjcmliZXMgdGhlIGNvbm5lY3Rpb24gZnVsbHksIGRyaXZl
+cg0KPiA+IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1sdmRzLmMgd29ya3Mgb3V0LW9mLXRo
+ZS1ib3gsIG5vIGNoYW5nZXMNCj4gPiByZXF1aXJlZCwgaG93ZXZlciwgdGhpcyBpbXBsZW1lbnRh
+dGlvbiBvcGVucyB1cCBhIHByb2JsZW0gd2l0aCB0aGUNCj4gPiBkdC1iaW5kaW5ncy4NCj4gPiBE
+cml2ZXIgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWx2ZHMuYyBjYW4gc3RpbGwgYmUgcGxl
+YXNlZCBieQ0KPiA+IGEgcG9ydCBub2RlLCBidXQgYWxzbyBieSBhIHBvcnRzIG5vZGUuDQo+ID4g
+SSBoYXZlIGNyZWF0ZWQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YnVzLXRpbWluZ3MvbHZkcy55YW1sDQo+ID4gd2l0aCB0aGUgaWRlYSBvZiBpbmNsdWRpbmcgaXQg
+ZnJvbSBwYW5lbHMgYW5kIGJyaWRnZXMgZHQtYmluZGluZ3MNCj4gPiBzdXBwb3J0aW5nIGR1YWwt
+TFZEUyAoYW5kIG9mIGNvdXJzZSB0aGUgZHQtYmluZGluZ3MgZm9yIHRoZSBzcGVjaWZpYw0KPiA+
+IGRldmljZXMgc2hvdWxkIHNheSB3aGljaCBwb3J0IHNob3VsZCBiZSBtYXJrZWQgYXMgd2hhdCks
+IGJ1dCBmaWxlDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvbHZkcy55YW1sIGZvcm1hbGx5DQo+ID4gcmVxdWlyZXMgcHJvcGVydHkgInBvcnQiLCB3
+aGlsZSB3aXRoIHRoaXMgaW1wbGVtZW50YXRpb24gaXQgc2hvdWxkIHJlcXVpcmUNCj4gPiBPbmVP
+ZiAicG9ydCIgYW5kICJwb3J0cyIsIGFuZCB1bmZvcnR1bmF0ZWx5IEkgY2FuJ3Qgc2VlbSB0byBm
+aW5kIGEgbmVhdCB3YXkNCj4gPiBhcm91ZCB0aGF0LCBvdGhlciB0aGFuIGNyZWF0aW5nIGEgbmV3
+IGNvbXBhdGlibGUgc3RyaW5nDQo+IA0KPiBKdXN0IGFkZCAncG9ydHMnIGFuZCBkcm9wICdwb3J0
+JyBmcm9tIGJlaW5nIHJlcXVpcmVkIGluIHRoZSBjb21tb24NCj4gYmluZGluZy4gVGhlbiBpdCBp
+cyB1cCB0byB0aGUgcGFuZWwgc3BlY2lmaWMgYmluZGluZ3MgdG8gZGVmaW5lIHdoaWNoDQo+IG9u
+ZSBpcyByZXF1aXJlZC4gT3Igd2UganVzdCBsZWF2ZSBpdCB0byBhbGxvdyBlaXRoZXIgZm9ybSB3
+aGljaCB0aGUNCj4gZ3JhcGggY29kZSBjYW4gaGFuZGxlLg0KPiANCj4gV2UgY291bGQgaGF2ZSB0
+aGlzIGluIHRoZSBjb21tb24gYmluZGluZzoNCj4gDQo+IG9uZU9mOg0KPiAgLSByZXF1aXJlZDog
+W3BvcnRzXQ0KPiAgLSByZXF1aXJlZDogW3BvcnRdDQoNCg0KVGhhbmsgeW91IGZvciBSb2IgZm9y
+IGxvb2tpbmcgaW50byB0aGlzLiBJIHdpbGwgd2FpdCBmb3IgYSBmZWVkYmFjayBmcm9tIExhdXJl
+bnQNCm9uIHRoZSBjb2RlIGJlZm9yZSBzZW5kaW5nIG91dCB2NC4NCg0KVGhhbmtzLA0KRmFiDQoN
+Cj4gDQo+IFJvYg0K
