@@ -2,108 +2,86 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64857C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F14C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43258217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2968B217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567424817;
+	bh=3AeKxO0ddoJuqHSrvWoZKyJIKicbcRXMYvMJTXIXUkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=opbReC6/SwA8HgvSwaoDJa453lZOh45Nms8Yt+56HwW5FNn4kL5uBzgiiQzlfg24+
+	 BG8+rUCUS2UCHzAk4JqFvt3bdTaLmhRMWQHVRQJJb3km/UDpKlLMG3Dqovc2KKwDfr
+	 a1Rh2RT69hURd4RX7ct9QDSEzNQB5JvQo/ad50AU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbfIBLqx (ORCPT
+        id S1731162AbfIBLq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 2 Sep 2019 07:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731082AbfIBLqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Sep 2019 07:46:53 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:35291 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730538AbfIBLqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:46:52 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4knDidaguzaKO4knGiXWBB; Mon, 02 Sep 2019 13:46:50 +0200
-Subject: Re: [RFC 10/12] media: hantro: Add support for H264 decoding on
- RK3399
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20190901124531.23645-1-jonas@kwiboo.se>
- <HE1PR06MB40119DE07D38060F531D1070ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <99943cdf-7e3b-f819-5d81-2e007e788682@xs4all.nl>
-Date:   Mon, 2 Sep 2019 13:46:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from localhost (smbhubinfra01.hotspot.hub-one.net [213.174.99.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E502173E;
+        Mon,  2 Sep 2019 11:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567424813;
+        bh=3AeKxO0ddoJuqHSrvWoZKyJIKicbcRXMYvMJTXIXUkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NOMkxTlpJiSLb1t19p8ePomtZzXLnK4x7mAVZFT8P7TxQHbZFafWmBozeYUnuejtq
+         /eOWS2ZMDmVO8GQXvizOvHzE6hm6197vIi4dqfTSIv0d20lU7Z+FLnZdxIbxoOTY9g
+         3PAH/y/1afdQCcMAszgWphcDBNYpBesP/6mPdFb0=
+Date:   Mon, 2 Sep 2019 13:46:50 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas
+ for the generic watchdog bindings
+Message-ID: <20190902114650.w65ya7mgfsyu275x@flea>
+References: <20190821143835.7294-1-mripard@kernel.org>
+ <20190830164811.GA7911@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <HE1PR06MB40119DE07D38060F531D1070ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLcXWzujJMuvci893htW5/WH0F/hjHWkpTFnm1lpE6jVMZ59ZbS6Eni3lm0qlKUCmfvUXf6qHGyk2IEHuqBmSZoYZZymoYBlsbWur39VwOSFGABlHlOh
- 5vXpnNgjLuR1vHu25PXGdwLfaXhPgBLaxfVDPgqeTzIgkn5/REE30xKONjS1s25hl6DWtbikdXZPWPMNLQLMOohdOrgoRHO7izlXFfnDg/LBUNlGWANVrgbL
- qVHKJH+xn2AQHo2tRJ01VTj5obrHdS7y8ugriStMbqYSV0QlZcRg+41avsTPyOnzuDpKe2cFq4a17WFJWf2IsLRHdEjkXgaajZsY/U1YlR19KstUIsL3fO1T
- 7mcBwlE52DuB2xnJV8lervEKe0pAn+2mwI+Lvr3QF2EN8j9fkIizk2w0TW3L7LfpuNpd9e9czcc+D4cnKVau1QZhVAcm/9xVArmOyBsoN9bEx9EHDZ6+oa6T
- WZMUtkD2PGdJdRCd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830164811.GA7911@roeck-us.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/19 2:45 PM, Jonas Karlman wrote:
-> Rockchip RK3399 SoC has the same Hantro G1 IP block
-> as RK3288, but the registers are entirely different.
-> 
-> In a similar fashion as MPEG-2 and VP8 decoding,
-> it's simpler to just add a separate implementation.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
->  drivers/staging/media/hantro/Makefile         |   1 +
->  .../staging/media/hantro/hantro_g1_h264_dec.c |   1 -
->  drivers/staging/media/hantro/hantro_hw.h      |   1 +
->  .../media/hantro/rk3399_vpu_hw_h264_dec.c     | 486 ++++++++++++++++++
->  4 files changed, 488 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/staging/media/hantro/rk3399_vpu_hw_h264_dec.c
-> 
-> diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
-> index 5d6b0383d280..8d33b0e8aa6c 100644
-> --- a/drivers/staging/media/hantro/Makefile
-> +++ b/drivers/staging/media/hantro/Makefile
-> @@ -8,6 +8,7 @@ hantro-vpu-y += \
->  		hantro_g1_mpeg2_dec.o \
->  		hantro_g1_vp8_dec.o \
->  		rk3399_vpu_hw_jpeg_enc.o \
-> +		rk3399_vpu_hw_h264_dec.o \
->  		rk3399_vpu_hw_mpeg2_dec.o \
->  		rk3399_vpu_hw_vp8_dec.o \
->  		hantro_jpeg.o \
-> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> index 4b82b9fd5252..ec2736fb473d 100644
-> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> @@ -202,7 +202,6 @@
->  #define G1_REG_REFBU_E(v)		((v) ? BIT(31) : 0)
->  
->  #define G1_REG_APF_THRESHOLD(v)		(((v) << 0) & GENMASK(13, 0))
-> ->>>>>>> b22734fb5e2c... Ymedia: hantro: Refactor G1 H264 code
+Hi Guenther,
 
-^^^^^^^^^^^^^^^
+On Fri, Aug 30, 2019 at 09:48:11AM -0700, Guenter Roeck wrote:
+> On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
+> > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > The watchdogs have a bunch of generic properties that are needed in a
+> > device tree. Add a YAML schemas for those.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Seems to be a left-over from patch 9?
+Thanks for reviewing this, which tree should this go through? Yours or Rob's?
 
-Regards,
+Maxime
 
-	Hans
-
->  
->  void hantro_g1_h264_dec_run(struct hantro_ctx *ctx)
->  {
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
