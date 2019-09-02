@@ -2,111 +2,109 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71028C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03F8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516902168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C7A2168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="L9WqNTw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731650AbfIBO15 (ORCPT
+        id S1731635AbfIBO2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:27:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37922 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731482AbfIBO1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:27:52 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1F88C3084288;
-        Mon,  2 Sep 2019 14:27:52 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-116-156.phx2.redhat.com [10.3.116.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B01560C05;
-        Mon,  2 Sep 2019 14:27:49 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Klimov <aklimov@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: [PATCH v4 2/3] tpm: provide a way to override the chip returned durations
-Date:   Mon,  2 Sep 2019 07:27:34 -0700
-Message-Id: <20190902142735.6280-3-jsnitsel@redhat.com>
-In-Reply-To: <20190902142735.6280-1-jsnitsel@redhat.com>
-References: <20190902142735.6280-1-jsnitsel@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 02 Sep 2019 14:27:52 +0000 (UTC)
+        Mon, 2 Sep 2019 10:28:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41092 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731491AbfIBO2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:28:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j16so14228481wrr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 07:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=kBVMTQuhk+T7Ukw/iH6Fv/Si0UxRiFoyQ0dMHE7QvtM=;
+        b=L9WqNTw+lDeQxnmb4IBnSlhQIEjQQEHc41KpOvIKTg6KVy2yoNjjF0Nnh3im22NzGk
+         B1poC8Zm7MmUme/s/QoCtqp0DafVLacWOZEh5oskcW/M7zO5kFYB6UxIHq70UbftB7Cc
+         TEph3W3dL/+LRVqc2I8bppCzfEKyrw508B/tK1tYfnj9x2njqYPQgcc+pBV9dYyKbmc8
+         OHjH6PIRyCmCv0FlRzLxz9mzECWspMpHzmY+XPxFfpyULlu5qe/H+oh3WzaOE+4XATKq
+         t2x36xBsjphwNv1CWin4JiOBDvPgqEE/uB89obbyhs3POIn212EVTMEbej0ZRBfw4STQ
+         Pj0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=kBVMTQuhk+T7Ukw/iH6Fv/Si0UxRiFoyQ0dMHE7QvtM=;
+        b=JaXu1K2TfjdxvMBHAnSQQ15KxrmktRbNKtLVH0zs9YCFpF/mkznRxy8g3op80eYKo9
+         bazEiX3JbfYtXBql9dOdH6APx/RKJnoFD44GQ7pM4JHII7JI3uzzFgL19NHIVtX7UTlU
+         vNmOQaNon4jHJduEVATaxiuZLuPHzxSGkXH7ImzsWe2hWQX5Sx8eiZ7WKej0DGiOY1nt
+         uUfs7lJhvWydoWuR2UJPsAiqJvkWoBdyt0/5+VFEzHL+psn3crDpE5gKHD2/xhj2puLc
+         a+8bDORi8Iyws2R0xs6QSiKFaPqftTCbGWpBnlGzhQJtx+rpV95A+JYngdfJpwD1b52A
+         02vQ==
+X-Gm-Message-State: APjAAAU5hvMs6HBGpK0uNjqIGg0sCYMVw+iAi2Xc51LhjkyJmKT2f93E
+        rVqneZXxtc9f6/NiX5v1QwwLUugKB/OXRLbM
+X-Google-Smtp-Source: APXvYqyO397vHhfCskHh8cwMyoUd3jnZFHXaYs4K0biXoMFfjgiE/4hfNFZBtUyw7CEUYPc6j/Am4g==
+X-Received: by 2002:a5d:4d81:: with SMTP id b1mr38731050wru.27.1567434481989;
+        Mon, 02 Sep 2019 07:28:01 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id f18sm16202373wrx.85.2019.09.02.07.28.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Sep 2019 07:28:01 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] serial: core: Use cons->index for preferred console registration
+Date:   Mon,  2 Sep 2019 16:27:59 +0200
+Message-Id: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch adds method ->update_durations to override returned
-durations in case TPM chip misbehaves for TPM 1.2 drivers.
+The reason for this patch is xilinx_uartps driver which create one dynamic
+instance per IP with unique major and minor combinations. drv->nr is in
+this case all the time setup to 1. That means that uport->line is all the
+time setup to 0 and drv->tty_driver->name_base is doing shift in name to
+for example ttyPS3.
 
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Alexey Klimov <aklimov@redhat.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+register_console() is looping over console_cmdline array and looking for
+proper name/index combination which is in our case ttyPS/3.
+That's why every instance of driver needs to be registered with proper
+combination of name/number (ttyPS/3). Using uport->line is doing
+registration with ttyPS/0 which is wrong that's why proper console index
+should be used which is in cons->index field.
+
+Also it is visible that recording console should be done based on
+information about console not about the port but in most cases numbers are
+the same and xilinx_uartps is only one exception now.
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- drivers/char/tpm/tpm1-cmd.c | 15 +++++++++++++++
- include/linux/tpm.h         |  2 ++
- 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-index 149e953ca369..ca7158fa6e6c 100644
---- a/drivers/char/tpm/tpm1-cmd.c
-+++ b/drivers/char/tpm/tpm1-cmd.c
-@@ -343,6 +343,7 @@ int tpm1_get_timeouts(struct tpm_chip *chip)
- {
- 	cap_t cap;
- 	unsigned long timeout_old[4], timeout_chip[4], timeout_eff[4];
-+	unsigned long durations[3];
- 	ssize_t rc;
+ drivers/tty/serial/serial_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 4223cb496764..5ec447a4c5c3 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2825,7 +2825,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+ 		lockdep_set_class(&uport->lock, &port_lock_key);
+ 	}
+ 	if (uport->cons && uport->dev)
+-		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
++		of_console_check(uport->dev->of_node, uport->cons->name,
++				 uport->cons->index);
  
- 	rc = tpm1_getcap(chip, TPM_CAP_PROP_TIS_TIMEOUT, &cap, NULL,
-@@ -427,6 +428,20 @@ int tpm1_get_timeouts(struct tpm_chip *chip)
- 		usecs_to_jiffies(be32_to_cpu(cap.duration.tpm_long));
- 	chip->duration[TPM_LONG_LONG] = 0; /* not used under 1.2 */
+ 	uart_configure_port(drv, state, uport);
  
-+	/*
-+	 * Provide the ability for vendor overrides of duration values in case
-+	 * of misreporting.
-+	 */
-+	if (chip->ops->update_durations)
-+		chip->ops->update_durations(chip, durations);
-+
-+	if (chip->duration_adjusted) {
-+		dev_info(&chip->dev, HW_ERR "Adjusting reported durations.");
-+		chip->duration[TPM_SHORT] = durations[0];
-+		chip->duration[TPM_MEDIUM] = durations[1];
-+		chip->duration[TPM_LONG] = durations[2];
-+	}
-+
- 	/* The Broadcom BCM0102 chipset in a Dell Latitude D820 gets the above
- 	 * value wrong and apparently reports msecs rather than usecs. So we
- 	 * fix up the resulting too-small TPM_SHORT value to make things work.
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 53c0ea9ec9df..bb1d1ac7081d 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -67,6 +67,8 @@ struct tpm_class_ops {
- 	u8 (*status) (struct tpm_chip *chip);
- 	void (*update_timeouts)(struct tpm_chip *chip,
- 				unsigned long *timeout_cap);
-+	void (*update_durations)(struct tpm_chip *chip,
-+				 unsigned long *duration_cap);
- 	int (*go_idle)(struct tpm_chip *chip);
- 	int (*cmd_ready)(struct tpm_chip *chip);
- 	int (*request_locality)(struct tpm_chip *chip, int loc);
 -- 
-2.21.0
+2.17.1
 
