@@ -6,113 +6,151 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2A2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3493FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F2B2168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189F720820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfIBMZA (ORCPT
+        id S1731586AbfIBM0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:25:00 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13637 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbfIBMY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:24:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 05:24:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="194051087"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 02 Sep 2019 05:24:55 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i4lOA-0001f8-HR; Mon, 02 Sep 2019 15:24:54 +0300
-Date:   Mon, 2 Sep 2019 15:24:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        robhkernel.org@smile.fi.intel.com, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
-Message-ID: <20190902122454.GF2680@smile.fi.intel.com>
-References: <cover.1566975410.git.rahul.tanwar@linux.intel.com>
- <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
- <20190828150951.GS2680@smile.fi.intel.com>
- <e4a1fd0a-b179-92dd-fb81-22d9d7465a33@linux.intel.com>
- <20190902122030.GE2680@smile.fi.intel.com>
+        Mon, 2 Sep 2019 08:26:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5711 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729893AbfIBM0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:26:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 17A6940E61A165018A38;
+        Mon,  2 Sep 2019 20:26:05 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Sep 2019
+ 20:25:57 +0800
+Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <dalias@libc.org>, <linux-sh@vger.kernel.org>,
+        <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
+        <heiko.carstens@de.ibm.com>, <linuxarm@huawei.com>,
+        <jiaxun.yang@flygoat.com>, <linux-kernel@vger.kernel.org>,
+        <mwb@linux.vnet.ibm.com>, <paulus@samba.org>, <hpa@zytor.com>,
+        <sparclinux@vger.kernel.org>, <chenhc@lemote.com>,
+        <will@kernel.org>, <linux-s390@vger.kernel.org>,
+        <ysato@users.sourceforge.jp>, <mpe@ellerman.id.au>,
+        <x86@kernel.org>, <rppt@linux.ibm.com>, <borntraeger@de.ibm.com>,
+        <dledford@redhat.com>, <mingo@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <benh@kernel.crashing.org>,
+        <jhogan@kernel.org>, <nfont@linux.vnet.ibm.com>,
+        <mattst88@gmail.com>, <len.brown@intel.com>, <gor@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <ink@jurassic.park.msu.ru>,
+        <cai@lca.pw>, <luto@kernel.org>, <tglx@linutronix.de>,
+        <naveen.n.rao@linux.vnet.ibm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <rth@twiddle.net>,
+        <axboe@kernel.dk>, <robin.murphy@arm.com>,
+        <linux-mips@vger.kernel.org>, <ralf@linux-mips.org>,
+        <tbogendoerfer@suse.de>, <paul.burton@mips.com>,
+        <linux-alpha@vger.kernel.org>, <bp@alien8.de>,
+        <akpm@linux-foundation.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <davem@davemloft.net>
+References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
+ <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
+ <20190831085539.GG2369@hirez.programming.kicks-ass.net>
+ <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
+ <20190831161247.GM2369@hirez.programming.kicks-ass.net>
+ <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
+ <20190902072542.GN2369@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
+Date:   Mon, 2 Sep 2019 20:25:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902122030.GE2680@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190902072542.GN2369@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:20:30PM +0300, Andy Shevchenko wrote:
-> On Mon, Sep 02, 2019 at 03:43:13PM +0800, Tanwar, Rahul wrote:
-> > On 28/8/2019 11:09 PM, Andy Shevchenko wrote:
-> > > On Wed, Aug 28, 2019 at 03:00:17PM +0800, Rahul Tanwar wrote:
+On 2019/9/2 15:25, Peter Zijlstra wrote:
+> On Mon, Sep 02, 2019 at 01:46:51PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/1 0:12, Peter Zijlstra wrote:
+> 
+>>> 1) because even it is not set, the device really does belong to a node.
+>>> It is impossible a device will have magic uniform access to memory when
+>>> CPUs cannot.
+>>
+>> So it means dev_to_node() will return either NUMA_NO_NODE or a
+>> valid node id?
+> 
+> NUMA_NO_NODE := -1, which is not a valid node number. It is also, like I
+> said, not a valid device location on a NUMA system.
+> 
+> Just because ACPI/BIOS is shit, doesn't mean the device doesn't have a
+> node association. It just means we don't know and might have to guess.
 
-> > > Does val == 0 follows the table, i.e. makes div == 1?
-> > 
-> > 0 val means output clock is ref clock i.e. div ==1. Agree that adding
-> > .val = 0, .div =1 entry will make it more clear & complete.
-> > 
-> > > > +	{ .val = 0, .div = 1 },
-> > > > +	{ .val = 1, .div = 2 },
-> > > > +	{ .val = 2, .div = 3 },
-> 
-> 1
-> 
-> > > > +	{ .val = 3, .div = 4 },
-> > > > +	{ .val = 4, .div = 5 },
-> > > > +	{ .val = 5, .div = 6 },
-> 
-> 1
-> 
-> > > > +	{ .val = 6, .div = 8 },
-> > > > +	{ .val = 7, .div = 10 },
-> > > > +	{ .val = 8, .div = 12 },
-> 
-> 2
-> 
-> > > > +	{ .val = 9, .div = 16 },
-> > > > +	{ .val = 10, .div = 20 },
-> > > > +	{ .val = 11, .div = 24 },
-> 
-> 4
-> 
-> > > > +	{ .val = 12, .div = 32 },
-> > > > +	{ .val = 13, .div = 40 },
-> > > > +	{ .val = 14, .div = 48 },
-> 
-> 8
-> 
-> > > > +	{ .val = 15, .div = 64 },
-> 
-> 16
-> 
-> 
-> So, now we see the pattern:
-> 
-> 	div = val < 3 ? (val + 1) : (1 << ((val - 3) / 3));
+How do we guess the device's location when ACPI/BIOS does not set it?
 
-It's not complete, but I think you got the idea.
+It seems dev_to_node() does not do anything about that and leave the
+job to the caller or whatever function that get called with its return
+value, such as cpumask_of_node().
 
-> So, can we eliminate table?
+> 
+>>> 2) is already true today, cpumask_of_node() requires a valid node_id.
+>>
+>> Ok, most of the user does check node_id before calling
+>> cpumask_of_node(), but does a little different type of checking:
+>>
+>> 1) some does " < 0" check;
+>> 2) some does "== NUMA_NO_NODE" check;
+>> 3) some does ">= MAX_NUMNODES" check;
+>> 4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
+> 
+> The one true way is:
+> 
+> 	'(unsigned)node_id >= nr_node_ids'
 
--- 
-With Best Regards,
-Andy Shevchenko
+I missed the magic of the "unsigned" in your previous reply.
 
+> 
+>>> 3) is just wrong and increases overhead for everyone.
+>>
+>> Ok, cpumask_of_node() is also used in some critical path such
+>> as scheduling, which may not need those checking, the overhead
+>> is unnecessary.
+>>
+>> But for non-critical path such as setup or configuration path,
+>> it better to have consistent checking, and also simplify the
+>> user code that calls cpumask_of_node().
+>>
+>> Do you think it is worth the trouble to add a new function
+>> such as cpumask_of_node_check(maybe some other name) to do
+>> consistent checking?
+>>
+>> Or caller just simply check if dev_to_node()'s return value is
+>> NUMA_NO_NODE before calling cpumask_of_node()?
+> 
+> It is not a matter of convenience. The function is called
+> cpumask_of_node(), when node < 0 || node >= nr_node_ids, it is not a
+> valid node, therefore the function shouldn't return anything except an
+> error.
+what do you mean by error? What I can think is three type of errors:
+1) return NULL, this way it seems cpumask_of_node() also leave the
+   job to the function that calls it.
+2) cpu_none_mask, I am not sure what this means, maybe it means there
+   is no cpu on the same node with the device?
+3) give a warning, stack dump, or even a BUG_ON?
+
+I would prefer the second one, and implement the third one when the
+CONFIG_DEBUG_PER_CPU_MAPS is selected.
+
+Any suggestion?
+
+> 
+> Also note that the CONFIG_DEBUG_PER_CPU_MAPS version of
+> cpumask_of_node() already does this (although it wants the below fix).
+
+Thanks for the note and example.
 
