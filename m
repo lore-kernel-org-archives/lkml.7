@@ -2,139 +2,72 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C57C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC93C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA5A22DCC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567448638;
-	bh=mW5nf+1HLE19vezXKFXZ5fGbtvNwUx214Bc6vuyN+XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BdeqMM6sALnUXGh7RCq2J1BDqo9EdgdEhXhCxbRof536Ewq+nnyWThj0kA+rUqk1E
-	 cfFqSKIhaQvOt2CYhBKd9j2tOjG20wXJCAu7vzFIMqN1YlnD+VM7ML38Y5bczFmw1Y
-	 1CP6+Yu/W1Bmz6EfkCUvJYozg/YtAQnmK6XjFoX8=
+	by mail.kernel.org (Postfix) with ESMTP id 3B7C7208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfIBSX6 (ORCPT
+        id S1726944AbfIBS0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfIBSX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:23:58 -0400
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F03D3208E4;
-        Mon,  2 Sep 2019 18:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567448637;
-        bh=mW5nf+1HLE19vezXKFXZ5fGbtvNwUx214Bc6vuyN+XQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2lRKi/DYQ1enqibPmCSg9L2FuAxsP8jQ6ZqevbwzCQggmhKMaD2EkSkhYwD1LVclL
-         rEuRiVlo5PiIrcPAfH7RTG+sgWJzA9JCV/TeR/ADbQxFNywLye6/VyYYiiKHAM1A6/
-         0emN/s4cyN+YGMjmWzFA5P5PfUsaqp060NIGGYls=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 97B813C0B7F; Mon,  2 Sep 2019 20:23:54 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 20:23:54 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Richard Tresidder <rtresidd@electromag.com.au>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, rfontana@redhat.com, allison@lohutok.net,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v2 1/2] dt-binding docs: sbs_sbs-battery: Addition of
- force_load binding
-Message-ID: <20190902182354.p2o6pb4wy7bggywz@earth.universe>
-References: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
- <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
+        Mon, 2 Sep 2019 14:26:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45759 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfIBS0l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:26:41 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i4r2D-0007rt-Qw; Mon, 02 Sep 2019 18:26:37 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net/sched: cbs: remove redundant assignment to variable port_rate
+Date:   Mon,  2 Sep 2019 19:26:37 +0100
+Message-Id: <20190902182637.22167-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kxy72r42udvqwqdq"
-Content-Disposition: inline
-In-Reply-To: <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---kxy72r42udvqwqdq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Variable port_rate is being initialized with a value that is never read
+and is being re-assigned a little later on. The assignment is redundant
+and hence can be removed.
 
-Hi,
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/sched/sch_cbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, Jul 30, 2019 at 06:10:03PM +0800, Richard Tresidder wrote:
-> Add device tree binding documentation for addition of force_load boolean =
-value
-> to allow loading a battery during boot even if notpresent at that time.
->=20
-> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
-> ---
->  Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +=
-++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-batte=
-ry.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> index 4e78e51..187d7bb 100644
-> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> @@ -15,7 +15,8 @@ Optional properties :
->     after an external change notification.
->   - sbs,battery-detect-gpios : The gpio which signals battery detection a=
-nd
->     a flag specifying its polarity.
-> -
-> + - sbs,force-load : Allow loading of a hot-pluggable battery when there =
-is no
-> +   GPIO detect available and the module is statically built.
+diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
+index 810645b5c086..93b58fde99b7 100644
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -299,7 +299,7 @@ static void cbs_set_port_rate(struct net_device *dev, struct cbs_sched_data *q)
+ {
+ 	struct ethtool_link_ksettings ecmd;
+ 	int speed = SPEED_10;
+-	int port_rate = -1;
++	int port_rate;
+ 	int err;
+ 
+ 	err = __ethtool_get_link_ksettings(dev, &ecmd);
+-- 
+2.20.1
 
-This does not describe hardware configuration and is not an
-acceptable DT property.
-
--- Sebastian
-
->  Example:
-> =20
->  	battery@b {
-> @@ -24,4 +25,5 @@ Example:
->  		sbs,i2c-retry-count =3D <2>;
->  		sbs,poll-retry-count =3D <10>;
->  		sbs,battery-detect-gpios =3D <&gpio-controller 122 1>;
-> +		sbs,force-load;
->  	}
-> --=20
-> 1.8.3.1
->=20
-
---kxy72r42udvqwqdq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tXjcACgkQ2O7X88g7
-+potIhAAh3upX8+LvEe6Q2MDNqs1lToaIapy6jXTBI9HHhb0i78GbnqV/dducdPJ
-TpZo7N4G8+3/jz8h8wPOZtOZuAUm1RE44+aqP39CHE1wfrzuNGa7Q2JVPijT2xAN
-6dmeIWCz1qkK6cskT3MngTcUNHwul1RMHuhdrlzZ8I+BxvfjQXo7VBjK8oMhGys/
-sKZ1ZMv4IQx37iEfbFibTo8HhcJJKsy1Qg2qwoizyQytuu8axlg+PYh4sS+oEcbf
-1DAWUh+KeHX5IG6BKJFkWth17HGPvJUVpFqm/Wx6SWAQ76k9j4lL3jRnhZPWRuLF
-B9Oq8ikQCgCk2Blt1oNPVSpHv39r6vQFLPuUXYAA1ZCPEISYRFu63ACeA354eddL
-r0IDU+l1aMVumX9Flrj2pY5+tWEKtZER9ieuHsERyA9JNZetuvz3Um3CzP964wut
-WRERDWcJhxl6Hwv7YvWTx0lQgT7hO9yvAa9dzXux8UYX53lAGvlq5PXf2I9AHPlo
-z7jlCokUtjG195B36QvZLZoiGDEZ7p+kfFRTFIhTKc4c/dsbQX/gKB99TeVAp6TB
-2Kc6Ge3sRkqHaVKqmNc4B5/56YmSDTAttxZQGEY0c4wAdvLz7DTDPQdcDxF792Ap
-BDji1wHRt9323nXptnhzPE+IF2qnvfvJ/jV5MIncVst+EmAxnx0=
-=tOBC
------END PGP SIGNATURE-----
-
---kxy72r42udvqwqdq--
