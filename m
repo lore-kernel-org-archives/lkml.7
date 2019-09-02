@@ -2,110 +2,160 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32696C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95677C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097A621670
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:42:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHjjt3os"
+	by mail.kernel.org (Postfix) with ESMTP id 63B1021883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567464858;
+	bh=bzZjfZ+mvTNiUmcXg5HlIkB/RRWo5xarRlEOE/jTwTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FEPSEo8K9FNtSnR+vxeTIgXx9XgUypAp9s5k72cUVm1DLCDMfEJbuKylNhRpA8YFJ
+	 13/oEC94sU/jde9t5u40WJPeU7saIQvm3+sjcSGsx1zsKUTQlrSO9kTvsKSMzSaGFV
+	 6pQS9xc7HHJwuadWlu4uZC7PK7CCov49uNAX//wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfIBWmR (ORCPT
+        id S1727823AbfIBWyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 18:42:17 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43483 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfIBWmQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 18:42:16 -0400
-Received: by mail-yw1-f65.google.com with SMTP id n205so5141208ywb.10;
-        Mon, 02 Sep 2019 15:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5VinCzEEH/Uk+FyLdBPhobtfKHbcOpqI1/OiKIP+nEo=;
-        b=jHjjt3ospKYQOsutK4f7sotSxd5PNU+Zhtq6gx3h/W9EkvCpG9SvLzH97WkKLaE062
-         q1y9gHsmmATqN6PU4PJBeCyECIJD9Wcp8AWuRxg5iXHeHav6+iWl/x1n6Pp07alSinLF
-         KwwvvfuKbLCxYEhIg9aNeOyrgG9fMxgefSy7A9bPW+yHu7/WRsZ20xr1bFP7ZNDDx1Pf
-         KH5jbaYfeN/FQVW270QBJxod5Ip4DIRGhGXPqWCK1QU/ZMuAqkGYr1KwYRQyaYouMb5K
-         Q/OEcmdC9yC3WqSdLjr8EJbInqd+bUYt2inTIL5XDtUa+roDzm0GI0RqONjVIyBeyNC/
-         1XuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5VinCzEEH/Uk+FyLdBPhobtfKHbcOpqI1/OiKIP+nEo=;
-        b=SEGVF5lYXYvk95UzoHO1Gw6gmlJNX5X4a0DZ/uQ47Q2xRYu97bVDKGbVktS/mawfqX
-         ZvqPhsk0kiPYW512hJNfrpGAGCzvk5Vie3Py6seeJ15264m7bZmB4yhiflarpP//f6Wv
-         jH/AnODydSDvNdHqkycZd9xb9dVUefsRKF+rO73TVhkDVi0dVrYpVs4k/XlrJHlL5BY7
-         XODQJTYsfElLH+pLoriltIoNkZjKhMLMJMnVNaNpcR15af4LluocUQ+PY/UApzg5B72K
-         nC5oG8kg+UlfsStL05G8Fw2uEDSvh43mEUWtBQCJhv5g+JY5BtY8f6JVRVQHMT4m0T/P
-         uQtw==
-X-Gm-Message-State: APjAAAXyYhFlAwEu62IVvFaAeHUrMZGZzRuIvkKknAtcNZ+tqZjMYQR4
-        j2Eze4xtIG9W6J9RGg25d6Fipgfu9cu2z6p38PsJG/OB59Y=
-X-Google-Smtp-Source: APXvYqxyKiI05WXxKGwCJSWYmOBkGoTck/rBw0K9RFvGYovmNWY79iFdVOkNY7PlCRWOoUZw/Ns42dntHyRQJday77c=
-X-Received: by 2002:a0d:df13:: with SMTP id i19mr22823943ywe.264.1567464135563;
- Mon, 02 Sep 2019 15:42:15 -0700 (PDT)
+        Mon, 2 Sep 2019 18:54:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727635AbfIBWyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 18:54:15 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD8F216C8;
+        Mon,  2 Sep 2019 22:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567464854;
+        bh=bzZjfZ+mvTNiUmcXg5HlIkB/RRWo5xarRlEOE/jTwTQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xo56DupzfPwOOR3BWemVG1NBwxCFHOMVyZX5kxNNCy46UBRvIcz7lexE7RrvF9iRZ
+         goJhEH0EbHKz9HNXYXWpyq8akpk+WdwE6n8toTDcEJgmSUlQpKT3oSC2RbguXbPJ+5
+         wmakN/RTdEscGeGa2ArhC93Ees16i7VylZnQI/QA=
+Date:   Mon, 2 Sep 2019 15:54:13 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2 1/2] f2fs: introduce get_available_block_count() for
+ cleanup
+Message-ID: <20190902225413.GC71929@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190831095401.8142-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-References: <20190830095639.4562-1-kkamagui@gmail.com> <20190830095639.4562-3-kkamagui@gmail.com>
- <20190830124334.GA10004@ziepe.ca> <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
- <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com> <20190902135348.3pndbtbi6hpgjpjn@linux.intel.com>
-In-Reply-To: <20190902135348.3pndbtbi6hpgjpjn@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Tue, 3 Sep 2019 07:42:03 +0900
-Message-ID: <CAHjaAcR4H6CnHxzR3NHLpMCgdafVHYuKCp4qxUd8b+K0SN34BQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
- supporting AMD's fTPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831095401.8142-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Fri, Aug 30, 2019 at 05:58:39PM +0000, Safford, David (GE Global Research, US) wrote:
-> > > Thank you for your advice. We also discussed earlier and concluded that
-> > > checking and raw remapping are enough to work around this. The link is
-> > > here, https://lkml.org/lkml/2019/8/29/962 .
-> >
-> > I don't see Matthew Garrett's agreement on that thread.
->
-> No one has agreed on anything.
->
-> /Jarkko
+On 08/31, Chao Yu wrote:
+> There are very similar codes in inc_valid_block_count() and
+> inc_valid_node_count() which is used for available user block
+> count calculation.
+> 
+> This patch introduces a new helper get_available_block_count()
+> to include those common codes, and used it instead for cleanup.
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+> v2:
+> - fix panic during recovery
+>  fs/f2fs/f2fs.h | 47 +++++++++++++++++++++++++++--------------------
+>  1 file changed, 27 insertions(+), 20 deletions(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index a89ad8cab821..9c010e6cba5c 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -1756,6 +1756,27 @@ static inline bool __allow_reserved_blocks(struct f2fs_sb_info *sbi,
+>  	return false;
+>  }
+>  
+> +static inline unsigned int get_available_block_count(struct f2fs_sb_info *sbi,
+> +						struct inode *inode, bool cap)
+> +{
+> +	block_t avail_user_block_count;
+> +
+> +	avail_user_block_count = sbi->user_block_count -
+> +					sbi->current_reserved_blocks;
+> +
+> +	if (!__allow_reserved_blocks(sbi, inode, cap))
+> +		avail_user_block_count -= F2FS_OPTION(sbi).root_reserved_blocks;
+> +
+> +	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
+> +		if (avail_user_block_count > sbi->unusable_block_count)
+> +			avail_user_block_count -= sbi->unusable_block_count;
+> +		else
+> +			avail_user_block_count = 0;
+> +	}
+> +
+> +	return avail_user_block_count;
+> +}
+> +
+>  static inline void f2fs_i_blocks_write(struct inode *, block_t, bool, bool);
+>  static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
+>  				 struct inode *inode, blkcnt_t *count)
+> @@ -1782,17 +1803,8 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
+>  
+>  	spin_lock(&sbi->stat_lock);
+>  	sbi->total_valid_block_count += (block_t)(*count);
+> -	avail_user_block_count = sbi->user_block_count -
+> -					sbi->current_reserved_blocks;
+> +	avail_user_block_count = get_available_block_count(sbi, inode, true);
+>  
+> -	if (!__allow_reserved_blocks(sbi, inode, true))
+> -		avail_user_block_count -= F2FS_OPTION(sbi).root_reserved_blocks;
+> -	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
+> -		if (avail_user_block_count > sbi->unusable_block_count)
+> -			avail_user_block_count -= sbi->unusable_block_count;
+> -		else
+> -			avail_user_block_count = 0;
+> -	}
+>  	if (unlikely(sbi->total_valid_block_count > avail_user_block_count)) {
+>  		diff = sbi->total_valid_block_count - avail_user_block_count;
+>  		if (diff > *count)
+> @@ -2005,7 +2017,8 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
+>  					struct inode *inode, bool is_inode)
+>  {
+>  	block_t	valid_block_count;
+> -	unsigned int valid_node_count, user_block_count;
+> +	unsigned int valid_node_count;
+> +	unsigned int avail_user_block_count;
+>  	int err;
+>  
+>  	if (is_inode) {
+> @@ -2027,16 +2040,10 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
+>  
+>  	spin_lock(&sbi->stat_lock);
+>  
+> -	valid_block_count = sbi->total_valid_block_count +
+> -					sbi->current_reserved_blocks + 1;
+> -
+> -	if (!__allow_reserved_blocks(sbi, inode, false))
+> -		valid_block_count += F2FS_OPTION(sbi).root_reserved_blocks;
+> -	user_block_count = sbi->user_block_count;
+> -	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+> -		user_block_count -= sbi->unusable_block_count;
+> +	valid_block_count = sbi->total_valid_block_count + 1;
+> +	avail_user_block_count = get_available_block_count(sbi, inode, false);
 
-Jarkko,
-you gave me good advice related to the NVS area and mapping like below.
+This doesn't look like same?
 
-"A function that gets region and then checks if NVS driver has matching
- one and returns true/false based on that should be good enough. Then
-you raw ioremap() in the TPM driver."
-
-So, I made a patch on your advice and test it. According to my test
-result, command and response buffers were saved and restored while
-hibernation. And, there was no side-effect because they were just
-buffers and hibernation didn't affect the control area of TPM CRB
-driver. So, I think that saving and restoring buffers during sleep is
-no problem. I also think your advice and solution are clear and good
-to work around AMD's fTPM. I will attach my detailed test result soon.
-
-Jarkko,
-I have a question. Do you think this patch is not enough to handle
-AMD's fTPM problem? If so, would you tell me about it? I will change
-my patch.
-
-Seunghun
+>  
+> -	if (unlikely(valid_block_count > user_block_count)) {
+> +	if (unlikely(valid_block_count > avail_user_block_count)) {
+>  		spin_unlock(&sbi->stat_lock);
+>  		goto enospc;
+>  	}
+> -- 
+> 2.18.0.rc1
