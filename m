@@ -2,99 +2,123 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB48C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA27CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A8021874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CD32190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfIBI07 (ORCPT
+        id S1730062AbfIBI1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:26:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53910 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729382AbfIBI06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:26:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EF187AF0D;
-        Mon,  2 Sep 2019 08:26:56 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 10:26:53 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 3/6] powerpc/perf: consolidate read_user_stack_32
-Message-ID: <20190902102653.6d477e16@naga>
-In-Reply-To: <877e6rtkhe.fsf@mpe.ellerman.id.au>
-References: <cover.1567198491.git.msuchanek@suse.de>
-        <ea3783a1640b707ef9ce4740562850ef1152829b.1567198491.git.msuchanek@suse.de>
-        <87a7bntkum.fsf@mpe.ellerman.id.au>
-        <877e6rtkhe.fsf@mpe.ellerman.id.au>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 2 Sep 2019 04:27:42 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:35701 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729423AbfIBI1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:27:42 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 2273A821DA; Mon,  2 Sep 2019 10:27:26 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 10:27:39 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
+Message-ID: <20190902082739.GE15850@amd>
+References: <20190814202815.32491-3-jacopo@jmondi.org>
+ <20190814224340.GD5015@pendragon.ideasonboard.com>
+ <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
+ <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
+ <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
+ <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
+ <20190901172457.GC1047@bug>
+ <20190902080002.GC4777@pendragon.ideasonboard.com>
+ <20190902080657.GC15850@amd>
+ <20190902081942.GE4777@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
+Content-Disposition: inline
+In-Reply-To: <20190902081942.GE4777@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 02 Sep 2019 14:01:17 +1000
-Michael Ellerman <mpe@ellerman.id.au> wrote:
 
-> Michael Ellerman <mpe@ellerman.id.au> writes:
-> > Michal Suchanek <msuchanek@suse.de> writes:  
-> ...
-> >> @@ -295,6 +279,12 @@ static inline int current_is_64bit(void)
-> >>  }
-> >>  
-> >>  #else  /* CONFIG_PPC64 */
-> >> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-> >> +{
-> >> +	return 0;
-> >> +}
-> >> +#endif /* CONFIG_PPC64 */  
-> >
-> > Ending the PPC64 else case here, and then restarting it below with an
-> > ifndef means we end up with two parts of the file that define 32-bit
-> > code, with a common chunk in the middle, which I dislike.
-> >
-> > I'd rather you add the empty read_user_stack_slow() in the existing
-> > #else section and then move read_user_stack_32() below the whole ifdef
-> > PPC64/else/endif section.
-> >
-> > Is there some reason that doesn't work?  
-> 
-> Gah, I missed that you split the whole file later in the series. Any
-> reason you did it in two steps rather than moving patch 6 earlier in the
-> series?
+--2hMgfIw2X+zgXrFs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To make this patch readable.
+On Mon 2019-09-02 11:19:42, Laurent Pinchart wrote:
+> On Mon, Sep 02, 2019 at 10:06:57AM +0200, Pavel Machek wrote:
+> > >>> Single integer. It's read-only, so it just reports the location.
+> > >>>=20
+> > >>> It would be different if this was a writable control: then you need=
+ to
+> > >>> know which locations are possible to set, and that requires a menu =
+type.
+> > >>>=20
+> > >>> But it doesn't make sense to set the location from software. Howeve=
+r, the
+> > >>> location might change as a result of other changes: e.g. if the cam=
+era
+> > >>> has motor control of the tilt and the tilt changes from forward fac=
+ing to
+> > >>> downward facing, then the driver might change the location from FRO=
+NT
+> > >>> to DOWN. A convoluted example perhaps, but this is just brainstormi=
+ng.
+> > >>=20
+> > >> There are phones with exactly such camera setup. And yes, it makes
+> > >> sense to be writable in that case, as software can move the camera in
+> > >> such case.
+> > >=20
+> > > Out of curiosity, what phones are those ?
+> >=20
+> > This one:
+> >=20
+> > https://www.samsung.com/global/galaxy/galaxy-a80/
+>=20
+> Interesting device. I'm not sure we should control that through a
+> location control though, as it seems there's more than the rotation of
+> the camera involved. In any case I wouldn't care about it for now, and
+> turn the location control from read-only to read-write later if needed.
+> We need more information and more thought to support that use case.
 
-Thanks
+Well, the mechanism is there just to rotate the camera.
 
-Michal
+Anyway, that phone is probably nowhere close to having mainline
+support, so...
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2hMgfIw2X+zgXrFs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1s0nsACgkQMOfwapXb+vLK8wCeOolmxDwSiEfrrMCLr1uKyMwC
+x7oAnj1SKkwBc++DIAb84Xp8unM2RoHV
+=noqu
+-----END PGP SIGNATURE-----
+
+--2hMgfIw2X+zgXrFs--
