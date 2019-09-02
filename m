@@ -2,126 +2,103 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91ECC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E882C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF1621744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0720B2339D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567447933;
+	bh=4P3J4NkIgc4F6pEAdfjqzloqtIEOSTf5ASuleNu0cAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SjAlgWkz20CaTW4IYhIBMI9+e45/X0KXqcdsbtdfLkuVgzTX13zajsIAd4CF60d2n
+	 QxLJCMI37krjL6ksFSwGi2Z/3K/eB91umrAKmlIMkA3D9HeqEhaatm+GApVy9U14Cz
+	 ZANf6I9pYAAwVTdEErGYIjtBJNCcT96EbLpQrOUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfIBSLu (ORCPT
+        id S1726909AbfIBSML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:11:50 -0400
-Received: from smtprelay0176.hostedemail.com ([216.40.44.176]:58928 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726448AbfIBSLt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:11:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BF9D618224D8A;
-        Mon,  2 Sep 2019 18:11:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: heat65_83e2ed7ab5f20
-X-Filterd-Recvd-Size: 3481
-Received: from XPS-9350.home (unknown [47.151.137.30])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  2 Sep 2019 18:11:46 +0000 (UTC)
-Message-ID: <f7f8f751e77578edb88c0d9888930de3f3b60670.camel@perches.com>
-Subject: Re: linux-next: Tree for Sep 2 (exfat)
-From:   Joe Perches <joe@perches.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Date:   Mon, 02 Sep 2019 11:11:45 -0700
-In-Reply-To: <13e2db80-0c89-0f36-6876-f9639f0d30ab@infradead.org>
-References: <20190902224310.208575dc@canb.auug.org.au>
-         <cecc2af6-7ef6-29f6-569e-b591365e45ad@infradead.org>
-         <20190902174631.GB31445@kroah.com>
-         <13e2db80-0c89-0f36-6876-f9639f0d30ab@infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Mon, 2 Sep 2019 14:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbfIBSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:12:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B999B21744;
+        Mon,  2 Sep 2019 18:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567447930;
+        bh=4P3J4NkIgc4F6pEAdfjqzloqtIEOSTf5ASuleNu0cAM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fgeQH4rsUyxLMZJAyhEM5CPsVzvwFrK+wReZ0J9ebCLlqVRRuQxSCau7RkWJ1qEcr
+         hqFG+/nG4tAdYNJ3ZMWKYQOhzxmNBZ8YmzeapS3+kEeVv2PUHWQM/7ru+YtKo6CafX
+         NFkrS6phIZTj+XOh3dZZ6Qgl3mogoelf8F1CdfaM=
+Date:   Mon, 2 Sep 2019 20:12:07 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
+ /sys/class/leds/<led>/trigger
+Message-ID: <20190902181207.GA18577@kroah.com>
+References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
+ <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-02 at 11:07 -0700, Randy Dunlap wrote:
-> On 9/2/19 10:46 AM, Greg KH wrote:
-> > On Mon, Sep 02, 2019 at 10:39:39AM -0700, Randy Dunlap wrote:
-> > > On 9/2/19 5:43 AM, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > > 
-> > > > News: I will only be doing 2 more releases before I leave for Kernel
-> > > > Summit (there may be some reports on Thursday, but I doubt I will have
-> > > > time to finish the full release) and then no more until Sept 30.
-> > > > 
-> > > > Changes since 20190830:
-> > > > 
-> > > 
-> > > Hi,
-> > > I am seeing lots of exfat build errors when CONFIG_BLOCK is not set/enabled.
-> > > Maybe its Kconfig should also say
-> > > 	depends on BLOCK
-> > > ?
-> > 
-> > Here's what I committed to my tree:
-> > 
-> > 
-> > From e2b880d3d1afaa5cad108c29be3e307b1917d195 Mon Sep 17 00:00:00 2001
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Date: Mon, 2 Sep 2019 19:45:06 +0200
-> > Subject: staging: exfat: make exfat depend on BLOCK
-> > 
-> > This should fix a build error in some configurations when CONFIG_BLOCK
-> > is not selected.  Also properly set the dependancy for no FAT support at
-> > the same time.
-> > 
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Sun, Sep 01, 2019 at 06:53:34PM +0200, Jacek Anaszewski wrote:
+> Hi Akinobu,
 > 
-> That works. Thanks.
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> Thank you for the patch.
 > 
-> > ---
-> >  drivers/staging/exfat/Kconfig | 2 ++
-> >  1 file changed, 2 insertions(+)
+> I have one nit below but in general it looks good to me.
+> I've tested it with 2000 mtd triggers (~14kB file size)
+> and it worked flawlessly.
+> 
+> Still, I would like to have ack from Greg for it.
+> 
+> Adding Greg on Cc.
+> 
+> On 8/29/19 4:49 PM, Akinobu Mita wrote:
+> > Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+> > However, the size of this file is limited to PAGE_SIZE because of the
+> > limitation for sysfs attribute.
 > > 
-> > diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-> > index f52129c67f97..290dbfc7ace1 100644
-> > --- a/drivers/staging/exfat/Kconfig
-> > +++ b/drivers/staging/exfat/Kconfig
-> > @@ -1,11 +1,13 @@
-> >  config EXFAT_FS
-> >  	tristate "exFAT fs support"
-> > +	depends on BLOCK
-> >  	select NLS
-> >  	help
-> >  	  This adds support for the exFAT file system.
-> >  
-> >  config EXFAT_DONT_MOUNT_VFAT
-> >  	bool "Prohibit mounting of fat/vfat filesysems by exFAT"
-> > +	depends on EXFAT_FS
-> >  	default y
-> >  	help
-> >  	  By default, the exFAT driver will only mount exFAT filesystems, and refuse
+> > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+> > PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+> > and which trigger is currently activated.
+> > 
+> > This converts /sys/class/leds/<led>/trigger to bin attribute and removes
+> > the PAGE_SIZE limitation.
 
-I think this last one is backwards and should be
+But this is NOT a binary file.  A sysfs binary file is used for when the
+kernel passes data to or from hardware without any parsing of the data
+by the kernel.
 
-config EXFAT_ALLOW_MOUNT_VFAT
-and
-default n
+You are not doing that here, you are abusing the "one value per file"
+rule of sysfs so much that you are forced to work around the limitation
+it put in place on purpose to keep you from doing stuff like this.
 
-> 
-> 
+Please fix this "correctly" by creating a new api that works properly
+and just live with the fact that this file will never work correctly and
+move everyone to use the new api instead.
 
+Don't keep on abusing the interface by workarounds like this, it is not
+ok.
+
+thanks,
+
+greg k-h
