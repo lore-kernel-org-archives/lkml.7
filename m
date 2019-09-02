@@ -2,74 +2,162 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AC6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3626921882
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F86521881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:30:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBa75ROk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfIBPaK (ORCPT
+        id S1726180AbfIBPaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:30:10 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43218 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfIBPaJ (ORCPT
+        Mon, 2 Sep 2019 11:30:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43399 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIBPa3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:30:09 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i4oHM-0000An-6r; Mon, 02 Sep 2019 15:30:04 +0000
-Date:   Mon, 2 Sep 2019 16:30:04 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: linux-next: manual merge of the vfs tree with the fuse tree
-Message-ID: <20190902153004.GD1131@ZenIV.linux.org.uk>
-References: <20190830130119.446e7389@canb.auug.org.au>
- <CAJfpeguxmJvCV+PXr=wz5HXONKv4RDmZ1LpYNEqAtvw_smP5Ag@mail.gmail.com>
- <CAJfpegsijOi6TdRcObGSAJ+tS0JiZky=v6Wqh5u8RZTzi6tkjA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegsijOi6TdRcObGSAJ+tS0JiZky=v6Wqh5u8RZTzi6tkjA@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Mon, 2 Sep 2019 11:30:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v12so9150766pfn.10;
+        Mon, 02 Sep 2019 08:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7fRcUp1tbqTpziT5RMv5XSX+Ysbr7LLSA811sn9L4Ks=;
+        b=iBa75ROkxwAhIZ+6ZVDuKDz2CV6Jg4Jlk5QW+/JXAnpzhMBeqcqFGlZ1m48Vnw+POu
+         djStDAENEXC0I2ipEtIfHxSdBPf1zhjL3ykjd3KhMvb6CczSAIqpi9NSeCMSuhvwbr/1
+         hCEFiJv72JMOPw7Oy2v6k38q+3lOAMlHrttuzF83P5TSIaixSggAn0Um0B7HmgUgFLQl
+         Toc1kEkCpDpQciMnK0lDRdhYsKxMkJXzM2cF7oNy3JCZ34DOEX8s/Z1iutBMXgSxfZvW
+         tU4YirB96796j2CHeAuvEujEq9qBzHEiSQSVnEISifUX7FafELxjsQufaH7VdCYGd2bO
+         A0uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7fRcUp1tbqTpziT5RMv5XSX+Ysbr7LLSA811sn9L4Ks=;
+        b=ppp6ikJGeg7nEuRkWfMcZYCwFZ5b2NOWw/w9GWRMPfWJOHXVs6CV3r1AFSsENeRDLB
+         peqjYAxLT9w2XZ7pEuX+ELmfXLY71R8WkliOf5W7TbZ3OdrTpWVl9OvkB11jh2Gzz70R
+         3BQPqCjFLpswqeOj0N/HXZSq7H7Al7UD3TpbLHXRtMjR11/XOQSeKBPV3y9/exU3Oaj5
+         7zzZY16pECrAkb2uypLJbz6wzL+RUAUwVp2J1Xu9f1iGRAgVKoid7EVb+usbZOJ884Ko
+         Lus8xN1+0C6E30iErApH4rcQvVTOnOSrxh3UNR1iWJAXgwKK5ke/zpU5B6U9qy1D3tGZ
+         RQLg==
+X-Gm-Message-State: APjAAAXvzgvJs/3H5vozE+nmjJC1qcJVix9Mco6yVmrof0FQUpxaW3BB
+        tiqiZnIJoIdMobuV/AtK/QwahRNq
+X-Google-Smtp-Source: APXvYqy7Giggf6pgZFvOqn0lpoOUoUBkW/82V7Q/4G3iRI75IXIlcvyqGB+wbn2iwza7DTcHB1nUTQ==
+X-Received: by 2002:a63:2026:: with SMTP id g38mr25237832pgg.172.1567438228801;
+        Mon, 02 Sep 2019 08:30:28 -0700 (PDT)
+Received: from hyd1358.marvell.com ([115.113.156.2])
+        by smtp.googlemail.com with ESMTPSA id i6sm10249114pfq.20.2019.09.02.08.30.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Sep 2019 08:30:28 -0700 (PDT)
+From:   sundeep.lkml@gmail.com
+To:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.stalley@intel.com,
+        bhelgaas@google.com
+Cc:     sgoutham@marvell.com, Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: [PATCH] PCI: Do not use bus number zero from EA capability
+Date:   Mon,  2 Sep 2019 21:00:03 +0530
+Message-Id: <1567438203-8405-1-git-send-email-sundeep.lkml@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 05:10:27PM +0200, Miklos Szeredi wrote:
-> On Mon, Sep 2, 2019 at 11:00 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >
-> > On Fri, Aug 30, 2019 at 5:01 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > Today's linux-next merge of the vfs tree got a conflict in:
-> > >
-> > >   fs/fuse/inode.c
-> > >
-> > > between commit:
-> > >
-> > >   1458e5e9f99a ("fuse: extract fuse_fill_super_common()")
-> > >
-> > > from the fuse tree and commit:
-> > >
-> > >   2ad9ab0f7429 ("vfs: Convert fuse to use the new mount API")
-> > >   48ceb15f98c8 ("vfs: Move the subtype parameter into fuse")
-> >
-> > And the latter is b0rked anyway.
-> 
-> Both, actually.
-> 
-> Pushed fixed ones to fuse.git#for-next.
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-... originals cheerfully dropped; will be gone in today's push to
-vfs.git#for-next.
+As per the spec, "Enhanced Allocation (EA) for Memory
+and I/O Resources" ECN, approved 23 October 2014,
+sec 6.9.1.2, fixed bus numbers of a bridge can be zero
+when no function that uses EA is located behind it.
+Hence assign bus numbers sequentially when fixed bus
+numbers are zero.
+
+Fixes: 2dbce590117981196fe355efc0569bc6f949ae9b
+
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+---
+ drivers/pci/probe.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index a3c7338..c06ca4c 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1095,27 +1095,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+  * @sub: updated with subordinate bus number from EA
+  *
+  * If @dev is a bridge with EA capability, update @sec and @sub with
+- * fixed bus numbers from the capability and return true.  Otherwise,
+- * return false.
++ * fixed bus numbers from the capability. Otherwise @sec and @sub
++ * will be zeroed.
+  */
+-static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
++static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+ {
+ 	int ea, offset;
+ 	u32 dw;
+ 
++	*sec = *sub = 0;
++
+ 	if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+-		return false;
++		return;
+ 
+ 	/* find PCI EA capability in list */
+ 	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+ 	if (!ea)
+-		return false;
++		return;
+ 
+ 	offset = ea + PCI_EA_FIRST_ENT;
+ 	pci_read_config_dword(dev, offset, &dw);
+ 	*sec =  dw & PCI_EA_SEC_BUS_MASK;
+ 	*sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+-	return true;
+ }
+ 
+ /*
+@@ -1151,7 +1152,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	u16 bctl;
+ 	u8 primary, secondary, subordinate;
+ 	int broken = 0;
+-	bool fixed_buses;
+ 	u8 fixed_sec, fixed_sub;
+ 	int next_busnr;
+ 
+@@ -1254,11 +1254,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		pci_write_config_word(dev, PCI_STATUS, 0xffff);
+ 
+ 		/* Read bus numbers from EA Capability (if present) */
+-		fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+-		if (fixed_buses)
++		pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
++
++		next_busnr = max + 1;
++		/* Use secondary bus number in EA */
++		if (fixed_sec)
+ 			next_busnr = fixed_sec;
+-		else
+-			next_busnr = max + 1;
+ 
+ 		/*
+ 		 * Prevent assigning a bus number that already exists.
+@@ -1336,7 +1337,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		 * If fixed subordinate bus number exists from EA
+ 		 * capability then use it.
+ 		 */
+-		if (fixed_buses)
++		if (fixed_sub)
+ 			max = fixed_sub;
+ 		pci_bus_update_busn_res_end(child, max);
+ 		pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
+-- 
+2.7.4
+
