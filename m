@@ -4,101 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999AAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDE7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CF921744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4421744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbfIBKS7 (ORCPT
+        id S1730362AbfIBKVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:18:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:51620 "EHLO foss.arm.com"
+        Mon, 2 Sep 2019 06:21:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:11447 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729668AbfIBKS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:18:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82DE028;
-        Mon,  2 Sep 2019 03:18:58 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED8013F246;
-        Mon,  2 Sep 2019 03:18:57 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 11:18:56 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 3/6] PCI: tegra: Add support to configure sideband pins
-Message-ID: <20190902101855.GV14582@e119886-lin.cambridge.arm.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-4-vidyas@nvidia.com>
+        id S1729489AbfIBKVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:21:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 03:21:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="381816054"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2019 03:21:22 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4jSb-0008Sn-VK; Mon, 02 Sep 2019 13:21:21 +0300
+Date:   Mon, 2 Sep 2019 13:21:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 09/11] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Message-ID: <20190902102121.GD2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-10-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-4-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190902083240.20367-10-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:58:47PM +0530, Vidya Sagar wrote:
-> Add support to configure sideband signal pins when information is present
-> in respective controller's device-tree node.
+On Mon, Sep 02, 2019 at 11:32:38AM +0300, Sakari Ailus wrote:
+> Factor out static kobject_string() function that simply calls
+> device_node_string(), and thus remove references to kobjects (as these are
+> struct device_node).
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
-> V3:
-> * Used 'dev' instead of 'pcie->dev'
+>  lib/vsprintf.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
 > 
-> V2:
-> * Addressed review comment from Andrew Murray
-> * Handled failure case of pinctrl_pm_select_default_state() cleanly
-> 
->  drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index fc0dbeb31d78..77fa6f70bc96 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1304,8 +1304,13 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
->  			ret);
-> -		pm_runtime_disable(dev);
-> -		return ret;
-> +		goto fail_pm_get_sync;
-> +	}
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index a04a2167101ef..4ad9332d54ba6 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1905,6 +1905,9 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	struct printf_spec str_spec = spec;
+>  	str_spec.field_width = -1;
+>  
+> +	if (fmt[0] != 'F')
+> +		return error_string(buf, end, "(%pO?)", spec);
 > +
-> +	ret = pinctrl_pm_select_default_state(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
-> +		goto fail_pinctrl;
->  	}
+>  	if (!IS_ENABLED(CONFIG_OF))
+>  		return error_string(buf, end, "(%pOF?)", spec);
 >  
->  	tegra_pcie_init_controller(pcie);
-> @@ -1332,7 +1337,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  
->  fail_host_init:
->  	tegra_pcie_deinit_controller(pcie);
-> +fail_pinctrl:
->  	pm_runtime_put_sync(dev);
-> +fail_pm_get_sync:
->  	pm_runtime_disable(dev);
->  	return ret;
+> @@ -1978,17 +1981,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	return widen_string(buf, buf - buf_start, end, spec);
 >  }
+>  
+> -static char *kobject_string(char *buf, char *end, void *ptr,
+> -			    struct printf_spec spec, const char *fmt)
+> -{
+> -	switch (fmt[1]) {
+> -	case 'F':
+> -		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> -	}
+> -
+> -	return error_string(buf, end, "(%pO?)", spec);
+> -}
+> -
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> @@ -2167,7 +2159,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  	case 'G':
+>  		return flags_string(buf, end, ptr, spec, fmt);
+>  	case 'O':
+> -		return kobject_string(buf, end, ptr, spec, fmt);
+> +		return device_node_string(buf, end, ptr, spec, fmt + 1);
+>  	case 'x':
+>  		return pointer_string(buf, end, ptr, spec);
+>  	}
 > -- 
-> 2.17.1
+> 2.20.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
