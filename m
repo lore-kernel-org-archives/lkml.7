@@ -2,278 +2,94 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=AD_PREFS,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90038C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB81C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6351021897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567449121;
-	bh=48saDu2OkRopU+sxbZhDbOY5dlUZqXFHW7UlD0wi3PE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zAADapEIQIJAOZX+EEkuPetTC5cDp85twJnGn5WQvhGG9MqcSocbcu9tpmD+m3JH/
-	 o9wXysMlY/rHKGHeUS5wua8DSMenVIZMI3b/uH8LPEFXDbN80dmstdyMn6SN65nFsS
-	 C7sdglVQOtF3zy1gpFxgG9V+eVV4NATz2tTMQvk8=
+	by mail.kernel.org (Postfix) with ESMTP id 8EFAE21881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwHuIETS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfIBScA (ORCPT
+        id S1726887AbfIBSgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726395AbfIBScA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:32:00 -0400
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2962521881;
-        Mon,  2 Sep 2019 18:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567449118;
-        bh=48saDu2OkRopU+sxbZhDbOY5dlUZqXFHW7UlD0wi3PE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=miD21iyEUekwktVZZ1bEp9935D61M7B5jcopxRBrKKx91pdjd6emSo8YJxNqqo5dC
-         8USM0BlcKBxWQvAdETU6YcHrmYHKBAtl1cBet4ri3kb0WZaapCQz3A2AAB2VAEuL61
-         jVRCvb9BSR5k8STMh7b+hWPFCys8nzX6kkqhiBso=
-Received: by earth.universe (Postfix, from userid 1000)
-        id B210C3C0B7F; Mon,  2 Sep 2019 20:31:55 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 20:31:55 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     Richard Tresidder <rtresidd@electromag.com.au>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        andrew.smirnov@gmail.com, Guenter Roeck <groeck@chromium.org>,
-        david@lechnology.com, Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rfontana@redhat.com, allison@lohutok.net,
-        Baolin Wang <baolin.wang@linaro.org>, linux-pm@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] power/supply/sbs-battery: Fix confusing battery
- status when idle or empty
-Message-ID: <20190902183155.6nugohjfr3pktxve@earth.universe>
-References: <1564452025-12673-1-git-send-email-rtresidd@electromag.com.au>
- <CAHX4x87gVfmKVmj2O_riwV57Qb8X-MtKCUp6e=3UYuii4TVg0Q@mail.gmail.com>
+        Mon, 2 Sep 2019 14:36:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34762 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfIBSgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:36:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so14955248wrn.1;
+        Mon, 02 Sep 2019 11:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4JvqH4dVIZDIO1d0Nq/uUBbGdESQsTM1wf9S0qUQ2TQ=;
+        b=DwHuIETS6XKB8Mpy/ynyP37OhTDxGXeSj0D8kEOnlZKZsciiYnva5pfHUrK9kIzgns
+         VGtB/7zZH3cOFyjjjADZyFdxzw8fiCDstk/K6pkpLbdxBCrjQ+B+iuaQKvndrqpRfLPi
+         zjolKZFlQ0dlm3kzzVvUPlAp6q6Lg6r0JpDTOwEHrZqZrc3vUmb4K9n5xmh9K+PRIna+
+         XefAakJ3fJYIsAma3Kc0Rxx/cXf2ym7mFnT9QOjzIQOJkWhe3cHQGs04IZiv5PRemR1N
+         LwYq31nceAyULOwMjrFpy6UQHJQWmVrA7vnoJ6J5oGQ8unuColSzSWHB24eQNpNEhncn
+         bsKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4JvqH4dVIZDIO1d0Nq/uUBbGdESQsTM1wf9S0qUQ2TQ=;
+        b=S6uNfhZP1W+Dgz8RU8iO2G/yjY0MVf17l15Q4TYOuEh1ckWnaGGZ5UhKMuWDy0wO5E
+         Ul+148gSCOkotnEyywxxEfrjalqQ0R2Z3pfhH8d27wdgQccLM0ry5jfFuNIkdYE9yZu9
+         c+dy+q2zz9U3SzqaW2I8we3WAc/VdXDPGwHBSCai5jZSFL22ClFxwJ0AzioDmABRNWaW
+         vjiG4SyyCdZaBuX5AtR1SNfloacP8Ma+Z8QZGPIvipxFQ0hD0jsSJmbWs/cNQoqlomh8
+         d7jYjrpiedIxDyPEgF5QhZ43ZeyByzf4NDkA8dQ7jrwb1rffnk+M0JCVcssE9qc2vXO7
+         E4XQ==
+X-Gm-Message-State: APjAAAVzTLINmhXJni18D8harCa8f691LokzF6uacwKPPkgZab0emZhi
+        Voi2myk0Noi8fpzSn4GFfv3JrKgk
+X-Google-Smtp-Source: APXvYqwDLZXpr70uabGYy+aBTZfRmSoYBTbNB/DeB4/uF/C6TF3B1U/sRCAgLmpYN6dUr1N6FSQqUA==
+X-Received: by 2002:adf:ea08:: with SMTP id q8mr39371547wrm.188.1567449408131;
+        Mon, 02 Sep 2019 11:36:48 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:6df2:15:f24:92e2? (p200300EA8F047C006DF200150F2492E2.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:6df2:15:f24:92e2])
+        by smtp.googlemail.com with ESMTPSA id z17sm15858827wrw.23.2019.09.02.11.36.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 11:36:47 -0700 (PDT)
+Subject: Re: [PATCH net-next] r8152: modify rtl8152_set_speed function
+To:     Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org
+Cc:     nic_swsd@realtek.com, linux-kernel@vger.kernel.org
+References: <1394712342-15778-326-Taiwan-albertk@realtek.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <280e6a3d-c6c3-ef32-a65d-19566190a1d3@gmail.com>
+Date:   Mon, 2 Sep 2019 20:36:40 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c5jfoqaruz4rn6pk"
-Content-Disposition: inline
-In-Reply-To: <CAHX4x87gVfmKVmj2O_riwV57Qb8X-MtKCUp6e=3UYuii4TVg0Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1394712342-15778-326-Taiwan-albertk@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02.09.2019 13:52, Hayes Wang wrote:
+> First, for AUTONEG_DISABLE, we only need to modify MII_BMCR.
+> 
+> Second, add advertising parameter for rtl8152_set_speed(). Add
+> RTL_ADVERTISED_xxx for advertising parameter of rtl8152_set_speed().
+> Then, the advertising settings from ethtool could be saved.
+> 
+Seeing all this code it might be a good idea to switch this driver
+to phylib, similar to what I did with r8169 some time ago.
 
---c5jfoqaruz4rn6pk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-Looks good to me, but needs to be split (one patch adding STATUS_EMPTY
-to the power-supply core and one patch fixing sbs-battery driver).
-
--- Sebastian
-
-On Thu, Aug 01, 2019 at 12:34:18PM -0600, Nick Crews wrote:
-> Thanks Richard, I still would like some more opinions
-> on this changing the userspace experience, but LGTM
-> otherwise.
->=20
-> Reviewed-by: Nick Crews <ncrews@chromium.org>
->=20
-> On Mon, Jul 29, 2019 at 8:00 PM Richard Tresidder
-> <rtresidd@electromag.com.au> wrote:
-> >
-> > When a battery or batteries in a system are in parallel then one or more
-> > may not be providing any current to the system.
-> > This fixes an incorrect status indication of FULL for the battery simply
-> > because it wasn't discharging at that point in time.
-> > The battery will now be flagged as NOT CHARGING.
-> > Have also added the additional check for the battery FULL DISCHARGED fl=
-ag
-> > which will now flag a status of EMPTY.
-> >
-> > Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
-> > ---
-> >
-> > Notes:
-> >     power/supply/sbs-battery: Fix confusing battery status when idle or=
- empty
-> >
-> >     When a battery or batteries in a system are in parallel then one or=
- more
-> >     may not be providing any current to the system.
-> >     This fixes an incorrect status indication of FULL for the battery s=
-imply
-> >     because it wasn't discharging at that point in time.
-> >     The battery will now be flagged as NOT CHARGING.
-> >     Have also added the additional check for the battery FULL DISCHARGE=
-D flag
-> >     which will now flag a status of EMPTY.
-> >
-> >     v2: Missed a later merge that should have been included in original=
- patch
-> >     v3: Refactor the sbs_status_correct function to capture all the sta=
-tes for
-> >         normal operation rather than being spread across multile functi=
-ons.
-> >     v4: Remove unnecessary brackets, rename sbs_status_correct to
-> >         sbs_correct_battery_status
-> >
-> >  drivers/power/supply/power_supply_sysfs.c |  2 +-
-> >  drivers/power/supply/sbs-battery.c        | 46 ++++++++++++-----------=
---------
-> >  include/linux/power_supply.h              |  1 +
-> >  3 files changed, 19 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/=
-supply/power_supply_sysfs.c
-> > index f37ad4e..305e833 100644
-> > --- a/drivers/power/supply/power_supply_sysfs.c
-> > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > @@ -51,7 +51,7 @@
-> >  };
-> >
-> >  static const char * const power_supply_status_text[] =3D {
-> > -       "Unknown", "Charging", "Discharging", "Not charging", "Full"
-> > +       "Unknown", "Charging", "Discharging", "Not charging", "Full", "=
-Empty"
-> >  };
-> >
-> >  static const char * const power_supply_charge_type_text[] =3D {
-> > diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/=
-sbs-battery.c
-> > index 048d205..3ed70d4 100644
-> > --- a/drivers/power/supply/sbs-battery.c
-> > +++ b/drivers/power/supply/sbs-battery.c
-> > @@ -283,7 +283,7 @@ static int sbs_write_word_data(struct i2c_client *c=
-lient, u8 address,
-> >         return 0;
-> >  }
-> >
-> > -static int sbs_status_correct(struct i2c_client *client, int *intval)
-> > +static int sbs_correct_battery_status(struct i2c_client *client, int *=
-status)
-> >  {
-> >         int ret;
-> >
-> > @@ -293,16 +293,18 @@ static int sbs_status_correct(struct i2c_client *=
-client, int *intval)
-> >
-> >         ret =3D (s16)ret;
-> >
-> > -       /* Not drawing current means full (cannot be not charging) */
-> > -       if (ret =3D=3D 0)
-> > -               *intval =3D POWER_SUPPLY_STATUS_FULL;
-> > -
-> > -       if (*intval =3D=3D POWER_SUPPLY_STATUS_FULL) {
-> > -               /* Drawing or providing current when full */
-> > -               if (ret > 0)
-> > -                       *intval =3D POWER_SUPPLY_STATUS_CHARGING;
-> > -               else if (ret < 0)
-> > -                       *intval =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > +       if (ret > 0)
-> > +               *status =3D POWER_SUPPLY_STATUS_CHARGING;
-> > +       else if (ret < 0)
-> > +               *status =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > +       else {
-> > +               /* Current is 0, so how full is the battery? */
-> > +               if (*status & BATTERY_FULL_CHARGED)
-> > +                       *status =3D POWER_SUPPLY_STATUS_FULL;
-> > +               else if (*status & BATTERY_FULL_DISCHARGED)
-> > +                       *status =3D POWER_SUPPLY_STATUS_EMPTY;
-> > +               else
-> > +                       *status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> >         }
-> >
-> >         return 0;
-> > @@ -421,14 +423,9 @@ static int sbs_get_battery_property(struct i2c_cli=
-ent *client,
-> >                         return 0;
-> >                 }
-> >
-> > -               if (ret & BATTERY_FULL_CHARGED)
-> > -                       val->intval =3D POWER_SUPPLY_STATUS_FULL;
-> > -               else if (ret & BATTERY_DISCHARGING)
-> > -                       val->intval =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > -               else
-> > -                       val->intval =3D POWER_SUPPLY_STATUS_CHARGING;
-> > -
-> > -               sbs_status_correct(client, &val->intval);
-> > +               ret =3D sbs_correct_battery_status(client, &val->intval=
-);
-> > +               if (ret < 0)
-> > +                       return ret;
-> >
-> >                 if (chip->poll_time =3D=3D 0)
-> >                         chip->last_state =3D val->intval;
-> > @@ -773,20 +770,11 @@ static void sbs_delayed_work(struct work_struct *=
-work)
-> >
-> >         ret =3D sbs_read_word_data(chip->client, sbs_data[REG_STATUS].a=
-ddr);
-> >         /* if the read failed, give up on this work */
-> > -       if (ret < 0) {
-> > +       if (ret < 0 || sbs_correct_battery_status(chip->client, &ret) <=
- 0) {
-> >                 chip->poll_time =3D 0;
-> >                 return;
-> >         }
-> >
-> > -       if (ret & BATTERY_FULL_CHARGED)
-> > -               ret =3D POWER_SUPPLY_STATUS_FULL;
-> > -       else if (ret & BATTERY_DISCHARGING)
-> > -               ret =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > -       else
-> > -               ret =3D POWER_SUPPLY_STATUS_CHARGING;
-> > -
-> > -       sbs_status_correct(chip->client, &ret);
-> > -
-> >         if (chip->last_state !=3D ret) {
-> >                 chip->poll_time =3D 0;
-> >                 power_supply_changed(chip->power_supply);
-> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> > index 28413f7..8fb10ec 100644
-> > --- a/include/linux/power_supply.h
-> > +++ b/include/linux/power_supply.h
-> > @@ -37,6 +37,7 @@ enum {
-> >         POWER_SUPPLY_STATUS_DISCHARGING,
-> >         POWER_SUPPLY_STATUS_NOT_CHARGING,
-> >         POWER_SUPPLY_STATUS_FULL,
-> > +       POWER_SUPPLY_STATUS_EMPTY,
-> >  };
-> >
-> >  /* What algorithm is the charger using? */
-> > --
-> > 1.8.3.1
-> >
-
---c5jfoqaruz4rn6pk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tYBsACgkQ2O7X88g7
-+prZLhAAidogLtBQ44eP7QxfyURYuiKdZclVMhxhhkscUe9w8AWjMC+JDXGQH7T7
-+il73UYNc0xlGicZIrBV5DRRWSJfhLAUVt+cpeYkGrzVUiEeNa0KYUPu96J49C8s
-GSZnsQDLkt4kG+FOgRIRh/hu18G3GmMJ4qvFoNObGTTXa3OwjZCf3f5ML2yaseTL
-R1UOl1SMkdN7fmTozjUxeLb/gd/LDja8bZDRcFgGu5BoP6Ju7+IKfvHyLAISCZo5
-iQJIH1MR+spTGf3wIUB3NLbjAHw5qCUnY/f9oSuEvA4LJuPMK1LH6lXHJJbYaf7v
-XpBG8iYmabY6YuLf8pc5zKNU1Amft+KogbkSV8Jd6eN4T2UcKC9K7yzPtN1cRSe/
-1I1VS3d+LFbYS8Fz4D8Phb671edRedClecAhFY3D/FEdi0/H68RglMnl5Ugp/5NW
-L6uuo5xk4xTvQ6kH6zivLcaDHEQjjoJEeG5zTycHCvzj1lU6iJVmwHc8B2+A7wk4
-3Fzq8rM90tw6LwnKQIuicURJuzlE2X04h7GF/p9Iq/43sAAbVyk+q94kbu5eqvns
-l1GzJCO53rlouRTebzzzCBj2eX+GjfNgMcVMpi1wi4LVM0Sdh6VqTdnMVuPS3N8y
-uWHQr+Cqbglggr3yIry3h5F4iWR1jr9eGFu2OaiE3sSTbusXvQM=
-=d3Rd
------END PGP SIGNATURE-----
-
---c5jfoqaruz4rn6pk--
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+> ---
+>  drivers/net/usb/r8152.c | 196 +++++++++++++++++++++++++++-------------
+>  1 file changed, 132 insertions(+), 64 deletions(-)
+> 
+[...]
