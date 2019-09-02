@@ -2,106 +2,260 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7BFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AADC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74BA21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yt5Kk70Q"
+	by mail.kernel.org (Postfix) with ESMTP id 0C3F8216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfIBNgi (ORCPT
+        id S1730829AbfIBNgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:36:38 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41807 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbfIBNgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:36:37 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m24so12899509ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8LhD/sF/NTN0NjoFAgiiHQ7UUs0ybG0eLJoGIh+N4ts=;
-        b=yt5Kk70QvcaLMsgSVuGuAG4SWM+BIcLIE5gou9GHOehJB4r9b6weJu+L7oHTmKWf1G
-         fX/yXW2q6/k6BNw8YAh51Jz1YplyVXmpWkzRX/rbuKi1zIv8GcZA3hbylkT11Dc7iaf2
-         UGWvbJ0bU+abLpXT6JPE+sKYsFDh14BO9haw58yB5Jesu632ftsPtb7jEp+yQsLtBeua
-         h6bewrNUmYJldinBXbVXilFKl05GC6gWO8jL+Ees9sIZ+roT2Xq6s4iZF1aIs4QqX4Va
-         fNgWF6FpKWU72uZOR1YsWCa5OnA/ZEmxIr5AAA9nCB5JlphyvX/FIT4W0Oxgn0gPqATz
-         CsuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8LhD/sF/NTN0NjoFAgiiHQ7UUs0ybG0eLJoGIh+N4ts=;
-        b=BH45fdXfHJF/GH5XCL0HzEAhCRXXq/L8XCYFo63d40n83cojJhg4ZDjQGR+WbFGLLn
-         tH2fxawFGMbpvUNDGK0enG8VHgAFWP5IHEvNVbgnKZmAkfZmOVngarwPuDtpT6aMYQGM
-         1+nox3+0RbCqm1DDT1PH8QPfiFAs26bJcHTpD6lbYx2hrRk6/uv3bbRGxkZwt0E89rzO
-         CzfGBnOUki1pmX91CLgYTcLTV7Ihu2pNchifyLsNzAdC3V1zRKPmipdzFR2kC/jbSGSD
-         I/0pcZLjg6iuz8wOV6abxk2937cCNtWBVyETFLnPWldMTwsik8KoNTmQg1VoLUAHp1sU
-         9zkg==
-X-Gm-Message-State: APjAAAUFRiGMWJlY+TiWwWKmEIqKxCt9HsdknlX3B6cX8xv3qVgwPKtD
-        Bk1Mt1QR8Qdomop+NH2Vy6SEexeL+YqBGMGMgaNu1Q==
-X-Google-Smtp-Source: APXvYqy/56/JZhH9u5h/dgz83LrB1WA4WlE3a52G84UNe7DNmvw7eo78678HYTfzEBqzkAB8w0uR5xAG6bAC2llAAJg=
-X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr16425420lja.180.1567431395793;
- Mon, 02 Sep 2019 06:36:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190831030916.13172-1-peter@typeblog.net> <20190902100141.GW2680@smile.fi.intel.com>
-In-Reply-To: <20190902100141.GW2680@smile.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 2 Sep 2019 15:36:24 +0200
-Message-ID: <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Peter Cai <peter@typeblog.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Mon, 2 Sep 2019 09:36:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:54574 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730197AbfIBNgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:36:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85F83337;
+        Mon,  2 Sep 2019 06:36:40 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6EEC3F59C;
+        Mon,  2 Sep 2019 06:36:39 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 14:36:38 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Message-ID: <20190902133637.GM9720@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-6-xiaowei.bao@nxp.com>
+ <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+ <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <11e9b2c3-f4d0-2f82-bb14-45c38a1419e4@ti.com>
+ <AM5PR04MB32995566CD6DF0AAAD1AE52EF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB32995566CD6DF0AAAD1AE52EF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 12:01 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
-> > On GPD P2 Max, the firmware could not reset the touch panel correctly.
-> > The kernel needs to take on the job instead, but the GpioInt definition
-> > in DSDT specifies ActiveHigh while the GPIO pin should actually be
-> > ActiveLow.
-> >
-> > We need to override the polarity defined by DSDT. The GPIO driver
-> > already allows defining polarity in acpi_gpio_params, but the option is
-> > not applied to GpioInt.
-> >
-> > This patch adds a new quirk that enables the polarity specified in
-> > acpi_gpio_params to also be applied to GpioInt.
->
-> Thank you for an update!
->
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> on the condition that Dmitry and other input / Goodix developers are okay with
-> the approach in general.
+On Fri, Aug 23, 2019 at 04:13:30AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Kishon Vijay Abraham I <kishon@ti.com>
+> > Sent: 2019年8月23日 11:40
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; bhelgaas@google.com;
+> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+> > <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.co
+> > <lorenzo.pieralisi@arm.com>; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
+> > Roy Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
+> > andrew.murray@arm.com
+> > Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+> > capability with different PEX
+> > 
+> > Hi,
+> > 
+> > (Fixed Lorenzo's email address. All the patches in the series have wrong email
+> > id)
+> > 
+> > On 23/08/19 8:09 AM, Xiaowei Bao wrote:
+> > >
+> > >
+> > >> -----Original Message-----
+> > >> From: Kishon Vijay Abraham I <kishon@ti.com>
+> > >> Sent: 2019年8月22日 19:44
+> > >> To: Xiaowei Bao <xiaowei.bao@nxp.com>; bhelgaas@google.com;
+> > >> robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
+> > Li
+> > >> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.co; arnd@arndb.de;
+> > >> gregkh@linuxfoundation.org; M.h. Lian <minghuan.lian@nxp.com>;
+> > >> Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+> > >> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+> > >> linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+> > >> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > >> linuxppc-dev@lists.ozlabs.org; andrew.murray@arm.com
+> > >> Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of
+> > >> getting capability with different PEX
+> > >>
+> > >> Hi,
+> > >>
+> > >> On 22/08/19 4:52 PM, Xiaowei Bao wrote:
+> > >>> The different PCIe controller in one board may be have different
+> > >>> capability of MSI or MSIX, so change the way of getting the MSI
+> > >>> capability, make it more flexible.
+> > >>
+> > >> please use different pci_epc_features table for different boards.
+> > > Thanks, I think that it will be more flexible to dynamically get MSI
+> > > or MSIX capability, Thus, we will not need to define the pci_epc_feature for
+> > different boards.
+> > 
+> > Is the restriction because you cannot have different compatible for different
+> > boards?
+> Sorry, I am not very clear what your mean, I think even if I use the same compatible
+> with different boards, each boards will enter the probe function, in there I will get
+> the MSI or MSIX PCIe capability of the current controller in this board. Why do I need
+> to define the pci_epc_feature for different boards? 
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-In case Dmitry needs to merge this.
+At present you determine how to set the [msi,msix]_capable flags of
+pci_epc_features based on reading the function capabilities at probe
+time. Instead of doing this, is it possible that you can determine the flags
+based on the compatible type alone? For example, is the MSI/MSIX capability
+the same for all fsl,ls2088a-pcie-ep devices?
 
-Or should I simply merge this patch to the GPIO tree?
+If it isn't *necessary* to probe for this information at probe time, then
+you could instead create a static pci_epc_features structure and assign
+it to something in your drvdata. This may provide some benefits.
 
-Yours,
-Linus Walleij
+The dw_pcie_ep_get_features function would then look like:
+
+static const struct pci_epc_features*
+ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+{
+	struct dw_pcie *pci = to_dw_pcie_from_pp(ep);
+	struct ls_pcie_ep *pcie = dev_get_drvdata(pci->dev);
+	return pcie->epc_features;
+}
+
+This also means you can revert "[v3,03/11] PCI: designware-ep: Move the".
+
+Is this what you had in mind Kishon?
+
+Thanks,
+
+Andrew Murray
+
+> > 
+> > Thanks
+> > Kishon
+> > 
+> > >>
+> > >> Thanks
+> > >> Kishon
+> > >>>
+> > >>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> ---
+> > >>> v2:
+> > >>>  - Remove the repeated assignment code.
+> > >>>
+> > >>>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 26
+> > >>> +++++++++++++++++++-------
+> > >>>  1 file changed, 19 insertions(+), 7 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> index 4e92a95..8461f62 100644
+> > >>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> @@ -22,6 +22,7 @@
+> > >>>
+> > >>>  struct ls_pcie_ep {
+> > >>>  	struct dw_pcie		*pci;
+> > >>> +	struct pci_epc_features	*ls_epc;
+> > >>>  };
+> > >>>
+> > >>>  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > >>> @@ -40,25 +41,26 @@ static const struct of_device_id
+> > >> ls_pcie_ep_of_match[] = {
+> > >>>  	{ },
+> > >>>  };
+> > >>>
+> > >>> -static const struct pci_epc_features ls_pcie_epc_features = {
+> > >>> -	.linkup_notifier = false,
+> > >>> -	.msi_capable = true,
+> > >>> -	.msix_capable = false,
+> > >>> -};
+> > >>> -
+> > >>>  static const struct pci_epc_features*
+> > >>> ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  {
+> > >>> -	return &ls_pcie_epc_features;
+> > >>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > >>> +
+> > >>> +	return pcie->ls_epc;
+> > >>>  }
+> > >>>
+> > >>>  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)  {
+> > >>>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > >>>  	enum pci_barno bar;
+> > >>>
+> > >>>  	for (bar = BAR_0; bar <= BAR_5; bar++)
+> > >>>  		dw_pcie_ep_reset_bar(pci, bar);
+> > >>> +
+> > >>> +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
+> > >>> +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
+> > >>>  }
+> > >>>
+> > >>>  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > >>> @@
+> > >>> -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct
+> > >>> platform_device
+> > >> *pdev)
+> > >>>  	struct device *dev = &pdev->dev;
+> > >>>  	struct dw_pcie *pci;
+> > >>>  	struct ls_pcie_ep *pcie;
+> > >>> +	struct pci_epc_features *ls_epc;
+> > >>>  	struct resource *dbi_base;
+> > >>>  	int ret;
+> > >>>
+> > >>> @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct
+> > >> platform_device *pdev)
+> > >>>  	if (!pci)
+> > >>>  		return -ENOMEM;
+> > >>>
+> > >>> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
+> > >>> +	if (!ls_epc)
+> > >>> +		return -ENOMEM;
+> > >>> +
+> > >>>  	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > >> "regs");
+> > >>>  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > >>>  	if (IS_ERR(pci->dbi_base))
+> > >>> @@ -139,6 +146,11 @@ static int __init ls_pcie_ep_probe(struct
+> > >> platform_device *pdev)
+> > >>>  	pci->ops = &ls_pcie_ep_ops;
+> > >>>  	pcie->pci = pci;
+> > >>>
+> > >>> +	ls_epc->linkup_notifier = false,
+> > >>> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > >>> +
+> > >>> +	pcie->ls_epc = ls_epc;
+> > >>> +
+> > >>>  	platform_set_drvdata(pdev, pcie);
+> > >>>
+> > >>>  	ret = ls_add_pcie_ep(pcie, pdev);
+> > >>>
