@@ -2,80 +2,120 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3348BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43664217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080C6217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:19:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hg55rG0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731948AbfIBPTK (ORCPT
+        id S1731962AbfIBPTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:19:10 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51084 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729656AbfIBPTK (ORCPT
+        Mon, 2 Sep 2019 11:19:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44270 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729971AbfIBPTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:19:10 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 5100228A869
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-tegra@vger.kernel.org,
-        Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: [PATCH v2] merge_config.sh: ignore unwanted grep errors
-Date:   Mon,  2 Sep 2019 16:18:36 +0100
-Message-Id: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Sep 2019 11:19:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2EGoFqF4zos5OWv6WNlwPBiBbR4EbKkewLh/Q5wrwzg=; b=hg55rG0HzZ77yWw3lDcHMwEJH
+        4h8tXaA10F6hxvy5EoMJeMlsFgva45iKJC3AS9g/Ap2If6wlb+9lOoQjF6RautWXs7fuH2KbLPGpN
+        TokyPVRzEED9kDfKmX0u4MhmhuRBVRYt+Z3SxO5dLwR2lBE5cfOK80/paYacTHWmSW0sdGT1Na+S7
+        7aF0pm3wH2AIQejEdf+A1hMOAsn/lirsJZGtZPGXN77GBmAO/1wDvwfOk84jnwhxPVK1KEgzMy3sG
+        1aboGacoWyhc+tMzP691PSZ/lxTmBIA7WJAdPZghGGSWUKZNLU67+qXiJdEu+WBVcVmXLOES8qJf1
+        UBT+u7T5g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4o6o-0004hD-LX; Mon, 02 Sep 2019 15:19:10 +0000
+Date:   Mon, 2 Sep 2019 08:19:10 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190902151910.GA14009@infradead.org>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
+ <20190829101545.GC20598@infradead.org>
+ <20190901085452.GA4663@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190902125109.GA9826@infradead.org>
+ <20190902144303.GF2664@architecture4>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902144303.GF2664@architecture4>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The merge_config.sh script verifies that all the config options have
-their expected value in the resulting file and prints any issues as
-warnings.  These checks aren't intended to be treated as errors given
-the current implementation.  However, since "set -e" was added, if the
-grep command to look for a config option does not find it the script
-will then abort prematurely.
+On Mon, Sep 02, 2019 at 10:43:04PM +0800, Gao Xiang wrote:
+> Hi Christoph,
+> > > ...
+> > >  24         __le32 features;        /* (aka. feature_compat) */
+> > > ...
+> > >  38         __le32 requirements;    /* (aka. feature_incompat) */
+> > > ...
+> > >  41 };
+> > 
+> > This is only cosmetic, why not stick to feature_compat and
+> > feature_incompat?
+> 
+> Okay, will fix. (however, in my mind, I'm some confused why
+> "features" could be incompatible...)
 
-Handle the case where the grep exit status is non-zero by setting
-ACTUAL_VAL to an empty string to restore previous functionality.
+The feature is incompatible if it requires changes to the driver.
+An easy to understand historic example is that ext3 originally did not
+have the file types in the directory entry.  Adding them means old
+file system drivers can not read a file system with this new feature,
+so an incompat flag has to be added.
 
-Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
-Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
----
+> > > > > +	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
+> > > > > +	memcpy(sbi->volume_name, layout->volume_name,
+> > > > > +	       sizeof(layout->volume_name));
+> > > > 
+> > > > s_uuid should preferably be a uuid_t (assuming it is a real BE uuid,
+> > > > if it is le it should be a guid_t).
+> > > 
+> > > For this case, I have no idea how to deal with...
+> > > I have little knowledge about this uuid stuff, so I just copied
+> > > from f2fs... (Could be no urgent of this field...)
+> > 
+> > Who fills out this field in the on-disk format and how?
+> 
+> mkfs.erofs, but this field leaves 0 for now. Is that reasonable?
+> (using libuuid can generate it easily...)
 
-Notes:
-    v2: use true rather than echo as per Jon Hunter's suggestion
-
- scripts/kconfig/merge_config.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
-index d924c51d28b7..f2cc10b1d404 100755
---- a/scripts/kconfig/merge_config.sh
-+++ b/scripts/kconfig/merge_config.sh
-@@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
- for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
- 
- 	REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
--	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
-+	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || true)
- 	if [ "x$REQUESTED_VAL" != "x$ACTUAL_VAL" ] ; then
- 		echo "Value requested for $CFG not in final .config"
- 		echo "Requested value:  $REQUESTED_VAL"
--- 
-2.20.1
-
+If the filed is always zero for now please don't fill it out.  If you
+decide it is worth adding the uuid eventually please add a compat
+feature flag that you have a valid uuid and only fill out the field
+if the file system actualy has a valid uuid.
