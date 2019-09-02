@@ -2,113 +2,135 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D45C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D9FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54593216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A1A216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKcHDACo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfIBMqU (ORCPT
+        id S1731030AbfIBMqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:46:20 -0400
-Received: from mga12.intel.com ([192.55.52.136]:14909 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbfIBMqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:46:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 05:46:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="382788033"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Sep 2019 05:46:17 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i4liq-00021s-EE; Mon, 02 Sep 2019 15:46:16 +0300
-Date:   Mon, 2 Sep 2019 15:46:16 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v4 04/11] device property: Add functions for accessing
- node's parents
-Message-ID: <20190902124616.GH2680@smile.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-5-sakari.ailus@linux.intel.com>
- <20190902101426.GB2680@smile.fi.intel.com>
- <20190902123431.GK5475@paasikivi.fi.intel.com>
+        Mon, 2 Sep 2019 08:46:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41583 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfIBMqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:46:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so7432678pgg.8;
+        Mon, 02 Sep 2019 05:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pgpliINIcPhRc7BoPrS9B0ow1dlVmDoEwaS8EkZIGsk=;
+        b=iKcHDACooIYXG12YqobbLfwrs0m9jJ0g9pUEG/yHkkVSUkM+4P2KHKsylGwM7IFasO
+         77lLo5fMqVvA1ZyFcVvUs9kp97t7EYK9xLbVze9DNahb00gwgfTrT7i6NftOA7WOFszY
+         BQm26EUDi9RHFXHYXMgnFfZYRopoBYYZK8p+sd3Koqh5TbLKd5wi0n/Mm7UtAsrQjeFs
+         n/Z6jMYgcDOvMn+KGep5g5kdw5Ct9tg4tfK6fPPf2dY9tnz3iF+t0SiGmHqnQXI+tZpJ
+         AovmJaUzEHmO+HmLgO+yqXmIDkrKWIfHx51iUR3DplGeOYQ4uQ3QwGCr8/TqhGJH/6IK
+         vf4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pgpliINIcPhRc7BoPrS9B0ow1dlVmDoEwaS8EkZIGsk=;
+        b=A4KOY9h4wtF2HQWMuvaAf9cuKlr319RZKVSNpARiKbY7nWf9nZ8JmNUre4CDHEIWa9
+         7+zbNz0H5DnN69u9SKvLo6RQlc/ESScLtat52W63O343jOn5vkqRf+meHJknOsjQxIFq
+         7MvyGaniDT7s/RUfg1SJHqUYRh8lQV9KgYw5cUzuQ7fOPrkslKt0TpYaqOYKb7TM7HT4
+         1htSiJFYPcECnit2mky8Wm6NrEZ5i5Og2saTLw3fpOm22+AtpV7WIk2PL+Uo6e6FOR1y
+         wW7FJkwLMGow8TreHaKz48DVPp3MIIC54hp1/EcP2EUIn8z5/JErysJAWunrXqp8d2hG
+         NJRA==
+X-Gm-Message-State: APjAAAW4xTMRFH1gBaxZPDbsvIHe5dCUoTQlAWBiseVmkH15nzbx1vtv
+        jOULevzs0UEt96w535bqIc7dBe2ESo222mHhAQA=
+X-Google-Smtp-Source: APXvYqxXfUfYYlSHCGT8QWcRuQ7m0TRU6YfPCzIJqacGx9wipMEOCpcJgFUg1vZ65kU4tE0DEW8M4geXJQCCfGj37x8=
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr34409763pfi.72.1567428382975;
+ Mon, 02 Sep 2019 05:46:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902123431.GK5475@paasikivi.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190830061540.211072-1-Tianyu.Lan@microsoft.com> <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Mon, 2 Sep 2019 20:46:15 +0800
+Message-ID: <CAOLK0pwEMg7kSsRNfKa6=uQ1eVGa-HdNG=qMBernoe7XwS-0_w@mail.gmail.com>
+Subject: Re: [PATCH] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:34:31PM +0300, Sakari Ailus wrote:
-> Hi Andy,
-> 
-> On Mon, Sep 02, 2019 at 01:14:26PM +0300, Andy Shevchenko wrote:
-> > On Mon, Sep 02, 2019 at 11:32:33AM +0300, Sakari Ailus wrote:
-> > > Add two convenience functions for accessing node's parents:
-> > > 
-> > > fwnode_count_parents() returns the number of parent nodes a given node
-> > > has. fwnode_get_nth_parent() returns node's parent at a given distance
-> > > from the node itself.
-> > > 
-> > 
-> > Much better now, thanks!
-> > 
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > though one question below.
+On Sat, Aug 31, 2019 at 1:41 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>
+> From: lantianyu1986@gmail.com  Sent: Thursday, August 29, 2019 11:16 PM
+> >
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >
+> > fill_gva_list() populates gva list and adds offset
+> > HV_TLB_FLUSH_UNIT(0x1000000) to variable "cur"
+> > in the each loop. When diff between "end" and "cur" is
+> > less than HV_TLB_FLUSH_UNIT, the gva entry should
+> > be the last one and the loop should be end.
+> >
+> > If cur is equal or greater than 0xFF000000 on 32-bit
+> > mode, "cur" will be overflow after adding HV_TLB_FLUSH_UNIT.
+> > Its value will be wrapped and less than "end". fill_gva_list()
+> > falls into an infinite loop and fill gva list out of
+> > border finally.
+> >
+> > Set "cur" to be "end" to make loop end when diff is
+> > less than HV_TLB_FLUSH_UNIT and add HV_TLB_FLUSH_UNIT to
+> > "cur" when diff is equal or greater than HV_TLB_FLUSH_UNIT.
+> > Fix the overflow issue.
+>
+> Let me suggest simplifying the commit message a bit.  It
+> doesn't need to describe every line of the code change.   I think
+> it should also make clear that the same problem could occur on
+> 64-bit systems with the right "start" address.  My suggestion:
+>
+> When the 'start' parameter is >=  0xFF000000 on 32-bit
+> systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+> fill_gva_list gets into an infinite loop.  With such inputs,
+> 'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
+> compares as less than end.  Memory is filled with guest virtual
+> addresses until the system crashes
+>
+> Fix this by never incrementing 'cur' to be larger than 'end'.
+>
+> >
+> > Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote
+> > TLB flush")
+>
+> The "Fixes:" line needs to not wrap.  It's exempt from the
+> "wrap at 75 columns" rule in order to simplify parsing scripts.
+>
+> The code itself looks good.
 
-> > > +/**
-> > > + * fwnode_get_nth_parent - Return an nth parent of a node
-> > > + * @fwnode: The node the parent of which is requested
-> > > + * @depth: Distance of the parent from the node
-> > > + *
-> > > + * Returns the nth parent of a node. If @depth is 0, the functionality is
-> > > + * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
-> > > + * and so on.
-> > > + *
-> > > + * The caller is responsible for calling fwnode_handle_put() for the returned
-> > > + * node.
-> > > + */
-> > > +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-> > > +					    unsigned int depth)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	fwnode_handle_get(fwnode);
-> > > +
-> > > +	for (i = 0; i < depth && fwnode; i++)
-> > > +		fwnode = fwnode_get_next_parent(fwnode);
-> > > +
-> > 
-> > If 'fnode == NULL' and 'i < depth', shan't we return some kind of error?
-> 
-> How about adding to the comment, after the first sentence of the
-> description:
-> 
-> 	If there is no parent at the requested depth, NULL is returned.
-
-Works for me!
-
+Hi Michael:
+       Thanks for suggestion. Update commit log in V2.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards
+Tianyu Lan
