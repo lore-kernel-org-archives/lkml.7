@@ -2,69 +2,82 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEAEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2284AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4824B21883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567440057;
-	bh=mJwEXeh9CSD/UGKpq5I8/EKKhuH0yp4LBIc3MRNKusI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hj8kx2CX2hJGUYgd3cLyIZJG8oGBP7gVD7q1OLHQ6U/yCmtEmgxD3vKwuZ3w0koqP
-	 5uZlRnopr88RrKQO45GB4NwDVD74c+XlH/ow7ZmwJMoV0Qt/NYw68Vf9CFgbzmh3iB
-	 R5jrDTCuYNebPXXNJG02B71Dx5MIoF0Q8p5om6Rk=
+	by mail.kernel.org (Postfix) with ESMTP id F006B217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfIBQA4 (ORCPT
+        id S1726410AbfIBQBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 12:00:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46048 "EHLO mail.kernel.org"
+        Mon, 2 Sep 2019 12:01:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55102 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfIBQA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 12:00:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725815AbfIBQBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 12:01:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89E921881;
-        Mon,  2 Sep 2019 16:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567440055;
-        bh=mJwEXeh9CSD/UGKpq5I8/EKKhuH0yp4LBIc3MRNKusI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IokDy13upxRjfjtUAgiANVVb5OnMLv/ypAQlXMRYwgf7PNYfawBES++kL3BndpSyq
-         wmRXla5ruFdg/4tW1jDyC7volEhHr3UqY75gAI2gconNIjwmU+MH2nmHgpOo8zWGXa
-         yjHRGES2Yuocvxc4Ka10XexzBKcrvhehbuY4UkEs=
-Date:   Mon, 2 Sep 2019 18:00:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hui Peng <benquike@gmail.com>
-Cc:     stable@vger.kernel.org,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Wenwen Wang <wang6495@umn.edu>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Fix a stack buffer overflow bug in check_input_term
-Message-ID: <20190902160044.GC21884@kroah.com>
-References: <20190830214730.27842-1-benquike@gmail.com>
- <CAKpmkkWv2cjrJCkVhGmEMnLG2_kCNxdbt29dZ8j-UM8Cf3quGQ@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id CBC20301E11C;
+        Mon,  2 Sep 2019 16:01:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 589CE600D1;
+        Mon,  2 Sep 2019 16:01:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190902161935.78bf56f1@canb.auug.org.au>
+References: <20190902161935.78bf56f1@canb.auug.org.au> <20190829153116.7ffc7470@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     dhowells@redhat.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the keys tree
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKpmkkWv2cjrJCkVhGmEMnLG2_kCNxdbt29dZ8j-UM8Cf3quGQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <16835.1567440079.1@warthog.procyon.org.uk>
+Date:   Mon, 02 Sep 2019 17:01:19 +0100
+Message-ID: <16836.1567440079@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 02 Sep 2019 16:01:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 05:51:17PM -0400, Hui Peng wrote:
-> This is the backported patch for the following fix to v4.4.x and v4.14.x:
-> 19bce474c45b ("ALSA: usb-audio: Fix a stack buffer overflow bug in
-> check_input_term")
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Now queued up, thanks.
+> The forward declararion doesn't seem to work (at laste for the
+> !CONFIG_USB_NOTIFICATIONS case.
 
-greg k-h
+In the !CONFIG_USB_NOTIFICATIONS case, the argument is to a stub inline
+function.  Even though the argument isn't actually used, it can't be an
+undefined type - and, I'm guessing, an undefined size, meaning the compiler
+doesn't know how many registers/how much stack space it would occupy before
+getting to the error argument.
+
+I have a fix for this in my tree that just makes it an unsigned int in the
+disabled case:
+
+static inline void post_usb_device_notification(const struct usb_device *udev,
+						unsigned int subtype, u32 error) {}
+
+> +#include <linux/watch_queue.h>
+
+I was trying to avoid that if I could to avoid introducing the possibility of
+circular deps, but that might not be a problem in this case.
+
+> I then discovered that I needed to install libkeyutils-dev :-( but it
+> built OK after that.
+
+?  The kernel shouldn't require that to build.
+
+David
