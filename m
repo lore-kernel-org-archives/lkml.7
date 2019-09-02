@@ -2,106 +2,118 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCDDC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8D9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B6A21897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:41:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSLbfQPD"
+	by mail.kernel.org (Postfix) with ESMTP id 8957A22DCC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfIBUlC (ORCPT
+        id S1727483AbfIBUmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 16:41:02 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40364 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfIBUlC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 16:41:02 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v38so10720082edm.7;
-        Mon, 02 Sep 2019 13:41:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/6xZYkgl4ocSqmwrHXLN+0O+x2+BOQMBtBz7Y33HFq8=;
-        b=uSLbfQPDAcBsaxTcXTs7bxHorDIpkF8/bQWuFPf8D0/arS6TmVjKnjoXhcg8cRA0f8
-         e84ZQSgf/VANlfdOsVBJHjNr8GTYlAwOIlrNoa7Ujj92GY1jO/3FbCw7H6r08lzC39et
-         3oyU2ZHjbtg3xZqUU2dqC25754xnGeWSAfBMCXNneHrws0JXyEo91fjTU5flrJj0ufnu
-         zCq1RWVtzQni6KAaIuLpxBRIciIEgQ8hfPJkoqP5vjZvZ7wLs07Et5YfVoGz7Gvct34M
-         V6m9Z6jSXV0YmavIrtBfN333cT6KY4HAmNDWp70k7Xqg8FwZkY/OSJOeN8HN3QPuohtv
-         kzkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/6xZYkgl4ocSqmwrHXLN+0O+x2+BOQMBtBz7Y33HFq8=;
-        b=tfOc5znxCvCEpWBZzo68Mpp40Hizav3MV3g8x82d/6HeyDUgP4s7XV7uwJJBXF1Ln3
-         7g99IjQbcjs4m0ODI0OJ5G/UDeOOydMAfPN26BvNI71CK0k+dHMVNfibmiNo/IRkyKUk
-         U/Kco1IxpktlgqDG24HEd6mZbyexJoehRb7DjPUovzACZdwOR2YzLBnI+nsxXCnPiJiJ
-         3aCsUv111qtGFSsPVJPB8L4Jf0Ebsfku9keuzXPfoJOrL2JtzgoYWvcKtvRDIS8n1lqe
-         cykC3oPrLCoxMh2QPHGWG9sHSEOr20VAXZeGA4spIO1K32wYUag55HMFwPwFs8WU/I4k
-         umUg==
-X-Gm-Message-State: APjAAAVaFqKf/NL3X2GvvHPg9EL4RAy454lnf4mFQE4kDyrroPNOx1Hn
-        1K1CmSDew+jdvEp6LpT2g+xgQo+kgn5KeHCJgbQ=
-X-Google-Smtp-Source: APXvYqzkGpl0pu44qDC0uA4IX121wLLKZE0M+hrRSi3CbuBwKmftDNqCzqy4uvMsNkzIcxWoyGa7h9FxzLr5ayiQOhg=
-X-Received: by 2002:aa7:dcc3:: with SMTP id w3mr26706924edu.202.1567456860910;
- Mon, 02 Sep 2019 13:41:00 -0700 (PDT)
+        Mon, 2 Sep 2019 16:42:11 -0400
+Received: from sauhun.de ([88.99.104.3]:43936 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727183AbfIBUmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 16:42:11 -0400
+Received: from localhost (p54B337C1.dip0.t-ipconnect.de [84.179.55.193])
+        by pokefinder.org (Postfix) with ESMTPSA id 1120B2C0165;
+        Mon,  2 Sep 2019 22:42:09 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 22:42:08 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Message-ID: <20190902204208.GA7253@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
 MIME-Version: 1.0
-References: <20190901105410.23567-1-repk@triplefau.lt> <CAFBinCD96nJBPnyNgWA6CgwE2kZrkXB3-cgbV9aQLB=JtbrN2w@mail.gmail.com>
-In-Reply-To: <CAFBinCD96nJBPnyNgWA6CgwE2kZrkXB3-cgbV9aQLB=JtbrN2w@mail.gmail.com>
-From:   Elie Roudninski <xademax@gmail.com>
-Date:   Mon, 2 Sep 2019 21:40:49 +0100
-Message-ID: <CAJJ5kavS6RU1tK-BqgWD-VmJzPuG114y+pNApYay=+xwCtAwQg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: meson_saradc: Fix memory allocation order
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
+In-Reply-To: <20190723203723.11730-3-luca@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 1, 2019 at 12:29 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> On Sun, Sep 1, 2019 at 12:45 PM Remi Pommarel <repk@triplefau.lt> wrote:
-> >
-> > meson_saradc's irq handler uses priv->regmap so make sure that it is
-> > allocated before the irq get enabled.
-> >
-> > This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
-> > managed resources are freed in the inverted order they had been
-> > allocated, priv->regmap was freed before the spurious fake irq that
-> > CONFIG_DEBUG_SHIRQ adds called the handler.
-> >
->
-> Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to
-> interrupt mode")
-> > Reported-by: Elie Roudninski <xademax@gmail.com>
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
-> thank you for fixing this!
-The patch fixed the kernel panic I had, i can now successfully boot my
-meson-gxl-s905x-libretech-cc boad using patched linux 5.2.11
 
-Tested-by: Elie ROUDNINSKI <xademax@gmail.com>
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Elie
->
->
-> Martin
+Hi Luca,
+
+> + * Topology:
+> + *
+> + *                       Slave X @ 0x10
+> + *               .-----.   |
+> + *   .-----.     |     |---+---- B
+> + *   | CPU |--A--| ATR |
+> + *   `-----'     |     |---+---- C
+> + *               `-----'   |
+> + *                       Slave Y @ 0x10
+> + *
+> + * Alias table:
+> + *
+> + *   Client  Alias
+> + *   -------------
+> + *      X    0x20
+> + *      Y    0x30
+
+Great that you already provided docs for this driver!
+
+One huge drawback for me is the attach/detach callbacks. One year ago, I
+removed a similar callback from the I2C core ("[PATCH 0/2] i2c: remove
+deprecated attach_adapter callback") because some drivers did a lot of
+crazy things there. It took years to remove all that.
+
+What I could imagine here: the adapter (B and C each in the picture
+above) gets a flag like NEEDS_ATR before registering to the core. The
+flag means all clients on that bus will have their address translated.
+The core will figure out a free alias when a device is registered. We
+can then have an ATR specific callback with the original and translated
+address as arguments, so one can setup the HW as needed.
+
+Do you think that would work? Jacopo, does that meet GMSL as well?
+
+Regards,
+
+   Wolfram
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1tfpwACgkQFA3kzBSg
+KbYMqw/7B+tsA9k6JQpEn3lIgySHVigNyDkBrhwtllVTPWmdTX67GS6UmzOu5vsN
+JwVMAPeXvrB1/R8d3wudXYWwz9AL+b/GUmCcZiOpJShWtVZg7ynCbJT2LJq578zG
+JS1D8HvawfMMRW2XcotIPKXZbxP8WoIV/wQP7qb7Cg1z196bPmiN96pHIPNUJKRu
+MYvMC1RYwv8q54US8nX7HIU8KREEUKTcwNQeUWwQqGtqtMUchy9A8Qrb8HRugTy9
+cym7RrnkJ43/nDaG/XocQ/h4finto7md9wkQ2y4WoblumpyY+xWIeQ1esAU66q89
+BJbRQMDOEO3P0U8kdpo0rIRMCie/RAU4tNLTA8sW65oPi0OGWAk9DW/raJ2QD5yw
+6co4sWJJKBFjWI6nSxdneBQhzPB0u1hiiCqkkHp8NZScXZzZ1X2uUN0qKIuXDQwS
+GZwzF9Nq+8X5NJt0rofFtkR3hcpKBQgdWqRx/omsV58mPFJFC+XKGKAQgZpE+k4m
+IZFWVfpmIh2N3Fcl2m34qKf6Ca2pbMhy2EnzkqQdIVrB8Y81cm8RdCLbz/KSmFPK
+ZAxrdo1ohwezmkoSAzXuwy1TGsPgaNtyl8yZdEu3f+9C3jYnQJbUGc4qIJtvrQvD
+0BrJHQRwJB+9v5CMLrNqAv6e5Cv/ZsuDswWM0ZajUz0mhUUnczA=
+=hGfN
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
