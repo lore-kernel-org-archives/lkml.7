@@ -2,184 +2,139 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BC3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C57C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AC9208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA5A22DCC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567448580;
-	bh=vuFrIXY8fo9UaGbA+uOu8Wzc3yR4vUW1Mvu4wGLQtZ4=;
+	s=default; t=1567448638;
+	bh=mW5nf+1HLE19vezXKFXZ5fGbtvNwUx214Bc6vuyN+XQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KeJoCE3PN3qrbU2BBVejS1kPuIMsZEbo0Is7CyGz8ThcjMqVz28sGWe0ArkF33Jnb
-	 Y/qPb/ior1A1BuUBnCLhUYb8dutH7Tln0IY9gBXLDzFyBZlfq9jmGdy5kfPQotQR08
-	 wElYa82PUszKAe8YSjNqXfRTwL19pK3SOEhTlmCQ=
+	b=BdeqMM6sALnUXGh7RCq2J1BDqo9EdgdEhXhCxbRof536Ewq+nnyWThj0kA+rUqk1E
+	 cfFqSKIhaQvOt2CYhBKd9j2tOjG20wXJCAu7vzFIMqN1YlnD+VM7ML38Y5bczFmw1Y
+	 1CP6+Yu/W1Bmz6EfkCUvJYozg/YtAQnmK6XjFoX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfIBSW7 (ORCPT
+        id S1726952AbfIBSX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:22:59 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46351 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfIBSW7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:22:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so13548350wrt.13;
-        Mon, 02 Sep 2019 11:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8A/kzDKosPuqQJbNKUfUKEZ3g88LloK7fbrgo3dQ42Q=;
-        b=X1Hbz3B066PMs/wFzGMdVngPlmfveUnUO/NuPBD+yyoHoS/9BlKzuv6Ckhzew5pOv/
-         ULDRFPERFg0KWvkfbvIML575gChH/77GxlL9dyk0qa5UbCTonhi5xuz7mlZvij7GUpvU
-         l8QZ4qFlwn7TuZaW7UAUDyhkPZsuaTeATTFAGn7Qd8HvQZmhQky+CvoiJmtue1FDyubn
-         P/yL1vPboPGUH9tzCouFRzdLC3HVehGXkouMh5YjL0urGmjTKniylfgtdMV0yebN/eRz
-         7uoeQ6KEpliOCJn3osbrEoocuMhC4Yp1FBqhiDOASFKIs2V0PKzjMQyq6vK0Cfy1LKoW
-         ARkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8A/kzDKosPuqQJbNKUfUKEZ3g88LloK7fbrgo3dQ42Q=;
-        b=sPFksgp++BwVc11NqdEPgVcgsF6+gvtdk77p5TRBFScEGWqvWOhW2bWdxwAMfHIn22
-         RN+3ZWiX8IXeRlcQo+KISRwGtC/iuYhzB5JZwahS+G2Stxhg1r5SH51makiKPMBiHEXa
-         D04eUN7RIVQUUrIW2S62oARJp4HLTh5ZEqA9MoIq/pnqSjlMrDo3eA1j2z4lXISENf1w
-         6tVZPt7PlbM1r4jkmi8T3fGVas9IShQ90Ljpee5yDioIGLkpDjmQvldAOkOV/q2zX1be
-         jq5poy+U488HZii/35/fgiFMYCQkin0qTENAvzdBwGZxVZgW7jPpF/iC9IMr2rwdG0he
-         8FVQ==
-X-Gm-Message-State: APjAAAX7Wwe4CYeX1fTxrjA6j5q4QMTSqOYdwukJazHaW+eLCpyFSKrs
-        QUwEafkyCs/evHz7LiQxz4I=
-X-Google-Smtp-Source: APXvYqzIotofKxre9TSXVZbGJRzt2MUIul0zkl0rNXE9gzwa4Z1Lg36GB0S2Qsdlyw89JY76H73b4Q==
-X-Received: by 2002:adf:a4c8:: with SMTP id h8mr15266864wrb.293.1567448576040;
-        Mon, 02 Sep 2019 11:22:56 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id z21sm3901958wmf.30.2019.09.02.11.22.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 11:22:55 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 20:22:52 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, dalias@libc.org,
-        linux-sh@vger.kernel.org, catalin.marinas@arm.com,
-        dave.hansen@linux.intel.com, heiko.carstens@de.ibm.com,
-        linuxarm@huawei.com, jiaxun.yang@flygoat.com,
-        linux-kernel@vger.kernel.org, mwb@linux.vnet.ibm.com,
-        paulus@samba.org, hpa@zytor.com, sparclinux@vger.kernel.org,
-        chenhc@lemote.com, will@kernel.org, linux-s390@vger.kernel.org,
-        ysato@users.sourceforge.jp, mpe@ellerman.id.au, x86@kernel.org,
-        rppt@linux.ibm.com, borntraeger@de.ibm.com, dledford@redhat.com,
-        mingo@redhat.com, jeffrey.t.kirsher@intel.com,
-        benh@kernel.crashing.org, jhogan@kernel.org,
-        nfont@linux.vnet.ibm.com, mattst88@gmail.com, len.brown@intel.com,
-        gor@linux.ibm.com, anshuman.khandual@arm.com,
-        ink@jurassic.park.msu.ru, cai@lca.pw, luto@kernel.org,
-        tglx@linutronix.de, naveen.n.rao@linux.vnet.ibm.com,
-        linux-arm-kernel@lists.infradead.org, rth@twiddle.net,
-        axboe@kernel.dk, robin.murphy@arm.com, linux-mips@vger.kernel.org,
-        ralf@linux-mips.org, tbogendoerfer@suse.de, paul.burton@mips.com,
-        linux-alpha@vger.kernel.org, bp@alien8.de,
-        akpm@linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-Message-ID: <20190902182252.GC35858@gmail.com>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
- <20190831161247.GM2369@hirez.programming.kicks-ass.net>
- <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
- <20190902072542.GN2369@hirez.programming.kicks-ass.net>
- <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
- <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
+        Mon, 2 Sep 2019 14:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbfIBSX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:23:58 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F03D3208E4;
+        Mon,  2 Sep 2019 18:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567448637;
+        bh=mW5nf+1HLE19vezXKFXZ5fGbtvNwUx214Bc6vuyN+XQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2lRKi/DYQ1enqibPmCSg9L2FuAxsP8jQ6ZqevbwzCQggmhKMaD2EkSkhYwD1LVclL
+         rEuRiVlo5PiIrcPAfH7RTG+sgWJzA9JCV/TeR/ADbQxFNywLye6/VyYYiiKHAM1A6/
+         0emN/s4cyN+YGMjmWzFA5P5PfUsaqp060NIGGYls=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 97B813C0B7F; Mon,  2 Sep 2019 20:23:54 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 20:23:54 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Richard Tresidder <rtresidd@electromag.com.au>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, rfontana@redhat.com, allison@lohutok.net,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v2 1/2] dt-binding docs: sbs_sbs-battery: Addition of
+ force_load binding
+Message-ID: <20190902182354.p2o6pb4wy7bggywz@earth.universe>
+References: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
+ <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kxy72r42udvqwqdq"
 Content-Disposition: inline
-In-Reply-To: <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+--kxy72r42udvqwqdq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Sep 02, 2019 at 08:25:24PM +0800, Yunsheng Lin wrote:
-> > On 2019/9/2 15:25, Peter Zijlstra wrote:
-> > > On Mon, Sep 02, 2019 at 01:46:51PM +0800, Yunsheng Lin wrote:
-> > >> On 2019/9/1 0:12, Peter Zijlstra wrote:
-> > > 
-> > >>> 1) because even it is not set, the device really does belong to a node.
-> > >>> It is impossible a device will have magic uniform access to memory when
-> > >>> CPUs cannot.
-> > >>
-> > >> So it means dev_to_node() will return either NUMA_NO_NODE or a
-> > >> valid node id?
-> > > 
-> > > NUMA_NO_NODE := -1, which is not a valid node number. It is also, like I
-> > > said, not a valid device location on a NUMA system.
-> > > 
-> > > Just because ACPI/BIOS is shit, doesn't mean the device doesn't have a
-> > > node association. It just means we don't know and might have to guess.
-> > 
-> > How do we guess the device's location when ACPI/BIOS does not set it?
-> 
-> See device_add(), it looks to the device's parent and on NO_NODE, puts
-> it there.
-> 
-> Lacking any hints, just stick it to node0 and print a FW_BUG or
-> something.
-> 
-> > It seems dev_to_node() does not do anything about that and leave the
-> > job to the caller or whatever function that get called with its return
-> > value, such as cpumask_of_node().
-> 
-> Well, dev_to_node() doesn't do anything; nor should it. It are the
-> callers of set_dev_node() that should be taking care.
-> 
-> Also note how device_add() sets the device node to the parent device's
-> node on NUMA_NO_NODE. Arguably we should change it to complain when it
-> finds NUMA_NO_NODE and !parent.
-> 
+Hi,
+
+On Tue, Jul 30, 2019 at 06:10:03PM +0800, Richard Tresidder wrote:
+> Add device tree binding documentation for addition of force_load boolean =
+value
+> to allow loading a battery during boot even if notpresent at that time.
+>=20
+> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
 > ---
->  drivers/base/core.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index f0dd8e38fee3..2caf204966a0 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -2120,8 +2120,16 @@ int device_add(struct device *dev)
->  		dev->kobj.parent = kobj;
->  
->  	/* use parent numa_node */
-> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
-> -		set_dev_node(dev, dev_to_node(parent));
-> +	if (dev_to_node(dev) == NUMA_NO_NODE) {
-> +		if (parent)
-> +			set_dev_node(dev, dev_to_node(parent));
-> +#ifdef CONFIG_NUMA
-> +		else {
-> +			pr_err("device: '%s': has no assigned NUMA node\n", dev_name(dev));
-> +			set_dev_node(dev, 0);
-> +		}
-> +#endif
+>  Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +=
+++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-batte=
+ry.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+> index 4e78e51..187d7bb 100644
+> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+> @@ -15,7 +15,8 @@ Optional properties :
+>     after an external change notification.
+>   - sbs,battery-detect-gpios : The gpio which signals battery detection a=
+nd
+>     a flag specifying its polarity.
+> -
+> + - sbs,force-load : Allow loading of a hot-pluggable battery when there =
+is no
+> +   GPIO detect available and the module is statically built.
 
-BTW., is firmware required to always provide a NUMA node on NUMA systems?
+This does not describe hardware configuration and is not an
+acceptable DT property.
 
-I.e. do we really want this warning on non-NUMA systems that don't assign 
-NUMA nodes?
+-- Sebastian
 
-Also, even on NUMA systems, is firmware required to provide a NUMA node - 
-i.e. is it in principle invalid to offer no NUMA binding?
+>  Example:
+> =20
+>  	battery@b {
+> @@ -24,4 +25,5 @@ Example:
+>  		sbs,i2c-retry-count =3D <2>;
+>  		sbs,poll-retry-count =3D <10>;
+>  		sbs,battery-detect-gpios =3D <&gpio-controller 122 1>;
+> +		sbs,force-load;
+>  	}
+> --=20
+> 1.8.3.1
+>=20
 
-Thanks,
+--kxy72r42udvqwqdq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Ingo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tXjcACgkQ2O7X88g7
++potIhAAh3upX8+LvEe6Q2MDNqs1lToaIapy6jXTBI9HHhb0i78GbnqV/dducdPJ
+TpZo7N4G8+3/jz8h8wPOZtOZuAUm1RE44+aqP39CHE1wfrzuNGa7Q2JVPijT2xAN
+6dmeIWCz1qkK6cskT3MngTcUNHwul1RMHuhdrlzZ8I+BxvfjQXo7VBjK8oMhGys/
+sKZ1ZMv4IQx37iEfbFibTo8HhcJJKsy1Qg2qwoizyQytuu8axlg+PYh4sS+oEcbf
+1DAWUh+KeHX5IG6BKJFkWth17HGPvJUVpFqm/Wx6SWAQ76k9j4lL3jRnhZPWRuLF
+B9Oq8ikQCgCk2Blt1oNPVSpHv39r6vQFLPuUXYAA1ZCPEISYRFu63ACeA354eddL
+r0IDU+l1aMVumX9Flrj2pY5+tWEKtZER9ieuHsERyA9JNZetuvz3Um3CzP964wut
+WRERDWcJhxl6Hwv7YvWTx0lQgT7hO9yvAa9dzXux8UYX53lAGvlq5PXf2I9AHPlo
+z7jlCokUtjG195B36QvZLZoiGDEZ7p+kfFRTFIhTKc4c/dsbQX/gKB99TeVAp6TB
+2Kc6Ge3sRkqHaVKqmNc4B5/56YmSDTAttxZQGEY0c4wAdvLz7DTDPQdcDxF792Ap
+BDji1wHRt9323nXptnhzPE+IF2qnvfvJ/jV5MIncVst+EmAxnx0=
+=tOBC
+-----END PGP SIGNATURE-----
+
+--kxy72r42udvqwqdq--
