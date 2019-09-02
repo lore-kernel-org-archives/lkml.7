@@ -2,135 +2,108 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D55C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB85E216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567452826;
-	bh=PayzVtvb1IrG2V07glwrkJeACX2e/Z4eCtEZGxId41c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LuWC0iUIn2qiWXtEyotTOLa+aq0XVj4RAb3kdk1b3NNtywd2hGrJNU5T5/hpYHrkH
-	 moz00OWeDMQHsKEcGPA6yNIZ+FL4a8yD7Rqny7oU+7QW9sSH7CmvLu+K46HLPe08XA
-	 X9Pb2o229mqTQKvjC8GRkMuPFjIP8kDwIHzs9gnE=
+	by mail.kernel.org (Postfix) with ESMTP id C1ECB21897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:37:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="AevTDV+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfIBTdp (ORCPT
+        id S1727183AbfIBThx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfIBTdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:33:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8884A20674;
-        Mon,  2 Sep 2019 19:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567452824;
-        bh=PayzVtvb1IrG2V07glwrkJeACX2e/Z4eCtEZGxId41c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NZNSSlw7HOuJ+Pkrf+mxy/A6QUPTkfVDeOc3z7+mzfz1MCEPmzt9Cp8pzpgUn9qyT
-         hMfq7dcAuT0T7Awc2humYKdVBjxAgHzHNtG4CffeVCM6W0QUA6tU9KOghWcw1za0Xz
-         JN+wu3TrPCcQCYQgql9arF9gn3qSngy9Tpw3lrgA=
-Date:   Mon, 2 Sep 2019 21:33:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
- userspace
-Message-ID: <20190902193341.GA28723@kroah.com>
-References: <20190712180211.26333-1-sagi@grimberg.me>
- <20190712180211.26333-4-sagi@grimberg.me>
- <20190822002328.GP9511@lst.de>
- <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
- <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
- <20190826065639.GA11036@lst.de>
- <20190826075916.GA30396@kroah.com>
- <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
- <20190830062036.GA15257@kroah.com>
- <73e3d2ca-33e0-3133-9dfb-62b07e5b09c4@grimberg.me>
+        Mon, 2 Sep 2019 15:37:53 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36763 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbfIBThw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:37:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u15so13808205ljl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 12:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AFBZbglnhDy4wm5KdZCDkbStrJH9o3uKwcmY8dacc3U=;
+        b=AevTDV+wfZYm4W85EBlJwOhCTN+owzObRyYtnPAQFD9/ZgMrEnTKiGX58KaVOPa13I
+         11thWv5CuiaFG67Jnn/Nq9bD6NUm6apCyTlNAYKrvxt82lJbbf5ayGtiXHKhT4drocDv
+         w+3YtZf7XvMMhfHpEMaAJuG8GUVBo69b2HEGXLW9A1NYB+CWg83i3mAV2Xk2rTaJfu6f
+         7TC/yrOfrM9VRLm3fO7Xpls5a0IjzKa1pCL3bGf3xd5HuqIGVlj3dXwMDtTaOqieVFHm
+         O/cjl4xsqVeluMXLAc4Gd6xl6EVowBMyiNDCzVmGqpGegsL94u3akkN279Ml0VhzZc80
+         8sFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AFBZbglnhDy4wm5KdZCDkbStrJH9o3uKwcmY8dacc3U=;
+        b=CGMCjAPRbAolCmAfx3vEfobKitQqQuOOP/MyT0yOIvgvxvjseG1c/vc/26G6n56CDh
+         6/ewHwevJhkTomfhNeD452B5UqBYFKOno5Gole6jjWhbPzs3l9Mos6Eagn6ZNZLxEmMo
+         ZDfxchISvRbhYgxrd+8C3+s70kT2IiqhokCiJptBSZ9j2i9UJ1/UnM8Svo0tWBPeKy1u
+         9kXL0IF23X3bmdPtisD7oXOPzCeQILPVxXdNWnfMV9NFxDQHtmYRz8VQfp5xEGn+7huL
+         RTulbiMwdE1qPBJ7g0RYY5xFNFJ+J3wJPa2Griy7IX0hRcFvnmpLJhE5AIqroPN9RQxh
+         a0Wg==
+X-Gm-Message-State: APjAAAXrwk1wIKkpRg9dM9ASZ+rVrFy0fiWka226IN0LJ4EnicEB/BcQ
+        UZZfQcy6MQxzbP33E4/smD9vYx1NQKuhZ8MCIu0LiA==
+X-Google-Smtp-Source: APXvYqxbBRxUy282JBaawD5vQL/kXq0ZGive67XU+QMHi+fOK/RZkHJV2tjtlXbDP9XgKqI+yMTqKPPHKZ3O1jw4hjA=
+X-Received: by 2002:a2e:3c12:: with SMTP id j18mr10752018lja.50.1567453070510;
+ Mon, 02 Sep 2019 12:37:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73e3d2ca-33e0-3133-9dfb-62b07e5b09c4@grimberg.me>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190828103229.191853-1-maco@android.com> <20190830155024.GA23882@infradead.org>
+In-Reply-To: <20190830155024.GA23882@infradead.org>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 2 Sep 2019 21:37:39 +0200
+Message-ID: <CAB0TPYELq72hjHvyFVmaAFZPCaSSxV-j6znM8peezqtep6i-1A@mail.gmail.com>
+Subject: Re: [PATCH] loop: change queue block size to match when using DIO.
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com,
+        Narayan Kamath <narayan@google.com>,
+        Dario Freni <dariofreni@google.com>,
+        Nikita Ioffe <ioffe@google.com>,
+        Jiyong Park <jiyong@google.com>,
+        Martijn Coenen <maco@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:14:39AM -0700, Sagi Grimberg wrote:
-> 
-> > > > > > > You are correct that this information can be derived from sysfs, but the
-> > > > > > > main reason why we add these here, is because in udev rule we can't
-> > > > > > > just go ahead and start looking these up and parsing these..
-> > > > > > > 
-> > > > > > > We could send the discovery aen with NVME_CTRL_NAME and have
-> > > > > > > then have systemd run something like:
-> > > > > > > 
-> > > > > > > nvme connect-all -d nvme0 --sysfs
-> > > > > > > 
-> > > > > > > and have nvme-cli retrieve all this stuff from sysfs?
-> > > > > > 
-> > > > > > Actually that may be a problem.
-> > > > > > 
-> > > > > > There could be a hypothetical case where after the event was fired
-> > > > > > and before it was handled, the discovery controller went away and
-> > > > > > came back again with a different controller instance, and the old
-> > > > > > instance is now a different discovery controller.
-> > > > > > 
-> > > > > > This is why we need this information in the event. And we verify this
-> > > > > > information in sysfs in nvme-cli.
-> > > > > 
-> > > > > Well, that must be a usual issue with uevents, right?  Don't we usually
-> > > > > have a increasing serial number for that or something?
-> > > > 
-> > > > Yes we do, userspace should use it to order events.  Does udev not
-> > > > handle that properly today?
-> > > 
-> > > The problem is not ordering of events, its really about the fact that
-> > > the chardev can be removed and reallocated for a different controller
-> > > (could be a completely different discovery controller) by the time
-> > > that userspace handles the event.
-> > 
-> > So?  You will have gotten the remove and then new addition uevent in
-> > order showing you this.  So your userspace code knows that something
-> > went away and then came back properly so you should be kept in sync.
-> 
-> Still don't understand how this is ok...
-> 
-> I have /dev/nvme0 represents a network endpoint that I would discover
-> from, it is raising me an event to do a discovery operation (namely to
-> issue an ioctl to it) so my udev code calls a systemd script.
-> 
-> By the time I actually get to do that, /dev/nvme0 represents now a new
-> network endpoint (where the event is no longer relevant to). I would
-> rather the discovery to explicitly fail than to give me something
-> different, so we pass some arguments that we verify in the operation.
-> 
-> Its a stretch case, but it was raised by people as a potential issue.
+On Fri, Aug 30, 2019 at 5:50 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Wed, Aug 28, 2019 at 12:32:29PM +0200, Martijn Coenen wrote:
+> > The loop driver assumes that if the passed in fd is opened with
+> > O_DIRECT, the caller wants to use direct I/O on the loop device.
+> > However, if the underlying filesystem has a different block size than
+> > the loop block queue, direct I/O can't be enabled. Instead of requiring
+> > userspace to manually change the blocksize and re-enable direct I/O,
+> > just change the queue block size to match.
+>
+> Why can't we enable the block device in that case?  All the usual
+> block filesystems support 512 byte aligned direct I/O with a 4k
+> file system block size (as long as the underlying block device
+> sector size is also 512 bytes).
 
-Ok, and how do you handle this same thing for something like /dev/sda ?
-(hint, it isn't new, and is something we solved over a decade ago)
+Sorry, I didn't word that correctly: it's not the logical block size
+of the filesystem, but the logical block size of the underlying block
+device that loop's queue must match (or exceed). With the current loop
+code, if the backing file is opened with O_DIRECT and resides on a
+block device with a 512 bytes logical block size, the loop device will
+correctly use direct I/O. If instead the backing file happened to
+reside on a block device with a 4k logical block size, the loop device
+would silently fall back to cached mode. I think there's a benefit in
+the behavior being consistent independent of the block size of the
+backing device, and I don't see a good reason for not automatically
+switching loop's logical/physical queue sizes to match the backing
+device in this specific case.
 
-If you worry about stuff like this, use a persistant device naming
-scheme and have your device node be pointed to by a symlink.  Create
-that symlink by using the information in the initial 'ADD' uevent.
+Will send a v2.
 
-That way, when userspace opens the device node, it "knows" exactly which
-one it opens.  It sounds like you have a bunch of metadata to describe
-these uniquely, so pass that in the ADD event, not in some other crazy
-non-standard manner.
-
-thanks,
-
-greg k-h
+Thanks,
+Martijn
