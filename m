@@ -2,186 +2,125 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21E6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EB6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD5F23402
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567434019;
-	bh=AxTJX4Sy34LCyqEsH+WI/Hwf5ujI35RSWIvy9oMh8Wc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rA2r+5iJwE0p7sh5iaNxlDyaqkpaQ/lSROYXtLbtiM/TUuRlFxC5lNYUDijwCpVQs
-	 AxzKQqMaU1xYZh5OvOLewtnOLWOtsU/61l4rIu2ipyJPUPb5So2SmTzr/N827eNHw+
-	 5pRLFfqyB2VMPfgS9wYdiUGkqp5s+8+r1X3s2sMs=
+	by mail.kernel.org (Postfix) with ESMTP id DDACA2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbfIBOUS (ORCPT
+        id S1731506AbfIBOUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbfIBOUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:20:18 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA9ED21883;
-        Mon,  2 Sep 2019 14:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567434012;
-        bh=AxTJX4Sy34LCyqEsH+WI/Hwf5ujI35RSWIvy9oMh8Wc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L2Blockz7/DoqZgkB8u4vX6tVvN7EVnrZ0r2H/VY0IsukXWuTe0ncWyvirv5atV4w
-         UEUAdLuod8c9cPTqWimDKIokQKFtTOUdbmF5F0omUdbfF/SL1fKWn/pVq1n0kutMBX
-         8xBC2rf1gZpeXsOLZNES3F/sI2JafMqN6YGFyNAU=
-Received: by mail-qk1-f177.google.com with SMTP id g17so12612741qkk.8;
-        Mon, 02 Sep 2019 07:20:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAW27+Ez2AwPogxjAb06G9fzWpnH+C+svmVUkUdCYlOW0Gh3wyRl
-        1iTF9DgNF2CzH3z6HlF3X069sV4Ful2xDGqmZg==
-X-Google-Smtp-Source: APXvYqxPGBMJIHE3Wdp0ctZv+Wz/CJn+h36vN88vdviYdDNQU98hoWVWliq0ENL5YpSo9mfe/J4UK3cWrQaTNxP86zY=
-X-Received: by 2002:a05:620a:1356:: with SMTP id c22mr9452576qkl.119.1567434011842;
- Mon, 02 Sep 2019 07:20:11 -0700 (PDT)
+        Mon, 2 Sep 2019 10:20:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55342 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731097AbfIBOUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:20:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AB78EAD4E;
+        Mon,  2 Sep 2019 14:20:18 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 080BADA796; Mon,  2 Sep 2019 16:20:37 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 16:20:37 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Chao Yu <chao@kernel.org>
+Cc:     dsterba@suse.cz, Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
+Message-ID: <20190902142037.GW2752@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Chao Yu <chao@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <gaoxiang25@huawei.com>, linux-fsdevel@vger.kernel.org,
+        devel@driverdev.osuosl.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>, Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-12-gaoxiang25@huawei.com>
+ <20190902125711.GA23462@infradead.org>
+ <20190902130644.GT2752@suse.cz>
+ <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
 MIME-Version: 1.0
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com> <5d6d1b86.1c69fb81.f86b5.3988@mx.google.com>
-In-Reply-To: <5d6d1b86.1c69fb81.f86b5.3988@mx.google.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 2 Sep 2019 15:20:00 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqLauLbgVg=Aguebqk3q6e+BOxiMNJ+xqTgkmpAjOh8BpA@mail.gmail.com>
-Message-ID: <CAL_JsqLauLbgVg=Aguebqk3q6e+BOxiMNJ+xqTgkmpAjOh8BpA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 2:39 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Aug 28, 2019 at 03:02:58AM +0000, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-> > actions in software layers running in the EL2 or EL3 exception levels.
-> > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > instruction set, not as a standard endorsed by ARM Ltd.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
-> >  1 file changed, 125 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > new file mode 100644
-> > index 000000000000..f8eb28d5e307
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > @@ -0,0 +1,125 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM SMC Mailbox Interface
-> > +
-> > +maintainers:
-> > +  - Peng Fan <peng.fan@nxp.com>
-> > +
-> > +description: |
-> > +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
-> > +  call) instruction to trigger a mailbox-connected activity in firmware,
-> > +  executing on the very same core as the caller. By nature this operation
-> > +  is synchronous and this mailbox provides no way for asynchronous messages
-> > +  to be delivered the other way round, from firmware to the OS, but
-> > +  asynchronous notification could also be supported. However the value of
-> > +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
-> > +  message to the mailbox framework, so a synchronous communication can be
-> > +  established, for a asynchronous notification, no value will be returned.
-> > +  The exact meaning of both the action the mailbox triggers as well as the
-> > +  return value is defined by their users and is not subject to this binding.
-> > +
-> > +  One use case of this mailbox is the SCMI interface, which uses shared memory
-> > +  to transfer commands and parameters, and a mailbox to trigger a function
-> > +  call. This allows SoCs without a separate management processor (or when
-> > +  such a processor is not available or used) to use this standardized
-> > +  interface anyway.
-> > +
-> > +  This binding describes no hardware, but establishes a firmware interface.
-> > +  Upon receiving an SMC using one of the described SMC function identifiers,
-> > +  the firmware is expected to trigger some mailbox connected functionality.
-> > +  The communication follows the ARM SMC calling convention.
-> > +  Firmware expects an SMC function identifier in r0 or w0. The supported
-> > +  identifiers are passed from consumers, or listed in the the arm,func-ids
-> > +  properties as described below. The firmware can return one value in
-> > +  the first SMC result register, it is expected to be an error value,
-> > +  which shall be propagated to the mailbox client.
-> > +
-> > +  Any core which supports the SMC or HVC instruction can be used, as long as
-> > +  a firmware component running in EL3 or EL2 is handling these calls.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: arm,smc-mbox
-> > +
-> > +  "#mbox-cells":
-> > +    const: 1
-> > +
-> > +  arm,num-chans:
-> > +    description: The number of channels supported.
-> > +    items:
-> > +      minimum: 1
-> > +      maximum: 4096 # Should be enough?
-> > +
-> > +  method:
-> > +    - enum:
->
-> Did you build this with 'make dt_binding_check' as this should be a
-> warning. This should not be a list entry (i.e. drop the '-').
->
-> > +        - smc
-> > +        - hvc
-> > +
-> > +  transports:
->
-> arm,transports
->
-> > +    - enum:
-> > +        - mem
-> > +        - reg
-> > +
-> > +  arm,func-ids:
-> > +    description: |
-> > +      An array of 32-bit values specifying the function IDs used by each
-> > +      mailbox channel. Those function IDs follow the ARM SMC calling
-> > +      convention standard [1].
-> > +
-> > +      There is one identifier per channel and the number of supported
-> > +      channels is determined by the length of this array.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+On Mon, Sep 02, 2019 at 09:51:59PM +0800, Chao Yu wrote:
+> On 2019-9-2 21:06, David Sterba wrote:
+> > On Mon, Sep 02, 2019 at 05:57:11AM -0700, Christoph Hellwig wrote:
+> >>> +config EROFS_FS_XATTR
+> >>> +	bool "EROFS extended attributes"
+> >>> +	depends on EROFS_FS
+> >>> +	default y
+> >>> +	help
+> >>> +	  Extended attributes are name:value pairs associated with inodes by
+> >>> +	  the kernel or by users (see the attr(5) manual page, or visit
+> >>> +	  <http://acl.bestbits.at/> for details).
+> >>> +
+> >>> +	  If unsure, say N.
+> >>> +
+> >>> +config EROFS_FS_POSIX_ACL
+> >>> +	bool "EROFS Access Control Lists"
+> >>> +	depends on EROFS_FS_XATTR
+> >>> +	select FS_POSIX_ACL
+> >>> +	default y
+> >>
+> >> Is there any good reason to make these optional these days?
+> > 
+> > I objected against adding so many config options, not to say for the
+> > standard features. The various cache strategies or other implementation
+> > details have been removed but I agree that making xattr/acl configurable
+> > is not necessary as well.
+> 
+> I can see similar *_ACL option in btrfs/ext4/xfs, should we remove them as well
+> due to the same reason?
 
-Also, this doesn't work. You need:
+Oh right, I think the reasons are historical and that we can remove the
+options nowadays. From the compatibility POV this should be safe, with
+ACLs compiled out, no tool would use them, and no harm done when the
+code is present but not used.
 
-allOf:
-  - $ref: /schemas/types.yaml#/definitions/uint32-array
-
-> > +    minItems: 0
-> > +    maxItems: 4096   # Should be enough?
+There were some efforts by embedded guys to make parts of kernel more
+configurable to allow removing subsystems to reduce the final image
+size. In this case I don't think it would make any noticeable
+difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
+while the whole module is over 1.3MiB.
