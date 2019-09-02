@@ -2,155 +2,138 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6FFC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0A6C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E718217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:39:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvNFZ1/j"
+	by mail.kernel.org (Postfix) with ESMTP id AE969217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbfIBJjF (ORCPT
+        id S1731223AbfIBJjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:39:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55428 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729690AbfIBJjF (ORCPT
+        Mon, 2 Sep 2019 05:39:54 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:45071 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729489AbfIBJjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:39:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g207so9797063wmg.5;
-        Mon, 02 Sep 2019 02:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=TuI9rd12MfxFCijDCnxps6RQxMfXZ9+gpL/KNKqGJec=;
-        b=MvNFZ1/jbfE4vo5KXjxBEUkydGqOUTy8/La+RmqGYg5z2JPMO4Qd0g2/1gppakerEf
-         R+9Sj7AHvlz/9wAfHYLgtAfERiRSR9JjQa7RSa0vIohbKMR7hJPH87Bgf/jVqZ8nCo2a
-         l71eHN00Xhi7Dnp4J/12HU59pZXlaoSB6fYGx6pWRC6n+SU6CM82+HEnH4AVywthNWtI
-         zG6kcdf3TtKfKoFTLPdQ8PY/9oi24mzPlTBu1oytWaJG7bv8p7JTIL2cXqRivwJuRva4
-         FfZdqgg24TrobN/IjD4hgTjIitilPnkaWpFgJGp7C1epJ8tFPCy0C2MvvdFI4kMzRgnK
-         stkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=TuI9rd12MfxFCijDCnxps6RQxMfXZ9+gpL/KNKqGJec=;
-        b=lMAqDzdhs2YrajgO95Na1tfpZM5sn2M1J4QACHn3tYe6b5y1VxJkVTqFn/JiWGWOOi
-         W4Dt+3cRncYPLKQAhURwU/iYy4WC5BoN4YRYvad8pFHW8nkxz6E+Mi/jXKMuk8eF4owH
-         Zi2Myrq+KmkMaDDW4sUfSm0gb3Xp4SJ3bVq4A8LbzFbQLk6orU4Ogj8O1X6Enn9gW6qA
-         6PRmOA624L3a9yo2undCiCLes7vBG99se4dXD2AUYWa8j98WZXdXQEgpGpeqxUF1tLs9
-         D1VYG/o/MS8OcMRezv0QwVg7TrikTBoa1wiCr9N+LQz7fNCXAEr5HfgCAxpaB+H/ryNm
-         977w==
-X-Gm-Message-State: APjAAAVBuSOuSmX54XHj6tL6jWdT9l7Muhb76qJwlBIjn0rkyUNDkQ9s
-        ZmldsHGTGvcx/BMc3+WCxhADV/Kvv1U=
-X-Google-Smtp-Source: APXvYqxLMl9twPuZRaBPGCt6IQrTMUDpWGDiRa+m+TO/WYNNG1GFTxiKSkMi81n2v/MwR6YMiUQ8ZQ==
-X-Received: by 2002:a1c:c909:: with SMTP id f9mr35144152wmb.52.1567417142665;
-        Mon, 02 Sep 2019 02:39:02 -0700 (PDT)
-Received: from arch-late (87-196-73-69.net.novis.pt. [87.196.73.69])
-        by smtp.gmail.com with ESMTPSA id t123sm14100440wma.40.2019.09.02.02.39.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 02:39:01 -0700 (PDT)
-References: <20190805233505.21167-1-slongerbeam@gmail.com> <20190805233505.21167-16-slongerbeam@gmail.com>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     linux-media@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mon, 2 Sep 2019 05:39:54 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 99ED324000E;
+        Mon,  2 Sep 2019 09:39:50 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 11:41:23 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list\:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 15/22] media: imx7-media-csi: Create media links in bound notifier
-In-reply-to: <20190805233505.21167-16-slongerbeam@gmail.com>
-Date:   Mon, 02 Sep 2019 10:38:59 +0100
-Message-ID: <m3blw35970.fsf@gmail.com>
+Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
+Message-ID: <20190902094123.wixtn5dm2dwd62bu@uno.localdomain>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-3-jacopo@jmondi.org>
+ <20190814224340.GD5015@pendragon.ideasonboard.com>
+ <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
+ <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
+ <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
+ <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
+ <20190901172457.GC1047@bug>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zuavsfa6rq46r5dn"
+Content-Disposition: inline
+In-Reply-To: <20190901172457.GC1047@bug>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-On Tue 06 Aug 2019 at 00:34, Steve Longerbeam wrote:
-> Implement a notifier bound op to register media links from the remote
-> sub-device's source pad(s) to the CSI sink pad.
->
-> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-> ---
->  drivers/staging/media/imx/imx7-media-csi.c | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-> index a1c96c52a606..f71ac485f780 100644
-> --- a/drivers/staging/media/imx/imx7-media-csi.c
-> +++ b/drivers/staging/media/imx/imx7-media-csi.c
-> @@ -196,6 +196,11 @@ struct imx7_csi {
->  	struct completion last_eof_completion;
->  };
->
-> +static inline struct imx7_csi *notifier_to_dev(struct v4l2_async_notifier *n)
->
 
-As the other one add the namespace for the function name:
-imx7_csi_notifier_to_dev
+--zuavsfa6rq46r5dn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-other than this, looks good to me.
+Hi Pavel,
 
-Cheers,
-  Rui
-> +{
-> +	return container_of(n, struct imx7_csi, notifier);
-> +}
-> +
->  static u32 imx7_csi_reg_read(struct imx7_csi *csi, unsigned int offset)
->  {
->  	return readl(csi->regbase + offset);
-> @@ -1173,6 +1178,23 @@ static int imx7_csi_parse_endpoint(struct device *dev,
->  	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
->  }
+On Sun, Sep 01, 2019 at 07:24:57PM +0200, Pavel Machek wrote:
+> Hi!
 >
-> +static int imx7_csi_notify_bound(struct v4l2_async_notifier *notifier,
-> +				 struct v4l2_subdev *sd,
-> +				 struct v4l2_async_subdev *asd)
-> +{
-> +	struct imx7_csi *csi = notifier_to_dev(notifier);
-> +	struct media_pad *sink = &csi->sd.entity.pads[IMX7_CSI_PAD_SINK];
-> +
-> +	return media_create_fwnode_pad_links(sink,
-> +					     dev_fwnode(csi->sd.dev),
-> +					     &sd->entity,
-> +					     dev_fwnode(sd->dev), 0);
-> +}
-> +
-> +static const struct v4l2_async_notifier_operations imx7_csi_notify_ops = {
-> +	.bound = imx7_csi_notify_bound,
-> +};
-> +
->  static int imx7_csi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -1253,6 +1275,8 @@ static int imx7_csi_probe(struct platform_device *pdev)
+> > >>>>> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
+> > >>>>>      value down. A value of zero stops the motion if one is in progress
+> > >>>>>      and has no effect otherwise.
+> > >>>>>
+> > >>>>> +``V4L2_CID_LOCATION (integer)``
+> > >>>>
+> > >>>> Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
+> > >>>
+> > >>> Probably a better name, if a bit long. But we might need other location
+> > >>> controls in the future (e.g. flash location), so CID_LOCATION is just too
+> > >>> generic.
+> > >>
+> > >
+> > > Thanks for the feedback.
+> > >
+> > >> Note that the location defines themselves can most likely be used with any
+> > >> LOCATION control, so V4L2_LOCATION_FRONT would be fine with any control.
+> > >>
+> > >
+> > > What do you think instead of the control type? Would a single integer
+> > > control do or an integer menu one would be better? I see merit in both
+> > > proposals actually...
+> >
+> > Single integer. It's read-only, so it just reports the location.
+> >
+> > It would be different if this was a writable control: then you need to
+> > know which locations are possible to set, and that requires a menu type.
+> >
+> > But it doesn't make sense to set the location from software. However, the
+> > location might change as a result of other changes: e.g. if the camera
+> > has motor control of the tilt and the tilt changes from forward facing to
+> > downward facing, then the driver might change the location from FRONT
+> > to DOWN. A convoluted example perhaps, but this is just brainstorming.
 >
->  	v4l2_async_notifier_init(&csi->notifier);
->
-> +	csi->notifier.ops = &imx7_csi_notify_ops;
-> +
->  	ret = v4l2_async_register_fwnode_subdev(&csi->sd, &csi->notifier,
->  						sizeof(struct v4l2_async_subdev),
->  						NULL, 0,
+> There are phones with exactly such camera setup. And yes, it makes sense to be writable
+> in that case, as software can move the camera in such case.
 
+Nice, I had no idea!
+
+Support for those kind of devices seems a bit far-fetched at the
+moment, and as Laurent suggested, I would make the control writable
+once we have a use case for that. But let's keep in mind that could
+happen sooner or later!
+
+Thanks
+   j
+
+>
+> 										Pavel
+
+--zuavsfa6rq46r5dn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1s48MACgkQcjQGjxah
+VjySHxAAj0VW0JBKc19IKqZ8qF2HxYIjAq54yckaYChexDAFzMmmib9ABkgjvRHy
+3rA+qxUp2J37b14bs+rksQCli9Aej6quziNeKB2pCayBFoFhFJIKEQjgRSkj2Pbq
+DABGGxWEAUg/NQzC0I/zbqch8yGE1KPy+Gw8OlgwwK7tqeffx5vVA3TC/ZE+7VhU
+w3qBW7SpaMNKDPgkUkTTrfy4wQpnsPMhgozSEJso93+Ryr5wrh+OjtUBdSAYRVoH
+xAw6Yq2lyNm1bl2R/G1QeOJ5yf8V+i5yYtlUWkSfnmrijWWaiEUD9JLxjd9VSSbA
+byMxrCI2mYVNzvYMNPiSnfwb0ECrdkme3Zs+jfTSnGWj8fKllogppWP1QEwWQsVw
+DmzJJbBnMivB8cygx4MUDBRDP0G4Op24V97x60m4wxJFShHcuKEDn2/e0Rj7QZH/
+uNzu9ZvYXM8rN0fl5HP0uDXEqM2MmWu5khjHp7AP049t9NTyDrr9oyeK/WYQ8xO3
+vUlG4yMr/8p9S6kniGmx5B9rpsBDlYxgmiamOBlhDALsEWM1cOzwP/qObxmrBz8K
+vhkgOFxiUodw4ny9tDB9VRPH3awT9ge1uD4AO3LdyYD22dHO/DzZ9VRz9RpG9s2i
+Bd+h47u7Jhk5WTz0KzXWvCykIYaKYu0fP+3zO1rwm+cj7JROg9g=
+=pHsq
+-----END PGP SIGNATURE-----
+
+--zuavsfa6rq46r5dn--
