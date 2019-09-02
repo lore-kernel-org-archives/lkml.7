@@ -2,92 +2,121 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F2FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E719C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB4F21897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8CA21883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567451184;
-	bh=zvRcbQCOY51GKOL5qbyTT97X2kqYQ4CVAIpuSfcp7o8=;
+	s=default; t=1567451188;
+	bh=S1+dlwDGmxYztYUwt+eKgHRMn08Lq4zajk+qvBznZbU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lRuqqTeDm6c84dX8kXSBXTHqpRNrmXFTNvIUO3Dwk/hiG9394M1nnRH0rbOWdlL8v
-	 q2Qv3h2oH/4NIwsKhvOo5u84nApySiYLrD82ELgci1sFxMLvPDk4BJa1TeuEFiY0RB
-	 OktezRuTfbDXjj88ucy7bSTOF/Fw0aGcNMImoS/E=
+	b=i5MGENRVbLnK/aD4hsB7sYMkEmFUNskWAHTUhbKeko7i62ByiHoB/Mhen+tw5fYsM
+	 Oqj5MA9JuCov3wCdMbuF/hYwRV5wRAxRQ828ksYoqwiOCmr7z0F9jbqlXMhyzqjABX
+	 ar2TOkaQJjrsGxjmWxV8nVYik3J+Q3zeVozC8ekI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfIBTGW (ORCPT
+        id S1727096AbfIBTG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37506 "EHLO mail.kernel.org"
+        Mon, 2 Sep 2019 15:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbfIBTGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:06:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726974AbfIBTG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:06:26 -0400
+Received: from earth.universe (unknown [185.62.205.105])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2209321883;
-        Mon,  2 Sep 2019 19:06:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 248EE2190F;
+        Mon,  2 Sep 2019 19:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567451181;
-        bh=zvRcbQCOY51GKOL5qbyTT97X2kqYQ4CVAIpuSfcp7o8=;
+        s=default; t=1567451185;
+        bh=S1+dlwDGmxYztYUwt+eKgHRMn08Lq4zajk+qvBznZbU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lmWXZApgoxbrSptmsO4LuoMFe+B2CSSNeTx4sy7Itg3caSDGj/n0qJmj2OuZgeYeM
-         tHBHUB715zWlMS3R4s7H2lYdA9cs+/r5/fETLy4BJYDYvy6sbogNHT9q5px030ZniO
-         FI/zmQ1ubYy+8XSX7RBjcc0jg0aP9Ta4QGLrrHVc=
-Date:   Mon, 2 Sep 2019 21:06:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of
- fat/vfat
-Message-ID: <20190902190619.GA25019@kroah.com>
-References: <245727.1567183359@turing-police>
- <20190830164503.GA12978@infradead.org>
- <267691.1567212516@turing-police>
- <20190831064616.GA13286@infradead.org>
- <295233.1567247121@turing-police>
- <20190902073525.GA18988@infradead.org>
- <20190902152524.GA4964@kroah.com>
- <501797.1567450817@turing-police>
+        b=ZLT5gfVtFgU7+zNRHIdMh9TtkFwhDfd9yjrtXC4Uaq2fMcJMJypjvx649/8LauPNp
+         R3VsjPPGaRT+A7cPrip7FINkmVcD3sZwV1uqIK1QVhQrkkKffomoHfJLkPrDuV+UjK
+         IG/8kRdJ5srdjpsnAK3DwhuBBlhrQ0uJAMJVjvYs=
+Received: by earth.universe (Postfix, from userid 1000)
+        id E66E93C0B7F; Mon,  2 Sep 2019 21:06:22 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 21:06:22 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Cc:     matwey.kornilov@gmail.com,
+        "open list:SYSTEM RESET/SHUTDOWN DRIVERS" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] power: reset: reboot-mode: Fix author email format
+Message-ID: <20190902190622.vvl7hcgfqayf6xmk@earth.universe>
+References: <20190713154248.24382-1-matwey@sai.msu.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gtgty2bekc5smtop"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <501797.1567450817@turing-police>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190713154248.24382-1-matwey@sai.msu.ru>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:00:17PM -0400, Valdis Klētnieks wrote:
-> On Mon, 02 Sep 2019 17:25:24 +0200, Greg Kroah-Hartman said:
-> 
-> > I dug up my old discussion with the current vfat maintainer and he said
-> > something to the affect of, "leave the existing code alone, make a new
-> > filesystem, I don't want anything to do with exfat".
-> >
-> > And I don't blame them, vfat is fine as-is and stable and shouldn't be
-> > touched for new things.
-> >
-> > We can keep non-vfat filesystems from being mounted with the exfat
-> > codebase, and make things simpler for everyone involved.
-> 
-> Ogawa:
-> 
-> Is this still your position, that you want exfat to be a separate module?
 
-Personally I agree that this should be separate at least for quite some
-time to shake things out at the very least.  But I'll defer to Ogawa if
-he thinks things should be merged.
+--gtgty2bekc5smtop
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+Hi,
 
-greg k-h
+On Sat, Jul 13, 2019 at 06:42:48PM +0300, Matwey V. Kornilov wrote:
+> Closing angle bracket was missing.
+>=20
+> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/reset/reboot-mode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/reset/reboot-mode.c b/drivers/power/reset/rebo=
+ot-mode.c
+> index 06ff035b57f5..b4076b10b893 100644
+> --- a/drivers/power/reset/reboot-mode.c
+> +++ b/drivers/power/reset/reboot-mode.c
+> @@ -190,6 +190,6 @@ void devm_reboot_mode_unregister(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(devm_reboot_mode_unregister);
+> =20
+> -MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
+> +MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com>");
+>  MODULE_DESCRIPTION("System reboot mode core library");
+>  MODULE_LICENSE("GPL v2");
+> --=20
+> 2.16.4
+>=20
+
+--gtgty2bekc5smtop
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1taC4ACgkQ2O7X88g7
++prjmw//ZmeR66fSYpuE5t1rAd2c/elEfz2JRPleMqCgXeAWY8uJHiOrdMNLjY38
+yTIx1KUzqY8tfZGiGeLGv4t9x0c0DoWzfDYYvGKOTcrRsl2BATbqgRGumNc244Cc
+1Kd9b670hotWxZ6KUgcCJxNxE9C2lY9VgWIEj4heRgc0/ZKqokMfP8pP+s43OJaM
+pRv56aM9yhL/U+qOm25rbyKmlHk4J4ihAhspY/KT4UkihGlpfWeq2RQrsNKhz6pO
+T4rgaR+EfoGmQs7Rnh1V/sRbGwtEdWmRyIJz1/Tcb68IV+Ar9RSHoQrfuOaPy3ie
+zQ+4upbbLP5p95TNADLNl2jpySRjvjZ3EwaYtDaX9l/I0dVLvghXTUe1Tcw/TrnU
+6EBPZAePTXbzY9NbxVehNjWiaq4msa3K2XQxMWq7l4qpdSNv5dnMsv0JXS5Jx9s3
+PvqF+eQq+IFZ8KCimj4fM+XOHp2zOsdmYX4BhykmpHmfviasZpXcJygtU/puzFkV
+fRhut6MFk6eT78gkWpeOds0/GAC8B2Zcx3slSxudXn8hYyxTk4vymWlBJEqYjb+g
+XsSI+eu7AwW7hMdFtcuySQsu9vb0E+05Wlnw5KQiCRcMc2/8OjGotXmOed/1P6zO
+aOs+/aZldmSTqpE0vRlu7QbOypZN2Ia/bdIEMkyDrtuHu9+oxaY=
+=UZnE
+-----END PGP SIGNATURE-----
+
+--gtgty2bekc5smtop--
