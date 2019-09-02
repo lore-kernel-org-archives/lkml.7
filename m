@@ -6,96 +6,56 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1B5C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79353C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDAFD22DD6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5792F22DD6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfIBHzY (ORCPT
+        id S1729865AbfIBH7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:55:24 -0400
-Received: from verein.lst.de ([213.95.11.211]:47882 "EHLO verein.lst.de"
+        Mon, 2 Sep 2019 03:59:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:47904 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbfIBHzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:55:23 -0400
+        id S1729382AbfIBH7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:59:04 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 53D3A227A8A; Mon,  2 Sep 2019 09:55:20 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 09:55:20 +0200
+        id 48EE8227A8A; Mon,  2 Sep 2019 09:59:00 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 09:58:59 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: linux-next: Tree for Aug 30
-Message-ID: <20190902075520.GB28967@lst.de>
-References: <20190831003613.7540b2d7@canb.auug.org.au> <20190901182226.GA20315@roeck-us.net>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: Re: [PATCH 2/3] pagewalk: separate function pointers from iterator
+ data
+Message-ID: <20190902075859.GA29137@lst.de>
+References: <20190828141955.22210-1-hch@lst.de> <20190828141955.22210-3-hch@lst.de> <20190901184530.GA18656@roeck-us.net> <20190901193601.GB5208@mellanox.com> <b26ac5ae-a90c-7db5-a26c-3ace2f1530c7@roeck-us.net> <20190902055156.GA24116@mellanox.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901182226.GA20315@roeck-us.net>
+In-Reply-To: <20190902055156.GA24116@mellanox.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 11:22:26AM -0700, Guenter Roeck wrote:
-> On Sat, Aug 31, 2019 at 12:36:13AM +1000, Stephen Rothwell wrote:
-> > Hi all,
+On Mon, Sep 02, 2019 at 05:51:58AM +0000, Jason Gunthorpe wrote:
+> On Sun, Sep 01, 2019 at 01:35:16PM -0700, Guenter Roeck wrote:
+> > > I belive the macros above are missing brackets.. Can you confirm the
+> > > below takes care of things? I'll add a patch if so
+> > > 
 > > 
-> > Changes since 20190829:
-> > 
-> > The compiler-attributes tree gained a build failure for which I reverted
-> > a commit.
-> > 
-> > The arm-soc tree gained a conflict against the arm tree.
-> > 
-> > The csky tree gained a conflict against the dma-mapping tree.
-> > 
-> > The fuse tree gained a conflict against the fsverity tree.
-> > 
-> > The vfs tree gained conflicts against the fuse tree.
-> > 
-> > The pci tree gained a build failure for which I revereted a commit.
-> > 
-> > The net-next tree still had its build failure for which I applied a patch.
-> > It also gained a conflict against the net tree.
-> > 
-> > The regulator tree still has its build failure for which I reverted
-> > a commit.
-> > 
-> > The keys tree still has its build failure so I used the version from
-> > next-20190828.
-> > 
-> > The driver-core tree lost its build failure.
-> > 
-> > The staging tree got conflicts against the net-next and usb trees.
-> > 
-> > The akpm-current tree gained a build failure due to an interaction with
-> > the hmm tree for which I applied a patch.
-> > 
+> > Good catch. Yes, that fixes the build problem.
 > 
-> Something in the fixup patch seems to be wrong. I get the following
-> error with sh4 boot tests when booting from usb.
-> 
-> sm501-usb sm501-usb: OHCI Unrecoverable Error, disabled
-> sm501-usb sm501-usb: HC died; cleaning up
-> 
-> Unfortunately, bisect doesn't help much (see below). Reverting the fixup
-> patch as well as the offending patch (plus a context patch) alone does
-> not help either. Further analysis shows that the problem exists since
-> at least next-20190823. Another round of bisect on next-20190827 suggests
-> another culprit (see second bisect below). Reverting all the offending
-> patches doesn't help either, though, only result in a different error.
-> 
-> usb 1-1: new full-speed USB device number 2 using sm501-usb
-> sm501-usb sm501-usb: DMA map on device without dma_mask
-> 
-> With that, I am giving up. Copying Christoph as he appears to be heavily
-> involved in the patch series causing the problems.
+> I added this to the hmm tree to fix it:
 
-What was the last tree you tested that works perfectly?
+This looks good.  Although I still haven't figure out how this is
+related to the pagewalk changes to start with..
