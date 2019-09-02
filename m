@@ -2,133 +2,94 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4394EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F5C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA1A2168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC3F2168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/POo8hM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfIBIiD (ORCPT
+        id S1730498AbfIBIiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:38:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25522 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729756AbfIBIiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:38:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:38:02 -0700
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="184442382"
-Received: from jkrzyszt-desk.ger.corp.intel.com ([172.22.244.17])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:38:00 -0700
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?B?TWljaGHFgg==?= Wajdeczko <michal.wajdeczko@intel.com>,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device hot re-plug
-Date:   Mon, 02 Sep 2019 10:37:41 +0200
-Message-ID: <1769080.0GM3UzqXcv@jkrzyszt-desk.ger.corp.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
-References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com> <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com> <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
+        Mon, 2 Sep 2019 04:38:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52181 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729408AbfIBIiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:38:09 -0400
+Received: by mail-wm1-f67.google.com with SMTP id k1so13554885wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=piVC8lY47V4zd0qmJtmvx1ZiVDDDWKtmdiyonD3TF+Q=;
+        b=n/POo8hMG3mQicU7+ByrLjlYsC97v0YrUFoP3JHijWfcpq4vMwVB3wWGfgPoFMdHww
+         NE6bBd+YtLGrQx6m1WkizQrNtqvBTGoveH1A9A4NvxKke3W/0BU8Uo6jrYT4c2qfDok1
+         iIoXNreDXNu8sHgng2vWjW5m8OCdvoCLVzU9fLxUJkAjdbFcQ2fYuVSjRYR4zdRyOEkn
+         wH1mo8eGWcXUro7RAdESUDvzPQnCcu7T7Hr+bQShEltk17zsrBCHbjKpAhCDod4kUi8N
+         4nkKdLTZzjctwhI1Rdz4FTx65stl+bfjit8oxwud7eje22AeKM9KtJ4g5bTxzE54637V
+         FSCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=piVC8lY47V4zd0qmJtmvx1ZiVDDDWKtmdiyonD3TF+Q=;
+        b=AWJ5UN4CMWjm6JjvzIj9VdQdbQdDAnw/0O2cqoB5h43+7QrlxcRISHWU0i0rSbjZ7L
+         gyMmrJYDWgXvDRl+pDrDlkmG8aR+dGD15Vxk9sk7xMSYByIo+MOYSduQhQODJZiCTrWM
+         GyO49X2ts8LN4eFfUte1kHSUE3uxXf9AAvpKDHFKS/jgfG0aWVVAKZ7TaZvcqLWOwIrz
+         l/JjcfUZa7PUeMh3IfFkR7UwJpeE1t87RxiKlD3O11RaUFk78Me/OjDwroPMkxcwFu/E
+         ekw/7SEEOTZmc9r5YI/I0ZKKYF9s1ZxlIAkEz3KMEL5gLfcd7qGu7kU/UqCvBnuxJ7oT
+         1xOw==
+X-Gm-Message-State: APjAAAUGnLhrPGAoWavccTGFXnrJAgNabMzFg2bVghCr4ToGIUD4Fy7T
+        I4UIBVgHZSxhjXVxOQN0X3DIpg==
+X-Google-Smtp-Source: APXvYqzd+oaKCa9BjDVPLj3eFkkr6EXBnTjgGlGYosAAou3KodJM+uIFV8+hDwPS23hA06IffnQ5zA==
+X-Received: by 2002:a1c:c5c3:: with SMTP id v186mr20535829wmf.66.1567413487754;
+        Mon, 02 Sep 2019 01:38:07 -0700 (PDT)
+Received: from dell ([95.147.198.93])
+        by smtp.gmail.com with ESMTPSA id o193sm12550070wme.39.2019.09.02.01.38.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Sep 2019 01:38:07 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 09:38:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: ezx-pcap: replace mutex_lock with spin_lock
+Message-ID: <20190902083805.GP4804@dell>
+References: <20190813103133.8354-1-huangfq.daxian@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190813103133.8354-1-huangfq.daxian@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
+On Tue, 13 Aug 2019, Fuqian Huang wrote:
 
-On Thursday, August 29, 2019 11:08:18 AM CEST Lu Baolu wrote:
-> Hi,
-> 
-> On 8/29/19 3:58 PM, Janusz Krzysztofik wrote:
-> > Hi Baolu,
-> > 
-> > On Thursday, August 29, 2019 3:43:31 AM CEST Lu Baolu wrote:
-> >> Hi Janusz,
-> >>
-> >> On 8/28/19 10:17 PM, Janusz Krzysztofik wrote:
-> >>>> We should avoid kernel panic when a intel_unmap() is called against
-> >>>> a non-existent domain.
-> >>> Does that mean you suggest to replace
-> >>> 	BUG_ON(!domain);
-> >>> with something like
-> >>> 	if (WARN_ON(!domain))
-> >>> 		return;
-> >>> and to not care of orphaned mappings left allocated?  Is there a way to
-> > inform
-> >>> users that their active DMA mappings are no longer valid and they
-> > shouldn't
-> >>> call dma_unmap_*()?
-> >>>
-> >>>> But we shouldn't expect the IOMMU driver not
-> >>>> cleaning up the domain info when a device remove notification comes and
-> >>>> wait until all file descriptors being closed, right?
-> >>> Shouldn't then the IOMMU driver take care of cleaning up resources still
-> >>> allocated on device remove before it invalidates and forgets their
-> > pointers?
-> >>>
-> >>
-> >> You are right. We need to wait until all allocated resources (iova and
-> >> mappings) to be released.
-> >>
-> >> How about registering a callback for BUS_NOTIFY_UNBOUND_DRIVER, and
-> >> removing the domain info when the driver detachment completes?
-> > 
-> > Device core calls BUS_NOTIFY_UNBOUND_DRIVER on each driver unbind, 
-regardless
-> > of a device being removed or not.  As long as the device is not unplugged 
-and
-> > the BUS_NOTIFY_REMOVED_DEVICE notification not generated, an unbound 
-driver is
-> > not a problem here.
-> > Morever, BUS_NOTIFY_UNBOUND_DRIVER  is called even before
-> > BUS_NOTIFY_REMOVED_DEVICE so that wouldn't help anyway.
-> > Last but not least, bus events are independent of the IOMMU driver use via
-> > DMA-API it exposes.
-> 
-> Fair enough.
-> 
-> > 
-> > If keeping data for unplugged devices and reusing it on device re-plug is 
-not
-> > acceptable then maybe the IOMMU driver should perform reference counting 
-of
-> > its internal resources occupied by DMA-API users and perform cleanups on 
-last
-> > release?
-> 
-> I am not saying that keeping data is not acceptable. I just want to
-> check whether there are any other solutions.
+> As mutex_lock might sleep.
+> Function pcap_adc_irq is an interrupt handler.
+> The use of mutex_lock in pcap_adc_irq may cause sleep
+> in IRQ context.
+> Replace mutex_lock with spin_lock to avoid this.
 
-Then reverting 458b7c8e0dde and applying this patch still resolves the issue 
-for me.  No errors appear when mappings are unmapped on device close after the 
-device has been removed, and domain info preserved on device removal is 
-successfully reused on device re-plug.
+No one has complained explaining why this might be a bad idea and the
+premise is sound enough.
 
-Is there anything else I can do to help?
+Applied, thanks.
 
-Thanks,
-Janusz
-
-> 
-> Best regards,
-> Baolu
-> 
-
-
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
