@@ -2,178 +2,182 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B12C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AA5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3582120820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EBD20820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IhsxVtMb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VfyOjtZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfIBNKy (ORCPT
+        id S1726408AbfIBNLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:10:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60710 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729844AbfIBNKx (ORCPT
+        Mon, 2 Sep 2019 09:11:34 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42155 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729840AbfIBNLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:10:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nD3tPT+dPURhPutTDbnYpadEmPBrztQqjMF3uDUJm/Y=; b=IhsxVtMbisw/Wwd3qAP9O7qeWp
-        6qk9T320OB+gXlxiSzysiuAzs6RNVf5quqkzN/0ZsOihE/QgkKaVnXzqWXhyqU5xyiZe0M6cvihuf
-        XAk5GfnFbx/cKWCByrA0bJOG5sPmZRC+uqWos2PvrnsP52Io1sJc/djTusz/MgwCcMxXlMz+4KbDn
-        qLuDUzeuATJILgkcJM/FPadoo4uZlUZrGDleZa0o+jeqw9DCksoTf/epuaHvuduATYSR1KyMinbIu
-        32wMyg3iOstgkvujY4hWjL32bqj4gpGNCdE2bf2iU+GbBrdhHCoZ9QCv6pmMGdMM80YGmQpT2TmWj
-        uegJSHWQ==;
-Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4m6c-0008Q1-8Z; Mon, 02 Sep 2019 13:10:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        gross@suse.com, boris.ostrovsky@oracle.com
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 11/13] swiotlb-xen: remove page-coherent.h
-Date:   Mon,  2 Sep 2019 15:03:37 +0200
-Message-Id: <20190902130339.23163-12-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190902130339.23163-1-hch@lst.de>
-References: <20190902130339.23163-1-hch@lst.de>
+        Mon, 2 Sep 2019 09:11:34 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t12so15519916qtp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PZv22NgyAy4cpGO8nvyQHGric91X1UzIHSt4+HMcQy0=;
+        b=VfyOjtZ8aWgjvf651FHyhOAmwULu+NSuKIFmWFDbTRWli+KD2QjI1GYeqiw61Zjm2m
+         7aaaBlmkKkRFGyH+0e/2tfli/Lzx3ClE2/e2G5QLJQYnubJJ3JYzZLvgyXXSK4+1L+EE
+         Z7LbQ3jZDzcbqs+UdWR7g5QpEcTndIQMh46gYQkp6+SayViDEjVz6qOCIWbXrzCYf9qd
+         7mQnrP/NU6T4dEn9pN39cR1iiOpk8+HPk9FvMT4BxOIGOTrnmYFYwqdtsOMeIh+WZXQZ
+         YbLPKeJAaT7hmIolpfVwwIm0YOCT6huuORR8Dat7ZQQzEFC7TrlK3q7zqruDx4uHmJk/
+         oj0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PZv22NgyAy4cpGO8nvyQHGric91X1UzIHSt4+HMcQy0=;
+        b=qixgzlLM+nOQSBcovlT9IwEFHm3n1zH39/sCcTO2YmsB4j9A7qhq7c+9A00vja9VeQ
+         q5LEcXAVQGBSUwj3mcF8Ue4zHJYB9S1tJLCYw2ghATg8/8BekjsUbZrnc8JZlAorsLzV
+         kMeq3Lwkm4wDILEErKpmVAJKoDS43oJQSPyh5j6QeH/d+G3+JSkTa76Xk9yZ/yvpMbRV
+         1bJTHX9vYhXRFlykfxpHCKp9gjC3IBOGJYzxeS6rTkGzymVuw7uJOwCgf2G0lLZa6VBw
+         xqWWIB4C12sQRK2UnkoyqwsH9UN37FNEc7/Yu5RSIhCE4DiIssYr0DHkl1KBhUTbaE8d
+         1iZQ==
+X-Gm-Message-State: APjAAAV5thuOjT4DyzbPg4XjSSA/M4zV1VNjhfkTM9+RIEaTySM1pVtd
+        tpLamnws65YI28s8DCztqVUqoVvIVkMSz/dpsmpjEQ==
+X-Google-Smtp-Source: APXvYqxEna7P0g0Bcyf5yaueoracYZLNFgddoZxTQyK2mxM0F5w6o3XIUtpvDIp7islXuRjcdOl+JjDzPJJdEmQZDWQ=
+X-Received: by 2002:ac8:60d6:: with SMTP id i22mr24868461qtm.250.1567429893126;
+ Mon, 02 Sep 2019 06:11:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190814104520.6001-1-darekm@google.com> <20190814104520.6001-7-darekm@google.com>
+ <00515839-a4bd-6721-8563-a16fbbaa7159@xs4all.nl>
+In-Reply-To: <00515839-a4bd-6721-8563-a16fbbaa7159@xs4all.nl>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Mon, 2 Sep 2019 15:11:22 +0200
+Message-ID: <CA+M3ks6zkg9nh39tLr-fzHR8_UJeaxADTM9yeRSECtkyBuUbFw@mail.gmail.com>
+Subject: Re: [PATCH v7 6/9] drm: sti: use cec_notifier_conn_(un)register
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-media@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only thing left of page-coherent.h is two functions implemented by
-the architecture for non-coherent DMA support that are never called for
-fully coherent architectures.  Just move the prototypes for those to
-swiotlb-xen.h instead.
+Le jeu. 22 ao=C3=BBt 2019 =C3=A0 10:11, Hans Verkuil <hverkuil-cisco@xs4all=
+.nl> a =C3=A9crit :
+>
+> Adding Benjamin Gaignard.
+>
+> Benjamin, can you take a look at this and Ack it (or merge it if you pref=
+er) and
+> ideally test it as well. This is the only patch in this series that I cou=
+ld not
+> test since I don't have any hardware.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
----
- arch/arm/include/asm/xen/page-coherent.h   |  2 --
- arch/arm64/include/asm/xen/page-coherent.h |  2 --
- arch/x86/include/asm/xen/page-coherent.h   | 11 -----------
- drivers/xen/swiotlb-xen.c                  |  3 ---
- include/Kbuild                             |  1 -
- include/xen/arm/page-coherent.h            | 10 ----------
- include/xen/swiotlb-xen.h                  |  6 ++++++
- 7 files changed, 6 insertions(+), 29 deletions(-)
- delete mode 100644 arch/arm/include/asm/xen/page-coherent.h
- delete mode 100644 arch/arm64/include/asm/xen/page-coherent.h
- delete mode 100644 arch/x86/include/asm/xen/page-coherent.h
- delete mode 100644 include/xen/arm/page-coherent.h
+Looks good for me.
 
-diff --git a/arch/arm/include/asm/xen/page-coherent.h b/arch/arm/include/asm/xen/page-coherent.h
-deleted file mode 100644
-index 27e984977402..000000000000
---- a/arch/arm/include/asm/xen/page-coherent.h
-+++ /dev/null
-@@ -1,2 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#include <xen/arm/page-coherent.h>
-diff --git a/arch/arm64/include/asm/xen/page-coherent.h b/arch/arm64/include/asm/xen/page-coherent.h
-deleted file mode 100644
-index 27e984977402..000000000000
---- a/arch/arm64/include/asm/xen/page-coherent.h
-+++ /dev/null
-@@ -1,2 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#include <xen/arm/page-coherent.h>
-diff --git a/arch/x86/include/asm/xen/page-coherent.h b/arch/x86/include/asm/xen/page-coherent.h
-deleted file mode 100644
-index c9c8398a31ff..000000000000
---- a/arch/x86/include/asm/xen/page-coherent.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_X86_XEN_PAGE_COHERENT_H
--#define _ASM_X86_XEN_PAGE_COHERENT_H
--
--static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir) { }
--
--static inline void xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir) { }
--
--#endif /* _ASM_X86_XEN_PAGE_COHERENT_H */
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index a642e284f1e2..95911ff9c11c 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -35,9 +35,6 @@
- #include <xen/xen-ops.h>
- #include <xen/hvc-console.h>
- 
--#include <asm/dma-mapping.h>
--#include <asm/xen/page-coherent.h>
--
- #include <trace/events/swiotlb.h>
- /*
-  * Used to do a quick range check in swiotlb_tbl_unmap_single and
-diff --git a/include/Kbuild b/include/Kbuild
-index c38f0d46b267..cce5cf6abf89 100644
---- a/include/Kbuild
-+++ b/include/Kbuild
-@@ -1189,7 +1189,6 @@ header-test-			+= video/vga.h
- header-test-			+= video/w100fb.h
- header-test-			+= xen/acpi.h
- header-test-			+= xen/arm/hypercall.h
--header-test-			+= xen/arm/page-coherent.h
- header-test-			+= xen/arm/page.h
- header-test-			+= xen/balloon.h
- header-test-			+= xen/events.h
-diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
-deleted file mode 100644
-index 635492d41ebe..000000000000
---- a/include/xen/arm/page-coherent.h
-+++ /dev/null
-@@ -1,10 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _XEN_ARM_PAGE_COHERENT_H
--#define _XEN_ARM_PAGE_COHERENT_H
--
--void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
--		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
--void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
--		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
--
--#endif /* _XEN_ARM_PAGE_COHERENT_H */
-diff --git a/include/xen/swiotlb-xen.h b/include/xen/swiotlb-xen.h
-index 5e4b83f83dbc..a7c642872568 100644
---- a/include/xen/swiotlb-xen.h
-+++ b/include/xen/swiotlb-xen.h
-@@ -2,8 +2,14 @@
- #ifndef __LINUX_SWIOTLB_XEN_H
- #define __LINUX_SWIOTLB_XEN_H
- 
-+#include <linux/dma-mapping.h>
- #include <linux/swiotlb.h>
- 
-+void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
-+
- extern int xen_swiotlb_init(int verbose, bool early);
- extern const struct dma_map_ops xen_swiotlb_dma_ops;
- 
--- 
-2.20.1
+Applied on drm-misc-next,
+Thanks,
+Benjamin
 
+>
+> Regards,
+>
+>         Hans
+>
+> On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
+> > Use the new cec_notifier_conn_(un)register() functions to
+> > (un)register the notifier for the HDMI connector, and fill
+> > in the cec_connector_info.
+> >
+> > Changes since v2:
+> >       Don't invalidate physical address before unregistering the
+> >       notifier.
+> >
+> > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> > ---
+> >  drivers/gpu/drm/sti/sti_hdmi.c | 19 ++++++++++++-------
+> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_h=
+dmi.c
+> > index 9862c322f0c4a..bd15902b825ad 100644
+> > --- a/drivers/gpu/drm/sti/sti_hdmi.c
+> > +++ b/drivers/gpu/drm/sti/sti_hdmi.c
+> > @@ -1256,6 +1256,7 @@ static int sti_hdmi_bind(struct device *dev, stru=
+ct device *master, void *data)
+> >       struct drm_device *drm_dev =3D data;
+> >       struct drm_encoder *encoder;
+> >       struct sti_hdmi_connector *connector;
+> > +     struct cec_connector_info conn_info;
+> >       struct drm_connector *drm_connector;
+> >       struct drm_bridge *bridge;
+> >       int err;
+> > @@ -1318,6 +1319,14 @@ static int sti_hdmi_bind(struct device *dev, str=
+uct device *master, void *data)
+> >               goto err_sysfs;
+> >       }
+> >
+> > +     cec_fill_conn_info_from_drm(&conn_info, drm_connector);
+> > +     hdmi->notifier =3D cec_notifier_conn_register(&hdmi->dev, NULL,
+> > +                                                 &conn_info);
+> > +     if (!hdmi->notifier) {
+> > +             hdmi->drm_connector =3D NULL;
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> >       /* Enable default interrupts */
+> >       hdmi_write(hdmi, HDMI_DEFAULT_INT, HDMI_INT_EN);
+> >
+> > @@ -1331,6 +1340,9 @@ static int sti_hdmi_bind(struct device *dev, stru=
+ct device *master, void *data)
+> >  static void sti_hdmi_unbind(struct device *dev,
+> >               struct device *master, void *data)
+> >  {
+> > +     struct sti_hdmi *hdmi =3D dev_get_drvdata(dev);
+> > +
+> > +     cec_notifier_conn_unregister(hdmi->notifier);
+> >  }
+> >
+> >  static const struct component_ops sti_hdmi_ops =3D {
+> > @@ -1436,10 +1448,6 @@ static int sti_hdmi_probe(struct platform_device=
+ *pdev)
+> >               goto release_adapter;
+> >       }
+> >
+> > -     hdmi->notifier =3D cec_notifier_get(&pdev->dev);
+> > -     if (!hdmi->notifier)
+> > -             goto release_adapter;
+> > -
+> >       hdmi->reset =3D devm_reset_control_get(dev, "hdmi");
+> >       /* Take hdmi out of reset */
+> >       if (!IS_ERR(hdmi->reset))
+> > @@ -1459,14 +1467,11 @@ static int sti_hdmi_remove(struct platform_devi=
+ce *pdev)
+> >  {
+> >       struct sti_hdmi *hdmi =3D dev_get_drvdata(&pdev->dev);
+> >
+> > -     cec_notifier_set_phys_addr(hdmi->notifier, CEC_PHYS_ADDR_INVALID)=
+;
+> > -
+> >       i2c_put_adapter(hdmi->ddc_adapt);
+> >       if (hdmi->audio_pdev)
+> >               platform_device_unregister(hdmi->audio_pdev);
+> >       component_del(&pdev->dev, &sti_hdmi_ops);
+> >
+> > -     cec_notifier_put(hdmi->notifier);
+> >       return 0;
+> >  }
+> >
+> >
+>
