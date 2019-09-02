@@ -2,76 +2,268 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783CCC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75BFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5647023774
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B0323774
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bAJ3UbDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfIBHaX (ORCPT
+        id S1729744AbfIBHbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:30:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9579 "EHLO mga04.intel.com"
+        Mon, 2 Sep 2019 03:31:08 -0400
+Received: from ozlabs.org ([203.11.71.1]:50219 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729408AbfIBHaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:30:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:30:22 -0700
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="357416837"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:30:19 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 3BA0C20B09; Mon,  2 Sep 2019 10:30:17 +0300 (EEST)
-Date:   Mon, 2 Sep 2019 10:30:17 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 03/10] device property: Add functions for accessing
- node's parents
-Message-ID: <20190902073017.GJ5475@paasikivi.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-4-sakari.ailus@linux.intel.com>
- <20190830123448.GB2680@smile.fi.intel.com>
+        id S1729408AbfIBHbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:31:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MMFg5Tzsz9s7T;
+        Mon,  2 Sep 2019 17:31:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567409464;
+        bh=XELxu5FgecPOqvbsunN+p5nGwQ3YBc3AeD3egFnCS9g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bAJ3UbDbhkTno29Q0Ba888CbYXog/kbRlUFQINag1Jor1bwpBJaNieJPHJ9ZlHqjm
+         O6hnaBSfrGGiMwHQ6bAe+mXiIeJmUuJr/LmQnTlgu3s+FTExUdWW1bMcZIFCqErTpn
+         E+gLHEpxYHORmtKsvpP8ARBX2G/n2lBzaUTgBch0R7V52xB/rg/AXbhjWoTxFC8Q15
+         pxB/s/3HzSw7VZzUr6RqvullPK3JepMWNawFlhcgiEN9fFaUBDmVF9O2wsmK2Y9elL
+         +1ifkV2KISmN51dASokvGwkx+8qy048uovIvuIiopKhqI4Lduv15SDCpDAKn30qPGJ
+         mvdgR/RMkv+Eg==
+Date:   Mon, 2 Sep 2019 17:31:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20190902173102.53a44459@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830123448.GB2680@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/61CBMUCLyn0N/.EVCaxPnwA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 03:34:48PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 29, 2019 at 01:10:36PM +0300, Sakari Ailus wrote:
-> > Add two convenience functions for accessing node's parents:
-> > 
-> > fwnode_count_parents() returns the number of parent nodes a given node
-> > has. fwnode_get_nth_parent() returns node's parent at a given distance
-> > from the node itself.
-> > 
-> > Also reorder fwnode_get_parent() in property.c according to the same order
-> > as in property.h.
-> 
-> > +/**
-> > + * fwnode_get_parent - Return parent firwmare node
-> > + * @fwnode: Firmware whose parent is retrieved
-> 
-> I guess you may leave this in the same location. The change will be more clear
-> to review and smaller.
+--Sig_/61CBMUCLyn0N/.EVCaxPnwA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I added a separate patch that just moves it up.
+Hi all,
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Today's linux-next merge of the tip tree got a conflict in:
+
+  tools/power/x86/turbostat/turbostat.c
+
+between commit:
+
+  cd188af5282d ("tools/power turbostat: Fix Haswell Core systems")
+  b62b3184576b ("tools/power turbostat: add Jacobsville support")
+  d93ea567fc4e ("tools/power turbostat: Add Ice Lake NNPI support")
+
+from Linus' tree and commit:
+
+  c66f78a6de4d ("x86/intel: Aggregate big core client naming")
+  af239c44e3f9 ("x86/intel: Aggregate big core mobile naming")
+  5e741407eab7 ("x86/intel: Aggregate big core graphics naming")
+  5ebb34edbefa ("x86/intel: Aggregate microserver naming")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/power/x86/turbostat/turbostat.c
+index b2a86438f074,6eef0cee6d75..000000000000
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@@ -3234,15 -3207,14 +3234,15 @@@ int probe_nhm_msrs(unsigned int family
+  		pkg_cstate_limits =3D snb_pkg_cstate_limits;
+  		has_misc_feature_control =3D 1;
+  		break;
+- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++ 	case INTEL_FAM6_HASWELL:	/* HSW */
+  	case INTEL_FAM6_HASWELL_X:	/* HSX */
+- 	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+++	case INTEL_FAM6_HASWELL_L:	/* HSW */
++ 	case INTEL_FAM6_HASWELL_G:	/* HSW */
++ 	case INTEL_FAM6_BROADWELL:	/* BDW */
++ 	case INTEL_FAM6_BROADWELL_G:	/* BDW */
+  	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+- 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+- 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++ 	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++ 	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+  		pkg_cstate_limits =3D hsw_pkg_cstate_limits;
+  		has_misc_feature_control =3D 1;
+  		break;
+@@@ -3431,15 -3403,14 +3431,15 @@@ int has_config_tdp(unsigned int family
+ =20
+  	switch (model) {
+  	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++ 	case INTEL_FAM6_HASWELL:	/* HSW */
+  	case INTEL_FAM6_HASWELL_X:	/* HSX */
+- 	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+++	case INTEL_FAM6_HASWELL_L:	/* HSW */
++ 	case INTEL_FAM6_HASWELL_G:	/* HSW */
++ 	case INTEL_FAM6_BROADWELL:	/* BDW */
++ 	case INTEL_FAM6_BROADWELL_G:	/* BDW */
+  	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+- 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+- 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++ 	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++ 	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+  	case INTEL_FAM6_SKYLAKE_X:	/* SKX */
+ =20
+  	case INTEL_FAM6_XEON_PHI_KNL:	/* Knights Landing */
+@@@ -3870,11 -3840,10 +3870,11 @@@ void rapl_probe_intel(unsigned int fami
+  	switch (model) {
+  	case INTEL_FAM6_SANDYBRIDGE:
+  	case INTEL_FAM6_IVYBRIDGE:
+- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
++ 	case INTEL_FAM6_HASWELL:	/* HSW */
+++	case INTEL_FAM6_HASWELL_L:	/* HSW */
++ 	case INTEL_FAM6_HASWELL_G:	/* HSW */
++ 	case INTEL_FAM6_BROADWELL:	/* BDW */
++ 	case INTEL_FAM6_BROADWELL_G:	/* BDW */
+  		do_rapl =3D RAPL_PKG | RAPL_CORES | RAPL_CORE_POLICY | RAPL_GFX | RAPL_=
+PKG_POWER_INFO;
+  		if (rapl_joules) {
+  			BIC_PRESENT(BIC_Pkg_J);
+@@@ -4063,9 -4031,8 +4063,9 @@@ void perf_limit_reasons_probe(unsigned=20
+  		return;
+ =20
+  	switch (model) {
+- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
++ 	case INTEL_FAM6_HASWELL:	/* HSW */
+++	case INTEL_FAM6_HASWELL_L:	/* HSW */
++ 	case INTEL_FAM6_HASWELL_G:	/* HSW */
+  		do_gfx_perf_limit_reasons =3D 1;
+  	case INTEL_FAM6_HASWELL_X:	/* HSX */
+  		do_core_perf_limit_reasons =3D 1;
+@@@ -4282,15 -4249,14 +4282,15 @@@ int has_snb_msrs(unsigned int family, u
+  	case INTEL_FAM6_SANDYBRIDGE_X:
+  	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+  	case INTEL_FAM6_IVYBRIDGE_X:	/* IVB Xeon */
+- 	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++ 	case INTEL_FAM6_HASWELL:	/* HSW */
+  	case INTEL_FAM6_HASWELL_X:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+- 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+- 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+++	case INTEL_FAM6_HASWELL_L:	/* HSW */
++ 	case INTEL_FAM6_HASWELL_G:	/* HSW */
++ 	case INTEL_FAM6_BROADWELL:	/* BDW */
++ 	case INTEL_FAM6_BROADWELL_G:	/* BDW */
+  	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+- 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+- 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++ 	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++ 	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+  	case INTEL_FAM6_SKYLAKE_X:	/* SKX */
+  	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+  	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+@@@ -4318,10 -4284,10 +4318,10 @@@ int has_c8910_msrs(unsigned int family
+  		return 0;
+ =20
+  	switch (model) {
+- 	case INTEL_FAM6_HASWELL_ULT:	/* HSW */
+- 	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
+- 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+- 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
+ -	case INTEL_FAM6_HASWELL:
+++	case INTEL_FAM6_HASWELL_L:	/* HSW */
++ 	case INTEL_FAM6_BROADWELL:	/* BDW */
++ 	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++ 	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+  	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+  	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+  		return 1;
+@@@ -4602,22 -4568,21 +4602,22 @@@ unsigned int intel_model_duplicates(uns
+  	case INTEL_FAM6_XEON_PHI_KNM:
+  		return INTEL_FAM6_XEON_PHI_KNL;
+ =20
+ -	case INTEL_FAM6_HASWELL_L:
+ -		return INTEL_FAM6_HASWELL;
+ -
+  	case INTEL_FAM6_BROADWELL_X:
+- 	case INTEL_FAM6_BROADWELL_XEON_D:	/* BDX-DE */
++ 	case INTEL_FAM6_BROADWELL_D:	/* BDX-DE */
+  		return INTEL_FAM6_BROADWELL_X;
+ =20
+- 	case INTEL_FAM6_SKYLAKE_MOBILE:
+- 	case INTEL_FAM6_SKYLAKE_DESKTOP:
+- 	case INTEL_FAM6_KABYLAKE_MOBILE:
+- 	case INTEL_FAM6_KABYLAKE_DESKTOP:
+- 		return INTEL_FAM6_SKYLAKE_MOBILE;
++ 	case INTEL_FAM6_SKYLAKE_L:
++ 	case INTEL_FAM6_SKYLAKE:
++ 	case INTEL_FAM6_KABYLAKE_L:
++ 	case INTEL_FAM6_KABYLAKE:
++ 		return INTEL_FAM6_SKYLAKE_L;
+ =20
+- 	case INTEL_FAM6_ICELAKE_MOBILE:
++ 	case INTEL_FAM6_ICELAKE_L:
+ +	case INTEL_FAM6_ICELAKE_NNPI:
+- 		return INTEL_FAM6_CANNONLAKE_MOBILE;
++ 		return INTEL_FAM6_CANNONLAKE_L;
+ +
+- 	case INTEL_FAM6_ATOM_TREMONT_X:
+- 		return INTEL_FAM6_ATOM_GOLDMONT_X;
+++	case INTEL_FAM6_ATOM_TREMONT_D:
+++		return INTEL_FAM6_ATOM_GOLDMONT_D;
+  	}
+  	return model;
+  }
+
+--Sig_/61CBMUCLyn0N/.EVCaxPnwA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1sxTYACgkQAVBC80lX
+0GytAQf/Y7+erBVjhJBCkpMVrk+m51iVWIoeXC4ynPd86vwfE+M4Kk5AglxQo0tr
+uP7EhZLEotGUq/FvkQsRpA5t2gC7UKRUJ6sbEYtYvIQdwqxPR9PkiNyoWzu9FLUl
+FTLjp9csl3i39ljNXufd/NPoB4/g5XAEckitMGZ5VMXSZIv4H/SnLWumAr3Zp9S9
+8SB370abfjLyXQ/gX3t7Qo4DqiY7TiQYtLNgakrLwDnYopcCwuX+M/mdSK8V6SEN
+DZclW6gHrFYrw3uqRwahUHdKqsG/ajh3OxzZM0UbAWJA0nPcfLGeRQ58qMeXHJSX
+McFYyxf1uxI4ZyXSH3Xg4caejfL8ig==
+=IIa5
+-----END PGP SIGNATURE-----
+
+--Sig_/61CBMUCLyn0N/.EVCaxPnwA--
