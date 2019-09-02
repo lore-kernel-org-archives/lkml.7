@@ -2,219 +2,173 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B897C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38386C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9C32173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mj/Q0Kso"
+	by mail.kernel.org (Postfix) with ESMTP id 144C92173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfIBOPb (ORCPT
+        id S1731126AbfIBOP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:15:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46542 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfIBOPa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:15:30 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 201so3063354qkd.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 07:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vg5cV8RgYZAUwO4BlUHQDzrdFcjapkG4a4PKGmuKmDk=;
-        b=mj/Q0KsoKkL2aU8JZYYOHHonFGHI32S47bwd5c/tBzZWVQqk20Z5lLx+BxwVj/27qU
-         CVKjoFn4KS2uLQ/mVkJkNF2mAgDtmCdpBVGUKns+p5oTekFtv67IL8RRWmpZqFtxaZ3U
-         v2gxg4Ku+yL/kAxYWoaL9NFMXqoa40a0L1BCLjo/4mrl/lj0XaHeavdXQVStmMlhMohI
-         GtAbBq5vOdH/MuvS6pe6D9Sdce9cGAjxA0OGr3pmJ+a3bnABM0SX6/QPtxwY8LhWztnJ
-         GuG0qHfkIj9uf2P8ls1l987c+SgQm0iqRt/CuNzTsAGgvJIL4p+Kb21tQgfa6Cxq6myZ
-         wTUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vg5cV8RgYZAUwO4BlUHQDzrdFcjapkG4a4PKGmuKmDk=;
-        b=FW48/PGtaP2Y2tITh+q2JiSEgodcIcbI6joMdyqczqxE8COYE6igWfiDXwM1caHn/N
-         Wsgsly7JInEZ7jDNwhWufFWP5V/athhj2g7R/iIjkdaUv1N7y5kYfhd2E0gY5ggDZWPE
-         rZ2jdLueMXfqKNqbv+qdvRYY0jY9v7tCFpUtlVyiOqZ6ecCzGWZCo8ijpUYMA4sjMTge
-         ILBAOdczhAJVp/hEihGqQBj4TbIzQVlI3fZmkHedyxPJs+jDHaUNKvW2W4vZvgZht+hA
-         HBvsfF/r6bfgK0RxynuS8f0iuyij1I59uXKchXKBT/+8T3mBtOmlCG5LVXW9tQg3jLcD
-         PHAA==
-X-Gm-Message-State: APjAAAVnIEdqPcJ5RYsLnJrGP/KbQ/J+iNr/lego0n9OuOU8+hnYb4Hj
-        De+OrqK5GRnGiUhuKVzPd/Hn/A==
-X-Google-Smtp-Source: APXvYqwh5YLrf3v8H14X6qT6Rudakihge2BEBvIqE2ipHpxFGIlfyf61HS+kjaheOm4zXVDWDgA7sA==
-X-Received: by 2002:a37:de14:: with SMTP id h20mr26496247qkj.260.1567433729523;
-        Mon, 02 Sep 2019 07:15:29 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1320-244.members.linode.com. [45.79.221.244])
-        by smtp.gmail.com with ESMTPSA id d45sm3752547qtc.70.2019.09.02.07.15.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 07:15:28 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 22:15:11 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5] perf machine: arm/arm64: Improve completeness for
- kernel address space
-Message-ID: <20190902141511.GF4931@leoy-ThinkPad-X240s>
-References: <20190815082521.16885-1-leo.yan@linaro.org>
- <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
- <20190815113242.GA28881@leoy-ThinkPad-X240s>
- <e0919e39-7607-815b-3a12-96f098e45a5f@intel.com>
- <20190816014541.GA17960@leoy-ThinkPad-X240s>
- <363577f1-097e-eddd-a6ca-b23f644dd8ce@intel.com>
- <20190826125105.GA3288@leoy-ThinkPad-X240s>
+        Mon, 2 Sep 2019 10:15:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53752 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726438AbfIBOP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:15:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 51EBFADBF;
+        Mon,  2 Sep 2019 14:15:56 +0000 (UTC)
+Subject: Re: [PATCH] mm/vmalloc: move 'area->pages' after if statement
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Austin Kim <austindh.kim@gmail.com>
+Cc:     urezki@gmail.com, guro@fb.com, rpenyaev@suse.de, mhocko@suse.com,
+        rick.p.edgecombe@intel.com, rppt@linux.ibm.com,
+        aryabinin@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190830035716.GA190684@LGEARND20B15>
+ <20190830135007.8b5949bd57975d687ff0a3f8@linux-foundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8d537e02-9479-d3b2-f74a-7136f03ecde2@suse.cz>
+Date:   Mon, 2 Sep 2019 16:15:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826125105.GA3288@leoy-ThinkPad-X240s>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190830135007.8b5949bd57975d687ff0a3f8@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On 8/30/19 10:50 PM, Andrew Morton wrote:
+> On Fri, 30 Aug 2019 12:57:16 +0900 Austin Kim <austindh.kim@gmail.com> wrote:
+> 
+>> If !area->pages statement is true where memory allocation fails, 
+>> area is freed.
+>>
+>> In this case 'area->pages = pages' should not executed.
 
-On Mon, Aug 26, 2019 at 08:51:05PM +0800, Leo Yan wrote:
-> Hi Adrian,
-> 
-> On Fri, Aug 16, 2019 at 04:00:02PM +0300, Adrian Hunter wrote:
-> > On 16/08/19 4:45 AM, Leo Yan wrote:
-> > > Hi Adrian,
-> > > 
-> > > On Thu, Aug 15, 2019 at 02:45:57PM +0300, Adrian Hunter wrote:
-> > > 
-> > > [...]
-> > > 
-> > >>>> How come you cannot use kallsyms to get the information?
-> > >>>
-> > >>> Thanks for pointing out this.  Sorry I skipped your comment "I don't
-> > >>> know how you intend to calculate ARM_PRE_START_SIZE" when you reviewed
-> > >>> the patch v3, I should use that chance to elaborate the detailed idea
-> > >>> and so can get more feedback/guidance before procceed.
-> > >>>
-> > >>> Actually, I have considered to use kallsyms when worked on the previous
-> > >>> patch set.
-> > >>>
-> > >>> As mentioned in patch set v4's cover letter, I tried to implement
-> > >>> machine__create_extra_kernel_maps() for arm/arm64, the purpose is to
-> > >>> parse kallsyms so can find more kernel maps and thus also can fixup
-> > >>> the kernel start address.  But I found the 'perf script' tool directly
-> > >>> calls machine__get_kernel_start() instead of running into the flow for
-> > >>> machine__create_extra_kernel_maps();
-> > >>
-> > >> Doesn't it just need to loop through each kernel map to find the lowest
-> > >> start address?
-> > > 
-> > > Based on your suggestion, I worked out below change and verified it
-> > > can work well on arm64 for fixing up start address; please let me know
-> > > if the change works for you?
-> > 
-> > How does that work if take a perf.data file to a machine with a different
-> > architecture?
-> 
-> Sorry I delayed so long to respond to your question; I didn't have
-> confidence to give out very reasonale answer and this is the main reason
-> for delaying.
+That read like a use after free fix and made me wonder about stable,
+fixes etc... luckily it's not.
 
-Could you take chance to review my below replying?  I'd like to get
-your confirmation before I send out offical patch.
+>> So move 'area->pages = pages' after if statement.
+>>
+>> ...
+>>
+>> --- a/mm/vmalloc.c
+>> +++ b/mm/vmalloc.c
+>> @@ -2416,13 +2416,15 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+>>  	} else {
+>>  		pages = kmalloc_node(array_size, nested_gfp, node);
+>>  	}
+>> -	area->pages = pages;
+>> -	if (!area->pages) {
+>> +
+>> +	if (!pages) {
+>>  		remove_vm_area(area->addr);
+>>  		kfree(area);
+>>  		return NULL;
+>>  	}
+>>  
+>> +	area->pages = pages;
+>> +
+>>  	for (i = 0; i < area->nr_pages; i++) {
+>>  		struct page *page;
+>>  
+> 
+> Fair enough.  But we can/should also do this?
 
-Thanks,
-Leo Yan
+Agreed, same thing.
 
-> 
-> For your question for taking a perf.data file to a machine with a
-> different architecture, we can firstly use command 'perf buildid-list'
-> to print out the buildid for kallsyms, based on the dumped buildid we
-> can find out the location for the saved kallsyms file; then we can use
-> option '--kallsyms' to specify the offline kallsyms file and use the
-> offline kallsyms to fixup kernel start address.  The detailed commands
-> are listed as below:
-> 
-> root@debian:~# perf buildid-list
-> 7b36dfca8317ef74974ebd7ee5ec0a8b35c97640 [kernel.kallsyms]
-> 56b84aa88a1bcfe222a97a53698b92723a3977ca /usr/lib/systemd/systemd
-> 0956b952e9cd673d48ff2cfeb1a9dbd0c853e686 /usr/lib/aarch64-linux-gnu/libm-2.28.so
-> [...]
-> 
-> root@debian:~# perf script --kallsyms ~/.debug/\[kernel.kallsyms\]/7b36dfca8317ef74974ebd7ee5ec0a8b35c97640/kallsyms
-> 
-> The amended patch is as below, please review and always welcome
-> any suggestions or comments!
-> 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 5734460fc89e..593f05cc453f 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2672,9 +2672,26 @@ int machine__nr_cpus_avail(struct machine *machine)
->  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
->  }
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+> --- a/mm/vmalloc.c~mm-vmalloc-move-area-pages-after-if-statement-fix
+> +++ a/mm/vmalloc.c
+> @@ -2409,7 +2409,6 @@ static void *__vmalloc_area_node(struct
+>  	nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
+>  	array_size = (nr_pages * sizeof(struct page *));
 >  
-> +static int machine__fixup_kernel_start(void *arg,
-> +				       const char *name __maybe_unused,
-> +				       char type,
-> +				       u64 start)
-> +{
-> +	struct machine *machine = arg;
-> +
-> +	type = toupper(type);
-> +
-> +	/* Fixup for text, weak, data and bss sections. */
-> +	if (type == 'T' || type == 'W' || type == 'D' || type == 'B')
-> +		machine->kernel_start = min(machine->kernel_start, start);
-> +
-> +	return 0;
-> +}
-> +
->  int machine__get_kernel_start(struct machine *machine)
->  {
->  	struct map *map = machine__kernel_map(machine);
-> +	char filename[PATH_MAX];
->  	int err = 0;
->  
->  	/*
-> @@ -2696,6 +2713,22 @@ int machine__get_kernel_start(struct machine *machine)
->  		if (!err && !machine__is(machine, "x86_64"))
->  			machine->kernel_start = map->start;
+> -	area->nr_pages = nr_pages;
+>  	/* Please note that the recursion is strictly bounded. */
+>  	if (array_size > PAGE_SIZE) {
+>  		pages = __vmalloc_node(array_size, 1, nested_gfp|highmem_mask,
+> @@ -2425,6 +2424,7 @@ static void *__vmalloc_area_node(struct
 >  	}
-> +
-> +	if (symbol_conf.kallsyms_name != NULL) {
-> +		strncpy(filename, symbol_conf.kallsyms_name, PATH_MAX);
-> +	} else {
-> +		machine__get_kallsyms_filename(machine, filename, PATH_MAX);
-> +
-> +		if (symbol__restricted_filename(filename, "/proc/kallsyms"))
-> +			goto out;
-> +	}
-> +
-> +	if (kallsyms__parse(filename, machine, machine__fixup_kernel_start))
-> +		pr_warning("Fail to fixup kernel start address. skipping...\n");
-> +
-> +out:
->  	return err;
->  }
 >  
+>  	area->pages = pages;
+> +	area->nr_pages = nr_pages;
+>  
+>  	for (i = 0; i < area->nr_pages; i++) {
+>  		struct page *page;
+> _
 > 
-> Thanks,
-> Leo Yan
+> 
+
