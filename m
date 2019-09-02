@@ -6,153 +6,120 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30143C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311E121881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075F72184D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfIBBHY (ORCPT
+        id S1729268AbfIBBJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 21:07:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45408 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729147AbfIBBHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 21:07:23 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DFEAACCBADF9A72EFC1A;
-        Mon,  2 Sep 2019 09:07:21 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 2 Sep 2019
- 09:07:17 +0800
-Subject: Re: [PATCH] ext4 crypto: fix to check feature status before get
- policy
-To:     <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
-        Chao Yu <chao@kernel.org>, <linux-ext4@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fscrypt@vger.kernel.org>
-References: <20190804095643.7393-1-chao@kernel.org>
- <f5186fae-ac58-a5f5-f9dc-b749ade7285d@huawei.com>
- <20190831150251.GA528@zzz.localdomain>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a6a452d6-aee3-76e1-4a6c-e31247a5a72e@huawei.com>
-Date:   Mon, 2 Sep 2019 09:07:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 1 Sep 2019 21:09:17 -0400
+Received: from mga05.intel.com ([192.55.52.43]:10038 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729169AbfIBBJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 21:09:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Sep 2019 18:09:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="183190007"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Sep 2019 18:09:13 -0700
+Date:   Mon, 2 Sep 2019 09:13:42 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        linux-input@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
+ backdoor call with support for new instructions
+Message-ID: <20190902011342.GA14687@intel.com>
+References: <20190829163353.GC2132@zn.tnic>
+ <20190830010349.GD857@intel.com>
+ <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
+ <20190830062053.GA2598@intel.com>
+ <20190830080650.GA30413@zn.tnic>
+ <20190830143645.GA4784@intel.com>
+ <20190830144628.GC30413@zn.tnic>
+ <20190830150002.GA6931@intel.com>
+ <20190830150856.GB6931@intel.com>
+ <20190830193557.GF30413@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190831150251.GA528@zzz.localdomain>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830193557.GF30413@zn.tnic>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/31 23:02, Eric Biggers wrote:
-> On Sat, Aug 31, 2019 at 06:32:28PM +0800, Chao Yu wrote:
->> Hi,
->>
->> Is this change not necessary? A month has passed...
->>
->> Thanks,
->>
->> On 2019/8/4 17:56, Chao Yu wrote:
->>> From: Chao Yu <yuchao0@huawei.com>
->>>
->>> When getting fscrypto policy via EXT4_IOC_GET_ENCRYPTION_POLICY, if
->>> encryption feature is off, it's better to return EOPNOTSUPP instead
->>> of ENODATA, so let's add ext4_has_feature_encrypt() to do the check
->>> for that.
->>>
->>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>> ---
->>>  fs/ext4/ioctl.c | 6 ++++--
->>>  1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
->>> index 442f7ef873fc..bf87835c1237 100644
->>> --- a/fs/ext4/ioctl.c
->>> +++ b/fs/ext4/ioctl.c
->>> @@ -1112,9 +1112,11 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->>>  		return -EOPNOTSUPP;
->>>  #endif
->>>  	}
->>> -	case EXT4_IOC_GET_ENCRYPTION_POLICY:
->>> +	case EXT4_IOC_GET_ENCRYPTION_POLICY: {
->>> +		if (!ext4_has_feature_encrypt(sb))
->>> +			return -EOPNOTSUPP;
->>>  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
->>> -
->>> +	}
->>>  	case EXT4_IOC_FSGETXATTR:
->>>  	{
->>>  		struct fsxattr fa;
->>>
+On Fri, Aug 30, 2019 at 09:35:57PM +0200, Borislav Petkov wrote:
+> On Fri, Aug 30, 2019 at 11:08:56PM +0800, Philip Li wrote:
+> > hi Boris, for the build status notification, we currently send to below
+> > address, is it still valid? If not, can you suggest one for us?
 > 
-> Sorry, I was preoccupied with all the other fscrypt changes, and was thinking of
-> waiting until 5.5 for this to avoid a potential extra merge conflict or a
-> potentially breaking change.  Looking at this again though, the new ioctl
-> FS_IOC_GET_ENCRYPTION_POLICY_EX *does* do the feature check, which doesn't match
-> the documentation, which implies the check isn't done.  Also, f2fs does the
-> check in FS_IOC_GET_ENCRYPTION_POLICY, so the filesystems are inconsistent.
-> 
-> So, it makes some sense to apply this now.  So I've gone ahead and applied the
-> following to fscrypt.git#master, edited a bit from your original patch:
-> 
->>From 0642ea2409f3bfa105570e12854b8e2628db6835 Mon Sep 17 00:00:00 2001
-> From: Chao Yu <yuchao0@huawei.com>
-> Date: Sun, 4 Aug 2019 17:56:43 +0800
-> Subject: [PATCH] ext4 crypto: fix to check feature status before get policy
-> 
-> When getting fscrypt policy via EXT4_IOC_GET_ENCRYPTION_POLICY, if
-> encryption feature is off, it's better to return EOPNOTSUPP instead of
-> ENODATA, so let's add ext4_has_feature_encrypt() to do the check for
-> that.
-> 
-> This makes it so that all fscrypt ioctls consistently check for the
-> encryption feature, and makes ext4 consistent with f2fs in this regard.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> [EB - removed unneeded braces, updated the documentation, and
->       added more explanation to commit message]
+> Sure, here's an update patch ontop of your master branch:
+Thanks Boris, it is applied, and will take effect soon.
 
-The patch looks better now, thanks for the help.
-
-Thanks,
-
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> 
 > ---
->  Documentation/filesystems/fscrypt.rst | 3 ++-
->  fs/ext4/ioctl.c                       | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
+> From: Borislav Petkov <bp@suse.de>
+> Date: Fri, 30 Aug 2019 21:33:29 +0200
+> Subject: [PATCH] repo/linux/tip: Update tip tree contact information
 > 
-> diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-> index 4289c29d7c5a..8a0700af9596 100644
-> --- a/Documentation/filesystems/fscrypt.rst
-> +++ b/Documentation/filesystems/fscrypt.rst
-> @@ -562,7 +562,8 @@ FS_IOC_GET_ENCRYPTION_POLICY_EX can fail with the following errors:
->    or this kernel is too old to support FS_IOC_GET_ENCRYPTION_POLICY_EX
->    (try FS_IOC_GET_ENCRYPTION_POLICY instead)
->  - ``EOPNOTSUPP``: the kernel was not configured with encryption
-> -  support for this filesystem
-> +  support for this filesystem, or the filesystem superblock has not
-> +  had encryption enabled on it
->  - ``EOVERFLOW``: the file is encrypted and uses a recognized
->    encryption policy version, but the policy struct does not fit into
->    the provided buffer
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index fe5a4b13f939..5703d607f5af 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -1113,6 +1113,8 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  #endif
->  	}
->  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
-> +		if (!ext4_has_feature_encrypt(sb))
-> +			return -EOPNOTSUPP;
->  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
->  
->  	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
+> Replace hpa with Borislav and change contact mail address.
 > 
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> ---
+>  repo/linux/tip | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/repo/linux/tip b/repo/linux/tip
+> index 4fc5d88176fd..96a7dec66f97 100644
+> --- a/repo/linux/tip
+> +++ b/repo/linux/tip
+> @@ -2,11 +2,11 @@ url: https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.git
+>  integration_testing_branches: auto-latest
+>  mail_cc:
+>  - linux-kernel@vger.kernel.org
+> -- tipbuild@zytor.com
+> +- x86@kernel.org
+>  owner:
+>  - Ingo Molnar <mingo@kernel.org>
+> -- H. Peter Anvin <hpa@zytor.com>
+>  - Thomas Gleixner <tglx@linutronix.de>
+> +- Borislav Petkov <bp@suse.de>
+>  subsystems:
+>  - x86
+>  - fpu
+> @@ -16,4 +16,4 @@ subsystems:
+>  - locking
+>  blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
+>  notify_build_success_branch: .*
+> -build_success_mail_to: tip build status <tipbuild@zytor.com>
+> +build_success_mail_to: x86-ml <x86@kernel.org>
+> -- 
+> 2.21.0
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
