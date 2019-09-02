@@ -2,103 +2,91 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFD0C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE0BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D3F2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63E921881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nosthoff.rocks header.i=@nosthoff.rocks header.b="J76ZiGdK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g3j/hn9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbfIBHmn (ORCPT
+        id S1729814AbfIBHm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:42:43 -0400
-Received: from mail.heine.tech ([195.201.24.99]:59284 "EHLO mail.heine.tech"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfIBHmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:42:43 -0400
-X-Greylist: delayed 593 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Sep 2019 03:42:42 EDT
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: michael@nosthoff.rocks)
-        by mail.heine.tech (Postcow) with ESMTPA id 0C7951814BA;
-        Mon,  2 Sep 2019 09:32:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nosthoff.rocks;
-        s=dkim; t=1567409568;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-        bh=JX2/x2Fpnilt3YxCUMwW5hYCNP+HOh2fh/yrCcqpfvQ=;
-        b=J76ZiGdK8Y8frci+PP36sETn4Ys5AjkBijg1nzhyOTdG6TmXvQZduu0sdF+BzkCWj6NKTL
-        3vDsUbYcMOQzf20c+atRE0vudaSEg+GgfKFyP4gZWdmh4e42Sl5d5XqMRomOoMlon0lMci
-        xYBaboQ/h0/Lhk+Mj70Mh93gPlWeqnk=
-Content-Type: text/plain; charset="utf-8"
-In-Reply-To: <20190902071041.ukvc64tg5tjttk6w@earth.universe>
-From:   "Michael Nosthoff" <michael@nosthoff.rocks>
-Date:   Mon, 02 Sep 2019 09:32:47 +0200
-Cc:     "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-To:     "Sebastian Reichel" <sre@kernel.org>
+        Mon, 2 Sep 2019 03:42:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44186 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfIBHm5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:42:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZgtVeGGG3KMC+Cmb89T82xo3W2wtcYXnu9G9kMNBb/4=; b=g3j/hn9O8UxmWCki1gGN6vETlC
+        HmR+NiNJ728ZVhf/gAKaFAqVRXvCkfYOnEAg9ALZq9gA7xtzAbjcLTu5fH9tHiJ5KKVCL4hvwaSlz
+        voFEn+gP5K4TLlru2/6wc7RJW4Vy3S+/CHmlGEFto87+t2Ey25fEQo65gfXyPIbDtJvtYBaKWbJ+H
+        WwuYoZRNRzY5zFQrrcHwdsVfy6m0+xwm8fPOhqgR1qwwgQAteHy+v6OqZ8jSe5MZAh/W6R+6fY+bN
+        1a/zAWezcQY9MLxnRdKyyWLe/1X+EX7dGeNHv9SgfJN/qoWbTYMmvVxhWqqtT+5Y0RM4E88plJdLd
+        5VXswXAw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4gzI-0002Eb-6W; Mon, 02 Sep 2019 07:42:56 +0000
+Date:   Mon, 2 Sep 2019 00:42:56 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
+Message-ID: <20190902074256.GA754@infradead.org>
+References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
+ <20190826113526.GA23425@infradead.org>
+ <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
+ <20190830155322.GA30046@infradead.org>
+ <CAK7LNAR2JuZkdJGxO=f2hUxmQca5d7430NC-2hiqZwkJphJ9sA@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <79b6-5d6cc580-3-35015040@57153312>
-Subject: =?utf-8?q?Re=3A?==?utf-8?q?_linux-next=3A?= Fixes tag needs some work in 
- the battery tree
-User-Agent: SOGoMail 4.0.8
-Content-Transfer-Encoding: quoted-printable
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=nosthoff.rocks;
-        s=dkim; t=1567409568;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to; bh=JX2/x2Fpnilt3YxCUMwW5hYCNP+HOh2fh/yrCcqpfvQ=;
-        b=Z3HDkULOYVoIMvU9ddzW4tOX5r8fU2VGjP5iUEaAy3oD6pVKkWzOAERH+5erlX/84IKveH
-        vUzflOjvpzWAvMchDFjlZGIaIvZJbmdurvS4G+OlnBMyOC/AyFKBQ0UPIwLvC++NS9rPu+
-        dgz5hMMm3lIfktr2t9aw5/ZvjLN07Yw=
-ARC-Seal: i=1; s=dkim; d=nosthoff.rocks; t=1567409568; a=rsa-sha256;
-        cv=none;
-        b=VIBLveKhDw6arNCEsJeZylZEauLRE64oRt1XoM0Ch6zIaNIWMGBxcT5gX6tsSryxTDOyhT
-        BoCgieTBgKW8x7MBELA8m85jYytlmRRoMvGKs0Q2B2LTyjdmX1s/KP91sYon1Vj5Z68CWU
-        SGBj4udBNwFV2ufL8oV48vsbtHVePqI=
-ARC-Authentication-Results: i=1;
-        mail.heine.tech;
-        auth=pass smtp.mailfrom=michael@nosthoff.rocks
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAR2JuZkdJGxO=f2hUxmQca5d7430NC-2hiqZwkJphJ9sA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+On Sat, Aug 31, 2019 at 10:04:53PM +0900, Masahiro Yamada wrote:
+> Kbuild support two file names, "Makefile" and "Kbuild"
+> for describing obj-y, obj-m, etc.
 
-I think you missed that the second commit
+<snipping the basic explanation, which is documented pretty well,
+I I think I full understand>
 
-38fa8b9f75ea ("power: supply: sbs-battery: use correct flags field")
-
-also needs this fix.
-
-
-Regards,
-Michael
-
-On Monday, September 02, 2019 09:10 CEST, Sebastian Reichel <sre@kernel=
-.org> wrote: 
- 
-> Hi Stephen,
+> Similarly, arch/$(SRCARCH)/Makefile is very special
+> in that it is included from the top-level Makefile,
+> and specify arch-specific compiler flags etc.
 > 
-> On Mon, Sep 02, 2019 at 09:31:31AM +1000, Stephen Rothwell wrote:
-> > In commit
-> > 
-> > b19aca4eb2d2 ("power: supply: sbs-battery: only return health when =
-battery present")
-> > 
-> > [...]
-> > 
-> > Please do not split Fixes tags over more than one line.
+> We can use arch/$(SRCARCH)/Kbuild
+> to specify obj-y, obj-m.
+> The top-level Makefile does not need to know
+> the directory structure under arch/$(SRCARCH)/.
 > 
-> I have fixed this and rebased the branch, so the issue should be
-> gone tomororw. Thanks for the notice,
-> 
-> -- Sebastian
+> This is logical separation.
 
+But only if we document this specific split and eventually stop allowing 
+to build objects from arch/$(SRCARCH)/Makefile.  And in my perfect world
+we'd eventually phase out the magic arch/$(SRCARCH)/Makefile entireŀy.
+In addition to the normal Kbuild file we'd then have say (names entirely
+made up and probably not the best idea)
+
+  arch/$(SRCARCH)/flags.mk to set the various compiler flags and co
+  arch/$(SRCARCH)/targets.mk for extra arch-specific targets
