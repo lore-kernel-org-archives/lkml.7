@@ -2,122 +2,97 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5E0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD4C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939D62168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qyt5M2sH"
+	by mail.kernel.org (Postfix) with ESMTP id D18CD21897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbfIBMbc (ORCPT
+        id S1731632AbfIBMbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:31:32 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:44178 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729999AbfIBMbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:31:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lBLD1ncc2hG4ju0AyE3DjcGoR5OZ27h6EU0DPKLq93w=; b=qyt5M2sHlu4gjAY1O6NgGLy91
-        EoYi9ltTA+5ZM4d+xmzo3toUP8JrlqXyvIg7/gY7maGaaa0oXQkxWjAYSPgAvwuDtgy5v01S8EqVE
-        EkMXrFGlwX4KfojVcf/s6F7p/lQ63rvMXTZ6qmwZMq8YTc9LntWlJcEO8lLd6+qLotRcLGqwhYBYD
-        aO95Xgw7qL6pegat+9HipWcBnb35mwdNl74YPSaOV76g6CwI1cMmT5wnltcbWGEBXnBSKe1R405iw
-        5Fg2MdPWYenEncekJj0F5WIVCNU5jwzhbBl55sZmK1l8N3TJeKriw1p0FOKz15Cx5aikYFVr/K4X1
-        Xe/0z1C4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4lUE-00080K-Ua; Mon, 02 Sep 2019 12:31:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0E5430116F;
-        Mon,  2 Sep 2019 14:30:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 539C029B2A005; Mon,  2 Sep 2019 14:31:06 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 14:31:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alessio Balsini <balsini@android.com>
-Cc:     mingo@kernel.org, juri.lelli@redhat.com,
-        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        luca.abeni@santannapisa.it, bristot@redhat.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org,
-        kernel-team@android.com
-Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
- sched_attr::sched_period
-Message-ID: <20190902123106.GS2386@hirez.programming.kicks-ass.net>
-References: <20190726145409.947503076@infradead.org>
- <20190726161357.397880775@infradead.org>
- <20190802172104.GA134279@google.com>
- <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
- <20190822122949.GA245353@google.com>
- <20190822165125.GW2369@hirez.programming.kicks-ass.net>
- <20190831144117.GA133727@google.com>
- <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
+        Mon, 2 Sep 2019 08:31:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:53344 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729999AbfIBMbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:31:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7527337;
+        Mon,  2 Sep 2019 05:31:42 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 155123F246;
+        Mon,  2 Sep 2019 05:31:42 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 13:31:40 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v3 05/11] dt-bindings: pci: layerscape-pci: add
+ compatible strings for ls1088a and ls2088a
+Message-ID: <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-6-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190902031716.43195-6-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:16:23AM +0200, Peter Zijlstra wrote:
-> On Sat, Aug 31, 2019 at 03:41:17PM +0100, Alessio Balsini wrote:
-> > Right!
-> > 
-> > Verified that sysctl_sched_dl_period_max and sysctl_sched_dl_period_min values
-> > are now always consistent.
-> > 
-> > I spent some time in trying to figure out if not having any mutex in
-> > __checkparam_dl() is safe. There can surely happen that "max < min", e.g.:
+On Mon, Sep 02, 2019 at 11:17:10AM +0800, Xiaowei Bao wrote:
+> Add compatible strings for ls1088a and ls2088a.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - Use one valid combination of compatible strings.
+> 
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index e20ceaa..762ae41 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -22,7 +22,9 @@ Required properties:
+>          "fsl,ls1043a-pcie"
+>          "fsl,ls1012a-pcie"
+>    EP mode:
+> -	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+> +	"fsl,ls1046a-pcie-ep" "fsl,ls-pcie-ep"
+> +	"fsl,ls1088a-pcie-ep" "fsl,ls-pcie-ep"
+> +	"fsl,ls2088a-pcie-ep" "fsl,ls-pcie-ep"
 
-> > Sharing my thoughts, a "BUG_ON(max < min)" in __checkparam_dl() is then a
-> > guaranteed source of explosions, but the good news is that "if (period < min ||
-> > period > max" in __checkparam_dl() surely fails if "max < min".  Also the fact
-> > that, when we are writing the new sysctl_sched_dl_* values, only one is
-> > actually changed at a time, that surely helps to preserve the consistency.
-> > 
-> > But is that enough?
-> 
-> Strictly speaking, no, I suppose it is not. We can have two changes in
-> between the two READ_ONCE()s and then we'd be able to observe a
-> violation.
-> 
-> The easy way to fix that is do something like:
-> 
-> +	synchronize_rcu();
-> 	mutex_unlock(&mutex);
-> 
-> in sched_dl_period_handler(). And do:
-> 
-> +	preempt_disable();
-> 	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
-> 	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
-> +	preempt_enable();
-> 
-> in __checkparam_dl().
-> 
-> That would prohibit we see two changes, and seeing only the single
-> change is safe.
+This isn't consistent with "[PATCH v3 09/11] PCI: layerscape: Add EP mode..."
+as that patch drops the fallback "fsl,ls-pcie-ep". Either the fallback must
+be preserved in the driver, or you need to drop it here.
 
-I pushed out a new version; and added patch to sched_rt_handler() on
-top.
+What if there are existing users that depend on the fallback?
 
-Please have a look at:
+(I'm also not sure if that comma should have been dropped).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git sched/wip-deadline
+Thanks,
 
-I'll move these two patches to sched/core if everything looks good.
+Andrew Murray
+
+>  - reg: base addresses and lengths of the PCIe controller register blocks.
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> -- 
+> 2.9.5
+> 
