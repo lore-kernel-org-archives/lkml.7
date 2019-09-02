@@ -2,160 +2,216 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836A0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8CFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAC22087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D876021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567435202;
+	bh=wuLNHdq4qiPYY4vaRkJdguYMmspwYOeW5TeDdxn/Q+U=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Oz8HeMhILmxAVxHAsn0xb0syd3EnPAnAaSUsZQKPJMESN5pliACnb/5WT0T8IY7hW
+	 47pe/vniLm92fUNBXOo4mB08TZ/2vJpZnMbCTnpAA62EgtKnkN3ShPomIpSazX987d
+	 46HgfKvt/hmw6OtZP47T8M0sARwxN5Aa8TJvSPoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731349AbfIBOji (ORCPT
+        id S1731509AbfIBOkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:39:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727393AbfIBOji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:39:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ED046B65E;
-        Mon,  2 Sep 2019 14:39:35 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 16:39:35 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Message-ID: <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-8-sakari.ailus@linux.intel.com>
+        Mon, 2 Sep 2019 10:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730830AbfIBOkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:40:01 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C242087E;
+        Mon,  2 Sep 2019 14:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567435200;
+        bh=wuLNHdq4qiPYY4vaRkJdguYMmspwYOeW5TeDdxn/Q+U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pZ2zCSjOWm+c2x4dtk1SR9LV+mxeygSDuf+eHNF0glhZuCOV9/svIM/l/AT6XMGWy
+         5fCIaWYeESRwOPwsDCM/jF5rqRg06xsn3uzrwrOh8IaB8bKYk1e4daM/2g0X60GKfA
+         8CoggJg+tNDu+bIX7X28PqRkGMyX7Umz50wZykWw=
+Subject: Re: [PATCH v2] kunit: fix failure to build without printk
+To:     Petr Mladek <pmladek@suse.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Tim.Bird@sony.com, sfr@canb.auug.org.au, frowand.list@gmail.com,
+        sergey.senozhatsky@gmail.com, sergey.senozhatsky.work@gmail.com,
+        rostedt@goodmis.org, kunit-dev@googlegroups.com,
+        rdunlap@infradead.org, sboyd@kernel.org, joe@perches.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190828094929.GA14038@jagdpanzerIV>
+ <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
+ <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
+ <20190830183821.GA30306@google.com>
+ <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977A8392@USCULXMSG01.am.sony.com>
+ <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
+ <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977A8416@USCULXMSG01.am.sony.com>
+ <20190830233710.GA101591@google.com>
+ <20190902125249.qs7ql54vnsgf2665@pathway.suse.cz>
+From:   shuah <shuah@kernel.org>
+Message-ID: <91f7f74f-a815-0fda-5a01-0dbfa4ebe24d@kernel.org>
+Date:   Mon, 2 Sep 2019 08:39:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902083240.20367-8-sakari.ailus@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190902125249.qs7ql54vnsgf2665@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
-> %pS and %ps are now the preferred conversion specifiers to print function
-> names. The functionality is equivalent; remove the old, deprecated %pF
-> and %pf support.
-
-Hmm, I see the following in master:
-
-$> git grep %pF
-tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
-
-$> git grep %pf
-tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-
-I wonder how this is related to printk(). In each case, it seems
-that libtraceevent somehow implements the non-standard kernel
-%p mofifiers. It looks error-prone to keep another %pf user
-with the old semantic around.
-
-I am adding some tracing people into CC.
-
-Best Regards,
-Petr
-
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/core-api/printk-formats.rst | 10 ----------
->  lib/vsprintf.c                            |  8 ++------
->  scripts/checkpatch.pl                     |  1 -
->  3 files changed, 2 insertions(+), 17 deletions(-)
+On 9/2/19 6:52 AM, Petr Mladek wrote:
+> On Fri 2019-08-30 16:37:10, Brendan Higgins wrote:
+>> On Fri, Aug 30, 2019 at 11:22:43PM +0000, Tim.Bird@sony.com wrote:
+>>>> -----Original Message-----
+>>>> From: Brendan Higgins
+>>>>
+>>>> On Fri, Aug 30, 2019 at 3:46 PM Joe Perches <joe@perches.com> wrote:
+>>>>>
+>>>>> On Fri, 2019-08-30 at 21:58 +0000, Tim.Bird@sony.com wrote:
+>>>>>>> From: Joe Perches
+>>>>> []
+>>>>>> IMHO %pV should be avoided if possible.  Just because people are
+>>>>>> doing it doesn't mean it should be used when it is not necessary.
+>>>>>
+>>>>> Well, as the guy that created %pV, I of course
+>>>>> have a different opinion.
+>>>>>
+>>>>>>>   then wouldn't it be easier to pass in the
+>>>>>>>> kernel level as a separate parameter and then strip off all printk
+>>>>>>>> headers like this:
+>>>>>>>
+>>>>>>> Depends on whether or not you care for overall
+>>>>>>> object size.  Consolidated formats with the
+>>>>>>> embedded KERN_<LEVEL> like suggested are smaller
+>>>>>>> overall object size.
+>>>>>>
+>>>>>> This is an argument I can agree with.  I'm generally in favor of
+>>>>>> things that lessen kernel size creep. :-)
+>>>>>
+>>>>> As am I.
+>>>>
+>>>> Sorry, to be clear, we are talking about the object size penalty due
+>>>> to adding a single parameter to a function. Is that right?
+>>>
+>>> Not exactly.  The argument is that pre-pending the different KERN_LEVEL
+>>> strings onto format strings can result in several versions of nearly identical strings
+>>> being compiled into the object file.  By parameterizing this (that is, adding
+>>> '%s' into the format string, and putting the level into the string as an argument),
+>>> it prevents this duplication of format strings.
+>>>
+>>> I haven't seen the data on duplication of format strings, and how much this
+>>> affects it, but little things can add up.  Whether it matters in this case depends
+>>> on whether the format strings that kunit uses are also used elsewhere in the kernel,
+>>> and whether these same format strings are used with multiple kernel message levels.
+>>>   -- Tim
+>>
+>> I thought this portion of the discussion was about whether Joe's version
+>> of kunit_printk was better or my critique of his version of kunit_printk:
+>>
+>> Joe's:
+>>>>>> -void kunit_printk(const char *level,
+>>>>>> -		  const struct kunit *test,
+>>>>>> -		  const char *fmt, ...)
+>>>>>> +void kunit_printk(const struct kunit *test, const char *fmt, ...)
+>>>>>>   {
+>>>>>> +	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
+>>>>>>   	struct va_format vaf;
+>>>>>>   	va_list args;
+>>>>>> +	int kern_level;
+>>>>>>
+>>>>>>   	va_start(args, fmt);
+>>>>>>
+>>>>>> +	while ((kern_level = printk_get_level(fmt)) != 0) {
+>>>>>> +		size_t size = printk_skip_level(fmt) - fmt;
+>>>>>> +
+>>>>>> +		if (kern_level >= '0' && kern_level <= '7') {
+>>>>>> +			memcpy(lvl, fmt,  size);
+>>>>>> +			lvl[size] = '\0';
+>>>>>> +		}
+>>>>>> +		fmt += size;
+>>>>>> +	}
+>>>>>> +
+>>>>>>   	vaf.fmt = fmt;
+>>>>>>   	vaf.va = &args;
+>>>>>>
+>>>>>> -	kunit_vprintk(test, level, &vaf);
+>>>>>> +	printk("%s\t# %s %pV\n", lvl, test->name, &vaf);
+>>>>>>
+>>>>>>   	va_end(args);
+>>>>>>   }
+>>
+>> Mine:
+>>>   void kunit_printk(const char *level,
+>>>   		  const struct kunit *test,
+>>>   		  const char *fmt, ...)
+>>>   {
+>>>   	struct va_format vaf;
+>>>   	va_list args;
+>>>
+>>>   	va_start(args, fmt);
+>>>
+>>> +	fmt = printk_skip_headers(fmt);
+>>> +
+>>>   	vaf.fmt = fmt;
+>>>   	vaf.va = &args;
+>>>
+>>> -	kunit_vprintk(test, level, &vaf);
+>>> +	printk("%s\t# %s %pV\n", level, test->name, &vaf);
+>>>
+>>>   	va_end(args);
+>>>   }
+>>
+>> I thought you and Joe were arguing that "Joe's" resulted in a smaller
+>> object size than "Mine" (not to be confused with the actual patch I
+>> presented here, which is what Sergey suggested I do on a different
+>> thread).
+>>
+>> I really don't feel strongly about what Sergey suggested I do (which is
+>> what this patch originally introduced), versus, what Joe suggested,
+>> versus what I suggested in response to Joe (or any of the things
+>> suggested on other threads). I just want to pick one, fix the breakage
+>> in linux-next, and move on with my life.
 > 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index c6224d039bcbe..922a29eb70e6c 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -86,8 +86,6 @@ Symbols/Function Pointers
->  
->  	%pS	versatile_init+0x0/0x110
->  	%ps	versatile_init
-> -	%pF	versatile_init+0x0/0x110
-> -	%pf	versatile_init
->  	%pSR	versatile_init+0x9/0x110
->  		(with __builtin_extract_return_addr() translation)
->  	%pB	prev_fn_of_versatile_init+0x88/0x88
-> @@ -97,14 +95,6 @@ The ``S`` and ``s`` specifiers are used for printing a pointer in symbolic
->  format. They result in the symbol name with (S) or without (s)
->  offsets. If KALLSYMS are disabled then the symbol address is printed instead.
->  
-> -Note, that the ``F`` and ``f`` specifiers are identical to ``S`` (``s``)
-> -and thus deprecated. We have ``F`` and ``f`` because on ia64, ppc64 and
-> -parisc64 function pointers are indirect and, in fact, are function
-> -descriptors, which require additional dereferencing before we can lookup
-> -the symbol. As of now, ``S`` and ``s`` perform dereferencing on those
-> -platforms (when needed), so ``F`` and ``f`` exist for compatibility
-> -reasons only.
-> -
->  The ``B`` specifier results in the symbol name with offsets and should be
->  used when printing stack backtraces. The specifier takes into
->  consideration the effect of compiler optimisations which may occur
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index b0967cf17137d..b00b57f9f911f 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
->  #ifdef CONFIG_KALLSYMS
->  	if (*fmt == 'B')
->  		sprint_backtrace(sym, value);
-> -	else if (*fmt != 'f' && *fmt != 's')
-> +	else if (*fmt != 's')
->  		sprint_symbol(sym, value);
->  	else
->  		sprint_symbol_no_offset(sym, value);
-> @@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
->   *
->   * - 'S' For symbolic direct pointers (or function descriptors) with offset
->   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> - * - 'F' Same as 'S'
-> - * - 'f' Same as 's'
-> - * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
-> + * - '[Ss]R' as above with __builtin_extract_return_addr() translation
->   * - 'B' For backtraced symbolic direct pointers with offset
->   * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
->   * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
-> @@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->  	      struct printf_spec spec)
->  {
->  	switch (*fmt) {
-> -	case 'F':
-> -	case 'f':
->  	case 'S':
->  	case 's':
->  		ptr = dereference_symbol_descriptor(ptr);
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 93a7edfe0f059..a60c241112cd4 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -6012,7 +6012,6 @@ sub process {
->  					my $ext_type = "Invalid";
->  					my $use = "";
->  					if ($bad_specifier =~ /p[Ff]/) {
-> -						$ext_type = "Deprecated";
->  						$use = " - use %pS instead";
->  						$use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
->  					}
-> -- 
-> 2.20.1
+> I am a bit lost in all the versions ;-) Though, I like most this
+> patch. I think that it is based on Sergey's suggestion.
 > 
+
+I am too.
+
+> I think that object size is not a huge concern for unit testing.
+> Also if I get it correctly, the object is bigger only when
+> the same string is used with different log levels. I am not
+> sure how often this happen.
+> 
+> Feel free to use for this patch:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+
+Brendan,
+
+Send me the version Sergey suggested with a short summary of the
+discussion in the commit log. Tag it v3 so I don't pull the wrong
+patch in.
+
+I am going to just ignore the checkpatch warn on this and get it in.
+Thanks for the discussion. It helped me clarify my understanding of
+the printk.
+
+thanks,
+-- Shuah
+
