@@ -2,154 +2,131 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4B2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F3AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 622E2217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3672C21881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WhFDP2/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbfIBKtm (ORCPT
+        id S1731185AbfIBKtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:49:42 -0400
-Received: from mail-oln040092065059.outbound.protection.outlook.com ([40.92.65.59]:26592
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730973AbfIBKtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:49:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hFvnGT7kibWRZLn4pE9xG2yuusTkDqRTCsoGrVsE24MQfu1MJ1mOWx2pz5FNCLmBXVDFLhnCGRMp0lv6SA5F6xGCi5F9RqyaxOhrqCvSAUKyacWFSB4OCJtPQV1mOIbcgnnCj5REC+l/NE3fhvA0LTYdjQ1Q01cHCTDM5ihQzCcue1yDtlhQtrPeCCGq2q3TCqrcr6QySHIt/8Wzu7NXx3RYfeySAG7FzfddQETyGD3qDupwf9zGMDEgkYfBbc8KUsqF6qU8fNq74j5UxPGf5IDhEldEgphRLjeZF3M0Ij8o+5VhCdPCE7VsKfrNxEDH9i0hJ1HrOVshPgRDP6e4kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gmFhpZxLwhZaIRYAzSaCQF50e+WXIPq9aD+svjhuYlw=;
- b=ixtj7bM4TVU8FmTTo4D3awLljH//x2q+pCG1OMySqEKAI/godc2moouLfcbnjPiiS+ADVSUrVTPq4qXcnyRhuRMNqaS33NwWsDLlaqAn5rriqmL5uQcWvzgBrFWR4zwCi6aapkEUlLxlt6uG+tXJyceCki8PWkyq2mBL6HdRuiabExFJy7S70WRb3l3ecsj6hZDp5BwAdo//TASjQMcAql2yjYU9x0tgVR9idArGjCAtKCXYz85/tXj0wvvxNy6cFPwqZrekcEI5qhqg9SWpXK/B+KtB3x0sa5Ss0VcsFytMWIXPhjCk/PsbD7SiGP2Nq+A00RsfJKI0vSQceWX04w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR01FT054.eop-EUR01.prod.protection.outlook.com
- (10.152.0.57) by HE1EUR01HT130.eop-EUR01.prod.protection.outlook.com
- (10.152.1.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2220.16; Mon, 2 Sep
- 2019 10:49:34 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.0.58) by
- HE1EUR01FT054.mail.protection.outlook.com (10.152.1.61) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.16 via Frontend Transport; Mon, 2 Sep 2019 10:49:34 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::1188:7e7d:69b:a036]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::1188:7e7d:69b:a036%5]) with mapi id 15.20.2220.022; Mon, 2 Sep 2019
- 10:49:34 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] drm: dw-hdmi: update CEC phys addr and EDID on HPD
- event
-Thread-Topic: [PATCH 3/5] drm: dw-hdmi: update CEC phys addr and EDID on HPD
- event
-Thread-Index: AQHVYOBbQpm/ZMlRykOhaECOU9r4vKcYCfWAgAAsfYA=
-Date:   Mon, 2 Sep 2019 10:49:34 +0000
-Message-ID: <HE1PR06MB40112A70BFF02182310DD3E4ACBE0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <AM0PR06MB40049562E295DD62302C8DB7ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
- <20190901161426.1606-1-jonas@kwiboo.se>
- <AM0PR06MB4004285BAA935D14F1A68787ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
- <d0d7a5b8-4301-9a08-64af-8474a0c4f5de@baylibre.com>
-In-Reply-To: <d0d7a5b8-4301-9a08-64af-8474a0c4f5de@baylibre.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P191CA0022.EURP191.PROD.OUTLOOK.COM (2603:10a6:3:cf::32)
- To HE1PR06MB4011.eurprd06.prod.outlook.com (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:638B98758CD7D450D439C660868FDAFC89FF6AE35CFEA6ACCAF18B7034823439;UpperCasedChecksum:B50DD240BA448C26675459662D7AE8E7604ADDD060C0F2DE1649D363D59F51BF;SizeAsReceived:8108;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [3dJFHbEQVhsRIPcfawhfxKQ2oc8hNkbT]
-x-microsoft-original-message-id: <914c4edc-e3e2-9cb5-384b-c983427edf82@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119158)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR01HT130;
-x-ms-traffictypediagnostic: HE1EUR01HT130:
-x-microsoft-antispam-message-info: ISEF/gA/HRMVbm2J7Y78IHeJdipYotDtJ979fTEVMYNEWyMJVqMXkYYucBPqt8bfnF7nxSsK5KhgPyQhiqyn02Mz6UC2fLfHB3n6apnFZHBlV8hloURKqi/f8uLaf2l/Y3HrhLX3RnSdC6/zz2eKB82z3KthsJS/PfSviSxxgJgnokcwcUnleK+ht5XglQEP
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BEE870B58B10314283DDC3BB1DE2F89E@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 2 Sep 2019 06:49:50 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58524 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730785AbfIBKtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:49:49 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82AhO5Q179751;
+        Mon, 2 Sep 2019 10:48:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=09Q4/fYIG9MJvMP7nWj77FfKeGU7L5Yn85N83DxgLrw=;
+ b=WhFDP2/IAFKDzmMK9FZuHXS9XTbT4hEwmQUa11WiaO3/aF1lXTAz2fg60WkvRhW9xu61
+ NbVJutLwz31Bsu26lfKGgBIpmuZ42eYeBy4GGqKylL5CGB2VGsh1OYy9jTVEtEOm8nCC
+ vSC0m6W/cTepEIcAS4EU4zn82WmiA4t+18S9hgtWJfkd4Kjilj7TfLJ6c/Co9RpjV51i
+ 9kf7AQOXcKFOr9U2juvglD7sXzrWHYaR88Tbg6U2aIwzuG1RTLe+55BjMoA/P6G/EDez
+ G4z6lfHa7BMgFMDi7i34PZ3Ajd1d2gcK8WW9qX4tlmnOUrhRZp8H/acP+ZevWCPFriOu ig== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2us1cbg2j3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Sep 2019 10:48:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82Am2Y7174602;
+        Mon, 2 Sep 2019 10:48:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2uryv530x6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Sep 2019 10:48:18 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x82AmGK4023171;
+        Mon, 2 Sep 2019 10:48:17 GMT
+Received: from [10.175.163.45] (/10.175.163.45)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Sep 2019 03:48:16 -0700
+Subject: Re: [PATCH v2] cpuidle-haltpoll: vcpu hotplug support
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <20190829151027.9930-1-joao.m.martins@oracle.com>
+ <20190829152714.GA15616@amt.cnet>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <5df5b2b1-11ce-9b1a-dd4a-8fe32e491543@oracle.com>
+Date:   Mon, 2 Sep 2019 11:48:06 +0100
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52b02354-cc05-4bc3-cb2f-08d72f933dc3
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:49:34.2382
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT130
+In-Reply-To: <20190829152714.GA15616@amt.cnet>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909020124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909020123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wOS0wMiAxMDoxMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+IE9uIDAxLzA5LzIw
-MTkgMTg6MTQsIEpvbmFzIEthcmxtYW4gd3JvdGU6DQo+PiBVcGRhdGUgQ0VDIHBoeXMgYWRkciBh
-bmQgRURJRCBvbiBIUEQgZXZlbnQsIGZpeGVzIGxvc3QgQ0VDIHBoeXMgYWRkciBhbmQNCj4+IHN0
-YWxlIEVESUQgd2hlbiBIRE1JIGNhYmxlIGlzIHVucGx1Z2dlZC9yZXBsdWdnZWQgb3IgQVZSIGlz
-IHBvd2VyZWQgb24vb2ZmLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEpvbmFzIEthcmxtYW4gPGpv
-bmFzQGt3aWJvby5zZT4NCj4+IC0tLQ0KPj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3Bz
-eXMvZHctaGRtaS5jIHwgMTYgKysrKysrKysrLS0tLS0tLQ0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA5
-IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMNCj4+IGluZGV4IDkxZDg2ZGRkNjYyNC4uMGYwN2JlMWI1
-OTE0IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1o
-ZG1pLmMNCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5j
-DQo+PiBAQCAtMjE4OSw2ICsyMTg5LDcgQEAgc3RhdGljIGludCBkd19oZG1pX2Nvbm5lY3Rvcl91
-cGRhdGVfZWRpZChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLA0KPj4gIHN0YXRpYyBl
-bnVtIGRybV9jb25uZWN0b3Jfc3RhdHVzDQo+PiAgZHdfaGRtaV9jb25uZWN0b3JfZGV0ZWN0KHN0
-cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsIGJvb2wgZm9yY2UpDQo+PiAgew0KPj4gKwll
-bnVtIGRybV9jb25uZWN0b3Jfc3RhdHVzIHN0YXR1czsNCj4+ICAJc3RydWN0IGR3X2hkbWkgKmhk
-bWkgPSBjb250YWluZXJfb2YoY29ubmVjdG9yLCBzdHJ1Y3QgZHdfaGRtaSwNCj4+ICAJCQkJCSAg
-ICAgY29ubmVjdG9yKTsNCj4+ICANCj4+IEBAIC0yMTk4LDcgKzIxOTksMTQgQEAgZHdfaGRtaV9j
-b25uZWN0b3JfZGV0ZWN0KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsIGJvb2wgZm9y
-Y2UpDQo+PiAgCWR3X2hkbWlfdXBkYXRlX3BoeV9tYXNrKGhkbWkpOw0KPj4gIAltdXRleF91bmxv
-Y2soJmhkbWktPm11dGV4KTsNCj4+ICANCj4+IC0JcmV0dXJuIGhkbWktPnBoeS5vcHMtPnJlYWRf
-aHBkKGhkbWksIGhkbWktPnBoeS5kYXRhKTsNCj4+ICsJc3RhdHVzID0gaGRtaS0+cGh5Lm9wcy0+
-cmVhZF9ocGQoaGRtaSwgaGRtaS0+cGh5LmRhdGEpOw0KPj4gKw0KPj4gKwlpZiAoc3RhdHVzID09
-IGNvbm5lY3Rvcl9zdGF0dXNfY29ubmVjdGVkKQ0KPj4gKwkJZHdfaGRtaV9jb25uZWN0b3JfdXBk
-YXRlX2VkaWQoY29ubmVjdG9yLCBmYWxzZSk7DQo+PiArCWVsc2UNCj4+ICsJCWNlY19ub3RpZmll
-cl9waHlzX2FkZHJfaW52YWxpZGF0ZShoZG1pLT5jZWNfbm90aWZpZXIpOw0KPj4gKw0KPj4gKwly
-ZXR1cm4gc3RhdHVzOw0KPj4gIH0NCj4+ICANCj4+ICBzdGF0aWMgaW50IGR3X2hkbWlfY29ubmVj
-dG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQ0KPj4gQEAgLTI0
-MzgsMTIgKzI0NDYsNiBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZHdfaGRtaV9pcnEoaW50IGlycSwg
-dm9pZCAqZGV2X2lkKQ0KPj4gIAkJZHdfaGRtaV9zZXR1cF9yeF9zZW5zZShoZG1pLA0KPj4gIAkJ
-CQkgICAgICAgcGh5X3N0YXQgJiBIRE1JX1BIWV9IUEQsDQo+PiAgCQkJCSAgICAgICBwaHlfc3Rh
-dCAmIEhETUlfUEhZX1JYX1NFTlNFKTsNCj4+IC0NCj4+IC0JCWlmICgocGh5X3N0YXQgJiAoSERN
-SV9QSFlfUlhfU0VOU0UgfCBIRE1JX1BIWV9IUEQpKSA9PSAwKSB7DQo+PiAtCQkJbXV0ZXhfbG9j
-aygmaGRtaS0+Y2VjX25vdGlmaWVyX211dGV4KTsNCj4+IC0JCQljZWNfbm90aWZpZXJfcGh5c19h
-ZGRyX2ludmFsaWRhdGUoaGRtaS0+Y2VjX25vdGlmaWVyKTsNCj4+IC0JCQltdXRleF91bmxvY2so
-JmhkbWktPmNlY19ub3RpZmllcl9tdXRleCk7DQo+PiAtCQl9DQo+PiAgCX0NCj4+ICANCj4+ICAJ
-aWYgKGludHJfc3RhdCAmIEhETUlfSUhfUEhZX1NUQVQwX0hQRCkgew0KPj4NCj4gV29uJ3QgaXQg
-cG9zc2libHkgdHJpZ2dlciB0d2ljZSBlZGlkIHJlYWRvdXRzIG9uIGVhY2ggSFBEIGV2ZW50LA0K
-PiBvbmUgZm9yIENFQyBhbmQgb25lIGZvciBtb2RlcyA/IEl0IHNlZW1zIHNhbmUgYnV0IG5vdCB2
-ZXJ5IGVmZmljaWVudCB0byBtZS4uLg0KDQpZZXMgdGhlcmUgbWF5IGJlIEVESUQgcmVhZG91dCB0
-d2ljZSB3aXRoIHRoaXMgY2hhbmdlIGluIGNhc2UgYm90aCBkZXRlY3QgYW5kIGdldF9tb2RlcyBn
-ZXRzIGNhbGxlZC4NCkd1ZXNzIHdlIGNvdWxkIHNhdmUgdGhlIEVESUQgcmVhZG91dCBpbiBkZXRl
-Y3QgYW5kIHJldXNlIGl0IGluIGdldF9tb2RlcyBvciBzaW1pbGFyPw0KDQpUaGUgaXNzdWUgb2Jz
-ZXJ2ZWQgaXMgdGhhdCBDRUMgcGh5cyBhZGRyIG5ldmVyIGdldHMgdXBkYXRlZCBhZnRlciBhbiBp
-bnZhbGlkYXRpb24gKEhQRCkNCnVudGlsIGdldF9tb2RlcyBpcyBjYWxsZWQsIHdoZW4gVFYvQVZS
-IHRyaWdnZXJzIGFuIEVESUQgcmVmcmVzaCB1c2luZyBhIDEwMG1zIEhQRCBwdWxzZQ0Kb3IgYW4g
-QVZSIGlzIHBvd2VyZWQgb24vb2ZmIHRoZSBDRUMgcGh5cyBhZGRyLCBFRElEIGFuZCBFTEQgbmV2
-ZXIgZ2V0cyByZWZyZXNoZWQgYXMNCm9ubHkgZGV0ZWN0IGlzIGNhbGxlZCBhbmQgbm90IGdldF9t
-b2Rlcy4NCg0KUmVnYXJkcywNCkpvbmFzDQoNCj4NCj4gQW55d2F5Og0KPiBSZXZpZXdlZC1ieTog
-TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPg0KDQo=
+On 8/29/19 4:27 PM, Marcelo Tosatti wrote:
+> On Thu, Aug 29, 2019 at 04:10:27PM +0100, Joao Martins wrote:
+>> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
+>> past the online ones and thus fail to register the idle driver.
+>> This is because cpuidle_add_sysfs() will return with -ENODEV as a
+>> consequence from get_cpu_device() return no device for a non-existing
+>> CPU.
+>>
+>> Instead switch to cpuidle_register_driver() and manually register each
+>> of the present cpus through cpuhp_setup_state() callback and future
+>> ones that get onlined. This mimmics similar logic that intel_idle does.
+>>
+>> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
+>> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+>> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>> ---
+>> v2:
+>> * move cpus_read_unlock() right after unregistering all cpuidle_devices;
+>> (Marcello Tosatti)
+>> * redundant usage of cpuidle_unregister() when only
+>> cpuidle_unregister_driver() suffices; (Marcelo Tosatti)
+>> * cpuhp_setup_state() returns a state (> 0) on success with CPUHP_AP_ONLINE_DYN
+>> thus we set @ret to 0
+
+[ ... ]
+
+> 
+> Reviewed-by: Marcelo Tosatti <mtosatti@redhat.com>
+> 
+Thanks!
+
+Meanwhile upon re-reading cpuhp_setup_state() I found out the teardown/offlining
+and haltpoll_uninit() could be a bit simplified. So I sent out a new version[0],
+but didn't add your Rb because there's was some very slight functional changes.
+
+[0] https://lore.kernel.org/kvm/20190902104031.9296-1-joao.m.martins@oracle.com/
+
+	Joao
