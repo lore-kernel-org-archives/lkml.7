@@ -2,183 +2,230 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D81C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EEDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D98206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA7E206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbfIBMwx (ORCPT
+        id S1730959AbfIBMxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:52:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35880 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729571AbfIBMwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:52:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7DD0B61F;
-        Mon,  2 Sep 2019 12:52:50 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 14:52:49 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Tim.Bird@sony.com, sfr@canb.auug.org.au, frowand.list@gmail.com,
-        sergey.senozhatsky@gmail.com, sergey.senozhatsky.work@gmail.com,
-        rostedt@goodmis.org, kunit-dev@googlegroups.com,
-        rdunlap@infradead.org, sboyd@kernel.org, shuah@kernel.org,
-        joe@perches.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2] kunit: fix failure to build without printk
-Message-ID: <20190902125249.qs7ql54vnsgf2665@pathway.suse.cz>
-References: <20190828094929.GA14038@jagdpanzerIV>
- <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
- <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
- <20190830183821.GA30306@google.com>
- <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977A8392@USCULXMSG01.am.sony.com>
- <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
- <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977A8416@USCULXMSG01.am.sony.com>
- <20190830233710.GA101591@google.com>
+        Mon, 2 Sep 2019 08:53:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41966 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729571AbfIBMxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:53:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DA6F9190C004;
+        Mon,  2 Sep 2019 12:52:59 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A723E608AB;
+        Mon,  2 Sep 2019 12:52:56 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 14:52:54 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 01/10] KVM: arm64: Document PV-time interface
+Message-ID: <20190902125254.3w6lnvcbs7sfhjz7@kamzik.brq.redhat.com>
+References: <20190830084255.55113-1-steven.price@arm.com>
+ <20190830084255.55113-2-steven.price@arm.com>
+ <20190830144734.kvj4dvt32qzmhw32@kamzik.brq.redhat.com>
+ <7f459290-9c39-cfba-c514-a07469ff120f@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830233710.GA101591@google.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <7f459290-9c39-cfba-c514-a07469ff120f@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 02 Sep 2019 12:53:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-08-30 16:37:10, Brendan Higgins wrote:
-> On Fri, Aug 30, 2019 at 11:22:43PM +0000, Tim.Bird@sony.com wrote:
-> > > -----Original Message-----
-> > > From: Brendan Higgins 
-> > > 
-> > > On Fri, Aug 30, 2019 at 3:46 PM Joe Perches <joe@perches.com> wrote:
-> > > >
-> > > > On Fri, 2019-08-30 at 21:58 +0000, Tim.Bird@sony.com wrote:
-> > > > > > From: Joe Perches
-> > > > []
-> > > > > IMHO %pV should be avoided if possible.  Just because people are
-> > > > > doing it doesn't mean it should be used when it is not necessary.
-> > > >
-> > > > Well, as the guy that created %pV, I of course
-> > > > have a different opinion.
-> > > >
-> > > > > >  then wouldn't it be easier to pass in the
-> > > > > > > kernel level as a separate parameter and then strip off all printk
-> > > > > > > headers like this:
-> > > > > >
-> > > > > > Depends on whether or not you care for overall
-> > > > > > object size.  Consolidated formats with the
-> > > > > > embedded KERN_<LEVEL> like suggested are smaller
-> > > > > > overall object size.
-> > > > >
-> > > > > This is an argument I can agree with.  I'm generally in favor of
-> > > > > things that lessen kernel size creep. :-)
-> > > >
-> > > > As am I.
-> > > 
-> > > Sorry, to be clear, we are talking about the object size penalty due
-> > > to adding a single parameter to a function. Is that right?
+On Fri, Aug 30, 2019 at 04:25:08PM +0100, Steven Price wrote:
+> On 30/08/2019 15:47, Andrew Jones wrote:
+> > On Fri, Aug 30, 2019 at 09:42:46AM +0100, Steven Price wrote:
+> >> Introduce a paravirtualization interface for KVM/arm64 based on the
+> >> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
+> >>
+> >> This only adds the details about "Stolen Time" as the details of "Live
+> >> Physical Time" have not been fully agreed.
+> >>
+> >> User space can specify a reserved area of memory for the guest and
+> >> inform KVM to populate the memory with information on time that the host
+> >> kernel has stolen from the guest.
+> >>
+> >> A hypercall interface is provided for the guest to interrogate the
+> >> hypervisor's support for this interface and the location of the shared
+> >> memory structures.
+> >>
+> >> Signed-off-by: Steven Price <steven.price@arm.com>
+> >> ---
+> >>  Documentation/virt/kvm/arm/pvtime.txt   | 64 +++++++++++++++++++++++++
+> >>  Documentation/virt/kvm/devices/vcpu.txt | 14 ++++++
+> >>  2 files changed, 78 insertions(+)
+> >>  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+> >>
+> >> diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
+> >> new file mode 100644
+> >> index 000000000000..dda3f0f855b9
+> >> --- /dev/null
+> >> +++ b/Documentation/virt/kvm/arm/pvtime.txt
+> >> @@ -0,0 +1,64 @@
+> >> +Paravirtualized time support for arm64
+> >> +======================================
+> >> +
+> >> +Arm specification DEN0057/A defined a standard for paravirtualised time
+> >> +support for AArch64 guests:
+> >> +
+> >> +https://developer.arm.com/docs/den0057/a
+> >> +
+> >> +KVM/arm64 implements the stolen time part of this specification by providing
+> >> +some hypervisor service calls to support a paravirtualized guest obtaining a
+> >> +view of the amount of time stolen from its execution.
+> >> +
+> >> +Two new SMCCC compatible hypercalls are defined:
+> >> +
+> >> +PV_FEATURES 0xC5000020
+> >> +PV_TIME_ST  0xC5000022
+> >> +
+> >> +These are only available in the SMC64/HVC64 calling convention as
+> >> +paravirtualized time is not available to 32 bit Arm guests. The existence of
+> >> +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
+> >> +mechanism before calling it.
+> >> +
+> >> +PV_FEATURES
+> >> +    Function ID:  (uint32)  : 0xC5000020
+> >> +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
 > > 
-> > Not exactly.  The argument is that pre-pending the different KERN_LEVEL
-> > strings onto format strings can result in several versions of nearly identical strings
-> > being compiled into the object file.  By parameterizing this (that is, adding
-> > '%s' into the format string, and putting the level into the string as an argument),
-> > it prevents this duplication of format strings.
-> > 
-> > I haven't seen the data on duplication of format strings, and how much this
-> > affects it, but little things can add up.  Whether it matters in this case depends
-> > on whether the format strings that kunit uses are also used elsewhere in the kernel,
-> > and whether these same format strings are used with multiple kernel message levels.
-> >  -- Tim
+> > PV_TIME_LPT doesn't exist
 > 
-> I thought this portion of the discussion was about whether Joe's version
-> of kunit_printk was better or my critique of his version of kunit_printk:
+> Thanks, will remove.
 > 
-> Joe's:
-> > > > > -void kunit_printk(const char *level,
-> > > > > -		  const struct kunit *test,
-> > > > > -		  const char *fmt, ...)
-> > > > > +void kunit_printk(const struct kunit *test, const char *fmt, ...)
-> > > > >  {
-> > > > > +	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
-> > > > >  	struct va_format vaf;
-> > > > >  	va_list args;
-> > > > > +	int kern_level;
-> > > > >
-> > > > >  	va_start(args, fmt);
-> > > > >
-> > > > > +	while ((kern_level = printk_get_level(fmt)) != 0) {
-> > > > > +		size_t size = printk_skip_level(fmt) - fmt;
-> > > > > +
-> > > > > +		if (kern_level >= '0' && kern_level <= '7') {
-> > > > > +			memcpy(lvl, fmt,  size);
-> > > > > +			lvl[size] = '\0';
-> > > > > +		}
-> > > > > +		fmt += size;
-> > > > > +	}
-> > > > > +
-> > > > >  	vaf.fmt = fmt;
-> > > > >  	vaf.va = &args;
-> > > > >
-> > > > > -	kunit_vprintk(test, level, &vaf);
-> > > > > +	printk("%s\t# %s %pV\n", lvl, test->name, &vaf);
-> > > > >
-> > > > >  	va_end(args);
-> > > > >  }
+> >> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
+> >> +                              PV-time feature is supported by the hypervisor.
+> >> +
+> >> +PV_TIME_ST
+> >> +    Function ID:  (uint32)  : 0xC5000022
+> >> +    Return value: (int64)   : IPA of the stolen time data structure for this
+> >> +                              VCPU. On failure:
+> >> +                              NOT_SUPPORTED (-1)
+> >> +
+> >> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
+> >> +with inner and outer write back caching attributes, in the inner shareable
+> >> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
+> >> +meaningfully filled by the hypervisor (see structure below).
+> >> +
+> >> +PV_TIME_ST returns the structure for the calling VCPU.
+> >> +
+> >> +Stolen Time
+> >> +-----------
+> >> +
+> >> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
+> >> +
+> >> +  Field       | Byte Length | Byte Offset | Description
+> >> +  ----------- | ----------- | ----------- | --------------------------
+> >> +  Revision    |      4      |      0      | Must be 0 for version 0.1
+> >> +  Attributes  |      4      |      4      | Must be 0
+> > 
+> > The above fields don't appear to be exposed to userspace in anyway. How
+> > will we handle migration from one KVM with one version of the structure
+> > to another?
 > 
-> Mine:
-> >  void kunit_printk(const char *level,
-> >  		  const struct kunit *test,
-> >  		  const char *fmt, ...)
-> >  {
-> >  	struct va_format vaf;
-> >  	va_list args;
-> > 
-> >  	va_start(args, fmt);
-> > 
-> > +	fmt = printk_skip_headers(fmt);
-> > +
-> >  	vaf.fmt = fmt;
-> >  	vaf.va = &args;
-> > 
-> > -	kunit_vprintk(test, level, &vaf);
-> > +	printk("%s\t# %s %pV\n", level, test->name, &vaf);
-> > 
-> >  	va_end(args);
-> >  }
+> Interesting question. User space does have access to them now it is
+> providing the memory, but it's not exactly an easy method. In particular
+> user space has no (simple) way of probing the kernel's supported version.
 > 
-> I thought you and Joe were arguing that "Joe's" resulted in a smaller
-> object size than "Mine" (not to be confused with the actual patch I
-> presented here, which is what Sergey suggested I do on a different
-> thread).
+> I guess one solution would be to add an extra attribute on the VCPU
+> which would provide the revision information. The current kernel would
+> then reject any revision other than 0, but this could then be extended
+> to support other revision numbers in the future.
 > 
-> I really don't feel strongly about what Sergey suggested I do (which is
-> what this patch originally introduced), versus, what Joe suggested,
-> versus what I suggested in response to Joe (or any of the things
-> suggested on other threads). I just want to pick one, fix the breakage
-> in linux-next, and move on with my life.
+> Although there's some logic in saying we could add the extra attribute
+> when(/if) there is a new version. Future kernels would then be expected
+> to use the current version unless user space explicitly set the new
+> attribute.
+> 
+> Do you feel this is something that needs to be addressed now, or can it
+> be deferred until another version is proposed?
 
-I am a bit lost in all the versions ;-) Though, I like most this
-patch. I think that it is based on Sergey's suggestion.
+Assuming we'll want userspace to have the option of choosing version=0,
+and that we're fine with version=0 being the implicit choice, when nothing
+is selected, then I guess it can be left as is for now. If, OTOH, we just
+want migration to fail when attempting to migrate to another host with
+an incompatible stolen-time structure (i.e. version=0 is not selectable
+on hosts that implement later versions), then we should expose the version
+in some way now. Perhaps a VCPU's "PV config" should be described in a
+set of pseudo registers?
 
-I think that object size is not a huge concern for unit testing.
-Also if I get it correctly, the object is bigger only when
-the same string is used with different log levels. I am not
-sure how often this happen.
+> 
+> >> +  Stolen time |      8      |      8      | Stolen time in unsigned
+> >> +              |             |             | nanoseconds indicating how
+> >> +              |             |             | much time this VCPU thread
+> >> +              |             |             | was involuntarily not
+> >> +              |             |             | running on a physical CPU.
+> >> +
+> >> +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
+> >> +will be present within a reserved region of the normal memory given to the
+> >> +guest. The guest should not attempt to write into this memory. There is a
+> >> +structure per VCPU of the guest.
+> > 
+> > Should we provide a recommendation as to how that reserved memory is
+> > provided? One memslot divided into NR_VCPUS subregions? Should the
+> > reserved region be described to the guest kernel with DT/ACPI? Or
+> > should userspace ensure the region is not within any DT/ACPI described
+> > regions?
+> 
+> I'm open to providing a recommendation, but I'm not entirely sure I know
+> enough here to provide one.
+> 
+> There is an obvious efficiency argument for minimizing memslots with the
+> current code. But if someone has a reason for using multiple memslots
+> then that's probably a good argument for implementing a memslot-caching
+> kvm_put_user() rather than to be dis-recommended.
 
-Feel free to use for this patch:
+Actually even if a single memslot is used for all the PV structures for
+all VCPUs, but it's separate from the slot(s) used for main memory, then
+we'll likely see performance issues with memslot searches (even though
+it's a binary search). This is because memslots already have caching. The
+last used slot is stored in the memslots' lru_slot member (the "lru" name
+is confusing, but it means "last used" somehow). This means we could get
+thrashing on that slot cache if we're searching for the PV structure
+memslot on each vcpu load after searching for the main memory slot on each
+page fault.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> My assumption (and testing) has been with a single memslot divided into
+> NR_VCPUS (or more accurately the number of VCPUs in the VM) subregions.
+> 
+> For testing DT I've tested both methods: an explicit reserved region or
+> just ensuring it's not in any DT described region. Both seem reasonable,
+> but it might be easier to integrate into existing migration mechanisms
+> if it's simply a reserved region (then the memory block of the guest is
+> just as it always was).
+> 
+> For ACPI the situation should be similar, but my testing has been with DT.
 
-Best Regards,
-Petr
+I also can't think of any reason why we'd have to describe it in DT/ACPI,
+but I get this feeling that if we don't, then we'll hit some issue that
+will make us wish we had...
 
-> Cheers
+Thanks,
+drew
