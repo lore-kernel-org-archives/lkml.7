@@ -2,128 +2,168 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AC6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7BDC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C905F22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42812190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K3syjr2b"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YVfSG3Xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbfIBGPB (ORCPT
+        id S1729551AbfIBGTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 02:15:01 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:22448 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729415AbfIBGPB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 02:15:01 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8264pmb026548;
-        Sun, 1 Sep 2019 23:14:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=G+tb34DLVI/GaywJTNbYC1jeXErBz+Ms/6koVGt7RTU=;
- b=K3syjr2bCax7AufTwpWHSbhbUxU5VYIwQEGesdU+fjDriqoSzEFdkr2JUq977PDcmeX7
- uuc14vje7aiqve851BL7WogZtLYTz0XWArF5xGzBtOTHm80fceTgWCY1i7TJDxdLR7b6
- aQY2phvHAnpFQvujyc1ht8rSzxumpnnrgGexiwo+0sAxrDgW+277R4zSow83oGnV1nPm
- n5ZqLh6CVeEy1Z2ukXY74mOeELiVxKdof9BJYbxbnBJJCtbuNk4cHveoXOVAI/8v+L69
- 5KyB0KUP69rHZi7jXrl8CNGPgOIVe4M9ILgvYaNvF6rzGe4VoN50GIuCpyvOKgDZ7C2b 6g== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2uqrdm52ma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Sun, 01 Sep 2019 23:14:30 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Sun, 1 Sep
- 2019 23:14:27 -0700
-Received: from maili.marvell.com (10.93.176.43) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Sun, 1 Sep 2019 23:14:27 -0700
-Received: from jerin-lab.marvell.com (jerin-lab.marvell.com [10.28.34.14])
-        by maili.marvell.com (Postfix) with ESMTP id BA3533F703F;
-        Sun,  1 Sep 2019 23:14:23 -0700 (PDT)
-From:   <jerinj@marvell.com>
-To:     <netdev@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Martin KaFai Lau" <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "open list:BPF JIT for ARM64" <bpf@vger.kernel.org>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     Jerin Jacob <jerinj@marvell.com>
-Subject: [PATCH bpf-next] arm64: bpf: optimize modulo operation
-Date:   Mon, 2 Sep 2019 11:44:48 +0530
-Message-ID: <20190902061448.28252-1-jerinj@marvell.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 2 Sep 2019 02:19:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:47913 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfIBGTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 02:19:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MKgD2tbGz9sDB;
+        Mon,  2 Sep 2019 16:19:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567405176;
+        bh=t9O5MxvNoWVtNpfW2QZR8r8y4gZ6tmv7UWmwEAS7QLY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YVfSG3XrXw6C2O9FTtqr+Y4V/rn5+AERd9/ztoAVb84o8Qx+czjFmcbSu9ZcA1DiE
+         b6g1yUGyI6cNJ//sSANuWJvhJSo4WPIuJwfR2RuDLGblKvOqsfjSxnPL604CqzeWm9
+         sN8BDtMFKf7UzMcmmFeSL9iO96sswOCX7RXo4Y4a/7KEIDtMT1/TIOikFA6AlQDFfT
+         j2BIwDHrxi94ry9O7vGpsJGdxXFSOGYuVlGxGaNbmqxXjGBq0uTNkiwfpdywTzI8ID
+         iki/iwEPpGTtKso+0TNdPrWMvmw5QsbSMPRvIrZkAj2xTvK/F+IAIZf0JC2ApklDRu
+         wFnDDD4g3MOJQ==
+Date:   Mon, 2 Sep 2019 16:19:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the keys tree
+Message-ID: <20190902161935.78bf56f1@canb.auug.org.au>
+In-Reply-To: <20190829153116.7ffc7470@canb.auug.org.au>
+References: <20190829153116.7ffc7470@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-02_02:2019-08-29,2019-09-02 signatures=0
+Content-Type: multipart/signed; boundary="Sig_/+8CAegbZXPlV2cLhTG7bR4i";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerin Jacob <jerinj@marvell.com>
+--Sig_/+8CAegbZXPlV2cLhTG7bR4i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Optimize modulo operation instruction generation by
-using single MSUB instruction vs MUL followed by SUB
-instruction scheme.
+Hi all,
 
-Signed-off-by: Jerin Jacob <jerinj@marvell.com>
+On Thu, 29 Aug 2019 15:31:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the keys tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>=20
+>=20
+> Caused by commit
+>=20
+>   ef9cc255c953 ("usb: Add USB subsystem notifications")
+>=20
+> # CONFIG_USB_NOTIFICATIONS is not set
+>=20
+> I have used the keys tree from next-20190828 for today.
+
+I only realised this morning that I forgot to include the error log
+(sorry):
+
+In file included from include/linux/usb/phy.h:15,
+                 from include/linux/usb/otg.h:14,
+                 from include/linux/usb/tegra_usb_phy.h:21,
+                 from arch/arm/mach-tegra/tegra.c:27:
+include/linux/usb.h:2026:34: error: parameter 2 ('subtype') has incomplete =
+type
+ 2026 |       enum usb_notification_type subtype,
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+include/linux/usb.h:2025:20: error: function declaration isn't a prototype =
+[-Werror=3Dstrict-prototypes]
+ 2025 | static inline void post_usb_device_notification(const struct usb_de=
+vice *udev,
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/usb.h:2029:38: error: parameter 2 ('subtype') has incomplete =
+type
+ 2029 |           enum usb_notification_type subtype,
+      |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+include/linux/usb.h:2028:20: error: function declaration isn't a prototype =
+[-Werror=3Dstrict-prototypes]
+ 2028 | static inline void post_usb_bus_notification(const struct usb_bus *=
+ubus,
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+(several more like this)
+
+Today I have included the following fix patch:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 2 Sep 2019 16:01:59 +1000
+Subject: [PATCH] usb: include watch_queue.h for needed enum
+
+The forward declararion doesn't seem to work (at laste for the
+!CONFIG_USB_NOTIFICATIONS case.
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- arch/arm64/net/bpf_jit.h      | 3 +++
- arch/arm64/net/bpf_jit_comp.c | 6 ++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ include/linux/usb.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/net/bpf_jit.h b/arch/arm64/net/bpf_jit.h
-index cb7ab50b7657..eb73f9f72c46 100644
---- a/arch/arm64/net/bpf_jit.h
-+++ b/arch/arm64/net/bpf_jit.h
-@@ -171,6 +171,9 @@
- /* Rd = Ra + Rn * Rm */
- #define A64_MADD(sf, Rd, Ra, Rn, Rm) aarch64_insn_gen_data3(Rd, Ra, Rn, Rm, \
- 	A64_VARIANT(sf), AARCH64_INSN_DATA3_MADD)
-+/* Rd = Ra - Rn * Rm */
-+#define A64_MSUB(sf, Rd, Ra, Rn, Rm) aarch64_insn_gen_data3(Rd, Ra, Rn, Rm, \
-+	A64_VARIANT(sf), AARCH64_INSN_DATA3_MSUB)
- /* Rd = Rn * Rm */
- #define A64_MUL(sf, Rd, Rn, Rm) A64_MADD(sf, Rd, A64_ZR, Rn, Rm)
- 
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index f5b437f8a22b..cdc79de0c794 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -409,8 +409,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 			break;
- 		case BPF_MOD:
- 			emit(A64_UDIV(is64, tmp, dst, src), ctx);
--			emit(A64_MUL(is64, tmp, tmp, src), ctx);
--			emit(A64_SUB(is64, dst, dst, tmp), ctx);
-+			emit(A64_MSUB(is64, dst, dst, tmp, src), ctx);
- 			break;
- 		}
- 		break;
-@@ -516,8 +515,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 	case BPF_ALU64 | BPF_MOD | BPF_K:
- 		emit_a64_mov_i(is64, tmp2, imm, ctx);
- 		emit(A64_UDIV(is64, tmp, dst, tmp2), ctx);
--		emit(A64_MUL(is64, tmp, tmp, tmp2), ctx);
--		emit(A64_SUB(is64, dst, dst, tmp), ctx);
-+		emit(A64_MSUB(is64, dst, dst, tmp, tmp2), ctx);
- 		break;
- 	case BPF_ALU | BPF_LSH | BPF_K:
- 	case BPF_ALU64 | BPF_LSH | BPF_K:
--- 
-2.23.0
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index a7d5fce46569..11438058f4fa 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -4,6 +4,7 @@
+=20
+ #include <linux/mod_devicetable.h>
+ #include <linux/usb/ch9.h>
++#include <linux/watch_queue.h>
+=20
+ #define USB_MAJOR			180
+ #define USB_DEVICE_MAJOR		189
+@@ -26,7 +27,6 @@
+ struct usb_device;
+ struct usb_driver;
+ struct wusb_dev;
+-enum usb_notification_type;
+=20
+ /*------------------------------------------------------------------------=
+-*/
+=20
+--=20
+2.23.0.rc1
 
+I then discovered that I needed to install libkeyutils-dev :-( but it
+built OK after that.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+8CAegbZXPlV2cLhTG7bR4i
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1stHcACgkQAVBC80lX
+0GxhZAgAk7/hqNI8xqsPxpzKfqTcWTeOcYGutHZicZDrYUjsmfXi6rguvL1gf6zF
+QooPTjCVh3U44YNMk7Xzu9ftIMYGByi/xdoaSV82mtw+NECpYysF7u3/dz3kK/yN
+V7YmxixJBwc2VmY4o9pXKLSlOHlki/+jC7QOVAJsho6SqiQlSGttDZCw49wsFrji
+BekgNKyKF4f8GrQb0xs2xibcxQVhFDrjcBE+NodSByvUCpIp3DWij4pxYS3XBDhg
+yYsKV36TYBigfsndTTIVUVU/SGDrU6nH39A6ff4NGCjEQOJSny1WenY1UL4J/VoG
+LNWAPn8coC6CKMzdjCdTI1jkdby9Xw==
+=JNcQ
+-----END PGP SIGNATURE-----
+
+--Sig_/+8CAegbZXPlV2cLhTG7bR4i--
