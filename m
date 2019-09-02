@@ -2,95 +2,97 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493F0C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8AEC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4DC21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="VCF2ypNo"
+	by mail.kernel.org (Postfix) with ESMTP id 2C0EC22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfIBHBe (ORCPT
+        id S1729497AbfIBHFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:01:34 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:51738 "EHLO mx.kolabnow.com"
+        Mon, 2 Sep 2019 03:05:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:48801 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbfIBHBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:01:34 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id 62EDC403F1;
-        Mon,  2 Sep 2019 09:01:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1567407688; x=1569222089; bh=gQTLlnjxfU5wtu5rW3AqaO/cAFjAnpJ6Tai
-        mExqVlFA=; b=VCF2ypNoGc6gj2VcDTY24Hgpz+lWZfLUIwGuDVaTH2dk8CjuYdy
-        PqP027/8lXWoQebo018ZCqKWLFF4wmd1BdeVfKKtYesRPuH8sCamcr2I+uO7Ysc6
-        M8VPVcCkPDPusHFVwrk7Kj1RmBJzsyW6XI7EFreglZTbrWRJ2x02YP5HnSHBhHqU
-        PutOUzRcRy5OOLxh8UGRrwh+4JgzoO+hSg/hqchg09deRUYPMvVe28GEpFGJaffG
-        JALreoIdoPGxjoNKYkHxypBKyKa4+ffAf3EGHEz4MO4/2dYIkyyN/dD6gsf7MjcK
-        h7E7OptnHnpT1iM0ppnaasbLl/GIgq6j7RNuErVznwJo57uJTgm0IMIvS7jvPd+G
-        c8TVtDXHNisDazOBHcIw2cfVyRPlJeUhuHrw+4B89Lht3g4HQmFov8O6ozqSgJ+8
-        1pWH+fg6aCs5siLh8AlUojKM0k3tlWdtD4XT6bnq0rj+Mw7RnUW8SS/mNRnOPCKw
-        NXINYsYLo0S7FWX93skgQxa3IHsA5KPRuadPByqGPJKmQfaP6xESJp25hmyznCML
-        IB/SC1gm3RFk+lop2kjIUqLWgaOqI0e+KvZH7P0M5LN8231ZPoJhAkWL69985gmk
-        iIpMAWbEt16S87XUWeBP6MFIJwFJRzU21nmJUVg4WnyQaHwrIIG5Zz6M=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MvEp27HjTeVe; Mon,  2 Sep 2019 09:01:28 +0200 (CEST)
-Received: from int-mx002.mykolab.com (unknown [10.9.13.2])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id 96D4E403C8;
-        Mon,  2 Sep 2019 09:01:28 +0200 (CEST)
-Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
-        by int-mx002.mykolab.com (Postfix) with ESMTPS id 1B4F43964;
-        Mon,  2 Sep 2019 09:01:28 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc:lock: remove reference to clever use of read-write lock
-Date:   Mon, 02 Sep 2019 09:01:26 +0200
-Message-ID: <2216492.xyESGPMPG3@pcbe13614>
-In-Reply-To: <20190831084344.6fd7c039@lwn.net>
-References: <20190831134116.25417-1-federico.vaga@vaga.pv.it> <20190831084344.6fd7c039@lwn.net>
+        id S1726352AbfIBHFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:05:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:05:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="265950380"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by orsmga001.jf.intel.com with ESMTP; 02 Sep 2019 00:05:49 -0700
+Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Introduce Tanix TX6 board
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190816205342.29552-3-jernej.skrabec@siol.net>
+ <201908190222.ZdIp2gT1%lkp@intel.com> <7640522.c0V0aH5rf2@jernej-laptop>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <4494861c-defe-6783-6718-a201f77ec65a@intel.com>
+Date:   Mon, 2 Sep 2019 15:05:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <7640522.c0V0aH5rf2@jernej-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, August 31, 2019 4:43:44 PM CEST Jonathan Corbet wrote:
-> On Sat, 31 Aug 2019 15:41:16 +0200
-> 
-> Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-> >  several CPU's and you want to use spinlocks you can potentially use
-> > 
-> > -cheaper versions of the spinlocks. IFF you know that the spinlocks are
-> > +cheaper versions of the spinlocks. If you know that the spinlocks are
-> > 
-> >  never used in interrupt handlers, you can use the non-irq versions::
-> I suspect that was not actually a typo; "iff" is a way for the
-> mathematically inclined to say "if and only if".
-> 
-> jon
+Hi,
 
-I learned something new today :)
+On 8/19/19 2:59 AM, Jernej Škrabec wrote:
+> Dne nedelja, 18. avgust 2019 ob 20:42:49 CEST je kbuild test robot napisal(a):
+>> Hi Jernej,
+>>
+>> Thank you for the patch! Yet something to improve:
+>>
+>> [auto build test ERROR on linus/master]
+>> [cannot apply to v5.3-rc4 next-20190816]
+>> [if your patch is applied to the wrong git tree, please drop us a note to
+>> help improve the system]
+>>
+>> url:
+>> https://github.com/0day-ci/linux/commits/Jernej-Skrabec/dt-bindings-arm-sun
+>> xi-Add-compatible-for-Tanix-TX6-board/20190819-002034 config:
+>> arm64-defconfig (attached as .config)
+>> compiler: aarch64-linux-gcc (GCC) 7.4.0
+>> reproduce:
+>>          wget
+>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O
+>> ~/bin/make.cross chmod +x ~/bin/make.cross
+>>          # save the attached .config to linux build tree
+>>          GCC_VERSION=7.4.0 make.cross ARCH=arm64
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>>> Error: arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts:83.1-6 Label
+>>>> or path r_ir not found FATAL ERROR: Syntax error parsing input tree
+> Strange, Allwinner tree has commit, which introduces r_ir node:
+> https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/commit/?
+> h=sunxi/dt-for-5.4&id=9267811aad3524c857cf2e16bbadd8c569e15ab9
+>
+> Maybe kbuild test robot tree doesn't have it?
 
-I am not used to the mathematical English jargon. It make sense, but then I 
-would replace it with "If and only if": for clarity.
+The tree is in our list. 
+https://github.com/intel/lkp-tests/blob/master/repo/linux/sunxi
+Robot also tries to apply patches to a git tree to test. Maybe your 
+patch was applied to a wrong git tree.
 
-
--- 
-Federico Vaga
-
-
+Best Regards,
+Rong Chen
 
