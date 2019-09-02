@@ -2,114 +2,136 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FFBC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A55BC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC54021874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5517217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WExV3yo0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/f0r3wh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbfIBJle (ORCPT
+        id S1731306AbfIBJlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:41:34 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:59530 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731262AbfIBJlc (ORCPT
+        Mon, 2 Sep 2019 05:41:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41562 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731294AbfIBJll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:41:32 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x829aShX002477;
-        Mon, 2 Sep 2019 11:41:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=k4XLct6ml4ZJyCzK/W4Oqc4vom88qBwlUIHqJmE7NVU=;
- b=WExV3yo0UPyis40W1IocHx2q9xWZZSLIfCVI7UUkJwCObFD46QEF9IUtRIJuOBrfYnxq
- 6czmU8hNIPLA7XGX1KQrvp7cX7iVKSt52MN51pq4wKmaC5oTGAth/pHgHokuv4sXoyel
- IXZ/Un1qARFnrDe9lVVpwZUL1ua43s7NrMoWgTmHGrhxnZ7W8BO+zdG35NOyhq638FTC
- iKLEGDkFQqo76Bldg1xhNjlF4LUTq5m4ilYBT9wF2qCyd3mbVk1FTAhOtp0HMJSRAFRs
- f3Jgeyx8HkSxwBxk0eu8fYwOXfKCm4omgG79+HklgbA5up1cHxqf2IZlPsmncu9YQPQg gw== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2uqec2ksbf-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 02 Sep 2019 11:41:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A781524;
-        Mon,  2 Sep 2019 09:41:15 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 084022D43A1;
-        Mon,  2 Sep 2019 11:41:15 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Sep
- 2019 11:41:14 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Mon, 2 Sep 2019 11:41:14 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] media: stm32-dcmi: Delete an unnecessary of_node_put()
- call in dcmi_probe()
-Thread-Topic: [PATCH] media: stm32-dcmi: Delete an unnecessary of_node_put()
- call in dcmi_probe()
-Thread-Index: AQHVXOEYzuD2okWKlEeO39Kr8stWpKcYCdSA
-Date:   Mon, 2 Sep 2019 09:41:14 +0000
-Message-ID: <58d7d520-ba18-a822-4920-2bedb0d01203@st.com>
-References: <129a4933-2171-7ed9-c84c-8e56b6d05270@web.de>
-In-Reply-To: <129a4933-2171-7ed9-c84c-8e56b6d05270@web.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4915444CEE91B947B1778506854F085B@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 2 Sep 2019 05:41:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j16so13284936wrr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=XEaajhYL2DDcNnig232ycVZm5Az7zzGM6juW3JXG9yQ=;
+        b=a/f0r3wh1i2nTAvJVAJBZEoLNeDpRYSXvLUG800eabb6+vAM1Piy+0FYiXbkWJS4on
+         aywDOCMGNAhoBqPGDYyF+qGX2MgbkO8+mFR9K0wa5ChpvAgCDdzrq9vMq5dxnIhF+0yf
+         N1vkx4pEtz5FJsNy3IIZoe3eMtE5GJBw9V3pdcQrBLYSshV3ucgoY6rq5hvTd+BWrteQ
+         ZF8RYGsso3WxK/1Jp841Xpgz5qdpswdGBggqH3JmJxaYM3g3Hx0XAQYucE7PREvRuj9X
+         kG60QBVhiW/tOtPkagKKds9jkvxyfjfCSXna7SOZDdD925Sq37LrwNctNNT8h4i04gaH
+         G3Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XEaajhYL2DDcNnig232ycVZm5Az7zzGM6juW3JXG9yQ=;
+        b=RTm6rrUfVzqhFvY73uqqIM+qNk5N39ldlRzP56pW/nfhrY24dvCc0ywtKHQFhIsdX8
+         hISQHRLeW/8Hw4JFUGa6xDSdf+dgrA24iWwqWBapIreS2dEcYhUkuWsIIGfwlOZOgS+M
+         39Eq0gGlo3ToDFlD8gnWABHMOWHzjI2btUqZposXeLPh0L6OYp2t5hcYB63Im/kWY8ZM
+         Psp4NBS4hfNQ874Fok74E7rdFA0WQTE/9VCpLuQI4iVlls0s+e0qOwwhLK1rSrvnqKNv
+         HZrzUL2YsytHKLJ8oUpbgoMV+13s+2u+hYw4mghZYGDMGNej2t8CpliiehlOFXFkkemG
+         4GqA==
+X-Gm-Message-State: APjAAAWw9XnqlOVMK4J/806BWwsq1xQNiphfbPk6r69GLgy3vBYfPPSy
+        jwnGadTDoUxd8AC7+s0xiLMXoA==
+X-Google-Smtp-Source: APXvYqzc9kvt4IxUGw8ouqARjHnLlmJJZz62Rz9BCP9k67kGZc0ulYwTxiSzmVBXrtHgzH6HcjVbGw==
+X-Received: by 2002:adf:e603:: with SMTP id p3mr4027156wrm.102.1567417299891;
+        Mon, 02 Sep 2019 02:41:39 -0700 (PDT)
+Received: from dell ([95.147.198.93])
+        by smtp.gmail.com with ESMTPSA id g201sm11439111wmg.34.2019.09.02.02.41.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Sep 2019 02:41:39 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 10:41:37 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190902094137.GM32232@dell>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-02_03:2019-08-29,2019-09-02 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190709190007.91260-3-mka@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWNrZWQtYnk6IEh1Z3VlcyBGcnVjaGV0IDxodWd1ZXMuZnJ1Y2hldEBzdC5jb20+DQoNCk9uIDgv
-MjcvMTkgNDowOSBQTSwgTWFya3VzIEVsZnJpbmcgd3JvdGU6DQo+IEZyb206IE1hcmt1cyBFbGZy
-aW5nIDxlbGZyaW5nQHVzZXJzLnNvdXJjZWZvcmdlLm5ldD4NCj4gRGF0ZTogVHVlLCAyNyBBdWcg
-MjAxOSAxNjowMDoxMyArMDIwMA0KPiANCj4gQSBudWxsIHBvaW50ZXIgd291bGQgYmUgcGFzc2Vk
-IHRvIGEgY2FsbCBvZiB0aGUgZnVuY3Rpb24g4oCcb2Zfbm9kZV9wdXTigJ0NCj4gaW1tZWRpYXRl
-bHkgYWZ0ZXIgYSBjYWxsIG9mIHRoZSBmdW5jdGlvbiDigJxvZl9ncmFwaF9nZXRfbmV4dF9lbmRw
-b2ludOKAnQ0KPiBmYWlsZWQgYXQgb25lIHBsYWNlLg0KPiBSZW1vdmUgdGhpcyBzdXBlcmZsdW91
-cyBmdW5jdGlvbiBjYWxsLg0KPiANCj4gVGhpcyBpc3N1ZSB3YXMgZGV0ZWN0ZWQgYnkgdXNpbmcg
-dGhlIENvY2NpbmVsbGUgc29mdHdhcmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJrdXMgRWxm
-cmluZyA8ZWxmcmluZ0B1c2Vycy5zb3VyY2Vmb3JnZS5uZXQ+DQo+IC0tLQ0KPiAgIGRyaXZlcnMv
-bWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItZGNtaS5jIHwgMSAtDQo+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL3N0bTMyL3N0bTMyLWRjbWkuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3Rt
-MzItZGNtaS5jDQo+IGluZGV4IGNiMWRhZjgyMTdmZi4uOTM5MmUzNDA5ZmJhIDEwMDY0NA0KPiAt
-LS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYw0KPiArKysgYi9k
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYw0KPiBAQCAtMTg2MSw3ICsx
-ODYxLDYgQEAgc3RhdGljIGludCBkY21pX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ICAgCW5wID0gb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQobnAsIE5VTEwpOw0KPiAg
-IAlpZiAoIW5wKSB7DQo+ICAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJDb3VsZCBub3QgZmluZCB0
-aGUgZW5kcG9pbnRcbiIpOw0KPiAtCQlvZl9ub2RlX3B1dChucCk7DQo+ICAgCQlyZXR1cm4gLUVO
-T0RFVjsNCj4gICAJfQ0KPiANCj4gLS0NCj4gMi4yMy4wDQo+IA==
+On Tue, 09 Jul 2019, Matthias Kaehlcke wrote:
+
+> Backlight brightness curves can have different shapes. The two main
+> types are linear and non-linear curves. The human eye doesn't
+> perceive linearly increasing/decreasing brightness as linear (see
+> also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> linearly to human eye"), hence many backlights use non-linear (often
+> logarithmic) brightness curves. The type of curve currently is opaque
+> to userspace, so userspace often uses more or less reliable heuristics
+> (like the number of brightness levels) to decide whether to treat a
+> backlight device as linear or non-linear.
+> 
+> Export the type of the brightness curve via the new sysfs attribute
+> 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> 'unknown'. For devices that don't provide information about the scale
+> of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Feel free to suggest improvements in the documentation :)
+> 
+> Changes in v3:
+> - removed composite strings, only keep 'linear', 'non-linear' and
+>   'unknown'
+> - updated sysfs attribute documentation
+> - updated commit message
+> 
+> Changes in v2:
+> - changed order of brightness scale enums, explicitly make 'unknown' zero
+> - minor update of commit message
+> - deleted excess blank line after 'backlight_scale_types'
+> - s/curves/curve/ in sysfs doc
+> ---
+>  .../ABI/testing/sysfs-class-backlight         | 26 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  drivers/video/backlight/backlight.c           | 19 ++++++++++++++
+>  include/linux/backlight.h                     |  8 ++++++
+>  4 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
