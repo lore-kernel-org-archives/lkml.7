@@ -2,128 +2,112 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E740C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D4FC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D35622CF4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5B22343A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QTN11fqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfIBHtW (ORCPT
+        id S1729919AbfIBHuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:49:22 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:53025 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfIBHtW (ORCPT
+        Mon, 2 Sep 2019 03:50:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48480 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfIBHuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:49:22 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id F055260014;
-        Mon,  2 Sep 2019 07:49:19 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 09:49:17 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Michael <michael@mipisi.de>
-Cc:     linux-rtc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: Problem when function alarmtimer_suspend returns 0 if time delta
- is zero
-Message-ID: <20190902074917.GA21922@piout.net>
-References: <S1728511AbfHaSEm/20190831180442Z+580@vger.kernel.org>
- <08fbdf25-faa1-aa13-4f13-d30acbf27dda@mipisi.de>
+        Mon, 2 Sep 2019 03:50:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NLbPkO1nBLjxjJMJLtjjfjvIrKkFYiad08Wtr6KwkSw=; b=QTN11fqUWCWaQ1Qfvv9fmTkeg
+        f4Du4MFrH1JeBL/lYO4ZmvejNdqey6NA3y5cyyRlcge584lMTs3yBaKzq33D5bbzOugM4K9b2N1Lo
+        m25L2EcK6DZtpdpqBmXVzn7xsRsLu51Ikl+6Xf9MMGg3cy7oF+OcIWJfCEIGH1vF5U6Nmag8Jwh2m
+        Av5PwuPKTVGxS8fhTUztEdPofUkT3UYw5jibpCXaJJ6AaHv5BM1wnu7XQ4pfeXkUWsuCIJHB32jYo
+        14YZcDEu6aRqCPSkafuqSYr8vyo9rnjOViyAFQhSPj9fQsY8RRe2ddJpXeKtpNQPI9oRC3cPCc9k7
+        YoZc6ErOA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4h6E-0005zw-La; Mon, 02 Sep 2019 07:50:06 +0000
+Date:   Mon, 2 Sep 2019 00:50:06 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: Use GFP_ATOMIC in resource_alignment_store()
+Message-ID: <20190902075006.GB754@infradead.org>
+References: <20190831124932.18759-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08fbdf25-faa1-aa13-4f13-d30acbf27dda@mipisi.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190831124932.18759-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michael,
+On Sat, Aug 31, 2019 at 12:49:32PM +0000, YueHaibing wrote:
+> When allocating memory, the GFP_KERNEL cannot be used during the
+> spin_lock period. It may cause scheduling when holding spin_lock.
+> 
+> Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 484e35349565..0b5fc6736f3f 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6148,7 +6148,7 @@ static ssize_t resource_alignment_store(struct bus_type *bus,
+>  	spin_lock(&resource_alignment_lock);
+>  
+>  	kfree(resource_alignment_param);
+> -	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
+> +	resource_alignment_param = kstrndup(buf, count, GFP_ATOMIC);
+>  
+>  	spin_unlock(&resource_alignment_lock);
 
-This code is maintained by the timekeeping maintainers, now in Cc and I
-think John will be able to answer.
+Why not move the allocation outside the lock? Something like this
+seems much more sensible:
 
-On 31/08/2019 20:32:06+0200, Michael wrote:
-> Dear members of the linux-rtc list,
-> 
-> currently I have a problem with the alarmtimer i'm using to cyclically wake
-> up my i.MX6 ULL board from suspend to RAM.
-> 
-> The problem is that in principle the timer wake ups work fine but seem to be
-> not 100% stable. In about 1 percent the wake up alarm from suspend is
-> missing.
-> 
-> When I look at the code of alarmtimer in function alarmtimer_suspend
-> (kernel/time/alarmtimer.c)
-> I find the following:
-> 
-> ....
-> 
-> /* Find the soonest timer to expire*/
-> 
->     for (i = 0; i < ALARM_NUMTYPE; i++) {
->         struct alarm_base *base = &alarm_bases[i];
->         struct timerqueue_node *next;
->         ktime_t delta;
-> 
->         spin_lock_irqsave(&base->lock, flags);
->         next = timerqueue_getnext(&base->timerqueue);
->         spin_unlock_irqrestore(&base->lock, flags);
->         if (!next)
->             continue;
->         delta = ktime_sub(next->expires, base->gettime());
->         if (!min || (delta < min)) {
->             expires = next->expires;
->             min = delta;
->             type = i;
->         }
->     }
->     if (min == 0)
->         return 0;
-> 
->     if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
->         __pm_wakeup_event(ws, 2 * MSEC_PER_SEC);
->         return -EBUSY;
->     }
-> 
-> In my error case the alarm wake up always fails if the path "if(min==0)" is
-> entered. If I understand this code correctly that means that
-> when ever one of the timers in the list has a remaining tick time of zero,
-> the function just returns 0 and continues the suspend process until
-> it reaches suspend mode.
-> 
-> If I implement a hack here "if(min == 0) {min = 1;}" and do not return, my
-> system runs 100% ok, as the following -EBUSY path is hit.
-> 
-> So my question to you is: Why is there a check if min < 2 seconds and do a
-> return -EBUSY here, but handle (min==0) differently?
-> Could there be some race condition here, where the function
-> alarmtimer_suspend just returns 0 and shortly after this the alarmtimer
-> expires
-> right before the RTC driver was able to allow the wake up interrupt?
-> 
-> If I look through the kernel versions I found the alarmtimer_suspend to be a
-> very stable function, so I don't think there is anything wrong here.
-> 
-> But do you have a hint for me where else I could have a look to encircle the
-> error?
-> 
-> Thank you very much!
-> 
-> Br,
-> Michael
-> 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e35349565..fe205829f676 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6145,14 +6145,16 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+ static ssize_t resource_alignment_store(struct bus_type *bus,
+ 					const char *buf, size_t count)
+ {
+-	spin_lock(&resource_alignment_lock);
++	char *param = kstrndup(buf, count, GFP_KERNEL);
+ 
+-	kfree(resource_alignment_param);
+-	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
++	if (!param)
++		return -ENOMEM;
+ 
++	spin_lock(&resource_alignment_lock);
++	kfree(resource_alignment_param);
++	resource_alignment_param = param;
+ 	spin_unlock(&resource_alignment_lock);
+-
+-	return resource_alignment_param ? count : -ENOMEM;
++	return count;
+ }
+ 
+ static BUS_ATTR_RW(resource_alignment);
