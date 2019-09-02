@@ -6,66 +6,96 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9DBC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CC8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB3E20881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C922621881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfIBXxR (ORCPT
+        id S1727926AbfIBXyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 19:53:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42116 "EHLO mx1.redhat.com"
+        Mon, 2 Sep 2019 19:54:02 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36863 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbfIBXxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 19:53:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726775AbfIBXyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 19:54:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A5280189DACB;
-        Mon,  2 Sep 2019 23:53:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EF5E19C78;
-        Mon,  2 Sep 2019 23:53:15 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190903092121.0b817e0c@canb.auug.org.au>
-References: <20190903092121.0b817e0c@canb.auug.org.au> <20190902161935.78bf56f1@canb.auug.org.au> <20190829153116.7ffc7470@canb.auug.org.au> <16836.1567440079@warthog.procyon.org.uk> <20190903090722.556b66ba@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     dhowells@redhat.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mn3n2Lzbz9s7T;
+        Tue,  3 Sep 2019 09:53:57 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Breno Leitao <leitao@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the keys tree
+        Firoz Khan <firoz.khan@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Stanley <joel@jms.id.au>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Hildenbrand <david@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v7 5/6] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
+In-Reply-To: <20190902130008.GZ31406@gate.crashing.org>
+References: <cover.1567198491.git.msuchanek@suse.de> <c7c88e88408588fa6fcf858a5ae503b5e2f4ec0b.1567198492.git.msuchanek@suse.de> <87ftlftpy7.fsf@mpe.ellerman.id.au> <20190902130008.GZ31406@gate.crashing.org>
+Date:   Tue, 03 Sep 2019 09:53:56 +1000
+Message-ID: <87k1aqs19n.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <14615.1567468394.1@warthog.procyon.org.uk>
-Date:   Tue, 03 Sep 2019 00:53:14 +0100
-Message-ID: <14616.1567468394@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Mon, 02 Sep 2019 23:53:16 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Segher Boessenkool <segher@kernel.crashing.org> writes:
+> On Mon, Sep 02, 2019 at 12:03:12PM +1000, Michael Ellerman wrote:
+>> Michal Suchanek <msuchanek@suse.de> writes:
+>> > On bigendian ppc64 it is common to have 32bit legacy binaries but much
+>> > less so on littleendian.
+>> 
+>> I think the toolchain people will tell you that there is no 32-bit
+>> little endian ABI defined at all, if anything works it's by accident.
+                ^
+                v2
 
-> > I was doing an x86_64 allmodconfig build which seems to build (all of?)
-> > the samples.
-> 
-> Of course, this breaks our crossbuilds :-(
-> 
-> e.g. S390 allyesconfig build:
-> 
-> /usr/bin/ld: cannot find -lkeyutils
+> There of course is a lot of powerpcle-* support.  The ABI used for it
+> on linux is the SYSV ABI, just like on BE 32-bit.
 
-Is it a requirement that stuff in samples/ should be able to build without
-resorting to external userspace headers?  Or, at least, those outside of the C
-library?
+I was talking about ELFv2, which is 64-bit only. But that was based on
+me thinking we had a hard assumption in the kernel that ppc64le kernels
+always expect ELFv2 userland. Looking at the code though I was wrong
+about that, it looks like we will run little endian ELFv1 binaries,
+though I don't think anyone is testing it.
 
-David
+> There also is specific powerpcle-linux support in GCC, and in binutils,
+> too.  Also, config.guess/config.sub supports it.  Half a year ago this
+> all built fine (no, I don't test it often either).
+>
+> I don't think glibc supports it though, so I wonder if anyone builds an
+> actual system with it?  Maybe busybox or the like?
+>
+>> So I think we should not make this selectable, unless someone puts their
+>> hand up to say they want it and are willing to test it and keep it
+>> working.
+>
+> What about actual 32-bit LE systems?  Does anyone still use those?
+
+Not that I've ever heard of.
+
+cheers
