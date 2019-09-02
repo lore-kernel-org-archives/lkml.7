@@ -2,124 +2,118 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30143C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A27C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075F72184D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF142184D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 01:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfIBBJR (ORCPT
+        id S1729246AbfIBBQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 21:09:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10038 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbfIBBJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 21:09:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Sep 2019 18:09:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="183190007"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Sep 2019 18:09:13 -0700
-Date:   Mon, 2 Sep 2019 09:13:42 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        linux-input@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
-        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
- backdoor call with support for new instructions
-Message-ID: <20190902011342.GA14687@intel.com>
-References: <20190829163353.GC2132@zn.tnic>
- <20190830010349.GD857@intel.com>
- <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
- <20190830062053.GA2598@intel.com>
- <20190830080650.GA30413@zn.tnic>
- <20190830143645.GA4784@intel.com>
- <20190830144628.GC30413@zn.tnic>
- <20190830150002.GA6931@intel.com>
- <20190830150856.GB6931@intel.com>
- <20190830193557.GF30413@zn.tnic>
+        Sun, 1 Sep 2019 21:16:45 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5264 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729117AbfIBBQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 21:16:45 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 05DDA2834E6AD09C6159;
+        Mon,  2 Sep 2019 09:16:42 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 2 Sep 2019
+ 09:16:35 +0800
+Subject: Re: [PATCH v4] f2fs: add bio cache for IPU
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190219081529.5106-1-yuchao0@huawei.com>
+ <d2b3c101-0399-4e85-5765-7b6504aaca74@huawei.com>
+ <20190901071757.GA49907@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <024fe351-8e25-35cd-47a7-9755498c73f4@huawei.com>
+Date:   Mon, 2 Sep 2019 09:16:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830193557.GF30413@zn.tnic>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190901071757.GA49907@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:35:57PM +0200, Borislav Petkov wrote:
-> On Fri, Aug 30, 2019 at 11:08:56PM +0800, Philip Li wrote:
-> > hi Boris, for the build status notification, we currently send to below
-> > address, is it still valid? If not, can you suggest one for us?
+On 2019/9/1 15:17, Jaegeuk Kim wrote:
+> On 08/31, Chao Yu wrote:
+>> On 2019/2/19 16:15, Chao Yu wrote:
+>>> @@ -1976,10 +2035,13 @@ static int __write_data_page(struct page *page, bool *submitted,
+>>>  	}
+>>>  
+>>>  	unlock_page(page);
+>>> -	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode))
+>>> +	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode)) {
+>>> +		f2fs_submit_ipu_bio(sbi, bio, page);
+>>>  		f2fs_balance_fs(sbi, need_balance_fs);
+>>> +	}
+>>
+>> Above bio submission was added to avoid below deadlock:
+>>
+>> - __write_data_page
+>>  - f2fs_do_write_data_page
+>>   - set_page_writeback        ---- set writeback flag
+>>   - f2fs_inplace_write_data
+>>  - f2fs_balance_fs
+>>   - f2fs_gc
+>>    - do_garbage_collect
+>>     - gc_data_segment
+>>      - move_data_page
+>>       - f2fs_wait_on_page_writeback
+>>        - wait_on_page_writeback  --- wait writeback
+>>
+>> However, it breaks the merge of IPU IOs, to solve this issue, it looks we need
+>> to add global bio cache for such IPU merge case, then later
+>> f2fs_wait_on_page_writeback can check whether writebacked page is cached or not,
+>> and do the submission if necessary.
+>>
+>> Jaegeuk, any thoughts?
 > 
-> Sure, here's an update patch ontop of your master branch:
-Thanks Boris, it is applied, and will take effect soon.
+> How about calling f2fs_submit_ipu_bio() when we need to do GC in the same
+> context?
+
+However it also could happen in race case:
+
+Thread A				Thread B
+- __write_data_page (inode x, page y)
+ - f2fs_do_write_data_page
+  - set_page_writeback        ---- set writeback flag in page y
+  - f2fs_inplace_write_data
+ - f2fs_balance_fs
+					 - lock gc_mutex
+ - lock gc_mutex
+					  - f2fs_gc
+					   - do_garbage_collect
+					    - gc_data_segment
+					     - move_data_page
+					      - f2fs_wait_on_page_writeback
+					       - wait_on_page_writeback  --- wait writeback of page y
+
+So it needs a global bio cache for merged IPU pages, how about adding a list to
+link all ipu bios in struct f2fs_bio_info?
+
+struct f2fs_bio_info {
+	....
+	struct list_head ipu_bio_list;	/* track all ipu bio */
+	spinlock_t ipu_bio_lock;	/* protect ipu bio list */
+}
 
 > 
-> ---
-> From: Borislav Petkov <bp@suse.de>
-> Date: Fri, 30 Aug 2019 21:33:29 +0200
-> Subject: [PATCH] repo/linux/tip: Update tip tree contact information
+>>
+>> Thanks,
+> .
 > 
-> Replace hpa with Borislav and change contact mail address.
-> 
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> ---
->  repo/linux/tip | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/repo/linux/tip b/repo/linux/tip
-> index 4fc5d88176fd..96a7dec66f97 100644
-> --- a/repo/linux/tip
-> +++ b/repo/linux/tip
-> @@ -2,11 +2,11 @@ url: https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.git
->  integration_testing_branches: auto-latest
->  mail_cc:
->  - linux-kernel@vger.kernel.org
-> -- tipbuild@zytor.com
-> +- x86@kernel.org
->  owner:
->  - Ingo Molnar <mingo@kernel.org>
-> -- H. Peter Anvin <hpa@zytor.com>
->  - Thomas Gleixner <tglx@linutronix.de>
-> +- Borislav Petkov <bp@suse.de>
->  subsystems:
->  - x86
->  - fpu
-> @@ -16,4 +16,4 @@ subsystems:
->  - locking
->  blacklist_branch: auto-.*|tmp-.*|base-.*|test.*|.*-for-linus
->  notify_build_success_branch: .*
-> -build_success_mail_to: tip build status <tipbuild@zytor.com>
-> +build_success_mail_to: x86-ml <x86@kernel.org>
-> -- 
-> 2.21.0
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
