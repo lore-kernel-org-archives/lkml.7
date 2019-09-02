@@ -2,193 +2,140 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABF6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B43C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7AA216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2FA216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVZ5xTxR"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="HisKgtPm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QabHFEFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfIBSrI (ORCPT
+        id S1727005AbfIBSr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:47:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40238 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfIBSrI (ORCPT
+        Mon, 2 Sep 2019 14:47:27 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:46253 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726849AbfIBSr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:47:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t9so15568835wmi.5;
-        Mon, 02 Sep 2019 11:47:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1gck3Y1S/2H7u4PQmy5W56nvn/ZFpUz5KRSMjK1VeS0=;
-        b=aVZ5xTxRfhTNHHYfeNOR6fj99zcpjpgzXz+TubXJmwBpL0KFZkbeyHMHJjzjxffkRn
-         fZGmaRT29W2nHTIikVTOCTBB9E0ZymJ+yFvh5VfsRKOvul1MN9jKQNtepaELRlbjkje+
-         tIlMm2pYqNInUoTwenTVcoDmDrWtWMJiRXpHkHMZhaOdPHBc6p4rKNEiNRi4vt3Jyi6x
-         ltIBu0gxBqmHPzyChmemgkvpGKvSU106Wu9zCc4bYCxZytx8YMySn+Woa5+fBGs/1SxU
-         bPZqG/kqmEK6c8DW0025i9Ntbi6PSf5g40+d2R3sUkyHC7l5iJdhXWzE5A9XDeFfu21x
-         N4Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1gck3Y1S/2H7u4PQmy5W56nvn/ZFpUz5KRSMjK1VeS0=;
-        b=tNnUefjHJtp9OvQoyBV8wJw68iskUIPR5mvjzJNUKD932XYyYa3WEHW4NgklIoMjiQ
-         lXbIird+FP9bnpEbrTyWkp1oCigaGz23JzMedDtBX2zht0RYKAttixY7i35ztu7P5CMB
-         4NSKa0BOvNBKf5SaTredPl5Jbk7F/U/VGShhSKTFxqP88hV9Vp2aRY0xph8gzRN3YgGW
-         DBbmXuJlnBkpfjw/yOQvqtq7OuuYJa3HC/t/4+gqtGfc0PHx2w64jTy7ZJ88TakXD/8v
-         h/dehYO4Vu7Nic1jn4ImXFVbmx80P8wAMVV7UxIvdQkeIjhAHp5PjOWcq7wab0TWlXS6
-         QY7w==
-X-Gm-Message-State: APjAAAVeZtS+rzfsDf4Q7S05fB7mKeiKW2AGiV+g2GdFXmSHQ1aL6ZeR
-        hMnzEgC1fifbZOJfv36nj+/adIWI
-X-Google-Smtp-Source: APXvYqy1TMB7FOLambRYHeEaVE3ZgPP7N/RVW0/qhjX7U6Z1bqc60ow7OaOb/SBZc58/DJ3bYyoIyg==
-X-Received: by 2002:a1c:b745:: with SMTP id h66mr17042106wmf.70.1567450024971;
-        Mon, 02 Sep 2019 11:47:04 -0700 (PDT)
-Received: from [192.168.1.19] (bky183.neoplus.adsl.tpnet.pl. [83.28.192.183])
-        by smtp.gmail.com with ESMTPSA id l20sm13840524wrb.61.2019.09.02.11.47.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 11:47:04 -0700 (PDT)
-Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>
-References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
- <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
- <20190902181207.GA18577@kroah.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1cd468a3-b6e5-a93b-739a-f30288318356@gmail.com>
-Date:   Mon, 2 Sep 2019 20:47:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 14:47:27 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 061EF603;
+        Mon,  2 Sep 2019 14:47:25 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 02 Sep 2019 14:47:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=jvdK4Jen2RCEgg6SQll6JQs4XBc
+        0TdXI2+8sajCKgts=; b=HisKgtPmjyc50Q51dI6x7O1Av5K1DiCIy1weJNbAQyw
+        NfaB/lELa/xXGitPGzwxdP4YKIE5eQuWRkY8OjLThDrlGjy4wIRPCCCM0F8J5yPs
+        qnP44YP0hxLE5FZeJUtyhvgNsI36Mqeol2P+TGQHDyxUlnlN4j18++cV/3tV+IE4
+        sAx5isdqwoWqGWF3ztVVWl96xGEWu4nsEKeqldn2PPpiiLFAevmLCqR9yIdMbVmX
+        7VabDz+NgxGWM6wbJXuNX/lmuqFw8setF43TKQVJmr81WNCjoYdQrIIVI4293eSI
+        SD26MTg73bvsdM4RUMeiIIQI+q+6M7LCyMLotBZpeuQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=jvdK4J
+        en2RCEgg6SQll6JQs4XBc0TdXI2+8sajCKgts=; b=QabHFEFQWkHTq5vl5QGksW
+        rlyGRzCUhfuiZzb5RYyNPXDoPeynBP7U1fZBhwrCOiEiK9+QQuHrDu4ELhGYuMvr
+        5jpPp3vdaENeP2I8C3f3+aMAaypPBSHRNU5n7/hgekMNR0Ju+G8mTyUDgV6DRznD
+        c9o17kbAdA/rsu6g9nVWcUuZp7npeavjk5SgP//4v1++65Fdd6tTilrE9/Jh63vs
+        YHrXAubgBr5lqclByIZogtLha5AikIG2OogvGmkCz4URX5EBABHpcHUiHhN2ddjf
+        aBuGRkOyA0Md9CKU8Zqlzooni5O2EyQ39ojLYSrIO5crmHIUVbJjLVUO8DZDquPQ
+        ==
+X-ME-Sender: <xms:vGNtXbYhVGvIlWBwCFVBis5BFP2Resu-kSZ4wIOMT3prTAHAYErA8A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejtddgudeftdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:vGNtXWQeoXkHmPTKTGMktd-Y0DdjZ_LkDh3cTGsR9MQgZ8NtvUJqew>
+    <xmx:vGNtXWzZ87g03H-RuVlzafF7d98RTNAQ3LsZpMP0IowkOHYiAbXBdQ>
+    <xmx:vGNtXaftgrtj1O4hdO2WxJX5rPxi8LAUiQvuOmN1pmZMxGdmO-BwiQ>
+    <xmx:vWNtXXE9soBGrsTKaiNyfLXGB8tdSUbTNs1CLLuy4Pndc4z0fis56A>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 46D188005B;
+        Mon,  2 Sep 2019 14:47:24 -0400 (EDT)
+Date:   Mon, 2 Sep 2019 20:47:22 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, Hui Peng <benquike@gmail.com>,
+        security@kernel.org, Mathias Payer <mathias.payer@nebelwelt.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix a double free bug in rsi_91x_deinit
+Message-ID: <20190902184722.GC5697@kroah.com>
+References: <20190819220230.10597-1-benquike@gmail.com>
+ <20190831181852.GA22160@roeck-us.net>
+ <87k1asqw87.fsf@kamboji.qca.qualcomm.com>
+ <385361d3-048e-9b3f-c749-aa5861e397e7@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20190902181207.GA18577@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <385361d3-048e-9b3f-c749-aa5861e397e7@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 8:12 PM, Greg KH wrote:
-> On Sun, Sep 01, 2019 at 06:53:34PM +0200, Jacek Anaszewski wrote:
->> Hi Akinobu,
->>
->> Thank you for the patch.
->>
->> I have one nit below but in general it looks good to me.
->> I've tested it with 2000 mtd triggers (~14kB file size)
->> and it worked flawlessly.
->>
->> Still, I would like to have ack from Greg for it.
->>
->> Adding Greg on Cc.
->>
->> On 8/29/19 4:49 PM, Akinobu Mita wrote:
->>> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
->>> However, the size of this file is limited to PAGE_SIZE because of the
->>> limitation for sysfs attribute.
->>>
->>> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
->>> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
->>> and which trigger is currently activated.
->>>
->>> This converts /sys/class/leds/<led>/trigger to bin attribute and removes
->>> the PAGE_SIZE limitation.
+On Sun, Sep 01, 2019 at 07:08:29AM -0700, Guenter Roeck wrote:
+> On 9/1/19 1:03 AM, Kalle Valo wrote:
+> > Guenter Roeck <linux@roeck-us.net> writes:
+> > 
+> > > On Mon, Aug 19, 2019 at 06:02:29PM -0400, Hui Peng wrote:
+> > > > `dev` (struct rsi_91x_usbdev *) field of adapter
+> > > > (struct rsi_91x_usbdev *) is allocated  and initialized in
+> > > > `rsi_init_usb_interface`. If any error is detected in information
+> > > > read from the device side,  `rsi_init_usb_interface` will be
+> > > > freed. However, in the higher level error handling code in
+> > > > `rsi_probe`, if error is detected, `rsi_91x_deinit` is called
+> > > > again, in which `dev` will be freed again, resulting double free.
+> > > > 
+> > > > This patch fixes the double free by removing the free operation on
+> > > > `dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
+> > > > used in `rsi_disconnect`, in that code path, the `dev` field is not
+> > > >   (and thus needs to be) freed.
+> > > > 
+> > > > This bug was found in v4.19, but is also present in the latest version
+> > > > of kernel.
+> > > > 
+> > > > Reported-by: Hui Peng <benquike@gmail.com>
+> > > > Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+> > > > Signed-off-by: Hui Peng <benquike@gmail.com>
+> > > 
+> > > FWIW:
+> > > 
+> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > > 
+> > > This patch is listed as fix for CVE-2019-15504, which has a CVSS 2.0 score
+> > > of 10.0 (high) and CVSS 3.0 score of 9.8 (critical).
+> > 
+> > A double free in error path is considered as a critical CVE issue? I'm
+> > very curious, why is that?
+> > 
 > 
-> But this is NOT a binary file.  A sysfs binary file is used for when the
-> kernel passes data to or from hardware without any parsing of the data
-> by the kernel.
-> 
-> You are not doing that here, you are abusing the "one value per file"
-> rule of sysfs so much that you are forced to work around the limitation
-> it put in place on purpose to keep you from doing stuff like this.
-> 
-> Please fix this "correctly" by creating a new api that works properly
-> and just live with the fact that this file will never work correctly and
-> move everyone to use the new api instead.
-> 
-> Don't keep on abusing the interface by workarounds like this, it is not
-> ok.
+> You'd have to ask the people assigning CVSS scores. However, if the memory
+> was reallocated, that reallocated memory (which is still in use) is freed.
+> Then all kinds of bad things can happen.
 
-In the message [0] you pledged to give us exception for that, provided
-it will be properly documented in the code. I suppose you now object
-because the patch does not meet that condition.
+Yes, but moving from "bad things _can_ happen" to "bad things happen" in
+an instance like this will be a tough task.  It also requires physical
+access to the machine.
 
-Provided that will be fixed, can we count on your ack for the
-implementation of the solution you proposed? :-)
+Anyway, that doesn't mean we shouldn't fix it, it's just that CVSS can
+be crazy when it comes to kernel patches (i.e. almost all fixes should
+be "critical"...)
 
-[0] https://lore.kernel.org/lkml/20190329102606.GB7286@kroah.com/
+thanks,
 
--- 
-Best regards,
-Jacek Anaszewski
+greg k-h
