@@ -2,94 +2,125 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=AD_PREFS,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB81C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A94C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFAE21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:36:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwHuIETS"
+	by mail.kernel.org (Postfix) with ESMTP id 125FB230F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567449480;
+	bh=/wM7s3NKrRlICYkMU4E2G6/DD4ggEHpOe/EtqV5iWvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jZl5cXavXywckFcJgeTNeU0wycyLInb7FHDOFCYNtzqMeZwguTKhSiGhyG+cGpHGm
+	 SGel2BgbLJL1L13o0oh5mar2oHicfc001AFJ9aN00HN0jrBBI7GnKgt3OdBpLE95MP
+	 +G0DFz2OwPXPv46/jvQJCGEr94YUZqBs4du6al9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfIBSgv (ORCPT
+        id S1726925AbfIBSh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:36:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34762 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfIBSgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:36:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so14955248wrn.1;
-        Mon, 02 Sep 2019 11:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4JvqH4dVIZDIO1d0Nq/uUBbGdESQsTM1wf9S0qUQ2TQ=;
-        b=DwHuIETS6XKB8Mpy/ynyP37OhTDxGXeSj0D8kEOnlZKZsciiYnva5pfHUrK9kIzgns
-         VGtB/7zZH3cOFyjjjADZyFdxzw8fiCDstk/K6pkpLbdxBCrjQ+B+iuaQKvndrqpRfLPi
-         zjolKZFlQ0dlm3kzzVvUPlAp6q6Lg6r0JpDTOwEHrZqZrc3vUmb4K9n5xmh9K+PRIna+
-         XefAakJ3fJYIsAma3Kc0Rxx/cXf2ym7mFnT9QOjzIQOJkWhe3cHQGs04IZiv5PRemR1N
-         LwYq31nceAyULOwMjrFpy6UQHJQWmVrA7vnoJ6J5oGQ8unuColSzSWHB24eQNpNEhncn
-         bsKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4JvqH4dVIZDIO1d0Nq/uUBbGdESQsTM1wf9S0qUQ2TQ=;
-        b=S6uNfhZP1W+Dgz8RU8iO2G/yjY0MVf17l15Q4TYOuEh1ckWnaGGZ5UhKMuWDy0wO5E
-         Ul+148gSCOkotnEyywxxEfrjalqQ0R2Z3pfhH8d27wdgQccLM0ry5jfFuNIkdYE9yZu9
-         c+dy+q2zz9U3SzqaW2I8we3WAc/VdXDPGwHBSCai5jZSFL22ClFxwJ0AzioDmABRNWaW
-         vjiG4SyyCdZaBuX5AtR1SNfloacP8Ma+Z8QZGPIvipxFQ0hD0jsSJmbWs/cNQoqlomh8
-         d7jYjrpiedIxDyPEgF5QhZ43ZeyByzf4NDkA8dQ7jrwb1rffnk+M0JCVcssE9qc2vXO7
-         E4XQ==
-X-Gm-Message-State: APjAAAVzTLINmhXJni18D8harCa8f691LokzF6uacwKPPkgZab0emZhi
-        Voi2myk0Noi8fpzSn4GFfv3JrKgk
-X-Google-Smtp-Source: APXvYqwDLZXpr70uabGYy+aBTZfRmSoYBTbNB/DeB4/uF/C6TF3B1U/sRCAgLmpYN6dUr1N6FSQqUA==
-X-Received: by 2002:adf:ea08:: with SMTP id q8mr39371547wrm.188.1567449408131;
-        Mon, 02 Sep 2019 11:36:48 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f04:7c00:6df2:15:f24:92e2? (p200300EA8F047C006DF200150F2492E2.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:6df2:15:f24:92e2])
-        by smtp.googlemail.com with ESMTPSA id z17sm15858827wrw.23.2019.09.02.11.36.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 11:36:47 -0700 (PDT)
-Subject: Re: [PATCH net-next] r8152: modify rtl8152_set_speed function
-To:     Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org
-Cc:     nic_swsd@realtek.com, linux-kernel@vger.kernel.org
-References: <1394712342-15778-326-Taiwan-albertk@realtek.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <280e6a3d-c6c3-ef32-a65d-19566190a1d3@gmail.com>
-Date:   Mon, 2 Sep 2019 20:36:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 14:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbfIBSh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:37:58 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9C4C2087E;
+        Mon,  2 Sep 2019 18:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567449477;
+        bh=/wM7s3NKrRlICYkMU4E2G6/DD4ggEHpOe/EtqV5iWvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DG21VCKyBtbrWLmGDzDlfikGMekEU6o0oeUw7vLRJyHBSBun+UgG1Mize8hH/4f7e
+         OVWwP8PCGk0+KcemtzBLgOE6FWeUpeIibdlDCj0imQZBduxedGDcx+D1XqdzurA8mW
+         YfgBshdZp2b2kScZot/6XzES5+uPdOLdkv6l1Ip8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 586FA3C0B7F; Mon,  2 Sep 2019 20:37:55 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 20:37:55 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] power: reset: gpio-restart: Fix typo when gpio reset is
+ not found
+Message-ID: <20190902183755.72vpe4xn2gbw4kmy@earth.universe>
+References: <94b3d1f3ebeb6000c32a7bed6f8b9411bae9cf19.1567429238.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <1394712342-15778-326-Taiwan-albertk@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dulct22sl4bantvv"
+Content-Disposition: inline
+In-Reply-To: <94b3d1f3ebeb6000c32a7bed6f8b9411bae9cf19.1567429238.git.michal.simek@xilinx.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.09.2019 13:52, Hayes Wang wrote:
-> First, for AUTONEG_DISABLE, we only need to modify MII_BMCR.
-> 
-> Second, add advertising parameter for rtl8152_set_speed(). Add
-> RTL_ADVERTISED_xxx for advertising parameter of rtl8152_set_speed().
-> Then, the advertising settings from ethtool could be saved.
-> 
-Seeing all this code it might be a good idea to switch this driver
-to phylib, similar to what I did with r8169 some time ago.
 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+--dulct22sl4bantvv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Sep 02, 2019 at 03:00:40PM +0200, Michal Simek wrote:
+> Trivial patch which just corrects error message.
+>=20
+> Fixes: 371bb20d6927 ("power: Add simple gpio-restart driver")
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->  drivers/net/usb/r8152.c | 196 +++++++++++++++++++++++++++-------------
->  1 file changed, 132 insertions(+), 64 deletions(-)
-> 
-[...]
+
+Thanks, queued.
+
+-- Sebastian
+
+>=20
+>  drivers/power/reset/gpio-restart.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/reset/gpio-restart.c b/drivers/power/reset/gpi=
+o-restart.c
+> index 2880cd5ae0d2..308ca9d9d276 100644
+> --- a/drivers/power/reset/gpio-restart.c
+> +++ b/drivers/power/reset/gpio-restart.c
+> @@ -65,7 +65,7 @@ static int gpio_restart_probe(struct platform_device *p=
+dev)
+>  	gpio_restart->reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL,
+>  			open_source ? GPIOD_IN : GPIOD_OUT_LOW);
+>  	if (IS_ERR(gpio_restart->reset_gpio)) {
+> -		dev_err(&pdev->dev, "Could net get reset GPIO\n");
+> +		dev_err(&pdev->dev, "Could not get reset GPIO\n");
+>  		return PTR_ERR(gpio_restart->reset_gpio);
+>  	}
+> =20
+> --=20
+> 2.17.1
+>=20
+
+--dulct22sl4bantvv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tYYMACgkQ2O7X88g7
++poRMw//V7Ow1mpLJIwknsKNr9wI/GzrbyKQnLvAYrBdPMVvx2m2PSBsvUw+kVQJ
+YmihXkkLacM7EQnWbKtr/R7Lq0Ld6wmSvCqhFyzvaPhydqgSEdhBh7JRk8yN8eW/
+7ptnYelb925VkFn5dcz7KAHZ7AIP6lP8CJGU06I4HSaYsYliQbyvcDL5vwSB7oGP
+qF/1ESwqh/x7Kq4u6EfHYGbT2gtD294ZWA2tUZK6R8hqh4242Nc6sdGkxnHw09Gt
+TGowAhfeJ9blsvtMV9MOHHJbSCn46fK/5IaoEcy/p4AYyatTKdLKV5BcQC1Y8OGU
+OdsSVOTOP/HYNCHgVPu9zgnkxymnVIM49/oe9+3Jn7h/s3cHLRCEi96gFOXTNpVF
+kmgoGE/cOod2jL9+65ToivZBtttcsePXnx06NzSUMzTwN/T086I51S2Vr/J0ufGn
+YCEBVG4+cm9jSGejUqs/ZGM+hJ583BLeOfFhxYGSM1/jAlg7jZzEwqEsgFDVWYlL
+2eZ23z3Ez1/peYgCPlE/AK9AEoup0Ot9S9+T5wg+xtHMpov1FK1TcS827Y1Av4w2
+xshXBOZAMM+jZP38bLJixQ+CCrs6psp3CRZj2qUQ+HvAS8+O2vqao/r5hcQb4aKF
+wi4ShqQ/Xfk+IQ7N77TwoTxdyP0tx1+SnGODczCGXE8RIMd+w8w=
+=m9Nx
+-----END PGP SIGNATURE-----
+
+--dulct22sl4bantvv--
