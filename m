@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323D8C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F3CC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027E9217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B90217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731395AbfIBJxe (ORCPT
+        id S1731406AbfIBJxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:53:34 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46676 "EHLO
+        Mon, 2 Sep 2019 05:53:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46854 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731208AbfIBJx0 (ORCPT
+        with ESMTP id S1731385AbfIBJxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:53:26 -0400
+        Mon, 2 Sep 2019 05:53:34 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 67FF528CB6E
+        with ESMTPSA id CB28A28CB6E
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -47,9 +47,9 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Collabora kernel ML <kernel@collabora.com>, arnd@arndb.de,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v7 04/10] mfd: cros_ec: Switch to use the new cros-ec-chardev driver
-Date:   Mon,  2 Sep 2019 11:53:03 +0200
-Message-Id: <20190902095309.18574-5-enric.balletbo@collabora.com>
+Subject: [PATCH v7 09/10] mfd: cros_ec: Add convenience struct to define autodetectable CrOS EC subdevices
+Date:   Mon,  2 Sep 2019 11:53:08 +0200
+Message-Id: <20190902095309.18574-10-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190902095309.18574-1-enric.balletbo@collabora.com>
 References: <20190902095309.18574-1-enric.balletbo@collabora.com>
@@ -60,11 +60,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the purpose of remove the things that far extends the bounds of
-what a MFD was designed to do, instantiate the new platform misc
-cros-ec-chardev driver and get rid of all the unneeded code. After this
-patch the misc chardev driver is a sub-device of the MFD, and all the
-new file operations should be implemented there.
+The CrOS EC is gaining lots of subdevices that are autodetectable by
+sending the EC_FEATURE_GET_CMD, it takes fair amount of boiler plate
+code to add those devices. So, add a struct that can be used to quickly
+add new subdevices without having to duplicate code.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -77,358 +76,179 @@ Changes in v7: None
 Changes in v6: None
 Changes in v5: None
 Changes in v4: None
-Changes in v3: None
+Changes in v3:
+- Use mfd_add_hotplug_devices helper (Gwendal)
+
 Changes in v2: None
 
- drivers/mfd/cros_ec_dev.c   | 220 +-----------------------------------
- include/linux/mfd/cros_ec.h |   2 -
- 2 files changed, 6 insertions(+), 216 deletions(-)
+ drivers/mfd/cros_ec_dev.c | 131 +++++++++++++++++++++-----------------
+ 1 file changed, 73 insertions(+), 58 deletions(-)
 
 diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 4c96445b1bf5..0c1c0ce3453e 100644
+index 31da038effc0..90eb02c56b77 100644
 --- a/drivers/mfd/cros_ec_dev.c
 +++ b/drivers/mfd/cros_ec_dev.c
-@@ -5,76 +5,23 @@
-  * Copyright (C) 2014 Google, Inc.
-  */
- 
--#include <linux/fs.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/cros_ec.h>
- #include <linux/mfd/cros_ec_commands.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
--#include <linux/platform_data/cros_ec_chardev.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
--#include <linux/pm.h>
-+#include <linux/platform_data/cros_ec_chardev.h>
- #include <linux/slab.h>
--#include <linux/uaccess.h>
--
- 
- #define DRV_NAME "cros-ec-dev"
- 
--/* Device variables */
--#define CROS_MAX_DEV 128
--static int ec_major;
--
- static struct class cros_class = {
- 	.owner          = THIS_MODULE,
- 	.name           = "chromeos",
+@@ -35,6 +35,18 @@ struct cros_feature_to_name {
+ 	const char *desc;
  };
  
--/* Basic communication */
--static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
--{
--	struct ec_response_get_version *resp;
--	static const char * const current_image_name[] = {
--		"unknown", "read-only", "read-write", "invalid",
--	};
--	struct cros_ec_command *msg;
--	int ret;
--
--	msg = kmalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
--	if (!msg)
--		return -ENOMEM;
--
--	msg->version = 0;
--	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
--	msg->insize = sizeof(*resp);
--	msg->outsize = 0;
--
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
--	if (ret < 0)
--		goto exit;
--
--	if (msg->result != EC_RES_SUCCESS) {
--		snprintf(str, maxlen,
--			 "%s\nUnknown EC version: EC returned %d\n",
--			 CROS_EC_DEV_VERSION, msg->result);
--		ret = -EINVAL;
--		goto exit;
--	}
--
--	resp = (struct ec_response_get_version *)msg->data;
--	if (resp->current_image >= ARRAY_SIZE(current_image_name))
--		resp->current_image = 3; /* invalid */
--
--	snprintf(str, maxlen, "%s\n%s\n%s\n%s\n", CROS_EC_DEV_VERSION,
--		 resp->version_string_ro, resp->version_string_rw,
--		 current_image_name[resp->current_image]);
--
--	ret = 0;
--exit:
--	kfree(msg);
--	return ret;
--}
--
++/**
++ * cros_feature_to_cells - CrOS feature id to mfd cells association.
++ * @id: The feature identifier.
++ * @mfd_cells: Pointer to the array of mfd cells that needs to be added.
++ * @num_cells: Number of mfd cells into the array.
++ */
++struct cros_feature_to_cells {
++	unsigned int id;
++	const struct mfd_cell *mfd_cells;
++	unsigned int num_cells;
++};
++
+ static const struct cros_feature_to_name cros_mcu_devices[] = {
+ 	{
+ 		.id	= EC_FEATURE_FINGERPRINT,
+@@ -58,6 +70,48 @@ static const struct cros_feature_to_name cros_mcu_devices[] = {
+ 	},
+ };
+ 
++static const struct mfd_cell cros_ec_cec_cells[] = {
++	{ .name = "cros-ec-cec", },
++};
++
++static const struct mfd_cell cros_ec_rtc_cells[] = {
++	{ .name = "cros-ec-rtc", },
++};
++
++static const struct mfd_cell cros_usbpd_charger_cells[] = {
++	{ .name = "cros-usbpd-charger", },
++	{ .name = "cros-usbpd-logger", },
++};
++
++static const struct cros_feature_to_cells cros_subdevices[] = {
++	{
++		.id		= EC_FEATURE_CEC,
++		.mfd_cells	= cros_ec_cec_cells,
++		.num_cells	= ARRAY_SIZE(cros_ec_cec_cells),
++	},
++	{
++		.id		= EC_FEATURE_RTC,
++		.mfd_cells	= cros_ec_rtc_cells,
++		.num_cells	= ARRAY_SIZE(cros_ec_rtc_cells),
++	},
++	{
++		.id		= EC_FEATURE_USB_PD,
++		.mfd_cells	= cros_usbpd_charger_cells,
++		.num_cells	= ARRAY_SIZE(cros_usbpd_charger_cells),
++	},
++};
++
++static const struct mfd_cell cros_ec_platform_cells[] = {
++	{ .name = "cros-ec-chardev", },
++	{ .name = "cros-ec-debugfs", },
++	{ .name = "cros-ec-lightbar", },
++	{ .name = "cros-ec-sysfs", },
++};
++
++static const struct mfd_cell cros_ec_vbc_cells[] = {
++	{ .name = "cros-ec-vbc", }
++};
++
  static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
  {
  	struct cros_ec_command *msg;
-@@ -110,142 +57,6 @@ static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
- 	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+@@ -283,30 +337,6 @@ static void cros_ec_accel_legacy_register(struct cros_ec_dev *ec)
+ 		dev_err(ec_dev->dev, "failed to add EC sensors\n");
  }
  
--/* Device file ops */
--static int ec_device_open(struct inode *inode, struct file *filp)
--{
--	struct cros_ec_dev *ec = container_of(inode->i_cdev,
--					      struct cros_ec_dev, cdev);
--	filp->private_data = ec;
--	nonseekable_open(inode, filp);
--	return 0;
--}
--
--static int ec_device_release(struct inode *inode, struct file *filp)
--{
--	return 0;
--}
--
--static ssize_t ec_device_read(struct file *filp, char __user *buffer,
--			      size_t length, loff_t *offset)
--{
--	struct cros_ec_dev *ec = filp->private_data;
--	char msg[sizeof(struct ec_response_get_version) +
--		 sizeof(CROS_EC_DEV_VERSION)];
--	size_t count;
--	int ret;
--
--	if (*offset != 0)
--		return 0;
--
--	ret = ec_get_version(ec, msg, sizeof(msg));
--	if (ret)
--		return ret;
--
--	count = min(length, strlen(msg));
--
--	if (copy_to_user(buffer, msg, count))
--		return -EFAULT;
--
--	*offset = count;
--	return count;
--}
--
--/* Ioctls */
--static long ec_device_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
--{
--	long ret;
--	struct cros_ec_command u_cmd;
--	struct cros_ec_command *s_cmd;
--
--	if (copy_from_user(&u_cmd, arg, sizeof(u_cmd)))
--		return -EFAULT;
--
--	if ((u_cmd.outsize > EC_MAX_MSG_BYTES) ||
--	    (u_cmd.insize > EC_MAX_MSG_BYTES))
--		return -EINVAL;
--
--	s_cmd = kmalloc(sizeof(*s_cmd) + max(u_cmd.outsize, u_cmd.insize),
--			GFP_KERNEL);
--	if (!s_cmd)
--		return -ENOMEM;
--
--	if (copy_from_user(s_cmd, arg, sizeof(*s_cmd) + u_cmd.outsize)) {
--		ret = -EFAULT;
--		goto exit;
--	}
--
--	if (u_cmd.outsize != s_cmd->outsize ||
--	    u_cmd.insize != s_cmd->insize) {
--		ret = -EINVAL;
--		goto exit;
--	}
--
--	s_cmd->command += ec->cmd_offset;
--	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
--	/* Only copy data to userland if data was received. */
--	if (ret < 0)
--		goto exit;
--
--	if (copy_to_user(arg, s_cmd, sizeof(*s_cmd) + s_cmd->insize))
--		ret = -EFAULT;
--exit:
--	kfree(s_cmd);
--	return ret;
--}
--
--static long ec_device_ioctl_readmem(struct cros_ec_dev *ec, void __user *arg)
--{
--	struct cros_ec_device *ec_dev = ec->ec_dev;
--	struct cros_ec_readmem s_mem = { };
--	long num;
--
--	/* Not every platform supports direct reads */
--	if (!ec_dev->cmd_readmem)
--		return -ENOTTY;
--
--	if (copy_from_user(&s_mem, arg, sizeof(s_mem)))
--		return -EFAULT;
--
--	num = ec_dev->cmd_readmem(ec_dev, s_mem.offset, s_mem.bytes,
--				  s_mem.buffer);
--	if (num <= 0)
--		return num;
--
--	if (copy_to_user((void __user *)arg, &s_mem, sizeof(s_mem)))
--		return -EFAULT;
--
--	return num;
--}
--
--static long ec_device_ioctl(struct file *filp, unsigned int cmd,
--			    unsigned long arg)
--{
--	struct cros_ec_dev *ec = filp->private_data;
--
--	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
--		return -ENOTTY;
--
--	switch (cmd) {
--	case CROS_EC_DEV_IOCXCMD:
--		return ec_device_ioctl_xcmd(ec, (void __user *)arg);
--	case CROS_EC_DEV_IOCRDMEM:
--		return ec_device_ioctl_readmem(ec, (void __user *)arg);
--	}
--
--	return -ENOTTY;
--}
--
--/* Module initialization */
--static const struct file_operations fops = {
--	.open = ec_device_open,
--	.release = ec_device_release,
--	.read = ec_device_read,
--	.unlocked_ioctl = ec_device_ioctl,
--#ifdef CONFIG_COMPAT
--	.compat_ioctl = ec_device_ioctl,
--#endif
+-static const struct mfd_cell cros_ec_cec_cells[] = {
+-	{ .name = "cros-ec-cec" }
 -};
 -
- static void cros_ec_class_release(struct device *dev)
+-static const struct mfd_cell cros_ec_rtc_cells[] = {
+-	{ .name = "cros-ec-rtc" }
+-};
+-
+-static const struct mfd_cell cros_usbpd_charger_cells[] = {
+-	{ .name = "cros-usbpd-charger" },
+-	{ .name = "cros-usbpd-logger" },
+-};
+-
+-static const struct mfd_cell cros_ec_platform_cells[] = {
+-	{ .name = "cros-ec-chardev" },
+-	{ .name = "cros-ec-debugfs" },
+-	{ .name = "cros-ec-lightbar" },
+-	{ .name = "cros-ec-sysfs" },
+-};
+-
+-static const struct mfd_cell cros_ec_vbc_cells[] = {
+-	{ .name = "cros-ec-vbc" }
+-};
+-
+ static int ec_device_probe(struct platform_device *pdev)
  {
- 	kfree(to_cros_ec_dev(dev));
-@@ -453,6 +264,7 @@ static const struct mfd_cell cros_usbpd_charger_cells[] = {
- };
+ 	int retval = -ENOMEM;
+@@ -368,42 +398,27 @@ static int ec_device_probe(struct platform_device *pdev)
+ 		/* Workaroud for older EC firmware */
+ 		cros_ec_accel_legacy_register(ec);
  
- static const struct mfd_cell cros_ec_platform_cells[] = {
-+	{ .name = "cros-ec-chardev" },
- 	{ .name = "cros-ec-debugfs" },
- 	{ .name = "cros-ec-lightbar" },
- 	{ .name = "cros-ec-sysfs" },
-@@ -480,7 +292,6 @@ static int ec_device_probe(struct platform_device *pdev)
- 	ec->features[0] = -1U; /* Not cached yet */
- 	ec->features[1] = -1U; /* Not cached yet */
- 	device_initialize(&ec->class_dev);
--	cdev_init(&ec->cdev, &fops);
- 
- 	/* Check whether this is actually a Fingerprint MCU rather than an EC */
- 	if (cros_ec_check_features(ec, EC_FEATURE_FINGERPRINT)) {
-@@ -527,10 +338,7 @@ static int ec_device_probe(struct platform_device *pdev)
- 
- 	/*
- 	 * Add the class device
--	 * Link to the character device for creating the /dev entry
--	 * in devtmpfs.
- 	 */
--	ec->class_dev.devt = MKDEV(ec_major, pdev->id);
- 	ec->class_dev.class = &cros_class;
- 	ec->class_dev.parent = dev;
- 	ec->class_dev.release = cros_ec_class_release;
-@@ -541,6 +349,10 @@ static int ec_device_probe(struct platform_device *pdev)
- 		goto failed;
- 	}
- 
-+	retval = device_add(&ec->class_dev);
-+	if (retval)
-+		goto failed;
-+
- 	/* check whether this EC is a sensor hub. */
- 	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE))
- 		cros_ec_sensors_register(ec);
-@@ -584,13 +396,6 @@ static int ec_device_probe(struct platform_device *pdev)
- 				retval);
- 	}
- 
--	/* We can now add the sysfs class, we know which parameter to show */
--	retval = cdev_device_add(&ec->cdev, &ec->class_dev);
--	if (retval) {
--		dev_err(dev, "cdev_device_add failed => %d\n", retval);
--		goto failed;
+-	/* Check whether this EC instance has CEC host command support */
+-	if (cros_ec_check_features(ec, EC_FEATURE_CEC)) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_ec_cec_cells,
+-					 ARRAY_SIZE(cros_ec_cec_cells),
+-					 NULL, 0, NULL);
+-		if (retval)
+-			dev_err(ec->dev,
+-				"failed to add cros-ec-cec device: %d\n",
+-				retval);
 -	}
 -
+-	/* Check whether this EC instance has RTC host command support */
+-	if (cros_ec_check_features(ec, EC_FEATURE_RTC)) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_ec_rtc_cells,
+-					 ARRAY_SIZE(cros_ec_rtc_cells),
+-					 NULL, 0, NULL);
+-		if (retval)
+-			dev_err(ec->dev,
+-				"failed to add cros-ec-rtc device: %d\n",
+-				retval);
+-	}
+-
+-	/* Check whether this EC instance has the PD charge manager */
+-	if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_usbpd_charger_cells,
+-					 ARRAY_SIZE(cros_usbpd_charger_cells),
+-					 NULL, 0, NULL);
+-		if (retval)
+-			dev_err(ec->dev,
+-				"failed to add cros-usbpd-charger device: %d\n",
+-				retval);
++	/*
++	 * The following subdevices can be detected by sending the
++	 * EC_FEATURE_GET_CMD Embedded Controller device.
++	 */
++	for (i = 0; i < ARRAY_SIZE(cros_subdevices); i++) {
++		if (cros_ec_check_features(ec, cros_subdevices[i].id)) {
++			retval = mfd_add_hotplug_devices(ec->dev,
++						cros_subdevices[i].mfd_cells,
++						cros_subdevices[i].num_cells);
++			if (retval)
++				dev_err(ec->dev,
++					"failed to add %s subdevice: %d\n",
++					cros_subdevices[i].mfd_cells->name,
++					retval);
++		}
+ 	}
+ 
++	/*
++	 * The following subdevices cannot be detected by sending the
++	 * EC_FEATURE_GET_CMD to the Embedded Controller device.
++	 */
  	retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
  				 cros_ec_platform_cells,
  				 ARRAY_SIZE(cros_ec_platform_cells),
-@@ -624,7 +429,6 @@ static int ec_device_remove(struct platform_device *pdev)
- 	struct cros_ec_dev *ec = dev_get_drvdata(&pdev->dev);
- 
- 	mfd_remove_devices(ec->dev);
--	cdev_del(&ec->cdev);
- 	device_unregister(&ec->class_dev);
- 	return 0;
- }
-@@ -647,7 +451,6 @@ static struct platform_driver cros_ec_dev_driver = {
- static int __init cros_ec_dev_init(void)
- {
- 	int ret;
--	dev_t dev = 0;
- 
- 	ret  = class_register(&cros_class);
- 	if (ret) {
-@@ -655,14 +458,6 @@ static int __init cros_ec_dev_init(void)
- 		return ret;
- 	}
- 
--	/* Get a range of minor numbers (starting with 0) to work with */
--	ret = alloc_chrdev_region(&dev, 0, CROS_MAX_DEV, CROS_EC_DEV_NAME);
--	if (ret < 0) {
--		pr_err(CROS_EC_DEV_NAME ": alloc_chrdev_region() failed\n");
--		goto failed_chrdevreg;
--	}
--	ec_major = MAJOR(dev);
--
- 	/* Register the driver */
- 	ret = platform_driver_register(&cros_ec_dev_driver);
- 	if (ret < 0) {
-@@ -672,8 +467,6 @@ static int __init cros_ec_dev_init(void)
- 	return 0;
- 
- failed_devreg:
--	unregister_chrdev_region(MKDEV(ec_major, 0), CROS_MAX_DEV);
--failed_chrdevreg:
- 	class_unregister(&cros_class);
- 	return ret;
- }
-@@ -681,7 +474,6 @@ static int __init cros_ec_dev_init(void)
- static void __exit cros_ec_dev_exit(void)
- {
- 	platform_driver_unregister(&cros_ec_dev_driver);
--	unregister_chrdev(ec_major, CROS_EC_DEV_NAME);
- 	class_unregister(&cros_class);
- }
- 
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index bcccda0257ff..569428ad1cb1 100644
---- a/include/linux/mfd/cros_ec.h
-+++ b/include/linux/mfd/cros_ec.h
-@@ -192,7 +192,6 @@ struct cros_ec_debugfs;
- /**
-  * struct cros_ec_dev - ChromeOS EC device entry point.
-  * @class_dev: Device structure used in sysfs.
-- * @cdev: Character device structure in /dev.
-  * @ec_dev: cros_ec_device structure to talk to the physical device.
-  * @dev: Pointer to the platform device.
-  * @debug_info: cros_ec_debugfs structure for debugging information.
-@@ -202,7 +201,6 @@ struct cros_ec_debugfs;
-  */
- struct cros_ec_dev {
- 	struct device class_dev;
--	struct cdev cdev;
- 	struct cros_ec_device *ec_dev;
- 	struct device *dev;
- 	struct cros_ec_debugfs *debug_info;
 -- 
 2.20.1
 
