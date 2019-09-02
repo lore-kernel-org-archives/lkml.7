@@ -2,110 +2,98 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393CBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2080C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D3121883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="hJFEuuou"
+	by mail.kernel.org (Postfix) with ESMTP id A13A022CF7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfIBTTa (ORCPT
+        id S1727136AbfIBTTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:19:30 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:9496 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbfIBTT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:19:29 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id D8D61812;
-        Mon,  2 Sep 2019 21:19:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1567451966; x=1569266367; bh=WvO6w1JGeAzjzBoBNy70PSLAMWZ4kpESBOV
-        SCmJ5cok=; b=hJFEuuou+AtpNPsgyNRb45DU+uP9v/aBuQuu9LZDTt1Mv1suhkz
-        QQmFt6nP+Rff6Ka38Tf+OoXlbLGBI34A0moEeLBIPAoGXU9U5e3MgIz9l5v3GYh8
-        HelD6pZbl5ly6Ydqf9FaxugLIeUfdY05lNTyWIjHTHQieICXIZI/rSITzJMu8uRF
-        KNMaBnA1P2XIW5OM9GSDvAk4MZP5W8oRJdwrdVlBcK8iV5de/pc/9taetKNC8D43
-        BRrnvJTzrrjMpX+GRx7kOUMv1NZArx75NeOcQ0Tp+jesddLCSTtnVoLxsXu0GGMf
-        9Gw2UWb97Q8Dn1c6W3sPtVAgIWiHgPrIUtF1APza8RPYXeAT6DkqsmMCG+eSn5Ca
-        SlbC9zx5DMtAWfZl/4i1yHVIYMyShs7DSIz0TeANHBAWVpMAMbdPHNO2xofbt29q
-        0rC++mnpuCZVZuGl8bWCcvpqHJB8QQhnnFizYBHlTTW9/YhQU9UkVplg9ewbOFVS
-        zH8Kg4CREJ5iA0CUp4FEpqrLwZ/yM8O6Q/aMSLBJqtqwNK8KzMvj740V3x9LkHF3
-        nHSMzQDjrWRx/js4kaW+XEK46kiazH8eXKfv0JiRyH6SUleF0SlOqY6g+Wc6/mzx
-        rbBOmidoi4EWp4AVzQ2iYDMEZp+sxpIBF18KQDd+IFQgZJgCPNP7/nJo=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MIjW3ZdQ02Xb; Mon,  2 Sep 2019 21:19:26 +0200 (CEST)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id 677BF3AE;
-        Mon,  2 Sep 2019 21:19:26 +0200 (CEST)
-Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id E79CA4ECD;
-        Mon,  2 Sep 2019 21:19:25 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc:lock: remove reference to clever use of read-write lock
-Date:   Mon, 02 Sep 2019 21:19:24 +0200
-Message-ID: <4627860.yBeiQmOknq@harkonnen>
-In-Reply-To: <20190902181010.GA35858@gmail.com>
-References: <20190831134116.25417-1-federico.vaga@vaga.pv.it> <2216492.xyESGPMPG3@pcbe13614> <20190902181010.GA35858@gmail.com>
+        Mon, 2 Sep 2019 15:19:34 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:51571 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfIBTTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:19:33 -0400
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x82JJAia011666;
+        Tue, 3 Sep 2019 04:19:11 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
+ Tue, 03 Sep 2019 04:19:10 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x82JJAlm011657
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 3 Sep 2019 04:19:10 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH v2 1/3] ASoC: es8316: judge PCM rate at later timing
+To:     Mark Brown <broonie@kernel.org>
+Cc:     David Yang <yangxiaohua@everest-semi.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20190831162650.19822-1-katsuhiro@katsuster.net>
+ <20190902120248.GA5819@sirena.co.uk>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <1a3c5934-4731-d474-e9d5-795e8337b180@katsuster.net>
+Date:   Tue, 3 Sep 2019 04:19:10 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190902120248.GA5819@sirena.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, September 2, 2019 8:10:10 PM CEST Ingo Molnar wrote:
-> * Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-> > On Saturday, August 31, 2019 4:43:44 PM CEST Jonathan Corbet wrote:
-> > > On Sat, 31 Aug 2019 15:41:16 +0200
-> > > 
-> > > Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-> > > >  several CPU's and you want to use spinlocks you can potentially use
-> > > > 
-> > > > -cheaper versions of the spinlocks. IFF you know that the spinlocks
-> > > > are
-> > > > +cheaper versions of the spinlocks. If you know that the spinlocks are
-> > > > 
-> > > >  never used in interrupt handlers, you can use the non-irq versions::
-> > > I suspect that was not actually a typo; "iff" is a way for the
-> > > mathematically inclined to say "if and only if".
-> > > 
-> > > jon
-> > 
-> > I learned something new today :)
-> > 
-> > I am not used to the mathematical English jargon. It make sense, but then
-> > I
-> > would replace it with "If and only if": for clarity.
+Hello Mark,
+
+Thanks a lot for your comments.
+
+On 2019/09/02 21:02, Mark Brown wrote:
+> On Sun, Sep 01, 2019 at 01:26:48AM +0900, Katsuhiro Suzuki wrote:
+>> This patch change the judge timing about playing/capturing PCM rate.
+>>
+>> Original code set constraints list of PCM rate limits at set_sysclk.
+>> This strategy works well if system is using fixed rate clock.
+>>
+>> But some boards and SoC (such as RockPro64 and RockChip I2S) has
+>> connected SoC MCLK out to ES8316 MCLK in. In this case, SoC side I2S
+>> will choose suitable frequency of MCLK such as fs * mclk-fs when
+>> user starts playing or capturing.
 > 
-> While it's used in a number of places and it's pretty common wording
-> overall in the literature, I agree that we should probably change this in
-> locking API user facing documentation.
-
-I would say not only in locking/. The argument is valid for the entire 
-Documentation/. I wait for Jon's opinion before proceeding.
-
-> If you change it, please do it in both places it's used.
+> The best way to handle this is to try to support both fixed and variable
+> clock rates, some other drivers do this by setting constraints based on
+> MCLK only if the MCLK has been set to a non-zero value.  They have the
+> machine drivers reset the clock rate to 0 when it goes idle so that no
+> constraints are applied then.  This means that if the machine has a
+> fixed clock there will be constraints, and that constraints get applied
+> if one direction has started and fixed the clock, but still allows the
+> clock to be varied where possible.
 > 
-> Thanks,
-> 
-> 	Ingo
+
+In my understanding, fixed and variable clock both use set_sysclk() for 
+telling their MCLK to codec driver. For fixed MCLK cases we need to
+apply constraint but for variable MCLK cases we should not set
+constraints at set_sysclk(). How can we identify these two cases...?
+
+For example, if machine sets very low MCLK once, the driver applies low
+Fs constraints which I2S driver cannot support to. After that this sound
+card cannot play/capture any Fs rate. It seems set_sysclk() is not
+called if Fs does not match constraints. So we have no chance to
+reconfigure MCLK by set_sysclk().
 
 
-
-
+Best Regards,
+Katsuhiro Suzuki
