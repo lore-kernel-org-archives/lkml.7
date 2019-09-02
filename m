@@ -2,219 +2,115 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A394C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC3C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555252173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565AA21881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JE+rTGDd"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="bYOhCRQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfIBIjV (ORCPT
+        id S1730706AbfIBIjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:39:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38479 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729870AbfIBIjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:39:19 -0400
+Received: from mail-eopbgr710055.outbound.protection.outlook.com ([40.107.71.55]:60799
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730155AbfIBIjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Sep 2019 04:39:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l11so4263623wrx.5;
-        Mon, 02 Sep 2019 01:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=84tNa0LJ5qNP8ceq2AHt9GMRkk+XoKF4Wbr0EYQvIpE=;
-        b=JE+rTGDd3vfb9wVcnjiTAQ6VJuKqNZw1kp4lvjPYJQleCdZutoksvcSMrlbLlijgCD
-         eA0G7FMldjru0uK1XH4l74xGOPEmK3pJ1sPHZkOIrZr4BS6wnRxvwBqRoz9XiIQerESa
-         jX+iX5JReRbNpB+qIm2TIK6sWuVMsKA0S0XMYbWYNcj2+SuMNh2YzUcPN3Ivu6DSSW3b
-         rT05eDiPQfsvIDsgAW75tfQ1C52HqBA7opRcNIzA1Vmi/6sQ/3QfMZ+3+lgjZDe3fbDE
-         oOkXpLo2mcwKwq9a0L+APjev3rJXds2O1xredJzBH0qz936K/dnrmcjHVT3Q0ByGdP97
-         xxgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=84tNa0LJ5qNP8ceq2AHt9GMRkk+XoKF4Wbr0EYQvIpE=;
-        b=FYWDRnhcv8JMIpaGwtRaGbDlr553sJ5NDhPk7C7p0BWT89JtVuqWzqiGEdFBKBvfjh
-         7mV84UEFxqR99nNWFk2e/CsSHWAMq8gdrd3K8zkFUfzuywC1zbd71pYeqyYD7rurTmkv
-         bLXhWlKQBvqEBq0j4aDWzuXZLqwGY+Dgn4F7/H+ZeXii17ZG0AabURdUPlo4IhJ/yy5c
-         DCNrSEPtkcPdhFnEwI7DXJuUaOK1KJhZEviolenb/n+MDWrbScqO3wb03wYgpHA1LtIT
-         35iO+Vq4QDGQ/KoMpPBciiNRudLmEquKJuffXLbLuO2Eqvq/fw9ygtODSej8WX4ACzSW
-         nalA==
-X-Gm-Message-State: APjAAAUa3TR6P6WNRmjlMyBi0uV8bk5q+4AGELDARMO4QbZbJCOGC1ll
-        D1BiLc86foYVMuOkxvxdRVE=
-X-Google-Smtp-Source: APXvYqw8kmUFZTdml86OFk4ExnbC4on8hvb43jeEB+SHfHs0C2+GnjIN7wyw+xxJ23zIcyfbPlXgSw==
-X-Received: by 2002:a5d:6a45:: with SMTP id t5mr33771273wrw.228.1567413555153;
-        Mon, 02 Sep 2019 01:39:15 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id b18sm17854812wro.34.2019.09.02.01.39.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 01:39:14 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 09:39:12 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190902083912.GA9069@stefanha-x1.localdomain>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org>
- <20190830094059.c7qo5cxrp2nkrncd@steredhat>
- <20190901024525-mutt-send-email-mst@kernel.org>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EfV3mq42xWciAZ6XYZokDky1YARkBta2o1J6lT6TSIVAP7/TazYGlkziY/L4hDUM12/2WKC+clDTewJfyxPd+8aMd2WQT398r53DjvqMNqFotd2WXlz3uw/FGC64RsOUmV2KioqaufkoOHMyROx5g1E/ASMRLfxLY5orWWAs/o8YmyIXIA8FclEqYH54ZbwniE4ZZZLnQdRV0k5t+cZWks/q/3PmFe7pWY4g2Td32qI1IvEO2JbnjxX/WSiV88+kftoWrRl7H6jGe2akvDR7mVH9Q8gfyz73EnfqDPGdneS/GgQq3JEh0En+fm+MXKtPLCioqEoCOolp1bBxeTdS/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ajzl+po9rLpeRV4D8+FDnTseMsOMZuK19i+zrkhwYbc=;
+ b=jTGMB1UcsMXTYTYc1GKh09aFKG9aJKti0Zxa4rLh0EiNkGwJRMh0Cz6GNhckcHFElNZj8VszVH8G6e4Oj7BdG+aNuX/6xX9NVACX/2dU8LVyGn+TiGpGy8/9k5ej+UqrYUaFsmYyM58X+JyemCD3rLt4G7tJM/TV7a3o5Y7U+4nDGQ0fnjHOAmzy0T2DIfJiPysDkdNdads6FLKyoUtc9/aAoNj80dlXIoHg9gSkpD9eaG8Dmuh3o/Hzfvx4tEHaBElFVEjXYjf9O5gNtzUm5C3xRAcZC/AsiDrhyRY9RZAOOB97ShsESE0Ml6ZICGEJDyvghSfjAyYbXJzUPXOLsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ajzl+po9rLpeRV4D8+FDnTseMsOMZuK19i+zrkhwYbc=;
+ b=bYOhCRQAW8K81WpgEEnzUbPjVtN9lMj+kZDitPlQ8y0CUhlkmz3F45dI17V4EJA+St7t3DHKK7zSykJADOmKppe95o30sGbnhQtbSg8UpdTcBSy+cQQ4f89XJ7UO0PsF/4gAXDQLjdpCZI9MoeaH2bTz0XKeTM6qgJnCiDVf89I=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB6116.namprd08.prod.outlook.com (20.176.29.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.19; Mon, 2 Sep 2019 08:39:10 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::1c5f:b47c:d1c3:c30c]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::1c5f:b47c:d1c3:c30c%7]) with mapi id 15.20.2220.021; Mon, 2 Sep 2019
+ 08:39:10 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: RE: [EXT] [PATCH v4 1/3] scsi: ufs: Introduce vops for resetting
+ device
+Thread-Topic: [EXT] [PATCH v4 1/3] scsi: ufs: Introduce vops for resetting
+ device
+Thread-Index: AQHVXdVTwpSMXoBF7UGihYWygcclaqcYF7yQ
+Date:   Mon, 2 Sep 2019 08:39:10 +0000
+Message-ID: <BN7PR08MB5684EEDE565DC4AAC9E658A3DBBE0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
+ <20190828191756.24312-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20190828191756.24312-2-bjorn.andersson@linaro.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.111]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3dd1d36d-c609-4f1b-40bd-08d72f810689
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR08MB6116;
+x-ms-traffictypediagnostic: BN7PR08MB6116:|BN7PR08MB6116:|BN7PR08MB6116:
+x-microsoft-antispam-prvs: <BN7PR08MB611680F2FAE12848DD64DAFDDBBE0@BN7PR08MB6116.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:400;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(66556008)(486006)(446003)(54906003)(7416002)(11346002)(14454004)(33656002)(6506007)(2906002)(305945005)(110136005)(55236004)(7696005)(76176011)(5660300002)(4326008)(6436002)(26005)(6246003)(3846002)(53936002)(66946007)(25786009)(9686003)(558084003)(55016002)(229853002)(66066001)(256004)(64756008)(66476007)(66446008)(102836004)(71190400001)(71200400001)(76116006)(478600001)(6116002)(186003)(7736002)(99286004)(86362001)(81156014)(8936002)(81166006)(8676002)(74316002)(316002)(476003)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB6116;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UzZHpAECDrWVRr4stDrRWdYXyJbB6jG41ZWCFdT2kABFjulEnfQLY67nVFx5WhsxkPOGkaUtxUZXuqN1AIH6pZqzCDGk+dSaP6uXtl4AttwlWAV0Tk0S7ur5fCFysrzmIRphCxlKePstbxL9Brh/ysn1JAIqMsVNTGZFnu0z/rhTovb6hPNTZntHAGvzUDgWTX0tHHdEPnWmYSoaVattHpOOC+fJzBxFmNgzutQJXst2oWM5EKDCzdJy+snpit85BJKCgZWRBdk0Fx3qYY+0SEdairsLL1XsKgXLnzTa26BY3oKPEhDXLIGY0kwPQ8wEsVL+kPE2GXLL/Jb1nhZaxfB4O4mA0p/nNSVuOZb5Sw8bvGVCb/BEvEbwakru9mjZQfEngZVN5CppJU5+Ilwt8H8CACW9s82LZp7Qx2m2ocg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Content-Disposition: inline
-In-Reply-To: <20190901024525-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dd1d36d-c609-4f1b-40bd-08d72f810689
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 08:39:10.1240
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Uf72roamKCbF1bCCV/T8qSdFueWMpctj5d/EhWDSxUgiEsPDa5kP7ye22dc+uQsc9lMRx7u6n7sIyZ8JpbQf/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB6116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>
+>Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+>Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Sep 01, 2019 at 02:56:44AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Aug 30, 2019 at 11:40:59AM +0200, Stefano Garzarella wrote:
-> > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> > > > Since virtio-vsock was introduced, the buffers filled by the host
-> > > > and pushed to the guest using the vring, are directly queued in
-> > > > a per-socket list. These buffers are preallocated by the guest
-> > > > with a fixed size (4 KB).
-> > > >=20
-> > > > The maximum amount of memory used by each socket should be
-> > > > controlled by the credit mechanism.
-> > > > The default credit available per-socket is 256 KB, but if we use
-> > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > > > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > > > guest will continue to fill the vring with new 4 KB free buffers
-> > > > to avoid starvation of other sockets.
-> > > >=20
-> > > > This patch mitigates this issue copying the payload of small
-> > > > packets (< 128 bytes) into the buffer of last packet queued, in
-> > > > order to avoid wasting memory.
-> > > >=20
-> > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > >=20
-> > > This is good enough for net-next, but for net I think we
-> > > should figure out how to address the issue completely.
-> > > Can we make the accounting precise? What happens to
-> > > performance if we do?
-> > >=20
-> >=20
-> > Since I'm back from holidays, I'm restarting this thread to figure out
-> > how to address the issue completely.
-> >=20
-> > I did a better analysis of the credit mechanism that we implemented in
-> > virtio-vsock to get a clearer view and I'd share it with you:
-> >=20
-> >     This issue affect only the "host->guest" path. In this case, when t=
-he
-> >     host wants to send a packet to the guest, it uses a "free" buffer
-> >     allocated by the guest (4KB).
-> >     The "free" buffers available for the host are shared between all
-> >     sockets, instead, the credit mechanism is per-socket, I think to
-> >     avoid the starvation of others sockets.
-> >     The guests re-fill the "free" queue when the available buffers are
-> >     less than half.
-> >=20
-> >     Each peer have these variables in the per-socket state:
-> >        /* local vars */
-> >        buf_alloc        /* max bytes usable by this socket
-> >                            [exposed to the other peer] */
-> >        fwd_cnt          /* increased when RX packet is consumed by the
-> >                            user space [exposed to the other peer] */
-> >        tx_cnt 	        /* increased when TX packet is sent to the other=
- peer */
-> >=20
-> >        /* remote vars  */
-> >        peer_buf_alloc   /* peer's buf_alloc */
-> >        peer_fwd_cnt     /* peer's fwd_cnt */
-> >=20
-> >     When a peer sends a packet, it increases the 'tx_cnt'; when the
-> >     receiver consumes the packet (copy it to the user-space buffer), it
-> >     increases the 'fwd_cnt'.
-> >     Note: increments are made considering the payload length and not the
-> >     buffer length.
-> >=20
-> >     The value of 'buf_alloc' and 'fwd_cnt' are sent to the other peer in
-> >     all packet headers or with an explicit CREDIT_UPDATE packet.
-> >=20
-> >     The local 'buf_alloc' value can be modified by the user space using
-> >     setsockopt() with optname=3DSO_VM_SOCKETS_BUFFER_SIZE.
-> >=20
-> >     Before to send a packet, the peer checks the space available:
-> >     	credit_available =3D peer_buf_alloc - (tx_cnt - peer_fwd_cnt)
-> >     and it will send up to credit_available bytes to the other peer.
-> >=20
-> > Possible solutions considering Michael's advice:
-> > 1. Use the buffer length instead of the payload length when we increment
-> >    the counters:
-> >   - This approach will account precisely the memory used per socket.
-> >   - This requires changes in both guest and host.
-> >   - It is not compatible with old drivers, so a feature should be negot=
-iated.
-> > 2. Decrease the advertised 'buf_alloc' taking count of bytes queued in
-> >    the socket queue but not used. (e.g. 256 byte used on 4K available in
-> >    the buffer)
-> >   - pkt->hdr.buf_alloc =3D buf_alloc - bytes_not_used.
-> >   - This should be compatible also with old drivers.
-> >=20
-> > Maybe the second is less invasive, but will it be too tricky?
-> > Any other advice or suggestions?
-> >=20
-> > Thanks in advance,
-> > Stefano
->=20
-> OK let me try to clarify.  The idea is this:
->=20
-> Let's say we queue a buffer of 4K, and we copy if len < 128 bytes.  This
-> means that in the worst case (128 byte packets), each byte of credit in
-> the socket uses up 4K/128 =3D 16 bytes of kernel memory. In fact we need
-> to also account for the virtio_vsock_pkt since I think it's kept around
-> until userspace consumes it.
->=20
-> Thus given X buf alloc allowed in the socket, we should publish X/16
-> credits to the other side. This will ensure the other side does not send
-> more than X/16 bytes for a given socket and thus we won't need to
-> allocate more than X bytes to hold the data.
->=20
-> We can play with the copy break value to tweak this.
-
-This seems like a reasonable solution.  Hopefully the benchmark results
-will come out okay too.
-
-Stefan
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1s1TAACgkQnKSrs4Gr
-c8gLsQf/X+M+3+I6vdXaOQqa3p6XuU6eKcoPYS3AZKsgf2/Hu7lfjlaFu1me49Qx
-eoM5VhsaVIzCfF7TJgUthcFsoG+nAc1sc+TPm16rBnDArLUHGMrny6LTZHGmkvi2
-HxnjGjLD/1CNxeeyL3HDyyzkKtG32surnGULXLKqW/599PQxHDq+QXSWysC8QTX7
-MKE3vc7zIpRh7PiXbPdh4IH8UUeHdEbdYrRoaK0uiXN47vUFOUdM1t8iMG1u/C8t
-8X3f/wnHGl7Z6k+QH/3SMme3xihN0/F/TQW8PqyZdUMB7I+X5URicB4ECRpQ3dgE
-c0cux2rhFpAIui9MpqD7+fagnhksmw==
-=wVO3
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
+//Bean Huo
