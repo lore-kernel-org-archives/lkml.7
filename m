@@ -2,190 +2,97 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF01C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4021DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E3E2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E69215EA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ddESnutp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbfIBITq (ORCPT
+        id S1730619AbfIBITw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:19:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56145 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729964AbfIBIQf (ORCPT
+        Mon, 2 Sep 2019 04:19:52 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58484 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729964AbfIBITv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:16:35 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i4hVf-0007wn-OG; Mon, 02 Sep 2019 10:16:24 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5B26C1C0DE7;
-        Mon,  2 Sep 2019 10:16:23 +0200 (CEST)
-Date:   Mon, 02 Sep 2019 08:16:23 -0000
-From:   "tip-bot2 for Kyle Meyer" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf timechart: Refactor svg_build_topology_map()
-Cc:     Kyle Meyer <kyle.meyer@hpe.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190827214352.94272-2-meyerk@stormcage.eag.rdlabs.hpecorp.net>
-References: <20190827214352.94272-2-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+        Mon, 2 Sep 2019 04:19:51 -0400
+Received: from pendragon.ideasonboard.com (231.125-247-81.adsl-dyn.isp.belgacom.be [81.247.125.231])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54748303;
+        Mon,  2 Sep 2019 10:19:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1567412389;
+        bh=5HBvswllGaiODYjSIoZK0GflOekHiZSNfmmM72aXnHo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ddESnutpxySaQ/3OkWOw3E0FVnOw68ZIr0ANYsVmiRXVIziGPIOVS4k0hcZquq8yP
+         tcAbH9x6nM6+Tf7h3nu9gNOw0JjmVEcqqIrA6IH2Lp9iEVehsHh3/GILJbqOIeEFQ3
+         RHnEDJc/VTN463sjn5hHj4hojUwkb9SHET+w1x28=
+Date:   Mon, 2 Sep 2019 11:19:42 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
+Message-ID: <20190902081942.GE4777@pendragon.ideasonboard.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-3-jacopo@jmondi.org>
+ <20190814224340.GD5015@pendragon.ideasonboard.com>
+ <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
+ <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
+ <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
+ <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
+ <20190901172457.GC1047@bug>
+ <20190902080002.GC4777@pendragon.ideasonboard.com>
+ <20190902080657.GC15850@amd>
 MIME-Version: 1.0
-Message-ID: <156741218328.17265.12865594530636474273.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190902080657.GC15850@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On Mon, Sep 02, 2019 at 10:06:57AM +0200, Pavel Machek wrote:
+> >>> Single integer. It's read-only, so it just reports the location.
+> >>> 
+> >>> It would be different if this was a writable control: then you need to
+> >>> know which locations are possible to set, and that requires a menu type.
+> >>> 
+> >>> But it doesn't make sense to set the location from software. However, the
+> >>> location might change as a result of other changes: e.g. if the camera
+> >>> has motor control of the tilt and the tilt changes from forward facing to
+> >>> downward facing, then the driver might change the location from FRONT
+> >>> to DOWN. A convoluted example perhaps, but this is just brainstorming.
+> >> 
+> >> There are phones with exactly such camera setup. And yes, it makes
+> >> sense to be writable in that case, as software can move the camera in
+> >> such case.
+> > 
+> > Out of curiosity, what phones are those ?
+> 
+> This one:
+> 
+> https://www.samsung.com/global/galaxy/galaxy-a80/
 
-Commit-ID:     0ac1dd5b4a70cfc8591dd9426f800b484765badb
-Gitweb:        https://git.kernel.org/tip/0ac1dd5b4a70cfc8591dd9426f800b484765badb
-Author:        Kyle Meyer <meyerk@hpe.com>
-AuthorDate:    Tue, 27 Aug 2019 16:43:46 -05:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 29 Aug 2019 17:38:31 -03:00
+Interesting device. I'm not sure we should control that through a
+location control though, as it seems there's more than the rotation of
+the camera involved. In any case I wouldn't care about it for now, and
+turn the location control from read-only to read-write later if needed.
+We need more information and more thought to support that use case.
 
-perf timechart: Refactor svg_build_topology_map()
+-- 
+Regards,
 
-Exchange the parameters of svg_build_topology_map() with 'struct
-perf_env *env' and adjust the function accordingly.
-
-This patch should not change any behavior, it is merely refactoring for
-the following patch.
-
-Committer notes:
-
-No need to include env.h from svghelper.h, all it needs is a forward
-declaration for 'struct perf_env', so move the include directive to
-svghelper.c, where it is really needed.
-
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russ Anderson <russ.anderson@hpe.com>
-Link: http://lore.kernel.org/lkml/20190827214352.94272-2-meyerk@stormcage.eag.rdlabs.hpecorp.net
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-timechart.c |  5 +----
- tools/perf/util/svghelper.c    | 20 ++++++++++++--------
- tools/perf/util/svghelper.h    |  4 +++-
- 3 files changed, 16 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 7d6a6ec..1ff81a7 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1518,10 +1518,7 @@ static int process_header(struct perf_file_section *section __maybe_unused,
- 		if (!tchart->topology)
- 			break;
- 
--		if (svg_build_topology_map(ph->env.sibling_cores,
--					   ph->env.nr_sibling_cores,
--					   ph->env.sibling_threads,
--					   ph->env.nr_sibling_threads))
-+		if (svg_build_topology_map(&ph->env))
- 			fprintf(stderr, "problem building topology\n");
- 		break;
- 
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index bbdd871..2e99715 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -19,6 +19,7 @@
- #include <linux/zalloc.h>
- #include <perf/cpumap.h>
- 
-+#include "env.h"
- #include "perf.h"
- #include "svghelper.h"
- #include "cpumap.h"
-@@ -752,23 +753,26 @@ static int str_to_bitmap(char *s, cpumask_t *b)
- 	return ret;
- }
- 
--int svg_build_topology_map(char *sib_core, int sib_core_nr,
--			   char *sib_thr, int sib_thr_nr)
-+int svg_build_topology_map(struct perf_env *env)
- {
- 	int i;
- 	struct topology t;
-+	char *sib_core, *sib_thr;
- 
--	t.sib_core_nr = sib_core_nr;
--	t.sib_thr_nr = sib_thr_nr;
--	t.sib_core = calloc(sib_core_nr, sizeof(cpumask_t));
--	t.sib_thr = calloc(sib_thr_nr, sizeof(cpumask_t));
-+	t.sib_core_nr = env->nr_sibling_cores;
-+	t.sib_thr_nr = env->nr_sibling_threads;
-+	t.sib_core = calloc(env->nr_sibling_cores, sizeof(cpumask_t));
-+	t.sib_thr = calloc(env->nr_sibling_threads, sizeof(cpumask_t));
-+
-+	sib_core = env->sibling_cores;
-+	sib_thr = env->sibling_threads;
- 
- 	if (!t.sib_core || !t.sib_thr) {
- 		fprintf(stderr, "topology: no memory\n");
- 		goto exit;
- 	}
- 
--	for (i = 0; i < sib_core_nr; i++) {
-+	for (i = 0; i < env->nr_sibling_cores; i++) {
- 		if (str_to_bitmap(sib_core, &t.sib_core[i])) {
- 			fprintf(stderr, "topology: can't parse siblings map\n");
- 			goto exit;
-@@ -777,7 +781,7 @@ int svg_build_topology_map(char *sib_core, int sib_core_nr,
- 		sib_core += strlen(sib_core) + 1;
- 	}
- 
--	for (i = 0; i < sib_thr_nr; i++) {
-+	for (i = 0; i < env->nr_sibling_threads; i++) {
- 		if (str_to_bitmap(sib_thr, &t.sib_thr[i])) {
- 			fprintf(stderr, "topology: can't parse siblings map\n");
- 			goto exit;
-diff --git a/tools/perf/util/svghelper.h b/tools/perf/util/svghelper.h
-index e55338d..81823e8 100644
---- a/tools/perf/util/svghelper.h
-+++ b/tools/perf/util/svghelper.h
-@@ -4,6 +4,8 @@
- 
- #include <linux/types.h>
- 
-+struct perf_env;
-+
- void open_svg(const char *filename, int cpus, int rows, u64 start, u64 end);
- void svg_ubox(int Yslot, u64 start, u64 end, double height, const char *type, int fd, int err, int merges);
- void svg_lbox(int Yslot, u64 start, u64 end, double height, const char *type, int fd, int err, int merges);
-@@ -28,7 +30,7 @@ void svg_partial_wakeline(u64 start, int row1, char *desc1, int row2, char *desc
- void svg_interrupt(u64 start, int row, const char *backtrace);
- void svg_text(int Yslot, u64 start, const char *text);
- void svg_close(void);
--int svg_build_topology_map(char *sib_core, int sib_core_nr, char *sib_thr, int sib_thr_nr);
-+int svg_build_topology_map(struct perf_env *env);
- 
- extern int svg_page_width;
- extern u64 svg_highlight;
+Laurent Pinchart
