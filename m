@@ -2,132 +2,299 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C550FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE73BC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD1F2168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OJsk6o+K"
+	by mail.kernel.org (Postfix) with ESMTP id A8337217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfIBLsf (ORCPT
+        id S1730618AbfIBLwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:48:35 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57051 "EHLO ozlabs.org"
+        Mon, 2 Sep 2019 07:52:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:48367 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbfIBLsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:48:35 -0400
+        id S1729850AbfIBLwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 07:52:41 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MSyj35rkz9s7T;
-        Mon,  2 Sep 2019 21:48:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567424913;
-        bh=RfRlld/uLGo2JdTLLuUxgj3kFdxGvnj6knbdWYv1y7Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OJsk6o+KJfxrS0sd3aTCp6PWxC9Abs7I766QR7kqhVQt3KP7l0DRDTWtZFdCcrwTs
-         169BULZ6N1lQpI3LLZPzBfc1w+VjGvzcU9vofjFkZBWvu0zB4We0doYeotTfVso1nC
-         676gHKyuZs0fRFhAH4js+VBugIgITRX3v+iKpp77m1Kl3Enb3fUfO81393pzUOpwtp
-         R0fcSR2ai6UFZFvdgJTd9L4+YtYkRhfXrigjOV9a2b07dtGu0yvP6tv9mMQIPu2Dvk
-         es05LCA0gxQPUz4dCSrLtq1PvyptuyUAxwLDwk4DztPDEjw23A6emkMhPPTzkz101e
-         MpydAX3ncrSbg==
-Date:   Mon, 2 Sep 2019 21:48:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: linux-next: manual merge of the akpm-current tree with the risc-v
- tree
-Message-ID: <20190902214828.1c6f27ac@canb.auug.org.au>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MT3T1Rzqz9s7T;
+        Mon,  2 Sep 2019 21:52:37 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v5 1/2] powerpc: detect the secure boot mode of the system
+In-Reply-To: <1566218108-12705-2-git-send-email-nayna@linux.ibm.com>
+References: <1566218108-12705-1-git-send-email-nayna@linux.ibm.com> <1566218108-12705-2-git-send-email-nayna@linux.ibm.com>
+Date:   Mon, 02 Sep 2019 21:52:36 +1000
+Message-ID: <87tv9usynv.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/b_xC9QUrPrrV6q/nNK=XH2G";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/b_xC9QUrPrrV6q/nNK=XH2G
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Nayna,
 
-Hi all,
+Sorry I've taken so long to get to this series, there's just too many
+patches that need reviewing :/
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+Nayna Jain <nayna@linux.ibm.com> writes:
+> Secure boot on POWER defines different IMA policies based on the secure
+> boot state of the system.
 
-  arch/riscv/Kconfig
+The terminology throughout is a bit vague, we have POWER, PowerPC, Linux
+on POWER etc.
 
-between commit:
+What this patch is talking about is a particular implemention of secure
+boot on some OpenPOWER machines running bare metal - am I right?
 
-  d95f1a542c3d ("RISC-V: Implement sparsemem")
+So saying "Secure boot on POWER defines different IMA policies" is a bit
+broad I think. Really we've just decided that a way to implement secure
+boot is to use IMA policies.
 
-from the risc-v tree and commit:
+> This patch defines a function to detect the secure boot state of the
+> system.
+>
+> The PPC_SECURE_BOOT config represents the base enablement of secureboot
+> on POWER.
+>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  arch/powerpc/Kconfig               | 11 +++++
+>  arch/powerpc/include/asm/secboot.h | 27 ++++++++++++
+>  arch/powerpc/kernel/Makefile       |  2 +
+>  arch/powerpc/kernel/secboot.c      | 71 ++++++++++++++++++++++++++++++
+>  4 files changed, 111 insertions(+)
+>  create mode 100644 arch/powerpc/include/asm/secboot.h
+>  create mode 100644 arch/powerpc/kernel/secboot.c
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 77f6ebf97113..c902a39124dc 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -912,6 +912,17 @@ config PPC_MEM_KEYS
+>  
+>  	  If unsure, say y.
+>  
+> +config PPC_SECURE_BOOT
+> +	prompt "Enable PowerPC Secure Boot"
 
-  f6a9089b8915 ("riscv: make mmap allocation top-down by default")
+How about "Enable secure boot support"
 
-from the akpm-current tree.
+> +	bool
+> +	default n
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+The default is 'n', so you don't need that default line.
 
---=20
-Cheers,
-Stephen Rothwell
+> +	depends on PPC64
 
-diff --cc arch/riscv/Kconfig
-index 572599cbf750,87dc5370becb..000000000000
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@@ -56,7 -54,18 +56,19 @@@ config RISC
-  	select EDAC_SUPPORT
-  	select ARCH_HAS_GIGANTIC_PAGE
-  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- +	select SPARSEMEM_STATIC if 32BIT
-+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-+ 	select HAVE_ARCH_MMAP_RND_BITS
-+=20
-+ config ARCH_MMAP_RND_BITS_MIN
-+ 	default 18 if 64BIT
-+ 	default 8
-+=20
-+ # max bits determined by the following formula:
-+ #  VA_BITS - PAGE_SHIFT - 3
-+ config ARCH_MMAP_RND_BITS_MAX
-+ 	default 24 if 64BIT # SV39 based
-+ 	default 17
- =20
-  config MMU
-  	def_bool y
+Should it just depend on POWERNV for now? AFAIK there's nothing in here
+that's necessarily going to be shared with the guest secure boot code is
+there?
 
---Sig_/b_xC9QUrPrrV6q/nNK=XH2G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +	help
+> +	  Linux on POWER with firmware secure boot enabled needs to define
+> +	  security policies to extend secure boot to the OS.This config
+> +	  allows user to enable OS Secure Boot on PowerPC systems that
+> +	  have firmware secure boot support.
 
------BEGIN PGP SIGNATURE-----
+Again POWER vs PowerPC.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1tAYwACgkQAVBC80lX
-0Gx4qAf/QOrNMD3q4Szf59s/KK8KkfnIgf++Sg+bgEutj90F79SdgjFwfDm5SvE3
-FSYmJsu7/Oot7wWKxPXZh5ThdbPfOtEhRhkj7Co/7tB3M+3oLsM31nVRjUvfzEqn
-5ct6ZW/fkJwjc8nn0dcVORT9oEahRx3nz3oAsFblH1oTmNEZb3KfBhCk2quSPP2q
-r/mQsUmXmznJaWmQqjKlAxMFshw61rCP9YVoXkV5eaHh+FDndlv2WglyKnw0fA6m
-antt6j4cRFdzvO8hd4CkRoo1/PIe+m1kMZaWN6Nug/zJIiCTFXA9EpWaJFuYe+jA
-yJvgOfg2hBnaoYAQoUmhLRe1pqLLQA==
-=UEcZ
------END PGP SIGNATURE-----
+I think something like:
 
---Sig_/b_xC9QUrPrrV6q/nNK=XH2G--
+"Enable support for secure boot on some systems that have firmware
+support for it. If in doubt say N."
+
+
+> diff --git a/arch/powerpc/include/asm/secboot.h b/arch/powerpc/include/asm/secboot.h
+
+secure_boot.h would be fine.
+
+> new file mode 100644
+> index 000000000000..e726261bb00b
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/secboot.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * PowerPC secure boot definitions
+> + *
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain <nayna@linux.ibm.com>
+
+I prefer to not have email addresses in copyright headers, as they just
+bit rot. Your email is in the git log.
+
+> + *
+> + */
+> +#ifndef POWERPC_SECBOOT_H
+> +#define POWERPC_SECBOOT_H
+
+We usually do _ASM_POWERPC_SECBOOT_H (or _ASM_POWERPC_SECURE_BOOT_H).
+
+> +#ifdef CONFIG_PPC_SECURE_BOOT
+> +extern struct device_node *is_powerpc_secvar_supported(void);
+> +extern bool get_powerpc_secureboot(void);
+
+You don't need 'extern' for functions in headers.
+
+> +#else
+> +static inline struct device_node *is_powerpc_secvar_supported(void)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline bool get_powerpc_secureboot(void)
+> +{
+> +	return false;
+> +}
+> +
+> +#endif
+> +#endif
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index ea0c69236789..d310ebb4e526 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -157,6 +157,8 @@ endif
+>  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+>  
+> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o
+> +
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+>  KCOV_INSTRUMENT_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/secboot.c b/arch/powerpc/kernel/secboot.c
+> new file mode 100644
+> index 000000000000..5ea0d52d64ef
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/secboot.c
+> @@ -0,0 +1,71 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain <nayna@linux.ibm.com>
+> + *
+> + * secboot.c
+> + *      - util function to get powerpc secboot state
+
+That's not really necessary.
+
+> + */
+> +#include <linux/types.h>
+> +#include <linux/of.h>
+> +#include <asm/secboot.h>
+> +
+> +struct device_node *is_powerpc_secvar_supported(void)
+
+This is a pretty weird signature. The "is_" implies it will return a
+bool, but then it actually returns a device node *.
+
+> +{
+> +	struct device_node *np;
+> +	int status;
+> +
+> +	np = of_find_node_by_name(NULL, "ibm,secureboot");
+> +	if (!np) {
+> +		pr_info("secureboot node is not found\n");
+> +		return NULL;
+> +	}
+
+There's no good reason to search by name. You should just search by compatible.
+
+eg. of_find_compatible_node()
+
+> +	status = of_device_is_compatible(np, "ibm,secureboot-v3");
+> +	if (!status) {
+> +		pr_info("Secure variables are not supported by this firmware\n");
+> +		return NULL;
+> +	}
+> +
+> +	return np;
+> +}
+> +
+> +bool get_powerpc_secureboot(void)
+> +{
+> +	struct device_node *np;
+> +	struct device_node *secvar_np;
+> +	const u64 *psecboot;
+> +	u64 secboot = 0;
+> +
+> +	np = is_powerpc_secvar_supported();
+> +	if (!np)
+> +		goto disabled;
+> +
+> +	/* Fail-safe for any failure related to secvar */
+> +	secvar_np = of_get_child_by_name(np, "secvar");
+
+Finding a child by name is not ideal, it encodes the structure of the
+tree in the API. It's better to just search by compatible.
+
+eg. of_find_compatible_node("ibm,secvar-v1")
+
+You should also define what that means, ie. write a little snippet of
+doc to define what the expected properties are and their meaning and so
+on.
+
+> +	if (!secvar_np) {
+> +		pr_err("Expected secure variables support, fail-safe\n");
+
+I'm a bit confused by this. This is the exact opposite of what I
+understand fail-safe to mean. We shouldn't tell the user the system is
+securely booted unless we're 100% sure it is. Right?
+
+> +		goto enabled;
+> +	}
+> +
+> +	if (!of_device_is_available(secvar_np)) {
+> +		pr_err("Secure variables support is in error state, fail-safe\n");
+> +		goto enabled;
+> +	}
+
+It seems a little weird to use the status property to indicate ok/error
+and then also have a "secure-mode" property. Wouldn't just "secure-mode"
+be sufficient with several states to represent what we need?
+
+> +	psecboot = of_get_property(secvar_np, "secure-mode", NULL);
+> +	if (!psecboot)
+> +		goto enabled;
+
+Please use of_read_property_u64() or similar.
+
+> +	secboot = be64_to_cpup((__be64 *)psecboot);
+> +	if (!(secboot & (~0x0)))
+
+I'm not sure what that's trying to do.
+
+> +		goto disabled;
+
+> +
+> +enabled:
+> +	pr_info("secureboot mode enabled\n");
+> +	return true;
+> +
+> +disabled:
+> +	pr_info("secureboot mode disabled\n");
+> +	return false;
+> +}
+
+
+cheers
