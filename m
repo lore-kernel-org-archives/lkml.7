@@ -2,182 +2,143 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AA5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57430C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EBD20820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA0620820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VfyOjtZ8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+TiADkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfIBNLe (ORCPT
+        id S1730845AbfIBNL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:11:34 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42155 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729840AbfIBNLe (ORCPT
+        Mon, 2 Sep 2019 09:11:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33443 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729768AbfIBNL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:11:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t12so15519916qtp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:11:33 -0700 (PDT)
+        Mon, 2 Sep 2019 09:11:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so3930706pfl.0;
+        Mon, 02 Sep 2019 06:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PZv22NgyAy4cpGO8nvyQHGric91X1UzIHSt4+HMcQy0=;
-        b=VfyOjtZ8aWgjvf651FHyhOAmwULu+NSuKIFmWFDbTRWli+KD2QjI1GYeqiw61Zjm2m
-         7aaaBlmkKkRFGyH+0e/2tfli/Lzx3ClE2/e2G5QLJQYnubJJ3JYzZLvgyXXSK4+1L+EE
-         Z7LbQ3jZDzcbqs+UdWR7g5QpEcTndIQMh46gYQkp6+SayViDEjVz6qOCIWbXrzCYf9qd
-         7mQnrP/NU6T4dEn9pN39cR1iiOpk8+HPk9FvMT4BxOIGOTrnmYFYwqdtsOMeIh+WZXQZ
-         YbLPKeJAaT7hmIolpfVwwIm0YOCT6huuORR8Dat7ZQQzEFC7TrlK3q7zqruDx4uHmJk/
-         oj0w==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dKBlu/uJD1E27uZkZUHPL5g33kiGPBY8pyXH2GoFqbo=;
+        b=g+TiADkqSxyb/cFMNoxRYD9JtVAeM20eO8vWnTPdjiTrAzflpVTr562UTnmhs6LdBZ
+         9v3MuQD3iIpsSBISydHCOSAx4e1k5h4Y3fbH+6W/XjQe6Q9KIbSXIG1zeFGkE8/skka/
+         3yAn+kBdD3qA9Gs8hcmql1Yx5jp7/b8Jc/OHNN+8NQsPOB3ZvH/thUoshvlBlNIqtO9t
+         TeJmm3qrkAcituxpSsGyXwm+gqlUCg77JrFBukRh80qlVlWR7aKh6kUEgjOPp6q2rorQ
+         oG8dAm0XlpG3hYi4SpDkG8Tuw8VRh64RwXcplmh8Yz59Y7wEUpOr1DOZcj2LGnXtJgWf
+         14YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PZv22NgyAy4cpGO8nvyQHGric91X1UzIHSt4+HMcQy0=;
-        b=qixgzlLM+nOQSBcovlT9IwEFHm3n1zH39/sCcTO2YmsB4j9A7qhq7c+9A00vja9VeQ
-         q5LEcXAVQGBSUwj3mcF8Ue4zHJYB9S1tJLCYw2ghATg8/8BekjsUbZrnc8JZlAorsLzV
-         kMeq3Lwkm4wDILEErKpmVAJKoDS43oJQSPyh5j6QeH/d+G3+JSkTa76Xk9yZ/yvpMbRV
-         1bJTHX9vYhXRFlykfxpHCKp9gjC3IBOGJYzxeS6rTkGzymVuw7uJOwCgf2G0lLZa6VBw
-         xqWWIB4C12sQRK2UnkoyqwsH9UN37FNEc7/Yu5RSIhCE4DiIssYr0DHkl1KBhUTbaE8d
-         1iZQ==
-X-Gm-Message-State: APjAAAV5thuOjT4DyzbPg4XjSSA/M4zV1VNjhfkTM9+RIEaTySM1pVtd
-        tpLamnws65YI28s8DCztqVUqoVvIVkMSz/dpsmpjEQ==
-X-Google-Smtp-Source: APXvYqxEna7P0g0Bcyf5yaueoracYZLNFgddoZxTQyK2mxM0F5w6o3XIUtpvDIp7islXuRjcdOl+JjDzPJJdEmQZDWQ=
-X-Received: by 2002:ac8:60d6:: with SMTP id i22mr24868461qtm.250.1567429893126;
- Mon, 02 Sep 2019 06:11:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814104520.6001-1-darekm@google.com> <20190814104520.6001-7-darekm@google.com>
- <00515839-a4bd-6721-8563-a16fbbaa7159@xs4all.nl>
-In-Reply-To: <00515839-a4bd-6721-8563-a16fbbaa7159@xs4all.nl>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 2 Sep 2019 15:11:22 +0200
-Message-ID: <CA+M3ks6zkg9nh39tLr-fzHR8_UJeaxADTM9yeRSECtkyBuUbFw@mail.gmail.com>
-Subject: Re: [PATCH v7 6/9] drm: sti: use cec_notifier_conn_(un)register
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-media@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dKBlu/uJD1E27uZkZUHPL5g33kiGPBY8pyXH2GoFqbo=;
+        b=YQGjRaML6cGIZ4kNkBLHPTe660fLsNofUt9KQyAcRUUsohtQ6CRYcbKD+wfmWL7Po5
+         2+aVEovP56z509Oi6yhsj4GCTIn5vmLgK1K2Qi3otlw/25UiRHu/I/oFOUgs77dniLp+
+         Mq7iE4BI1VjQeEChajeyueUpZelu8gK6z5moDRiKjsPboQ+UTiUNDsUMIa0zNZ4qK8Gc
+         ZJlN0hAOb6pqmnv4eACHq61BsF5aoKE3a9zYymQ0EegJ7O4ywaU1ZiM/2quQtq5Uj/Yp
+         YOhdQlff+8YaO+b2fnGlnI29Q+F0ZHRiThMDwkcPWn30FZsGtFpCn6xrbosmjxhqh14V
+         kpNg==
+X-Gm-Message-State: APjAAAVKoS6KqltFqGp+vR76N7daJ4kK5QBUIi1d3ierMnnDJiexMsEy
+        T33S94zki6XHksuvGjOcdtDXZJOh
+X-Google-Smtp-Source: APXvYqzrc7KbiqBdBBaqp5St91rHSUbyTY5rJ6vPrnD+ayy4FMR7weVumUG3nZNutBhZRgjgraJCpQ==
+X-Received: by 2002:a63:c006:: with SMTP id h6mr24997331pgg.290.1567429918514;
+        Mon, 02 Sep 2019 06:11:58 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f188sm9374682pfa.170.2019.09.02.06.11.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 06:11:57 -0700 (PDT)
+Subject: Re: linux-next: Tree for Aug 30
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vincent Abriou <vincent.abriou@st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190831003613.7540b2d7@canb.auug.org.au>
+ <20190901182226.GA20315@roeck-us.net> <20190902075520.GB28967@lst.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <937bab44-f2fd-6b4c-48ee-7aedc142d9d8@roeck-us.net>
+Date:   Mon, 2 Sep 2019 06:11:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190902075520.GB28967@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeu. 22 ao=C3=BBt 2019 =C3=A0 10:11, Hans Verkuil <hverkuil-cisco@xs4all=
-.nl> a =C3=A9crit :
->
-> Adding Benjamin Gaignard.
->
-> Benjamin, can you take a look at this and Ack it (or merge it if you pref=
-er) and
-> ideally test it as well. This is the only patch in this series that I cou=
-ld not
-> test since I don't have any hardware.
+On 9/2/19 12:55 AM, Christoph Hellwig wrote:
+> On Sun, Sep 01, 2019 at 11:22:26AM -0700, Guenter Roeck wrote:
+>> On Sat, Aug 31, 2019 at 12:36:13AM +1000, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20190829:
+>>>
+>>> The compiler-attributes tree gained a build failure for which I reverted
+>>> a commit.
+>>>
+>>> The arm-soc tree gained a conflict against the arm tree.
+>>>
+>>> The csky tree gained a conflict against the dma-mapping tree.
+>>>
+>>> The fuse tree gained a conflict against the fsverity tree.
+>>>
+>>> The vfs tree gained conflicts against the fuse tree.
+>>>
+>>> The pci tree gained a build failure for which I revereted a commit.
+>>>
+>>> The net-next tree still had its build failure for which I applied a patch.
+>>> It also gained a conflict against the net tree.
+>>>
+>>> The regulator tree still has its build failure for which I reverted
+>>> a commit.
+>>>
+>>> The keys tree still has its build failure so I used the version from
+>>> next-20190828.
+>>>
+>>> The driver-core tree lost its build failure.
+>>>
+>>> The staging tree got conflicts against the net-next and usb trees.
+>>>
+>>> The akpm-current tree gained a build failure due to an interaction with
+>>> the hmm tree for which I applied a patch.
+>>>
+>>
+>> Something in the fixup patch seems to be wrong. I get the following
+>> error with sh4 boot tests when booting from usb.
+>>
+>> sm501-usb sm501-usb: OHCI Unrecoverable Error, disabled
+>> sm501-usb sm501-usb: HC died; cleaning up
+>>
+>> Unfortunately, bisect doesn't help much (see below). Reverting the fixup
+>> patch as well as the offending patch (plus a context patch) alone does
+>> not help either. Further analysis shows that the problem exists since
+>> at least next-20190823. Another round of bisect on next-20190827 suggests
+>> another culprit (see second bisect below). Reverting all the offending
+>> patches doesn't help either, though, only result in a different error.
+>>
+>> usb 1-1: new full-speed USB device number 2 using sm501-usb
+>> sm501-usb sm501-usb: DMA map on device without dma_mask
+>>
+>> With that, I am giving up. Copying Christoph as he appears to be heavily
+>> involved in the patch series causing the problems.
+> 
+> What was the last tree you tested that works perfectly?
+> 
+next-20190822
 
-Looks good for me.
+Guenter
 
-Applied on drm-misc-next,
-Thanks,
-Benjamin
-
->
-> Regards,
->
->         Hans
->
-> On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
-> > Use the new cec_notifier_conn_(un)register() functions to
-> > (un)register the notifier for the HDMI connector, and fill
-> > in the cec_connector_info.
-> >
-> > Changes since v2:
-> >       Don't invalidate physical address before unregistering the
-> >       notifier.
-> >
-> > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-> > ---
-> >  drivers/gpu/drm/sti/sti_hdmi.c | 19 ++++++++++++-------
-> >  1 file changed, 12 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_h=
-dmi.c
-> > index 9862c322f0c4a..bd15902b825ad 100644
-> > --- a/drivers/gpu/drm/sti/sti_hdmi.c
-> > +++ b/drivers/gpu/drm/sti/sti_hdmi.c
-> > @@ -1256,6 +1256,7 @@ static int sti_hdmi_bind(struct device *dev, stru=
-ct device *master, void *data)
-> >       struct drm_device *drm_dev =3D data;
-> >       struct drm_encoder *encoder;
-> >       struct sti_hdmi_connector *connector;
-> > +     struct cec_connector_info conn_info;
-> >       struct drm_connector *drm_connector;
-> >       struct drm_bridge *bridge;
-> >       int err;
-> > @@ -1318,6 +1319,14 @@ static int sti_hdmi_bind(struct device *dev, str=
-uct device *master, void *data)
-> >               goto err_sysfs;
-> >       }
-> >
-> > +     cec_fill_conn_info_from_drm(&conn_info, drm_connector);
-> > +     hdmi->notifier =3D cec_notifier_conn_register(&hdmi->dev, NULL,
-> > +                                                 &conn_info);
-> > +     if (!hdmi->notifier) {
-> > +             hdmi->drm_connector =3D NULL;
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> >       /* Enable default interrupts */
-> >       hdmi_write(hdmi, HDMI_DEFAULT_INT, HDMI_INT_EN);
-> >
-> > @@ -1331,6 +1340,9 @@ static int sti_hdmi_bind(struct device *dev, stru=
-ct device *master, void *data)
-> >  static void sti_hdmi_unbind(struct device *dev,
-> >               struct device *master, void *data)
-> >  {
-> > +     struct sti_hdmi *hdmi =3D dev_get_drvdata(dev);
-> > +
-> > +     cec_notifier_conn_unregister(hdmi->notifier);
-> >  }
-> >
-> >  static const struct component_ops sti_hdmi_ops =3D {
-> > @@ -1436,10 +1448,6 @@ static int sti_hdmi_probe(struct platform_device=
- *pdev)
-> >               goto release_adapter;
-> >       }
-> >
-> > -     hdmi->notifier =3D cec_notifier_get(&pdev->dev);
-> > -     if (!hdmi->notifier)
-> > -             goto release_adapter;
-> > -
-> >       hdmi->reset =3D devm_reset_control_get(dev, "hdmi");
-> >       /* Take hdmi out of reset */
-> >       if (!IS_ERR(hdmi->reset))
-> > @@ -1459,14 +1467,11 @@ static int sti_hdmi_remove(struct platform_devi=
-ce *pdev)
-> >  {
-> >       struct sti_hdmi *hdmi =3D dev_get_drvdata(&pdev->dev);
-> >
-> > -     cec_notifier_set_phys_addr(hdmi->notifier, CEC_PHYS_ADDR_INVALID)=
-;
-> > -
-> >       i2c_put_adapter(hdmi->ddc_adapt);
-> >       if (hdmi->audio_pdev)
-> >               platform_device_unregister(hdmi->audio_pdev);
-> >       component_del(&pdev->dev, &sti_hdmi_ops);
-> >
-> > -     cec_notifier_put(hdmi->notifier);
-> >       return 0;
-> >  }
-> >
-> >
->
