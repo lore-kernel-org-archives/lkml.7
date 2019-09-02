@@ -2,111 +2,67 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF08C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD187C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40B22339D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eCZRNKp+"
+	by mail.kernel.org (Postfix) with ESMTP id 9482C21882
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730672AbfIBNx2 (ORCPT
+        id S1730749AbfIBNxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:53:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49734 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfIBNx2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:53:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Yb5zUoEnO3GNQPM3y18hRLQjrCGxX9+7yCoKShGebvI=; b=eCZRNKp+WhDMXxx0s114roIpM
-        Q/B4MEL73oZTg++Jtr9RefuPldAkJjC3M33FRcQCpsH+F/cwi+guGnn0ju1WWXYGMSyIxnhurNPMw
-        PUok2mYPLaP3nN9k3CUy1CdgjvpsvmDp3QPg+ZBvuah8+BlsKSzbK5Y1RZ4+PrhT5E8N/yD6HTeOR
-        ekamRqv7s4F5kpRFltoYCD9Ot1m+6QUbELEBerlox+I41EQ+hFHjjlsgndpfUtCjAAHfTrHJMR9JN
-        XC/8pVs5S++A5DqUN7JWr6KYLKS9ULtuk+M7hauHcWeD8sWOOwN79ir7faQDkctBaDM67/eEqpnu4
-        2P4yhWYdQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4mlh-0003An-U8; Mon, 02 Sep 2019 13:53:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C3D14306024;
-        Mon,  2 Sep 2019 15:52:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4C3C320CD2B23; Mon,  2 Sep 2019 15:53:15 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 15:53:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] Use of probe_kernel_address() in task_rcu_dereference()
- without checking return value
-Message-ID: <20190902135315.GR2369@hirez.programming.kicks-ass.net>
-References: <20190830140805.GD13294@shell.armlinux.org.uk>
- <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
- <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
- <20190830160957.GC2634@redhat.com>
- <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
- <87o906wimo.fsf@x220.int.ebiederm.org>
- <20190902134003.GA14770@redhat.com>
+        Mon, 2 Sep 2019 09:53:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:44926 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbfIBNxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:53:53 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:53:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="266026347"
+Received: from doblerbe-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.53.100])
+  by orsmga001.jf.intel.com with ESMTP; 02 Sep 2019 06:53:49 -0700
+Date:   Mon, 2 Sep 2019 16:53:48 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Seunghun Han <kkamagui@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
+ supporting AMD's fTPM
+Message-ID: <20190902135348.3pndbtbi6hpgjpjn@linux.intel.com>
+References: <20190830095639.4562-1-kkamagui@gmail.com>
+ <20190830095639.4562-3-kkamagui@gmail.com>
+ <20190830124334.GA10004@ziepe.ca>
+ <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902134003.GA14770@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:40:03PM +0200, Oleg Nesterov wrote:
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 8dc1811..1f9b021 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1134,7 +1134,10 @@ struct task_struct {
->  
->  	struct tlbflush_unmap_batch	tlb_ubc;
->  
-> -	struct rcu_head			rcu;
-> +	union {
-> +		bool			xxx;
-> +		struct rcu_head		rcu;
-> +	};
->  
->  	/* Cache last used pipe for splice(): */
->  	struct pipe_inode_info		*splice_pipe;
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index a75b6a7..baacfce 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -182,6 +182,11 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
->  	put_task_struct(tsk);
->  }
->  
-> +void call_delayed_put_task_struct(struct task_struct *p)
-> +{
-> +	if (xchg(&p->xxx, 1))
-> +		call_rcu(&p->rcu, delayed_put_task_struct);
-> +}
+On Fri, Aug 30, 2019 at 05:58:39PM +0000, Safford, David (GE Global Research, US) wrote:
+> > Thank you for your advice. We also discussed earlier and concluded that
+> > checking and raw remapping are enough to work around this. The link is
+> > here, https://lkml.org/lkml/2019/8/29/962 .
+> 
+> I don't see Matthew Garrett's agreement on that thread.
 
-I think this is the first usage of xchg() on _Bool, also not all archs
-implement xchg8()
+No one has agreed on anything.
 
+/Jarkko
