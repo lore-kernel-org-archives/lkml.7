@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D1DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A14C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABAA22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BA122DD6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HYdjMmlV"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="a3B8ZYzx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfIBICT (ORCPT
+        id S1730078AbfIBICT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 2 Sep 2019 04:02:19 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:51320 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729675AbfIBICR (ORCPT
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:51390 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729926AbfIBICR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Sep 2019 04:02:17 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 77A6AC042B;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DD8DCC043B;
         Mon,  2 Sep 2019 08:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567411337; bh=KCQxzNKdPciLpCzMYFXS00/1ZDMQ64xO5mQOdoiRlGM=;
+        t=1567411337; bh=793MRHdv4DLwQdQr3WJdmtfxyUuhU0fectEqf0N0Y5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=HYdjMmlVNEx7t25t6pVED8QCg0+TQDguvdDqz0LGkr0e+OGsJS1KM6jXBTH1ozyIz
-         qmLuh6wHWGOv2Uap6+PPZbkpXu+5L+jwCaeoATwOq82tRFrWan9qpiq1+Q659CwxaS
-         jZtHlE8ekB7iare0mdQRydJJOtr0FUTm4ddzLjwuZpjdSJOL9TLzdoC+xHTX+adZRP
-         HyBrBrTE57gvnDSZVyDpJOCAhVkH5AdSCFpi25Qx+0tum2GSFr/nuFxNWvVOYgDodk
-         2tk2Ro96NIEhzHLqX47ATUWr3vMG3O7WIjkkpXmpsCUBg/4uVFk/nPCEhLnqGjuOUf
-         9S2RJAdxE9gHA==
+        b=a3B8ZYzxCH17QfUXa0xm+zzycE9iJFrOLWrcPD0A5LuaAgNMupDyl3dAAzO+eu+KB
+         duDPedszgqvuEzVdA6wv4ZTHY7aCPWvBH8+apX9VH9iivflTOOa6c4mXvql48hqq42
+         f5OXVfAm57L+nrt7SV0KR35+oJ7LNpi8D7oEsO9T8oPYgOZcGGh48Qg7kda8tVbI7C
+         5plzqF1gJ5cPqJj9pDgnO1P1Vc1XSSQ5V/Pu19ctjEn+hEijXs6DzadN1NL35YYLDK
+         94s6TC35GL54mcbwS1wtEQZjJg4esAuS9YHuunKfIsAWj5Tyw9Jj0L5+umDHLYcchS
+         ZEnQtLBlutEqA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 307C4A006C;
+        by mailhost.synopsys.com (Postfix) with ESMTP id A38C0A007C;
         Mon,  2 Sep 2019 08:02:15 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 03/13] net: stmmac: Do not return error code in TC Initialization
-Date:   Mon,  2 Sep 2019 10:01:45 +0200
-Message-Id: <04b637681f523e26fdc61c31e72d1a90d2b3a2b6.1567410970.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 09/13] net: stmmac: ethtool: Let user configure TX coalesce without RIWT
+Date:   Mon,  2 Sep 2019 10:01:51 +0200
+Message-Id: <851a16ddd28878dbaf932cc05f0dab627189be40.1567410970.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
 References: <cover.1567410970.git.joabreu@synopsys.com>
@@ -64,8 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we can still use the remaining TC callbacks, e.g. CBS. We should not
-fail in the initialization only because RX Parser is not available.
+When RX Watchdog is disabled its currently not possible to configure TX
+coalesce settings. Let user configure it anyway.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -80,24 +80,52 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c    | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-index 6c305b6ecad0..8dbbbf181ada 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-@@ -243,8 +243,9 @@ static int tc_init(struct stmmac_priv *priv)
- 	struct dma_features *dma_cap = &priv->dma_cap;
- 	unsigned int count;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index 1c450105e5a6..1a768837ca72 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -746,8 +746,15 @@ static int stmmac_set_coalesce(struct net_device *dev,
+ 	    (ec->tx_max_coalesced_frames_high) || (ec->rate_sample_interval))
+ 		return -EOPNOTSUPP;
  
-+	/* Fail silently as we can still use remaining features, e.g. CBS */
- 	if (!dma_cap->frpsel)
+-	if (ec->rx_coalesce_usecs == 0)
 -		return -EINVAL;
-+		return 0;
++	if (priv->use_riwt && (ec->rx_coalesce_usecs > 0)) {
++		rx_riwt = stmmac_usec2riwt(ec->rx_coalesce_usecs, priv);
++
++		if ((rx_riwt > MAX_DMA_RIWT) || (rx_riwt < MIN_DMA_RIWT))
++			return -EINVAL;
++
++		priv->rx_riwt = rx_riwt;
++		stmmac_rx_watchdog(priv, priv->ioaddr, priv->rx_riwt, rx_cnt);
++	}
  
- 	switch (dma_cap->frpbs) {
- 	case 0x0:
+ 	if ((ec->tx_coalesce_usecs == 0) &&
+ 	    (ec->tx_max_coalesced_frames == 0))
+@@ -757,20 +764,10 @@ static int stmmac_set_coalesce(struct net_device *dev,
+ 	    (ec->tx_max_coalesced_frames > STMMAC_TX_MAX_FRAMES))
+ 		return -EINVAL;
+ 
+-	rx_riwt = stmmac_usec2riwt(ec->rx_coalesce_usecs, priv);
+-
+-	if ((rx_riwt > MAX_DMA_RIWT) || (rx_riwt < MIN_DMA_RIWT))
+-		return -EINVAL;
+-	else if (!priv->use_riwt)
+-		return -EOPNOTSUPP;
+-
+ 	/* Only copy relevant parameters, ignore all others. */
+ 	priv->tx_coal_frames = ec->tx_max_coalesced_frames;
+ 	priv->tx_coal_timer = ec->tx_coalesce_usecs;
+ 	priv->rx_coal_frames = ec->rx_max_coalesced_frames;
+-	priv->rx_riwt = rx_riwt;
+-	stmmac_rx_watchdog(priv, priv->ioaddr, priv->rx_riwt, rx_cnt);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
