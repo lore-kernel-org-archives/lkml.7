@@ -2,92 +2,84 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5216C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0AEC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864F821670
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EFE21670
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567434438;
+	bh=0cCLEO9S9/YPCFtkIz4Qwr4X3F3wCxlOktuGmT2kgZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uYx0Smxa9BTuFgMz47G1a3lq0jhZwAIGKBgZH18Uznh6mFHHXGG9CjoI2yYoyi35u
+	 6mdreJg2rWcFJYRbztmThGMfhVEtjgCJFiQxV+UIsR961//NrOzVmsQhYVHw72XJ8D
+	 EvXI7sBoH2YISIgAwxVwMCx5E6g1LYIY6qkPsQU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731559AbfIBO1D (ORCPT
+        id S1731579AbfIBO1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:27:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50416 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfIBO1D (ORCPT
+        Mon, 2 Sep 2019 10:27:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50196 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731508AbfIBO1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:27:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 9DA2428A0B7
-Subject: Re: [PATCH 1/1] merge_config.sh: ignore unwanted grep errors
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <4f92e9b3a88e60c8b5962504d77bc596442b0a40.1567023309.git.guillaume.tucker@collabora.com>
- <b1dc3c40-b658-211e-811c-e13083303d48@collabora.com>
- <a302a6fe-8f22-9ae6-559f-5b2ad13d5b05@nvidia.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <b4631303-37b8-2bc8-8e97-59f8b50ac60f@collabora.com>
-Date:   Mon, 2 Sep 2019 15:26:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 10:27:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c10so2911085wmc.0;
+        Mon, 02 Sep 2019 07:27:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8aEmKxykDndXFGiMc09N0+3vyQXksajAhUoOKsW/WK0=;
+        b=c69GCzD5saQcdqLrMovQtXGXQEwVW2MJXB4LJN0f6H54qUBjTuHY/oTrgdLt0FjRLF
+         tfPeBAg3MhN5q7mKw5K2WZ4PZGfRwtGzqyEvCGvgV+XCJ3d/wJL6UgGo1jdmPVRALGub
+         LeC9ZK5XMqL/rlIsKclxKgA1vyyDY139Xkf5My6v1+1DnqGhEubJKeVjWgMQIf7+a9ab
+         zuxjBN1+pq4W61t71ndduHV20fsfcu6NFRXAZk0msgtmrGlFBuoOfoNzL6OLRgcS/eF1
+         6oAy2PcHFSN8e+K+XzCrqeIP5TYD/GBIFUcdOSxiWIBkHuz2WZKNK8ryAaA/8OMAu+3Q
+         n4IQ==
+X-Gm-Message-State: APjAAAWFN/H4pikAxCd7KkMXrH1gd//SUa3+MXkHtQqdd6O1ORs3a3UB
+        TpH43pbRyJ3rgCCfwWTWdTM=
+X-Google-Smtp-Source: APXvYqwyfddA/cMRPecq6/P3O1MlQw7z2N8mx8lHHIajlCGKJ0NFgh6GCVZjhxptGjVO52lBT01q+g==
+X-Received: by 2002:a7b:cc0a:: with SMTP id f10mr37660760wmh.6.1567434435563;
+        Mon, 02 Sep 2019 07:27:15 -0700 (PDT)
+Received: from liuwe-gateway.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.140.50.101])
+        by smtp.gmail.com with ESMTPSA id g15sm12937489wmk.17.2019.09.02.07.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 07:27:14 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 14:27:13 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     lantianyu1986@gmail.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] x86/Hyper-V: Fix reference of pv_ops with
+ CONFIG_PARAVIRT=N
+Message-ID: <20190902142713.erskx45n3agnzvlu@liuwe-gateway.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20190828080747.204419-1-Tianyu.Lan@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <a302a6fe-8f22-9ae6-559f-5b2ad13d5b05@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828080747.204419-1-Tianyu.Lan@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2019 15:21, Jon Hunter wrote:
+On Wed, Aug 28, 2019 at 04:07:47PM +0800, lantianyu1986@gmail.com wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > 
-> On 02/09/2019 15:14, Guillaume Tucker wrote:
->> + Jon Hunter who hit a similar issue
+> hv_setup_sched_clock() references pv_ops and this should
+> be under CONFIG_PARAVIRT=Y. Fix it.
 > 
-> Thanks for adding me.
-> 
->> On 28/08/2019 21:19, Guillaume Tucker wrote:
->>> The merge_config.sh script verifies that all the config options have
->>> their expected value in the resulting file and prints any issues as
->>> warnings.  These checks aren't intended to be treated as errors given
->>> the current implementation.  However, since "set -e" was added, if the
->>> grep command to look for a config option does not find it the script
->>> will then abort prematurely.
->>>
->>> Handle the case where the grep exit status is non-zero by setting
->>> ACTUAL_VAL to an empty string to restore previous functionality.
->>>
->>> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
->>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->>> ---
->>>  scripts/kconfig/merge_config.sh | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
->>> index d924c51d28b7..d673268d414b 100755
->>> --- a/scripts/kconfig/merge_config.sh
->>> +++ b/scripts/kconfig/merge_config.sh
->>> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
->>>  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
->>>  
->>>  	REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
->>> -	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
->>> +	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || echo)
-> 
-> Shouldn't this just be 'true' instead of 'echo'?
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-I just explained why I used "echo" on your thread.  Essentially,
-I think both can be used but "echo" made more sense to me because
-the script is then using the output string from the command
-rather than the exit status.
-
-Guillaume
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
