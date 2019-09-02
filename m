@@ -2,449 +2,113 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692E5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04C0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC0E2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="TZRqgh4u"
+	by mail.kernel.org (Postfix) with ESMTP id ACFD32087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbfIBOog (ORCPT
+        id S1731702AbfIBOqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:44:36 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:37205 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfIBOof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:44:35 -0400
-Received: by mail-wr1-f41.google.com with SMTP id z11so14296797wrt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 07:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gbQBcFmqmzaEdjwSGcBRPWu9uqGZXOisYoKIEohdG0k=;
-        b=TZRqgh4uTQUPjaDL3a7fJZ2UIGZ6/s8ie06Y/f2f1Ro+wezUHGaVFgcg2Te5wr4M06
-         dgKJmCNHFFvWmnylDOsQ/J1pQOFCxwY9iOUfZo+43cxmrq+bJCHIHc+lHYMT4wANy5VC
-         dAQnxFm61JNLKk6BgMm+kMgH4TEIHwAL0At7x/YUEa+no2hsHAbIR942ucDUNM0gpfb8
-         Dst+pK+Zod+WuHbZWkiWPlOEs5icegQGUJOSdfj0YBi7XJJ0C6gSCIWpXjxQCfNTbcJu
-         HM3KOoJz0XfbTVk/HQO6gFigRZ5ZxuwoEO2fB0RiYr4RNT3pLfuI08S8kbw3zPpQbDWv
-         ZfEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gbQBcFmqmzaEdjwSGcBRPWu9uqGZXOisYoKIEohdG0k=;
-        b=mJJN9VN1LVbSef/1zlbEVAwlf10yKa4EliJBeI2x0LvqZPGEqwSKLFEMzgnSTJuE+y
-         h4XdDrxNmfH87l+S/jbf2bFrOG0bnOJMZZVlMajZX/QBKIyaCtxaJ23Nto1cg44gsMKW
-         xoCVlMxdxU85k8S4/TcSVDqi4xtP8nq26Oxr536cGXYW6RO2aCsuh6CmXciM0UD8XVa/
-         T2pJRxWlbiQv4MK666KkN7bZtXdO2KFjtVWPL70HbiUpF0pmD+aADCEXY4Qx+jC5nfXo
-         Ciq5rIC90bxVdH2mRKDPWGERKJOlrXcLkxa/FrlDR3eazBiSVnVhPn5o73S+SH/mldVy
-         V7tw==
-X-Gm-Message-State: APjAAAXqMG/LKd4eS+hjc1bw/RcIs47EK5uDhriIXv677Aw2pXI2BUyP
-        /LQm66idr6ehsMAkLEgGyQFkGnQe9E8s+EnkhjAQMbovezM=
-X-Google-Smtp-Source: APXvYqwNAuNNIgsYaBDUrE2oS+huO9S6n8h335y7ZGl9zLLrM8DI8/ZJhopsjR+xzNFy1hgz3Kh8pniI91RNBS1a1v0=
-X-Received: by 2002:adf:82d4:: with SMTP id 78mr34506730wrc.85.1567435472006;
- Mon, 02 Sep 2019 07:44:32 -0700 (PDT)
+        Mon, 2 Sep 2019 10:46:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60948 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfIBOqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:46:11 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 907FF10F23ED;
+        Mon,  2 Sep 2019 14:46:10 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02F89196B2;
+        Mon,  2 Sep 2019 14:46:06 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 16:46:04 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] mdev: Introduce sha1 based mdev alias
+Message-ID: <20190902164604.1d04614f.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB48661F9608F284AB5C9BAEB5D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190829111904.16042-1-parav@mellanox.com>
+        <20190829111904.16042-2-parav@mellanox.com>
+        <20190830111720.04aa54e9.cohuck@redhat.com>
+        <AM0PR05MB48660877881F7A2D757A9C82D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190830143927.163d13a7.cohuck@redhat.com>
+        <AM0PR05MB486621283F935B673455DA63D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190830160223.332fd81f.cohuck@redhat.com>
+        <AM0PR05MB48661F9608F284AB5C9BAEB5D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190610213106.19342-1-mail@joaomoreno.com> <CAHxFc3QC147B6j4pBztjK7stLgCveeYhJWojai_SbKNbnpC9yw@mail.gmail.com>
- <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com>
- <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
- <CAHxFc3TjZu7_u0U3ZoB466WGNzbfYLe4ZB7C4LuKdBAwkRum5Q@mail.gmail.com>
- <CAN+gG=H6O202SYXGbTG5rTMUt_X5dZyi02YFUquPaqL=FGHXwQ@mail.gmail.com> <bf759ce7-a0e1-0da8-ccd8-1925e5ccc184@redhat.com>
-In-Reply-To: <bf759ce7-a0e1-0da8-ccd8-1925e5ccc184@redhat.com>
-From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
-Date:   Mon, 2 Sep 2019 16:44:18 +0200
-Message-ID: <CAHxFc3QP8Jtbh0AVbj1zfUNtO+ek+PH-DG==DGfo6Dj7t7PXRA@mail.gmail.com>
-Subject: Re: [PATCH] HID: apple: Fix stuck function keys when using FN
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Mon, 02 Sep 2019 14:46:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+On Fri, 30 Aug 2019 15:45:13 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-First of all, sorry for the late reply. Turns out a newborn baby can
-keep one quite busy, who would have known? :)
+> > > > > > This detour via the local variable looks weird to me. Can you
+> > > > > > either create the alias directly in the mdev (would need to
+> > > > > > happen later in the function, but I'm not sure why you generate
+> > > > > > the alias before checking for duplicates anyway), or do an explicit copy?  
+> > > > > Alias duplicate check is done after generating it, because
+> > > > > duplicate alias are  
+> > > > not allowed.  
+> > > > > The probability of collision is rare.
+> > > > > So it is speculatively generated without hold the lock, because
+> > > > > there is no  
+> > > > need to hold the lock.  
+> > > > > It is compared along with guid while mutex lock is held in single loop.
+> > > > > And if it is duplicate, there is no need to allocate mdev.
+> > > > >
+> > > > > It will be sub optimal to run through the mdev list 2nd time after
+> > > > > mdev  
+> > > > creation and after generating alias for duplicate check.
+> > > >
+> > > > Ok, but what about copying it? I find this "set local variable to
+> > > > NULL after ownership is transferred" pattern a bit unintuitive.
+> > > > Copying it to the mdev (and then unconditionally freeing it) looks more  
+> > obvious to me.  
+> > > Its not unconditionally freed.  
+> > 
+> > That's not what I have been saying :(
+> >   
+> Ah I see. You want to allocate alias memory twice; once inside mdev device and another one in _create() function.
+> _create() one you want to free unconditionally.
+> 
+> Well, passing pointer is fine.
 
-On Tue, 27 Aug 2019 at 18:57, Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> Hi Jo=C3=A3o,
->
-> On 8/12/19 6:57 PM, Benjamin Tissoires wrote:
-> > Hi Jo=C3=A3o,
-> >
-> > On Thu, Aug 8, 2019 at 10:35 PM Jo=C3=A3o Moreno <mail@joaomoreno.com> =
-wrote:
-> >>
-> >> Hi Benjamin,
-> >>
-> >> On Mon, 8 Jul 2019 at 22:35, Jo=C3=A3o Moreno <mail@joaomoreno.com> wr=
-ote:
-> >>>
-> >>> Hi Benjamin,
-> >>>
-> >>> No worries, also pretty busy over here. Didn't mean to press.
-> >>>
-> >>> On Mon, 1 Jul 2019 at 10:32, Benjamin Tissoires
-> >>> <benjamin.tissoires@redhat.com> wrote:
-> >>>>
-> >>>> Hi Jo=C3=A3o,
-> >>>>
-> >>>> On Sun, Jun 30, 2019 at 10:15 PM Jo=C3=A3o Moreno <mail@joaomoreno.c=
-om> wrote:
-> >>>>>
-> >>>>> Hi Jiri & Benjamin,
-> >>>>>
-> >>>>> Let me know if you need something else to get this patch moving for=
-ward. This
-> >>>>> fixes an issue I hit daily, it would be great to get it fixed.
-> >>>>
-> >>>> Sorry for the delay, I am very busy with internal corporate stuff, a=
-nd
-> >>>> I tried setting up a new CI system at home, and instead of spending =
-a
-> >>>> couple of ours, I am down to 2 weeks of hard work, without possibili=
-ty
-> >>>> to switch to the new right now :(
-> >>>> Anyway.
-> >>>>
-> >>>>>
-> >>>>> Thanks.
-> >>>>>
-> >>>>> On Mon, 10 Jun 2019 at 23:31, Joao Moreno <mail@joaomoreno.com> wro=
-te:
-> >>>>>>
-> >>>>>> This fixes an issue in which key down events for function keys wou=
-ld be
-> >>>>>> repeatedly emitted even after the user has raised the physical key=
-. For
-> >>>>>> example, the driver fails to emit the F5 key up event when going t=
-hrough
-> >>>>>> the following steps:
-> >>>>>> - fnmode=3D1: hold FN, hold F5, release FN, release F5
-> >>>>>> - fnmode=3D2: hold F5, hold FN, release F5, release FN
-> >>>>
-> >>>> Ouch :/
-> >>>>
-> >>>
-> >>> Right?!
-> >>>
-> >>>>>>
-> >>>>>> The repeated F5 key down events can be easily verified using xev.
-> >>>>>>
-> >>>>>> Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-> >>>>>> ---
-> >>>>>>  drivers/hid/hid-apple.c | 21 +++++++++++----------
-> >>>>>>  1 file changed, 11 insertions(+), 10 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-> >>>>>> index 1cb41992aaa1..81867a6fa047 100644
-> >>>>>> --- a/drivers/hid/hid-apple.c
-> >>>>>> +++ b/drivers/hid/hid-apple.c
-> >>>>>> @@ -205,20 +205,21 @@ static int hidinput_apple_event(struct hid_d=
-evice *hid, struct input_dev *input,
-> >>>>>>                 trans =3D apple_find_translation (table, usage->co=
-de);
-> >>>>>>
-> >>>>>>                 if (trans) {
-> >>>>>> -                       if (test_bit(usage->code, asc->pressed_fn)=
-)
-> >>>>>> -                               do_translate =3D 1;
-> >>>>>> -                       else if (trans->flags & APPLE_FLAG_FKEY)
-> >>>>>> -                               do_translate =3D (fnmode =3D=3D 2 =
-&& asc->fn_on) ||
-> >>>>>> -                                       (fnmode =3D=3D 1 && !asc->=
-fn_on);
-> >>>>>> +                       int fn_on =3D value ? asc->fn_on :
-> >>>>>> +                               test_bit(usage->code, asc->pressed=
-_fn);
-> >>>>>> +
-> >>>>>> +                       if (!value)
-> >>>>>> +                               clear_bit(usage->code, asc->presse=
-d_fn);
-> >>>>>> +                       else if (asc->fn_on)
-> >>>>>> +                               set_bit(usage->code, asc->pressed_=
-fn);
-> >>>>
-> >>>> I have the feeling that this is not the correct fix here.
-> >>>>
-> >>>> I might be wrong, but the following sequence might also mess up the
-> >>>> driver state, depending on how the reports are emitted:
-> >>>> - hold FN, hold F4, hold F5, release F4, release FN, release F5
-> >>>>
-> >>>
-> >>> I believe this should be fine. Following the code:
-> >>>
-> >>> - hold FN, sets asc->fn_on to true
-> >>> - hold F4, in the trans block fn_on will be true and we'll set the F4
-> >>> bit in the bitmap
-> >>> - hold F5, in the trans block fn_on will be true and we'll set the F5=
- bit
-> >>> - release F4, in the trans block fn_on will be true (because of the b=
-itmap) and
-> >>> we'll clear the F4 bit
-> >>> - release FN, asc->fn_on will be false, but it doesn't matter since..=
-.
-> >>> - release F5, in the trans block we'll look into the bitmap (instead
-> >>> of asc->fn_on),
-> >>> so fn_on will be true and we'll clear the F5 bit
-> >>>
-> >>> I tested it in practice using my changes:
-> >>>
-> >>> Interestingly the Apple keyboard doesn't seem to emit an even for F5 =
-when F4 is
-> >>> pressed, seems like a hardware limitation. But F6 does work. So, when=
- I execute
-> >>> these events in that order, everything works as it should: xev report=
-s
-> >>> the following:
-> >>>
-> >>> KeyPress F4
-> >>> KeyPress F6
-> >>> KeyRelease F4
-> >>> KeyRelease F6
-> >>>
-> >>>> The reason is that the driver only considers you have one key presse=
-d
-> >>>> with the modifier, and as the code changed its state based on the la=
-st
-> >>>> value.
-> >>>>
-> >>>
-> >>> I believe the bitmap takes care of storing the FN state per key press=
-. The
-> >>> trick I did was to check on the global `asc->fn_on` state only when a=
- key
-> >>> is pressed, but check on the bitmap instead when it's released.
-> >>>
-> >>> Let me know what you think. Am I missing something here?
-> >>>
-> >>> Cheers,
-> >>> Jo=C3=A3o.
-> >>>
-> >>>> IMO a better fix would:
-> >>>>
-> >>>> - keep the existing `trans` mapping lookout
-> >>>> - whenever a `trans` mapping gets found:
-> >>>>   * get both translated and non-translated currently reported values
-> >>>> (`test_bit(keycode, input_dev->key)`)
-> >>>>   * if one of them is set to true, then consider the keycode to be t=
-he
-> >>>> one of the key (no matter fn_on)
-> >>>>     -> deal with `value` with the corrected keycode
-> >>>>   * if the key was not pressed:
-> >>>>     -> chose the keycode based on `fn_on` and `fnmode` states
-> >>>>     and report the key press event
-> >>>>
-> >>>> This should remove the nasty pressed_fn state which depends on the
-> >>>> other pressed keys.
-> >>>>
-> >>>> Cheers,
-> >>>> Benjamin
-> >>>>
-> >>>>>> +
-> >>>>>> +                       if (trans->flags & APPLE_FLAG_FKEY)
-> >>>>>> +                               do_translate =3D (fnmode =3D=3D 2 =
-&& fn_on) ||
-> >>>>>> +                                       (fnmode =3D=3D 1 && !fn_on=
-);
-> >>>>>>                         else
-> >>>>>>                                 do_translate =3D asc->fn_on;
-> >>>>>>
-> >>>>>>                         if (do_translate) {
-> >>>>>> -                               if (value)
-> >>>>>> -                                       set_bit(usage->code, asc->=
-pressed_fn);
-> >>>>>> -                               else
-> >>>>>> -                                       clear_bit(usage->code, asc=
-->pressed_fn);
-> >>>>>> -
-> >>>>>>                                 input_event(input, usage->type, tr=
-ans->to,
-> >>>>>>                                                 value);
-> >>>>>>
-> >>>>>> --
-> >>>>>> 2.19.1
-> >>>>>>
-> >>
-> >> Gave this another look and I still haven't found any issues, let me
-> >> know if you still
-> >> think I'm missing something. Thanks!
-> >>
-> >
-> > OK, I am tempted to take the patch, but I'll need to add this as a
-> > regression test in my test-suite. This is too complex that it can
-> > easily break next time someone looks at it.
-> >
-> > Can you send me the report descriptors of the device using
-> > hid-recorder from hid-tools[0].
-> > Ideally, if you can put the faulty sequence in the logs, that would
-> > help writing down the use case.
-> >
->
-> I finally managed to get the regression tests up in
-> https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/52
->
+It's not that it doesn't work, but it feels fragile due to its
+non-obviousness.
 
-This is great, really cool that you can write proper tests for this. I
-assume you don't need me to send you the report descriptors any more?
+> mdev_register_device() has similar little tricky pattern that makes parent = NULL on __find_parent_device() finds duplicate one.
 
-> This allowed me to better understand the code, and yes, for the F-keys,
-> I could not find a faulty situation with your patch.
->
-> However, the same problem is happening with the arrow keys, as arrow up
-> is translated to page up.
->
+I don't think that the two are comparable.
 
-Great catch, I can easily repro that issue as well on my keyboard.
+> 
+> Ownership transfer is more straight forward code.
 
-> We *could* adapt your patch to solve this, but I find it really hard to u=
-nderstand.
->
-> How about the following diff:
-> ---
-> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-> index 81df62f48c4c..ef916c0f3c0b 100644
-> --- a/drivers/hid/hid-apple.c
-> +++ b/drivers/hid/hid-apple.c
-> @@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\=
-") and Command (\"Flag\")
->  struct apple_sc {
->         unsigned long quirks;
->         unsigned int fn_on;
-> -       DECLARE_BITMAP(pressed_fn, KEY_CNT);
->         DECLARE_BITMAP(pressed_numlock, KEY_CNT);
->  };
->
-> @@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hi=
-d, struct input_dev *input,
->  {
->         struct apple_sc *asc =3D hid_get_drvdata(hid);
->         const struct apple_key_translation *trans, *table;
-> +       bool do_translate;
-> +       u16 code =3D 0;
->
->         if (usage->code =3D=3D KEY_FN) {
->                 asc->fn_on =3D !!value;
-> @@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hi=
-d, struct input_dev *input,
->         }
->
->         if (fnmode) {
-> -               int do_translate;
-> -
->                 if (hid->product >=3D USB_DEVICE_ID_APPLE_WELLSPRING4_ANS=
-I &&
->                                 hid->product <=3D USB_DEVICE_ID_APPLE_WEL=
-LSPRING4A_JIS)
->                         table =3D macbookair_fn_keys;
-> @@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *=
-hid, struct input_dev *input,
->                 trans =3D apple_find_translation (table, usage->code);
->
->                 if (trans) {
-> -                       if (test_bit(usage->code, asc->pressed_fn))
-> -                               do_translate =3D 1;
-> -                       else if (trans->flags & APPLE_FLAG_FKEY)
-> -                               do_translate =3D (fnmode =3D=3D 2 && asc-=
->fn_on) ||
-> -                                       (fnmode =3D=3D 1 && !asc->fn_on);
-> -                       else
-> -                               do_translate =3D asc->fn_on;
-> -
-> -                       if (do_translate) {
-> -                               if (value)
-> -                                       set_bit(usage->code, asc->pressed=
-_fn);
-> -                               else
-> -                                       clear_bit(usage->code, asc->press=
-ed_fn);
-> -
-> -                               input_event(input, usage->type, trans->to=
-,
-> -                                               value);
-> -
-> -                               return 1;
-> +                       if (test_bit(trans->from, input->key))
-> +                               code =3D trans->from;
-> +                       if (test_bit(trans->to, input->key))
-> +                               code =3D trans->to;
+I have to disagree here.
 
-I see, this is what you meant before. I still don't quite understand
-what information `input->key` actually holds. Can you elaborate on
-what it contains? How does it differ from `usage->code`?
+> 
+> It is similar to device_initialize(), device init sequence code, where once device_initialize is done, freeing the device memory will be left to the put_device(), we don't call kfree() on mdev device.
 
-Also, should the second `if` be an `else if` instead? We shouldn't
-have to call `test_bit` more than once here, right? If right, then the
-next `if` would could simply be an `else`, since the translation
-tables should not have zeros in them.
-
-> +
-> +                       if (!code) {
-> +                               if (trans->flags & APPLE_FLAG_FKEY) {
-> +                                       switch (fnmode) {
-> +                                       case 1:
-> +                                               do_translate =3D !asc->fn=
-_on;
-> +                                               break;
-> +                                       case 2:
-> +                                               do_translate =3D asc->fn_=
-on;
-> +                                               break;
-> +                                       default:
-> +                                               /* should never happen */
-> +                                               do_translate =3D false;
-> +                                       }
-> +                               } else {
-> +                                       do_translate =3D asc->fn_on;
-> +                               }
-> +
-> +                               code =3D do_translate ? trans->to : trans=
-->from;
->                         }
-> +
-> +                       input_event(input, usage->type, code, value);
-> +                       return 1;
->                 }
->
->                 if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
-> ---
->
-> This is more or less what I suggested, minus the bug fixes.
->
-> I find this easier to understand as the .pressed_fn field is not there
-> anymore and we just rely on the actual state of the input subsystem.
->
-> Comments?
-
-Love it. Seems to catch all the cases on my hardware. Thanks for
-following up with the patch!
-
->
-> Cheers,
-> Benjamin
->
->
-> > Cheers,
-> > Benjamin
-> >
-> > [0] https://gitlab.freedesktop.org/libevdev/hid-tools
-> >
-
-Cheers,
-Jo=C3=A3o
+This does not really look similar to me: devices are refcounted
+structures, while strings aren't; you transfer a local pointer to a
+refcounted structure and then discard the local reference.
