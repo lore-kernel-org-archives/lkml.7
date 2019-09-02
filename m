@@ -2,176 +2,129 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C434C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D84C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E29B23431
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43A7216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567431614;
+	bh=U93H7YkrVvUP58I65sSKXB50tQJks72DUG7jUhKXOMY=;
+	h=Date:From:Subject:References:In-Reply-To:Cc:CC:To:List-ID:From;
+	b=fk/rBKWKfezNiVulNmF5LVRvaJA52CeZVJ/TO1b7yxdtsWGQPJcMLLKs8HvQwb8zH
+	 xGf6YM2vB56UKpkH6fz8wrc/tUZezTdLbFSQ/eC85y36pgi/Gtt7y4ZbV2Ofix+CCA
+	 wdeBQftefvjU087b4NOh0WL1MsIOFd4ez02RG41s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfIBNkI (ORCPT
+        id S1731100AbfIBNjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:40:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36510 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730375AbfIBNkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:40:07 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DC9F05AFF8;
-        Mon,  2 Sep 2019 13:40:06 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 774FC5780;
-        Mon,  2 Sep 2019 13:40:04 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon,  2 Sep 2019 15:40:06 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 15:40:03 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] Use of probe_kernel_address() in task_rcu_dereference()
- without checking return value
-Message-ID: <20190902134003.GA14770@redhat.com>
-References: <20190830140805.GD13294@shell.armlinux.org.uk>
- <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
- <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
- <20190830160957.GC2634@redhat.com>
- <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
- <87o906wimo.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o906wimo.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 02 Sep 2019 13:40:07 +0000 (UTC)
+        Mon, 2 Sep 2019 09:39:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35408 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731044AbfIBNi5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:38:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g7so14103041wrx.2;
+        Mon, 02 Sep 2019 06:38:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:subject:references
+         :in-reply-to:cc:cc:to;
+        bh=nPRUA5yZXmPWTokSGym1lKZ6GQZy5ySBbJLcfcoglsY=;
+        b=BFcpCg0LAn+Q+c79wtcXvehQXl8AqZ6jW9xkIm8so5A5qQRk/Bnf4IC9He2z4Mi8FU
+         LWbBApIFugWYM6jWqKmyV0F21F/NhsA+hdmdhJUJ8/lwHVsV3xm1WEBfqok4YB5Z+/vG
+         rdXJlBOUpvmsDU1j/LDIYsdu9qLYWTfpuiIcjOd4/YKDm3WdzYqnaGV9s3A1TGpMsTm5
+         bgnYwuddXFknk+q7+rW7y5Ty9bo6pCTbZ1x2NHNfuQpP43Iz2OlC9dSxXtWU9/Uhsq0i
+         6Vs3MyBSf4ceOiTaJICerNTXgmAZL5fNHr2iOhzV96qzsoJ40wMITKqI2n+6UuLb3OHU
+         Uqew==
+X-Gm-Message-State: APjAAAXLJtbf477yjOyk6n0sUdJjXo/hdGbR07IbIHDcPktiayTJZzS6
+        Eyj2AvaK6beJZi9bkU5nnA==
+X-Google-Smtp-Source: APXvYqyvbrMPmMiV5b3gWdHNFD445UozayaIuP3ud47MYHnGtI4Z0dvVWaAlPFhYplcTUpqc5ajKFA==
+X-Received: by 2002:adf:ff8e:: with SMTP id j14mr35307186wrr.141.1567431534372;
+        Mon, 02 Sep 2019 06:38:54 -0700 (PDT)
+Received: from localhost ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id t203sm15258248wmf.42.2019.09.02.06.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 06:38:53 -0700 (PDT)
+Message-ID: <5d6d1b6d.1c69fb81.a78b7.2ccb@mx.google.com>
+Date:   Mon, 02 Sep 2019 14:38:53 +0100
+From:   Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH next v11 03/11] dt-bindings: usb: add binding for USB GPIO based connection detection driver
+References: <1567070558-29417-1-git-send-email-chunfeng.yun@mediatek.com> <1567070558-29417-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1567070558-29417-4-git-send-email-chunfeng.yun@mediatek.com>
+Content-Type: text/plain
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das@bp.renesas.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/30, Eric W. Biederman wrote:
->
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -182,6 +182,24 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
->  	put_task_struct(tsk);
->  }
->  
-> +void put_dead_task_struct(struct task_struct *task)
-> +{
-> +	bool delay = false;
-> +	unsigned long flags;
-> +
-> +	/* Is the task both reaped and no longer being scheduled? */
-> +	raw_spin_lock_irqsave(&task->pi_lock, flags);
-> +	if ((task->state == TASK_DEAD) &&
-> +	    (cmpxchg(&task->exit_state, EXIT_DEAD, EXIT_RCU) == EXIT_DEAD))
-> +		delay = true;
-> +	raw_spin_lock_irqrestore(&task->pi_lock, flags);
-> +
-> +	/* If both are true use rcu delay the put_task_struct */
-> +	if (delay)
-> +		call_rcu(&task->rcu, delayed_put_task_struct);
-> +	else
-> +		put_task_struct(task);
-> +}
->  
->  void release_task(struct task_struct *p)
->  {
-> @@ -222,76 +240,13 @@ void release_task(struct task_struct *p)
->  
->  	write_unlock_irq(&tasklist_lock);
->  	release_thread(p);
-> -	call_rcu(&p->rcu, delayed_put_task_struct);
-> +	put_dead_task_struct(p);
+On Thu, 29 Aug 2019 17:22:30 +0800, Chunfeng Yun wrote:
+> It's used to support dual role switch via GPIO when use Type-B
+> receptacle, typically the USB ID pin is connected to an input
+> GPIO, and also used to enable/disable device when the USB Vbus
+> pin is connected to an input GPIO.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> v11 changes:
+>  1. add Reviewed-by Linus
+>  2. change compatible as "gpio-usb-b-connector", and remove label
+>     in example suggested by Rob
+> 
+> v9~v10 no changes
+> 
+> v8 changes:
+>  1. rename the title
+>  2. change the compatible as "linux,usb-conn-gpio" instead of
+>     "linux,typeb-conn-gpio"
+> 
+> v7 changes:
+>  1. add description for device only mode
+> 
+> v6 changes:
+>  1. remove status and port nodes in example
+>  2. make vbus-supply as optional property
+> 
+> v5 changes:
+>  1. treat type-B connector as child device of USB controller's, but not
+>     as a separate virtual device, suggested by Rob
+>  2. put connector's port node under connector node, suggested by Rob
+> 
+> v4 no changes
+> 
+> v3 changes:
+>  1. treat type-B connector as a virtual device, but not child device of
+>     USB controller's
+> 
+> v2 changes:
+>   1. new patch to make binding clear suggested by Hans
+> ---
+>  .../devicetree/bindings/usb/usb-conn-gpio.txt | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+> 
 
-I had a similar change in mind, see below. This is subjective, but to me
-it looks more simple and clean.
-
-Oleg.
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 8dc1811..1f9b021 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1134,7 +1134,10 @@ struct task_struct {
- 
- 	struct tlbflush_unmap_batch	tlb_ubc;
- 
--	struct rcu_head			rcu;
-+	union {
-+		bool			xxx;
-+		struct rcu_head		rcu;
-+	};
- 
- 	/* Cache last used pipe for splice(): */
- 	struct pipe_inode_info		*splice_pipe;
-diff --git a/kernel/exit.c b/kernel/exit.c
-index a75b6a7..baacfce 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -182,6 +182,11 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
- 	put_task_struct(tsk);
- }
- 
-+void call_delayed_put_task_struct(struct task_struct *p)
-+{
-+	if (xchg(&p->xxx, 1))
-+		call_rcu(&p->rcu, delayed_put_task_struct);
-+}
- 
- void release_task(struct task_struct *p)
- {
-@@ -222,7 +227,7 @@ void release_task(struct task_struct *p)
- 
- 	write_unlock_irq(&tasklist_lock);
- 	release_thread(p);
--	call_rcu(&p->rcu, delayed_put_task_struct);
-+	call_delayed_put_task_struct(p);
- 
- 	p = leader;
- 	if (unlikely(zap_leader))
-diff --git a/kernel/fork.c b/kernel/fork.c
-index d8ae0f1..e90f6de 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -900,11 +900,7 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
- 	if (orig->cpus_ptr == &orig->cpus_mask)
- 		tsk->cpus_ptr = &tsk->cpus_mask;
- 
--	/*
--	 * One for us, one for whoever does the "release_task()" (usually
--	 * parent)
--	 */
--	refcount_set(&tsk->usage, 2);
-+	refcount_set(&tsk->usage, 1);
- #ifdef CONFIG_BLK_DEV_IO_TRACE
- 	tsk->btrace_seq = 0;
- #endif
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f1..e77389c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3135,7 +3135,7 @@ static struct rq *finish_task_switch(struct task_struct *prev)
- 		/* Task is done with its stack. */
- 		put_task_stack(prev);
- 
--		put_task_struct(prev);
-+		call_delayed_put_task_struct(prev);
- 	}
- 
- 	tick_nohz_task_switch();
+Reviewed-by: Rob Herring <robh@kernel.org>
 
