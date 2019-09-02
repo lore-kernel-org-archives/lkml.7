@@ -3,82 +3,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F393BC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE492C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCB7238CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2022168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfIBH1p convert rfc822-to-8bit (ORCPT
+        id S1729750AbfIBH2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:27:45 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43203 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729678AbfIBH1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:27:44 -0400
-X-Originating-IP: 213.190.86.42
-Received: from localhost (unknown [213.190.86.42])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D864DC0008;
-        Mon,  2 Sep 2019 07:27:40 +0000 (UTC)
-Date:   Mon, 2 Sep 2019 09:27:35 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
-        edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 00/18] add thermal driver for h6
-Message-ID: <20190902072735.zkrueocyz4glc26n@flea>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190901215214.f4vbxemdd7mf3gun@core.my.home>
+        Mon, 2 Sep 2019 03:28:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:65228 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfIBH2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:28:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:28:10 -0700
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="186935638"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:28:07 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 73F4620B09; Mon,  2 Sep 2019 10:28:05 +0300 (EEST)
+Date:   Mon, 2 Sep 2019 10:28:05 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 08/10] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Message-ID: <20190902072805.GH5475@paasikivi.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-9-sakari.ailus@linux.intel.com>
+ <20190830125749.GI2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190901215214.f4vbxemdd7mf3gun@core.my.home>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190830125749.GI2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Aug 30, 2019 at 03:57:49PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 29, 2019 at 01:10:41PM +0300, Sakari Ailus wrote:
+> > Factor out static kobject_string() function that simply calls
+> > device_node_string(), and thus remove references to kobjects (as these are
+> > struct device_node).
+> 
+> Not sure. This removes "(%pO?)" error string.
 
-On Sun, Sep 01, 2019 at 11:52:14PM +0200, Ondřej Jirman wrote:
-> Hello Yangtao,
->
-> On Sat, Aug 10, 2019 at 05:28:11AM +0000, Yangtao Li wrote:
-> > This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
-> >
-> > Thx to Icenowy and Vasily.
-> >
-> > BTY, do a cleanup in thermal makfile.
->
-> I've added support for A83T and also some cleanups, according to my
-> feedback:
->
-> https://megous.com/git/linux/log/?h=ths-5.3
->
-> Feel free to pick up whatever you like from that tree.
->
-> For others, there are also DTS patches in that tree for H3, H5, A83T, and H6, so
-> that shoul make testing of this driver easier.
+Indeed. I'll add it back for v4.
 
-I'm not convinced that always expanding the number of SoC supported is
-the best strategy to get this merged. Usually, keeping the same
-feature set across version, consolidating that, and then once it's in
-sending the new SoC support works best.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
