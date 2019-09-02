@@ -2,165 +2,159 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA11C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E20C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07ADB21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="eiQPq9kt"
+	by mail.kernel.org (Postfix) with ESMTP id A6B8921882
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbfIBKMo (ORCPT
+        id S1730161AbfIBKOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:12:44 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:46315 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731457AbfIBKMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:12:43 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: uAleM8fmxKmtg+PpYRosDm73BYE/z7cYCZ23I990a8a51x8MDSBGoz4wOrLujoDBOcIl4prvVd
- 3RdGUo+u5ZItKppEsXfzaTE9xJ7QObs5FgPGclacovfWiQr73ibHP0yy4VQaP/mZphwVFuOPOJ
- qqiTJPEGXy5Sc+9b13NH07bLMVhSr9tBqWQ/EyI6E9GUP3QmT2AJoQbx3bkDA7QMT4z7S7g8Ku
- 4fJdF9dL5k/t8FgRHdMVo7jb79GNy945/vLlf3rlUzLBwHFWP4qXhWsgW3W9bcATTKAiTxXGw+
- 09Q=
+        Mon, 2 Sep 2019 06:14:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:20906 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbfIBKOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:14:30 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 03:14:30 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="44561100"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Sep 2019 03:12:37 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Sep 2019 03:12:21 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 2 Sep 2019 03:12:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NAFpnSEb+eoC5fewbyzo3EgVZqt5um2Y4rszfD5mkpMsyGXkz8GaVD0y3szXsi0WlQ+gV0ZgyEppj7sQ7VymJbjGTDq1N1FpQEuidH46Tc8u1YzlQu2woEQmrTSPXY+1AOSPFnEv5OcB3EmrGh4clG9FS6kkf6RlpMM/rw6ZODH87FVMmBvC+VBGMAit4GBPGjwItUY4comprbpQXADumq3Bx2OR/2+QmbFvPnoUTHyz946R4X3lI/GoLLuRJ83PzEHkKb5Tv+Yjgtvuijg9VR2NA+9bOD4/OSvB3ODRvJfQgXFRB6kUmGYw1MthR2/hxZTVCRIJr0lFujHR6g+B8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9IBcdoZOiF2OFUwwq5xd7VoCpgH+rEzEOB0u5csHOE=;
- b=ax9levRsbWKykQfvjscYiJHf64fFnZbU8rXq+7SAE6rPP/inUqySK7/wVHYmu/TLAfVg4/ptMQ4vI0uLCgK9V9TNJlOFdOneGZv5/1OAahUsjCWrsRmFbmDuYSkt1VibCDEoWhq5KrOBF8Vop2uX911AXB4zMOD32fJKS2rZu/72qfIXdhLoRtEwbvu0zTZG6qG1zDaUo6xE0im7yKbSi5f0dMRYGuIsJhsjcu30NAToSKBmCDXDUuv6ifNbthe2COm4APY6UNBBGXBTKBhYKEE0E/eNqpjzgtTgu86X0Ma/Pq2dlTRbw6dtiqzY8SkNjKHcpUj0wgefxq1K9wURww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9IBcdoZOiF2OFUwwq5xd7VoCpgH+rEzEOB0u5csHOE=;
- b=eiQPq9ktTXvt/E3wqUufgLJSclArrPQkDX1lP4Jsqjhg5GaQ8kyBeVoHdSGi5HIVoUNbcmjUAWkP+DqtZuRKoZTL0i3gE3xv6c3hAhaVzkE9iVLCnBUXB+PweqfAS9VQknDe8G5DzbazNkpzVDJc9cCoyWucrFNRq9txAVjIsDU=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB0044.namprd11.prod.outlook.com (10.164.155.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.16; Mon, 2 Sep 2019 10:12:20 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::c457:dc57:6e6f:f4f3]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::c457:dc57:6e6f:f4f3%10]) with mapi id 15.20.2220.022; Mon, 2 Sep 2019
- 10:12:20 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <wsa@the-dreams.de>, <peda@axentia.se>, <mark.rutland@arm.com>,
-        <Ludovic.Desroches@microchip.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <pierre-yves.mordret@st.com>,
-        <alexandre.belloni@bootlin.com>, <robh+dt@kernel.org>
-CC:     <Nicolas.Ferre@microchip.com>, <Eugen.Hristev@microchip.com>
-Subject: [PATCH v4 9/9] ARM: dts: at91: sama5d4_xplained: add digital filter
- for i2c
-Thread-Topic: [PATCH v4 9/9] ARM: dts: at91: sama5d4_xplained: add digital
- filter for i2c
-Thread-Index: AQHVYXbnlQUIVEL80UaOkK0PZOxmvA==
-Date:   Mon, 2 Sep 2019 10:12:20 +0000
-Message-ID: <1567418773-2427-10-git-send-email-eugen.hristev@microchip.com>
-References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1P189CA0018.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:802:2a::31) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-mailer: git-send-email 2.7.4
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ea66726-ee68-47b0-a7ae-08d72f8e0a4f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB0044;
-x-ms-traffictypediagnostic: DM5PR11MB0044:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB00444B1DD28DAB9F6E511250E8BE0@DM5PR11MB0044.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1079;
-x-forefront-prvs: 01480965DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(39850400004)(346002)(366004)(189003)(199004)(2906002)(66446008)(2201001)(66556008)(66476007)(64756008)(8936002)(305945005)(3846002)(7736002)(66946007)(6512007)(446003)(6116002)(86362001)(36756003)(5660300002)(52116002)(2501003)(11346002)(476003)(2616005)(256004)(6486002)(486006)(50226002)(14454004)(386003)(6506007)(53936002)(76176011)(186003)(99286004)(66066001)(81166006)(110136005)(7416002)(4326008)(107886003)(54906003)(4744005)(71190400001)(26005)(102836004)(6436002)(71200400001)(316002)(8676002)(81156014)(478600001)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0044;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xpVnW3p8NQX5WQ6jbdee5ae819u6q1KZ2w3y6myY0eAH0y26Q/yOjHS7y8EC0XQhTj6kEPQLIUIKHnl8cRkOzmqmVcRtHfD3l9HPccKDRccFMXi2qs3eqi2MkGMeai8ZedJ4evlLSPMxHQCGu6W87+UFZAHmuNPbqLZTTsQK77LRWoL0Cbkeq78Rrw4F9G6MK7/eivv0JV3IJ6VeFxS6yleuWgFKqJTa4vWnqDWTjzq5ToKqmfdHtiM8lVvHgOrk5JXMdDjSI1FcCk5LzGSJb8SQ5rNLChwLd11TvvZyeLWYoUWndPOpWrQt0FoUM4qH+372yzETaz5RzlQXv71PBJpZvkn0o6e6YF240Hu4hsmGgizKY9YfLOT6f9SDaCGLNLwvI3y+mejJR9E3jtdx7clpyWA+BBVhGXJsf8ZA7fw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+   d="scan'208";a="186965481"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 02 Sep 2019 03:14:27 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4jLu-0008Nv-C3; Mon, 02 Sep 2019 13:14:26 +0300
+Date:   Mon, 2 Sep 2019 13:14:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 04/11] device property: Add functions for accessing
+ node's parents
+Message-ID: <20190902101426.GB2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-5-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ea66726-ee68-47b0-a7ae-08d72f8e0a4f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:12:20.3497
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CcGGwxg18v0vD62G78dSNdy+W+MgrlhJup4A5QC2BCwZ9FUJosDxiYf8Bue57TpDOHaLk7S2gLAhbIuRzTsQV3yn8tcWyWqq7N0cigkXfFc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0044
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902083240.20367-5-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+On Mon, Sep 02, 2019 at 11:32:33AM +0300, Sakari Ailus wrote:
+> Add two convenience functions for accessing node's parents:
+> 
+> fwnode_count_parents() returns the number of parent nodes a given node
+> has. fwnode_get_nth_parent() returns node's parent at a given distance
+> from the node itself.
+> 
 
-Add property for digital filter for i2c0 node sama5d4_xplained
+Much better now, thanks!
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d4_xplained.dts | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dt=
-s/at91-sama5d4_xplained.dts
-index fdfc37d..924d949 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -49,6 +49,7 @@
- 			};
-=20
- 			i2c0: i2c@f8014000 {
-+				i2c-digital-filter;
- 				status =3D "okay";
- 			};
-=20
---=20
-2.7.4
+though one question below.
+
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/base/property.c  | 46 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/property.h |  3 +++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 3d9dffbe96378..d2461d79139f3 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -590,6 +590,52 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+>  }
+>  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+>  
+> +/**
+> + * fwnode_count_parents - Return the number of parents a node has
+> + * @fwnode: The node the parents of which are to be counted
+> + *
+> + * Returns the number of parents a node has.
+> + */
+> +unsigned int fwnode_count_parents(const struct fwnode_handle *fwnode)
+> +{
+> +	struct fwnode_handle *__fwnode;
+> +	unsigned int count;
+> +
+> +	__fwnode = fwnode_get_parent(fwnode);
+> +
+> +	for (count = 0; __fwnode; count++)
+> +		__fwnode = fwnode_get_next_parent(__fwnode);
+> +
+> +	return count;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_count_parents);
+> +
+> +/**
+> + * fwnode_get_nth_parent - Return an nth parent of a node
+> + * @fwnode: The node the parent of which is requested
+> + * @depth: Distance of the parent from the node
+> + *
+> + * Returns the nth parent of a node. If @depth is 0, the functionality is
+> + * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
+> + * and so on.
+> + *
+> + * The caller is responsible for calling fwnode_handle_put() for the returned
+> + * node.
+> + */
+> +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
+> +					    unsigned int depth)
+> +{
+> +	unsigned int i;
+> +
+> +	fwnode_handle_get(fwnode);
+> +
+> +	for (i = 0; i < depth && fwnode; i++)
+> +		fwnode = fwnode_get_next_parent(fwnode);
+> +
+
+If 'fnode == NULL' and 'i < depth', shan't we return some kind of error?
+
+> +	return fwnode;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
+> +
+>  /**
+>   * fwnode_get_next_child_node - Return the next child node handle for a node
+>   * @fwnode: Firmware node to find the next child node for.
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 421c76e53708d..5450e7ec219ac 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
+>  struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
+>  struct fwnode_handle *fwnode_get_next_parent(
+>  	struct fwnode_handle *fwnode);
+> +unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
+> +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
+> +					    unsigned int depth);
+>  struct fwnode_handle *fwnode_get_next_child_node(
+>  	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
+>  struct fwnode_handle *fwnode_get_next_available_child_node(
+> -- 
+> 2.20.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
