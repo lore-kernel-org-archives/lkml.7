@@ -2,155 +2,120 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE775C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A85C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A896221883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQfs6DZW"
+	by mail.kernel.org (Postfix) with ESMTP id 1B3E222D6D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567451789;
+	bh=DDCYrv3lGKJ63xn/Bvcw9F7AwwviJwsM2ns4CptNxNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bd8eF30CQsGPTgfsYS5J2dwMjD3+L2+xu5S2l1GclplHRRKavytInzDufHv1R1NdX
+	 uu/FwE7WyKcnmm+4p+I5jdNZ4d3BbfndqgVjk9+zdFHlL2ALQBp/Whv2neDvBs/jgP
+	 z8cvOjpm0esygXayFudn5lfp7ZlOKn6i2wkH0gn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfIBTQW (ORCPT
+        id S1727179AbfIBTQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:16:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39575 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfIBTQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:16:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s12so2387897pfe.6;
-        Mon, 02 Sep 2019 12:16:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oVYAlVrZfSgGuhdp8J1bJOh+7e8+KCFSvF87G3dnuqA=;
-        b=aQfs6DZWBspomDmj03PMKcrzoihdwGAFfddUfiMnPgm1hPtLEKwFNj8yZHEl3vicgW
-         icwFH52dChjMJ1dWfy66+x//XfKaeFMnkeh+/uifDY7vp2XjEcmeMxdwR6W5b5EPqCho
-         0AHQJ3lwMSfXnQle/zkFtjUKJtHMYnyFYN+tA+aSQzW57seUO/IAtuS1AjFyz8mpF+4b
-         u7JiGLbIUL8RoeFG6dw+xKWO+gMtaKuEHOgpBmNOdB7LGnxbK9ALV4STRJ9A3URnrUqp
-         kzoxtbmEZCuN7b0FlFPDy41xVEOFJ2enkv7inhcUh8F8t/fnDYX0pfgfHoa+Niq2NeR5
-         XNEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oVYAlVrZfSgGuhdp8J1bJOh+7e8+KCFSvF87G3dnuqA=;
-        b=NANDy0YmyqmxlTmozcyPhK9AloJXe6xWp8+et0Thr9j0CKgZ0l/pZM2t4dplEl0Xl7
-         wU9riEEaJOytXvYOZd+JoJ85fwxQkQ9eXKWDDntrk9Stox7yCzQ8J5xoE1i6AlY/yCRP
-         vMyR+1HOL83jHD9E0xAI1J+jyqUjOC5KSzTWnp2fcuPE3b8fheXtHRf5hDsQwJ7wqPo3
-         g+gwBKRa83oEz2SUDVMe5YesbufEkJ2gOgW7MIOPg8uMoj5gX9XT3gxUzDiYA8ASdwY5
-         TQAYp9H6gzfdwob89F2muCr8DdFK3hqlF9RdaadJHS/ScvwGCX8dFbGDceREu/BPwdQN
-         RW8g==
-X-Gm-Message-State: APjAAAVHSQ0bV3ePY3+u+iR0drvSqJ9OKBGMplypDBsbQFtEsJRY2yBQ
-        XcDnugjVAGFXHs8fEHihRtU=
-X-Google-Smtp-Source: APXvYqxxdFKA/8zfsRJSWBrXDIOku7j0IfD0ot3/W6xQOB4IhKcz/UTJl3JSizGbGLLcQDfi+OARxw==
-X-Received: by 2002:a17:90a:c694:: with SMTP id n20mr14181605pjt.24.1567451781462;
-        Mon, 02 Sep 2019 12:16:21 -0700 (PDT)
-Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id o35sm13021420pgm.29.2019.09.02.12.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 12:16:20 -0700 (PDT)
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-To:     linux@armlinux.org.uk, linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org
-Subject: [PATCH] adfs: Fill in max and min timestamps in sb
-Date:   Mon,  2 Sep 2019 12:12:31 -0700
-Message-Id: <20190902191231.13346-1-deepa.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Sep 2019 15:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfIBTQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:16:27 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945E521883;
+        Mon,  2 Sep 2019 19:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567451786;
+        bh=DDCYrv3lGKJ63xn/Bvcw9F7AwwviJwsM2ns4CptNxNA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jSf+/qBaSV27D7/nD6ebiZkSY4fKuT2tny+urCaRlf8ahzGELYKyLwtw/rsBpYM6j
+         tA0SZJmnTnPUU8GDzbC3E+zeGn0vqiMwoqJP8fPW0tHgSSW4biGgVrAUrYIGtJXDA/
+         dy81qZj658dgCGwsAF/ZxlB5MmyMH7AYXF6UYgWY=
+Received: by earth.universe (Postfix, from userid 1000)
+        id E44A53C0B7F; Mon,  2 Sep 2019 21:16:23 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 21:16:23 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] power: supply: max77650: add MODULE_ALIAS()
+Message-ID: <20190902191623.t4l4hlcorkbsjnqj@earth.universe>
+References: <20190703084811.9582-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rxknfcmqlmimaizl"
+Content-Disposition: inline
+In-Reply-To: <20190703084811.9582-1-brgl@bgdev.pl>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fill in the appropriate limits to avoid inconsistencies
-in the vfs cached inode times when timestamps are
-outside the permitted range.
 
-Note that the min timestamp is assumed to be
-01 Jan 1970 00:00:00 (Unix epoch). This is consistent
-with the way we convert timestamps in adfs_adfs2unix_time().
+--rxknfcmqlmimaizl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
----
+Hi,
 
-This depends on the following patch in Arnd's y2038 tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground y2038
-188d20bcd1eb ("vfs: Add file timestamp range support")
+On Wed, Jul 03, 2019 at 10:48:10AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>=20
+> Define a MODULE_ALIAS() in the charger sub-driver for max77650 so that
+> the appropriate module gets loaded together with the core mfd driver.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
 
- fs/adfs/adfs.h  | 13 +++++++++++++
- fs/adfs/inode.c |  8 ++++----
- fs/adfs/super.c |  2 ++
- 3 files changed, 19 insertions(+), 4 deletions(-)
+Thanks, queued. Sorry for the delay.
 
-diff --git a/fs/adfs/adfs.h b/fs/adfs/adfs.h
-index 699c4fa8b78b..504ad80072ef 100644
---- a/fs/adfs/adfs.h
-+++ b/fs/adfs/adfs.h
-@@ -3,6 +3,19 @@
- #include <linux/fs.h>
- #include <linux/adfs_fs.h>
- 
-+/*
-+ * 01 Jan 1970 00:00:00 (Unix epoch) as seconds since
-+ * 01 Jan 1900 00:00:00 (RISC OS epoch)
-+ */
-+#define RISC_OS_EPOCH_DELTA 2208988800LL
-+
-+/*
-+ * Convert 40 bit centi seconds to seconds
-+ * since 01 Jan 1900 00:00:00 (RISC OS epoch)
-+ * The result is 2248-06-03 06:57:57 GMT
-+ */
-+#define ADFS_MAX_TIMESTAMP ((0xFFFFFFFFFFLL / 100) - RISC_OS_EPOCH_DELTA)
-+
- /* Internal data structures for ADFS */
- 
- #define ADFS_FREE_FRAG		 0
-diff --git a/fs/adfs/inode.c b/fs/adfs/inode.c
-index 5b8017ab0a98..11acd74fb099 100644
---- a/fs/adfs/inode.c
-+++ b/fs/adfs/inode.c
-@@ -162,7 +162,10 @@ static int adfs_mode2atts(struct super_block *sb, struct inode *inode,
- 	return attr;
- }
- 
--static const s64 nsec_unix_epoch_diff_risc_os_epoch = 2208988800000000000LL;
-+/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
-+ * 01 Jan 1900 00:00:00 (RISC OS epoch)
-+ */
-+static const s64 nsec_unix_epoch_diff_risc_os_epoch = RISC_OS_EPOCH_DELTA * NSEC_PER_SEC;
- 
- /*
-  * Convert an ADFS time to Unix time.  ADFS has a 40-bit centi-second time
-@@ -173,9 +176,6 @@ static void
- adfs_adfs2unix_time(struct timespec64 *tv, struct inode *inode)
- {
- 	unsigned int high, low;
--	/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
--	 * 01 Jan 1900 00:00:00 (RISC OS epoch)
--	 */
- 	s64 nsec;
- 
- 	if (!adfs_inode_is_stamped(inode))
-diff --git a/fs/adfs/super.c b/fs/adfs/super.c
-index 7a3e6b394f2a..532e2afbc7a3 100644
---- a/fs/adfs/super.c
-+++ b/fs/adfs/super.c
-@@ -381,6 +381,8 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 	sb->s_fs_info = asb;
- 	sb->s_magic = ADFS_SUPER_MAGIC;
- 	sb->s_time_gran = 10000000;
-+	sb->s_time_min = 0;
-+	sb->s_time_max = ADFS_MAX_TIMESTAMP;
- 
- 	/* set default options */
- 	asb->s_uid = GLOBAL_ROOT_UID;
--- 
-2.17.1
+-- Sebastian
 
+>  drivers/power/supply/max77650-charger.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/power/supply/max77650-charger.c b/drivers/power/supp=
+ly/max77650-charger.c
+> index e34714cb05ec..5f9477c5cf5a 100644
+> --- a/drivers/power/supply/max77650-charger.c
+> +++ b/drivers/power/supply/max77650-charger.c
+> @@ -366,3 +366,4 @@ module_platform_driver(max77650_charger_driver);
+>  MODULE_DESCRIPTION("MAXIM 77650/77651 charger driver");
+>  MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
+>  MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:max77650-charger");
+> --=20
+> 2.21.0
+>=20
+
+--rxknfcmqlmimaizl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1taocACgkQ2O7X88g7
++ppuTg//dK84CNX4lS56lFT7mQTU/KJd75YQoJg6CIHH/H0QmkHm0+MZg/7w4Fu+
+x8WANmvOV1G+nk9GFE2Um6KwRCIUzfkAyPf0XBAlb43M82jIxqBOfk2waXrEvGA6
+DdwJT0j2l1jZRiqxvsAVt675Ine86M6BB9v1S3ZSX+VOMfyOtKHVFAx32eJ1mKHg
+DMNEdkGRW/DBWYXDrtY5v6dpGeYCafGFEn++3r8GO3bmjQwLQkTlzk7JkEop75Wb
++cs0+kwbnOWiVO95W2dSorkagr8yhlRwGxkHV57VAQenQRxk0Di1tKZfoxavk4BU
+dMeOeBS2/Wfrw+pEC/hQ8xiHWJnmKqzxmv9QL2+3Ta1QmgduOD9T4aZNrHcgX/ET
+V8C3lmpL/LsASk9llcvs+a6EuQo+Vgr7bIPcd6Y8a9cA7zY2WPd4mZK96GL2GiBb
+yChk6FJWgZjClO/vMEyILUzq2DwksEHDlyF6CO9lo09AW41qYFTj7mu6CiONUjp8
+8rZz0O/RXIUX02Cs+Tk18oFmVTOqjXgZMLo3kkaRkaHwdtmdShjQKQQlB4apf8sx
+RZhNnNRbY1ymMEo8w9hnTpycoX8MWpTr53vbLC8UjsZu45iG+UlkQLPReOZ9dp4f
+IuG/yjWqB2EijOMnRWTGx6L8I/deaQ1jw5TrzjRFkW1mcUWYw3A=
+=fAmd
+-----END PGP SIGNATURE-----
+
+--rxknfcmqlmimaizl--
