@@ -2,224 +2,140 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E0FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A143C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E7121883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4110E214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJNxvgSJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="CrK6yduX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfIBWF3 (ORCPT
+        id S1727812AbfIBWKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 18:05:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44906 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbfIBWF3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 18:05:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so7981365pgl.11;
-        Mon, 02 Sep 2019 15:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qheEaqbo7JPkZrd6C0f084OuMiH7jmWGMxuDz2HD13Q=;
-        b=kJNxvgSJhbmsCH9tyXj23F4iPNyvuMKdcr8FWc6ZElFc18oDscBjGvhUJ3PDIDa9iU
-         CWGMW8m0sfdiBv6oQKDmlHwGdaRrbDDsSk1fiYkdJiljmZ8bD7aeFxodRED39OPOciID
-         kLhBZ/GpY30Oz0enJF9Tbps8pXSxb2zZa/a+7X25NXaJIwMhskAZpads3GF8jKVbCzfF
-         UG8UVILu8KHtxM6J0I7uiUfloT06mcdkspYdZgQ0xGhU8fL+/BZx9oHrTNHxNAeR7vBX
-         A5nGgwQHMq09NTH3jOsTZQ+wYO2v2VcMfL9uUY6cVdKftHC1eM0ubd/k8F27n+hIQ6NZ
-         NMUg==
+        Mon, 2 Sep 2019 18:10:15 -0400
+Received: from mx5.ucr.edu ([138.23.62.67]:2455 "EHLO mx5.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727603AbfIBWKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 18:10:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567462214; x=1598998214;
+  h=from:to:cc:subject:date:message-id;
+  bh=5cjzoQ6j8LPRIgvYQs/hdB84XOxSvYfieFjVv+oztNE=;
+  b=CrK6yduXstc2Pu+L2HjAJ+JlnWyvIpsUmQqJNURE/JPXcrJAeLGCsXcj
+   /XgsNwgvn9PprPbpZqlhO3RewIXq2q2oguJt/QnWl5rj1lGClUFNIfRNZ
+   IiPs0yjbDcIR4yrPyiOoX79L/+FDYkXgY/ScRo+EhVzVdZJuSow22QU+G
+   5PkHdHH4CugfHXvCyq+919fIh2YH5dwycQDh6qCxkHskZ0eqz+EtkFq61
+   TEyIr77ETZgw3PbDR4JdBG94UiPvNIgoRFfv/oZqrnGD011LvILqZsPQ8
+   Kqz7ZrygTXaW+WNXCuo3cRH30z2t3Xih49JEJoJ9SUTeQ/zaSEzmQ6a6W
+   w==;
+IronPort-SDR: cavb9EizEnQ8gBH7VFRrgGHzajXHvdRMMdn+FgOaz+6OqbyCgXAdD+m6AEEN66JnQLAD+0b0W6
+ XmokPnh7bpWm+y5cP2ms7c5WsUCQrd59Gp2y6cIl32L8RFxkj2gT8OL7Le17oDwtuQI1Q2WDSx
+ d8LD28b4RFil8faegO6f0hzLhuRIgVc2N9cYAAkP4o2ACARMR5OmNJdw95J9B8K3YIQLaImoeK
+ FYtVobxlF/yIBDz+gAw5GFfQN2Otc82i24jF9R2vicp5+PR6a5T5aXO66aJC5LYsbao3gYEgkV
+ RYE=
+IronPort-PHdr: =?us-ascii?q?9a23=3AS7wg1x2nj6pDPf8PsmDT+DRfVm0co7zxezQtwd?=
+ =?us-ascii?q?8Zse0fLvad9pjvdHbS+e9qxAeQG9mCsbQd1LOd6/yocFdDyK7JiGoFfp1IWk?=
+ =?us-ascii?q?1NouQttCtkPvS4D1bmJuXhdS0wEZcKflZk+3amLRodQ56mNBXdrXKo8DEdBA?=
+ =?us-ascii?q?j0OxZrKeTpAI7SiNm82/yv95HJbAhEmSSxbalvIBi0sAndudUajIR/Iast1x?=
+ =?us-ascii?q?XFpWdFdf5Lzm1yP1KTmBj85sa0/JF99ilbpuws+c1dX6jkZqo0VbNXAigoPG?=
+ =?us-ascii?q?Az/83rqALMTRCT6XsGU2UZiQRHDg7Y5xznRJjxsy/6tu1g2CmGOMD9UL45VS?=
+ =?us-ascii?q?i+46ptVRTlkzkMOSIn/27Li8xwlKNbrwynpxxj2I7ffYWZOONjcq/BYd8WQG?=
+ =?us-ascii?q?xMXsNQVyxaGYO8bo0PD+UcNuhGtof2ulUOrRqgCgmoGezk1ztEi3Hq0aE/1e?=
+ =?us-ascii?q?kqDAPI0xE6H98WsHrassj7OqkRX+6y16TE0SnPYulK1Trn9ITEbhYsquyMU7?=
+ =?us-ascii?q?JqdsrRzFEiGAHEjlSRqYzlIjSV3fkKvmmb7utgVfigi287pw1trDWi3doshZ?=
+ =?us-ascii?q?XTho4P1F/L6Dh5zZ8zKNalS0B7ecapHIVMuyyeLYd7QcMvT3t2tConxbAKo4?=
+ =?us-ascii?q?O3cSwJxZg/2hLSaviKf5KW7h/tVOudOyl0iXN/dL+9iBu/91WrxPfmWcmuyl?=
+ =?us-ascii?q?lKqzJIktzLtn8QyRPe8tOHSv5h/ke53jaPyhzT5vlEIU8qkarbLIYswrsqmZ?=
+ =?us-ascii?q?oStUTPBzf2mEHrgKOPeEUo5+yl5uf9brXpoZ+cMIB0igXgPag0hsO/BuE4Ph?=
+ =?us-ascii?q?APX2id5+u8yKXu8VPlTLhOlPE7kanUvIrEKcgGqaO1GRJZ34Ig5hqnCjepyt?=
+ =?us-ascii?q?UYnX0JLFJffxKHipDkOlHPIfD4F/i/gkignCtlyv3dI73uHo/NImLdn7j8YL?=
+ =?us-ascii?q?Zx81RcxxYrzdBD+5JUDakMIPbyWk/3qdzZAQY1Mw+qzOb9DtVyyIceVHmRAq?=
+ =?us-ascii?q?+WLqzSq0WE5uExLOmWYo8apjL9J+Ii5/70gn9q0XEHeqz87JoFaG2/VqB3MU?=
+ =?us-ascii?q?WQYCK02f8cGn1MswYjGr+5wGaeWCJeMi7hF5k34Ss2Xcf5VYo=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2G8AQDXkm1dgMbWVdFlHQEBBQEHBQG?=
+ =?us-ascii?q?BVgUBCwGDV0wQjR2GXwEBAQaLOHGFeoMJhx8BCAEBAQwBAS0CAQGEP4JvIzc?=
+ =?us-ascii?q?GDgIDCAEBBQEBAQEBBgQBAQIQAQEJDQkIJ4VDgjopgmALFhVSVj8BBQE1Ijm?=
+ =?us-ascii?q?CRwGBdhQFnU6BAzyMIzOIbgEIDIFJCQEIgSIBhx6EWYEQgQeEYYQNg1aCRAS?=
+ =?us-ascii?q?BLgEBAZRalg0BBgKCDRSBc5JcJ4QyiRuLGAEtphICCgcGDyGBRYF7TSWBbAq?=
+ =?us-ascii?q?BRIJ6ji0gM4EIjCqCVAE?=
+X-IPAS-Result: =?us-ascii?q?A2G8AQDXkm1dgMbWVdFlHQEBBQEHBQGBVgUBCwGDV0wQj?=
+ =?us-ascii?q?R2GXwEBAQaLOHGFeoMJhx8BCAEBAQwBAS0CAQGEP4JvIzcGDgIDCAEBBQEBA?=
+ =?us-ascii?q?QEBBgQBAQIQAQEJDQkIJ4VDgjopgmALFhVSVj8BBQE1IjmCRwGBdhQFnU6BA?=
+ =?us-ascii?q?zyMIzOIbgEIDIFJCQEIgSIBhx6EWYEQgQeEYYQNg1aCRASBLgEBAZRalg0BB?=
+ =?us-ascii?q?gKCDRSBc5JcJ4QyiRuLGAEtphICCgcGDyGBRYF7TSWBbAqBRIJ6ji0gM4EIj?=
+ =?us-ascii?q?CqCVAE?=
+X-IronPort-AV: E=Sophos;i="5.64,460,1559545200"; 
+   d="scan'208";a="74273994"
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 15:10:13 -0700
+Received: by mail-pl1-f198.google.com with SMTP id bj9so1167136plb.22
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 15:10:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qheEaqbo7JPkZrd6C0f084OuMiH7jmWGMxuDz2HD13Q=;
-        b=X37D1YaYWRl4XNzEi9PGkRIIwE92izMHJz/fcZ7ybEaegTPueofKx8nuNt81YV+KDu
-         naCCjQ1N0jyySaNg5CMz6r2fzn70B0oL523fR1oNHGEKCseDTlTwrR5MDQDg1w+VJk6d
-         +VY1NIU5NV+SMCf67/dKOtbqR82aL5UPjbK3Tsw07NwPi/LGLoyjCu9yV7KLccleOJI1
-         bIAlcqtkTGvQsu4tg/CoH7qbVXLtCRvHMcg9OgV7SwwjrdkQD5S2fvUqB+lJjrhBJ/tt
-         sdio1vQmikcXMNRzBjhagCUOFdI2Q+FKOMV0n6b0gJWx26ZSSG0r20DgQauzDgy0dJRU
-         C1DQ==
-X-Gm-Message-State: APjAAAVxm4w3Xd2pxQmY9avLINSRPkQnXffNRMOS1rw2TBOfVmXP0y+Z
-        X9JPWKZf341gqbNJKh5AqpGjPr1NFXtve+Sa3zU=
-X-Google-Smtp-Source: APXvYqyasWDR1xLzwKeqcueQCv5COBd18dK6l6Wtf8Qyqbkz2ADCtnVUtROABP8V561xswifjBnUL/RTRzK3s2Ew4Qs=
-X-Received: by 2002:a17:90a:bf01:: with SMTP id c1mr15294811pjs.30.1567461928498;
- Mon, 02 Sep 2019 15:05:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190830022542.8571-1-benchuanggli@gmail.com>
-In-Reply-To: <20190830022542.8571-1-benchuanggli@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Sep 2019 01:05:16 +0300
-Message-ID: <CAHp75Vfx4FukybSjQjiNNQpHUNQrUsvwOen4ibqxOONKTJNxww@mail.gmail.com>
-Subject: Re: [PATCH V7 5/5] mmc: host: sdhci-pci: Add Genesys Logic GL975x support
-To:     Ben Chuang <benchuanggli@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7lAYw+WYXgGKa3GnnIrXLx3dmFJj4c1yM3CfWtIDfjw=;
+        b=Tw3dbae80+6FSRxrjTRJL6sQfSi1g6Ke0H2VZL38xmkGvqamo87JkGIW1lJkJXcCFg
+         ZVawpvf1QVcD5MZND1n/rs2DvLWI6zFnOtlmplyDla6U+sC4ALMs7du3sd5I47DTLrgk
+         b51dlEbEqpaytXwWVaGRtWhcMz+TTxpn93BLrzGgDQgsn1xSS//02yLd5lEIl5izA4i9
+         8NVnr1U1UVIk8+yZ6QcKlNO+knVxt4oARhAXw/R7UzVYN99U3hHvazb1QWmlQJsBFxDX
+         0YApiKOzKmNmOH6+vGy88gStD4zKRiiHRbrpG2++qv2mEFe2nqx1760gwJlwqOesg1LP
+         jhsA==
+X-Gm-Message-State: APjAAAWGlCOTLqgDt8KseKTqVsgt/dkRFbGjtrwRur9kP18garaE1Jw7
+        b8oVynzC6Ekteo8xpwhOsZMgaiCEwXpU5H1BWlDIs9gPs/r3Du2ejfgdwoFvsMTakYv/HhBUFe4
+        RUYCQaaPsbdsjJmt6UlGFUCTtdg==
+X-Received: by 2002:a63:fc52:: with SMTP id r18mr27137028pgk.378.1567462213135;
+        Mon, 02 Sep 2019 15:10:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyNSTQVIp962Y65O4IgM35gCComdCD/HHeUpE1Ns7dzzsXcc/tCXj8aO8S7mliLuXw/MUENfQ==
+X-Received: by 2002:a63:fc52:: with SMTP id r18mr27137013pgk.378.1567462212862;
+        Mon, 02 Sep 2019 15:10:12 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id q33sm12300791pgb.79.2019.09.02.15.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 15:10:11 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
+Date:   Mon,  2 Sep 2019 15:10:47 -0700
+Message-Id: <20190902221047.20189-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 5:28 AM Ben Chuang <benchuanggli@gmail.com> wrote:
->
-> From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
->
-> Add support for the GL9750 and GL9755 chipsets.
->
-> Enable v4 mode and wait 5ms after set 1.8V signal enable for GL9750/
-> GL9755. Fix the value of SDHCI_MAX_CURRENT register and use the vendor
-> tuning flow for GL9750.
->
+In function pfuze100_regulator_probe(), variable "val" could be
+initialized if regmap_read() fails. However, "val" is used to
+decide the control flow later in the if statement, which is
+potentially unsafe.
 
-> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/regulator/pfuze100-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Usually last one for latest developer / submitter goes on.
-
-> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
-
-
-> +#define GLI_MAX_TUNING_LOOP 40
-
-
-> +static void gli_set_9750(struct sdhci_host *host)
-> +{
-> +       u32 driving_value = 0;
-> +       u32 pll_value = 0;
-> +       u32 sw_ctrl_value = 0;
-> +       u32 misc_value = 0;
-> +       u32 parameter_value = 0;
-> +       u32 control_value = 0;
-
-> +
-
-Redundant blank line.
-
-> +       u16 ctrl2 = 0;
-
-Do you need these all assignments above?
-
-> +       driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-> +       pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-> +       sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-> +       misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> +       parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-> +       control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
-
-
-
-> +
-> +       udelay(1);
-
-This misses the answer to question why. Why this is needed and why
-timeout is this long?
-
-> +
-> +       gl9750_wt_off(host);
-> +}
-
-> +static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-> +{
-> +       int i;
-
-> +       int rx_inv = 0;
-
-Duplicate assignment.
-
-> +
-> +       for (rx_inv = 0; rx_inv < 2; rx_inv++) {
-
-> +               if (rx_inv & 0x1)
-> +                       gli_set_9750_rx_inv(host, true);
-> +               else
-> +                       gli_set_9750_rx_inv(host, false);
-
-gli_set_...(host, !!rx_inv);
-
-> +
-> +               sdhci_start_tuning(host);
-> +
-> +               for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-> +                       u16 ctrl;
-> +
-> +                       sdhci_send_tuning(host, opcode);
-> +
-> +                       if (!host->tuning_done) {
-
-> +                               if (rx_inv == 1) {
-
-It's an invariant to the loop. So, you may do this check after outter loop.
-
-> +                                       pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-> +                                               mmc_hostname(host->mmc));
-
-> +                                       sdhci_abort_tuning(host, opcode);
-
-It will also de-duplicates this call.
-
-> +                                       return -ETIMEDOUT;
-> +                               }
-> +                               sdhci_abort_tuning(host, opcode);
-> +                               break;
-> +                       }
-
-> +               }
-> +       }
-> +
-> +       pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-> +               mmc_hostname(host->mmc));
-> +       sdhci_reset_tuning(host);
-> +       return -EAGAIN;
-> +}
-
-> +static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-> +{
-
-Any comment why?
-
-> +       usleep_range(5000, 5500);
-> +}
-
-> +static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
-> +{
-> +       u32 value;
-> +
-> +       value = readl(host->ioaddr + reg);
-
-> +       if (unlikely(reg == SDHCI_MAX_CURRENT)) {
-> +               if (!(value & 0xff))
-> +                       value |= 0xc8;
-> +       }
-
-if (a) {
- if (b) {
-   ...
- }
-}
-
-is the same as
-
-if (a && b) {
- ...
-}
-
-> +       return value;
-> +}
-
-> +#define PCI_DEVICE_ID_GLI_9755         0x9755
-> +#define PCI_DEVICE_ID_GLI_9750         0x9750
-
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index df5df1c495ad..649e2bfcdffd 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -777,7 +777,7 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
+ 	for (i = 0; i < regulator_num; i++) {
+ 		struct regulator_init_data *init_data;
+ 		struct regulator_desc *desc;
+-		int val;
++		int val = 0;
+ 
+ 		desc = &pfuze_chip->regulator_descs[i].desc;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
