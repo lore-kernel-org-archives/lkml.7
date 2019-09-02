@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C21C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9A8C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72EF2168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592A12168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfIBDxg (ORCPT
+        id S1729467AbfIBDxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 23:53:36 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:38262 "EHLO inva021.nxp.com"
+        Sun, 1 Sep 2019 23:53:41 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55994 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfIBDxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 23:53:35 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7AF7F20011C;
-        Mon,  2 Sep 2019 05:53:34 +0200 (CEST)
+        id S1729421AbfIBDxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:53:39 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 77C291A005A;
+        Mon,  2 Sep 2019 05:53:37 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 85FB8200679;
-        Mon,  2 Sep 2019 05:53:27 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8561C1A0006;
+        Mon,  2 Sep 2019 05:53:30 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BCE2F402B7;
-        Mon,  2 Sep 2019 11:53:18 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BF43A402CB;
+        Mon,  2 Sep 2019 11:53:21 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
@@ -37,26 +37,27 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linuxppc-dev@lists.ozlabs.org
 Cc:     bhelgaas@google.com, Xiaowei Bao <xiaowei.bao@nxp.com>,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible strings "fsl,ls1028a-pcie"
-Date:   Mon,  2 Sep 2019 11:43:17 +0800
-Message-Id: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+Subject: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Date:   Mon,  2 Sep 2019 11:43:19 +0800
+Message-Id: <20190902034319.14026-3-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the PCIe compatible string for LS1028A
+Add support for the LS1028a PCIe controller.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 v2:
  - No change.
 v3:
- - No change.
+ - Reuse the ls2088 driver data structurt.
 v4:
  - No change.
 v5:
@@ -64,21 +65,21 @@ v5:
 v6:
  - No change.
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+ drivers/pci/controller/dwc/pci-layerscape.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e20ceaa..99a386e 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -21,6 +21,7 @@ Required properties:
-         "fsl,ls1046a-pcie"
-         "fsl,ls1043a-pcie"
-         "fsl,ls1012a-pcie"
-+        "fsl,ls1028a-pcie"
-   EP mode:
- 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index 3a5fa26..f24f79a 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
+ static const struct of_device_id ls_pcie_of_match[] = {
+ 	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
+ 	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
++	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
+ 	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
+ 	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
+ 	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
 -- 
 2.9.5
 
