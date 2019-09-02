@@ -2,73 +2,106 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1426DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1C6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22D3216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A04E216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:18:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=origamienergy.com header.i=@origamienergy.com header.b="Gu4NSEju";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VuRtX7nH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfIBLL1 (ORCPT
+        id S1731514AbfIBLST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:11:27 -0400
-Received: from gate.crashing.org ([63.228.1.57]:37712 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730457AbfIBLL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:11:27 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x82BB7FG023249;
-        Mon, 2 Sep 2019 06:11:07 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x82BB5Mw023248;
-        Mon, 2 Sep 2019 06:11:05 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Mon, 2 Sep 2019 06:11:05 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH] powerpc: Convert ____flush_dcache_icache_phys() to C
-Message-ID: <20190902111105.GX31406@gate.crashing.org>
-References: <de7a813c71c4823797bb351bea8be15acae83be2.1565970465.git.christophe.leroy@c-s.fr> <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com> <a0ad8dd8-2f5d-256d-9e88-e9c236335bb8@c-s.fr> <fcc94e7f347c3759a1698444239a7250b22cde7d.camel@au1.ibm.com> <87imqbtqlw.fsf@mpe.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imqbtqlw.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.4.2.3i
+        Mon, 2 Sep 2019 07:18:19 -0400
+Received: from a6-42.smtp-out.eu-west-1.amazonses.com ([54.240.6.42]:46632
+        "EHLO a6-42.smtp-out.eu-west-1.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730532AbfIBLST (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 07:18:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=awgt3ic55kqhwizgro5hhdlz56bi7lbf; d=origamienergy.com;
+        t=1567423096; h=From:To:Cc:Subject:Date:Message-Id;
+        bh=yf4UDlhY9zG8j1i5sWup6Xc7wzTyoPqlV6dPYa9fU20=;
+        b=Gu4NSEjueZq/jkm/u1EajqrO/I0Uu/xHunt6LZmZ5Dji1Hk6/g0l8EFpi14DJGll
+        i/RCqnQhQrIwpNP09VkXXzCo86wK6egJZbF7m9xaKf9iW312kNO2wxQjhzJcHXPwPlh
+        RwUeZy3k173Hxr8eS+VRTc9LxtrmLuSZiCryMu0c=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1567423096;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=yf4UDlhY9zG8j1i5sWup6Xc7wzTyoPqlV6dPYa9fU20=;
+        b=VuRtX7nH/RqA//4vZuYNPkB3nnZLEu93IVHLxge6OE/AqfbYJSXCc2Lt4g6BjKBT
+        TMwihe3uWDUEA4oaOkpxIj6NBW+j70mCeL6K5RImQnCx1ex0AmAJIuxrDYN6j+9l1P1
+        Q3ISxsmIQaK30XIk5Wffv/1TGOxBK7YqKNLC8sys=
+From:   James Byrne <james.byrne@origamienergy.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        James Byrne <james.byrne@origamienergy.com>
+Subject: [PATCH] ABI: Update dev-kmsg documentation to match current kernel behaviour
+Date:   Mon, 2 Sep 2019 11:18:16 +0000
+Message-ID: <0102016cf1b26630-8e9b337b-da49-43c6-b028-4250c2fac3ef-000000@eu-west-1.amazonses.com>
+X-Mailer: git-send-email 2.17.1
+X-SES-Outgoing: 2019.09.02-54.240.6.42
+Feedback-ID: 1.eu-west-1.sQ65CuNSNkrvjFrT7j7oeWmhxZgivYoP5c3BHSC7Qc8=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:48:59AM +1000, Michael Ellerman wrote:
-> "Alastair D'Silva" <alastair@au1.ibm.com> writes:
-> > On Wed, 2019-08-21 at 22:27 +0200, Christophe Leroy wrote:
-> >> Can we be 100% sure that GCC won't add any code accessing some
-> >> global data or stack while the Data MMU is OFF ?
-> >
-> > +mpe
-> >
-> > I'm not sure how we would go about making such a guarantee, but I've
-> > tied every variable used to a register and addr is passed in a
-> > register, so there is no stack usage, and every call in there only
-> > operates on it's operands.
-> 
-> That's not safe, I can believe it happens to work but the compiler
-> people will laugh at us if it ever breaks.
+Commit 5aa068ea4082 ("printk: remove games with previous record flags")
+abolished the practice of setting the log flag to 'c' for the first
+continuation line and '+' for subsequent lines. Now all continuation
+lines are flagged with 'c' and '+' is never used.
 
-Yes.  Sorry.
+Update the 'dev-kmsg' documentation to remove the reference to the
+obsolete '+' flag. In addition, state explicitly that only 8 bits of the
+<N> syslog prefix are used for the facility number when writing to
+/dev/kmsg.
 
-> Let's leave it in asm.
+Signed-off-by: James Byrne <james.byrne@origamienergy.com>
+---
+ Documentation/ABI/testing/dev-kmsg | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-+1
+diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testing/dev-kmsg
+index fff817efa508..f307506eb54c 100644
+--- a/Documentation/ABI/testing/dev-kmsg
++++ b/Documentation/ABI/testing/dev-kmsg
+@@ -12,7 +12,7 @@ Description:	The /dev/kmsg character device node provides userspace access
+ 		The logged line can be prefixed with a <N> syslog prefix, which
+ 		carries the syslog priority and facility. The single decimal
+ 		prefix number is composed of the 3 lowest bits being the syslog
+-		priority and the higher bits the syslog facility number.
++		priority and the next 8 bits the syslog facility number.
+ 
+ 		If no prefix is given, the priority number is the default kernel
+ 		log priority and the facility number is set to LOG_USER (1). It
+@@ -90,13 +90,12 @@ Description:	The /dev/kmsg character device node provides userspace access
+ 		  +sound:card0 - subsystem:devname
+ 
+ 		The flags field carries '-' by default. A 'c' indicates a
+-		fragment of a line. All following fragments are flagged with
+-		'+'. Note, that these hints about continuation lines are not
+-		necessarily correct, and the stream could be interleaved with
+-		unrelated messages, but merging the lines in the output
+-		usually produces better human readable results. A similar
+-		logic is used internally when messages are printed to the
+-		console, /proc/kmsg or the syslog() syscall.
++		fragment of a line. Note, that these hints about continuation
++		lines are not necessarily correct, and the stream could be
++		interleaved with unrelated messages, but merging the lines in
++		the output usually produces better human readable results. A
++		similar logic is used internally when messages are printed to
++		the console, /proc/kmsg or the syslog() syscall.
+ 
+ 		By default, kernel tries to avoid fragments by concatenating
+ 		when it can and fragments are rare; however, when extended
+-- 
+2.17.1
 
-The asm is simpler, more readable, more maintainable, and perhaps more
-performant even.  Plus the being-laughed-at issue.
-
-
-Segher
