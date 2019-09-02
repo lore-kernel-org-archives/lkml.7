@@ -2,116 +2,146 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD087C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5095C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D1A216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC0D216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZVUGTMsp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=typeblog-net.20150623.gappssmtp.com header.i=@typeblog-net.20150623.gappssmtp.com header.b="xZeRG54Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbfIBMpa (ORCPT
+        id S1730673AbfIBMqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:45:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49038 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729571AbfIBMpa (ORCPT
+        Mon, 2 Sep 2019 08:46:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33994 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730558AbfIBMqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:45:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8e5pl/cUyEaSaTIP0gVix4kLe1LPGSDBfLiK5Z6oMK4=; b=ZVUGTMspxfe3xQHunBefXYA5b
-        RRbaGgX6OxaI5bD/kap+hgR/IMcivPmetVVU0OUh7XfX/onX4ou9VeUjDQzoj7QsZuFRnisygmRMR
-        6aSRZqCeGTIR7HBudutdMooyrGcPpR0hkheR6CyDRkG5dnHP0PPWBnPiut+u+ir5xS3zAUTvIKeMp
-        9kadYDIyHlr8crmhMNQf+xk98sFwL/p9FMNGUL465OFDk2tte+kQXPCeD4kLiTtAJCrJKcZsmRYhZ
-        uS4+zLv9VrGHCAGQSoOHn9VVeP/qV/SEF74aqb+LcB7q27YkoFsxkDnZqLUWMBKzyYIaO02PDTHcf
-        rwwT6O0Pw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4lhx-00028u-J6; Mon, 02 Sep 2019 12:45:21 +0000
-Date:   Mon, 2 Sep 2019 05:45:21 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190902124521.GA22153@infradead.org>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-2-gaoxiang25@huawei.com>
- <20190829095954.GB20598@infradead.org>
- <20190901075240.GA2938@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Mon, 2 Sep 2019 08:46:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b24so8990445pfp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 05:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=typeblog-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UxK0D/fheIqSygqLr5s8Jq9AxF3QesYF0ilcNylte7o=;
+        b=xZeRG54YWKgB5dbF3y59khScl7yI/HflO++6A95O/QzD0f+8H5FUe2QQ3uAhJzFOqW
+         MOZhRtvQsBNttdrNi6MzxpT9+vo+cisz5qhPDQhREQA2QDNNLA2JR8SF4xoUAe0v7Ju0
+         uDuMxGHHYUZFf9CHrGwFQEI3PszflA2AtaQ8qPf4tyjkU9iFpBKQ2wWTdDX2V1ODXDqB
+         5Vv9Vd0Lty5qxiYaMFwrRNYzk+TYv6WpdYIPAyM+o/Fninkl1JRoboszMWFnjzGQiEFn
+         dGv7QXx+L13ylOkzwOA3ssTwjv36EHLkuJ3yFJAo74527kCN8levJC1nPNfz+YY7WZHc
+         K2ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UxK0D/fheIqSygqLr5s8Jq9AxF3QesYF0ilcNylte7o=;
+        b=OgwHYf4NN3Xp2AYC/mOyWi1y4ye5f4drt1tJnew75NbNKr+avBbvGD9s+zjolrx66r
+         npJFSCSiyBBGa9gKlsplcncBQI1npHgHRx7oXcGTknVAVWPQsHon7O/GFnPLORxgEhNz
+         pN50jX/50Bvs1pEweMDCHVHpaM8U6euRxIHWBBoKmVicDVHWNPjKbyYtWGTtB8PqQKKE
+         oPWeUD/rVZT4a+IaKLFY07Fmw46mLRjHPzxW2jM6YKj6LrtTOLCVlqrFs8kwLBq5tq+b
+         v2sujlWihHDKIvhIPI/JM4NaeRstOjv4dgTFzPeokQgBJvWJ3G885cGUpoUxcvWLtSxU
+         vXsQ==
+X-Gm-Message-State: APjAAAXIQCeg7+Y+mzx6aIgR+a0+hKoRhsvLt9BTse0UuK/m69pJcSJ8
+        uNjwWVqTDcvCvhwVkyAK9sCu7w==
+X-Google-Smtp-Source: APXvYqxIvcyPxpnb3yh6eeP7HxC1AmtMZNRoGdxnjCor2F+TkQe4/r3whehjlKum19mXExKsD3b4OQ==
+X-Received: by 2002:a17:90a:d0c6:: with SMTP id y6mr3298714pjw.76.1567428361563;
+        Mon, 02 Sep 2019 05:46:01 -0700 (PDT)
+Received: from peter-pc.home ([91.207.174.229])
+        by smtp.gmail.com with ESMTPSA id 2sm15884652pjh.13.2019.09.02.05.45.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 05:46:00 -0700 (PDT)
+From:   Peter Cai <peter@typeblog.net>
+Cc:     Peter Cai <peter@typeblog.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH v3 1/2] gpio: acpi: add quirk to override GpioInt polarity
+Date:   Mon,  2 Sep 2019 20:43:51 +0800
+Message-Id: <20190902124352.12291-1-peter@typeblog.net>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190831030916.13172-1-peter@typeblog.net>
+References: <20190831030916.13172-1-peter@typeblog.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190901075240.GA2938@hsiangkao-HP-ZHAN-66-Pro-G1>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 03:54:11PM +0800, Gao Xiang wrote:
-> It could be better has a name though, because 1) erofs.mkfs uses this
-> definition explicitly, and we keep this on-disk definition erofs_fs.h
-> file up with erofs-utils.
-> 
-> 2) For kernel use, first we have,
->    datamode < EROFS_INODE_LAYOUT_MAX; and
->    !erofs_inode_is_data_compressed, so there are only two mode here,
->         1) EROFS_INODE_FLAT_INLINE,
->         2) EROFS_INODE_FLAT_PLAIN
->    if its datamode isn't EROFS_INODE_FLAT_INLINE (tail-end block packing),
->    it should be EROFS_INODE_FLAT_PLAIN.
-> 
->    The detailed logic in erofs_read_inode and
->    erofs_map_blocks_flatmode....
+On GPD P2 Max, the firmware could not reset the touch panel correctly.
+The kernel needs to take on the job instead, but the GpioInt definition
+in DSDT specifies ActiveHigh while the GPIO pin should actually be
+ActiveLow.
 
-Ok.  At least the explicit numbering makes this a little more obvious
-now.  What seems fairly odd is that there are only various places that
-check for some inode layouts/formats but nothing that does a switch
-over all of them.
+We need to override the polarity defined by DSDT. The GPIO driver
+already allows defining polarity in acpi_gpio_params, but the option is
+not applied to GpioInt.
 
-> > why are we adding a legacy field to a brand new file system?
-> 
-> The difference is just EROFS_INODE_FLAT_COMPRESSION_LEGACY doesn't
-> have z_erofs_map_header, so it only supports default (4k clustersize)
-> fixed-sized output compression rather than per-file setting, nothing
-> special at all...
+This patch adds a new quirk that enables the polarity specified in
+acpi_gpio_params to also be applied to GpioInt.
 
-It still seems odd to add a legacy field to a brand new file system.
+Signed-off-by: Peter Cai <peter@typeblog.net>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-> > structures, as that keeps it clear in everyones mind what needs to
-> > stay persistent and what can be chenged easily.
-> 
-> All fields in this file are on-disk representation by design
-> (no logic for in-memory presentation).
+v2: rebased to gpio/for-next, moved quirk out of the gpioint
+conditional.
 
-Ok, make sense.    Maybe add a note to the top of the file comment
-that this is the on-disk format.
+v3: no change, series update.
+---
+ drivers/gpio/gpiolib-acpi.c   | 9 +++++++++
+ include/linux/gpio/consumer.h | 6 ++++++
+ 2 files changed, 15 insertions(+)
 
-One little oddity is that erofs_inode_is_data_compressed is here, while
-is_inode_flat_inline is in internal.h.  There are arguments for either
-place, but I'd suggest to keep the related macros together.
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index fdee8afa5339..ab16ea61a8fa 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -603,6 +603,15 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+ 			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
+ 			lookup->info.polarity = lookup->active_low;
+ 		}
++
++		/*
++		 * Override the polarity specified by GpioInt if
++		 * ACPI_GPIO_QUIRK_OVERRIDE_POLARITY is set.
++		 */
++		if (lookup->info.quirks & ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) {
++			dev_warn(&lookup->info.adev->dev, FW_BUG "Incorrect polarity specified by GpioInt, overriding.\n");
++			lookup->info.polarity = lookup->active_low;
++		}
+ 	}
+ 
+ 	return 1;
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index b70af921c614..7e9f24ebb085 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -622,6 +622,12 @@ struct acpi_gpio_mapping {
+  * get GpioIo type explicitly, this quirk may be used.
+  */
+ #define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
++/*
++ * Use the GPIO polarity (ActiveHigh / ActiveLow) from acpi_gpio_params
++ * for GpioInt as well. The default behavior is to use the one specified
++ * by GpioInt, which can be incorrect on some devices.
++ */
++#define ACPI_GPIO_QUIRK_OVERRIDE_POLARITY	BIT(2)
+ 
+ 	unsigned int quirks;
+ };
+-- 
+2.23.0
+
