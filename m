@@ -2,164 +2,125 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C514C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51206C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003F021874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD3B21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lPR+RAf4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xy4Qg4nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbfIBCHZ (ORCPT
+        id S1729211AbfIBCKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 22:07:25 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39269 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727517AbfIBCHY (ORCPT
+        Sun, 1 Sep 2019 22:10:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57924 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727517AbfIBCKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 22:07:24 -0400
-Received: by mail-vs1-f66.google.com with SMTP id y62so8269853vsb.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 19:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SteZi7Jc1Qj/ZWEovebsg0xMt+f3c5vmQftu053JsS8=;
-        b=lPR+RAf4lLbHFKrG7BKbpxKO2o5PIV6QPEk5yeLJsGuOupELQ4EX6PQ2n7tlyefFjX
-         5TueBZwuZlQptLjVpdiWoRTQzixxBywwaHL2Q/9NxpVlWZua4yL5HvNYQaptM2F6I5gj
-         urBmtznxWX5SXt9UN7RdKLsmNWsgswpCy+GTA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SteZi7Jc1Qj/ZWEovebsg0xMt+f3c5vmQftu053JsS8=;
-        b=dM0bXVecqcFVXAA2e4Xf21ibUknJPAhwAxImEs/iVfSkfTOlIuDKgio14N3ppz/iJ0
-         ggPSHFiLaamzZFUqnnP8X1/NmBzqHQ9cG9aNhYSqVm3lA+09B6HOmEpTi91Zlvk+JltW
-         tg2fTIUTYkVDUqVVgeWWBgQBW8ZVNSox8RcAL9THCCnsJR0eeG9TF42eRr+ypek7Xiuj
-         DqWxIJX66oAe41DYc7KpktyoU2YkLFSJxveizpzGrIzGRbqEvO2J+Mcw2lqUy9SFQhsB
-         5VucTpObdDOP0pYqmr0bdFHjMd2JGJnS6Ggj1/C6FyI+c4qLl+f4Bz4nkj9v/6qDXyfF
-         /EFg==
-X-Gm-Message-State: APjAAAWcB1yldT5Sp/A7+yMNmL1zvUhU1jvA7qN1pAoa0xHMBOztEsiv
-        r9Pw/EKkEKKlnOu/J8pkDRXipVoDzpem2RA5fXSX3g==
-X-Google-Smtp-Source: APXvYqygVljSvGbaEG8FKuJz0otOZOZdwZTpv0TbVOTes8YfHOyxR97RLOewIUCIM3Ih7DIGVB5YrjsGpPU2Agxjvyo=
-X-Received: by 2002:a67:de08:: with SMTP id q8mr4571764vsk.119.1567390042918;
- Sun, 01 Sep 2019 19:07:22 -0700 (PDT)
+        Sun, 1 Sep 2019 22:10:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IKEtilq2bCFU0ExW/kQEechgE7sEyiAZtsK6K3A0aYY=; b=Xy4Qg4nuoZ6/KSJhUspUj71XI
+        mbaz/IVdXenNWL1LKL9plQv9geiHY86SuQO0ixHozKNmJxtbEacXej57pmenRH8w0KlEjJwwZMTFq
+        eGVMwvFN9MQ2qoVAiPe8fphyLamELduVy9sYqA8LSs0XVsstbxBSa0nHStSazf9nUf3B8PRAQ4TQD
+        Pn4WqFDZr+TXsdeYRAAK3WE8EUfZKDJJTluu9VCWOw4u4dOCWlifTtB7H5J+7GnyPcuRJDNt9YVjv
+        +Br/XLSlTpP1NxVGiG2UobCe2rKSmmwrBvJx5gjnRGuuF/DHrerFZ8fIm7WDF48tWWVSsxRkJHU2V
+        qRh0Sd+NA==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4bnI-0006CI-LK; Mon, 02 Sep 2019 02:10:12 +0000
+Subject: Re: [PATCH v3] arch/microblaze: add support for get_user() of size 8
+ bytes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Steven J. Magnani" <steve@digidescorp.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <5a3e440f-4ec5-65d7-b2a4-c57fec0df973@infradead.org>
+ <CAHk-=wg4mE8pSEdWViqJBC9Teh8h1c9LrqqP6=_g8ud5hvkfmA@mail.gmail.com>
+ <CAHk-=whH+Wzj+h0WzgdLMu+xtFddokoVy8dWWvEJqJRGA_HLmw@mail.gmail.com>
+ <6184ffdd-30bf-668a-cdee-88cc8eb2ead7@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <98c83922-6ab1-98ca-7682-7796ae1facf4@infradead.org>
+Date:   Sun, 1 Sep 2019 19:10:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190829042957.150929-1-cychiang@chromium.org> <HE1PR06MB4011FA45247F186BB83DFF04ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-In-Reply-To: <HE1PR06MB4011FA45247F186BB83DFF04ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Mon, 2 Sep 2019 10:06:55 +0800
-Message-ID: <CAFv8NwLq-cJqj0MB=rzKuqr3g0n3Y-nHor4w8ntiFXytoHpdLw@mail.gmail.com>
-Subject: Re: [PATCH] drm: dw-hdmi-i2s: enable audio clock in audio_startup
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "tzungbi@chromium.org" <tzungbi@chromium.org>,
-        "zhengxing@rock-chips.com" <zhengxing@rock-chips.com>,
-        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jeffy.chen@rock-chips.com" <jeffy.chen@rock-chips.com>,
-        "dianders@chromium.org" <dianders@chromium.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "cain.cai@rock-chips.com" <cain.cai@rock-chips.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "eddie.cai@rock-chips.com" <eddie.cai@rock-chips.com>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "dgreid@chromium.org" <dgreid@chromium.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6184ffdd-30bf-668a-cdee-88cc8eb2ead7@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 1, 2019 at 6:04 PM Jonas Karlman <jonas@kwiboo.se> wrote:
->
-> On 2019-08-29 06:29, Cheng-Yi Chiang wrote:
-> > In the designware databook, the sequence of enabling audio clock and
-> > setting format is not clearly specified.
-> > Currently, audio clock is enabled in the end of hw_param ops after
-> > setting format.
-> >
-> > On some monitors, there is a possibility that audio does not come out.
-> > Fix this by enabling audio clock in audio_startup ops
-> > before hw_param ops setting format.
-> >
-> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > ---
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> > index 5cbb71a866d5..08b4adbb1ddc 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> > @@ -69,6 +69,14 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
-> >       hdmi_write(audio, conf0, HDMI_AUD_CONF0);
-> >       hdmi_write(audio, conf1, HDMI_AUD_CONF1);
-> >
-> > +     return 0;
-> > +}
-> > +
-> > +static int dw_hdmi_i2s_audio_startup(struct device *dev, void *data)
-> > +{
-> > +     struct dw_hdmi_i2s_audio_data *audio = data;
-> > +     struct dw_hdmi *hdmi = audio->hdmi;
-> > +
-> >       dw_hdmi_audio_enable(hdmi);
-> >
-> >       return 0;
-> > @@ -105,6 +113,7 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
-> >  }
-> >
-> >  static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
-> > +     .audio_startup = dw_hdmi_i2s_audio_startup,
->
-> A small white space nit, there should be a tab and not space to align the equal sign above.
+On 9/1/19 12:10 PM, Randy Dunlap wrote:
+> On 9/1/19 10:31 AM, Linus Torvalds wrote:
+>> On Sun, Sep 1, 2019 at 10:07 AM Linus Torvalds
+>> <torvalds@linux-foundation.org> wrote:
+>>>
+>>> I guess I'll apply it. I'm not sure why you _care_ about microblaze, but ...
+> 
+> It was just a response to the 0day build bot reporting build errors.
+> 
+> 
+>> Ugh. As I was going to apply it, my code cleanliness conscience struck.
+>>
+>> I can't deal with that unnecessary duplication of code. Does something
+>> like the attached patch work instead?
+>>
+>> Totally untested, but looks much cleaner.
+> 
+> Hm, I'm getting one (confusing) build error, in block/scsi_ioctl.c:
+> 
+>   CC      block/scsi_ioctl.o
+> In file included from ../include/linux/uaccess.h:11,
+>                  from ../include/linux/highmem.h:9,
+>                  from ../include/linux/pagemap.h:11,
+>                  from ../include/linux/blkdev.h:16,
+>                  from ../block/scsi_ioctl.c:9:
+> ../block/scsi_ioctl.c: In function 'sg_scsi_ioctl':
+> ../arch/microblaze/include/asm/uaccess.h:167:25: error: invalid initializer
+>   typeof(ptr) __gu_ptr = (ptr);   \
+>                          ^
+> ../block/scsi_ioctl.c:426:6: note: in expansion of macro 'get_user'
+>   if (get_user(opcode, sic->data))
+>       ^~~~~~~~
 
-ACK. Will fix in v2.
->
-> Also this patch do not cleanly apply to drm-misc-next or linux-next after
-> fc1ca6e01d0a "drm/bridge: dw-hdmi-i2s: add .get_eld support" was merged.
+	if (get_user(opcode, sic->data))
+		return -EFAULT;
 
-ACK. Will rebase in v2.
->
->
->
->
-> This patch does fix an issue I have observed on my Rockchip devices where audio would not always
-> came out after switching between audio streams having different rate and channels parameters.
-> I used to carry [1] to fix that issue, but this seems like a more sane fix.
->
-> [1] https://github.com/Kwiboo/linux-rockchip/commit/4862e4044532b8b480fa3a0faddc197586623808
->
-> With above fixed,
->
-> Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+where sic->data is unsigned char data[0] here:
 
+typedef struct scsi_ioctl_command {
+	unsigned int inlen;
+	unsigned int outlen;
+	unsigned char data[0];
+} Scsi_Ioctl_Command;
 
-Thanks a lot!
+On x86_64 this builds as a call to get_user_1().
+(cannot do objdump on arch/microblaze/, unknown arch/machine)
 
->
->
-> Regards,
-> Jonas
->
-> >       .hw_params      = dw_hdmi_i2s_hw_params,
-> >       .audio_shutdown = dw_hdmi_i2s_audio_shutdown,
-> >       .get_dai_id     = dw_hdmi_i2s_get_dai_id,
->
+I guess we need a way to coerce that to call get_user_1(),
+such as a typecast.  This _seems_ to work (i.e., call get_user_1()):
+
+	if (get_user(opcode, (unsigned char *)(sic->data)))
+		return -EFAULT;
+
+??
+
+-- 
+~Randy
