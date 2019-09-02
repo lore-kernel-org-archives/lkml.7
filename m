@@ -2,94 +2,134 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D69C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE157C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E77421881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C624A22DCC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F8PlcePD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yw0hv6WP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfIBVNA (ORCPT
+        id S1727568AbfIBVQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:13:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40433 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfIBVNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:13:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MjV05wJ2z9sBF;
-        Tue,  3 Sep 2019 07:12:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567458778;
-        bh=YLFOuafLtktMTxfNG9ChbmdV7a8fE+Qr2vYZ/ultEdk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=F8PlcePDTGmFoPhElOO+NNxm64/8xNLBuGKzyuR6KMAZhsXwyE/Qmr3NUHrnc34/j
-         qEbiWw+jZAl76/+M98vc97Cz+3IaWkLEZjbguOo/N//4f+thujgdnU8n1DMMjmwJcl
-         +SsWuY/2uI3AKq2azrkqQIXv6wj08gMaMf8/eUl3ch8R3RBxZmEBIixJFWYImH861m
-         BbOhbX8gn0u7F71kbsYapKRkqKK4FW0nJw/KL9VKioiJLdxztQRBG9jnb+AeYZjWH/
-         mfvPRJ8v0b0mz4Ew6Xh5nw7GNHDoE8NxLvP+94roCzr10CW9X4pr6XjvaNeENxQvG4
-         f/nohEfEHymIg==
-Date:   Tue, 3 Sep 2019 07:12:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: linux-next: Signed-off-by missing for commits in the fuse tree
-Message-ID: <20190903071251.7967684a@canb.auug.org.au>
+        Mon, 2 Sep 2019 17:16:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34216 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfIBVQZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:16:25 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b24so9537181pfp.1;
+        Mon, 02 Sep 2019 14:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UzPPEolNh35wWErUe2k2fZkCpaurwJuZg/+ELGsiOFk=;
+        b=Yw0hv6WPGdzg89CqQgm2pjeaLxqK1SCjR9n0FGD5Y3r2LiFeW+G9UtCLiznr5RxuhI
+         7tE3P5Li0aUEBa2fZHPoHoot/SSNCoFmsbvAnqNg9aZX2mbt5QhkqpDML4MSTi/QpcpM
+         lxoK1qzZaPS5EA4osYjqQ2CDcDD+DBrRlxvXe3RImogXOtyntEvvi2ecDgvwyaHy84XK
+         RitqIfgPXhoh1+oroTx4tktLbK5Kqc/1Le9S3MJUcn/vj85LdAkINB8xrvuPRrvcF1wt
+         XG1FcNeH0sAxpcl72s4C6ov/yEFMMPgQchAya1U+z4GvOBJqX/jHRkG2XgpuDvMlv4Jh
+         ZY6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UzPPEolNh35wWErUe2k2fZkCpaurwJuZg/+ELGsiOFk=;
+        b=ARQ3o811yRXmggLTx8OkI3mbSVpG6KMzb1MGHaWrZAin8K/IqLuEP+5qGwCiuzjIqb
+         y/jnvglpTn2SDYI7QXVQBX787+BExjxoa3nYf4/0vFGkgJaiUax0WLu0iDm/Ue6Ynkco
+         sej8Y+FNVMAuIcPfT1mNtoI99Djpc11iLnJs25W8YkB7rmbqkJcpwETVAYHzrKrsmV+6
+         pS5IyNtuSpkoiPFmFO9tzXiltihAdtXVreYrZIj/gAI6OaDrkQWlaEgrxVJZrc0zK0x0
+         U37tMxh7e9msNjuHqRvBqFnV3U8BS8KaSTSQVvmFDMLiSyduCqIQIj1jf74ODbiBoFb9
+         idhg==
+X-Gm-Message-State: APjAAAXLlRdE0X02u4waistTfWei/DwEUpv5/ng/4mimR9VfveE9aywx
+        wmlSp1F5CIeIU9aYD0G8NbYlY5dJfLVVSEPwcf8=
+X-Google-Smtp-Source: APXvYqyg9Tkgzp+liZd++CYTKTIbIPE7/kBlL+HXD5OkDBg82HGev2/K71w5cyXBHT4FgJomex2UHjw/TsfC1ly8MEY=
+X-Received: by 2002:a63:6eca:: with SMTP id j193mr26308059pgc.74.1567458984928;
+ Mon, 02 Sep 2019 14:16:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3/wmMl9fldTfXn.=mT2GO6C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190711102601.20582-1-chuanhua.han@nxp.com> <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 3 Sep 2019 00:16:12 +0300
+Message-ID: <CAHp75VfFtMMQhetRFHrx=Ft7OWwyMqLrwP3sPjT6YVtr8xCHoQ@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: support for NXP i2c controller
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Chuanhua Han <chuanhua.han@nxp.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
+        Udit Kumar <udit.kumar@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3/wmMl9fldTfXn.=mT2GO6C
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 2, 2019 at 11:58 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Jul 11, 2019 at 12:35 PM Chuanhua Han <chuanhua.han@nxp.com> wrote:
+> >
+> > Enable NXP i2c controller to boot with ACPI
+> >
+> > Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+> > Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
+> > Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+>
+> Wolfram, any objections to this from the i2c side?
 
-Hi all,
+May I propose amendment(s)?
 
-Commit
+> > @@ -44,6 +44,7 @@
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/slab.h>
 
-  5eae593422da ("vfs: Convert fuse to use the new mount API")
+> > +#include <linux/acpi.h>
 
-is missing a Signed-off-by from its author.
+If it's kept in order, better to go with it. (Yes, it is as I have checked)
+However, property.h should be included instead, see below.
 
-Commit
+> >         const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
+> >                                                            &pdev->dev);
+> > +       const struct acpi_device_id *acpi_id =
+> > +                       acpi_match_device(i2c_imx_acpi_ids,
+> > +                                         &pdev->dev);
 
-  c08428c528bc ("vfs: Create fs_context-aware mount_bdev() replacement")
 
-is missing a Signed-off-by from its committer.
+> >         if (of_id)
+> >                 i2c_imx->hwdata = of_id->data;
+> > +       else if (acpi_id)
+> > +               i2c_imx->hwdata = (struct imx_i2c_hwdata *)
+> > +                               acpi_id->driver_data;
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/3/wmMl9fldTfXn.=mT2GO6C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+The above altogher may be replaced with
 
------BEGIN PGP SIGNATURE-----
+const struct imx_i2c_hwdata *match;
+...
+match = device_get_match_data(&pdev->dev);
+if (match)
+ i2c_imx->hwdata = match;
+else
+...
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1thdMACgkQAVBC80lX
-0Gxpwwf8CRFzwwU0tsD7FQqwn0VmeaxZEkyUdJNl+qPdiPqEaxGnqq80HESCED2p
-coKEkK4DjPRSzi9295mynteAv8UikoGtWiun038Qy1taPIiau51VQ8TFhmiclvTR
-68MDg2ylmE2/fHrCmNB9zzkQUKBcAoiKGgdK9sXI5hcGjfuB0NWkqSbmyUvlzCp6
-aiL9N1KF1Px8v9Rklyco4aaqGNBdc/9rFgp9+iZ5Vh+b2KEi1AtFzfC/+g5RYx4T
-M/tAUIEYr223prgT6aQA97I36NWGmpfSRgJ8jgrLaMLkP3z3e97bzoL5xoFp7pJ1
-LFCO8VyMgNReQ76UHhrEEHZ5uJQWWQ==
-=iloA
------END PGP SIGNATURE-----
+> > +               .acpi_match_table = ACPI_PTR(i2c_imx_acpi_ids),
 
---Sig_/3/wmMl9fldTfXn.=mT2GO6C--
+Since there is no #ifdef guard no need to use ACPI_PTR().
+
+-- 
+With Best Regards,
+Andy Shevchenko
