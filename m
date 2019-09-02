@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB80CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB9AC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7CED21874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5572C2190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GS/UWabS"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="u9jT5UnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfIBIFQ (ORCPT
+        id S1730049AbfIBIFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:05:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43992 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfIBIFQ (ORCPT
+        Mon, 2 Sep 2019 04:05:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34716 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfIBIFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:05:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y8so12939478wrn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:05:13 -0700 (PDT)
+        Mon, 2 Sep 2019 04:05:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so13013174wrn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=fO/Fs9yhycLN56Ypumx1dDOmveWnwXs336ehWOSJQl8=;
-        b=GS/UWabSrOopY6o0gIwaQ2w0Kz6bve0lYOWB2MoNuu14CycgzC6GFfHrArf3Vev8DL
-         HHptHf4rOcJjdQOqLJMU5gGG8jZWnBMG2aXbqkeqZiJIH2sm3dl/glFEn07kgp+6KrHL
-         Ghx1l/tdVvl/HsD8p2HGeegS0/7Za6f1e911k2iZJ7m81lc5ekmHK3cwWHzdlz+671RG
-         QHKJYFkI4GlDacTSjS43sQ4RqPBipkwSRiSsXvXu44ZhQ32tLEGRZqmnRVEHChDoz8Ac
-         kjLooKrtbFW6I5KhH2YZxDXWFTFxHp29e71Ymq+HPJSFU0H4JakGfdkWSfTqzf10MVsC
-         MbFQ==
+        bh=/pHVxf6N6S+S04cnwPxjOpZs7BM1gCEC9ZFkDTl0jF4=;
+        b=u9jT5UnLQyRqYSLrxnWhzLF0nhlJYyWXtoWuLljFjdxiaK97CwZYpMt3cGQCQejA/D
+         9cvNAxpg8X1NVCWqk2pN1jBcP5+4/N4B6sKhfpt4HdwEUJviwMozkbcXuCgPLy+l5sxp
+         ah8XWrwofB+Zy3z7QRDEZvTVdXmPWgtq/6bYCk3KVL9sse+sxAAuQCBv4jbYcBlfVhBT
+         SYjPoYEHCxmS/lIOFPqXSZVC74vsiJwvfPdT6zE4xwvinoo5Uv/vK1oG35xfaphk2Ulb
+         sG0C175Zt8BgFOEszFzDEEdNNDGWWTFcnUF7p3lMIIRngTG9UzW3bPnZbFmg99J6i4Pa
+         nu4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=fO/Fs9yhycLN56Ypumx1dDOmveWnwXs336ehWOSJQl8=;
-        b=kAcLGHLwmEFPL/3Jp3NEOsUIYnskxsazOGmbNj4gfscwqL8UgpyHaoPB0Bbcv6UHMO
-         QVSjo86Ztp4dyLlPJ+BrAdbdL8serYKmGl0lLsGb4Qsy59lKlAIoIF+Y1dwgUEVltWJM
-         FLnk2j7RG6LI8Kb7Hu3HbvofxuNMvjNg7lfhlxJLIAedGFwyLDV+Y9PZ4zYFAoSxAYcd
-         +U4+ORqb/4oPffd/1LgQj/FHb1h8yIPEE2DVOREsFvCY9qUhiGNpeVJa9PgiBdol+wdH
-         4POEKJHA6OLcqTsGFq3Gd9yMimVDwBY07bvp57zN1alpOAPOlUdQPYOHHOSoS9tJgX5/
-         0Mig==
-X-Gm-Message-State: APjAAAW4lvBoAmXoBfKx2vILfh5+fOYXkl0Ky9j/+msJl7VhdGhR60QJ
-        FzE8t6J5GE+jrpQ1bS9xzta6XFC6TO0=
-X-Google-Smtp-Source: APXvYqyk2RjxajEGOAwGyishWjOtiBsMjUX7blAN9b4Wfv3Cy2fbPxsmWwVbhFmA0cLkkHqsLH5zJw==
-X-Received: by 2002:adf:cc84:: with SMTP id p4mr16899211wrj.201.1567411512816;
-        Mon, 02 Sep 2019 01:05:12 -0700 (PDT)
+        bh=/pHVxf6N6S+S04cnwPxjOpZs7BM1gCEC9ZFkDTl0jF4=;
+        b=T+dX7vMnGcB4ft17i9v0co3/ZlcwBZkzNBZWCA4yyj/GqxbD2p8c4R5TZ2JtSJS5kp
+         9MX9BDVYosngyz4WgXCxkLht+FfwsCf2kWhhpG5j7I1tgCmtojFdPqDIdIxWf4NOlCP8
+         cmAra3yGr1u83PKgiSEzLPxczWaCX0aUF7fuCm4bnC7YXmHnPIKyZ2xYjscNITxw2voQ
+         dQwEVGwr8hvwv4sYm3/hRWsZX4GEOItuEwyc5sMe7hSggW4019iv9F8Ht9bLhwWbGGWu
+         akh9RYUhJOKfTgOrHLvuhzMpERpldGQMpF0QwjvvJwGHYfk/LBVVZyggNVTMNKKjxNHK
+         z11g==
+X-Gm-Message-State: APjAAAUKFmgNyQQLvNgopg1Nrl/uYD3QA+ZWD6+LN7yMoih8G51f1Ywe
+        PX4l44OMADszuot5wDY55rzeFhBsjSM=
+X-Google-Smtp-Source: APXvYqzbEBakAHIj7NXCsZoF0XmYVixKPzIsRXJ1EELGxPZ0QjqpJ6WcT4Ey1s11OsWxNG8N+jMQ7Q==
+X-Received: by 2002:adf:9050:: with SMTP id h74mr34146710wrh.191.1567411528226;
+        Mon, 02 Sep 2019 01:05:28 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q15sm3982870wmb.28.2019.09.02.01.05.11
+        by smtp.gmail.com with ESMTPSA id o22sm5746140wra.96.2019.09.02.01.05.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 01:05:12 -0700 (PDT)
-Subject: Re: [PATCH 1/5] drm: dw-hdmi: extract dw_hdmi_connector_update_edid()
+        Mon, 02 Sep 2019 01:05:27 -0700 (PDT)
+Subject: Re: [PATCH 2/5] drm: dw-hdmi: move dw_hdmi_connector_detect()
 To:     Jonas Karlman <jonas@kwiboo.se>,
         Andrzej Hajda <a.hajda@samsung.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -72,7 +72,8 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <AM0PR06MB40049562E295DD62302C8DB7ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
- <AM0PR06MB4004C3231CA859341E6CF8B9ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+ <20190901161426.1606-1-jonas@kwiboo.se>
+ <AM0PR06MB400415A45BFD6956950D9251ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -125,12 +126,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <179241b1-3f54-683d-036f-ae10f53935d7@baylibre.com>
-Date:   Mon, 2 Sep 2019 10:05:11 +0200
+Message-ID: <3fcff58c-de58-31e9-26cb-6699eca610e7@baylibre.com>
+Date:   Mon, 2 Sep 2019 10:05:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR06MB4004C3231CA859341E6CF8B9ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+In-Reply-To: <AM0PR06MB400415A45BFD6956950D9251ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,58 +140,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
-
 On 01/09/2019 18:14, Jonas Karlman wrote:
-> Extract code that updates EDID into a dw_hdmi_connector_update_edid()
-> helper, it will be called from dw_hdmi_connector_detect().
-
-Small nit, you should precise you add a bool to optionally add the modes.
-
-Anyway:
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
+> Move dw_hdmi_connector_detect() it will call dw_hdmi_connector_update_edid().
 > 
 > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 > ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 30 +++++++++++------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 521d689413c8..8ab214dc5ae7 100644
+> index 8ab214dc5ae7..91d86ddd6624 100644
 > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -2171,7 +2171,8 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
->  	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+> @@ -2156,21 +2156,6 @@ static void dw_hdmi_update_phy_mask(struct dw_hdmi *hdmi)
+>  					  hdmi->rxsense);
 >  }
 >  
-> -static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
-> +static int dw_hdmi_connector_update_edid(struct drm_connector *connector,
-> +					  bool add_modes)
+> -static enum drm_connector_status
+> -dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+> -{
+> -	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> -					     connector);
+> -
+> -	mutex_lock(&hdmi->mutex);
+> -	hdmi->force = DRM_FORCE_UNSPECIFIED;
+> -	dw_hdmi_update_power(hdmi);
+> -	dw_hdmi_update_phy_mask(hdmi);
+> -	mutex_unlock(&hdmi->mutex);
+> -
+> -	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+> -}
+> -
+>  static int dw_hdmi_connector_update_edid(struct drm_connector *connector,
+>  					  bool add_modes)
 >  {
->  	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
->  					     connector);
-> @@ -2190,7 +2191,8 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
->  		hdmi->sink_has_audio = drm_detect_monitor_audio(edid);
->  		drm_connector_update_edid_property(connector, edid);
->  		cec_notifier_set_phys_addr_from_edid(hdmi->cec_notifier, edid);
-> -		ret = drm_add_edid_modes(connector, edid);
-> +		if (add_modes)
-> +			ret = drm_add_edid_modes(connector, edid);
->  		kfree(edid);
->  	} else {
->  		dev_dbg(hdmi->dev, "failed to get edid\n");
-> @@ -2199,6 +2201,11 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> @@ -2201,6 +2186,21 @@ static int dw_hdmi_connector_update_edid(struct drm_connector *connector,
 >  	return ret;
 >  }
 >  
-> +static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> +static enum drm_connector_status
+> +dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
 > +{
-> +	return dw_hdmi_connector_update_edid(connector, true);
+> +	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> +					     connector);
+> +
+> +	mutex_lock(&hdmi->mutex);
+> +	hdmi->force = DRM_FORCE_UNSPECIFIED;
+> +	dw_hdmi_update_power(hdmi);
+> +	dw_hdmi_update_phy_mask(hdmi);
+> +	mutex_unlock(&hdmi->mutex);
+> +
+> +	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
 > +}
 > +
->  static void dw_hdmi_connector_force(struct drm_connector *connector)
+>  static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
 >  {
->  	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+>  	return dw_hdmi_connector_update_edid(connector, true);
 > 
 
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
