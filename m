@@ -2,119 +2,116 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A513C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738D1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B11214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F32214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfIBHOS convert rfc822-to-8bit (ORCPT
+        id S1729656AbfIBHRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:14:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39218 "EHLO mx1.redhat.com"
+        Mon, 2 Sep 2019 03:17:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59546 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729330AbfIBHOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:14:18 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 506FA81F1B;
-        Mon,  2 Sep 2019 07:14:17 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0256360920;
-        Mon,  2 Sep 2019 07:14:15 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <11986.1567178014@warthog.procyon.org.uk>
-References: <11986.1567178014@warthog.procyon.org.uk> <85B7196E-D717-4F19-A7E8-82A18287A3DE@linux.vnet.ibm.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     dhowells@redhat.com, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        keyrings@vger.kernel.org
-Subject: Re: Oops (request_key_auth_describe) while running cve-2016-7042 from LTP
+        id S1729393AbfIBHRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:17:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:17:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="381777869"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2019 00:16:57 -0700
+Cc:     baolu.lu@linux.intel.com,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>,
+        "alan.cox@intel.com" <alan.cox@intel.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "pengfei.xu@intel.com" <pengfei.xu@intel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v8 7/7] iommu/vt-d: Use bounce buffer for untrusted
+ devices
+To:     David Laight <David.Laight@ACULAB.COM>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
+ <20190830071718.16613-8-baolu.lu@linux.intel.com>
+ <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <90de3797-d961-a3e5-36c9-d8328a3faab0@linux.intel.com>
+Date:   Mon, 2 Sep 2019 15:15:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <760.1567408455.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Mon, 02 Sep 2019 08:14:15 +0100
-Message-ID: <761.1567408455@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 02 Sep 2019 07:14:17 +0000 (UTC)
+In-Reply-To: <4dee1bcef8474ebb95a7826a58bb72aa@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
+Hi David,
 
-Would you like to me to put you down as the author of this patch?  If so, I'll
-need a Signed-off-by from you.
+On 8/30/19 9:39 PM, David Laight wrote:
+> From: Lu Baolu
+>> Sent: 30 August 2019 08:17
+> 
+>> The Intel VT-d hardware uses paging for DMA remapping.
+>> The minimum mapped window is a page size. The device
+>> drivers may map buffers not filling the whole IOMMU
+>> window. This allows the device to access to possibly
+>> unrelated memory and a malicious device could exploit
+>> this to perform DMA attacks. To address this, the
+>> Intel IOMMU driver will use bounce pages for those
+>> buffers which don't fill whole IOMMU pages.
+> 
+> Won't this completely kill performance?
+> 
+> I'd expect to see something for dma_alloc_coherent() (etc)
+> that tries to give the driver page sized buffers.
 
-David
----
-commit df882ad6d4e24a3763719c1798ea58e87d56c2d7
-Author: Hillf Danton <hdanton@sina.com>
-Date:   Fri Aug 30 15:54:33 2019 +0100
+Bounce page won't be used if driver request page sized buffers.
 
-    keys: Fix missing null pointer check in request_key_auth_describe()
-    
-    If a request_key authentication token key gets revoked, there's a window in
-    which request_key_auth_describe() can see it with a NULL payload - but it
-    makes no check for this and something like the following oops may occur:
-    
-            BUG: Kernel NULL pointer dereference at 0x00000038
-            Faulting instruction address: 0xc0000000004ddf30
-            Oops: Kernel access of bad area, sig: 11 [#1]
-            ...
-            NIP [...] request_key_auth_describe+0x90/0xd0
-            LR [...] request_key_auth_describe+0x54/0xd0
-            Call Trace:
-            [...] request_key_auth_describe+0x54/0xd0 (unreliable)
-            [...] proc_keys_show+0x308/0x4c0
-            [...] seq_read+0x3d0/0x540
-            [...] proc_reg_read+0x90/0x110
-            [...] __vfs_read+0x3c/0x70
-            [...] vfs_read+0xb4/0x1b0
-            [...] ksys_read+0x7c/0x130
-            [...] system_call+0x5c/0x70
-    
-    Fix this by checking for a NULL pointer when describing such a key.
-    
-    Also make the read routine check for a NULL pointer to be on the safe side.
-    
-    Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-    Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> 
+> Either that or the driver could allocate page sized buffers
+> even though it only passes fragments of these buffers to
+> the dma functions (to avoid excessive cache invalidates).
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index e73ec040e250..ecba39c93fd9 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -66,6 +66,9 @@ static void request_key_auth_describe(const struct key *key,
- {
- 	struct request_key_auth *rka = dereference_key_rcu(key);
- 
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -83,6 +86,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
- 
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
- 
+Yes, agreed. One possible solution is to add a dma attribution and the
+device driver could hint that the buffer under mapping is part of a page
+sized buffer and iommu driver don't need to use bounce buffer for it.
+This is in the todo list. We need to figure out which device driver
+really needs this.
+
+> 
+> Since you have to trust the driver, why not actually trust it?
+> 
+
+In thunderbolt case, we trust driver, but we don't trust the hot-added
+devices.
+
+Best regards,
+Baolu
