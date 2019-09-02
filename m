@@ -2,119 +2,85 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F4FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213AAC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF89521744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E392087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfIBOuA (ORCPT
+        id S1731679AbfIBOul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:50:00 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50672 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfIBOuA (ORCPT
+        Mon, 2 Sep 2019 10:50:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41457 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfIBOuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:50:00 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 410DF272BD9
-Subject: Re: [PATCH 1/1] merge_config.sh: ignore unwanted grep errors
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <4f92e9b3a88e60c8b5962504d77bc596442b0a40.1567023309.git.guillaume.tucker@collabora.com>
- <b1dc3c40-b658-211e-811c-e13083303d48@collabora.com>
- <a302a6fe-8f22-9ae6-559f-5b2ad13d5b05@nvidia.com>
- <b4631303-37b8-2bc8-8e97-59f8b50ac60f@collabora.com>
- <cb711681-40fb-80df-e471-565b542b5197@nvidia.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <4dcc3258-8909-e2de-2836-378e8e39594a@collabora.com>
-Date:   Mon, 2 Sep 2019 15:49:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 10:50:40 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i4nf9-0007oF-W5; Mon, 02 Sep 2019 14:50:36 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][usb-next] usb: cdns3: fix missing assignment of ret before error check on ret
+Date:   Mon,  2 Sep 2019 15:50:35 +0100
+Message-Id: <20190902145035.18200-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <cb711681-40fb-80df-e471-565b542b5197@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2019 15:32, Jon Hunter wrote:
-> 
-> On 02/09/2019 15:26, Guillaume Tucker wrote:
->> On 02/09/2019 15:21, Jon Hunter wrote:
->>>
->>> On 02/09/2019 15:14, Guillaume Tucker wrote:
->>>> + Jon Hunter who hit a similar issue
->>>
->>> Thanks for adding me.
->>>
->>>> On 28/08/2019 21:19, Guillaume Tucker wrote:
->>>>> The merge_config.sh script verifies that all the config options have
->>>>> their expected value in the resulting file and prints any issues as
->>>>> warnings.  These checks aren't intended to be treated as errors given
->>>>> the current implementation.  However, since "set -e" was added, if the
->>>>> grep command to look for a config option does not find it the script
->>>>> will then abort prematurely.
->>>>>
->>>>> Handle the case where the grep exit status is non-zero by setting
->>>>> ACTUAL_VAL to an empty string to restore previous functionality.
->>>>>
->>>>> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
->>>>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->>>>> ---
->>>>>  scripts/kconfig/merge_config.sh | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
->>>>> index d924c51d28b7..d673268d414b 100755
->>>>> --- a/scripts/kconfig/merge_config.sh
->>>>> +++ b/scripts/kconfig/merge_config.sh
->>>>> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
->>>>>  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
->>>>>  
->>>>>  	REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
->>>>> -	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
->>>>> +	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || echo)
->>>
->>> Shouldn't this just be 'true' instead of 'echo'?
->>
->> I just explained why I used "echo" on your thread.  Essentially,
->> I think both can be used but "echo" made more sense to me because
->> the script is then using the output string from the command
->> rather than the exit status.
-> 
-> Yes just saw that. However, I don't think that using 'echo' is
-> necessary. The grep command does not output anything and so the variable
-> will essentially be an empty string, we just need to ensure that no
-> error is returned from the command. In cases such as these I always use
-> 'true' in conjunction with grep.
+From: Colin Ian King <colin.king@canonical.com>
 
-Sure, that makes sense too.  Your solution is arguably a bit
-simpler so I agree it would be better to use "true" here.
+Currently the check on a non-zero return code in ret is false because
+ret has been initialized to zero.  I believe that ret should be assigned
+to the return from the call to readl_poll_timeout_atomic before the
+check on ret.  Since ret is being re-assinged the original initialization
+of ret to zero can be removed.
 
-I can submit a v2 with "true" if that helps, unless you prefer to
-send your version of the fix yourself?
+Addresses-Coverity: ("'Constant' variable guards dead code")
+Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/usb/cdns3/gadget.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 3094ad65ffc9..0eb3022838d6 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -2154,7 +2154,7 @@ int __cdns3_gadget_ep_clear_halt(struct cdns3_endpoint *priv_ep)
+ {
+ 	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
+ 	struct usb_request *request;
+-	int ret = 0;
++	int ret;
+ 	int val;
+ 
+ 	trace_cdns3_halt(priv_ep, 0, 0);
+@@ -2162,8 +2162,8 @@ int __cdns3_gadget_ep_clear_halt(struct cdns3_endpoint *priv_ep)
+ 	writel(EP_CMD_CSTALL | EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
+ 
+ 	/* wait for EPRST cleared */
+-	readl_poll_timeout_atomic(&priv_dev->regs->ep_cmd, val,
+-				  !(val & EP_CMD_EPRST), 1, 100);
++	ret = readl_poll_timeout_atomic(&priv_dev->regs->ep_cmd, val,
++					!(val & EP_CMD_EPRST), 1, 100);
+ 	if (ret)
+ 		return -EINVAL;
+ 
+-- 
+2.20.1
 
-Also we're actually using this fix in KernelCI to test it on top
-of Mark's patch:
-
-  https://github.com/kernelci/linux/commits/staging.kernelci.org
-
-so I can get it tested again with quite a few build variants
-using "true".  It's kind of trivial but we need a working
-merge_config.sh anyway on that branch.
-
-Guillaume
