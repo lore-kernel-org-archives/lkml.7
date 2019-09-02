@@ -6,141 +6,143 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5F8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817B0C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F5821881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D15321881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LStOEI5q"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RR0ZCKig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbfIBKuD (ORCPT
+        id S1731267AbfIBKu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:50:03 -0400
-Received: from mail-eopbgr10056.outbound.protection.outlook.com ([40.107.1.56]:55940
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731192AbfIBKuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:50:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cOSaw6d5v4TJKE3QcmR6vQCM0LCKSmwHqA2EJu6FDTlzl6emgs1E5ssnc7roHwEJ4X6ABwL6UHelRl+H4/t7dYKEliBbSmKiYCiCH47qjrsZ6vu1N9hz9vkHXD9+gszi7v2JEpzRDi7n5fzo2TV5c9Z2O488HgIDwVu77jEDFCOvhmGT4OuuxRCNP5SjWqOxc3y6STIo6rEQO240ingnxPU77+3GcyKIHTv2uLIP5+ICOtCq+qDagCxV7sQbc6iWQeqNtliZA5jen2IA61aoQuMkH3t0U1oNTL+WSjiSXWuTCeAmT32lmjUk0e0CZD2Oz9Ta/or1og0Zeog8O8Z/Ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NuhtYnzfhusV9OxQzs2EJk2b74vyp3IHqOmQDca5lIU=;
- b=MYG6+QkVdsaw/9TPUGPPMXnrJkttxymtyy7B4DOEhAg8cm6/hN7snWPvsHQjSOD+cK0g5+iDj+rJ9DkSYZS7is9oOPsqEs3Po+KXBGFSF6OxWdyL0b8falvrirT5CXuV0thtqIvZQSbIlo6gfhc/RMXa4H+M94vAjjBvNIfjaVgdEJYToXaW5nOGP74PPRvK+bfGTgfDWoUUOl+ToC7Ex9Yv8YyaTJi1NMzPnhSDqal0ykLomuuIf+MPiYlDCccnbxuUbZubKpLb5kcuQkz1oe2djCMBu3xG1GWhLorOFnzQCWc2wV6aexWwC+nBKzGGpOdStnGGkc+vch+55u/+/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NuhtYnzfhusV9OxQzs2EJk2b74vyp3IHqOmQDca5lIU=;
- b=LStOEI5qrkwACLMAvFu3m/mIYvoWYZfd286tcwYqSgtrMHjxRteNlFYjkQVCPD9rlqXiaGoyG6Il1ok7yP2VxH9eFmXG5PQYanag5CG6H6YwERnLswecZ1+OPvBz543Fag4XHEs+6KpGcveiZbAIxmoHMO2jDpJ5Mru2mEH9xOE=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4895.eurprd05.prod.outlook.com (20.177.51.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.21; Mon, 2 Sep 2019 10:49:58 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2220.020; Mon, 2 Sep 2019
- 10:49:58 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Guenter Roeck <linux@roeck-us.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Steven Price <steven.price@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: Re: [PATCH 2/3] pagewalk: separate function pointers from iterator
- data
-Thread-Topic: [PATCH 2/3] pagewalk: separate function pointers from iterator
- data
-Thread-Index: AQHVXauzoOyMGt/Rm0+/Xu8LAWoHTqcXL4MAgAAOHoCAABCOAIAAm4cAgAAjgICAAC/DAA==
-Date:   Mon, 2 Sep 2019 10:49:58 +0000
-Message-ID: <20190902104955.GB20@mellanox.com>
-References: <20190828141955.22210-1-hch@lst.de>
- <20190828141955.22210-3-hch@lst.de> <20190901184530.GA18656@roeck-us.net>
- <20190901193601.GB5208@mellanox.com>
- <b26ac5ae-a90c-7db5-a26c-3ace2f1530c7@roeck-us.net>
- <20190902055156.GA24116@mellanox.com> <20190902075859.GA29137@lst.de>
-In-Reply-To: <20190902075859.GA29137@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR01CA0036.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:69::49) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53469947-dbde-4e13-b9a6-08d72f934c4a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4895;
-x-ms-traffictypediagnostic: VI1PR05MB4895:
-x-microsoft-antispam-prvs: <VI1PR05MB489527A66C2397AAEF7ECBABCFBE0@VI1PR05MB4895.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 01480965DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(189003)(86362001)(186003)(4326008)(478600001)(8936002)(36756003)(7736002)(305945005)(71190400001)(71200400001)(256004)(6512007)(14454004)(6436002)(81166006)(81156014)(8676002)(53936002)(316002)(26005)(102836004)(14444005)(33656002)(2906002)(6246003)(76176011)(54906003)(6506007)(386003)(66476007)(66556008)(64756008)(66446008)(6116002)(66946007)(3846002)(52116002)(11346002)(476003)(2616005)(486006)(25786009)(446003)(7416002)(229853002)(6486002)(1076003)(6916009)(66066001)(99286004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4895;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u3yP2zgBzHURzB9tJhA+7SX5ivEUZ0RwAuvSIBwod6Bd4lLddC4gbzx0hy6BMQ0J95S7RoGfD0g3pLQr2JC/bRymEarJ8YJNgSORJfdff/McSAcw9b9WGBNZfWssEbXPHpkp9dhdEJK13FAFjAZ/+dEvcrwm9/q9T53DX52cJxyNl+Zf3dTbut0QBcrQzdeqe8Swh0hYsA7pBVna8gGdrcXTLx7HcSIpICLuqhhnFluxAQFgiogiebCNpqA0z0DDRdAHgpdW7496NDEIxLYpG3g2kRbn9S/Wfw9PJVKRz4r6C8GwnrCSUpulA+z90xoQCks/SisPGGGWUt9bWxYrGIaU1vgTYg6vH3CPaHZ+6BxSYrtA6oI8T84CH659PiWsYNNyEb1pFhJGXnHJyrExflI8ahMKyQMy2UpG38+GUkQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <0E3FE41A0CB6E74EA4443B039BEC2BBA@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Sep 2019 06:50:28 -0400
+Received: from ozlabs.org ([203.11.71.1]:56473 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730785AbfIBKu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:50:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MRgh0qNJz9s00;
+        Mon,  2 Sep 2019 20:50:24 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567421424;
+        bh=QE5MySbZZCiZEdG5L/eNJABS4Gc63k5VfnN8vgNiVSs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RR0ZCKigvY1/8MVPKYkwge4hNLaqPI1Ta+cESsA+5ZhobEyOO+1afi8NWLyBNsSQe
+         H7arwruxr5xy9oSqz6ZWVAzg4mzw/DiSIYjv4KnD98SVHurpTDhGk0vtjSz18+wFDv
+         luJEwUhqbMtW8y1VKaEccPjP0UW+N/ZShliP75T7JxEeRy2Yfs1drSVvuPK3xZRZVL
+         eJBuI+HjQs9X+NmHO50rEI5VRTF2TXvrcOZp/v5x4r06+vF3+a1brhKBWOg4WTeWWU
+         pk7rTd4F/4IYV+UHMSzEwdOKYu+n22qdGnjZ13zfPgJlm7qBrppIdNnAg/zNggH2bG
+         jiZm0kp0auBLg==
+Date:   Mon, 2 Sep 2019 20:50:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build failure after merge of the hmm tree
+Message-ID: <20190902205017.3eca5b70@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53469947-dbde-4e13-b9a6-08d72f934c4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:49:58.5176
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RTe3Biu3LyLvl9twoKSud2kxcqiUkNu2AhofwoPNFB8QguKsCxVLpcMVPik5vMe3ojKyoPMtKKtBFh6I85bq9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4895
+Content-Type: multipart/signed; boundary="Sig_/2akw3iYkGk2rHz__16Dk2f5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 09:58:59AM +0200, Christoph Hellwig wrote:
-> On Mon, Sep 02, 2019 at 05:51:58AM +0000, Jason Gunthorpe wrote:
-> > On Sun, Sep 01, 2019 at 01:35:16PM -0700, Guenter Roeck wrote:
-> > > > I belive the macros above are missing brackets.. Can you confirm th=
-e
-> > > > below takes care of things? I'll add a patch if so
-> > > >=20
-> > >=20
-> > > Good catch. Yes, that fixes the build problem.
-> >=20
-> > I added this to the hmm tree to fix it:
->=20
-> This looks good.  Although I still haven't figure out how this is
-> related to the pagewalk changes to start with..
+--Sig_/2akw3iYkGk2rHz__16Dk2f5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It is this hunk:
+Hi all,
 
-@@ -481,7 +461,10 @@ static int madvise_free_single_vma(struct
-vm_area_struct *vma,
- 	       update_hiwater_rss(mm);
-=20
-	mmu_notifier_invalidate_range_start(&range);
--	madvise_free_page_range(&tlb, vma, range.start, range.end);
-+	tlb_start_vma(&tlb, vma);
-+	walk_page_range(vma->vm_mm, range.start, range.end,
-+                       &madvise_free_walk_ops, &tlb);
-+			tlb_end_vma(&tlb, vma);
+After merging the hmm tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-&tlb does not expand properly in the csky tlb_start_vma macro, and
-previously it was just tlb
+ERROR: "__nd_driver_register" [drivers/dax/pmem/dax_pmem_compat.ko] undefin=
+ed!
+ERROR: "nvdimm_namespace_common_probe" [drivers/dax/pmem/dax_pmem_core.ko] =
+undefined!
+ERROR: "devm_nsio_disable" [drivers/dax/pmem/dax_pmem_core.ko] undefined!
+ERROR: "devm_nsio_enable" [drivers/dax/pmem/dax_pmem_core.ko] undefined!
+ERROR: "nvdimm_setup_pfn" [drivers/dax/pmem/dax_pmem_core.ko] undefined!
+ERROR: "to_nd_dax" [drivers/dax/pmem/dax_pmem_core.ko] undefined!
+ERROR: "to_nd_region" [drivers/dax/pmem/dax_pmem_core.ko] undefined!
+ERROR: "__nd_driver_register" [drivers/dax/pmem/dax_pmem.ko] undefined!
+ERROR: "nvdimm_cmd_mask" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_blk_region_provider_data" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_blk_region_to_dimm" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_bus_attribute_group" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_fletcher64" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_attribute_group" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_blk_region_set_provider_data" [drivers/acpi/nfit/nfit.ko] undefi=
+ned!
+ERROR: "nvdimm_kobj" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_pmem_region_create" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_cmd_in_size" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_region_dev" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_bus_register" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_to_bus" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_numa_attribute_group" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_in_overwrite" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_flush" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_region_acquire_lane" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_provider_data" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_volatile_region_create" [drivers/acpi/nfit/nfit.ko] undefine=
+d!
+ERROR: "devm_nvdimm_memremap" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_region_attribute_group" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "to_nvdimm_bus_dev" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_name" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_blk_memremap_flags" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_bus_unregister" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_cmd_dimm_desc" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_mapping_attribute_group" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_cmd_out_size" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_region_release_lane" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_device_attribute_group" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "to_nd_desc" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_has_flush" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "to_nvdimm_bus" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_bus_check_dimm_count" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "to_nd_region" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "__nvdimm_create" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "to_nvdimm" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_cmd_bus_desc" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_bus_add_badrange" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nd_region_provider_data" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "to_nd_blk_region" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_region_notify" [drivers/acpi/nfit/nfit.ko] undefined!
+ERROR: "nvdimm_blk_region_create" [drivers/acpi/nfit/nfit.ko] undefined!
 
-Jason
+Caused by commit
+
+  126470c8a58b ("libnvdimm: Enable unit test infrastructure compile checks")
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2akw3iYkGk2rHz__16Dk2f5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1s8+kACgkQAVBC80lX
+0Gw5Xgf/VlpdIsbo67q5dX4B5fXtLW7KGXnCyt58f/kOcbXPQKsY4PDlJTNtDSAn
+GGUD2gYFID9ZN+NGYxsZWir3N1leeY2hmgJ1XFngsNf8LSTQTV/M6zhV5T/eb6Nt
+FA2FvfMSIK0J7oZkl/b7XNu/38BtEkEsY58E5YYHrsr4o9jQhyPtDbQkZYWJ5EqB
+TgHbTruw7zSl3emq8pRpRv9slTCebPWAcaWENgws0wVuiycwkdBKN6iwQlJEnZ/j
+Mn9niTsYuvcqDQn0BZCBuW1aWCJYOni4DneC2Up0ztfGbQXXJ1dWIilNU+4VTb8+
+msw7HhqqCAgrflw8yGqx3g/AsdYiRg==
+=idY6
+-----END PGP SIGNATURE-----
+
+--Sig_/2akw3iYkGk2rHz__16Dk2f5--
