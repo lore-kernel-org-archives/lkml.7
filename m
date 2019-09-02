@@ -2,183 +2,149 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8A6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2B6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535EF214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="L2oxYcTk"
+	by mail.kernel.org (Postfix) with ESMTP id 40FDD20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 22:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfIBWUb (ORCPT
+        id S1727758AbfIBW03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 18:20:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35011 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfIBWUb (ORCPT
+        Mon, 2 Sep 2019 18:26:29 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:58860 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727454AbfIBW03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 18:20:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g7so15363437wrx.2;
-        Mon, 02 Sep 2019 15:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jbpHxnDBxXx170DoGswvL3HiN5epW2CNEsNmP1ES4JU=;
-        b=L2oxYcTkuKi/U6Ryi6UjYgPeUYJb9CH0qbBBWAd7OBpq1bgCTF7LMJJKpUkAJqWkLs
-         76cdEl5v8UzM3RervtpvynB2koOelgHtZZHpZE4aMYc/BIsf3w0BXfBJjXx72KDqqlZQ
-         fBETKsJKpm2VAfItN6UrLIQAVJlbnwIT7OFBqNKvRyufzpv4VUYb6ou1+Sp1U4amPTiz
-         LaSDqB9UQgi04cUWvSNYOY4P4cq9ft0yTl33wQtL4RmQj2QXfUaHsemzo6O3PWaeJT0y
-         6zYy8ZuqtRJSTidTJCQ2ltKSpxeQ0sd3FasjRx8t7XD87qc+n3Ta87QB8RGvQifKkK7H
-         Oobw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jbpHxnDBxXx170DoGswvL3HiN5epW2CNEsNmP1ES4JU=;
-        b=hZWjarX3aPKZA0o+cy/FR6LuWOSev1EBoerZ/zfF8iD5RKC/GpxleJ/X00W+Wk5Jct
-         geYAreZH/sZGwa5rvkw8HBeGk8P1eDxQoMODOGf+b6aWHUwZqFCOolsLbyHZ2/gh+yxp
-         TAzOKcw8xY7Mm05tHoR5Xvjg/yVxXyaImir+PYlzlZ8WfMhUlQYLYmR8AvSuuISmkjJH
-         33C/L7p/roWGR7apRo5nsLV8fDJH7CePuYEI7aZXbMv2FX6jZlU/CFbIcKwOLsvPHfZS
-         8o+GXIUlr14CMATV/22inmE5U13I8KNDfKT9pvLDKg6eTPQ9q+RF8o6zE1KatVPeaSNY
-         BdZQ==
-X-Gm-Message-State: APjAAAXkWoOAMJrN5SQvPiLVR9LerVG9OFgIYk6BL/RxtaVhN3PXSkQ7
-        /3wOBhFPYrw1uH2T1lew760=
-X-Google-Smtp-Source: APXvYqy+Gbdp/tVMGvd7w7DWg+eedL+1OuXc79nXRKuSBEh7TKnUcGZLii4h5C6ciZmcUY1CQy2LYg==
-X-Received: by 2002:adf:f282:: with SMTP id k2mr4450132wro.38.1567462828052;
-        Mon, 02 Sep 2019 15:20:28 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133F1DA0058B592E56A73A27F.dip0.t-ipconnect.de. [2003:f1:33f1:da00:58b5:92e5:6a73:a27f])
-        by smtp.googlemail.com with ESMTPSA id z17sm16242733wrw.23.2019.09.02.15.20.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 15:20:27 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     rahul.tanwar@linux.intel.com
-Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
-        robhkernel.org@vger.kernel.org, sboyd@kernel.org,
-        yixin.zhu@linux.intel.com
-Subject: RE: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
-Date:   Tue,  3 Sep 2019 00:20:15 +0200
-Message-Id: <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
-References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
+        Mon, 2 Sep 2019 18:26:29 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 16DDF43D911;
+        Tue,  3 Sep 2019 08:26:19 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i4umA-0003Ym-4t; Tue, 03 Sep 2019 08:26:18 +1000
+Date:   Tue, 3 Sep 2019 08:26:18 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190902222618.GR1119@dread.disaster.area>
+References: <20190821181343.GH8653@ziepe.ca>
+ <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area>
+ <20190823120428.GA12968@ziepe.ca>
+ <20190824001124.GI1119@dread.disaster.area>
+ <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
+ <20190826055510.GL1119@dread.disaster.area>
+ <20190829020230.GA18249@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829020230.GA18249@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=7-415B0cAAAA:8 a=uquYBjWIGtznz3R1yhAA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Aug 28, 2019 at 07:02:31PM -0700, Ira Weiny wrote:
+> On Mon, Aug 26, 2019 at 03:55:10PM +1000, Dave Chinner wrote:
+> > On Fri, Aug 23, 2019 at 10:08:36PM -0700, Ira Weiny wrote:
+> > > On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
+> > > > On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
+> > > "Leases are associated with an open file description (see open(2)).  This means
+> > > that duplicate file descriptors (created by, for example, fork(2) or dup(2))
+> > > refer to the same lease, and this lease may be modified or released using any
+> > > of these descriptors.  Furthermore,  the lease is released by either an
+> > > explicit F_UNLCK operation on any of these duplicate file descriptors, or when
+> > > all such file descriptors have been closed."
+> > 
+> > Right, the lease is attached to the struct file, so it follows
+> > where-ever the struct file goes. That doesn't mean it's actually
+> > useful when the struct file is duplicated and/or passed to another
+> > process. :/
+> > 
+> > AFAICT, the problem is that when we take another reference to the
+> > struct file, or when the struct file is passed to a different
+> > process, nothing updates the lease or lease state attached to that
+> > struct file.
+> 
+> Ok, I probably should have made this more clear in the cover letter but _only_
+> the process which took the lease can actually pin memory.
 
-I only noticed this patchset today and I don't have much time left.
-Here's my initial impressions without going through the code in detail.
-I'll continue my review in the next days (as time permits).
+Sure, no question about that.
 
-As with all other Intel LGM patches: I don't have access to the
-datasheets, so it's possible that I don't understand <insert topic here>
-feel free to correct me in this case (I appreciate an explanation where
-I was wrong, so I can learn from it)
+> That pinned memory _can_ be passed to another process but those sub-process' can
+> _not_ use the original lease to pin _more_ of the file.  They would need to
+> take their own lease to do that.
 
+Yes, they would need a new lease to extend it. But that ignores the
+fact they don't have a lease on the existing pins they are using and
+have no control over the lease those pins originated under.  e.g.
+the originating process dies (for whatever reason) and now we have
+pins without a valid lease holder.
 
-[...]
---- /dev/null
-+++ b/drivers/clk/intel/Kconfig
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0
-+config INTEL_LGM_CGU_CLK
-+	depends on COMMON_CLK
-+	select MFD_SYSCON
-can you please explain the reason why you need to use syscon?
-also please see [0] for a comment from Rob on another LGM dt-binding
-regarding syscon
+If something else now takes an exclusive lease on the file (because
+the original exclusive lease no longer exists), it's not going to
+work correctly because of the zombied page pins caused by closing
+the exclusive lease they were gained under. IOWs, pages pinned under
+an exclusive lease are no longer "exclusive" the moment the original
+exclusive lease is dropped, and pins passed to another process are
+no longer covered by the original lease they were created under.
 
-+	select OF_EARLY_FLATTREE
-there's not a single other "select OF_EARLY_FLATTREE" in driver/clk
-I'm not saying this is wrong but it makes me curious why you need this
+> Sorry for not being clear on that.
 
-[...]
-diff --git a/drivers/clk/intel/clk-cgu.h b/drivers/clk/intel/clk-cgu.h
-new file mode 100644
-index 000000000000..e44396b4aad7
---- /dev/null
-+++ b/drivers/clk/intel/clk-cgu.h
-@@ -0,0 +1,278 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright(c) 2018 Intel Corporation.
-+ *  Zhu YiXin <Yixin.zhu@intel.com>
-+ */
-+
-+#ifndef __INTEL_CLK_H
-+#define __INTEL_CLK_H
-+
-+struct intel_clk_mux {
-+	struct clk_hw hw;
-+	struct device *dev;
-+	struct regmap *map;
-+	unsigned int reg;
-+	u8 shift;
-+	u8 width;
-+	unsigned long flags;
-+};
-+
-+struct intel_clk_divider {
-+	struct clk_hw hw;
-+	struct device *dev;
-+	struct regmap *map;
-+	unsigned int reg;
-+	u8 shift;
-+	u8 width;
-+	unsigned long flags;
-+	const struct clk_div_table *table;
-+};
-+
-+struct intel_clk_ddiv {
-+	struct clk_hw hw;
-+	struct device *dev;
-+	struct regmap *map;
-+	unsigned int reg;
-+	u8 shift0;
-+	u8 width0;
-+	u8 shift1;
-+	u8 width1;
-+	u8 shift2;
-+	u8 width2;
-+	unsigned int mult;
-+	unsigned int div;
-+	unsigned long flags;
-+};
-+
-+struct intel_clk_gate {
-+	struct clk_hw hw;
-+	struct device *dev;
-+	struct regmap *map;
-+	unsigned int reg;
-+	u8 shift;
-+	unsigned long flags;
-+};
-I know at least two existing regmap clock implementations:
-- drivers/clk/qcom/clk-regmap*
-- drivers/clk/meson/clk-regmap*
+I know exactly what you are saying. What I'm failing to get across
+is that file layout leases don't actually allow the behaviour you
+want to have.
 
-it would be great if we could decide to re-use one of those for the
-"generic" clock types (mux, divider and gate).
-Stephen, do you have any preference here?
-personally I like the meson one, but I'm biased because I've used it
-a lot in the past and I haven't used the qcom one at all.
+> > As such, leases that require callbacks to userspace are currently
+> > only valid within the process context the lease was taken in.
+> 
+> But for long term pins we are not requiring callbacks.
 
+Regardless, we still require an active lease for long term pins so
+that other lease holders fail operations appropriately. And that
+exclusive lease must follow the process that pins the pages so that
+the life cycle is the same...
 
-Martin
+> > Indeed, even closing the fd the lease was taken on without
+> > F_UNLCKing it first doesn't mean the lease has been torn down if
+> > there is some other reference to the struct file. That means the
+> > original lease owner will still get SIGIO delivered to that fd on a
+> > lease break regardless of whether it is open or not. ANd if we
+> > implement "layout lease not released within SIGIO response timeout"
+> > then that process will get killed, despite the fact it may not even
+> > have a reference to that file anymore.
+> 
+> I'm not seeing that as a problem.  This is all a result of the application
+> failing to do the right thing.
 
+How is that not a problem?
 
-[0] https://lkml.org/lkml/2019/8/27/849
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
