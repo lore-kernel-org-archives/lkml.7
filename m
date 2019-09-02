@@ -2,98 +2,76 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B4FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA33C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A165215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PuQm7M77"
+	by mail.kernel.org (Postfix) with ESMTP id 306B121874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbfIBJdr (ORCPT
+        id S1731127AbfIBJeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:33:47 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35829 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729887AbfIBJdq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:33:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n10so3150261wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:33:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0xz9pivsW1X+fkzwGjMbd/cLw8RxLJr78NFgGicHx+4=;
-        b=PuQm7M77gK8TDYqSFSZJw0maTSHeRE5xrz2Aa9bPdCEdHGD9LsffOUe7gOgY2WOKnO
-         pJmf4ac2qqXgwcYHOn5rS1idTHSiFp+TOizVesX0pCdgnjnTSvE9Vg6d29M2z0rhD6Wc
-         rUtgDTUGNDnKsumVf5wh4wJfNNGJWszCvGOO4/iBoTI8hplEqtCJQklxK5FdIG//TZx6
-         UAsBiUcoJ18897FkinJarrVjJqEzSDA7dD7i1D6hBl8KTZA+EXILsmEPJ8nB9VSW94F2
-         7+YBs9gGPXpiXHaTtIb2puqeBfDi1KEc8saThL0xltfGjZv+hWQXcb7FUW7BAlS3MKpz
-         BfTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0xz9pivsW1X+fkzwGjMbd/cLw8RxLJr78NFgGicHx+4=;
-        b=YhN9t1NZh5nlEyqM4BLdc6Rv6cwqXEzq+CNR2H58kDTAefkxH83G01vND0hR7Lfgaa
-         0BUBptFr4d2O3Aikgu2qqWBNzws/gHH7MAiUNszNcZFZ+dwLEcbvHOAL6pGdZK1qlkkO
-         P114HxmMpYyAncpslHX4aCRinBBg3dn3zOzK338nu/NpbfCk8LdDDkPpl5OAeEsbLVZZ
-         SDZrOltHYYnH89/AO9brMbmxbRZAM86ETFh9wOqT25hoCAi0+OoFnQpAfs2GzzJ/WtuU
-         5dXLa/mSBxk9wSs89bINABvLYriKq7qXXb0KHbYCcfdZjCGCKHjaPYYYJAq0QnKB2ezE
-         oM2A==
-X-Gm-Message-State: APjAAAWR25T0HA9esgB3ApEHNCIu6wQuUxNt3mdl8mSyyq7V+HQQ7v4p
-        Zlds/Yil5XBULIiA9zB98asYSw==
-X-Google-Smtp-Source: APXvYqxHpHyKHeVnNR8LoYA2/Xy4ZP6iMCFRlAgWlGkxTezTtxF6pj+ynxkTmffkjEOCPkaSSBfDzg==
-X-Received: by 2002:a1c:a984:: with SMTP id s126mr34839595wme.26.1567416824468;
-        Mon, 02 Sep 2019 02:33:44 -0700 (PDT)
-Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id f75sm20403518wmf.2.2019.09.02.02.33.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 02:33:43 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:33:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: Re: [PATCH] mfd: db8500-prcmu: Support the higher DB8520 ARMSS
-Message-ID: <20190902093342.GJ32232@dell>
-References: <20190829112501.30185-1-linus.walleij@linaro.org>
+        Mon, 2 Sep 2019 05:34:13 -0400
+Received: from mga01.intel.com ([192.55.52.88]:29753 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731116AbfIBJeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:34:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 02:34:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="382747800"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Sep 2019 02:34:07 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4iis-0007xT-RM; Mon, 02 Sep 2019 12:34:06 +0300
+Date:   Mon, 2 Sep 2019 12:34:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Divya Indi <divya.indi@oracle.com>
+Subject: Re: [PATCH v1] tracing: Drop static keyword for exported
+ ftrace_set_clr_event()
+Message-ID: <20190902093406.GS2680@smile.fi.intel.com>
+References: <20190830193228.65446-1-andriy.shevchenko@linux.intel.com>
+ <20190830170424.40c4188a@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190829112501.30185-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190830170424.40c4188a@gandalf.local.home>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019, Linus Walleij wrote:
-
-> The DB8520 used in a lot of Samsung phones has a slightly higher
-> maximum ARMSS frequency than the DB8500. In order to not confuse
-> the OPP framework and cpufreq, make sure the PRCMU driver
-> returns the correct frequency.
+On Fri, Aug 30, 2019 at 05:04:24PM -0400, Steven Rostedt wrote:
+> On Fri, 30 Aug 2019 22:32:28 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Stephan Gerhold <stephan@gerhold.net>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/mfd/db8500-prcmu.c | 40 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 35 insertions(+), 5 deletions(-)
+> > When we export something, it shan't be static.
+> 
+> I'm finally getting around to my patch queue (it's unfortunately much
+> bigger than I should be). But my punishment is duplicate patches.
+> 
+> Someone beat you to it...
+> 
+>  http://lkml.kernel.org/r/20190704172110.27041-1-efremov@linux.com
 
-Applied, thanks.
+Looking to the original patch and taking into account that there is no user for
+it, I guess the best option to simple revert original one (it will clean up
+export table).
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
