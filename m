@@ -2,161 +2,87 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC40BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638CDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDE6216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E3221881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567431526;
+	bh=Whcs8mlKmTqfZxOhgtYZCcxn/vWlYEtkR6WkX+mAmQg=;
+	h=Date:From:Subject:References:In-Reply-To:CC:To:List-ID:From;
+	b=0KYw6t8j2jEXSWiSM8Jj9BvekGufMs4hHNZVPP9HUYWxjuJnhn7W/dti4aNoPu6vg
+	 kIbcPb2DErjVmgYQ+UlH3V8bOnOD3na/msg3JmB3rd5JsoR90+EhurXTkVSvHsXTHO
+	 hKGAI2yXOVSL0y4pmsDjwnYS0un32pPRTxYY1SWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfIBNhv (ORCPT
+        id S1730887AbfIBNip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:37:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:54630 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730221AbfIBNhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:37:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 115A7337;
-        Mon,  2 Sep 2019 06:37:50 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 548D23F59C;
-        Mon,  2 Sep 2019 06:37:49 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 14:37:47 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v3 07/11] PCI: layerscape: Modify the way of getting
- capability with different PEX
-Message-ID: <20190902133747.GN9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-8-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902031716.43195-8-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Mon, 2 Sep 2019 09:38:45 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51881 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730662AbfIBNio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:38:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id k1so14644994wmi.1;
+        Mon, 02 Sep 2019 06:38:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:subject:references
+         :in-reply-to:cc:cc:to;
+        bh=0A2NGMWOy3zEuz3VxC/asQLJTnz9aoB2esNpQEgqd1g=;
+        b=ujRAtidc97z7NergjRki6rSUAt6MIYwYCWaOjmN+fQfgv1WPYXORXma59zbTEqLXOI
+         qlOxIhmHkFa8t8pUwadG2JS4hsaYbmCqvxvSyiKoLisd7k0BQVEkCTZf9sKGkq4tSqY0
+         UPSJEDUB3U+zj7psO0bhPCnckAvXqkG+x0ZvuFMcSk05qHGfZiCR+2soz5ontBZsVlne
+         QIZwxzgRyBmebZVYl9kzLj9Qs7oKUwDGGv2qSsjAiXZQ4Ub2+9FOhCsaC82yZmTQ13Wz
+         DpooEpLUCROjVphGjZigW2mfFT+2RxZ9j+2EhqWWFVs1Y3Y2J5GXf7WiWT1EtWApKsoP
+         WsKw==
+X-Gm-Message-State: APjAAAWC9wIwxtvXacSKjrBLpK1lW+ob4L1Ry/2B/AcZNZI3GQpgP6r9
+        uj/R45p89sAVVyKF6BUFwg==
+X-Google-Smtp-Source: APXvYqyryTjFEoAjRiTRD/cveMVvJ62e6tv3eGdxZSToRxqfmTU0cEJbrtDlZV7N6If8HbCiP6JxUw==
+X-Received: by 2002:a7b:cc02:: with SMTP id f2mr34634993wmh.92.1567431522631;
+        Mon, 02 Sep 2019 06:38:42 -0700 (PDT)
+Received: from localhost ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id n2sm9271557wro.52.2019.09.02.06.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 06:38:41 -0700 (PDT)
+Message-ID: <5d6d1b61.1c69fb81.735c8.535d@mx.google.com>
+Date:   Mon, 02 Sep 2019 14:38:41 +0100
+From:   Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: mediatek: add pericfg for MT8183
+References: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
+Content-Type: text/plain
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:17:12AM +0800, Xiaowei Bao wrote:
-> The different PCIe controller in one board may be have different
-> capability of MSI or MSIX, so change the way of getting the MSI
-> capability, make it more flexible.
+On Wed, 28 Aug 2019 16:22:12 +0800, Chunfeng Yun wrote:
+> This patch adds binding of pericfg for MT8183.
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-
-Please see the comments I just made to Kishon's feedback in the thread for
-this patch in series v2.
-
-Thanks,
-
-Andrew Murray
-
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
-> v2:
->  - Remove the repeated assignment code.
-> v3:
->  - Use ep_func msi_cap and msix_cap to decide the msi_capable and
->    msix_capable of pci_epc_features struct.
+> v2: no changes
+> ---
+>  .../devicetree/bindings/arm/mediatek/mediatek,pericfg.txt        | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 31 +++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index a9c552e..1e07287 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -22,6 +22,7 @@
->  
->  struct ls_pcie_ep {
->  	struct dw_pcie		*pci;
-> +	struct pci_epc_features	*ls_epc;
->  };
->  
->  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> @@ -40,26 +41,31 @@ static const struct of_device_id ls_pcie_ep_of_match[] = {
->  	{ },
->  };
->  
-> -static const struct pci_epc_features ls_pcie_epc_features = {
-> -	.linkup_notifier = false,
-> -	.msi_capable = true,
-> -	.msix_capable = false,
-> -	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> -};
-> -
->  static const struct pci_epc_features*
->  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
->  {
-> -	return &ls_pcie_epc_features;
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> +
-> +	return pcie->ls_epc;
->  }
->  
->  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> +	struct dw_pcie_ep_func *ep_func;
->  	enum pci_barno bar;
->  
-> +	ep_func = dw_pcie_ep_get_func_from_ep(ep, 0);
-> +	if (!ep_func)
-> +		return;
-> +
->  	for (bar = BAR_0; bar <= BAR_5; bar++)
->  		dw_pcie_ep_reset_bar(pci, bar);
-> +
-> +	pcie->ls_epc->msi_capable = ep_func->msi_cap ? true : false;
-> +	pcie->ls_epc->msix_capable = ep_func->msix_cap ? true : false;
->  }
->  
->  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> @@ -119,6 +125,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct ls_pcie_ep *pcie;
-> +	struct pci_epc_features *ls_epc;
->  	struct resource *dbi_base;
->  	int ret;
->  
-> @@ -130,6 +137,10 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
-> +	if (!ls_epc)
-> +		return -ENOMEM;
-> +
->  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
->  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
->  	if (IS_ERR(pci->dbi_base))
-> @@ -140,6 +151,10 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	pci->ops = &ls_pcie_ep_ops;
->  	pcie->pci = pci;
->  
-> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> +
-> +	pcie->ls_epc = ls_epc;
-> +
->  	platform_set_drvdata(pdev, pcie);
->  
->  	ret = ls_add_pcie_ep(pcie, pdev);
-> -- 
-> 2.9.5
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>
+
