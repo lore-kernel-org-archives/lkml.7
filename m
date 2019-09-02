@@ -2,109 +2,231 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA3EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC91FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202782173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567432364;
-	bh=gOroYR0C5WTKOPu/VQ5CFcFa5lQQvYa++hC+79eQH/s=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=oc8BrhB7kRJPRGlQEl9wf5DS5SoeZ+1ssEIu4Ul7Xn+YoPHURGh2SaLbXVHWMgtQB
-	 Jgmpowwhkhdd4pujrbniimarxN7Sx/c/66Ut88qx4uLqjhgRU9mre9MjcZVXQrrDOH
-	 p0m3LxD6LMwaT8AOliPzaIFQnLyfDJuDrltWwWiA=
+	by mail.kernel.org (Postfix) with ESMTP id 8C0C7217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aLHERm29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbfIBNwn (ORCPT
+        id S1730661AbfIBNxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbfIBNwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:52:42 -0400
-Received: from [192.168.0.111] (unknown [180.111.100.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D15621897;
-        Mon,  2 Sep 2019 13:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567432361;
-        bh=gOroYR0C5WTKOPu/VQ5CFcFa5lQQvYa++hC+79eQH/s=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=E3s8rI8tch1TVAzcgD5OWZZEOzgqwPPkjn9lFP0l3a86miClAmSD7sW/vGDeQeo4E
-         kFk1hwJddCNd0nS6dWRYlB397xGjb7rBbX3Jp4CLXwCWWKaiUYRxp3YzNQc2lL7/7L
-         XpNaXqFE1v92DhuZzZgnOEy87oZHgv8QzzWvN8VU=
-Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
-To:     dsterba@suse.cz, Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
- <20190815044155.88483-12-gaoxiang25@huawei.com>
- <20190902125711.GA23462@infradead.org> <20190902130644.GT2752@suse.cz>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
-Date:   Mon, 2 Sep 2019 21:51:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 2 Sep 2019 09:53:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49680 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729823AbfIBNxA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:53:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yuR+/Sf6GnkPlNMX6eXUn8QaXZJj0jj/VyWj5qeXH5s=; b=aLHERm29AFa/sGQvx4fkmhNrf
+        DRFvSWMBdOdAcDy6G9UXpuH6rEzLTP5IfcK4ADwwSaJTajC2JmpWlGGOdr2u+AM78/OJaIwLv4z93
+        TGMT6d+Dpnv7cCRIQiGcVfJPYZvUWmRvNYB3ZaOUWps1nD4J4bfKkQkcUG+bWVelP9S4q4lP9HOqX
+        EwMTCTPUqXJvtccnSs835wK3MOBn2DuGnLyZGPVI/Kk9t3MosjmxVQuk6BuBU4Ckt/1rFvQpdQAtv
+        r8uEEQbZCgogSrjXDNzzj/U93Z2Li0hqAS5G/+z6agV8IOrxCIlfuszfpwuN8l1aj3VIfFNY7+H4Z
+        NXMT1zE3g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4mlK-00039E-FZ; Mon, 02 Sep 2019 13:52:54 +0000
+Date:   Mon, 2 Sep 2019 06:52:54 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+03ee87124ee05af991bd@syzkaller.appspotmail.com>,
+        hughd@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in shmem_fault (2)
+Message-ID: <20190902135254.GC2431@bombadil.infradead.org>
+References: <20190831045826.748-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <20190902130644.GT2752@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831045826.748-1-hdanton@sina.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-9-2 21:06, David Sterba wrote:
-> On Mon, Sep 02, 2019 at 05:57:11AM -0700, Christoph Hellwig wrote:
->>> +config EROFS_FS_XATTR
->>> +	bool "EROFS extended attributes"
->>> +	depends on EROFS_FS
->>> +	default y
->>> +	help
->>> +	  Extended attributes are name:value pairs associated with inodes by
->>> +	  the kernel or by users (see the attr(5) manual page, or visit
->>> +	  <http://acl.bestbits.at/> for details).
->>> +
->>> +	  If unsure, say N.
->>> +
->>> +config EROFS_FS_POSIX_ACL
->>> +	bool "EROFS Access Control Lists"
->>> +	depends on EROFS_FS_XATTR
->>> +	select FS_POSIX_ACL
->>> +	default y
->>
->> Is there any good reason to make these optional these days?
+On Sat, Aug 31, 2019 at 12:58:26PM +0800, Hillf Danton wrote:
+> On Fri, 30 Aug 2019 12:40:06 -0700
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    a55aa89a Linux 5.3-rc6
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12f4beb6600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2a6a2b9826fdadf9
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=03ee87124ee05af991bd
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > 
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+03ee87124ee05af991bd@syzkaller.appspotmail.com
+> > 
+> > ==================================================================
+> > BUG: KASAN: use-after-free in perf_trace_lock_acquire+0x401/0x530  
+> > include/trace/events/lock.h:13
+> > Read of size 8 at addr ffff8880a5cf2c50 by task syz-executor.0/26173
+> > 
+> > CPU: 0 PID: 26173 Comm: syz-executor.0 Not tainted 5.3.0-rc6 #146
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >   print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+> >   __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+> >   kasan_report+0x12/0x17 mm/kasan/common.c:618
+> >   __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+> >   perf_trace_lock_acquire+0x401/0x530 include/trace/events/lock.h:13
+> >   trace_lock_acquire include/trace/events/lock.h:13 [inline]
+> >   lock_acquire+0x2de/0x410 kernel/locking/lockdep.c:4411
+> >   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+> >   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+> >   spin_lock include/linux/spinlock.h:338 [inline]
+> >   shmem_fault+0x5ec/0x7b0 mm/shmem.c:2034
+> >   __do_fault+0x111/0x540 mm/memory.c:3083
+> >   do_shared_fault mm/memory.c:3535 [inline]
+> >   do_fault mm/memory.c:3613 [inline]
+> >   handle_pte_fault mm/memory.c:3840 [inline]
+> >   __handle_mm_fault+0x2adf/0x3f20 mm/memory.c:3964
+> >   handle_mm_fault+0x1b5/0x6b0 mm/memory.c:4001
+> >   do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
+> >   __do_page_fault+0x536/0xdd0 arch/x86/mm/fault.c:1506
+> >   do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
+> >   page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1202
+> > RIP: 0010:copy_user_generic_unrolled+0x89/0xc0  
+> > arch/x86/lib/copy_user_64.S:91
+> > Code: 38 4c 89 47 20 4c 89 4f 28 4c 89 57 30 4c 89 5f 38 48 8d 76 40 48 8d  
+> > 7f 40 ff c9 75 b6 89 d1 83 e2 07 c1 e9 03 74 12 4c 8b 06 <4c> 89 07 48 8d  
+> > 76 08 48 8d 7f 08 ff c9 75 ee 21 d2 74 10 89 d1 8a
+> > RSP: 0018:ffff88806b927e18 EFLAGS: 00010202
+> > RAX: 0000000000000001 RBX: 0000000000000008 RCX: 0000000000000001
+> > RDX: 0000000000000000 RSI: ffff88806b927e80 RDI: 0000000020000000
+> > RBP: ffff88806b927e50 R08: 0000000500000004 R09: ffffed100d724fd1
+> > R10: ffffed100d724fd0 R11: ffff88806b927e87 R12: 0000000020000000
+> > R13: ffff88806b927e80 R14: 0000000020000008 R15: 00007ffffffff000
+> >   copy_to_user include/linux/uaccess.h:152 [inline]
+> >   do_pipe2+0xec/0x160 fs/pipe.c:857
+> >   __do_sys_pipe fs/pipe.c:878 [inline]
+> >   __se_sys_pipe fs/pipe.c:876 [inline]
+> >   __x64_sys_pipe+0x33/0x40 fs/pipe.c:876
+> >   do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x459879
+> > Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+> > ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007f833e81fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000016
+> > RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000459879
+> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000000
+> > RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007f833e8206d4
+> > R13: 00000000004f5b47 R14: 00000000004db7b8 R15: 00000000ffffffff
+> > 
+> > Allocated by task 25774:
+> >   save_stack+0x23/0x90 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:493 [inline]
+> >   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:466
+> >   kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:501
+> >   slab_post_alloc_hook mm/slab.h:520 [inline]
+> >   slab_alloc mm/slab.c:3319 [inline]
+> >   kmem_cache_alloc+0x121/0x710 mm/slab.c:3483
+> >   shmem_alloc_inode+0x1c/0x50 mm/shmem.c:3630
+> >   alloc_inode+0x68/0x1e0 fs/inode.c:227
+> >   new_inode_pseudo+0x19/0xf0 fs/inode.c:916
+> >   new_inode+0x1f/0x40 fs/inode.c:945
+> >   shmem_get_inode+0x84/0x7e0 mm/shmem.c:2228
+> >   __shmem_file_setup.part.0+0x1e2/0x2b0 mm/shmem.c:3985
+> >   __shmem_file_setup mm/shmem.c:3979 [inline]
+> >   shmem_kernel_file_setup mm/shmem.c:4015 [inline]
+> >   shmem_zero_setup+0xe1/0x4cc mm/shmem.c:4059
+> >   mmap_region+0x13d5/0x1760 mm/mmap.c:1804
+> >   do_mmap+0x82e/0x1090 mm/mmap.c:1561
+> >   do_mmap_pgoff include/linux/mm.h:2374 [inline]
+> >   vm_mmap_pgoff+0x1c5/0x230 mm/util.c:391
+> >   ksys_mmap_pgoff+0xf7/0x630 mm/mmap.c:1611
+> >   __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
+> >   __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
+> >   __x64_sys_mmap+0xe9/0x1b0 arch/x86/kernel/sys_x86_64.c:91
+> >   do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > 
+> > Freed by task 26359:
+> >   save_stack+0x23/0x90 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:455
+> >   kasan_slab_free+0xe/0x10 mm/kasan/common.c:463
+> >   __cache_free mm/slab.c:3425 [inline]
+> >   kmem_cache_free+0x86/0x320 mm/slab.c:3693
+> >   shmem_free_in_core_inode+0x63/0xb0 mm/shmem.c:3640
+> >   i_callback+0x44/0x80 fs/inode.c:216
+> >   __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+> >   rcu_do_batch kernel/rcu/tree.c:2114 [inline]
+> >   rcu_core+0x67f/0x1580 kernel/rcu/tree.c:2314
+> >   rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
+> >   __do_softirq+0x262/0x98c kernel/softirq.c:292
+> > 
+> > The buggy address belongs to the object at ffff8880a5cf2a90
+> >   which belongs to the cache shmem_inode_cache(17:syz0) of size 1192
+> > The buggy address is located 448 bytes inside of
+> >   1192-byte region [ffff8880a5cf2a90, ffff8880a5cf2f38)
+> > The buggy address belongs to the page:
+> > page:ffffea0002973c80 refcount:1 mapcount:0 mapping:ffff88808e1418c0  
+> > index:0xffff8880a5cf2ffd
+> > flags: 0x1fffc0000000200(slab)
+> > raw: 01fffc0000000200 ffffea0002592ec8 ffffea0002492588 ffff88808e1418c0
+> > raw: ffff8880a5cf2ffd ffff8880a5cf2040 0000000100000003 0000000000000000
+> > page dumped because: kasan: bad access detected
+> > 
+> > Memory state around the buggy address:
+> >   ffff8880a5cf2b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8880a5cf2b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > > ffff8880a5cf2c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >                                                   ^
+> >   ffff8880a5cf2c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8880a5cf2d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ==================================================================
 > 
-> I objected against adding so many config options, not to say for the
-> standard features. The various cache strategies or other implementation
-> details have been removed but I agree that making xattr/acl configurable
-> is not necessary as well.
+> 
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2021,6 +2021,12 @@ static vm_fault_t shmem_fault(struct vm_
+>  			shmem_falloc_waitq = shmem_falloc->waitq;
+>  			prepare_to_wait(shmem_falloc_waitq, &shmem_fault_wait,
+>  					TASK_UNINTERRUPTIBLE);
+> +			/*
+> +			 * it is not trivial to see what will take place after
+> +			 * releasing i_lock and taking a nap, so hold inode to
+> +			 * be on the safe side.
 
-I can see similar *_ACL option in btrfs/ext4/xfs, should we remove them as well
-due to the same reason?
+I think the comment could be improved.  How about:
 
-Thanks,
+			 * The file could be unmapped by another thread after
+			 * releasing i_lock, and the inode then freed.  Hold
+			 * a reference to the inode to prevent this.
 
+> +			 */
+> +			__iget(inode);
+>  			spin_unlock(&inode->i_lock);
+>  			schedule();
+>  
+> @@ -2034,6 +2040,7 @@ static vm_fault_t shmem_fault(struct vm_
+>  			spin_lock(&inode->i_lock);
+>  			finish_wait(shmem_falloc_waitq, &shmem_fault_wait);
+>  			spin_unlock(&inode->i_lock);
+> +			iput(inode);
+>  			return ret;
+>  		}
+>  		spin_unlock(&inode->i_lock);
+> 
 > 
