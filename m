@@ -2,206 +2,108 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C35C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E75C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEF8217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1392217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vJRTmlvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfIBXpO convert rfc822-to-8bit (ORCPT
+        id S1727939AbfIBXpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 19:45:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:55925 "EHLO ozlabs.org"
+        Mon, 2 Sep 2019 19:45:20 -0400
+Received: from ozlabs.org ([203.11.71.1]:33459 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726849AbfIBXpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 19:45:14 -0400
+        id S1726849AbfIBXpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 19:45:18 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mmsb27qjz9s7T;
-        Tue,  3 Sep 2019 09:45:07 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 3/6] powerpc/perf: consolidate read_user_stack_32
-In-Reply-To: <20190902102653.6d477e16@naga>
-References: <cover.1567198491.git.msuchanek@suse.de> <ea3783a1640b707ef9ce4740562850ef1152829b.1567198491.git.msuchanek@suse.de> <87a7bntkum.fsf@mpe.ellerman.id.au> <877e6rtkhe.fsf@mpe.ellerman.id.au> <20190902102653.6d477e16@naga>
-Date:   Tue, 03 Sep 2019 09:45:05 +1000
-Message-ID: <87mufms1oe.fsf@mpe.ellerman.id.au>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mmsh4xy8z9sDB;
+        Tue,  3 Sep 2019 09:45:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567467912;
+        bh=gh6SHKoQKgF1kZ2bFjHV1PqXJnljJDMJacna8gmLJCs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vJRTmlvDoDFVmjeuP6A3wCP3r8S8ey9qn+bbGs+EDrRLsxmstUiEhU4N7POEGJl+n
+         dY221zhN8pfi/sIfjH3jUamaA3BLTnYZnEqlsrEpeGifsM8k9oRKBeRigsDAscVnas
+         sErH45+5cPXG9GP2K3biVR7246HQmaoydglwPPv1bE+dGJGWxfUY6zB0ryzlrC6Aat
+         uKV0ldg6xBNm47mBffgdkw7wxzDnRtHnrN7J0P6iY4lzInBOnQ9EJpNxcrgleHNKfU
+         TB7pmoJrCtklVRh+ZrPiA+QalQIHhOvWoN+2TqBWORdRR7FbZt2YWfSgg+3qtaN0qq
+         4RTMbCnToBSJA==
+Date:   Tue, 3 Sep 2019 09:45:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: build failure after merge of the hmm tree
+Message-ID: <20190903094511.2704484a@canb.auug.org.au>
+In-Reply-To: <20190902105137.GC20@mellanox.com>
+References: <20190902205017.3eca5b70@canb.auug.org.au>
+        <20190902105137.GC20@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="Sig_/=y_+vcbrUjS6AcrKSV=+lmQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Suchánek <msuchanek@suse.de> writes:
-> On Mon, 02 Sep 2019 14:01:17 +1000
-> Michael Ellerman <mpe@ellerman.id.au> wrote:
->> Michael Ellerman <mpe@ellerman.id.au> writes:
->> > Michal Suchanek <msuchanek@suse.de> writes:  
->> ...
->> >> @@ -295,6 +279,12 @@ static inline int current_is_64bit(void)
->> >>  }
->> >>  
->> >>  #else  /* CONFIG_PPC64 */
->> >> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
->> >> +{
->> >> +	return 0;
->> >> +}
->> >> +#endif /* CONFIG_PPC64 */  
->> >
->> > Ending the PPC64 else case here, and then restarting it below with an
->> > ifndef means we end up with two parts of the file that define 32-bit
->> > code, with a common chunk in the middle, which I dislike.
->> >
->> > I'd rather you add the empty read_user_stack_slow() in the existing
->> > #else section and then move read_user_stack_32() below the whole ifdef
->> > PPC64/else/endif section.
->> >
->> > Is there some reason that doesn't work?  
->> 
->> Gah, I missed that you split the whole file later in the series. Any
->> reason you did it in two steps rather than moving patch 6 earlier in the
->> series?
+--Sig_/=y_+vcbrUjS6AcrKSV=+lmQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Jason,
+
+On Mon, 2 Sep 2019 10:51:41 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
 >
-> To make this patch readable.
+> On Mon, Sep 02, 2019 at 08:50:17PM +1000, Stephen Rothwell wrote:
+> > Hi all, =20
+>=20
+> > ERROR: "nd_region_provider_data" [drivers/acpi/nfit/nfit.ko] undefined!
+> > ERROR: "to_nd_blk_region" [drivers/acpi/nfit/nfit.ko] undefined!
+> > ERROR: "nvdimm_region_notify" [drivers/acpi/nfit/nfit.ko] undefined!
+> > ERROR: "nvdimm_blk_region_create" [drivers/acpi/nfit/nfit.ko] undefined!
+> >=20
+> > Caused by commit
+> >=20
+> >   126470c8a58b ("libnvdimm: Enable unit test infrastructure compile che=
+cks")
+> >=20
+> > I have reverted that commit for today.
+>=20
+> Looks like more kconfig trouble, can you send Dan your kconfig? I'll
+> drop this patch again
+>
 
-But it's not very readable :)
+Thanks.  It was just an x86_64 allmodconfig build.  I don't actually
+have the .config file (it gets cleaned up, sorry).
+--=20
+Cheers,
+Stephen Rothwell
 
-You also retained the comment about the 32-bit behaviour which is now a
-bit confusing, because the function is used on both 32 & 64-bit.
+--Sig_/=y_+vcbrUjS6AcrKSV=+lmQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I think moving it as I suggested in my first reply makes for a better
-diff, something like eg:
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index c84bbd4298a0..82c0f81b89a5 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	return read_user_stack_slow(ptr, ret, 8);
- }
- 
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
--{
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	pagefault_disable();
--	if (!__get_user_inatomic(*ret, ptr)) {
--		pagefault_enable();
--		return 0;
--	}
--	pagefault_enable();
--
--	return read_user_stack_slow(ptr, ret, 4);
--}
--
- static inline int valid_user_sp(unsigned long sp, int is_64)
- {
- 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-@@ -295,27 +279,6 @@ static inline int current_is_64bit(void)
- }
- 
- #else  /* CONFIG_PPC64 */
--/*
-- * On 32-bit we just access the address and let hash_page create a
-- * HPTE if necessary, so there is no need to fall back to reading
-- * the page tables.  Since this is called at interrupt level,
-- * do_page_fault() won't treat a DSI as a page fault.
-- */
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
--{
--	int rc;
--
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	pagefault_disable();
--	rc = __get_user_inatomic(*ret, ptr);
--	pagefault_enable();
--
--	return rc;
--}
--
- static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 					  struct pt_regs *regs)
- {
-@@ -333,6 +296,11 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
- 	return 1;
- }
- 
-+static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-+{
-+	return 0;
-+}
-+
- #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
- #define sigcontext32		sigcontext
- #define mcontext32		mcontext
-@@ -341,6 +309,33 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
- 
- #endif /* CONFIG_PPC64 */
- 
-+static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+{
-+	int rc;
-+
-+	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-+	    ((unsigned long)ptr & 3))
-+		return -EFAULT;
-+
-+	pagefault_disable();
-+	rc = __get_user_inatomic(*ret, ptr);
-+	pagefault_enable();
-+
-+	/*
-+	 * On 32-bit we just access the address and let hash_page() create a
-+	 * HPTE if necessary, so there is no need to fall back to reading the
-+	 * page tables. Since this is called at interrupt level, do_page_fault()
-+	 * won't treat a DSI as a page fault.
-+	 *
-+	 * On 64-bit if the access faults we fall back to
-+	 * read_user_stack_slow(), see the comment there for more details.
-+	 */
-+	if (IS_ENABLED(CONFIG_PPC64) && rc)
-+		return read_user_stack_slow(ptr, ret, 4);
-+
-+	return rc;
-+}
-+
- /*
-  * Layout for non-RT signal frames
-  */
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1tqYcACgkQAVBC80lX
+0GwaPAf9GnKq/UFMCw7HbG27ds+lw90Nz/JmLxF42c+uIxIvFF6f44xBsKQBTRCd
+KuUcNBMFt1XHuuT8bxnNFQ9Wc/vLCiDqmpWyR8OJt1MyrY3YRML6dx9c3DX1/oW6
+OCdnxfr6Rd7/8tO1QggUSKeJ8L1NvE7ikJxspFTIUwQSn7mVMtlHX3U6f9p3IDty
+ftaaY00+ni2L1koeZs3YX71Cwj54tdJKke4CSqtfOFQUlmMDA14xwpwjd4xPYbo1
+0iNrFSDIU3Q1wsSvu4TNOeClgNQLvN1P91DriDzkfnaIRUToSKyPG0odUQM0JN2f
+eXt/7WxQeOzkOsDk7l0Iag/pwit03w==
+=x6n8
+-----END PGP SIGNATURE-----
 
-
-cheers
+--Sig_/=y_+vcbrUjS6AcrKSV=+lmQ--
