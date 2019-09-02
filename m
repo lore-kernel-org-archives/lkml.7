@@ -2,126 +2,133 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C3CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F24C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1B52168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="alhEYSaq"
+	by mail.kernel.org (Postfix) with ESMTP id 666692168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfIBNGa (ORCPT
+        id S1730831AbfIBNGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:06:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50032 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729761AbfIBNG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:06:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=sZTEAgPmhnxnngHfnvEbQsrU5etCxPhvpRqBQENBmaM=; b=alhEYSaqagjorgd0iX1B6Ixzyk
-        1w+GU4gTDXD26zrYHIrge+oL1um/VIN37Yx4uZEHSKKZO7C0qTBp81LQJKkLxGVvAdLw/Do28l/LP
-        +mHaBAWfHtT/ShWhRHOKjGKW3l3J8CTBmjRJmiciUkdxJ/7z2GVBtnjxlLSO4JPinf5lbusCuYZTr
-        mac/6p9wBr/82hZMtu6aBoTXVpOGJrw06nxWEiCURFA1a0E0+pktouQTBlIIj+SMHgHxSe1vMzptZ
-        lKrvI9m1niPSOlW62+Hr/dJiyezwMM/fspRK33j+geNe6HWP85tDwfAL3bcp8oz1Bq3fCFuYJl5gU
-        Zd4pIySg==;
-Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4m2J-00054g-KL; Mon, 02 Sep 2019 13:06:24 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        gross@suse.com, boris.ostrovsky@oracle.com
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 09/13] swiotlb-xen: use the same foreign page check everywhere
-Date:   Mon,  2 Sep 2019 15:03:35 +0200
-Message-Id: <20190902130339.23163-10-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190902130339.23163-1-hch@lst.de>
-References: <20190902130339.23163-1-hch@lst.de>
+        Mon, 2 Sep 2019 09:06:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:54130 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729761AbfIBNGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:06:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3E6F337;
+        Mon,  2 Sep 2019 06:06:30 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5E1F3F246;
+        Mon,  2 Sep 2019 06:06:29 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 14:06:28 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
+ ls1088a
+Message-ID: <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-11-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902031716.43195-11-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xen_dma_map_page uses a different and more complicated check for foreign
-pages than the other three cache maintainance helpers.  Switch it to the
-simpler pfn_valid method a well, and document the scheme with a single
-improved comment in xen_dma_map_page.
+On Mon, Sep 02, 2019 at 11:17:15AM +0800, Xiaowei Bao wrote:
+> Add PCIe EP node for ls1088a to support EP mode.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - Remove the pf-offset proparty.
+> v3:
+>  - No change.
+>  
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index c676d07..da246ab 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -483,6 +483,17 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		pcie_ep@3400000 {
+> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
----
- include/xen/arm/page-coherent.h | 31 +++++++++----------------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+Here you specify a fallback "fsl,ls-pcie-ep" that is removed by this series.
 
-diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
-index 0e244f4fec1a..07c104dbc21f 100644
---- a/include/xen/arm/page-coherent.h
-+++ b/include/xen/arm/page-coherent.h
-@@ -41,23 +41,17 @@ static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
- 	     dma_addr_t dev_addr, unsigned long offset, size_t size,
- 	     enum dma_data_direction dir, unsigned long attrs)
- {
--	unsigned long page_pfn = page_to_xen_pfn(page);
--	unsigned long dev_pfn = XEN_PFN_DOWN(dev_addr);
--	unsigned long compound_pages =
--		(1<<compound_order(page)) * XEN_PFN_PER_PAGE;
--	bool local = (page_pfn <= dev_pfn) &&
--		(dev_pfn - page_pfn < compound_pages);
-+	unsigned long pfn = PFN_DOWN(dev_addr);
- 
- 	/*
--	 * Dom0 is mapped 1:1, while the Linux page can span across
--	 * multiple Xen pages, it's not possible for it to contain a
--	 * mix of local and foreign Xen pages. So if the first xen_pfn
--	 * == mfn the page is local otherwise it's a foreign page
--	 * grant-mapped in dom0. If the page is local we can safely
--	 * call the native dma_ops function, otherwise we call the xen
--	 * specific function.
-+	 * Dom0 is mapped 1:1, and while the Linux page can span across multiple
-+	 * Xen pages, it is not possible for it to contain a mix of local and
-+	 * foreign Xen pages.  Calling pfn_valid on a foreign mfn will always
-+	 * return false, so if pfn_valid returns true the pages is local and we
-+	 * can use the native dma-direct functions, otherwise we call the Xen
-+	 * specific version.
- 	 */
--	if (local)
-+	if (pfn_valid(pfn))
- 		dma_direct_map_page(hwdev, page, offset, size, dir, attrs);
- 	else
- 		__xen_dma_map_page(hwdev, page, dev_addr, offset, size, dir, attrs);
-@@ -67,14 +61,7 @@ static inline void xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs)
- {
- 	unsigned long pfn = PFN_DOWN(handle);
--	/*
--	 * Dom0 is mapped 1:1, while the Linux page can be spanned accross
--	 * multiple Xen page, it's not possible to have a mix of local and
--	 * foreign Xen page. Dom0 is mapped 1:1, so calling pfn_valid on a
--	 * foreign mfn will always return false. If the page is local we can
--	 * safely call the native dma_ops function, otherwise we call the xen
--	 * specific function.
--	 */
-+
- 	if (pfn_valid(pfn))
- 		dma_direct_unmap_page(hwdev, handle, size, dir, attrs);
- 	else
--- 
-2.20.1
+Besides that, this looks OK.
 
+Thanks,
+
+Andrew Murray
+
+> +			reg = <0x00 0x03400000 0x0 0x00100000
+> +			       0x20 0x00000000 0x8 0x00000000>;
+> +			reg-names = "regs", "addr_space";
+> +			num-ib-windows = <24>;
+> +			num-ob-windows = <128>;
+> +			max-functions = /bits/ 8 <2>;
+> +			status = "disabled";
+> +		};
+> +
+>  		pcie@3500000 {
+>  			compatible = "fsl,ls1088a-pcie";
+>  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+> @@ -508,6 +519,16 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		pcie_ep@3500000 {
+> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> +			reg = <0x00 0x03500000 0x0 0x00100000
+> +			       0x28 0x00000000 0x8 0x00000000>;
+> +			reg-names = "regs", "addr_space";
+> +			num-ib-windows = <6>;
+> +			num-ob-windows = <8>;
+> +			status = "disabled";
+> +		};
+> +
+>  		pcie@3600000 {
+>  			compatible = "fsl,ls1088a-pcie";
+>  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+> @@ -533,6 +554,16 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		pcie_ep@3600000 {
+> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> +			reg = <0x00 0x03600000 0x0 0x00100000
+> +			       0x30 0x00000000 0x8 0x00000000>;
+> +			reg-names = "regs", "addr_space";
+> +			num-ib-windows = <6>;
+> +			num-ob-windows = <8>;
+> +			status = "disabled";
+> +		};
+> +
+>  		smmu: iommu@5000000 {
+>  			compatible = "arm,mmu-500";
+>  			reg = <0 0x5000000 0 0x800000>;
+> -- 
+> 2.9.5
+> 
