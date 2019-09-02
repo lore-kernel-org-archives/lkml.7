@@ -2,64 +2,146 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B45FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E67C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B69B21882
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4701B2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:06:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qzg6vbH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbfIBOE0 (ORCPT
+        id S1731034AbfIBOGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:04:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37563 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730418AbfIBOE0 (ORCPT
+        Mon, 2 Sep 2019 10:06:33 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13411 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfIBOGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:04:26 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i4mwS-0005iW-D9; Mon, 02 Sep 2019 16:04:24 +0200
-Message-ID: <1567433063.3666.7.camel@pengutronix.de>
-Subject: Re: [PATCH v1] reset: Remove copy'n'paste redundancy in the comments
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 02 Sep 2019 16:04:23 +0200
-In-Reply-To: <20190902131920.GK2680@smile.fi.intel.com>
-References: <20190819105252.81020-1-andriy.shevchenko@linux.intel.com>
-         <20190902131920.GK2680@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
+        Mon, 2 Sep 2019 10:06:33 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6d21eb0000>; Mon, 02 Sep 2019 07:06:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 02 Sep 2019 07:06:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 02 Sep 2019 07:06:32 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Sep
+ 2019 14:06:30 +0000
+Subject: Re: [PATCH v2] merge_config.sh: Check error codes from make
+To:     Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>
+CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190819200650.18156-1-broonie@kernel.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b744485d-3e57-469f-5573-6d8a32ba0aef@nvidia.com>
+Date:   Mon, 2 Sep 2019 15:06:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190819200650.18156-1-broonie@kernel.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567433195; bh=KVdqkwH94asqRCj++B1Gbrjh1gXHTTaR7MnaPWkXh1w=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qzg6vbH1B7t2CBjWKbGXJLs+GhTcilFJ/ki1MdaTthDpTO5hw1fOIQaBP/Ldq/AIt
+         YbjN4PhQl7tlnN4L54xrViOIbd9HrQCEoi+dE4fIToGH1X62oZggG8yb48dkk81jjO
+         G9OTR1Y/g24+m34MMzSn28YkF4VoiMwPR1TpE9x8O5VkQvDywWDAig+orWvlKC1F7p
+         XeJuMHuXP7JHeHfr0eV8WApHGH0iMkul56VO5uXniHxyXEH1SLgXwJmWOc+oifANif
+         DzBpj5OCMvRA4U39jEWblBzsRXhWSFukkT81dJhTxH9Bbt7mTWe+8in0LqOwzEBzXP
+         jAxNAVrseAB6A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-On Mon, 2019-09-02 at 16:19 +0300, Andy Shevchenko wrote:
-> On Mon, Aug 19, 2019 at 01:52:52PM +0300, Andy Shevchenko wrote:
-> > It seems the commit bb475230b8e5
-> > ("reset: make optional functions really optional")
-> > brought couple of redundant lines in the comments.
-> > 
-> > Drop them here.
+On 19/08/2019 21:06, Mark Brown wrote:
+> When we execute make after merging the configurations we ignore any
+> errors it produces causing whatever is running merge_config.sh to be
+> unaware of any failures.  This issue was noticed by Guillaume Tucker
+> while looking at problems with testing of clang only builds in KernelCI
+> which caused Kbuild to be unable to find a working host compiler.
 > 
-> Any comment on this?
+> This implementation was suggested by Yamada-san.
+> 
+> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reported-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
 
-No, this looks correct to me. Thank for the patch!
-Applied to reset/next.
+I have noticed some recent build failures on -next and the bisect is 
+pointing to this commit. I have been looking at why this commit is 
+making the builds fail and I see a few different things going on ...
 
-regards
-Philipp
+1. By using 'set -e', if grep fails to find a kconfig option in the   
+   resulting config file, then script exits silently without reporting 
+   which option it failed to find. Hence, it is unclear what triggered 
+   the failure. This may happen when options are being disabled.
+
+2. If an option is disabled by the config fragment that happens to be a 
+   parent of other kconfig options, then although the parent and 
+   children are disabled correctly, the script may fail because it no 
+   longer finds the children in the resulting config file. A specific 
+   example, here is CONFIG_NFS_V4. We disable this option due to 
+   issues with some host machines we use, and disabling this also 
+   disables CONFIG_NFS_V4_1 and CONFIG_NFS_V4_2. Now if all 3 of these 
+   options are enabled by default in the base config file, such as the 
+   case in the ARM64 defconfig, then disabling CONFIG_NFS_V4 in the 
+   config fragment causes merge_config.sh to fail because  
+   CONFIG_NFS_V4_1 and CONFIG_NFS_V4_2 are not defined at all in 
+   the resulting config. This causes grep to fail to find these and 
+   hence causes the script to terminate. In the resulting config file we 
+   just have '# CONFIG_NFS_V4 is not set'. I am not sure if there is an 
+   easy way to determine if a missing config option is legitimate or 
+   not. 
+
+A simple way to test the above is ...
+
+ $ export ARCH=arm64
+ $ echo "CONFIG_NFS_V4=n" > kfrag                                                                                                                                                   
+ $ ./scripts/kconfig/merge_config.sh arch/arm64/configs/defconfig kfrag 
+
+If the intent is to catch errors returned by make, then one simple fix would be ...
+
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index bec246719aea..63c8565206a4 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -179,7 +179,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+ for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
+ 
+        REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
+-       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
++       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || true)
+        if [ "x$REQUESTED_VAL" != "x$ACTUAL_VAL" ] ; then
+                echo "Value requested for $CFG not in final .config"
+                echo "Requested value:  $REQUESTED_VAL"
+
+
+I have been using merge_config.sh to enable and disable various options
+we need for testing for sometime now and so would hope I am not doing
+anything out of the ordinary here. 
+
+Let me know your thoughts.
+
+Cheers
+Jon
+
+-- 
+nvpublic
