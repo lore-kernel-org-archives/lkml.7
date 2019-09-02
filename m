@@ -2,187 +2,109 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA42DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD2CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C084121897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF49621897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTxwNe23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfIBFri (ORCPT
+        id S1729629AbfIBFto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 01:47:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729403AbfIBFrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 01:47:37 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 841D5224CEFB5C28D060;
-        Mon,  2 Sep 2019 13:47:28 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Sep 2019
- 13:47:19 +0800
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <dalias@libc.org>, <linux-sh@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
-        <heiko.carstens@de.ibm.com>, <linuxarm@huawei.com>,
-        <jiaxun.yang@flygoat.com>, <linux-mips@vger.kernel.org>,
-        <mwb@linux.vnet.ibm.com>, <paulus@samba.org>, <hpa@zytor.com>,
-        <sparclinux@vger.kernel.org>, <chenhc@lemote.com>,
-        <will@kernel.org>, <cai@lca.pw>, <linux-s390@vger.kernel.org>,
-        <ysato@users.sourceforge.jp>, <mpe@ellerman.id.au>,
-        <x86@kernel.org>, <rppt@linux.ibm.com>, <borntraeger@de.ibm.com>,
-        <dledford@redhat.com>, <mingo@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <benh@kernel.crashing.org>,
-        <jhogan@kernel.org>, <nfont@linux.vnet.ibm.com>,
-        <mattst88@gmail.com>, <len.brown@intel.com>, <gor@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <bp@alien8.de>, <luto@kernel.org>,
-        <tglx@linutronix.de>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <linux-arm-kernel@lists.infradead.org>, <rth@twiddle.net>,
-        <axboe@kernel.dk>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <ralf@linux-mips.org>,
-        <tbogendoerfer@suse.de>, <paul.burton@mips.com>,
-        <linux-alpha@vger.kernel.org>, <ink@jurassic.park.msu.ru>,
-        <akpm@linux-foundation.org>, <robin.murphy@arm.com>,
-        <davem@davemloft.net>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
- <20190831161247.GM2369@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
-Date:   Mon, 2 Sep 2019 13:46:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Mon, 2 Sep 2019 01:49:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35450 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfIBFto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 01:49:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n4so6902038pgv.2;
+        Sun, 01 Sep 2019 22:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MHdxKsFqjn9JIHizAHLjgVQgY6D3oHhQhJ6Mqn2/Qis=;
+        b=gTxwNe230a+264cG9c+8Feyt1MMUrqIZtlpV2gNcUSLYb9cGMxCXEDMCXl+5tiMyd7
+         eUa/FrxSb3adsoXpZ3KxcgExKHRp+/hvRpiAZAxjenPJkjOYsUoRdTRILyEkmug4+JE2
+         j7fCV8+2/+6M8w8pXHBB4FH11+PT9DpxczyrJ9TErw6BrQhiT9rQ071e82EHNCDawVrP
+         260yQtXj7stBkcZtNNv0f8vUSfhlWQ9+vGNJuCK6il9nb8jb6d7MeBvK6yDblE353vUj
+         3Fcz2nQzuhtim8yXoBxjdue88BRauI+qfekOrrHgbejP1bkdfe9VzvnN8/TmFSoHFjQM
+         dqeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MHdxKsFqjn9JIHizAHLjgVQgY6D3oHhQhJ6Mqn2/Qis=;
+        b=b/09JFZzSghz3SLxxKsD//C3uP9c9qdk6m8RqeN0kHV7TIOFaQnBOrHVOZ3m/2tS0A
+         9U4JsPFiHkTWILu4dvOQb9+Q/3jwTK27gow7Q12fQZX5F0ffFdduTMmA5MHh9cEfgkwY
+         YGxY8Vp2V2Sy4XENQwxrbTsobuzvy5/9cmOSoHyIFkqiqGQ3DzJ2jaGo+24vXkcys5/Z
+         d2WZybHSqtOulvNQCzqHRm2rMZGi3THoXPf8e/EyWxRK9GmGkiSOD88w3nqXYYd7I9M6
+         UsFi3K2dCoMUZccWX6pWwJx8hWDYhToLtnuIgcYdznT4+UHTkW0SWT4OK8KoHQKJ4tGf
+         3YnA==
+X-Gm-Message-State: APjAAAWUnuxPBxLQ4oMYPTP4lIDQMUEBojZvdZskT3rLnbxE9Ke3dBeA
+        ra55B4/XJwcaDXCIcd/2L/M=
+X-Google-Smtp-Source: APXvYqxMMBohwzZ+xCjsgq6JKN2mBCiIwV8Sg2mHwLWuAJb5J6RTlHaoYhCkAJ03i20k7n9FGw3M1w==
+X-Received: by 2002:a62:1808:: with SMTP id 8mr32564790pfy.177.1567403383986;
+        Sun, 01 Sep 2019 22:49:43 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.62.203])
+        by smtp.gmail.com with ESMTPSA id 136sm16533912pfz.123.2019.09.01.22.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 22:49:43 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv4-next 0/3] Odroid c2 usb fixs rebase on linux-next
+Date:   Mon,  2 Sep 2019 05:49:32 +0000
+Message-Id: <20190902054935.4899-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190831161247.GM2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/1 0:12, Peter Zijlstra wrote:
-> On Sat, Aug 31, 2019 at 06:09:39PM +0800, Yunsheng Lin wrote:
->>
->>
->> On 2019/8/31 16:55, Peter Zijlstra wrote:
->>> On Sat, Aug 31, 2019 at 01:58:16PM +0800, Yunsheng Lin wrote:
->>>> According to Section 6.2.14 from ACPI spec 6.3 [1], the setting
->>>> of proximity domain is optional, as below:
->>>>
->>>> This optional object is used to describe proximity domain
->>>> associations within a machine. _PXM evaluates to an integer
->>>> that identifies a device as belonging to a Proximity Domain
->>>> defined in the System Resource Affinity Table (SRAT).
->>>
->>> That's just words.. what does it actually mean?
->>
->> It means the dev_to_node(dev) may return -1 if the bios does not
->> implement the proximity domain feature, user may use that value
->> to call cpumask_of_node and cpumask_of_node does not protect itself
->> from node id being -1, which causes out of bound access.
-> 
->>>> @@ -69,6 +69,12 @@ extern const struct cpumask *cpumask_of_node(int node);
->>>>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->>>>  static inline const struct cpumask *cpumask_of_node(int node)
->>>>  {
->>>> +	if (node >= nr_node_ids)
->>>> +		return cpu_none_mask;
->>>> +
->>>> +	if (node < 0 || !node_to_cpumask_map[node])
->>>> +		return cpu_online_mask;
->>>> +
->>>>  	return node_to_cpumask_map[node];
->>>>  }
->>>>  #endif
->>>
->>> I _reallly_ hate this. Users are expected to use valid numa ids. Now
->>> we're adding all this checking to all users. Why do we want to do that?
->>
->> As above, the dev_to_node(dev) may return -1.
->>
->>>
->>> Using '(unsigned)node >= nr_nods_ids' is an error.
->>
->> 'node >= nr_node_ids' can be dropped if all user is expected to not call
->> cpumask_of_node with node id greater or equal to nr_nods_ids.
-> 
-> you copied my typo :-)
+Some time ago I had tired to enable usb bus 1 for Odroid C2/C1
+but it's look like some more work is needed to u-boot and
+usb_phy driver to initialize this port.
 
-I did note the typo, corrected the first one, but missed the second one :)
+Below patches tries to address the issue regarding usb bus 2 (4 port)
+while disable the usb bus 1 on this board.
 
-> 
->> From what I can see, the problem can be fixed in three place:
->> 1. Make user dev_to_node return a valid node id even when proximity
->>    domain is not set by bios(or node id set by buggy bios is not valid),
->>    which may need info from the numa system to make sure it will return
->>    a valid node.
->>
->> 2. User that call cpumask_of_node should ensure the node id is valid
->>    before calling cpumask_of_node, and user also need some info to
->>    make ensure node id is valid.
->>
->> 3. Make sure cpumask_of_node deal with invalid node id as this patchset.
->>
->> Which one do you prefer to make sure node id is valid, or do you
->> have any better idea?
->>
->> Any detail advice and suggestion will be very helpful, thanks.
-> 
-> 1) because even it is not set, the device really does belong to a node.
-> It is impossible a device will have magic uniform access to memory when
-> CPUs cannot.
+Previous patch
+[0] https://lkml.org/lkml/2019/1/29/325
 
-So it means dev_to_node() will return either NUMA_NO_NODE or a
-valid node id?
+Re send below series based re based on linux-next-20190830.
+For review and testing.
 
-> 
-> 2) is already true today, cpumask_of_node() requires a valid node_id.
+[1] https://patchwork.kernel.org/cover/11113091/
 
-Ok, most of the user does check node_id before calling
-cpumask_of_node(), but does a little different type of checking:
+Small changes from previous series.
+Fix the commit message for patch 1
 
-1) some does " < 0" check;
-2) some does "== NUMA_NO_NODE" check;
-3) some does ">= MAX_NUMNODES" check;
-4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
+Best Regards
+-Anand
 
+Anand Moon (3):
+  arm64: dts: meson: odroid-c2: p5v0 is the main 5V power input
+  arm64: dts: meson: odroid-c2: Add missing linking regulator to usb bus
+  arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power
+    failed warning
 
-> 
-> 3) is just wrong and increases overhead for everyone.
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-Ok, cpumask_of_node() is also used in some critical path such
-as scheduling, which may not need those checking, the overhead
-is unnecessary.
-
-But for non-critical path such as setup or configuration path,
-it better to have consistent checking, and also simplify the
-user code that calls cpumask_of_node().
-
-Do you think it is worth the trouble to add a new function
-such as cpumask_of_node_check(maybe some other name) to do
-consistent checking?
-
-Or caller just simply check if dev_to_node()'s return value is
-NUMA_NO_NODE before calling cpumask_of_node()?
-
-
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
+-- 
+2.23.0
 
