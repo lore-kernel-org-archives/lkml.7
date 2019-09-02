@@ -3,111 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A59C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7BFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA4B21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74BA21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlCl3abu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yt5Kk70Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfIBNgK (ORCPT
+        id S1730794AbfIBNgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:36:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37052 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730626AbfIBNgJ (ORCPT
+        Mon, 2 Sep 2019 09:36:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41807 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730209AbfIBNgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:36:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d16so14644283wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:36:08 -0700 (PDT)
+        Mon, 2 Sep 2019 09:36:37 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m24so12899509ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lgluUPyzTE3k7AyBs9nIV6ho5+oXFx0a+s2dE+u1Fk8=;
-        b=UlCl3abuuJFpLnHk0GD3eI2rM9n0Azzsrf1m9RwHiYwS5Exwkvc49cN6lZTg4HtDf7
-         te3wGTJ/Q7Wy8QRj0FtydbX8PZLAfGrl8vo+++PDn7mkgS4TL0jgQ8+bXY/N6sFSQR3M
-         x0K8Ptix0M+imYJ3mhqS5fJkHGT7j2yIVNZAkfhf0gYNF27aoG1kW2R+jzzT9GQG+BTU
-         /vd3Ju6jWcKst2NaTlSZuIDgXKK13QwQqMJNF8Isx+KN9LAtfuCbQfAPBoEmmM5r8hsX
-         uKBnW3Nmo8MVLpnhW97mSpcRSvhQ1UBMILml1T2Gdw/Kt2s825Bz4yoJXO3Nff6npHJR
-         lCcw==
+        bh=8LhD/sF/NTN0NjoFAgiiHQ7UUs0ybG0eLJoGIh+N4ts=;
+        b=yt5Kk70QvcaLMsgSVuGuAG4SWM+BIcLIE5gou9GHOehJB4r9b6weJu+L7oHTmKWf1G
+         fX/yXW2q6/k6BNw8YAh51Jz1YplyVXmpWkzRX/rbuKi1zIv8GcZA3hbylkT11Dc7iaf2
+         UGWvbJ0bU+abLpXT6JPE+sKYsFDh14BO9haw58yB5Jesu632ftsPtb7jEp+yQsLtBeua
+         h6bewrNUmYJldinBXbVXilFKl05GC6gWO8jL+Ees9sIZ+roT2Xq6s4iZF1aIs4QqX4Va
+         fNgWF6FpKWU72uZOR1YsWCa5OnA/ZEmxIr5AAA9nCB5JlphyvX/FIT4W0Oxgn0gPqATz
+         CsuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lgluUPyzTE3k7AyBs9nIV6ho5+oXFx0a+s2dE+u1Fk8=;
-        b=g2KyAZ3APG6b0wLJPO30VoJSO0+zffjLXD6jmxFJsRh/RPffakWijfnoFn/JsUJqUn
-         +PN8AdOtF7EDkrqfZxZIviP4i3zy53pM9nKjgIYqpuCi9ueRcuJeaCxJ+Kwms4yBStpc
-         scABO6Ly4BdRLrxDVYGiRehYi5B80qBPNJfCRgBsGDZa0cE9dWp0dve/Vr3LrQaC+xsT
-         cdCkWkI96iXud+6jjW1vNclVeQkNSGpnbSaxcr6E2J72A6TDppe3QAMys3hZg0nZU1Ur
-         CswEQ+PtdGuyVpXgTo0QAAWEkY4jCtF4aRldnwV069rYQ6NTFYbIcvInHehyNi1Wz1w5
-         JE7w==
-X-Gm-Message-State: APjAAAVe7gcguAi19VeVTK9bPHb6xW+cAqjoqFCi192A3Pca7vYkJuRf
-        k9Ls8MCMnRbxj5Du1psps7EUx5wAxoQeJw4r6TOcDX3h
-X-Google-Smtp-Source: APXvYqxXTnz3j1+58ZXipucuYWcIzBAoeW6774ATixJZMau34AMCKmrFZUDfhSF4cmAZHiIFE4a5YsMhxy4Bn6/LgVQ=
-X-Received: by 2002:a7b:cc94:: with SMTP id p20mr9324398wma.171.1567431367725;
- Mon, 02 Sep 2019 06:36:07 -0700 (PDT)
+        bh=8LhD/sF/NTN0NjoFAgiiHQ7UUs0ybG0eLJoGIh+N4ts=;
+        b=BH45fdXfHJF/GH5XCL0HzEAhCRXXq/L8XCYFo63d40n83cojJhg4ZDjQGR+WbFGLLn
+         tH2fxawFGMbpvUNDGK0enG8VHgAFWP5IHEvNVbgnKZmAkfZmOVngarwPuDtpT6aMYQGM
+         1+nox3+0RbCqm1DDT1PH8QPfiFAs26bJcHTpD6lbYx2hrRk6/uv3bbRGxkZwt0E89rzO
+         CzfGBnOUki1pmX91CLgYTcLTV7Ihu2pNchifyLsNzAdC3V1zRKPmipdzFR2kC/jbSGSD
+         I/0pcZLjg6iuz8wOV6abxk2937cCNtWBVyETFLnPWldMTwsik8KoNTmQg1VoLUAHp1sU
+         9zkg==
+X-Gm-Message-State: APjAAAUFRiGMWJlY+TiWwWKmEIqKxCt9HsdknlX3B6cX8xv3qVgwPKtD
+        Bk1Mt1QR8Qdomop+NH2Vy6SEexeL+YqBGMGMgaNu1Q==
+X-Google-Smtp-Source: APXvYqy/56/JZhH9u5h/dgz83LrB1WA4WlE3a52G84UNe7DNmvw7eo78678HYTfzEBqzkAB8w0uR5xAG6bAC2llAAJg=
+X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr16425420lja.180.1567431395793;
+ Mon, 02 Sep 2019 06:36:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190830225514.5283-1-daniel.baluta@nxp.com> <20190902123944.GB5819@sirena.co.uk>
-In-Reply-To: <20190902123944.GB5819@sirena.co.uk>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 2 Sep 2019 16:35:56 +0300
-Message-ID: <CAEnQRZDmVoSkpf47mTHeEKodX9_x4Y_9EVrkS=ta4sWU8tD3Zw@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Set SAI Channel Mode to Output Mode
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Timur Tabi <timur@kernel.org>,
-        Cosmin-Gabriel Samoila <gabrielcsmo@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+References: <20190831030916.13172-1-peter@typeblog.net> <20190902100141.GW2680@smile.fi.intel.com>
+In-Reply-To: <20190902100141.GW2680@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 2 Sep 2019 15:36:24 +0200
+Message-ID: <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Peter Cai <peter@typeblog.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 3:42 PM Mark Brown <broonie@kernel.org> wrote:
+On Mon, Sep 2, 2019 at 12:01 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
+> > On GPD P2 Max, the firmware could not reset the touch panel correctly.
+> > The kernel needs to take on the job instead, but the GpioInt definition
+> > in DSDT specifies ActiveHigh while the GPIO pin should actually be
+> > ActiveLow.
+> >
+> > We need to override the polarity defined by DSDT. The GPIO driver
+> > already allows defining polarity in acpi_gpio_params, but the option is
+> > not applied to GpioInt.
+> >
+> > This patch adds a new quirk that enables the polarity specified in
+> > acpi_gpio_params to also be applied to GpioInt.
 >
-> On Sat, Aug 31, 2019 at 01:55:14AM +0300, Daniel Baluta wrote:
+> Thank you for an update!
 >
-> > Fix this by setting CHMOD to Output Mode so that pins will output zero
-> > when slots are masked or channels are disabled.
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 >
-> This patch seems to do this unconditionally.  This is fine for
-> configurations where the SoC is the only thing driving the bus but will
-> mean that for TDM configurations where something else also drives some
-> of the slots we'll end up with both devices driving simultaneously.  The
-> safest thing would be to set this only if TDM isn't configured.
+> on the condition that Dmitry and other input / Goodix developers are okay with
+> the approach in general.
 
-I thought that the SAI IP is the single owner of the audio data lines,
-so even in TDM
-mode SAI IP (which is inside SoC) is the only one adding data on the bus.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+In case Dmitry needs to merge this.
 
-Now, you say that there could be two devices driving some of he masked
-slots right?
-I'm not sure how to really figure out that SAI is running in TDM mode.
+Or should I simply merge this patch to the GPIO tree?
 
-RM says:
-
-When enabled, the SAI continuously transmits and/or receives frames of
-data. Each
-frame consists of a fixed number of words and each word consists of a
-fixed number of
-bits. Within each frame, any given word can be masked causing the
-receiver to ignore
-that word and the transmitter to tri-state for the duration of that word.
-
-Will try to ask IP designer about this, thanks a lot for your comment!
-
-Daniel.
+Yours,
+Linus Walleij
