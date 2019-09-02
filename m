@@ -2,82 +2,100 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2284AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9382C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F006B217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE34217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:01:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="W0T3hZat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfIBQBW (ORCPT
+        id S1726470AbfIBQBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 12:01:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55102 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfIBQBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 12:01:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CBC20301E11C;
-        Mon,  2 Sep 2019 16:01:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 589CE600D1;
-        Mon,  2 Sep 2019 16:01:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190902161935.78bf56f1@canb.auug.org.au>
-References: <20190902161935.78bf56f1@canb.auug.org.au> <20190829153116.7ffc7470@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     dhowells@redhat.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the keys tree
+        Mon, 2 Sep 2019 12:01:36 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31978 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbfIBQBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 12:01:35 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x82FugXs018639;
+        Mon, 2 Sep 2019 18:01:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=/aa56M5YSWRpVt8Ft9iZEe2M6R3uFp9aD8gFFWVnG8o=;
+ b=W0T3hZatOv0zWlkmehLF2oiCW7ELayPNixLUx/TaLDxe2BbiTX6o0aFox4GLzIVpcvpi
+ wXvJzYHojMbVNGbZ2wwty4a0W2pi4VszwBn8vux0V8C6c9RXh4lrszMIghrAhgcHevz7
+ 6zWVj5w9QI5ubr/HNzWHnt6qD/Mteo8fpkGtE4O78rjStRoFWFKIMhNiAVEplmRF9U/c
+ osBBcRHeGADMRYyEX/agLuVI+lDW2av1ogCSCRHAbiunmIqentX+nMOtdBHvmLpv9v9U
+ U+d3hnqFcNlx8Y/dxernxysFPH+PxH+sTSgGmRwBYbP3armE2unZuDrVazLTLNSnA8N+ kg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2uqe19dt3w-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 02 Sep 2019 18:01:06 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C359224;
+        Mon,  2 Sep 2019 16:01:02 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7608B2CF15E;
+        Mon,  2 Sep 2019 18:01:02 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 2 Sep 2019
+ 18:01:02 +0200
+Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 2 Sep 2019 18:01:01
+ +0200
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <alexandre.torgue@st.com>, <olof@lixom.net>,
+        <horms+renesas@verge.net.au>, <arnd@arndb.de>, <krzk@kernel.org>,
+        <yannick.fertre@st.com>, <tony@atomide.com>,
+        <m.szyprowski@samsung.com>, <fabrice.gasnier@st.com>,
+        <enric.balletbo@collabora.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+CC:     <olivier.moysan@st.com>
+Subject: [PATCH 2/4] ARM: multi_v7_defconfig: enable stm32 i2s support
+Date:   Mon, 2 Sep 2019 18:00:39 +0200
+Message-ID: <1567440041-19220-3-git-send-email-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567440041-19220-1-git-send-email-olivier.moysan@st.com>
+References: <1567440041-19220-1-git-send-email-olivier.moysan@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <16835.1567440079.1@warthog.procyon.org.uk>
-Date:   Mon, 02 Sep 2019 17:01:19 +0100
-Message-ID: <16836.1567440079@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 02 Sep 2019 16:01:21 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.16]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-02_06:2019-08-29,2019-09-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Enable support for I2S on STM32MP1.
 
-> The forward declararion doesn't seem to work (at laste for the
-> !CONFIG_USB_NOTIFICATIONS case.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-In the !CONFIG_USB_NOTIFICATIONS case, the argument is to a stub inline
-function.  Even though the argument isn't actually used, it can't be an
-undefined type - and, I'm guessing, an undefined size, meaning the compiler
-doesn't know how many registers/how much stack space it would occupy before
-getting to the error argument.
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 929d13842171..02265e195e50 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -700,6 +700,7 @@ CONFIG_SND_SOC_SH4_FSI=m
+ CONFIG_SND_SOC_RCAR=m
+ CONFIG_SND_SOC_STI=m
+ CONFIG_SND_SOC_STM32_SAI=m
++CONFIG_SND_SOC_STM32_I2S=m
+ CONFIG_SND_SUN4I_CODEC=m
+ CONFIG_SND_SOC_TEGRA=m
+ CONFIG_SND_SOC_TEGRA20_I2S=m
+-- 
+2.7.4
 
-I have a fix for this in my tree that just makes it an unsigned int in the
-disabled case:
-
-static inline void post_usb_device_notification(const struct usb_device *udev,
-						unsigned int subtype, u32 error) {}
-
-> +#include <linux/watch_queue.h>
-
-I was trying to avoid that if I could to avoid introducing the possibility of
-circular deps, but that might not be a problem in this case.
-
-> I then discovered that I needed to install libkeyutils-dev :-( but it
-> built OK after that.
-
-?  The kernel shouldn't require that to build.
-
-David
