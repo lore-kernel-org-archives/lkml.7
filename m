@@ -2,158 +2,94 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF05C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7ED21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F33C217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=yehs2007@zoho.com header.b="QxLgzFE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbfIBKEV (ORCPT
+        id S1731012AbfIBKFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:04:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:21331 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729560AbfIBKEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:04:20 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 03:04:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="382753520"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Sep 2019 03:04:17 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i4jC3-0008Hw-IJ; Mon, 02 Sep 2019 13:04:15 +0300
-Date:   Mon, 2 Sep 2019 13:04:15 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Cai <peter@typeblog.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] touchscreen: goodix: define GPIO mapping for GPD
- P2 Max
-Message-ID: <20190902100415.GX2680@smile.fi.intel.com>
-References: <20190831030916.13172-1-peter@typeblog.net>
- <20190831030916.13172-2-peter@typeblog.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190831030916.13172-2-peter@typeblog.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Sep 2019 06:05:10 -0400
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25507 "EHLO
+        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729560AbfIBKFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:05:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1567418704; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=TM+4mEo1xD2rzEeOfUxWndcC3p0c8zhKYLLPAqM/BOV14zqFaKumCXx8Zy6hu/18AsOsP+TPVaeLZ6bVemP8diEYHDUtiSrdc+2uwGNy4KNQ9PLRA9IP62A95m4Zdq78av9OhLMHjmxQpvXd4kGpx5CBmWAKV71d+vLLd295Bno=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1567418704; h=Cc:Date:From:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=Ot31l6YpX1Hep2bcCR1LFgbNEtu8dKylpOjGYbOxviM=; 
+        b=biMCUT0zeW4LfaIQz+uiKhh4+fQoHdfApmOIaEMmq+7+RRv2qfDaiGqns4/K9isfdmumv+kaCUScwZIeIdCf0Hk2pPEnySpR5NS0qnsjXthJDtrJx+tzUld6g0W1c/0cjbkdCS9FhSYzfVBhoqUKbBEwdsg/BDJ1UYZ6uXHz+zQ=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=yehs2007@zoho.com;
+        dmarc=pass header.from=<yehs2007@zoho.com> header.from=<yehs2007@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=czy/eCu1ugpkJGhENvNLqYJWEHDA7rdgLAiR+89XIzN4M3F28ach6VP6qA3xNdZmujT7mhNHokCP
+    rqxXqCcUvxCnXrXxzODJoYdpApi/RsxExfeDwO8ISwt71/kfEhTG  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1567418704;
+        s=zm2019; d=zoho.com; i=yehs2007@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id; l=911;
+        bh=Ot31l6YpX1Hep2bcCR1LFgbNEtu8dKylpOjGYbOxviM=;
+        b=QxLgzFE7GjTrKP6CgR4RAKH6pA4VZ3f28TEBGKKPr1hYWk8Xibf9nCE9OxBkS4iw
+        1u0MfRITi23bPn3e5Oq61rL25siCq5jjD2Y7XUDNVgiuF5iIdKM/SAaWR92UyuYTaDv
+        Jedy067xd+CjwOPefeZo8UCAM0joTFR8j3Ui7COc=
+Received: from YEHS1XPF1D05WL.lenovo.com (111.205.43.251 [111.205.43.251]) by mx.zohomail.com
+        with SMTPS id 1567418703324628.2466891855994; Mon, 2 Sep 2019 03:05:03 -0700 (PDT)
+From:   Huaisheng Ye <yehs2007@zoho.com>
+To:     mpatocka@redhat.com, snitzer@redhat.com, agk@redhat.com
+Cc:     prarit@redhat.com, tyu1@lenovo.com, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, Huaisheng Ye <yehs1@lenovo.com>
+Subject: [PATCH] dm writecache: skip writecache_wait for pmem mode
+Date:   Mon,  2 Sep 2019 18:04:50 +0800
+Message-Id: <20190902100450.10600-1-yehs2007@zoho.com>
+X-Mailer: git-send-email 2.17.0.windows.1
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 11:09:15AM +0800, Peter Cai wrote:
-> The firmware of GPD P2 Max could not handle panel resets although code
-> is present in DSDT. The kernel needs to take on this job instead, but
-> the DSDT does not provide _DSD, rendering kernel helpless when trying to
-> find the respective GPIO pins.
-> 
-> Fortunately, this time GPD has proper DMI vendor / product strings that
-> we could match against. We simply apply an acpi_gpio_mapping table when
-> GPD P2 Max is matched.
-> 
-> Additionally, the DSDT definition of the irq pin specifies a wrong
-> polarity. The new quirk introduced in the previous patch
-> (ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this.
+From: Huaisheng Ye <yehs1@lenovo.com>
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The array bio_in_progress[2] only have chance to be increased and
+decreased with ssd mode. For pmem mode, they are not involved at all.
+So skip writecache_wait_for_ios in writecache_flush for pmem.
 
-though one comment below.
+Suggested-by: Doris Yu <tyu1@lenovo.com>
+Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
+---
+ drivers/md/dm-writecache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Peter Cai <peter@typeblog.net>
-> ---
-> 
-> v2: removed '#ifdef CONFIG_ACPI' as per suggestion. The #ifdef guards
-> for CONFIG_DMI is kept for consistency with the other dmi_system_id
-> definition in the same file.
-> ---
->  drivers/input/touchscreen/goodix.c | 31 ++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index 5178ea8b5f30..df476f7dcd95 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -144,6 +144,31 @@ static const struct dmi_system_id rotated_screen[] = {
->  	{}
->  };
->  
-> +static const struct acpi_gpio_params irq_gpios_default = { 0, 0, false };
-> +static const struct acpi_gpio_params reset_gpios_default = { 1, 0, false };
-> +static const struct acpi_gpio_mapping gpio_mapping_force_irq_active_high[] = {
-> +	{ "irq-gpios", &irq_gpios_default, 1, ACPI_GPIO_QUIRK_OVERRIDE_POLARITY },
-> +	{ "reset-gpios", &reset_gpios_default, 1 },
-> +	{}
-> +};
-> +
-> +/*
-> + * Devices that need acpi_gpio_mapping to function correctly
-> + */
-> +static const struct dmi_system_id need_gpio_mapping[] = {
-> +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
-> +	{
-> +		.ident = "GPD P2 Max",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "P2 MAX")
-> +		},
-> +		.driver_data = &gpio_mapping_force_irq_active_high
-> +	},
-> +#endif
-> +	{}
-> +};
-> +
->  /**
->   * goodix_i2c_read - read data from a register of the i2c slave device.
->   *
-> @@ -795,6 +820,12 @@ static int goodix_ts_probe(struct i2c_client *client,
->  {
->  	struct goodix_ts_data *ts;
->  	int error;
-
-> +	struct dmi_system_id *dmi_match;
-
-I guess it should be const as kbuild bot complained on v1.
-
-And perhaps you want to keep reverse xmas tree order in definition block:
-
-	const struct dmi_system_id *dmi_match;
-	struct goodix_ts_data *ts;
-	int error;
-
-> +
-> +	dmi_match = dmi_first_match(need_gpio_mapping);
-> +	if (dmi_match)
-> +		devm_acpi_dev_add_driver_gpios(&client->dev,
-> +					       dmi_match->driver_data);
->  
->  	dev_dbg(&client->dev, "I2C Address: 0x%02x\n", client->addr);
->  
-> -- 
-> 2.23.0
-> 
-
+diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+index c481947..d06b8aa 100644
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -726,7 +726,8 @@ static void writecache_flush(struct dm_writecache *wc)
+ 	}
+ 	writecache_commit_flushed(wc);
+ 
+-	writecache_wait_for_ios(wc, WRITE);
++	if (!WC_MODE_PMEM(wc))
++		writecache_wait_for_ios(wc, WRITE);
+ 
+ 	wc->seq_count++;
+ 	pmem_assign(sb(wc)->seq_count, cpu_to_le64(wc->seq_count));
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
 
 
