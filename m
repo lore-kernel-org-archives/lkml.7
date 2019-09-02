@@ -2,103 +2,95 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E882C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09952C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0720B2339D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567447933;
-	bh=4P3J4NkIgc4F6pEAdfjqzloqtIEOSTf5ASuleNu0cAM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SjAlgWkz20CaTW4IYhIBMI9+e45/X0KXqcdsbtdfLkuVgzTX13zajsIAd4CF60d2n
-	 QxLJCMI37krjL6ksFSwGi2Z/3K/eB91umrAKmlIMkA3D9HeqEhaatm+GApVy9U14Cz
-	 ZANf6I9pYAAwVTdEErGYIjtBJNCcT96EbLpQrOUI=
+	by mail.kernel.org (Postfix) with ESMTP id CC41121744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfIBSML (ORCPT
+        id S1726858AbfIBSOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfIBSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:12:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B999B21744;
-        Mon,  2 Sep 2019 18:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567447930;
-        bh=4P3J4NkIgc4F6pEAdfjqzloqtIEOSTf5ASuleNu0cAM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fgeQH4rsUyxLMZJAyhEM5CPsVzvwFrK+wReZ0J9ebCLlqVRRuQxSCau7RkWJ1qEcr
-         hqFG+/nG4tAdYNJ3ZMWKYQOhzxmNBZ8YmzeapS3+kEeVv2PUHWQM/7ru+YtKo6CafX
-         NFkrS6phIZTj+XOh3dZZ6Qgl3mogoelf8F1CdfaM=
-Date:   Mon, 2 Sep 2019 20:12:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-Message-ID: <20190902181207.GA18577@kroah.com>
-References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
- <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
+        Mon, 2 Sep 2019 14:14:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58159 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfIBSOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:14:08 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i4qq3-0000kr-7J; Mon, 02 Sep 2019 20:14:03 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C2BF81C0C76;
+        Mon,  2 Sep 2019 20:14:02 +0200 (CEST)
+Date:   Mon, 02 Sep 2019 18:14:02 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] x86, perf: Fix the dependency of the x86 insn
+ decoder selftest
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Message-ID: <156744804260.24692.11076064450017342914.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 06:53:34PM +0200, Jacek Anaszewski wrote:
-> Hi Akinobu,
-> 
-> Thank you for the patch.
-> 
-> I have one nit below but in general it looks good to me.
-> I've tested it with 2000 mtd triggers (~14kB file size)
-> and it worked flawlessly.
-> 
-> Still, I would like to have ack from Greg for it.
-> 
-> Adding Greg on Cc.
-> 
-> On 8/29/19 4:49 PM, Akinobu Mita wrote:
-> > Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> > However, the size of this file is limited to PAGE_SIZE because of the
-> > limitation for sysfs attribute.
-> > 
-> > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> > PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-> > and which trigger is currently activated.
-> > 
-> > This converts /sys/class/leds/<led>/trigger to bin attribute and removes
-> > the PAGE_SIZE limitation.
+The following commit has been merged into the perf/core branch of tip:
 
-But this is NOT a binary file.  A sysfs binary file is used for when the
-kernel passes data to or from hardware without any parsing of the data
-by the kernel.
+Commit-ID:     7720804a2ae46c90265a32c81c45fb6f8d2f4e8b
+Gitweb:        https://git.kernel.org/tip/7720804a2ae46c90265a32c81c45fb6f8d2f4e8b
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Sun, 01 Sep 2019 12:03:08 +09:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 02 Sep 2019 20:05:58 +02:00
 
-You are not doing that here, you are abusing the "one value per file"
-rule of sysfs so much that you are forced to work around the limitation
-it put in place on purpose to keep you from doing stuff like this.
+x86, perf: Fix the dependency of the x86 insn decoder selftest
 
-Please fix this "correctly" by creating a new api that works properly
-and just live with the fact that this file will never work correctly and
-move everyone to use the new api instead.
+Since x86 instruction decoder is not only for kprobes,
+it should be tested when the insn.c is compiled.
+(e.g. perf is enabled but kprobes is disabled)
 
-Don't keep on abusing the interface by workarounds like this, it is not
-ok.
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: cbe5c34c8c1f ("x86: Compile insn.c and inat.c only for KPROBES")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
-
-greg k-h
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index 71c92db..bf9cd83 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -171,7 +171,7 @@ config HAVE_MMIOTRACE_SUPPORT
+ 
+ config X86_DECODER_SELFTEST
+ 	bool "x86 instruction decoder selftest"
+-	depends on DEBUG_KERNEL && KPROBES
++	depends on DEBUG_KERNEL && INSTRUCTION_DECODER
+ 	depends on !COMPILE_TEST
+ 	---help---
+ 	 Perform x86 instruction decoder selftests at build time.
