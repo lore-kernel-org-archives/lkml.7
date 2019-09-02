@@ -2,66 +2,173 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EEBC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137B5C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02479215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5F72190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pu4E28W6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbfIBJXp (ORCPT
+        id S1731052AbfIBJYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:23:45 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:45099 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729603AbfIBJXp (ORCPT
+        Mon, 2 Sep 2019 05:24:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49834 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730402AbfIBJYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:23:45 -0400
-X-Originating-IP: 83.155.44.161
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 04D171BF221;
-        Mon,  2 Sep 2019 09:23:41 +0000 (UTC)
-Message-ID: <99cffa73439fd0d59fa738d786545f5a6e35ab4d.camel@hadess.net>
-Subject: Re: [PATCH v5] hid-logitech-hidpp: read battery voltage from newer
- devices
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Pedro Vanzella <pedro@pedrovanzella.com>,
-        linux-input@vger.kernel.org
-Cc:     lains@archlinux.org, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 02 Sep 2019 11:23:41 +0200
-In-Reply-To: <20190831175659.7404-1-pedro@pedrovanzella.com>
-References: <20190831175659.7404-1-pedro@pedrovanzella.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 2 Sep 2019 05:24:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x829NTaU112903;
+        Mon, 2 Sep 2019 09:23:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=WP5SWb5aqTyQm1j2T5BZONlHyn/oglQhKd+u/iDEp+I=;
+ b=pu4E28W6U0XN4iSXIuscxOwdDYGtPxhnWcpPJxIRtX0wf6UTyDCvTQSArWW/BkjNLu/0
+ Q81mx+aRNRGKD2cEHuypQHBx2FCrkxArk0952PZRnvMFo+V1MijUsWnxLafNi/TeVhIG
+ 4Sj4zcuKya4FISNEKp7A8RqZfpO+hoWxkSou/PfpkJxtkf1W76msnb/dNJZ/GBJoVNRj
+ R5axY+zQMnphc94EJ024BRhScuqg23/I+MXmNmJoRQonrjgtBF/Jj5Sb9tir/9QWgS6A
+ QKAKxBxrhcbeJ5V6X6ZPj1N0jeeDIG2IYuBZWR8iSygVNjvvBmTkBPNQYtWmqRfqzzP1 dQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2us0bh80ng-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Sep 2019 09:23:54 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x829MVVE065290;
+        Mon, 2 Sep 2019 09:23:53 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2urww6c70y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Sep 2019 09:23:53 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x829Noge002005;
+        Mon, 2 Sep 2019 09:23:50 GMT
+Received: from localhost.localdomain (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Sep 2019 02:23:49 -0700
+From:   William Kucharski <william.kucharski@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Bob Kasten <robert.a.kasten@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Chad Mynhier <chad.mynhier@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <jweiner@fb.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v5 0/2]  mm,thp: Add filemap_huge_fault() for THP
+Date:   Mon,  2 Sep 2019 03:23:39 -0600
+Message-Id: <20190902092341.26712-1-william.kucharski@oracle.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=945
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909020107
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909020107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-31 at 13:56 -0400, Pedro Vanzella wrote:
-> Newer Logitech mice report their battery voltage through feature
-> 0x1001
-> instead of the battery levels through feature 0x1000.
-> 
-> When the device is brought up and we try to query the battery, figure
-> out if it supports the old or the new feature. If it supports the new
-> feature, record the feature index and read the battery voltage and
-> its status.
+This set of patches is the first step towards a mechanism for automatically
+mapping read-only text areas of appropriate size and alignment to THPs
+whenever possible.
 
-FWIW, it wasn't clear to me that there were 3 bytes, and the last one
-would contain the battery status. I was under the impression reading
-this that the only thing the mouse would send back would be the
-voltage, so this might need a slight rewording.
+For now, the central routine, filemap_huge_fault(), amd various support
+routines are only included if the experimental kernel configuration option
 
-Did you test this with upower? Did it work as you expected?
+        RO_EXEC_FILEMAP_HUGE_FAULT_THP
 
-Cheers
+is enabled.
+
+This is because filemap_huge_fault() is dependent upon the
+address_space_operations vector readpage() pointing to a routine that will
+read and fill an entire large page at a time without poulluting the page
+cache with PAGESIZE entries for the large page being mapped or performing
+readahead that would pollute the page cache entries for succeeding large
+pages. Unfortunately, there is no good way to determine how many bytes
+were read by readpage(). At present, if filemap_huge_fault() were to call
+a conventional readpage() routine, it would only fill the first PAGESIZE
+bytes of the large page, which is definitely NOT the desired behavior.
+
+However, by making the code available now it is hoped that filesystem
+maintainers who have pledged to provide such a mechanism will do so more
+rapidly.
+
+The first part of the patch adds an order field to __page_cache_alloc(),
+allowing callers to directly request page cache pages of various sizes.
+This code was provided by Matthew Wilcox.
+
+The second part of the patch implements the filemap_huge_fault() mechanism
+as described above.
+
+As this code is only run when the experimental config option is set,
+there are some issues that need to be resolved but this is a good step
+step that will enable further developemt.
+
+Changes since v4:
+1. More code review comments addressed, fixed bug in rcu logic
+2. Add code to delete hugepage from page cache upon failure within
+   filemap_huge_fault
+3. Remove improperly crafted VM_BUG_ON when removing a THP from the
+   page cache
+4. Fixed mapping count issue
+
+Changes since v3:
+1. Multiple code review comments addressed
+2. filemap_huge_fault() now does rcu locking when possible
+3. filemap_huge_fault() now properly adds the THP to the page cache before
+   calling readpage()
+
+Changes since v2:
+1. FGP changes were pulled out to enable submission as an independent
+   patch
+2. Inadvertent tab spacing and comment changes were reverted
+
+Changes since v1:
+1. Fix improperly generated patch for v1 PATCH 1/2
+
+Matthew Wilcox (1):
+  Add an 'order' argument to __page_cache_alloc() and
+    do_read_cache_page(). Ensure the allocated pages are compound pages.
+
+William Kucharski (1):
+  Add filemap_huge_fault() to attempt to satisfy page faults on
+    memory-mapped read-only text pages using THP when possible.
+
+ fs/afs/dir.c            |   2 +-
+ fs/btrfs/compression.c  |   2 +-
+ fs/cachefiles/rdwr.c    |   4 +-
+ fs/ceph/addr.c          |   2 +-
+ fs/ceph/file.c          |   2 +-
+ include/linux/mm.h      |   2 +
+ include/linux/pagemap.h |  10 +-
+ mm/Kconfig              |  15 ++
+ mm/filemap.c            | 418 ++++++++++++++++++++++++++++++++++++++--
+ mm/huge_memory.c        |   3 +
+ mm/mmap.c               |  39 +++-
+ mm/readahead.c          |   2 +-
+ mm/rmap.c               |   4 +-
+ mm/vmscan.c             |   2 +-
+ net/ceph/pagelist.c     |   4 +-
+ net/ceph/pagevec.c      |   2 +-
+ 16 files changed, 473 insertions(+), 40 deletions(-)
+
+-- 
+2.21.0
 
