@@ -2,181 +2,95 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0079C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95D6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BBD21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567436631;
-	bh=bFvoIVZPGocM61oupTglGGc0FyftmOcB63lyHubofMg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QBAs16QUxCAne28FwaGT40nMxNMeXdu08i6y3eu08GkRCaIbCPxAjPUZDiDyFaLLf
-	 HaiiCpBo+H7CUvZGiNOIxcKiFBHIheMRRsE6i7wRkv2p6ht/T41EAurXQcNCq7iv5y
-	 Nu5uoI/JkG4uCUcN5gUdfQqeuVnm4NBzbEHHgelE=
+	by mail.kernel.org (Postfix) with ESMTP id 7EC4121744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tLPkucC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbfIBPDu (ORCPT
+        id S1731868AbfIBPGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbfIBPDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:03:49 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E4C217D7;
-        Mon,  2 Sep 2019 15:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567436627;
-        bh=bFvoIVZPGocM61oupTglGGc0FyftmOcB63lyHubofMg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUhcqiku0QyWkiMJnjfhQ4itM+KUUMw0nfVKOlctNuI8bPPeGjg65V9TVpA/koFw/
-         kffWv61cg0CE1w5mmQk6Zf8svohVkFnKFRcNRRiX0j11uP4vnOEKR7IdNa5aCDDSph
-         E0YUoOa3g/npCAyJzrgGyc4yk6Vl3IsyHgKmUk7U=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] dt-bindings: power: syscon-poweroff: Convert bindings to json-schema
-Date:   Mon,  2 Sep 2019 17:03:36 +0200
-Message-Id: <20190902150336.3600-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190902150336.3600-1-krzk@kernel.org>
-References: <20190902150336.3600-1-krzk@kernel.org>
+        Mon, 2 Sep 2019 11:06:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34568 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731307AbfIBPGp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 11:06:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nNUDDXya3h8hqFlB3tiL0TsifnVLRoZdKphNekPMo0s=; b=tLPkucC5rxvW7BgJAmnNzExc4
+        jCapxosKXIHpknqAkYvSi3cp2jeockOD66WW1kwhnydi/5iiDzv08sSwt+y2+Te0GRAnFNTy5l4Nn
+        bPRW62bal2Azk1tepSwDyWTTcx0rhUPPD92aUfB6GZjINZamiP9k0jXlDPCfI5FAg7JOwFrHEN8h0
+        bn2WgpiHzivlJGyNW0s9cDfix4/jZnjEGr6nvQiGOpklSkdIAvVIFbwRm2zxWMCzzLkNvGikY+fgE
+        dZOMVOMeExieYAnXWniEGIiwbWQKYVYc1Uis0znCdI4FAJClNgNqLYMH7kk561bAMgM+SEUO6meMX
+        2iMABbwFg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4nui-0007SA-OE; Mon, 02 Sep 2019 15:06:40 +0000
+Date:   Mon, 2 Sep 2019 08:06:40 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     dsterba@suse.cz, Chao Yu <chao@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
+Message-ID: <20190902150640.GA23089@infradead.org>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-12-gaoxiang25@huawei.com>
+ <20190902125711.GA23462@infradead.org>
+ <20190902130644.GT2752@suse.cz>
+ <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
+ <20190902142037.GW2752@twin.jikos.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902142037.GW2752@twin.jikos.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Syscon poweroff bindings to DT schema format using
-json-schema.
+On Mon, Sep 02, 2019 at 04:20:37PM +0200, David Sterba wrote:
+> Oh right, I think the reasons are historical and that we can remove the
+> options nowadays. From the compatibility POV this should be safe, with
+> ACLs compiled out, no tool would use them, and no harm done when the
+> code is present but not used.
+> 
+> There were some efforts by embedded guys to make parts of kernel more
+> configurable to allow removing subsystems to reduce the final image
+> size. In this case I don't think it would make any noticeable
+> difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
+> while the whole module is over 1.3MiB.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../bindings/power/reset/syscon-poweroff.txt  | 30 --------
- .../bindings/power/reset/syscon-poweroff.yaml | 68 +++++++++++++++++++
- 2 files changed, 68 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
-
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
-deleted file mode 100644
-index 022ed1f3bc80..000000000000
---- a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--Generic SYSCON mapped register poweroff driver
--
--This is a generic poweroff driver using syscon to map the poweroff register.
--The poweroff is generally performed with a write to the poweroff register
--defined by the register map pointed by syscon reference plus the offset
--with the value and mask defined in the poweroff node.
--
--Required properties:
--- compatible: should contain "syscon-poweroff"
--- regmap: this is phandle to the register map node
--- offset: offset in the register map for the poweroff register (in bytes)
--- value: the poweroff value written to the poweroff register (32 bit access)
--
--Optional properties:
--- mask: update only the register bits defined by the mask (32 bit)
--
--Legacy usage:
--If a node doesn't contain a value property but contains a mask property, the
--mask property is used as the value.
--
--Default will be little endian mode, 32 bit access only.
--
--Examples:
--
--	poweroff {
--	   compatible = "syscon-poweroff";
--	   regmap = <&regmapnode>;
--	   offset = <0x0>;
--	   mask = <0x7a>;
--	};
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
-new file mode 100644
-index 000000000000..9336ffcf3ac8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/reset/syscon-poweroff.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic SYSCON mapped register poweroff driver
-+
-+maintainers:
-+  - Sebastian Reichel <sre@kernel.org>
-+
-+description: |+
-+  This is a generic poweroff driver using syscon to map the poweroff register.
-+  The poweroff is generally performed with a write to the poweroff register
-+  defined by the register map pointed by syscon reference plus the offset
-+  with the value and mask defined in the poweroff node.
-+  Default will be little endian mode, 32 bit access only.
-+
-+properties:
-+  compatible:
-+    const: syscon-poweroff
-+
-+  mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Update only the register bits defined by the mask (32 bit).
-+    maxItems: 1
-+
-+  offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the poweroff register (in bytes).
-+    maxItems: 1
-+
-+  regmap:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle to the register map node.
-+    maxItems: 1
-+
-+  value:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: The poweroff value written to the poweroff register (32 bit access).
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - regmap
-+  - offset
-+
-+allOf:
-+  - if:
-+      properties:
-+        value:
-+          not:
-+            type: array
-+    then:
-+      required:
-+        - mask
-+    else:
-+      required:
-+        - value
-+
-+examples:
-+  - |
-+    poweroff {
-+      compatible = "syscon-poweroff";
-+      regmap = <&regmapnode>;
-+      offset = <0x0>;
-+      mask = <0x7a>;
-+    };
--- 
-2.17.1
-
+Given that the erofs folks have an actual use case for it I think
+it is fine to keep the options, I just wanted to ensure this wasn't
+copy and pasted for no good reason.  Note that for XFS we don't have
+an option for xattrs, as those are integral to a lot of file system
+features.  WE have an ACL option mostly for historic reasons.
