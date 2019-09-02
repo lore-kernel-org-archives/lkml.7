@@ -2,80 +2,123 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7FCC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29631C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DB4216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BCE21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567447642;
+	bh=V9ODiMkdkxlWNp0H2vDmbkEuqwN9aIh0HkW4kHpJguI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xZPPMifakhogpTqmLpzOYC/d2dmOe+/kl9rziascilW7EQXw/r0hHt6VZE7pNEKDs
+	 vzlMyhfUcUcrCbyjkiVfeGNdcg7cfmfcmFz9x+gvKd+fDsoQbGiaJPQvkz7Uusdilj
+	 72iwraTFyutS+CdpsCLqnZXh82atWM3XlSsUc2QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfIBSF1 (ORCPT
+        id S1726863AbfIBSHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:05:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44740 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfIBSF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:05:26 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D898985539
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Sep 2019 18:05:26 +0000 (UTC)
-Received: by mail-io1-f72.google.com with SMTP id t8so19810987iom.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 11:05:26 -0700 (PDT)
+        Mon, 2 Sep 2019 14:07:21 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37744 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfIBSHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:07:20 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d16so15474731wme.2;
+        Mon, 02 Sep 2019 11:07:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2FP61o/rTW3HxqMEgs6ZmsTW0Pzgbyx4HaATesyroRc=;
+        b=HBBXjVcXyPoUX9Asnc9aIZcuXAz5XCTn37veQopKqIAVof3qtxqVYmqKBc2B4Ppra5
+         Y58KTaTk/nF08+uUkUU/+oSEPovt1UF2SY74JuMgjhCYqQP3vPUk3tNXnX25OXyP3esb
+         /bHFrxNIbLm89dE8OnG9Yax/CYvaVUJ/odjkWKvIBTBY26zjskZ3yvtJadNMOQOCL5rx
+         BV7ZKOitDRacIBTt2lPx8WSzEDmAowxX88zc7+zjgdEwE4Jr0bGVd68DWZRW5LZLfaI/
+         /z1i1lpLvxBu5Gt0B1Df7/X345wvA04TXZWDWQzjtLCWEkFICodhFOq7Lu3KJVrUIARb
+         TK0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UkgUaL8VzlklW86uya8kYZjjavCTUDQ8aI35FGVFq8s=;
-        b=jgoa/KM65HeMqe2BHrTFVbOmbjLy/aZCOkmODVAz1j0b6G1dVWeBicwqBe+5i/AhBK
-         WaLUEGVsXusUNB3lv+1gnQBGudro7oF4CLE72bi04vl6jJn1/fYwS3rqwyIDfEuqBNVL
-         ft0BeCPmMCRuO4gDtfvLYqFB4D2ovu21Wxx/dHQhNe00c+d7LD297E5QV9SO6xaAr6zc
-         OTGP/hZelN2ngQYwQYIzvYUEcXOK9hgtIKJZQMGUpnQGJS0fBAcOUTcPCoLHhqCYVFSm
-         zpFc0LcbE7MTM1Z5NzC1THPc6Bd0NqGyghSS1IAIwzhySUVMmhyuUih/nx+fhjHwGElw
-         LPCw==
-X-Gm-Message-State: APjAAAUsj7QnL/JAokkRdJREkb2ahGYZsKBRV90ovyGNuXoWOW8+mKUJ
-        Tb3wOucSvi0o08jf2WBVejXaKMb1Df+Z/SZ1kOZ+guI+89P3iBFOPuM1X5hBeNarIjrw9MZ5dEW
-        uRL+K2EQ3wS473Ebuki3PxJfLgbuju6x2c3WvA91L
-X-Received: by 2002:a02:9a12:: with SMTP id b18mr26263196jal.70.1567447526342;
-        Mon, 02 Sep 2019 11:05:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxnLzafJ6PcT24LmpFEMVCZaodz/wkINz7GVGLbos75Tlsx/zjDptZUOJTEX5bD3/97D/+Tpax1FDlAP1hMiDE=
-X-Received: by 2002:a02:9a12:: with SMTP id b18mr26263171jal.70.1567447526101;
- Mon, 02 Sep 2019 11:05:26 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2FP61o/rTW3HxqMEgs6ZmsTW0Pzgbyx4HaATesyroRc=;
+        b=OpXfRFt23TagndtsbEZ8Eq0nxAVXRFdDj6zOD8cstg0gqphJVrtOgkkI7URcQwtzl7
+         OTXavhGfw7L1+y0/aX6to/yzPq0VRzXkYo8emtwKb177fj/Xftv3zkGTgNhVyCE6LMXp
+         GModI5/57NHkfxb6mjw8kPCL5tDNgSQTIbu1s0mD4SbW71c+2W7j2i4AyuoM8BnK2AbK
+         2khtjiyrBmNUROr1fA4OJhKSX4ibvqJGVESjaUA7mqovidnMtO5sOH6ZvZe/+rA8HmSC
+         QOid3oPIpBo9OqNus/NujvMB8lJ7OLvDuaoCvoh9VhBLha8vdify9hP2NpD5B1smlx9L
+         4OqA==
+X-Gm-Message-State: APjAAAVVCg/N9kxRGAlCjsDYvVCdYd4rP1CSCH58De/xTPTKG6L/GLuK
+        xIjXIgsfpsPCubrLwzYjZj0=
+X-Google-Smtp-Source: APXvYqw1iHn46OE2NUICV9iUJgJFO0LHiEfe7scxyxXpgXgJ7+0k95/PZgmSBwtfuREkAbfiq2gXCQ==
+X-Received: by 2002:a1c:4b14:: with SMTP id y20mr4799177wma.10.1567447638782;
+        Mon, 02 Sep 2019 11:07:18 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id t203sm16421896wmf.42.2019.09.02.11.07.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 11:07:18 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 20:07:16 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: Re: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20190902180716.GA34219@gmail.com>
+References: <20190902173102.53a44459@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190902143915.20576-1-yuehaibing@huawei.com>
-In-Reply-To: <20190902143915.20576-1-yuehaibing@huawei.com>
-From:   Miklos Szeredi <mszeredi@redhat.com>
-Date:   Mon, 2 Sep 2019 20:05:15 +0200
-Message-ID: <CAOssrKdfyd0=Vod6DC9AiN=wNnPaT2nN5MY8tSq73m80BLoANg@mail.gmail.com>
-Subject: Re: [PATCH -next] virtio-fs: Add missing include file
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902173102.53a44459@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 4:43 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> fs/fuse/virtio_fs.c: In function virtio_fs_requests_done_work:
-> fs/fuse/virtio_fs.c:348:6: error: implicit declaration of function zero_user_segment;
->  did you mean get_user_pages? [-Werror=implicit-function-declaration]
->       zero_user_segment(page, len, thislen);
->       ^~~~~~~~~~~~~~~~~
->       get_user_pages
->
-> Add missing include file <linux/highmem.h>
 
-Thanks, folded.
+* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Miklos
+> Hi all,
+> 
+> Today's linux-next merge of the tip tree got a conflict in:
+> 
+>   tools/power/x86/turbostat/turbostat.c
+> 
+> between commit:
+> 
+>   cd188af5282d ("tools/power turbostat: Fix Haswell Core systems")
+>   b62b3184576b ("tools/power turbostat: add Jacobsville support")
+>   d93ea567fc4e ("tools/power turbostat: Add Ice Lake NNPI support")
+> 
+> from Linus' tree and commit:
+> 
+>   c66f78a6de4d ("x86/intel: Aggregate big core client naming")
+>   af239c44e3f9 ("x86/intel: Aggregate big core mobile naming")
+>   5e741407eab7 ("x86/intel: Aggregate big core graphics naming")
+>   5ebb34edbefa ("x86/intel: Aggregate microserver naming")
+> 
+> from the tip tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+
+Thanks Stephen - I resolved this in -tip too, this conflict should not 
+trigger anymore in tomorrow's -next integration.
+
+Thanks,
+
+	Ingo
