@@ -2,365 +2,183 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5160EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45EDC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB5B2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E7A2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oMKUbQQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfIBQJF (ORCPT
+        id S1726457AbfIBQJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 12:09:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51710 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfIBQJE (ORCPT
+        Mon, 2 Sep 2019 12:09:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43769 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfIBQJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 12:09:04 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 525E528CFDA
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Benson Leung <bleung@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2] platform/chrome: cros_ec_chardev: Add a poll handler to receive MKBP events
-Date:   Mon,  2 Sep 2019 18:08:48 +0200
-Message-Id: <20190902160848.4738-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Sep 2019 12:09:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v12so9195854pfn.10;
+        Mon, 02 Sep 2019 09:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zShaFAP74aJga8P+EWAaD/eJPjKlvpwUgjAlhsNU3q0=;
+        b=oMKUbQQDtpbqxTYcYhm+L0DV65dinVK3bO9v4Po7a/d+WRNahr4T0JkTc4Guvk8jnF
+         7rR6chiOv0NVOFrA4bPyqwhFKdbdItjK/V/hKaaIFx58xwLwoASfdl75JyQ7LywlbgqR
+         WszVm/mRPLEteW3h5VYFP9zpOhLsigSA/GOuxWzFHUI/UvElM1chJncbi4hSxOujBtXi
+         X8O+BnSlYfPDScqWt4G8zSW951+uUr7o49WNl0zt9IDkegsAg4rBqYqyE6erCPY72TyN
+         kaUzJF//+xwxvHRll2emJSOvUnKFN9dPe/7WMsggNQv0D/K5UyyiUQctyJlXqVyDr1ch
+         8Mjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zShaFAP74aJga8P+EWAaD/eJPjKlvpwUgjAlhsNU3q0=;
+        b=TgUF0RTXCSo2iKm/lCh0bpZAx86PyVbQGr7388CBBjQVgALnxqdV2YBG09paySO5o3
+         f1+t5EqCyRD2YqJSJ/Cb3NtdP/QrL3MCQWQrA9dlScvlAgFTYHffVPf8rGqQVheFHRlP
+         bhClh1d8MYAmWcmZf2L7A/IB1/B1zwcL/SPV+2MKKvB4rAOQZYDcqJC3v+1TuDF/74oy
+         eVNdvdZIINcHIK3x3OhA2u0jgvUvLO51e4vR4x28gUS4jlDVekdvLeBN2WJ2sKhKFcc6
+         vxe16k0ZlIJjeGglWplt68zF167oH8Rk8ARaVywyGGkj/YOJU77KhphpN4yRojjOmHLd
+         OQaA==
+X-Gm-Message-State: APjAAAXMSYEMk7vHLN7yUxOopKPN0auh3WjHgNDKN41ISxwBwQA4agwm
+        NI7mO6T2F63JWjV2H5N+zM4=
+X-Google-Smtp-Source: APXvYqz6Ye4Kedth37Js8pmu13MSfUKPp+rA9tdeUPxTCiYzZ/5vyqIUzexfHSL3uIiBnVkBoEPfRg==
+X-Received: by 2002:a65:6259:: with SMTP id q25mr26388143pgv.145.1567440589640;
+        Mon, 02 Sep 2019 09:09:49 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y128sm13823679pgy.41.2019.09.02.09.09.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 09:09:49 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 09:09:48 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Amy.Shih@advantech.com.tw
+Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
+        bichan.lu@advantech.com.tw, jia.sui@advantech.com.cn,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v6,1/1] hwmon: (nct7904) Fix incorrect temperature limitation
+ register setting of LTD.
+Message-ID: <20190902160948.GA16583@roeck-us.net>
+References: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow to poll on the cros_ec device to receive the MKBP events.
+On Mon, Jun 18, 2085 at 03:57:19PM +0000, Amy.Shih@advantech.com.tw wrote:
+> From: "amy.shih" <amy.shih@advantech.com.tw>
+> 
+> According to kernel hwmon sysfs-interface documentation, temperature
+> critical max value, typically greater than corresponding temp_max values.
+> Thus, reads the LTD_HV_HL (LTD HIGH VALUE HIGH LIMITATION) and LTD_LV_HL
+> (LTD LOW VALUE HIGH LIMITATION) for case hwmon_temp_crit and
+> hwmon_temp_crit_hyst. Reads the LTD_HV_LL (HIGH VALUE LOW LIMITATION)
+> and LTD_LV_LL (LOW VALUE LOW LIMITATION) for case hwmon_temp_max
+> and hwmon_temp_max_hyst.
+> 
+> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+> ---
+> 
+> Changes in v6:
+> - Fix incorrect temperature limitation register setting of LTD.
 
-The /dev/cros_[ec|fp|..] file operations now implements the poll
-operation. The userspace can now receive specific MKBP events by doing
-the
-following:
-- Open the /dev/cros_XX file.
-- Call the CROS_EC_DEV_IOCEVENTMASK ioctl with the bitmap of the MKBP
-  events it wishes to receive as argument.
-- Poll on the file descriptor.
-- When it gets POLLIN, do a read on the file descriptor, the first
-  queued event will be returned (using the struct
-  ec_response_get_next_event format: one byte of event type, then
-  the payload).
+This is a separate (follow-up) patch; v6 is inappropriate here.
+Nevertheless, applied on top of the previous patch to hwmon-next.
 
-The read() operation returns at most one event even if there are several
-queued, and it might be truncated if the buffer is smaller than the
-event (but the caller should know the maximum size of the events it is
-reading).
+Thanks,
+Guenter
 
-read() used to return the EC version string, it still does it when no
-event mask or an empty event is set for backward compatibility (despite
-nobody really using this feature).
-
-This will be used, for example, by the userspace daemon to receive and
-treat the EC_MKBP_EVENT_FINGERPRINT sent by the FP MCU.
-
-Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Note that this patch depends on the immutable branch [1] to apply
-cleanly.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-extcon-hid-i2c-iio-input-media-chrome-power-pwm-rtc-sound-5.4
-
-
-Changes in v2:
-- Moved the code to the cros_ec_chardev driver.
-
- drivers/platform/chrome/cros_ec_chardev.c     | 177 +++++++++++++++++-
- include/linux/platform_data/cros_ec_chardev.h |   1 +
- 2 files changed, 173 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-index 08abd7e5c7bf..eabb1fe85688 100644
---- a/drivers/platform/chrome/cros_ec_chardev.c
-+++ b/drivers/platform/chrome/cros_ec_chardev.c
-@@ -16,21 +16,42 @@
- #include <linux/mfd/cros_ec.h>
- #include <linux/miscdevice.h>
- #include <linux/module.h>
-+#include <linux/notifier.h>
- #include <linux/platform_data/cros_ec_chardev.h>
- #include <linux/platform_data/cros_ec_commands.h>
- #include <linux/platform_data/cros_ec_proto.h>
- #include <linux/platform_device.h>
-+#include <linux/poll.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
- 
- #define DRV_NAME		"cros-ec-chardev"
- 
-+/* Arbitrary bounded size for the event queue */
-+#define CROS_MAX_EVENT_LEN	PAGE_SIZE
-+
- struct chardev_data {
- 	struct cros_ec_dev *ec_dev;
- 	struct miscdevice misc;
- };
- 
-+struct chardev_priv {
-+	struct cros_ec_dev *ec_dev;
-+	struct notifier_block notifier;
-+	wait_queue_head_t wait_event;
-+	unsigned long event_mask;
-+	struct list_head events;
-+	size_t event_len;
-+};
-+
-+struct ec_event {
-+	struct list_head node;
-+	size_t size;
-+	u8 event_type;
-+	u8 data[0];
-+};
-+
- static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
- {
- 	static const char * const current_image_name[] = {
-@@ -69,6 +90,71 @@ static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
- 	return ret;
- }
- 
-+static int ec_mkbp_event(struct notifier_block *nb,
-+			 unsigned long queued_during_suspend,
-+			 void *_notify)
-+{
-+	struct chardev_priv *priv = container_of(nb, struct chardev_priv,
-+						 notifier);
-+	struct cros_ec_device *ec_dev = priv->ec_dev->ec_dev;
-+	struct ec_event *event;
-+	unsigned long event_bit = 1 << ec_dev->event_data.event_type;
-+	int total_size = sizeof(*event) + ec_dev->event_size;
-+
-+	if (!(event_bit & priv->event_mask) ||
-+	    (priv->event_len + total_size) > CROS_MAX_EVENT_LEN)
-+		return NOTIFY_DONE;
-+
-+	event = kzalloc(total_size, GFP_KERNEL);
-+	if (!event)
-+		return NOTIFY_DONE;
-+
-+	event->size = ec_dev->event_size;
-+	event->event_type = ec_dev->event_data.event_type;
-+	memcpy(event->data, &ec_dev->event_data.data, ec_dev->event_size);
-+
-+	spin_lock(&priv->wait_event.lock);
-+	list_add_tail(&event->node, &priv->events);
-+	priv->event_len += total_size;
-+	wake_up_locked(&priv->wait_event);
-+	spin_unlock(&priv->wait_event.lock);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct ec_event *ec_fetch_event(struct chardev_priv *priv, bool fetch,
-+				       bool block)
-+{
-+	struct ec_event *event;
-+	int err;
-+
-+	spin_lock(&priv->wait_event.lock);
-+	if (!block && list_empty(&priv->events)) {
-+		event = ERR_PTR(-EWOULDBLOCK);
-+		goto out;
-+	}
-+
-+	if (!fetch) {
-+		event = NULL;
-+		goto out;
-+	}
-+
-+	err = wait_event_interruptible_locked(priv->wait_event,
-+					      !list_empty(&priv->events));
-+	if (err) {
-+		event = ERR_PTR(err);
-+		goto out;
-+	}
-+
-+	event = list_first_entry(&priv->events, struct ec_event, node);
-+	list_del(&event->node);
-+	priv->event_len -= sizeof(*event) + event->size;
-+
-+out:
-+	spin_unlock(&priv->wait_event.lock);
-+	return event;
-+}
-+
- /*
-  * Device file ops
-  */
-@@ -76,11 +162,40 @@ static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
- {
- 	struct miscdevice *mdev = filp->private_data;
- 	struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
-+	struct chardev_priv *priv;
-+	int ret;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
- 
--	filp->private_data = ec_dev;
-+	priv->ec_dev = ec_dev;
-+	filp->private_data = priv;
-+	INIT_LIST_HEAD(&priv->events);
-+	init_waitqueue_head(&priv->wait_event);
- 	nonseekable_open(inode, filp);
- 
--	return 0;
-+	priv->notifier.notifier_call = ec_mkbp_event;
-+	ret = blocking_notifier_chain_register(&ec_dev->ec_dev->event_notifier,
-+					       &priv->notifier);
-+	if (ret) {
-+		dev_err(ec_dev->dev, "failed to register event notifier\n");
-+		kfree(priv);
-+	}
-+
-+	return ret;
-+}
-+
-+static __poll_t cros_ec_chardev_poll(struct file *filp, poll_table *wait)
-+{
-+	struct chardev_priv *priv = filp->private_data;
-+
-+	poll_wait(filp, &priv->wait_event, wait);
-+
-+	if (list_empty(&priv->events))
-+		return 0;
-+
-+	return EPOLLIN | EPOLLRDNORM;
- }
- 
- static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
-@@ -88,14 +203,42 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
- {
- 	char msg[sizeof(struct ec_response_get_version) +
- 		 sizeof(CROS_EC_DEV_VERSION)];
--	struct cros_ec_dev *ec = filp->private_data;
-+	struct chardev_priv *priv = filp->private_data;
-+	struct cros_ec_dev *ec_dev = priv->ec_dev;
- 	size_t count;
- 	int ret;
- 
-+	if (priv->event_mask) { /* queued MKBP event */
-+		struct ec_event *event;
-+
-+		event = ec_fetch_event(priv, length != 0,
-+				       !(filp->f_flags & O_NONBLOCK));
-+		if (IS_ERR(event))
-+			return PTR_ERR(event);
-+		/*
-+		 * length == 0 is special - no IO is done but we check
-+		 * for error conditions.
-+		 */
-+		if (length == 0)
-+			return 0;
-+
-+		/* The event is 1 byte of type plus the payload */
-+		count = min(length, event->size + 1);
-+		ret = copy_to_user(buffer, &event->event_type, count);
-+		kfree(event);
-+		if (ret) /* the copy failed */
-+			return -EFAULT;
-+		*offset = count;
-+		return count;
-+	}
-+
-+	/*
-+	 * Legacy behavior if no event mask is defined
-+	 */
- 	if (*offset != 0)
- 		return 0;
- 
--	ret = ec_get_version(ec, msg, sizeof(msg));
-+	ret = ec_get_version(ec_dev, msg, sizeof(msg));
- 	if (ret)
- 		return ret;
- 
-@@ -108,6 +251,24 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
- 	return count;
- }
- 
-+static int cros_ec_chardev_release(struct inode *inode, struct file *filp)
-+{
-+	struct chardev_priv *priv = filp->private_data;
-+	struct cros_ec_dev *ec_dev = priv->ec_dev;
-+	struct ec_event *event, *e;
-+
-+	blocking_notifier_chain_unregister(&ec_dev->ec_dev->event_notifier,
-+					   &priv->notifier);
-+
-+	list_for_each_entry_safe(event, e, &priv->events, node) {
-+		list_del(&event->node);
-+		kfree(event);
-+	}
-+	kfree(priv);
-+
-+	return 0;
-+}
-+
- /*
-  * Ioctls
-  */
-@@ -181,7 +342,8 @@ static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
- static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
- 				   unsigned long arg)
- {
--	struct cros_ec_dev *ec = filp->private_data;
-+	struct chardev_priv *priv = filp->private_data;
-+	struct cros_ec_dev *ec = priv->ec_dev;
- 
- 	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
- 		return -ENOTTY;
-@@ -191,6 +353,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
- 		return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
- 	case CROS_EC_DEV_IOCRDMEM:
- 		return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
-+	case CROS_EC_DEV_IOCEVENTMASK:
-+		priv->event_mask = arg;
-+		return 0;
- 	}
- 
- 	return -ENOTTY;
-@@ -198,7 +363,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
- 
- static const struct file_operations chardev_fops = {
- 	.open		= cros_ec_chardev_open,
-+	.poll		= cros_ec_chardev_poll,
- 	.read		= cros_ec_chardev_read,
-+	.release	= cros_ec_chardev_release,
- 	.unlocked_ioctl	= cros_ec_chardev_ioctl,
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl	= cros_ec_chardev_ioctl,
-diff --git a/include/linux/platform_data/cros_ec_chardev.h b/include/linux/platform_data/cros_ec_chardev.h
-index 973b2615aa02..7de8faaf77df 100644
---- a/include/linux/platform_data/cros_ec_chardev.h
-+++ b/include/linux/platform_data/cros_ec_chardev.h
-@@ -33,5 +33,6 @@ struct cros_ec_readmem {
- #define CROS_EC_DEV_IOC       0xEC
- #define CROS_EC_DEV_IOCXCMD   _IOWR(CROS_EC_DEV_IOC, 0, struct cros_ec_command)
- #define CROS_EC_DEV_IOCRDMEM  _IOWR(CROS_EC_DEV_IOC, 1, struct cros_ec_readmem)
-+#define CROS_EC_DEV_IOCEVENTMASK _IO(CROS_EC_DEV_IOC, 2)
- 
- #endif /* _CROS_EC_DEV_H_ */
--- 
-2.20.1
-
+> Changes in v5:
+> - Squashed subsequent fixes of three patches into one patch.
+> Changes in v4:
+> - Fix the incorrect return value of case hwmon_fan_min in function "nct7904_write_fan".
+> - Fix the confused calculation of case hwmon_fan_min in function
+> Changes in v3:
+> - Squashed subsequent fixes of patches into one patch.
+> 
+> -- Fix bad fallthrough in various switch statements.
+> -- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+> -- Fix incorrect register setting of voltage.
+> -- Fix incorrect register bit mapping of temperature alarm.
+> -- Fix wrong return code 0x1fff in function nct7904_write_fan.
+> -- Delete wrong comment in function nct7904_write_in.
+> -- Fix wrong attribute names for temperature.
+> -- Fix wrong registers setting for temperature.
+> 
+> Changes in v2:
+> - Fix bad fallthrough in various switch statements.
+> - Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+> ---
+>  drivers/hwmon/nct7904.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+> index 76372f20d71a..ce688ab4fce2 100644
+> --- a/drivers/hwmon/nct7904.c
+> +++ b/drivers/hwmon/nct7904.c
+> @@ -398,22 +398,22 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+>  		}
+>  		return 0;
+>  	case hwmon_temp_max:
+> -		reg1 = LTD_HV_HL_REG;
+> +		reg1 = LTD_HV_LL_REG;
+>  		reg2 = TEMP_CH1_W_REG;
+>  		reg3 = DTS_T_CPU1_W_REG;
+>  		break;
+>  	case hwmon_temp_max_hyst:
+> -		reg1 = LTD_LV_HL_REG;
+> +		reg1 = LTD_LV_LL_REG;
+>  		reg2 = TEMP_CH1_WH_REG;
+>  		reg3 = DTS_T_CPU1_WH_REG;
+>  		break;
+>  	case hwmon_temp_crit:
+> -		reg1 = LTD_HV_LL_REG;
+> +		reg1 = LTD_HV_HL_REG;
+>  		reg2 = TEMP_CH1_C_REG;
+>  		reg3 = DTS_T_CPU1_C_REG;
+>  		break;
+>  	case hwmon_temp_crit_hyst:
+> -		reg1 = LTD_LV_LL_REG;
+> +		reg1 = LTD_LV_HL_REG;
+>  		reg2 = TEMP_CH1_CH_REG;
+>  		reg3 = DTS_T_CPU1_CH_REG;
+>  		break;
+> @@ -507,22 +507,22 @@ static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
+>  
+>  	switch (attr) {
+>  	case hwmon_temp_max:
+> -		reg1 = LTD_HV_HL_REG;
+> +		reg1 = LTD_HV_LL_REG;
+>  		reg2 = TEMP_CH1_W_REG;
+>  		reg3 = DTS_T_CPU1_W_REG;
+>  		break;
+>  	case hwmon_temp_max_hyst:
+> -		reg1 = LTD_LV_HL_REG;
+> +		reg1 = LTD_LV_LL_REG;
+>  		reg2 = TEMP_CH1_WH_REG;
+>  		reg3 = DTS_T_CPU1_WH_REG;
+>  		break;
+>  	case hwmon_temp_crit:
+> -		reg1 = LTD_HV_LL_REG;
+> +		reg1 = LTD_HV_HL_REG;
+>  		reg2 = TEMP_CH1_C_REG;
+>  		reg3 = DTS_T_CPU1_C_REG;
+>  		break;
+>  	case hwmon_temp_crit_hyst:
+> -		reg1 = LTD_LV_LL_REG;
+> +		reg1 = LTD_LV_HL_REG;
+>  		reg2 = TEMP_CH1_CH_REG;
+>  		reg3 = DTS_T_CPU1_CH_REG;
+>  		break;
