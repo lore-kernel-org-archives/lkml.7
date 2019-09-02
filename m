@@ -2,389 +2,597 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9D0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6C2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730C221744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E127217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfIBQY1 (ORCPT
+        id S1725988AbfIBQ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 12:24:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:33341 "EHLO mga14.intel.com"
+        Mon, 2 Sep 2019 12:26:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:56808 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfIBQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 12:24:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 09:24:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="187032591"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 02 Sep 2019 09:24:22 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i4p7s-0004nA-WD; Mon, 02 Sep 2019 19:24:20 +0300
-Date:   Mon, 2 Sep 2019 19:24:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_chardev: Add a poll handler
- to receive MKBP events
-Message-ID: <20190902162420.GU2680@smile.fi.intel.com>
-References: <20190902160848.4738-1-enric.balletbo@collabora.com>
+        id S1726480AbfIBQ0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 12:26:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 509B8344;
+        Mon,  2 Sep 2019 09:26:11 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67D033F59C;
+        Mon,  2 Sep 2019 09:26:10 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 17:26:08 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, gregkh@linuxfoundation.org,
+        zhiqiang.hou@nxp.com, arnd@arndb.de
+Subject: Re: [PATCH v3 01/11] PCI: designware-ep: Add multiple PFs support
+ for DWC
+Message-ID: <20190902162608.GP9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-2-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902160848.4738-1-enric.balletbo@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190902031716.43195-2-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 06:08:48PM +0200, Enric Balletbo i Serra wrote:
-> Allow to poll on the cros_ec device to receive the MKBP events.
-> 
-> The /dev/cros_[ec|fp|..] file operations now implements the poll
-> operation. The userspace can now receive specific MKBP events by doing
-> the
-> following:
-> - Open the /dev/cros_XX file.
-> - Call the CROS_EC_DEV_IOCEVENTMASK ioctl with the bitmap of the MKBP
->   events it wishes to receive as argument.
-> - Poll on the file descriptor.
-> - When it gets POLLIN, do a read on the file descriptor, the first
->   queued event will be returned (using the struct
->   ec_response_get_next_event format: one byte of event type, then
->   the payload).
-> 
-> The read() operation returns at most one event even if there are several
-> queued, and it might be truncated if the buffer is smaller than the
-> event (but the caller should know the maximum size of the events it is
-> reading).
-> 
-> read() used to return the EC version string, it still does it when no
-> event mask or an empty event is set for backward compatibility (despite
-> nobody really using this feature).
-> 
-> This will be used, for example, by the userspace daemon to receive and
-> treat the EC_MKBP_EVENT_FINGERPRINT sent by the FP MCU.
-> 
+On Mon, Sep 02, 2019 at 11:17:06AM +0800, Xiaowei Bao wrote:
+> Add multiple PFs support for DWC, different PF have different config space
+> we use pf-offset property which get from the DTS to access the different pF
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This needs to be updated as this no longer comes from the DT.
 
-> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> config space.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+
+
+We're assuming:
+
+ - The offset address (func_offset) between PF's in the memory map can be
+   different between different DWC implementations. And also that it's
+   possible for DWC implementations to address PFs without using an offset.
+
+ - The current approach is preferable to adding DWC EP driver callbacks
+   for writing to the EP config space (e.g. a variant of dw_pcie_writew_dbi
+   that takes a func number).
+
+I'm keen to hear feedback from Jingoo/Gustavo on this.
+
+Thanks,
+
+Andrew Murray
+
 > ---
-> Note that this patch depends on the immutable branch [1] to apply
-> cleanly.
+> v2:
+>  - Remove duplicate redundant code.
+>  - Reimplement the PF config space access way.
+> v3:
+>  - Integrate duplicate code for func_select.
+>  - Move PCIE_ATU_FUNC_NUM(pf) (pf << 20) to ((pf) << 20).
+>  - Add the comments for func_conf_select function.
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-extcon-hid-i2c-iio-input-media-chrome-power-pwm-rtc-sound-5.4
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 123 ++++++++++++++++--------
+>  drivers/pci/controller/dwc/pcie-designware.c    |  59 ++++++++----
+>  drivers/pci/controller/dwc/pcie-designware.h    |  18 +++-
+>  3 files changed, 142 insertions(+), 58 deletions(-)
 > 
-> 
-> Changes in v2:
-> - Moved the code to the cros_ec_chardev driver.
-> 
->  drivers/platform/chrome/cros_ec_chardev.c     | 177 +++++++++++++++++-
->  include/linux/platform_data/cros_ec_chardev.h |   1 +
->  2 files changed, 173 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-> index 08abd7e5c7bf..eabb1fe85688 100644
-> --- a/drivers/platform/chrome/cros_ec_chardev.c
-> +++ b/drivers/platform/chrome/cros_ec_chardev.c
-> @@ -16,21 +16,42 @@
->  #include <linux/mfd/cros_ec.h>
->  #include <linux/miscdevice.h>
->  #include <linux/module.h>
-> +#include <linux/notifier.h>
->  #include <linux/platform_data/cros_ec_chardev.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/platform_device.h>
-> +#include <linux/poll.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
->  
->  #define DRV_NAME		"cros-ec-chardev"
->  
-> +/* Arbitrary bounded size for the event queue */
-> +#define CROS_MAX_EVENT_LEN	PAGE_SIZE
-> +
->  struct chardev_data {
->  	struct cros_ec_dev *ec_dev;
->  	struct miscdevice misc;
->  };
->  
-> +struct chardev_priv {
-> +	struct cros_ec_dev *ec_dev;
-> +	struct notifier_block notifier;
-> +	wait_queue_head_t wait_event;
-> +	unsigned long event_mask;
-> +	struct list_head events;
-> +	size_t event_len;
-> +};
-> +
-> +struct ec_event {
-> +	struct list_head node;
-> +	size_t size;
-> +	u8 event_type;
-> +	u8 data[0];
-> +};
-> +
->  static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
->  {
->  	static const char * const current_image_name[] = {
-> @@ -69,6 +90,71 @@ static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
->  	return ret;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 65f4792..eb851c2 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -19,12 +19,26 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+>  	pci_epc_linkup(epc);
 >  }
 >  
-> +static int ec_mkbp_event(struct notifier_block *nb,
-> +			 unsigned long queued_during_suspend,
-> +			 void *_notify)
+> -static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
+> -				   int flags)
+> +static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
 > +{
-> +	struct chardev_priv *priv = container_of(nb, struct chardev_priv,
-> +						 notifier);
-> +	struct cros_ec_device *ec_dev = priv->ec_dev->ec_dev;
-> +	struct ec_event *event;
-> +	unsigned long event_bit = 1 << ec_dev->event_data.event_type;
-> +	int total_size = sizeof(*event) + ec_dev->event_size;
+> +	unsigned int func_offset = 0;
 > +
-> +	if (!(event_bit & priv->event_mask) ||
-> +	    (priv->event_len + total_size) > CROS_MAX_EVENT_LEN)
-> +		return NOTIFY_DONE;
+> +	if (ep->ops->func_conf_select)
+> +		func_offset = ep->ops->func_conf_select(ep, func_no);
 > +
-> +	event = kzalloc(total_size, GFP_KERNEL);
-> +	if (!event)
-> +		return NOTIFY_DONE;
-> +
-> +	event->size = ec_dev->event_size;
-> +	event->event_type = ec_dev->event_data.event_type;
-> +	memcpy(event->data, &ec_dev->event_data.data, ec_dev->event_size);
-> +
-> +	spin_lock(&priv->wait_event.lock);
-> +	list_add_tail(&event->node, &priv->events);
-> +	priv->event_len += total_size;
-> +	wake_up_locked(&priv->wait_event);
-> +	spin_unlock(&priv->wait_event.lock);
-> +
-> +	return NOTIFY_OK;
+> +	return func_offset;
 > +}
 > +
-> +static struct ec_event *ec_fetch_event(struct chardev_priv *priv, bool fetch,
-> +				       bool block)
-> +{
-> +	struct ec_event *event;
-> +	int err;
-> +
-> +	spin_lock(&priv->wait_event.lock);
-> +	if (!block && list_empty(&priv->events)) {
-> +		event = ERR_PTR(-EWOULDBLOCK);
-> +		goto out;
-> +	}
-> +
-> +	if (!fetch) {
-> +		event = NULL;
-> +		goto out;
-> +	}
-> +
-> +	err = wait_event_interruptible_locked(priv->wait_event,
-> +					      !list_empty(&priv->events));
-> +	if (err) {
-> +		event = ERR_PTR(err);
-> +		goto out;
-> +	}
-> +
-> +	event = list_first_entry(&priv->events, struct ec_event, node);
-> +	list_del(&event->node);
-> +	priv->event_len -= sizeof(*event) + event->size;
-> +
-> +out:
-> +	spin_unlock(&priv->wait_event.lock);
-> +	return event;
-> +}
-> +
->  /*
->   * Device file ops
->   */
-> @@ -76,11 +162,40 @@ static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
+> +static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+> +				   enum pci_barno bar, int flags)
 >  {
->  	struct miscdevice *mdev = filp->private_data;
->  	struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
-> +	struct chardev_priv *priv;
-> +	int ret;
+>  	u32 reg;
+> +	unsigned int func_offset = 0;
+> +	struct dw_pcie_ep *ep = &pci->ep;
 > +
-> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
 >  
-> -	filp->private_data = ec_dev;
-> +	priv->ec_dev = ec_dev;
-> +	filp->private_data = priv;
-> +	INIT_LIST_HEAD(&priv->events);
-> +	init_waitqueue_head(&priv->wait_event);
->  	nonseekable_open(inode, filp);
+> -	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  	dw_pcie_writel_dbi2(pci, reg, 0x0);
+>  	dw_pcie_writel_dbi(pci, reg, 0x0);
+> @@ -37,7 +51,12 @@ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
 >  
-> -	return 0;
-> +	priv->notifier.notifier_call = ec_mkbp_event;
-> +	ret = blocking_notifier_chain_register(&ec_dev->ec_dev->event_notifier,
-> +					       &priv->notifier);
-> +	if (ret) {
-> +		dev_err(ec_dev->dev, "failed to register event notifier\n");
-> +		kfree(priv);
-> +	}
+>  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  {
+> -	__dw_pcie_ep_reset_bar(pci, bar, 0);
+> +	u8 func_no, funcs;
 > +
-> +	return ret;
-> +}
+> +	funcs = pci->ep.epc->max_functions;
 > +
-> +static __poll_t cros_ec_chardev_poll(struct file *filp, poll_table *wait)
-> +{
-> +	struct chardev_priv *priv = filp->private_data;
-> +
-> +	poll_wait(filp, &priv->wait_event, wait);
-> +
-> +	if (list_empty(&priv->events))
-> +		return 0;
-> +
-> +	return EPOLLIN | EPOLLRDNORM;
+> +	for (func_no = 0; func_no < funcs; func_no++)
+> +		__dw_pcie_ep_reset_bar(pci, func_no, bar, 0);
 >  }
 >  
->  static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
-> @@ -88,14 +203,42 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+>  static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+> @@ -45,28 +64,31 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
 >  {
->  	char msg[sizeof(struct ec_response_get_version) +
->  		 sizeof(CROS_EC_DEV_VERSION)];
-> -	struct cros_ec_dev *ec = filp->private_data;
-> +	struct chardev_priv *priv = filp->private_data;
-> +	struct cros_ec_dev *ec_dev = priv->ec_dev;
->  	size_t count;
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int func_offset = 0;
+> +
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, hdr->vendorid);
+> -	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, hdr->deviceid);
+> -	dw_pcie_writeb_dbi(pci, PCI_REVISION_ID, hdr->revid);
+> -	dw_pcie_writeb_dbi(pci, PCI_CLASS_PROG, hdr->progif_code);
+> -	dw_pcie_writew_dbi(pci, PCI_CLASS_DEVICE,
+> +	dw_pcie_writew_dbi(pci, func_offset + PCI_VENDOR_ID, hdr->vendorid);
+> +	dw_pcie_writew_dbi(pci, func_offset + PCI_DEVICE_ID, hdr->deviceid);
+> +	dw_pcie_writeb_dbi(pci, func_offset + PCI_REVISION_ID, hdr->revid);
+> +	dw_pcie_writeb_dbi(pci, func_offset + PCI_CLASS_PROG, hdr->progif_code);
+> +	dw_pcie_writew_dbi(pci, func_offset + PCI_CLASS_DEVICE,
+>  			   hdr->subclass_code | hdr->baseclass_code << 8);
+> -	dw_pcie_writeb_dbi(pci, PCI_CACHE_LINE_SIZE,
+> +	dw_pcie_writeb_dbi(pci, func_offset + PCI_CACHE_LINE_SIZE,
+>  			   hdr->cache_line_size);
+> -	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_VENDOR_ID,
+> +	dw_pcie_writew_dbi(pci, func_offset + PCI_SUBSYSTEM_VENDOR_ID,
+>  			   hdr->subsys_vendor_id);
+> -	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> -	dw_pcie_writeb_dbi(pci, PCI_INTERRUPT_PIN,
+> +	dw_pcie_writew_dbi(pci, func_offset + PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> +	dw_pcie_writeb_dbi(pci, func_offset + PCI_INTERRUPT_PIN,
+>  			   hdr->interrupt_pin);
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	return 0;
+>  }
+>  
+> -static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
+> -				  dma_addr_t cpu_addr,
+> +static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+> +				  enum pci_barno bar, dma_addr_t cpu_addr,
+>  				  enum dw_pcie_as_type as_type)
+>  {
 >  	int ret;
+> @@ -79,7 +101,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
+>  		return -EINVAL;
+>  	}
 >  
-> +	if (priv->event_mask) { /* queued MKBP event */
-> +		struct ec_event *event;
-> +
-> +		event = ec_fetch_event(priv, length != 0,
-> +				       !(filp->f_flags & O_NONBLOCK));
-> +		if (IS_ERR(event))
-> +			return PTR_ERR(event);
-> +		/*
-> +		 * length == 0 is special - no IO is done but we check
-> +		 * for error conditions.
-> +		 */
-> +		if (length == 0)
-> +			return 0;
-> +
-> +		/* The event is 1 byte of type plus the payload */
-> +		count = min(length, event->size + 1);
-> +		ret = copy_to_user(buffer, &event->event_type, count);
-> +		kfree(event);
-> +		if (ret) /* the copy failed */
-> +			return -EFAULT;
-> +		*offset = count;
-> +		return count;
-> +	}
-> +
-> +	/*
-> +	 * Legacy behavior if no event mask is defined
-> +	 */
->  	if (*offset != 0)
->  		return 0;
+> -	ret = dw_pcie_prog_inbound_atu(pci, free_win, bar, cpu_addr,
+> +	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, bar, cpu_addr,
+>  				       as_type);
+>  	if (ret < 0) {
+>  		dev_err(pci->dev, "Failed to program IB window\n");
+> @@ -92,7 +114,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
+>  	return 0;
+>  }
 >  
-> -	ret = ec_get_version(ec, msg, sizeof(msg));
-> +	ret = ec_get_version(ec_dev, msg, sizeof(msg));
+> -static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
+> +static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+> +				   phys_addr_t phys_addr,
+>  				   u64 pci_addr, size_t size)
+>  {
+>  	u32 free_win;
+> @@ -104,8 +127,8 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
+>  		return -EINVAL;
+>  	}
+>  
+> -	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
+> -				  phys_addr, pci_addr, size);
+> +	dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE_ATU_TYPE_MEM,
+> +				     phys_addr, pci_addr, size);
+>  
+>  	set_bit(free_win, ep->ob_window_map);
+>  	ep->outbound_addr[free_win] = phys_addr;
+> @@ -121,7 +144,7 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no,
+>  	enum pci_barno bar = epf_bar->barno;
+>  	u32 atu_index = ep->bar_to_atu[bar];
+>  
+> -	__dw_pcie_ep_reset_bar(pci, bar, epf_bar->flags);
+> +	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
+>  
+>  	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_INBOUND);
+>  	clear_bit(atu_index, ep->ib_window_map);
+> @@ -137,14 +160,20 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
+>  	size_t size = epf_bar->size;
+>  	int flags = epf_bar->flags;
+>  	enum dw_pcie_as_type as_type;
+> -	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	u32 reg;
+> +	unsigned int func_offset = 0;
+> +
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
+>  
+>  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+>  		as_type = DW_PCIE_AS_MEM;
+>  	else
+>  		as_type = DW_PCIE_AS_IO;
+>  
+> -	ret = dw_pcie_ep_inbound_atu(ep, bar, epf_bar->phys_addr, as_type);
+> +	ret = dw_pcie_ep_inbound_atu(ep, func_no, bar,
+> +				     epf_bar->phys_addr, as_type);
 >  	if (ret)
 >  		return ret;
 >  
-> @@ -108,6 +251,24 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
->  	return count;
+> @@ -202,7 +231,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  
+> -	ret = dw_pcie_ep_outbound_atu(ep, addr, pci_addr, size);
+> +	ret = dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
+>  	if (ret) {
+>  		dev_err(pci->dev, "Failed to enable address\n");
+>  		return ret;
+> @@ -216,11 +245,14 @@ static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no)
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+> +	unsigned int func_offset = 0;
+>  
+>  	if (!ep->msi_cap)
+>  		return -EINVAL;
+>  
+> -	reg = ep->msi_cap + PCI_MSI_FLAGS;
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+>  		return -EINVAL;
+> @@ -235,11 +267,14 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts)
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+> +	unsigned int func_offset = 0;
+>  
+>  	if (!ep->msi_cap)
+>  		return -EINVAL;
+>  
+> -	reg = ep->msi_cap + PCI_MSI_FLAGS;
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	val &= ~PCI_MSI_FLAGS_QMASK;
+>  	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK;
+> @@ -255,11 +290,14 @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+> +	unsigned int func_offset = 0;
+>  
+>  	if (!ep->msix_cap)
+>  		return -EINVAL;
+>  
+> -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+>  		return -EINVAL;
+> @@ -274,11 +312,14 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	u32 val, reg;
+> +	unsigned int func_offset = 0;
+>  
+>  	if (!ep->msix_cap)
+>  		return -EINVAL;
+>  
+> -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	val &= ~PCI_MSIX_FLAGS_QSIZE;
+>  	val |= interrupts;
+> @@ -365,6 +406,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct pci_epc *epc = ep->epc;
+>  	unsigned int aligned_offset;
+> +	unsigned int func_offset = 0;
+>  	u16 msg_ctrl, msg_data;
+>  	u32 msg_addr_lower, msg_addr_upper, reg;
+>  	u64 msg_addr;
+> @@ -374,20 +416,22 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	if (!ep->msi_cap)
+>  		return -EINVAL;
+>  
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+>  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+> -	reg = ep->msi_cap + PCI_MSI_FLAGS;
+> +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
+>  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+> -	reg = ep->msi_cap + PCI_MSI_ADDRESS_LO;
+> +	reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_LO;
+>  	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
+>  	if (has_upper) {
+> -		reg = ep->msi_cap + PCI_MSI_ADDRESS_HI;
+> +		reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_HI;
+>  		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
+> -		reg = ep->msi_cap + PCI_MSI_DATA_64;
+> +		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_64;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	} else {
+>  		msg_addr_upper = 0;
+> -		reg = ep->msi_cap + PCI_MSI_DATA_32;
+> +		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_32;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	}
+>  	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> @@ -406,11 +450,12 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
 >  }
 >  
-> +static int cros_ec_chardev_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct chardev_priv *priv = filp->private_data;
-> +	struct cros_ec_dev *ec_dev = priv->ec_dev;
-> +	struct ec_event *event, *e;
-> +
-> +	blocking_notifier_chain_unregister(&ec_dev->ec_dev->event_notifier,
-> +					   &priv->notifier);
-> +
-> +	list_for_each_entry_safe(event, e, &priv->events, node) {
-> +		list_del(&event->node);
-> +		kfree(event);
-> +	}
-> +	kfree(priv);
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * Ioctls
->   */
-> @@ -181,7 +342,8 @@ static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
->  static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
->  				   unsigned long arg)
+>  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> -			     u16 interrupt_num)
+> +			      u16 interrupt_num)
 >  {
-> -	struct cros_ec_dev *ec = filp->private_data;
-> +	struct chardev_priv *priv = filp->private_data;
-> +	struct cros_ec_dev *ec = priv->ec_dev;
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct pci_epc *epc = ep->epc;
+>  	u16 tbl_offset, bir;
+> +	unsigned int func_offset = 0;
+>  	u32 bar_addr_upper, bar_addr_lower;
+>  	u32 msg_addr_upper, msg_addr_lower;
+>  	u32 reg, msg_data, vec_ctrl;
+> @@ -418,12 +463,14 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	void __iomem *msix_tbl;
+>  	int ret;
 >  
->  	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
->  		return -ENOTTY;
-> @@ -191,6 +353,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
->  		return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
->  	case CROS_EC_DEV_IOCRDMEM:
->  		return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
-> +	case CROS_EC_DEV_IOCEVENTMASK:
-> +		priv->event_mask = arg;
-> +		return 0;
+> -	reg = ep->msix_cap + PCI_MSIX_TABLE;
+> +	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +
+> +	reg = ep->msix_cap + func_offset + PCI_MSIX_TABLE;
+>  	tbl_offset = dw_pcie_readl_dbi(pci, reg);
+>  	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
+>  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+>  
+> -	reg = PCI_BASE_ADDRESS_0 + (4 * bir);
+> +	reg = PCI_BASE_ADDRESS_0 + func_offset + (4 * bir);
+>  	bar_addr_upper = 0;
+>  	bar_addr_lower = dw_pcie_readl_dbi(pci, reg);
+>  	reg_u64 = (bar_addr_lower & PCI_BASE_ADDRESS_MEM_TYPE_MASK);
+> @@ -559,13 +606,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	ep->epc = epc;
+>  	epc_set_drvdata(epc, ep);
+>  
+> -	if (ep->ops->ep_init)
+> -		ep->ops->ep_init(ep);
+> -
+>  	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+>  
+> +	if (ep->ops->ep_init)
+> +		ep->ops->ep_init(ep);
+> +
+>  	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+>  				 ep->page_size);
+>  	if (ret < 0) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 143cb6c..ede2e75 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -238,9 +238,10 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+>  	dw_pcie_writel_atu(pci, offset + reg, val);
+>  }
+>  
+> -static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
+> -					     int type, u64 cpu_addr,
+> -					     u64 pci_addr, u32 size)
+> +static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+> +					     int index, int type,
+> +					     u64 cpu_addr, u64 pci_addr,
+> +					     u32 size)
+>  {
+>  	u32 retries, val;
+>  
+> @@ -255,7 +256,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+>  				 upper_32_bits(pci_addr));
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
+> -				 type);
+> +				 type | PCIE_ATU_FUNC_NUM(func_no));
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+>  				 PCIE_ATU_ENABLE);
+>  
+> @@ -274,8 +275,9 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
+>  	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
+>  }
+>  
+> -void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> -			       u64 cpu_addr, u64 pci_addr, u32 size)
+> +static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+> +					int index, int type, u64 cpu_addr,
+> +					u64 pci_addr, u32 size)
+>  {
+>  	u32 retries, val;
+>  
+> @@ -283,8 +285,8 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+>  		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
+>  
+>  	if (pci->iatu_unroll_enabled) {
+> -		dw_pcie_prog_outbound_atu_unroll(pci, index, type, cpu_addr,
+> -						 pci_addr, size);
+> +		dw_pcie_prog_outbound_atu_unroll(pci, func_no, index, type,
+> +						 cpu_addr, pci_addr, size);
+>  		return;
 >  	}
 >  
->  	return -ENOTTY;
-> @@ -198,7 +363,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+> @@ -300,7 +302,8 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+>  			   lower_32_bits(pci_addr));
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+>  			   upper_32_bits(pci_addr));
+> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type);
+> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+> +			   PCIE_ATU_FUNC_NUM(func_no));
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
 >  
->  static const struct file_operations chardev_fops = {
->  	.open		= cros_ec_chardev_open,
-> +	.poll		= cros_ec_chardev_poll,
->  	.read		= cros_ec_chardev_read,
-> +	.release	= cros_ec_chardev_release,
->  	.unlocked_ioctl	= cros_ec_chardev_ioctl,
->  #ifdef CONFIG_COMPAT
->  	.compat_ioctl	= cros_ec_chardev_ioctl,
-> diff --git a/include/linux/platform_data/cros_ec_chardev.h b/include/linux/platform_data/cros_ec_chardev.h
-> index 973b2615aa02..7de8faaf77df 100644
-> --- a/include/linux/platform_data/cros_ec_chardev.h
-> +++ b/include/linux/platform_data/cros_ec_chardev.h
-> @@ -33,5 +33,6 @@ struct cros_ec_readmem {
->  #define CROS_EC_DEV_IOC       0xEC
->  #define CROS_EC_DEV_IOCXCMD   _IOWR(CROS_EC_DEV_IOC, 0, struct cros_ec_command)
->  #define CROS_EC_DEV_IOCRDMEM  _IOWR(CROS_EC_DEV_IOC, 1, struct cros_ec_readmem)
-> +#define CROS_EC_DEV_IOCEVENTMASK _IO(CROS_EC_DEV_IOC, 2)
+>  	/*
+> @@ -317,6 +320,21 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+>  	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
+>  }
 >  
->  #endif /* _CROS_EC_DEV_H_ */
+> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> +			       u64 cpu_addr, u64 pci_addr, u32 size)
+> +{
+> +	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
+> +				    cpu_addr, pci_addr, size);
+> +}
+> +
+> +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> +				  int type, u64 cpu_addr, u64 pci_addr,
+> +				  u32 size)
+> +{
+> +	__dw_pcie_prog_outbound_atu(pci, func_no, index, type,
+> +				    cpu_addr, pci_addr, size);
+> +}
+> +
+>  static u32 dw_pcie_readl_ib_unroll(struct dw_pcie *pci, u32 index, u32 reg)
+>  {
+>  	u32 offset = PCIE_GET_ATU_INB_UNR_REG_OFFSET(index);
+> @@ -332,8 +350,8 @@ static void dw_pcie_writel_ib_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+>  	dw_pcie_writel_atu(pci, offset + reg, val);
+>  }
+>  
+> -static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
+> -					   int bar, u64 cpu_addr,
+> +static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+> +					   int index, int bar, u64 cpu_addr,
+>  					   enum dw_pcie_as_type as_type)
+>  {
+>  	int type;
+> @@ -355,8 +373,10 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
+>  		return -EINVAL;
+>  	}
+>  
+> -	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, type);
+> +	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, type |
+> +				 PCIE_ATU_FUNC_NUM(func_no));
+>  	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+> +				 PCIE_ATU_FUNC_NUM_MATCH_EN |
+>  				 PCIE_ATU_ENABLE |
+>  				 PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
+>  
+> @@ -377,14 +397,15 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
+>  	return -EBUSY;
+>  }
+>  
+> -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
+> -			     u64 cpu_addr, enum dw_pcie_as_type as_type)
+> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> +			     int bar, u64 cpu_addr,
+> +			     enum dw_pcie_as_type as_type)
+>  {
+>  	int type;
+>  	u32 retries, val;
+>  
+>  	if (pci->iatu_unroll_enabled)
+> -		return dw_pcie_prog_inbound_atu_unroll(pci, index, bar,
+> +		return dw_pcie_prog_inbound_atu_unroll(pci, func_no, index, bar,
+>  						       cpu_addr, as_type);
+>  
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, PCIE_ATU_REGION_INBOUND |
+> @@ -403,9 +424,11 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
+>  		return -EINVAL;
+>  	}
+>  
+> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type);
+> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE
+> -			   | PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
+> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+> +			   PCIE_ATU_FUNC_NUM(func_no));
+> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE |
+> +			   PCIE_ATU_FUNC_NUM_MATCH_EN |
+> +			   PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
+>  
+>  	/*
+>  	 * Make sure ATU enable takes effect before any subsequent config
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 5a18e94..6aca0bb 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -71,9 +71,11 @@
+>  #define PCIE_ATU_TYPE_IO		0x2
+>  #define PCIE_ATU_TYPE_CFG0		0x4
+>  #define PCIE_ATU_TYPE_CFG1		0x5
+> +#define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
+>  #define PCIE_ATU_CR2			0x908
+>  #define PCIE_ATU_ENABLE			BIT(31)
+>  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
+> +#define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
+>  #define PCIE_ATU_LOWER_BASE		0x90C
+>  #define PCIE_ATU_UPPER_BASE		0x910
+>  #define PCIE_ATU_LIMIT			0x914
+> @@ -206,6 +208,14 @@ struct dw_pcie_ep_ops {
+>  	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
+>  			     enum pci_epc_irq_type type, u16 interrupt_num);
+>  	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
+> +	/*
+> +	 * Provide a method to implement the different func config space
+> +	 * access for different platform, if different func have different
+> +	 * offset, return the offset of func. if use write a register way
+> +	 * return a 0, and implement code in callback function of platform
+> +	 * driver.
+> +	 */
+> +	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
+>  };
+>  
+>  struct dw_pcie_ep {
+> @@ -277,8 +287,12 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci);
+>  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+>  			       int type, u64 cpu_addr, u64 pci_addr,
+>  			       u32 size);
+> -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
+> -			     u64 cpu_addr, enum dw_pcie_as_type as_type);
+> +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> +				  int type, u64 cpu_addr, u64 pci_addr,
+> +				  u32 size);
+> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> +			     int bar, u64 cpu_addr,
+> +			     enum dw_pcie_as_type as_type);
+>  void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+>  			 enum dw_pcie_region_type type);
+>  void dw_pcie_setup(struct dw_pcie *pci);
 > -- 
-> 2.20.1
+> 2.9.5
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
