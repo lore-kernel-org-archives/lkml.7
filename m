@@ -2,105 +2,157 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BE7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF78C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F3122CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567408245;
-	bh=nI1FQ+yp2NSHESE6VHXqC+vG7vvMeihbXOq9nd7cT1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f+CyEelD01pOAWHuIZiiWFjJ5U2hwFnTlkMgJ/yVwxNWqkF4Ko3dUZ60oHeBRyX2I
-	 /dpySEAYSnDBld9F8NUdm5mAnhrguH9X6RxCc0cSyYqdIVhNx9lQTCalNATcPHs6rO
-	 lEP29Kj9hpokwzMud+9NFSFkXb+DwZU5mpKT7wO8=
+	by mail.kernel.org (Postfix) with ESMTP id 8C829214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbfIBHKo (ORCPT
+        id S1729627AbfIBHLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:10:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42318 "EHLO mail.kernel.org"
+        Mon, 2 Sep 2019 03:11:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48282 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfIBHKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:10:44 -0400
-Received: from earth.universe (dyndsl-091-096-044-124.ewe-ip-backbone.de [91.96.44.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19537214AE;
-        Mon,  2 Sep 2019 07:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567408243;
-        bh=nI1FQ+yp2NSHESE6VHXqC+vG7vvMeihbXOq9nd7cT1A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mWSlnzTBSy/PPFqJDIHARHDU+/BQEYEqj4GPMQrIhDr+kNWLJ+49QGkdtq7YbhXyx
-         L5a9DSxXXfztFm8QOvGrNo5hCpoTOup76ASYdaRF+/qBkzeugjCqizMogWx4OHXDu8
-         zxxFH2Am9/paHJQr11iJcNbnrm711xcwONt29Qh4=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 19BF63C0B7F; Mon,  2 Sep 2019 09:10:41 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 09:10:41 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Nosthoff <committed@heine.so>
-Subject: Re: linux-next: Fixes tag needs some work in the battery tree
-Message-ID: <20190902071041.ukvc64tg5tjttk6w@earth.universe>
-References: <20190902093131.06f66c9f@canb.auug.org.au>
+        id S1729262AbfIBHLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:11:35 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:11:34 -0700
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="183240942"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:11:31 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 3C25120B09; Mon,  2 Sep 2019 10:11:30 +0300 (EEST)
+Date:   Mon, 2 Sep 2019 10:11:30 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 07/10] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Message-ID: <20190902071130.GF5475@paasikivi.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-8-sakari.ailus@linux.intel.com>
+ <20190830125314.GG2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wm7d4y7wvhwlmzhu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902093131.06f66c9f@canb.auug.org.au>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190830125314.GG2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andy,
 
---wm7d4y7wvhwlmzhu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 30, 2019 at 03:53:14PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 29, 2019 at 01:10:40PM +0300, Sakari Ailus wrote:
+> > Instead of implementing our own means of discovering parent nodes, node
+> > names or counting how many parents a node has, use the newly added
+> > functions in the fwnode API to obtain that information.
+> > 
+> 
+> Some style comments below.
+> Nevertheless,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Hi Stephen,
+Thanks!
 
-On Mon, Sep 02, 2019 at 09:31:31AM +1000, Stephen Rothwell wrote:
-> In commit
->=20
-> b19aca4eb2d2 ("power: supply: sbs-battery: only return health when batter=
-y present")
->=20
-> [...]
->=20
-> Please do not split Fixes tags over more than one line.
+> 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  lib/vsprintf.c | 38 ++++++++++++++++----------------------
+> >  1 file changed, 16 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index b00b57f9f911f..a04a2167101ef 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -38,6 +38,7 @@
+> >  #include <net/addrconf.h>
+> >  #include <linux/siphash.h>
+> >  #include <linux/compiler.h>
+> > +#include <linux/property.h>
+> >  #ifdef CONFIG_BLOCK
+> >  #include <linux/blkdev.h>
+> >  #endif
+> > @@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+> >  	return format_flags(buf, end, flags, names);
+> >  }
+> >  
+> > -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+> > -{
+> > -	for ( ; np && depth; depth--)
+> > -		np = np->parent;
+> > -
+> > -	return kbasename(np->full_name);
+> > -}
+> > -
+> >  static noinline_for_stack
+> > -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
+> 
+> > +char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
+> > +			      char *end)
+> 
+> I would leave it on one line.
+> 
+> >  {
+> >  	int depth;
+> > -	const struct device_node *parent = np->parent;
+> >  
+> > -	/* special case for root node */
+> > -	if (!parent)
+> > -		return string_nocheck(buf, end, "/", default_str_spec);
+> > +	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
+> > +		struct fwnode_handle *__fwnode =
+> > +			fwnode_get_nth_parent(fwnode, depth);
+> 
+> Ditto if you name temporary variable like fw / fh / fn / etc.
+> 
+> >  
+> > -	for (depth = 0; parent->parent; depth++)
+> > -		parent = parent->parent;
+> > -
+> > -	for ( ; depth >= 0; depth--) {
+> > -		buf = string_nocheck(buf, end, "/", default_str_spec);
+> > -		buf = string(buf, end, device_node_name_for_depth(np, depth),
+> 
+> > +		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
+> > +			     default_str_spec);
+> > +		buf = string(buf, end, fwnode_get_name(__fwnode),
+> >  			     default_str_spec);
+> 
+> Ditto.
+> 
+> > +
+> > +		fwnode_handle_put(__fwnode);
+> >  	}
+> > +
+> >  	return buf;
+> >  }
+> >  
+> > @@ -1933,10 +1926,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  
+> >  		switch (*fmt) {
+> >  		case 'f':	/* full_name */
+> > -			buf = device_node_gen_full_name(dn, buf, end);
+> 
+> > +			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
+> > +						      end);
+> 
+> Ditto, disregard checkpatch.
 
-I have fixed this and rebased the branch, so the issue should be
-gone tomororw. Thanks for the notice,
+Why? I see no reason to avoid wrapping here; in fact, if I'd review a patch
+that contained such code, I'd ask the submitter to wrap the lines.
 
--- Sebastian
-
---wm7d4y7wvhwlmzhu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1swG0ACgkQ2O7X88g7
-+ppgvw/+P6KS+HyVyg/uxc5+sXrC0VTxIZO+rYG2qFhMOO23u7dguRaQw0GreVms
-BoKEzxxVN/siZ0R95gUxAnnd8N9vMDdXXVvDBT2QD21HuEcKthM+fvrNYlZg70u5
-ZYDiTGfY+AIga+O113n3047P8vo26QpljbPP7K8slmemSoxfxgCjH7/Ccq1afYUk
-AZwyzGJ18OTvdqkFqt6/x5RzmKs1hb58BrlfZoZIsbA1zGghAk4C5lznSTOYobZi
-IoX783RA/gkjbOKGKSND7NrajjHf0vaps0rfgf3X/+f+fpiOIuOhuVlXfRHtMuMS
-Nxtcb2/KhI60rTNnMVgpl2QUWN4Lab4rBebDjqGm8U30v8tgTzGJzX2qs6N9jFhE
-FVv1bh3/SVAcB36Zsl7i4oYJ/ttNzeuo06pP/aL30y4TfwsNEnBhKhUdonQ4/36i
-qN5hHfzHziRXQi/C7lT2fsmGMufzpLUuF13GNPL1S+T9OVHwF73YbUQ3GzZ9oqaI
-HgGvFBDeP290u5sPHgdQ3gZ4hslmcQfHiHpCSylVfcHJ3IYjy3q+Zi+pipMUZMXT
-dPPqYuEhN0TnIB1QJA11rFhqtdXenG7VDWWG0ijsWAZAUni4GljKue/6O6f48dMD
-e8J5hazgLbbYMsxVed11d1QoDdhKaAx4cCNuxBk2wbr0BqPzgrM=
-=M2sM
------END PGP SIGNATURE-----
-
---wm7d4y7wvhwlmzhu--
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
