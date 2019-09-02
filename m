@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66470C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1348C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7672168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C2E2168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EFwPojdc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R/7x+fHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbfIBNEH (ORCPT
+        id S1730610AbfIBNEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:04:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37662 "EHLO
+        Mon, 2 Sep 2019 09:04:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37930 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730469AbfIBNEG (ORCPT
+        with ESMTP id S1730469AbfIBNEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:04:06 -0400
+        Mon, 2 Sep 2019 09:04:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Zpw5MllFX9fhxx6EO9p2LOeJ5F0J0z3R/HLMi2TPdSQ=; b=EFwPojdcTFtbmMxJO5jtupsmx1
-        0tkTmctlO9fhUz5pZDZcKWWaI/hsFfRBeODr7tpq2Gvpi3l2cF8wkkTTOE7SpqXyvwM+/3ZdPSJhk
-        V7+1WpI9EgCTq837af7201iLXeuE7wvQNZJ2B66q4aSjrGgsTDB5O29MuMoavMru0ooGjSP/SpGI+
-        nnfV7Xv5NVo4xIR0g5R3u9Df9GfGws/LVk4JdSzEi2+ilgFKy0ghvDyMhWndfjsjiJKalerzMcKaD
-        8xCOwxM7l0dEzaweHZA5RtKiGT0A/B01FL2NCMwfPiWBdRSTvv1AgDp03eEDbZtQlmitPXIy/pQs7
-        UQ2B6nXA==;
+        bh=ta9M2b2y7wj8yOyfpMAIMWmSlpU0UyW1ZNcRY8yDGCI=; b=R/7x+fHstCiuPGDtTHZn3ll3Vq
+        Bje0x8mwce/f0sqmLfpKhlzht358B2ZCHH5NQIfoFuM4jMAzL8nXsLiMLhuXBa0imvQ1m2YnjijdP
+        m4damP9kMDPrjWt5jsPBW9o/EL1AfD2NDjGpsag7XmbClPAsxIcv/QuF5Zryeen6r3c6KjjSP7qe0
+        qv/l3JSmpx00SKgeMwjRNwlMp/NhSOLsl37N6vA4sslaJhHkNqFFFXNGxmxDHqiUPr8HKjrvv10Wh
+        yusnBdKDI2O1aOBewMIYkw/jzkmP8HJQI6gU1gh+JtUdwrZdhzm23/WXdtwKfbDjrZnqdFeiFkesu
+        poUiRbxA==;
 Received: from [2001:4bb8:18c:1755:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4m01-0001Ua-Mj; Mon, 02 Sep 2019 13:04:02 +0000
+        id 1i4m04-0001Ym-VB; Mon, 02 Sep 2019 13:04:05 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Stefano Stabellini <sstabellini@kernel.org>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
@@ -45,9 +45,9 @@ To:     Stefano Stabellini <sstabellini@kernel.org>,
 Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/13] xen: remove the exports for xen_{create,destroy}_contiguous_region
-Date:   Mon,  2 Sep 2019 15:03:32 +0200
-Message-Id: <20190902130339.23163-7-hch@lst.de>
+Subject: [PATCH 07/13] swiotlb-xen: remove xen_swiotlb_dma_mmap and -xen_swiotlb_dma_get_sgtable
+Date:   Mon,  2 Sep 2019 15:03:33 +0200
+Message-Id: <20190902130339.23163-8-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190902130339.23163-1-hch@lst.de>
 References: <20190902130339.23163-1-hch@lst.de>
@@ -59,53 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These routines are only used by swiotlb-xen, which cannot be modular.
+There is no need to wrap the common version, just wire them up directly.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 ---
- arch/arm/xen/mm.c     | 2 --
- arch/x86/xen/mmu_pv.c | 2 --
- 2 files changed, 4 deletions(-)
+ drivers/xen/swiotlb-xen.c | 29 ++---------------------------
+ 1 file changed, 2 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index 11d5ad26fcfe..9d73fa4a5991 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -154,13 +154,11 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 	*dma_handle = pstart;
- 	return 0;
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index eee86cc7046b..b8808677ae1d 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -547,31 +547,6 @@ xen_swiotlb_dma_supported(struct device *hwdev, u64 mask)
+ 	return xen_virt_to_bus(xen_io_tlb_end - 1) <= mask;
  }
--EXPORT_SYMBOL_GPL(xen_create_contiguous_region);
  
- void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- {
- 	return;
- }
--EXPORT_SYMBOL_GPL(xen_destroy_contiguous_region);
- 
- int __init xen_mm_init(void)
- {
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index 26e8b326966d..c8dbee62ec2a 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -2625,7 +2625,6 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 	*dma_handle = virt_to_machine(vstart).maddr;
- 	return success ? 0 : -ENOMEM;
- }
--EXPORT_SYMBOL_GPL(xen_create_contiguous_region);
- 
- void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- {
-@@ -2660,7 +2659,6 @@ void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- 
- 	spin_unlock_irqrestore(&xen_reservation_lock, flags);
- }
--EXPORT_SYMBOL_GPL(xen_destroy_contiguous_region);
- 
- static noinline void xen_flush_tlb_all(void)
- {
+-/*
+- * Create userspace mapping for the DMA-coherent memory.
+- * This function should be called with the pages from the current domain only,
+- * passing pages mapped from other domains would lead to memory corruption.
+- */
+-static int
+-xen_swiotlb_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+-		     void *cpu_addr, dma_addr_t dma_addr, size_t size,
+-		     unsigned long attrs)
+-{
+-	return dma_common_mmap(dev, vma, cpu_addr, dma_addr, size, attrs);
+-}
+-
+-/*
+- * This function should be called with the pages from the current domain only,
+- * passing pages mapped from other domains would lead to memory corruption.
+- */
+-static int
+-xen_swiotlb_get_sgtable(struct device *dev, struct sg_table *sgt,
+-			void *cpu_addr, dma_addr_t handle, size_t size,
+-			unsigned long attrs)
+-{
+-	return dma_common_get_sgtable(dev, sgt, cpu_addr, handle, size, attrs);
+-}
+-
+ const struct dma_map_ops xen_swiotlb_dma_ops = {
+ 	.alloc = xen_swiotlb_alloc_coherent,
+ 	.free = xen_swiotlb_free_coherent,
+@@ -584,6 +559,6 @@ const struct dma_map_ops xen_swiotlb_dma_ops = {
+ 	.map_page = xen_swiotlb_map_page,
+ 	.unmap_page = xen_swiotlb_unmap_page,
+ 	.dma_supported = xen_swiotlb_dma_supported,
+-	.mmap = xen_swiotlb_dma_mmap,
+-	.get_sgtable = xen_swiotlb_get_sgtable,
++	.mmap = dma_common_mmap,
++	.get_sgtable = dma_common_get_sgtable,
+ };
 -- 
 2.20.1
 
