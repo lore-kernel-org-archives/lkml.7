@@ -2,104 +2,138 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5F9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC42C41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70316217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pO+Ye//g"
+	by mail.kernel.org (Postfix) with ESMTP id 8294321881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbfIBKpG (ORCPT
+        id S1731072AbfIBKpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:45:06 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12279 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729805AbfIBKpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:45:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6cf2b30003>; Mon, 02 Sep 2019 03:45:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 02 Sep 2019 03:45:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 02 Sep 2019 03:45:05 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Sep
- 2019 10:45:03 +0000
-Subject: Re: [PATCH] soc/tegra: fuse: Add clock error check in
- tegra_fuse_readl
-To:     Nagarjuna Kristam <nkristam@nvidia.com>,
-        <thierry.reding@gmail.com>, <kishon@ti.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1566991129-13479-1-git-send-email-nkristam@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <95734aa4-c7cb-17a2-fa4c-416a5a40b3e6@nvidia.com>
-Date:   Mon, 2 Sep 2019 11:45:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 06:45:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:51944 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730013AbfIBKpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:45:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FC1D28;
+        Mon,  2 Sep 2019 03:45:54 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 636DA3F246;
+        Mon,  2 Sep 2019 03:45:53 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 11:45:51 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 5/6] arm64: tegra: Add configuration for PCIe C5
+ sideband signals
+Message-ID: <20190902104551.GD9720@e119886-lin.cambridge.arm.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <1566991129-13479-1-git-send-email-nkristam@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567421107; bh=23RK3bFsbXHJOcLJuWydUO0ViPES8WxSZ9tSvoPFM6Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pO+Ye//gYChuiGk6/8Yu6IiQseGoS+tMfJ3jAmIrD4dOSfut8k8TmkIXYU/4C7ANk
-         rXszbX22n6Otx6F/nIs37wqNpxQZYsFImGwNLJcQayLzytfq9QV2+U69wyeQpqz+EL
-         eBP99eN024dLFRy/cfBp/Kjr7bXckLNq0vOKm+/HpibljJi71bE1/0cI33QTratqBb
-         piZy2Wq0QBIjAFumtOiXZsf4zwv/MIKTgk1Ji1ziu/U3kfsTrcEjm8G4oux2wP5DJi
-         uppPMAy3bVv8z3L7St+KsDm5Z/tmiazQ1QegN4geX6xcrK+EkmXflH/1ZG3JjKjC9H
-         op2el/9q1bxPA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828172850.19871-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 28, 2019 at 10:58:49PM +0530, Vidya Sagar wrote:
+> Add support to configure PCIe C5's sideband signals PERST# and CLKREQ#
+> as output and bi-directional signals respectively which unlike other
+> PCIe controllers sideband signals are not configured by default.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-On 28/08/2019 12:18, Nagarjuna Kristam wrote:
-> Tegra fuse clock handle is retrieved in tegra_fuse_probe().
-> tegra_fuse_readl() is exported symbol, which can be called from drivers
-> at any time. tegra_fuse_readl() enables fuse clock and reads corresponding
-> fuse register offset.
-> 
-> Calling tegra_fuse_readl() before tegra_fuse_probe(), will cause data
-> abort. Add DEFER_PROBE error check for fuse clock in tegra_fuse_readl(),
-> to avoid enabling of fuse clock, before clock is available.
-> 
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
 > ---
->  drivers/soc/tegra/fuse/fuse-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> V3:
+> * None
 > 
-> diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-> index 3eb44e6..21b39b7 100644
-> --- a/drivers/soc/tegra/fuse/fuse-tegra.c
-> +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-> @@ -186,7 +186,7 @@ u32 __init tegra_fuse_read_early(unsigned int offset)
+> V2:
+> * None
+> 
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 38 +++++++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> index adebbbf36bd0..3c0cf54f0aab 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -3,8 +3,9 @@
+>  #include <dt-bindings/gpio/tegra194-gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/mailbox/tegra186-hsp.h>
+> -#include <dt-bindings/reset/tegra194-reset.h>
+> +#include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/power/tegra194-powergate.h>
+> +#include <dt-bindings/reset/tegra194-reset.h>
+>  #include <dt-bindings/thermal/tegra194-bpmp-thermal.h>
 >  
->  int tegra_fuse_readl(unsigned long offset, u32 *value)
->  {
-> -	if (!fuse->read)
-> +	if (!fuse->read || (PTR_ERR(fuse->clk) == -EPROBE_DEFER))
->  		return -EPROBE_DEFER;
-
-What about the case where fuse->clk is NULL or a different error value?
-
-Jon
-
--- 
-nvpublic
+>  / {
+> @@ -130,6 +131,38 @@
+>  			};
+>  		};
+>  
+> +		pinmux: pinmux@2430000 {
+> +			compatible = "nvidia,tegra194-pinmux";
+> +			reg = <0x2430000 0x17000
+> +			       0xc300000 0x4000>;
+> +
+> +			status = "okay";
+> +
+> +			pex_rst_c5_out_state: pex_rst_c5_out {
+> +				pex_rst {
+> +					nvidia,pins = "pex_l5_rst_n_pgg1";
+> +					nvidia,schmitt = <TEGRA_PIN_DISABLE>;
+> +					nvidia,lpdr = <TEGRA_PIN_ENABLE>;
+> +					nvidia,enable-input = <TEGRA_PIN_DISABLE>;
+> +					nvidia,io-high-voltage = <TEGRA_PIN_ENABLE>;
+> +					nvidia,tristate = <TEGRA_PIN_DISABLE>;
+> +					nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+> +				};
+> +			};
+> +
+> +			clkreq_c5_bi_dir_state: clkreq_c5_bi_dir {
+> +				clkreq {
+> +					nvidia,pins = "pex_l5_clkreq_n_pgg0";
+> +					nvidia,schmitt = <TEGRA_PIN_DISABLE>;
+> +					nvidia,lpdr = <TEGRA_PIN_ENABLE>;
+> +					nvidia,enable-input = <TEGRA_PIN_ENABLE>;
+> +					nvidia,io-high-voltage = <TEGRA_PIN_ENABLE>;
+> +					nvidia,tristate = <TEGRA_PIN_DISABLE>;
+> +					nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+> +				};
+> +			};
+> +		};
+> +
+>  		uarta: serial@3100000 {
+>  			compatible = "nvidia,tegra194-uart", "nvidia,tegra20-uart";
+>  			reg = <0x03100000 0x40>;
+> @@ -1365,6 +1398,9 @@
+>  		num-viewport = <8>;
+>  		linux,pci-domain = <5>;
+>  
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pex_rst_c5_out_state>, <&clkreq_c5_bi_dir_state>;
+> +
+>  		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>,
+>  			<&bpmp TEGRA194_CLK_PEX1_CORE_5M>;
+>  		clock-names = "core", "core_m";
+> -- 
+> 2.17.1
+> 
