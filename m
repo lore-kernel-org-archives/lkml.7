@@ -2,135 +2,227 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D9FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B73BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A1A216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKcHDACo"
+	by mail.kernel.org (Postfix) with ESMTP id 2B3B1216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567428492;
+	bh=HRPdP6IoZxIKzVyOlsz8h5aGfiCrnDwoIA8rqSjMhRM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SHrfyFLvCXV6zKyodPc45Mzw0W13mOgTR/wbXnTbAhLtNHLI90j0xV+8kdkJDjrto
+	 VILmIN/toqMIZjgErnv3aa1Bu8Fwm5IworSFV6pFHGUfv6oe9mnOLwUqLPZk65Yn/+
+	 DSJN3B/RugiXRqM+ZRsNNn56Yxd90tpnHciMVuzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfIBMqZ (ORCPT
+        id S1730957AbfIBMsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:46:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41583 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfIBMqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:46:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so7432678pgg.8;
-        Mon, 02 Sep 2019 05:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pgpliINIcPhRc7BoPrS9B0ow1dlVmDoEwaS8EkZIGsk=;
-        b=iKcHDACooIYXG12YqobbLfwrs0m9jJ0g9pUEG/yHkkVSUkM+4P2KHKsylGwM7IFasO
-         77lLo5fMqVvA1ZyFcVvUs9kp97t7EYK9xLbVze9DNahb00gwgfTrT7i6NftOA7WOFszY
-         BQm26EUDi9RHFXHYXMgnFfZYRopoBYYZK8p+sd3Koqh5TbLKd5wi0n/Mm7UtAsrQjeFs
-         n/Z6jMYgcDOvMn+KGep5g5kdw5Ct9tg4tfK6fPPf2dY9tnz3iF+t0SiGmHqnQXI+tZpJ
-         AovmJaUzEHmO+HmLgO+yqXmIDkrKWIfHx51iUR3DplGeOYQ4uQ3QwGCr8/TqhGJH/6IK
-         vf4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pgpliINIcPhRc7BoPrS9B0ow1dlVmDoEwaS8EkZIGsk=;
-        b=A4KOY9h4wtF2HQWMuvaAf9cuKlr319RZKVSNpARiKbY7nWf9nZ8JmNUre4CDHEIWa9
-         7+zbNz0H5DnN69u9SKvLo6RQlc/ESScLtat52W63O343jOn5vkqRf+meHJknOsjQxIFq
-         7MvyGaniDT7s/RUfg1SJHqUYRh8lQV9KgYw5cUzuQ7fOPrkslKt0TpYaqOYKb7TM7HT4
-         1htSiJFYPcECnit2mky8Wm6NrEZ5i5Og2saTLw3fpOm22+AtpV7WIk2PL+Uo6e6FOR1y
-         wW7FJkwLMGow8TreHaKz48DVPp3MIIC54hp1/EcP2EUIn8z5/JErysJAWunrXqp8d2hG
-         NJRA==
-X-Gm-Message-State: APjAAAW4xTMRFH1gBaxZPDbsvIHe5dCUoTQlAWBiseVmkH15nzbx1vtv
-        jOULevzs0UEt96w535bqIc7dBe2ESo222mHhAQA=
-X-Google-Smtp-Source: APXvYqxXfUfYYlSHCGT8QWcRuQ7m0TRU6YfPCzIJqacGx9wipMEOCpcJgFUg1vZ65kU4tE0DEW8M4geXJQCCfGj37x8=
-X-Received: by 2002:aa7:8219:: with SMTP id k25mr34409763pfi.72.1567428382975;
- Mon, 02 Sep 2019 05:46:22 -0700 (PDT)
+        Mon, 2 Sep 2019 08:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729707AbfIBMsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:48:11 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 479D422DBF;
+        Mon,  2 Sep 2019 12:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567428489;
+        bh=HRPdP6IoZxIKzVyOlsz8h5aGfiCrnDwoIA8rqSjMhRM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mojGZV5oAnM90ECPfyUnZxLnQg5FAEU7IHZztlBj52IrmhvAD32oB7WbU888c04pr
+         IfiJXxL9wsE3n37P3IKeLmF3FFfFlEXgVQIyZ//aYhp+A45/EO3Ge14QBTptFUrmtD
+         A4l0D+dHtwqJ7+EC+Ao9ho0yiRBDMhlNHMID1BCM=
+Received: by mail-lj1-f177.google.com with SMTP id d5so1768680lja.10;
+        Mon, 02 Sep 2019 05:48:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAWL3sCXszC7z1xTZR2oHPv6uiXSNY7ogL7GJiwP5Mj+dQEt5lMl
+        4xB9ku5kM3HbKHoZ1/6CVLGvI3D8hO0OmBZFZz0=
+X-Google-Smtp-Source: APXvYqwsQ0jKyySStl5IspgIxl6esl8OcqilEKBAJg/dod6mua7Muq88O0wbce7GxRjmTRa8z4MXHmevjQBq3jJ5+j0=
+X-Received: by 2002:a2e:7818:: with SMTP id t24mr15549999ljc.210.1567428487319;
+ Mon, 02 Sep 2019 05:48:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190830061540.211072-1-Tianyu.Lan@microsoft.com> <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
-From:   Tianyu Lan <lantianyu1986@gmail.com>
-Date:   Mon, 2 Sep 2019 20:46:15 +0800
-Message-ID: <CAOLK0pwEMg7kSsRNfKa6=uQ1eVGa-HdNG=qMBernoe7XwS-0_w@mail.gmail.com>
-Subject: Re: [PATCH] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-7-krzk@kernel.org>
+ <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
+In-Reply-To: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 2 Sep 2019 14:47:55 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPddVJvpGgd1K_W63eho8tu+X_nr+0PYpjBafp+bw=-70w@mail.gmail.com>
+Message-ID: <CAJKOXPddVJvpGgd1K_W63eho8tu+X_nr+0PYpjBafp+bw=-70w@mail.gmail.com>
+Subject: Re: [RFC 7/9] dt-bindings: rtc: s3c: Convert S3C/Exynos RTC bindings
+ to json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, notify@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 1:41 AM Michael Kelley <mikelley@microsoft.com> wrote:
+On Mon, 26 Aug 2019 at 14:06, Rob Herring <robh+dt@kernel.org> wrote:
 >
-> From: lantianyu1986@gmail.com  Sent: Thursday, August 29, 2019 11:16 PM
+> On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > >
-> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > Convert Samsung S3C/Exynos Real Time Clock bindings to DT schema format
+> > using json-schema.
 > >
-> > fill_gva_list() populates gva list and adds offset
-> > HV_TLB_FLUSH_UNIT(0x1000000) to variable "cur"
-> > in the each loop. When diff between "end" and "cur" is
-> > less than HV_TLB_FLUSH_UNIT, the gva entry should
-> > be the last one and the loop should be end.
-> >
-> > If cur is equal or greater than 0xFF000000 on 32-bit
-> > mode, "cur" will be overflow after adding HV_TLB_FLUSH_UNIT.
-> > Its value will be wrapped and less than "end". fill_gva_list()
-> > falls into an infinite loop and fill gva list out of
-> > border finally.
-> >
-> > Set "cur" to be "end" to make loop end when diff is
-> > less than HV_TLB_FLUSH_UNIT and add HV_TLB_FLUSH_UNIT to
-> > "cur" when diff is equal or greater than HV_TLB_FLUSH_UNIT.
-> > Fix the overflow issue.
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/rtc/s3c-rtc.txt       | 31 ------
+> >  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 95 +++++++++++++++++++
+> >  2 files changed, 95 insertions(+), 31 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.txt
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
 >
-> Let me suggest simplifying the commit message a bit.  It
-> doesn't need to describe every line of the code change.   I think
-> it should also make clear that the same problem could occur on
-> 64-bit systems with the right "start" address.  My suggestion:
 >
-> When the 'start' parameter is >=  0xFF000000 on 32-bit
-> systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
-> fill_gva_list gets into an infinite loop.  With such inputs,
-> 'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
-> compares as less than end.  Memory is filled with guest virtual
-> addresses until the system crashes
+> > diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> > new file mode 100644
+> > index 000000000000..44b021812a83
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> > @@ -0,0 +1,95 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/rtc/s3c-rtc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung S3C, S5P and Exynos Real Time Clock controller
+> > +
+> > +maintainers:
+> > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > +
+> > +# Select also deprecated compatibles (for finding deprecate usage)
+> > +select:
+> > +  properties:
+> > +    compatible:
+> > +      items:
+> > +        - enum:
+> > +            - samsung,s3c2410-rtc
+> > +            - samsung,s3c2416-rtc
+> > +            - samsung,s3c2443-rtc
+> > +            - samsung,s3c6410-rtc
+> > +            # Deprecated, use samsung,s3c6410-rtc
+> > +            - samsung,exynos3250-rtc
 >
-> Fix this by never incrementing 'cur' to be larger than 'end'.
+> We've come up with a better way of doing this that doesn't need a
+> custom 'select'. Add a 'oneOf' to compatible and add another entry:
 >
-> >
-> > Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
-> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote
-> > TLB flush")
+> - const: samsung,exynos3250-rtc
+>   deprecated: true
 >
-> The "Fixes:" line needs to not wrap.  It's exempt from the
-> "wrap at 75 columns" rule in order to simplify parsing scripts.
->
-> The code itself looks good.
+> It's not implemented yet in the tool, but we'll keep the compatible
+> for 'select' and otherwise drop schema marked deprecated.
 
-Hi Michael:
-       Thanks for suggestion. Update commit log in V2.
--- 
-Best regards
-Tianyu Lan
+OK
+
+>
+> > +  required:
+> > +    - compatible
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+>
+> You can drop 'items' when there's only 1 entry.
+
+Indeed.
+
+>
+> > +          - samsung,s3c2410-rtc
+> > +          - samsung,s3c2416-rtc
+> > +          - samsung,s3c2443-rtc
+> > +          - samsung,s3c6410-rtc
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    description:
+> > +      Must contain a list of phandle and clock specifier for the rtc
+> > +      clock and in the case of a s3c6410 compatible controller, also
+> > +      a source clock.
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    description:
+> > +      Must contain "rtc" and for a s3c6410 compatible controller,
+> > +      a "rtc_src" sorted in the same order as the clocks property.
+> > +    oneOf:
+> > +      - items:
+> > +          - const: rtc
+> > +      - items:
+> > +          # TODO: This can be in any order matching clocks, how to express it?
+>
+> It shouldn't be in any order. Fix the dts files.
+
+I see, other schemas also require specific ordering.
+
+>
+> > +          - const: rtc
+> > +          - const: rtc_src
+>
+> You should drop all this and add an else clause below.
+
+Yes
+
+>
+> > +
+> > +  interrupts:
+> > +    description:
+> > +      Two interrupt numbers to the cpu should be specified. First
+> > +      interrupt number is the rtc alarm interrupt and second interrupt number
+> > +      is the rtc tick interrupt. The number of cells representing a interrupt
+> > +      depends on the parent interrupt controller.
+> > +    minItems: 2
+> > +    maxItems: 2
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - samsung,s3c6410-rtc
+> > +              - samsung,exynos3250-rtc
+> > +
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          minItems: 2
+> > +          maxItems: 2
+> > +        clock-names:
+> > +          items:
+> > +          - const: rtc
+> > +          - const: rtc_src
+>
+> Should be indented 2 more spaces.
+
+Thanks for feedback.
+
+Best regards,
+Krzysztof
