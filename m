@@ -2,142 +2,103 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32FDC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFD0C41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62F12173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D3F2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:42:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nosthoff.rocks header.i=@nosthoff.rocks header.b="J76ZiGdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbfIBHjf (ORCPT
+        id S1729781AbfIBHmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:39:35 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52047 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729787AbfIBHje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:39:34 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 25931816D6; Mon,  2 Sep 2019 09:39:18 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 09:39:31 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Mihai Carabas <mihai.carabas@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, ashok.raj@intel.com,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
-        patrick.colp@oracle.com, kanth.ghatraju@oracle.com,
-        Jon.Grimm@amd.com, Thomas.Lendacky@amd.com
-Subject: Re: [PATCH] Parallel microcode update in Linux
-Message-ID: <20190902073931.GA15850@amd>
-References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
- <20190901172547.GD1047@bug>
- <5BACA033-7613-49A9-801C-9F75F4306909@oracle.com>
+        Mon, 2 Sep 2019 03:42:43 -0400
+Received: from mail.heine.tech ([195.201.24.99]:59284 "EHLO mail.heine.tech"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbfIBHmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:42:43 -0400
+X-Greylist: delayed 593 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Sep 2019 03:42:42 EDT
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: michael@nosthoff.rocks)
+        by mail.heine.tech (Postcow) with ESMTPA id 0C7951814BA;
+        Mon,  2 Sep 2019 09:32:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nosthoff.rocks;
+        s=dkim; t=1567409568;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+        bh=JX2/x2Fpnilt3YxCUMwW5hYCNP+HOh2fh/yrCcqpfvQ=;
+        b=J76ZiGdK8Y8frci+PP36sETn4Ys5AjkBijg1nzhyOTdG6TmXvQZduu0sdF+BzkCWj6NKTL
+        3vDsUbYcMOQzf20c+atRE0vudaSEg+GgfKFyP4gZWdmh4e42Sl5d5XqMRomOoMlon0lMci
+        xYBaboQ/h0/Lhk+Mj70Mh93gPlWeqnk=
+Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190902071041.ukvc64tg5tjttk6w@earth.universe>
+From:   "Michael Nosthoff" <michael@nosthoff.rocks>
+Date:   Mon, 02 Sep 2019 09:32:47 +0200
+Cc:     "Stephen Rothwell" <sfr@canb.auug.org.au>,
+        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+To:     "Sebastian Reichel" <sre@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Content-Disposition: inline
-In-Reply-To: <5BACA033-7613-49A9-801C-9F75F4306909@oracle.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Message-ID: <79b6-5d6cc580-3-35015040@57153312>
+Subject: =?utf-8?q?Re=3A?==?utf-8?q?_linux-next=3A?= Fixes tag needs some work in 
+ the battery tree
+User-Agent: SOGoMail 4.0.8
+Content-Transfer-Encoding: quoted-printable
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=nosthoff.rocks;
+        s=dkim; t=1567409568;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to; bh=JX2/x2Fpnilt3YxCUMwW5hYCNP+HOh2fh/yrCcqpfvQ=;
+        b=Z3HDkULOYVoIMvU9ddzW4tOX5r8fU2VGjP5iUEaAy3oD6pVKkWzOAERH+5erlX/84IKveH
+        vUzflOjvpzWAvMchDFjlZGIaIvZJbmdurvS4G+OlnBMyOC/AyFKBQ0UPIwLvC++NS9rPu+
+        dgz5hMMm3lIfktr2t9aw5/ZvjLN07Yw=
+ARC-Seal: i=1; s=dkim; d=nosthoff.rocks; t=1567409568; a=rsa-sha256;
+        cv=none;
+        b=VIBLveKhDw6arNCEsJeZylZEauLRE64oRt1XoM0Ch6zIaNIWMGBxcT5gX6tsSryxTDOyhT
+        BoCgieTBgKW8x7MBELA8m85jYytlmRRoMvGKs0Q2B2LTyjdmX1s/KP91sYon1Vj5Z68CWU
+        SGBj4udBNwFV2ufL8oV48vsbtHVePqI=
+ARC-Authentication-Results: i=1;
+        mail.heine.tech;
+        auth=pass smtp.mailfrom=michael@nosthoff.rocks
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sebastian,
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think you missed that the second commit
 
-Hi!
+38fa8b9f75ea ("power: supply: sbs-battery: use correct flags field")
 
-> >> +       u64 p0, p1;
-> >>        int ret;
-> >>=20
-> >>        atomic_set(&late_cpus_in,  0);
-> >>        atomic_set(&late_cpus_out, 0);
-> >>=20
-> >> +       p0 =3D rdtsc_ordered();
-> >> +
-> >>        ret =3D stop_machine_cpuslocked(__reload_late, NULL, cpu_online=
-_mask);
-> >> +
-> >> +       p1 =3D rdtsc_ordered();
-> >> +
-> >>        if (ret > 0)
-> >>                microcode_check();
-> >>=20
-> >>        pr_info("Reload completed, microcode revision: 0x%x\n", boot_cp=
-u_data.microcode);
-> >>=20
-> >> +       pr_info("p0: %lld, p1: %lld, diff: %lld\n", p0, p1, p1 - p0);
-> >> +
-> >>        return ret;
-> >> }
-> >>=20
-> >> We have used a machine with a broken microcode in BIOS and no microcod=
-e in
-> >> initramfs (to bypass early loading).
-> >>=20
-> >> Here are the results for parallel loading (we made two measurements):
-> >=20
-> >> [   18.197760] microcode: updated to revision 0x200005e, date =3D 2019=
--04-02
-> >> [   18.201225] x86/CPU: CPU features have changed after loading microc=
-ode, but might not take effect.
-> >> [   18.201230] microcode: Reload completed, microcode revision: 0x2000=
-05e
-> >> [   18.201232] microcode: p0: 118138123843052, p1: 118138153732656, di=
-ff: 29889604
-> >=20
-> >> Here are the results of serial loading:
-> >>=20
-> >> [   17.542518] microcode: updated to revision 0x200005e, date =3D 2019=
--04-02
-> >> [   17.898365] x86/CPU: CPU features have changed after loading microc=
-ode, but might not take effect.
-> >> [   17.898370] microcode: Reload completed, microcode revision: 0x2000=
-05e
-> >> [   17.898372] microcode: p0: 149220216047388, p1: 149221058945422, di=
-ff: 842898034
-> >>=20
-> >> One can see that the difference is an order magnitude.
-> >=20
-> > Well, that's impressive, but it seems to finish 300 msec later? Where d=
-oes that difference
-> > come from / how much real time do you gain by this?
->=20
-> The difference comes from the large amount of cores/threads the machine h=
-as: 72 in this case, but there are machines with more. As the commit messag=
-e says initially the microcode was applied serially one by one and now the =
-microcode is updated in parallel on all cores.
->=20
-> 300ms seems nothing but it is enough to cause disruption in some critical=
- services (e.g. storage) - 300ms in which we do not execute anything on CPU=
-s. Also this 300ms is increasing when the machine is fully loaded with gues=
-ts.
->=20
+also needs this fix.
 
-Yes, but if you look at the dmesgs I quoted, paralel microcode update
-actually finished 300msec _later_.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards,
+Michael
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+On Monday, September 02, 2019 09:10 CEST, Sebastian Reichel <sre@kernel=
+.org> wrote: 
+ 
+> Hi Stephen,
+> 
+> On Mon, Sep 02, 2019 at 09:31:31AM +1000, Stephen Rothwell wrote:
+> > In commit
+> > 
+> > b19aca4eb2d2 ("power: supply: sbs-battery: only return health when =
+battery present")
+> > 
+> > [...]
+> > 
+> > Please do not split Fixes tags over more than one line.
+> 
+> I have fixed this and rebased the branch, so the issue should be
+> gone tomororw. Thanks for the notice,
+> 
+> -- Sebastian
 
-iEYEARECAAYFAl1sxzMACgkQMOfwapXb+vInxgCfYqV8iQD034oFJ7fn1Eom+E4C
-4LwAn0bvqEXNfSVvV6tJGn6npo+HELO7
-=9hh5
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
