@@ -2,51 +2,205 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DAAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A316CC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25099217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86525217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbfIBLwt (ORCPT
+        id S1731330AbfIBLwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:52:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:49614 "EHLO verein.lst.de"
+        Mon, 2 Sep 2019 07:52:51 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46967 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbfIBLwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:52:47 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8704768AFE; Mon,  2 Sep 2019 13:52:43 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 13:52:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Michal Simek <monstr@monstr.eu>
-Subject: Re: linux-next: build failure after merge of the powerpc tree
-Message-ID: <20190902115243.GA1011@lst.de>
-References: <20190902214011.2a5400c9@canb.auug.org.au>
+        id S1731213AbfIBLwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 07:52:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MT3f0ptxz9sNk;
+        Mon,  2 Sep 2019 21:52:46 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v5 2/2] powerpc: Add support to initialize ima policy rules
+In-Reply-To: <1566218108-12705-3-git-send-email-nayna@linux.ibm.com>
+References: <1566218108-12705-1-git-send-email-nayna@linux.ibm.com> <1566218108-12705-3-git-send-email-nayna@linux.ibm.com>
+Date:   Mon, 02 Sep 2019 21:52:46 +1000
+Message-ID: <87sgpesynl.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902214011.2a5400c9@canb.auug.org.au>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 09:40:11PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the powerpc tree, today's linux-next build (powerpc
-> ppc44x_defconfig) failed like this:
+Hi Nayna,
 
-Yes, this conflict is expected and we dicussed it before.  I'll make
-sure Linus is in the loop when sending the pull request.
+Some more comments below.
+
+Nayna Jain <nayna@linux.ibm.com> writes:
+> POWER secure boot relies on the kernel IMA security subsystem to
+> perform the OS kernel image signature verification.
+
+Again this is just a design choice we've made, it's not specified
+anywhere or anything like that. And it only applies to bare metal secure
+boot, at least so far. AIUI.
+
+> Since each secure
+> boot mode has different IMA policy requirements, dynamic definition of
+> the policy rules based on the runtime secure boot mode of the system is
+> required. On systems that support secure boot, but have it disabled,
+> only measurement policy rules of the kernel image and modules are
+> defined.
+
+It's probably worth mentioning that we intend to use this in our
+Linux-based boot loader, which uses kexec, and that's one of the reasons
+why we're particularly interested in defining the rules for kexec?
+
+> This patch defines the arch-specific implementation to retrieve the
+> secure boot mode of the system and accordingly configures the IMA policy
+> rules.
+>
+> This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
+> config is enabled.
+>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  arch/powerpc/Kconfig           |  2 ++
+>  arch/powerpc/kernel/Makefile   |  2 +-
+>  arch/powerpc/kernel/ima_arch.c | 50 ++++++++++++++++++++++++++++++++++
+>  include/linux/ima.h            |  3 +-
+>  4 files changed, 55 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/powerpc/kernel/ima_arch.c
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index c902a39124dc..42109682b727 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -917,6 +917,8 @@ config PPC_SECURE_BOOT
+>  	bool
+>  	default n
+>  	depends on PPC64
+> +	depends on IMA
+> +	depends on IMA_ARCH_POLICY
+>  	help
+>  	  Linux on POWER with firmware secure boot enabled needs to define
+>  	  security policies to extend secure boot to the OS.This config
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index d310ebb4e526..520b1c814197 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -157,7 +157,7 @@ endif
+>  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+>  
+> -obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o
+> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o ima_arch.o
+>  
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> new file mode 100644
+> index 000000000000..ac90fac83338
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/ima_arch.c
+> @@ -0,0 +1,50 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain <nayna@linux.ibm.com>
+> + *
+> + * ima_arch.c
+> + *      - initialize ima policies for PowerPC Secure Boot
+> + */
+> +
+> +#include <linux/ima.h>
+> +#include <asm/secboot.h>
+> +
+> +bool arch_ima_get_secureboot(void)
+> +{
+> +	return get_powerpc_secureboot();
+> +}
+> +
+> +/*
+> + * File signature verification is not needed, include only measurements
+> + */
+> +static const char *const default_arch_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK",
+> +	"measure func=MODULE_CHECK",
+> +	NULL
+> +};
+
+The rules above seem fairly self explanatory.
+
+> +
+> +/* Both file signature verification and measurements are needed */
+> +static const char *const sb_arch_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+> +#if IS_ENABLED(CONFIG_MODULE_SIG)
+> +	"measure func=MODULE_CHECK",
+> +#else
+> +	"measure func=MODULE_CHECK template=ima-modsig",
+> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> +#endif
+
+But these ones are not so obvious, at least to me who knows very little
+about IMA.
+
+Can you add a one line comment to each of the ones in here saying what
+it does and why we want it?
+
+> +	NULL
+> +};
+> +
+> +/*
+> + * On PowerPC, file measurements are to be added to the IMA measurement list
+> + * irrespective of the secure boot state of the system.
+
+Why? Just because we think it's useful? Would be good to provide some
+further justification.
+
+    * Signature verification
+> + * is conditionally enabled based on the secure boot state.
+> + */
+> +const char *const *arch_get_ima_policy(void)
+> +{
+> +	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot())
+> +		return sb_arch_rules;
+> +	return default_arch_rules;
+> +}
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index a20ad398d260..10af09b5b478 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -29,7 +29,8 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+>  #endif
+>  
+> -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390)
+> +#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> +	|| defined(CONFIG_PPC_SECURE_BOOT)
+>  extern bool arch_ima_get_secureboot(void);
+>  extern const char * const *arch_get_ima_policy(void);
+>  #else
+
+
+cheers
