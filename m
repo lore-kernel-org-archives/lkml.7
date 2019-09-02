@@ -2,151 +2,176 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF20C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B814DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA138217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2A9217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 23:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="OhnTr0ld"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OXGCaKGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfIBXOi (ORCPT
+        id S1727503AbfIBXPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 19:14:38 -0400
-Received: from mx1.ucr.edu ([138.23.248.2]:5684 "EHLO mx1.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbfIBXOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 19:14:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1567466279; x=1599002279;
-  h=from:to:cc:subject:date:message-id;
-  bh=wrJn6aBHz0Uw1eGhnnd+uYHpG8nT9vsMJN2vUur/bWQ=;
-  b=OhnTr0ldt5Mv8QIOqfKoGO5jKzVcBnhz2phCnjp8HMy3Z4zhSBlPlWZP
-   EdYsMgKQVGFjDTBARnjzO1+p3Zcad2mYHadNlnF8bnxE92fv/WzQFlQcb
-   vEZTyFZO1KJo4TYmIOza7DNBfwApnSU2GF4L1symoGL47trASjQk/1JEn
-   TjcyO48I5Hn3HOcQZetzNqa1uoOTmBSqSgD/ZzFZYdOQHzrR8iCXIdcX9
-   tHV1HJFyz8kl6wRNrcIXtc24rqWC47WNjpsvWfosz8Q8RG2kFodhLA1pS
-   8xHaERd8BlS1ilkFzBCGFHz5hAhSg9dCh13yw9eq0ANketdiJ9aYsHetA
-   Q==;
-IronPort-SDR: n3qv3njVNkvFqgrYURstPTaJYfKTX+0kFQzwrBIl5oikQH+n9lM/IpDaYc0C6X3JgyT3cvLI4N
- crtX15mBwqzhPmnnEiQDAkVKF1pPxDyHGuOJY62W1FuK2v7tHy5Ismibq8ais2jdRoTaGswlMf
- 1crDir4KF4d/qaZzm227ggSVMS7uv2ckN1fPN1jPdwnMoUqNtC/RY6rm2aCzUa1jfFNRiL62Gh
- PvW93woJhy4Hftz5oYcZIBkhPpvGEHSPP54tkHRGsJ+XJVgfTFZ38CKRHwGd4Nua7yheqX6YvC
- VNg=
-IronPort-PHdr: =?us-ascii?q?9a23=3Arvp1WhLny5rMXwg389mcpTZWNBhigK39O0sv0r?=
- =?us-ascii?q?FitYgRI/jxwZ3uMQTl6Ol3ixeRBMOHsqgC0rWP+Pm/EUU7or+5+EgYd5JNUx?=
- =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
- =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCejbb9oMRm7rxjdusYLjYZgN6081g?=
- =?us-ascii?q?bHrnxUdupM2GhmP0iTnxHy5sex+J5s7SFdsO8/+sBDTKv3Yb02QaRXAzo6PW?=
- =?us-ascii?q?814tbrtQTYQguU+nQcSGQWnQFWDAXD8Rr3Q43+sir+tup6xSmaIcj7Rq06VD?=
- =?us-ascii?q?i+86tmTgLjhTwZPDAl7m7Yls1wjLpaoB2/oRx/35XUa5yROPZnY6/RYc8WSW?=
- =?us-ascii?q?9HU8ZUVixBGZi8b4oJD+oOIO1WsZDzrEYArRu/GwasAP7gwSJMinL4waE21u?=
- =?us-ascii?q?IsGhzE0gM9BdIDqHTaosvoOqkcUu67y7LFwSnfY/5MxTvw8pTEfgwnrPqRXb?=
- =?us-ascii?q?xwa83RyUw3GgzHj1WRqIzlPy6S1u8QtGWa7+thVeK1hG4mtw19vjaiy9wxio?=
- =?us-ascii?q?bVnIIZ0E7L+jhkwIssI9CzVU11Yca8HZdOqy2XM5F6T8AiTm1ypio216EKtY?=
- =?us-ascii?q?SmcCUOy5kr3wPTZv2DfoSS/B7uWuacLS1miH9kYr6yhRm//E69wePmTMa0yk?=
- =?us-ascii?q?xFri9dn9nJsXACygLc59CcSvt44kehwTGP1x3P6u1cIUA7i67bK5k5z741jJ?=
- =?us-ascii?q?UTsEDDEjbumEX4kaOab0sk9vWs5unkeLnmqZicN4h7igH6LKsigNCwAeM9Mg?=
- =?us-ascii?q?QWXmib//qz1KH78EHnXLlHiuc6n6rZvZzAO8gXu7K1DxVI3osn6BuzFzKm38?=
- =?us-ascii?q?4ZnXkDIlJFYhWHj43xNlDOIfH4De2wg1WwnDt3yf3LJaDhDYnXLnTZjrjuYK?=
- =?us-ascii?q?t951ZGyAUv1dBf+45UCrYZLfL3W0/xssHYDxAgPwy33ennEtN92Z0aWW+UHK?=
- =?us-ascii?q?+ZP73dsUWS6uIsPeaMfokVtyj5K/Q/4P7ul3A5yhczZ66siKoWenClGbwyMl?=
- =?us-ascii?q?eZaHu02owpDGwQ+AcyUbq52xW5TTdPaiPqDOoH7TYhBdfjUt/O?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2E8AACqgmddh8bSVdFlHgEGBwaBUwk?=
- =?us-ascii?q?LAYNXTBCNHYZdAQEGix8YcYV5gwmFJIF7AQgBAQEMAQEtAgEBhD+CWyM0CQ4?=
- =?us-ascii?q?CAwgBAQUBAQEBAQYEAQECEAEBAQgNCQgphUGCOimCYAsWFVJWPwEFATUiOYJ?=
- =?us-ascii?q?HAYF2FJ08gQM8jCMziGkBCAyBSQkBCIEiAYcdhFmBEIEHhGGEDYNWgkQEgS4?=
- =?us-ascii?q?BAQGUTpYFAQYCAYIMFIFyklMngjKBfokZOYpaAS2ldwIKBwYPIYEvghFNJYF?=
- =?us-ascii?q?sCoFEglweji0fM4EIjAGCVAE?=
-X-IPAS-Result: =?us-ascii?q?A2E8AACqgmddh8bSVdFlHgEGBwaBUwkLAYNXTBCNHYZdA?=
- =?us-ascii?q?QEGix8YcYV5gwmFJIF7AQgBAQEMAQEtAgEBhD+CWyM0CQ4CAwgBAQUBAQEBA?=
- =?us-ascii?q?QYEAQECEAEBAQgNCQgphUGCOimCYAsWFVJWPwEFATUiOYJHAYF2FJ08gQM8j?=
- =?us-ascii?q?CMziGkBCAyBSQkBCIEiAYcdhFmBEIEHhGGEDYNWgkQEgS4BAQGUTpYFAQYCA?=
- =?us-ascii?q?YIMFIFyklMngjKBfokZOYpaAS2ldwIKBwYPIYEvghFNJYFsCoFEglweji0fM?=
- =?us-ascii?q?4EIjAGCVAE?=
-X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
-   d="scan'208";a="5470477"
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 16:17:58 -0700
-Received: by mail-pf1-f198.google.com with SMTP id z13so9609232pfr.15
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 16:14:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qbPcGIvjek55/mukFc57PQHYy7743OrNG7Y4v0Ab2d0=;
-        b=akB6V87MIelXqA69qufz3gN9sCMwdUL6nhU9fXTVasTV/neN4XsUBINreyiIdcggeh
-         u4nAuKdQM5mIT/wed9aaXSHy2VvFtkkzSjdQ0UA1hBj+b8tjuOc8d0dSAMGaKDRoziM7
-         QjbwAOwoT3ExCZ8C1WugNdx8SxrQB/bc9xThG4Syrxzdow5xBecJuEgeIsPC4bDC9bh0
-         p7tK1ZrbRQN/QzDKjkiKLA0NbBVQkWV+qtzjLXCO9BK50/CPeG8d6y2smnRH4cjhau7m
-         OLYUER2ifY4EkLQoAip09ppoT8N3LsR/FWeDeI95Qa1jOP4GNfjnTO+8fHBjFylut+zl
-         z0eg==
-X-Gm-Message-State: APjAAAUNRhtWhCjqKJ+LYiwJM3d71VxQvD0akpvfvKolGnuJ/bVPDXBt
-        ztBLMcHwLl3KrxxQniH+Ot67aamYK5sPDBHbpmXDcTB7TB0b43nlr+YLnxN5Tii/rrMyk28TcQf
-        KKw3V1gf5FaYI+rqk3tZ2aYTyCA==
-X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr25566848plq.248.1567466076389;
-        Mon, 02 Sep 2019 16:14:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyG1mxoH7h9PwFtEKTdqe361X81McE/StIlugJILQyx3cKKtm08UaQvwZnUk/+e7cNgptjUmQ==
-X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr25566835plq.248.1567466076169;
-        Mon, 02 Sep 2019 16:14:36 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id 138sm18270374pfw.78.2019.09.02.16.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 16:14:35 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: hisilicon: Variable "reg_value" in function mdio_sc_cfg_reg_write() could be uninitialized
-Date:   Mon,  2 Sep 2019 16:15:10 -0700
-Message-Id: <20190902231510.21374-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 2 Sep 2019 19:15:05 -0400
+Received: from mail-eopbgr1300113.outbound.protection.outlook.com ([40.107.130.113]:60252
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726767AbfIBXPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 19:15:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PijwKdqyp48II2nshjMjYlr9iEKaayvF1NoLHR4PA6s5wD46eoIVU98FfWCESPUaDW8hIgY0o0FiE0HLXc04MKwpoK1xfSJcZOYCby/4nrMtP3HF2McPpDTY7lgoslBKX7RdWzvEyPCamQTEPVqqXKB4Gu5uSVBbMmQY4CKES1kXIYD8SVbJ3mN2FoE32mjlhK5pxPtlcXZP4qR4e+ofEXOFFrylsT+UJM1fpZFXg7l1eM0lt3LLoTr1lsXc249I0fF4/00/ZE7lr6vTAWZlDvCzXRtYbfEAjFdqphhX860Tjc407eZ5QlPyr22qekBxp5Ng9OCjJt/vaYK3m8ar7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3ntnqllTt7c12TfQkWnPeR91zVuZKwQJlKPYnI8VM/Q=;
+ b=Rb3ejL4IwHjgpIrUmLJmH2qBMhfV9wRwmvAQqQ3eUD8/++d4qqLuUsirj/l9Bm86A4J/kPX+1BoEqwlZ/ZIatk1taCu0/Djoj7S+ztj2qO5cc6iNJ7+N+70XKf51XOHpLrVmN1JEj3avQE53RqzlkpV1P3/N+zmvG7HPxoX4P9VLhCaLIAsRdMcq/JUqRp1/aWpPPCjiaHdDXveD2qgxkqCC7LVBkwuNrSIDFstp7cguDE6W9xORQyLJl4H/hcsv6tp1Tt1MEEZolu0KevGOZxNvyfOFDVsWM9b6O+ZL5jmAegv8NJBvxDVElgWfOzjfOwFnnByYAUmt7ixrBDUFIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3ntnqllTt7c12TfQkWnPeR91zVuZKwQJlKPYnI8VM/Q=;
+ b=OXGCaKGwEc7I87L88lmqu7BNJoqvOKeu1mMK8snP+0KJi+/SZJfpwxVM8bjXQyW1MZ1ZNorPMbOELIojz3q+fOfIlTgvwh+oBO4tM5DZ6ZxjjNO+PL7WtRXX4ljp8HWR6xGwZTn7tlNZbst/w6/w9qCPKmye5z9WJ1EbqE9/fdY=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0107.APCP153.PROD.OUTLOOK.COM (10.170.188.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.4; Mon, 2 Sep 2019 23:14:57 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.013; Mon, 2 Sep 2019
+ 23:14:57 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>
+Subject: [PATCH] irqdomain: Add the missing assignment of domain->fwnode for
+ named fwnode
+Thread-Topic: [PATCH] irqdomain: Add the missing assignment of domain->fwnode
+ for named fwnode
+Thread-Index: AdVh4blqLc5rFg83RpSOwiBFpYO6dw==
+Date:   Mon, 2 Sep 2019 23:14:56 +0000
+Message-ID: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-02T23:14:54.7798798Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=27b9a0ce-4761-494d-81f6-46ffd0132acf;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:45b3:904b:db76:f1a7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3e928531-0e80-427a-4f8b-08d72ffb5ee3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0107;
+x-ms-traffictypediagnostic: PU1P153MB0107:|PU1P153MB0107:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB010769251CAA7B0372E026F0BFBE0@PU1P153MB0107.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(199004)(189003)(54534003)(46003)(478600001)(10090500001)(14454004)(8990500004)(66946007)(66476007)(66556008)(66446008)(64756008)(10290500003)(305945005)(7736002)(99286004)(52536014)(81156014)(8936002)(74316002)(110136005)(8676002)(81166006)(7696005)(316002)(22452003)(102836004)(186003)(6506007)(107886003)(4326008)(53936002)(2906002)(54906003)(6116002)(5660300002)(86362001)(76116006)(6436002)(476003)(256004)(9686003)(71200400001)(55016002)(71190400001)(486006)(33656002)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0107;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XkfGkx+csX2pbXED7D2Sy4fTmfq/tUx0Reh2fCVtPAVyT8V+p/kYqWlmZTM/UBA/VYXd/KSVwjkdFW56du4AY9hq+25fSj+1SOdWgPgsiDLhOSSuLY3qztT+194ESPhnEOJ0rCvdSCdnDOCmVoe9dMOA8iH7Q/iBKv3H/QxZnskNZO4Uo0ssUi+0Vn9Shy0/AT+OJpBhAUfCnlmHTLxG3117jpGmfNnU7vGrgrUa64VoOvK0cbCmThIJC7jNUKOB7YdkI6xR3tSbn4YEwXpl+4HaUxCrSxuyNUF3TpXIJVp3MeoQcW4IJt8W/HWte5j6Q/gqEK4ZOn1qS3cWl00C+6Sc0cs2fNvDsSf2LUpgT8fzIlg7UhctxlbyRctPubaK5g5BSo0zK5MNLJWzGnQnVU0HByYfJtP57MWS2rzGqz8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e928531-0e80-427a-4f8b-08d72ffb5ee3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 23:14:56.6849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: imf/ngyJCN3NgQC9J9zXVl8t+2lzAclZ0psn7nf7nXVpmxW7y6jYZkE3xsjVv5NwNVd30QGd+F05JW07K7ZZFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function mdio_sc_cfg_reg_write(), variable reg_value could be
-uninitialized if regmap_read() fails. However, this variable is
-used later in the if statement, which is potentially unsafe.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Recently device pass-through stops working for Linux VM running on Hyper-V.
+
+git-bisect shows the regression is caused by the recent commit
+467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
+is that the commit d59f6617eef0 forgets to set the domain->fwnode for
+IRQCHIP_FWNODE_NAMED*, and as a result:
+
+1. The domain->fwnode remains to be NULL.
+
+2. irq_find_matching_fwspec() returns NULL since "h->fwnode =3D=3D fwnode" =
+is
+false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
+msi_domain to NULL.
+
+3. When the device is added onto the root bus, the device's dev->msi_domain
+is set to NULL in pci_set_msi_domain().
+
+4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
+calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
+arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
+actually pci_msi_setup_msi_irqs() is supposed to call
+msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
+hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
+hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
+the device driver can not receive any interrupt.
+
+Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
+Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an addres=
+s-based one")
+Reported-by: Lili Deng <v-lide@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index 3e863a71c513..f5b64cb2d0f6 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -148,11 +148,17 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
- {
- 	u32 time_cnt;
- 	u32 reg_value;
-+	int ret;
- 
- 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
- 
- 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
--		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		if (ret) {
-+			dev_err(mdio_dev->regmap->dev, "Fail to read from the register\n");
-+			return ret;
-+		}
-+
- 		reg_value &= st_msk;
- 		if ((!!check_st) == (!!reg_value))
- 			break;
--- 
-2.17.1
+Note: the commit 467a3bb97432 ("PCI: hv: Allocate a named fwnode ...") has =
+not
+gone in Linus's tree yet (the commit is in linux-next for a while), so the =
+commit ID
+in the changelog can change when it goes in Linus's tree.
+
+This patch works in my test, but I'm not 100% sure this is the right fix.=20
+
+Looking forward to your comment!
+
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index e7bbab149750..132672b74e4b 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -149,6 +149,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handl=
+e *fwnode, int size,
+ 		switch (fwid->type) {
+ 		case IRQCHIP_FWNODE_NAMED:
+ 		case IRQCHIP_FWNODE_NAMED_ID:
++			domain->fwnode =3D fwnode;
+ 			domain->name =3D kstrdup(fwid->name, GFP_KERNEL);
+ 			if (!domain->name) {
+ 				kfree(domain);
+--=20
+2.19.1
 
