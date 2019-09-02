@@ -2,48 +2,95 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C32CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D29C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEAA2343A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6B421874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfIBI3h (ORCPT
+        id S1729851AbfIBIc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:29:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:48230 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfIBI3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:29:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7D5E0227A8A; Mon,  2 Sep 2019 10:29:33 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 10:29:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marta Rybczynska <mrybczyn@kalray.eu>
-Cc:     Christoph Hellwig <hch@lst.de>, kbusch <kbusch@kernel.org>,
-        axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Samuel Jones <sjones@kalray.eu>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>
-Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
-Message-ID: <20190902082933.GA29909@lst.de>
-References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu> <20190822000652.GF9511@lst.de> <1678802062.58145473.1566818428010.JavaMail.zimbra@kalray.eu>
+        Mon, 2 Sep 2019 04:32:29 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:33686 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729680AbfIBIc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:32:29 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id E5E6625B75F;
+        Mon,  2 Sep 2019 18:32:26 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id E04B29401E6; Mon,  2 Sep 2019 10:32:24 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 10:32:24 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1
+ bindings
+Message-ID: <20190902083224.mn5agbxf5akhhoqg@verge.net.au>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB1770BF952221F50BBCDF3765C0BD0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1678802062.58145473.1566818428010.JavaMail.zimbra@kalray.eu>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <TY1PR01MB1770BF952221F50BBCDF3765C0BD0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:20:28PM +0200, Marta Rybczynska wrote:
-> Do you mean something like this?
+On Fri, Aug 30, 2019 at 10:37:54AM +0000, Fabrizio Castro wrote:
+> Dear All,
+> 
+> This patch has been reviewed by Geert, Simon, and Rob, so I think it's ok to apply.
+> Is anybody willing to take this patch?
 
-Yes.
+<2c> I think Geert can take this </2c>
+
+> Thanks,
+> Fab
+> 
+> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Sent: 11 June 2019 14:07
+> > Subject: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
+> > 
+> > Document RZ/G2M (R8A774A1) SoC in the Renesas TMU bindings.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > index 13ad074..9dff7e5 100644
+> > --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > @@ -10,6 +10,7 @@ Required Properties:
+> > 
+> >    - compatible: must contain one or more of the following:
+> >      - "renesas,tmu-r8a7740" for the r8a7740 TMU
+> > +    - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
+> >      - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
+> >      - "renesas,tmu-r8a7778" for the r8a7778 TMU
+> >      - "renesas,tmu-r8a7779" for the r8a7779 TMU
+> > --
+> > 2.7.4
+> 
