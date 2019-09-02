@@ -2,112 +2,101 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D4FC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CADC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5B22343A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDBE2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QTN11fqU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcnZfCKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfIBHuM (ORCPT
+        id S1729930AbfIBHub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:50:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48480 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfIBHuM (ORCPT
+        Mon, 2 Sep 2019 03:50:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51138 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729396AbfIBHub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:50:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NLbPkO1nBLjxjJMJLtjjfjvIrKkFYiad08Wtr6KwkSw=; b=QTN11fqUWCWaQ1Qfvv9fmTkeg
-        f4Du4MFrH1JeBL/lYO4ZmvejNdqey6NA3y5cyyRlcge584lMTs3yBaKzq33D5bbzOugM4K9b2N1Lo
-        m25L2EcK6DZtpdpqBmXVzn7xsRsLu51Ikl+6Xf9MMGg3cy7oF+OcIWJfCEIGH1vF5U6Nmag8Jwh2m
-        Av5PwuPKTVGxS8fhTUztEdPofUkT3UYw5jibpCXaJJ6AaHv5BM1wnu7XQ4pfeXkUWsuCIJHB32jYo
-        14YZcDEu6aRqCPSkafuqSYr8vyo9rnjOViyAFQhSPj9fQsY8RRe2ddJpXeKtpNQPI9oRC3cPCc9k7
-        YoZc6ErOA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4h6E-0005zw-La; Mon, 02 Sep 2019 07:50:06 +0000
-Date:   Mon, 2 Sep 2019 00:50:06 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: Use GFP_ATOMIC in resource_alignment_store()
-Message-ID: <20190902075006.GB754@infradead.org>
-References: <20190831124932.18759-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190831124932.18759-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 2 Sep 2019 03:50:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c10so1473880wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 00:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kcqdyPLZCov8q1Yc/4XKH+CQy/J5UB53PgtIuV1/9s0=;
+        b=LcnZfCKVTpLMDSyTKoyPJioZnyoyxbApYpDcFohtdhF/N0yZ6NvcquB62kSyksYfiU
+         RTJqnqILmxGftbwaKpi9NjKjvcrsskfRVgfbzUqeTCK8SzVVB/ao54259cpxN1ChkJuC
+         Wj2iIBBzAOsDDASBRonvIl1Dt4WA9re47EEAklCsTF30eqGvz+mg1Uz3pcFqj/oYZI/n
+         FCiEsDN10RupFNICm0sQ3c49zv40v4/c1J8M+C/GMtpT9gwgvend9KwyhAZ0Jme8s8C+
+         bwTdZCBseNxE6MQ7qvG+M3q59N2HZZ6tG2fpZCrSsPIyKvGqdl2uQdqjEdj+owb/QA3f
+         EGrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=kcqdyPLZCov8q1Yc/4XKH+CQy/J5UB53PgtIuV1/9s0=;
+        b=cv+LSPtnhyf1St0ho+thkIEU476+C9Q6d9B2/Nz0jdN2XQfPajOq3pxc//cNTpyRFe
+         nfvbc7S8+k34pBOkV66AlTQPsM+lp8HPWwih6Dkemo2cH0XBxq5VtujiQDaY5sWm85TO
+         WBFWZRF0+cN2TMo+zeKkvUG1JsNN51FjkWKvpBHfQhh5JyMzjqRnnuudlddhz75JSRtZ
+         c6gSh0QR3vlpLYs5Z1GglBYrUp+5o9TS1BfrzobzQ4Cst24L/XI5jj4QbgtW5dZNHj2h
+         WyLDv2lLwM2pOAiikNMdqEHrW9fLhuHK9B0yIgrpYmKx+ozgpXZiWkNKYVCGp8ODbNJe
+         yDOw==
+X-Gm-Message-State: APjAAAVGMq7zpus9IV715cNv9qHTkoN9u4l+7c/Iead9EQlspRQlasBj
+        Fr7p6PEPV7y4sHlckLjfgHP7G5Vb
+X-Google-Smtp-Source: APXvYqwLQDx/lQ1qN6zWmmYoDCzQvVTFBTDd2UhevqKQzB1zBoeJVcXZmLwJHHeVEIxu5Uk1Nf0Agw==
+X-Received: by 2002:a1c:2bc1:: with SMTP id r184mr8601187wmr.40.1567410628597;
+        Mon, 02 Sep 2019 00:50:28 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id f6sm27460510wrh.30.2019.09.02.00.50.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 00:50:28 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 2/2] habanalabs: show correct id in error print
+Date:   Mon,  2 Sep 2019 10:50:24 +0300
+Message-Id: <20190902075024.27302-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190902075024.27302-1-oded.gabbay@gmail.com>
+References: <20190902075024.27302-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 12:49:32PM +0000, YueHaibing wrote:
-> When allocating memory, the GFP_KERNEL cannot be used during the
-> spin_lock period. It may cause scheduling when holding spin_lock.
-> 
-> Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 484e35349565..0b5fc6736f3f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6148,7 +6148,7 @@ static ssize_t resource_alignment_store(struct bus_type *bus,
->  	spin_lock(&resource_alignment_lock);
->  
->  	kfree(resource_alignment_param);
-> -	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-> +	resource_alignment_param = kstrndup(buf, count, GFP_ATOMIC);
->  
->  	spin_unlock(&resource_alignment_lock);
+If the initialization of a device failed, the driver prints an error
+message with the id of the device. The device index on the file system is
+that id divided by 2.
 
-Why not move the allocation outside the lock? Something like this
-seems much more sensible:
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 484e35349565..fe205829f676 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6145,14 +6145,16 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
- static ssize_t resource_alignment_store(struct bus_type *bus,
- 					const char *buf, size_t count)
- {
--	spin_lock(&resource_alignment_lock);
-+	char *param = kstrndup(buf, count, GFP_KERNEL);
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index bc98032cc4ec..e9f5a0e45183 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -1290,10 +1290,10 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
+ 	if (hdev->pdev)
+ 		dev_err(&hdev->pdev->dev,
+ 			"Failed to initialize hl%d. Device is NOT usable !\n",
+-			hdev->id);
++			hdev->id / 2);
+ 	else
+ 		pr_err("Failed to initialize hl%d. Device is NOT usable !\n",
+-			hdev->id);
++			hdev->id / 2);
  
--	kfree(resource_alignment_param);
--	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-+	if (!param)
-+		return -ENOMEM;
- 
-+	spin_lock(&resource_alignment_lock);
-+	kfree(resource_alignment_param);
-+	resource_alignment_param = param;
- 	spin_unlock(&resource_alignment_lock);
--
--	return resource_alignment_param ? count : -ENOMEM;
-+	return count;
+ 	return rc;
  }
- 
- static BUS_ATTR_RW(resource_alignment);
+-- 
+2.17.1
+
