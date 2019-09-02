@@ -2,116 +2,69 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09020C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46613C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF739216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E910216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfIBNnM (ORCPT
+        id S1730356AbfIBNqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:43:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37504 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726253AbfIBNnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:43:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89671ADFB;
-        Mon,  2 Sep 2019 13:43:09 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id CA0C1DA796; Mon,  2 Sep 2019 15:43:29 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 15:43:29 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
+        Mon, 2 Sep 2019 09:46:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:32119 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfIBNqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:46:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:46:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="211690834"
+Received: from doblerbe-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.53.100])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Sep 2019 06:46:30 -0700
+Date:   Mon, 2 Sep 2019 16:46:28 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jordan Hand <jorhand@linux.microsoft.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v6 05/24] erofs: add inode operations
-Message-ID: <20190902134329.GU2752@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Gao Xiang <hsiangkao@aol.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-6-gaoxiang25@huawei.com>
- <20190829102426.GE20598@infradead.org>
- <20190901093326.GA6267@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] tpm: Parse event log from TPM2 ACPI table
+Message-ID: <20190902134628.yaqvdur4utnjrj3d@linux.intel.com>
+References: <20190831051027.11544-1-jorhand@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901093326.GA6267@hsiangkao-HP-ZHAN-66-Pro-G1>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20190831051027.11544-1-jorhand@linux.microsoft.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 05:34:00PM +0800, Gao Xiang wrote:
-> > > +static int read_inode(struct inode *inode, void *data)
-> > > +{
-> > > +	struct erofs_vnode *vi = EROFS_V(inode);
-> > > +	struct erofs_inode_v1 *v1 = data;
-> > > +	const unsigned int advise = le16_to_cpu(v1->i_advise);
-> > > +	erofs_blk_t nblks = 0;
-> > > +
-> > > +	vi->datamode = __inode_data_mapping(advise);
-> > 
-> > What is the deal with these magic underscores here and various
-> > other similar helpers?
+On Fri, Aug 30, 2019 at 10:10:27PM -0700, Jordan Hand wrote:
+> For systems with a TPM2 chip which use ACPI to expose event logs, retrieve the
+> crypto-agile event log from the TPM2 ACPI table. The TPM2 table is defined
+> in section 7.3 of the TCG ACPI Specification (see link).
 > 
-> Fixed in
-> https://lore.kernel.org/linux-fsdevel/20190901055130.30572-17-hsiangkao@aol.com/
+> The TPM2 table is used by SeaBIOS in place of the TCPA table when the system's
+> TPM is version 2.0 to denote (among other metadata) the location of the
+> crypto-agile log.
 > 
-> underscores means 'internal' in my thought, it seems somewhat
-> some common practice of Linux kernel, or some recent discussions
-> about it?... I didn't notice these discussions...
+> Link: https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
+> Signed-off-by: Jordan Hand <jorhand@linux.microsoft.com>
 
-I know about a few valid uses of the underscores:
+Where is the changelog for v2 and v3 i.e. what happened in those
+updates?
 
-* pattern where the __underscored version does not do locking, while the other
-  does
-* similarly for atomic and non-atomic version
-* macro that needs to manipulate the argument name (like glue some
-  prefix, so the macro does not have underscores and is supposed to be
-  used instead of the function with underscores that needs the full name
-  of a variable/constant/..
-* underscore function takes a few more parameters to further tune the
-  behaviour, but most users are fine with the defaults and that is
-  provided as a function without underscores
-* in case you have just one function of the kind, don't use the underscores
-
-I can lookup examples if you're interested or if the brief description
-is not sufficient. The list covers what I've seen and used, but the list
-may be incomplete.
+/Jarkko
