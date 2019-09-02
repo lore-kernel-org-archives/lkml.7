@@ -2,140 +2,116 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABF2C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C259EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250892339D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567450673;
-	bh=b9q+F0oWgfqJemt7YPpgOVkZgFWsUthBT+dsjYcADps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TFJZU8kLDaqDWGUVOHFp+mYjOQOxaL8tIdagmwbxNcE6lIFY1atDpEVVKO4WIIUZO
-	 XC3IvZtn394ODjdjF82FS5o/kjvkkdb9BtjoZSL83ImHuc13WcSjd49jVyXRz6un2C
-	 nTDqLRzm5WE4DIRMAg3m82sS/N87b28XeBt58EY4=
+	by mail.kernel.org (Postfix) with ESMTP id A3A0721883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfIBS5v (ORCPT
+        id S1727002AbfIBTA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbfIBS5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:57:51 -0400
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01CC21883;
-        Mon,  2 Sep 2019 18:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567450670;
-        bh=b9q+F0oWgfqJemt7YPpgOVkZgFWsUthBT+dsjYcADps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ucpxDPnqMNLEOYNQMdQBWre8nDFaw9ck65PeaIpDMfwUfFUwrMihvqEmmMYa/BVXl
-         5Rdh7dHeDnogDtM0cLGYdirddDYjHO5mLHnX5h6LtyNcLgi0I9Jy24FPrOhAa4gusP
-         0woltmtq1NHGubwcHsx2KafCSlPBVJyWvLGv8hxE=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8B3A03C0B7F; Mon,  2 Sep 2019 20:57:47 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 20:57:47 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>
-Cc:     od@zcrc.me, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] power/supply: ingenic-battery: Don't change scale if
- there's only one
-Message-ID: <20190902185747.mt3jku4gfosfu4wz@earth.universe>
-References: <20190723024554.9248-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="edm47sjsxpx3tepz"
-Content-Disposition: inline
-In-Reply-To: <20190723024554.9248-1-paul@crapouillou.net>
-User-Agent: NeoMutt/20180716
+        Mon, 2 Sep 2019 15:00:26 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:45818 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726865AbfIBTA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:00:26 -0400
+Received: from mr5.cc.vt.edu (smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x82J0PSq000665
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Sep 2019 15:00:25 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x82J0Ks4022539
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Sep 2019 15:00:25 -0400
+Received: by mail-qk1-f199.google.com with SMTP id o4so16662610qkg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 12:00:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=X/y07lbPGXH7bB6jZdP7Y7cEHaqxYqjbURRNMPG/Hrw=;
+        b=imUAcJnlr9Ztm1OZF7Ipyz+jS5B0+An99i30P8SdTH4H9LlnXJgTjnziB63CS13WMg
+         D85/GQzTD8oMFN+1DLrnd5xQ23ckLtQUSzwIAqQkiad2y5GJwIPfPAjI9Qtr48oBud++
+         YDr/5j1YlADK+HyjXd8i7ugxbPjt0tSxuDlYL1Paz750LveWNNQZKQZyivIiBE5KVah3
+         uH9dHTft+rCt1vNOXxdaIv7hSAYfTcDyv0WM0cdvgz+c4xhaEci42ZGB4Z02DNTQqZDK
+         +3wiL/T+lI+x3GPcBy8OPivV+8ANXBChKUi6xHBIvQ7hpC0mcQA8vK1ENUkxCZ5d2pDb
+         dDyg==
+X-Gm-Message-State: APjAAAXBy7CYq8GZNOdYmWAjDEaXO097FwwvITOtFFZbNUn+E/XdoUfE
+        /3e6/Qeya65TwdmPwTraH/x96O2hakcaXhh3G8/dKLFCLnSyjGaHbe+qh09SS5ee1wIWD2Sv3Ao
+        P4v0B+K4l5a92AnpDicw2+DCAAtEp5GvzDUY=
+X-Received: by 2002:a37:d2c6:: with SMTP id f189mr30717558qkj.231.1567450819925;
+        Mon, 02 Sep 2019 12:00:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxma30y8CeByk3061faiFLcZAV2GhZK20oPOHS8T7CDWivXwHYnbWqBBq2P0PNalvAPJoaD+Q==
+X-Received: by 2002:a37:d2c6:: with SMTP id f189mr30717531qkj.231.1567450819691;
+        Mon, 02 Sep 2019 12:00:19 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4340::ba0])
+        by smtp.gmail.com with ESMTPSA id 22sm7364247qkc.90.2019.09.02.12.00.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 12:00:18 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of fat/vfat
+In-Reply-To: <20190902152524.GA4964@kroah.com>
+References: <245727.1567183359@turing-police> <20190830164503.GA12978@infradead.org> <267691.1567212516@turing-police> <20190831064616.GA13286@infradead.org> <295233.1567247121@turing-police> <20190902073525.GA18988@infradead.org>
+ <20190902152524.GA4964@kroah.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1567450817_4251P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Sep 2019 15:00:17 -0400
+Message-ID: <501797.1567450817@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---edm47sjsxpx3tepz
+--==_Exmh_1567450817_4251P
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, 02 Sep 2019 17:25:24 +0200, Greg Kroah-Hartman said:
 
-On Mon, Jul 22, 2019 at 10:45:54PM -0400, Paul Cercueil wrote:
-> The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
-> range, or in low-precision mode with a 7.5V range. The code in place in
-> this driver will select the proper scale according to the maximum
-> voltage of the battery.
->=20
-> The JZ4770 however only has one mode, with a 6.6V range. If only one
-> scale is available, there's no need to change it (and nothing to change
-> it to), and trying to do so will fail with -EINVAL.
->=20
-> Fixes commit fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery
-> driver.")
+> I dug up my old discussion with the current vfat maintainer and he said
+> something to the affect of, "leave the existing code alone, make a new
+> filesystem, I don't want anything to do with exfat".
+>
+> And I don't blame them, vfat is fine as-is and stable and shouldn't be
+> touched for new things.
+>
+> We can keep non-vfat filesystems from being mounted with the exfat
+> codebase, and make things simpler for everyone involved.
 
-There is a standard format for this. It should be
+Ogawa:
 
-Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
+Is this still your position, that you want exfat to be a separate module?
 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Cc: stable@vger.kernel.org
-
-Also it would be nice to have an Acked-by from Artur.
-
--- Sebastian
-
->  drivers/power/supply/ingenic-battery.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/suppl=
-y/ingenic-battery.c
-> index 35816d4b3012..5a53057b4f64 100644
-> --- a/drivers/power/supply/ingenic-battery.c
-> +++ b/drivers/power/supply/ingenic-battery.c
-> @@ -80,6 +80,10 @@ static int ingenic_battery_set_scale(struct ingenic_ba=
-ttery *bat)
->  	if (ret !=3D IIO_AVAIL_LIST || scale_type !=3D IIO_VAL_FRACTIONAL_LOG2)
->  		return -EINVAL;
-> =20
-> +	/* Only one (fractional) entry - nothing to change */
-> +	if (scale_len =3D=3D 2)
-> +		return 0;
-> +
->  	max_mV =3D bat->info.voltage_max_design_uv / 1000;
-> =20
->  	for (i =3D 0; i < scale_len; i +=3D 2) {
-> --=20
-> 2.21.0.593.g511ec345e18
->=20
-
---edm47sjsxpx3tepz
-Content-Type: application/pgp-signature; name="signature.asc"
+--==_Exmh_1567450817_4251P
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tZigACgkQ2O7X88g7
-+pqIeA//bbrrfgxWrAbtsrO9ZahirCLvKBApSmv0pQQ7flaauiQiUxUNcDDnEVU/
-aAty+Pta0ZUOsFm9xfGWLYB1qU0jyRvv2mBaCZRpr3W/K2fs8dLJSPXbVcgOYElz
-0FdU5p72ksy2gr0vhPO++SccNNJYxVvCTs7ihiEpp2w6MVkcLLKfPPn8JsmteoJA
-ZtsbYcRJr3I8z2VMhe0oT2xbAq9h9N/VCdZqccEDgIh3pvReEVXNyfgvZ+3BdZ3T
-89eDpFST/XY9PZyWtlfBi18GEzd9Y9VQPgJro95/n1JoxmLOCyd0Bmh3Nc1Wykhv
-E1aEgvI3tjiufbpaY8Oy2SoXEKG8nR77hCMw8wEswnpcqvaFPNNExEj3HtEWGaJC
-Atyw/dppgRneeOgLXfxaIKqGHjyOTIZ/Q3Wm7CqHmQFAOHTcnQ48NRG0JjXzrxqO
-0ykLvhHfpQ64xYAfzY5CdKCKplHQs7dt8ql2+y+GCg6rOYpRl6pgcSCaaEqV1u2a
-L+Iu58ykLla3OXfniDl7ZywkhA+ssWjUUmjf0uf1ZC3EgiPA8bEaIZ+6AqaYpCES
-QdXX6VJEaoh9RbdbADMXp+5dk/3xXSTffFxncwUZoT2Jy37Pb0Kim8lB10v4TASo
-3GLpSDnixlny9WEapyG9oMC76dh1sZtQ6Bf/Ca5TgXAh+HwkBQI=
-=ANOV
+iQIVAwUBXW1mvwdmEQWDXROgAQIl4RAAo/gmznohIGbnQoiSqQRal12lVpZlEja5
+QV7GuSKa9gPe0jd8ewra5/5HhEQINbocmI36jJeRxbkDWgBRvvxU7USO1FQRIDUE
+aSkUC2kylgyQiq8guFyZTm8sgELLpDuJ2mOHK1FvaOdP4zIjfopiLWRPAhfyr1tw
+vmB/AKDm9ze7wS+mu6dI8JROdOpNu0LoYGmD0TQtOIa+y8lJHmVNu7vRFo2+KeXi
+LOLb1LDm9BaipSnco+apeGqEPx0AtlRbW7MHG03XOkQwgaq2lsGViBCpMkq5Nrmd
+s/YIa/E6Z3YwLFEjzR2hCXZWZBrCk/waTUDS3psqkblP6K8MiBpCanSdutDw5/qD
+33uxYgyGYWuTJYyLX2ziXby4/dPYoDU33m3ihu9e3jfcM/48a21r4LtDC2uTgKEw
+O8bDWkpkZS1Sm5UiwpOps9cuNlmm+ES15rGFKId2hroxe8eGhswL5xkm3U9JGAGY
+81qoAOm4Nisj+F19JlYtH84iHD4ZN0ic/TOXxjiB0tvitiilp+lAQyF4bE+7rzd9
+J8zXqYCJF1JBB/dWF+N24E68ClU/A0CLtg6k3SVD0bNHt5Vn600xd7WqsGjDGUww
+Da09AkmdVeNc+lX+pTYzDDe53bGqgJ4/g6XhoRsZijJWcH90+fpKODQeGdydqL71
+ZJLR8r8Chhk=
+=CHbf
 -----END PGP SIGNATURE-----
 
---edm47sjsxpx3tepz--
+--==_Exmh_1567450817_4251P--
