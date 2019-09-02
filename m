@@ -2,176 +2,176 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D597C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7566C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C85820820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E9B20820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567427054;
+	bh=58/nG/YRrJasI17XBK4VVY6ts8w3wHSbdwS0KmSQlew=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=VxyTAmTBVdRZztyGpPBuoFYE+8yXkjMxG79lzPewHspJ9Iqit9VaDsEjQBqsIbSPE
+	 oau2+r9HBE/bYnYVNB4k1lKOKKPlJSMhlEFUqLo9fBu8jQtQw5T2PfFDSxwNT5YbSp
+	 My6bC0r+ZrT13nK4b3yFsgL9S4+GkJ6lQq7/VmWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731545AbfIBMUg (ORCPT
+        id S1731560AbfIBMYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:20:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18247 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbfIBMUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:20:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 05:20:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="181862938"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 02 Sep 2019 05:20:32 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i4lJu-0001cz-O7; Mon, 02 Sep 2019 15:20:30 +0300
-Date:   Mon, 2 Sep 2019 15:20:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        robhkernel.org@smile.fi.intel.com, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
-Message-ID: <20190902122030.GE2680@smile.fi.intel.com>
-References: <cover.1566975410.git.rahul.tanwar@linux.intel.com>
- <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
- <20190828150951.GS2680@smile.fi.intel.com>
- <e4a1fd0a-b179-92dd-fb81-22d9d7465a33@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4a1fd0a-b179-92dd-fb81-22d9d7465a33@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Sep 2019 08:24:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49422 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729893AbfIBMYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:24:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=DxTOloQGXUNFNhqK1FaukINitRR/ojl8Bp/2Ma+Gdpk=; b=hdGpEZ+0sXN/
+        g44xXPMgI5xDdpg/2tasLveB3VmCEVOV7TfPUXTHQFsoCztQeazALzIWLKNLH29u0nOy6ozZnkqBV
+        umTVO7ytcTDD5joGdEquyLrZ6RDi95hV1BqLNDgLX8/LkG/P2X6SCRCfzdou2VIweOIe948t9sV2W
+        pmNic=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i4lNI-0003CV-Bn; Mon, 02 Sep 2019 12:24:00 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id DF0C42742CCB; Mon,  2 Sep 2019 13:23:59 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        JC Kuo <jckuo@nvidia.com>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Applied "regulator: provide regulator_bulk_set_supply_names()" to the regulator tree
+In-Reply-To: <20190830071740.4267-2-brgl@bgdev.pl>
+X-Patchwork-Hint: ignore
+Message-Id: <20190902122359.DF0C42742CCB@ypsilon.sirena.org.uk>
+Date:   Mon,  2 Sep 2019 13:23:59 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:43:13PM +0800, Tanwar, Rahul wrote:
-> On 28/8/2019 11:09 PM, Andy Shevchenko wrote:
-> > On Wed, Aug 28, 2019 at 03:00:17PM +0800, Rahul Tanwar wrote:
+The patch
 
-> > >   drivers/clk/intel/Kconfig       |  13 +
-> > >   drivers/clk/intel/Makefile      |   4 +
-> > Any plans what to do with existing x86 folder there?
+   regulator: provide regulator_bulk_set_supply_names()
 
-> I checked the x86 folder. This driver's clock controller IP is totally
-> different than other clock drivers inside x86. So having a common
-> driver source is not a option. It is of course possible to move this
-> driver inside x86 folder. Please let me know if you think moving
-> this driver inside x86 folder makes more sense.
+has been applied to the regulator tree at
 
-I'm talking about unambiguous folder where we keep Intel's drivers.
-With your series it will be confusing x86 vs intel.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
-> > > +/*
-> > > + * Calculate formula:
-> > > + * rate = (prate * mult + (prate * frac) / frac_div) / div
-> > > + */
-> > > +static unsigned long
-> > > +intel_pll_calc_rate(unsigned long prate, unsigned int mult,
-> > > +		    unsigned int div, unsigned int frac, unsigned int frac_div)
-> > > +{
-> > > +	u64 crate, frate, rate64;
-> > > +
-> > > +	rate64 = prate;
-> > > +	crate = rate64 * mult;
-> > > +
-> > > +	if (frac) {
-> > This seems unnecessary.
-> > I think you would like to check for frac_div instead?
-> > Though I would rather to use frac = 0, frac_div = 1 and drop this conditional
-> > completely.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> frac_div value is fixed to BIT(24) i.e. always a non zero value. mult & div
-> are directly read from registers and by design the register values for
-> mult & div is also always a non zero value. However, frac can logically
-> be zero. So, I still find if (frac) condition most suitable here.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Then it's simple not needed.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> > > +		frate = rate64 * frac;
-> > > +		do_div(frate, frac_div);
-> > > +		crate += frate;
-> > > +	}
-> > > +	do_div(crate, div);
-> > > +
-> > > +	return (unsigned long)crate;
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> > > +	hw = &pll->hw;
-> > Seems redundant temporary variable.
-> 
-> Agree, will update in v2.
+Thanks,
+Mark
 
-Though in another method you have similar pattern. So, perhaps you may leave it
-for sake of consistency with patterns.
+From d0087e72710ca7d1b309bf427286da58418ea89e Mon Sep 17 00:00:00 2001
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date: Fri, 30 Aug 2019 09:17:37 +0200
+Subject: [PATCH] regulator: provide regulator_bulk_set_supply_names()
 
-> > > +	pr_debug("Add clk: %s, id: %u\n", clk_hw_get_name(hw), id);
-> > Is this useful?
+There are many regulator consumers who - before using the regulator
+bulk functions - set the supply names in regulator_bulk_data using
+a for loop.
 
-> Yes, IMO, this proves very useful for system wide clock issues
-> debugging during bootup.
+Let's provide a simple helper in the consumer API that allows users
+to do the same with a single function call.
 
-You may use function tracer for that.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Link: https://lore.kernel.org/r/20190830071740.4267-2-brgl@bgdev.pl
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/helpers.c        | 21 +++++++++++++++++++++
+ include/linux/regulator/consumer.h | 12 ++++++++++++
+ 2 files changed, 33 insertions(+)
 
-> > Does val == 0 follows the table, i.e. makes div == 1?
-> 
-> 0 val means output clock is ref clock i.e. div ==1. Agree that adding
-> .val = 0, .div =1 entry will make it more clear & complete.
-> 
-> > > +	{ .val = 0, .div = 1 },
-> > > +	{ .val = 1, .div = 2 },
-> > > +	{ .val = 2, .div = 3 },
-
-1
-
-> > > +	{ .val = 3, .div = 4 },
-> > > +	{ .val = 4, .div = 5 },
-> > > +	{ .val = 5, .div = 6 },
-
-1
-
-> > > +	{ .val = 6, .div = 8 },
-> > > +	{ .val = 7, .div = 10 },
-> > > +	{ .val = 8, .div = 12 },
-
-2
-
-> > > +	{ .val = 9, .div = 16 },
-> > > +	{ .val = 10, .div = 20 },
-> > > +	{ .val = 11, .div = 24 },
-
-4
-
-> > > +	{ .val = 12, .div = 32 },
-> > > +	{ .val = 13, .div = 40 },
-> > > +	{ .val = 14, .div = 48 },
-
-8
-
-> > > +	{ .val = 15, .div = 64 },
-
-16
-
-
-So, now we see the pattern:
-
-	div = val < 3 ? (val + 1) : (1 << ((val - 3) / 3));
-
-So, can we eliminate table?
-
+diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
+index 4986cc5064a1..ca3dc3f3bb29 100644
+--- a/drivers/regulator/helpers.c
++++ b/drivers/regulator/helpers.c
+@@ -860,3 +860,24 @@ int regulator_get_current_limit_regmap(struct regulator_dev *rdev)
+ 	return -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(regulator_get_current_limit_regmap);
++
++/**
++ * regulator_bulk_set_supply_names - initialize the 'supply' fields in an array
++ *                                   of regulator_bulk_data structs
++ *
++ * @consumers: array of regulator_bulk_data entries to initialize
++ * @supply_names: array of supply name strings
++ * @num_supplies: number of supply names to initialize
++ *
++ * Note: the 'consumers' array must be the size of 'num_supplies'.
++ */
++void regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
++				     const char *const *supply_names,
++				     unsigned int num_supplies)
++{
++	unsigned int i;
++
++	for (i = 0; i < num_supplies; i++)
++		consumers[i].supply = supply_names[i];
++}
++EXPORT_SYMBOL_GPL(regulator_bulk_set_supply_names);
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index 815983419375..6d2181a76987 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -281,6 +281,12 @@ void devm_regulator_unregister_notifier(struct regulator *regulator,
+ void *regulator_get_drvdata(struct regulator *regulator);
+ void regulator_set_drvdata(struct regulator *regulator, void *data);
+ 
++/* misc helpers */
++
++void regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
++				     const char *const *supply_names,
++				     unsigned int num_supplies);
++
+ #else
+ 
+ /*
+@@ -580,6 +586,12 @@ static inline int regulator_list_voltage(struct regulator *regulator, unsigned s
+ 	return -EINVAL;
+ }
+ 
++void regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
++				     const char *const *supply_names,
++				     unsigned int num_supplies)
++{
++}
++
+ #endif
+ 
+ static inline int regulator_set_voltage_triplet(struct regulator *regulator,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
