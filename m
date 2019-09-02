@@ -2,177 +2,133 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD20C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4394EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A3821881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA1A2168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbfIBIfk (ORCPT
+        id S1730436AbfIBIiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:35:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54282 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729602AbfIBIfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:35:39 -0400
-X-UUID: 9a2d1042b0744384859d9a769755d2ae-20190902
-X-UUID: 9a2d1042b0744384859d9a769755d2ae-20190902
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1878997567; Mon, 02 Sep 2019 16:35:33 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Sep 2019 16:35:32 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Sep 2019 16:35:32 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Rob Herring <robh@kernel.org>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v1 1/3] clk: mediatek: Register clock gate with device
-Date:   Mon, 2 Sep 2019 16:35:08 +0800
-Message-ID: <1567413310-2589-2-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1567413310-2589-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1567413310-2589-1-git-send-email-weiyi.lu@mediatek.com>
+        Mon, 2 Sep 2019 04:38:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25522 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729756AbfIBIiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:38:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:38:02 -0700
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="184442382"
+Received: from jkrzyszt-desk.ger.corp.intel.com ([172.22.244.17])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:38:00 -0700
+From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?B?TWljaGHFgg==?= Wajdeczko <michal.wajdeczko@intel.com>,
+        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device hot re-plug
+Date:   Mon, 02 Sep 2019 10:37:41 +0200
+Message-ID: <1769080.0GM3UzqXcv@jkrzyszt-desk.ger.corp.intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
+References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com> <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com> <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6D69E1A40769C1063E2B0E0881DEDFBF853F6617C505E698E086CF6C5B2619E92000:8
-X-MTK:  N
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow those clocks under a power domain to do the runtime pm operation
-by forwarding the struct device pointer from clock provider.
+Hi Baolu,
 
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
----
- drivers/clk/mediatek/clk-gate.c |  5 +++--
- drivers/clk/mediatek/clk-gate.h |  3 ++-
- drivers/clk/mediatek/clk-mtk.c  | 16 +++++++++++++---
- drivers/clk/mediatek/clk-mtk.h  |  5 +++++
- 4 files changed, 23 insertions(+), 6 deletions(-)
+On Thursday, August 29, 2019 11:08:18 AM CEST Lu Baolu wrote:
+> Hi,
+> 
+> On 8/29/19 3:58 PM, Janusz Krzysztofik wrote:
+> > Hi Baolu,
+> > 
+> > On Thursday, August 29, 2019 3:43:31 AM CEST Lu Baolu wrote:
+> >> Hi Janusz,
+> >>
+> >> On 8/28/19 10:17 PM, Janusz Krzysztofik wrote:
+> >>>> We should avoid kernel panic when a intel_unmap() is called against
+> >>>> a non-existent domain.
+> >>> Does that mean you suggest to replace
+> >>> 	BUG_ON(!domain);
+> >>> with something like
+> >>> 	if (WARN_ON(!domain))
+> >>> 		return;
+> >>> and to not care of orphaned mappings left allocated?  Is there a way to
+> > inform
+> >>> users that their active DMA mappings are no longer valid and they
+> > shouldn't
+> >>> call dma_unmap_*()?
+> >>>
+> >>>> But we shouldn't expect the IOMMU driver not
+> >>>> cleaning up the domain info when a device remove notification comes and
+> >>>> wait until all file descriptors being closed, right?
+> >>> Shouldn't then the IOMMU driver take care of cleaning up resources still
+> >>> allocated on device remove before it invalidates and forgets their
+> > pointers?
+> >>>
+> >>
+> >> You are right. We need to wait until all allocated resources (iova and
+> >> mappings) to be released.
+> >>
+> >> How about registering a callback for BUS_NOTIFY_UNBOUND_DRIVER, and
+> >> removing the domain info when the driver detachment completes?
+> > 
+> > Device core calls BUS_NOTIFY_UNBOUND_DRIVER on each driver unbind, 
+regardless
+> > of a device being removed or not.  As long as the device is not unplugged 
+and
+> > the BUS_NOTIFY_REMOVED_DEVICE notification not generated, an unbound 
+driver is
+> > not a problem here.
+> > Morever, BUS_NOTIFY_UNBOUND_DRIVER  is called even before
+> > BUS_NOTIFY_REMOVED_DEVICE so that wouldn't help anyway.
+> > Last but not least, bus events are independent of the IOMMU driver use via
+> > DMA-API it exposes.
+> 
+> Fair enough.
+> 
+> > 
+> > If keeping data for unplugged devices and reusing it on device re-plug is 
+not
+> > acceptable then maybe the IOMMU driver should perform reference counting 
+of
+> > its internal resources occupied by DMA-API users and perform cleanups on 
+last
+> > release?
+> 
+> I am not saying that keeping data is not acceptable. I just want to
+> check whether there are any other solutions.
 
-diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
-index 803bf0a..a35cf0b 100644
---- a/drivers/clk/mediatek/clk-gate.c
-+++ b/drivers/clk/mediatek/clk-gate.c
-@@ -150,7 +150,8 @@ struct clk *mtk_clk_register_gate(
- 		int sta_ofs,
- 		u8 bit,
- 		const struct clk_ops *ops,
--		unsigned long flags)
-+		unsigned long flags,
-+		struct device *dev)
- {
- 	struct mtk_clk_gate *cg;
- 	struct clk *clk;
-@@ -174,7 +175,7 @@ struct clk *mtk_clk_register_gate(
- 
- 	cg->hw.init = &init;
- 
--	clk = clk_register(NULL, &cg->hw);
-+	clk = clk_register(dev, &cg->hw);
- 	if (IS_ERR(clk))
- 		kfree(cg);
- 
-diff --git a/drivers/clk/mediatek/clk-gate.h b/drivers/clk/mediatek/clk-gate.h
-index e05c736..3c3329e 100644
---- a/drivers/clk/mediatek/clk-gate.h
-+++ b/drivers/clk/mediatek/clk-gate.h
-@@ -40,7 +40,8 @@ struct clk *mtk_clk_register_gate(
- 		int sta_ofs,
- 		u8 bit,
- 		const struct clk_ops *ops,
--		unsigned long flags);
-+		unsigned long flags,
-+		struct device *dev);
- 
- #define GATE_MTK_FLAGS(_id, _name, _parent, _regs, _shift,	\
- 			_ops, _flags) {				\
-diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-index d28790c..cec1c8a 100644
---- a/drivers/clk/mediatek/clk-mtk.c
-+++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -12,6 +12,7 @@
- #include <linux/delay.h>
- #include <linux/clkdev.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/device.h>
- 
- #include "clk-mtk.h"
- #include "clk-gate.h"
-@@ -93,9 +94,10 @@ void mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
- 	}
- }
- 
--int mtk_clk_register_gates(struct device_node *node,
-+int mtk_clk_register_gates_with_dev(struct device_node *node,
- 		const struct mtk_gate *clks,
--		int num, struct clk_onecell_data *clk_data)
-+		int num, struct clk_onecell_data *clk_data,
-+		struct device *dev)
- {
- 	int i;
- 	struct clk *clk;
-@@ -122,7 +124,7 @@ int mtk_clk_register_gates(struct device_node *node,
- 				gate->regs->set_ofs,
- 				gate->regs->clr_ofs,
- 				gate->regs->sta_ofs,
--				gate->shift, gate->ops, gate->flags);
-+				gate->shift, gate->ops, gate->flags, dev);
- 
- 		if (IS_ERR(clk)) {
- 			pr_err("Failed to register clk %s: %ld\n",
-@@ -136,6 +138,14 @@ int mtk_clk_register_gates(struct device_node *node,
- 	return 0;
- }
- 
-+int mtk_clk_register_gates(struct device_node *node,
-+		const struct mtk_gate *clks,
-+		int num, struct clk_onecell_data *clk_data)
-+{
-+	return mtk_clk_register_gates_with_dev(node,
-+		clks, num, clk_data, NULL);
-+}
-+
- struct clk *mtk_clk_register_composite(const struct mtk_composite *mc,
- 		void __iomem *base, spinlock_t *lock)
- {
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-index 733a11d..0f8ada7 100644
---- a/drivers/clk/mediatek/clk-mtk.h
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -169,6 +169,11 @@ int mtk_clk_register_gates(struct device_node *node,
- 			const struct mtk_gate *clks, int num,
- 			struct clk_onecell_data *clk_data);
- 
-+int mtk_clk_register_gates_with_dev(struct device_node *node,
-+		const struct mtk_gate *clks,
-+		int num, struct clk_onecell_data *clk_data,
-+		struct device *dev);
-+
- struct mtk_clk_divider {
- 	int id;
- 	const char *name;
--- 
-1.8.1.1.dirty
+Then reverting 458b7c8e0dde and applying this patch still resolves the issue 
+for me.  No errors appear when mappings are unmapped on device close after the 
+device has been removed, and domain info preserved on device removal is 
+successfully reused on device re-plug.
+
+Is there anything else I can do to help?
+
+Thanks,
+Janusz
+
+> 
+> Best regards,
+> Baolu
+> 
+
+
+
 
