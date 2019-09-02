@@ -2,209 +2,150 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A416C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1EAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BE6216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA9B216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Zv6I/vnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbfIBLJK (ORCPT
+        id S1731488AbfIBLKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:09:10 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48296 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbfIBLJJ (ORCPT
+        Mon, 2 Sep 2019 07:10:50 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52012 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730277AbfIBLKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:09:09 -0400
-Received: from 79.184.255.97.ipv4.supernova.orange.pl (79.184.255.97) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id ca6a75402afdd719; Mon, 2 Sep 2019 13:09:04 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     tglx@linutronix.de, rafael.j.wysocki@intel.com,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v5 00/10] EFI Specific Purpose Memory Support
-Date:   Mon, 02 Sep 2019 13:09:04 +0200
-Message-ID: <2329745.bCNtynFxEq@kreacher>
-In-Reply-To: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Mon, 2 Sep 2019 07:10:50 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82B9QA3003761;
+        Mon, 2 Sep 2019 11:10:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=8Ppji8qGbcASH6uk0TDCwGeLmvTPI4dJnc6pTo22Ce0=;
+ b=Zv6I/vnEMRyLoBnpGYwaRAqrkkCCAU0ysXuPeQQXMwqhhEV7x+4nNi5rGN//oHNpD1yN
+ W783HlUw2Q+82K48bI4WYxoxXVPB58ztlJye6Z30ECuK0mRxTyEHbdQz5ARmE2WqqGqV
+ lGKOisNhfZuqEhbU87nFHVuV65y1erfqivNHZhcN0HtYYoT7Bud7p+fBdZQJ0doruiH9
+ YUMSLidX45mWL9RfwKSDCtKoWYaKF4wRpV4/181BDvvRqhDCq5gGD/9ulGLfhui9F124
+ hUz0hnig51erZUZUvpakHK2VZDLF6Tvx/I0qHgm3TJmw+mLWjLdtjmETv+xHAt2Ry3pW 2A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2us1cbg549-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Sep 2019 11:10:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x82B9N8P102202;
+        Mon, 2 Sep 2019 11:10:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2uqg83214p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Sep 2019 11:10:37 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x82BAZtN025913;
+        Mon, 2 Sep 2019 11:10:36 GMT
+Received: from [172.17.0.254] (/141.85.241.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Sep 2019 04:10:35 -0700
+Subject: Re: [PATCH] Parallel microcode update in Linux
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, ashok.raj@intel.com,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+        patrick.colp@oracle.com, kanth.ghatraju@oracle.com,
+        Jon.Grimm@amd.com, Thomas.Lendacky@amd.com
+References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
+ <20190901172547.GD1047@bug> <5BACA033-7613-49A9-801C-9F75F4306909@oracle.com>
+ <20190902073931.GA15850@amd>
+From:   Mihai Carabas <mihai.carabas@oracle.com>
+Message-ID: <c2bafc82-2e93-ab5c-d1ac-68ef94d8eebc@oracle.com>
+Date:   Mon, 2 Sep 2019 14:10:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190902073931.GA15850@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: ro
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909020128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9367 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909020128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, August 30, 2019 3:52:18 AM CEST Dan Williams wrote:
-> Changes since v4 [1]:
-> - Rename the facility from "Application Reserved" to "Soft Reserved" to
->   better reflect how the memory is treated. While the spec talks about
->   "specific / application purpose" memory the expected kernel behavior is
->   to make a best effort at reserving the memory from general purpose
->   allocations.
+La 02.09.2019 10:39, Pavel Machek a scris:
+> Hi!
 > 
-> - Add a new efi=nosoftreserve option to disable consideration of the
->   EFI_MEMORY_SP attribute at boot time. This is also motivated by
->   Christoph's initial feedback of allowing the kernel to opt-out of the
->   policy whims of the platform BIOS implementation.
+>>>> +       u64 p0, p1;
+>>>>         int ret;
+>>>>
+>>>>         atomic_set(&late_cpus_in,  0);
+>>>>         atomic_set(&late_cpus_out, 0);
+>>>>
+>>>> +       p0 = rdtsc_ordered();
+>>>> +
+>>>>         ret = stop_machine_cpuslocked(__reload_late, NULL, cpu_online_mask);
+>>>> +
+>>>> +       p1 = rdtsc_ordered();
+>>>> +
+>>>>         if (ret > 0)
+>>>>                 microcode_check();
+>>>>
+>>>>         pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
+>>>>
+>>>> +       pr_info("p0: %lld, p1: %lld, diff: %lld\n", p0, p1, p1 - p0);
+>>>> +
+>>>>         return ret;
+>>>> }
+>>>>
+>>>> We have used a machine with a broken microcode in BIOS and no microcode in
+>>>> initramfs (to bypass early loading).
+>>>>
+>>>> Here are the results for parallel loading (we made two measurements):
+>>>
+>>>> [   18.197760] microcode: updated to revision 0x200005e, date = 2019-04-02
+>>>> [   18.201225] x86/CPU: CPU features have changed after loading microcode, but might not take effect.
+>>>> [   18.201230] microcode: Reload completed, microcode revision: 0x200005e
+>>>> [   18.201232] microcode: p0: 118138123843052, p1: 118138153732656, diff: 29889604
+>>>
+>>>> Here are the results of serial loading:
+>>>>
+>>>> [   17.542518] microcode: updated to revision 0x200005e, date = 2019-04-02
+>>>> [   17.898365] x86/CPU: CPU features have changed after loading microcode, but might not take effect.
+>>>> [   17.898370] microcode: Reload completed, microcode revision: 0x200005e
+>>>> [   17.898372] microcode: p0: 149220216047388, p1: 149221058945422, diff: 842898034
+>>>>
+>>>> One can see that the difference is an order magnitude.
+>>>
+>>> Well, that's impressive, but it seems to finish 300 msec later? Where does that difference
+>>> come from / how much real time do you gain by this?
+>>
+>> The difference comes from the large amount of cores/threads the machine has: 72 in this case, but there are machines with more. As the commit message says initially the microcode was applied serially one by one and now the microcode is updated in parallel on all cores.
+>>
+>> 300ms seems nothing but it is enough to cause disruption in some critical services (e.g. storage) - 300ms in which we do not execute anything on CPUs. Also this 300ms is increasing when the machine is fully loaded with guests.
+>>
 > 
-> - Update the KASLR implementation to exclude soft-reserved memory
->   including the case where soft-reserved memory is specified via the
->   efi_fake_mem= attribute-override command-line option.
-> 
-> - Move the memregion allocator to its own object file. v4 had it in
->   kernel/resource.c which caused compile errors on Sparc. I otherwise
->   could not find an appropriate place to stash it.
-> 
-> - Rebase on a merge of tip/master and rafael/linux-next since the series
->   collides with changes in both those trees.
-> 
-> [1]: https://lore.kernel.org/r/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
-> 
-> ---
-> 
-> Thomas, Rafael,
-> 
-> This happens to collide with both your trees. I think the content
-> warrants going through the x86 tree, but would need to publish commit:
-> 
-> 5c7ed4385424 HMAT: Skip publishing target info for nodes with no online memory
-> 
-> ...in Rafael's tree as a stable id for -tip to pull in, but I'm also
-> open to other options. I've retained Dave's reviewed-by from v4.
-> 
-> ---
-> 
-> The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
-> purpose") memory attribute. This attribute bit replaces the deprecated
-> ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
-> in ACPI 6.3.
-> 
-> Given the increasing diversity of memory types that might be advertised
-> to the operating system, there is a need for platform firmware to hint
-> which memory ranges are free for the OS to use as general purpose memory
-> and which ranges are intended for application specific usage. For
-> example, an application with prior knowledge of the platform may expect
-> to be able to exclusively allocate a precious / limited pool of high
-> bandwidth memory. Alternatively, for the general purpose case, the
-> operating system may want to make the memory available on a best effort
-> basis as a unique numa-node with performance properties by the new
-> CONFIG_HMEM_REPORTING [3] facility.
-> 
-> In support of optionally allowing either application-exclusive and
-> core-kernel-mm managed access to differentiated memory, claim
-> EFI_MEMORY_SP ranges for exposure as "soft reserved" and assigned to a
-> device-dax instance by default. Such instances can be directly owned /
-> mapped by a platform-topology-aware application. Alternatively, with the
-> new kmem facility [4], the administrator has the option to instead
-> designate that those memory ranges be hot-added to the core-kernel-mm as
-> a unique memory numa-node. In short, allow for the decision about what
-> software agent manages soft-reserved memory to be made at runtime.
-> 
-> The patches build on the new HMAT+HMEM_REPORTING facilities merged
-> for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
-> [5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
-> attribute. Specific details on reproducing the test configuration are in
-> patch 10.
-> 
-> [2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
-> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
-> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
-> [5]: http://patchwork.ozlabs.org/cover/1096737/
-> 
-> ---
-> 
-> Dan Williams (10):
->       acpi/numa: Establish a new drivers/acpi/numa/ directory
->       efi: Enumerate EFI_MEMORY_SP
->       x86, efi: Push EFI_MEMMAP check into leaf routines
->       x86, efi: Reserve UEFI 2.8 Specific Purpose Memory for dax
->       x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
->       lib: Uplevel the pmem "region" ida to a global allocator
->       dax: Fix alloc_dax_region() compile warning
->       device-dax: Add a driver for "hmem" devices
->       acpi/numa/hmat: Register HMAT at device_initcall level
->       acpi/numa/hmat: Register "soft reserved" memory as an "hmem" device
-> 
-> 
->  Documentation/admin-guide/kernel-parameters.txt |   19 +++
->  arch/x86/Kconfig                                |   21 ++++
->  arch/x86/boot/compressed/eboot.c                |    7 +
->  arch/x86/boot/compressed/kaslr.c                |   50 +++++++-
->  arch/x86/include/asm/e820/types.h               |    8 +
->  arch/x86/include/asm/efi-stub.h                 |   11 ++
->  arch/x86/include/asm/efi.h                      |   17 +++
->  arch/x86/kernel/e820.c                          |   12 ++
->  arch/x86/kernel/setup.c                         |   19 ++-
->  arch/x86/platform/efi/efi.c                     |   56 +++++++++
->  arch/x86/platform/efi/quirks.c                  |    3 +
->  drivers/acpi/Kconfig                            |    9 --
->  drivers/acpi/Makefile                           |    3 -
->  drivers/acpi/hmat/Makefile                      |    2 
->  drivers/acpi/numa/Kconfig                       |    8 +
->  drivers/acpi/numa/Makefile                      |    3 +
->  drivers/acpi/numa/hmat.c                        |  138 +++++++++++++++++++++--
->  drivers/acpi/numa/srat.c                        |    0 
->  drivers/dax/Kconfig                             |   27 ++++-
->  drivers/dax/Makefile                            |    2 
->  drivers/dax/bus.c                               |    2 
->  drivers/dax/bus.h                               |    2 
->  drivers/dax/dax-private.h                       |    2 
->  drivers/dax/hmem.c                              |   57 ++++++++++
->  drivers/firmware/efi/Makefile                   |    5 +
->  drivers/firmware/efi/efi.c                      |    8 +
->  drivers/firmware/efi/esrt.c                     |    3 +
->  drivers/firmware/efi/fake_mem.c                 |   26 ++--
->  drivers/firmware/efi/fake_mem.h                 |   10 ++
->  drivers/firmware/efi/libstub/efi-stub-helper.c  |   12 ++
->  drivers/firmware/efi/x86-fake_mem.c             |   69 ++++++++++++
->  drivers/nvdimm/Kconfig                          |    1 
->  drivers/nvdimm/core.c                           |    1 
->  drivers/nvdimm/nd-core.h                        |    1 
->  drivers/nvdimm/region_devs.c                    |   13 +-
->  include/linux/efi.h                             |    4 -
->  include/linux/ioport.h                          |    1 
->  include/linux/memregion.h                       |   23 ++++
->  lib/Kconfig                                     |    3 +
->  lib/Makefile                                    |    1 
->  lib/memregion.c                                 |   18 +++
->  41 files changed, 584 insertions(+), 93 deletions(-)
->  create mode 100644 arch/x86/include/asm/efi-stub.h
->  delete mode 100644 drivers/acpi/hmat/Makefile
->  rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (70%)
->  create mode 100644 drivers/acpi/numa/Makefile
->  rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (85%)
->  rename drivers/acpi/{numa.c => numa/srat.c} (100%)
->  create mode 100644 drivers/dax/hmem.c
->  create mode 100644 drivers/firmware/efi/fake_mem.h
->  create mode 100644 drivers/firmware/efi/x86-fake_mem.c
->  create mode 100644 include/linux/memregion.h
->  create mode 100644 lib/memregion.c
-> 
+> Yes, but if you look at the dmesgs I quoted, paralel microcode update
+> actually finished 300msec _later_.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-for the ACPI-related changes in this series.
+That is the serial loading (it is written before: "Here are the results 
+of serial loading:"), parallel is before. Am I missing something?
 
 
-
+> 									Pavel
+> 
 
