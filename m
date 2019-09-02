@@ -2,201 +2,91 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F76FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDA8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7509E21874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qVngIIwu"
+	by mail.kernel.org (Postfix) with ESMTP id 3E6902168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbfIBJrF (ORCPT
+        id S1731021AbfIBJsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:47:05 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51922 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730287AbfIBJrF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:47:05 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k1so13814652wmi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=d0Fmd8+tPhsncECjkpyfN40FKyAZ9dwp7GhgzrHppXE=;
-        b=qVngIIwui1J9tByelwV/mGZbVHFBFHyDB8d+zUgLu3YBU/pt2PyBLaNu6aJVP3PZu+
-         ihkRHhUgNreGoIsCbkx1FNEXIz6W3YzxsPtykCOFZra1Ph5YrfDGBk5pUhNPXnyQhdOw
-         D9ABWajSIFLGxjIDL3ZgE8fjcP4o/qvxAq8ScG/ooH2FuTnduj/fyZWm7jHaTjH42E/D
-         Ei0dGMTfBr8owiAqXxN0DezEgPDMt9Z1EvGzVnLLyrgPVWZ3lXxJ9oZIffCqMvqKZt1l
-         C76KOLTdO84oTFmQbF26UtdsQg6gT2TxP7R0Ue3uQ2+bt919+f7rtplpS6l1WtkiwEYy
-         +qOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=d0Fmd8+tPhsncECjkpyfN40FKyAZ9dwp7GhgzrHppXE=;
-        b=qAzxvc9XFAOtETWeA7sZ1RqJ+0/063i2Lwujf4TP9cZ82lwfqU02dYPfJww+wGF8tO
-         GS3sJzDduLOK5z3qstzDScj3RwyTGlKzP3OUm9fcrQ+qpARqrnVgiu0fSZYGl8JgQT9d
-         gPpiKrLYlpfQ3s4XYmND+YYohALIzR9ZhxjKqjQ5QeSWAngjFBBXFNr8WXdHb3TiyW+u
-         J4Xi9BQwl2LqinXp1sE+JUU3EnwFpsJcCwV9KfDcDjAYNLpR5Ny66Kbwbc8zdyvb6Lkp
-         zY9BH1ZzUZDUURs8nQvll2do1O1UCrmYpd87ryYJVo/4jB9MQO0tc2whQwxH71QDKqyG
-         VXnA==
-X-Gm-Message-State: APjAAAWH6eQQ/CfsnF5w/s2KVLK+GSoFHfVqtDblG7BOAaBr6xvCQioT
-        Tv8xybt7bDPi3a1ZC6xiwIvzpg==
-X-Google-Smtp-Source: APXvYqzpAmIdXWUOa0YAoYYeALNbgpYYaMFH/Rih64cJ0rC02eyJ+NoygykybAEJqvvgTgzMlJYBEA==
-X-Received: by 2002:a1c:f106:: with SMTP id p6mr31938241wmh.148.1567417622917;
-        Mon, 02 Sep 2019 02:47:02 -0700 (PDT)
-Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id b18sm18199417wro.34.2019.09.02.02.47.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 02:47:02 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:47:00 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" 
-        <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tianping Fang <tianping.fang@mediatek.com>
-Subject: Re: [PATCH v6 05/13] rtc: mt6397: move some common definitions into
- rtc.h
-Message-ID: <20190902094700.GS32232@dell>
-References: <20190818135611.7776-1-frank-w@public-files.de>
- <20190818135611.7776-6-frank-w@public-files.de>
+        Mon, 2 Sep 2019 05:48:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:18169 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730106AbfIBJsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:48:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 02:48:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="189515436"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Sep 2019 02:48:03 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4iwM-00086E-H9; Mon, 02 Sep 2019 12:48:02 +0300
+Date:   Mon, 2 Sep 2019 12:48:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 07/10] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Message-ID: <20190902094802.GT2680@smile.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-8-sakari.ailus@linux.intel.com>
+ <20190830125314.GG2680@smile.fi.intel.com>
+ <20190902071130.GF5475@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190818135611.7776-6-frank-w@public-files.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190902071130.GF5475@paasikivi.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 18 Aug 2019, Frank Wunderlich wrote:
-
-> From: Josef Friedl <josef.friedl@speed.at>
+On Mon, Sep 02, 2019 at 10:11:30AM +0300, Sakari Ailus wrote:
+> On Fri, Aug 30, 2019 at 03:53:14PM +0300, Andy Shevchenko wrote:
+> > On Thu, Aug 29, 2019 at 01:10:40PM +0300, Sakari Ailus wrote:
+> > > Instead of implementing our own means of discovering parent nodes, node
+> > > names or counting how many parents a node has, use the newly added
+> > > functions in the fwnode API to obtain that information.
+> > > 
+> > 
+> > Some style comments below.
+> > Nevertheless,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> move code to separate header-file to reuse definitions later
-> in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> Thanks!
+
+> > >  		case 'f':	/* full_name */
+> > > -			buf = device_node_gen_full_name(dn, buf, end);
+> > 
+> > > +			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
+> > > +						      end);
+> > 
+> > Ditto, disregard checkpatch.
 > 
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> changes since v5: none
-> changes since v4: none
-> changes since v3: none
-> changes since v2: add missing commit-message
-> ---
->  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
->  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 54 deletions(-)
->  create mode 100644 include/linux/mfd/mt6397/rtc.h
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index b46ed4dc7015..c08ee5edf865 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,60 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> -#include <linux/irqdomain.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
-> -#include <linux/io.h>
-> -#include <linux/mfd/mt6397/core.h>
-> -
-> -#define RTC_BBPU		0x0000
-> -#define RTC_BBPU_CBUSY		BIT(6)
-> -
-> -#define RTC_WRTGR		0x003c
-> -
-> -#define RTC_IRQ_STA		0x0002
-> -#define RTC_IRQ_STA_AL		BIT(0)
-> -#define RTC_IRQ_STA_LP		BIT(3)
-> -
-> -#define RTC_IRQ_EN		0x0004
-> -#define RTC_IRQ_EN_AL		BIT(0)
-> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
-> -#define RTC_IRQ_EN_LP		BIT(3)
-> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-> -
-> -#define RTC_AL_MASK		0x0008
-> -#define RTC_AL_MASK_DOW		BIT(4)
-> -
-> -#define RTC_TC_SEC		0x000a
-> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
-> -#define RTC_OFFSET_SEC		0
-> -#define RTC_OFFSET_MIN		1
-> -#define RTC_OFFSET_HOUR		2
-> -#define RTC_OFFSET_DOM		3
-> -#define RTC_OFFSET_DOW		4
-> -#define RTC_OFFSET_MTH		5
-> -#define RTC_OFFSET_YEAR		6
-> -#define RTC_OFFSET_COUNT	7
-> -
-> -#define RTC_AL_SEC		0x0018
-> -
-> -#define RTC_PDN2		0x002e
-> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
-> -
-> -#define RTC_MIN_YEAR		1968
-> -#define RTC_BASE_YEAR		1900
-> -#define RTC_NUM_YEARS		128
-> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
-> -
-> -struct mt6397_rtc {
-> -	struct device		*dev;
-> -	struct rtc_device	*rtc_dev;
-> -	struct mutex		lock;
-> -	struct regmap		*regmap;
-> -	int			irq;
-> -	u32			addr_base;
-> -};
-> +#include <linux/mfd/mt6397/rtc.h>
->  
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> new file mode 100644
-> index 000000000000..b702c29e8c74
-> --- /dev/null
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -0,0 +1,71 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2014-2018 MediaTek Inc.
+> Why? I see no reason to avoid wrapping here; in fact, if I'd review a patch
+> that contained such code, I'd ask the submitter to wrap the lines.
 
-This is out of date.
+For sake of readability. If you look to that file we broke that rule few times
+for the same reason.
 
-Once corrected, please apply my:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
