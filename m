@@ -2,87 +2,155 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73347C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6FFC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D209215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E718217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PxjOk9O0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvNFZ1/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfIBJgy (ORCPT
+        id S1731211AbfIBJjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:36:54 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34398 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731184AbfIBJgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:36:54 -0400
-Received: from zn.tnic (p200300EC2F064300457D028AAFF6D0C1.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:4300:457d:28a:aff6:d0c1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A77E21EC06F3;
-        Mon,  2 Sep 2019 11:36:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1567417012;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uMMyoFANBQiUKkXtM+OKELpLztUx2WSmL1GhIv0sKAU=;
-        b=PxjOk9O0dXU9E7bIKDD2ZEc8hbly/jAUZbTtsoHimpotQwXLizCKcd6cVmjf06OhCOxE77
-        djGhJr720LyUela8JuoFpGaw56lj7C29LUqDO/k0KMvE3l0E0g7L4/G4jfMR4YnY16lqTo
-        2aeSwLB8dHhL7pqEyOi9p+YwStKBi7I=
-Date:   Mon, 2 Sep 2019 11:36:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Philip Li <philip.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        linux-input@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
-        pv-drivers@vmware.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        kbuild-all@01.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [kbuild-all] [tip: x86/vmware] input/vmmouse: Update the
- backdoor call with support for new instructions
-Message-ID: <20190902093651.GC9605@zn.tnic>
-References: <20190830010349.GD857@intel.com>
- <alpine.DEB.2.21.1908300802390.1938@nanos.tec.linutronix.de>
- <20190830062053.GA2598@intel.com>
- <20190830080650.GA30413@zn.tnic>
- <20190830143645.GA4784@intel.com>
- <20190830144628.GC30413@zn.tnic>
- <20190830150002.GA6931@intel.com>
- <20190830150856.GB6931@intel.com>
- <20190830193557.GF30413@zn.tnic>
- <20190902011342.GA14687@intel.com>
+        Mon, 2 Sep 2019 05:39:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55428 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729690AbfIBJjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:39:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g207so9797063wmg.5;
+        Mon, 02 Sep 2019 02:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=TuI9rd12MfxFCijDCnxps6RQxMfXZ9+gpL/KNKqGJec=;
+        b=MvNFZ1/jbfE4vo5KXjxBEUkydGqOUTy8/La+RmqGYg5z2JPMO4Qd0g2/1gppakerEf
+         R+9Sj7AHvlz/9wAfHYLgtAfERiRSR9JjQa7RSa0vIohbKMR7hJPH87Bgf/jVqZ8nCo2a
+         l71eHN00Xhi7Dnp4J/12HU59pZXlaoSB6fYGx6pWRC6n+SU6CM82+HEnH4AVywthNWtI
+         zG6kcdf3TtKfKoFTLPdQ8PY/9oi24mzPlTBu1oytWaJG7bv8p7JTIL2cXqRivwJuRva4
+         FfZdqgg24TrobN/IjD4hgTjIitilPnkaWpFgJGp7C1epJ8tFPCy0C2MvvdFI4kMzRgnK
+         stkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=TuI9rd12MfxFCijDCnxps6RQxMfXZ9+gpL/KNKqGJec=;
+        b=lMAqDzdhs2YrajgO95Na1tfpZM5sn2M1J4QACHn3tYe6b5y1VxJkVTqFn/JiWGWOOi
+         W4Dt+3cRncYPLKQAhURwU/iYy4WC5BoN4YRYvad8pFHW8nkxz6E+Mi/jXKMuk8eF4owH
+         Zi2Myrq+KmkMaDDW4sUfSm0gb3Xp4SJ3bVq4A8LbzFbQLk6orU4Ogj8O1X6Enn9gW6qA
+         6PRmOA624L3a9yo2undCiCLes7vBG99se4dXD2AUYWa8j98WZXdXQEgpGpeqxUF1tLs9
+         D1VYG/o/MS8OcMRezv0QwVg7TrikTBoa1wiCr9N+LQz7fNCXAEr5HfgCAxpaB+H/ryNm
+         977w==
+X-Gm-Message-State: APjAAAVBuSOuSmX54XHj6tL6jWdT9l7Muhb76qJwlBIjn0rkyUNDkQ9s
+        ZmldsHGTGvcx/BMc3+WCxhADV/Kvv1U=
+X-Google-Smtp-Source: APXvYqxLMl9twPuZRaBPGCt6IQrTMUDpWGDiRa+m+TO/WYNNG1GFTxiKSkMi81n2v/MwR6YMiUQ8ZQ==
+X-Received: by 2002:a1c:c909:: with SMTP id f9mr35144152wmb.52.1567417142665;
+        Mon, 02 Sep 2019 02:39:02 -0700 (PDT)
+Received: from arch-late (87-196-73-69.net.novis.pt. [87.196.73.69])
+        by smtp.gmail.com with ESMTPSA id t123sm14100440wma.40.2019.09.02.02.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 02:39:01 -0700 (PDT)
+References: <20190805233505.21167-1-slongerbeam@gmail.com> <20190805233505.21167-16-slongerbeam@gmail.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list\:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/22] media: imx7-media-csi: Create media links in bound notifier
+In-reply-to: <20190805233505.21167-16-slongerbeam@gmail.com>
+Date:   Mon, 02 Sep 2019 10:38:59 +0100
+Message-ID: <m3blw35970.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190902011342.GA14687@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 09:13:42AM +0800, Philip Li wrote:
-> Thanks Boris, it is applied, and will take effect soon.
+Hi Steve,
+On Tue 06 Aug 2019 at 00:34, Steve Longerbeam wrote:
+> Implement a notifier bound op to register media links from the remote
+> sub-device's source pad(s) to the CSI sink pad.
+>
+> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+> ---
+>  drivers/staging/media/imx/imx7-media-csi.c | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+> index a1c96c52a606..f71ac485f780 100644
+> --- a/drivers/staging/media/imx/imx7-media-csi.c
+> +++ b/drivers/staging/media/imx/imx7-media-csi.c
+> @@ -196,6 +196,11 @@ struct imx7_csi {
+>  	struct completion last_eof_completion;
+>  };
+>
+> +static inline struct imx7_csi *notifier_to_dev(struct v4l2_async_notifier *n)
+>
 
-Seems to has taken effect. I got the first build report.
+As the other one add the namespace for the function name:
+imx7_csi_notifier_to_dev
 
-Thx!
+other than this, looks good to me.
 
--- 
-Regards/Gruss,
-    Boris.
+Cheers,
+  Rui
+> +{
+> +	return container_of(n, struct imx7_csi, notifier);
+> +}
+> +
+>  static u32 imx7_csi_reg_read(struct imx7_csi *csi, unsigned int offset)
+>  {
+>  	return readl(csi->regbase + offset);
+> @@ -1173,6 +1178,23 @@ static int imx7_csi_parse_endpoint(struct device *dev,
+>  	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
+>  }
+>
+> +static int imx7_csi_notify_bound(struct v4l2_async_notifier *notifier,
+> +				 struct v4l2_subdev *sd,
+> +				 struct v4l2_async_subdev *asd)
+> +{
+> +	struct imx7_csi *csi = notifier_to_dev(notifier);
+> +	struct media_pad *sink = &csi->sd.entity.pads[IMX7_CSI_PAD_SINK];
+> +
+> +	return media_create_fwnode_pad_links(sink,
+> +					     dev_fwnode(csi->sd.dev),
+> +					     &sd->entity,
+> +					     dev_fwnode(sd->dev), 0);
+> +}
+> +
+> +static const struct v4l2_async_notifier_operations imx7_csi_notify_ops = {
+> +	.bound = imx7_csi_notify_bound,
+> +};
+> +
+>  static int imx7_csi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1253,6 +1275,8 @@ static int imx7_csi_probe(struct platform_device *pdev)
+>
+>  	v4l2_async_notifier_init(&csi->notifier);
+>
+> +	csi->notifier.ops = &imx7_csi_notify_ops;
+> +
+>  	ret = v4l2_async_register_fwnode_subdev(&csi->sd, &csi->notifier,
+>  						sizeof(struct v4l2_async_subdev),
+>  						NULL, 0,
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
