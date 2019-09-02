@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E7CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72B8C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE27E22DD6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935BE23697
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfIBIQw (ORCPT
+        id S1730343AbfIBIQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:16:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56186 "EHLO
+        Mon, 2 Sep 2019 04:16:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56256 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730130AbfIBIQi (ORCPT
+        with ESMTP id S1730234AbfIBIQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:16:38 -0400
+        Mon, 2 Sep 2019 04:16:45 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i4hVh-0007xA-5X; Mon, 02 Sep 2019 10:16:25 +0200
+        id 1i4hVs-00084P-MX; Mon, 02 Sep 2019 10:16:36 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C00921C0793;
-        Mon,  2 Sep 2019 10:16:23 +0200 (CEST)
-Date:   Mon, 02 Sep 2019 08:16:23 -0000
-From:   "tip-bot2 for Kyle Meyer" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3CD351C0793;
+        Mon,  2 Sep 2019 10:16:32 +0200 (CEST)
+Date:   Mon, 02 Sep 2019 08:16:32 -0000
+From:   "tip-bot2 for Tzvetomir Stoyanov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf svghelper: Replace MAX_NR_CPUS with
- perf_env::nr_cpus_online
-Cc:     Kyle Meyer <kyle.meyer@hpe.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Subject: [tip: perf/core] libtraceevent: Change users plugin directory
+Cc:     Patrick McLean <chutzpah@gentoo.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russ Anderson <russ.anderson@hpe.com>,
+        linux-trace-devel@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190827214352.94272-3-meyerk@stormcage.eag.rdlabs.hpecorp.net>
-References: <20190827214352.94272-3-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+In-Reply-To: <20190801074959.22023-4-tz.stoyanov@gmail.com>
+References: <20190801074959.22023-4-tz.stoyanov@gmail.com>
 MIME-Version: 1.0
-Message-ID: <156741218370.17269.13149756432525958447.tip-bot2@tip-bot2>
+Message-ID: <156741219210.17327.15327991314741454472.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,141 +63,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f78f96676a256d7fa171a54b271a2ad2c6555c9c
-Gitweb:        https://git.kernel.org/tip/f78f96676a256d7fa171a54b271a2ad2c6555c9c
-Author:        Kyle Meyer <meyerk@hpe.com>
-AuthorDate:    Tue, 27 Aug 2019 16:43:47 -05:00
+Commit-ID:     e97fd1383cd77c467d2aed7fa4e596789df83977
+Gitweb:        https://git.kernel.org/tip/e97fd1383cd77c467d2aed7fa4e596789df83977
+Author:        Tzvetomir Stoyanov <tstoyanov@vmware.com>
+AuthorDate:    Mon, 05 Aug 2019 16:43:15 -04:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 29 Aug 2019 17:38:32 -03:00
+CommitterDate: Sat, 31 Aug 2019 22:19:28 -03:00
 
-perf svghelper: Replace MAX_NR_CPUS with perf_env::nr_cpus_online
+libtraceevent: Change users plugin directory
 
-'nr_cpus', the number of CPUs online during a record session bound by
-MAX_NR_CPUS, can be used as a dynamic alternative for MAX_NR_CPUS in
-svg_build_topology_map().
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-The value of nr_cpus can be passed into str_to_bitmap(),
-scan_core_topology(), and svg_build_topology_map() to replace
-MAX_NR_CPUS as well.
-
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russ Anderson <russ.anderson@hpe.com>
-Link: http://lore.kernel.org/lkml/20190827214352.94272-3-meyerk@stormcage.eag.rdlabs.hpecorp.net
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/svghelper.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index 2e99715..fef0f8a 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -697,7 +697,8 @@ struct topology {
- 	int sib_thr_nr;
- };
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 8352d53..a39cdd0 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -62,15 +62,15 @@ set_plugin_dir := 1
  
--static void scan_thread_topology(int *map, struct topology *t, int cpu, int *pos)
-+static void scan_thread_topology(int *map, struct topology *t, int cpu,
-+				 int *pos, int nr_cpus)
- {
- 	int i;
- 	int thr;
-@@ -706,28 +707,24 @@ static void scan_thread_topology(int *map, struct topology *t, int cpu, int *pos
- 		if (!test_bit(cpu, cpumask_bits(&t->sib_thr[i])))
- 			continue;
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index 8ca28de..e1f7ddd 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -18,7 +18,7 @@
+ #include "event-utils.h"
+ #include "trace-seq.h"
  
--		for_each_set_bit(thr,
--				 cpumask_bits(&t->sib_thr[i]),
--				 MAX_NR_CPUS)
-+		for_each_set_bit(thr, cpumask_bits(&t->sib_thr[i]), nr_cpus)
- 			if (map[thr] == -1)
- 				map[thr] = (*pos)++;
- 	}
- }
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
  
--static void scan_core_topology(int *map, struct topology *t)
-+static void scan_core_topology(int *map, struct topology *t, int nr_cpus)
- {
- 	int pos = 0;
- 	int i;
- 	int cpu;
- 
- 	for (i = 0; i < t->sib_core_nr; i++)
--		for_each_set_bit(cpu,
--				 cpumask_bits(&t->sib_core[i]),
--				 MAX_NR_CPUS)
--			scan_thread_topology(map, t, cpu, &pos);
-+		for_each_set_bit(cpu, cpumask_bits(&t->sib_core[i]), nr_cpus)
-+			scan_thread_topology(map, t, cpu, &pos, nr_cpus);
- }
- 
--static int str_to_bitmap(char *s, cpumask_t *b)
-+static int str_to_bitmap(char *s, cpumask_t *b, int nr_cpus)
- {
- 	int i;
- 	int ret = 0;
-@@ -740,7 +737,7 @@ static int str_to_bitmap(char *s, cpumask_t *b)
- 
- 	for (i = 0; i < m->nr; i++) {
- 		c = m->map[i];
--		if (c >= MAX_NR_CPUS) {
-+		if (c >= nr_cpus) {
- 			ret = -1;
- 			break;
- 		}
-@@ -755,10 +752,12 @@ static int str_to_bitmap(char *s, cpumask_t *b)
- 
- int svg_build_topology_map(struct perf_env *env)
- {
--	int i;
-+	int i, nr_cpus;
- 	struct topology t;
- 	char *sib_core, *sib_thr;
- 
-+	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
-+
- 	t.sib_core_nr = env->nr_sibling_cores;
- 	t.sib_thr_nr = env->nr_sibling_threads;
- 	t.sib_core = calloc(env->nr_sibling_cores, sizeof(cpumask_t));
-@@ -773,7 +772,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	}
- 
- 	for (i = 0; i < env->nr_sibling_cores; i++) {
--		if (str_to_bitmap(sib_core, &t.sib_core[i])) {
-+		if (str_to_bitmap(sib_core, &t.sib_core[i], nr_cpus)) {
- 			fprintf(stderr, "topology: can't parse siblings map\n");
- 			goto exit;
- 		}
-@@ -782,7 +781,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	}
- 
- 	for (i = 0; i < env->nr_sibling_threads; i++) {
--		if (str_to_bitmap(sib_thr, &t.sib_thr[i])) {
-+		if (str_to_bitmap(sib_thr, &t.sib_thr[i], nr_cpus)) {
- 			fprintf(stderr, "topology: can't parse siblings map\n");
- 			goto exit;
- 		}
-@@ -790,16 +789,16 @@ int svg_build_topology_map(struct perf_env *env)
- 		sib_thr += strlen(sib_thr) + 1;
- 	}
- 
--	topology_map = malloc(sizeof(int) * MAX_NR_CPUS);
-+	topology_map = malloc(sizeof(int) * nr_cpus);
- 	if (!topology_map) {
- 		fprintf(stderr, "topology: no memory\n");
- 		goto exit;
- 	}
- 
--	for (i = 0; i < MAX_NR_CPUS; i++)
-+	for (i = 0; i < nr_cpus; i++)
- 		topology_map[i] = -1;
- 
--	scan_core_topology(topology_map, &t);
-+	scan_core_topology(topology_map, &t, nr_cpus);
- 
- 	return 0;
- 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
