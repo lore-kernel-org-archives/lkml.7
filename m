@@ -2,146 +2,205 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5095C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F92BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC0D216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=typeblog-net.20150623.gappssmtp.com header.i=@typeblog-net.20150623.gappssmtp.com header.b="xZeRG54Y"
+	by mail.kernel.org (Postfix) with ESMTP id 6FC59216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbfIBMqD (ORCPT
+        id S1730822AbfIBMqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:46:03 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33994 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730558AbfIBMqC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:46:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so8990445pfp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 05:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=typeblog-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UxK0D/fheIqSygqLr5s8Jq9AxF3QesYF0ilcNylte7o=;
-        b=xZeRG54YWKgB5dbF3y59khScl7yI/HflO++6A95O/QzD0f+8H5FUe2QQ3uAhJzFOqW
-         MOZhRtvQsBNttdrNi6MzxpT9+vo+cisz5qhPDQhREQA2QDNNLA2JR8SF4xoUAe0v7Ju0
-         uDuMxGHHYUZFf9CHrGwFQEI3PszflA2AtaQ8qPf4tyjkU9iFpBKQ2wWTdDX2V1ODXDqB
-         5Vv9Vd0Lty5qxiYaMFwrRNYzk+TYv6WpdYIPAyM+o/Fninkl1JRoboszMWFnjzGQiEFn
-         dGv7QXx+L13ylOkzwOA3ssTwjv36EHLkuJ3yFJAo74527kCN8levJC1nPNfz+YY7WZHc
-         K2ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UxK0D/fheIqSygqLr5s8Jq9AxF3QesYF0ilcNylte7o=;
-        b=OgwHYf4NN3Xp2AYC/mOyWi1y4ye5f4drt1tJnew75NbNKr+avBbvGD9s+zjolrx66r
-         npJFSCSiyBBGa9gKlsplcncBQI1npHgHRx7oXcGTknVAVWPQsHon7O/GFnPLORxgEhNz
-         pN50jX/50Bvs1pEweMDCHVHpaM8U6euRxIHWBBoKmVicDVHWNPjKbyYtWGTtB8PqQKKE
-         oPWeUD/rVZT4a+IaKLFY07Fmw46mLRjHPzxW2jM6YKj6LrtTOLCVlqrFs8kwLBq5tq+b
-         v2sujlWihHDKIvhIPI/JM4NaeRstOjv4dgTFzPeokQgBJvWJ3G885cGUpoUxcvWLtSxU
-         vXsQ==
-X-Gm-Message-State: APjAAAXIQCeg7+Y+mzx6aIgR+a0+hKoRhsvLt9BTse0UuK/m69pJcSJ8
-        uNjwWVqTDcvCvhwVkyAK9sCu7w==
-X-Google-Smtp-Source: APXvYqxIvcyPxpnb3yh6eeP7HxC1AmtMZNRoGdxnjCor2F+TkQe4/r3whehjlKum19mXExKsD3b4OQ==
-X-Received: by 2002:a17:90a:d0c6:: with SMTP id y6mr3298714pjw.76.1567428361563;
-        Mon, 02 Sep 2019 05:46:01 -0700 (PDT)
-Received: from peter-pc.home ([91.207.174.229])
-        by smtp.gmail.com with ESMTPSA id 2sm15884652pjh.13.2019.09.02.05.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 05:46:00 -0700 (PDT)
-From:   Peter Cai <peter@typeblog.net>
-Cc:     Peter Cai <peter@typeblog.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH v3 1/2] gpio: acpi: add quirk to override GpioInt polarity
-Date:   Mon,  2 Sep 2019 20:43:51 +0800
-Message-Id: <20190902124352.12291-1-peter@typeblog.net>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190831030916.13172-1-peter@typeblog.net>
-References: <20190831030916.13172-1-peter@typeblog.net>
+        Mon, 2 Sep 2019 08:46:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:53558 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730558AbfIBMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:46:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBF90337;
+        Mon,  2 Sep 2019 05:46:05 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B3C53F246;
+        Mon,  2 Sep 2019 05:46:05 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 13:46:03 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190902124603.GJ9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-10-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902031716.43195-10-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On GPD P2 Max, the firmware could not reset the touch panel correctly.
-The kernel needs to take on the job instead, but the GpioInt definition
-in DSDT specifies ActiveHigh while the GPIO pin should actually be
-ActiveLow.
+On Mon, Sep 02, 2019 at 11:17:14AM +0800, Xiaowei Bao wrote:
+> Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> difference between LS1 and LS2 platform, so refactor the code of
+> the EP driver.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2: 
+>  - This is a new patch for supporting the ls1088a and ls2088a platform.
+> v3:
+>  - Adjust the some struct assignment order in probe function.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 72 +++++++++++++++++++-------
+>  1 file changed, 53 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 5f0cb99..723bbe5 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -20,27 +20,29 @@
+>  
+>  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+>  
+> -struct ls_pcie_ep {
+> -	struct dw_pcie		*pci;
+> -	struct pci_epc_features	*ls_epc;
+> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +
+> +struct ls_pcie_ep_drvdata {
+> +	u32				func_offset;
+> +	const struct dw_pcie_ep_ops	*ops;
+> +	const struct dw_pcie_ops	*dw_pcie_ops;
+>  };
+>  
+> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +struct ls_pcie_ep {
+> +	struct dw_pcie			*pci;
+> +	struct pci_epc_features		*ls_epc;
+> +	const struct ls_pcie_ep_drvdata *drvdata;
+> +};
+>  
+>  static int ls_pcie_establish_link(struct dw_pcie *pci)
+>  {
+>  	return 0;
+>  }
+>  
+> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+>  	.start_link = ls_pcie_establish_link,
+>  };
+>  
+> -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> -	{ .compatible = "fsl,ls-pcie-ep",},
+> -	{ },
+> -};
+> -
+>  static const struct pci_epc_features*
+>  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+>  {
+> @@ -87,10 +89,39 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  }
+>  
+> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> +						u8 func_no)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> +
+> +	WARN_ON(func_no && !pcie->drvdata->func_offset);
+> +	return pcie->drvdata->func_offset * func_no;
+> +}
+> +
+> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+>  	.ep_init = ls_pcie_ep_init,
+>  	.raise_irq = ls_pcie_ep_raise_irq,
+>  	.get_features = ls_pcie_ep_get_features,
+> +	.func_conf_select = ls_pcie_ep_func_conf_select,
+> +};
+> +
+> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> +	.ops = &ls_pcie_ep_ops,
+> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> +};
+> +
+> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> +	.func_offset = 0x20000,
+> +	.ops = &ls_pcie_ep_ops,
+> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> +};
+> +
+> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> +	{ },
 
-We need to override the polarity defined by DSDT. The GPIO driver
-already allows defining polarity in acpi_gpio_params, but the option is
-not applied to GpioInt.
+This removes support for "fsl,ls-pcie-ep" - was that intentional? If you do
+plan to drop it please make sure you explain why in the commit message. See
+also my comments in your dt-binding patch.
 
-This patch adds a new quirk that enables the polarity specified in
-acpi_gpio_params to also be applied to GpioInt.
+Thanks,
 
-Signed-off-by: Peter Cai <peter@typeblog.net>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+Andrew Murray
 
-v2: rebased to gpio/for-next, moved quirk out of the gpioint
-conditional.
-
-v3: no change, series update.
----
- drivers/gpio/gpiolib-acpi.c   | 9 +++++++++
- include/linux/gpio/consumer.h | 6 ++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index fdee8afa5339..ab16ea61a8fa 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -603,6 +603,15 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
- 			lookup->info.polarity = lookup->active_low;
- 		}
-+
-+		/*
-+		 * Override the polarity specified by GpioInt if
-+		 * ACPI_GPIO_QUIRK_OVERRIDE_POLARITY is set.
-+		 */
-+		if (lookup->info.quirks & ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) {
-+			dev_warn(&lookup->info.adev->dev, FW_BUG "Incorrect polarity specified by GpioInt, overriding.\n");
-+			lookup->info.polarity = lookup->active_low;
-+		}
- 	}
- 
- 	return 1;
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index b70af921c614..7e9f24ebb085 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -622,6 +622,12 @@ struct acpi_gpio_mapping {
-  * get GpioIo type explicitly, this quirk may be used.
-  */
- #define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
-+/*
-+ * Use the GPIO polarity (ActiveHigh / ActiveLow) from acpi_gpio_params
-+ * for GpioInt as well. The default behavior is to use the one specified
-+ * by GpioInt, which can be incorrect on some devices.
-+ */
-+#define ACPI_GPIO_QUIRK_OVERRIDE_POLARITY	BIT(2)
- 
- 	unsigned int quirks;
- };
--- 
-2.23.0
-
+>  };
+>  
+>  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> @@ -103,7 +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+>  	int ret;
+>  
+>  	ep = &pci->ep;
+> -	ep->ops = &pcie_ep_ops;
+> +	ep->ops = pcie->drvdata->ops;
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>  	if (!res)
+> @@ -142,20 +173,23 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	if (!ls_epc)
+>  		return -ENOMEM;
+>  
+> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> -	if (IS_ERR(pci->dbi_base))
+> -		return PTR_ERR(pci->dbi_base);
+> +	pcie->drvdata = of_device_get_match_data(dev);
+>  
+> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+>  	pci->dev = dev;
+> -	pci->ops = &ls_pcie_ep_ops;
+> -	pcie->pci = pci;
+> +	pci->ops = pcie->drvdata->dw_pcie_ops;
+>  
+>  	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+>  
+> +	pcie->pci = pci;
+>  	pcie->ls_epc = ls_epc;
+>  
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> +
+>  	platform_set_drvdata(pdev, pcie);
+>  
+>  	ret = ls_add_pcie_ep(pcie, pdev);
+> -- 
+> 2.9.5
+> 
