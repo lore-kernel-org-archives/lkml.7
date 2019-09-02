@@ -2,141 +2,183 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED6CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D81C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5130D216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p1wdTs4X"
+	by mail.kernel.org (Postfix) with ESMTP id 84D98206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbfIBMvQ (ORCPT
+        id S1730705AbfIBMwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:51:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52252 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729690AbfIBMvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:51:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2SRLGmzt9ygJ+k1758a7WeMkOp6QVS9SpfevL0fmQfQ=; b=p1wdTs4XDK/LQWfm/yELbp49u
-        phV0PdWujXYthfryE4TkwNYPNSjVRtyhrjikDgf3P3SMQVhM4XRwApkyG5tQzhuUZhc9Bz3ebmUh7
-        qJ3KM1c0uT+TU9dK8YwGrjAmSVzRQYI1dlCZedOFGQzdvco5MqhqYrS1C6rDLvn7gNyBDqmIo/xKW
-        G8ajsycXwdssNAKgMAPBfcubUQjWvXjRoblHim8dRKXzpDUS1z/aSV/OxkTDhuv2tYkihbFEL8+Ig
-        Joaenckr004Pz8x2NJ1XiFbwZSkzUEc91fCcuCSy47u20XG+/CKVdTloaqFrnExpE814on13j+pV8
-        EmKp8xVSg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4lnZ-0004LV-VP; Mon, 02 Sep 2019 12:51:09 +0000
-Date:   Mon, 2 Sep 2019 05:51:09 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
-        Chao Yu <yuchao0@huawei.com>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v6 03/24] erofs: add super block operations
-Message-ID: <20190902125109.GA9826@infradead.org>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-4-gaoxiang25@huawei.com>
- <20190829101545.GC20598@infradead.org>
- <20190901085452.GA4663@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Mon, 2 Sep 2019 08:52:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35880 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729571AbfIBMwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:52:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E7DD0B61F;
+        Mon,  2 Sep 2019 12:52:50 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 14:52:49 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Tim.Bird@sony.com, sfr@canb.auug.org.au, frowand.list@gmail.com,
+        sergey.senozhatsky@gmail.com, sergey.senozhatsky.work@gmail.com,
+        rostedt@goodmis.org, kunit-dev@googlegroups.com,
+        rdunlap@infradead.org, sboyd@kernel.org, shuah@kernel.org,
+        joe@perches.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2] kunit: fix failure to build without printk
+Message-ID: <20190902125249.qs7ql54vnsgf2665@pathway.suse.cz>
+References: <20190828094929.GA14038@jagdpanzerIV>
+ <8b2d63bf-56cd-e8f5-e8ee-2891c2c1be8f@kernel.org>
+ <f2d5b474411b2940d62198490f06e77890fbdb32.camel@perches.com>
+ <20190830183821.GA30306@google.com>
+ <bc688b00b2995e4b11229c3d4d90f532e00792c7.camel@perches.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977A8392@USCULXMSG01.am.sony.com>
+ <ca01d8c4823c63db52fc0f18d62334aeb5634a50.camel@perches.com>
+ <CAFd5g45X8bOiTWn5TMe3iEFwASafr6dWo6c4bG32uRKbQ+r5oA@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977A8416@USCULXMSG01.am.sony.com>
+ <20190830233710.GA101591@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901085452.GA4663@hsiangkao-HP-ZHAN-66-Pro-G1>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190830233710.GA101591@google.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 04:54:55PM +0800, Gao Xiang wrote:
-> No modification at this... (some comments already right here...)
-
->  20 /* 128-byte erofs on-disk super block */
->  21 struct erofs_super_block {
-> ...
->  24         __le32 features;        /* (aka. feature_compat) */
-> ...
->  38         __le32 requirements;    /* (aka. feature_incompat) */
-> ...
->  41 };
-
-This is only cosmetic, why not stick to feature_compat and
-feature_incompat?
-
-> > > +	bh = sb_bread(sb, 0);
+On Fri 2019-08-30 16:37:10, Brendan Higgins wrote:
+> On Fri, Aug 30, 2019 at 11:22:43PM +0000, Tim.Bird@sony.com wrote:
+> > > -----Original Message-----
+> > > From: Brendan Higgins 
+> > > 
+> > > On Fri, Aug 30, 2019 at 3:46 PM Joe Perches <joe@perches.com> wrote:
+> > > >
+> > > > On Fri, 2019-08-30 at 21:58 +0000, Tim.Bird@sony.com wrote:
+> > > > > > From: Joe Perches
+> > > > []
+> > > > > IMHO %pV should be avoided if possible.  Just because people are
+> > > > > doing it doesn't mean it should be used when it is not necessary.
+> > > >
+> > > > Well, as the guy that created %pV, I of course
+> > > > have a different opinion.
+> > > >
+> > > > > >  then wouldn't it be easier to pass in the
+> > > > > > > kernel level as a separate parameter and then strip off all printk
+> > > > > > > headers like this:
+> > > > > >
+> > > > > > Depends on whether or not you care for overall
+> > > > > > object size.  Consolidated formats with the
+> > > > > > embedded KERN_<LEVEL> like suggested are smaller
+> > > > > > overall object size.
+> > > > >
+> > > > > This is an argument I can agree with.  I'm generally in favor of
+> > > > > things that lessen kernel size creep. :-)
+> > > >
+> > > > As am I.
+> > > 
+> > > Sorry, to be clear, we are talking about the object size penalty due
+> > > to adding a single parameter to a function. Is that right?
 > > 
-> > Is there any good reasons to use buffer heads like this in new code
-> > vs directly using bios?
-> 
-> As you said, I want it in the page cache.
-> 
-> The reason "why not use read_mapping_page or similar?" is simply
-> read_mapping_page -> .readpage -> (for bdev inode) block_read_full_page
->  -> create_page_buffers anyway...
-> 
-> sb_bread haven't obsoleted... It has similar function though...
-
-With the different that it keeps you isolated from the buffer_head
-internals.  This seems to be your only direct use of buffer heads,
-which while not deprecated are a bit of an ugly step child.  So if
-you can easily avoid creating a buffer_head dependency in a new
-filesystem I think you should avoid it.
-
-> > > +	sbi->build_time = le64_to_cpu(layout->build_time);
-> > > +	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
-> > > +
-> > > +	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
-> > > +	memcpy(sbi->volume_name, layout->volume_name,
-> > > +	       sizeof(layout->volume_name));
+> > Not exactly.  The argument is that pre-pending the different KERN_LEVEL
+> > strings onto format strings can result in several versions of nearly identical strings
+> > being compiled into the object file.  By parameterizing this (that is, adding
+> > '%s' into the format string, and putting the level into the string as an argument),
+> > it prevents this duplication of format strings.
 > > 
-> > s_uuid should preferably be a uuid_t (assuming it is a real BE uuid,
-> > if it is le it should be a guid_t).
+> > I haven't seen the data on duplication of format strings, and how much this
+> > affects it, but little things can add up.  Whether it matters in this case depends
+> > on whether the format strings that kunit uses are also used elsewhere in the kernel,
+> > and whether these same format strings are used with multiple kernel message levels.
+> >  -- Tim
 > 
-> For this case, I have no idea how to deal with...
-> I have little knowledge about this uuid stuff, so I just copied
-> from f2fs... (Could be no urgent of this field...)
-
-Who fills out this field in the on-disk format and how?
-
-> The background is Al's comments in erofs v2....
-> (which simplify erofs_fill_super logic)
-> https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
+> I thought this portion of the discussion was about whether Joe's version
+> of kunit_printk was better or my critique of his version of kunit_printk:
 > 
-> with a specific notation...
-> https://lore.kernel.org/r/20190721040547.GF17978@ZenIV.linux.org.uk/
+> Joe's:
+> > > > > -void kunit_printk(const char *level,
+> > > > > -		  const struct kunit *test,
+> > > > > -		  const char *fmt, ...)
+> > > > > +void kunit_printk(const struct kunit *test, const char *fmt, ...)
+> > > > >  {
+> > > > > +	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
+> > > > >  	struct va_format vaf;
+> > > > >  	va_list args;
+> > > > > +	int kern_level;
+> > > > >
+> > > > >  	va_start(args, fmt);
+> > > > >
+> > > > > +	while ((kern_level = printk_get_level(fmt)) != 0) {
+> > > > > +		size_t size = printk_skip_level(fmt) - fmt;
+> > > > > +
+> > > > > +		if (kern_level >= '0' && kern_level <= '7') {
+> > > > > +			memcpy(lvl, fmt,  size);
+> > > > > +			lvl[size] = '\0';
+> > > > > +		}
+> > > > > +		fmt += size;
+> > > > > +	}
+> > > > > +
+> > > > >  	vaf.fmt = fmt;
+> > > > >  	vaf.va = &args;
+> > > > >
+> > > > > -	kunit_vprintk(test, level, &vaf);
+> > > > > +	printk("%s\t# %s %pV\n", lvl, test->name, &vaf);
+> > > > >
+> > > > >  	va_end(args);
+> > > > >  }
 > 
-> "
-> > OTOH, for the case of NULL ->s_root ->put_super() won't be called
-> > at all, so in that case you need it directly in ->kill_sb().
-> "
+> Mine:
+> >  void kunit_printk(const char *level,
+> >  		  const struct kunit *test,
+> >  		  const char *fmt, ...)
+> >  {
+> >  	struct va_format vaf;
+> >  	va_list args;
+> > 
+> >  	va_start(args, fmt);
+> > 
+> > +	fmt = printk_skip_headers(fmt);
+> > +
+> >  	vaf.fmt = fmt;
+> >  	vaf.va = &args;
+> > 
+> > -	kunit_vprintk(test, level, &vaf);
+> > +	printk("%s\t# %s %pV\n", level, test->name, &vaf);
+> > 
+> >  	va_end(args);
+> >  }
+> 
+> I thought you and Joe were arguing that "Joe's" resulted in a smaller
+> object size than "Mine" (not to be confused with the actual patch I
+> presented here, which is what Sergey suggested I do on a different
+> thread).
+> 
+> I really don't feel strongly about what Sergey suggested I do (which is
+> what this patch originally introduced), versus, what Joe suggested,
+> versus what I suggested in response to Joe (or any of the things
+> suggested on other threads). I just want to pick one, fix the breakage
+> in linux-next, and move on with my life.
 
-Yes.  Although none of that is relevant for this initial version,
-just after more features are added.
+I am a bit lost in all the versions ;-) Though, I like most this
+patch. I think that it is based on Sergey's suggestion.
+
+I think that object size is not a huge concern for unit testing.
+Also if I get it correctly, the object is bigger only when
+the same string is used with different log levels. I am not
+sure how often this happen.
+
+Feel free to use for this patch:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
+
+> Cheers
