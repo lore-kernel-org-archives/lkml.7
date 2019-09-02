@@ -2,114 +2,110 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408BFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B78C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2225322DD6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CF02339D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TVizoMOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbfIBIAG (ORCPT
+        id S1729983AbfIBIAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:00:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45188 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbfIBIAG (ORCPT
+        Mon, 2 Sep 2019 04:00:11 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58266 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbfIBIAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:00:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3FF54283C69
-Received: by earth.universe (Postfix, from userid 1000)
-        id 0FA1A3C0B7F; Mon,  2 Sep 2019 10:00:01 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 10:00:01 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: N900: Remove isp1704_charger.h record
-Message-ID: <20190902080001.66rj5spzaauarvqy@earth.universe>
-References: <20190325212737.27322-1-joe@perches.com>
- <20190813061358.17223-1-efremov@linux.com>
+        Mon, 2 Sep 2019 04:00:10 -0400
+Received: from pendragon.ideasonboard.com (231.125-247-81.adsl-dyn.isp.belgacom.be [81.247.125.231])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C978A303;
+        Mon,  2 Sep 2019 10:00:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1567411207;
+        bh=U+9BdVklBawHPdtmd1jDm2xYgA2xb6dvC4qDJJQPuj4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TVizoMOIVAQ91Rw3rlYiZsHsYYnwHTkOuzT4MXo5mnFmEwlvJv6jVeWaSXVG6vxAD
+         eoYN6fUEgo98vTplt75lwjnNW8l0uf3XatutwyxQVCNHYt7Yv95GMnPLUabENdQF8H
+         OVuIGS3nheSDeXX7ioLBaeilkIxDAVH94aDirHoA=
+Date:   Mon, 2 Sep 2019 11:00:02 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
+Message-ID: <20190902080002.GC4777@pendragon.ideasonboard.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-3-jacopo@jmondi.org>
+ <20190814224340.GD5015@pendragon.ideasonboard.com>
+ <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
+ <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
+ <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
+ <cb36e8a0-b941-ff37-e58c-0f9b7f62116a@xs4all.nl>
+ <20190901172457.GC1047@bug>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="krhurshqx4pzxoo3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190813061358.17223-1-efremov@linux.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190901172457.GC1047@bug>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Pavel,
 
---krhurshqx4pzxoo3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Sep 01, 2019 at 07:24:57PM +0200, Pavel Machek wrote:
+> >>>>>> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
+> >>>>>>      value down. A value of zero stops the motion if one is in progress
+> >>>>>>      and has no effect otherwise.
+> >>>>>>
+> >>>>>> +``V4L2_CID_LOCATION (integer)``
+> >>>>>
+> >>>>> Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
+> >>>>
+> >>>> Probably a better name, if a bit long. But we might need other location
+> >>>> controls in the future (e.g. flash location), so CID_LOCATION is just too
+> >>>> generic.
+> >>>
+> >> 
+> >> Thanks for the feedback.
+> >> 
+> >>> Note that the location defines themselves can most likely be used with any
+> >>> LOCATION control, so V4L2_LOCATION_FRONT would be fine with any control.
+> >>>
+> >> 
+> >> What do you think instead of the control type? Would a single integer
+> >> control do or an integer menu one would be better? I see merit in both
+> >> proposals actually...
+> > 
+> > Single integer. It's read-only, so it just reports the location.
+> > 
+> > It would be different if this was a writable control: then you need to
+> > know which locations are possible to set, and that requires a menu type.
+> > 
+> > But it doesn't make sense to set the location from software. However, the
+> > location might change as a result of other changes: e.g. if the camera
+> > has motor control of the tilt and the tilt changes from forward facing to
+> > downward facing, then the driver might change the location from FRONT
+> > to DOWN. A convoluted example perhaps, but this is just brainstorming.
+> 
+> There are phones with exactly such camera setup. And yes, it makes
+> sense to be writable in that case, as software can move the camera in
+> such case.
 
-Hi,
+Out of curiosity, what phones are those ?
 
-On Tue, Aug 13, 2019 at 09:13:58AM +0300, Denis Efremov wrote:
-> Update MAINTAINERS to reflect that isp1704_charger.h file was removed.
->=20
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Pali Roh=E1r <pali.rohar@gmail.com>
-> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Cc: linux-pm@vger.kernel.org
-> Fixes: f5d782d46aa5 ("power: supply: isp1704: switch to gpiod API")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
+-- 
+Regards,
 
-Thanks, queued.
-
--- Sebastian
-
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 29514fc19b01..2776e0797ae3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11400,7 +11400,6 @@ NOKIA N900 POWER SUPPLY DRIVERS
->  R:	Pali Roh=E1r <pali.rohar@gmail.com>
->  F:	include/linux/power/bq2415x_charger.h
->  F:	include/linux/power/bq27xxx_battery.h
-> -F:	include/linux/power/isp1704_charger.h
->  F:	drivers/power/supply/bq2415x_charger.c
->  F:	drivers/power/supply/bq27xxx_battery.c
->  F:	drivers/power/supply/bq27xxx_battery_i2c.c
-> --=20
-> 2.21.0
->=20
-
---krhurshqx4pzxoo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1szAAACgkQ2O7X88g7
-+pod9A/+JUsyTh1EkTARCpyGyhu7UUwz6kyUB8RDrf8A7++VC3dElKc1lMqrpFw/
-W7xUSMjB2KXwx+im1D5UYOwnBo1AKnV7mfjOwcw1SxJ8xc69nNoMT2SjNYayi3iH
-VZDa9jOwU7k5+kSNOfacOLq45ZZKIkkA8uyV4qYL0sBzekItPaQ3Ag8QCTBbm+02
-2IDIQp4ifKuQrNPcMp25XN8wT+qTFYITBTAsmNHuAv86NXpHYmYi0M7FK8uEP8Pp
-8ch5v5MdXmRt91D5mwtqIEGBh2MX2nI8J9jUzBDZ49GgYK46BC5cVqs2OXLaXLzW
-ySIUHbJqvJ7PlWlOfuDREwrrIFDbQ+ytT4FUdLx1P0kpjKaV/jFEBJ6vJrrt9Smx
-1R1UCzeJiePXFa2DvqHLbux16KSB63FuGhoHbfiF17mAfYgYUlevSVzPTidED+My
-Yfe9Xt86gW6g2mZXf33XCEHmBpdB7rKZ+NWEIEzrNSLmuoy+Pz9kn08c0iEgxHm9
-9zGlSuLWJbL/QySZLSduO2ZR7DaqvlMmnX8WlViHanAxobnu3ZLxwQIaPPLIGeTu
-mIdoOy4+sQyE6QdJs7AJFEhYXCw8eZ0CI5jvxdzGIgMjfOpnpqJVRbv8pExyyald
-+IVdpxrU6LpFHawwe5PFETDG+PaQhzRdyTDDWUfraWpvtctvRPk=
-=tdy4
------END PGP SIGNATURE-----
-
---krhurshqx4pzxoo3--
+Laurent Pinchart
