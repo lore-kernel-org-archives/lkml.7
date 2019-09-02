@@ -6,53 +6,56 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8520FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195D0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A352184D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D3F21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfIBD3k (ORCPT
+        id S1729441AbfIBD3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 23:29:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59191 "EHLO ozlabs.org"
+        Sun, 1 Sep 2019 23:29:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57283 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729286AbfIBD3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 23:29:38 -0400
+        id S1728926AbfIBD3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:29:39 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 46MFv41xF7z9sN1; Mon,  2 Sep 2019 13:29:36 +1000 (AEST)
+        id 46MFv46j2Qz9sPJ; Mon,  2 Sep 2019 13:29:36 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 63ce271b5e377deaddace4bac6dafb6e79d2bee4
-In-Reply-To: <cdaf4bbbb64c288a077845846f04b12683f8875a.1566817807.git.christophe.leroy@c-s.fr>
+X-powerpc-patch-commit: f7a0bf7d904e902e13024986b7b357181ee30849
+In-Reply-To: <d644eaf7dff8cc149260066802af230bdf34fded.1566834712.git.christophe.leroy@c-s.fr>
 To:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/prom: convert PROM_BUG() to standard trap
-Message-Id: <46MFv41xF7z9sN1@ozlabs.org>
+Subject: Re: [PATCH 1/6] powerpc/32s: add an option to exclusively select powerpc 601
+Message-Id: <46MFv46j2Qz9sPJ@ozlabs.org>
 Date:   Mon,  2 Sep 2019 13:29:36 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-26 at 11:10:23 UTC, Christophe Leroy wrote:
-> Prior to commit 1bd98d7fbaf5 ("ppc64: Update BUG handling based on
-> ppc32"), BUG() family was using BUG_ILLEGAL_INSTRUCTION which
-> was an invalid instruction opcode to trap into program check
-> exception.
+On Mon, 2019-08-26 at 15:52:13 UTC, Christophe Leroy wrote:
+> Powerpc 601 is rather old powerpc which as some important
+> limitations compared to other book3s/32 powerpcs:
+> - No Timebase.
+> - Common BATs for instruction and data.
+> - No execution protection in segment registers.
+> - No RI bit in MSR
+> - ...
 > 
-> That commit converted them to using standard trap instructions,
-> but prom/prom_init and their PROM_BUG() macro were left over.
-> head_64.S and exception-64s.S were left aside as well.
+> It is starting to be difficult and cumbersome to maintain
+> kernels that are compatible both with 601 and other 6xx cores.
 > 
-> Convert them to using the standard BUG infrastructure.
+> Create a compiletime option to exclusively select either powerpc 601
+> or other 6xx.
 > 
 > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Applied to powerpc next, thanks.
+Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/63ce271b5e377deaddace4bac6dafb6e79d2bee4
+https://git.kernel.org/powerpc/c/f7a0bf7d904e902e13024986b7b357181ee30849
 
 cheers
