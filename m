@@ -2,104 +2,128 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66769C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7873CC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B3B217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567424332;
-	bh=OpXxr+BU7p7KY33dk2QGMbECJ2xkRL8tD6em4euS+OI=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=khPufJnSlzsKJ9rB3H7R/gvCvvsNXx2C01twcgon61AoOlUCbtUI29nKLxczr6D9E
-	 WvWvcXeyVigJE2OWn+X5BIIRDLOZM9RJxBscTJ3Bbg1R+yjNm7i2b/CPUHJUUZoZ1P
-	 j37i7izqUmhfflI9h/9rHxq3FLsmeq8hN0zVPN7c=
+	by mail.kernel.org (Postfix) with ESMTP id 52261217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:39:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srxps2g4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbfIBLiv (ORCPT
+        id S1730717AbfIBLjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:38:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfIBLiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:38:50 -0400
-Received: from localhost (smbhubinfra01.hotspot.hub-one.net [213.174.99.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F0A217F4;
-        Mon,  2 Sep 2019 11:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567424329;
-        bh=OpXxr+BU7p7KY33dk2QGMbECJ2xkRL8tD6em4euS+OI=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=khYckrjHLYrPNF+DLRGhNBfCjgMQqqQsWK1NB5KuaWlopBlWjd5X8T5z04GamgAQV
-         R51kwjGe2B1t45Vbg1E53IvO8NaEf4VreaDhzYn2gmdvytiRmD6KW9ohqmZsF6MIlk
-         prJ2BS0EdCXdFPirFpAfjg639HJgdJD56kA0givg=
-Date:   Mon, 2 Sep 2019 13:38:46 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, wens@csie.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: pine64-plus: Add PHY
- regulator delay
-Message-ID: <20190902113846.752jdgr3czywuieh@flea>
-References: <20190825130336.14154-1-jernej.skrabec@siol.net>
- <20190827133443.fdxl5wjmgkerc3uh@flea>
- <20190827134806.5l7dxyvzjrvabh7o@core.my.home>
+        Mon, 2 Sep 2019 07:39:05 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39529 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfIBLjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 07:39:05 -0400
+Received: by mail-ed1-f66.google.com with SMTP id u6so9480569edq.6;
+        Mon, 02 Sep 2019 04:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dJABXDobIWh1nooLsy7S53th7Uqr+4tppXx8bmIrX/E=;
+        b=srxps2g4NXpNgtJjDKxOu1fYmUhRVg5OTVtujqKbouQgKQhe7bdE7m37VmUsCLuLtb
+         YQ6IhHchMua1pC1YoY2mPAjvrgunUN+5WNBdMjbiumFxlPihFjJFAjIMcNwOuTSmq30o
+         PnlHAmwICgb+4iYJn73ht147Gy0J0E5QhjhqAh41AXsZbKS+bhymS0lDiqJWoh9kSRij
+         i1z5TgsmnU0LNtlk+Zmfv/NLPKYnO9lrmEMF4nszPyk7OdJjLyBj6F4FarGCurD28rM1
+         BlGFYJd3drJ+gSwsZ+HhLkT85Ye7cI0ekuKVnJgfFM5h9w4b3Ev3nV4bTvkeMI5lbgSL
+         ywIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dJABXDobIWh1nooLsy7S53th7Uqr+4tppXx8bmIrX/E=;
+        b=f+p2Kr/tr3Pn0mnzNGBASKrYEC1jk0oNKYIyl7P3/FU421WohT6hJCe58+bki2VWSJ
+         y1UKaYO8yW9LVGTNMYT78yjwWtx+ZvXTIvAsJVdd/Grzpm9sLXj6zBTXoAx0zJR4WoPl
+         q77No+SqwpzBcnQKgHHLxYidhUCvNFChXD82+pazG0UG0sIRBdohNv9QAUxdKok3vrpr
+         L8pHP99K+SVBti7PSkkds5Dc7SH2KVFUbjnntXBaOF/F331+oFUsKeb3/RH1od7d0Io5
+         aBwnCbEsnsoPian+i40UEHnfI4GSL1CAnDfbLZMGoQb8PHTz5igMlGX5kp2c8JVKcnSK
+         Ax6w==
+X-Gm-Message-State: APjAAAU1Q+u1rN11xUoWs1aYw267Y/xWLyABOYZx7WxgX4DodtRBXFwQ
+        mINogqTWoBflEUIAysNMqP0=
+X-Google-Smtp-Source: APXvYqxD0OTk4zunuo+zB+jioNUHxiTrPa/e6jRWtgJj83asCZF0rf+8ALlsOJheTmDEANFXKtyzNg==
+X-Received: by 2002:aa7:c81a:: with SMTP id a26mr15644204edt.26.1567424342732;
+        Mon, 02 Sep 2019 04:39:02 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id c1sm1938836ejm.85.2019.09.02.04.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 04:39:00 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 13:38:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 3/6] PCI: tegra: Add support to configure sideband pins
+Message-ID: <20190902113859.GF19263@ulmo>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-4-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="924gEkU1VlJlwnwX"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190827134806.5l7dxyvzjrvabh7o@core.my.home>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190828172850.19871-4-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:48:06PM +0200, Ond=C5=99ej Jirman wrote:
-> Hi,
->
-> On Tue, Aug 27, 2019 at 03:34:43PM +0200, Maxime Ripard wrote:
-> > On Sun, Aug 25, 2019 at 03:03:36PM +0200, Jernej Skrabec wrote:
-> > > Depending on kernel and bootloader configuration, it's possible that
-> > > Realtek ethernet PHY isn't powered on properly. It needs some time
-> > > before it can be used.
-> > >
-> > > Fix that by adding 100ms ramp delay to regulator responsible for
-> > > powering PHY.
-> > >
-> > > Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun=
-8i")
-> > > Suggested-by: Ondrej Jirman <megous@megous.com>
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > How was that delay found?
->
-> I suggested it. There's no delay in the dwmac-sun8i driver, so after enab=
-ling
-> the phy power, it will start accessing it over MDIO right away, which is =
-not
-> good.
->
-> I suggested the value based on post-reset delay in the PHY's datasheet (3=
-0ms).
-> Multiplied ~3x (if I remember correctly) to get some safety margin. Chip =
-has
-> more to do then after the HW reset, and regulator also needs some time to
-> ramp-up.
 
-That sounds reasonable, can you add that as a comment?
+--924gEkU1VlJlwnwX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
-Maxime
+On Wed, Aug 28, 2019 at 10:58:47PM +0530, Vidya Sagar wrote:
+> Add support to configure sideband signal pins when information is present
+> in respective controller's device-tree node.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V3:
+> * Used 'dev' instead of 'pcie->dev'
+>=20
+> V2:
+> * Addressed review comment from Andrew Murray
+> * Handled failure case of pinctrl_pm_select_default_state() cleanly
+>=20
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--924gEkU1VlJlwnwX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/1MACgkQ3SOs138+
+s6GwEQ/8DQfqPImwI/sN8KkGlUTrymHeb5p1LcJjyObL3s5FzC1VNuPP6ztRPNMj
+XUJ3C0LOyCBrPharGw9CyUpDmhzkhQaMqVmCekuocA6xMEQmG3ggIHaEW3wPwGwt
+3evIIRgTAwoYT84m/q2cy/zOvLq8omwFGwuknOWcQCy6upDCKJt1hQAcnfg4+GQN
+E/iGl21g1hfsZUlyGd9NAYZ2F9ZWbKaymoV+LmKRnB2R6U+D0dJb30w5oLnC+Gp/
+2vtjAAa4c7re7ZG4j3/rzdOqzPjpJFa5KLHDV1I05lZi7rmyxmclmrhbrT0Fvwht
+8l8lkb9WWcvAdpCv4aVPEqp/ocDN40uIPhqIwzjpbRmc28Z8/6Nc26Ps7xzn9WX1
+yj7nQSQWkczWQPbNADrAlPCDpDBke/tzpNpjEX3IY7ltLvdCbV9p1LP3BU+aqCiV
+nKcZIG1DMv70fmQ5ZZ9ln0ylERYt4c/69nGXiowdUNfwZ7/zD8tEhsmU332JHEOP
+SGdAkxiz3K5m2MZ3DzyECyBcASTwZTWWzHsYmgqM2yFEOa1k1Ih7joY+nmd3xrAe
+DnvcfZKW8dug/2zwdraLt/Dkju2bczWXHLVLhJpISEh8he9H1jsuZho7u+2wacQJ
+2LZA7HIIANTX/M06bh+sbv6UG+WL7AImXDhDVpUqpuqmqDk3uaI=
+=eL6G
+-----END PGP SIGNATURE-----
+
+--924gEkU1VlJlwnwX--
