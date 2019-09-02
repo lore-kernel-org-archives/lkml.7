@@ -2,150 +2,117 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E28C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FFAC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D86021744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDE821881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567412466;
-	bh=BbZKUhNFpw8vqDlmoSyZ7Qmvj6Kb+53Fk7hn/ROwkJo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=imfjPOyVhZUd+iDKQoxIn2fdiiEySbAcgnbJvo+wXY4vya+kd6T9c0UtvXog1NekX
-	 /jItJcECqLqG9ZTxMok//nf5LiCIOPZDDBjG3XFl1xGPXXVOrMl6VV81oMG0KxabMP
-	 DTHELGyEGbIA7iZx/VP1L+4eijJx9+BE7EJE8ESM=
+	s=default; t=1567412712;
+	bh=hJqNd1nAJxTWeoG8cUFOGVuydTeiAcks6J/HnRnrdCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qwRnBaWj6dYKjGs//kJfhSzZWIdHGOrvtdTvjC4WpuEc76ckcjTqN1HJsRb9Uchn6
+	 sew2/hdzncaRI09Xkd8Se+WvYNyHvltsiTP/Pye4rJLk425ahucsMoS1S5rBwVyw15
+	 9iOSTv8autlhLwwAiaQWbd6yhlENYx9i1T6mUBok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbfIBIVG (ORCPT
+        id S1729843AbfIBIZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:21:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:50152 "EHLO foss.arm.com"
+        Mon, 2 Sep 2019 04:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729408AbfIBIVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:21:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A799028;
-        Mon,  2 Sep 2019 01:21:04 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3032B3F71A;
-        Mon,  2 Sep 2019 01:21:03 -0700 (PDT)
-Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup
- capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     swboyd@chromium.org, evgreen@chromium.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-4-ilina@codeaurora.org>
- <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
- <20190830155853.GA5224@codeaurora.org>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <11d14b08-27ae-d25a-6056-55c1cfbd89b1@kernel.org>
-Date:   Mon, 2 Sep 2019 09:21:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726609AbfIBIZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:25:11 -0400
+Received: from earth.universe (dyndsl-091-096-044-124.ewe-ip-backbone.de [91.96.44.124])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F40EC21744;
+        Mon,  2 Sep 2019 08:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567412710;
+        bh=hJqNd1nAJxTWeoG8cUFOGVuydTeiAcks6J/HnRnrdCQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CSKXHmZVccWeRF1swatxhhvfPbdfotFTHJhA/Wq7BnjRstbc5TxYRywGykOTGOAh+
+         eIq0L6cf/BwuM9gFhJ2eLGCSQWNiYDlkSMHlxJIBTQIvMavt7Fwh18IJtc1JsspM8e
+         3fhI5XLsXL5L75XAx1RV96LcJi2yV8fSJTt+ckvI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 9A4513C0B7F; Mon,  2 Sep 2019 10:25:07 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 10:25:07 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Michael Nosthoff <michael@nosthoff.rocks>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the battery tree
+Message-ID: <20190902082507.fmfays3lnnkyigmv@earth.universe>
+References: <20190902071041.ukvc64tg5tjttk6w@earth.universe>
+ <79b6-5d6cc580-3-35015040@57153312>
 MIME-Version: 1.0
-In-Reply-To: <20190830155853.GA5224@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hobeijwfp3tvdwi2"
+Content-Disposition: inline
+In-Reply-To: <79b6-5d6cc580-3-35015040@57153312>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 16:58, Lina Iyer wrote:
-> On Fri, Aug 30 2019 at 08:50 -0600, Marc Zyngier wrote:
->> [Please use my kernel.org address in the future. The days of this
->> arm.com address are numbered...]
->>
-> Sure, will update and repost.
-> 
->> On 29/08/2019 19:11, Lina Iyer wrote:
->>> Introduce a new domain for wakeup capable GPIOs. The domain can be
->>> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
->>> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
->>> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
->>> corresponding PDC interrupt as its parent.
->>>
->>> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
->>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>> ---
->>>  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
->>>  include/linux/soc/qcom/irq.h |  34 ++++++++++++
->>>  2 files changed, 129 insertions(+), 9 deletions(-)
->>>  create mode 100644 include/linux/soc/qcom/irq.h
->>>
 
-[...]
+--hobeijwfp3tvdwi2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
->>> new file mode 100644
->>> index 000000000000..73239917dc38
->>> --- /dev/null
->>> +++ b/include/linux/soc/qcom/irq.h
->>> @@ -0,0 +1,34 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only */
->>> +
->>> +#ifndef __QCOM_IRQ_H
->>> +#define __QCOM_IRQ_H
->>> +
->>> +#include <linux/irqdomain.h>
->>> +
->>> +#define GPIO_NO_WAKE_IRQ	~0U
->>> +
->>> +/**
->>> + * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
->>> + * capable interrupts by different interrupt controllers.
->>> + *
->>> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
->>> + *                                  interrupt configuration is done at PDC
->>> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
->>> + */
->>> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
->>> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
->>
->> Any reason why you're starting at bit 17? The available range in from
->> bit 16... But overall, it would be better if you expressed it as:
->>
->> #define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP	(IRQ_DOMAIN_FLAG_NONCORE << 0)
->> #define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP (IRQ_DOMAIN_FLAG_NONCORE << 1)
->>
-> Okay.
-> 
->>> +
->>> +/**
->>> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
->>> + *                                configuration
->>> + * @parent: irq domain
->>> + *
->>> + * This QCOM specific irq domain call returns if the interrupt controller
->>> + * requires the interrupt be masked at the child interrupt controller.
->>> + */
->>> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
->>> +{
->>> +	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
->>> +}
->>> +
->>> +#endif
->>>
->>
->> But most of this file isn't used by this patch, so maybe it should be
->> moved somewhere else...
->>
-> Apart from creating the domain, this is not used here, but a separate
-> patch seemed excessive. Let me know if you have any suggestions.
+Hi,
 
-My personal preference would be to move it into the patch that actually
-makes use of this.
+On Mon, Sep 02, 2019 at 09:32:47AM +0200, Michael Nosthoff wrote:
+> On Monday, September 02, 2019 09:10 CEST, Sebastian Reichel <sre@kernel.o=
+rg> wrote:
+> > On Mon, Sep 02, 2019 at 09:31:31AM +1000, Stephen Rothwell wrote:
+> > > In commit
+> > >
+> > > b19aca4eb2d2 ("power: supply: sbs-battery: only return health when ba=
+ttery present")
+> > >
+> > > [...]
+> > >
+> > > Please do not split Fixes tags over more than one line.
+> >
+> > I have fixed this and rebased the branch, so the issue should be
+> > gone tomororw. Thanks for the notice,
+>
+> I think you missed that the second commit
+>=20
+> 38fa8b9f75ea ("power: supply: sbs-battery: use correct flags field")
+>=20
+> also needs this fix.
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Right, now also fixed.
+
+-- Sebastian
+
+--hobeijwfp3tvdwi2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1s0d8ACgkQ2O7X88g7
++prcOhAAm9EtUz32jofNUdITle8kHeokXBQnmIVM1qaac1+iEiO7DUt5F3tGCyyg
+Jk5q8zZMHIzGeZY1TEvMPtxUnsPsrKEDRZTOYfLQ2uwMC4gKMgce8kTqM6aiQopl
+BQzbJpS+zvDcMIUa1my7TynvmZaCLETwkUfY03QlJlvPIabzpdECcZr2h83jTSTL
+p9JwUA1RJH3dqkrkLNjevjqh5z1DMTn/vvl8UnmypYmCSesypHl51VeWzM/RZ6DQ
+5J/jkjelRsWmTaMnFOtG3WtxZOJDbk0GGbhMb2f8rRPgtlOQqSEhbOpxSlH7Md78
+iTsZLL0FkZXqhR8nsbm5tEOZHemiF5AyNaGKM+y9S+24DI35EsZHQlpR+oFok4lk
+YKbwNJSl483v9uaIb5LZPJxxDPJY7HtR0+tue8UPqjHOeb7SN47ppMJJo8nAZFA1
+VlnAPEauj6GnI0JbbEIkHhK/HNS39aK+p+3ngiRPQV9HiRaVOC9QSU83LD+Eviza
+f4lDVUtlhF3Hl3VTvEVdlrxzCC10ASX9ou+3B8VAbBnUGmioJG19cgqgDF3vFbEL
+6c8gBk6S+Z9XrRla2cecBxM7nW+3ShzqLNAbdoY/hMRIHwBYE3PDLbhP8taIsIA8
+5Z3PuLrFga0B9Sja0NZGG8LM1VeIIt12goRpFUfKDhvhWA7tMw0=
+=MVak
+-----END PGP SIGNATURE-----
+
+--hobeijwfp3tvdwi2--
