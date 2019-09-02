@@ -2,98 +2,80 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2080C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA56C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A13A022CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2176420674
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfIBTTe (ORCPT
+        id S1727123AbfIBTYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:19:34 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:51571 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfIBTTd (ORCPT
+        Mon, 2 Sep 2019 15:24:24 -0400
+Received: from smtprelay0234.hostedemail.com ([216.40.44.234]:39724 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726750AbfIBTYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:19:33 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x82JJAia011666;
-        Tue, 3 Sep 2019 04:19:11 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
- Tue, 03 Sep 2019 04:19:10 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x82JJAlm011657
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 3 Sep 2019 04:19:10 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v2 1/3] ASoC: es8316: judge PCM rate at later timing
-To:     Mark Brown <broonie@kernel.org>
-Cc:     David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190831162650.19822-1-katsuhiro@katsuster.net>
- <20190902120248.GA5819@sirena.co.uk>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <1a3c5934-4731-d474-e9d5-795e8337b180@katsuster.net>
-Date:   Tue, 3 Sep 2019 04:19:10 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 15:24:24 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 848D3999D;
+        Mon,  2 Sep 2019 19:24:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: idea71_260a5d3da1f24
+X-Filterd-Recvd-Size: 1675
+Received: from XPS-9350.home (unknown [47.151.137.30])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  2 Sep 2019 19:24:21 +0000 (UTC)
+Message-ID: <6c8bbcbe2f3af638d2286baf1acc9bfb723bf95b.camel@perches.com>
+Subject: Re: [PATCH] power: reset: reboot-mode: Fix author email format
+From:   Joe Perches <joe@perches.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     matwey.kornilov@gmail.com,
+        "open list:SYSTEM RESET/SHUTDOWN DRIVERS" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 02 Sep 2019 12:24:20 -0700
+In-Reply-To: <20190902190622.vvl7hcgfqayf6xmk@earth.universe>
+References: <20190713154248.24382-1-matwey@sai.msu.ru>
+         <20190902190622.vvl7hcgfqayf6xmk@earth.universe>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20190902120248.GA5819@sirena.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
-
-Thanks a lot for your comments.
-
-On 2019/09/02 21:02, Mark Brown wrote:
-> On Sun, Sep 01, 2019 at 01:26:48AM +0900, Katsuhiro Suzuki wrote:
->> This patch change the judge timing about playing/capturing PCM rate.
->>
->> Original code set constraints list of PCM rate limits at set_sysclk.
->> This strategy works well if system is using fixed rate clock.
->>
->> But some boards and SoC (such as RockPro64 and RockChip I2S) has
->> connected SoC MCLK out to ES8316 MCLK in. In this case, SoC side I2S
->> will choose suitable frequency of MCLK such as fs * mclk-fs when
->> user starts playing or capturing.
+On Mon, 2019-09-02 at 21:06 +0200, Sebastian Reichel wrote:
+> Hi,
 > 
-> The best way to handle this is to try to support both fixed and variable
-> clock rates, some other drivers do this by setting constraints based on
-> MCLK only if the MCLK has been set to a non-zero value.  They have the
-> machine drivers reset the clock rate to 0 when it goes idle so that no
-> constraints are applied then.  This means that if the machine has a
-> fixed clock there will be constraints, and that constraints get applied
-> if one direction has started and fixed the clock, but still allows the
-> clock to be varied where possible.
+> On Sat, Jul 13, 2019 at 06:42:48PM +0300, Matwey V. Kornilov wrote:
+> > Closing angle bracket was missing.
+> > 
+> > Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> > ---
 > 
+> Thanks, queued.
 
-In my understanding, fixed and variable clock both use set_sysclk() for 
-telling their MCLK to codec driver. For fixed MCLK cases we need to
-apply constraint but for variable MCLK cases we should not set
-constraints at set_sysclk(). How can we identify these two cases...?
+This is relatively widespread.
 
-For example, if machine sets very low MCLK once, the driver applies low
-Fs constraints which I2S driver cannot support to. After that this sound
-card cannot play/capture any Fs rate. It seems set_sysclk() is not
-called if Fs does not match constraints. So we have no chance to
-reconfigure MCLK by set_sysclk().
+There are 80 more of these in the kernel tree.
 
+$ git grep -P 'MODULE_AUTHOR.*<[^>]+$' | wc -l
+81
 
-Best Regards,
-Katsuhiro Suzuki
+Here's a trivial little script to fix them all:
+
+$ git grep -P -n 'MODULE_AUTHOR.*<[^>]+$' | \
+  while read entry ; do \
+    file=$(echo $entry|cut -f1 -d:); \
+    line=$(echo $entry|cut -f2 -d:); \
+    sed -i "${line}s/\");/>\");/" $file; \
+  done
+
