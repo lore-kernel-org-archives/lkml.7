@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD99FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4D2C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D85421874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCC8217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfIBJxZ (ORCPT
+        id S1731371AbfIBJx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:53:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46676 "EHLO
+        Mon, 2 Sep 2019 05:53:27 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46692 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729626AbfIBJxX (ORCPT
+        with ESMTP id S1731181AbfIBJxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:53:23 -0400
+        Mon, 2 Sep 2019 05:53:25 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id EACDD28CB77
+        with ESMTPSA id D77F928CBA0
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -46,14 +46,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Collabora kernel ML <kernel@collabora.com>, arnd@arndb.de,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v7 02/10] mfd / platform: cros_ec: Move cros-ec core driver out from MFD
-Date:   Mon,  2 Sep 2019 11:53:01 +0200
-Message-Id: <20190902095309.18574-3-enric.balletbo@collabora.com>
+Subject: [PATCH v7 03/10] mfd / platform: cros_ec: Miscellaneous character device to talk with the EC
+Date:   Mon,  2 Sep 2019 11:53:02 +0200
+Message-Id: <20190902095309.18574-4-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190902095309.18574-1-enric.balletbo@collabora.com>
 References: <20190902095309.18574-1-enric.balletbo@collabora.com>
@@ -64,319 +60,393 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now, the ChromeOS EC core driver has nothing related to an MFD device, so
-move that driver from the MFD subsystem to the platform/chrome subsystem.
+That's a driver to talk with the ChromeOS Embedded Controller via a
+miscellaneous character device, it creates an entry in /dev for every
+instance and implements basic file operations for communicating with the
+Embedded Controller with an userspace application. The API is moved to
+the uapi folder, which is supposed to contain the user space API of the
+kernel.
+
+Note that this will replace current character device interface
+implemented in the cros-ec-dev driver in the MFD subsystem. The idea is
+to move all the functionality that extends the bounds of what MFD was
+designed to platform/chrome subsystem.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 Tested-by: Gwendal Grignou <gwendal@chromium.org>
 Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
 
 Changes in v7: None
-Changes in v6: None
-Changes in v5: None
+Changes in v6:
+- Move cros_ec_chardev.h to include/linux/platform_data
+
+Changes in v5:
+- Prefix the versions strings with CROS_EC_DEV_VERSION (Gwendal)
+
 Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Changes in v3:
+- Fix 'linux/mfd/cros_ec.h' is not exported (reported by lkp)
 
- drivers/extcon/Kconfig                     |  2 +-
- drivers/hid/Kconfig                        |  2 +-
- drivers/i2c/busses/Kconfig                 |  2 +-
- drivers/iio/common/cros_ec_sensors/Kconfig |  2 +-
- drivers/input/keyboard/Kconfig             |  2 +-
- drivers/media/platform/Kconfig             |  3 +--
- drivers/mfd/Kconfig                        | 15 ++-------------
- drivers/mfd/Makefile                       |  2 --
- drivers/platform/chrome/Kconfig            | 21 +++++++++++++++++----
- drivers/platform/chrome/Makefile           |  1 +
- drivers/{mfd => platform/chrome}/cros_ec.c |  0
- drivers/power/supply/Kconfig               |  2 +-
- drivers/pwm/Kconfig                        |  2 +-
- drivers/rtc/Kconfig                        |  2 +-
- sound/soc/codecs/Kconfig                   |  4 ++--
- sound/soc/qcom/Kconfig                     |  2 +-
- 16 files changed, 32 insertions(+), 32 deletions(-)
- rename drivers/{mfd => platform/chrome}/cros_ec.c (100%)
+Changes in v2:
+- Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
+- Remove dev_info in probe, anyway we will see the chardev or not if the
+  probe fails (Greg Kroah-Hartman)
 
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index fa1804460e8c..aac507bff135 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -181,7 +181,7 @@ config EXTCON_USB_GPIO
+ drivers/mfd/cros_ec_dev.c                     |   4 +-
+ drivers/platform/chrome/Kconfig               |  11 +
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_ec_chardev.c     | 251 ++++++++++++++++++
+ .../linux/platform_data/cros_ec_chardev.h     |  10 +-
+ 5 files changed, 272 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
+ rename drivers/mfd/cros_ec_dev.h => include/linux/platform_data/cros_ec_chardev.h (83%)
+
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 41dccced5026..4c96445b1bf5 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -7,15 +7,17 @@
  
- config EXTCON_USBC_CROS_EC
- 	tristate "ChromeOS Embedded Controller EXTCON support"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	help
- 	  Say Y here to enable USB Type C cable detection extcon support when
- 	  using Chrome OS EC based USB Type-C ports.
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index 3872e03d9a59..a958b9625bba 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -376,7 +376,7 @@ config HOLTEK_FF
+ #include <linux/fs.h>
+ #include <linux/mfd/core.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/mfd/cros_ec_commands.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/platform_data/cros_ec_chardev.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
  
- config HID_GOOGLE_HAMMER
- 	tristate "Google Hammer Keyboard"
--	depends on USB_HID && LEDS_CLASS && MFD_CROS_EC
-+	depends on USB_HID && LEDS_CLASS && CROS_EC
- 	---help---
- 	Say Y here if you have a Google Hammer device.
+-#include "cros_ec_dev.h"
  
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 09367fc014c3..938fe1f2ce31 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -1345,7 +1345,7 @@ config I2C_SIBYTE
- 
- config I2C_CROS_EC_TUNNEL
- 	tristate "ChromeOS EC tunnel I2C bus"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	help
- 	  If you say yes here you get an I2C bus that will tunnel i2c commands
- 	  through to the other side of the ChromeOS EC to the i2c bus
-diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig b/drivers/iio/common/cros_ec_sensors/Kconfig
-index bcb58fb76b9f..cdbb29cfb907 100644
---- a/drivers/iio/common/cros_ec_sensors/Kconfig
-+++ b/drivers/iio/common/cros_ec_sensors/Kconfig
-@@ -4,7 +4,7 @@
- #
- config IIO_CROS_EC_SENSORS_CORE
- 	tristate "ChromeOS EC Sensors Core"
--	depends on SYSFS && MFD_CROS_EC
-+	depends on SYSFS && CROS_EC
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	help
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 8e9c3ea9d5e7..861c7a2105a2 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -745,7 +745,7 @@ config KEYBOARD_W90P910
- config KEYBOARD_CROS_EC
- 	tristate "ChromeOS EC keyboard"
- 	select INPUT_MATRIXKMAP
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	help
- 	  Say Y here to enable the matrix keyboard used by ChromeOS devices
- 	  and implemented on the ChromeOS EC. You must enable one bus option
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 8a19654b393a..98c3a9a6725e 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -547,10 +547,9 @@ if CEC_PLATFORM_DRIVERS
- 
- config VIDEO_CROS_EC_CEC
- 	tristate "ChromeOS EC CEC driver"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	select CEC_CORE
- 	select CEC_NOTIFIER
--	select CHROME_PLATFORMS
- 	select CROS_EC_PROTO
- 	help
- 	  If you say yes here you will get support for the
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 4a07afe50b35..1079aff13f54 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -211,21 +211,10 @@ config MFD_AXP20X_RSB
- 	  components like regulators or the PEK (Power Enable Key) under the
- 	  corresponding menus.
- 
--config MFD_CROS_EC
--	tristate "ChromeOS Embedded Controller"
--	select MFD_CORE
--	select CHROME_PLATFORMS
--	select CROS_EC_PROTO
--	depends on X86 || ARM || ARM64 || COMPILE_TEST
--	help
--	  If you say Y here you get support for the ChromeOS Embedded
--	  Controller (EC) providing keyboard, battery and power services.
--	  You also need to enable the driver for the bus you are using. The
--	  protocol for talking to the EC is defined by the bus driver.
--
- config MFD_CROS_EC_CHARDEV
- 	tristate "Chrome OS Embedded Controller userspace device interface"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
-+	select MFD_CORE
- 	---help---
- 	  This driver adds support to talk with the ChromeOS EC from userspace.
- 
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 7b6a6aa4fe42..b7ea093dd097 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -13,8 +13,6 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
- obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
- obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
--cros_ec_core-objs		:= cros_ec.o
--obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec_core.o
- obj-$(CONFIG_MFD_CROS_EC_CHARDEV) += cros_ec_dev.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+ #define DRV_NAME "cros-ec-dev"
  
 diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 970679d0b6f6..eaeb04e07335 100644
+index eaeb04e07335..bd3524bd6b37 100644
 --- a/drivers/platform/chrome/Kconfig
 +++ b/drivers/platform/chrome/Kconfig
-@@ -50,9 +50,22 @@ config CHROMEOS_TBMC
+@@ -136,6 +136,17 @@ config CROS_KBD_LED_BACKLIGHT
  	  To compile this driver as a module, choose M here: the
- 	  module will be called chromeos_tbmc.
+ 	  module will be called cros_kbd_led_backlight.
  
-+config CROS_EC
-+	tristate "ChromeOS Embedded Controller"
-+	select CROS_EC_PROTO
-+	depends on X86 || ARM || ARM64 || COMPILE_TEST
++config CROS_EC_CHARDEV
++	tristate "ChromeOS EC miscdevice"
++	depends on MFD_CROS_EC_CHARDEV
++	default MFD_CROS_EC_CHARDEV
 +	help
-+	  If you say Y here you get support for the ChromeOS Embedded
-+	  Controller (EC) providing keyboard, battery and power services.
-+	  You also need to enable the driver for the bus you are using. The
-+	  protocol for talking to the EC is defined by the bus driver.
++	  This driver adds file operations support to talk with the
++	  ChromeOS EC from userspace via a character device.
 +
 +	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec.
++	  module will be called cros_ec_chardev.
 +
- config CROS_EC_I2C
- 	tristate "ChromeOS Embedded Controller (I2C)"
--	depends on MFD_CROS_EC && I2C
-+	depends on CROS_EC && I2C
- 
- 	help
- 	  If you say Y here, you get support for talking to the ChromeOS
-@@ -62,7 +75,7 @@ config CROS_EC_I2C
- 
- config CROS_EC_RPMSG
- 	tristate "ChromeOS Embedded Controller (rpmsg)"
--	depends on MFD_CROS_EC && RPMSG && OF
-+	depends on CROS_EC && RPMSG && OF
- 	help
- 	  If you say Y here, you get support for talking to the ChromeOS EC
- 	  through rpmsg. This uses a simple byte-level protocol with a
-@@ -87,7 +100,7 @@ config CROS_EC_ISHTP
- 
- config CROS_EC_SPI
- 	tristate "ChromeOS Embedded Controller (SPI)"
--	depends on MFD_CROS_EC && SPI
-+	depends on CROS_EC && SPI
- 
- 	---help---
- 	  If you say Y here, you get support for talking to the ChromeOS EC
-@@ -97,7 +110,7 @@ config CROS_EC_SPI
- 
- config CROS_EC_LPC
- 	tristate "ChromeOS Embedded Controller (LPC)"
--	depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
-+	depends on CROS_EC && ACPI && (X86 || COMPILE_TEST)
- 	help
- 	  If you say Y here, you get support for talking to the ChromeOS EC
- 	  over an LPC bus, including the LPC Microchip EC (MEC) variant.
+ config CROS_EC_LIGHTBAR
+ 	tristate "Chromebook Pixel's lightbar support"
+ 	depends on MFD_CROS_EC_CHARDEV
 diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index fd0af05cc14c..12ff8de5ac7a 100644
+index 12ff8de5ac7a..477ec3d1d1c9 100644
 --- a/drivers/platform/chrome/Makefile
 +++ b/drivers/platform/chrome/Makefile
-@@ -6,6 +6,7 @@ CFLAGS_cros_ec_trace.o:=		-I$(src)
- obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
- obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
- obj-$(CONFIG_CHROMEOS_TBMC)		+= chromeos_tbmc.o
-+obj-$(CONFIG_CROS_EC)			+= cros_ec.o
- obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
- obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
- obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
-diff --git a/drivers/mfd/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-similarity index 100%
-rename from drivers/mfd/cros_ec.c
-rename to drivers/platform/chrome/cros_ec.c
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 5d91b5160b41..5e448b64393d 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -670,7 +670,7 @@ config CHARGER_RT9455
+@@ -15,6 +15,7 @@ cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
+ obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+ obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
++obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
+ obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+ obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+new file mode 100644
+index 000000000000..174f940822c9
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_chardev.c
+@@ -0,0 +1,251 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Miscellaneous character driver for ChromeOS Embedded Controller
++ *
++ * Copyright 2014 Google, Inc.
++ * Copyright 2019 Google LLC
++ *
++ * This file is a rework and part of the code is ported from
++ * drivers/mfd/cros_ec_dev.c that was originally written by
++ * Bill Richardson.
++ */
++
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/mfd/cros_ec_commands.h>
++#include <linux/miscdevice.h>
++#include <linux/module.h>
++#include <linux/platform_data/cros_ec_chardev.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/uaccess.h>
++
++#define DRV_NAME		"cros-ec-chardev"
++
++struct chardev_data {
++	struct cros_ec_dev *ec_dev;
++	struct miscdevice misc;
++};
++
++static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
++{
++	static const char * const current_image_name[] = {
++		"unknown", "read-only", "read-write", "invalid",
++	};
++	struct ec_response_get_version *resp;
++	struct cros_ec_command *msg;
++	int ret;
++
++	msg = kzalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
++	msg->insize = sizeof(*resp);
++
++	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	if (ret < 0) {
++		snprintf(str, maxlen,
++			 "Unknown EC version, returned error: %d\n",
++			 msg->result);
++		goto exit;
++	}
++
++	resp = (struct ec_response_get_version *)msg->data;
++	if (resp->current_image >= ARRAY_SIZE(current_image_name))
++		resp->current_image = 3; /* invalid */
++
++	snprintf(str, maxlen, "%s\n%s\n%s\n%s\n", CROS_EC_DEV_VERSION,
++		 resp->version_string_ro, resp->version_string_rw,
++		 current_image_name[resp->current_image]);
++
++	ret = 0;
++exit:
++	kfree(msg);
++	return ret;
++}
++
++/*
++ * Device file ops
++ */
++static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
++{
++	struct miscdevice *mdev = filp->private_data;
++	struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
++
++	filp->private_data = ec_dev;
++	nonseekable_open(inode, filp);
++
++	return 0;
++}
++
++static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
++				     size_t length, loff_t *offset)
++{
++	char msg[sizeof(struct ec_response_get_version) +
++		 sizeof(CROS_EC_DEV_VERSION)];
++	struct cros_ec_dev *ec = filp->private_data;
++	size_t count;
++	int ret;
++
++	if (*offset != 0)
++		return 0;
++
++	ret = ec_get_version(ec, msg, sizeof(msg));
++	if (ret)
++		return ret;
++
++	count = min(length, strlen(msg));
++
++	if (copy_to_user(buffer, msg, count))
++		return -EFAULT;
++
++	*offset = count;
++	return count;
++}
++
++/*
++ * Ioctls
++ */
++static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
++{
++	struct cros_ec_command *s_cmd;
++	struct cros_ec_command u_cmd;
++	long ret;
++
++	if (copy_from_user(&u_cmd, arg, sizeof(u_cmd)))
++		return -EFAULT;
++
++	if (u_cmd.outsize > EC_MAX_MSG_BYTES ||
++	    u_cmd.insize > EC_MAX_MSG_BYTES)
++		return -EINVAL;
++
++	s_cmd = kmalloc(sizeof(*s_cmd) + max(u_cmd.outsize, u_cmd.insize),
++			GFP_KERNEL);
++	if (!s_cmd)
++		return -ENOMEM;
++
++	if (copy_from_user(s_cmd, arg, sizeof(*s_cmd) + u_cmd.outsize)) {
++		ret = -EFAULT;
++		goto exit;
++	}
++
++	if (u_cmd.outsize != s_cmd->outsize ||
++	    u_cmd.insize != s_cmd->insize) {
++		ret = -EINVAL;
++		goto exit;
++	}
++
++	s_cmd->command += ec->cmd_offset;
++	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
++	/* Only copy data to userland if data was received. */
++	if (ret < 0)
++		goto exit;
++
++	if (copy_to_user(arg, s_cmd, sizeof(*s_cmd) + s_cmd->insize))
++		ret = -EFAULT;
++exit:
++	kfree(s_cmd);
++	return ret;
++}
++
++static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
++					   void __user *arg)
++{
++	struct cros_ec_device *ec_dev = ec->ec_dev;
++	struct cros_ec_readmem s_mem = { };
++	long num;
++
++	/* Not every platform supports direct reads */
++	if (!ec_dev->cmd_readmem)
++		return -ENOTTY;
++
++	if (copy_from_user(&s_mem, arg, sizeof(s_mem)))
++		return -EFAULT;
++
++	num = ec_dev->cmd_readmem(ec_dev, s_mem.offset, s_mem.bytes,
++				  s_mem.buffer);
++	if (num <= 0)
++		return num;
++
++	if (copy_to_user((void __user *)arg, &s_mem, sizeof(s_mem)))
++		return -EFAULT;
++
++	return num;
++}
++
++static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
++				   unsigned long arg)
++{
++	struct cros_ec_dev *ec = filp->private_data;
++
++	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
++		return -ENOTTY;
++
++	switch (cmd) {
++	case CROS_EC_DEV_IOCXCMD:
++		return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
++	case CROS_EC_DEV_IOCRDMEM:
++		return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
++	}
++
++	return -ENOTTY;
++}
++
++static const struct file_operations chardev_fops = {
++	.open		= cros_ec_chardev_open,
++	.read		= cros_ec_chardev_read,
++	.unlocked_ioctl	= cros_ec_chardev_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= cros_ec_chardev_ioctl,
++#endif
++};
++
++static int cros_ec_chardev_probe(struct platform_device *pdev)
++{
++	struct cros_ec_dev *ec_dev = dev_get_drvdata(pdev->dev.parent);
++	struct cros_ec_platform *ec_platform = dev_get_platdata(ec_dev->dev);
++	struct chardev_data *data;
++
++	/* Create a char device: we want to create it anew */
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->ec_dev = ec_dev;
++	data->misc.minor = MISC_DYNAMIC_MINOR;
++	data->misc.fops = &chardev_fops;
++	data->misc.name = ec_platform->ec_name;
++	data->misc.parent = pdev->dev.parent;
++
++	dev_set_drvdata(&pdev->dev, data);
++
++	return misc_register(&data->misc);
++}
++
++static int cros_ec_chardev_remove(struct platform_device *pdev)
++{
++	struct chardev_data *data = dev_get_drvdata(&pdev->dev);
++
++	misc_deregister(&data->misc);
++
++	return 0;
++}
++
++static struct platform_driver cros_ec_chardev_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.probe = cros_ec_chardev_probe,
++	.remove = cros_ec_chardev_remove,
++};
++
++module_platform_driver(cros_ec_chardev_driver);
++
++MODULE_ALIAS("platform:" DRV_NAME);
++MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
++MODULE_DESCRIPTION("ChromeOS EC Miscellaneous Character Driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/mfd/cros_ec_dev.h b/include/linux/platform_data/cros_ec_chardev.h
+similarity index 83%
+rename from drivers/mfd/cros_ec_dev.h
+rename to include/linux/platform_data/cros_ec_chardev.h
+index 7a42c3ef50e4..6600b54f531c 100644
+--- a/drivers/mfd/cros_ec_dev.h
++++ b/include/linux/platform_data/cros_ec_chardev.h
+@@ -1,15 +1,17 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * cros_ec_dev - expose the Chrome OS Embedded Controller to userspace
++ * ChromeOS EC device interface.
+  *
+  * Copyright (C) 2014 Google, Inc.
+  */
  
- config CHARGER_CROS_USBPD
- 	tristate "ChromeOS EC based USBPD charger"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	default n
- 	help
- 	  Say Y here to enable ChromeOS EC based USBPD charger
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a7e57516959e..b0e632ba8590 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -145,7 +145,7 @@ config PWM_CRC
+-#ifndef _CROS_EC_DEV_H_
+-#define _CROS_EC_DEV_H_
++#ifndef _UAPI_LINUX_CROS_EC_DEV_H_
++#define _UAPI_LINUX_CROS_EC_DEV_H_
  
- config PWM_CROS_EC
- 	tristate "ChromeOS EC PWM driver"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	help
- 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
- 	  Controller.
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e72f65b61176..a45175fd8cc4 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1274,7 +1274,7 @@ config RTC_DRV_ZYNQMP
++#include <linux/bits.h>
+ #include <linux/ioctl.h>
+ #include <linux/types.h>
++
+ #include <linux/mfd/cros_ec.h>
  
- config RTC_DRV_CROS_EC
- 	tristate "Chrome OS EC RTC driver"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	help
- 	  If you say yes here you will get support for the
- 	  Chrome OS Embedded Controller's RTC.
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 9f89a5346299..11fd97cd9ab4 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -51,7 +51,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_BT_SCO
- 	select SND_SOC_BD28623
- 	select SND_SOC_CQ0093VC
--	select SND_SOC_CROS_EC_CODEC if MFD_CROS_EC
-+	select SND_SOC_CROS_EC_CODEC if CROS_EC
- 	select SND_SOC_CS35L32 if I2C
- 	select SND_SOC_CS35L33 if I2C
- 	select SND_SOC_CS35L34 if I2C
-@@ -474,7 +474,7 @@ config SND_SOC_CQ0093VC
- 
- config SND_SOC_CROS_EC_CODEC
- 	tristate "codec driver for ChromeOS EC"
--	depends on MFD_CROS_EC
-+	depends on CROS_EC
- 	help
- 	  If you say yes here you will get support for the
- 	  ChromeOS Embedded Controller's Audio Codec.
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 8e3e86619b35..60086858e920 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -99,7 +99,7 @@ config SND_SOC_MSM8996
- 
- config SND_SOC_SDM845
- 	tristate "SoC Machine driver for SDM845 boards"
--	depends on QCOM_APR && MFD_CROS_EC && I2C
-+	depends on QCOM_APR && CROS_EC && I2C
- 	select SND_SOC_QDSP6
- 	select SND_SOC_QCOM_COMMON
- 	select SND_SOC_RT5663
+ #define CROS_EC_DEV_VERSION "1.0.0"
 -- 
 2.20.1
 
