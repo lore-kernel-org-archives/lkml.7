@@ -2,78 +2,232 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761E1C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B31C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E49D217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C1A217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 05:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="qGL5ZUYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbfIBFTX (ORCPT
+        id S1729534AbfIBFVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 01:19:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52120 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfIBFTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 01:19:23 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECA72C058CA4;
-        Mon,  2 Sep 2019 05:19:22 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-95.ams2.redhat.com [10.36.116.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D46660127;
-        Mon,  2 Sep 2019 05:19:22 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id C51B316E08; Mon,  2 Sep 2019 07:19:21 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 07:19:21 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     David Riley <davidriley@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>,
-        "open list:VIRTIO CORE, NET AND BLOCK DRIVERS" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH] drm/virtio: Use vmalloc for command buffer allocations.
-Message-ID: <20190902051921.nczclnaqcmxlh7bz@sirius.home.kraxel.org>
-References: <20190829212417.257397-1-davidriley@chromium.org>
- <20190830060857.tzrzgoi2hrmchdi5@sirius.home.kraxel.org>
- <CAASgrz2v0DYb_5A3MnaWFM4Csx1DKkZe546v7DG7R+UyLOA8og@mail.gmail.com>
- <20190830111605.twzssycagmjhfa45@sirius.home.kraxel.org>
- <CAPaKu7QeYDqek7pBSHmg1E5A9h9E=njrvLxBMnkCtqeb3s77Cg@mail.gmail.com>
+        Mon, 2 Sep 2019 01:21:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36762 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfIBFVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 01:21:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y22so2709783pfr.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Sep 2019 22:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WNHOWN+0Coztu38fB5yaHQpPDHparb+VQPnzTlZJ0JE=;
+        b=qGL5ZUYGDLtShp6IGgeoveuGqiflKyRIhYWTwSBVGkQ43dxoV3iFZnW5QpB5+Hlbz5
+         ICIVLCdmC8l3ZuZX8aGB3liCE2ieHjV6JDw0I79Z3rvqNjUiT/UaMYm8k+i4teCYOSg/
+         lbp9WDH3hamYhncb7TgQhCKbiWZXh7LFKItDjQMUyV/UwUxXTSC+ykctPkZXBumrUmMI
+         K4g3fcZHPqbgtiVqXxextA2WLFxgGz3zhaDYiUzgbqKNcAZus7gnXqyJFC0m131RiG8G
+         6eL2ypB8E5zAh+1ahaEzu4jBmB5FXpWMaWpPENWnxmKtRwNmuvbLEOC/XDEMrxDApxan
+         0NAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WNHOWN+0Coztu38fB5yaHQpPDHparb+VQPnzTlZJ0JE=;
+        b=jzp2fpNaPzd8QoFXa+FJ3FS5vHfIhBHoieynYthV3EZaL+94BcCQPINXJOmAU6ZyPY
+         URlCgM3oueCvfprSJCSsG97M2ZIwQKXXheyXTNCCSIRJEELYhkG3mCITKnNChSx4ogCw
+         fR7YBQVPyHUX+DhCFjRC1YBVXeSh/RAc8Xki5pNMur5YJ8uvF8R460EYhlUncDxCdDok
+         N4TKvEDdThrctlrvmoDHstNz2V5i0Djc7Iu1nztLmrRD5NgvzsQOU3YRNwxscvb/fjEW
+         CQ7AIRM1nzOvfwzrIrmAbWROsLTEXMP5Tf5X1JhKG7udCYJlegf0MOX3FdU9B67oRzMN
+         MYgQ==
+X-Gm-Message-State: APjAAAV04jT5Jr5fg1RHsEztoWdaChj38Rk3tn8kX+UIC9d0VkxEn8EE
+        igDgoOREkedqDLVCdA/ZdYc7uw==
+X-Google-Smtp-Source: APXvYqzSc8PJTNOasSxVo2SAiBObjLCkzFGQxDy5LaUIXeaU2EEHSvJ7j/aHYhbPwwPar2MHcMsIEg==
+X-Received: by 2002:a65:6458:: with SMTP id s24mr23405467pgv.158.1567401705371;
+        Sun, 01 Sep 2019 22:21:45 -0700 (PDT)
+Received: from hev-sbc.hz.ali.com ([47.89.83.40])
+        by smtp.gmail.com with ESMTPSA id w207sm14636242pff.93.2019.09.01.22.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Sep 2019 22:21:44 -0700 (PDT)
+From:   hev <r@hev.cc>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     e@80x24.org, Heiher <r@hev.cc>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Jason Baron <jbaron@akamai.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] fs/epoll: fix the edge-triggered mode for nested epoll
+Date:   Mon,  2 Sep 2019 13:20:34 +0800
+Message-Id: <20190902052034.16423-1-r@hev.cc>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7QeYDqek7pBSHmg1E5A9h9E=njrvLxBMnkCtqeb3s77Cg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 02 Sep 2019 05:19:23 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Completely different approach: use get_user_pages() and don't copy the
-> > execbuffer at all.
-> It would be really nice if execbuffer does not copy.
-> 
-> The user space owns the buffer and may overwrite the contents
-> immediately after the ioctl.
+From: Heiher <r@hev.cc>
 
-Oh, right.  The exec ioctl doesn't block.  So this doesn't work (breaks
-userspace abi).  Scratch the idea then.
+The structure of event pools:
+ efd[1]: { efd[2] (EPOLLIN) }        efd[0]: { efd[2] (EPOLLIN | EPOLLET) }
+               |                                   |
+               +-----------------+-----------------+
+                                 |
+                                 v
+                             efd[2]: { sfd[0] (EPOLLIN) }
 
-> We also need a flag to indicate that the
-> ownership of the buffer is transferred to the kernel.
+When sfd[0] to be readable:
+ * the epoll_wait(efd[0], ..., 0) should return efd[2]'s events on first call,
+   and returns 0 on next calls, because efd[2] is added in edge-triggered mode.
+ * the epoll_wait(efd[1], ..., 0) should returns efd[2]'s events on every calls
+   until efd[2] is not readable (epoll_wait(efd[2], ...) => 0), because efd[1]
+   is added in level-triggered mode.
+ * the epoll_wait(efd[2], ..., 0) should returns sfd[0]'s events on every calls
+   until sfd[0] is not readable (read(sfd[0], ...) => EAGAIN), because sfd[0]
+   is added in level-triggered mode.
 
-Yes, with an additional flag for the changed behavior it could work.
+Test code:
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <sys/epoll.h>
+ #include <sys/socket.h>
 
-cheers,
-  Gerd
+ int main(int argc, char *argv[])
+ {
+ 	int sfd[2];
+ 	int efd[3];
+ 	int nfds;
+ 	struct epoll_event e;
+
+ 	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
+ 		goto out;
+
+ 	efd[0] = epoll_create(1);
+ 	if (efd[0] < 0)
+ 		goto out;
+
+ 	efd[1] = epoll_create(1);
+ 	if (efd[1] < 0)
+ 		goto out;
+
+ 	efd[2] = epoll_create(1);
+ 	if (efd[2] < 0)
+ 		goto out;
+
+ 	e.events = EPOLLIN;
+ 	if (epoll_ctl(efd[2], EPOLL_CTL_ADD, sfd[0], &e) < 0)
+ 		goto out;
+
+ 	e.events = EPOLLIN;
+ 	if (epoll_ctl(efd[1], EPOLL_CTL_ADD, efd[2], &e) < 0)
+ 		goto out;
+
+ 	e.events = EPOLLIN | EPOLLET;
+ 	if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[2], &e) < 0)
+ 		goto out;
+
+ 	if (write(sfd[1], "w", 1) != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[0], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[0], &e, 1, 0);
+ 	if (nfds != 0)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[1], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[1], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[2], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	nfds = epoll_wait(efd[2], &e, 1, 0);
+ 	if (nfds != 1)
+ 		goto out;
+
+ 	close(efd[2]);
+ 	close(efd[1]);
+ 	close(efd[0]);
+ 	close(sfd[0]);
+ 	close(sfd[1]);
+
+ 	printf("PASS\n");
+ 	return 0;
+
+ out:
+ 	printf("FAIL\n");
+ 	return -1;
+ }
+
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Davide Libenzi <davidel@xmailserver.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Eric Wong <e@80x24.org>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Roman Penyaev <rpenyaev@suse.de>
+Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: hev <r@hev.cc>
+---
+ fs/eventpoll.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d7f1f5011fac..a44cb27c636c 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -672,6 +672,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ {
+ 	__poll_t res;
+ 	int pwake = 0;
++	int nwake = 0;
+ 	struct epitem *epi, *nepi;
+ 	LIST_HEAD(txlist);
+ 
+@@ -685,6 +686,9 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 	if (!ep_locked)
+ 		mutex_lock_nested(&ep->mtx, depth);
+ 
++	if (!depth || list_empty(&ep->rdllist))
++		nwake = 1;
++
+ 	/*
+ 	 * Steal the ready list, and re-init the original one to the
+ 	 * empty list. Also, set ep->ovflist to NULL so that events
+@@ -739,7 +743,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 	list_splice(&txlist, &ep->rdllist);
+ 	__pm_relax(ep->ws);
+ 
+-	if (!list_empty(&ep->rdllist)) {
++	if (nwake && !list_empty(&ep->rdllist)) {
+ 		/*
+ 		 * Wake up (if active) both the eventpoll wait list and
+ 		 * the ->poll() wait list (delayed after we release the lock).
+-- 
+2.23.0
 
