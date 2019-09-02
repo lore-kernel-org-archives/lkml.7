@@ -2,129 +2,114 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D9C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE93FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7791B21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:07:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tFFWIXxu"
+	by mail.kernel.org (Postfix) with ESMTP id D44C321744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfIBSHo (ORCPT
+        id S1726901AbfIBSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:07:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51622 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfIBSHn (ORCPT
+        Mon, 2 Sep 2019 14:07:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58151 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfIBSHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:07:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c5UKk/WUqmxqtU3WpUzbuDwbt+WLxvtk3T/wDs7cTaI=; b=tFFWIXxuHlrcBDXTEYoGRQIOX
-        yiVt+S4Nlh9YE9muq1/9s8LrreLMTC8sogsYkYEJ048MHkTLkp1T4ipminIZuUDIFDu3EhwyGJarq
-        5HQPFfFkfXpYEm4GcLm76SyhP4Z0qUOfQ86XH2Al1Ek02sxxaJTfA2jNd9VOzm1ZzfVfIedRN/zPW
-        WGZbFtfGyC7/qBnyJDDOdpRA0E/qvfIwMzdmoUkHrPBpTMlhbJmAKEyLyJgFwepqn+eEyWJMCL6Qp
-        4fI3uvV4h9GFnl62ajWxX7cEL1BwyS2ZoUfox16rkHQeXZ6cQVfeDGxaxUfOtGC8mc+NJ7fuXF+/B
-        fbgpOogFg==;
-Received: from [2601:1c0:6200:6e8::4f71]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4qjt-0004SO-MG; Mon, 02 Sep 2019 18:07:41 +0000
-Subject: Re: linux-next: Tree for Sep 2 (exfat)
-To:     Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <20190902224310.208575dc@canb.auug.org.au>
- <cecc2af6-7ef6-29f6-569e-b591365e45ad@infradead.org>
- <20190902174631.GB31445@kroah.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <13e2db80-0c89-0f36-6876-f9639f0d30ab@infradead.org>
-Date:   Mon, 2 Sep 2019 11:07:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 14:07:48 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i4qjq-0000he-P8; Mon, 02 Sep 2019 20:07:38 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 004851C0C76;
+        Mon,  2 Sep 2019 20:07:37 +0200 (CEST)
+Date:   Mon, 02 Sep 2019 18:07:37 -0000
+From:   "tip-bot2 for Tianyu Lan" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/hyper-v: Fix overflow bug in fill_gva_list()
+Cc:     Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-In-Reply-To: <20190902174631.GB31445@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <156744765778.23765.3492272300473328838.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 10:46 AM, Greg KH wrote:
-> On Mon, Sep 02, 2019 at 10:39:39AM -0700, Randy Dunlap wrote:
->> On 9/2/19 5:43 AM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> News: I will only be doing 2 more releases before I leave for Kernel
->>> Summit (there may be some reports on Thursday, but I doubt I will have
->>> time to finish the full release) and then no more until Sept 30.
->>>
->>> Changes since 20190830:
->>>
->>
->> Hi,
->> I am seeing lots of exfat build errors when CONFIG_BLOCK is not set/enabled.
->> Maybe its Kconfig should also say
->> 	depends on BLOCK
->> ?
-> 
-> Here's what I committed to my tree:
-> 
-> 
-> From e2b880d3d1afaa5cad108c29be3e307b1917d195 Mon Sep 17 00:00:00 2001
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Date: Mon, 2 Sep 2019 19:45:06 +0200
-> Subject: staging: exfat: make exfat depend on BLOCK
-> 
-> This should fix a build error in some configurations when CONFIG_BLOCK
-> is not selected.  Also properly set the dependancy for no FAT support at
-> the same time.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The following commit has been merged into the x86/urgent branch of tip:
 
-That works. Thanks.
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Commit-ID:     4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d
+Gitweb:        https://git.kernel.org/tip/4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d
+Author:        Tianyu Lan <Tianyu.Lan@microsoft.com>
+AuthorDate:    Mon, 02 Sep 2019 20:41:43 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 02 Sep 2019 19:57:19 +02:00
 
-> ---
->  drivers/staging/exfat/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-> index f52129c67f97..290dbfc7ace1 100644
-> --- a/drivers/staging/exfat/Kconfig
-> +++ b/drivers/staging/exfat/Kconfig
-> @@ -1,11 +1,13 @@
->  config EXFAT_FS
->  	tristate "exFAT fs support"
-> +	depends on BLOCK
->  	select NLS
->  	help
->  	  This adds support for the exFAT file system.
->  
->  config EXFAT_DONT_MOUNT_VFAT
->  	bool "Prohibit mounting of fat/vfat filesysems by exFAT"
-> +	depends on EXFAT_FS
->  	default y
->  	help
->  	  By default, the exFAT driver will only mount exFAT filesystems, and refuse
-> 
+x86/hyper-v: Fix overflow bug in fill_gva_list()
 
+When the 'start' parameter is >=  0xFF000000 on 32-bit
+systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+fill_gva_list() gets into an infinite loop.
 
--- 
-~Randy
+With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
+and always compares as less than end.  Memory is filled with
+guest virtual addresses until the system crashes.
+
+Fix this by never incrementing 'cur' to be larger than 'end'.
+
+Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/hyperv/mmu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index e65d7fe..5208ba4 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
+ 		 * Lower 12 bits encode the number of additional
+ 		 * pages to flush (in addition to the 'cur' page).
+ 		 */
+-		if (diff >= HV_TLB_FLUSH_UNIT)
++		if (diff >= HV_TLB_FLUSH_UNIT) {
+ 			gva_list[gva_n] |= ~PAGE_MASK;
+-		else if (diff)
++			cur += HV_TLB_FLUSH_UNIT;
++		}  else if (diff) {
+ 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
++			cur = end;
++		}
+ 
+-		cur += HV_TLB_FLUSH_UNIT;
+ 		gva_n++;
+ 
+ 	} while (cur < end);
