@@ -2,84 +2,76 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4737BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329CDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C6020674
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IKK7dOAU"
+	by mail.kernel.org (Postfix) with ESMTP id 08CAB208CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfIBUIV (ORCPT
+        id S1727360AbfIBUP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 16:08:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfIBUIU (ORCPT
+        Mon, 2 Sep 2019 16:15:58 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45175 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfIBUP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 16:08:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BVNq47HXj2pt+zogEJG8nkEiH0l4/wH9jA+1tCZXI6w=; b=IKK7dOAUG6pwQ3QFcv9Q2x3ZUH
-        zOxu0VV1ODcT6ycsRhGaL+MdqFJ01nNbP+4sqBmq5bM29wdnYvaIABqI6YxK58JfVVNG2KhxBbqQK
-        XPkkhiI+gfs7TMrLKbB6Ba7JliUxN20U6GoWVZhqEFfe3+GEJ2zTrkLwNEQDgcemLy63W+bI8zMvF
-        bLTvdnpWAYqzHN1ws/GsnN/cPWtw8y0I7E1I/p8LDh73tt7L2WNkvP1gE4BJL0jciVjdmLL1Jsz+j
-        UThFdNhTBiUCzaxg6co3+rfiWR4B05AkSdBR0XGwMCeakPNbl4RdnNcNrwM1aqNvdoFw3H2iCKH9j
-        Jtw4ezfw==;
-Received: from [2001:4bb8:18c:1755:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4scc-0007Od-Gn; Mon, 02 Sep 2019 20:08:19 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] dma-mapping: remove the dma_declare_coherent_memory export
-Date:   Mon,  2 Sep 2019 22:07:46 +0200
-Message-Id: <20190902200746.16185-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190902200746.16185-1-hch@lst.de>
-References: <20190902200746.16185-1-hch@lst.de>
+        Mon, 2 Sep 2019 16:15:57 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 2825B818DA; Mon,  2 Sep 2019 22:15:41 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 22:15:53 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     James Courtier-Dutton <james.dutton@gmail.com>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        "Artem S. Tashkinov" <aros@gmx.com>,
+        LKML Mailing List <linux-kernel@vger.kernel.org>,
+        linux@endlessm.com, hadess@hadess.net,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
+ inability to gracefully handle low memory pressure
+Message-ID: <20190902201553.GA6546@bug>
+References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
+ <20190820064620.5119-1-drake@endlessm.com>
+ <CAAMvbhH=ftMoh9eFVR3YgN9DVSLaN5tXa-vTsBocY8YuL0Rc1A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAMvbhH=ftMoh9eFVR3YgN9DVSLaN5tXa-vTsBocY8YuL0Rc1A@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_declare_coherent_memory is something that the platform setup code
-(which pretty much means the device tree these days) need to do so that
-drivers can use the memory as declared by the platform.  Drivers
-themselves have no business calling this function.
+Hi!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- kernel/dma/coherent.c | 1 -
- 1 file changed, 1 deletion(-)
+> >
+> > And if there is a meaningful way to make the kernel behave better, that would
+> > obviously be of huge value too.
+> >
+> > Thanks
+> > Daniel
+> 
+> Hi,
+> 
+> Is there a way for an application to be told that there is a memory
+> pressure situation?
+> For example, say I do a "make -j32"  and half way through the compile
+> it hits a memory pressure situation.
+> If make could have been told about it. It could give up on some of the
+> parallel compiles, and instead proceed as if the user have typed "make
+> -j4". It could then re-try the failed compile parts, that failed due
+> to memory pressure.
+> I know all applications won't be this clever, but providing a kernel
+> API so that an application could do something about it, if the
+> programmer of that application has thought about it.
 
-diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-index 7cafe1affdc9..545e3869b0e3 100644
---- a/kernel/dma/coherent.c
-+++ b/kernel/dma/coherent.c
-@@ -122,7 +122,6 @@ int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
- 		dma_release_coherent_memory(mem);
- 	return ret;
- }
--EXPORT_SYMBOL(dma_declare_coherent_memory);
- 
- static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
- 		ssize_t size, dma_addr_t *dma_handle)
--- 
-2.20.1
+Support is not really needed in many applications. It would be nice to
+have for make and web browsers... And I suspect it is easy to do interface
+becomes available.
 
+Best regards,
+								Pavel
