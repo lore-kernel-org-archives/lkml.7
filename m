@@ -2,240 +2,202 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD58C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8B0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B63C21874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057A72186A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 02:47:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HIlqEoTd";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="aa5Lpbq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfIBCP0 (ORCPT
+        id S1729246AbfIBCr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 22:15:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7913 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbfIBCPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 22:15:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Sep 2019 19:15:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="381729047"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Sep 2019 19:15:20 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v8 6/7] iommu/vt-d: Add trace events for device dma
- map/unmap
-To:     Steven Rostedt <rostedt@goodmis.org>
-References: <20190830071718.16613-1-baolu.lu@linux.intel.com>
- <20190830071718.16613-7-baolu.lu@linux.intel.com>
- <20190830095349.1c222240@gandalf.local.home>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <319db353-6641-61af-a86a-93d832b742c2@linux.intel.com>
-Date:   Mon, 2 Sep 2019 10:13:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190830095349.1c222240@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sun, 1 Sep 2019 22:47:27 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:28414 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728926AbfIBCr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 22:47:26 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x822ieuI003096;
+        Sun, 1 Sep 2019 19:47:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=facebook; bh=SpeeiTT1702e+gajS4S7QkWKldtV+AL7UZ+seQ+Evzg=;
+ b=HIlqEoTdLWuEN6psaHSinTfJXvjEpiuF80EX90K7CX68VPNoxgwwOlJQCMx3IEPLX0Fi
+ nPKMHzcNgwBVv3B00URrl/fVRlowdJHPujlaqLR40ter/XDGctj0BYbuOQ/RT2yiWzbD
+ IC8ZJwlv8PpM+G3+5ksxV7VnWEWt0s98JUI= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2uqpdj5f1j-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 01 Sep 2019 19:47:09 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Sun, 1 Sep 2019 19:47:07 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Sun, 1 Sep 2019 19:47:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ISrnsDt5zM93XB1BRu+5LEaQ6+CHfWpxnRtoMGSDVZtHuzEVqe6xVlEBHikPhQ6UOexnd/oGoYQrC/M5AYB0x4IXhKEqmQcnnQKKaI/7eq2HVRaUm99a131oA4ib9/vb3gQt/vPWQqQHEj4fITzw7yfnQq5rfFzdou6TFGfD+7VvDw47dO4xydxfM9jt5MYIwGubVJBtzgdB8E8ENK2q31+bizeMfRoXDKsGSkui8o6T5iTLks06DoI2N/e5h8eGdfBGy3D5ZFP5dx+QD6S1D6cHZ0wZTPCWASehzqy5mc6KbM7Jr2o5nfNmgzB77i9z6XgVkhN1qVuKHEwDHtbvCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SpeeiTT1702e+gajS4S7QkWKldtV+AL7UZ+seQ+Evzg=;
+ b=XjL815FhWpO7EKCJFXskRObLiv1FU/ivBY2pLS6HyArD+9At3IiYs0xYEH+MfVD6t5sh7q4vX49QZyaj815uXxxuLj759AB2ptAZD5dtv7Wu6ovSEryI3QSY4N8N/wEkU98ct3Nt4oXxpDjPJl4Wglr/Mjm3Q/6oqPqQN3NAcH8+j4E9cIr218s8e9JYHOAv+IR5vA3mBdr0TsE/GEyPcuevnZZezpdUaHIe80SPvOvYT1j+P4+R5EsoZ2T7vx1HX7sQuUlsxbH0SEwtt0FRjfpMygQfvBs05NMTvj23op/UVe5Mwj0AskIT/qxsX0Z1fLBfgOgnXRTJ+Qy0riUkWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SpeeiTT1702e+gajS4S7QkWKldtV+AL7UZ+seQ+Evzg=;
+ b=aa5Lpbq5OSokIvtG1UDgeIbQfnbnFctGO2uTWG/rF0Hc6CesYdgKzjl3uI8VjRPpO7/DiLMY2aowI4jYpEtn/Z40l5o9b0WAOzwzHJzgDjhrgyS+QbJK9LZxf5Goye/oa6QCHVNW0gtGn9kzeI6snkQxqgE5KfG2aZpMGyYASis=
+Received: from CH2PR15MB3686.namprd15.prod.outlook.com (10.255.155.143) by
+ CH2PR15MB3621.namprd15.prod.outlook.com (52.132.228.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Mon, 2 Sep 2019 02:46:52 +0000
+Received: from CH2PR15MB3686.namprd15.prod.outlook.com
+ ([fe80::49a8:bb4e:fcce:aee7]) by CH2PR15MB3686.namprd15.prod.outlook.com
+ ([fe80::49a8:bb4e:fcce:aee7%4]) with mapi id 15.20.2220.021; Mon, 2 Sep 2019
+ 02:46:52 +0000
+From:   Ben Wei <benwei@fb.com>
+To:     Ben Wei <benwei@fb.com>, David Miller <davem@davemloft.net>,
+        "sam@mendozajonas.com" <sam@mendozajonas.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+CC:     Ben Wei <benwei@fb.com>
+Subject: [PATCH net-next] net/ncsi: support unaligned payload size in NC-SI
+ cmd handler
+Thread-Topic: [PATCH net-next] net/ncsi: support unaligned payload size in
+ NC-SI cmd handler
+Thread-Index: AdVhOKsnD7LLLBrzTcm5Yllqe1NFWA==
+Date:   Mon, 2 Sep 2019 02:46:52 +0000
+Message-ID: <CH2PR15MB368619179F403EAE47FD61F7A3BE0@CH2PR15MB3686.namprd15.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:180::4d27]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bd3c89c4-5b02-4256-bf1c-08d72f4fcf5e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CH2PR15MB3621;
+x-ms-traffictypediagnostic: CH2PR15MB3621:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR15MB362195FE41D0BDD126A7F2EAA3BE0@CH2PR15MB3621.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(376002)(39860400002)(136003)(189003)(199004)(76116006)(102836004)(110136005)(14444005)(5660300002)(86362001)(33656002)(81156014)(2906002)(316002)(81166006)(7696005)(6436002)(4326008)(8936002)(66446008)(66556008)(64756008)(478600001)(66946007)(66476007)(186003)(486006)(53936002)(6506007)(52536014)(14454004)(2201001)(71200400001)(9686003)(25786009)(256004)(55016002)(6116002)(74316002)(71190400001)(2501003)(476003)(305945005)(99286004)(7736002)(46003)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR15MB3621;H:CH2PR15MB3686.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hZAuAbsgn/eL6gEkX6X/aVCyKq+ptKfqlWc3MhHl8PFQl6hTEIZxwn4mrx/C6t9D5M7Yde1Sc0p5n01kDBE8E7z5nCqvr7TJMsr+j8ne2j6ZODs9M25PscJ0gai0H9suRoviEuUq1mmpG3/H0uzaSxAC4yFK2Wx9KJ1bkoYmJTrL7WQW4HJ0QU/jQTZWqHXm2+rV2wsOXE116JySeFqNiJL918cekVqcbvWDh6ue594jPeWR96ZdlLEBmC45lELcY5yWD9MYDWhlRnwdhmFoBLSwChwHnmqF+8pxDnVeuZpdNVrBUvmQ033c2DEQkeABGRygl0VJaQ98drent/ucXxTYW152kOE7UR5UdeU7gPmiT5xcCtAVQ0yQFi1z/cndmsxemYZVT255+kCgvabEnB0UXzU14ptyUU/MGSXKlcI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd3c89c4-5b02-4256-bf1c-08d72f4fcf5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 02:46:52.2650
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UqJ5y4lANzTqIxV1oP8uZoAdpf3p2HPpNhaiA39vxQXeEbT7wmpInIPguXzxNFTE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3621
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-02_01:2019-08-29,2019-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0 spamscore=0
+ suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=909 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909020030
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+Update NC-SI command handler (both standard and OEM) to take into
+account of payload paddings in allocating skb (in case of payload
+size is not 32-bit aligned).
 
-On 8/30/19 9:53 PM, Steven Rostedt wrote:
-> On Fri, 30 Aug 2019 15:17:17 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
->> This adds trace support for the Intel IOMMU driver. It
->> also declares some events which could be used to trace
->> the events when an IOVA is being mapped or unmapped in
->> a domain.
->>
->> Cc: Ashok Raj <ashok.raj@intel.com>
->> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
->> ---
->>   drivers/iommu/Makefile             |  1 +
->>   drivers/iommu/intel-trace.c        | 14 +++++
->>   include/trace/events/intel_iommu.h | 84 ++++++++++++++++++++++++++++++
->>   3 files changed, 99 insertions(+)
->>   create mode 100644 drivers/iommu/intel-trace.c
->>   create mode 100644 include/trace/events/intel_iommu.h
->>
->> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
->> index f13f36ae1af6..bfe27b2755bd 100644
->> --- a/drivers/iommu/Makefile
->> +++ b/drivers/iommu/Makefile
->> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
->>   obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
->>   obj-$(CONFIG_DMAR_TABLE) += dmar.o
->>   obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
->> +obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
->>   obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
->>   obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
->>   obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
->> diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel-trace.c
->> new file mode 100644
->> index 000000000000..bfb6a6e37a88
->> --- /dev/null
->> +++ b/drivers/iommu/intel-trace.c
->> @@ -0,0 +1,14 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Intel IOMMU trace support
->> + *
->> + * Copyright (C) 2019 Intel Corporation
->> + *
->> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
->> + */
->> +
->> +#include <linux/string.h>
->> +#include <linux/types.h>
->> +
->> +#define CREATE_TRACE_POINTS
->> +#include <trace/events/intel_iommu.h>
->> diff --git a/include/trace/events/intel_iommu.h b/include/trace/events/intel_iommu.h
->> new file mode 100644
->> index 000000000000..9c28e6cae86f
->> --- /dev/null
->> +++ b/include/trace/events/intel_iommu.h
->> @@ -0,0 +1,84 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Intel IOMMU trace support
->> + *
->> + * Copyright (C) 2019 Intel Corporation
->> + *
->> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
->> + */
->> +#ifdef CONFIG_INTEL_IOMMU
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM intel_iommu
->> +
->> +#if !defined(_TRACE_INTEL_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
->> +#define _TRACE_INTEL_IOMMU_H
->> +
->> +#include <linux/tracepoint.h>
->> +#include <linux/intel-iommu.h>
->> +
->> +DECLARE_EVENT_CLASS(dma_map,
->> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
->> +		 size_t size),
->> +
->> +	TP_ARGS(dev, dev_addr, phys_addr, size),
->> +
->> +	TP_STRUCT__entry(
->> +		__string(dev_name, dev_name(dev))
->> +		__field(dma_addr_t, dev_addr)
->> +		__field(phys_addr_t, phys_addr)
->> +		__field(size_t,	size)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__assign_str(dev_name, dev_name(dev));
->> +		__entry->dev_addr = dev_addr;
->> +		__entry->phys_addr = phys_addr;
->> +		__entry->size = size;
->> +	),
->> +
->> +	TP_printk("dev=%s dev_addr=0x%llx phys_addr=0x%llx size=%zu",
->> +		  __get_str(dev_name),
->> +		  (unsigned long long)__entry->dev_addr,
->> +		  (unsigned long long)__entry->phys_addr,
->> +		  __entry->size)
->> +);
->> +
->> +DEFINE_EVENT(dma_map, bounce_map_single,
->> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
->> +		 size_t size),
->> +	TP_ARGS(dev, dev_addr, phys_addr, size)
->> +);
-> 
-> Do you plan on adding more events to these classes? This patch has two
-> distinct DECLARE_EVENT_CLASS() calls, and each has one DEFINE_EVENT()
-> for them.
+The checksum field follows payload field, without taking payload
+padding into account can cause checksum being truncated, leading to
+dropped packets.
 
-Yes, we will add more. This patch only adds the trace events that are
-necessary for this patch series's development. It's easy to extend to
-other events.
+Signed-off-by: Ben Wei <benwei@fb.com>
+---
+ net/ncsi/ncsi-cmd.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-> 
-> It's fine to do this, but I'm curious to why you did not use
-> the "TRACE_EVENT()" macro, which basically is just a single
-> DECLARE_EVENT_CLASS() followed by a single DEFINE_EVENT(). In other
-> words, you just open coded TRACE_EVENT().
+diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
+index 0187e65176c0..42636ed3cf3a 100644
+--- a/net/ncsi/ncsi-cmd.c
++++ b/net/ncsi/ncsi-cmd.c
+@@ -213,17 +213,22 @@ static int ncsi_cmd_handler_oem(struct sk_buff *skb,
+ {
+ 	struct ncsi_cmd_oem_pkt *cmd;
+ 	unsigned int len;
++	/* NC-SI spec requires payload to be padded with 0
++	 * to 32-bit boundary before the checksum field.
++	 * Ensure the padding bytes are accounted for in
++	 * skb allocation
++	 */
++	unsigned short payload =3D ALIGN(nca->payload, 4);
+=20
+ 	len =3D sizeof(struct ncsi_cmd_pkt_hdr) + 4;
+-	if (nca->payload < 26)
++	if (payload < 26)
+ 		len +=3D 26;
+ 	else
+-		len +=3D nca->payload;
++		len +=3D payload;
+=20
+ 	cmd =3D skb_put_zero(skb, len);
+ 	memcpy(&cmd->mfr_id, nca->data, nca->payload);
+ 	ncsi_cmd_build_header(&cmd->cmd.common, nca);
+-
+ 	return 0;
+ }
+=20
+@@ -272,6 +277,7 @@ static struct ncsi_request *ncsi_alloc_command(struct n=
+csi_cmd_arg *nca)
+ 	struct net_device *dev =3D nd->dev;
+ 	int hlen =3D LL_RESERVED_SPACE(dev);
+ 	int tlen =3D dev->needed_tailroom;
++	int payload;
+ 	int len =3D hlen + tlen;
+ 	struct sk_buff *skb;
+ 	struct ncsi_request *nr;
+@@ -281,14 +287,17 @@ static struct ncsi_request *ncsi_alloc_command(struct=
+ ncsi_cmd_arg *nca)
+ 		return NULL;
+=20
+ 	/* NCSI command packet has 16-bytes header, payload, 4 bytes checksum.
++	 * Payload needs padding so that the checksum field follwoing payload is
++	 * aligned to 32bit boundary.
+ 	 * The packet needs padding if its payload is less than 26 bytes to
+ 	 * meet 64 bytes minimal ethernet frame length.
+ 	 */
+ 	len +=3D sizeof(struct ncsi_cmd_pkt_hdr) + 4;
+-	if (nca->payload < 26)
++	payload =3D ALIGN(nca->payload, 4);
++	if (payload < 26)
+ 		len +=3D 26;
+ 	else
+-		len +=3D nca->payload;
++		len +=3D payload;
+=20
+ 	/* Allocate skb */
+ 	skb =3D alloc_skb(len, GFP_ATOMIC);
+--=20
+2.17.1
 
-Fair enough.
-
-> 
-> -- Steve
-
-Best regards,
-Lu Baolu
-
-> 
->> +
->> +DECLARE_EVENT_CLASS(dma_unmap,
->> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
->> +
->> +	TP_ARGS(dev, dev_addr, size),
->> +
->> +	TP_STRUCT__entry(
->> +		__string(dev_name, dev_name(dev))
->> +		__field(dma_addr_t, dev_addr)
->> +		__field(size_t,	size)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__assign_str(dev_name, dev_name(dev));
->> +		__entry->dev_addr = dev_addr;
->> +		__entry->size = size;
->> +	),
->> +
->> +	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
->> +		  __get_str(dev_name),
->> +		  (unsigned long long)__entry->dev_addr,
->> +		  __entry->size)
->> +);
->> +
->> +DEFINE_EVENT(dma_unmap, bounce_unmap_single,
->> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
->> +	TP_ARGS(dev, dev_addr, size)
->> +);
->> +
->> +#endif /* _TRACE_INTEL_IOMMU_H */
->> +
->> +/* This part must be outside protection */
->> +#include <trace/define_trace.h>
->> +#endif /* CONFIG_INTEL_IOMMU */
-> 
-> 
