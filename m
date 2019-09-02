@@ -2,89 +2,85 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74648C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DBDC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550632173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C6921874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbfIBJH6 convert rfc822-to-8bit (ORCPT
+        id S1730922AbfIBJIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:07:58 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:37068 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730663AbfIBJH6 (ORCPT
+        Mon, 2 Sep 2019 05:08:25 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:51450 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729804AbfIBJIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:07:58 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-45-pWetoKX2MVuDKeOGTbmj9Q-1; Mon, 02 Sep 2019 10:07:53 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 2 Sep 2019 10:07:53 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 2 Sep 2019 10:07:53 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Rasmus Villemoes' <linux@rasmusvillemoes.dk>,
-        Joe Perches <joe@perches.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Petr Mladek <pmladek@suse.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] printf: add support for printing symbolic error codes
-Thread-Topic: [PATCH] printf: add support for printing symbolic error codes
-Thread-Index: AQHVX4Vhxwh8/eMOVEunFKpvvE2RyacYHAyQ
-Date:   Mon, 2 Sep 2019 09:07:53 +0000
-Message-ID: <d5cd47d8f2344ddfa88a34eab5cceb81@AcuMS.aculab.com>
-References: <20190830214655.6625-1-linux@rasmusvillemoes.dk>
- <64a000cc3b0fcd7c99b5cd41b0db7f1b5e9e6db7.camel@perches.com>
- <9fecd3a9-e1ae-a1f9-a0c5-f5db3430c81d@rasmusvillemoes.dk>
- <92108c09c37a9355566b579db152a05e19f54ccf.camel@perches.com>
- <516ab378-e79a-4e1c-8099-ccb22dfd5508@rasmusvillemoes.dk>
-In-Reply-To: <516ab378-e79a-4e1c-8099-ccb22dfd5508@rasmusvillemoes.dk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 2 Sep 2019 05:08:25 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8298DeO009993, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8298DeO009993
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 2 Sep 2019 17:08:14 +0800
+Received: from localhost.localdomain (172.21.83.238) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
+ 14.3.468.0; Mon, 2 Sep 2019 17:08:13 +0800
+From:   <max.chou@realtek.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <alex_lu@realsil.com.cn>, <max.chou@realtek.com>
+Subject: [PATCH] Bluetooth: btrtl: Fix an issue that failing to download the FW which size is over 32K bytes
+Date:   Mon, 2 Sep 2019 17:08:09 +0800
+Message-ID: <20190902090809.3409-1-max.chou@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MC-Unique: pWetoKX2MVuDKeOGTbmj9Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [172.21.83.238]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes
-> Sent: 30 August 2019 23:51
-...
-> > But why not just extend check_pointer_msg?
-> 
-> Partly because that would rely on all %p<foo> actually eventually
-> passing ptr through to that (notably plain %p does not), partly because
-> the way check_pointer_msg works means that it has to return a string for
-> its caller to print - which is ok when the errcode is found, but breaks
-> if it needs to format a decimal. It can't even snprintf() to a stack
-> buffer and return that, because, well, you can't do that, and it would
-> be a silly recursive snprintf anyway.
+From: Max Chou <max.chou@realtek.com>
 
-Perhaps you could use NULL or "" to mean 'just print the value'.
-Then you might manage to use the test for NULL to print the errno strings.
+Fix the issue that when the FW size is 32K+, it will fail for the download
+process because of the incorrect index.
 
-	David
+Signed-off-by: Max Chou <max.chou@realtek.com>
+---
+ drivers/bluetooth/btrtl.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 0354e93e7a7c..215896af0259 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -389,6 +389,7 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+ 	int frag_len = RTL_FRAG_LEN;
+ 	int ret = 0;
+ 	int i;
++	int j;
+ 	struct sk_buff *skb;
+ 	struct hci_rp_read_local_version *rp;
+ 
+@@ -401,7 +402,12 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+ 
+ 		BT_DBG("download fw (%d/%d)", i, frag_num);
+ 
+-		dl_cmd->index = i;
++		if (i > 0x7f)
++			j = (i & 0x7f) + 1;
++		else
++			j = i;
++
++		dl_cmd->index = j;
+ 		if (i == (frag_num - 1)) {
+ 			dl_cmd->index |= 0x80; /* data end */
+ 			frag_len = fw_len % RTL_FRAG_LEN;
+-- 
+2.17.1
 
