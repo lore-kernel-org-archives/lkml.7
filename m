@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191D8C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D39C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B4C215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273F215EA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MrtEnvsP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PlrwvAU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbfIBJfU (ORCPT
+        id S1731163AbfIBJfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:35:20 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40377 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729882AbfIBJfT (ORCPT
+        Mon, 2 Sep 2019 05:35:34 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45681 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729882AbfIBJfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:35:19 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f10so11974816qkg.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:35:19 -0700 (PDT)
+        Mon, 2 Sep 2019 05:35:34 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so11922010qki.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=38YIQw9rYXVcXSnz01ylMn1XuQgT2tKgepHXTvRAlmI=;
-        b=MrtEnvsPeKbpdEE6n4t+yRTgqlactOV8g1SI+5jk0ZIyXDWGDbTrfXIz12VxRvYixu
-         SI8Ls/by2Tn0tT31+NYhrzpSyE5Qa9YGGnyhVIPRyvIcUhdZeF3bi3rdJehdc0tDmz98
-         CTP/uleQTCSkAmNWdqVCC0BkzhNBysidHkm9VFiK2EhUzjY3+sHD3BjBFcGIETlSLr27
-         i6Qiijo8rqb36DwmQYlzWbmf2lxeJ2FOYX04K4zDuxcziu8LoskVWRvp4bG8nMy1wfVs
-         bPt6NY0feBStC430sECK7fDZ4b8hOSs4S7Lbxq8HXiYsTdy5BQedyRMgkTk2AqWIjazR
-         8/Vw==
+        bh=vAwnLuMjjeItOOqHHXHJmcc2xpDcbEuHDPmJlUbyfys=;
+        b=PlrwvAU2KCgLvuLJeYmq+oXRO6WFqP5OyD8x2GqpXCKWsQyaCQv+JWXDCy8y5BWeL5
+         yZzac6WC7sgZDmlZSV40kMzZtSar7DmfkwcY+qjoNz7vl+MVUr94nFmNDMGHou7vDoKr
+         1B1ExfRcC4j2fSK0hHmzHPehXdJFDwqnzCaQhW/eOsqs4lGEkbHklA9K71U7T7O4JMti
+         pbLv48onqk/2cqgkxei++KAtZJvLIWmMwfSgVsLTSoWwHjt8/8NELscJ9gkK0q1XeH9Y
+         +xXI99gACrkxEuyAEdP6FgWTd0DNtbq57D/lBrP/cMOsKt7I0hyS5ASpzkb9T4Zy86QP
+         4k+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=38YIQw9rYXVcXSnz01ylMn1XuQgT2tKgepHXTvRAlmI=;
-        b=DW7ALPRlNYHdqZihmUsWZwrhOEdLnoWxVpHQpre0FpVWAtXaxVPIoUEdaGMXKARW6v
-         S0Y5yEn6d4xKVovIjQ4u8Mre6Un6IlXW/SClcqmfpOF1BtWfmJBnuiGUtdZHKGBP8119
-         U44L9ruFH1F7K8tU+fFFzprgVb6mB5iW+9ROVhNiRjXZdAyN1BpaZaIQbdtfcxODFCl2
-         5ZIMhcni2eGjzSHiAoQjK28OqpchSY2d867T41Zt8VHoODMCivHolp5PelKuP6DpoGO3
-         mLUdH+QWJj9PWqUN0VdVSKeEODGtm1ck0TwKpvTrV5CbOcuXuPBOaymT/X/BWf7/IOmb
-         9DsQ==
-X-Gm-Message-State: APjAAAWQoQmM7Oe/zMkY8SqDsR8X4asH21EUct265eFE1MWffOukrCKr
-        MGX8IbAD0oYX0Sey6Nh/B+V3e1CwVrb1pM6Muk85Ydk4
-X-Google-Smtp-Source: APXvYqzstwtUHC+bSs9WdknmyMWA119lZrPIEt6ddRW8DWeESXgG8Thvv6/PsX8pItz2k9fLmDu/VaDOP/UcM6Gga/c=
-X-Received: by 2002:a37:8547:: with SMTP id h68mr6152302qkd.219.1567416918785;
- Mon, 02 Sep 2019 02:35:18 -0700 (PDT)
+        bh=vAwnLuMjjeItOOqHHXHJmcc2xpDcbEuHDPmJlUbyfys=;
+        b=LSGqKtIv4tBvq1vs78JWFw+nsdR92svFzVw1to5IaHnjHWGPsO2eYai0Lyf2+Wk2BX
+         T+XUR/Jkv7XpYki+eJphXevLTFfaGmXDMckBRapgWVGsZcgLJDANLjWQumIPt4Ak+00P
+         4y8cgnkMiZD5htIMCMPH2Zo64+7Hxy1mU7g6U/PIwHS5HOTPvnHbsvSEKqdJxMRPmiB/
+         LVZ5FjC0xBAPbvNEe7PuqVCp5FaLqh0KNanrOZ6iTPWasZhbrTAzGuQVL0inhV5dEwI6
+         bduHvuHQ6poEmSgxfvfJ8bCHOpLd+sKy04zh275JiwGRTOipp+f6TAKjRohBDYeR6AhO
+         bNWQ==
+X-Gm-Message-State: APjAAAVaqn2lemZ8WOVPjgHHqAwNRCCSyrZ7nzGqhv9hp4Z3BZkMpHt+
+        Cr0Jino65m2IAn8AZCPJEjA/tYvfHJac7ri1D7B6Ng==
+X-Google-Smtp-Source: APXvYqwcv2iKNWBzmW6xpbxs7QP7I0kVxvLsIMZ9MSGwXwqDaAyBeeDhkf6dp3c6TQppZmZjMOeNnmx68BmhybQL44Y=
+X-Received: by 2002:a37:813:: with SMTP id 19mr24965528qki.427.1567416933410;
+ Mon, 02 Sep 2019 02:35:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <1564757262-6166-1-git-send-email-yannick.fertre@st.com> <ada48bc2-ac6a-8732-9aa6-03ef1c104abf@st.com>
-In-Reply-To: <ada48bc2-ac6a-8732-9aa6-03ef1c104abf@st.com>
+References: <1564754931-13861-1-git-send-email-yannick.fertre@st.com> <50695b37-df51-08d6-a11e-99f9349aa481@st.com>
+In-Reply-To: <50695b37-df51-08d6-a11e-99f9349aa481@st.com>
 From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 2 Sep 2019 11:35:07 +0200
-Message-ID: <CA+M3ks6MurXFitY24Cm9jCVx8h+VxTDFARxKuqg7MmhUk58X7w@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: add pinctrl for DPI encoder mode
+Date:   Mon, 2 Sep 2019 11:35:22 +0200
+Message-ID: <CA+M3ks5GaN2-jEHO5-QGGkhYG2U-ExQR4=kNuk0jBxH2BkRGYQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1 board
 To:     Philippe CORNU <philippe.cornu@st.com>
 Cc:     Yannick FERTRE <yannick.fertre@st.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -72,8 +72,7 @@ Cc:     Yannick FERTRE <yannick.fertre@st.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
+        Fabrice GASNIER <fabrice.gasnier@st.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,102 +80,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+dri-devel mailing list
++ dri-devel mailing list
 
-Le lun. 2 sept. 2019 =C3=A0 10:47, Philippe CORNU <philippe.cornu@st.com> a=
+Le lun. 2 sept. 2019 =C3=A0 10:45, Philippe CORNU <philippe.cornu@st.com> a=
  =C3=A9crit :
 >
 > Hi Yannick,
 >
-> On 8/2/19 4:47 PM, Yannick Fertr=C3=A9 wrote:
-> > The implementation of functions encoder_enable and encoder_disable
-> > make possible to control the pinctrl according to the encoder type.
-> > The pinctrl must be activated only if the encoder type is DPI.
-> > This helps to move the DPI-related pinctrl configuration from
-> > all the panel or bridge to the LTDC dt node.
+> On 8/2/19 4:08 PM, Yannick Fertr=C3=A9 wrote:
+> > The ltdc pinctrl must be in the display controller node and
+> > not in the peripheral node (hdmi bridge).
 > >
 > > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
 > > ---
-> >   drivers/gpu/drm/stm/ltdc.c | 35 +++++++++++++++++++++++++++++++++++
-> >   1 file changed, 35 insertions(+)
+> >   arch/arm/boot/dts/stm32mp157a-dk1.dts | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
 > >
-> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index 3ab4fbf..1c4fde0 100644
-> > --- a/drivers/gpu/drm/stm/ltdc.c
-> > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -15,6 +15,7 @@
-> >   #include <linux/module.h>
-> >   #include <linux/of_address.h>
-> >   #include <linux/of_graph.h>
-> > +#include <linux/pinctrl/consumer.h>
-> >   #include <linux/platform_device.h>
-> >   #include <linux/pm_runtime.h>
-> >   #include <linux/reset.h>
-> > @@ -1040,6 +1041,36 @@ static const struct drm_encoder_funcs ltdc_encod=
-er_funcs =3D {
-> >       .destroy =3D drm_encoder_cleanup,
+> > diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/=
+stm32mp157a-dk1.dts
+> > index f3f0e37..1285cfc 100644
+> > --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> > +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> > @@ -99,9 +99,6 @@
+> >               reset-gpios =3D <&gpioa 10 GPIO_ACTIVE_LOW>;
+> >               interrupts =3D <1 IRQ_TYPE_EDGE_FALLING>;
+> >               interrupt-parent =3D <&gpiog>;
+> > -             pinctrl-names =3D "default", "sleep";
+> > -             pinctrl-0 =3D <&ltdc_pins_a>;
+> > -             pinctrl-1 =3D <&ltdc_pins_sleep_a>;
+> >               status =3D "okay";
+> >
+> >               ports {
+> > @@ -276,6 +273,9 @@
 > >   };
 > >
-> > +static void ltdc_encoder_disable(struct drm_encoder *encoder)
-> > +{
-> > +     struct drm_device *ddev =3D encoder->dev;
-> > +
-> > +     DRM_DEBUG_DRIVER("\n");
-> > +
-> > +     /* Set to sleep state the pinctrl whatever type of encoder */
-> > +     pinctrl_pm_select_sleep_state(ddev->dev);
-> > +}
-> > +
-> > +static void ltdc_encoder_enable(struct drm_encoder *encoder)
-> > +{
-> > +     struct drm_device *ddev =3D encoder->dev;
-> > +
-> > +     DRM_DEBUG_DRIVER("\n");
-> > +
-> > +     /*
-> > +      * Set to default state the pinctrl only with DPI type.
-> > +      * Others types like DSI, don't need pinctrl due to
-> > +      * internal bridge (the signals do not come out of the chipset).
-> > +      */
-> > +     if (encoder->encoder_type =3D=3D DRM_MODE_ENCODER_DPI)
-> > +             pinctrl_pm_select_default_state(ddev->dev);
-> > +}
-> > +
-> > +static const struct drm_encoder_helper_funcs ltdc_encoder_helper_funcs=
- =3D {
-> > +     .disable =3D ltdc_encoder_disable,
-> > +     .enable =3D ltdc_encoder_enable,
-> > +};
-> > +
-> >   static int ltdc_encoder_init(struct drm_device *ddev, struct drm_brid=
-ge *bridge)
-> >   {
-> >       struct drm_encoder *encoder;
-> > @@ -1055,6 +1086,8 @@ static int ltdc_encoder_init(struct drm_device *d=
-dev, struct drm_bridge *bridge)
-> >       drm_encoder_init(ddev, encoder, &ltdc_encoder_funcs,
-> >                        DRM_MODE_ENCODER_DPI, NULL);
-> >
-> > +     drm_encoder_helper_add(encoder, &ltdc_encoder_helper_funcs);
-> > +
-> >       ret =3D drm_bridge_attach(encoder, bridge, NULL);
-> >       if (ret) {
-> >               drm_encoder_cleanup(encoder);
-> > @@ -1280,6 +1313,8 @@ int ltdc_load(struct drm_device *ddev)
-> >
-> >       clk_disable_unprepare(ldev->pixel_clk);
-> >
-> > +     pinctrl_pm_select_sleep_state(ddev->dev);
-> > +
+> >   &ltdc {
+> > +     pinctrl-names =3D "default", "sleep";
+> > +     pinctrl-0 =3D <&ltdc_pins_a>;
+> > +     pinctrl-1 =3D <&ltdc_pins_sleep_a>;
 >
 > Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
 >
 > Thanks
 > Philippe :)
 >
-> >       pm_runtime_enable(ddev->dev);
+> >       status =3D "okay";
 > >
-> >       return 0;
+> >       port {
 > >
 > _______________________________________________
 > linux-arm-kernel mailing list
