@@ -2,117 +2,99 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FFAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB48C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDE821881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567412712;
-	bh=hJqNd1nAJxTWeoG8cUFOGVuydTeiAcks6J/HnRnrdCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qwRnBaWj6dYKjGs//kJfhSzZWIdHGOrvtdTvjC4WpuEc76ckcjTqN1HJsRb9Uchn6
-	 sew2/hdzncaRI09Xkd8Se+WvYNyHvltsiTP/Pye4rJLk425ahucsMoS1S5rBwVyw15
-	 9iOSTv8autlhLwwAiaQWbd6yhlENYx9i1T6mUBok=
+	by mail.kernel.org (Postfix) with ESMTP id F0A8021874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbfIBIZL (ORCPT
+        id S1729964AbfIBI07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfIBIZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:25:11 -0400
-Received: from earth.universe (dyndsl-091-096-044-124.ewe-ip-backbone.de [91.96.44.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F40EC21744;
-        Mon,  2 Sep 2019 08:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567412710;
-        bh=hJqNd1nAJxTWeoG8cUFOGVuydTeiAcks6J/HnRnrdCQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CSKXHmZVccWeRF1swatxhhvfPbdfotFTHJhA/Wq7BnjRstbc5TxYRywGykOTGOAh+
-         eIq0L6cf/BwuM9gFhJ2eLGCSQWNiYDlkSMHlxJIBTQIvMavt7Fwh18IJtc1JsspM8e
-         3fhI5XLsXL5L75XAx1RV96LcJi2yV8fSJTt+ckvI=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 9A4513C0B7F; Mon,  2 Sep 2019 10:25:07 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 10:25:07 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Michael Nosthoff <michael@nosthoff.rocks>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the battery tree
-Message-ID: <20190902082507.fmfays3lnnkyigmv@earth.universe>
-References: <20190902071041.ukvc64tg5tjttk6w@earth.universe>
- <79b6-5d6cc580-3-35015040@57153312>
+        Mon, 2 Sep 2019 04:26:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53910 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729382AbfIBI06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:26:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EF187AF0D;
+        Mon,  2 Sep 2019 08:26:56 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 10:26:53 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 3/6] powerpc/perf: consolidate read_user_stack_32
+Message-ID: <20190902102653.6d477e16@naga>
+In-Reply-To: <877e6rtkhe.fsf@mpe.ellerman.id.au>
+References: <cover.1567198491.git.msuchanek@suse.de>
+        <ea3783a1640b707ef9ce4740562850ef1152829b.1567198491.git.msuchanek@suse.de>
+        <87a7bntkum.fsf@mpe.ellerman.id.au>
+        <877e6rtkhe.fsf@mpe.ellerman.id.au>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hobeijwfp3tvdwi2"
-Content-Disposition: inline
-In-Reply-To: <79b6-5d6cc580-3-35015040@57153312>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 02 Sep 2019 14:01:17 +1000
+Michael Ellerman <mpe@ellerman.id.au> wrote:
 
---hobeijwfp3tvdwi2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Sep 02, 2019 at 09:32:47AM +0200, Michael Nosthoff wrote:
-> On Monday, September 02, 2019 09:10 CEST, Sebastian Reichel <sre@kernel.o=
-rg> wrote:
-> > On Mon, Sep 02, 2019 at 09:31:31AM +1000, Stephen Rothwell wrote:
-> > > In commit
-> > >
-> > > b19aca4eb2d2 ("power: supply: sbs-battery: only return health when ba=
-ttery present")
-> > >
-> > > [...]
-> > >
-> > > Please do not split Fixes tags over more than one line.
+> Michael Ellerman <mpe@ellerman.id.au> writes:
+> > Michal Suchanek <msuchanek@suse.de> writes:  
+> ...
+> >> @@ -295,6 +279,12 @@ static inline int current_is_64bit(void)
+> >>  }
+> >>  
+> >>  #else  /* CONFIG_PPC64 */
+> >> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +#endif /* CONFIG_PPC64 */  
 > >
-> > I have fixed this and rebased the branch, so the issue should be
-> > gone tomororw. Thanks for the notice,
->
-> I think you missed that the second commit
->=20
-> 38fa8b9f75ea ("power: supply: sbs-battery: use correct flags field")
->=20
-> also needs this fix.
+> > Ending the PPC64 else case here, and then restarting it below with an
+> > ifndef means we end up with two parts of the file that define 32-bit
+> > code, with a common chunk in the middle, which I dislike.
+> >
+> > I'd rather you add the empty read_user_stack_slow() in the existing
+> > #else section and then move read_user_stack_32() below the whole ifdef
+> > PPC64/else/endif section.
+> >
+> > Is there some reason that doesn't work?  
+> 
+> Gah, I missed that you split the whole file later in the series. Any
+> reason you did it in two steps rather than moving patch 6 earlier in the
+> series?
 
-Right, now also fixed.
+To make this patch readable.
 
--- Sebastian
+Thanks
 
---hobeijwfp3tvdwi2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1s0d8ACgkQ2O7X88g7
-+prcOhAAm9EtUz32jofNUdITle8kHeokXBQnmIVM1qaac1+iEiO7DUt5F3tGCyyg
-Jk5q8zZMHIzGeZY1TEvMPtxUnsPsrKEDRZTOYfLQ2uwMC4gKMgce8kTqM6aiQopl
-BQzbJpS+zvDcMIUa1my7TynvmZaCLETwkUfY03QlJlvPIabzpdECcZr2h83jTSTL
-p9JwUA1RJH3dqkrkLNjevjqh5z1DMTn/vvl8UnmypYmCSesypHl51VeWzM/RZ6DQ
-5J/jkjelRsWmTaMnFOtG3WtxZOJDbk0GGbhMb2f8rRPgtlOQqSEhbOpxSlH7Md78
-iTsZLL0FkZXqhR8nsbm5tEOZHemiF5AyNaGKM+y9S+24DI35EsZHQlpR+oFok4lk
-YKbwNJSl483v9uaIb5LZPJxxDPJY7HtR0+tue8UPqjHOeb7SN47ppMJJo8nAZFA1
-VlnAPEauj6GnI0JbbEIkHhK/HNS39aK+p+3ngiRPQV9HiRaVOC9QSU83LD+Eviza
-f4lDVUtlhF3Hl3VTvEVdlrxzCC10ASX9ou+3B8VAbBnUGmioJG19cgqgDF3vFbEL
-6c8gBk6S+Z9XrRla2cecBxM7nW+3ShzqLNAbdoY/hMRIHwBYE3PDLbhP8taIsIA8
-5Z3PuLrFga0B9Sja0NZGG8LM1VeIIt12goRpFUfKDhvhWA7tMw0=
-=MVak
------END PGP SIGNATURE-----
-
---hobeijwfp3tvdwi2--
+Michal
