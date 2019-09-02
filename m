@@ -2,154 +2,84 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE129C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1502C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC36E2168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hbKCmxrh"
+	by mail.kernel.org (Postfix) with ESMTP id BA5882168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbfIBM5h (ORCPT
+        id S1730975AbfIBNAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:57:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55238 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729950AbfIBM5g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:57:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9h13EkBbQnZFZZifKdj3rs2HLYagXdgFWT2AUzdmgpI=; b=hbKCmxrhUY1zqpP0uzODVohmc
-        7Gc3fRoEvRGtWXSR1YHAsRyqeOQZ+xSo3xueOYK0vZkz2wXZDvUnLNC21905DicvN9MPBAs4DBoHP
-        3bEPPX3Lah67+Yt2YExpC+47yEB1NRTiRlG2syuXFfZuBnYx1rgsSfXzIhagdqy2nJMJMcIGaOkBm
-        jqE6smn69C/mhsZ+W09pCKWboIYlgkXz4x5ucnn1GxJP4fgNnVDc7NhwfOC1XwO1DTcx+XifaEChK
-        ej/28hnJz2yhxza7ykMLMj5I6MCx6KdQRmTPPejmkQG2Pu2wo4ajJdOKDSq+MquqSIw54tqAYCWoV
-        lCZUHOQWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4lt4-0006FG-Ob; Mon, 02 Sep 2019 12:56:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B054A30116F;
-        Mon,  2 Sep 2019 14:56:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 695CA29B408C9; Mon,  2 Sep 2019 14:56:44 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 14:56:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     dalias@libc.org, linux-sh@vger.kernel.org, catalin.marinas@arm.com,
-        dave.hansen@linux.intel.com, heiko.carstens@de.ibm.com,
-        linuxarm@huawei.com, jiaxun.yang@flygoat.com,
-        linux-kernel@vger.kernel.org, mwb@linux.vnet.ibm.com,
-        paulus@samba.org, hpa@zytor.com, sparclinux@vger.kernel.org,
-        chenhc@lemote.com, will@kernel.org, linux-s390@vger.kernel.org,
-        ysato@users.sourceforge.jp, mpe@ellerman.id.au, x86@kernel.org,
-        rppt@linux.ibm.com, borntraeger@de.ibm.com, dledford@redhat.com,
-        mingo@redhat.com, jeffrey.t.kirsher@intel.com,
-        benh@kernel.crashing.org, jhogan@kernel.org,
-        nfont@linux.vnet.ibm.com, mattst88@gmail.com, len.brown@intel.com,
-        gor@linux.ibm.com, anshuman.khandual@arm.com,
-        ink@jurassic.park.msu.ru, cai@lca.pw, luto@kernel.org,
-        tglx@linutronix.de, naveen.n.rao@linux.vnet.ibm.com,
-        linux-arm-kernel@lists.infradead.org, rth@twiddle.net,
-        axboe@kernel.dk, robin.murphy@arm.com, linux-mips@vger.kernel.org,
-        ralf@linux-mips.org, tbogendoerfer@suse.de, paul.burton@mips.com,
-        linux-alpha@vger.kernel.org, bp@alien8.de,
-        akpm@linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-Message-ID: <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
- <20190831161247.GM2369@hirez.programming.kicks-ass.net>
- <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
- <20190902072542.GN2369@hirez.programming.kicks-ass.net>
- <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
+        Mon, 2 Sep 2019 09:00:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:53816 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730415AbfIBNAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:00:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4399337;
+        Mon,  2 Sep 2019 06:00:10 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE5DD3F246;
+        Mon,  2 Sep 2019 06:00:08 -0700 (PDT)
+Subject: Re: [PATCH 3/7] iommu/arm-smmu: Add tlb_sync implementation hook
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     Sachin Nikam <Snikam@nvidia.com>,
+        "Thomas Zeng (SW-TEGRA)" <thomasz@nvidia.com>,
+        Juha Tukkinen <jtukkinen@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Timo Alho <talho@nvidia.com>, Yu-Huan Hsu <YHsu@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Alexander Van Brunt <avanbrunt@nvidia.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+ <1567118827-26358-4-git-send-email-vdumpa@nvidia.com>
+ <554f8de1-1638-4eb9-59ae-8e1f0d786c44@arm.com>
+ <BYAPR12MB2710AF5DDCB687C7E78362E5B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
+ <BYAPR12MB271010C629D8DD7AEC0123D4B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3d734164-51c9-3465-cddd-276093389797@arm.com>
+Date:   Mon, 2 Sep 2019 14:00:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BYAPR12MB271010C629D8DD7AEC0123D4B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 08:25:24PM +0800, Yunsheng Lin wrote:
-> On 2019/9/2 15:25, Peter Zijlstra wrote:
-> > On Mon, Sep 02, 2019 at 01:46:51PM +0800, Yunsheng Lin wrote:
-> >> On 2019/9/1 0:12, Peter Zijlstra wrote:
-> > 
-> >>> 1) because even it is not set, the device really does belong to a node.
-> >>> It is impossible a device will have magic uniform access to memory when
-> >>> CPUs cannot.
-> >>
-> >> So it means dev_to_node() will return either NUMA_NO_NODE or a
-> >> valid node id?
-> > 
-> > NUMA_NO_NODE := -1, which is not a valid node number. It is also, like I
-> > said, not a valid device location on a NUMA system.
-> > 
-> > Just because ACPI/BIOS is shit, doesn't mean the device doesn't have a
-> > node association. It just means we don't know and might have to guess.
+On 30/08/2019 23:49, Krishna Reddy wrote:
+>>> +	if (smmu->impl->tlb_sync) {
+>>> +		smmu->impl->tlb_sync(smmu, page, sync, status);
 > 
-> How do we guess the device's location when ACPI/BIOS does not set it?
+>> What I'd hoped is that rather than needing a hook for this, you could just override smmu_domain->tlb_ops from .init_context to wire up the alternate .sync method directly. That would save this extra level of indirection.
+> 
+> Hi Robin,  overriding tlb_ops->tlb_sync function is not enough here.
+> There are direct references to arm_smmu_tlb_sync_context(),  arm_smmu_tlb_sync_global() functions.
+> In arm-smmu.c.  we can replace these direct references with tlb_ops->tlb_sync() function except in one function arm_smmu_device_reset().
+> When arm_smmu_device_reset() gets called, domains are not initialized and tlb_ops is not available.
+> Should we add a new hook for arm_smmu_tlb_sync_global() or make this as a responsibility of impl->reset() hook as it gets
+> called at the same place?
 
-See device_add(), it looks to the device's parent and on NO_NODE, puts
-it there.
+Ah, right, I'd forgotten about the TLB maintenance on reset. Looking 
+again, though, I think you might need to implement impl->reset anyway 
+for the sake of clearing GFSR correctly - since the value read from the 
+base instance technically may not match whatever bits might happen to be 
+set in the other instances - so I don't see any issue with just calling 
+nsmmu_tlb_sync() from there as well.
 
-Lacking any hints, just stick it to node0 and print a FW_BUG or
-something.
-
-> It seems dev_to_node() does not do anything about that and leave the
-> job to the caller or whatever function that get called with its return
-> value, such as cpumask_of_node().
-
-Well, dev_to_node() doesn't do anything; nor should it. It are the
-callers of set_dev_node() that should be taking care.
-
-Also note how device_add() sets the device node to the parent device's
-node on NUMA_NO_NODE. Arguably we should change it to complain when it
-finds NUMA_NO_NODE and !parent.
-
----
- drivers/base/core.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index f0dd8e38fee3..2caf204966a0 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2120,8 +2120,16 @@ int device_add(struct device *dev)
- 		dev->kobj.parent = kobj;
- 
- 	/* use parent numa_node */
--	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
--		set_dev_node(dev, dev_to_node(parent));
-+	if (dev_to_node(dev) == NUMA_NO_NODE) {
-+		if (parent)
-+			set_dev_node(dev, dev_to_node(parent));
-+#ifdef CONFIG_NUMA
-+		else {
-+			pr_err("device: '%s': has no assigned NUMA node\n", dev_name(dev));
-+			set_dev_node(dev, 0);
-+		}
-+#endif
-+	}
- 
- 	/* first, register with generic layer. */
- 	/* we require the name to be set before, and pass NULL */
+Robin.
