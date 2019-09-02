@@ -2,200 +2,93 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7872C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEEDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A3121670
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E24921670
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HtkLDWjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfIBVC3 (ORCPT
+        id S1727530AbfIBVDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:02:29 -0400
-Received: from sauhun.de ([88.99.104.3]:44198 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727370AbfIBVC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:02:29 -0400
-Received: from localhost (p54B337C1.dip0.t-ipconnect.de [84.179.55.193])
-        by pokefinder.org (Postfix) with ESMTPSA id 79B4D2C0165;
-        Mon,  2 Sep 2019 23:02:26 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 23:02:26 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Chuanhua Han <chuanhua.han@nxp.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
-        Udit Kumar <udit.kumar@nxp.com>
-Subject: Re: [PATCH] ACPI: support for NXP i2c controller
-Message-ID: <20190902210226.GC7253@kunai>
-References: <20190711102601.20582-1-chuanhua.han@nxp.com>
- <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+        Mon, 2 Sep 2019 17:03:07 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44029 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbfIBVDG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:03:06 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c19so2754122edy.10;
+        Mon, 02 Sep 2019 14:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DiN3XUwEyWuVguvm3uea8it2JK7pQhMrwbT1bWvvbSI=;
+        b=HtkLDWjRjEb4yj4xw+UwrQaSDsmAzlj4JTHeRXU8o3a8vDDL46gfQ4a8mRd1ongvjP
+         70YSB9qYB8I5jqkD3LhBW4HXXOHRnbEbbXzqXhtISLkvBvujhEmdmUF+2upqsjUYAPqH
+         IFireVQTQR7Lxi6MB1VhoSUJ0nVnrIlK0WFY1aevs2QYMCT7GbV7ZobxG+apGNtic2ug
+         m+Umt1EDp1nA8rucntv9Or5/HzE1LGG+ML6sbLesn6BXyaTSZ2zMHFhZvS0VO22egN03
+         nbJ9Yoswq9wH+d6/qdQNLwWvofUgZFQqMB2/CoDNy2J6Zb9y2ATIF+Q2zsez4SKcWnVY
+         XPYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=DiN3XUwEyWuVguvm3uea8it2JK7pQhMrwbT1bWvvbSI=;
+        b=QwAPycc5/plMp1bogIf18M2wniJYUTMuKljG0xrmpQOdvpAkN3gmLBqnRbEgiFPRwy
+         pJ1Fz0Tmvb4ZJIuXYvEEO8CDV0elznOh4Y/+tAeS3CtRgve17kY1VfeT8g8X60YU/8TZ
+         2KglaYxHIw9Lg1+rfTOsRljm869QsWnjRP4hITmyb4Wq/auxKyDed41uOqAY3OZt+wJ6
+         d2qWMEg4DIMdafDo7ajnW+JnS2VtEKqaSjJjchymBzWablDoYuujyDPzdlJ4MCXc64j5
+         8WuYR5S4QCSvXtc219JXyRUFEbECF8JiVIFREjhsJSqQKl//AJFF6IDrXRCrNIW3b3+B
+         PhKw==
+X-Gm-Message-State: APjAAAX9mQ1XStXEP+iGIETIqAqtwCX2up5yF18rHj24ipO7HbnywZXf
+        +nruYr9axYmpk4LaP+nOg/Q=
+X-Google-Smtp-Source: APXvYqxkCeIQUQMnPqh16Z8FXBzr1esY93hV66aFNGmk7+B4ffm4Y6lPGy4bvc73J3A/SW1NNAEuag==
+X-Received: by 2002:a05:6402:658:: with SMTP id u24mr8722914edx.102.1567458184831;
+        Mon, 02 Sep 2019 14:03:04 -0700 (PDT)
+Received: from rocinante (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id a11sm3139323edf.73.2019.09.02.14.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 14:03:04 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 23:03:02 +0200
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Luca Coelho <luca@coelho.fi>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Shaul Triebitz <shaul.triebitz@intel.com>,
+        Liad Kaufman <liad.kaufman@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iwlwifi: mvm: Move static keyword to the front of
+ declarations
+Message-ID: <20190902210302.GA3046@rocinante>
+References: <20190831220108.10602-1-kw@linux.com>
+ <c22d4775fdad4e34fdc386e2cf728b63dfe13ffe.camel@coelho.fi>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f0KYrhQ4vYSV2aJu"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c22d4775fdad4e34fdc386e2cf728b63dfe13ffe.camel@coelho.fi>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Luca,
 
---f0KYrhQ4vYSV2aJu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
+> Thanks for your patch! Though we already have this change in our
+> internal tree (submitted by YueHaibing) and it will reach the mainline
+> soon.
 
-On Mon, Sep 02, 2019 at 10:56:22PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Jul 11, 2019 at 12:35 PM Chuanhua Han <chuanhua.han@nxp.com> wrot=
-e:
-> >
-> > Enable NXP i2c controller to boot with ACPI
-> >
-> > Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-> > Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
-> > Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
->=20
-> Wolfram, any objections to this from the i2c side?
+Thank you for letting me know.  I am glad it's fixed. :)
 
-CCing the new maintainer of this driver...
-
->=20
-> > ---
-> >  drivers/acpi/acpi_apd.c      |  6 ++++++
-> >  drivers/i2c/busses/i2c-imx.c | 15 +++++++++++++++
-> >  2 files changed, 21 insertions(+)
-> >
-> > diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-> > index ff47317..cf8566c 100644
-> > --- a/drivers/acpi/acpi_apd.c
-> > +++ b/drivers/acpi/acpi_apd.c
-> > @@ -165,6 +165,11 @@ static const struct apd_device_desc thunderx2_i2c_=
-desc =3D {
-> >         .fixed_clk_rate =3D 125000000,
-> >  };
-> >
-> > +static const struct apd_device_desc nxp_i2c_desc =3D {
-> > +       .setup =3D acpi_apd_setup,
-> > +       .fixed_clk_rate =3D 350000000,
-> > +};
-> > +
-> >  static const struct apd_device_desc hip08_spi_desc =3D {
-> >         .setup =3D acpi_apd_setup,
-> >         .fixed_clk_rate =3D 250000000,
-> > @@ -238,6 +243,7 @@ static const struct acpi_device_id acpi_apd_device_=
-ids[] =3D {
-> >         { "HISI02A1", APD_ADDR(hip07_i2c_desc) },
-> >         { "HISI02A2", APD_ADDR(hip08_i2c_desc) },
-> >         { "HISI0173", APD_ADDR(hip08_spi_desc) },
-> > +       { "NXP0001", APD_ADDR(nxp_i2c_desc) },
-> >  #endif
-> >         { }
-> >  };
-> > diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-> > index b1b8b93..99f9b96 100644
-> > --- a/drivers/i2c/busses/i2c-imx.c
-> > +++ b/drivers/i2c/busses/i2c-imx.c
-> > @@ -44,6 +44,7 @@
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/acpi.h>
-> >
-> >  /* This will be the driver name the kernel reports */
-> >  #define DRIVER_NAME "imx-i2c"
-> > @@ -255,6 +256,12 @@ static const struct of_device_id i2c_imx_dt_ids[] =
-=3D {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, i2c_imx_dt_ids);
-> >
-> > +static const struct acpi_device_id i2c_imx_acpi_ids[] =3D {
-> > +       {"NXP0001", .driver_data =3D (kernel_ulong_t)&vf610_i2c_hwdata},
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, i2c_imx_acpi_ids);
-> > +
-> >  static inline int is_imx1_i2c(struct imx_i2c_struct *i2c_imx)
-> >  {
-> >         return i2c_imx->hwdata->devtype =3D=3D IMX1_I2C;
-> > @@ -1052,6 +1059,9 @@ static int i2c_imx_probe(struct platform_device *=
-pdev)
-> >  {
-> >         const struct of_device_id *of_id =3D of_match_device(i2c_imx_dt=
-_ids,
-> >                                                            &pdev->dev);
-> > +       const struct acpi_device_id *acpi_id =3D
-> > +                       acpi_match_device(i2c_imx_acpi_ids,
-> > +                                         &pdev->dev);
-> >         struct imx_i2c_struct *i2c_imx;
-> >         struct resource *res;
-> >         struct imxi2c_platform_data *pdata =3D dev_get_platdata(&pdev->=
-dev);
-> > @@ -1079,6 +1089,9 @@ static int i2c_imx_probe(struct platform_device *=
-pdev)
-> >
-> >         if (of_id)
-> >                 i2c_imx->hwdata =3D of_id->data;
-> > +       else if (acpi_id)
-> > +               i2c_imx->hwdata =3D (struct imx_i2c_hwdata *)
-> > +                               acpi_id->driver_data;
-> >         else
-> >                 i2c_imx->hwdata =3D (struct imx_i2c_hwdata *)
-> >                                 platform_get_device_id(pdev)->driver_da=
-ta;
-> > @@ -1091,6 +1104,7 @@ static int i2c_imx_probe(struct platform_device *=
-pdev)
-> >         i2c_imx->adapter.nr             =3D pdev->id;
-> >         i2c_imx->adapter.dev.of_node    =3D pdev->dev.of_node;
-> >         i2c_imx->base                   =3D base;
-> > +       ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev-=
->dev));
-> >
-> >         /* Get I2C clock */
-> >         i2c_imx->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > @@ -1253,6 +1267,7 @@ static struct platform_driver i2c_imx_driver =3D {
-> >                 .name =3D DRIVER_NAME,
-> >                 .pm =3D &i2c_imx_pm_ops,
-> >                 .of_match_table =3D i2c_imx_dt_ids,
-> > +               .acpi_match_table =3D ACPI_PTR(i2c_imx_acpi_ids),
-> >         },
-> >         .id_table =3D imx_i2c_devtype,
-> >  };
-> > --
-> > 2.9.5
-> >
-
---f0KYrhQ4vYSV2aJu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1tg2EACgkQFA3kzBSg
-KbZjdQ//fUFpSzgjzQ8pjBl6JVroHT8jzq2aP30gEwpsl/FI14JgShodic81qs0q
-9s7imcri7trPcIJolZPmqdZ7GOrTxQq1N2I2B0EnS+krBEOMj8WS2B1TOxhpeAdC
-wXSQIEkEtXV+XKxGGhNNnw20GJp9OEzsbGbqOAv8hL3toI2MOjTJn0lv+tuWJpPB
-LhL5DfizUp24aocb8Y7pp5XBCGYm+X2wekkTuGQ6G9S/ApfgfTjGncIhmacD07ML
-H9/z0Gq9WNpQz/5knUquLANiUFA9VjNrxup3jHFMCCnUxvdO5RzY76X0kxWiWXru
-CexaoxPMsQ18J/jQFdEw0y3buiTjHOgs0ipAMY41gCMM3LcdbBwUbDqg94FtK+f2
-rsKzrBA9yAJ5v8nqb9GQSwYrFV40fMpYjEWbac+aptlA4dArLcpQZdmeXgvpzhR8
-9g7djI6+V0/M+LqyAFuCLoy4luTszOe1FdOrOHiO+4Yx2La2+JKSuGu1uM80eBWs
-Ea4l1PtgSsjVNs7Xq5VYO6v4J8SK2XGNAazdQOMAHONtmoUIL4QQhuyCrFOh2MbR
-BSgZLZc2cDusYZRk6IU87a7o6tAFb8FYlJrlrPFN/Cv29zzat0kilpi4t4Pqqpx5
-9Kgsq4dCj8enN/LGbWPC3HkuKV9LATHJcD5FyE8k0EGRJ/3RvIw=
-=y6Va
------END PGP SIGNATURE-----
-
---f0KYrhQ4vYSV2aJu--
+Krzysztof
