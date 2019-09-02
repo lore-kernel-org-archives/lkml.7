@@ -2,133 +2,92 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F24C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912B1C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666692168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C90220820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXnIW/gi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbfIBNGc (ORCPT
+        id S1730010AbfIBNH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:06:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:54130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbfIBNGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:06:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3E6F337;
-        Mon,  2 Sep 2019 06:06:30 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5E1F3F246;
-        Mon,  2 Sep 2019 06:06:29 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 14:06:28 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
- ls1088a
-Message-ID: <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-11-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902031716.43195-11-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Mon, 2 Sep 2019 09:07:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55320 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfIBNH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:07:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g207so10545026wmg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=rsozEf7LzXTyUNJhzuuHzBFC5HEt2b+uTwoXpDRJPPQ=;
+        b=UXnIW/gi4ourEdlpXtCIx1S1FdKJcFcQnM7bu2ySM1BS08gggZ9EP6PkB7Hlmo094A
+         R8yfJqlI0EUBa4wwuJYf3VfYqjWP8naYIs7CwbaJ47VhuqSHehwPBBCboj8KU25mTD0w
+         R7n9mX51/1VCrBPqnSo9HGSeKlgIWBhN6NUw2Ahm1iSqNp7ussbRoSozB2hb8DPykHmb
+         9kKwvikt9bSwwk524bOwBpIeQUfW6XMZgAUjshEWjh+7lm2ndr4j+NAzVBx8KsKxosxT
+         mEG8a0HPEW5tEzdsQl29Hew92Zg5HKc1uppQvAjC/A1oG6Ul3JxEjIavbmjEVYF1euxk
+         f4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rsozEf7LzXTyUNJhzuuHzBFC5HEt2b+uTwoXpDRJPPQ=;
+        b=CBqJvIuExNiyQHamPye6kI7yIuGYrJ4KOBu5hBUhIEay2KpoIrhbO+kPaRfEkq5d0h
+         x0Y7TeFjpAGnG+AMqYwGQF5B2UAbsMzR3gcAtlu4IoyW93i1Vc+Avu6qpVPnyYZ1IMjp
+         KaVit0m6L5fUJQA0Gsn/NzvswNNqZmlNCbyL78M9p7597UXDpNRMM1QejfDdveme6STa
+         xaVE0OFbdO3t5O16O2BM5hfZ/ef3CrRx3RTfJDoKH9mmcdle21sDNHu0mZoW89LdcqCZ
+         jyG6FVVBW/CYA1LjYHO39gyKW8gUP8BLYiOZoluxmMPnRHcfxG6xu36HHgOVTF/k8AgC
+         HyOg==
+X-Gm-Message-State: APjAAAXBHg++ObfI5gXQ460IUR55MmUt4ltIdAbHbsv3BlCwgu74u1hL
+        MeI3s3DBgmfAyxo35oemmE63kuZ4GT8z9w==
+X-Google-Smtp-Source: APXvYqz/ztCgmeIEp/4+hjdqXQXltGXofSvsJ49jHcYPf0MoF928UaMsVWrnbu+vkyw1bSoRiYE2Jw==
+X-Received: by 2002:a7b:c752:: with SMTP id w18mr4172216wmk.63.1567429647185;
+        Mon, 02 Sep 2019 06:07:27 -0700 (PDT)
+Received: from localhost.localdomain ([95.147.198.93])
+        by smtp.gmail.com with ESMTPSA id d28sm12352030wrb.95.2019.09.02.06.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 06:07:26 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     catalin.marinas@arm.com, will@kernel.org,
+        bjorn.andersson@linaro.org, olof@lixom.net, arnd@arndb.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/3] arm64: defconfig: Enable Qualcomm GENI based I2C controller
+Date:   Mon,  2 Sep 2019 14:07:22 +0100
+Message-Id: <20190902130724.12030-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:17:15AM +0800, Xiaowei Bao wrote:
-> Add PCIe EP node for ls1088a to support EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Remove the pf-offset proparty.
-> v3:
->  - No change.
->  
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index c676d07..da246ab 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -483,6 +483,17 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3400000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+Tested on the Lenovo Yoga C630 where this patch enables the
+keyboard, touchpad and touchscreen.
 
-Here you specify a fallback "fsl,ls-pcie-ep" that is removed by this series.
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Besides that, this looks OK.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index facf19cc275d..0fe943ac53b5 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -366,6 +366,7 @@ CONFIG_I2C_IMX_LPI2C=y
+ CONFIG_I2C_MESON=y
+ CONFIG_I2C_MV64XXX=y
+ CONFIG_I2C_PXA=y
++CONFIG_I2C_QCOM_GENI=m
+ CONFIG_I2C_QUP=y
+ CONFIG_I2C_RK3X=y
+ CONFIG_I2C_SH_MOBILE=y
+-- 
+2.17.1
 
-Thanks,
-
-Andrew Murray
-
-> +			reg = <0x00 0x03400000 0x0 0x00100000
-> +			       0x20 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <24>;
-> +			num-ob-windows = <128>;
-> +			max-functions = /bits/ 8 <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3500000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-> @@ -508,6 +519,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3500000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03500000 0x0 0x00100000
-> +			       0x28 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3600000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-> @@ -533,6 +554,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3600000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03600000 0x0 0x00100000
-> +			       0x30 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		smmu: iommu@5000000 {
->  			compatible = "arm,mmu-500";
->  			reg = <0 0x5000000 0 0x800000>;
-> -- 
-> 2.9.5
-> 
