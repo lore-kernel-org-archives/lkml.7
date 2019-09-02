@@ -2,85 +2,86 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DBDC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E9DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C6921874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C08C217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfIBJIZ (ORCPT
+        id S1730939AbfIBJIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:08:25 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:51450 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729804AbfIBJIZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:08:25 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8298DeO009993, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8298DeO009993
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 2 Sep 2019 17:08:14 +0800
-Received: from localhost.localdomain (172.21.83.238) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
- 14.3.468.0; Mon, 2 Sep 2019 17:08:13 +0800
-From:   <max.chou@realtek.com>
-To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <alex_lu@realsil.com.cn>, <max.chou@realtek.com>
-Subject: [PATCH] Bluetooth: btrtl: Fix an issue that failing to download the FW which size is over 32K bytes
-Date:   Mon, 2 Sep 2019 17:08:09 +0800
-Message-ID: <20190902090809.3409-1-max.chou@realtek.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Sep 2019 05:08:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:50774 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729804AbfIBJIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:08:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED91028;
+        Mon,  2 Sep 2019 02:08:49 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD7C33F246;
+        Mon,  2 Sep 2019 02:08:48 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 10:08:46 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Will Deacon <will@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Peter Collingbourne <pcc@google.com>
+Subject: Re: linux-next: manual merge of the powerpc tree with the arm64 tree
+Message-ID: <20190902090846.GA15118@arrakis.emea.arm.com>
+References: <20190902094711.2625ba31@canb.auug.org.au>
+ <87lfv7tqt0.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.21.83.238]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfv7tqt0.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Chou <max.chou@realtek.com>
+On Mon, Sep 02, 2019 at 11:44:43AM +1000, Michael Ellerman wrote:
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> > Hi all,
+> >
+> > Today's linux-next merge of the powerpc tree got a conflict in:
+> >
+> >   arch/Kconfig
+> >
+> > between commit:
+> >
+> >   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
+> >
+> > from the arm64 tree and commit:
+> >
+> >   0c9c1d563975 ("x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig")
+> >
+> > from the powerpc tree.
+> >
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+> 
+> Thanks.
+> 
+> That conflict seems entirely trivial, but Catalin/Will if it bothers you
+> I have the conflicting commit in a topic branch based on rc2 which you
+> could merge to resolve it:
 
-Fix the issue that when the FW size is 32K+, it will fail for the download
-process because of the incorrect index.
+It's a trivial conflict, easy to resolve. I don't think it's worth
+trying to avoid it (Linus normally doesn't mind such conflicts).
 
-Signed-off-by: Max Chou <max.chou@realtek.com>
----
- drivers/bluetooth/btrtl.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 0354e93e7a7c..215896af0259 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -389,6 +389,7 @@ static int rtl_download_firmware(struct hci_dev *hdev,
- 	int frag_len = RTL_FRAG_LEN;
- 	int ret = 0;
- 	int i;
-+	int j;
- 	struct sk_buff *skb;
- 	struct hci_rp_read_local_version *rp;
- 
-@@ -401,7 +402,12 @@ static int rtl_download_firmware(struct hci_dev *hdev,
- 
- 		BT_DBG("download fw (%d/%d)", i, frag_num);
- 
--		dl_cmd->index = i;
-+		if (i > 0x7f)
-+			j = (i & 0x7f) + 1;
-+		else
-+			j = i;
-+
-+		dl_cmd->index = j;
- 		if (i == (frag_num - 1)) {
- 			dl_cmd->index |= 0x80; /* data end */
- 			frag_len = fw_len % RTL_FRAG_LEN;
 -- 
-2.17.1
-
+Catalin
