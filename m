@@ -2,149 +2,135 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEBCC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C1C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337D520674
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxQviwEB"
+	by mail.kernel.org (Postfix) with ESMTP id AB85E216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567452826;
+	bh=PayzVtvb1IrG2V07glwrkJeACX2e/Z4eCtEZGxId41c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LuWC0iUIn2qiWXtEyotTOLa+aq0XVj4RAb3kdk1b3NNtywd2hGrJNU5T5/hpYHrkH
+	 moz00OWeDMQHsKEcGPA6yNIZ+FL4a8yD7Rqny7oU+7QW9sSH7CmvLu+K46HLPe08XA
+	 X9Pb2o229mqTQKvjC8GRkMuPFjIP8kDwIHzs9gnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfIBTcm (ORCPT
+        id S1727192AbfIBTdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:32:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42995 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfIBTcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:32:42 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p3so7846606pgb.9;
-        Mon, 02 Sep 2019 12:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8uh9/XY6ueQfpSKxv8VJgELq8LY9QmNiFoOeViVR+c4=;
-        b=pxQviwEBr0hEsNe1eCykn9M13dqO4mBqfwj1m4MWuDTkWkG1B1LZzsTNWegeoiL1lP
-         00DtTplx0zqiFxhT56al/XqE3yasqKgdVyNUuz7aygxtgDMHjgorrndMHCKqN0yhK2uD
-         7/3G5Fj4npqW6VrT+9aQwJEPwcY5kM7sWlv27K1NpbLPzf75Y82nJL0tk5W9sTEeZrOs
-         Nsq68NrEn+S1AvwCZvc3CyoHDWFBwjU1HPjkM4rdBq/SdrSg7owZi9APYacuzdGcejmc
-         kypgTMmRWfZK/iQDjbZhYK0NkB9o7AKYlkFx327UltxETd2zlnCmbTx3VFUa018uAh1F
-         c/DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8uh9/XY6ueQfpSKxv8VJgELq8LY9QmNiFoOeViVR+c4=;
-        b=ScIUzUF3gOtpeYbiqRbrznDchQqQwWQ6nNSaFgVe0Fy0f0PvVKmUv0v3INb6oQ0VqY
-         O/WgNbb33k4RaCWEfgJgTxjmp2bp3zAAoH7Yv9/0W2HIrkL8acL0gOui98ylkSjGsTjh
-         /7m2jImicvB3gj4qcq+otfFQRh/D/8KmpRWOc0xGNQFyEZdL8qyzathor+4XLDUGXutj
-         0BG0Cdk/psXGzr/Rn8+DZlH1kysojniN0doFoJACt/OIbVYD0EJxMKszPZlZG1WW0/qc
-         0HFz9hahhXglNM5fdzK43tcxLd+dcWtrltSHMzmGPJKwPI0qPRpTl6crwUGHx9LibxJQ
-         8hCw==
-X-Gm-Message-State: APjAAAVR3i43N0M+qwaodXvoMeWBtPlo7cRoPNjbwyXQd0zkX91WUxm2
-        pUoQgmPI7ZP+BdmLNCHpc49WJRdR
-X-Google-Smtp-Source: APXvYqxkFooiS6ICYvQ9vnRobKav0pYZiEQBh4lXbGG9jTnEa4sKiiIHfpqFUrzUb3VN42qxhULyew==
-X-Received: by 2002:aa7:809a:: with SMTP id v26mr36157719pff.82.1567452760864;
-        Mon, 02 Sep 2019 12:32:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i6sm10739350pfq.20.2019.09.02.12.32.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 12:32:39 -0700 (PDT)
-Subject: Re: [PATCH] Fix a double free bug in rsi_91x_deinit
-To:     Greg KH <greg@kroah.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, Hui Peng <benquike@gmail.com>,
-        security@kernel.org, Mathias Payer <mathias.payer@nebelwelt.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Mon, 2 Sep 2019 15:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726997AbfIBTdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 15:33:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8884A20674;
+        Mon,  2 Sep 2019 19:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567452824;
+        bh=PayzVtvb1IrG2V07glwrkJeACX2e/Z4eCtEZGxId41c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NZNSSlw7HOuJ+Pkrf+mxy/A6QUPTkfVDeOc3z7+mzfz1MCEPmzt9Cp8pzpgUn9qyT
+         hMfq7dcAuT0T7Awc2humYKdVBjxAgHzHNtG4CffeVCM6W0QUA6tU9KOghWcw1za0Xz
+         JN+wu3TrPCcQCYQgql9arF9gn3qSngy9Tpw3lrgA=
+Date:   Mon, 2 Sep 2019 21:33:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        James Smart <james.smart@broadcom.com>,
         linux-kernel@vger.kernel.org
-References: <20190819220230.10597-1-benquike@gmail.com>
- <20190831181852.GA22160@roeck-us.net>
- <87k1asqw87.fsf@kamboji.qca.qualcomm.com>
- <385361d3-048e-9b3f-c749-aa5861e397e7@roeck-us.net>
- <20190902184722.GC5697@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <804fb4dc-23e5-3442-c64e-9857d61d6b6c@roeck-us.net>
-Date:   Mon, 2 Sep 2019 12:32:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
+ userspace
+Message-ID: <20190902193341.GA28723@kroah.com>
+References: <20190712180211.26333-1-sagi@grimberg.me>
+ <20190712180211.26333-4-sagi@grimberg.me>
+ <20190822002328.GP9511@lst.de>
+ <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
+ <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
+ <20190826065639.GA11036@lst.de>
+ <20190826075916.GA30396@kroah.com>
+ <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
+ <20190830062036.GA15257@kroah.com>
+ <73e3d2ca-33e0-3133-9dfb-62b07e5b09c4@grimberg.me>
 MIME-Version: 1.0
-In-Reply-To: <20190902184722.GC5697@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73e3d2ca-33e0-3133-9dfb-62b07e5b09c4@grimberg.me>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 11:47 AM, Greg KH wrote:
-> On Sun, Sep 01, 2019 at 07:08:29AM -0700, Guenter Roeck wrote:
->> On 9/1/19 1:03 AM, Kalle Valo wrote:
->>> Guenter Roeck <linux@roeck-us.net> writes:
->>>
->>>> On Mon, Aug 19, 2019 at 06:02:29PM -0400, Hui Peng wrote:
->>>>> `dev` (struct rsi_91x_usbdev *) field of adapter
->>>>> (struct rsi_91x_usbdev *) is allocated  and initialized in
->>>>> `rsi_init_usb_interface`. If any error is detected in information
->>>>> read from the device side,  `rsi_init_usb_interface` will be
->>>>> freed. However, in the higher level error handling code in
->>>>> `rsi_probe`, if error is detected, `rsi_91x_deinit` is called
->>>>> again, in which `dev` will be freed again, resulting double free.
->>>>>
->>>>> This patch fixes the double free by removing the free operation on
->>>>> `dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
->>>>> used in `rsi_disconnect`, in that code path, the `dev` field is not
->>>>>    (and thus needs to be) freed.
->>>>>
->>>>> This bug was found in v4.19, but is also present in the latest version
->>>>> of kernel.
->>>>>
->>>>> Reported-by: Hui Peng <benquike@gmail.com>
->>>>> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
->>>>> Signed-off-by: Hui Peng <benquike@gmail.com>
->>>>
->>>> FWIW:
->>>>
->>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>>>
->>>> This patch is listed as fix for CVE-2019-15504, which has a CVSS 2.0 score
->>>> of 10.0 (high) and CVSS 3.0 score of 9.8 (critical).
->>>
->>> A double free in error path is considered as a critical CVE issue? I'm
->>> very curious, why is that?
->>>
->>
->> You'd have to ask the people assigning CVSS scores. However, if the memory
->> was reallocated, that reallocated memory (which is still in use) is freed.
->> Then all kinds of bad things can happen.
+On Fri, Aug 30, 2019 at 11:14:39AM -0700, Sagi Grimberg wrote:
 > 
-> Yes, but moving from "bad things _can_ happen" to "bad things happen" in
-> an instance like this will be a tough task.  It also requires physical
-> access to the machine.
+> > > > > > > You are correct that this information can be derived from sysfs, but the
+> > > > > > > main reason why we add these here, is because in udev rule we can't
+> > > > > > > just go ahead and start looking these up and parsing these..
+> > > > > > > 
+> > > > > > > We could send the discovery aen with NVME_CTRL_NAME and have
+> > > > > > > then have systemd run something like:
+> > > > > > > 
+> > > > > > > nvme connect-all -d nvme0 --sysfs
+> > > > > > > 
+> > > > > > > and have nvme-cli retrieve all this stuff from sysfs?
+> > > > > > 
+> > > > > > Actually that may be a problem.
+> > > > > > 
+> > > > > > There could be a hypothetical case where after the event was fired
+> > > > > > and before it was handled, the discovery controller went away and
+> > > > > > came back again with a different controller instance, and the old
+> > > > > > instance is now a different discovery controller.
+> > > > > > 
+> > > > > > This is why we need this information in the event. And we verify this
+> > > > > > information in sysfs in nvme-cli.
+> > > > > 
+> > > > > Well, that must be a usual issue with uevents, right?  Don't we usually
+> > > > > have a increasing serial number for that or something?
+> > > > 
+> > > > Yes we do, userspace should use it to order events.  Does udev not
+> > > > handle that properly today?
+> > > 
+> > > The problem is not ordering of events, its really about the fact that
+> > > the chardev can be removed and reallocated for a different controller
+> > > (could be a completely different discovery controller) by the time
+> > > that userspace handles the event.
+> > 
+> > So?  You will have gotten the remove and then new addition uevent in
+> > order showing you this.  So your userspace code knows that something
+> > went away and then came back properly so you should be kept in sync.
 > 
-
-Is this correct even with usbip enabled ?
-
-> Anyway, that doesn't mean we shouldn't fix it, it's just that CVSS can
-> be crazy when it comes to kernel patches (i.e. almost all fixes should
-> be "critical"...)
+> Still don't understand how this is ok...
 > 
+> I have /dev/nvme0 represents a network endpoint that I would discover
+> from, it is raising me an event to do a discovery operation (namely to
+> issue an ioctl to it) so my udev code calls a systemd script.
+> 
+> By the time I actually get to do that, /dev/nvme0 represents now a new
+> network endpoint (where the event is no longer relevant to). I would
+> rather the discovery to explicitly fail than to give me something
+> different, so we pass some arguments that we verify in the operation.
+> 
+> Its a stretch case, but it was raised by people as a potential issue.
 
-Not all of them, but probably too many. That is why I asked if the problem
-is real. I _used_ to trust CVSS scores, but by now I am at least somewhat
-suspicious - especially if a patch wasn't applied for a period of time,
-like this series of usb patches.
+Ok, and how do you handle this same thing for something like /dev/sda ?
+(hint, it isn't new, and is something we solved over a decade ago)
 
-Having said that, I am even more wary of double-free problems - those tend
-to be notoriously difficult to debug. I'd rather have them out of my way,
-even if they are unlikely to be seen in the real world (plus, Murphy
-says that anything unlikely is going to happen almost immediately).
+If you worry about stuff like this, use a persistant device naming
+scheme and have your device node be pointed to by a symlink.  Create
+that symlink by using the information in the initial 'ADD' uevent.
 
-Guenter
+That way, when userspace opens the device node, it "knows" exactly which
+one it opens.  It sounds like you have a bunch of metadata to describe
+these uniquely, so pass that in the ADD event, not in some other crazy
+non-standard manner.
+
+thanks,
+
+greg k-h
