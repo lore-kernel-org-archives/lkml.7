@@ -2,114 +2,102 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B4C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB11C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8022217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC553217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731891AbfIBPLD (ORCPT
+        id S1731894AbfIBPLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:11:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42056 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfIBPLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:11:02 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i4nyu-0000hR-7J; Mon, 02 Sep 2019 15:11:00 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2][cifs-next] cifs: fix dereference on ses before it is null checked
-Date:   Mon,  2 Sep 2019 16:10:59 +0100
-Message-Id: <20190902151059.22088-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Sep 2019 11:11:25 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3991 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726447AbfIBPLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 11:11:24 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 93A29523D8D4C3635C29;
+        Mon,  2 Sep 2019 23:11:21 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 2 Sep 2019 23:11:21 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 2 Sep 2019 23:11:20 +0800
+Date:   Mon, 2 Sep 2019 23:10:29 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     <dsterba@suse.cz>, Chao Yu <chao@kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
+Message-ID: <20190902151028.GA179615@architecture4>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-12-gaoxiang25@huawei.com>
+ <20190902125711.GA23462@infradead.org>
+ <20190902130644.GT2752@suse.cz>
+ <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
+ <20190902142037.GW2752@twin.jikos.cz>
+ <20190902150640.GA23089@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190902150640.GA23089@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Christoph,
 
-The assignment of pointer server dereferences pointer ses, however,
-this dereference occurs before ses is null checked and hence we
-have a potential null pointer dereference.  Fix this by only
-dereferencing ses after it has been null checked.
+On Mon, Sep 02, 2019 at 08:06:40AM -0700, Christoph Hellwig wrote:
+> On Mon, Sep 02, 2019 at 04:20:37PM +0200, David Sterba wrote:
+> > Oh right, I think the reasons are historical and that we can remove the
+> > options nowadays. From the compatibility POV this should be safe, with
+> > ACLs compiled out, no tool would use them, and no harm done when the
+> > code is present but not used.
+> > 
+> > There were some efforts by embedded guys to make parts of kernel more
+> > configurable to allow removing subsystems to reduce the final image
+> > size. In this case I don't think it would make any noticeable
+> > difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
+> > while the whole module is over 1.3MiB.
+> 
+> Given that the erofs folks have an actual use case for it I think
+> it is fine to keep the options, I just wanted to ensure this wasn't
+> copy and pasted for no good reason.  Note that for XFS we don't have
+> an option for xattrs, as those are integral to a lot of file system
+> features.  WE have an ACL option mostly for historic reasons.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 2808c6639104 ("cifs: add new debugging macro cifs_server_dbg")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/cifs/smb2pdu.c   | 11 ++++++++---
- fs/cifs/transport.c |  3 ++-
- 2 files changed, 10 insertions(+), 4 deletions(-)
+I fully understand your starting point...
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index dbc6ef50dd45..0e92983de0b7 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2759,8 +2759,10 @@ SMB2_ioctl(const unsigned int xid, struct cifs_tcon *tcon, u64 persistent_fid,
- 	else
- 		return -EIO;
- 
-+	if (!ses)
-+		return -EIO;
- 	server = ses->server;
--	if (!ses || !(server))
-+	if (!server)
- 		return -EIO;
- 
- 	if (smb3_encryption_required(tcon))
-@@ -3058,13 +3060,16 @@ query_info(const unsigned int xid, struct cifs_tcon *tcon,
- 	int rc = 0;
- 	int resp_buftype = CIFS_NO_BUFFER;
- 	struct cifs_ses *ses = tcon->ses;
--	struct TCP_Server_Info *server = ses->server;
-+	struct TCP_Server_Info *server;
- 	int flags = 0;
- 	bool allocated = false;
- 
- 	cifs_dbg(FYI, "Query Info\n");
- 
--	if (!ses || !(server))
-+	if (!ses)
-+		return -EIO;
-+	server = ses->server;
-+	if (!server)
- 		return -EIO;
- 
- 	if (smb3_encryption_required(tcon))
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index 0d60bd2f4dca..a90bd4d75b4d 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -1242,12 +1242,13 @@ SendReceive(const unsigned int xid, struct cifs_ses *ses,
- 	struct kvec iov = { .iov_base = in_buf, .iov_len = len };
- 	struct smb_rqst rqst = { .rq_iov = &iov, .rq_nvec = 1 };
- 	struct cifs_credits credits = { .value = 1, .instance = 0 };
--	struct TCP_Server_Info *server = ses->server;
-+	struct TCP_Server_Info *server;
- 
- 	if (ses == NULL) {
- 		cifs_dbg(VFS, "Null smb session\n");
- 		return -EIO;
- 	}
-+	server = ses->server;
- 	if (server == NULL) {
- 		cifs_dbg(VFS, "Null tcp session\n");
- 		return -EIO;
--- 
-2.20.1
+Thanks,
+Gao Xiang
+
+
 
