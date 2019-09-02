@@ -2,99 +2,131 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89E4C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B61DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A516A2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:39:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YH/fkxbX"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0352190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 06:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbfIBGjz (ORCPT
+        id S1729500AbfIBGlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 02:39:55 -0400
-Received: from ozlabs.org ([203.11.71.1]:59367 "EHLO ozlabs.org"
+        Mon, 2 Sep 2019 02:41:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:48880 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfIBGjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 02:39:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46ML6c49q2z9s7T;
-        Mon,  2 Sep 2019 16:39:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567406392;
-        bh=9/AxkFW6IePlir+tSIMvxXKRtvcA0eYBJu9xVFk5fwg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YH/fkxbXyuq5J/irSitmrg6uSgQJor1jKAeEbP77P5KxkNbCgAU6k/zHMbla6NdVY
-         6ZMYJqmskS+gHRfGsTiOtd+hNxTx2CKCWtuu2XaYUZhRuazfXibxDscWW4J7JGH0fp
-         jURzNMjn/cGOUTSR1CeAc39c03UTTC4CyTCnigsmWdT8rt6q92l9WO89EhqQAxmNmt
-         zFxJ5mMfVpbmwx8NQ+/60U4tdXsnW8RLaOQo6eVYcv1eZRgCZKquOqtSYWTCghvz4v
-         enLk2+AqLNnmKsLQo0iBVH0F5FAfZCjE7T8L0yaNFEqoS1EpFjzS7klXClemoCAkLD
-         1TWzr90iQWlQg==
-Date:   Mon, 2 Sep 2019 16:39:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the iommu tree
-Message-ID: <20190902163951.6280e030@canb.auug.org.au>
+        id S1726375AbfIBGlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 02:41:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05ADF337;
+        Sun,  1 Sep 2019 23:41:14 -0700 (PDT)
+Received: from darkstar (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 088393F71A;
+        Sun,  1 Sep 2019 23:43:05 -0700 (PDT)
+References: <20190822132811.31294-1-patrick.bellasi@arm.com> <20190822132811.31294-2-patrick.bellasi@arm.com> <20190830094505.GA2369@hirez.programming.kicks-ass.net>
+User-agent: mu4e 1.3.3; emacs 25.3.1
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, cgroups@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>, Michal Koutny <mkoutny@suse.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v14 1/6] sched/core: uclamp: Extend CPU's cgroup controller
+Message-ID: <87zhjnnqz2.fsf@arm.com>
+In-reply-to: <20190830094505.GA2369@hirez.programming.kicks-ass.net>
+Date:   Mon, 02 Sep 2019 07:38:53 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4nCL=0Dvyf=cbwcgrMz6l/M";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4nCL=0Dvyf=cbwcgrMz6l/M
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Fri, Aug 30, 2019 at 09:45:05 +0000, Peter Zijlstra wrote...
 
-After merging the iommu tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+> On Thu, Aug 22, 2019 at 02:28:06PM +0100, Patrick Bellasi wrote:
+>> +#define _POW10(exp) ((unsigned int)1e##exp)
+>> +#define POW10(exp) _POW10(exp)
+>
+> What is this magic? You're forcing a float literal into an integer.
+> Surely that deserves a comment!
 
-drivers/iommu/iommu.c: In function 'iommu_subsys_init':
-drivers/iommu/iommu.c:123:38: error: implicit declaration of function 'sme_=
-active'; did you mean 'cpu_active'? [-Werror=3Dimplicit-function-declaratio=
-n]
-  123 |   if (iommu_default_passthrough() && sme_active()) {
-      |                                      ^~~~~~~~~~
-      |                                      cpu_active
+Yes, I'm introducing the two constants:
+  UCLAMP_PERCENT_SHIFT,
+  UCLAMP_PERCENT_SCALE
+similar to what we have for CAPACITY. Moreover, I need both 100*100 (for
+the scale) and 100 further down in the code for the: 
 
-Caused by commit
+	percent = div_u64_rem(percent, POW10(UCLAMP_PERCENT_SHIFT), &rem);
 
-  2cc13bb4f59f ("iommu: Disable passthrough mode when SME is active")
+used in cpu_uclamp_print().
 
-sme_active() seems to be only relevant to X86.
+That's why adding a compile time support to compute a 10^N is useful.
 
-I have reverted that commit for today.
+C provides the "1eN" literal, I just convert it to integer and to do
+that at compile time I need a two level macros.
 
---=20
+What if I add this comment just above the macro definitions:
+
+/*
+ * Integer 10^N with a given N exponent by casting to integer the literal "1eN"
+ * C expression. Since there is no way to convert a macro argument (N) into a
+ * character constant, use two levels of macros.
+ */
+
+is this clear enough?
+
+>
+>> +struct uclamp_request {
+>> +#define UCLAMP_PERCENT_SHIFT	2
+>> +#define UCLAMP_PERCENT_SCALE	(100 * POW10(UCLAMP_PERCENT_SHIFT))
+>> +	s64 percent;
+>> +	u64 util;
+>> +	int ret;
+>> +};
+>> +
+>> +static inline struct uclamp_request
+>> +capacity_from_percent(char *buf)
+>> +{
+>> +	struct uclamp_request req = {
+>> +		.percent = UCLAMP_PERCENT_SCALE,
+>> +		.util = SCHED_CAPACITY_SCALE,
+>> +		.ret = 0,
+>> +	};
+>> +
+>> +	buf = strim(buf);
+>> +	if (strncmp("max", buf, 4)) {
+>
+> That is either a bug, and you meant to write: strncmp(buf, "max", 3),
+> or it is not, and then you could've written: strcmp(buf, "max")
+
+I don't think it's a bug.
+
+The usage of 4 is intentional, to force a '\0' check while using
+strncmp(). Otherwise, strncmp(buf, "max", 3) would accept also strings
+starting by "max", which we don't want.
+
+> But as written it doesn't make sense.
+
+The code is safe but I agree that strcmp() does just the same and it
+does not generate confusion. That's actually a pretty good example
+on how it's not always better to use strncmp() instead of strcmp().
+
 Cheers,
-Stephen Rothwell
+Patrick
 
---Sig_/4nCL=0Dvyf=cbwcgrMz6l/M
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1suTcACgkQAVBC80lX
-0GyiAQf+OckwedNntYxYbX7qXQ+91aiPY37T9h5UTrsvdr4xRZ/5uwgeRou0wqIT
-pGkmUVBMryRj6GxGbUHp+DFyjn6mAIQ4gjS3IjhQ1arz+Y2Bu7GEp76E0WVtOTt9
-z/V+f9JMtzIOMkGok9VdlR3na/TCiwHlBhlC52HULfh9JZd0ktkOVBjPubNLU9FS
-hmf2d++OBx+6ZPnapeCffUj6t3furfyLmrshF4LdPFYhQsVj3NMbeolnyRqmYpO2
-CFzNqr+u9BaZMWn+ZIHzrDWnGf+F7IMZ6Y3D1GvL2uPCHwKjkRI1WmkC3Yx9SX+L
-yWsvaiSz5y5ZAVCk0EJSvHHQs2BI8A==
-=Q5fe
------END PGP SIGNATURE-----
-
---Sig_/4nCL=0Dvyf=cbwcgrMz6l/M--
