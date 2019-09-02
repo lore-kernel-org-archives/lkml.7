@@ -2,159 +2,225 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1935C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C820C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2F72087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF820214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drk3pFKr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BebKuUrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfIBTmr (ORCPT
+        id S1727281AbfIBTnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:42:47 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44707 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfIBTmq (ORCPT
+        Mon, 2 Sep 2019 15:43:31 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:33796 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfIBTnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:42:46 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so30941846iog.11;
-        Mon, 02 Sep 2019 12:42:46 -0700 (PDT)
+        Mon, 2 Sep 2019 15:43:31 -0400
+Received: by mail-wm1-f43.google.com with SMTP id y135so10582788wmc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 12:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QnCqjttPsD9VOItZgQKR8PHxubyIWfecxGB1z85kRaA=;
-        b=drk3pFKrwK38hMeRXxVG2/nOt7S70Pfl9vl3UrDB/SaQoNBjlHvB0wWXFsN+vGsWPL
-         8lXwNSZhUfDAWlfNVUnhJv+pfSH9ZgqRoBfr1Kcc+BBYYDcuN2p65XDjF538ynOkczuK
-         wRFtpxcgV1311tVqcH3hbqFBDIXln5wgwCjlbZFTNBNubr8ISIcFOJlOZwSs+d+mHpQ+
-         cXrlhW+3yaMM4aqB4guKpTKEUawxMOsiDKUvFDGsiEL9+HGqB3c3muIkkPF3LxiQSZL/
-         xmBNYgivufdorFGF+XdUVNhY/sMGsiaWwl0tHBewkKDTfPWu6mkl0VOPS5CgQE7ynN6B
-         G2AQ==
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Sa03S6vEaays6dcwuYI8guBUuYko9RawE4hVY+9UpC8=;
+        b=BebKuUrSweQBwv0My872r+2E+xquJKJLkKur8VeFveAtv5Kws3D8yRbfd6llwL7CD+
+         vQ6mWe+fX/v0STRDq3y229V4cwZ+SfFd5SH7KRuRRI11maUdXjBJKUeNAOmIfTKz3P6f
+         z/3SmnepCCNDB+HR2/PrxovHEDh5LNyfihh8jNjKyd3J78FO1mSLZ5lEmtZ0u6fRwpJO
+         vHHThZy3detC2aU7/DQxGxjYIWSUUKDQ3fNXi6qAjt9L8OHURlgvzgF9BTBzYp/KSQ/4
+         2m1xKUrsW0eW5atL9/YuiIozolpsv3irV1igpRFbJptV63CD2SXYDYRTmpK8HAB/5fSl
+         FwRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QnCqjttPsD9VOItZgQKR8PHxubyIWfecxGB1z85kRaA=;
-        b=XTm571X7XphS82r6u6kerEvfNV6IjSNDHCuN+1oiStyoFXTB5a4JbUjHFrpHB9kbEf
-         9xGY5LjGgttRUfuRJxgnuFFqEPDy+kv/Vw4ZL8XFWiDxJd5X7sfE00SKFAszyHT5Pd/S
-         NCTV2/Fs8w4YeXusguxw9S2ROiAPOG5IOGtOCrqr50q/dN77SKNvk+xcDEHSapempY1Z
-         Pc3XGB1VDCf70fNn6pFOo7KfSx2KWUM65ni7I7sQz4oQhkWYhuW6z23hujJmzqjNj/eY
-         ALSFkKdB8vKInrrA+FAm6NiDgAoOy/IN5eNdVmuI5iFMav9egQ10UJAk8xh9BFA8IRPQ
-         XcMg==
-X-Gm-Message-State: APjAAAWgMVZPBrwc3KTk5MMkIfoiI3lkMqFEkNzjZYGLZe9xlB8Fem4s
-        P4rLEC78jxRkdi3FSNUTXUAL5/qgGllOCMWU/OMkakIFPFw=
-X-Google-Smtp-Source: APXvYqz0ig3Ou3gySoBUVnZyPjYLAcAupHpExck2qSURcqM7IatpW8/XwvrGxI/vgiYJ8fO0ibOunmPv31vCfW2Exhs=
-X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr15389478iof.5.1567453365705;
- Mon, 02 Sep 2019 12:42:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190902151059.22088-1-colin.king@canonical.com>
-In-Reply-To: <20190902151059.22088-1-colin.king@canonical.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Mon, 2 Sep 2019 14:42:34 -0500
-Message-ID: <CAH2r5mv_Fv_k8h=-i8-bBrgBU3ghCVM3W=KyLrL=LrrCiT=vOQ@mail.gmail.com>
-Subject: Re: [PATCH][V2][cifs-next] cifs: fix dereference on ses before it is
- null checked
-To:     Colin King <colin.king@canonical.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Sa03S6vEaays6dcwuYI8guBUuYko9RawE4hVY+9UpC8=;
+        b=GuvWvCfrhjBvqyagK3MRWGivzvV2kWbOPpq6V5QQ+T5uPnyW6AYkHbMpcgDbYaLiyh
+         bDQ09sMhGuAxzuqjSluXINTNyLy5jFL/2rxjG1kxjaYPBIyHorHr8GdcBtxnTqk9sKz3
+         xMk4ERToaz19VM+//moNeEaWAsDgHF373liKtGUa/btpfQTjjKw9twc9mbflkjM9DmCJ
+         N0a6/8TCWVHzD0p1xzr6nQbILVO/W8jKG6nw2mJzvYEUSQHqjS28HX/1t9Zfx2Bo0UVV
+         9MPXtfHrVTKLhBb8Ng99bC98xZmQbpU8juMsZFrmr9Y4qPz49sWyKvzwELLqBwsdf15e
+         TSnA==
+X-Gm-Message-State: APjAAAUsNFsD/dYb5rPIb4wHYGAGWUTss8JJI2AOyCg0qvvMsGddH9In
+        19tvyoyDfOSoamDYx3LckgPGhQ==
+X-Google-Smtp-Source: APXvYqyudjJGOzIp0Q7gzh3z6YJmCayZ4onrFg/fn97YusYXGCgpQdPA9pNGV6h1MiuJXj0WAPgr7w==
+X-Received: by 2002:a1c:a617:: with SMTP id p23mr18296789wme.166.1567453408094;
+        Mon, 02 Sep 2019 12:43:28 -0700 (PDT)
+Received: from [192.168.0.101] (88-147-40-76.dyn.eolo.it. [88.147.40.76])
+        by smtp.gmail.com with ESMTPSA id v186sm36076972wmb.5.2019.09.02.12.43.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 12:43:27 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190902155652.GH2263813@devbig004.ftw2.facebook.com>
+Date:   Mon, 2 Sep 2019 21:43:25 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D9F6BC6D-FEB3-40CA-A33C-F501AE4434F0@linaro.org>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+ <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+ <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+ <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+ <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
+ <20190831065358.GF2263813@devbig004.ftw2.facebook.com>
+ <88C7DC68-680E-49BB-9699-509B9B0B12A0@linaro.org>
+ <20190902155652.GH2263813@devbig004.ftw2.facebook.com>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tentatively merged into cifs-2.6.git pending additional testing
-
-Kicked off buildbot with rc7+patches in cifs for-next
-
-See http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/247
-
-On Mon, Sep 2, 2019 at 10:33 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The assignment of pointer server dereferences pointer ses, however,
-> this dereference occurs before ses is null checked and hence we
-> have a potential null pointer dereference.  Fix this by only
-> dereferencing ses after it has been null checked.
->
-> Addresses-Coverity: ("Dereference before null check")
-> Fixes: 2808c6639104 ("cifs: add new debugging macro cifs_server_dbg")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/cifs/smb2pdu.c   | 11 ++++++++---
->  fs/cifs/transport.c |  3 ++-
->  2 files changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-> index dbc6ef50dd45..0e92983de0b7 100644
-> --- a/fs/cifs/smb2pdu.c
-> +++ b/fs/cifs/smb2pdu.c
-> @@ -2759,8 +2759,10 @@ SMB2_ioctl(const unsigned int xid, struct cifs_tcon *tcon, u64 persistent_fid,
->         else
->                 return -EIO;
->
-> +       if (!ses)
-> +               return -EIO;
->         server = ses->server;
-> -       if (!ses || !(server))
-> +       if (!server)
->                 return -EIO;
->
->         if (smb3_encryption_required(tcon))
-> @@ -3058,13 +3060,16 @@ query_info(const unsigned int xid, struct cifs_tcon *tcon,
->         int rc = 0;
->         int resp_buftype = CIFS_NO_BUFFER;
->         struct cifs_ses *ses = tcon->ses;
-> -       struct TCP_Server_Info *server = ses->server;
-> +       struct TCP_Server_Info *server;
->         int flags = 0;
->         bool allocated = false;
->
->         cifs_dbg(FYI, "Query Info\n");
->
-> -       if (!ses || !(server))
-> +       if (!ses)
-> +               return -EIO;
-> +       server = ses->server;
-> +       if (!server)
->                 return -EIO;
->
->         if (smb3_encryption_required(tcon))
-> diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-> index 0d60bd2f4dca..a90bd4d75b4d 100644
-> --- a/fs/cifs/transport.c
-> +++ b/fs/cifs/transport.c
-> @@ -1242,12 +1242,13 @@ SendReceive(const unsigned int xid, struct cifs_ses *ses,
->         struct kvec iov = { .iov_base = in_buf, .iov_len = len };
->         struct smb_rqst rqst = { .rq_iov = &iov, .rq_nvec = 1 };
->         struct cifs_credits credits = { .value = 1, .instance = 0 };
-> -       struct TCP_Server_Info *server = ses->server;
-> +       struct TCP_Server_Info *server;
->
->         if (ses == NULL) {
->                 cifs_dbg(VFS, "Null smb session\n");
->                 return -EIO;
->         }
-> +       server = ses->server;
->         if (server == NULL) {
->                 cifs_dbg(VFS, "Null tcp session\n");
->                 return -EIO;
-> --
-> 2.20.1
->
 
 
--- 
+> Il giorno 2 set 2019, alle ore 17:56, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>=20
+> On Mon, Sep 02, 2019 at 05:45:50PM +0200, Paolo Valente wrote:
+>> Thanks for this extra explanations.  It is a little bit difficult for
+>> me to understand how the min/max teaks for exactly, but you did give
+>> me the general idea.
+>=20
+> It just limits how far high and low the IO issue rate, measured in
+> cost, can go.  ie. if max is at 200%, the controller won't issue more
+> than twice of what the cost model says 100% is.
+>=20
+>> Are these results in line with your expectations?  If they are, then
+>> I'd like to extend benchmarks to more mixes of workloads.  Or should =
+I
+>> try some other QoS configuration first?
+>=20
+> They aren't.  Can you please include the content of io.cost.qos and
+> io.cost.model before each run?  Note that partial writes to subset of
+> parameters don't clear other parameters.
+>=20
+
+Yep.  I've added the printing of the two parameters in the script, and
+I'm pasting the whole output, in case you could get also some other
+useful piece of information from it.
+
+$ sudo ./bandwidth-latency.sh -t randread -s none -b weight -n 7 -d 20
+Switching to none for sda
+echo "8:0 enable=3D1 rpct=3D95 rlat=3D2500 wpct=3D95 wlat=3D5000" > =
+/cgroup/io.cost.qos
+/cgroup/io.cost.qos 8:0 enable=3D1 ctrl=3Duser rpct=3D95.00 rlat=3D2500 =
+wpct=3D95.00 wlat=3D5000 min=3D1.00 max=3D10000.00
+/cgroup/io.cost.model 8:0 ctrl=3Dauto model=3Dlinear rbps=3D488636629 =
+rseqiops=3D8932 rrandiops=3D8518 wbps=3D427891549 wseqiops=3D28755 =
+wrandiops=3D21940
+Not changing weight/limits for interferer group 0
+Not changing weight/limits for interferer group 1
+Not changing weight/limits for interferer group 2
+Not changing weight/limits for interferer group 3
+Not changing weight/limits for interferer group 4
+Not changing weight/limits for interferer group 5
+Not changing weight/limits for interferer group 6
+Not changing weight/limits for interfered
+Starting Interferer group 0
+start_fio_jobs InterfererGroup0 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile0
+Starting Interferer group 1
+start_fio_jobs InterfererGroup1 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile1
+Starting Interferer group 2
+start_fio_jobs InterfererGroup2 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile2
+Starting Interferer group 3
+start_fio_jobs InterfererGroup3 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile3
+Starting Interferer group 4
+start_fio_jobs InterfererGroup4 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile4
+Starting Interferer group 5
+start_fio_jobs InterfererGroup5 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile5
+Starting Interferer group 6
+start_fio_jobs InterfererGroup6 0 default read MAX linear 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile6
+Linux 5.3.0-rc6+ (paolo-ThinkPad-W520) 	02/09/2019 	_x86_64_	=
+(8 CPU)
+
+02/09/2019 21:39:11
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda              66.53         5.22         0.10       1385         27
+
+start_fio_jobs interfered 20 default randread MAX poisson 1 1 0 0 4k =
+/home/paolo/local-S/bandwidth-latency/../workfiles/largefile_interfered0
+02/09/2019 21:39:14
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda             154.67        20.63         0.05         61          0
+
+02/09/2019 21:39:17
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda             453.00        64.27         0.00        192          0
+
+02/09/2019 21:39:20
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda             675.33        95.99         0.00        287          0
+
+02/09/2019 21:39:23
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            1907.67       348.61         0.00       1045          0
+
+02/09/2019 21:39:26
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2414.67       462.98         0.00       1388          0
+
+02/09/2019 21:39:29
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2429.67       438.71         0.00       1316          0
+
+02/09/2019 21:39:32
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2437.00       475.79         0.00       1427          0
+
+02/09/2019 21:39:35
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2162.33       346.97         0.00       1040          0
+
+Results for one rand reader against 7 seq readers (I/O depth 1), =
+weight-none with weights: (default, default)
+Aggregated throughput:
+         min         max         avg     std_dev     conf99%
+       64.27      475.79     319.046     171.233     1011.97
+Read throughput:
+         min         max         avg     std_dev     conf99%
+       64.27      475.79     319.046     171.233     1011.97
+Write throughput:
+         min         max         avg     std_dev     conf99%
+           0           0           0           0           0
+Interfered total throughput:
+         min         max         avg     std_dev
+       1.032       4.455       2.266    0.742696
+Interfered per-request total latency:
+         min         max         avg     std_dev
+        0.11      12.005      1.7545    0.878281
+
 Thanks,
+Paolo
 
-Steve
+
+> Thanks.
+>=20
+> --=20
+> tejun
+
