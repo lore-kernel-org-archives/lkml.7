@@ -2,170 +2,159 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E33C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8667EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817152184D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596A32342E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 04:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="dN7IQbc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfIBEMT (ORCPT
+        id S1729378AbfIBENE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 00:12:19 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:30221 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbfIBEMT (ORCPT
+        Mon, 2 Sep 2019 00:13:04 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34488 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfIBENE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 00:12:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tb4Gnpz_1567396918;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Tb4Gnpz_1567396918)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 02 Sep 2019 12:02:01 +0800
-From:   Ben Luo <luoben@linux.alibaba.com>
-To:     tglx@linutronix.de, alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org, tao.ma@linux.alibaba.com,
-        gerry@linux.alibaba.com, nanhai.zou@linux.alibaba.com
-Subject: [PATCH v6 2/3] genirq: introduce irq_update_devid()
-Date:   Mon,  2 Sep 2019 12:01:51 +0800
-Message-Id: <dccc49c34393c9c6114b3695feaab489d680d62d.1567394624.git.luoben@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1567394624.git.luoben@linux.alibaba.com>
-References: <cover.1567394624.git.luoben@linux.alibaba.com>
-In-Reply-To: <cover.1567394624.git.luoben@linux.alibaba.com>
-References: <cover.1567394624.git.luoben@linux.alibaba.com>
+        Mon, 2 Sep 2019 00:13:04 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q203so2226953qke.1;
+        Sun, 01 Sep 2019 21:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tEtrc1rdzh/Z7dC3mMEoNjpzKu9VEPrGxsmA4Ux5oa0=;
+        b=dN7IQbc7odvWieIZ5FEdT/iecR2k9co0ZKCiVEoF2+XtJgJEdBx8dxIzOy3zhL02jM
+         Ng4NLHSa7h/5wwE7q5SJd047yMm+wIvJm2pobbFMrlKBydk8kDSkH9Vuy1khb04sb0IG
+         QvFDdo4L8E5TGP0OzMn69C3bccFG0s+t/Y2hM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tEtrc1rdzh/Z7dC3mMEoNjpzKu9VEPrGxsmA4Ux5oa0=;
+        b=orcVABPt4ULBT+94U0s03B1Zlt25T7Au5CY7K4BwxixIggbbSsh+3DmqSL/BAJ4h+C
+         0xf11/39xkewqQF6845saZZCt0QgasBnlVkROvJ3qDhSCZZzcw0Jsu0m1XdO2HrPioE5
+         Onj+GLL7CvAQU7fCm3wHWJKdGFN13E3hgpxXnpOjcIp3lfGPClFZayAU7yn5rqwjXtbJ
+         EvsZL3UjAMeKPW8nBAPnz0X0yoA3rGYDHSNrNh+ANx83tFyalMDdXx7SYAw41decAJgV
+         nLk90URF1cKFrVnNV1jlbmbnBk+pLVub6tn1owO3aw9+14t4FH4Jn9KMVaMmKpdVRYL/
+         EK2Q==
+X-Gm-Message-State: APjAAAUeBQG9mBnYBJF8B3j7MgTDa4d6JTVJ82Zifyol7x3jpvJrCBTY
+        aqvgA83U5SzAe8UBEGye1y/Y8tsyzTUuEzvrykRbunPU
+X-Google-Smtp-Source: APXvYqx0AbdqwDb0w0SXIQPBfCsiY91eO/PaLq21Y0/TBBmbdFC4DKJXXqARBT3GurZhBmBSWqMC8OS98b5LFv7L5rI=
+X-Received: by 2002:a37:4f4c:: with SMTP id d73mr13799291qkb.171.1567397583086;
+ Sun, 01 Sep 2019 21:13:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190902035842.2747-1-andrew@aj.id.au> <20190902035842.2747-2-andrew@aj.id.au>
+In-Reply-To: <20190902035842.2747-2-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 2 Sep 2019 04:12:51 +0000
+Message-ID: <CACPK8XfYgEUfaK6rtr+FdEq-Vau6d4wE2Rvfp6Q4G2-kjVLT0g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] mmc: sdhci-of-aspeed: Fix link failure for SPARC
+To:     Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-mmc@vger.kernel.org, adrian.hunter@intel.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes, only the dev_id field of irqaction needs to be changed.
+On Mon, 2 Sep 2019 at 03:58, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Resolves the following build error reported by the 0-day bot:
+>
+>     ERROR: "of_platform_device_create" [drivers/mmc/host/sdhci-of-aspeed.ko] undefined!
+>
+> SPARC does not set CONFIG_OF_ADDRESS so the symbol is missing. Guard the
+> callsite to maintain build coverage for the rest of the driver.
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  drivers/mmc/host/sdhci-of-aspeed.c | 38 ++++++++++++++++++++----------
+>  1 file changed, 25 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> index d5acb5afc50f..96ca494752c5 100644
+> --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> @@ -224,10 +224,30 @@ static struct platform_driver aspeed_sdhci_driver = {
+>         .remove         = aspeed_sdhci_remove,
+>  };
+>
+> -static int aspeed_sdc_probe(struct platform_device *pdev)
+> -
+> +static int aspeed_sdc_create_sdhcis(struct platform_device *pdev)
+>  {
+> +#if defined(CONFIG_OF_ADDRESS)
 
-E.g. KVM VM with device passthru via VFIO may switch the interrupt
-injection path between KVM irqfd and userspace eventfd. These two
-paths share the same interrupt number and handler for the same msi
-vector of a device, only with different 'dev_id's referencing to
-different fds' contexts. Set interrupt affinity in this VM is a way
-to trigger the path switching.
+This is going to be untested code forever, as no one will be running
+on a chip with this hardware present but OF_ADDRESS disabled.
 
-Currently, VFIO uses a free-then-request-irq way for the path switching.
-There is a time window between free_irq() and request_irq() where the
-target IRTE is invalid. So, in-flight interrupts (buffering in hardware
-layer and unfortunately cannot be synchronized in software) can cause
-DMAR faults and even worse, this VM may hang in waiting IO completion.
+How about we make the driver depend on OF_ADDRESS instead?
 
-By using irq_update_devid(), this issue can be avoided since IRTE will
-not be invalidated during the whole process.
+Cheers,
 
-Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
----
- include/linux/interrupt.h |  3 ++
- kernel/irq/manage.c       | 75 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 78 insertions(+)
+Joel
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 5b8328a..09b6a0f 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -172,6 +172,9 @@ struct irqaction {
- request_percpu_nmi(unsigned int irq, irq_handler_t handler,
- 		   const char *devname, void __percpu *dev);
- 
-+extern int __must_check
-+irq_update_devid(unsigned int irq, void *dev_id, void *new_dev_id);
-+
- extern const void *free_irq(unsigned int, void *);
- extern void free_percpu_irq(unsigned int, void __percpu *);
- 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 10ec3e9..adb1980 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2063,6 +2063,81 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
- EXPORT_SYMBOL(request_threaded_irq);
- 
- /**
-+ *	irq_update_devid - update irq dev_id to a new one
-+ *
-+ *	@irq:		Interrupt line to update
-+ *	@dev_id:	A cookie to find the irqaction to update
-+ *	@new_dev_id:	New cookie passed to the handler function
-+ *
-+ *	Sometimes, only the cookie data need to be changed. Instead of
-+ *	free-then-request interrupt, only update dev_id of irqaction can
-+ *	not only gain some performance benefit, but also reduce the risk
-+ *	of losing interrupt.
-+ *
-+ *	This function won't update dev_id until any executing interrupts
-+ *	for this IRQ have completed. This function must not be called
-+ *	from interrupt context.
-+ *
-+ *	On failure, it returns a negative value. On success,
-+ *	it returns 0
-+ */
-+int irq_update_devid(unsigned int irq, void *dev_id, void *new_dev_id)
-+{
-+	struct irq_desc *desc = irq_to_desc(irq);
-+	struct irqaction *action, **action_ptr;
-+	unsigned long flags;
-+
-+	if (WARN(in_interrupt(),
-+		 "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
-+		 irq, dev_id, new_dev_id))
-+		return -EPERM;
-+
-+	if (!desc)
-+		return -EINVAL;
-+
-+	/*
-+	 * Ensure that an interrupt in flight on another CPU which uses the
-+	 * old 'dev_id' has completed because the caller can free the memory
-+	 * to which it points after this function returns. And also avoid to
-+	 * update 'dev_id' in the middle of a threaded interrupt process, it
-+	 * can lead to a twist that primary handler uses old 'dev_id' but new
-+	 * 'dev_id' is used by secondary handler.
-+	 */
-+	disable_irq(irq);
-+	raw_spin_lock_irqsave(&desc->lock, flags);
-+
-+	/*
-+	 * There can be multiple actions per IRQ descriptor, find the right
-+	 * one based on the dev_id:
-+	 */
-+	action_ptr = &desc->action;
-+	for (;;) {
-+		action = *action_ptr;
-+
-+		if (!action) {
-+			raw_spin_unlock_irqrestore(&desc->lock, flags);
-+			enable_irq(irq);
-+			WARN(1,
-+			     "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
-+			     irq, dev_id, new_dev_id);
-+			return -ENXIO;
-+		}
-+
-+		if (action->dev_id == dev_id) {
-+			action->dev_id = new_dev_id;
-+			break;
-+		}
-+		action_ptr = &action->next;
-+	}
-+
-+	raw_spin_unlock_irqrestore(&desc->lock, flags);
-+	enable_irq(irq);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_update_devid);
-+
-+/**
-  *	request_any_context_irq - allocate an interrupt line
-  *	@irq: Interrupt line to allocate
-  *	@handler: Function to be called when the IRQ occurs.
--- 
-1.8.3.1
 
+
+>         struct device_node *parent, *child;
+> +
+> +       parent = pdev->dev.of_node;
+> +
+> +       for_each_available_child_of_node(parent, child) {
+> +               struct platform_device *cpdev;
+> +
+> +               cpdev = of_platform_device_create(child, NULL, &pdev->dev);
+> +               if (!cpdev) {
+> +                       of_node_put(child);
+> +                       return -ENODEV;
+> +               }
+> +       }
+> +#endif
+> +
+> +       return 0;
+> +}
+> +
+> +static int aspeed_sdc_probe(struct platform_device *pdev)
+> +
+> +{
+>         struct aspeed_sdc *sdc;
+>         int ret;
+>
+> @@ -256,17 +276,9 @@ static int aspeed_sdc_probe(struct platform_device *pdev)
+>
+>         dev_set_drvdata(&pdev->dev, sdc);
+>
+> -       parent = pdev->dev.of_node;
+> -       for_each_available_child_of_node(parent, child) {
+> -               struct platform_device *cpdev;
+> -
+> -               cpdev = of_platform_device_create(child, NULL, &pdev->dev);
+> -               if (!cpdev) {
+> -                       of_node_put(child);
+> -                       ret = -ENODEV;
+> -                       goto err_clk;
+> -               }
+> -       }
+> +       ret = aspeed_sdc_create_sdhcis(pdev);
+> +       if (ret)
+> +               goto err_clk;
+>
+>         return 0;
+>
+> --
+> 2.20.1
+>
