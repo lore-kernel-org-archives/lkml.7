@@ -2,123 +2,100 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90A4C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A92C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82B222CF7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Cp7zfrOX"
+	by mail.kernel.org (Postfix) with ESMTP id 0C39521744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbfIBKvq (ORCPT
+        id S1731225AbfIBKxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:51:46 -0400
-Received: from mail-eopbgr10073.outbound.protection.outlook.com ([40.107.1.73]:22149
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727951AbfIBKvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:51:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WHM6sLOW4Tcqs6Hdgfjg9VhUi9tfkHbGBQ5SkwPzPlv6i192j66nou+u/NhTTfIxsgsapY6xYjk8mAXBtiEF+pRBgPW1ACYJ2+xkGZRIJEx5jUDOxO6wiT1yp2XEpp1uzBew0sYx2yNa7NlpuRqvDmc2GdSvU9ELHZFVo8exLKndJu1rHrhVYu+x69b7cdKFJZdUELaLqy4atdj8k3dOqadYNZGxcu09Mgd1H6FjGHjBHg8pAPFtCdonxcGq9LOslIulQHDohNWTN8xd3YVOYaXOlJyKizEnrE1G1QkumE+kIeS2Q+yJwJxWnRGblqNU9L6u3ITI8F2YREfeUW78SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BcO5bkczUi3nMox/QUG0GSFvMsuShePDGA8isTcSOZI=;
- b=Q0rpiDGuxDnjW4mcJ/78CgFiT3cP7CItiUoLuDeARFOTCLDKwINu6zOLoNuvlunFSH6C45gRqjgl3cOiszuz24dBu1R97MV4gUCot7HTvVp81mJGQBQK36VjzY93Veelp2CxvpztI2qq8vuVZtNkdGIz2/fOEE7SmqcmYsAVmj+qdvi+mfyTtvz/gmzlEKScIQSdl4jnGoeJMrFJdsg+SxYfX/klhA6FM2gY6nhh+68nWgrxr+tfcJ64a9JBj/tvSBvfXSOx3ShDlteNhJA+Tgi2V4rmcl26LJZjyfxoTS5J+uuN9qb2g9K43mNGofLMEMcmkpCLLFCKG3rMshT3Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BcO5bkczUi3nMox/QUG0GSFvMsuShePDGA8isTcSOZI=;
- b=Cp7zfrOXW2dY/m0ByoB0t/0ctfKrMRgZrOeZHM16Zw3j7/2hCzxyQntCUzix5wrAAcu77b+AlRG30isOU2PDdncbz1OnBBU5nixyEYecfmQ5C9rQnnGxnVxv/a1qs7z327yTt4VJKrRwpAZiHwbgU8/wS1dvi/eeocHQ86N+Eio=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4895.eurprd05.prod.outlook.com (20.177.51.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.21; Mon, 2 Sep 2019 10:51:41 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2220.020; Mon, 2 Sep 2019
- 10:51:41 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: build failure after merge of the hmm tree
-Thread-Topic: linux-next: build failure after merge of the hmm tree
-Thread-Index: AQHVYXw83banRLe5NEK49Gtd2c7XPacYNdIA
-Date:   Mon, 2 Sep 2019 10:51:41 +0000
-Message-ID: <20190902105137.GC20@mellanox.com>
-References: <20190902205017.3eca5b70@canb.auug.org.au>
-In-Reply-To: <20190902205017.3eca5b70@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4P190CA0006.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:200:56::16) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cbe5a7e0-fee5-4a6f-7316-08d72f9388ea
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4895;
-x-ms-traffictypediagnostic: VI1PR05MB4895:
-x-microsoft-antispam-prvs: <VI1PR05MB4895307E6076CECD490646E8CFBE0@VI1PR05MB4895.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:612;
-x-forefront-prvs: 01480965DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(53754006)(199004)(189003)(86362001)(186003)(4326008)(478600001)(8936002)(36756003)(7736002)(305945005)(71190400001)(71200400001)(256004)(6512007)(14454004)(6436002)(81166006)(81156014)(8676002)(53936002)(316002)(26005)(102836004)(33656002)(2906002)(6246003)(76176011)(54906003)(6506007)(386003)(66476007)(66556008)(64756008)(66446008)(6116002)(66946007)(3846002)(52116002)(11346002)(476003)(2616005)(486006)(25786009)(446003)(229853002)(6486002)(1076003)(6916009)(66066001)(99286004)(5660300002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4895;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: d3riot/RiNwjeaytGDyYmMnq0rdZH+ULEGZXo92/cafTiswQggMjE9/3TGNlKIhppxG4iq4bB9+27+IxWYorX5DbGwm+kqXekmJZGFNPLlLu/j/SqqCUmoH2GHZu8v3kDMAo7Q8vy7G+Wk8fo6ACRsjLuPWuej5PnJS8BkpM7F9ordJsbzyj7k9ZfEM6+GQf+DWledqKiz36XsaxFRbk5cWRl1L9NErYfi7CywPouA6qm7dSfLURdaOk8OXhMsFsXg0IlI1qWZ7CEnkPt/aAxAhd7Z9cANZDmzi+edkAXfg5qY5SUU2eG7zmBdOX0rx+GqnRmIgxTnOiTRI9YNima+3yudBI3Pk5Jdy6LQAQeXW/3eZeYwLQeVf5CMsCOVbvFp1qZCveXxtrDlmV/BjT7Ju1y/QO3FPjVW4LnZKgwCo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <44EA7FDA20E5394C9FEBE48B1A69F906@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Sep 2019 06:53:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:52150 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729881AbfIBKxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:53:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46D2E28;
+        Mon,  2 Sep 2019 03:53:51 -0700 (PDT)
+Received: from [192.168.0.8] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDA4A3F246;
+        Mon,  2 Sep 2019 03:53:49 -0700 (PDT)
+Subject: Re: [PATCH RFC v4 0/15] sched,fair: flatten CPU controller runqueues
+To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, pjt@google.com, peterz@infradead.org,
+        mingo@redhat.com, morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+References: <20190822021740.15554-1-riel@surriel.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <94ba95b9-9cfe-d715-dded-ff92700d47eb@arm.com>
+Date:   Mon, 2 Sep 2019 12:53:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbe5a7e0-fee5-4a6f-7316-08d72f9388ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 10:51:41.3131
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bBC02oG9qo+zuUZe40noSwKqUgDxFaBrMaIIB290Y3FZ0pSQYW4PvDo9sE1BQIxaF33P7LjzF7xCGVeAcNN5Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4895
+In-Reply-To: <20190822021740.15554-1-riel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 08:50:17PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On 22/08/2019 04:17, Rik van Riel wrote:
+> The current implementation of the CPU controller uses hierarchical
+> runqueues, where on wakeup a task is enqueued on its group's runqueue,
+> the group is enqueued on the runqueue of the group above it, etc.
+> 
+> This increases a fairly large amount of overhead for workloads that
+> do a lot of wakeups a second, especially given that the default systemd
+> hierarchy is 2 or 3 levels deep.
+> 
+> This patch series is an attempt at reducing that overhead, by placing
+> all the tasks on the same runqueue, and scaling the task priority by
+> the priority of the group, which is calculated periodically.
+> 
+> My main TODO items for the next period of time are likely going to
+> be testing, testing, and testing. I hope to find and flush out any
+> corner case I can find, and make sure performance does not regress
+> with any workloads, and hopefully improves some.
 
-> ERROR: "nd_region_provider_data" [drivers/acpi/nfit/nfit.ko] undefined!
-> ERROR: "to_nd_blk_region" [drivers/acpi/nfit/nfit.ko] undefined!
-> ERROR: "nvdimm_region_notify" [drivers/acpi/nfit/nfit.ko] undefined!
-> ERROR: "nvdimm_blk_region_create" [drivers/acpi/nfit/nfit.ko] undefined!
->=20
-> Caused by commit
->=20
->   126470c8a58b ("libnvdimm: Enable unit test infrastructure compile check=
-s")
->=20
-> I have reverted that commit for today.
->=20
+I did some testing with a small & simple rt-app based test-case:
 
-Looks like more kconfig trouble, can you send Dan your kconfig? I'll
-drop this patch again
+2 CPUs (rq->cpu_capacity_orig=1024), CPUfreq performance governor
 
-Thanks,
-Jason
+2 taskgroups /tg0 and /tg1
+
+6 CFS tasks (periodic, 8/16ms (runtime/period))
+
+/tg0 (cpu.shares=1024) ran 4 tasks and /tg1 (cpu.shares=1024) ran 2 tasks
+
+(arm64 defconfig with !CONFIG_NUMA_BALANCING, !CONFIG_SCHED_AUTOGROUP)
+
+---
+
+v5.2:
+
+The 2 /tg1 tasks ran 8/16ms. The 4 /tg0 tasks ran 4/16ms in the
+beginning and then 8/16ms after the 2 /tg1 tasks did finish.
+
+---
+
+v5.2 + v4:
+
+There is no runtime/period pattern visible anymore. I see a lot of extra
+wakeup latency for those tasks though.
+
+v5.2 + (v4 without 07/15, 08/15, 15/15) didn't change much.
+
+---
+
+I could try to reduce the stack even further (e.g. without 13/15).
+
+IMHO it's a good idea to have a set of these small & simple test-cases
+handy to verify that the base-functionality is still in place. This
+might be hard to achieve with benchmarks.
