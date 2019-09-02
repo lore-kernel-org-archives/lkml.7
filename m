@@ -2,69 +2,87 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8000C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD7EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6E822DCC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188C120870
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:17:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jZbY3BW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfIBVQq (ORCPT
+        id S1727653AbfIBVRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:16:46 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42059 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfIBVQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:16:45 -0400
-Received: by mail-qk1-f194.google.com with SMTP id f13so13613890qkm.9;
-        Mon, 02 Sep 2019 14:16:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pf6kRO7ifbTnomTd3/bWPA70UjAWSRKoHpL8unNkk8g=;
-        b=MJ2+sxKBYv56fgevVG9r/0B10FtOIvsmIC5EYT/80ioLA8/9DU/cSNpvSuWcjp+JOV
-         ONibQyegXVY7x4yO3e5HeWFvF1OuNz21csEa0kMbd+EAvVYbzdha45LLl1Q0K/nIXuym
-         C4hrutaruWFzqdLfldyPC29llCjg9ZKXQB/W7se/K9gzml7jURze7ZgmYEpzAIAG8JEe
-         FEuVsE3S2beS5j2GiuqbcYTGR3lGgo9CEdX6JILd7FUSMNzrJqx+FVmiA+WS11n0eaaQ
-         DB6aaB/o68pUE9aZ/oeBledwfd4C7Bgo1Y/Z8L1tId1QX+G02pxChIBdIsrwiLav6Ehd
-         NvRQ==
-X-Gm-Message-State: APjAAAX+5W5G8pGp+dp14asnaImKY7u98ekdWuyacswIADRfEsYkHs+s
-        8dgQvJEYSP8oSatkyCbLoVQLgtIK9188oy+JYhY=
-X-Google-Smtp-Source: APXvYqwy7H5va/4bAXkcUfSpA/SbDmlLNbYRpJqfX4B8ejokogm1ieXoll1x3qEkN/VOTl6DASAJoe2SycrHp5MqG+w=
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr30124029qka.3.1567459004644;
- Mon, 02 Sep 2019 14:16:44 -0700 (PDT)
+        Mon, 2 Sep 2019 17:17:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:58679 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbfIBVQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:16:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MjZd5CGPz9sBF;
+        Tue,  3 Sep 2019 07:16:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567459017;
+        bh=LI/Ccw4jAyBMSDMACYJQ4UJwzivHIPT6USfX7vBdITM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jZbY3BW1zy4m68So90dqF1LcUyEZ3//OAhDjgNO5o2v9eKS05viA8EfAEoSiswZLh
+         DEUH1OLUEvc0ph2g+P/BeFxumN9CE8JRQfKfvAtn4wkLGTHjdmC/AVmdlDrRa6OI3y
+         6DE6s2bCCXmfRTJhLEEP2IG/MNM/iBSKRlapZsembp5YtNp74YJ24pPp9hnvsMXFFk
+         z1YGvme1AROeiK5C/vBVBsH0HVGNYTQvWBiLVPIOqY6ynzLVnB6jBMDS1GEkHYipQh
+         pjaHQQvB2FGs/6tuMyoK0V7UhuPdw2iZn3tkuPfdE/6YMNVJfQF+dwdlkI06Uo6aJJ
+         0COMsy7EAAnbA==
+Date:   Tue, 3 Sep 2019 07:16:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the kgdb-dt tree
+Message-ID: <20190903071657.2caa0c46@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190805075812.1056069-1-arnd@arndb.de> <20190902203857.zusvlv3yv5arel6y@earth.universe>
-In-Reply-To: <20190902203857.zusvlv3yv5arel6y@earth.universe>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 2 Sep 2019 23:16:27 +0200
-Message-ID: <CAK8P3a3uNPepYweCN9+_cQNQyiSGdidwNGL0+xhti2vm8g9O_g@mail.gmail.com>
-Subject: Re: [PATCH] power: reset: make reboot-mode user selectable
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Nandor Han <nandor.han@vaisala.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/gybZqUVR=MvMJJDn42XrIvL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 10:39 PM Sebastian Reichel <sre@kernel.org> wrote:
->
-> This patch does not look good to me. Better patch would be to
-> allow compiling CONFIG_REBOOT_MODE without CONFIG_OF. Obviously
-> the configuration would not be useful for anything except compile
-> testing, but that is also true for this patch.
+--Sig_/gybZqUVR=MvMJJDn42XrIvL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, I'd suggest we leave it with the bugfix you already applied then.
-[caa2b55784, power: reset: nvmem-reboot-mode: add CONFIG_OF dependency]
+Hi all,
 
-      Arnd
+Commits
+
+  f12dc871e3ec ("kgdb: fix comment regarding static function")
+  c60d67aad7b7 ("kdb: Replace strncmp with str_has_prefix")
+
+are missing a Signed-off-by from their committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gybZqUVR=MvMJJDn42XrIvL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1thskACgkQAVBC80lX
+0GyiEwf/VqWYXy0ot99fxq1GE6AGrm9uO1V1D6MdI8FY1q19NLuPOmytkmTSc2x5
+0hvW4p0QYimMkMKCmq/0JTUpeBbz5MWzYbw2OBaQ4+mjAWMdxr+AUHA+uBVNHTwR
+/sTFPZscWRUVCaCoyiXWeMDp9BdjuBH5unTu/KUOm0yA7Ec2DpqCvlSMsTKQ4CTs
+RDKYLnqv6h/hSQU1m4JoL1tumAPsxtpdHiVURTt9GHjECfxZlZF/lEAWZCObHDM6
+/LqKZ1CVrY4/tX7L/EkAFiWBS3IEyJEijDH14a47PKTlrv0twYRKV/E2Z1qd5zXX
+Tlr33gJe6Pfb5WSzLCv+Z1W06P1n8w==
+=zdQY
+-----END PGP SIGNATURE-----
+
+--Sig_/gybZqUVR=MvMJJDn42XrIvL--
