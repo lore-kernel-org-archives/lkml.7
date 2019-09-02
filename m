@@ -2,134 +2,155 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F83C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE775C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8751121883
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A896221883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 19:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ABUi6bxw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQfs6DZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfIBTPx (ORCPT
+        id S1727136AbfIBTQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 15:15:53 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46544 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfIBTPw (ORCPT
+        Mon, 2 Sep 2019 15:16:22 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39575 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfIBTQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 15:15:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jLmXpLU6F1RGPbvNG04Pwx+M4aB058HdSSdmCuhuLak=; b=ABUi6bxwns6yQEN+1PnwjRCTK
-        GpwKo/K2O4pz7QylK87ZTmWEBXC3cVnMf4e54Wg0s5A0GhBfCrxAY5UkSmMCD2l120rKEBOMtmmSx
-        fQv7FhbjUE0Rpx3DiFQyebngjv0bSKpYfLtzd6C7v0yuII8sKLhPVKc2NYTg4oEjO86VlgdYYl2rw
-        /2rqFgmolMcY8H2vtNv4U8p9VQ9qhC7n/cEEEv5csuBN+Cf0JtVgyQGd6kZTDlEJSlCZaDYqDu3gN
-        nj7VnN5S6ckTuLGYXWcKmdyXpwxgRfmGWokUG7W1qrM5Pncbt6HIFrG7uIE9qeQYXi0H+WkSD6QRc
-        ZKFJaOhww==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4rmW-0003ny-LE; Mon, 02 Sep 2019 19:14:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 393DE306023;
-        Mon,  2 Sep 2019 21:13:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E09FA29B9FF21; Mon,  2 Sep 2019 21:14:21 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 21:14:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, dalias@libc.org,
-        linux-sh@vger.kernel.org, catalin.marinas@arm.com,
-        dave.hansen@linux.intel.com, heiko.carstens@de.ibm.com,
-        linuxarm@huawei.com, jiaxun.yang@flygoat.com,
-        linux-kernel@vger.kernel.org, mwb@linux.vnet.ibm.com,
-        paulus@samba.org, hpa@zytor.com, sparclinux@vger.kernel.org,
-        chenhc@lemote.com, will@kernel.org, linux-s390@vger.kernel.org,
-        ysato@users.sourceforge.jp, mpe@ellerman.id.au, x86@kernel.org,
-        rppt@linux.ibm.com, borntraeger@de.ibm.com, dledford@redhat.com,
-        mingo@redhat.com, jeffrey.t.kirsher@intel.com,
-        benh@kernel.crashing.org, jhogan@kernel.org,
-        nfont@linux.vnet.ibm.com, mattst88@gmail.com, len.brown@intel.com,
-        gor@linux.ibm.com, anshuman.khandual@arm.com,
-        ink@jurassic.park.msu.ru, cai@lca.pw, luto@kernel.org,
-        tglx@linutronix.de, naveen.n.rao@linux.vnet.ibm.com,
-        linux-arm-kernel@lists.infradead.org, rth@twiddle.net,
-        axboe@kernel.dk, robin.murphy@arm.com, linux-mips@vger.kernel.org,
-        ralf@linux-mips.org, tbogendoerfer@suse.de, paul.burton@mips.com,
-        linux-alpha@vger.kernel.org, bp@alien8.de,
-        akpm@linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-Message-ID: <20190902191421.GT2369@hirez.programming.kicks-ass.net>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
- <20190831161247.GM2369@hirez.programming.kicks-ass.net>
- <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
- <20190902072542.GN2369@hirez.programming.kicks-ass.net>
- <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
- <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
- <20190902182252.GC35858@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902182252.GC35858@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Sep 2019 15:16:22 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s12so2387897pfe.6;
+        Mon, 02 Sep 2019 12:16:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oVYAlVrZfSgGuhdp8J1bJOh+7e8+KCFSvF87G3dnuqA=;
+        b=aQfs6DZWBspomDmj03PMKcrzoihdwGAFfddUfiMnPgm1hPtLEKwFNj8yZHEl3vicgW
+         icwFH52dChjMJ1dWfy66+x//XfKaeFMnkeh+/uifDY7vp2XjEcmeMxdwR6W5b5EPqCho
+         0AHQJ3lwMSfXnQle/zkFtjUKJtHMYnyFYN+tA+aSQzW57seUO/IAtuS1AjFyz8mpF+4b
+         u7JiGLbIUL8RoeFG6dw+xKWO+gMtaKuEHOgpBmNOdB7LGnxbK9ALV4STRJ9A3URnrUqp
+         kzoxtbmEZCuN7b0FlFPDy41xVEOFJ2enkv7inhcUh8F8t/fnDYX0pfgfHoa+Niq2NeR5
+         XNEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oVYAlVrZfSgGuhdp8J1bJOh+7e8+KCFSvF87G3dnuqA=;
+        b=NANDy0YmyqmxlTmozcyPhK9AloJXe6xWp8+et0Thr9j0CKgZ0l/pZM2t4dplEl0Xl7
+         wU9riEEaJOytXvYOZd+JoJ85fwxQkQ9eXKWDDntrk9Stox7yCzQ8J5xoE1i6AlY/yCRP
+         vMyR+1HOL83jHD9E0xAI1J+jyqUjOC5KSzTWnp2fcuPE3b8fheXtHRf5hDsQwJ7wqPo3
+         g+gwBKRa83oEz2SUDVMe5YesbufEkJ2gOgW7MIOPg8uMoj5gX9XT3gxUzDiYA8ASdwY5
+         TQAYp9H6gzfdwob89F2muCr8DdFK3hqlF9RdaadJHS/ScvwGCX8dFbGDceREu/BPwdQN
+         RW8g==
+X-Gm-Message-State: APjAAAVHSQ0bV3ePY3+u+iR0drvSqJ9OKBGMplypDBsbQFtEsJRY2yBQ
+        XcDnugjVAGFXHs8fEHihRtU=
+X-Google-Smtp-Source: APXvYqxxdFKA/8zfsRJSWBrXDIOku7j0IfD0ot3/W6xQOB4IhKcz/UTJl3JSizGbGLLcQDfi+OARxw==
+X-Received: by 2002:a17:90a:c694:: with SMTP id n20mr14181605pjt.24.1567451781462;
+        Mon, 02 Sep 2019 12:16:21 -0700 (PDT)
+Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
+        by smtp.gmail.com with ESMTPSA id o35sm13021420pgm.29.2019.09.02.12.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 12:16:20 -0700 (PDT)
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+To:     linux@armlinux.org.uk, linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
+        y2038@lists.linaro.org
+Subject: [PATCH] adfs: Fill in max and min timestamps in sb
+Date:   Mon,  2 Sep 2019 12:12:31 -0700
+Message-Id: <20190902191231.13346-1-deepa.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 08:22:52PM +0200, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
+Fill in the appropriate limits to avoid inconsistencies
+in the vfs cached inode times when timestamps are
+outside the permitted range.
 
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index f0dd8e38fee3..2caf204966a0 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -2120,8 +2120,16 @@ int device_add(struct device *dev)
-> >  		dev->kobj.parent = kobj;
-> >  
-> >  	/* use parent numa_node */
-> > -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
-> > -		set_dev_node(dev, dev_to_node(parent));
-> > +	if (dev_to_node(dev) == NUMA_NO_NODE) {
-> > +		if (parent)
-> > +			set_dev_node(dev, dev_to_node(parent));
-> > +#ifdef CONFIG_NUMA
-> > +		else {
-> > +			pr_err("device: '%s': has no assigned NUMA node\n", dev_name(dev));
-> > +			set_dev_node(dev, 0);
-> > +		}
-> > +#endif
-> 
-> BTW., is firmware required to always provide a NUMA node on NUMA systems?
-> 
-> I.e. do we really want this warning on non-NUMA systems that don't assign 
-> NUMA nodes?
+Note that the min timestamp is assumed to be
+01 Jan 1970 00:00:00 (Unix epoch). This is consistent
+with the way we convert timestamps in adfs_adfs2unix_time().
 
-Good point; we might have to exclude nr_node_ids==1 systems from
-warning.
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+---
 
-> Also, even on NUMA systems, is firmware required to provide a NUMA node - 
-> i.e. is it in principle invalid to offer no NUMA binding?
+This depends on the following patch in Arnd's y2038 tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground y2038
+188d20bcd1eb ("vfs: Add file timestamp range support")
 
-I think so; a device needs to be _somewhere_, right? Typically though;
-devices are on a PCI bus, and the PCI bridge itself will have a NUMA
-binding and then the above parent rule will make everything just work.
+ fs/adfs/adfs.h  | 13 +++++++++++++
+ fs/adfs/inode.c |  8 ++++----
+ fs/adfs/super.c |  2 ++
+ 3 files changed, 19 insertions(+), 4 deletions(-)
 
-But I don't see how you can be outside of the NUMA topology.
+diff --git a/fs/adfs/adfs.h b/fs/adfs/adfs.h
+index 699c4fa8b78b..504ad80072ef 100644
+--- a/fs/adfs/adfs.h
++++ b/fs/adfs/adfs.h
+@@ -3,6 +3,19 @@
+ #include <linux/fs.h>
+ #include <linux/adfs_fs.h>
+ 
++/*
++ * 01 Jan 1970 00:00:00 (Unix epoch) as seconds since
++ * 01 Jan 1900 00:00:00 (RISC OS epoch)
++ */
++#define RISC_OS_EPOCH_DELTA 2208988800LL
++
++/*
++ * Convert 40 bit centi seconds to seconds
++ * since 01 Jan 1900 00:00:00 (RISC OS epoch)
++ * The result is 2248-06-03 06:57:57 GMT
++ */
++#define ADFS_MAX_TIMESTAMP ((0xFFFFFFFFFFLL / 100) - RISC_OS_EPOCH_DELTA)
++
+ /* Internal data structures for ADFS */
+ 
+ #define ADFS_FREE_FRAG		 0
+diff --git a/fs/adfs/inode.c b/fs/adfs/inode.c
+index 5b8017ab0a98..11acd74fb099 100644
+--- a/fs/adfs/inode.c
++++ b/fs/adfs/inode.c
+@@ -162,7 +162,10 @@ static int adfs_mode2atts(struct super_block *sb, struct inode *inode,
+ 	return attr;
+ }
+ 
+-static const s64 nsec_unix_epoch_diff_risc_os_epoch = 2208988800000000000LL;
++/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
++ * 01 Jan 1900 00:00:00 (RISC OS epoch)
++ */
++static const s64 nsec_unix_epoch_diff_risc_os_epoch = RISC_OS_EPOCH_DELTA * NSEC_PER_SEC;
+ 
+ /*
+  * Convert an ADFS time to Unix time.  ADFS has a 40-bit centi-second time
+@@ -173,9 +176,6 @@ static void
+ adfs_adfs2unix_time(struct timespec64 *tv, struct inode *inode)
+ {
+ 	unsigned int high, low;
+-	/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
+-	 * 01 Jan 1900 00:00:00 (RISC OS epoch)
+-	 */
+ 	s64 nsec;
+ 
+ 	if (!adfs_inode_is_stamped(inode))
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index 7a3e6b394f2a..532e2afbc7a3 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -381,6 +381,8 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	sb->s_fs_info = asb;
+ 	sb->s_magic = ADFS_SUPER_MAGIC;
+ 	sb->s_time_gran = 10000000;
++	sb->s_time_min = 0;
++	sb->s_time_max = ADFS_MAX_TIMESTAMP;
+ 
+ 	/* set default options */
+ 	asb->s_uid = GLOBAL_ROOT_UID;
+-- 
+2.17.1
+
