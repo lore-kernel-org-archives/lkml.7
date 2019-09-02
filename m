@@ -2,373 +2,221 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95F6C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F78C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBCA21874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C979E21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YUT83e9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfIBIDY (ORCPT
+        id S1730237AbfIBID3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:03:24 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:41068 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730205AbfIBIDV (ORCPT
+        Mon, 2 Sep 2019 04:03:29 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:51426 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729954AbfIBICS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:03:21 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 013761513131F9;
-        Mon,  2 Sep 2019 08:03:15 +0000 (UTC)
-Received: from saetre (unknown [154.53.1.40])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 2 Sep 2019 04:02:18 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Mon,  2 Sep 2019 08:03:14 +0000 (UTC)
-Message-ID: <9203df304b8ab11688ca15e56cc866982796894d.camel@archlinux.org>
-Subject: Re: [PATCH v5] hid-logitech-hidpp: read battery voltage from newer
- devices
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Pedro Vanzella <pedro@pedrovanzella.com>,
-        linux-input@vger.kernel.org
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190831175659.7404-1-pedro@pedrovanzella.com>
-References: <20190831175659.7404-1-pedro@pedrovanzella.com>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-NdhKaDjaaqQo7Wns1juD"
-Date:   Mon, 02 Sep 2019 09:03:12 +0100
-MIME-Version: 1.0
-User-Agent: Evolution 3.32.4 
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AED08C0438;
+        Mon,  2 Sep 2019 08:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567411337; bh=/MasdnODAJKEeH9TitBj6mYJC/lGR8OKb/0AXAK0+ss=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=YUT83e9PcMthqHTF3hahkdErxCAMXoCE0ZDhtMpc186kRRBCay/6Ea3Dxo7JsEOGu
+         qFfUiS5ZToKJ+Fox6+bg1IEjaDPgOjlqd4Lm2rt81kC2+emY+a5u3xfZJNwcyEGOdA
+         4BwA1TjGOeIRCIYuXSnr9rhG74GfVJluss16COhgWzAXIZJydhZGwlROs+OK0l7IW7
+         vCT1i8ycy4lAPDDWwgH1tc9aJURpsIR4mfBTY8KxbbAB+3gVu3EpeantFP/aWnkd27
+         R54D8mO/+gpnAOmCdkYr1A2Q1ZzUcCOQ3oh7aEnTwHkQhxDh2EQCGeMd/pL7euE5By
+         ZBUnz6o4PsNng==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 73665A0078;
+        Mon,  2 Sep 2019 08:02:15 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 07/13] net: stmmac: selftests: Implement the ARP Offload test
+Date:   Mon,  2 Sep 2019 10:01:49 +0200
+Message-Id: <dadd04bc5a62a1467a60f33ac6369159f5528fd5.1567410970.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
+References: <cover.1567410970.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
+References: <cover.1567410970.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Implement a test for ARP Offload feature.
 
---=-NdhKaDjaaqQo7Wns1juD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-On Sat, 2019-08-31 at 13:56 -0400, Pedro Vanzella wrote:
-> Newer Logitech mice report their battery voltage through feature
-> 0x1001
-> instead of the battery levels through feature 0x1000.
->=20
-> When the device is brought up and we try to query the battery, figure
-> out if it supports the old or the new feature. If it supports the new
-> feature, record the feature index and read the battery voltage and
-> its status.
->=20
-> If everything went correctly, record the fact that we're capable
-> of querying battery voltage.
->=20
-> Note that the protocol only gives us the current voltage in
-> millivolts.
->=20
-> Like we do for other ways of interacting with the battery for other
-> devices, refresh the battery status and notify the power supply
-> subsystem of the changes in voltage and status.
->=20
-> Since there are no known devices which implement both the old and the
-> new battery feature, we make sure to try the newer feature first and
-> only fall back to the old one if that fails.
->=20
-> Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
-> ---
->  drivers/hid/hid-logitech-hidpp.c | 141
-> ++++++++++++++++++++++++++++++-
->  1 file changed, 137 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
-> logitech-hidpp.c
-> index 0179f7ed77e5..2f215e5be001 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -87,6 +87,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
->  #define HIDPP_CAPABILITY_HIDPP20_BATTERY	BIT(1)
->  #define HIDPP_CAPABILITY_BATTERY_MILEAGE	BIT(2)
->  #define HIDPP_CAPABILITY_BATTERY_LEVEL_STATUS	BIT(3)
-> +#define HIDPP_CAPABILITY_BATTERY_VOLTAGE	BIT(4)
-> =20
->  /*
->   * There are two hidpp protocols in use, the first version hidpp10
-> is known
-> @@ -135,12 +136,14 @@ struct hidpp_report {
->  struct hidpp_battery {
->  	u8 feature_index;
->  	u8 solar_feature_index;
-> +	u8 voltage_feature_index;
->  	struct power_supply_desc desc;
->  	struct power_supply *ps;
->  	char name[64];
->  	int status;
->  	int capacity;
->  	int level;
-> +	int voltage; /* in millivolts */
->  	bool online;
->  };
-> =20
-> @@ -1219,6 +1222,118 @@ static int hidpp20_battery_event(struct
-> hidpp_device *hidpp,
->  	return 0;
->  }
-> =20
-> +/* ---------------------------------------------------------------
-> ----------- */
-> +/* 0x1001: Battery
-> voltage                                                    */
-> +/* ---------------------------------------------------------------
-> ----------- */
-> +
-> +#define HIDPP_PAGE_BATTERY_VOLTAGE 0x1001
-> +
-> +#define CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE 0x00
-> +
-> +#define EVENT_BATTERY_VOLTAGE_STATUS_BROADCAST 0x00
-> +
-> +static int hidpp20_battery_map_status_voltage(u8 data[3], int
-> *voltage)
-> +{
-> +	int status;
-> +
-> +	switch (data[2]) {
-> +	case 0x00: /* discharging */
-> +		status =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> +		break;
-> +	case 0x10: /* wireless charging */
-> +	case 0x80: /* charging */
-> +		status =3D POWER_SUPPLY_STATUS_CHARGING;
-> +		break;
-> +	case 0x81: /* fully charged */
-> +		status =3D POWER_SUPPLY_STATUS_FULL;
-> +		break;
-> +	default:
-> +		status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +	}
-> +
-> +	*voltage =3D get_unaligned_be16(data);
-> +
-> +	return status;
-> +}
-> +
-> +static int hidpp20_battery_get_battery_voltage(struct hidpp_device
-> *hidpp,
-> +					       u8 feature_index,
-> +					       int *status, int
-> *voltage)
-> +{
-> +	struct hidpp_report response;
-> +	int ret;
-> +	u8 *params =3D (u8 *)response.fap.params;
-> +
-> +	ret =3D hidpp_send_fap_command_sync(hidpp, feature_index,
-> +					  CMD_BATTERY_VOLTAGE_GET_BATTE
-> RY_VOLTAGE,
-> +					  NULL, 0, &response);
-> +
-> +	if (ret > 0) {
-> +		hid_err(hidpp->hid_dev, "%s: received protocol error
-> 0x%02x\n",
-> +			__func__, ret);
-> +		return -EPROTO;
-> +	}
-> +	if (ret)
-> +		return ret;
-> +
-> +	hidpp->capabilities |=3D HIDPP_CAPABILITY_BATTERY_VOLTAGE;
-> +
-> +	*status =3D hidpp20_battery_map_status_voltage(params, voltage);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hidpp20_query_battery_voltage_info(struct hidpp_device
-> *hidpp)
-> +{
-> +	u8 feature_type;
-> +	int ret;
-> +	int status, voltage;
-> +
-> +	if (hidpp->battery.voltage_feature_index =3D=3D 0xff) {
-> +		ret =3D hidpp_root_get_feature(hidpp,
-> HIDPP_PAGE_BATTERY_VOLTAGE,
-> +					     &hidpp-
-> >battery.voltage_feature_index,
-> +					     &feature_type);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret =3D hidpp20_battery_get_battery_voltage(hidpp,
-> +						  hidpp-
-> >battery.voltage_feature_index,
-> +						  &status, &voltage);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	hidpp->battery.status =3D status;
-> +	hidpp->battery.voltage =3D voltage;
-> +	hidpp->battery.online =3D status !=3D
-> POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +
-> +	return 0;
-> +}
-> +
-> +static int hidpp20_battery_voltage_event(struct hidpp_device *hidpp,
-> +					 u8 *data, int size)
-> +{
-> +	struct hidpp_report *report =3D (struct hidpp_report *)data;
-> +	int status, voltage;
-> +
-> +	if (report->fap.feature_index !=3D hidpp-
-> >battery.voltage_feature_index ||
-> +		report->fap.funcindex_clientid !=3D
-> EVENT_BATTERY_VOLTAGE_STATUS_BROADCAST)
-> +		return 0;
-> +
-> +	status =3D hidpp20_battery_map_status_voltage(report->fap.params,=20
-> &voltage);
-> +
-> +	hidpp->battery.online =3D status !=3D
-> POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +
-> +	if (voltage !=3D hidpp->battery.voltage || status !=3D hidpp-
-> >battery.status) {
-> +		hidpp->battery.voltage =3D voltage;
-> +		hidpp->battery.status =3D status;
-> +		if (hidpp->battery.ps)
-> +			power_supply_changed(hidpp->battery.ps);
-> +	}
-> +	return 0;
-> +}
-> +
->  static enum power_supply_property hidpp_battery_props[] =3D {
->  	POWER_SUPPLY_PROP_ONLINE,
->  	POWER_SUPPLY_PROP_STATUS,
-> @@ -1228,6 +1343,7 @@ static enum power_supply_property
-> hidpp_battery_props[] =3D {
->  	POWER_SUPPLY_PROP_SERIAL_NUMBER,
->  	0, /* placeholder for POWER_SUPPLY_PROP_CAPACITY, */
->  	0, /* placeholder for POWER_SUPPLY_PROP_CAPACITY_LEVEL, */
-> +	0, /* placeholder for POWER_SUPPLY_PROP_VOLTAGE_NOW, */
->  };
-> =20
->  static int hidpp_battery_get_property(struct power_supply *psy,
-> @@ -1265,6 +1381,9 @@ static int hidpp_battery_get_property(struct
-> power_supply *psy,
->  		case POWER_SUPPLY_PROP_SERIAL_NUMBER:
->  			val->strval =3D hidpp->hid_dev->uniq;
->  			break;
-> +		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +			val->intval =3D hidpp->battery.voltage;
-> +			break;
->  		default:
->  			ret =3D -EINVAL;
->  			break;
-> @@ -3083,6 +3202,9 @@ static int hidpp_raw_hidpp_event(struct
-> hidpp_device *hidpp, u8 *data,
->  		ret =3D hidpp_solar_battery_event(hidpp, data, size);
->  		if (ret !=3D 0)
->  			return ret;
-> +		ret =3D hidpp20_battery_voltage_event(hidpp, data, size);
-> +		if (ret !=3D 0)
-> +			return ret;
->  	}
-> =20
->  	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP10_BATTERY) {
-> @@ -3204,12 +3326,16 @@ static int hidpp_initialize_battery(struct
-> hidpp_device *hidpp)
-> =20
->  	hidpp->battery.feature_index =3D 0xff;
->  	hidpp->battery.solar_feature_index =3D 0xff;
-> +	hidpp->battery.voltage_feature_index =3D 0xff;
-> =20
->  	if (hidpp->protocol_major >=3D 2) {
->  		if (hidpp->quirks & HIDPP_QUIRK_CLASS_K750)
->  			ret =3D hidpp_solar_request_battery_event(hidpp);
-> -		else
-> -			ret =3D hidpp20_query_battery_info(hidpp);
-> +		else {
-> +			ret =3D
-> hidpp20_query_battery_voltage_info(hidpp);
-> +			if (ret)
-> +				ret =3D
-> hidpp20_query_battery_info(hidpp);
-> +		}
-> =20
->  		if (ret)
->  			return ret;
-> @@ -3234,7 +3360,7 @@ static int hidpp_initialize_battery(struct
-> hidpp_device *hidpp)
->  	if (!battery_props)
->  		return -ENOMEM;
-> =20
-> -	num_battery_props =3D ARRAY_SIZE(hidpp_battery_props) - 2;
-> +	num_battery_props =3D ARRAY_SIZE(hidpp_battery_props) - 3;
-> =20
->  	if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_MILEAGE)
->  		battery_props[num_battery_props++] =3D
-> @@ -3244,6 +3370,10 @@ static int hidpp_initialize_battery(struct
-> hidpp_device *hidpp)
->  		battery_props[num_battery_props++] =3D
->  				POWER_SUPPLY_PROP_CAPACITY_LEVEL;
-> =20
-> +	if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_VOLTAGE)
-> +		battery_props[num_battery_props++] =3D
-> +			POWER_SUPPLY_PROP_VOLTAGE_NOW;
-> +
->  	battery =3D &hidpp->battery;
-> =20
->  	n =3D atomic_inc_return(&battery_no) - 1;
-> @@ -3407,7 +3537,10 @@ static void hidpp_connect_event(struct
-> hidpp_device *hidpp)
->  		else
->  			hidpp10_query_battery_status(hidpp);
->  	} else if (hidpp->capabilities &
-> HIDPP_CAPABILITY_HIDPP20_BATTERY) {
-> -		hidpp20_query_battery_info(hidpp);
-> +		if (hidpp->capabilities &
-> HIDPP_CAPABILITY_BATTERY_VOLTAGE)
-> +			hidpp20_query_battery_voltage_info(hidpp);
-> +		else
-> +			hidpp20_query_battery_info(hidpp);
->  	}
->  	if (hidpp->battery.ps)
->  		power_supply_changed(hidpp->battery.ps);
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 110 +++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 8e9d0aeda817..f531dbe038df 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -196,6 +196,24 @@ static struct sk_buff *stmmac_test_get_udp_skb(struct stmmac_priv *priv,
+ 	return skb;
+ }
+ 
++static struct sk_buff *stmmac_test_get_arp_skb(struct stmmac_priv *priv,
++					       struct stmmac_packet_attrs *attr)
++{
++	__be32 ip_src = htonl(attr->ip_src);
++	__be32 ip_dst = htonl(attr->ip_dst);
++	struct sk_buff *skb = NULL;
++
++	skb = arp_create(ARPOP_REQUEST, ETH_P_ARP, ip_dst, priv->dev, ip_src,
++			 NULL, attr->src, attr->dst);
++	if (!skb)
++		return NULL;
++
++	skb->pkt_type = PACKET_HOST;
++	skb->dev = priv->dev;
++
++	return skb;
++}
++
+ struct stmmac_test_priv {
+ 	struct stmmac_packet_attrs *packet;
+ 	struct packet_type pt;
+@@ -1396,6 +1414,94 @@ static int stmmac_test_l4filt_sa_udp(struct stmmac_priv *priv)
+ 	return __stmmac_test_l4filt(priv, 0, dummy_port, 0, ~0, true);
+ }
+ 
++static int stmmac_test_arp_validate(struct sk_buff *skb,
++				    struct net_device *ndev,
++				    struct packet_type *pt,
++				    struct net_device *orig_ndev)
++{
++	struct stmmac_test_priv *tpriv = pt->af_packet_priv;
++	struct ethhdr *ehdr;
++	struct arphdr *ahdr;
++
++	ehdr = (struct ethhdr *)skb_mac_header(skb);
++	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->src))
++		goto out;
++
++	ahdr = arp_hdr(skb);
++	if (ahdr->ar_op != htons(ARPOP_REPLY))
++		goto out;
++
++	tpriv->ok = true;
++	complete(&tpriv->comp);
++out:
++	kfree_skb(skb);
++	return 0;
++}
++
++static int stmmac_test_arpoffload(struct stmmac_priv *priv)
++{
++	unsigned char src[ETH_ALEN] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
++	unsigned char dst[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
++	struct stmmac_packet_attrs attr = { };
++	struct stmmac_test_priv *tpriv;
++	struct sk_buff *skb = NULL;
++	u32 ip_addr = 0xdeadcafe;
++	u32 ip_src = 0xdeadbeef;
++	int ret;
++
++	if (!priv->dma_cap.arpoffsel)
++		return -EOPNOTSUPP;
++
++	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
++	if (!tpriv)
++		return -ENOMEM;
++
++	tpriv->ok = false;
++	init_completion(&tpriv->comp);
++
++	tpriv->pt.type = htons(ETH_P_ARP);
++	tpriv->pt.func = stmmac_test_arp_validate;
++	tpriv->pt.dev = priv->dev;
++	tpriv->pt.af_packet_priv = tpriv;
++	tpriv->packet = &attr;
++	dev_add_pack(&tpriv->pt);
++
++	attr.src = src;
++	attr.ip_src = ip_src;
++	attr.dst = dst;
++	attr.ip_dst = ip_addr;
++
++	skb = stmmac_test_get_arp_skb(priv, &attr);
++	if (!skb) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++
++	ret = stmmac_set_arp_offload(priv, priv->hw, true, ip_addr);
++	if (ret)
++		goto cleanup;
++
++	ret = dev_set_promiscuity(priv->dev, 1);
++	if (ret)
++		goto cleanup;
++
++	skb_set_queue_mapping(skb, 0);
++	ret = dev_queue_xmit(skb);
++	if (ret)
++		goto cleanup_promisc;
++
++	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
++	ret = tpriv->ok ? 0 : -ETIMEDOUT;
++
++cleanup_promisc:
++	dev_set_promiscuity(priv->dev, -1);
++cleanup:
++	stmmac_set_arp_offload(priv, priv->hw, false, 0x0);
++	dev_remove_pack(&tpriv->pt);
++	kfree(tpriv);
++	return ret;
++}
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -1505,6 +1611,10 @@ static const struct stmmac_test {
+ 		.name = "L4 SA UDP Filtering ",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_l4filt_sa_udp,
++	}, {
++		.name = "ARP Offload         ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_arpoffload,
+ 	},
+ };
+ 
+-- 
+2.7.4
 
-Thank you,
-Filipe La=C3=ADns
-
---=-NdhKaDjaaqQo7Wns1juD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl1szLsACgkQ+JPGdIFq
-qV1oghAAmuAeyEctBrGNhp4sYrWWXiim4FMsUVroBM6BM7XzskGUZcSjGl6+GNtv
-bPZUI2VBmbLUQDvMo3OXgiXlkTORSfFCLmTjrBm7+BAm2hwfj7kyoeOJRUKP8MRy
-7WIG83hn35IMq+X4FD2Z2mDA00XK9xsVHzgroHJseXA086Zg0039cbldiuwMtcsU
-V8k/EPDoA6Ci7GIHt0MYQcQUL/vr/pHPqGGNQby6S0WAvGLw2drSHkK/BcguuU2j
-PoGWpS/6z5gK/8t+3MzBGgDtPlgGuSsh+LI7lnUrEcSOkzo511+Aqa3ArvmZcnwY
-GHhr3Em7qB3DUN578J/3XINl0vOgEmkRXo98rezunrTuK9EcTj2ziJgM99eUoskb
-xNSY+Ba74EXHU46U9gcP5dBSxiK7Gpf7mk0xSnSMTo/LzY5lHFdtAeysqPwrqCqi
-6bqeuPyhA2nex11eLGzyhaKRluullTnpJXTVovPPR0KC7+Rr5IptmrV5Z3afHmDW
-mjj4E4iAGXwrXU/WYw37ZCoocYkfThw9w0l907eXlygq8ObMOyk0MysKC+T27Z2o
-EMCypmViM7rHXmYtpeFrxZ/2w0NdMwUhyzVMSdhQcxk97Jos1E9bqrZRfr12kOGa
-78q32zvtBf+la9e1KdflA2YngGhvbxsXsEJaHRbFjrFSWuhygSk=
-=ZRJP
------END PGP SIGNATURE-----
-
---=-NdhKaDjaaqQo7Wns1juD--
