@@ -2,105 +2,135 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E755C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F8BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB5921881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:07:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="lli5Txam"
+	by mail.kernel.org (Postfix) with ESMTP id CD2B822DBF
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567458501;
+	bh=s9W7m9n2kMALyK7KmGbZwDquYZXEzWR6eyYkv2dm2f8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FwCnv90xc+a33ttr/SYkJZwuTQOoZtIMOmQSSUicGoNBK00habsqjH6XYNPLqzDR/
+	 XDOiYSkqlPh/vWxmWGauwNNRyJRYdWOM5kuWaHmWISZjXVIdKUulB+KD4aCqTU5gMK
+	 CrR1T8gJpfWK2vBmnPMG7nqSgyPumD9dM9T3ZyI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfIBVHJ (ORCPT
+        id S1727522AbfIBVIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:07:09 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:12090 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfIBVHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:07:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id 67D68829;
-        Mon,  2 Sep 2019 23:07:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1567458426; x=1569272827; bh=WuXCxjOvHNPIr4f4FJI2dIbj/gOBpQVskgt
-        sRbojjiE=; b=lli5Txam2/ig+K9Eqk0TUyex2OEYzqaDfAazREZIKUxi0V1oZ2x
-        LIuc4CoFrPa2cTCiLnu+B2dKkco8lLeZj+X/MC48C7fzU6LxYJ+tKQoBhQiagrgw
-        vQ4HSTVxEKbgnp9NBVXKJnqpPtA24xpMsbc5buG1WY2Nobad0iIvKct1BlPaHTFx
-        kt0osiY0f6QC9sK9y/jKs7fPM883xB0UV29xsJwMrhLKZ2vg+TYct6wwiMesvm8+
-        xxWWoEJZmlzwb+ia+3+bhEg6DIlTu4YrUka5jKSn8KxSKHP2xh9I14+MwZNCX7DG
-        1aBGd4g8ALzCE6SKVFWF+s2apb0cBdi6VCPcoX4B/BFA+fXrUQsWbSt71VOLXEW4
-        R49/vuT14W0/IMA2UXseumSLacVQEReynC84aUD9O+lwxBdHHlVouz07Q4eQDXmP
-        D68hNeY0AdN176XVQ5YHnXA72M9E8ZBJtVYvzRqEADGgKaH06xeeNEmXyKp9eBG2
-        +vwMuZVel9yRI2kJYndY6SFikvTKajXs4riT8X/B5zFpUYBia3FG9NEO9Fd6BBOj
-        TyiLC/8iK7RSOBuwDOa0tqwg9fj8VDh3gA1ufel6Bh2BwWQ+sUsVAe7VhoRClX8R
-        LhjUQ7LewZWHLEiPrCj+wq4GpjRR9DikZgXwdc4Dq+OllSWgR+nwQ5DA=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FSSCfrSDwaJL; Mon,  2 Sep 2019 23:07:06 +0200 (CEST)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id 28EF1812;
-        Mon,  2 Sep 2019 23:07:05 +0200 (CEST)
-Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id A70964EF3;
-        Mon,  2 Sep 2019 23:07:05 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc:lock: remove reference to clever use of read-write lock
-Date:   Mon, 02 Sep 2019 23:07:04 +0200
-Message-ID: <2901443.IPKE8n5AsX@harkonnen>
-In-Reply-To: <20190902142133.37e106af@lwn.net>
-References: <20190831134116.25417-1-federico.vaga@vaga.pv.it> <4627860.yBeiQmOknq@harkonnen> <20190902142133.37e106af@lwn.net>
+        Mon, 2 Sep 2019 17:08:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35669 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfIBVIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:08:20 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 100so14719013otn.2;
+        Mon, 02 Sep 2019 14:08:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=huTQD+G6wSs8hXbu4stIdO9xW+9jjAIMQ/j2IBKOSLs=;
+        b=kGdy5a6AxvT29kVSZ2Kida0dWzlyvLm2AgBkZrYN9pf7HnDv9MfF345a+0CKCigvWF
+         CL1bNb8UEGH3t3ws7yGOul2dULhL3pS7ar+AiP3+x0p4oDRTngpwPOv5IVz+/CYiJOAx
+         fY2Z2JUgCvs7HiQLDLSzMlBEBK95cG2gt3OnQMP7a+8sKU3vnvPuHS3UgzW9c1X/vNSd
+         Bi39o+TKfx1+fltm4JGm3yZ7OzMo0B9K8L5AKm2mgYZ3AA2+IH2BYHP7Xz7Jk+eax+dK
+         0w6g7FSG38HxRssA7lEMRA4o6cpBpZs28wKiYpZO/wM787ILchCaQJ805OuTghwHzvMn
+         wacw==
+X-Gm-Message-State: APjAAAXLxzdB5swd05MTJqInq8SQCSgIM3hFSrkFATmawv8Ny7j+qTog
+        UhN1UZ2SdtbwqCCK9ZGINA4xg6364tcjiaMojAI=
+X-Google-Smtp-Source: APXvYqyI27hb2RWcNRadfCbRlDtIXktARg70zP5FAIcXUKIjdX66KnAXJFj+Kt7ssn8uG1C93zycuqAbTk3HFoTJ7d8=
+X-Received: by 2002:a05:6830:154:: with SMTP id j20mr26200025otp.266.1567458499533;
+ Mon, 02 Sep 2019 14:08:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
+ <20190722023530.67676-2-skunberg.kelsey@gmail.com> <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
+ <20190722182929.GA203187@google.com>
+In-Reply-To: <20190722182929.GA203187@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 2 Sep 2019 23:08:08 +0200
+Message-ID: <CAJZ5v0iF=TxxD_gCJfaZzORTrcu+2StJE1_vhthB70jxqCkHuw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ACPI: Remove acpi_has_method() call from acpi_adxl.c
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, bjorn@helgaas.com,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, September 2, 2019 10:21:33 PM CEST Jonathan Corbet wrote:
-> On Mon, 02 Sep 2019 21:19:24 +0200
-> 
-> Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-> > > > I am not used to the mathematical English jargon. It make sense, but
-> > > > then
-> > > > I
-> > > > would replace it with "If and only if": for clarity.
-> > > 
-> > > While it's used in a number of places and it's pretty common wording
-> > > overall in the literature, I agree that we should probably change this
-> > > in
-> > > locking API user facing documentation.
-> > 
-> > I would say not only in locking/. The argument is valid for the entire
-> > Documentation/. I wait for Jon's opinion before proceeding.
-> 
-> I don't really have a problem with "iff"; it doesn't seem like *that*
-> obscure a term to me.  But if you want spell it out, I guess I don't have
-> a problem with that.  We can change it - iff you send a patch to do it :)
+Sorry for the delayed reply.
 
-I do not mind too, once I got the meaning of IFF to *me* is clear and 
-translatable to SSE (i will not).
+On Mon, Jul 22, 2019 at 8:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Tony (original author), Borislav (merged original patch)]
+>
+> On Mon, Jul 22, 2019 at 10:31:11AM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Jul 22, 2019 at 4:36 AM Kelsey Skunberg
+> > <skunberg.kelsey@gmail.com> wrote:
+> > >
+> > > acpi_check_dsm() will already return an error if the DSM method does not
+> > > exist. Checking if the DSM method exists before the acpi_check_dsm() call
+> > > is not needed. Remove acpi_has_method() call to avoid additional work.
+> > >
+> > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > > ---
+> > >  drivers/acpi/acpi_adxl.c | 5 -----
+> > >  1 file changed, 5 deletions(-)
+> > >
+> > > diff --git a/drivers/acpi/acpi_adxl.c b/drivers/acpi/acpi_adxl.c
+> > > index 13c8f7b50c46..89aac15663fd 100644
+> > > --- a/drivers/acpi/acpi_adxl.c
+> > > +++ b/drivers/acpi/acpi_adxl.c
+> > > @@ -148,11 +148,6 @@ static int __init adxl_init(void)
+> > >                 return -ENODEV;
+> > >         }
+> > >
+> > > -       if (!acpi_has_method(handle, "_DSM")) {
+> > > -               pr_info("No DSM method\n");
+> >
+> > And why is printing the message not useful?
+> >
+> > > -               return -ENODEV;
+> > > -       }
+> > > -
+> > >         if (!acpi_check_dsm(handle, &adxl_guid, ADXL_REVISION,
+> > >                             ADXL_IDX_GET_ADDR_PARAMS |
+> > >                             ADXL_IDX_FORWARD_TRANSLATE)) {
+>
+> The next line of context (not included in the patch):
+>
+>                pr_info("DSM method does not support forward translate\n");
+>
+> IMHO kernel messages that are just a constant string, with no context
+> or variable part (device ID, path, error code, etc) are questionable
+> in general.  Is there any dev_printk()-like thing that takes an
+> acpi_handle?  Seems like that would be useful for cases like this.
+>
+> This message *does* include an "ADXL: " prefix (from the pr_fmt
+> definition), and from reading the code you can see that the only
+> possible method is "\_SB.ADXL._DSM".
+>
+> There's nothing an end user can do with these messages, so I suspect
+> their value is for debugging during platform bringup, and it would be
+> sufficient to drop the first one (as Kelsey's patch does) and change
+> the second one like this:
+>
+> -              pr_info("DSM method does not support forward translate\n");
+> +              pr_info("%s DSM missing or does not support forward translate\n",
+> +                      path);
 
-My opinion is that abbreviations should not be used in general. But it is a 
-weak opinion. I can do, and send, a patch
+You have a point, but then I would expect the changelog to mention that.
 
-> 
-> Thanks,
-> 
-> jon
-
-
-
-
+As it stands, the patch does more than the changelog says, which isn't nice.
