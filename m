@@ -2,69 +2,193 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D01C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E02206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567443917;
-	bh=xbswVfafBFtdRchKtBadzRQkMO3ItyV2U/0pzkspZZE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=GGXxQU81LsQpE6MpPl5LbymI+3ZucxNFX/flsCAQt2ayfzgc0hxtDGq/xKkgZ8+4F
-	 vTiH/HOEdKO5a1CX4a2xFGcWNzSHP19f9KhRh73ykznQhWkkHNBifB8AVsfMt0jxbl
-	 dkXvjpe/aogYJJtdhaTBI+5OgmLiwjdzbnZkED6I=
+	by mail.kernel.org (Postfix) with ESMTP id C36F7206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:14:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCZlaYBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfIBRFQ (ORCPT
+        id S1726642AbfIBRO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 13:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfIBRFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 13:05:09 -0400
-Subject: Re: [GIT PULL] Char/Misc driver fixes for 5.3-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567443908;
-        bh=xbswVfafBFtdRchKtBadzRQkMO3ItyV2U/0pzkspZZE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OfGsI9pq6+dgHqHeXBYv5MlxDNcJtWT+nD2J+MXVaR36/5zkL4HLpH6zxTUhs/lhY
-         96Iok5pblaCcaHFC6022rudeDAjoNs0TKhsm1A01GxtnIUFn67dCkHhPrmlLlKfcda
-         s6eMN/OK85gMhq5MEJ/YrXGQAYLS6J3fea5kezpo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190902153431.GA9961@kroah.com>
-References: <20190902153431.GA9961@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190902153431.GA9961@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
- tags/char-misc-5.3-rc7
-X-PR-Tracked-Commit-Id: 8919dfcb31161fae7d607bbef5247e5e82fd6457
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 49ffdb4c7c65082cee24a53a7ebd62e00eb2e9e9
-Message-Id: <156744390874.11156.16269248695385329485.pr-tracker-bot@kernel.org>
-Date:   Mon, 02 Sep 2019 17:05:08 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+        Mon, 2 Sep 2019 13:14:26 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33756 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbfIBROZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 13:14:25 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r5so11025249qtd.0;
+        Mon, 02 Sep 2019 10:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YNsJdH5ZVLz+f0cTeGEGJWLk48KOEiJLN5T05756t08=;
+        b=XCZlaYBLJxRb2KPMpPlHm7+SdKmGuRYkdPGUzgWd90ZLyA0wrCT5zMlvN+lmj5b97X
+         dgPBiUbMHkaYsAg12LhLt5/PYRQl+Bl5a3KpEbpKoF+pnSfdRVA+OR4ZPQ755Iqxvo69
+         iO2JoTuAbtuA/8D5Fy6mu3d5na+lkoPp3iqxEIsGqPyQ9S5g2STHvxu6QaqMItJAdC/B
+         xXzk+QoFVohIriEkLkQuWYiTmJRRZldzGg+ejoxbsHAjCxlJWGFSWLWs+ha7pz0/tMG6
+         SdFmlikpibJrIV9Wf/v+Te8VEy/80VwzWVd6Nh6+aGwyJya6DdXCyC4BDiDCMNnoTcqq
+         wwMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YNsJdH5ZVLz+f0cTeGEGJWLk48KOEiJLN5T05756t08=;
+        b=W9Os6w+B3x0snkDZ4aL4hhzDLqa5C/fUfK/LAr5wosNiH9wk9oytg2sb284NhK4Oyg
+         SnJcAsTA7D4RP3tLfk4HNRYofnQllTi6bHaJmzODRBYb9LNeF8Bgpza0CiV9Dz0qTPji
+         kknpj0WCLu0rYqXlqQIE346+82Afkt3m15+BSqdxFA/fZuyL40YWYxuoVyhukxOVh2Ch
+         zsb01qYNd4ZFINNHq/T6L7/eDcJCz0xV1hIkJnCksLCjQDU6QYAGmKj+DETwhOOK/f9i
+         AMON2JsYcT1w5IKanej9WC9I9Cf939mYlq4/JyF/o7SjymSAKzfR0TrNYZyQq5pZdm80
+         hJNw==
+X-Gm-Message-State: APjAAAXoh6fkaY2GwxOwlv3nukfY/OOv/YIsmsTY5xWBPz++vs5XD/Io
+        OatcKD3oMpyXA0ExcEsL5T0rI72dWU8=
+X-Google-Smtp-Source: APXvYqwVvt9fMERF1HY97g2B2SWVLwAIMrKwQqibSuPAA6WspRJ6r8Axg1IRptW90wNBKaRy/4cgag==
+X-Received: by 2002:a05:6214:80b:: with SMTP id df11mr12322721qvb.45.1567444464073;
+        Mon, 02 Sep 2019 10:14:24 -0700 (PDT)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id f20sm9160055qtf.68.2019.09.02.10.14.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 10:14:23 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 14:14:18 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Rodrigo Carvalho <rodrigorsdc@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH 1/2] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20190902171417.qbj7rwi43tr77mr5@smtp.gmail.com>
+References: <20190902005938.7734-1-rodrigorsdc@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902005938.7734-1-rodrigorsdc@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 2 Sep 2019 17:34:31 +0200:
+Hi Rodrigo,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.3-rc7
+This dt doc looks overal fine IMHO.
+I would just add some inline comments about the cpha and cpol
+properties.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/49ffdb4c7c65082cee24a53a7ebd62e00eb2e9e9
+On 09/01, Rodrigo Carvalho wrote:
+> This patch add device tree binding documentation for ADIS16240.
+> 
+> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+> ---
+> I have doubt about what maintainer I may to put in that documentation. I
+> put Alexandru as maintainer because he reviewed my last patch on this
+> driver, so I think that he is a good candidate.
+>  .../bindings/iio/accel/adi,adis16240.yaml     | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> new file mode 100644
+> index 000000000000..08019b51611c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ADIS16240 Programmable Impact Sensor and Recorder driver
+> +
+> +maintainers:
+> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> +
+> +description: |
+> +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
+> +  SPI interface.
+> +    https://www.analog.com/en/products/adis16240.html
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adis16240
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-cpha: true
+> +
+> +  spi-cpol: true
+Boolean properties don't require to be explicitly set. It would also be
+nice to add a description pointing to the spi-bus documentation. Like
+this:
 
-Thank you!
+  spi-cpha:
+    description: |
+      See Documentation/devicetree/bindings/spi/spi-bus.txt
+    maxItems: 1
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+  spi-cpol:
+    description: |
+      See Documentation/devicetree/bindings/spi/spi-bus.txt
+    maxItems: 1
+
+As far as I know, spi-cpol and spi-cpha stand for SPI chip polarity and
+SPI chip phase respectively. By default, it is assumed that SPI
+input/output data is available at uprising clock edges, however, some
+chips may work with different configuration (taking input data and/or
+push it out in falling edges). I'm not 100% sure but, from what I've
+seen on IIO, cpol is set to invert the input/output logic (making IO be
+taken on falling edges) while cpha is usually set when MISO valid out
+data is available on SCLK falling edge. If anyone has more comments
+about this please, add them here, I'm curious about it. :)
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* Example for a SPI device node */
+> +        accelerometer@0 {
+> +            compatible = "adi,adis16240";
+> +            reg = <0>;
+> +            spi-max-frequency = <2500000>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            interrupt-parent = <&gpio0>;
+> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+> -- 
+> 2.23.0.rc1
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/20190902005938.7734-1-rodrigorsdc%40gmail.com.
