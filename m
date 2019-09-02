@@ -2,98 +2,194 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B303C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C094C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6140721897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="cYdiNQXM"
+	by mail.kernel.org (Postfix) with ESMTP id 3EF51206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfIBK4Z (ORCPT
+        id S1731413AbfIBK5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:56:25 -0400
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:8124 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731285AbfIBK4N (ORCPT
+        Mon, 2 Sep 2019 06:57:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57433 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730702AbfIBK5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:56:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567421769;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=iDHDcTZofAwFtKZ+JtaTo+qsb9dMO/SudfMjC+bQAcY=;
-        b=cYdiNQXMOopAQSmQ6Zk3tTDwG9iRrD8vhNY3Zay2vAt3v3GgZfiwj4Eua714D/9UHp
-        Rwfrbznp/GXRrgHBNMT1ESe8qPs2nxW6W9X1O/03D9wvJ9mfj/jUsPrI7cY+t8Q/brdy
-        3F8/HlqwsZmY56LonAzDCXlPwvLj11p/EOQ2AjQdYIATuUawL6zATB3hV40cRecbmvXT
-        X9alRVD/x3vSyVry9yz+NR0+tnQXBKlaxZDKjEiyAYqULn4kBAOwdKkTfS3nmhdJ/P9S
-        M46zlEXBiL4692NVJzmDsdPO+XpLhab5KSqDH4Q/kEXtEF3btHNWOYBWq+V3nnelOmLH
-        uIcw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnvuHRT"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v82AtsPvl
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 2 Sep 2019 12:55:54 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
-Date:   Mon,  2 Sep 2019 12:55:50 +0200
-Message-Id: <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1567421750.git.hns@goldelico.com>
-References: <cover.1567421750.git.hns@goldelico.com>
+        Mon, 2 Sep 2019 06:57:52 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i4k1s-0003AW-Ei; Mon, 02 Sep 2019 12:57:48 +0200
+Date:   Mon, 2 Sep 2019 12:57:47 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+cc:     Michael <michael@mipisi.de>, linux-rtc@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: Problem when function alarmtimer_suspend returns 0 if time delta
+ is zero
+In-Reply-To: <20190902074917.GA21922@piout.net>
+Message-ID: <alpine.DEB.2.21.1909021247250.3955@nanos.tec.linutronix.de>
+References: <S1728511AbfHaSEm/20190831180442Z+580@vger.kernel.org> <08fbdf25-faa1-aa13-4f13-d30acbf27dda@mipisi.de> <20190902074917.GA21922@piout.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
-1GHz capability is automatically detected.
+Michael,
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
- 1 file changed, 7 deletions(-)
+On Mon, 2 Sep 2019, Alexandre Belloni wrote:
+> On 31/08/2019 20:32:06+0200, Michael wrote:
+> > currently I have a problem with the alarmtimer i'm using to cyclically wake
+> > up my i.MX6 ULL board from suspend to RAM.
+> > 
+> > The problem is that in principle the timer wake ups work fine but seem to be
+> > not 100% stable. In about 1 percent the wake up alarm from suspend is
+> > missing.
 
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index 5441e9ffdbb4..e98b0c615f19 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -11,13 +11,6 @@
- 	cpus {
- 		cpu@0 {
- 			cpu0-supply = <&vcc>;
--			operating-points = <
--				/* kHz    uV */
--				300000  1012500
--				600000  1200000
--				800000  1325000
--				1000000	1375000
--			>;
- 		};
- 	};
+> > In my error case the alarm wake up always fails if the path "if(min==0)" is
+> > entered. If I understand this code correctly that means that
+> > when ever one of the timers in the list has a remaining tick time of zero,
+> > the function just returns 0 and continues the suspend process until
+> > it reaches suspend mode.
+
+No. That code is simply broken because it tries to handle the case where a
+alarmtimer nanosleep got woken up by the freezer. That's broken because it
+makes the delta = 0 assumption which leads to the issue you discovered.
+
+That whole cruft can be removed by switching alarmtimer nanosleep to use
+freezable_schedule(). That keeps the timer queued and avoids all the issues.
+
+Completely untested patch below.
+
+Thanks,
+
+	tglx
+
+8<----------------------
+
+kernel/time/alarmtimer.c |   57 +++--------------------------------------------
+ 1 file changed, 4 insertions(+), 53 deletions(-)
+
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -46,14 +46,6 @@ static struct alarm_base {
+ 	clockid_t		base_clockid;
+ } alarm_bases[ALARM_NUMTYPE];
  
--- 
-2.19.1
-
+-#if defined(CONFIG_POSIX_TIMERS) || defined(CONFIG_RTC_CLASS)
+-/* freezer information to handle clock_nanosleep triggered wakeups */
+-static enum alarmtimer_type freezer_alarmtype;
+-static ktime_t freezer_expires;
+-static ktime_t freezer_delta;
+-static DEFINE_SPINLOCK(freezer_delta_lock);
+-#endif
+-
+ #ifdef CONFIG_RTC_CLASS
+ static struct wakeup_source *ws;
+ 
+@@ -241,19 +233,12 @@ EXPORT_SYMBOL_GPL(alarm_expires_remainin
+  */
+ static int alarmtimer_suspend(struct device *dev)
+ {
+-	ktime_t min, now, expires;
++	ktime_t now, expires, min = KTIME_MAX;
+ 	int i, ret, type;
+ 	struct rtc_device *rtc;
+ 	unsigned long flags;
+ 	struct rtc_time tm;
+ 
+-	spin_lock_irqsave(&freezer_delta_lock, flags);
+-	min = freezer_delta;
+-	expires = freezer_expires;
+-	type = freezer_alarmtype;
+-	freezer_delta = 0;
+-	spin_unlock_irqrestore(&freezer_delta_lock, flags);
+-
+ 	rtc = alarmtimer_get_rtcdev();
+ 	/* If we have no rtcdev, just return */
+ 	if (!rtc)
+@@ -271,13 +256,13 @@ static int alarmtimer_suspend(struct dev
+ 		if (!next)
+ 			continue;
+ 		delta = ktime_sub(next->expires, base->gettime());
+-		if (!min || (delta < min)) {
++		if (delta < min) {
+ 			expires = next->expires;
+ 			min = delta;
+ 			type = i;
+ 		}
+ 	}
+-	if (min == 0)
++	if (min == KTIME_MAX)
+ 		return 0;
+ 
+ 	if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
+@@ -479,38 +464,6 @@ u64 alarm_forward_now(struct alarm *alar
+ EXPORT_SYMBOL_GPL(alarm_forward_now);
+ 
+ #ifdef CONFIG_POSIX_TIMERS
+-
+-static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
+-{
+-	struct alarm_base *base;
+-	unsigned long flags;
+-	ktime_t delta;
+-
+-	switch(type) {
+-	case ALARM_REALTIME:
+-		base = &alarm_bases[ALARM_REALTIME];
+-		type = ALARM_REALTIME_FREEZER;
+-		break;
+-	case ALARM_BOOTTIME:
+-		base = &alarm_bases[ALARM_BOOTTIME];
+-		type = ALARM_BOOTTIME_FREEZER;
+-		break;
+-	default:
+-		WARN_ONCE(1, "Invalid alarm type: %d\n", type);
+-		return;
+-	}
+-
+-	delta = ktime_sub(absexp, base->gettime());
+-
+-	spin_lock_irqsave(&freezer_delta_lock, flags);
+-	if (!freezer_delta || (delta < freezer_delta)) {
+-		freezer_delta = delta;
+-		freezer_expires = absexp;
+-		freezer_alarmtype = type;
+-	}
+-	spin_unlock_irqrestore(&freezer_delta_lock, flags);
+-}
+-
+ /**
+  * clock2alarm - helper that converts from clockid to alarmtypes
+  * @clockid: clockid.
+@@ -715,7 +668,7 @@ static int alarmtimer_do_nsleep(struct a
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		alarm_start(alarm, absexp);
+ 		if (likely(alarm->data))
+-			schedule();
++			freezable_schedule();
+ 
+ 		alarm_cancel(alarm);
+ 	} while (alarm->data && !signal_pending(current));
+@@ -727,8 +680,6 @@ static int alarmtimer_do_nsleep(struct a
+ 	if (!alarm->data)
+ 		return 0;
+ 
+-	if (freezing(current))
+-		alarmtimer_freezerset(absexp, type);
+ 	restart = &current->restart_block;
+ 	if (restart->nanosleep.type != TT_NONE) {
+ 		struct timespec64 rmt;
