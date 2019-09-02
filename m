@@ -2,286 +2,178 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A99C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B12C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DC02168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3582120820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="zDiYdW6/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IhsxVtMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbfIBNJm (ORCPT
+        id S1730591AbfIBNKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:09:42 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62904 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729844AbfIBNJl (ORCPT
+        Mon, 2 Sep 2019 09:10:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60710 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729844AbfIBNKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:09:41 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x82D9K23025679;
-        Mon, 2 Sep 2019 09:09:20 -0400
-Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2050.outbound.protection.outlook.com [104.47.48.50])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2uqjrab78s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Sep 2019 09:09:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SKuCoyo0mCQO5b0Aas2zxB/KJ//33g0Sqy7ICcCvBw4I8cwSMYadsEs3TPMoEdDp6ThgOllNlj1NomubHx9d3w+s6zRN69o41l9naAKbYR9RRvg+I3Np0KdqixflGxk/gJfqa20n2qmAlU/ioWmAD3fmdnXauCywi9eJRkyginGVsYwPnppRZEb1gWrWzNQG/xWUFMOT6ZzhUxWZnhF9UEu39T3jGHyYZ4Ij5n2DxU++mX57n1g67f+/Cp3C2MJ6S1+X0nUd/C/PdZsOYty2lzT/ds/WPGl2uMpzhP3oIIeH8vzXqh+Q6XT7cD1snFJAXcVeTnfN1YzIAKeO4g+lkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6skLiWlEVitDs4Ban8ZjA0Xpm3/tfnOe/pHQRgSkZDA=;
- b=XVWogF0n+4TDfuqqNse/j+fMtwSNVvzUzWefP9nwkpFBZk0UQkdDIKNzoZRQURcdq0jmyaiT+BGpW4fLmZGcnO22IY6Jrh8jwOfTmU+At0LTYFAhef4xPq1QAsF3tSAYQXq3HFba+RqcnJHN7a2e5ICcCTjuOjNI29nx8P6gJ/9dKE6SEl1eEterHZUA9V4Bii3ZIneNLBoEfAta5T9DRw/XjHn0tm7gPZ8UXxHCTmt/UKHPZiT1tC+L3L81pOh3ZoUdxifaodayzUa/Gwuj2iI7cbo3wIfjizsehQBVnRIb8WVPjcJ/23c8eRnQgeXMulsDZ1MxzPvie9BcRALqpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=metafoo.de smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6skLiWlEVitDs4Ban8ZjA0Xpm3/tfnOe/pHQRgSkZDA=;
- b=zDiYdW6/gNtBhrCwQOFi6TlkwC/rPuZBljW6c5tD1PI2nHMIylDBeo5BRcF47t3O/e/foMa/BndXYG6FqtmvgFMmd7HYDVV2eIVzK9ZHHiCGz3oZ3o1VYGgS1zB9gejpXUWRWsgpJIBi5mzg/M6Ki5Qi6/PQUqyvnTnsJMBNlcs=
-Received: from DM5PR03CA0057.namprd03.prod.outlook.com (2603:10b6:4:3b::46) by
- MN2PR03MB4816.namprd03.prod.outlook.com (2603:10b6:208:103::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.20; Mon, 2 Sep
- 2019 13:08:44 +0000
-Received: from BL2NAM02FT019.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::201) by DM5PR03CA0057.outlook.office365.com
- (2603:10b6:4:3b::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.16 via Frontend
- Transport; Mon, 2 Sep 2019 13:08:43 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT019.mail.protection.outlook.com (10.152.77.166) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2220.16
- via Frontend Transport; Mon, 2 Sep 2019 13:08:43 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x82D8hGS027158
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 2 Sep 2019 06:08:43 -0700
-Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.107) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 2 Sep 2019 09:08:42 -0400
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V4 3/4] staging: iio: adc: ad7192: Add system calibration support
-Date:   Mon, 2 Sep 2019 16:08:30 +0300
-Message-ID: <20190902130831.23057-3-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190902130831.23057-1-mircea.caprioru@analog.com>
-References: <20190902130831.23057-1-mircea.caprioru@analog.com>
+        Mon, 2 Sep 2019 09:10:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nD3tPT+dPURhPutTDbnYpadEmPBrztQqjMF3uDUJm/Y=; b=IhsxVtMbisw/Wwd3qAP9O7qeWp
+        6qk9T320OB+gXlxiSzysiuAzs6RNVf5quqkzN/0ZsOihE/QgkKaVnXzqWXhyqU5xyiZe0M6cvihuf
+        XAk5GfnFbx/cKWCByrA0bJOG5sPmZRC+uqWos2PvrnsP52Io1sJc/djTusz/MgwCcMxXlMz+4KbDn
+        qLuDUzeuATJILgkcJM/FPadoo4uZlUZrGDleZa0o+jeqw9DCksoTf/epuaHvuduATYSR1KyMinbIu
+        32wMyg3iOstgkvujY4hWjL32bqj4gpGNCdE2bf2iU+GbBrdhHCoZ9QCv6pmMGdMM80YGmQpT2TmWj
+        uegJSHWQ==;
+Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4m6c-0008Q1-8Z; Mon, 02 Sep 2019 13:10:50 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        gross@suse.com, boris.ostrovsky@oracle.com
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 11/13] swiotlb-xen: remove page-coherent.h
+Date:   Mon,  2 Sep 2019 15:03:37 +0200
+Message-Id: <20190902130339.23163-12-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190902130339.23163-1-hch@lst.de>
+References: <20190902130339.23163-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(396003)(376002)(2980300002)(199004)(189003)(54534003)(47776003)(305945005)(126002)(2616005)(70586007)(44832011)(246002)(486006)(476003)(1076003)(51416003)(7696005)(36756003)(5660300002)(76176011)(70206006)(336012)(86362001)(50226002)(426003)(186003)(4326008)(54906003)(7636002)(26005)(446003)(2906002)(316002)(356004)(6666004)(16586007)(50466002)(8936002)(8676002)(48376002)(478600001)(107886003)(106002)(6916009)(14444005)(11346002)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB4816;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bbfddf1b-11e0-48c2-530c-08d72fa6ae8f
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:MN2PR03MB4816;
-X-MS-TrafficTypeDiagnostic: MN2PR03MB4816:
-X-Microsoft-Antispam-PRVS: <MN2PR03MB48169BB749F4DAD4BA8260EA81BE0@MN2PR03MB4816.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 01480965DA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: fgxPbBxGfZ91luHNBreh65Q2ihFMzWcTHV3C58kaOXz74n6adekf5sK2HE14koMvsd5jsOhAW9X46NcOcZyv3x3n+Qfpxrk5CjmczN5dK/KDeo4g0YQUTwgvl/A7mNhYa/aouSrjkXkxzUrFfFzTZN5YVlYfdhpn4XKXvisy+0QWMBmsaGFKx5ymUDGuJ+iKAI7MI8b7YdzUrXkCSMf4XgcoTWyqOn7Ar87w5VmiRF12Cs9QkdMzs8WmTXmTpnpB875pLDgIMm6NV5BPWei7Nf90yD9/zMOe4Gc8KhNV0cN5S8EOZvm0IqQAS7cPB//7mrIjb+epg4fcJcPnFWwJy3evTgp4VIBW4rVFa1lmug+VKqkXV1H/PAyb34AgnBqiJtCi92JsYl9GsmqCeLzw/eRhCNb8MFvhmmj0bWBOiwI=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2019 13:08:43.4708
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbfddf1b-11e0-48c2-530c-08d72fa6ae8f
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB4816
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-02_04:2019-08-29,2019-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 adultscore=0 mlxscore=0 suspectscore=1
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909020148
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will add a system calibration attribute for each channel. Using
-this option the user will have the ability to calibrate each channel for
-zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
-to implement the functionality.
+The only thing left of page-coherent.h is two functions implemented by
+the architecture for non-coherent DMA support that are never called for
+fully coherent architectures.  Just move the prototypes for those to
+swiotlb-xen.h instead.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 ---
-Changelog V2:
-- no changes here
+ arch/arm/include/asm/xen/page-coherent.h   |  2 --
+ arch/arm64/include/asm/xen/page-coherent.h |  2 --
+ arch/x86/include/asm/xen/page-coherent.h   | 11 -----------
+ drivers/xen/swiotlb-xen.c                  |  3 ---
+ include/Kbuild                             |  1 -
+ include/xen/arm/page-coherent.h            | 10 ----------
+ include/xen/swiotlb-xen.h                  |  6 ++++++
+ 7 files changed, 6 insertions(+), 29 deletions(-)
+ delete mode 100644 arch/arm/include/asm/xen/page-coherent.h
+ delete mode 100644 arch/arm64/include/asm/xen/page-coherent.h
+ delete mode 100644 arch/x86/include/asm/xen/page-coherent.h
+ delete mode 100644 include/xen/arm/page-coherent.h
 
-Changelog V3:
-- no changes here
-
-Changelog V4:
-- add an attribute to start the system calibration
-- the mode attribute does not trigger the calibration
-- added ABI documentation
-
- .../ABI/testing/sysfs-bus-iio-adc-ad7192      | 24 ++++++
- drivers/staging/iio/adc/ad7192.c              | 79 ++++++++++++++++++-
- 2 files changed, 102 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192 b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-index 74a2873045bf..7627d3be08f5 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-@@ -13,3 +13,27 @@ Description:
- 		need to minimize the system current consumption.
- 		Reading gives the state of the bridge switch.
- 		Writing '1' enables the bridge switch.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Initiates the system calibration procedure. This is done on a
-+		single channel at a time. Write '1' to start the calibration.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode_available
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Reading returns a list with the possible calibration modes.
-+		There are two available options:
-+		"zero_scale" - calibrate to zero scale
-+		"full_scale" - calibrate to full scale
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Sets up the calibration mode used in the system calibration
-+		procedure. Reading returns the current calibration mode.
-+		Writing sets the system calibration mode.
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index d58ce08f3693..c5106d98c9b3 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -155,6 +155,11 @@
-  * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
-  */
+diff --git a/arch/arm/include/asm/xen/page-coherent.h b/arch/arm/include/asm/xen/page-coherent.h
+deleted file mode 100644
+index 27e984977402..000000000000
+--- a/arch/arm/include/asm/xen/page-coherent.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <xen/arm/page-coherent.h>
+diff --git a/arch/arm64/include/asm/xen/page-coherent.h b/arch/arm64/include/asm/xen/page-coherent.h
+deleted file mode 100644
+index 27e984977402..000000000000
+--- a/arch/arm64/include/asm/xen/page-coherent.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <xen/arm/page-coherent.h>
+diff --git a/arch/x86/include/asm/xen/page-coherent.h b/arch/x86/include/asm/xen/page-coherent.h
+deleted file mode 100644
+index c9c8398a31ff..000000000000
+--- a/arch/x86/include/asm/xen/page-coherent.h
++++ /dev/null
+@@ -1,11 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_X86_XEN_PAGE_COHERENT_H
+-#define _ASM_X86_XEN_PAGE_COHERENT_H
+-
+-static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
+-		dma_addr_t handle, size_t size, enum dma_data_direction dir) { }
+-
+-static inline void xen_dma_sync_single_for_device(struct device *hwdev,
+-		dma_addr_t handle, size_t size, enum dma_data_direction dir) { }
+-
+-#endif /* _ASM_X86_XEN_PAGE_COHERENT_H */
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index a642e284f1e2..95911ff9c11c 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -35,9 +35,6 @@
+ #include <xen/xen-ops.h>
+ #include <xen/hvc-console.h>
  
-+enum {
-+   AD7192_SYSCALIB_ZERO_SCALE,
-+   AD7192_SYSCALIB_FULL_SCALE,
-+};
-+
- struct ad7192_state {
- 	struct regulator		*avdd;
- 	struct regulator		*dvdd;
-@@ -169,10 +174,80 @@ struct ad7192_state {
- 	u8				devid;
- 	u8				clock_sel;
- 	struct mutex			lock;	/* protect sensor state */
-+	u8				syscalib_mode[8];
+-#include <asm/dma-mapping.h>
+-#include <asm/xen/page-coherent.h>
+-
+ #include <trace/events/swiotlb.h>
+ /*
+  * Used to do a quick range check in swiotlb_tbl_unmap_single and
+diff --git a/include/Kbuild b/include/Kbuild
+index c38f0d46b267..cce5cf6abf89 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -1189,7 +1189,6 @@ header-test-			+= video/vga.h
+ header-test-			+= video/w100fb.h
+ header-test-			+= xen/acpi.h
+ header-test-			+= xen/arm/hypercall.h
+-header-test-			+= xen/arm/page-coherent.h
+ header-test-			+= xen/arm/page.h
+ header-test-			+= xen/balloon.h
+ header-test-			+= xen/events.h
+diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
+deleted file mode 100644
+index 635492d41ebe..000000000000
+--- a/include/xen/arm/page-coherent.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _XEN_ARM_PAGE_COHERENT_H
+-#define _XEN_ARM_PAGE_COHERENT_H
+-
+-void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
+-		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
+-void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
+-		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
+-
+-#endif /* _XEN_ARM_PAGE_COHERENT_H */
+diff --git a/include/xen/swiotlb-xen.h b/include/xen/swiotlb-xen.h
+index 5e4b83f83dbc..a7c642872568 100644
+--- a/include/xen/swiotlb-xen.h
++++ b/include/xen/swiotlb-xen.h
+@@ -2,8 +2,14 @@
+ #ifndef __LINUX_SWIOTLB_XEN_H
+ #define __LINUX_SWIOTLB_XEN_H
  
- 	struct ad_sigma_delta		sd;
- };
++#include <linux/dma-mapping.h>
+ #include <linux/swiotlb.h>
  
-+static const char * const ad7192_syscalib_modes[] = {
-+	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
-+	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
-+};
++void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
++		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
++void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
++		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
 +
-+static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    unsigned int mode)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+
-+	st->syscalib_mode[chan->channel] = mode;
-+
-+	return 0;
-+}
-+
-+static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+
-+	return st->syscalib_mode[chan->channel];
-+}
-+
-+static ssize_t ad7192_write_syscalib(struct iio_dev *indio_dev,
-+				     uintptr_t private,
-+				     const struct iio_chan_spec *chan,
-+				     const char *buf, size_t len)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+	bool sys_calib;
-+	int ret, temp;
-+
-+	ret = strtobool(buf, &sys_calib);
-+	if (ret)
-+		return ret;
-+
-+	temp = st->syscalib_mode[chan->channel];
-+	if (sys_calib) {
-+		if (temp == AD7192_SYSCALIB_ZERO_SCALE)
-+			ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
-+					      chan->address);
-+		else
-+			ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
-+					      chan->address);
-+	}
-+
-+	return ret ? ret : len;
-+}
-+
-+static const struct iio_enum ad7192_syscalib_mode_enum = {
-+	.items = ad7192_syscalib_modes,
-+	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
-+	.set = ad7192_set_syscalib_mode,
-+	.get = ad7192_get_syscalib_mode
-+};
-+
-+static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
-+	{
-+		.name = "sys_calibration",
-+		.write = ad7192_write_syscalib,
-+		.shared = IIO_SEPARATE,
-+	},
-+	IIO_ENUM("sys_calibration_mode", IIO_SEPARATE,
-+		 &ad7192_syscalib_mode_enum),
-+	IIO_ENUM_AVAILABLE("sys_calibration_mode", &ad7192_syscalib_mode_enum),
-+	{}
-+};
-+
- static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
- {
- 	return container_of(sd, struct ad7192_state, sd);
-@@ -769,9 +844,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 		*chan = channels[i];
- 		chan->info_mask_shared_by_all |=
- 			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
--		if (chan->type != IIO_TEMP)
-+		if (chan->type != IIO_TEMP) {
- 			chan->info_mask_shared_by_type_available |=
- 				BIT(IIO_CHAN_INFO_SCALE);
-+			chan->ext_info = ad7192_calibsys_ext_info;
-+		}
- 		chan++;
- 	}
+ extern int xen_swiotlb_init(int verbose, bool early);
+ extern const struct dma_map_ops xen_swiotlb_dma_ops;
  
 -- 
-2.17.1
+2.20.1
 
