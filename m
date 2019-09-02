@@ -2,365 +2,195 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EB6C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB80CC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964B32190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CED21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="I8ouv+mM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GS/UWabS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbfIBIDp (ORCPT
+        id S1730010AbfIBIFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:03:45 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:51350 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbfIBICR (ORCPT
+        Mon, 2 Sep 2019 04:05:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43992 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfIBIFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:02:17 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 92267C0436;
-        Mon,  2 Sep 2019 08:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567411337; bh=hu2YS9Oelxiw/a+6Er0HIzbWLUC4uM2NmfdyKKUqwaM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=I8ouv+mMCRWZAQd34jWVMzGjI/8dCLtZ2dVxeY68H28QJhSkoFzUqmw4WyG+DX0XE
-         73T2ewRC4OIJZ7jb7uu1ZxW2Og5uOZ7R5pLlpQTAlf4JFBh1bddd87r7pgBqxNIoCB
-         ASbjH5Qt+MO7Yo8s+oyGenDLrt/nJc4l0AbJpebhjYsSquWcoC573ZuPvDb6nnEnkj
-         +Ri49e7l0UVEzEAHZbC4eiU4I0Thq19+yo1awMzvrgkh/sDqMA+sQ6dOosZxBWcQ4j
-         US7e9AGRHZ4LlZaj3oL3vkGhio5clqCIyf+dUaxhbD7WXLOvyURyh5kYXn4Flo+FXo
-         7hICYkWN1y1sQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 546A1A0072;
-        Mon,  2 Sep 2019 08:02:15 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 05/13] net: stmmac: selftests: Add selftest for L3/L4 Filters
-Date:   Mon,  2 Sep 2019 10:01:47 +0200
-Message-Id: <f2b536e9370a448a40fc411712e717d4c605a3f5.1567410970.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
-References: <cover.1567410970.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
-References: <cover.1567410970.git.joabreu@synopsys.com>
+        Mon, 2 Sep 2019 04:05:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y8so12939478wrn.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fO/Fs9yhycLN56Ypumx1dDOmveWnwXs336ehWOSJQl8=;
+        b=GS/UWabSrOopY6o0gIwaQ2w0Kz6bve0lYOWB2MoNuu14CycgzC6GFfHrArf3Vev8DL
+         HHptHf4rOcJjdQOqLJMU5gGG8jZWnBMG2aXbqkeqZiJIH2sm3dl/glFEn07kgp+6KrHL
+         Ghx1l/tdVvl/HsD8p2HGeegS0/7Za6f1e911k2iZJ7m81lc5ekmHK3cwWHzdlz+671RG
+         QHKJYFkI4GlDacTSjS43sQ4RqPBipkwSRiSsXvXu44ZhQ32tLEGRZqmnRVEHChDoz8Ac
+         kjLooKrtbFW6I5KhH2YZxDXWFTFxHp29e71Ymq+HPJSFU0H4JakGfdkWSfTqzf10MVsC
+         MbFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fO/Fs9yhycLN56Ypumx1dDOmveWnwXs336ehWOSJQl8=;
+        b=kAcLGHLwmEFPL/3Jp3NEOsUIYnskxsazOGmbNj4gfscwqL8UgpyHaoPB0Bbcv6UHMO
+         QVSjo86Ztp4dyLlPJ+BrAdbdL8serYKmGl0lLsGb4Qsy59lKlAIoIF+Y1dwgUEVltWJM
+         FLnk2j7RG6LI8Kb7Hu3HbvofxuNMvjNg7lfhlxJLIAedGFwyLDV+Y9PZ4zYFAoSxAYcd
+         +U4+ORqb/4oPffd/1LgQj/FHb1h8yIPEE2DVOREsFvCY9qUhiGNpeVJa9PgiBdol+wdH
+         4POEKJHA6OLcqTsGFq3Gd9yMimVDwBY07bvp57zN1alpOAPOlUdQPYOHHOSoS9tJgX5/
+         0Mig==
+X-Gm-Message-State: APjAAAW4lvBoAmXoBfKx2vILfh5+fOYXkl0Ky9j/+msJl7VhdGhR60QJ
+        FzE8t6J5GE+jrpQ1bS9xzta6XFC6TO0=
+X-Google-Smtp-Source: APXvYqyk2RjxajEGOAwGyishWjOtiBsMjUX7blAN9b4Wfv3Cy2fbPxsmWwVbhFmA0cLkkHqsLH5zJw==
+X-Received: by 2002:adf:cc84:: with SMTP id p4mr16899211wrj.201.1567411512816;
+        Mon, 02 Sep 2019 01:05:12 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q15sm3982870wmb.28.2019.09.02.01.05.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 01:05:12 -0700 (PDT)
+Subject: Re: [PATCH 1/5] drm: dw-hdmi: extract dw_hdmi_connector_update_edid()
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <AM0PR06MB40049562E295DD62302C8DB7ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+ <AM0PR06MB4004C3231CA859341E6CF8B9ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <179241b1-3f54-683d-036f-ae10f53935d7@baylibre.com>
+Date:   Mon, 2 Sep 2019 10:05:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <AM0PR06MB4004C3231CA859341E6CF8B9ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds the selftests for L3 and L4 filters with DA/SA/DP/SP support.
+Hi Jonas,
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+On 01/09/2019 18:14, Jonas Karlman wrote:
+> Extract code that updates EDID into a dw_hdmi_connector_update_edid()
+> helper, it will be called from dw_hdmi_connector_detect().
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 254 ++++++++++++++++++++-
- 1 file changed, 253 insertions(+), 1 deletion(-)
+Small nit, you should precise you add a bool to optionally add the modes.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index d3234338a0ca..8e9d0aeda817 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -164,7 +164,7 @@ static struct sk_buff *stmmac_test_get_udp_skb(struct stmmac_priv *priv,
- 		iplen += sizeof(*uhdr);
- 	ihdr->tot_len = htons(iplen);
- 	ihdr->frag_off = 0;
--	ihdr->saddr = 0;
-+	ihdr->saddr = htonl(attr->ip_src);
- 	ihdr->daddr = htonl(attr->ip_dst);
- 	ihdr->tos = 0;
- 	ihdr->id = 0;
-@@ -1168,6 +1168,234 @@ static int stmmac_test_svlanoff(struct stmmac_priv *priv)
- 	return stmmac_test_vlanoff_common(priv, true);
- }
- 
-+#ifdef CONFIG_NET_CLS_ACT
-+static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
-+				u32 dst_mask, u32 src_mask)
-+{
-+	struct flow_dissector_key_ipv4_addrs key, mask;
-+	unsigned long dummy_cookie = 0xdeadbeef;
-+	struct flow_dissector dissector = { };
-+	struct stmmac_packet_attrs attr = { };
-+	struct flow_cls_offload cls = { };
-+	struct flow_rule *rule;
-+	int ret;
-+
-+	if (!tc_can_offload(priv->dev))
-+		return -EOPNOTSUPP;
-+	if (!priv->dma_cap.l3l4fnum)
-+		return -EOPNOTSUPP;
-+	if (priv->rss.enable) {
-+		struct stmmac_rss rss = { .enable = false, };
-+
-+		stmmac_rss_configure(priv, priv->hw, &rss,
-+				     priv->plat->rx_queues_to_use);
-+	}
-+
-+	dissector.used_keys |= (1 << FLOW_DISSECTOR_KEY_IPV4_ADDRS);
-+	dissector.offset[FLOW_DISSECTOR_KEY_IPV4_ADDRS] = 0;
-+
-+	cls.common.chain_index = 0;
-+	cls.command = FLOW_CLS_REPLACE;
-+	cls.cookie = dummy_cookie;
-+
-+	rule = kzalloc(struct_size(rule, action.entries, 1), GFP_KERNEL);
-+	if (!rule) {
-+		ret = -ENOMEM;
-+		goto cleanup_rss;
-+	}
-+
-+	rule->match.dissector = &dissector;
-+	rule->match.key = (void *)&key;
-+	rule->match.mask = (void *)&mask;
-+
-+	key.src = htonl(src);
-+	key.dst = htonl(dst);
-+	mask.src = src_mask;
-+	mask.dst = dst_mask;
-+
-+	cls.rule = rule;
-+
-+	rule->action.entries[0].id = FLOW_ACTION_DROP;
-+	rule->action.num_entries = 1;
-+
-+	attr.dst = priv->dev->dev_addr;
-+	attr.ip_dst = dst;
-+	attr.ip_src = src;
-+
-+	/* Shall receive packet */
-+	ret = __stmmac_test_loopback(priv, &attr);
-+	if (ret)
-+		goto cleanup_rule;
-+
-+	ret = stmmac_tc_setup_cls(priv, priv, &cls);
-+	if (ret)
-+		goto cleanup_rule;
-+
-+	/* Shall NOT receive packet */
-+	ret = __stmmac_test_loopback(priv, &attr);
-+	ret = ret ? 0 : -EINVAL;
-+
-+	cls.command = FLOW_CLS_DESTROY;
-+	stmmac_tc_setup_cls(priv, priv, &cls);
-+cleanup_rule:
-+	kfree(rule);
-+cleanup_rss:
-+	if (priv->rss.enable) {
-+		stmmac_rss_configure(priv, priv->hw, &priv->rss,
-+				     priv->plat->rx_queues_to_use);
-+	}
-+
-+	return ret;
-+}
-+#else
-+static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
-+				u32 dst_mask, u32 src_mask)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
-+static int stmmac_test_l3filt_da(struct stmmac_priv *priv)
-+{
-+	u32 addr = 0x10203040;
-+
-+	return __stmmac_test_l3filt(priv, addr, 0, ~0, 0);
-+}
-+
-+static int stmmac_test_l3filt_sa(struct stmmac_priv *priv)
-+{
-+	u32 addr = 0x10203040;
-+
-+	return __stmmac_test_l3filt(priv, 0, addr, 0, ~0);
-+}
-+
-+#ifdef CONFIG_NET_CLS_ACT
-+static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
-+				u32 dst_mask, u32 src_mask, bool udp)
-+{
-+	struct {
-+		struct flow_dissector_key_basic bkey;
-+		struct flow_dissector_key_ports key;
-+	} __aligned(BITS_PER_LONG / 8) keys;
-+	struct {
-+		struct flow_dissector_key_basic bmask;
-+		struct flow_dissector_key_ports mask;
-+	} __aligned(BITS_PER_LONG / 8) masks;
-+	unsigned long dummy_cookie = 0xdeadbeef;
-+	struct flow_dissector dissector = { };
-+	struct stmmac_packet_attrs attr = { };
-+	struct flow_cls_offload cls = { };
-+	struct flow_rule *rule;
-+	int ret;
-+
-+	if (!tc_can_offload(priv->dev))
-+		return -EOPNOTSUPP;
-+	if (!priv->dma_cap.l3l4fnum)
-+		return -EOPNOTSUPP;
-+	if (priv->rss.enable) {
-+		struct stmmac_rss rss = { .enable = false, };
-+
-+		stmmac_rss_configure(priv, priv->hw, &rss,
-+				     priv->plat->rx_queues_to_use);
-+	}
-+
-+	dissector.used_keys |= (1 << FLOW_DISSECTOR_KEY_BASIC);
-+	dissector.used_keys |= (1 << FLOW_DISSECTOR_KEY_PORTS);
-+	dissector.offset[FLOW_DISSECTOR_KEY_BASIC] = 0;
-+	dissector.offset[FLOW_DISSECTOR_KEY_PORTS] = offsetof(typeof(keys), key);
-+
-+	cls.common.chain_index = 0;
-+	cls.command = FLOW_CLS_REPLACE;
-+	cls.cookie = dummy_cookie;
-+
-+	rule = kzalloc(struct_size(rule, action.entries, 1), GFP_KERNEL);
-+	if (!rule) {
-+		ret = -ENOMEM;
-+		goto cleanup_rss;
-+	}
-+
-+	rule->match.dissector = &dissector;
-+	rule->match.key = (void *)&keys;
-+	rule->match.mask = (void *)&masks;
-+
-+	keys.bkey.ip_proto = udp ? IPPROTO_UDP : IPPROTO_TCP;
-+	keys.key.src = htons(src);
-+	keys.key.dst = htons(dst);
-+	masks.mask.src = src_mask;
-+	masks.mask.dst = dst_mask;
-+
-+	cls.rule = rule;
-+
-+	rule->action.entries[0].id = FLOW_ACTION_DROP;
-+	rule->action.num_entries = 1;
-+
-+	attr.dst = priv->dev->dev_addr;
-+	attr.tcp = !udp;
-+	attr.sport = src;
-+	attr.dport = dst;
-+	attr.ip_dst = 0;
-+
-+	/* Shall receive packet */
-+	ret = __stmmac_test_loopback(priv, &attr);
-+	if (ret)
-+		goto cleanup_rule;
-+
-+	ret = stmmac_tc_setup_cls(priv, priv, &cls);
-+	if (ret)
-+		goto cleanup_rule;
-+
-+	/* Shall NOT receive packet */
-+	ret = __stmmac_test_loopback(priv, &attr);
-+	ret = ret ? 0 : -EINVAL;
-+
-+	cls.command = FLOW_CLS_DESTROY;
-+	stmmac_tc_setup_cls(priv, priv, &cls);
-+cleanup_rule:
-+	kfree(rule);
-+cleanup_rss:
-+	if (priv->rss.enable) {
-+		stmmac_rss_configure(priv, priv->hw, &priv->rss,
-+				     priv->plat->rx_queues_to_use);
-+	}
-+
-+	return ret;
-+}
-+#else
-+static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
-+				u32 dst_mask, u32 src_mask, bool udp)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
-+static int stmmac_test_l4filt_da_tcp(struct stmmac_priv *priv)
-+{
-+	u16 dummy_port = 0x123;
-+
-+	return __stmmac_test_l4filt(priv, dummy_port, 0, ~0, 0, false);
-+}
-+
-+static int stmmac_test_l4filt_sa_tcp(struct stmmac_priv *priv)
-+{
-+	u16 dummy_port = 0x123;
-+
-+	return __stmmac_test_l4filt(priv, 0, dummy_port, 0, ~0, false);
-+}
-+
-+static int stmmac_test_l4filt_da_udp(struct stmmac_priv *priv)
-+{
-+	u16 dummy_port = 0x123;
-+
-+	return __stmmac_test_l4filt(priv, dummy_port, 0, ~0, 0, true);
-+}
-+
-+static int stmmac_test_l4filt_sa_udp(struct stmmac_priv *priv)
-+{
-+	u16 dummy_port = 0x123;
-+
-+	return __stmmac_test_l4filt(priv, 0, dummy_port, 0, ~0, true);
-+}
-+
- #define STMMAC_LOOPBACK_NONE	0
- #define STMMAC_LOOPBACK_MAC	1
- #define STMMAC_LOOPBACK_PHY	2
-@@ -1253,6 +1481,30 @@ static const struct stmmac_test {
- 		.name = "SVLAN TX Insertion  ",
- 		.lb = STMMAC_LOOPBACK_PHY,
- 		.fn = stmmac_test_svlanoff,
-+	}, {
-+		.name = "L3 DA Filtering     ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_l3filt_da,
-+	}, {
-+		.name = "L3 SA Filtering     ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_l3filt_sa,
-+	}, {
-+		.name = "L4 DA TCP Filtering ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_l4filt_da_tcp,
-+	}, {
-+		.name = "L4 SA TCP Filtering ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_l4filt_sa_tcp,
-+	}, {
-+		.name = "L4 DA UDP Filtering ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_l4filt_da_udp,
-+	}, {
-+		.name = "L4 SA UDP Filtering ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_l4filt_sa_udp,
- 	},
- };
- 
--- 
-2.7.4
+Anyway:
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 521d689413c8..8ab214dc5ae7 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2171,7 +2171,8 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+>  	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+>  }
+>  
+> -static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> +static int dw_hdmi_connector_update_edid(struct drm_connector *connector,
+> +					  bool add_modes)
+>  {
+>  	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+>  					     connector);
+> @@ -2190,7 +2191,8 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+>  		hdmi->sink_has_audio = drm_detect_monitor_audio(edid);
+>  		drm_connector_update_edid_property(connector, edid);
+>  		cec_notifier_set_phys_addr_from_edid(hdmi->cec_notifier, edid);
+> -		ret = drm_add_edid_modes(connector, edid);
+> +		if (add_modes)
+> +			ret = drm_add_edid_modes(connector, edid);
+>  		kfree(edid);
+>  	} else {
+>  		dev_dbg(hdmi->dev, "failed to get edid\n");
+> @@ -2199,6 +2201,11 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+>  	return ret;
+>  }
+>  
+> +static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> +{
+> +	return dw_hdmi_connector_update_edid(connector, true);
+> +}
+> +
+>  static void dw_hdmi_connector_force(struct drm_connector *connector)
+>  {
+>  	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> 
 
