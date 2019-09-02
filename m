@@ -2,62 +2,78 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_ADSP_ALL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBBEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AD2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE187216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F3F21883
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfIBSsj (ORCPT
+        id S1726986AbfIBSxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:48:39 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35610 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfIBSsi (ORCPT
+        Mon, 2 Sep 2019 14:53:10 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:45073 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfIBSxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:48:38 -0400
-Received: from localhost (unknown [63.64.162.234])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 83D9C15401AF2;
-        Mon,  2 Sep 2019 11:48:37 -0700 (PDT)
-Date:   Mon, 02 Sep 2019 11:48:36 -0700 (PDT)
-Message-Id: <20190902.114836.1043194833851564994.davem@davemloft.net>
-To:     yzhai003@ucr.edu
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com, mripard@kernel.org,
-        wens@csie.org, mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: stmmac: dwmac-sun8i: Variable "val" in function
- sun8i_dwmac_set_syscon() could be uninitialized
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190831020049.6516-1-yzhai003@ucr.edu>
-References: <20190831020049.6516-1-yzhai003@ucr.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 02 Sep 2019 11:48:38 -0700 (PDT)
+        Mon, 2 Sep 2019 14:53:10 -0400
+X-Greylist: delayed 575 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Sep 2019 14:53:09 EDT
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id 9533E3A32A; Mon,  2 Sep 2019 20:43:27 +0200 (CEST)
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Subject: [PATCH] staging: exfat: use BIT macro for defining sizes
+Date:   Mon,  2 Sep 2019 20:43:19 +0200
+Message-Id: <20190902184319.11971-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
-Date: Fri, 30 Aug 2019 19:00:48 -0700
+Fixes checkpatch.pl warning:
 
-> In function sun8i_dwmac_set_syscon(), local variable "val" could
-> be uninitialized if function regmap_field_read() returns -EINVAL.
-> However, it will be used directly in the if statement, which
-> is potentially unsafe.
-> 
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+  CHECK: Prefer using the BIT macro
 
-Applied, thank you.
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+---
+ drivers/staging/exfat/exfat.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index bae180e10609..f71d4e8c0c8e 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -163,8 +163,8 @@
+ #define HIGH_INDEX_BIT	(8)
+ #define HIGH_INDEX_MASK	(0xFF00)
+ #define LOW_INDEX_BIT	(16-HIGH_INDEX_BIT)
+-#define UTBL_ROW_COUNT	(1<<LOW_INDEX_BIT)
+-#define UTBL_COL_COUNT	(1<<HIGH_INDEX_BIT)
++#define UTBL_ROW_COUNT	BIT(LOW_INDEX_BIT)
++#define UTBL_COL_COUNT	BIT(HIGH_INDEX_BIT)
+ 
+ static inline u16 get_col_index(u16 i)
+ {
+@@ -690,7 +690,7 @@ struct exfat_mount_options {
+ };
+ 
+ #define EXFAT_HASH_BITS		8
+-#define EXFAT_HASH_SIZE		(1UL << EXFAT_HASH_BITS)
++#define EXFAT_HASH_SIZE		BIT(EXFAT_HASH_BITS)
+ 
+ /*
+  * EXFAT file system in-core superblock data
+-- 
+2.20.1
+
