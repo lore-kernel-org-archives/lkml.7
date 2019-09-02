@@ -2,118 +2,103 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AE0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FC3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B37F21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6CB21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbfIBPlz (ORCPT
+        id S1726063AbfIBPnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:41:55 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52936 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbfIBPlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:41:55 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 08:41:53 -0700
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="194093317"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 08:41:51 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 6E4EB20B48; Mon,  2 Sep 2019 18:41:49 +0300 (EEST)
-Date:   Mon, 2 Sep 2019 18:41:49 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 08/11] lib/vsprintf: Make use of fwnode API to obtain
- node names and separators
-Message-ID: <20190902154149.GO5475@paasikivi.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-9-sakari.ailus@linux.intel.com>
- <20190902151803.wgt2x5rtpziggtgx@pathway.suse.cz>
+        Mon, 2 Sep 2019 11:43:02 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:51844 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725807AbfIBPnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 11:43:02 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 539BF47A9E3273CCD727;
+        Mon,  2 Sep 2019 23:22:33 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 2 Sep 2019 23:22:33 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 2 Sep 2019 23:22:30 +0800
+Date:   Mon, 2 Sep 2019 23:21:39 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     <dsterba@suse.cz>, Chao Yu <chao@kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
+Message-ID: <20190902152139.GB179615@architecture4>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-12-gaoxiang25@huawei.com>
+ <20190902125711.GA23462@infradead.org>
+ <20190902130644.GT2752@suse.cz>
+ <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
+ <20190902142037.GW2752@twin.jikos.cz>
+ <20190902150640.GA23089@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190902151803.wgt2x5rtpziggtgx@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190902150640.GA23089@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+Hi Christoph,
 
-Thanks for the review.
-
-On Mon, Sep 02, 2019 at 05:18:03PM +0200, Petr Mladek wrote:
-> On Mon 2019-09-02 11:32:37, Sakari Ailus wrote:
-> > Instead of implementing our own means of discovering parent nodes, node
-> > names or counting how many parents a node has, use the newly added
-> > functions in the fwnode API to obtain that information.
+On Mon, Sep 02, 2019 at 08:06:40AM -0700, Christoph Hellwig wrote:
+> On Mon, Sep 02, 2019 at 04:20:37PM +0200, David Sterba wrote:
+> > Oh right, I think the reasons are historical and that we can remove the
+> > options nowadays. From the compatibility POV this should be safe, with
+> > ACLs compiled out, no tool would use them, and no harm done when the
+> > code is present but not used.
 > > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  lib/vsprintf.c | 38 ++++++++++++++++----------------------
-> >  1 file changed, 16 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index b00b57f9f911f..a04a2167101ef 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
-> >  	return format_flags(buf, end, flags, names);
-> >  }
-> >  
-> > -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
-> > -{
-> > -	for ( ; np && depth; depth--)
-> > -		np = np->parent;
-> > -
-> > -	return kbasename(np->full_name);
-> > -}
-> > -
-> >  static noinline_for_stack
-> > -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-> > +char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
-> > +			      char *end)
-> >  {
-> >  	int depth;
-> > -	const struct device_node *parent = np->parent;
-> >  
-> > -	/* special case for root node */
-> > -	if (!parent)
-> > -		return string_nocheck(buf, end, "/", default_str_spec);
-> > +	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
+> > There were some efforts by embedded guys to make parts of kernel more
+> > configurable to allow removing subsystems to reduce the final image
+> > size. In this case I don't think it would make any noticeable
+> > difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
+> > while the whole module is over 1.3MiB.
 > 
-> It looked suspicious that it iterated "depth + 1" times. It might be
-> obvious for people traversing paths every day but not for me ;-)
-> Please, add a comment, for example:
-> 
-> 	/* Iterate over parents and current node. */
-> 
-> With the above comment:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Given that the erofs folks have an actual use case for it I think
+> it is fine to keep the options, I just wanted to ensure this wasn't
+> copy and pasted for no good reason.  Note that for XFS we don't have
+> an option for xattrs, as those are integral to a lot of file system
+> features.  WE have an ACL option mostly for historic reasons.
 
-Thanks.
+Add a word, xattr is necessary for Android, but ACL is not.
+I'm fine with killing these two, but EROFS can be used in
+more wider embedded scenerios (other than Android), I have
+no idea xattrs is useful for those embedded devices...
 
-How about:
+Thanks,
+Gao Xiang
 
-	/* Loop starting from the root node to the current node. */
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
