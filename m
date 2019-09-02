@@ -2,102 +2,104 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D514CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6870C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39D4214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C46214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfIBHwy (ORCPT
+        id S1729922AbfIBHxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:52:54 -0400
-Received: from paleale.coelho.fi ([176.9.41.70]:40030 "EHLO
-        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729408AbfIBHwy (ORCPT
+        Mon, 2 Sep 2019 03:53:15 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33555 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729457AbfIBHxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:52:54 -0400
-Received: from [91.156.6.193] (helo=redipa)
-        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92)
-        (envelope-from <luca@coelho.fi>)
-        id 1i4h8g-0003aF-Cr; Mon, 02 Sep 2019 10:52:38 +0300
-Message-ID: <c22d4775fdad4e34fdc386e2cf728b63dfe13ffe.camel@coelho.fi>
-From:   Luca Coelho <luca@coelho.fi>
-To:     Krzysztof Wilczynski <kw@linux.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sara Sharon <sara.sharon@intel.com>,
-        Shaul Triebitz <shaul.triebitz@intel.com>,
-        Liad Kaufman <liad.kaufman@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 02 Sep 2019 10:52:36 +0300
-In-Reply-To: <20190831220108.10602-1-kw@linux.com>
-References: <20190831220108.10602-1-kw@linux.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 2 Sep 2019 03:53:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id p23so12811311oto.0;
+        Mon, 02 Sep 2019 00:53:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eXerReUtklcQDMDiAd2B7yy5/iYyeA9QfRGIULHn46Y=;
+        b=TimCe+rboTXhKNRwod9wY0LQixXq7N4d44ur73fTW2/Sl9IlzP0TM034In+nMphow6
+         xiWiEDZqeMr0hSqMmT3xGkOz7OVg3dbGFxB6DnaI7/rbUfGLp5wGTB8UdW1WjXG8zXJq
+         GC35+s1KZNEV6mpr4HpVQXkHzZooeXqyeTqNvhLbts5fV4wZDQecIXdsonD0+BAab9PD
+         ij7RgMJOuMnsdBRGk7Iikhn+E+SpUcF8PhWa1X7S/JkgFIr4SpDy+OGKLjntqmbZyPL8
+         YXo/hLdpnibizxv/zjuyNQYT5x6g91TVLGViL8KITcv+fUoz2h9zZaMW/KkBcnt6S4gT
+         8YrQ==
+X-Gm-Message-State: APjAAAX7DS5L5+NH75wZDOV+fHjVTm+zfjVhMTvhhFYG555Vtd1bttjE
+        mQDQeXujl1PugjbVRt4e0bk7o6oxmGdZkjYu+9w=
+X-Google-Smtp-Source: APXvYqwnZmuBQPAycR4wh+MzLxpLnaIqn9yYtJhnEginGgy5iGXJS00OPV33e9x6cT87GYQg3tA+HlJbqb3xbqDiJRA=
+X-Received: by 2002:a9d:61c3:: with SMTP id h3mr14729198otk.39.1567410792636;
+ Mon, 02 Sep 2019 00:53:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] iwlwifi: mvm: Move static keyword to the front of
- declarations
+References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-9-hch@lst.de>
+ <CAMuHMdWyXGjokWi7tn9JHCTz9YMb_vHn6XKeE7KzH5n-54Sy0A@mail.gmail.com> <20190830160620.GD26887@lst.de>
+In-Reply-To: <20190830160620.GD26887@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Sep 2019 09:53:01 +0200
+Message-ID: <CAMuHMdXB=DWyu=Y25gih5poeanVnhLEP2MXoozvxdEY6op32FA@mail.gmail.com>
+Subject: Re: [PATCH 08/26] m68k: simplify ioremap_nocache
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        Openrisc <openrisc@lists.librecores.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-09-01 at 00:01 +0200, Krzysztof Wilczynski wrote:
-> Move the static keyword to the front of declarations of
-> he_if_types_ext_capa_sta and he_iftypes_ext_capa, and
-> resolve the following compiler warnings that can be seen
-> when building with warnings enabled (W=1):
-> 
-> drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:427:1: warning:
->   ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-> 
-> drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:434:1: warning:
->   ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
-> Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
-> 
->  drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-> index d6499763f0dd..937a843fed56 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-> @@ -424,14 +424,14 @@ int iwl_mvm_init_fw_regd(struct iwl_mvm *mvm)
->  	return ret;
->  }
->  
-> -const static u8 he_if_types_ext_capa_sta[] = {
-> +static const u8 he_if_types_ext_capa_sta[] = {
->  	 [0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
->  	 [2] = WLAN_EXT_CAPA3_MULTI_BSSID_SUPPORT,
->  	 [7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
->  	 [9] = WLAN_EXT_CAPA10_TWT_REQUESTER_SUPPORT,
->  };
->  
-> -const static struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
-> +static const struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
->  	{
->  		.iftype = NL80211_IFTYPE_STATION,
->  		.extended_capabilities = he_if_types_ext_capa_sta,
+Hi Christoph,
 
-Thanks for your patch! Though we already have this change in our
-internal tree (submitted by YueHaibing) and it will reach the mainline
-soon.
+On Fri, Aug 30, 2019 at 6:06 PM Christoph Hellwig <hch@lst.de> wrote:
+> On Mon, Aug 19, 2019 at 10:56:02AM +0200, Geert Uytterhoeven wrote:
+> > On Sat, Aug 17, 2019 at 9:48 AM Christoph Hellwig <hch@lst.de> wrote:
+> > > Just define ioremap_nocache to ioremap instead of duplicating the
+> > > inline.  Also defined ioremap_uc in terms of ioremap instead of
+> > > the using a double indirection.
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>
+> Do you mind picking this up through the m68k tree?
 
---
-Cheers,
-Luca.
+Sure. Applied and queued for v5.4.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
