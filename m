@@ -2,380 +2,153 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8D1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6308C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037D621744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567426393;
-	bh=GR403O149nLYReGKq+uhlGE2v0z6XbJMgVujj9dsorU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HcwhAxGo5EFMIgyAV2ADriyeXkS8HLbqUqMUOQX+gD8leNWOr/XCu7xOB/UWmCnhE
-	 AkLFeN/51pV7WljfktQ1F1mHFA9VSKcx9fJOqbhL9juirx7DelnYZaPwdlFO9zJKVN
-	 /8P4wbWKWuOUa28Ts07OIETaOHfQqmQXqkhAdfK8=
+	by mail.kernel.org (Postfix) with ESMTP id 9380C206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfIBMNM (ORCPT
+        id S1731027AbfIBMPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:13:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59630 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbfIBMNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:13:11 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9331585550;
-        Mon,  2 Sep 2019 12:13:10 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 033DA60C05;
-        Mon,  2 Sep 2019 12:13:07 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Joe Mario <jmario@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 3/3] perf stat: Add --per-numa agregation support
-Date:   Mon,  2 Sep 2019 14:12:55 +0200
-Message-Id: <20190902121255.536-4-jolsa@kernel.org>
-In-Reply-To: <20190902121255.536-1-jolsa@kernel.org>
-References: <20190902121255.536-1-jolsa@kernel.org>
+        Mon, 2 Sep 2019 08:15:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57569 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729462AbfIBMPQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:15:16 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i4lE0-0004EU-75; Mon, 02 Sep 2019 14:14:24 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 95DC61C0793;
+        Mon,  2 Sep 2019 14:14:23 +0200 (CEST)
+Date:   Mon, 02 Sep 2019 12:14:23 -0000
+From:   "tip-bot2 for Marco Ammon" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86: Correct misc typos
+Cc:     Marco Ammon <marco.ammon@fau.de>, Borislav Petkov <bp@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>, trivial@kernel.org,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190902102436.27396-1-marco.ammon@fau.de>
+References: <20190902102436.27396-1-marco.ammon@fau.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 02 Sep 2019 12:13:10 +0000 (UTC)
+Message-ID: <156742646341.26803.3629648875044393473.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding new --per-numa option to aggregate counts per NUMA
-nodes for system-wide mode measurements.
+The following commit has been merged into the x86/cleanups branch of tip:
 
-You can specify --per-numa in live mode:
+Commit-ID:     32b1cbe380417f2ed80f758791179de6b05795ab
+Gitweb:        https://git.kernel.org/tip/32b1cbe380417f2ed80f758791179de6b05795ab
+Author:        Marco Ammon <marco.ammon@fau.de>
+AuthorDate:    Mon, 02 Sep 2019 14:02:59 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 02 Sep 2019 14:02:59 +02:00
 
-  # perf stat  -a -I 1000 -e cycles --per-numa
-  #           time numa   cpus             counts unit events
-       1.000542550 N0       20          6,202,097      cycles
-       1.000542550 N1       20            639,559      cycles
-       2.002040063 N0       20          7,412,495      cycles
-       2.002040063 N1       20          2,185,577      cycles
-       3.003451699 N0       20          6,508,917      cycles
-       3.003451699 N1       20            765,607      cycles
-  ...
+x86: Correct misc typos
 
-Or in the record/report stat session:
+Correct spelling typos in comments in different files under arch/x86/.
 
-  # perf stat record -a -I 1000 -e cycles
-  #           time             counts unit events
-       1.000536937         10,008,468      cycles
-       2.002090152          9,578,539      cycles
-       3.003625233          7,647,869      cycles
-       4.005135036          7,032,086      cycles
-  ^C     4.340902364          3,923,893      cycles
+ [ bp: Merge into a single patch, massage. ]
 
-  # perf stat report --per-numa
-  #           time numa   cpus             counts unit events
-       1.000536937 N0       20          9,355,086      cycles
-       1.000536937 N1       20            653,382      cycles
-       2.002090152 N0       20          7,712,838      cycles
-       2.002090152 N1       20          1,865,701      cycles
-       3.003625233 N0       20          6,604,441      cycles
-       3.003625233 N1       20          1,043,428      cycles
-       4.005135036 N0       20          6,350,522      cycles
-       4.005135036 N1       20            681,564      cycles
-       4.340902364 N0       20          3,403,188      cycles
-       4.340902364 N1       20            520,705      cycles
-
-Link: http://lkml.kernel.org/n/tip-h57ftv8vmqrgzz3kdvlvh4yk@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Marco Ammon <marco.ammon@fau.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: trivial@kernel.org
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190902102436.27396-1-marco.ammon@fau.de
 ---
- tools/perf/Documentation/perf-stat.txt |  5 +++
- tools/perf/builtin-stat.c              | 52 ++++++++++++++++++++++++++
- tools/perf/util/cpumap.c               | 18 +++++++++
- tools/perf/util/cpumap.h               |  3 ++
- tools/perf/util/stat-display.c         | 15 ++++++++
- tools/perf/util/stat.c                 |  1 +
- tools/perf/util/stat.h                 |  1 +
- 7 files changed, 95 insertions(+)
+ arch/x86/include/asm/text-patching.h | 4 ++--
+ arch/x86/kernel/alternative.c        | 6 +++---
+ arch/x86/kernel/kprobes/opt.c        | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 930c51c01201..74299dc2ffd1 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -217,6 +217,11 @@ core number and the number of online logical processors on that physical process
- Aggregate counts per monitored threads, when monitoring threads (-t option)
- or processes (-p option).
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index 70c0996..5e8319b 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -45,8 +45,8 @@ extern void text_poke_early(void *addr, const void *opcode, size_t len);
+  * no thread can be preempted in the instructions being modified (no iret to an
+  * invalid instruction possible) or if the instructions are changed from a
+  * consistent state to another consistent state atomically.
+- * On the local CPU you need to be protected again NMI or MCE handlers seeing an
+- * inconsistent instruction while you patch.
++ * On the local CPU you need to be protected against NMI or MCE handlers seeing
++ * an inconsistent instruction while you patch.
+  */
+ extern void *text_poke(void *addr, const void *opcode, size_t len);
+ extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ccd3201..9d3a971 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -713,7 +713,7 @@ void __init alternative_instructions(void)
+ 	 * Don't stop machine check exceptions while patching.
+ 	 * MCEs only happen when something got corrupted and in this
+ 	 * case we must do something about the corruption.
+-	 * Ignoring it is worse than a unlikely patching race.
++	 * Ignoring it is worse than an unlikely patching race.
+ 	 * Also machine checks tend to be broadcast and if one CPU
+ 	 * goes into machine check the others follow quickly, so we don't
+ 	 * expect a machine check to cause undue problems during to code
+@@ -753,8 +753,8 @@ void __init alternative_instructions(void)
+  * When you use this code to patch more than one byte of an instruction
+  * you need to make sure that other CPUs cannot execute this code in parallel.
+  * Also no thread must be currently preempted in the middle of these
+- * instructions. And on the local CPU you need to be protected again NMI or MCE
+- * handlers seeing an inconsistent instruction while you patch.
++ * instructions. And on the local CPU you need to be protected against NMI or
++ * MCE handlers seeing an inconsistent instruction while you patch.
+  */
+ void __init_or_module text_poke_early(void *addr, const void *opcode,
+ 				      size_t len)
+diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
+index 9d4aede..b348dd5 100644
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -403,7 +403,7 @@ int arch_prepare_optimized_kprobe(struct optimized_kprobe *op,
+ 			   (u8 *)op->kp.addr + op->optinsn.size);
+ 	len += RELATIVEJUMP_SIZE;
  
-+--per-numa::
-+Aggregate counts per NUMA nodes for system-wide mode measurements. This
-+is a useful mode to detect imbalance between NUMA nodes. To enable this
-+mode, use --per-numa in addition to -a. (system-wide).
-+
- -D msecs::
- --delay msecs::
- After starting the program, wait msecs before measuring. This is useful to
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5bc0c570b7b6..5c30e9e3de19 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -790,6 +790,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per physical processor core", AGGR_CORE),
- 	OPT_SET_UINT(0, "per-thread", &stat_config.aggr_mode,
- 		     "aggregate counts per thread", AGGR_THREAD),
-+	OPT_SET_UINT(0, "per-numa", &stat_config.aggr_mode,
-+		     "aggregate counts per numa node", AGGR_NUMA),
- 	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
- 		     "ms to wait before starting measurement after program start"),
- 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
-@@ -822,6 +824,12 @@ static int perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
- 	return cpu_map__get_core(map, cpu, NULL);
- }
- 
-+static int perf_stat__get_numa(struct perf_stat_config *config __maybe_unused,
-+			       struct perf_cpu_map *map, int cpu)
-+{
-+	return cpu_map__get_numa(map, cpu, NULL);
-+}
-+
- static int perf_stat__get_aggr(struct perf_stat_config *config,
- 			       aggr_get_id_t get_id, struct perf_cpu_map *map, int idx)
- {
-@@ -856,6 +864,12 @@ static int perf_stat__get_core_cached(struct perf_stat_config *config,
- 	return perf_stat__get_aggr(config, perf_stat__get_core, map, idx);
- }
- 
-+static int perf_stat__get_numa_cached(struct perf_stat_config *config,
-+				      struct perf_cpu_map *map, int idx)
-+{
-+	return perf_stat__get_aggr(config, perf_stat__get_numa, map, idx);
-+}
-+
- static bool term_percore_set(void)
- {
- 	struct evsel *counter;
-@@ -894,6 +908,13 @@ static int perf_stat_init_aggr_mode(void)
- 		}
- 		stat_config.aggr_get_id = perf_stat__get_core_cached;
- 		break;
-+	case AGGR_NUMA:
-+		if (cpu_map__build_numa_map(evsel_list->core.cpus, &stat_config.aggr_map)) {
-+			perror("cannot build core map");
-+			return -1;
-+		}
-+		stat_config.aggr_get_id = perf_stat__get_numa_cached;
-+		break;
- 	case AGGR_NONE:
- 		if (term_percore_set()) {
- 			if (cpu_map__build_core_map(evsel_list->core.cpus,
-@@ -1006,6 +1027,13 @@ static int perf_env__get_core(struct perf_cpu_map *map, int idx, void *data)
- 	return core;
- }
- 
-+static int perf_env__get_numa(struct perf_cpu_map *map, int idx, void *data)
-+{
-+	int cpu = perf_env__get_cpu(data, map, idx);
-+
-+	return perf_env__numa_node(data, cpu);
-+}
-+
- static int perf_env__build_socket_map(struct perf_env *env, struct perf_cpu_map *cpus,
- 				      struct perf_cpu_map **sockp)
- {
-@@ -1024,6 +1052,12 @@ static int perf_env__build_core_map(struct perf_env *env, struct perf_cpu_map *c
- 	return cpu_map__build_map(cpus, corep, perf_env__get_core, env);
- }
- 
-+static int perf_env__build_numa_map(struct perf_env *env, struct perf_cpu_map *cpus,
-+				    struct perf_cpu_map **numap)
-+{
-+	return cpu_map__build_map(cpus, numap, perf_env__get_numa, env);
-+}
-+
- static int perf_stat__get_socket_file(struct perf_stat_config *config __maybe_unused,
- 				      struct perf_cpu_map *map, int idx)
- {
-@@ -1041,6 +1075,12 @@ static int perf_stat__get_core_file(struct perf_stat_config *config __maybe_unus
- 	return perf_env__get_core(map, idx, &perf_stat.session->header.env);
- }
- 
-+static int perf_stat__get_numa_file(struct perf_stat_config *config __maybe_unused,
-+				    struct perf_cpu_map *map, int idx)
-+{
-+	return perf_env__get_numa(map, idx, &perf_stat.session->header.env);
-+}
-+
- static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- {
- 	struct perf_env *env = &st->session->header.env;
-@@ -1067,6 +1107,13 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- 		}
- 		stat_config.aggr_get_id = perf_stat__get_core_file;
- 		break;
-+	case AGGR_NUMA:
-+		if (perf_env__build_numa_map(env, evsel_list->core.cpus, &stat_config.aggr_map)) {
-+			perror("cannot build core map");
-+			return -1;
-+		}
-+		stat_config.aggr_get_id = perf_stat__get_numa_file;
-+		break;
- 	case AGGR_NONE:
- 	case AGGR_GLOBAL:
- 	case AGGR_THREAD:
-@@ -1614,6 +1661,8 @@ static int __cmd_report(int argc, const char **argv)
- 		     "aggregate counts per processor die", AGGR_DIE),
- 	OPT_SET_UINT(0, "per-core", &perf_stat.aggr_mode,
- 		     "aggregate counts per physical processor core", AGGR_CORE),
-+	OPT_SET_UINT(0, "per-numa", &perf_stat.aggr_mode,
-+		     "aggregate counts per numa node", AGGR_NUMA),
- 	OPT_SET_UINT('A', "no-aggr", &perf_stat.aggr_mode,
- 		     "disable CPU count aggregation", AGGR_NONE),
- 	OPT_END()
-@@ -1888,6 +1937,9 @@ int cmd_stat(int argc, const char **argv)
- 		}
- 	}
- 
-+	if (stat_config.aggr_mode == AGGR_NUMA)
-+		cpu__setup_cpunode_map();
-+
- 	if (stat_config.times && interval)
- 		interval_count = true;
- 	else if (stat_config.times && !interval) {
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index a22c1114e880..dbca1ee069b8 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -206,6 +206,11 @@ int cpu_map__get_core_id(int cpu)
- 	return ret ?: value;
- }
- 
-+int cpu_map__get_numa_id(int cpu)
-+{
-+	return cpu__get_node(cpu);
-+}
-+
- int cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
- {
- 	int cpu, s_die;
-@@ -235,6 +240,14 @@ int cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
- 	return (s_die << 16) | (cpu & 0xffff);
- }
- 
-+int cpu_map__get_numa(struct perf_cpu_map *map, int idx, void *data __maybe_unused)
-+{
-+	if (idx < 0 || idx >= map->nr)
-+		return -1;
-+
-+	return cpu_map__get_numa_id(map->map[idx]);
-+}
-+
- int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct perf_cpu_map **sockp)
- {
- 	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket, NULL);
-@@ -250,6 +263,11 @@ int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct perf_cpu_map **cor
- 	return cpu_map__build_map(cpus, corep, cpu_map__get_core, NULL);
- }
- 
-+int cpu_map__build_numa_map(struct perf_cpu_map *cpus, struct perf_cpu_map **numap)
-+{
-+	return cpu_map__build_map(cpus, numap, cpu_map__get_numa, NULL);
-+}
-+
- /* setup simple routines to easily access node numbers given a cpu number */
- static int get_max_num(char *path, int *max)
- {
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 2553bef1279d..6122fd6588d1 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -20,9 +20,12 @@ int cpu_map__get_die_id(int cpu);
- int cpu_map__get_die(struct perf_cpu_map *map, int idx, void *data);
- int cpu_map__get_core_id(int cpu);
- int cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data);
-+int cpu_map__get_numa_id(int cpu);
-+int cpu_map__get_numa(struct perf_cpu_map *map, int idx, void *data);
- int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct perf_cpu_map **sockp);
- int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct perf_cpu_map **diep);
- int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct perf_cpu_map **corep);
-+int cpu_map__build_numa_map(struct perf_cpu_map *cpus, struct perf_cpu_map **numap);
- const struct perf_cpu_map *cpu_map__online(void); /* thread unsafe */
- 
- static inline int cpu_map__socket(struct perf_cpu_map *sock, int s)
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ed3b0ac2f785..adbd80f54fee 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -100,6 +100,15 @@ static void aggr_printout(struct perf_stat_config *config,
- 			nr,
- 			config->csv_sep);
- 			break;
-+	case AGGR_NUMA:
-+		fprintf(config->output, "N%*d%s%*d%s",
-+			config->csv_output ? 0 : -5,
-+			id,
-+			config->csv_sep,
-+			config->csv_output ? 0 : 4,
-+			nr,
-+			config->csv_sep);
-+			break;
- 	case AGGR_NONE:
- 		if (evsel->percore) {
- 			fprintf(config->output, "S%d-D%d-C%*d%s",
-@@ -965,6 +974,11 @@ static void print_interval(struct perf_stat_config *config,
- 
- 	if ((num_print_interval == 0 && !config->csv_output) || config->interval_clear) {
- 		switch (config->aggr_mode) {
-+		case AGGR_NUMA:
-+			fprintf(output, "#           time numa   cpus");
-+			if (!metric_only)
-+				fprintf(output, "             counts %*s events\n", unit_width, "unit");
-+			break;
- 		case AGGR_SOCKET:
- 			fprintf(output, "#           time socket cpus");
- 			if (!metric_only)
-@@ -1188,6 +1202,7 @@ perf_evlist__print_counters(struct evlist *evlist,
- 	case AGGR_CORE:
- 	case AGGR_DIE:
- 	case AGGR_SOCKET:
-+	case AGGR_NUMA:
- 		print_aggr(config, evlist, prefix);
- 		break;
- 	case AGGR_THREAD:
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 8f1ea27f976f..cde91e0842b2 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -281,6 +281,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
- 	case AGGR_CORE:
- 	case AGGR_DIE:
- 	case AGGR_SOCKET:
-+	case AGGR_NUMA:
- 	case AGGR_NONE:
- 		if (!evsel->snapshot)
- 			perf_evsel__compute_deltas(evsel, cpu, thread, count);
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 14fe3e548229..388c90ca7855 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -46,6 +46,7 @@ enum aggr_mode {
- 	AGGR_CORE,
- 	AGGR_THREAD,
- 	AGGR_UNSET,
-+	AGGR_NUMA,
- };
- 
- enum {
--- 
-2.21.0
-
+-	/* We have to use text_poke for instuction buffer because it is RO */
++	/* We have to use text_poke() for instruction buffer because it is RO */
+ 	text_poke(slot, buf, len);
+ 	ret = 0;
+ out:
