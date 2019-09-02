@@ -2,92 +2,68 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA22C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3F8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26865206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7265217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 17:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567443910;
+	bh=AdMIfNYhZ7FeNxnvjp5wfjRX4hSJblsYFsHY0wpJryg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=2EvBmXkLwOJrr+IYho/uGldAeKYnZrC1Y2BCLtQevzdnBkg6GPrFCBPyEErfiFiS+
+	 W/LTH/KuSZoi4FZNaiezFMgQN94gXQXj3EslNIyZNtM3DzChEjVBVmomMXT8aOXX1b
+	 4lGmcmbpvXZibSMelo95VkxglN7dBNa6jGeDaUa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfIBRFF (ORCPT
+        id S1726658AbfIBRFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 13:05:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36796 "EHLO mx1.redhat.com"
+        Mon, 2 Sep 2019 13:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfIBRFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 13:05:05 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE181301E11C;
-        Mon,  2 Sep 2019 17:05:04 +0000 (UTC)
-Received: from [10.10.122.3] (ovpn-122-3.rdu2.redhat.com [10.10.122.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F03B51001B01;
-        Mon,  2 Sep 2019 17:05:03 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-To:     Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20190719122840.15353-1-mbenes@suse.cz>
- <20190719122840.15353-3-mbenes@suse.cz>
- <20190728200427.dbrojgu7hafphia7@treble>
- <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
- <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
-Date:   Mon, 2 Sep 2019 13:05:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 02 Sep 2019 17:05:04 +0000 (UTC)
+        id S1726581AbfIBRFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 13:05:08 -0400
+Subject: Re: [GIT] Networking
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567443907;
+        bh=AdMIfNYhZ7FeNxnvjp5wfjRX4hSJblsYFsHY0wpJryg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ZBBoAG9+V3CgBUNfKdd0Jm5bo+OCxsyri5S7HTHLqK36QklTnXxR+fgyvAfc8Uihq
+         lPhJE2Y1Qfx6/qifWvy36ksiUTcRUmZg0S02uP9y89w82t9KIbLSKW70GHlK6VY6Aq
+         NkS4t7Cxh1FiSvxyPUe/nH2tO8rX+sNX0PhzSJS0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190901.134525.286041997131171719.davem@davemloft.net>
+References: <20190901.134525.286041997131171719.davem@davemloft.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190901.134525.286041997131171719.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: e1e54ec7fb55501c33b117c111cb0a045b8eded2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 345464fb760d1b772e891538b498e111c588b692
+Message-Id: <156744390714.11156.14736006635251477689.pr-tracker-bot@kernel.org>
+Date:   Mon, 02 Sep 2019 17:05:07 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 12:13 PM, Miroslav Benes wrote:
->> I can easily foresee more problems like those in the future.  Going
->> forward we have to always keep track of which special sections are
->> needed for which architectures.  Those special sections can change over
->> time, or can simply be overlooked for a given architecture.  It's
->> fragile.
-> 
-> Indeed. It bothers me a lot. Even x86 "port" is not feature complete in
-> this regard (jump labels, alternatives,...) and who knows what lurks in
-> the corners of the other architectures we support.
-> 
-> So it is in itself reason enough to do something about late module
-> patching.
-> 
+The pull request you sent on Sun, 01 Sep 2019 13:45:25 -0700 (PDT):
 
-Hi Miroslav,
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
 
-I was tinkering with the "blue-sky" ideas that I mentioned to Josh the 
-other day.  I dunno if you had a chance to look at what removing that 
-code looks like, but I can continue to flesh out that idea if it looks 
-interesting:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/345464fb760d1b772e891538b498e111c588b692
 
-   https://github.com/joe-lawrence/linux/tree/blue-sky
+Thank you!
 
-A full demo would require packaging up replacement .ko's with a 
-livepatch, as well as "blacklisting" those deprecated .kos, etc.  But 
-that's all I had time to cook up last week before our holiday weekend here.
-
-Regards,
-
--- Joe
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
