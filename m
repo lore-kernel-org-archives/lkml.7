@@ -2,137 +2,120 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3125EC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C9FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DED22CF4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UQykYbAy"
+	by mail.kernel.org (Postfix) with ESMTP id 6D0382173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfIBHiy (ORCPT
+        id S1729834AbfIBHjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:38:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42268 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfIBHiy (ORCPT
+        Mon, 2 Sep 2019 03:39:25 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:39637 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729374AbfIBHjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:38:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=czLm9+6XeObljoXUlErx8mAKQvTAxkpX8YXKtxnvR4g=; b=UQykYbAyrrel/FfPuS6bPE+5w
-        MBmQ3B4whQzp+6X6/IjDTCyaNfY6g6oYXjxje/EICxmgJrmUETodNdZ2yhi00ffprnn6MrVDdL8LV
-        RyddXIHAQU4AMu1E/qJjB/BwhEyX+sOJc7N+88IML2MdGM/QvT7weXDugntF0SFaDiv7C5YTe2mEc
-        Hl+edJpyJU+brRrkfIDEkoF9Kg2BL7YZdExZOmbQPDE5FCoHtNhMC9EzhScErMWcR2oWTkj2wB0KJ
-        uLKTD2rl5Pi4jV5/ulydOP1bJ480eK7uy1k6r9ABehMfydGQj2iJmIlZIY+/XSYkWOf9XzIoMeLMi
-        jC8lQl3yw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4gv8-0004iF-Mo; Mon, 02 Sep 2019 07:38:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 070F330116F;
-        Mon,  2 Sep 2019 09:38:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9574829B7E7A5; Mon,  2 Sep 2019 09:38:36 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 09:38:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, cgroups@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>, Michal Koutny <mkoutny@suse.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v14 5/6] sched/core: uclamp: Update CPU's refcount on
- TG's clamp changes
-Message-ID: <20190902073836.GO2369@hirez.programming.kicks-ass.net>
-References: <20190822132811.31294-1-patrick.bellasi@arm.com>
- <20190822132811.31294-6-patrick.bellasi@arm.com>
- <20190830094834.GB2369@hirez.programming.kicks-ass.net>
- <87woernqnb.fsf@arm.com>
+        Mon, 2 Sep 2019 03:39:25 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x827dGbd055089;
+        Mon, 2 Sep 2019 15:39:16 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id D72D1393744B8AE61146;
+        Mon,  2 Sep 2019 15:39:16 +0800 (CST)
+In-Reply-To: <CAFLxGvyAk33SZY2J-WYzKMW6N9mKiJ=y0XfmMd8RjUVV2Rp5vg@mail.gmail.com>
+References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw> <20190824130329.68f310aa@xps13> <OF22C5A579.E2E7676F-ON48258465.002F7F69-48258465.00322849@mxic.com.tw> <20190830115100.3fec9bf1@xps13> <OF08E1C5EC.4DAEB179-ON48258469.0025AFFA-48258469.0025D2F2@mxic.com.tw> <CAFLxGvyAk33SZY2J-WYzKMW6N9mKiJ=y0XfmMd8RjUVV2Rp5vg@mail.gmail.com>
+To:     "Richard Weinberger" <richard.weinberger@gmail.com>
+Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        "LKML" <linux-kernel@vger.kernel.org>,
+        linux-mtd@lists.infradead.org,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Richard Weinberger" <richard@nod.at>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>
+Subject: Re: [PATCH] Add support for Macronix NAND randomizer
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87woernqnb.fsf@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-KeepSent: D9829D6A:151B1372-48258469:0029F27D;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFD9829D6A.151B1372-ON48258469.0029F27D-48258469.002A0CDA@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 2 Sep 2019 15:39:18 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/09/02 PM 03:39:16,
+        Serialize complete at 2019/09/02 PM 03:39:16
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x827dGbd055089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 07:44:40AM +0100, Patrick Bellasi wrote:
-> On Fri, Aug 30, 2019 at 09:48:34 +0000, Peter Zijlstra wrote...
-> > On Thu, Aug 22, 2019 at 02:28:10PM +0100, Patrick Bellasi wrote:
 
-> >> +	rq = task_rq_lock(p, &rf);
-> >
-> > Since modifying cgroup parameters is priv only, this should be OK I
-> > suppose. Priv can already DoS the system anyway.
+Hi Richard,
+ 
+> Subject
 > 
-> Are you referring to the possibility to DoS the scheduler by keep
-> writing cgroup attributes?
-
-Yep.
-
-> Because, in that case I think cgroup attributes could be written also by
-> non priv users. It all depends on how they are mounted and permissions
-> are set. Isn't it?
+> Re: [PATCH] Add support for Macronix NAND randomizer
 > 
-> Anyway, I'm not sure we can fix that here... and in principle we could
-> have that DoS by setting CPUs affinities, which is user exposed.
-> Isn't it?
-
-Only for a single task; by using the cgroup thing we have that in-kernel
-iteration of tasks.
-
-The thing I worry about is bouncing rq->lock around the system; but
-yeah, I suppose a normal user could achieve something similar with
-enough tasks.
-
-> >> +	/*
-> >> +	 * Setting the clamp bucket is serialized by task_rq_lock().
-> >> +	 * If the task is not yet RUNNABLE and its task_struct is not
-> >> +	 * affecting a valid clamp bucket, the next time it's enqueued,
-> >> +	 * it will already see the updated clamp bucket value.
-> >> +	 */
-> >> +	if (!p->uclamp[clamp_id].active)
-> >> +		goto done;
-> >> +
-> >> +	uclamp_rq_dec_id(rq, p, clamp_id);
-> >> +	uclamp_rq_inc_id(rq, p, clamp_id);
-> >> +
-> >> +done:
+> On Mon, Sep 2, 2019 at 8:54 AM <masonccyang@mxic.com.tw> wrote:
+> > > >                 nand@0 {
+> > > >                         reg = <0>;
+> > > >                         nand-reliability = "randomizer";
+> > >
+> > >                           mxic,enable-randomizer-otp;
+> > >
+> > > Would be better (with the proper documentation in the bindings).
+> > >
 > >
-> > I'm thinking that:
-> >
-> > 	if (p->uclamp[clamp_id].active) {
-> > 		uclamp_rq_dec_id(rq, p, clamp_id);
-> > 		uclamp_rq_inc_id(rq, p, clamp_id);
-> > 	}
-> >
-> > was too obvious? ;-)
+> > okay, thanks for your opinions.
 > 
-> Yep, right... I think there was some more code in prev versions but I
-> forgot to get rid of that "goto" pattern after some change.
+> Please document also when/why one wants to enable the randomizer.
 
-OK, already fixed that.
+okay, sure.
+
+> 
+> -- 
+> Thanks,
+> //richard
+
+best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
