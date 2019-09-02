@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6409CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23143C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399AD21874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC50D21874
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LIEnTSag"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BLwBVfN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfIBICS (ORCPT
+        id S1730182AbfIBIDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:02:18 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:51366 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729899AbfIBICR (ORCPT
+        Mon, 2 Sep 2019 04:03:02 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:51474 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730019AbfIBICS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:02:17 -0400
+        Mon, 2 Sep 2019 04:02:18 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A4D97C0437;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 73872C0429;
         Mon,  2 Sep 2019 08:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567411337; bh=vkwFXbNgXpcsWIBymeTdbdI0d7HHjr+O5myQC7lgDrs=;
+        t=1567411337; bh=S9lXifIRV5LjZ5ja6p24Sciaey7X+yvmq/cydA1irIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=LIEnTSagSCBwmxKnAPXp3O0++ZlCBB8FAMf9sL7S3+HmictbEZ8LqxS6T2Ph8gRg7
-         guM54HwcNUMsx6cllR+BT/c9JRS8CaGf97xe1CALRL926Ph0/PqoN6ZlfaL6OqNh5j
-         WWkgGYrQeY6vll0IELIw8IcMnSSx9ImN8S3aOKVyOYb+OF8OgzwzA38zshR8KN5Fzo
-         CxCByPHCSViOc7FEbNt9kzpSp7pK6M6oNyImGdnQaysq/8b9tTFNmz6nYPnYPp8kqO
-         WzZvGMMg9AI2WFQckTseD4fEj33mh3LZKSUpg7ed718nClB8pM26ysRADTChWwLHYJ
-         kNlU+f/FwYVkw==
+        b=BLwBVfN7hA1rp7Sxty/6goc9/Ku1UoJEkeGGpccfIziQrgzYBHtZb5eLrN3fPOV2d
+         gjrdPJ/4Pz1dkK4ryh3C5K3xxBhUGgqpCjHXeUO/07QJ1wDfpApUsisYkeLoENxRsg
+         kWz3hLOXzAa507rcYcy0vXmsdn7lHn3hXpMAyP6wBtgPuVaAbYzmNoKiVV4p9saGQl
+         NLcyfoyv0SWkH4LOvLTCnDpENGAWh5xKkL218lZt7WwTia88RBq6+tHPiwoyOvuj3v
+         DgjQXrBknSLjFVvZ4tfA4a5BOnkHrhl3oxZGTwNkJ2FatZWLwoMW8QQGKRLvbt+7s8
+         6MSgG7wp7jPPw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 5F5B6A0073;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 12ECDA0064;
         Mon,  2 Sep 2019 08:02:15 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 06/13] net: stmmac: xgmac: Implement ARP Offload
-Date:   Mon,  2 Sep 2019 10:01:48 +0200
-Message-Id: <91017a44b200aa4596947679f428fd00fefff2fd.1567410970.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 01/13] net: stmmac: selftests: Return proper error code to userspace
+Date:   Mon,  2 Sep 2019 10:01:43 +0200
+Message-Id: <04cd49b1c7529a464fe0b03a88b275ce85b1ca3d.1567410970.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1567410970.git.joabreu@synopsys.com>
 References: <cover.1567410970.git.joabreu@synopsys.com>
@@ -64,7 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the ARP Offload feature in XGMAC cores.
+We can do better than just return 1 to userspace. Lets return a proper
+Linux error code.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -79,92 +80,104 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h        |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 17 +++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c  |  1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.h          |  3 +++
- 4 files changed, 22 insertions(+)
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 19538057c24e..912bbb6515b2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -361,6 +361,7 @@ struct dma_features {
- 	unsigned int vlins;
- 	unsigned int dvlan;
- 	unsigned int l3l4fnum;
-+	unsigned int arpoffsel;
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index ecc8602c6799..d3234338a0ca 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -318,7 +318,7 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
+ 		attr->timeout = STMMAC_LB_TIMEOUT;
  
- /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 9f568b54b339..36262ef8b70a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -1338,6 +1338,22 @@ static int dwxgmac2_config_l4_filter(struct mac_device_info *hw, u32 filter_no,
- 	return 0;
- }
+ 	wait_for_completion_timeout(&tpriv->comp, attr->timeout);
+-	ret = !tpriv->ok;
++	ret = tpriv->ok ? 0 : -ETIMEDOUT;
  
-+static void dwxgmac2_set_arp_offload(struct mac_device_info *hw, bool en,
-+				     u32 addr)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value;
-+
-+	writel(addr, ioaddr + XGMAC_ARP_ADDR);
-+
-+	value = readl(ioaddr + XGMAC_RX_CONFIG);
-+	if (en)
-+		value |= XGMAC_CONFIG_ARPEN;
-+	else
-+		value &= ~XGMAC_CONFIG_ARPEN;
-+	writel(value, ioaddr + XGMAC_RX_CONFIG);
-+}
-+
- const struct stmmac_ops dwxgmac210_ops = {
- 	.core_init = dwxgmac2_core_init,
- 	.set_mac = dwxgmac2_set_mac,
-@@ -1380,6 +1396,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.enable_vlan = dwxgmac2_enable_vlan,
- 	.config_l3_filter = dwxgmac2_config_l3_filter,
- 	.config_l4_filter = dwxgmac2_config_l4_filter,
-+	.set_arp_offload = dwxgmac2_set_arp_offload,
- };
+ cleanup:
+ 	if (!attr->dont_wait)
+@@ -480,7 +480,7 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
  
- int dwxgmac2_setup(struct stmmac_priv *priv)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index fb0283b15c77..fd60bf5e0a72 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -370,6 +370,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
- 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
- 	dma_cap->av &= (hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
-+	dma_cap->arpoffsel = (hw_cap & XGMAC_HWFEAT_ARPOFFSEL) >> 9;
- 	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
- 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
- 	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 47c8ad9ec671..ddb851d99618 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -370,6 +370,7 @@ struct stmmac_ops {
- 	int (*config_l4_filter)(struct mac_device_info *hw, u32 filter_no,
- 				bool en, bool udp, bool sa, bool inv,
- 				u32 match);
-+	void (*set_arp_offload)(struct mac_device_info *hw, bool en, u32 addr);
- };
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
  
- #define stmmac_core_init(__priv, __args...) \
-@@ -454,6 +455,8 @@ struct stmmac_ops {
- 	stmmac_do_callback(__priv, mac, config_l3_filter, __args)
- #define stmmac_config_l4_filter(__priv, __args...) \
- 	stmmac_do_callback(__priv, mac, config_l4_filter, __args)
-+#define stmmac_set_arp_offload(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, set_arp_offload, __args)
+ cleanup:
+ 	dev_mc_del(priv->dev, gd_addr);
+@@ -512,7 +512,7 @@ static int stmmac_test_pfilt(struct stmmac_priv *priv)
  
- /* PTP and HW Timer helpers */
- struct stmmac_hwtimestamp {
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
+ 
+ cleanup:
+ 	dev_uc_del(priv->dev, gd_addr);
+@@ -562,7 +562,7 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
+ 
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
+ 
+ cleanup:
+ 	dev_uc_del(priv->dev, uc_addr);
+@@ -600,7 +600,7 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+ 
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
+ 
+ cleanup:
+ 	dev_mc_del(priv->dev, mc_addr);
+@@ -699,7 +699,7 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
+ 	}
+ 
+ 	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
+-	ret = !tpriv->ok;
++	ret = tpriv->ok ? 0 : -ETIMEDOUT;
+ 
+ cleanup:
+ 	dev_mc_del(priv->dev, paddr);
+@@ -833,11 +833,11 @@ static int stmmac_test_vlanfilt(struct stmmac_priv *priv)
+ 			goto vlan_del;
+ 
+ 		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
+-		ret = !tpriv->ok;
++		ret = tpriv->ok ? 0 : -ETIMEDOUT;
+ 		if (ret && !i) {
+ 			goto vlan_del;
+ 		} else if (!ret && i) {
+-			ret = -1;
++			ret = -EINVAL;
+ 			goto vlan_del;
+ 		} else {
+ 			ret = 0;
+@@ -909,11 +909,11 @@ static int stmmac_test_dvlanfilt(struct stmmac_priv *priv)
+ 			goto vlan_del;
+ 
+ 		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
+-		ret = !tpriv->ok;
++		ret = tpriv->ok ? 0 : -ETIMEDOUT;
+ 		if (ret && !i) {
+ 			goto vlan_del;
+ 		} else if (!ret && i) {
+-			ret = -1;
++			ret = -EINVAL;
+ 			goto vlan_del;
+ 		} else {
+ 			ret = 0;
+@@ -998,7 +998,7 @@ static int stmmac_test_rxp(struct stmmac_priv *priv)
+ 	attr.src = addr;
+ 
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret; /* Shall NOT receive packet */
++	ret = ret ? 0 : -EINVAL; /* Shall NOT receive packet */
+ 
+ 	cls_u32.command = TC_CLSU32_DELETE_KNODE;
+ 	stmmac_tc_setup_cls_u32(priv, priv, &cls_u32);
 -- 
 2.7.4
 
