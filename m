@@ -2,50 +2,50 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B36DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BBEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07B02087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEE8217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567438436;
-	bh=pghzbeWl3KPThv+7pJa01BvuqNz1rWFn0NoduQIlb60=;
+	s=default; t=1567438475;
+	bh=lA6eyYFAkUUFVvLcmYFaxJIeNymm/A2N6PpCW/HSFvY=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=QDHTm9JTSUd3EkcUvtNitG06tUUZjUlgkvdcFrKURwkLDRbEHBszO2BzBs2lajkVl
-	 GmTuHr+ADb3XltWRN0bCt5qwWnE4RRyGirXVZqFhp237759XvkI9mO5jjma4PCmiS7
-	 QMer5Lb3o/9Uz8aY8I3bQtzWE+FiuiVAkz+V5MVk=
+	b=2vWRujpOmh+jgJ19xLlsw88PeeZuXqEMZ54/gZH5430sj4u8Kn5+XUdovAGCOvRey
+	 kVSHL+RJhpnwO2Nsbzyc7GyEPTSwW6h03kZyL0O4eXBtHKQhGJTRUijCMGI8VsWWVp
+	 dQ3pCs34v6ZJYolH0tr5MItxsJhP1xYYhMiC3EPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfIBPdy (ORCPT
+        id S1726450AbfIBPee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38384 "EHLO mail.kernel.org"
+        Mon, 2 Sep 2019 11:34:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfIBPdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:33:54 -0400
+        id S1725813AbfIBPee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 11:34:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C8A2087E;
-        Mon,  2 Sep 2019 15:33:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6675B2087E;
+        Mon,  2 Sep 2019 15:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567438433;
-        bh=pghzbeWl3KPThv+7pJa01BvuqNz1rWFn0NoduQIlb60=;
+        s=default; t=1567438473;
+        bh=lA6eyYFAkUUFVvLcmYFaxJIeNymm/A2N6PpCW/HSFvY=;
         h=Date:From:To:Cc:Subject:From;
-        b=IIh86nBJ251zD6ZEuIvhY1KFqzBeW54iEAQF21569JuTQAfNlxuzc+skPYuX+g9/p
-         0PCumn2ggdS8lHtYbQe1UEnLW4eZZsXvoTTZZP/qrv/14tv1zGt9qGdTTbZZGz1c7G
-         C1mDiQ0FO3sR44M2PbKYIO+Ic/HLS6kofJ6S3mWQ=
-Date:   Mon, 2 Sep 2019 17:33:51 +0200
+        b=wDzTAvsPA1Dtb8QYfOP6In24ZqozuRCgRx+H7MffZNnD6lxd3rwDlhXNKdqL0mN1p
+         eVBVIXa4Rg0qbk0oqB3cBjKPhdHQ2mtSqPRcFUyLZgI7Mjq1DBaWRT9zeif02Nl/0N
+         cue8FdI8CFH730zUFYGk2raHyhoApu/IIPFgdnT4=
+Date:   Mon, 2 Sep 2019 17:34:31 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB fixes for 5.3-rc7
-Message-ID: <20190902153351.GA9779@kroah.com>
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Char/Misc driver fixes for 5.3-rc7
+Message-ID: <20190902153431.GA9961@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -61,67 +61,69 @@ The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.3-rc7
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.3-rc7
 
-for you to fetch changes up to 1426bd2c9f7e3126e2678e7469dca9fd9fc6dd3e:
+for you to fetch changes up to 8919dfcb31161fae7d607bbef5247e5e82fd6457:
 
-  USB: cdc-wdm: fix race between write and disconnect due to flag abuse (2019-08-28 22:48:38 +0200)
+  fsi: scom: Don't abort operations for minor errors (2019-08-28 22:59:18 +0200)
 
 ----------------------------------------------------------------
-USB fixes for 5.3-rc7
+Char/Misc driver fixes for 5.3-rc7
 
-Here are some small USB fixes that have been in linux-next this past
-week for 5.3-rc7
+Here are some small char and misc driver fixes for reported issues for
+5.3-rc7
 
-They fix the usual xhci, syzbot reports, and other small issues that
-have come up last week.
+Also included in here is the documentation for how we are handling
+hardware issues under embargo that everyone has finally agreed on, as
+well as a MAINTAINERS update for the suckers who agreed to handle the
+LICENSES/ files.
 
-All have been in linux-next with no reported issues.
+All of these have been in linux-next last week with no reported issues.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Colin Ian King (1):
-      typec: tcpm: fix a typo in the comparison of pdo_max_voltage
+Alexander Shishkin (2):
+      intel_th: pci: Add support for another Lewisburg PCH
+      intel_th: pci: Add Tiger Lake support
 
-Geert Uytterhoeven (1):
-      usb: host: xhci: rcar: Fix typo in compatible string matching
+Ding Xiang (1):
+      stm class: Fix a double free of stm_source_device
 
-Gustavo A. R. Silva (1):
-      usb: udc: lpc32xx: silence fall-through warning
+Eddie James (1):
+      fsi: scom: Don't abort operations for minor errors
 
-Henk van der Laan (1):
-      usb-storage: Add new JMS567 revision to unusual_devs
+Greg Kroah-Hartman (2):
+      MAINTAINERS: add entry for LICENSES and SPDX stuff
+      Merge tag 'fpga-fixes-for-5.3' of git://git.kernel.org/.../mdf/linux-fpga into char-misc-linus
 
-Kai-Heng Feng (2):
-      USB: storage: ums-realtek: Update module parameter description for auto_delink_en
-      USB: storage: ums-realtek: Whitelist auto-delink support
+Nadav Amit (2):
+      VMCI: Release resource if the work is already queued
+      vmw_balloon: Fix offline page marking with compaction
 
-Nagarjuna Kristam (1):
-      usb: host: xhci-tegra: Set DMA mask correctly
+Phil Reid (1):
+      fpga: altera-ps-spi: Fix getting of optional confd gpio
 
-Oliver Neukum (2):
-      usbtmc: more sanity checking for packet size
-      USB: cdc-wdm: fix race between write and disconnect due to flag abuse
+Raul E Rangel (1):
+      lkdtm/bugs: fix build error in lkdtm_EXHAUST_STACK
 
-Peter Chen (1):
-      usb: chipidea: udc: don't do hardware access if gadget has stopped
+Thomas Gleixner (1):
+      Documentation/process: Embargoed hardware security issues
 
-Schmid, Carsten (1):
-      usb: hcd: use managed device resources
+Tomas Winkler (1):
+      mei: me: add Tiger Lake point LP device ID
 
-Yoshihiro Shimoda (1):
-      usb: host: ohci: fix a race condition between shutdown and irq
-
- drivers/usb/chipidea/udc.c           | 32 ++++++++++++++++++++++++--------
- drivers/usb/class/cdc-wdm.c          | 16 ++++++++++++----
- drivers/usb/class/usbtmc.c           |  3 +++
- drivers/usb/core/hcd-pci.c           | 30 ++++++++----------------------
- drivers/usb/gadget/udc/lpc32xx_udc.c |  2 +-
- drivers/usb/host/ohci-hcd.c          | 15 ++++++++++++---
- drivers/usb/host/xhci-rcar.c         |  2 +-
- drivers/usb/host/xhci-tegra.c        | 10 ++++++++++
- drivers/usb/storage/realtek_cr.c     | 15 +++++++++------
- drivers/usb/storage/unusual_devs.h   |  2 +-
- drivers/usb/typec/tcpm/tcpm.c        |  2 +-
- 11 files changed, 82 insertions(+), 47 deletions(-)
+ .../process/embargoed-hardware-issues.rst          | 279 +++++++++++++++++++++
+ Documentation/process/index.rst                    |   1 +
+ MAINTAINERS                                        |  12 +
+ drivers/fpga/altera-ps-spi.c                       |  11 +-
+ drivers/fsi/fsi-scom.c                             |   8 +-
+ drivers/hwtracing/intel_th/pci.c                   |  10 +
+ drivers/hwtracing/stm/core.c                       |   1 -
+ drivers/misc/lkdtm/bugs.c                          |   4 +-
+ drivers/misc/mei/hw-me-regs.h                      |   2 +
+ drivers/misc/mei/pci-me.c                          |   2 +
+ drivers/misc/vmw_balloon.c                         |  10 +-
+ drivers/misc/vmw_vmci/vmci_doorbell.c              |   6 +-
+ 12 files changed, 328 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/process/embargoed-hardware-issues.rst
