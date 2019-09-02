@@ -2,109 +2,167 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E169C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A448C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2518021881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567459935;
-	bh=x77v7RfHxQP8XO6g/tjhFD4cAswr8tDwaEbOrs07xeA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RuX6vrAgpbI2w2yKH1Iuhia448Fed3bRlNLw3v1E2AUElzuBcrfuKaaaZArIobXRq
-	 tZ3jCMhYOWWNPIAnStKuRWhQpShhwBC+5QvEKoPOhLSENdTxTetK7akoTRdYUzosrf
-	 jwetRyneqwdZuuYdPXd5mL6CooSvBe351yBfl00s=
+	by mail.kernel.org (Postfix) with ESMTP id 18A8821897
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:37:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACOXOZft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfIBVcO (ORCPT
+        id S1727730AbfIBVht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:32:14 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43090 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfIBVcO (ORCPT
+        Mon, 2 Sep 2019 17:37:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38229 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfIBVhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:32:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 90so10830825otg.10;
-        Mon, 02 Sep 2019 14:32:13 -0700 (PDT)
+        Mon, 2 Sep 2019 17:37:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l11so6439754wrx.5;
+        Mon, 02 Sep 2019 14:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=AzTuyC2UsbNpm6l7U9X8UINePV0sxSWA4lyUt5FUF8I=;
+        b=ACOXOZftMzxnBXf7Mn8TNUGkt5tTRL0PxYAd9HIEyOmhxpyBC2Xs0YAiO2WCsQGZuM
+         2RyyEMVjxsUXBfHRnbvsgdAJ0Soi7FTywBM7MiTPh/31uIqySyseSdQZ2X+ucXc/NAmB
+         zzx7xB9CHW0AQlMugYjiOAr6J2CMaC4T4CTvmSNc4o6Gmrs3GUD3qiHcaceT2XEampVQ
+         uv3DSFPyxEaoUQHtQj+MFFif6DI37sQ3URILMUTlkVDslod+EUX47nfEHhue5U0gMKpM
+         4xjaCMmwR/X6+Pc/5og0XwtV56aBpEjjx+8JUbqJ613u7EsgbM4A4Bz6vFeED2fmwLm0
+         PEmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pRzaQ7RpTXTj09HDdlktAr/ebyQQrL0kch2BnxuHgVM=;
-        b=GPqChi5ZEQEJ2d6snw08BqkZoUfTizyDuyx91exo8Ojx18+lgomU/WROvx1jQtPZ1o
-         8rIghigt3pNT9eCnotG236Q9G+mbjSWGlK9a4bCfQeqHBrg1PIA+lcA4R+b919x6MGPF
-         CfGbTH9T8aOFPb66/yGmcJfbCyJ4fsvS963PQkpjs7OWA9U9uqkK1T7OBXTP+PcUFvsP
-         nM/0wpy5EE3gwtwxwvWftIb4RrBBIlzSVwI8lx0puDFK9h2lEJRgA+6iWCWfl46jQ+IK
-         9TFr+lMe8ULfDO84JKlLNYCyQTjdb8phYQY+MTy2Vvck7zFv869tS/ajd41eYm6DD9oi
-         lGzg==
-X-Gm-Message-State: APjAAAWMn41siAlUT6+C55eDkyw3pfaGc1RjjOmJCWPszxsNe787fUpI
-        Q6HGn1r6AtXlP9Ba9xW6h8NeGl1DxBf7dq9vSdxW0w==
-X-Google-Smtp-Source: APXvYqxFaje6DHixq3AXTitOhl/CdjQent8WfatECLamdB5wUhfMK3ec5uVdGchXtjQ9kQC/iwqzzDSlffmJFXUHlug=
-X-Received: by 2002:a9d:7411:: with SMTP id n17mr5860561otk.118.1567459933133;
- Mon, 02 Sep 2019 14:32:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=AzTuyC2UsbNpm6l7U9X8UINePV0sxSWA4lyUt5FUF8I=;
+        b=iDKH6+5TFjzoAL43GrNduPefldo8LT/+2ge/ccFt66qowi7pLlw3Iu/8+8QhLTGmpY
+         FAAaDSsGQnJNFJ+xO0rq8n20c1ohx0gkg16BMi1RQxnKMzaMAc6n7+NFTgza7y9LeSZK
+         wOVgaLYtmsUUysZScs1MNguTfE/PElO83q5BIhK8D8Hwc2ZrJkSGVbapaM3asxktmgsS
+         lijH8nOWfR2Ev7jJ3dkvWyXVnLbOpxIryaIa1M/9g5tFQHxgsRL2O/rOtilZTA4P02ZW
+         GssDSSNReCHwHlexRVaffX2xHrnDsNbZLLLG2GCIkCNEfdTzblcqvxQLDtK4p1fVhslc
+         kv/Q==
+X-Gm-Message-State: APjAAAVoxkCscA3BIZVv27YWK1gcQGwlmU/LPqnN0gNQmoj3KAQKRW7l
+        dJgKmCR2r3Z2Ms/m5gxnVDyTday3
+X-Google-Smtp-Source: APXvYqziqzBEOwGLRmlaO0Yb8EPO9joHZ7A7//D5mVWpDB+g5EX3APsttrwr1cYJsIvfbbQRjE3bKg==
+X-Received: by 2002:adf:f30e:: with SMTP id i14mr24352349wro.288.1567460265983;
+        Mon, 02 Sep 2019 14:37:45 -0700 (PDT)
+Received: from [172.30.89.46] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id q24sm23219092wmc.3.2019.09.02.14.37.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 14:37:45 -0700 (PDT)
+Subject: Re: [PATCH 15/22] media: imx7-media-csi: Create media links in bound
+ notifier
+To:     Rui Miguel Silva <rmfrfs@gmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190805233505.21167-1-slongerbeam@gmail.com>
+ <20190805233505.21167-16-slongerbeam@gmail.com> <m3blw35970.fsf@gmail.com>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <b648b587-110d-8e6a-8b9c-10e8dbb9561e@gmail.com>
+Date:   Mon, 2 Sep 2019 14:37:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1567240295-44686-1-git-send-email-tiantao6@huawei.com>
-In-Reply-To: <1567240295-44686-1-git-send-email-tiantao6@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 2 Sep 2019 23:32:01 +0200
-Message-ID: <CAJZ5v0huLagaNiK38JRaYY7=N38HSrHSqbw-HJiQDUmg_HTE2Q@mail.gmail.com>
-Subject: Re: [PATCH] ACPICA: Namespace: fix the no brace needed warning
-To:     tiantao <tiantao6@huawei.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Robert Moore <robert.moore@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Len Brown <lenb@kernel.org>, Linuxarm <linuxarm@huawei.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <m3blw35970.fsf@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 10:34 AM tiantao <tiantao6@huawei.com> wrote:
->
-> for if else statements having single block no braces are needed fixed
-> the following checkpatch warning
->
-> WARNING: braces {} are not necessary for any arm of this statement
-> +               if (!prev_node) {
-> [...]
-> +               } else {
-> [...]
->
-> Signed-off-by: tiantao <tiantao6@huawei.com>
-> ---
->  drivers/acpi/acpica/nsaccess.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/acpica/nsaccess.c b/drivers/acpi/acpica/nsaccess.c
-> index 2566e2d..7cef22a 100644
-> --- a/drivers/acpi/acpica/nsaccess.c
-> +++ b/drivers/acpi/acpica/nsaccess.c
-> @@ -109,11 +109,10 @@ acpi_status acpi_ns_root_initialize(void)
->                 new_node->descriptor_type = ACPI_DESC_TYPE_NAMED;
->                 new_node->type = init_val->type;
->
-> -               if (!prev_node) {
-> +               if (!prev_node)
->                         acpi_gbl_root_node_struct.child = new_node;
-> -               } else {
-> +               else
->                         prev_node->peer = new_node;
-> -               }
->
->                 new_node->parent = &acpi_gbl_root_node_struct;
->                 prev_node = new_node;
-> --
+Hi Rui,
 
-The ACPICA code comes from an external project and the coding style in
-it is different from the rest of the kernel, so the patch is not
-applicable.
+On 9/2/19 2:38 AM, Rui Miguel Silva wrote:
+> Hi Steve,
+> On Tue 06 Aug 2019 at 00:34, Steve Longerbeam wrote:
+>> Implement a notifier bound op to register media links from the remote
+>> sub-device's source pad(s) to the CSI sink pad.
+>>
+>> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+>> ---
+>>   drivers/staging/media/imx/imx7-media-csi.c | 24 ++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>
+>> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+>> index a1c96c52a606..f71ac485f780 100644
+>> --- a/drivers/staging/media/imx/imx7-media-csi.c
+>> +++ b/drivers/staging/media/imx/imx7-media-csi.c
+>> @@ -196,6 +196,11 @@ struct imx7_csi {
+>>   	struct completion last_eof_completion;
+>>   };
+>>
+>> +static inline struct imx7_csi *notifier_to_dev(struct v4l2_async_notifier *n)
+>>
+> As the other one add the namespace for the function name:
+> imx7_csi_notifier_to_dev
+>
+> other than this, looks good to me.
 
-Thanks!
+Thanks for the review. I will make those changes in next rev.
+
+Steve
+
+>
+>
+>> +{
+>> +	return container_of(n, struct imx7_csi, notifier);
+>> +}
+>> +
+>>   static u32 imx7_csi_reg_read(struct imx7_csi *csi, unsigned int offset)
+>>   {
+>>   	return readl(csi->regbase + offset);
+>> @@ -1173,6 +1178,23 @@ static int imx7_csi_parse_endpoint(struct device *dev,
+>>   	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
+>>   }
+>>
+>> +static int imx7_csi_notify_bound(struct v4l2_async_notifier *notifier,
+>> +				 struct v4l2_subdev *sd,
+>> +				 struct v4l2_async_subdev *asd)
+>> +{
+>> +	struct imx7_csi *csi = notifier_to_dev(notifier);
+>> +	struct media_pad *sink = &csi->sd.entity.pads[IMX7_CSI_PAD_SINK];
+>> +
+>> +	return media_create_fwnode_pad_links(sink,
+>> +					     dev_fwnode(csi->sd.dev),
+>> +					     &sd->entity,
+>> +					     dev_fwnode(sd->dev), 0);
+>> +}
+>> +
+>> +static const struct v4l2_async_notifier_operations imx7_csi_notify_ops = {
+>> +	.bound = imx7_csi_notify_bound,
+>> +};
+>> +
+>>   static int imx7_csi_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device *dev = &pdev->dev;
+>> @@ -1253,6 +1275,8 @@ static int imx7_csi_probe(struct platform_device *pdev)
+>>
+>>   	v4l2_async_notifier_init(&csi->notifier);
+>>
+>> +	csi->notifier.ops = &imx7_csi_notify_ops;
+>> +
+>>   	ret = v4l2_async_register_fwnode_subdev(&csi->sd, &csi->notifier,
+>>   						sizeof(struct v4l2_async_subdev),
+>>   						NULL, 0,
+
