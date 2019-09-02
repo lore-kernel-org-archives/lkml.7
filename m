@@ -2,227 +2,141 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B73BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED6CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3B1216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567428492;
-	bh=HRPdP6IoZxIKzVyOlsz8h5aGfiCrnDwoIA8rqSjMhRM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SHrfyFLvCXV6zKyodPc45Mzw0W13mOgTR/wbXnTbAhLtNHLI90j0xV+8kdkJDjrto
-	 VILmIN/toqMIZjgErnv3aa1Bu8Fwm5IworSFV6pFHGUfv6oe9mnOLwUqLPZk65Yn/+
-	 DSJN3B/RugiXRqM+ZRsNNn56Yxd90tpnHciMVuzs=
+	by mail.kernel.org (Postfix) with ESMTP id 5130D216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p1wdTs4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbfIBMsL (ORCPT
+        id S1730536AbfIBMvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729707AbfIBMsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:48:11 -0400
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 479D422DBF;
-        Mon,  2 Sep 2019 12:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567428489;
-        bh=HRPdP6IoZxIKzVyOlsz8h5aGfiCrnDwoIA8rqSjMhRM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mojGZV5oAnM90ECPfyUnZxLnQg5FAEU7IHZztlBj52IrmhvAD32oB7WbU888c04pr
-         IfiJXxL9wsE3n37P3IKeLmF3FFfFlEXgVQIyZ//aYhp+A45/EO3Ge14QBTptFUrmtD
-         A4l0D+dHtwqJ7+EC+Ao9ho0yiRBDMhlNHMID1BCM=
-Received: by mail-lj1-f177.google.com with SMTP id d5so1768680lja.10;
-        Mon, 02 Sep 2019 05:48:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAWL3sCXszC7z1xTZR2oHPv6uiXSNY7ogL7GJiwP5Mj+dQEt5lMl
-        4xB9ku5kM3HbKHoZ1/6CVLGvI3D8hO0OmBZFZz0=
-X-Google-Smtp-Source: APXvYqwsQ0jKyySStl5IspgIxl6esl8OcqilEKBAJg/dod6mua7Muq88O0wbce7GxRjmTRa8z4MXHmevjQBq3jJ5+j0=
-X-Received: by 2002:a2e:7818:: with SMTP id t24mr15549999ljc.210.1567428487319;
- Mon, 02 Sep 2019 05:48:07 -0700 (PDT)
+        Mon, 2 Sep 2019 08:51:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52252 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729690AbfIBMvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:51:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2SRLGmzt9ygJ+k1758a7WeMkOp6QVS9SpfevL0fmQfQ=; b=p1wdTs4XDK/LQWfm/yELbp49u
+        phV0PdWujXYthfryE4TkwNYPNSjVRtyhrjikDgf3P3SMQVhM4XRwApkyG5tQzhuUZhc9Bz3ebmUh7
+        qJ3KM1c0uT+TU9dK8YwGrjAmSVzRQYI1dlCZedOFGQzdvco5MqhqYrS1C6rDLvn7gNyBDqmIo/xKW
+        G8ajsycXwdssNAKgMAPBfcubUQjWvXjRoblHim8dRKXzpDUS1z/aSV/OxkTDhuv2tYkihbFEL8+Ig
+        Joaenckr004Pz8x2NJ1XiFbwZSkzUEc91fCcuCSy47u20XG+/CKVdTloaqFrnExpE814on13j+pV8
+        EmKp8xVSg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4lnZ-0004LV-VP; Mon, 02 Sep 2019 12:51:09 +0000
+Date:   Mon, 2 Sep 2019 05:51:09 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <gaoxiang25@huawei.com>, Jan Kara <jack@suse.cz>,
+        Chao Yu <yuchao0@huawei.com>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190902125109.GA9826@infradead.org>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
+ <20190829101545.GC20598@infradead.org>
+ <20190901085452.GA4663@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-7-krzk@kernel.org>
- <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
-In-Reply-To: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 2 Sep 2019 14:47:55 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPddVJvpGgd1K_W63eho8tu+X_nr+0PYpjBafp+bw=-70w@mail.gmail.com>
-Message-ID: <CAJKOXPddVJvpGgd1K_W63eho8tu+X_nr+0PYpjBafp+bw=-70w@mail.gmail.com>
-Subject: Re: [RFC 7/9] dt-bindings: rtc: s3c: Convert S3C/Exynos RTC bindings
- to json-schema
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, notify@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190901085452.GA4663@hsiangkao-HP-ZHAN-66-Pro-G1>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019 at 14:06, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Convert Samsung S3C/Exynos Real Time Clock bindings to DT schema format
-> > using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/rtc/s3c-rtc.txt       | 31 ------
-> >  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 95 +++++++++++++++++++
-> >  2 files changed, 95 insertions(+), 31 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
->
->
-> > diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> > new file mode 100644
-> > index 000000000000..44b021812a83
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> > @@ -0,0 +1,95 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/rtc/s3c-rtc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung S3C, S5P and Exynos Real Time Clock controller
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +# Select also deprecated compatibles (for finding deprecate usage)
-> > +select:
-> > +  properties:
-> > +    compatible:
-> > +      items:
-> > +        - enum:
-> > +            - samsung,s3c2410-rtc
-> > +            - samsung,s3c2416-rtc
-> > +            - samsung,s3c2443-rtc
-> > +            - samsung,s3c6410-rtc
-> > +            # Deprecated, use samsung,s3c6410-rtc
-> > +            - samsung,exynos3250-rtc
->
-> We've come up with a better way of doing this that doesn't need a
-> custom 'select'. Add a 'oneOf' to compatible and add another entry:
->
-> - const: samsung,exynos3250-rtc
->   deprecated: true
->
-> It's not implemented yet in the tool, but we'll keep the compatible
-> for 'select' and otherwise drop schema marked deprecated.
+On Sun, Sep 01, 2019 at 04:54:55PM +0800, Gao Xiang wrote:
+> No modification at this... (some comments already right here...)
 
-OK
+>  20 /* 128-byte erofs on-disk super block */
+>  21 struct erofs_super_block {
+> ...
+>  24         __le32 features;        /* (aka. feature_compat) */
+> ...
+>  38         __le32 requirements;    /* (aka. feature_incompat) */
+> ...
+>  41 };
 
->
-> > +  required:
-> > +    - compatible
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
->
-> You can drop 'items' when there's only 1 entry.
+This is only cosmetic, why not stick to feature_compat and
+feature_incompat?
 
-Indeed.
+> > > +	bh = sb_bread(sb, 0);
+> > 
+> > Is there any good reasons to use buffer heads like this in new code
+> > vs directly using bios?
+> 
+> As you said, I want it in the page cache.
+> 
+> The reason "why not use read_mapping_page or similar?" is simply
+> read_mapping_page -> .readpage -> (for bdev inode) block_read_full_page
+>  -> create_page_buffers anyway...
+> 
+> sb_bread haven't obsoleted... It has similar function though...
 
->
-> > +          - samsung,s3c2410-rtc
-> > +          - samsung,s3c2416-rtc
-> > +          - samsung,s3c2443-rtc
-> > +          - samsung,s3c6410-rtc
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    description:
-> > +      Must contain a list of phandle and clock specifier for the rtc
-> > +      clock and in the case of a s3c6410 compatible controller, also
-> > +      a source clock.
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      Must contain "rtc" and for a s3c6410 compatible controller,
-> > +      a "rtc_src" sorted in the same order as the clocks property.
-> > +    oneOf:
-> > +      - items:
-> > +          - const: rtc
-> > +      - items:
-> > +          # TODO: This can be in any order matching clocks, how to express it?
->
-> It shouldn't be in any order. Fix the dts files.
+With the different that it keeps you isolated from the buffer_head
+internals.  This seems to be your only direct use of buffer heads,
+which while not deprecated are a bit of an ugly step child.  So if
+you can easily avoid creating a buffer_head dependency in a new
+filesystem I think you should avoid it.
 
-I see, other schemas also require specific ordering.
+> > > +	sbi->build_time = le64_to_cpu(layout->build_time);
+> > > +	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
+> > > +
+> > > +	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
+> > > +	memcpy(sbi->volume_name, layout->volume_name,
+> > > +	       sizeof(layout->volume_name));
+> > 
+> > s_uuid should preferably be a uuid_t (assuming it is a real BE uuid,
+> > if it is le it should be a guid_t).
+> 
+> For this case, I have no idea how to deal with...
+> I have little knowledge about this uuid stuff, so I just copied
+> from f2fs... (Could be no urgent of this field...)
 
->
-> > +          - const: rtc
-> > +          - const: rtc_src
->
-> You should drop all this and add an else clause below.
+Who fills out this field in the on-disk format and how?
 
-Yes
+> The background is Al's comments in erofs v2....
+> (which simplify erofs_fill_super logic)
+> https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
+> 
+> with a specific notation...
+> https://lore.kernel.org/r/20190721040547.GF17978@ZenIV.linux.org.uk/
+> 
+> "
+> > OTOH, for the case of NULL ->s_root ->put_super() won't be called
+> > at all, so in that case you need it directly in ->kill_sb().
+> "
 
->
-> > +
-> > +  interrupts:
-> > +    description:
-> > +      Two interrupt numbers to the cpu should be specified. First
-> > +      interrupt number is the rtc alarm interrupt and second interrupt number
-> > +      is the rtc tick interrupt. The number of cells representing a interrupt
-> > +      depends on the parent interrupt controller.
-> > +    minItems: 2
-> > +    maxItems: 2
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - samsung,s3c6410-rtc
-> > +              - samsung,exynos3250-rtc
-> > +
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          minItems: 2
-> > +          maxItems: 2
-> > +        clock-names:
-> > +          items:
-> > +          - const: rtc
-> > +          - const: rtc_src
->
-> Should be indented 2 more spaces.
-
-Thanks for feedback.
-
-Best regards,
-Krzysztof
+Yes.  Although none of that is relevant for this initial version,
+just after more features are added.
