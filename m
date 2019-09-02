@@ -1,148 +1,74 @@
 Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DEAR_SOMETHING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D65C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A25C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BD4215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236A3215EA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfIBJ2Y (ORCPT
+        id S1731090AbfIBJ2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:28:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:50902 "EHLO foss.arm.com"
+        Mon, 2 Sep 2019 05:28:34 -0400
+Received: from smtp1.orange.ci ([196.201.64.68]:45202 "EHLO smtp1.orange.ci"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729912AbfIBJ2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:28:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B8DE28;
-        Mon,  2 Sep 2019 02:28:23 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB53C3F246;
-        Mon,  2 Sep 2019 02:28:21 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:28:19 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-Message-ID: <20190902092816.GK27757@arm.com>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
- <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
- <201908292224.007EB4D5@keescook>
- <20190830083415.GI27757@arm.com>
- <5ddd0306f42c2b53ffbd8ee8c9b948c1d529cf98.camel@intel.com>
+        id S1730100AbfIBJ2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:28:34 -0400
+X-Greylist: delayed 913 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Sep 2019 05:28:31 EDT
+Received: from WIND-PC ([160.120.23.222])
+        by smtp1.orange.ci  with ESMTP id x829DFpM031328-x829DFpN031328
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Sep 2019 09:13:15 GMT
+Message-Id: <201909020913.x829DFpM031328-x829DFpN031328@smtp1.orange.ci>
+Reply-To: "John Lewis Plc" <purchase@johnlewisspartnership.co.uk>
+From:   "John Lewis Plc" <purchase@johnlewisspartnership.co.uk>
+To:     <linux-kernel@vger.kernel.org>
+Subject: Inquiry.
+Date:   Mon, 2 Sep 2019 09:13:05 0000
+Importance: Normal
+X-Priority: 3 (Normal)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ddd0306f42c2b53ffbd8ee8c9b948c1d529cf98.camel@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-AntiAbuse: Message Originator UID: RI {a2e95-f6f76}
+X-AntiAbuse: Since we wish to continue to provide abuse tracking!
+X-AntiAbuse: Please do not use this header to filter out email
+X-AntiAbuse: Report abuse incidents to mach 5 enterprises
+X-AntiAbuse: This header is intended to track abuse. Include with any abuse report
+X-Mailer: Mach 5 Mailer version 4 RI{a2e95-f6f76}
+Content-Type: text/plain;
+        charset="Windows-1252"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 06:03:27PM +0100, Yu-cheng Yu wrote:
-> On Fri, 2019-08-30 at 09:34 +0100, Dave Martin wrote:
-> > On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
-> > > On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
-> > > > ELF program properties will needed for detecting whether to enable
-> > > > optional architecture or ABI features for a new ELF process.
-> > > > 
-> > > > For now, there are no generic properties that we care about, so do
-> > > > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > > > 
-> > > > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > > > phdrs entry (if any), and notify each property to the arch code.
-> > > > 
-> > > > For now, the added code is not used.
-> > > > 
-> > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > > 
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Thanks for the review.
-> > 
-> > Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
-> > early-terminate the scan if we can, but my feeling so far was that the
-> > scan is cheap, the number of properties is unlikely to be more than a
-> > smallish integer, and the code separation benefits of just calling the
-> > arch code for every property probably likely outweigh the costs of
-> > having to iterate over every property.  We could always optimise it
-> > later if necessary.
-> > 
-> > I need to double-check that there's no way we can get stuck in an
-> > infinite loop with the current code, though I've not seen it in my
-> > testing.  I should throw some malformed notes at it though.
-> 
-> Here is my arch_parse_elf_property() and objdump of the property.
-> The parser works fine.
+Dear Sir,
 
-[...]
+My name is Patrick Lewis, I am the Partnership Director of the famous 
+brand John Lewis Plc.
 
-> int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
->           
->                    bool compat, struct arch_elf_state *state)
-> {
->         if (type
-> != GNU_PROPERTY_X86_FEATURE_1_AND)
->                 return -ENOENT;
+John Lewis Plc is is a UK's largest multi-channel retailer with over 
+50 shops furnished with European products.
 
-For error returns, I was following this convention:
+Could you also send to us all information required to become one of 
+your regular distributors. Please, we would 
+appreciate if you could send us your stock list availability via 
+email?.
 
-	EIO: invalid ELF file
+Indeed we are interested in your products, we would like to know if 
+you can provide them.
+.....................
+Regards,
 
-	ENOEXEC: valid ELF file, but we can't (or won't) support it
+Patrick Lewis
 
-	0: OK, or don't care
-
-This function gets called for every property, including properties that
-the arch code may not be interested in, so for properties you don't care
-about here you should return 0.
-
-> 
->         if (datasz < sizeof(unsigned int))
->                 return -ENOEXEC;
-
-Should this be != ?
-
-According to the draft x86-64 psABI spec [1],
-X86_PROPERTY_FEATURE_1_AND (and all properties based on
-GNU_PROPERTY_X86_UINT32_AND_LO) has data consisting of a single 4-byte
-unsigned integer.
-
->         state->gnu_property = *(unsigned int *)data;
->         return 0;
-> }
->
-> Contents of section .note.gnu.property:
->  400338 04000000 30000000 05000000 474e5500  ....0.......GNU.
->  400348 020000c0 04000000 03000000 00000000  ................
->  400358 000001c0 04000000 00000000 00000000  ................
->  400368 010001c0 04000000 01000000 00000000  ................
-
-Because you return ENOENT except for GNU_PROPERTY_X86_FEATURE_1_AND,
-wouldn't we fail on the second and third properties here?
-(GNU_PROPERTY_X86_ISA_1_USED, GNU_PROPERTY_X86_FEATURE_2_USED if I
-decoded them correctly...)
-
-If not, maybe my code is failing to iterate over all the properties for
-some reason.
-
-Cheers
----Dave
-
-[1] https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI
-https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-draft.pdf
+Managing Director - Partnership Services
+www.johnlewis.com 
+www.johnlewispartnership.co.uk
+Direct-line +44(0) 7404024964
+Fax : +44 0208253410
+sales@salonsdirect.co.uk
