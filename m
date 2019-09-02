@@ -2,113 +2,100 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4C9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB9FC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020A921881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YajbdzbS"
+	by mail.kernel.org (Postfix) with ESMTP id E4E7F21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbfIBOVJ (ORCPT
+        id S1731363AbfIBOWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:21:09 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1409 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbfIBOVI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:21:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6d25560000>; Mon, 02 Sep 2019 07:21:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 02 Sep 2019 07:21:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 02 Sep 2019 07:21:07 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Sep
- 2019 14:21:06 +0000
-Subject: Re: [PATCH 1/1] merge_config.sh: ignore unwanted grep errors
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@collabora.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <4f92e9b3a88e60c8b5962504d77bc596442b0a40.1567023309.git.guillaume.tucker@collabora.com>
- <b1dc3c40-b658-211e-811c-e13083303d48@collabora.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a302a6fe-8f22-9ae6-559f-5b2ad13d5b05@nvidia.com>
-Date:   Mon, 2 Sep 2019 15:21:04 +0100
+        Mon, 2 Sep 2019 10:22:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:55554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbfIBOWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:22:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1B4E337;
+        Mon,  2 Sep 2019 07:22:39 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79FF43F59C;
+        Mon,  2 Sep 2019 07:22:37 -0700 (PDT)
+Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190829111407.17191-1-thierry.reding@gmail.com>
+ <20190829111407.17191-3-thierry.reding@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com>
+Date:   Mon, 2 Sep 2019 15:22:35 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <b1dc3c40-b658-211e-811c-e13083303d48@collabora.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20190829111407.17191-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567434070; bh=d+3lnPHPBX264Bf1cBmGC7sI4oSJKlvQXa/cZ2KLhE0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YajbdzbS0avBPia8RuYQ7j+PVgkwHzYlKv+TgMa7Q336gF7cOk1vleDXAvXQ/rSwh
-         pyucLH2Tx1r3ZulfC/2B8tqXvSRBcFtqol5NIpAPVAc7nMRqSrVx2WV1b/MPkeS6Js
-         oHp1rQnKcnhVpe4Gi8stlj181gG9JUwDL6st6tTEPIwbwpS0i8DcwBaX7c4LdGrB7K
-         WvwPsTN5KbyMXLp2t8f0YvpTYVyIjhVdt/KYWupCX5c5AQeIgpkTM3G6RBZw9pp/0Y
-         LrQ48J8UHbFzjouHjX+NPsvoAmA8/X4m1zU3YUiP6UQ0lAjHhxknUN1rFLWjDHl2S2
-         eo8ZXA/ntwKkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 29/08/2019 12:14, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> For device tree nodes, use the standard of_iommu_get_resv_regions()
+> implementation to obtain the reserved memory regions associated with a
+> device.
 
-On 02/09/2019 15:14, Guillaume Tucker wrote:
-> + Jon Hunter who hit a similar issue
+This covers the window between iommu_probe_device() setting up a default 
+domain and the device's driver finally probing and taking control, but 
+iommu_probe_device() represents the point that the IOMMU driver first 
+knows about this device - there's still a window from whenever the IOMMU 
+driver itself probed up to here where the "unidentified" traffic may 
+have already been disrupted. Some IOMMU drivers have no option but to 
+make the necessary configuration during their own probe routine, at 
+which point a struct device for the display/etc. endpoint may not even 
+exist yet.
 
-Thanks for adding me.
+Robin.
 
-> On 28/08/2019 21:19, Guillaume Tucker wrote:
->> The merge_config.sh script verifies that all the config options have
->> their expected value in the resulting file and prints any issues as
->> warnings.  These checks aren't intended to be treated as errors given
->> the current implementation.  However, since "set -e" was added, if the
->> grep command to look for a config option does not find it the script
->> will then abort prematurely.
->>
->> Handle the case where the grep exit status is non-zero by setting
->> ACTUAL_VAL to an empty string to restore previous functionality.
->>
->> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
->> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->> ---
->>  scripts/kconfig/merge_config.sh | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
->> index d924c51d28b7..d673268d414b 100755
->> --- a/scripts/kconfig/merge_config.sh
->> +++ b/scripts/kconfig/merge_config.sh
->> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
->>  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
->>  
->>  	REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
->> -	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
->> +	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || echo)
-
-Shouldn't this just be 'true' instead of 'echo'?
-
-Cheers
-Jon
-
--- 
-nvpublic
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>   drivers/iommu/dma-iommu.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index de68b4a02aea..31d48e55ab55 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -19,6 +19,7 @@
+>   #include <linux/iova.h>
+>   #include <linux/irq.h>
+>   #include <linux/mm.h>
+> +#include <linux/of_iommu.h>
+>   #include <linux/pci.h>
+>   #include <linux/scatterlist.h>
+>   #include <linux/vmalloc.h>
+> @@ -164,6 +165,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
+>   	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
+>   		iort_iommu_msi_get_resv_regions(dev, list);
+>   
+> +	if (dev->of_node)
+> +		of_iommu_get_resv_regions(dev, list);
+>   }
+>   EXPORT_SYMBOL(iommu_dma_get_resv_regions);
+>   
+> 
