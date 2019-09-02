@@ -6,96 +6,102 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB9FC41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F35C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E7F21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBDC21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731363AbfIBOWl (ORCPT
+        id S1731492AbfIBOW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:22:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:55554 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbfIBOWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:22:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1B4E337;
-        Mon,  2 Sep 2019 07:22:39 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79FF43F59C;
-        Mon,  2 Sep 2019 07:22:37 -0700 (PDT)
-Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
- <20190829111407.17191-3-thierry.reding@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com>
-Date:   Mon, 2 Sep 2019 15:22:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 2 Sep 2019 10:22:58 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:49011 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfIBOW6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:22:58 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 92B5A6000A;
+        Mon,  2 Sep 2019 14:22:54 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 16:22:51 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eugen.Hristev@microchip.com
+Cc:     peda@axentia.se, wsa@the-dreams.de, mark.rutland@arm.com,
+        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v4 2/9] dt-bindings: i2c: add bindings for i2c analog and
+ digital filter
+Message-ID: <20190902142251.GC21922@piout.net>
+References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
+ <1567418773-2427-3-git-send-email-eugen.hristev@microchip.com>
+ <9a9c209c-2fb8-0a4c-4e0a-b04fefda3360@axentia.se>
+ <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829111407.17191-3-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 12:14, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> For device tree nodes, use the standard of_iommu_get_resv_regions()
-> implementation to obtain the reserved memory regions associated with a
-> device.
+Eugen,
 
-This covers the window between iommu_probe_device() setting up a default 
-domain and the device's driver finally probing and taking control, but 
-iommu_probe_device() represents the point that the IOMMU driver first 
-knows about this device - there's still a window from whenever the IOMMU 
-driver itself probed up to here where the "unidentified" traffic may 
-have already been disrupted. Some IOMMU drivers have no option but to 
-make the necessary configuration during their own probe routine, at 
-which point a struct device for the display/etc. endpoint may not even 
-exist yet.
-
-Robin.
-
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->   drivers/iommu/dma-iommu.c | 3 +++
->   1 file changed, 3 insertions(+)
+On 02/09/2019 14:15:14+0000, Eugen.Hristev@microchip.com wrote:
+> On 02.09.2019 13:49, Peter Rosin wrote:
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index de68b4a02aea..31d48e55ab55 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -19,6 +19,7 @@
->   #include <linux/iova.h>
->   #include <linux/irq.h>
->   #include <linux/mm.h>
-> +#include <linux/of_iommu.h>
->   #include <linux/pci.h>
->   #include <linux/scatterlist.h>
->   #include <linux/vmalloc.h>
-> @@ -164,6 +165,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
->   	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
->   		iort_iommu_msi_get_resv_regions(dev, list);
->   
-> +	if (dev->of_node)
-> +		of_iommu_get_resv_regions(dev, list);
->   }
->   EXPORT_SYMBOL(iommu_dma_get_resv_regions);
->   
+> > On 2019-09-02 12:12, Eugen.Hristev@microchip.com wrote:
+> >> From: Eugen Hristev <eugen.hristev@microchip.com>
+> >>
+> >> Some i2c controllers have a built-in digital or analog filter.
+> >> This is specifically required depending on the hardware PCB/board.
+> >> Some controllers also allow specifying the maximum width of the
+> >> spikes that can be filtered. The width length can be specified in nanoseconds.
+> >>
+> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/i2c/i2c.txt | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+> >> index 44efafd..8dbff67 100644
+> >> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> >> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> >> @@ -55,6 +55,17 @@ wants to support one of the below features, it should adapt the bindings below.
+> >>   	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+> >>   	specification.
+> >>   
+> >> +- i2c-analog-filter
+> >> +	Enable analog filter for i2c lines.
+> >> +
+> >> +- i2c-digital-filter
+> >> +	Enable digital filter for i2c lines.
+> >> +
+> >> +- i2c-filter-width-ns
+> >> +	Width of spikes which can be filtered by either digital or analog
+> >> +	filters (i2c-analog-filtr or i2c-digital-filtr). This width is specified
+> > 
+> > filtr -> filter (two instances)
+> > 
+> > What if you want/need to have different bandwidth for the digital and analog
+> > filters? After all, this is a generic binding...
 > 
+> For our needs, this is enough: the purpose of the filters is to avoid 
+> noise on the lines, the noise is as big as it is for the digital and for 
+> the analog filters, since we use an absolute measurement for them. So I 
+> do not know how useful it would be to make a difference.
+> 
+
+You are adding generic properties so they have to be generic and not
+tied to your particular use case.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
