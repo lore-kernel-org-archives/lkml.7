@@ -2,120 +2,142 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C9FC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32FDC3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0382173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62F12173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfIBHjZ (ORCPT
+        id S1729845AbfIBHjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:39:25 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:39637 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729374AbfIBHjZ (ORCPT
+        Mon, 2 Sep 2019 03:39:35 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52047 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729787AbfIBHje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:39:25 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x827dGbd055089;
-        Mon, 2 Sep 2019 15:39:16 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id D72D1393744B8AE61146;
-        Mon,  2 Sep 2019 15:39:16 +0800 (CST)
-In-Reply-To: <CAFLxGvyAk33SZY2J-WYzKMW6N9mKiJ=y0XfmMd8RjUVV2Rp5vg@mail.gmail.com>
-References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw> <20190824130329.68f310aa@xps13> <OF22C5A579.E2E7676F-ON48258465.002F7F69-48258465.00322849@mxic.com.tw> <20190830115100.3fec9bf1@xps13> <OF08E1C5EC.4DAEB179-ON48258469.0025AFFA-48258469.0025D2F2@mxic.com.tw> <CAFLxGvyAk33SZY2J-WYzKMW6N9mKiJ=y0XfmMd8RjUVV2Rp5vg@mail.gmail.com>
-To:     "Richard Weinberger" <richard.weinberger@gmail.com>
-Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        linux-mtd@lists.infradead.org,
-        "Marek Vasut" <marek.vasut@gmail.com>,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        "Richard Weinberger" <richard@nod.at>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>
-Subject: Re: [PATCH] Add support for Macronix NAND randomizer
+        Mon, 2 Sep 2019 03:39:34 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 25931816D6; Mon,  2 Sep 2019 09:39:18 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 09:39:31 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Mihai Carabas <mihai.carabas@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, ashok.raj@intel.com,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+        patrick.colp@oracle.com, kanth.ghatraju@oracle.com,
+        Jon.Grimm@amd.com, Thomas.Lendacky@amd.com
+Subject: Re: [PATCH] Parallel microcode update in Linux
+Message-ID: <20190902073931.GA15850@amd>
+References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
+ <20190901172547.GD1047@bug>
+ <5BACA033-7613-49A9-801C-9F75F4306909@oracle.com>
 MIME-Version: 1.0
-X-KeepSent: D9829D6A:151B1372-48258469:0029F27D;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFD9829D6A.151B1372-ON48258469.0029F27D-48258469.002A0CDA@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 2 Sep 2019 15:39:18 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/09/02 PM 03:39:16,
-        Serialize complete at 2019/09/02 PM 03:39:16
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x827dGbd055089
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Disposition: inline
+In-Reply-To: <5BACA033-7613-49A9-801C-9F75F4306909@oracle.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Richard,
- 
-> Subject
-> 
-> Re: [PATCH] Add support for Macronix NAND randomizer
-> 
-> On Mon, Sep 2, 2019 at 8:54 AM <masonccyang@mxic.com.tw> wrote:
-> > > >                 nand@0 {
-> > > >                         reg = <0>;
-> > > >                         nand-reliability = "randomizer";
-> > >
-> > >                           mxic,enable-randomizer-otp;
-> > >
-> > > Would be better (with the proper documentation in the bindings).
-> > >
-> >
-> > okay, thanks for your opinions.
-> 
-> Please document also when/why one wants to enable the randomizer.
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-okay, sure.
+Hi!
 
-> 
-> -- 
-> Thanks,
-> //richard
+> >> +       u64 p0, p1;
+> >>        int ret;
+> >>=20
+> >>        atomic_set(&late_cpus_in,  0);
+> >>        atomic_set(&late_cpus_out, 0);
+> >>=20
+> >> +       p0 =3D rdtsc_ordered();
+> >> +
+> >>        ret =3D stop_machine_cpuslocked(__reload_late, NULL, cpu_online=
+_mask);
+> >> +
+> >> +       p1 =3D rdtsc_ordered();
+> >> +
+> >>        if (ret > 0)
+> >>                microcode_check();
+> >>=20
+> >>        pr_info("Reload completed, microcode revision: 0x%x\n", boot_cp=
+u_data.microcode);
+> >>=20
+> >> +       pr_info("p0: %lld, p1: %lld, diff: %lld\n", p0, p1, p1 - p0);
+> >> +
+> >>        return ret;
+> >> }
+> >>=20
+> >> We have used a machine with a broken microcode in BIOS and no microcod=
+e in
+> >> initramfs (to bypass early loading).
+> >>=20
+> >> Here are the results for parallel loading (we made two measurements):
+> >=20
+> >> [   18.197760] microcode: updated to revision 0x200005e, date =3D 2019=
+-04-02
+> >> [   18.201225] x86/CPU: CPU features have changed after loading microc=
+ode, but might not take effect.
+> >> [   18.201230] microcode: Reload completed, microcode revision: 0x2000=
+05e
+> >> [   18.201232] microcode: p0: 118138123843052, p1: 118138153732656, di=
+ff: 29889604
+> >=20
+> >> Here are the results of serial loading:
+> >>=20
+> >> [   17.542518] microcode: updated to revision 0x200005e, date =3D 2019=
+-04-02
+> >> [   17.898365] x86/CPU: CPU features have changed after loading microc=
+ode, but might not take effect.
+> >> [   17.898370] microcode: Reload completed, microcode revision: 0x2000=
+05e
+> >> [   17.898372] microcode: p0: 149220216047388, p1: 149221058945422, di=
+ff: 842898034
+> >>=20
+> >> One can see that the difference is an order magnitude.
+> >=20
+> > Well, that's impressive, but it seems to finish 300 msec later? Where d=
+oes that difference
+> > come from / how much real time do you gain by this?
+>=20
+> The difference comes from the large amount of cores/threads the machine h=
+as: 72 in this case, but there are machines with more. As the commit messag=
+e says initially the microcode was applied serially one by one and now the =
+microcode is updated in parallel on all cores.
+>=20
+> 300ms seems nothing but it is enough to cause disruption in some critical=
+ services (e.g. storage) - 300ms in which we do not execute anything on CPU=
+s. Also this 300ms is increasing when the machine is fully loaded with gues=
+ts.
+>=20
 
-best regards,
-Mason
+Yes, but if you look at the dmesgs I quoted, paralel microcode update
+actually finished 300msec _later_.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-CONFIDENTIALITY NOTE:
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Macronix International Co., Ltd.
+iEYEARECAAYFAl1sxzMACgkQMOfwapXb+vInxgCfYqV8iQD034oFJ7fn1Eom+E4C
+4LwAn0bvqEXNfSVvV6tJGn6npo+HELO7
+=9hh5
+-----END PGP SIGNATURE-----
 
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+--azLHFNyN32YCQGCU--
