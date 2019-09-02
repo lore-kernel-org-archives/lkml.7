@@ -2,96 +2,68 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2EDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A31C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CEB217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AEE21881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567439986;
-	bh=IyodhKhyCy5Pi4r8LmuLWce9enmROhwre+6shdmvqAM=;
+	s=default; t=1567440037;
+	bh=5U5wL+Lav8vc8FrVzZiXNl6k4DkKZxyIr97Ik1CVkR8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MrIbuBELVaNPSB2VyqLkJH08ZoTShCTQEPq+v4VIDoHWrl2wwknv3AI8wgstUlICE
-	 wvJs4AGlutzUcADiYsrsr6mhyZKjFitDj22xGVmkRwyUuQMveQGpnQpk2lWsJhh73a
-	 h0iij3UY+flB88pT0/Z0O12Urqm2791b0TEKhfCs=
+	b=e4fFjhTzN9FnWh0P8MXNhTI0NNkvIeLZfiM+8qHkgx3MT7a3cbTKnmp5i1ZPcUJhb
+	 zPsSHf34NrvZ5tb+BSTYWdSzV4zdZytsyyxdvVj4xUX44k4lmQRoFSC4a6dzbM2UuK
+	 Yv+TLC8p19fgpOWF3jomVmVMIIyPPwcRLXVLNSaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbfIBP7p (ORCPT
+        id S1726272AbfIBQAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:59:45 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44558 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfIBP7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:59:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=y50wGX0Un/A4Fwy+umw5sbmAokumtcB85dCMq1fL+es=; b=X4u2QxD90PtZskzs/CUyD9cRg
-        HkHr8kVkr3cHoHW/V4YK4GV1ZVvshyNHhBbJrIUw6REv51XdmHEUZZgePfiLFGzgFWPBjZfwli802
-        7/QbFThTZylR+b2rL2glT7Fso37Fl4tHwlMwjSvYvSkG5tqTkOJTkgXICtUfsIDEby+Ec=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i4ojy-0003gc-MT; Mon, 02 Sep 2019 15:59:38 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id B818A2742CCB; Mon,  2 Sep 2019 16:59:37 +0100 (BST)
-Date:   Mon, 2 Sep 2019 16:59:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2] merge_config.sh: Check error codes from make
-Message-ID: <20190902155937.GD5819@sirena.co.uk>
-References: <20190819200650.18156-1-broonie@kernel.org>
- <b744485d-3e57-469f-5573-6d8a32ba0aef@nvidia.com>
+        Mon, 2 Sep 2019 12:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbfIBQAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 12:00:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2501A217D7;
+        Mon,  2 Sep 2019 16:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567440034;
+        bh=5U5wL+Lav8vc8FrVzZiXNl6k4DkKZxyIr97Ik1CVkR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jyJIVH01rQHFkDbbkIGWWmoKXDHWvpyOA/lurrWX3CEEpDxAYQ+25OiP9Bd13EuV3
+         ySI41/OeMWlserWFVwt4v9Un20NTwO4ieCbyezUzlhtia2P8ElcvcFkeakTEneJBdL
+         ydYYQwVlG6/va9PNykJOK34/r78OQLEW52F/z1jA=
+Date:   Mon, 2 Sep 2019 18:00:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     stable@vger.kernel.org,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Wenwen Wang <wang6495@umn.edu>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Fix an OOB bug in parse_audio_mixer_unit
+Message-ID: <20190902160029.GB21884@kroah.com>
+References: <20190830214649.27761-1-benquike@gmail.com>
+ <CAKpmkkVQ2fbL47JrbVMrfCenPShjjwfkS9MY0Ay5MpyFjftxpg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gE7i1rD7pdK0Ng3j"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b744485d-3e57-469f-5573-6d8a32ba0aef@nvidia.com>
-X-Cookie: Lost ticket pays maximum rate.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKpmkkVQ2fbL47JrbVMrfCenPShjjwfkS9MY0Ay5MpyFjftxpg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 30, 2019 at 05:49:59PM -0400, Hui Peng wrote:
+> This is the backported patch of the following bug to v4.4.x and v4.14.x:
+> daac07156b33 ("ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit")
 
---gE7i1rD7pdK0Ng3j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, also now queued up to 4.9.y, you forgot that one :)
 
-On Mon, Sep 02, 2019 at 03:06:28PM +0100, Jon Hunter wrote:
-
-> If the intent is to catch errors returned by make, then one simple fix would be ...
-
-I proposed a simpler version originally that only caught errors from
-make, this version was suggested by Yamada-san.  Like Guillaume says he
-posted a proposed fix for this last week.
-
---gE7i1rD7pdK0Ng3j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1tPGgACgkQJNaLcl1U
-h9Ay0QgAg/xxPeqP2NZDIjMq3QJRYuPGW0WzVxE5ZNhSp4XYeNPplJo8koUkwApf
-FmvBUl0DJSJHwkh/jZNFm+Z6G5T0DrKoM+lgxyzYvDLH7Up6hVUx3Iw5i0v1fuys
-kjtgallTF9Jd75gYIYeX1mJWc5HChvKQyx8Q9Vy3UYePbUQ/S/LNZJdquESGSPiq
-Nb1Aql0BCqhUVMVKwXf9rk9/fEkvvD/rttciTOfHZiCCqj+eyu5hPrcLXvZgh2VF
-ntZSNe61u49S3kwhEN0R8JX0ViZvVpuKE4YqbTccEmVo+A2D7y5NI1na3ODEm/At
-jcGbsUlnWjeSpLkD7go+jsqV3ny9Rg==
-=jOvy
------END PGP SIGNATURE-----
-
---gE7i1rD7pdK0Ng3j--
+greg k-h
