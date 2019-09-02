@@ -2,134 +2,98 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D84C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B06BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46544217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A80C217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 16:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfIBQE5 (ORCPT
+        id S1726405AbfIBQGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 12:04:57 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48561 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfIBQE5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 12:04:57 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i4oow-0001oT-VY; Mon, 02 Sep 2019 18:04:46 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i4oov-0002kp-AO; Mon, 02 Sep 2019 18:04:45 +0200
-Date:   Mon, 2 Sep 2019 18:04:45 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sam Shih <sam.shih@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
-Message-ID: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
- <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
- <20190827183924.GA24178@bogus>
+        Mon, 2 Sep 2019 12:06:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54378 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfIBQGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 12:06:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 09:06:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="187029255"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 02 Sep 2019 09:06:07 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4oqE-0004aN-9z; Mon, 02 Sep 2019 19:06:06 +0300
+Date:   Mon, 2 Sep 2019 19:06:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Peter Cai <peter@typeblog.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
+Message-ID: <20190902160606.GR2680@smile.fi.intel.com>
+References: <20190831030916.13172-1-peter@typeblog.net>
+ <20190902100141.GW2680@smile.fi.intel.com>
+ <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190827183924.GA24178@bogus>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
-> On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
-> > From: Ryder Lee <ryder.lee@mediatek.com>
+On Mon, Sep 02, 2019 at 03:36:24PM +0200, Linus Walleij wrote:
+> On Mon, Sep 2, 2019 at 12:01 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
+> > > On GPD P2 Max, the firmware could not reset the touch panel correctly.
+> > > The kernel needs to take on the job instead, but the GpioInt definition
+> > > in DSDT specifies ActiveHigh while the GPIO pin should actually be
+> > > ActiveLow.
+> > >
+> > > We need to override the polarity defined by DSDT. The GPIO driver
+> > > already allows defining polarity in acpi_gpio_params, but the option is
+> > > not applied to GpioInt.
+> > >
+> > > This patch adds a new quirk that enables the polarity specified in
+> > > acpi_gpio_params to also be applied to GpioInt.
+> >
+> > Thank you for an update!
+> >
+> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > on the condition that Dmitry and other input / Goodix developers are okay with
+> > the approach in general.
 > 
-> The subject should indicate this is for Mediatek.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> In case Dmitry needs to merge this.
 > 
-> > 
-> > This adds a property "num-pwms" in example so that we could
-> > specify the number of PWM channels via device tree.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > ---
-> > Changes since v5:
-> > - Add an Acked-by tag
-> > - This file is original v4 patch 5/10
-> > (https://patchwork.kernel.org/patch/11102577/)
-> > 
-> > Change-Id: I429048afeffa96f3f14533910efe242f88776043
-> > ---
-> >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > index 991728cb46cb..ea95b490a913 100644
-> > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > @@ -14,12 +14,12 @@ Required properties:
-> >                  has no clocks
-> >     - "top": the top clock generator
-> >     - "main": clock used by the PWM core
-> > -   - "pwm1-8": the eight per PWM clocks for mt2712
-> > -   - "pwm1-6": the six per PWM clocks for mt7622
-> > -   - "pwm1-5": the five per PWM clocks for mt7623
-> > +   - "pwm1-N": the PWM clocks for each channel
-> > +   where N starting from 1 to the maximum number of PWM channels
-> 
-> Once converted to schema, you are going to be back to listing them out.
-> 
-> >   - pinctrl-names: Must contain a "default" entry.
-> >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
-> >     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> > + - num-pwms: the number of PWM channels.
-> 
-> You can't add new required properties without breaking compatibility. 
-> 
-> You already have to imply the number of channels from the compatible (or 
-> number of clocks) and you have to keep doing so to maintain 
-> compatibility, so why not just keep doing that for new chips?
+> Or should I simply merge this patch to the GPIO tree?
 
-This was a suggestion by me. The driver still handles compatibility
-(i.e. falls back to the number of PWMs that was implied by the
-compatible before). Given that there are various drivers that all solve
-the same problem (i.e. different variants with different number of PWMs)
-I thought it would be a good idea to introduce a property in the device
-tree that specifies this number.
-
-Only for newly introduced compatibles the num-pwms property is really
-required. Differentiating the ones that need it and the ones that don't
-seems over-engineered to me.
-
-(BTW, using the number of clks doesn't really work because there are
-also some variants without clocks. It is still under discussion if in
-this case dummy-clocks should be provided IIRC.)
-
-Best regards
-Uwe
+For my opinion Input subsystem should decide how to proceed with this.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+With Best Regards,
+Andy Shevchenko
+
+
