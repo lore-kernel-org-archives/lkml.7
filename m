@@ -2,94 +2,55 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E235C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4150C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7BD2184D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17322184D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbfIBD21 (ORCPT
+        id S1729386AbfIBD3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 23:28:27 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:32830 "EHLO inva020.nxp.com"
+        Sun, 1 Sep 2019 23:29:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42065 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729305AbfIBD1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 23:27:43 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 04C6C1A0651;
-        Mon,  2 Sep 2019 05:27:41 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7AD681A0650;
-        Mon,  2 Sep 2019 05:27:32 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 498C1402BE;
-        Mon,  2 Sep 2019 11:27:22 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1728926AbfIBD3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:29:37 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 46MFv23NDjz9sNF; Mon,  2 Sep 2019 13:29:33 +1000 (AEST)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 136bc0397ae21dbf63ca02e5775ad353a479cd2f
+In-Reply-To: <20190820021326.6884-3-bauerman@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         linuxppc-dev@lists.ozlabs.org
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v3 03/11] PCI: designware-ep: Move the function of getting MSI capability forward
-Date:   Mon,  2 Sep 2019 11:17:08 +0800
-Message-Id: <20190902031716.43195-4-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190902031716.43195-1-xiaowei.bao@nxp.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     Anshuman Khandual <anshuman.linux@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v4 02/16] powerpc/pseries: Introduce option to build secure virtual machines
+Message-Id: <46MFv23NDjz9sNF@ozlabs.org>
+Date:   Mon,  2 Sep 2019 13:29:33 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the function of getting MSI capability to the front of init
-function, because the init function of the EP platform driver will use
-the return value by the function of getting MSI capability.
+On Tue, 2019-08-20 at 02:13:12 UTC, Thiago Jung Bauermann wrote:
+> Introduce CONFIG_PPC_SVM to control support for secure guests and include
+> Ultravisor-related helpers when it is selected
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-v2:
- - No change.
-v3:
- - No change.
+Patch 2-14 & 16 applied to powerpc next, thanks.
 
- drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+https://git.kernel.org/powerpc/c/136bc0397ae21dbf63ca02e5775ad353a479cd2f
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 55b23ce..c3bc7bd 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -624,6 +624,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	if (ret < 0)
- 		epc->max_functions = 1;
- 
-+	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-+
-+	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
-+
- 	if (ep->ops->ep_init)
- 		ep->ops->ep_init(ep);
- 
-@@ -640,9 +644,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
- 		return -ENOMEM;
- 	}
--	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
--
--	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
- 
- 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
- 	if (offset) {
--- 
-2.9.5
-
+cheers
