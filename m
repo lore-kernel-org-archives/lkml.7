@@ -2,148 +2,65 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BBAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B7C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EA22190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705F920674
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="PuLFFvJj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fSM/lWN9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sCslFkJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfIBUGk (ORCPT
+        id S1727347AbfIBUIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 16:06:40 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:48373 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727188AbfIBUGj (ORCPT
+        Mon, 2 Sep 2019 16:08:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36160 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfIBUIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 16:06:39 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 1320362E;
-        Mon,  2 Sep 2019 16:06:38 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 02 Sep 2019 16:06:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=FAvLTBXJMFp5nXcvx3Bo9G6BMhn
-        oFVSkwgAThvpzQ0E=; b=PuLFFvJjjydqsD5PPNNZ/EcQZjy+LhTeYQefaKT8Qp9
-        ZJAj6L5Q0pWL4b+GcJ9bRp6JlDflgcd5CkdnvC1VIqsy+RciDYu4Qw4DNr9wOJCT
-        9N7f+Ng+yKQz0lmoAhfrpmIBn5ALb4ULIba8Uh6SceejMi8UsKqN3G+5Bfr4ttQp
-        4dcXulj4ML9ZHPiUPCa3F7AZ8wi/69c2H3dP+mAhgjKtTiuJ0BhYCDjwMmxw3Gi2
-        1M/O5G6DodkOt6hbEeSWjPTk42lIjmnmcfaFJpV+U6CMBv9Iv+7UXOJ3vMDYgDJU
-        U8n7Tg2uzYaUMABUToOmZlzRSxAmJcDvIzmCAeXrSng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=FAvLTB
-        XJMFp5nXcvx3Bo9G6BMhnoFVSkwgAThvpzQ0E=; b=fSM/lWN9/3VELwVFPVJ+4+
-        1dNc2eE/MONH7bQIu9vMRBceWDnizYiaWFw7MxTApeEqMxDRAvuejedQZXCDvdQf
-        YcyTyrl231eIc8ksNVntlyokmcp9AplYkaouSnPE67enZCVclVtJamWzBWNsKyCe
-        LMxA0ZvGqdHYYZMlvo/Rxx2BFgNGIIqJ1W7VRr1H8UBb0BplWeaSBVmOBCF/p9rR
-        GkXLybx2cyWjtZ73VKN+b54Zh8hKgGWkd1BPndKw/6DMb4faImPh9+w8thd0uXXB
-        3ak04VjeonTWMqxK3rmgEJkUyKeWvUFUDOkQhC9Pfg0H/DO1G/BxbgbqZjcMH5ag
-        ==
-X-ME-Sender: <xms:TXZtXXhBJm3zcYNoJEFv2vrb5bCNo_IehKJ90wRZYc42iuKe1nd-aA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejtddgudeghecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:TXZtXf9uAIxB67ewV0loxu7hjkDYEpHTKSgix7j8J6B_Zno3VS-Eqg>
-    <xmx:TXZtXdP43TexLhjYdeypHMTmntaNRVRyBm08QRRSLOuRbvlO54lCjw>
-    <xmx:TXZtXapcOrZ2PIdbElxYG3fXAAG0KYWdvRevkc5Prbp77Tb5cPxktA>
-    <xmx:TXZtXY2szrMMwnkilSWtjDljCPNpRJHXLc2FYwd6pGBbZ6ge_427Qw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 196D0D6005F;
-        Mon,  2 Sep 2019 16:06:37 -0400 (EDT)
-Date:   Mon, 2 Sep 2019 22:06:35 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, Hui Peng <benquike@gmail.com>,
-        security@kernel.org, Mathias Payer <mathias.payer@nebelwelt.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Mon, 2 Sep 2019 16:08:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bwO6paLntB9VHU+vDBa67wTZajbeuF1FpPf0mZJIk0w=; b=sCslFkJnLr/LX7OsPedVuZai8
+        pHXK0ahc+g1X+5fJjkqzYcoaFslGFu7+1+LmmXaIDHDtRtf6Gj2Vt8KQ5v5k0XYm8cNHvz0dMfYnx
+        2fMwBcJbPGqLK9komjJUR6BkzWbQaI99xRNswidL1EzoAJNF1Y9cnzdllKG7VFDeHxHKJoPZVsmKK
+        nrAQeLriv7uMbQU/FV063KkuJpLwDsZU5JrELh/LqYcF7cZSrZcyTrzRQ8mtWoKM8R3h6sckxdjbT
+        szlfuh30LVLphVEPuVFIuD8458lxY75PNFUOyemWFQ9ooL6jW5TOUybShhepI7ZXBCaLwJIkgu7Ne
+        8qyzWR1ww==;
+Received: from [2001:4bb8:18c:1755:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i4scD-0007MG-4R; Mon, 02 Sep 2019 20:07:56 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix a double free bug in rsi_91x_deinit
-Message-ID: <20190902200635.GA29465@kroah.com>
-References: <20190819220230.10597-1-benquike@gmail.com>
- <20190831181852.GA22160@roeck-us.net>
- <87k1asqw87.fsf@kamboji.qca.qualcomm.com>
- <385361d3-048e-9b3f-c749-aa5861e397e7@roeck-us.net>
- <20190902184722.GC5697@kroah.com>
- <804fb4dc-23e5-3442-c64e-9857d61d6b6c@roeck-us.net>
+Subject: remove various dma_declare_coherent related exports
+Date:   Mon,  2 Sep 2019 22:07:42 +0200
+Message-Id: <20190902200746.16185-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <804fb4dc-23e5-3442-c64e-9857d61d6b6c@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 12:32:37PM -0700, Guenter Roeck wrote:
-> On 9/2/19 11:47 AM, Greg KH wrote:
-> > On Sun, Sep 01, 2019 at 07:08:29AM -0700, Guenter Roeck wrote:
-> > > On 9/1/19 1:03 AM, Kalle Valo wrote:
-> > > > Guenter Roeck <linux@roeck-us.net> writes:
-> > > > 
-> > > > > On Mon, Aug 19, 2019 at 06:02:29PM -0400, Hui Peng wrote:
-> > > > > > `dev` (struct rsi_91x_usbdev *) field of adapter
-> > > > > > (struct rsi_91x_usbdev *) is allocated  and initialized in
-> > > > > > `rsi_init_usb_interface`. If any error is detected in information
-> > > > > > read from the device side,  `rsi_init_usb_interface` will be
-> > > > > > freed. However, in the higher level error handling code in
-> > > > > > `rsi_probe`, if error is detected, `rsi_91x_deinit` is called
-> > > > > > again, in which `dev` will be freed again, resulting double free.
-> > > > > > 
-> > > > > > This patch fixes the double free by removing the free operation on
-> > > > > > `dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
-> > > > > > used in `rsi_disconnect`, in that code path, the `dev` field is not
-> > > > > >    (and thus needs to be) freed.
-> > > > > > 
-> > > > > > This bug was found in v4.19, but is also present in the latest version
-> > > > > > of kernel.
-> > > > > > 
-> > > > > > Reported-by: Hui Peng <benquike@gmail.com>
-> > > > > > Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-> > > > > > Signed-off-by: Hui Peng <benquike@gmail.com>
-> > > > > 
-> > > > > FWIW:
-> > > > > 
-> > > > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > > > > 
-> > > > > This patch is listed as fix for CVE-2019-15504, which has a CVSS 2.0 score
-> > > > > of 10.0 (high) and CVSS 3.0 score of 9.8 (critical).
-> > > > 
-> > > > A double free in error path is considered as a critical CVE issue? I'm
-> > > > very curious, why is that?
-> > > > 
-> > > 
-> > > You'd have to ask the people assigning CVSS scores. However, if the memory
-> > > was reallocated, that reallocated memory (which is still in use) is freed.
-> > > Then all kinds of bad things can happen.
-> > 
-> > Yes, but moving from "bad things _can_ happen" to "bad things happen" in
-> > an instance like this will be a tough task.  It also requires physical
-> > access to the machine.
-> > 
-> 
-> Is this correct even with usbip enabled ?
+Hi all,
 
-Who has usbip enabled anywhere?  :)
-
-I don't know if usbip can trigger this type of thing, maybe someone
-needs to test that...
-
-thanks,
-
-greg k-h
+this is a refresh of and older series that tries to ensure that
+drivers don't use the dma_declare_coherent function, which is
+intende for platform code.  Unfortunately we've actually grown
+a user in remoteproc since then.  While the maintainers havee
+promised to fix that up that hasn't happened so far, so for now
+this disabled the modular build for remoteproc until that has been
+solved.
