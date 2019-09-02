@@ -2,195 +2,152 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D28EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1D7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F1A21670
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC8421670
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbfIBOev (ORCPT
+        id S1731205AbfIBOhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:34:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35222 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726916AbfIBOev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:34:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7F9CACC1;
-        Mon,  2 Sep 2019 14:34:49 +0000 (UTC)
-Subject: Re: [PATCH 4/5] drm/qxl: use drm_gem_object_funcs callbacks
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@redhat.com>
-References: <20190902124126.7700-1-kraxel@redhat.com>
- <20190902124126.7700-5-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <0a9d97c7-26a4-bee6-e9a2-120abbd5277c@suse.de>
-Date:   Mon, 2 Sep 2019 16:34:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 10:37:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57434 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727393AbfIBOhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:37:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9BC4F2A09B3;
+        Mon,  2 Sep 2019 14:37:05 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DEB77608C1;
+        Mon,  2 Sep 2019 14:37:00 +0000 (UTC)
+Date:   Mon, 2 Sep 2019 16:36:58 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 5/6] mdev: Update sysfs documentation
+Message-ID: <20190902163658.51fc48d2.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB4866372C521F59491838C8E4D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190829111904.16042-1-parav@mellanox.com>
+        <20190829111904.16042-6-parav@mellanox.com>
+        <20190830144927.7961193e.cohuck@redhat.com>
+        <AM0PR05MB4866372C521F59491838C8E4D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190902124126.7700-5-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="5pfoTXHkUA37GgICinr9tBPf2MBxv9lt0"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 02 Sep 2019 14:37:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---5pfoTXHkUA37GgICinr9tBPf2MBxv9lt0
-Content-Type: multipart/mixed; boundary="VYtJRpb5LuEH9QQwQSr1D2uADEAmevApW";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>, open list
- <linux-kernel@vger.kernel.org>,
- "open list:DRM DRIVER FOR QXL VIRTUAL GPU"
- <virtualization@lists.linux-foundation.org>,
- "open list:DRM DRIVER FOR QXL VIRTUAL GPU"
- <spice-devel@lists.freedesktop.org>, Dave Airlie <airlied@redhat.com>
-Message-ID: <0a9d97c7-26a4-bee6-e9a2-120abbd5277c@suse.de>
-Subject: Re: [PATCH 4/5] drm/qxl: use drm_gem_object_funcs callbacks
-References: <20190902124126.7700-1-kraxel@redhat.com>
- <20190902124126.7700-5-kraxel@redhat.com>
-In-Reply-To: <20190902124126.7700-5-kraxel@redhat.com>
+On Fri, 30 Aug 2019 13:10:17 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
---VYtJRpb5LuEH9QQwQSr1D2uADEAmevApW
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Friday, August 30, 2019 6:19 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: Re: [PATCH v2 5/6] mdev: Update sysfs documentation
+> > 
+> > On Thu, 29 Aug 2019 06:19:03 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > Updated documentation for optional read only sysfs attribute.  
+> > 
+> > I'd probably merge this into the patch introducing the attribute.
+> >   
+> Ok. I will spin v3.
+> 
+> > >
+> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > ---
+> > >  Documentation/driver-api/vfio-mediated-device.rst | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/driver-api/vfio-mediated-device.rst
+> > > b/Documentation/driver-api/vfio-mediated-device.rst
+> > > index 25eb7d5b834b..0ab03d3f5629 100644
+> > > --- a/Documentation/driver-api/vfio-mediated-device.rst
+> > > +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> > > @@ -270,6 +270,7 @@ Directories and Files Under the sysfs for Each mdev  
+> > Device  
+> > >           |--- remove
+> > >           |--- mdev_type {link to its type}
+> > >           |--- vendor-specific-attributes [optional]
+> > > +         |--- alias [optional]  
+> > 
+> > "optional" implies "not always present" to me, not "might return a read error if
+> > not available". Don't know if there's a better way to tag this? Or make it really
+> > optional? :)  
+> 
+> May be write it as,
+> 
+> alias [ optional when requested by parent ]
 
-This patch seems unrelated.
+I'm not sure what 'optional when requested' is supposed to mean...
+maybe something like 'content optional' or so?
 
-Am 02.09.19 um 14:41 schrieb Gerd Hoffmann:
-> Switch qxl to use drm_gem_object_funcs callbacks
-> instead of drm_driver callbacks.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/qxl/qxl_drv.c    |  8 --------
->  drivers/gpu/drm/qxl/qxl_object.c | 12 ++++++++++++
->  2 files changed, 12 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_dr=
-v.c
-> index 2b726a51a302..996d428fa7e6 100644
-> --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> @@ -258,16 +258,8 @@ static struct drm_driver qxl_driver =3D {
->  #endif
->  	.prime_handle_to_fd =3D drm_gem_prime_handle_to_fd,
->  	.prime_fd_to_handle =3D drm_gem_prime_fd_to_handle,
-> -	.gem_prime_pin =3D qxl_gem_prime_pin,
-> -	.gem_prime_unpin =3D qxl_gem_prime_unpin,
-> -	.gem_prime_get_sg_table =3D qxl_gem_prime_get_sg_table,
->  	.gem_prime_import_sg_table =3D qxl_gem_prime_import_sg_table,
-> -	.gem_prime_vmap =3D qxl_gem_prime_vmap,
-> -	.gem_prime_vunmap =3D qxl_gem_prime_vunmap,
->  	.gem_prime_mmap =3D qxl_gem_prime_mmap,
-> -	.gem_free_object_unlocked =3D qxl_gem_object_free,
-> -	.gem_open_object =3D qxl_gem_object_open,
-> -	.gem_close_object =3D qxl_gem_object_close,
->  	.fops =3D &qxl_fops,
->  	.ioctls =3D qxl_ioctls,
->  	.irq_handler =3D qxl_irq_handler,
-> diff --git a/drivers/gpu/drm/qxl/qxl_object.c b/drivers/gpu/drm/qxl/qxl=
-_object.c
-> index 548dfe6f3b26..29aab7b14513 100644
-> --- a/drivers/gpu/drm/qxl/qxl_object.c
-> +++ b/drivers/gpu/drm/qxl/qxl_object.c
-> @@ -77,6 +77,17 @@ void qxl_ttm_placement_from_domain(struct qxl_bo *qb=
-o, u32 domain, bool pinned)
->  	}
->  }
-> =20
-> +static const struct drm_gem_object_funcs qxl_object_funcs =3D {
-> +	.free =3D qxl_gem_object_free,
-> +	.open =3D qxl_gem_object_open,
-> +	.close =3D qxl_gem_object_close,
-> +	.pin =3D qxl_gem_prime_pin,
-> +	.unpin =3D qxl_gem_prime_unpin,
-> +	.get_sg_table =3D qxl_gem_prime_get_sg_table,
-> +	.vmap =3D qxl_gem_prime_vmap,
-> +	.vunmap =3D qxl_gem_prime_vunmap,
-> +};
-> +
->  int qxl_bo_create(struct qxl_device *qdev,
->  		  unsigned long size, bool kernel, bool pinned, u32 domain,
->  		  struct qxl_surface *surf,
-> @@ -100,6 +111,7 @@ int qxl_bo_create(struct qxl_device *qdev,
->  		kfree(bo);
->  		return r;
->  	}
-> +	bo->tbo.base.funcs =3D &qxl_object_funcs;
->  	bo->type =3D domain;
->  	bo->pin_count =3D pinned ? 1 : 0;
->  	bo->surface_id =3D 0;
->=20
+> 
+> >   
+> > >
+> > >  * remove (write only)
+> > >
+> > > @@ -281,6 +282,10 @@ Example::
+> > >
+> > >  	# echo 1 > /sys/bus/mdev/devices/$mdev_UUID/remove
+> > >
+> > > +* alias (read only)
+> > > +Whenever a parent requested to generate an alias, each mdev is
+> > > +assigned a unique alias by the mdev core. This file shows the alias of the  
+> > mdev device.
+> > 
+> > It's not really the parent, but the vendor driver requesting this, right? Also,  
+> At mdev level, it only knows parent->ops structure, whether parent is registered by vendor driver or something else.
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
+Who else is supposed to create the mdev device?
 
+> 
+> > "each mdev" is a bit ambiguous,   
+> It is in context of the parent. Sentence is not starting with "each mdev".
+> But may be more verbosely written as,
+> 
+> Whenever a parent requested to generate an alias, Each mdev device of such parent is assigned 
+> unique alias by the mdev core. This file shows the alias of the mdev device.
 
---VYtJRpb5LuEH9QQwQSr1D2uADEAmevApW--
+I'd really leave the parent out of this: this seems more like an
+implementation detail. It's more that alias may either contain an
+alias, or return a read error if no alias has been generated. Who
+requested the alias to be generated is probably not really of interest
+to the userspace reader.
 
---5pfoTXHkUA37GgICinr9tBPf2MBxv9lt0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+> 
+> > created via that driver. Lastly, if we stick with the "returns an error if not
+> > implemented" approach, that should also be mentioned here.  
+> Ok. Will spin v3 to describe it.
+> 
+> >   
+> > > +
+> > >  Mediated device Hot plug
+> > >  ------------------------
+> > >  
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl1tKIkACgkQaA3BHVML
-eiMbjAf6AxrSfiSwm5E9Q+kRgf/F5G7EF7dbpaTiSosYTZd7U+6DSM3ljVOdBoTP
-7tGDxBOB2gISyEwV80XSSNlfznuwu/AmcUlV0zxmmhQFbtAg5d+tltxkl8JUbThu
-IXnvhuagV3gTKsFLoRDcIaZhfX7WRQRdzT2aE3v8gPlC+2Gq79CRgkcWTUjxRqiC
-H8wZduikC5Eh8DIdMx8psHsnaIPB+Ody48ahAuc3IlSzW/Uml8pvktfFOt/E/1pt
-CR+A4iUYA8elgRKIBIvbTydzWgno/Yssq2jJmodCD/CchssJ/+L5XK67QuD04hmP
-kgiY7AUlzJRS2ECQGZq+jq0gSrkabw==
-=zx9m
------END PGP SIGNATURE-----
-
---5pfoTXHkUA37GgICinr9tBPf2MBxv9lt0--
