@@ -2,338 +2,176 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02108C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04374C41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A2020820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BDA21882
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QSaXCxZN"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="daCuBBv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfIBNIn (ORCPT
+        id S1730508AbfIBNJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:08:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59370 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729729AbfIBNIm (ORCPT
+        Mon, 2 Sep 2019 09:09:23 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:35632 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729840AbfIBNJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:08:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5y1O7KTPIhcgWpwUMW10Qm/8B4aqevpsq+Tc+hdiuQQ=; b=QSaXCxZNc0SSS4JsH1VMEcgFmo
-        8Q503fZzyWJJbyFnE+wFF3P0coYYWRdENaS5Erz5G/egOTlhZvPcx7OYSj45PcHXJWcDAqjzGyIYV
-        IdWGWovEt8e+izmuIBQogxekzkn5k5nz5UJASO/YlC4yNZ3hKjqNEhtkWfDGVuWXp/zdasr/ouUxI
-        CxvGTgCNxczxZ1zSVv9/uBwN6g6oTx45/sg6ISlXCVJWxzcs6wBMvx0OK5I3P6LFBmT6+JsOLwVGN
-        ZVSnAcFJtZ9nFGr2WeRaRfVhFgfoOx6cHwYBVI3pN2sGobPC07nYFymANLy0RKRBTrh0J1FyGv207
-        fzBW+H8A==;
-Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4m4T-0006ry-8K; Mon, 02 Sep 2019 13:08:37 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        gross@suse.com, boris.ostrovsky@oracle.com
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/13] swiotlb-xen: simplify cache maintainance
-Date:   Mon,  2 Sep 2019 15:03:36 +0200
-Message-Id: <20190902130339.23163-11-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190902130339.23163-1-hch@lst.de>
-References: <20190902130339.23163-1-hch@lst.de>
+        Mon, 2 Sep 2019 09:09:22 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x82CwbU4006770;
+        Mon, 2 Sep 2019 09:08:59 -0400
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2053.outbound.protection.outlook.com [104.47.45.53])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2uqjrab78q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Sep 2019 09:08:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GXR1Y8NLxYfUvUt4XuhaKxonP3Y4U0tjdR53X8hHtD9WXemsZYCBgwF8yTUI8kiGnU8QpGOsQCC0NaC4k3NU/9qGkGS2qXHkU2pqPfo0b5h/HhqOeBChDJ0Po6AMueThI6ODkiFp1p9ioYORXwtLT9zIAA9qujnO9cAr368m0CCXSV6lJWmkt7WEc+SGqYKhcIAToizvQyr6/YZHLWybOkycE45o0wdyNDLEuT1R9szUR9EpPJCTObbYdmUUW0eUvfnjfkNptiYFSKuKGZFKySTO+H22AZnRkA8FlMX8+ofEnmtgifI5bVn/nVQ+z/JGtWauJzPQ/Mv3zVrwy5QJQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbXsXun/TgtVwLRfRUd8LK1u2JOGQ34IUP16JX0/1cc=;
+ b=NZfWkTVW8xeR9zCsCqREw7vNopkQhLCScedwsixCrnt9O4GUNcV1LOATu2peCfdrvjrFSpZBtXSjfmWIvhvHMyEn+De8egES+up/R/ncAgri6xMjbL61PEy7r4NM0wtOBODg9e4398wpWZj3UACUAUMu11Gq4rA37cWPo+e8v6GskYK+bjQGQrnnw9DHOuLDc3rKo2hRftjTuzl0ApLqq1qlHumve7RpUD8nK8IjtFcuaxe7BnIORBwJ3FNlSYoBLmdaIP3cB5BB0Lgn0Urpym7fJQourHrSmBy1MB44WshFoI+FQzWAXMj9oKCwEleRcTMO4HSXCWSAafKksUL3Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=metafoo.de smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbXsXun/TgtVwLRfRUd8LK1u2JOGQ34IUP16JX0/1cc=;
+ b=daCuBBv2W1aD0kdsw8bnNoFpYh2sLBMOIArzgsoTWA/WOn5SJ1Ibm2LisxgYnVH1LHH/dz/cWmFbcyyBUtRX2OBjJA9OQuSoD7/FKe4YK8WLSpfqkWHL4lZ/WSRaKLKMTO/BHb11V3VkaYWz/tWtSrrmP0ADTHWAmmR9z16j56Q=
+Received: from DM5PR03CA0034.namprd03.prod.outlook.com (2603:10b6:4:3b::23) by
+ BN8PR03MB4852.namprd03.prod.outlook.com (2603:10b6:408:6a::31) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.21; Mon, 2 Sep 2019 13:08:41 +0000
+Received: from BL2NAM02FT018.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by DM5PR03CA0034.outlook.office365.com
+ (2603:10b6:4:3b::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
+ Transport; Mon, 2 Sep 2019 13:08:41 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT018.mail.protection.outlook.com (10.152.77.170) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2220.16
+ via Frontend Transport; Mon, 2 Sep 2019 13:08:41 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x82D8fr9027145
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 2 Sep 2019 06:08:41 -0700
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.107) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 2 Sep 2019 09:08:40 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V4 2/4] iio: adc: ad_sigma_delta: Export ad_sd_calibrate
+Date:   Mon, 2 Sep 2019 16:08:29 +0300
+Message-ID: <20190902130831.23057-2-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190902130831.23057-1-mircea.caprioru@analog.com>
+References: <20190902130831.23057-1-mircea.caprioru@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(396003)(136003)(2980300002)(54534003)(189003)(199004)(6666004)(14444005)(50226002)(36756003)(48376002)(4326008)(107886003)(11346002)(50466002)(47776003)(356004)(44832011)(2616005)(486006)(126002)(476003)(246002)(54906003)(16586007)(186003)(7696005)(51416003)(2351001)(5660300002)(6916009)(76176011)(478600001)(446003)(336012)(305945005)(106002)(8676002)(8936002)(70586007)(70206006)(316002)(1076003)(86362001)(2906002)(426003)(7636002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4852;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 079ba56e-f9cc-4fe1-59c6-08d72fa6ad46
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BN8PR03MB4852;
+X-MS-TrafficTypeDiagnostic: BN8PR03MB4852:
+X-Microsoft-Antispam-PRVS: <BN8PR03MB48527F17515F504645840B8D81BE0@BN8PR03MB4852.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 01480965DA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: M/JmO5QSPCI6X0Lt7OJcNv2CGxYJCZyhrQ0+vL/tFUCURwxzUzaizGMLMnQpgckpAuM2GuFHyM36U5FIVEw2V4DYxUP5tItgCJ5wk5GP6lbZCRHbkOODhBmOrFdUvB47x9Apnt5xZBxP3uUIuPd7ItX6w8BQyhe/SZ/Zs81fvUv9hLmvB9r9z3urxuVTKuo4UpP0x4YauV+kYCmYu5T2lapH+ReVE8gc2+kwGiuabqP5ISf+wdkJtOLuQnqRAblQeZXkjZEAp/jy4jyJ6XF+ekoXepeOtn59TEqxpGQD97RcMfUBogBy8xkuavfopFzVwpK1MP5WJ/MSjb5fADg/dPTivI5gKrqiC7hTbdH1RXHoWmiGmMp6X8TRvKkKXGRLIiyigF0rb3/Qn+P1nQ76SXKI69gnnRqFah/tnIfaehA=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2019 13:08:41.3369
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 079ba56e-f9cc-4fe1-59c6-08d72fa6ad46
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4852
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-02_04:2019-08-29,2019-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 adultscore=0 mlxscore=0 suspectscore=1
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909020146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we know we always have the dma-noncoherent.h helpers available
-if we are on an architecture with support for non-coherent devices,
-we can just call them directly, and remove the calls to the dma-direct
-routines, including the fact that we call the dma_direct_map_page
-routines but ignore the value returned from it.  Instead we now have
-Xen wrappers for the arch_sync_dma_for_{device,cpu} helpers that call
-the special Xen versions of those routines for foreign pages.
+This patch exports the ad_sd_calibrate function in order to be able to
+call it from outside ad_sigma_delta.
 
-Note that the new helpers get the physical address passed in addition
-to the dma address to avoid another translation for the local cache
-maintainance.  The pfn_valid checks remain on the dma address as in
-the old code, even if that looks a little funny.
+There are cases where the option to calibrate one channel at a time is
+necessary (ex. system calibration for zero scale and full scale).
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- arch/arm/xen/mm.c                        | 64 ++++++----------------
- arch/x86/include/asm/xen/page-coherent.h | 11 ----
- drivers/xen/swiotlb-xen.c                | 20 +++----
- include/xen/arm/page-coherent.h          | 69 ++----------------------
- 4 files changed, 31 insertions(+), 133 deletions(-)
+Changelog V2:
+- no changes here
 
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index 9d73fa4a5991..2b2c208408bb 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -60,63 +60,33 @@ static void dma_cache_maint(dma_addr_t handle, size_t size, u32 op)
- 	} while (size);
+Changelog V3:
+- no changes here
+
+Changelog V4:
+- no changes here
+
+ drivers/iio/adc/ad_sigma_delta.c       | 3 ++-
+ include/linux/iio/adc/ad_sigma_delta.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 2640b75fb774..8ba90486c787 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -205,7 +205,7 @@ int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
  }
+ EXPORT_SYMBOL_GPL(ad_sd_reset);
  
--static void __xen_dma_page_dev_to_cpu(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir)
-+/*
-+ * Dom0 is mapped 1:1, and while the Linux page can span across multiple Xen
-+ * pages, it is not possible for it to contain a mix of local and foreign Xen
-+ * pages.  Calling pfn_valid on a foreign mfn will always return false, so if
-+ * pfn_valid returns true the pages is local and we can use the native
-+ * dma-direct functions, otherwise we call the Xen specific version.
-+ */
-+void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir)
+-static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
++int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 	unsigned int mode, unsigned int channel)
  {
--	if (dir != DMA_TO_DEVICE)
-+	if (pfn_valid(PFN_DOWN(handle)))
-+		arch_sync_dma_for_cpu(dev, paddr, size, dir);
-+	else if (dir != DMA_TO_DEVICE)
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
+ 	int ret;
+@@ -242,6 +242,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 
+ 	return ret;
  }
++EXPORT_SYMBOL_GPL(ad_sd_calibrate);
  
--static void __xen_dma_page_cpu_to_dev(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir)
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir)
- {
--	if (dir == DMA_FROM_DEVICE)
-+	if (pfn_valid(PFN_DOWN(handle)))
-+		arch_sync_dma_for_device(dev, paddr, size, dir);
-+	else if (dir == DMA_FROM_DEVICE)
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
- 	else
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_CLEAN);
- }
+ /**
+  * ad_sd_calibrate_all() - Performs channel calibration
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 7716fa0c9fce..8a4e25a7080c 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -119,6 +119,8 @@ int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
  
--void __xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs)
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	if (attrs & DMA_ATTR_SKIP_CPU_SYNC)
--		return;
--
--	__xen_dma_page_cpu_to_dev(hwdev, dev_addr, size, dir);
--}
--
--void __xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir,
--		unsigned long attrs)
--
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	if (attrs & DMA_ATTR_SKIP_CPU_SYNC)
--		return;
--
--	__xen_dma_page_dev_to_cpu(hwdev, handle, size, dir);
--}
--
--void __xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	__xen_dma_page_dev_to_cpu(hwdev, handle, size, dir);
--}
--
--void __xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	__xen_dma_page_cpu_to_dev(hwdev, handle, size, dir);
--}
--
- bool xen_arch_need_swiotlb(struct device *dev,
- 			   phys_addr_t phys,
- 			   dma_addr_t dev_addr)
-diff --git a/arch/x86/include/asm/xen/page-coherent.h b/arch/x86/include/asm/xen/page-coherent.h
-index 8ee33c5edded..c9c8398a31ff 100644
---- a/arch/x86/include/asm/xen/page-coherent.h
-+++ b/arch/x86/include/asm/xen/page-coherent.h
-@@ -2,17 +2,6 @@
- #ifndef _ASM_X86_XEN_PAGE_COHERENT_H
- #define _ASM_X86_XEN_PAGE_COHERENT_H
- 
--#include <asm/page.h>
--#include <linux/dma-mapping.h>
--
--static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs) { }
--
--static inline void xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir,
--		unsigned long attrs) { }
--
- static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
- 		dma_addr_t handle, size_t size, enum dma_data_direction dir) { }
- 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index f9dd4cb6e4b3..a642e284f1e2 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -28,6 +28,7 @@
- 
- #include <linux/memblock.h>
- #include <linux/dma-direct.h>
-+#include <linux/dma-noncoherent.h>
- #include <linux/export.h>
- #include <xen/swiotlb-xen.h>
- #include <xen/page.h>
-@@ -390,6 +391,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
- 	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
- 		return DMA_MAPPING_ERROR;
- 
-+	phys = map;
- 	dev_addr = xen_phys_to_bus(map);
- 
- 	/*
-@@ -401,14 +403,9 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
- 		return DMA_MAPPING_ERROR;
- 	}
- 
--	page = pfn_to_page(map >> PAGE_SHIFT);
--	offset = map & ~PAGE_MASK;
- done:
--	/*
--	 * we are not interested in the dma_addr returned by xen_dma_map_page,
--	 * only in the potential cache flushes executed by the function.
--	 */
--	xen_dma_map_page(dev, page, dev_addr, offset, size, dir, attrs);
-+	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		xen_dma_sync_for_device(dev, dev_addr, phys, size, dir);
- 	return dev_addr;
- }
- 
-@@ -428,7 +425,8 @@ static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
- 
- 	BUG_ON(dir == DMA_NONE);
- 
--	xen_dma_unmap_page(hwdev, dev_addr, size, dir, attrs);
-+	if (!dev_is_dma_coherent(hwdev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		xen_dma_sync_for_cpu(hwdev, dev_addr, paddr, size, dir);
- 
- 	/* NOTE: We use dev_addr here, not paddr! */
- 	if (is_xen_swiotlb_buffer(dev_addr))
-@@ -448,7 +446,8 @@ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
- {
- 	phys_addr_t paddr = xen_bus_to_phys(dma_addr);
- 
--	xen_dma_sync_single_for_cpu(dev, dma_addr, size, dir);
-+	if (!dev_is_dma_coherent(dev))
-+		xen_dma_sync_for_cpu(dev, dma_addr, paddr, size, dir);
- 
- 	if (is_xen_swiotlb_buffer(dma_addr))
- 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
-@@ -463,7 +462,8 @@ xen_swiotlb_sync_single_for_device(struct device *dev, dma_addr_t dma_addr,
- 	if (is_xen_swiotlb_buffer(dma_addr))
- 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
- 
--	xen_dma_sync_single_for_device(dev, dma_addr, size, dir);
-+	if (!dev_is_dma_coherent(dev))
-+		xen_dma_sync_for_device(dev, dma_addr, paddr, size, dir);
- }
- 
- /*
-diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
-index 07c104dbc21f..635492d41ebe 100644
---- a/include/xen/arm/page-coherent.h
-+++ b/include/xen/arm/page-coherent.h
-@@ -2,70 +2,9 @@
- #ifndef _XEN_ARM_PAGE_COHERENT_H
- #define _XEN_ARM_PAGE_COHERENT_H
- 
--#include <linux/dma-mapping.h>
--#include <asm/page.h>
--
--void __xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs);
--void __xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir,
--		unsigned long attrs);
--void __xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir);
--void __xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir);
--
--static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	unsigned long pfn = PFN_DOWN(handle);
--
--	if (pfn_valid(pfn))
--		dma_direct_sync_single_for_cpu(hwdev, handle, size, dir);
--	else
--		__xen_dma_sync_single_for_cpu(hwdev, handle, size, dir);
--}
--
--static inline void xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	unsigned long pfn = PFN_DOWN(handle);
--	if (pfn_valid(pfn))
--		dma_direct_sync_single_for_device(hwdev, handle, size, dir);
--	else
--		__xen_dma_sync_single_for_device(hwdev, handle, size, dir);
--}
--
--static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs)
--{
--	unsigned long pfn = PFN_DOWN(dev_addr);
--
--	/*
--	 * Dom0 is mapped 1:1, and while the Linux page can span across multiple
--	 * Xen pages, it is not possible for it to contain a mix of local and
--	 * foreign Xen pages.  Calling pfn_valid on a foreign mfn will always
--	 * return false, so if pfn_valid returns true the pages is local and we
--	 * can use the native dma-direct functions, otherwise we call the Xen
--	 * specific version.
--	 */
--	if (pfn_valid(pfn))
--		dma_direct_map_page(hwdev, page, offset, size, dir, attrs);
--	else
--		__xen_dma_map_page(hwdev, page, dev_addr, offset, size, dir, attrs);
--}
--
--static inline void xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir, unsigned long attrs)
--{
--	unsigned long pfn = PFN_DOWN(handle);
--
--	if (pfn_valid(pfn))
--		dma_direct_unmap_page(hwdev, handle, size, dir, attrs);
--	else
--		__xen_dma_unmap_page(hwdev, handle, size, dir, attrs);
--}
-+void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
- 
- #endif /* _XEN_ARM_PAGE_COHERENT_H */
+ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	const struct iio_chan_spec *chan, int *val);
++int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
++	unsigned int mode, unsigned int channel);
+ int ad_sd_calibrate_all(struct ad_sigma_delta *sigma_delta,
+ 	const struct ad_sd_calib_data *cd, unsigned int n);
+ int ad_sd_init(struct ad_sigma_delta *sigma_delta, struct iio_dev *indio_dev,
 -- 
-2.20.1
+2.17.1
 
