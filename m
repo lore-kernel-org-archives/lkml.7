@@ -6,82 +6,86 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDD3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4984CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DF522DCC
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18724216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567431623;
-	bh=1MpB7+dGqH4khxznPka9JwEeioPre6aYiSDv4MiN2W8=;
-	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
-	b=SS+etwGxjCEhqXQwW2/YJzgJGXCGxts4qagENB5PAcSzZpokem6pXXqSwqcljzjt9
-	 Bf6mpuiV29lhQsNOvPm/Xjn91a3caLiQPiDRmsKEM5EHTGUb1Tpci1WfghgiPUl+fS
-	 DQHAixt3kUpSruMgjAV7qEKh1e08ee82jeFse2MI=
+	s=default; t=1567431629;
+	bh=XAFdskOuyjn/b06N3EhcR6EzDBNrDfOpdERmsZ51jaA=;
+	h=Date:From:Subject:References:In-Reply-To:Cc:CC:To:List-ID:From;
+	b=CuEUKXTbXxb7mJzcHBxq0eU1GJbjRxtQDWWToE7xXn711Kk8j2WNoaJHhFEm1xuWM
+	 N01VTazY93n6guOjk5xpwHe7kNlvgJbjuYcx6UnSPqwoWJvlSr7vWkmFoNSDNrovfD
+	 115tWI0Q3teC6FtNfghZlUDetFQC9uND6Izj4qQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbfIBNkW (ORCPT
+        id S1731537AbfIBNk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:40:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38954 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731048AbfIBNi5 (ORCPT
+        Mon, 2 Sep 2019 09:40:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35533 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730922AbfIBNiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:38:57 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n2so13266573wmk.4;
-        Mon, 02 Sep 2019 06:38:56 -0700 (PDT)
+        Mon, 2 Sep 2019 09:38:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n10so3980783wmj.0;
+        Mon, 02 Sep 2019 06:38:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:subject:references
          :in-reply-to:cc:cc:to;
-        bh=VHM7wVxbM3iFjk6g2BqysfNSZL4bn6Yh6NOKIm6VeQ8=;
-        b=GGG8Qyg+r3ce23l4JaTY51j6Y6J13+wPxHp+G0+m5cNBERwlL6wbSv6/kMOuIHThQE
-         qQ/QgLjhZaIrYp6YON7JgkL92AYaZkbXUCyGicy9kAYXvenxBKh0Yfcpsx0gJmaQgSe2
-         RQR8h/9JEE3meVKRRcOaicf9dbEkHFPActutDAoJ5z0yjOZ4/ZtRiIgV9Gc9a4VZil2i
-         xNieQwTYdTMwjA7Dg+Iy+41G10uMzyrnEFYxQ/Q3K8Pl6h7zUQjxNSfH0o/O8tTGoojS
-         yE59HhZBG7KE40nPLcJCrq9qtHraI27vjhhMBZ14oBMJHJ9pvDdcLlaqa2Uv7Hg/MUjC
-         UThg==
-X-Gm-Message-State: APjAAAWcZ3vNH2CsEfr5zxqbJmw2fNgvX1kqUJKM9RD5TtWlRvTCXdvT
-        dZA/hLExvW/XXfLUoIHOSw==
-X-Google-Smtp-Source: APXvYqy0KNBQfCwq+9RzjWG+pvrwpi4rW7y8999LenlesG4VEWMuewwgiR5JlpctG/2+f2gTGGix0A==
-X-Received: by 2002:a7b:c386:: with SMTP id s6mr4331454wmj.93.1567431535461;
-        Mon, 02 Sep 2019 06:38:55 -0700 (PDT)
+        bh=MUHGsZO7Q+UL7B/0Bo+ObMbSvRnyd9TzsXp9a78oerg=;
+        b=a7YRsJH2QwgfFmUgeQ464+D0ZNBA07dqjOIxa/TQVOZw5fTX/nWZ/fIk/x+HDpWjtU
+         JltamdCffLn1z9pE50tr8V6rLxfl7QvwNbqwDQ50rqedPzc4MU3XG+cg3mPtbDJc66Gf
+         l7pwcbvse4R4axTJpkqlbILuWoXuieDlR45c86Cz1abl31Ysemv2R4uumaSwAx0n+LXb
+         YKzOFf7FOK5A23uZnjUDRl9waiTLlihpmncG3GbamKh16g6ZJdVdHhHJUUP2geII1bKk
+         B4H+Er7PrDBupBGjqX8IZ6nzBowlyEgnG8fLqGpLcJxXVUNaoRYQA1v6BTqxcJzprkGM
+         kD2A==
+X-Gm-Message-State: APjAAAXkcErO2nLv9vB+IuYs0bG2czCqkSw3SZqpjND63rYPJfKfkgWv
+        buqn+/ySqoWWQMUC0NF7rQ==
+X-Google-Smtp-Source: APXvYqyvLTbczPJL2Kgv5aZwJae8V+vC19nEZctvk8m+po+VCSqy5grfmLXTj04W+bRvfuCa0/8m2A==
+X-Received: by 2002:a7b:c441:: with SMTP id l1mr94851wmi.170.1567431531911;
+        Mon, 02 Sep 2019 06:38:51 -0700 (PDT)
 Received: from localhost ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id h8sm16761794wrq.49.2019.09.02.06.38.54
+        by smtp.gmail.com with ESMTPSA id j18sm12521185wrr.20.2019.09.02.06.38.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 06:38:54 -0700 (PDT)
-Message-ID: <5d6d1b6e.1c69fb81.c6a88.9b11@mx.google.com>
-Date:   Mon, 02 Sep 2019 14:38:54 +0100
+        Mon, 02 Sep 2019 06:38:51 -0700 (PDT)
+Message-ID: <5d6d1b6b.1c69fb81.37811.4cd5@mx.google.com>
+Date:   Mon, 02 Sep 2019 14:38:50 +0100
 From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] iommu: Implement of_iommu_get_resv_regions()
-References: <20190829111407.17191-1-thierry.reding@gmail.com> <20190829111407.17191-2-thierry.reding@gmail.com>
-In-Reply-To: <20190829111407.17191-2-thierry.reding@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+References: <20190828172850.19871-1-vidyas@nvidia.com> <20190828172850.19871-3-vidyas@nvidia.com>
+In-Reply-To: <20190828172850.19871-3-vidyas@nvidia.com>
+Content-Type: text/plain
+Cc:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 13:14:06 +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On Wed, 28 Aug 2019 22:58:46 +0530, Vidya Sagar wrote:
+> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
+> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
+> is designed to have regulator controlled slot supplies.
 > 
-> This is an implementation that IOMMU drivers can use to obtain reserved
-> memory regions from a device tree node. It uses the reserved-memory DT
-> bindings to find the regions associated with a given device. These
-> regions will be used to create 1:1 mappings in the IOMMU domain that
-> the devices will be attached to.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/iommu/of_iommu.c | 39 +++++++++++++++++++++++++++++++++++++++
->  include/linux/of_iommu.h |  8 ++++++++
->  2 files changed, 47 insertions(+)
+> V3:
+> * None
+> 
+> V2:
+> * None
+> 
+>  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
