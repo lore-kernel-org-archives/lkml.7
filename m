@@ -2,181 +2,80 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E539C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7FCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D486216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DB4216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfIBSFZ (ORCPT
+        id S1726849AbfIBSF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:05:25 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:5236 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfIBSFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:05:25 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: HER/O+P4nrAcLTa8XXysI/HXmsgFV0NarfvE+VbTxBhYBwO5Sgb7n3E3j6NWhNqmaUKTlx6ZWl
- EZ/54vKM4oBkyj6ECZ0HMRpWM9yoQcZLQRL/6WsnIKrxDdIrwPQjOGhyy5AXdhlo4dpJfPTOau
- pSoilXhn5muEODXKK/8eErgOjIJ1j5MzvYv1Q5u8YhOo07N47eL6Sn1qwN6WQVGz91i67Ne0xU
- /XBZsWd+HwqgeRz3Wq1vNTCKX0HELhNeMqa7MjotkyeGw+YKicsNae5a+OQwkS+ZQACIX7vFaJ
- IDk=
-X-IronPort-AV: E=Sophos;i="5.64,460,1559545200"; 
-   d="scan'208";a="47512522"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Sep 2019 11:05:22 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Sep 2019 11:05:21 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 2 Sep 2019 11:05:20 -0700
-Date:   Mon, 2 Sep 2019 20:05:20 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     David Miller <davem@davemloft.net>, <idosch@idosch.org>,
-        <andrew@lunn.ch>, <horatiu.vultur@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <ivecera@redhat.com>, <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190902180519.ytbs6x2dx5z23hys@lx-anielsen.microsemi.net>
-References: <20190829193613.GA23259@splinter>
- <20190829.151201.940681219080864052.davem@davemloft.net>
- <20190830053940.GL2312@nanopsycho>
- <20190829.230233.287975311556641534.davem@davemloft.net>
- <20190830063624.GN2312@nanopsycho>
- <20190902174229.uur7r7duq4dvbnqq@lx-anielsen.microsemi.net>
- <20190902175124.GA2312@nanopsycho>
+        Mon, 2 Sep 2019 14:05:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44740 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfIBSF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 14:05:26 -0400
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D898985539
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Sep 2019 18:05:26 +0000 (UTC)
+Received: by mail-io1-f72.google.com with SMTP id t8so19810987iom.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 11:05:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UkgUaL8VzlklW86uya8kYZjjavCTUDQ8aI35FGVFq8s=;
+        b=jgoa/KM65HeMqe2BHrTFVbOmbjLy/aZCOkmODVAz1j0b6G1dVWeBicwqBe+5i/AhBK
+         WaLUEGVsXusUNB3lv+1gnQBGudro7oF4CLE72bi04vl6jJn1/fYwS3rqwyIDfEuqBNVL
+         ft0BeCPmMCRuO4gDtfvLYqFB4D2ovu21Wxx/dHQhNe00c+d7LD297E5QV9SO6xaAr6zc
+         OTGP/hZelN2ngQYwQYIzvYUEcXOK9hgtIKJZQMGUpnQGJS0fBAcOUTcPCoLHhqCYVFSm
+         zpFc0LcbE7MTM1Z5NzC1THPc6Bd0NqGyghSS1IAIwzhySUVMmhyuUih/nx+fhjHwGElw
+         LPCw==
+X-Gm-Message-State: APjAAAUsj7QnL/JAokkRdJREkb2ahGYZsKBRV90ovyGNuXoWOW8+mKUJ
+        Tb3wOucSvi0o08jf2WBVejXaKMb1Df+Z/SZ1kOZ+guI+89P3iBFOPuM1X5hBeNarIjrw9MZ5dEW
+        uRL+K2EQ3wS473Ebuki3PxJfLgbuju6x2c3WvA91L
+X-Received: by 2002:a02:9a12:: with SMTP id b18mr26263196jal.70.1567447526342;
+        Mon, 02 Sep 2019 11:05:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxnLzafJ6PcT24LmpFEMVCZaodz/wkINz7GVGLbos75Tlsx/zjDptZUOJTEX5bD3/97D/+Tpax1FDlAP1hMiDE=
+X-Received: by 2002:a02:9a12:: with SMTP id b18mr26263171jal.70.1567447526101;
+ Mon, 02 Sep 2019 11:05:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190902175124.GA2312@nanopsycho>
-User-Agent: NeoMutt/20180716
+References: <20190902143915.20576-1-yuehaibing@huawei.com>
+In-Reply-To: <20190902143915.20576-1-yuehaibing@huawei.com>
+From:   Miklos Szeredi <mszeredi@redhat.com>
+Date:   Mon, 2 Sep 2019 20:05:15 +0200
+Message-ID: <CAOssrKdfyd0=Vod6DC9AiN=wNnPaT2nN5MY8tSq73m80BLoANg@mail.gmail.com>
+Subject: Re: [PATCH -next] virtio-fs: Add missing include file
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 09/02/2019 19:51, Jiri Pirko wrote:
-> External E-Mail
-> 
-> 
-> Mon, Sep 02, 2019 at 07:42:31PM CEST, allan.nielsen@microchip.com wrote:
-> >Hi Jiri,
-> >
-> >Sorry for joining the discussion this late, but I have been without mail access
-> >for the last few days.
-> >
-> >
-> >The 08/30/2019 08:36, Jiri Pirko wrote:
-> >> Fri, Aug 30, 2019 at 08:02:33AM CEST, davem@davemloft.net wrote:
-> >> >From: Jiri Pirko <jiri@resnulli.us>
-> >> >Date: Fri, 30 Aug 2019 07:39:40 +0200
-> >> >
-> >> >> Because the "promisc mode" would gain another meaning. Now how the
-> >> >> driver should guess which meaning the user ment when he setted it?
-> >> >> filter or trap?
-> >> >> 
-> >> >> That is very confusing. If the flag is the way to do this, let's
-> >> >> introduce another flag, like IFF_TRAPPING indicating that user wants
-> >> >> exactly this.
-> >> >
-> >> >I don't understand how the meaning of promiscuous mode for a
-> >> >networking device has suddenly become ambiguous, when did this start
-> >> >happening?
-> >> 
-> >> The promiscuity is a way to setup the rx filter. So promics == rx filter
-> >> off. For normal nics, where there is no hw fwd datapath,
-> >> this coincidentally means all received packets go to cpu.
-> >> But if there is hw fwd datapath, rx filter is still off, all rxed packets
-> >> are processed. But that does not mean they should be trapped to cpu.
-> >> 
-> >> Simple example:
-> >> I need to see slowpath packets, for example arps/stp/bgp/... that
-> >> are going to cpu, I do:
-> >> tcpdump -i swp1
-> >
-> >How is this different from "tcpdump -p -i swp1"
-> >
-> >> I don't want to get all the traffic running over hw running this cmd.
-> >> This is a valid usecase.
-> >> 
-> >> To cope with hw fwd datapath devices, I believe that tcpdump has to have
-> >> notion of that. Something like:
-> >> 
-> >> tcpdump -i swp1 --hw-trapping-mode
-> >> 
-> >> The logic can be inverse:
-> >> tcpdump -i swp1
-> >> tcpdump -i swp1 --no-hw-trapping-mode
-> >> 
-> >> However, that would provide inconsistent behaviour between existing and
-> >> patched tcpdump/kernel.
-> >> 
-> >> All I'm trying to say, there are 2 flags
-> >> needed (if we don't use tc trap).
-> >
-> >I have been reading through this thread several times and I still do not get it.
-> >
-> >As far as I understand you are arguing that we need 3 modes:
-> >
-> >- tcpdump -i swp1
-> 
-> Depends on default. Promisc is on.
-> 
-> 
-> >- tcpdump -p -i swp1
-> 
-> All traffic that is trapped to the cpu by default, not promisc means
-> only mac of the interface (if bridge for example haven't set promisc
-> already) and special macs. So host traffic (ip of host), bgp, arp, nsnd,
-> etc.
+On Mon, Sep 2, 2019 at 4:43 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> fs/fuse/virtio_fs.c: In function virtio_fs_requests_done_work:
+> fs/fuse/virtio_fs.c:348:6: error: implicit declaration of function zero_user_segment;
+>  did you mean get_user_pages? [-Werror=implicit-function-declaration]
+>       zero_user_segment(page, len, thislen);
+>       ^~~~~~~~~~~~~~~~~
+>       get_user_pages
+>
+> Add missing include file <linux/highmem.h>
 
-In the case where the interface is enslaved to a bridge, it is put into promisc
-mode, which means that "tcpdump -i swp1" and "tcpdump -p -i swp1" give the same
-result, right?
+Thanks, folded.
 
-Is this desirable?
-
-> >- tcpdump -i swp1 --hw-trapping-mode
-> 
-> Promisc is on, all traffic received on the port and pushed to cpu. User
-> has to be careful because in case of mlxsw this can lead to couple
-> hundred gigabit traffic going over limited pci bandwidth (gigabits).
-> 
-> 
-> >
-> >Would you mind provide an example of the traffic you want to see in the 3 cases
-> >(or the traffic which you do not want to see).
-> >
-> >/Allan
-> >
-> 
-
--- 
-/Allan
+Miklos
