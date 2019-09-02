@@ -2,117 +2,126 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859EEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91ECC41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603BC21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567447816;
-	bh=FQkTVFpAGEnt+xpwHzJbtJCEpMvslqGkgqCuNetBb9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T2M2Enn/G+qWj51d2T7RqbNXtudYSxU2Pmj05G7Xzq1DA6+8fg09nmLq7RLbYHJhe
-	 ORhN+1j+McpjrW7TYQn4g5hnjzGrnj9YO3SUkSMZtYEtFB7eDwfYu/TDrjZXU9gY6z
-	 S4eCSYdtX9dXXbWfg2x6PkFlS5dSLTQkSpcNSAIU=
+	by mail.kernel.org (Postfix) with ESMTP id ADF1621744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 18:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfIBSKP (ORCPT
+        id S1726873AbfIBSLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 14:10:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51875 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfIBSKP (ORCPT
+        Mon, 2 Sep 2019 14:11:50 -0400
+Received: from smtprelay0176.hostedemail.com ([216.40.44.176]:58928 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726448AbfIBSLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 14:10:15 -0400
-Received: by mail-wm1-f66.google.com with SMTP id k1so15480038wmi.1;
-        Mon, 02 Sep 2019 11:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vDUaJApxfkNhR6vhz6RrOHesiiSeGJbPpZ0PxPybk/I=;
-        b=X2KKFYMCm/kPAAybfVW+JyM12W8hl+Uuo1n8mKn/rzA7LzWsHHSQA7xH/fVkWWzDGQ
-         FngagQeC/98AzdbGqqGS31CY9XrdB/EAZC4eaeudzzJ+Mp1xSqkC0QDTh1WRwnzeYsMK
-         2JeNdEUWAPgUTWrG4GGn2rDlTSIv+YKvXBQcX9xoIbwkrbJgjh3AwFSWTcYDncochdG2
-         6Vyi/AakJtGrUSHWxfhHbk00+qsazqOCb+6rPkDAvDQ/n3CPu3oTFPdd99lproWciZs0
-         uh3UKoHaLH47LxWGCMzQN8UV9viJvdvvB3X46llQDKnaY4YX98QagxcrKXJc0buQUlfZ
-         Kzsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vDUaJApxfkNhR6vhz6RrOHesiiSeGJbPpZ0PxPybk/I=;
-        b=fMkiy8Mks7PEzai81fFyfmob9UeXsN+LhcjS7lKsikuy6qNHuColBNgup1SlKcfqUT
-         B3re5fJX+S7XEoWT8nLcQHq/f9kw7wiUZhYtq4n3DXWKCYPELCUIan7tI+woWrZHWP3m
-         NlBEwSqdmJTOinWh+vTgEEc1GT5IFDmy5ZOH6AZ4pOddIdqdAsDcYBQzZnrgSKdK9NZb
-         5f2NC++twiX0rUhDjXXpEq1tcqY0O1BzlbLX7BLzds9d5buqecTwbD7CFw3x4itTxn3W
-         ZEPDFhifmeyglZmMrOG6B41MMA0Ssbv3XL3LUX43cH9WhdDC9GRn5CXpzNtbnE5XqYnm
-         Iwtw==
-X-Gm-Message-State: APjAAAVYVYn1qAJZorHNNCM+OiDaY2H78dEyWZahIhBPVeNdvFffk7Rz
-        QSBcPQj6A6sByb3ct/jc9FY=
-X-Google-Smtp-Source: APXvYqxO9TEqstUE7hLdlfJ+mMtY+H2+e2SfFBVFtOUhNn1MKcufFoTLuu3znyHThDv+TE/BULRZ3g==
-X-Received: by 2002:a1c:ed05:: with SMTP id l5mr12399414wmh.21.1567447813348;
-        Mon, 02 Sep 2019 11:10:13 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id b144sm33844070wmb.3.2019.09.02.11.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 11:10:12 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 20:10:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc:lock: remove reference to clever use of read-write
- lock
-Message-ID: <20190902181010.GA35858@gmail.com>
-References: <20190831134116.25417-1-federico.vaga@vaga.pv.it>
- <20190831084344.6fd7c039@lwn.net>
- <2216492.xyESGPMPG3@pcbe13614>
+        Mon, 2 Sep 2019 14:11:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BF9D618224D8A;
+        Mon,  2 Sep 2019 18:11:47 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: heat65_83e2ed7ab5f20
+X-Filterd-Recvd-Size: 3481
+Received: from XPS-9350.home (unknown [47.151.137.30])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  2 Sep 2019 18:11:46 +0000 (UTC)
+Message-ID: <f7f8f751e77578edb88c0d9888930de3f3b60670.camel@perches.com>
+Subject: Re: linux-next: Tree for Sep 2 (exfat)
+From:   Joe Perches <joe@perches.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, Greg KH <greg@kroah.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Date:   Mon, 02 Sep 2019 11:11:45 -0700
+In-Reply-To: <13e2db80-0c89-0f36-6876-f9639f0d30ab@infradead.org>
+References: <20190902224310.208575dc@canb.auug.org.au>
+         <cecc2af6-7ef6-29f6-569e-b591365e45ad@infradead.org>
+         <20190902174631.GB31445@kroah.com>
+         <13e2db80-0c89-0f36-6876-f9639f0d30ab@infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2216492.xyESGPMPG3@pcbe13614>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-
-> On Saturday, August 31, 2019 4:43:44 PM CEST Jonathan Corbet wrote:
-> > On Sat, 31 Aug 2019 15:41:16 +0200
-> > 
-> > Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-> > >  several CPU's and you want to use spinlocks you can potentially use
+On Mon, 2019-09-02 at 11:07 -0700, Randy Dunlap wrote:
+> On 9/2/19 10:46 AM, Greg KH wrote:
+> > On Mon, Sep 02, 2019 at 10:39:39AM -0700, Randy Dunlap wrote:
+> > > On 9/2/19 5:43 AM, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > > 
+> > > > News: I will only be doing 2 more releases before I leave for Kernel
+> > > > Summit (there may be some reports on Thursday, but I doubt I will have
+> > > > time to finish the full release) and then no more until Sept 30.
+> > > > 
+> > > > Changes since 20190830:
+> > > > 
 > > > 
-> > > -cheaper versions of the spinlocks. IFF you know that the spinlocks are
-> > > +cheaper versions of the spinlocks. If you know that the spinlocks are
-> > > 
-> > >  never used in interrupt handlers, you can use the non-irq versions::
-> > I suspect that was not actually a typo; "iff" is a way for the
-> > mathematically inclined to say "if and only if".
+> > > Hi,
+> > > I am seeing lots of exfat build errors when CONFIG_BLOCK is not set/enabled.
+> > > Maybe its Kconfig should also say
+> > > 	depends on BLOCK
+> > > ?
 > > 
-> > jon
+> > Here's what I committed to my tree:
+> > 
+> > 
+> > From e2b880d3d1afaa5cad108c29be3e307b1917d195 Mon Sep 17 00:00:00 2001
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Date: Mon, 2 Sep 2019 19:45:06 +0200
+> > Subject: staging: exfat: make exfat depend on BLOCK
+> > 
+> > This should fix a build error in some configurations when CONFIG_BLOCK
+> > is not selected.  Also properly set the dependancy for no FAT support at
+> > the same time.
+> > 
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> I learned something new today :)
+> That works. Thanks.
+> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 > 
-> I am not used to the mathematical English jargon. It make sense, but then I 
-> would replace it with "If and only if": for clarity.
+> > ---
+> >  drivers/staging/exfat/Kconfig | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
+> > index f52129c67f97..290dbfc7ace1 100644
+> > --- a/drivers/staging/exfat/Kconfig
+> > +++ b/drivers/staging/exfat/Kconfig
+> > @@ -1,11 +1,13 @@
+> >  config EXFAT_FS
+> >  	tristate "exFAT fs support"
+> > +	depends on BLOCK
+> >  	select NLS
+> >  	help
+> >  	  This adds support for the exFAT file system.
+> >  
+> >  config EXFAT_DONT_MOUNT_VFAT
+> >  	bool "Prohibit mounting of fat/vfat filesysems by exFAT"
+> > +	depends on EXFAT_FS
+> >  	default y
+> >  	help
+> >  	  By default, the exFAT driver will only mount exFAT filesystems, and refuse
 
-While it's used in a number of places and it's pretty common wording 
-overall in the literature, I agree that we should probably change this in 
-locking API user facing documentation.
+I think this last one is backwards and should be
 
-If you change it, please do it in both places it's used.
+config EXFAT_ALLOW_MOUNT_VFAT
+and
+default n
 
-Thanks,
+> 
+> 
 
-	Ingo
