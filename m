@@ -2,88 +2,78 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31850C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50CCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B39E21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567436503;
-	bh=kRJyiHYxs8PidvzF9z69Gs46eZqRTUfRwTatPA9skMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HyOaZOPrgMYqcgHK4douknbBdHMFMF6UTBrYjVVhOnsdEmYX2aWOoQRiWiRE7RjII
-	 loPP4sSGw7Gqqp+VNTPWemwCzXm02xzlFPddHTbXP4bCzw5pYkZoMTfRYfMK0aqtNj
-	 VZMRMY27uesjSCx/PC9ggYzbA4/DduYKDac1TdRY=
+	by mail.kernel.org (Postfix) with ESMTP id BEC5C21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbfIBPBm (ORCPT
+        id S1731780AbfIBPBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:01:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41239 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730234AbfIBPBl (ORCPT
+        Mon, 2 Sep 2019 11:01:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41766 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730234AbfIBPBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:01:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j16so14338872wrr.8;
-        Mon, 02 Sep 2019 08:01:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a3oWhnhg13aJExvjQfF8EoIHkTAHlX+PBj9hz38tCtY=;
-        b=tPGVA8Ay0dShBlRnxkrSWejchr1FHf6gU7v0KWRctsaEPR8xHk/o9xz0n/1QoSMLLy
-         CxVF3X2C7J63T32m22pRF9b/Kn3meFk0TvnpDEZBdTbebNThrEYO03Fala1IfCuXTpRs
-         ztLwvwxTFcNKb1y0WrHBsLPc82e48WgHk9hAOkLEawQKjR8qsLxZbI1ewOsy3v8xoWCe
-         HwtcFAsueXB6ZNEYFnANVnVTvBQWPpRHZnt1XPL8gIuZiyQDXJlqcnGVB0OQqZ/Kixqz
-         Gil/YY1FfASwcpVyh+n0smKcXa9PjruFMzK5PCo9EnTi6cXgCiKXHj1kDhVtn6LDNQXM
-         7q/w==
-X-Gm-Message-State: APjAAAWCw6qsK9Hxt2Nd/PiHK3sn4FZPKlns6SYrm8Eoza2IGzoMIeIo
-        3V99ALPyQHPPia6ZE0OPFkhNfoLneQ==
-X-Google-Smtp-Source: APXvYqyHCLpuFYf/DuF5rPmKMo1G2lITnST9aS3nNHF5oBnRZQWtnRxqV3jH0WevnpRW3xJO1d3/zg==
-X-Received: by 2002:adf:cd02:: with SMTP id w2mr18589959wrm.327.1567436499227;
-        Mon, 02 Sep 2019 08:01:39 -0700 (PDT)
-Received: from localhost ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id c1sm11768541wmk.20.2019.09.02.08.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 08:01:38 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 16:01:38 +0100
-From:   Rob Herring <robh@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: reset: pdc: Convert PDC Global
- bindings to yaml
-Message-ID: <20190902150138.GA29400@bogus>
-References: <20190901174407.30756-1-sibis@codeaurora.org>
- <20190901174407.30756-3-sibis@codeaurora.org>
+        Mon, 2 Sep 2019 11:01:54 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i4nq4-00007n-OK; Mon, 02 Sep 2019 15:01:52 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][cifs-next] cifs: fix dereference on ses before it is null checked
+Date:   Mon,  2 Sep 2019 16:01:52 +0100
+Message-Id: <20190902150152.21550-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190901174407.30756-3-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  1 Sep 2019 23:14:07 +0530, Sibi Sankar wrote:
-> Convert PDC Global bindings to yaml and add SC7180 PDC global to the list
-> of possible bindings.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../bindings/reset/qcom,pdc-global.txt        | 52 -------------------
->  .../bindings/reset/qcom,pdc-global.yaml       | 47 +++++++++++++++++
->  2 files changed, 47 insertions(+), 52 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
->  create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The assignment of pointer server dereferences pointer ses, however,
+this dereference occurs before ses is null checked and hence we
+have a potential null pointer dereference.  Fix this by only
+dereferencing ses after it has been null checked.
+
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 2808c6639104 ("cifs: add new debugging macro cifs_server_dbg")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/cifs/transport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index 0d60bd2f4dca..a90bd4d75b4d 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -1242,12 +1242,13 @@ SendReceive(const unsigned int xid, struct cifs_ses *ses,
+ 	struct kvec iov = { .iov_base = in_buf, .iov_len = len };
+ 	struct smb_rqst rqst = { .rq_iov = &iov, .rq_nvec = 1 };
+ 	struct cifs_credits credits = { .value = 1, .instance = 0 };
+-	struct TCP_Server_Info *server = ses->server;
++	struct TCP_Server_Info *server;
+ 
+ 	if (ses == NULL) {
+ 		cifs_dbg(VFS, "Null smb session\n");
+ 		return -EIO;
+ 	}
++	server = ses->server;
+ 	if (server == NULL) {
+ 		cifs_dbg(VFS, "Null tcp session\n");
+ 		return -EIO;
+-- 
+2.20.1
+
