@@ -2,87 +2,74 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD7EC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725B3C41514
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188C120870
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F82A230F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jZbY3BW1"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="XXemhwxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfIBVRA (ORCPT
+        id S1727602AbfIBVTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:17:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:58679 "EHLO ozlabs.org"
+        Mon, 2 Sep 2019 17:19:39 -0400
+Received: from onstation.org ([52.200.56.107]:51240 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbfIBVQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:16:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726860AbfIBVTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:19:38 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MjZd5CGPz9sBF;
-        Tue,  3 Sep 2019 07:16:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567459017;
-        bh=LI/Ccw4jAyBMSDMACYJQ4UJwzivHIPT6USfX7vBdITM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jZbY3BW1zy4m68So90dqF1LcUyEZ3//OAhDjgNO5o2v9eKS05viA8EfAEoSiswZLh
-         DEUH1OLUEvc0ph2g+P/BeFxumN9CE8JRQfKfvAtn4wkLGTHjdmC/AVmdlDrRa6OI3y
-         6DE6s2bCCXmfRTJhLEEP2IG/MNM/iBSKRlapZsembp5YtNp74YJ24pPp9hnvsMXFFk
-         z1YGvme1AROeiK5C/vBVBsH0HVGNYTQvWBiLVPIOqY6ynzLVnB6jBMDS1GEkHYipQh
-         pjaHQQvB2FGs/6tuMyoK0V7UhuPdw2iZn3tkuPfdE/6YMNVJfQF+dwdlkI06Uo6aJJ
-         0COMsy7EAAnbA==
-Date:   Tue, 3 Sep 2019 07:16:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the kgdb-dt tree
-Message-ID: <20190903071657.2caa0c46@canb.auug.org.au>
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 08CEF3E993;
+        Mon,  2 Sep 2019 21:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1567459178;
+        bh=bIb25bI6AK5yndv+YyL9u3f0a+M90BALHovQZTHTWBc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XXemhwxfXwCS+j40ANEYmNnWWJ8Dkcnad071I5isqDWZIWhEfCtQ2EmdK6XRkjC31
+         AGRZGVpfp/8/wXjB8HkRnnuky2hIUN68dybjIWrb7TpzPQkXZWm/egR+bWs5HhAW7k
+         oJK2IqPu2wHgtwCpgq2V/UPg5Xonm9dbnPVKPq3s=
+From:   Brian Masney <masneyb@onstation.org>
+To:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 0/2] interconnect: qcom: add msm8974 driver
+Date:   Mon,  2 Sep 2019 17:19:23 -0400
+Message-Id: <20190902211925.27169-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gybZqUVR=MvMJJDn42XrIvL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gybZqUVR=MvMJJDn42XrIvL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Here's a patch series that adds interconnect support for the Qualcomm
+MSM8974, which is needed so that the GPU can be supported upstream. I'm
+having an issue with getting this to work fully and included a detailed
+write up in patch 2 with what I'm seeing. I think I am close to
+getting this working fully and would appreciate any feedback on this
+series.
 
-Hi all,
+Brian Masney (2):
+  dt-bindings: interconnect: qcom: add msm8974 bindings
+  interconnect: qcom: add msm8974 driver
 
-Commits
+ .../bindings/interconnect/qcom,msm8974.yaml   | 163 ++++
+ drivers/interconnect/qcom/Kconfig             |   9 +
+ drivers/interconnect/qcom/Makefile            |   2 +
+ drivers/interconnect/qcom/msm8974.c           | 793 ++++++++++++++++++
+ .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++
+ 5 files changed, 1113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+ create mode 100644 drivers/interconnect/qcom/msm8974.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
 
-  f12dc871e3ec ("kgdb: fix comment regarding static function")
-  c60d67aad7b7 ("kdb: Replace strncmp with str_has_prefix")
+-- 
+2.21.0
 
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/gybZqUVR=MvMJJDn42XrIvL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1thskACgkQAVBC80lX
-0GyiEwf/VqWYXy0ot99fxq1GE6AGrm9uO1V1D6MdI8FY1q19NLuPOmytkmTSc2x5
-0hvW4p0QYimMkMKCmq/0JTUpeBbz5MWzYbw2OBaQ4+mjAWMdxr+AUHA+uBVNHTwR
-/sTFPZscWRUVCaCoyiXWeMDp9BdjuBH5unTu/KUOm0yA7Ec2DpqCvlSMsTKQ4CTs
-RDKYLnqv6h/hSQU1m4JoL1tumAPsxtpdHiVURTt9GHjECfxZlZF/lEAWZCObHDM6
-/LqKZ1CVrY4/tX7L/EkAFiWBS3IEyJEijDH14a47PKTlrv0twYRKV/E2Z1qd5zXX
-Tlr33gJe6Pfb5WSzLCv+Z1W06P1n8w==
-=zdQY
------END PGP SIGNATURE-----
-
---Sig_/gybZqUVR=MvMJJDn42XrIvL--
