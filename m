@@ -2,88 +2,168 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C986DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54565C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7C821670
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567435227;
-	bh=9XlrkKZs36QREKqW/7ZUpuD29iWxt58tOGcMwTyFjMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tLKfeV9pJ90HyYQDosZ0rEog2d5EL4U1T2QIvU1m3zvLSfQIPdh83hM34l/9Qhpsr
-	 rjUy4q6WEZt4//zwPRbc7uMFLZ92uBnKh7Zxs0lkGGL9mDg1ispUwpTxKP7K01A921
-	 KsyZViuf7IKM1JdDbW303TLC0J+AAYoEvLf3npxA=
+	by mail.kernel.org (Postfix) with ESMTP id 235C62087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 14:40:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EVxmpHXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbfIBOk1 (ORCPT
+        id S1731613AbfIBOkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 10:40:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45584 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730830AbfIBOk0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 10:40:26 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so14241135wrj.12;
-        Mon, 02 Sep 2019 07:40:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gF2YRoI6/lwt/TFrMmnLSeITDMeILS4+8zt7lZ2omHo=;
-        b=SeD1F11cXtnLnW8M3vBCdD1wlLJ8w/5LP6d+V+4Vlv91+v0XCPwv827KEG8Xo4xYbj
-         IohDbp5OyaDgbcpYX4CzKDwebbYrbt6SXQibN+j0BIpKLXRCnwarVW9gfjTdZhiED7cc
-         UABBye0tc4hDMMbNsT029lm/CS0Q0lxXaH4sbrreD84gTGu1FCP55UAl3DAhRZnbVlNg
-         Yn7XrLKe6tx9OYfknoOG5vTkZtILGU0nDQDCkVyZZi6DwOczbjPXqOmrlv7dNyu78+Za
-         5+iC6fy80cQ4utrys9ndpQ3dnETiNtWYGl3gCskoN1SfRW2PjDULxNKODgnmBn6W1Cba
-         IuEQ==
-X-Gm-Message-State: APjAAAUsaJ0kW3no0/sOtjhkkZPms85IAoFPkic7FeT1zp1RQv7Si4WE
-        Xlv9IPBJex9mLGBUqkl3eQ==
-X-Google-Smtp-Source: APXvYqzRwSzgzhnfparGWRJaR6tBJvpa7gyFCJoMnUO+USlBgu95jVtD97+bXRcYz9WicR2EhMiC3g==
-X-Received: by 2002:a5d:51c7:: with SMTP id n7mr35130945wrv.73.1567435224169;
-        Mon, 02 Sep 2019 07:40:24 -0700 (PDT)
-Received: from localhost ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id o193sm14431348wme.39.2019.09.02.07.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 07:40:23 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 15:40:22 +0100
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Vernia <peter.vernia@gmail.com>
-Cc:     peter.vernia@gmail.com, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, poeschel@lemonage.de
-Subject: Re: [PATCH] pinctrl-mcp23s08: Fix property-name in dt-example
-Message-ID: <20190902144022.GA24928@bogus>
-References: <20190828195609.4176-1-peter.vernia@gmail.com>
+        Mon, 2 Sep 2019 10:40:33 -0400
+Received: from mail-eopbgr750130.outbound.protection.outlook.com ([40.107.75.130]:29710
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730830AbfIBOkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 10:40:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kq2biLw9HFXdggMqewz8pyGTy5TYByh0BgDHW/CTc9uS2UnZtBNJf6n0NNPew9tzPxGn6jiHJr+EMGBOZuNCixpy3BJinUYG+GftEz6HCVaeX6v6vxw2WI+mwMTQkvKwz3I19MQsPzdxEvmg0CjaeIp4hoU86tpQAQVbTY6jRbE0bci0QVRuYv1WMBjsmd7Fg3Bb8nup0cymRznfTPJa7zs1xNxpqj4KKLGxpYP5x7ey9fWW7yCcbl5f8MRqeEy9YLGxcSQIb1IoZKZ8Jw5/ADrPMEr+5bM6LUEEAFP20bMJZ4/5ZICBEhn2ksS1HVP7QhTTKdInA7lycfHwl78pgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q4EGcA4uF+U0YPEY9+XtI783eny5k/mbsya35N0MCEQ=;
+ b=jkkMCJqHFCJUZFKm5jtbZrhDWzTVl3ZiTm/PQgcPTpgV05sWuU6p/Cv5DZNF5Oao+B0zntA7NYH49IIIpmw2u26IIH4qGzIEPjxiNQioahwNo5NnKFGrTzGQFCXblG/0AoLGy2cYCG3DGWseoYQvaVCoj6qK2wVvOXxzy7drY1VDMol//eCe6UCpn6StqpmLDb85GhMxIfBlOLX0JGMl3p4JG/swHML9SIWc/hW0LeMHmlYx71NHymIFmcGFHqTyZG/CIkql+LoUxRF63rH7W2ZzVgNbumAdSNJQ9VeWiTM/baGFwEatNCC7IGfkOtT+VqJdfUptzJh8HJSERdsgOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q4EGcA4uF+U0YPEY9+XtI783eny5k/mbsya35N0MCEQ=;
+ b=EVxmpHXpkzbujpbcLpI32pI7Sf1n2+bpexmsuAm7GIVJF2pdyIT/BR/qqwT7OjgF8RZSYXzrWcRDhRkmF/HsNjZf9tMPU1+jhehdaFDQJQ5cWpnlpQ4f7STk3M5B6HtagqTKtYut1l12m9U3pcxU7K4rp0eoeeoszuZWmU3Am38=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0700.namprd21.prod.outlook.com (10.175.112.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.3; Mon, 2 Sep 2019 14:40:26 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::c437:6219:efcc:fb8a]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::c437:6219:efcc:fb8a%7]) with mapi id 15.20.2263.004; Mon, 2 Sep 2019
+ 14:40:26 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH V2] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
+Thread-Topic: [PATCH V2] x86/Hyper-V: Fix overflow issue in the
+ fill_gva_list()
+Thread-Index: AQHVYYvUITYCw+y5jU6ew4FN0rlxzKcYdOig
+Date:   Mon, 2 Sep 2019 14:40:26 +0000
+Message-ID: <DM5PR21MB01379A2DC17C13ABCFEE5E05D7BE0@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20190902124143.119478-1-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20190902124143.119478-1-Tianyu.Lan@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-02T14:40:24.1421229Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e6ae5408-2b9a-4e9d-a873-ec1ebf59a379;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e309f0cc-64e6-480e-17f0-08d72fb37e6e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0700;
+x-ms-traffictypediagnostic: DM5PR21MB0700:|DM5PR21MB0700:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB0700A82EE1D8F7EF185AE09FD7BE0@DM5PR21MB0700.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:359;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(199004)(189003)(14454004)(54906003)(22452003)(110136005)(316002)(66066001)(6246003)(478600001)(1511001)(53936002)(2906002)(5660300002)(6436002)(52536014)(99286004)(71190400001)(55016002)(25786009)(9686003)(229853002)(256004)(8936002)(2201001)(7736002)(2501003)(86362001)(10090500001)(26005)(446003)(186003)(11346002)(4326008)(76116006)(66556008)(66476007)(6506007)(66446008)(6116002)(3846002)(8990500004)(66946007)(64756008)(102836004)(7696005)(76176011)(476003)(486006)(81156014)(81166006)(8676002)(7416002)(33656002)(10290500003)(71200400001)(74316002)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0700;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NH//qtB+HHtMlioKbkDFl8VqOXi9ozWQ086ZzivDU+uGVohpMspEov5ffp3AzmlijVEm4ESWEhBi89pZx50WrNdIYd3fRtMWgx1tGTcj1lppRj8beu0VeFbzMxq4PAiIIY6Y44nE78mZwB83OyXeXV1WbfxheuTaIxvi5RCM1d1+nPM/AtJlhTv1EiAOLkQEjO5Lck+7u/LUbIFKAH0O9wxNr+q/y/Vl0PHbsh/dyAr4Y2vKF+KBkLTyCudcLr0QsgIWmSh0g+leNqgjEnthlvz7Jo376C0PUvnYnC2xBa+ML3tptwFbMYDROvkLY4jOxpTkRxJNCDgLgIEHGvAF0qUMmHEneAV0xJVp2PwKLo9SJoeVvIIXhh5QOBh9NtUdogzTSpTPkwg4YGxFXtwASJMg3X+PxZAA4s40Yl7JTek=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828195609.4176-1-peter.vernia@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e309f0cc-64e6-480e-17f0-08d72fb37e6e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 14:40:26.1041
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rzo4F6shxpFhxPVkmlW1kvDxaYycxNZkNs0V/yiA+GMv6Wp6ovLFZzIO8uA/e0h7rnBP2DlmzbeRuTBgvHWDpmF4El2R0rSN2wVtusYwj84=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 15:56:09 -0400, Peter Vernia wrote:
-> The device-tree properties documentation-file specifies the property
-> "microchip,spi-present-mask" as required for MCP23SXX chips. However,
-> the device-tree-source example below it uses only "spi-present-mask".
-> Without "microchip," on the front, the driver will print "missing
-> spi-present-mask" when it initializes.
-> 
-> Update the device-tree example with the correct property-name.
-> 
-> Signed-off-by: Peter Vernia <peter.vernia@gmail.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, September 2, 2019=
+ 5:42 AM
+>=20
+> When the 'start' parameter is >=3D  0xFF000000 on 32-bit
+> systems, or >=3D 0xFFFFFFFF'FF000000 on 64-bit systems,
+> fill_gva_list gets into an infinite loop.  With such inputs,
+> 'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
+> compares as less than end.  Memory is filled with guest virtual
+> addresses until the system crashes
+>=20
+> Fix this by never incrementing 'cur' to be larger than 'end'.
+>=20
+> Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
 > ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> Change since v1:
+>      - Simply the commit message
+>=20
+>  arch/x86/hyperv/mmu.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+> index e65d7fe6489f..5208ba49c89a 100644
+> --- a/arch/x86/hyperv/mmu.c
+> +++ b/arch/x86/hyperv/mmu.c
+> @@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int o=
+ffset,
+>  		 * Lower 12 bits encode the number of additional
+>  		 * pages to flush (in addition to the 'cur' page).
+>  		 */
+> -		if (diff >=3D HV_TLB_FLUSH_UNIT)
+> +		if (diff >=3D HV_TLB_FLUSH_UNIT) {
+>  			gva_list[gva_n] |=3D ~PAGE_MASK;
+> -		else if (diff)
+> +			cur +=3D HV_TLB_FLUSH_UNIT;
+> +		}  else if (diff) {
+>  			gva_list[gva_n] |=3D (diff - 1) >> PAGE_SHIFT;
+> +			cur =3D end;
+> +		}
+>=20
+> -		cur +=3D HV_TLB_FLUSH_UNIT;
+>  		gva_n++;
+>=20
+>  	} while (cur < end);
+> --
+> 2.14.5
 
-Applied, thanks.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-Rob
