@@ -2,136 +2,142 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04D2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF64217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A338217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:02:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="mh3+HhRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfIBKBs (ORCPT
+        id S1730925AbfIBKCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:01:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:10307 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbfIBKBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:01:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 03:01:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="211644503"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Sep 2019 03:01:42 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i4j9Z-0008GD-87; Mon, 02 Sep 2019 13:01:41 +0300
-Date:   Mon, 2 Sep 2019 13:01:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Cai <peter@typeblog.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
-Message-ID: <20190902100141.GW2680@smile.fi.intel.com>
-References: <20190831030916.13172-1-peter@typeblog.net>
+        Mon, 2 Sep 2019 06:02:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37907 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730250AbfIBKCl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:02:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so2208644pfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 03:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RQ4bgGpDe1aO2dcXCN2kWEia8kVQV/JW3GaWgKM7FYE=;
+        b=mh3+HhRmMDF81+H6REGveUB1w/FITeP87l5Kn0pE/4A7ip3Z5n/gzLlKFGvZ4X1urg
+         uTrpaaPPotgwE1gr0/qkMLkkEL1LFvVDQ1g6zdBYh5mNyl/iYUjoMweg1L0+Iq06FP5f
+         f4Qty34vvU0ICYsKoQ6NQB2X16O+G5MR8/eRKCBB9pORO2u6OXD2bBaa+CskviGyjQRX
+         D39hS8k6KY0yQtWXsycwUKfCKd28ujoMsypj9cyIrODLgCNiyce+93/An3DIAZLTGnws
+         cujQTluCGz50xtILEjftm19ngvM+CNMXSRx2BuJDGhzdrOePRM8YHdbV93g9Xd4znWws
+         /1hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RQ4bgGpDe1aO2dcXCN2kWEia8kVQV/JW3GaWgKM7FYE=;
+        b=I8963KPNPlSpZFgwEbGm2hg3ly9JQUujZobb9tR2FbVOejFyhFBCeydsMDgmMC9pnv
+         YHrlK8y+GA1Nu/RENKZr2IzXKOPSjqs7Skl5IhsQ/w7ikyl55z8aPx1F7d78YERu/SNv
+         jKZCVnDgyq+IVXfFwePOCh6ckHbxUmTMx8OehnJ5B9MujqGEa1NDaIHCjFBcsePrRltQ
+         OElhpV1UNuX+Ci3ZUUReNPWKIdyQfk2g/xFcYlf9gWc9Jk1/pbjElx5hg27jxNVMRAm5
+         T8k5aVgCCA0bAz8M5m9cYlsGZgKIDKlpPI4KsgyBH1l9b7Xu8SaQk9j1SGm6z3OWTz5r
+         0Y4Q==
+X-Gm-Message-State: APjAAAUHOp+RFj8IWBcc+dlvwBe/Tw/vOGhDLQ0rfBgGx13mOtsYBOwz
+        WbU6qLXls+lrv0U5qm85OQ9gYA==
+X-Google-Smtp-Source: APXvYqxRf34N5BEFEv8etsDj/JI3+CfZ0JnpQI+TsEcRr5YSB05J7K3rQw7oqzyvUHr981kBtMIs4g==
+X-Received: by 2002:a62:2603:: with SMTP id m3mr34483187pfm.163.1567418560532;
+        Mon, 02 Sep 2019 03:02:40 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id z4sm12783932pgp.80.2019.09.02.03.02.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 03:02:40 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] ALSA: hda/realtek - Enable internal speaker & headset mic of ASUS UX431FL
+Date:   Mon,  2 Sep 2019 18:00:56 +0800
+Message-Id: <20190902100054.6941-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190831030916.13172-1-peter@typeblog.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
-> On GPD P2 Max, the firmware could not reset the touch panel correctly.
-> The kernel needs to take on the job instead, but the GpioInt definition
-> in DSDT specifies ActiveHigh while the GPIO pin should actually be
-> ActiveLow.
-> 
-> We need to override the polarity defined by DSDT. The GPIO driver
-> already allows defining polarity in acpi_gpio_params, but the option is
-> not applied to GpioInt.
-> 
-> This patch adds a new quirk that enables the polarity specified in
-> acpi_gpio_params to also be applied to GpioInt.
+Original pin node values of ASUS UX431FL with ALC294:
 
-Thank you for an update!
+0x12 0xb7a60140
+0x13 0x40000000
+0x14 0x90170110
+0x15 0x411111f0
+0x16 0x411111f0
+0x17 0x90170111
+0x18 0x411111f0
+0x19 0x411111f0
+0x1a 0x411111f0
+0x1b 0x411111f0
+0x1d 0x4066852d
+0x1e 0x411111f0
+0x1f 0x411111f0
+0x21 0x04211020
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+1. Has duplicated internal speakers (0x14 & 0x17) which makes the output
+   route become confused. So, the output volume cannot be changed by
+   setting.
+2. Misses the headset mic pin node.
 
-on the condition that Dmitry and other input / Goodix developers are okay with
-the approach in general.
+This patch disables the confusing speaker (NID 0x14) and enables the
+headset mic (NID 0x19).
 
-> 
-> Signed-off-by: Peter Cai <peter@typeblog.net>
-> ---
-> 
-> v2: rebased to gpio/for-next, moved quirk out of the gpioint
-> conditional.
-> ---
->  drivers/gpio/gpiolib-acpi.c   | 9 +++++++++
->  include/linux/gpio/consumer.h | 6 ++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index fdee8afa5339..ab16ea61a8fa 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -603,6 +603,15 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
->  			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
->  			lookup->info.polarity = lookup->active_low;
->  		}
-> +
-> +		/*
-> +		 * Override the polarity specified by GpioInt if
-> +		 * ACPI_GPIO_QUIRK_OVERRIDE_POLARITY is set.
-> +		 */
-> +		if (lookup->info.quirks & ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) {
-> +			dev_warn(&lookup->info.adev->dev, FW_BUG "Incorrect polarity specified by GpioInt, overriding.\n");
-> +			lookup->info.polarity = lookup->active_low;
-> +		}
->  	}
->  
->  	return 1;
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-> index b70af921c614..7e9f24ebb085 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -622,6 +622,12 @@ struct acpi_gpio_mapping {
->   * get GpioIo type explicitly, this quirk may be used.
->   */
->  #define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
-> +/*
-> + * Use the GPIO polarity (ActiveHigh / ActiveLow) from acpi_gpio_params
-> + * for GpioInt as well. The default behavior is to use the one specified
-> + * by GpioInt, which can be incorrect on some devices.
-> + */
-> +#define ACPI_GPIO_QUIRK_OVERRIDE_POLARITY	BIT(2)
->  
->  	unsigned int quirks;
->  };
-> -- 
-> 2.23.0
-> 
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ sound/pci/hda/patch_realtek.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e333b3e30e31..0a1fa99a6723 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5797,6 +5797,7 @@ enum {
+ 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
++	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6837,6 +6838,16 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		}
+ 	},
++	[ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x14, 0x411111f0 }, /* disable confusing internal speaker */
++			{ 0x19, 0x04a11150 }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6995,6 +7006,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
++	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
