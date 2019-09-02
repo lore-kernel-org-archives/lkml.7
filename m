@@ -2,167 +2,93 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A448C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20451C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A8821897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACOXOZft"
+	by mail.kernel.org (Postfix) with ESMTP id E14E022DCC
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 21:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567460311;
+	bh=kaaq401nmBdTSHu/XiUBD70JNneEb8DIrs7hzf+jJHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j8SjGnOEzUEltm9HmKPMrQV7YFB+0QNTBDsNYaL9yWljGdl0vmw+nJSr+H6TKpBwb
+	 Tj8/TgGforoY9iVPeUaDZycXf5fIcFITawjtmGZEsq+R9oor9deE2IYvxbF3hX4Iaf
+	 9DzXnlj3APL2JKj0bBjcarDKVxwu5qyR4UCjDSIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfIBVht (ORCPT
+        id S1727758AbfIBVia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 17:37:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38229 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfIBVhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 17:37:48 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so6439754wrx.5;
-        Mon, 02 Sep 2019 14:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=AzTuyC2UsbNpm6l7U9X8UINePV0sxSWA4lyUt5FUF8I=;
-        b=ACOXOZftMzxnBXf7Mn8TNUGkt5tTRL0PxYAd9HIEyOmhxpyBC2Xs0YAiO2WCsQGZuM
-         2RyyEMVjxsUXBfHRnbvsgdAJ0Soi7FTywBM7MiTPh/31uIqySyseSdQZ2X+ucXc/NAmB
-         zzx7xB9CHW0AQlMugYjiOAr6J2CMaC4T4CTvmSNc4o6Gmrs3GUD3qiHcaceT2XEampVQ
-         uv3DSFPyxEaoUQHtQj+MFFif6DI37sQ3URILMUTlkVDslod+EUX47nfEHhue5U0gMKpM
-         4xjaCMmwR/X6+Pc/5og0XwtV56aBpEjjx+8JUbqJ613u7EsgbM4A4Bz6vFeED2fmwLm0
-         PEmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=AzTuyC2UsbNpm6l7U9X8UINePV0sxSWA4lyUt5FUF8I=;
-        b=iDKH6+5TFjzoAL43GrNduPefldo8LT/+2ge/ccFt66qowi7pLlw3Iu/8+8QhLTGmpY
-         FAAaDSsGQnJNFJ+xO0rq8n20c1ohx0gkg16BMi1RQxnKMzaMAc6n7+NFTgza7y9LeSZK
-         wOVgaLYtmsUUysZScs1MNguTfE/PElO83q5BIhK8D8Hwc2ZrJkSGVbapaM3asxktmgsS
-         lijH8nOWfR2Ev7jJ3dkvWyXVnLbOpxIryaIa1M/9g5tFQHxgsRL2O/rOtilZTA4P02ZW
-         GssDSSNReCHwHlexRVaffX2xHrnDsNbZLLLG2GCIkCNEfdTzblcqvxQLDtK4p1fVhslc
-         kv/Q==
-X-Gm-Message-State: APjAAAVoxkCscA3BIZVv27YWK1gcQGwlmU/LPqnN0gNQmoj3KAQKRW7l
-        dJgKmCR2r3Z2Ms/m5gxnVDyTday3
-X-Google-Smtp-Source: APXvYqziqzBEOwGLRmlaO0Yb8EPO9joHZ7A7//D5mVWpDB+g5EX3APsttrwr1cYJsIvfbbQRjE3bKg==
-X-Received: by 2002:adf:f30e:: with SMTP id i14mr24352349wro.288.1567460265983;
-        Mon, 02 Sep 2019 14:37:45 -0700 (PDT)
-Received: from [172.30.89.46] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id q24sm23219092wmc.3.2019.09.02.14.37.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 14:37:45 -0700 (PDT)
-Subject: Re: [PATCH 15/22] media: imx7-media-csi: Create media links in bound
- notifier
-To:     Rui Miguel Silva <rmfrfs@gmail.com>
-Cc:     linux-media@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190805233505.21167-1-slongerbeam@gmail.com>
- <20190805233505.21167-16-slongerbeam@gmail.com> <m3blw35970.fsf@gmail.com>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <b648b587-110d-8e6a-8b9c-10e8dbb9561e@gmail.com>
-Date:   Mon, 2 Sep 2019 14:37:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 17:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727318AbfIBVi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 17:38:29 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CABC520828;
+        Mon,  2 Sep 2019 21:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567460308;
+        bh=kaaq401nmBdTSHu/XiUBD70JNneEb8DIrs7hzf+jJHc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zWpp0ekwFLO9mEtnMHUAEc17a8bDcIff1Kozu6gDr4uXN3F9z04i1GNSj/QOZ5rKe
+         FuHpA83H1qV8KrwcFIOyzgWaTfrOqG2VvFNMund6t/JQJRgqCUafDAKfxyeOndoZtF
+         quD/TKjyWIqOB1/QEOmWDfYieCsTGdVxuxScOlfE=
+Date:   Mon, 2 Sep 2019 16:38:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Subject: Re: [PATCH] PCI: Move ATS declarations to linux/pci.h
+Message-ID: <20190902213826.GI7013@google.com>
+References: <20190830150756.21305-1-kw@linux.com>
+ <20190830161840.GA9733@infradead.org>
+ <20190902211100.GH7013@google.com>
 MIME-Version: 1.0
-In-Reply-To: <m3blw35970.fsf@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902211100.GH7013@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rui,
+[+cc Kelsey]
 
-On 9/2/19 2:38 AM, Rui Miguel Silva wrote:
-> Hi Steve,
-> On Tue 06 Aug 2019 at 00:34, Steve Longerbeam wrote:
->> Implement a notifier bound op to register media links from the remote
->> sub-device's source pad(s) to the CSI sink pad.
->>
->> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
->> ---
->>   drivers/staging/media/imx/imx7-media-csi.c | 24 ++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
->> index a1c96c52a606..f71ac485f780 100644
->> --- a/drivers/staging/media/imx/imx7-media-csi.c
->> +++ b/drivers/staging/media/imx/imx7-media-csi.c
->> @@ -196,6 +196,11 @@ struct imx7_csi {
->>   	struct completion last_eof_completion;
->>   };
->>
->> +static inline struct imx7_csi *notifier_to_dev(struct v4l2_async_notifier *n)
->>
-> As the other one add the namespace for the function name:
-> imx7_csi_notifier_to_dev
->
-> other than this, looks good to me.
+On Mon, Sep 02, 2019 at 04:11:00PM -0500, Bjorn Helgaas wrote:
+> On Fri, Aug 30, 2019 at 09:18:40AM -0700, Christoph Hellwig wrote:
+> > On Fri, Aug 30, 2019 at 05:07:56PM +0200, Krzysztof Wilczynski wrote:
+> > > Move ATS function prototypes from include/linux/pci-ats.h to
+> > > include/linux/pci.h so users only need to include <linux/pci.h>:
+> > 
+> > Why is that so important?  Very few PCI(e) device drivers use ATS,
+> > so keeping it out of everyones include hell doesn't seem all bad.
+> 
+> This was my idea, and it wasn't a good one, sorry.
+> 
+> The ATS, PRI, and PASID interfaces are all sort of related and are
+> used only by the IOMMU drivers, so it probably makes sense to put them
+> all together.  Right now the ATS stuff is in linux/pci.h and PRI/PASID
+> stuff is in linux/pci-ats.h.  Maybe the right thing would be to move
+> the ATS stuff to pci-ats.h.
+> 
+> I previously moved it from pci-ats.h to pci.h with ff9bee895c4d ("PCI:
+> Move ATS declarations to linux/pci.h so they're all together") with
+> the excuse of putting the external ATS interfaces next to
+> pci_ats_init().  But that really looks like it was a mistake because
+> pci_ats_init() is a PCI-internal thing and its declaration should
+> probably be in drivers/pci/pci.h instead.
 
-Thanks for the review. I will make those changes in next rev.
-
-Steve
-
->
->
->> +{
->> +	return container_of(n, struct imx7_csi, notifier);
->> +}
->> +
->>   static u32 imx7_csi_reg_read(struct imx7_csi *csi, unsigned int offset)
->>   {
->>   	return readl(csi->regbase + offset);
->> @@ -1173,6 +1178,23 @@ static int imx7_csi_parse_endpoint(struct device *dev,
->>   	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
->>   }
->>
->> +static int imx7_csi_notify_bound(struct v4l2_async_notifier *notifier,
->> +				 struct v4l2_subdev *sd,
->> +				 struct v4l2_async_subdev *asd)
->> +{
->> +	struct imx7_csi *csi = notifier_to_dev(notifier);
->> +	struct media_pad *sink = &csi->sd.entity.pads[IMX7_CSI_PAD_SINK];
->> +
->> +	return media_create_fwnode_pad_links(sink,
->> +					     dev_fwnode(csi->sd.dev),
->> +					     &sd->entity,
->> +					     dev_fwnode(sd->dev), 0);
->> +}
->> +
->> +static const struct v4l2_async_notifier_operations imx7_csi_notify_ops = {
->> +	.bound = imx7_csi_notify_bound,
->> +};
->> +
->>   static int imx7_csi_probe(struct platform_device *pdev)
->>   {
->>   	struct device *dev = &pdev->dev;
->> @@ -1253,6 +1275,8 @@ static int imx7_csi_probe(struct platform_device *pdev)
->>
->>   	v4l2_async_notifier_init(&csi->notifier);
->>
->> +	csi->notifier.ops = &imx7_csi_notify_ops;
->> +
->>   	ret = v4l2_async_register_fwnode_subdev(&csi->sd, &csi->notifier,
->>   						sizeof(struct v4l2_async_subdev),
->>   						NULL, 0,
-
+Never mind the pci_ats_init() part; Kelsey has already moved that:
+https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=b92b512a435d
