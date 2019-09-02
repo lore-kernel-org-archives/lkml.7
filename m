@@ -2,85 +2,68 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619D0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F65C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4220F21881
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7FC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfIBKZR (ORCPT
+        id S1730821AbfIBK0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:25:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34889 "EHLO ozlabs.org"
+        Mon, 2 Sep 2019 06:26:38 -0400
+Received: from mga18.intel.com ([134.134.136.126]:47036 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729999AbfIBKZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:25:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MR6c6x1gz9sDB;
-        Mon,  2 Sep 2019 20:25:12 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Will Deacon <will@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Peter Collingbourne <pcc@google.com>
-Subject: Re: linux-next: manual merge of the powerpc tree with the arm64 tree
-In-Reply-To: <20190902090846.GA15118@arrakis.emea.arm.com>
-References: <20190902094711.2625ba31@canb.auug.org.au> <87lfv7tqt0.fsf@mpe.ellerman.id.au> <20190902090846.GA15118@arrakis.emea.arm.com>
-Date:   Mon, 02 Sep 2019 20:25:12 +1000
-Message-ID: <87y2z7ro53.fsf@mpe.ellerman.id.au>
+        id S1730690AbfIBK0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:26:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 03:26:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="183277100"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.44])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Sep 2019 03:26:35 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] doc: kvm: fix return description of KVM_SET_MSRS
+Date:   Mon,  2 Sep 2019 18:12:14 +0800
+Message-Id: <20190902101214.77833-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Catalin Marinas <catalin.marinas@arm.com> writes:
-> On Mon, Sep 02, 2019 at 11:44:43AM +1000, Michael Ellerman wrote:
->> Stephen Rothwell <sfr@canb.auug.org.au> writes:
->> > Hi all,
->> >
->> > Today's linux-next merge of the powerpc tree got a conflict in:
->> >
->> >   arch/Kconfig
->> >
->> > between commit:
->> >
->> >   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
->> >
->> > from the arm64 tree and commit:
->> >
->> >   0c9c1d563975 ("x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig")
->> >
->> > from the powerpc tree.
->> >
->> > I fixed it up (see below) and can carry the fix as necessary. This
->> > is now fixed as far as linux-next is concerned, but any non trivial
->> > conflicts should be mentioned to your upstream maintainer when your tree
->> > is submitted for merging.  You may also want to consider cooperating
->> > with the maintainer of the conflicting tree to minimise any particularly
->> > complex conflicts.
->> 
->> Thanks.
->> 
->> That conflict seems entirely trivial, but Catalin/Will if it bothers you
->> I have the conflicting commit in a topic branch based on rc2 which you
->> could merge to resolve it:
->
-> It's a trivial conflict, easy to resolve. I don't think it's worth
-> trying to avoid it (Linus normally doesn't mind such conflicts).
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ Documentation/virt/kvm/api.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yep, I agree.
+diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+index 2d067767b617..a2efc19e0f4e 100644
+--- a/Documentation/virt/kvm/api.txt
++++ b/Documentation/virt/kvm/api.txt
+@@ -586,7 +586,7 @@ Capability: basic
+ Architectures: x86
+ Type: vcpu ioctl
+ Parameters: struct kvm_msrs (in)
+-Returns: 0 on success, -1 on error
++Returns: number of msrs successfully set, -1 on error
+ 
+ Writes model-specific registers to the vcpu.  See KVM_GET_MSRS for the
+ data structures.
+-- 
+2.19.1
 
-cheers
