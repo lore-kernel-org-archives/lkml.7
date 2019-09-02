@@ -2,57 +2,172 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6AFC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E456C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B4D214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE64233A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 07:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbfIBHUR (ORCPT
+        id S1729453AbfIBHW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 03:20:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33540 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726230AbfIBHUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 03:20:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DCCE4AF39;
-        Mon,  2 Sep 2019 07:20:15 +0000 (UTC)
-Subject: Re: [PATCH] swiotlb-zen: Convert to use macro
-To:     Souptick Joarder <jrdr.linux@gmail.com>, sstabellini@kernel.org,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Cc:     iommu@lists.linux-foundation.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org
-References: <1567366136-874-1-git-send-email-jrdr.linux@gmail.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <b0c46bfb-9903-a3da-be30-e5b3fbabc9bf@suse.com>
-Date:   Mon, 2 Sep 2019 09:20:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 03:22:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:5185 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729262AbfIBHW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 03:22:27 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:22:27 -0700
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="184429072"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 00:22:25 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id CB98C20B09; Mon,  2 Sep 2019 10:22:22 +0300 (EEST)
+Date:   Mon, 2 Sep 2019 10:22:22 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 09/10] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Message-ID: <20190902072222.GG5475@paasikivi.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-10-sakari.ailus@linux.intel.com>
+ <20190830130349.GJ2680@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1567366136-874-1-git-send-email-jrdr.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830130349.GJ2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.09.19 21:28, Souptick Joarder wrote:
-> Rather than using static int max_dma_bits, this
-> can be coverted to use as macro.
+Hi Andy,
+
+Thanks for the review.
+
+On Fri, Aug 30, 2019 at 04:03:49PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 29, 2019 at 01:10:42PM +0300, Sakari Ailus wrote:
+> > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> > support printing full path of the node, including its name ("f") and only
+> > the node's name ("P") in the printk family of functions. The two flags
+> > have equivalent functionality to existing %pOF with the same two modifiers
+> > ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> > based systems is added by this patch.
+> > 
+> > On ACPI based systems the resulting strings look like
+> > 
+> > 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> > 
+> > where the nodes are separated by a dot (".") and the first three are
+> > ACPI device nodes and the latter two ACPI data nodes.
 > 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Couple of comments below, FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-s/zen/xen/ in the patch title, other than that:
+Thanks!
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+> 
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
+> >  lib/vsprintf.c                            | 37 +++++++++++++++++++++++
+> >  scripts/checkpatch.pl                     |  3 +-
+> >  3 files changed, 63 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> > index 922a29eb70e6c..abba210f67567 100644
+> > --- a/Documentation/core-api/printk-formats.rst
+> > +++ b/Documentation/core-api/printk-formats.rst
+> > @@ -418,6 +418,30 @@ Examples::
+> >  
+> >  Passed by reference.
+> >  
+> > +Fwnode handles
+> > +--------------
+> > +
+> > +::
+> > +
+> > +	%pfw[fP]
+> 
+> I'm not familiar with all flavours of the OF case, the question is do we use
+> same letters for analogues?
 
+Yes. There are some that may be unworkable to be extended, but in general
+this helps folks who are familiar with the OF conversion specifiers.
 
-Juergen
+> 
+> > +
+> > +For printing information on fwnode handles. The default is to print the full
+> > +node name, including the path. The modifiers are functionally equivalent to
+> > +%pOF above.
+> > +
+> > +	- f - full name of the node, including the path
+> > +	- P - the name of the node including an address (if there is one)
+> > +
+> > +Examples (ACPI):
+> > +
+> > +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
+> > +	%pfwP	endpoint@0				- Node name
+> > +
+> > +Examples (OF):
+> > +
+> > +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
+> > +	%pfwP	endpoint				- Node name
+> > +
+> >  Time and date (struct rtc_time)
+> >  -------------------------------
+> >  
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 19f9b3f30623e..79dacd0b9e124 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1978,6 +1978,37 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  	return widen_string(buf, buf - buf_start, end, spec);
+> >  }
+> >  
+> > +static noinline_for_stack
+> > +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> > +		    struct printf_spec spec, const char *fmt)
+> > +{
+> > +	struct printf_spec str_spec = spec;
+> > +	char *buf_start = buf;
+> > +
+> > +	str_spec.field_width = -1;
+> > +
+> > +	if (*fmt != 'w')
+> > +		return error_string(buf, end, "(%pfw?)", spec);
+> > +
+> > +	if (check_pointer(&buf, end, fwnode, spec))
+> > +		return buf;
+> > +
+> > +	fmt++;
+> > +
+> > +	switch (*fmt) {
+> > +	case 'f':	/* full_name */
+> > +	default:
+> > +		buf = fwnode_full_name_string(fwnode, buf, end);
+> > +		break;
+> > +	case 'P':	/* name */
+> 
+> > +		buf = string(buf, end, fwnode_get_name(fwnode),
+> > +			     str_spec);
+> 
+> Perfectly one line.
+
+Fixed.
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
