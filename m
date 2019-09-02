@@ -2,206 +2,106 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474A9C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C014C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFDA20820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C5D20820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="feQQ24a7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbfIBK3D (ORCPT
+        id S1730956AbfIBKbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:29:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:51704 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728236AbfIBK3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:29:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ABE128;
-        Mon,  2 Sep 2019 03:29:02 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 840AD3F246;
-        Mon,  2 Sep 2019 03:29:01 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 11:29:00 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 4/6] PCI: tegra: Add support to enable slot regulators
-Message-ID: <20190902102859.GA9720@e119886-lin.cambridge.arm.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-5-vidyas@nvidia.com>
+        Mon, 2 Sep 2019 06:31:25 -0400
+Received: from mx-rz-2.rrze.uni-erlangen.de ([131.188.11.21]:58673 "EHLO
+        mx-rz-2.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730880AbfIBKbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:31:23 -0400
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 46MR6F28s5zPnxD;
+        Mon,  2 Sep 2019 12:24:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1567419893; bh=7PNfOShZq9XQbGEA9kJNYAZx+o4dL0AwK/oHuiYjAwg=;
+        h=From:To:Cc:Subject:Date:From:To:CC:Subject;
+        b=feQQ24a7V8rkNC8++tJl1F6MiOhGYEzG8MSD9yOkGWrdNmK+SFOnYD/YS0NTeLGyb
+         tZWgv+7F6lMuHhSo45ZiiFWfWLRhArWwGszOGJURhqd4SJRD6ZqF5I2DimVSX3dFdv
+         QhcMUJBsMc3ngdr6ErLU/JQ1WDp8h5xRDwBCQNmvxW+F6P0+DVmGWpuK6I8KHnx6b6
+         4zGtECDfMz6XbKbDYXltOdjboXBN3RvnAd/ZD0cHC1JnIkweTglT4p1/46W2FpoP2C
+         YDXJvN0sr4ilF5O4oKbpy8eHERJyp4HhfENFpJ0BHkjy6zhWgRB3NJc7rPNB8PSNtI
+         9uZRdjvH/PMvw==
+X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2003:ec:6bcd:9e00:70b1:65fc:7ed4:76a
+Received: from Marco-E580.fritz.box (p200300EC6BCD9E0070B165FC7ED4076A.dip0.t-ipconnect.de [IPv6:2003:ec:6bcd:9e00:70b1:65fc:7ed4:76a])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX18+zHK+FqAwN9M7YvgbOTsFhBmB17DGhAg=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 46MR6B4v8RzPp4k;
+        Mon,  2 Sep 2019 12:24:50 +0200 (CEST)
+From:   Marco Ammon <marco.ammon@fau.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        trivial@kernel.org, Marco Ammon <marco.ammon@fau.de>
+Subject: [PATCH 1/3] x86: fix typo in comment for poke_text_early
+Date:   Mon,  2 Sep 2019 12:24:34 +0200
+Message-Id: <20190902102436.27396-1-marco.ammon@fau.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-5-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:58:48PM +0530, Vidya Sagar wrote:
-> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-> slot from the respective controller's device-tree node and enable those
-> supplies. This is required in platforms like p2972-0000 where the supplies
-> to x16 slot owned by C5 controller need to be enabled before attempting to
-> enumerate the devices.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+In the documentation for text_poke_early, "protected again" should
+actually be "protected against". This patch fixes the spelling mistake.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Marco Ammon <marco.ammon@fau.de>
+---
+ arch/x86/include/asm/text-patching.h | 4 ++--
+ arch/x86/kernel/alternative.c        | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> ---
-> V3:
-> * Added a dev_err() print for failure case of tegra_pcie_get_slot_regulators() API
-> * Modified to make 100ms sleep valid only if at least one of the regulator handles exist
-> 
-> V2:
-> * Addressed review comments from Thierry Reding and Andrew Murray
-> * Handled failure case of devm_regulator_get_optional() for -ENODEV cleanly
-> 
->  drivers/pci/controller/dwc/pcie-tegra194.c | 83 ++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 77fa6f70bc96..18453cc5e7e4 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
->  	u32 aspm_l0s_enter_lat;
->  
->  	struct regulator *pex_ctl_supply;
-> +	struct regulator *slot_ctl_3v3;
-> +	struct regulator *slot_ctl_12v;
->  
->  	unsigned int phy_count;
->  	struct phy **phys;
-> @@ -1047,6 +1049,73 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
->  	}
->  }
->  
-> +static int tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> +	if (IS_ERR(pcie->slot_ctl_3v3)) {
-> +		if (PTR_ERR(pcie->slot_ctl_3v3) != -ENODEV)
-> +			return PTR_ERR(pcie->slot_ctl_3v3);
-> +
-> +		pcie->slot_ctl_3v3 = NULL;
-> +	}
-> +
-> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-> +	if (IS_ERR(pcie->slot_ctl_12v)) {
-> +		if (PTR_ERR(pcie->slot_ctl_12v) != -ENODEV)
-> +			return PTR_ERR(pcie->slot_ctl_12v);
-> +
-> +		pcie->slot_ctl_12v = NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	int ret;
-> +
-> +	if (pcie->slot_ctl_3v3) {
-> +		ret = regulator_enable(pcie->slot_ctl_3v3);
-> +		if (ret < 0) {
-> +			dev_err(pcie->dev,
-> +				"Failed to enable 3.3V slot supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (pcie->slot_ctl_12v) {
-> +		ret = regulator_enable(pcie->slot_ctl_12v);
-> +		if (ret < 0) {
-> +			dev_err(pcie->dev,
-> +				"Failed to enable 12V slot supply: %d\n", ret);
-> +			goto fail_12v_enable;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * According to PCI Express Card Electromechanical Specification
-> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
-> +	 * should be a minimum of 100ms.
-> +	 */
-> +	if (pcie->slot_ctl_3v3 || pcie->slot_ctl_12v)
-> +		msleep(100);
-> +
-> +	return 0;
-> +
-> +fail_12v_enable:
-> +	if (pcie->slot_ctl_3v3)
-> +		regulator_disable(pcie->slot_ctl_3v3);
-> +	return ret;
-> +}
-> +
-> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	if (pcie->slot_ctl_12v)
-> +		regulator_disable(pcie->slot_ctl_12v);
-> +	if (pcie->slot_ctl_3v3)
-> +		regulator_disable(pcie->slot_ctl_3v3);
-> +}
-> +
->  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  					bool en_hw_hot_rst)
->  {
-> @@ -1060,6 +1129,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  		return ret;
->  	}
->  
-> +	ret = tegra_pcie_enable_slot_regulators(pcie);
-> +	if (ret < 0)
-> +		goto fail_slot_reg_en;
-> +
->  	ret = regulator_enable(pcie->pex_ctl_supply);
->  	if (ret < 0) {
->  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
-> @@ -1142,6 +1215,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  fail_core_clk:
->  	regulator_disable(pcie->pex_ctl_supply);
->  fail_reg_en:
-> +	tegra_pcie_disable_slot_regulators(pcie);
-> +fail_slot_reg_en:
->  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->  
->  	return ret;
-> @@ -1174,6 +1249,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
->  		return ret;
->  	}
->  
-> +	tegra_pcie_disable_slot_regulators(pcie);
-> +
->  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->  	if (ret) {
->  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
-> @@ -1373,6 +1450,12 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	ret = tegra_pcie_get_slot_regulators(pcie);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to get slot regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
->  	if (IS_ERR(pcie->pex_ctl_supply)) {
->  		dev_err(dev, "Failed to get regulator: %ld\n",
-> -- 
-> 2.17.1
-> 
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index 70c09967a999..5e8319bb207a 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -45,8 +45,8 @@ extern void text_poke_early(void *addr, const void *opcode, size_t len);
+  * no thread can be preempted in the instructions being modified (no iret to an
+  * invalid instruction possible) or if the instructions are changed from a
+  * consistent state to another consistent state atomically.
+- * On the local CPU you need to be protected again NMI or MCE handlers seeing an
+- * inconsistent instruction while you patch.
++ * On the local CPU you need to be protected against NMI or MCE handlers seeing
++ * an inconsistent instruction while you patch.
+  */
+ extern void *text_poke(void *addr, const void *opcode, size_t len);
+ extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ccd32013c47a..0eefd497e3d8 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -753,8 +753,8 @@ void __init alternative_instructions(void)
+  * When you use this code to patch more than one byte of an instruction
+  * you need to make sure that other CPUs cannot execute this code in parallel.
+  * Also no thread must be currently preempted in the middle of these
+- * instructions. And on the local CPU you need to be protected again NMI or MCE
+- * handlers seeing an inconsistent instruction while you patch.
++ * instructions. And on the local CPU you need to be protected against NMI or
++ * MCE handlers seeing an inconsistent instruction while you patch.
+  */
+ void __init_or_module text_poke_early(void *addr, const void *opcode,
+ 				      size_t len)
+-- 
+2.23.0
+
