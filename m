@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AB0C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2D2C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C782220820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B712173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aIdG133M"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NmmVnOK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfIBIH7 (ORCPT
+        id S1730109AbfIBIIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:07:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50351 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729735AbfIBIH6 (ORCPT
+        Mon, 2 Sep 2019 04:08:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44814 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729634AbfIBIII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:07:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c10so1537806wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:07:56 -0700 (PDT)
+        Mon, 2 Sep 2019 04:08:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 30so2031338wrk.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 01:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=dcnwYP0l9ZZMKxGuHDXzwQdyhtArK//FoNqgnDXsr3M=;
-        b=aIdG133MUwsuhfSLBa8fqn5EFclmRAPM0CnjV3oZTSa5E2c0Yz+hr27csv0yqo7TFL
-         b8X8SF5d13aJ7QrpTS2UmJYT6C+0FFO0StQtRrMfnZd9koiMSzJ9eo2O5sbQaKTYNi3Z
-         Z4okF48F8CMgldf7kxGmZLv8ityUqE4lfSXeClNkmIVCPeem7X1xL/NhJJAFsf5yjEjn
-         12OPCmBOKyVuYV1cGfxNzeaJc/XXjDr23Ubu93wSJEGztEhwLOdUx/5KWLBgc9He4L2w
-         esfvGuC9PX0wE9Eu6fjegI0J9F6ut3kokYjBbSHTepCTsCyWDol3zwhh9xvpaSAHA14Q
-         pjWg==
+        bh=RZo8WArml/7vG0RYj24lta//5luoUJUJmAZY76UyZ14=;
+        b=NmmVnOK7mXVQEe2XN0vdjc4SNOo+SjNOGMEIlZwSPmUjjCsbOkLMs+fUsPklF7kJqy
+         1tenxiZhLfUc7qNt+CJ20JhmLwuvTxXzS0PAyQNyezhuBckB+16e/LuVMYoZxfYx2pjY
+         ObLRjoa+Y25brv2KeMCuj17/u1jueOZGdfArPsCqHjgB2Hr9KK7sHsoKo+9uGFDrp/8A
+         IsAlu8WZe5gWgXiMmfoBnnVfalQlD0PNvjbOcg15AAUrqhNtKlDrUUZwLyEGiEI129Qd
+         iwBXETj6qJUTiNZjPxXiQQcN+ooXCZQzUVqWI3YBELbPmfEMVtJ8Ne+SSSJQ1lGJ8cgd
+         /SOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=dcnwYP0l9ZZMKxGuHDXzwQdyhtArK//FoNqgnDXsr3M=;
-        b=S4fvHJT1xveKR0bhMj+rCrcVIFaGbSypzrKSnDmZGvEP1RT/3o7RzioVJHYOh5tTfl
-         9zvxkRESG0i3W/GXS/AwzWpqUpu8PjwjAKWKmFydXK57kf1dAw2rPNqcN0W505wwL3wl
-         SZ6liGdkTzpRfGW6V60hv2s04X9SYxGwTbQnpiVqh+0t2fioIx+jILP9SuuNqNxIK3FW
-         E5YOcpes4kkuuPdOmRGGhl1hj0oWz5pavPY+2232l9yo5ySNWFbRPFYBAkxB0/IYoUqJ
-         snCpqdKs4S5nBSACr7/pWu3S6OlSX9nZFKumUSqtxy+72nDy95BomCvw1kX8D/tkKw6f
-         IajQ==
-X-Gm-Message-State: APjAAAU/PoMGJ40AbcTH9T4SluX2WYumM8C7d3T6mcbAAYxk0R7NPnhC
-        gAt1reA+m85wb7UlGEddYIHXvpjDnZ8=
-X-Google-Smtp-Source: APXvYqzAvvUBONvEDmDvUqv1/+iLEqZrBYcDKiQqW1eeu+Gdc6DVbQnQZQGK+/MONug2WHiNQjE4Ow==
-X-Received: by 2002:a1c:98c9:: with SMTP id a192mr18972277wme.29.1567411675221;
-        Mon, 02 Sep 2019 01:07:55 -0700 (PDT)
+        bh=RZo8WArml/7vG0RYj24lta//5luoUJUJmAZY76UyZ14=;
+        b=JEQkSSLaX5c4C67RGQG7HbdIB/TFdnti/yJOB40wm6rrrvCnCpbJE8HjFTb8OsgDU2
+         S9yxOQp6cUX3a1THAoQ6c3OWpM5VPIuDytOmnFK3ti6Bc4ZIRL3IS+LQnsE7Mf/sgS+4
+         2nWeQxXXytTKS9wZG4ZTzGhwVDx/29BnFhIb01YGCruu/kfvBQM+3ZzobgxJHz7pQHuJ
+         xHySol7qZAZVhCiZoySc0arX3bB3W3VY/hO77Fps4MTLX70fsZ9c2YRbh/8mD4e89EVI
+         LeACdf7AhkmjS042ozi18CBOVlC13Zf1F4feebtuL69f9+jHYqQ5zuu9p6tgYlVtbVaq
+         6CWg==
+X-Gm-Message-State: APjAAAUWTyOYyijYCY3UnqUJtEvj1i3dPKsfG7SQZN90Vxj7lGvddLnl
+        t+4SpG81aznkcRrfgjtfKSbdRJSmUU4=
+X-Google-Smtp-Source: APXvYqwt5QLqP19OkwKHcqUGCNFPAGKgzyqicVbDJkc+YQcUn5LJMd8evQtXKLeCCr/KgCwBQQi+Ww==
+X-Received: by 2002:a5d:4382:: with SMTP id i2mr18266108wrq.297.1567411685447;
+        Mon, 02 Sep 2019 01:08:05 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a16sm5757322wmg.5.2019.09.02.01.07.53
+        by smtp.gmail.com with ESMTPSA id 189sm11540852wmz.19.2019.09.02.01.08.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 01:07:54 -0700 (PDT)
-Subject: Re: [PATCH 4/5] Revert "drm/edid: make drm_edid_to_eld() static"
+        Mon, 02 Sep 2019 01:08:04 -0700 (PDT)
+Subject: Re: [PATCH 5/5] drm: dw-hdmi: update ELD on HPD event
 To:     Jonas Karlman <jonas@kwiboo.se>,
         Andrzej Hajda <a.hajda@samsung.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -73,7 +73,7 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <AM0PR06MB40049562E295DD62302C8DB7ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
  <20190901161426.1606-1-jonas@kwiboo.se>
- <AM0PR06MB4004968EE64C136494040B7AACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+ <AM0PR06MB4004F589E60DA4BA958FD316ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -126,12 +126,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <c24fbace-3772-b50c-23da-5af35a6ac70f@baylibre.com>
-Date:   Mon, 2 Sep 2019 10:07:53 +0200
+Message-ID: <29a3cd0b-af69-98ae-26c5-947526a7fc68@baylibre.com>
+Date:   Mon, 2 Sep 2019 10:08:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR06MB4004968EE64C136494040B7AACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
+In-Reply-To: <AM0PR06MB4004F589E60DA4BA958FD316ACBF0@AM0PR06MB4004.eurprd06.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -141,64 +141,27 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 01/09/2019 18:14, Jonas Karlman wrote:
-> drm_edid_to_eld() is needed to update stale connector ELD on HPD event.
-> 
-> This reverts part of commit 79436a1c9bcc ("drm/edid: make drm_edid_to_eld() static").
-
-Why not a full revert ?
-
-The documentation revert seems also relevant now
-
-Neil
-
+> Update connector ELD on HPD event, fixes stale ELD when
+> HDMI cable is unplugged/replugged or AVR is powered on/off.
 > 
 > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 > ---
->  drivers/gpu/drm/drm_edid.c | 5 +++--
->  include/drm/drm_edid.h     | 1 +
->  2 files changed, 4 insertions(+), 2 deletions(-)
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 82a4ceed3fcf..47c409af0903 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -4069,7 +4069,7 @@ static void clear_eld(struct drm_connector *connector)
->  	connector->audio_latency[1] = 0;
->  }
->  
-> -/*
-> +/**
->   * drm_edid_to_eld - build ELD from EDID
->   * @connector: connector corresponding to the HDMI/DP sink
->   * @edid: EDID to parse
-> @@ -4077,7 +4077,7 @@ static void clear_eld(struct drm_connector *connector)
->   * Fill the ELD (EDID-Like Data) buffer for passing to the audio driver. The
->   * HDCP and Port_ID ELD fields are left for the graphics driver to fill in.
->   */
-> -static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
-> +void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
->  {
->  	uint8_t *eld = connector->eld;
->  	u8 *cea;
-> @@ -4162,6 +4162,7 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
->  	DRM_DEBUG_KMS("ELD size %d, SAD count %d\n",
->  		      drm_eld_size(eld), total_sad_count);
->  }
-> +EXPORT_SYMBOL(drm_edid_to_eld);
->  
->  /**
->   * drm_edid_to_sad - extracts SADs from EDID
-> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-> index b9719418c3d2..49987818fe23 100644
-> --- a/include/drm/drm_edid.h
-> +++ b/include/drm/drm_edid.h
-> @@ -337,6 +337,7 @@ struct drm_connector;
->  struct drm_connector_state;
->  struct drm_display_mode;
->  
-> +void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid);
->  int drm_edid_to_sad(struct edid *edid, struct cea_sad **sads);
->  int drm_edid_to_speaker_allocation(struct edid *edid, u8 **sadb);
->  int drm_av_sync_delay(struct drm_connector *connector,
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 0f07be1b5914..0a8268b20561 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2178,6 +2178,8 @@ static int dw_hdmi_connector_update_edid(struct drm_connector *connector,
+>  		cec_notifier_set_phys_addr_from_edid(hdmi->cec_notifier, edid);
+>  		if (add_modes)
+>  			ret = drm_add_edid_modes(connector, edid);
+> +		else
+> +			drm_edid_to_eld(connector, edid);
+>  		kfree(edid);
+>  	} else {
+>  		dev_dbg(hdmi->dev, "failed to get edid\n");
 > 
 
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
