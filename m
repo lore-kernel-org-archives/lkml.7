@@ -2,214 +2,128 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8AFC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D040C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D0923717
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2544822D6D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 11:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPNxsY5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfIBLeF (ORCPT
+        id S1730501AbfIBLiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 07:34:05 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:44751 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730148AbfIBLeE (ORCPT
+        Mon, 2 Sep 2019 07:38:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34478 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfIBLiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:34:04 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4karidVj0zaKO4kaviXSof; Mon, 02 Sep 2019 13:34:02 +0200
-Subject: Re: [PATCH] media: cec-notifier: debounce reporing of invalid phys
- addr
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <DB6PR06MB400724D0DD41B208D405F44FACBF0@DB6PR06MB4007.eurprd06.prod.outlook.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <4754781f-3a3b-ef01-881e-c53848f542d8@xs4all.nl>
-Date:   Mon, 2 Sep 2019 13:33:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 07:38:23 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s49so15393637edb.1;
+        Mon, 02 Sep 2019 04:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Bs2n5sOSnZKXzoAXps0daq+vWvxl2WJKs7rvutsTT4E=;
+        b=XPNxsY5QH534cp64SXtvHluzlrL1NvvCKvuVIAkTY6t8H60YdWLXoxqa2sQ9+p2g9k
+         xohNmogX3ie67YGH8xuBCV+Hqzmc7IWBYM+OHATG2/QOXCgUkJhk3fzFitBDRVfbVl8L
+         VpZqMq2juawGFW8NMF8oWxsmbq7pjO39exiaUGddPAUghztghhwmRu1LrSlApHR0yn4S
+         OSmbrQMrA4XfoccFDI1BcOsStlqfjB2uTuVwQUIPpl6GJGr1soNlKLeGiZWdmOyjJZum
+         4Ik2TaQFCGNPyB0gVWxonj5gWuISSkbMgOigGQXByeSrtfF9y2AIWzgjLpcey7W7IH4O
+         Kh1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Bs2n5sOSnZKXzoAXps0daq+vWvxl2WJKs7rvutsTT4E=;
+        b=rsjV20WxKnxjONS+SD6IjtCjVVMBXRIIioUtPXyozuxiJXo/dBOlL7iDbAlWH+tD+o
+         3TLOaY/a+Pn07dl0qMEuNlR410Y04SX8U8Nn7+gnZeLbwbJh5WcLbllkbCPYAs9XQ5sJ
+         eqRviMumNgo9zJJhgL2TJhDdae8UO7f187D1N/2V+x9++0A4Coi38d49jUY9Ni2/Yuax
+         B/3n4i99IkxbvFgeWvUNkRl6SyHwTT1kEVZbcsYDywsbNBBp1M7hgWGunZK+0KJmgpVh
+         xtA6BqNQo6EAqjGsjwKKaDiQsHApuVII/uMasqiWGLmZNHBlo7ZpZWpSVc7b/tBXiiJz
+         o1pg==
+X-Gm-Message-State: APjAAAUoi+F0IAY5JV1AKuwHR4fS8IJRejASgozt8kpjkne/nVStDCRO
+        DZ2apMvsiJ0AHIn1dZ5ryJ0=
+X-Google-Smtp-Source: APXvYqxmE3s5EZUgIaOzgPLsOpwCF4lBTKm7zDmoM9dVth1ZO/tiUVK+qNUIJarcOaz9ECE9IhEs3Q==
+X-Received: by 2002:a17:906:c59:: with SMTP id t25mr23680384ejf.206.1567424300787;
+        Mon, 02 Sep 2019 04:38:20 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id r10sm2846825edp.25.2019.09.02.04.38.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 04:38:19 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 13:38:18 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 1/6] dt-bindings: PCI: tegra: Add sideband pins
+ configuration entries
+Message-ID: <20190902113818.GD19263@ulmo>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <DB6PR06MB400724D0DD41B208D405F44FACBF0@DB6PR06MB4007.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP5JnqS6IAOndfVuApgWk+ozlmOnMT6o2ensM1jUQVb2K6GthH+EWhPrc2RDemz2sVGkOynb4Lfgz6VttXXkjPAsLREb4bWMU+RKvQxG6grD++IrsH/D
- fzNZ/N6hcfuyfuhvNDhIKgVgxzhaXTjCYBX6TRJA0R6w4ugttuWO4AgUPICiOx34qOps8MO0WYxRUz77Gyzd4n96jeR1GcPxzaA/zRXAQzkZgf/GcWJeFevB
- 2b+oTJp2bLG5TMs+b4fSulM4vFzt4PoVI2rRIaJcRgQSOviN/LdESJeO+HE2iFts
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
+Content-Disposition: inline
+In-Reply-To: <20190828172850.19871-2-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
 
-On 9/1/19 9:45 PM, Jonas Karlman wrote:
-> When EDID is refreshed, HDMI cable is unplugged/replugged or
-> an AVR is power cycled the CEC phys addr gets invalidated.
-> 
-> This can cause some disruption of CEC communication when
-> adapter is being reconfigured.
-> 
-> Add a debounce option that can be used to debounce setting
-> an invalid phys addr.
+--LTeJQqWS0MN7I/qa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Debouncing can be dangerous since there are scenarios where there
-is a quick unplug/replug such as in HDMI splitters.
-
-So by default this should be off: I have yet to see issues with
-just assuming the sink was unplugged and a potentially different
-sink was plugged in.
-
-That said, it would be nice to have a debounce module option, but
-this doesn't belong in cec-notifier. Instead, this should be done
-in the cec_s_phys_addr() function itself.
-
-Regards,
-
-	Hans
-
-> 
-> Power off AVR (debounce = 0):
-> [  101.536866] cec-dw_hdmi: new physical address f.f.f.f
-> [  102.495686] cec-dw_hdmi: new physical address 2.1.0.0
-> [  102.495913] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  102.628574] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  105.130115] cec-dw_hdmi: new physical address f.f.f.f
-> [  106.979705] cec-dw_hdmi: new physical address 2.1.0.0
-> [  106.979872] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  107.112399] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  108.979408] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
-> [  109.205386] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
-> 
-> Power on AVR (debounce = 0):
-> [  158.398447] cec-dw_hdmi: new physical address f.f.f.f
-> [  161.977714] cec-dw_hdmi: new physical address 2.1.0.0
-> [  161.978766] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  162.115624] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  162.402750] cec-dw_hdmi: new physical address f.f.f.f
-> [  162.403389] cec-dw_hdmi: cec_transmit_msg_fh: adapter is unconfigured
-> [  162.886757] cec-dw_hdmi: new physical address 2.1.0.0
-> [  162.886964] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  163.510725] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  173.034200] cec-dw_hdmi: message 10 89 02 05 timed out
-> 
-> Power off AVR (debounce = 5000):
-> [  251.720471] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
-> [  251.922432] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
-> 
-> Power on AVR (debounce = 5000):
-> [  291.154262] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
-> [  291.296199] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
-> 
-> Using a debounce of 5000 ms reconfiguring can be avoided.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+On Wed, Aug 28, 2019 at 10:58:45PM +0530, Vidya Sagar wrote:
+> Add optional bindings "pinctrl-names" and "pinctrl-0" to describe pin
+> configuration information of a particular PCIe controller.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/media/cec/cec-core.c     |  4 ++++
->  drivers/media/cec/cec-notifier.c | 23 ++++++++++++++++++++++-
->  drivers/media/cec/cec-priv.h     |  1 +
->  3 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/cec/cec-core.c b/drivers/media/cec/cec-core.c
-> index 9c610e1e99b8..c5094fd9b664 100644
-> --- a/drivers/media/cec/cec-core.c
-> +++ b/drivers/media/cec/cec-core.c
-> @@ -28,6 +28,10 @@ static bool debug_phys_addr;
->  module_param(debug_phys_addr, bool, 0644);
->  MODULE_PARM_DESC(debug_phys_addr, "add CEC_CAP_PHYS_ADDR if set");
->  
-> +int cec_debounce;
-> +module_param_named(debounce, cec_debounce, int, 0644);
-> +MODULE_PARM_DESC(debounce, "debounce invalid phys addr");
-> +
->  static dev_t cec_dev_t;
->  
->  /* Active devices */
-> diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
-> index 4d82a5522072..0157d468cfe4 100644
-> --- a/drivers/media/cec/cec-notifier.c
-> +++ b/drivers/media/cec/cec-notifier.c
-> @@ -12,11 +12,14 @@
->  #include <linux/list.h>
->  #include <linux/kref.h>
->  #include <linux/of_platform.h>
-> +#include <linux/workqueue.h>
->  
->  #include <media/cec.h>
->  #include <media/cec-notifier.h>
->  #include <drm/drm_edid.h>
->  
-> +#include "cec-priv.h"
-> +
->  struct cec_notifier {
->  	struct mutex lock;
->  	struct list_head head;
-> @@ -28,11 +31,25 @@ struct cec_notifier {
->  	void (*callback)(struct cec_adapter *adap, u16 pa);
->  
->  	u16 phys_addr;
-> +	struct delayed_work work;
->  };
->  
->  static LIST_HEAD(cec_notifiers);
->  static DEFINE_MUTEX(cec_notifiers_lock);
->  
-> +static void cec_notifier_delayed_work(struct work_struct *work)
-> +{
-> +	struct cec_notifier *n =
-> +		container_of(to_delayed_work(work), struct cec_notifier, work);
-> +
-> +	mutex_lock(&n->lock);
-> +	if (n->callback)
-> +		n->callback(n->cec_adap, n->phys_addr);
-> +	else if (n->cec_adap)
-> +		cec_s_phys_addr(n->cec_adap, n->phys_addr, false);
-> +	mutex_unlock(&n->lock);
-> +}
-> +
->  struct cec_notifier *
->  cec_notifier_get_conn(struct device *hdmi_dev, const char *conn_name)
->  {
-> @@ -62,6 +79,7 @@ cec_notifier_get_conn(struct device *hdmi_dev, const char *conn_name)
->  	}
->  	n->phys_addr = CEC_PHYS_ADDR_INVALID;
->  
-> +	INIT_DELAYED_WORK(&n->work, cec_notifier_delayed_work);
->  	mutex_init(&n->lock);
->  	kref_init(&n->kref);
->  	list_add_tail(&n->head, &cec_notifiers);
-> @@ -172,9 +190,12 @@ void cec_notifier_set_phys_addr(struct cec_notifier *n, u16 pa)
->  	if (n == NULL)
->  		return;
->  
-> +	cancel_delayed_work_sync(&n->work);
->  	mutex_lock(&n->lock);
->  	n->phys_addr = pa;
-> -	if (n->callback)
-> +	if (cec_debounce > 0 && pa == CEC_PHYS_ADDR_INVALID)
-> +		schedule_delayed_work(&n->work, msecs_to_jiffies(cec_debounce));
-> +	else if (n->callback)
->  		n->callback(n->cec_adap, n->phys_addr);
->  	else if (n->cec_adap)
->  		cec_s_phys_addr(n->cec_adap, n->phys_addr, false);
-> diff --git a/drivers/media/cec/cec-priv.h b/drivers/media/cec/cec-priv.h
-> index 7bdf855aaecd..65176294fcf0 100644
-> --- a/drivers/media/cec/cec-priv.h
-> +++ b/drivers/media/cec/cec-priv.h
-> @@ -27,6 +27,7 @@ static inline bool msg_is_raw(const struct cec_msg *msg)
->  
->  /* cec-core.c */
->  extern int cec_debug;
-> +extern int cec_debounce;
->  int cec_get_device(struct cec_devnode *devnode);
->  void cec_put_device(struct cec_devnode *devnode);
->  
-> 
+> V3:
+> * None
+>=20
+> V2:
+> * None
+>=20
+>  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--LTeJQqWS0MN7I/qa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/ycACgkQ3SOs138+
+s6FLlQ//RFadCCy0+ywuyNwstWFl2JPShvqLv7sExZxKzKf4dNbyo0pVeTDUFWDX
+Xs25hc51nQ3J6PSG/U8KFvEhhZjYizZNXlCr0kdFrsaM+NAOejcC2BQ+cArIDb2w
+Gq3FBww/kgr1UCbfiDIThGlBgwalXABkZ32vk7pu9TKbDpMZLWyCHPEms6fFwo1g
+RhSLQJlMkf7fm4sp1ZFUvzvUjm5lEkqqQreRAfMO7NgVKwziBsrpc2wkNNwHqj9w
+XjeQ0hP2pSwKeB6IHGA4JFioQlb1eYhG8dqTAQem7qV0uOV9n2oIE86GgjiBXqea
+F3LiggKv47SQFBbyx/0TofZW3UVHWgtPlbZm5dIb/qPreNBX4/CKyAIZhn2Nt073
+pj4IZdllTRlPGchj0eW9a6W4PKOz/q/ZksK1kWjbw3yd9oKI7gpePqOoed416ALO
+5sVkOi1siz7sIyj/VowG7rRfPC/QqRtoVGVEYHtrdox2cPqjvXb30uCp8hqB9PZ0
+gXBVi/b0kWfAzl1S5Bwuh2WcXSkNEaUtSC4mnNLsbgiSA3P4qszsb9g4GZwrVN5T
+TlrWTAk7Hsm8AefUMM1SxseUH/VrkHnWDBEuN/K9t620vz8lyWCLcyAj+UdAWzUZ
+IXXXM7Jy2zYyR319UK74mkMxGokz1Pue5oJLciykKIyy+g9cDMQ=
+=eTUT
+-----END PGP SIGNATURE-----
+
+--LTeJQqWS0MN7I/qa--
