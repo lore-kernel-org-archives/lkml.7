@@ -6,40 +6,47 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329CDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C55C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CAB208CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D332343A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 20:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfIBUP6 (ORCPT
+        id S1727400AbfIBUQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 16:15:58 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45175 "EHLO
+        Mon, 2 Sep 2019 16:16:04 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45210 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfIBUP5 (ORCPT
+        with ESMTP id S1727143AbfIBUQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 16:15:57 -0400
+        Mon, 2 Sep 2019 16:16:03 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 2825B818DA; Mon,  2 Sep 2019 22:15:41 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 22:15:53 +0200
+        id CA23982018; Mon,  2 Sep 2019 22:15:47 +0200 (CEST)
+Date:   Mon, 2 Sep 2019 22:16:00 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     James Courtier-Dutton <james.dutton@gmail.com>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        LKML Mailing List <linux-kernel@vger.kernel.org>,
-        linux@endlessm.com, hadess@hadess.net,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-ID: <20190902201553.GA6546@bug>
-References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
- <20190820064620.5119-1-drake@endlessm.com>
- <CAAMvbhH=ftMoh9eFVR3YgN9DVSLaN5tXa-vTsBocY8YuL0Rc1A@mail.gmail.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@google.com>
+Subject: Re: Policy to keep USB ports powered in low-power states
+Message-ID: <20190902201600.GB6546@bug>
+References: <CAHX4x86QCrkrnPEfrup8k96wyqg=QR_vgetYLqP1AEa02fx1vw@mail.gmail.com>
+ <20190813060249.GD6670@kroah.com>
+ <CAHX4x87DbJ4cKuwVO3OS=UzwtwSucFCV073W8bYHOPHW8NiA=A@mail.gmail.com>
+ <20190814212012.GB22618@kroah.com>
+ <CAHX4x84YM0PcoQw17FxMz=6=NPq2+HUUw2GWZarAKzZxr+ax=A@mail.gmail.com>
+ <CADv6+07pYd-kg1i0TJXOPnEO6NUp6D5+BQBkqUO0MDAE+cquow@mail.gmail.com>
+ <20190816091243.GB15703@kroah.com>
+ <CADv6+047cZFRS9HG+OpsXw2+yZU4ROUf8v3eSh9p9GpJHy0mQw@mail.gmail.com>
+ <3f1def95-e3d4-514b-af76-193cdc43990e@collabora.com>
+ <CAHX4x843bshZPp4oYpvYQz8uNuG=JADqc8JFTioKypmJ5Qf4JQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAMvbhH=ftMoh9eFVR3YgN9DVSLaN5tXa-vTsBocY8YuL0Rc1A@mail.gmail.com>
+In-Reply-To: <CAHX4x843bshZPp4oYpvYQz8uNuG=JADqc8JFTioKypmJ5Qf4JQ@mail.gmail.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,30 +55,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> >
-> > And if there is a meaningful way to make the kernel behave better, that would
-> > obviously be of huge value too.
-> >
-> > Thanks
-> > Daniel
+> > Without knowing the internal design, but having more infor now, looks to me that
+> > should be modelled more as a kind of power supply? Maybe something similar to
+> > UCS1002-2 device (drivers/power/supply/ucs1002_power.c) but behind the EC?
 > 
-> Hi,
+> This would work, the problem would be that you lose the link to the
+> actual USB port.
+> On these Wilco devices, only one port supports this, and I don't think we really
+> care about exposing which one it is, but theoretically you would want
+> to be able to
+> control this for individual ports. I talked with Duncan today and he
+> will tweak the
+> BIOS firmware so that it exposes which USB ports support the PowerShare ability.
+> Then we can query this configuration via ACPI.
 > 
-> Is there a way for an application to be told that there is a memory
-> pressure situation?
-> For example, say I do a "make -j32"  and half way through the compile
-> it hits a memory pressure situation.
-> If make could have been told about it. It could give up on some of the
-> parallel compiles, and instead proceed as if the user have typed "make
-> -j4". It could then re-try the failed compile parts, that failed due
-> to memory pressure.
-> I know all applications won't be this clever, but providing a kernel
-> API so that an application could do something about it, if the
-> programmer of that application has thought about it.
+> I hadn't seen that driver before, it looks very new, but looks quite
+> similar. One problem
+> is that the standard power_supply properties represent the present
+> status of the device,
+> whereas we want to control the state when the device is off.
+> 
+> I think that I will write this up as a power_supply driver and see
+> what people think. As
+> a fallback, we can look more into the USB subsystem. Greg, do you think that is
+> acceptable, or would you really like this within the USB subsystem?
 
-Support is not really needed in many applications. It would be nice to
-have for make and web browsers... And I suspect it is easy to do interface
-becomes available.
+So, I'm not greg, but... Motorola Droid 4 (and other phones) have USB otg controllers...
+They can act as a device (common use), but they can also support USB host, and they
+can power the USB bus... either with battery voltage or with 5V.
 
-Best regards,
-								Pavel
+Having ability to control that even if USB device is not present would be pretty
+interesting for various hacks.
+
+Best regards,								Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
