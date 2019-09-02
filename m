@@ -6,111 +6,92 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC96C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D1BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F15E8216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C0421881
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730602AbfIBMlb (ORCPT
+        id S1730917AbfIBMll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:41:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47202 "EHLO mx1.redhat.com"
+        Mon, 2 Sep 2019 08:41:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37864 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729489AbfIBMla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:41:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1730247AbfIBMlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:41:31 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D240289AC9;
+        by mx1.redhat.com (Postfix) with ESMTPS id E970A3084288;
         Mon,  2 Sep 2019 12:41:30 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-117-67.ams2.redhat.com [10.36.117.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 15FB25D9CC;
-        Mon,  2 Sep 2019 12:41:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C844860127;
+        Mon,  2 Sep 2019 12:41:27 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 5951C31ECC; Mon,  2 Sep 2019 14:41:27 +0200 (CEST)
+        id 0A1EB31EBC; Mon,  2 Sep 2019 14:41:27 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 4/5] drm/qxl: use drm_gem_object_funcs callbacks
-Date:   Mon,  2 Sep 2019 14:41:25 +0200
-Message-Id: <20190902124126.7700-5-kraxel@redhat.com>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/5] drm/vram: use drm_gem_ttm_print_info
+Date:   Mon,  2 Sep 2019 14:41:23 +0200
+Message-Id: <20190902124126.7700-3-kraxel@redhat.com>
 In-Reply-To: <20190902124126.7700-1-kraxel@redhat.com>
 References: <20190902124126.7700-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 02 Sep 2019 12:41:30 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 02 Sep 2019 12:41:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch qxl to use drm_gem_object_funcs callbacks
-instead of drm_driver callbacks.
-
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/gpu/drm/qxl/qxl_drv.c    |  8 --------
- drivers/gpu/drm/qxl/qxl_object.c | 12 ++++++++++++
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ include/drm/drm_gem_vram_helper.h     | 1 +
+ drivers/gpu/drm/drm_gem_vram_helper.c | 3 ++-
+ drivers/gpu/drm/Kconfig               | 1 +
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 2b726a51a302..996d428fa7e6 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -258,16 +258,8 @@ static struct drm_driver qxl_driver = {
- #endif
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
--	.gem_prime_pin = qxl_gem_prime_pin,
--	.gem_prime_unpin = qxl_gem_prime_unpin,
--	.gem_prime_get_sg_table = qxl_gem_prime_get_sg_table,
- 	.gem_prime_import_sg_table = qxl_gem_prime_import_sg_table,
--	.gem_prime_vmap = qxl_gem_prime_vmap,
--	.gem_prime_vunmap = qxl_gem_prime_vunmap,
- 	.gem_prime_mmap = qxl_gem_prime_mmap,
--	.gem_free_object_unlocked = qxl_gem_object_free,
--	.gem_open_object = qxl_gem_object_open,
--	.gem_close_object = qxl_gem_object_close,
- 	.fops = &qxl_fops,
- 	.ioctls = qxl_ioctls,
- 	.irq_handler = qxl_irq_handler,
-diff --git a/drivers/gpu/drm/qxl/qxl_object.c b/drivers/gpu/drm/qxl/qxl_object.c
-index 548dfe6f3b26..29aab7b14513 100644
---- a/drivers/gpu/drm/qxl/qxl_object.c
-+++ b/drivers/gpu/drm/qxl/qxl_object.c
-@@ -77,6 +77,17 @@ void qxl_ttm_placement_from_domain(struct qxl_bo *qbo, u32 domain, bool pinned)
- 	}
- }
+diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
+index ac217d768456..17f160dd6e7d 100644
+--- a/include/drm/drm_gem_vram_helper.h
++++ b/include/drm/drm_gem_vram_helper.h
+@@ -4,6 +4,7 @@
+ #define DRM_GEM_VRAM_HELPER_H
  
-+static const struct drm_gem_object_funcs qxl_object_funcs = {
-+	.free = qxl_gem_object_free,
-+	.open = qxl_gem_object_open,
-+	.close = qxl_gem_object_close,
-+	.pin = qxl_gem_prime_pin,
-+	.unpin = qxl_gem_prime_unpin,
-+	.get_sg_table = qxl_gem_prime_get_sg_table,
-+	.vmap = qxl_gem_prime_vmap,
-+	.vunmap = qxl_gem_prime_vunmap,
-+};
-+
- int qxl_bo_create(struct qxl_device *qdev,
- 		  unsigned long size, bool kernel, bool pinned, u32 domain,
- 		  struct qxl_surface *surf,
-@@ -100,6 +111,7 @@ int qxl_bo_create(struct qxl_device *qdev,
- 		kfree(bo);
- 		return r;
- 	}
-+	bo->tbo.base.funcs = &qxl_object_funcs;
- 	bo->type = domain;
- 	bo->pin_count = pinned ? 1 : 0;
- 	bo->surface_id = 0;
+ #include <drm/drm_gem.h>
++#include <drm/drm_gem_ttm_helper.h>
+ #include <drm/ttm/ttm_bo_api.h>
+ #include <drm/ttm/ttm_placement.h>
+ #include <linux/kernel.h> /* for container_of() */
+diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+index fd751078bae1..b4929e1fb190 100644
+--- a/drivers/gpu/drm/drm_gem_vram_helper.c
++++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+@@ -633,5 +633,6 @@ static const struct drm_gem_object_funcs drm_gem_vram_object_funcs = {
+ 	.pin	= drm_gem_vram_object_pin,
+ 	.unpin	= drm_gem_vram_object_unpin,
+ 	.vmap	= drm_gem_vram_object_vmap,
+-	.vunmap	= drm_gem_vram_object_vunmap
++	.vunmap	= drm_gem_vram_object_vunmap,
++	.print_info = drm_gem_ttm_print_info,
+ };
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index f7b25519f95c..1be8ad30d8fe 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -169,6 +169,7 @@ config DRM_VRAM_HELPER
+ 	tristate
+ 	depends on DRM
+ 	select DRM_TTM
++	select DRM_TTM_HELPER
+ 	help
+ 	  Helpers for VRAM memory management
+ 
 -- 
 2.18.1
 
