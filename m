@@ -5,118 +5,103 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633D4C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E63C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C62021897
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E302F216C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wl35b6Q2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyO2ylq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbfIBMmD (ORCPT
+        id S1730539AbfIBMnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:42:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37745 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729844AbfIBMmC (ORCPT
+        Mon, 2 Sep 2019 08:43:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39076 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729690AbfIBMnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:42:02 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b10so1489648plr.4;
-        Mon, 02 Sep 2019 05:42:02 -0700 (PDT)
+        Mon, 2 Sep 2019 08:43:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so7430699pgi.6;
+        Mon, 02 Sep 2019 05:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=6bMBJGLXpJhft8Uqn8LI3hEGKJdQ2rbX77O2fwCWI2E=;
-        b=Wl35b6Q2vhQOwMbHRjRpL84HFK8WhqSwlYtxUV+0x2B3gqQ03umc3iEHozseCfzpOp
-         4P3fbqiqSRS3obSnqmP9B/FpYu3hmibxC/sZwM/rhee086SZtgvQmvo9eaUg69WkVFIx
-         wbdCcRK6vOsSeTMJUHgHlWXRaYojtAFYN7tduaAutWDdDrJjxTpuQ6yKda8o1YywuIxM
-         r/lR41obOtSjX/jBaqKjMKP4e3RqEg7lJ4068KAycK1Zn6zf024uXHWRcDXxja0V2uOB
-         Dj4XYxuH7MzniF4f/glaRRgR1xuTMqDd3i2UggJ3lKJ8MWgVOIhkCu5nHYjsmE1iZE1d
-         is9Q==
+        bh=Ooe5z12tf4eCBGCVXGJZdyU61lnZf8UxozrPAtJtqFg=;
+        b=LyO2ylq1hMvJP8HhT7mG3uunF78cZErvlO24NmDxqyhxNiCdYGt6pNgVCw1Jxd9HtE
+         2gLGK6oFjGGUNacqqhFzoTnVtYoVhI1eP8mHDf2fEY9kSmDDGKqG9tCN00JhEw/uoxWw
+         NKw+ZSlhqJnxG5HRQDmIhgAeiBcHi8Qt5xYB+EqzGfeIFHSwzpiIztN/Y33b8qq3zHH1
+         dc11/UPJEVWoCK1awbsKTd/NBn0v/c6kBXk4CbcDli9aeug4q0uJc9wLIYhG1Zo4nQ3z
+         Ll9kbCP93B+XX6aytGvWmNweWxpbawacxilTi4M4GSiIL6ddW8l+0OE0Xv2FcwOH/BHt
+         Ogag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6bMBJGLXpJhft8Uqn8LI3hEGKJdQ2rbX77O2fwCWI2E=;
-        b=dtmzixKKqAQL5rLJcXzQGYEhmOQ0qfXC5SLc1bvByNiW+PbsL/4xVbea/+B+aFxf4t
-         VPV6rcXkDFKW7Ft5swSJqH9zWyC37dqzv+QF4VcvyJmlb31HYrziOSwfr4AKGq+6Ry8Q
-         VD5GhUfEJ9gAFy2/FImG0q2OfKK7FQ13PeOXZg1snbMwk77zA3WbgzAbFxG6wDFIAGj3
-         vUVO+p80smJSxL2/oFhH7IimETKBF0eC+I/KNr0TU1cdPz/zAfpbdXUbO0qli+FsBTj1
-         LNNzCYHNnXxSZ2fWLuGTt9PoytmE5cuQgACNmTELtoXqX10jIltdmIzb6Uyfv0ZtFcql
-         mWSA==
-X-Gm-Message-State: APjAAAXqkAywDoQMZ7oV6BkatUcIGAWQ5N1nzW956gsHGeT44POAxDxN
-        f0h0xTNz0fQWy5dgG0BzxYw=
-X-Google-Smtp-Source: APXvYqwL8FuvpT89PhUcwAWXg2lJsDj/gqyiSZZDDqJbgrkM/4x/NHTlG0g63mGuez68xRVcnuk+jQ==
-X-Received: by 2002:a17:902:346:: with SMTP id 64mr29692851pld.151.1567428122261;
-        Mon, 02 Sep 2019 05:42:02 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.52])
-        by smtp.googlemail.com with ESMTPSA id y194sm15942600pfg.116.2019.09.02.05.41.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 05:42:01 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH V2] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
-Date:   Mon,  2 Sep 2019 20:41:43 +0800
-Message-Id: <20190902124143.119478-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        bh=Ooe5z12tf4eCBGCVXGJZdyU61lnZf8UxozrPAtJtqFg=;
+        b=O4rpQgJqk57mzAoSKz5554iYsXSBg0ff8vKbNIfugvIWyna+4u1VbxA2aQRWHIXIQb
+         OWhkdh7U7XL/SGxYnSNWFucFXNhpA81CU0PGQ5c4HbwBOre8c6Vj7CQwoK+IQSrNlS0D
+         KeWZ2+uUCAZ5dJtyH0tR/axJIQbsm5zCJjxmz1JBVRnafFLN7S2o6PYS6kOGpJe2eunF
+         50fyT6NjdRxqu+FdD2orUJuBUuF0+0CDCphId5feaJBy2MKWkO7bUHaXFLd+SdkeFvLv
+         +BR0CXOFkNqaoAfL2vPj6u2UhQWRmxw0c6YoZ7EDPQ1JPa/3Ov6yppzu6Qb7CYD74TIK
+         ZC8Q==
+X-Gm-Message-State: APjAAAUDnn51rMH5Y+FChwhXj84LmulQ9hQPqkrgZYd+k1QNo9RXKDud
+        J6mRglmJKCoqKBByvMR17sE=
+X-Google-Smtp-Source: APXvYqyLyzHI4G7B5pK37XIuveSiZGZ9agj2nr+S8QgtKm0qzaCDTZJG50/mG2xYaudRpo8bEPEpEw==
+X-Received: by 2002:a62:e30d:: with SMTP id g13mr13849175pfh.42.1567428193475;
+        Mon, 02 Sep 2019 05:43:13 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([49.207.50.39])
+        by smtp.gmail.com with ESMTPSA id m102sm2126286pje.5.2019.09.02.05.43.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Sep 2019 05:43:12 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     b.zolnierkie@samsung.com
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sabyasachi.linux@gmail.com,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] video/fbdev/68328fb: Remove dead code
+Date:   Mon,  2 Sep 2019 18:19:04 +0530
+Message-Id: <1567428544-8620-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+This is dead code since 3.15. If their is no plan to
+use it further, these can be removed forever.
 
-When the 'start' parameter is >=  0xFF000000 on 32-bit
-systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
-fill_gva_list gets into an infinite loop.  With such inputs,
-'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
-compares as less than end.  Memory is filled with guest virtual
-addresses until the system crashes
-
-Fix this by never incrementing 'cur' to be larger than 'end'.
-
-Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
-Change since v1:
-     - Simply the commit message 
+ drivers/video/fbdev/68328fb.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
- arch/x86/hyperv/mmu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index e65d7fe6489f..5208ba49c89a 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
- 		 * Lower 12 bits encode the number of additional
- 		 * pages to flush (in addition to the 'cur' page).
- 		 */
--		if (diff >= HV_TLB_FLUSH_UNIT)
-+		if (diff >= HV_TLB_FLUSH_UNIT) {
- 			gva_list[gva_n] |= ~PAGE_MASK;
--		else if (diff)
-+			cur += HV_TLB_FLUSH_UNIT;
-+		}  else if (diff) {
- 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
-+			cur = end;
-+		}
+diff --git a/drivers/video/fbdev/68328fb.c b/drivers/video/fbdev/68328fb.c
+index d48e960..02d22b7 100644
+--- a/drivers/video/fbdev/68328fb.c
++++ b/drivers/video/fbdev/68328fb.c
+@@ -405,20 +405,8 @@ static int mc68x328fb_mmap(struct fb_info *info, struct vm_area_struct *vma)
  
--		cur += HV_TLB_FLUSH_UNIT;
- 		gva_n++;
+ int __init mc68x328fb_setup(char *options)
+ {
+-#if 0
+-	char *this_opt;
+-#endif
+-
+ 	if (!options || !*options)
+ 		return 1;
+-#if 0
+-	while ((this_opt = strsep(&options, ",")) != NULL) {
+-		if (!*this_opt)
+-			continue;
+-		if (!strncmp(this_opt, "disable", 7))
+-			mc68x328fb_enable = 0;
+-	}
+-#endif
+ 	return 1;
+ }
  
- 	} while (cur < end);
 -- 
-2.14.5
+1.9.1
 
