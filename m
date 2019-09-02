@@ -2,37 +2,37 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA46C3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD00C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD3B2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BDC2190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 08:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbfIBIcp (ORCPT
+        id S1730607AbfIBIc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 04:32:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14620 "EHLO mga03.intel.com"
+        Mon, 2 Sep 2019 04:32:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28816 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbfIBIcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:32:39 -0400
+        id S1730487AbfIBIcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 04:32:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:32:38 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:32:42 -0700
 X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
-   d="scan'208";a="183255380"
+   d="scan'208";a="198542431"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:32:35 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 01:32:40 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id BB43E20B04;
-        Mon,  2 Sep 2019 11:32:33 +0300 (EEST)
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 3064621055;
+        Mon,  2 Sep 2019 11:32:34 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i4hlQ-0005JP-4K; Mon, 02 Sep 2019 11:32:40 +0300
+        id 1i4hlQ-0005Jt-Jl; Mon, 02 Sep 2019 11:32:40 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
@@ -40,10 +40,12 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v4 00/11] Device property improvements, add %pfw format specifier
-Date:   Mon,  2 Sep 2019 11:32:29 +0300
-Message-Id: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v4 10/11] lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+Date:   Mon,  2 Sep 2019 11:32:39 +0300
+Message-Id: <20190902083240.20367-11-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,96 +53,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+support printing full path of the node, including its name ("f") and only
+the node's name ("P") in the printk family of functions. The two flags
+have equivalent functionality to existing %pOF with the same two modifiers
+("f" and "P") on OF based systems. The ability to do the same on ACPI
+based systems is added by this patch.
 
-This set adds functionality into the device property API (counting a
-node's parents as well as obtaining its name) in order to support printing
-fwnode names using a new conversion specifier "%pfw". The names that are
-produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-two supported modifiers ("f" and "P").
+On ACPI based systems the resulting strings look like
 
-Printing a node's name is something that's been available on OF for a long
-time and if something is converted to device property API (such as the
-V4L2 fwnode framework) it always got removed of a nice feature that was
-sometimes essential in debugging. With this set, that no longer is the
-case.
+	\_SB.PCI0.CIO2.port@1.endpoint@0
 
-since v3:
+where the nodes are separated by a dot (".") and the first three are
+ACPI device nodes and the latter two ACPI data nodes.
 
-- Remove underscores in argument name of fwnode_count_parents().
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
+ lib/vsprintf.c                            | 36 +++++++++++++++++++++++
+ scripts/checkpatch.pl                     |  3 +-
+ 3 files changed, 62 insertions(+), 1 deletion(-)
 
-- Re-introduce "%pO?" error string.
-
-- Unwrap a call to string() in fwnode_string().
-
-- Removed a useless Depends-on: on a patch that was merged long ago.
-
-- Unwrap a Fixes: line.
-
-- Added a patch to move fwnode_get_parent() up to make the review of the
-  following patch easier.
-
-since v2:
-
-- Better comments in acpi_fwnode_get_name_prefix().
-
-- Added swnode implementation.
-
-- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
-  parent swnode in get_parent op")
-
-- Make argument to to_software_node() const (a new patch)
-
-- Factored out confusingly named kobject_string() that had a single
-  caller.
-
-- Cleaner fwnode_count_parents() implementation (as discussed in review).
-
-- Made fwnode_count_parents() argument const.
-
-- Added tests (last patch in the set).
-
-since v1:
-
-- Add patch to remove support for %pf and %pF (depends on another patch
-  removing all use of %pf and %pF) (now 4th patch)
-
-- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-
-- Align kerneldoc style with the rest of drivers/base/property.c (no extra
-  newline after function name)
-
-- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-
-- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
-  by "w")
-
-Sakari Ailus (11):
-  software node: Get reference to parent swnode in get_parent op
-  software node: Make argument to to_software_node const
-  device property: Move fwnode_get_parent() up
-  device property: Add functions for accessing node's parents
-  device property: Add fwnode_get_name for returning the name of a node
-  device property: Add a function to obtain a node's prefix
-  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-  lib/vsprintf: Make use of fwnode API to obtain node names and
-    separators
-  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-  lib/test_printf: Add tests for %pfw printk modifier
-
- Documentation/core-api/printk-formats.rst | 34 ++++++---
- drivers/acpi/property.c                   | 48 +++++++++++++
- drivers/base/property.c                   | 83 +++++++++++++++++++--
- drivers/base/swnode.c                     | 55 +++++++++++++-
- drivers/of/property.c                     | 16 +++++
- include/linux/fwnode.h                    |  4 ++
- include/linux/property.h                  |  8 ++-
- lib/test_printf.c                         | 37 ++++++++++
- lib/vsprintf.c                            | 88 ++++++++++++++---------
- scripts/checkpatch.pl                     |  4 +-
- 10 files changed, 319 insertions(+), 58 deletions(-)
-
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 922a29eb70e6c..abba210f67567 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -418,6 +418,30 @@ Examples::
+ 
+ Passed by reference.
+ 
++Fwnode handles
++--------------
++
++::
++
++	%pfw[fP]
++
++For printing information on fwnode handles. The default is to print the full
++node name, including the path. The modifiers are functionally equivalent to
++%pOF above.
++
++	- f - full name of the node, including the path
++	- P - the name of the node including an address (if there is one)
++
++Examples (ACPI):
++
++	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
++	%pfwP	endpoint@0				- Node name
++
++Examples (OF):
++
++	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
++	%pfwP	endpoint				- Node name
++
+ Time and date (struct rtc_time)
+ -------------------------------
+ 
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 4ad9332d54ba6..b9b4c835db063 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1981,6 +1981,36 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 	return widen_string(buf, buf - buf_start, end, spec);
+ }
+ 
++static noinline_for_stack
++char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
++		    struct printf_spec spec, const char *fmt)
++{
++	struct printf_spec str_spec = spec;
++	char *buf_start = buf;
++
++	str_spec.field_width = -1;
++
++	if (*fmt != 'w')
++		return error_string(buf, end, "(%pfw?)", spec);
++
++	if (check_pointer(&buf, end, fwnode, spec))
++		return buf;
++
++	fmt++;
++
++	switch (*fmt) {
++	case 'f':	/* full_name */
++	default:
++		buf = fwnode_full_name_string(fwnode, buf, end);
++		break;
++	case 'P':	/* name */
++		buf = string(buf, end, fwnode_get_name(fwnode), str_spec);
++		break;
++	}
++
++	return widen_string(buf, buf - buf_start, end, spec);
++}
++
+ /*
+  * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+  * by an extra set of alphanumeric characters that are extended format
+@@ -2083,6 +2113,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+  *                  F device node flags
+  *                  c major compatible string
+  *                  C full compatible string
++ * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
++ *		Without an option prints the full name of the node
++ *		f full name
++ *		P node name, including a possible unit address
+  * - 'x' For printing the address. Equivalent to "%lx".
+  *
+  * ** When making changes please also update:
+@@ -2160,6 +2194,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 		return flags_string(buf, end, ptr, spec, fmt);
+ 	case 'O':
+ 		return device_node_string(buf, end, ptr, spec, fmt + 1);
++	case 'f':
++		return fwnode_string(buf, end, ptr, spec, fmt + 1);
+ 	case 'x':
+ 		return pointer_string(buf, end, ptr, spec);
+ 	}
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a60c241112cd4..8df50911ff4e9 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5995,7 +5995,8 @@ sub process {
+ 				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+ 					$specifier = $1;
+ 					$extension = $2;
+-					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
++					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
++					    $extension =~ /^f[^w]/) {
+ 						$bad_specifier = $specifier;
+ 						last;
+ 					}
 -- 
 2.20.1
 
