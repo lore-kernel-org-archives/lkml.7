@@ -2,39 +2,39 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839A2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C9BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5696821744
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C81721744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 12:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567426387;
-	bh=WzrtNVGzm4ixTupcczZxtXfBA84ivj+cFQIGjhG8XeE=;
+	s=default; t=1567426390;
+	bh=ypMpWERHZbezGaBo/amYRWWWs1YLorJtc+VOg4MnC30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uURhoGXLqtt+HVYLJS38/yDewvTqv5QFodHxOq/sHDGUQ22eCxH4p2FR+jVEt9KKe
-	 oApMtw7OOOUAb+X83jVQgq6Qb3ri6Cuw/gAkvQIg22qGpN+iPveWW0Mopb3SQEwBAh
-	 GQKirQf48iox9LMA0qzEGHB649UX9CVk6Z/ATQ44=
+	b=XMU9h17Dxk68PtSmR6RGoo/dbBHP036f+rJ/tbna41R/Dikrd9a6b5eLjjlZDzrST
+	 7LXAaqo8z1wNrHX6oHrXzBVUuMa4UuP7YuuSARmFD6bHTvqPJIFBlagkgm/gA/dOQX
+	 cO4USXUj3mt8UJordIu1pWlFOtcDJ3udqI79OiPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfIBMNG (ORCPT
+        id S1731482AbfIBMNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 08:13:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60852 "EHLO mx1.redhat.com"
+        Mon, 2 Sep 2019 08:13:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48752 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbfIBMNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:13:06 -0400
+        id S1729658AbfIBMNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:13:08 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3CBD7307D90D;
-        Mon,  2 Sep 2019 12:13:05 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA2F383BDC;
+        Mon,  2 Sep 2019 12:13:07 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BB9060C05;
-        Mon,  2 Sep 2019 12:12:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 89BB360C05;
+        Mon,  2 Sep 2019 12:13:05 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,107 +46,103 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Joe Mario <jmario@redhat.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 1/3] libperf: Add perf_cpu_map__max function
-Date:   Mon,  2 Sep 2019 14:12:53 +0200
-Message-Id: <20190902121255.536-2-jolsa@kernel.org>
+Subject: [PATCH 2/3] perf tools: Add perf_env__numa_node function
+Date:   Mon,  2 Sep 2019 14:12:54 +0200
+Message-Id: <20190902121255.536-3-jolsa@kernel.org>
 In-Reply-To: <20190902121255.536-1-jolsa@kernel.org>
 References: <20190902121255.536-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 02 Sep 2019 12:13:05 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 02 Sep 2019 12:13:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So it can be used from multiple places.
+To speed up cpu to node lookup, adding perf_env__numa_node
+function, that creates cpu array on the first lookup, that
+holds numa nodes for each stored cpu.
 
-Link: http://lkml.kernel.org/n/tip-yp3h5rl9e8piybufq41zqnla@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-qqwxklhissf3yjyuaszh6480@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/builtin-stat.c            | 14 +-------------
- tools/perf/lib/cpumap.c              | 12 ++++++++++++
- tools/perf/lib/include/perf/cpumap.h |  1 +
- tools/perf/lib/libperf.map           |  1 +
- 4 files changed, 15 insertions(+), 13 deletions(-)
+ tools/perf/util/env.c | 35 +++++++++++++++++++++++++++++++++++
+ tools/perf/util/env.h |  6 ++++++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7e17bf9f700a..5bc0c570b7b6 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -822,18 +822,6 @@ static int perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
- 	return cpu_map__get_core(map, cpu, NULL);
- }
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 3baca06786fb..6385961e45df 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -179,6 +179,7 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->sibling_threads);
+ 	zfree(&env->pmu_mappings);
+ 	zfree(&env->cpu);
++	zfree(&env->numa_map);
  
--static int cpu_map__get_max(struct perf_cpu_map *map)
--{
--	int i, max = -1;
--
--	for (i = 0; i < map->nr; i++) {
--		if (map->map[i] > max)
--			max = map->map[i];
--	}
--
--	return max;
--}
--
- static int perf_stat__get_aggr(struct perf_stat_config *config,
- 			       aggr_get_id_t get_id, struct perf_cpu_map *map, int idx)
- {
-@@ -928,7 +916,7 @@ static int perf_stat_init_aggr_mode(void)
- 	 * taking the highest cpu number to be the size of
- 	 * the aggregation translate cpumap.
- 	 */
--	nr = cpu_map__get_max(evsel_list->core.cpus);
-+	nr = perf_cpu_map__max(evsel_list->core.cpus);
- 	stat_config.cpus_aggr_map = perf_cpu_map__empty_new(nr + 1);
- 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
- }
-diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
-index 1f0e6f334237..2ca1fafa620d 100644
---- a/tools/perf/lib/cpumap.c
-+++ b/tools/perf/lib/cpumap.c
-@@ -260,3 +260,15 @@ int perf_cpu_map__idx(struct perf_cpu_map *cpus, int cpu)
+ 	for (i = 0; i < env->nr_numa_nodes; i++)
+ 		perf_cpu_map__put(env->numa_nodes[i].map);
+@@ -338,3 +339,37 @@ const char *perf_env__arch(struct perf_env *env)
  
- 	return -1;
+ 	return normalize_arch(arch_name);
  }
 +
-+int perf_cpu_map__max(struct perf_cpu_map *map)
++
++int perf_env__numa_node(struct perf_env *env, int cpu)
 +{
-+	int i, max = -1;
++	if (!env->nr_numa_map) {
++		struct numa_node *nn;
++		int i, nr = 0;
 +
-+	for (i = 0; i < map->nr; i++) {
-+		if (map->map[i] > max)
-+			max = map->map[i];
++		for (i = 0; i < env->nr_numa_nodes; i++) {
++			nn = &env->numa_nodes[i];
++			nr = max(nr, perf_cpu_map__max(nn->map));
++		}
++
++		nr++;
++		env->numa_map = zalloc(nr * sizeof(int));
++		if (!env->numa_map)
++			return -1;
++
++		for (i = 0; i < nr; i++)
++			env->numa_map[i] = -1;
++
++		env->nr_numa_map = nr;
++
++		for (i = 0; i < env->nr_numa_nodes; i++) {
++			int tmp, j;
++
++			nn = &env->numa_nodes[i];
++			perf_cpu_map__for_each_cpu(j, tmp, nn->map)
++				env->numa_map[j] = i;
++		}
 +	}
 +
-+	return max;
++	return cpu >= 0 && cpu < env->nr_numa_map ? env->numa_map[cpu] : -1;
 +}
-diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
-index 8aa995c59498..ac9aa497f84a 100644
---- a/tools/perf/lib/include/perf/cpumap.h
-+++ b/tools/perf/lib/include/perf/cpumap.h
-@@ -16,6 +16,7 @@ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
- LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
- LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
-+LIBPERF_API int perf_cpu_map__max(struct perf_cpu_map *map);
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d8e083d42610..777008f8007a 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -86,6 +86,10 @@ struct perf_env {
+ 		struct rb_root		btfs;
+ 		u32			btfs_cnt;
+ 	} bpf_progs;
++
++	/* For fast cpu to numa node lookup via perf_env__numa_node */
++	int			*numa_map;
++	int			 nr_numa_map;
+ };
  
- #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
- 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index dc4d66363bc4..cd0d17b996c8 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -9,6 +9,7 @@ LIBPERF_0.0.1 {
- 		perf_cpu_map__nr;
- 		perf_cpu_map__cpu;
- 		perf_cpu_map__empty;
-+		perf_cpu_map__max;
- 		perf_thread_map__new_dummy;
- 		perf_thread_map__set_pid;
- 		perf_thread_map__comm;
+ enum perf_compress_type {
+@@ -118,4 +122,6 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 							__u32 prog_id);
+ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
++
++int perf_env__numa_node(struct perf_env *env, int cpu);
+ #endif /* __PERF_ENV_H */
 -- 
 2.21.0
 
