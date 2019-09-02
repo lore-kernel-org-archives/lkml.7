@@ -2,129 +2,91 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90B4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EA920820
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UBoCs/LG"
+	by mail.kernel.org (Postfix) with ESMTP id 9A7CD20820
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbfIBNPU (ORCPT
+        id S1730624AbfIBNPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:15:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36622 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729889AbfIBNPU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:15:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NmR+a6Uj1v91V4iU31zXRZrXbA98s0lz9xVim531aU8=; b=UBoCs/LGuwtUGE1GVpA3t3lyz4
-        i9EVFHXjXPkdzrlvo47lXY36sri3FCuLIJH0GBt9eZ+aGN32f5ga1vDul64qb8vTaCuAQWDAVW03e
-        WCQFBYARUXV6sqf2DrpI2i3+zrCZvpfB4O0Z7SGMt5eD1Jt7DWaH+IwVeC0ZdZ22D+ivgOdLEFZyE
-        yH6nCpFBmHYI7bfJecf0nMlri4dZjkk52FWSERpEkv47O/esiXYIXLUThffhwVzvsh0Y2UmUabvHp
-        6zNfrcmIxxQBOvdF/exGwu7QnipFCyfCvXaSWGVH9Clt+VVhcMAM5mIyCU8pNXPqeFRt35FxsVFUK
-        WxBiGuXg==;
-Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4mAu-00024f-GO; Mon, 02 Sep 2019 13:15:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        gross@suse.com, boris.ostrovsky@oracle.com
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>
-Subject: [PATCH 13/13] arm64: use asm-generic/dma-mapping.h
-Date:   Mon,  2 Sep 2019 15:03:39 +0200
-Message-Id: <20190902130339.23163-14-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190902130339.23163-1-hch@lst.de>
-References: <20190902130339.23163-1-hch@lst.de>
+        Mon, 2 Sep 2019 09:15:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:31797 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729983AbfIBNPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:15:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 06:15:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="382795380"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Sep 2019 06:15:45 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4mBM-0002NJ-Ox; Mon, 02 Sep 2019 16:15:44 +0300
+Date:   Mon, 2 Sep 2019 16:15:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4] mfd: Add support for Merrifield Basin Cove PMIC
+Message-ID: <20190902131544.GJ2680@smile.fi.intel.com>
+References: <20190801190335.37726-1-andriy.shevchenko@linux.intel.com>
+ <20190902083859.GQ4804@dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902083859.GQ4804@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the Xen special cases are gone nothing worth mentioning is
-left in the arm64 <asm/dma-mapping.h> file, so switch to use the
-asm-generic version instead.
+On Mon, Sep 02, 2019 at 09:38:59AM +0100, Lee Jones wrote:
+> On Thu, 01 Aug 2019, Andy Shevchenko wrote:
+> 
+> > Add an MFD driver for Intel Merrifield Basin Cove PMIC.
+> > 
+> > Firmware on the platforms which are using Basin Cove PMIC is "smarter"
+> > than on the rest supported by vanilla kernel. It handles first level
+> > of interrupt itself, while others do it on OS level.
+> > 
+> > The driver is done in the same way as the rest of Intel PMIC MFD drivers
+> > in the kernel to support the initial design. The design allows to use
+> > one driver among few PMICs without knowing implementation details of
+> > the each hardware version or generation.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > v4: elaborate in the commit message the design choice
+> >  drivers/mfd/Kconfig                      |  11 ++
+> >  drivers/mfd/Makefile                     |   1 +
+> >  drivers/mfd/intel_soc_pmic_mrfld.c       | 157 +++++++++++++++++++++++
+> >  include/linux/mfd/intel_soc_pmic_mrfld.h |  81 ++++++++++++
+> >  4 files changed, 250 insertions(+)
+> >  create mode 100644 drivers/mfd/intel_soc_pmic_mrfld.c
+> >  create mode 100644 include/linux/mfd/intel_soc_pmic_mrfld.h
+> 
+> Reluctantly applied, thanks.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Will Deacon <will@kernel.org>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
----
- arch/arm64/include/asm/Kbuild        |  1 +
- arch/arm64/include/asm/dma-mapping.h | 22 ----------------------
- arch/arm64/mm/dma-mapping.c          |  1 +
- 3 files changed, 2 insertions(+), 22 deletions(-)
- delete mode 100644 arch/arm64/include/asm/dma-mapping.h
+Thank you very much!
 
-diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm/Kbuild
-index c52e151afab0..98a5405c8558 100644
---- a/arch/arm64/include/asm/Kbuild
-+++ b/arch/arm64/include/asm/Kbuild
-@@ -4,6 +4,7 @@ generic-y += delay.h
- generic-y += div64.h
- generic-y += dma.h
- generic-y += dma-contiguous.h
-+generic-y += dma-mapping.h
- generic-y += early_ioremap.h
- generic-y += emergency-restart.h
- generic-y += hw_irq.h
-diff --git a/arch/arm64/include/asm/dma-mapping.h b/arch/arm64/include/asm/dma-mapping.h
-deleted file mode 100644
-index 67243255a858..000000000000
---- a/arch/arm64/include/asm/dma-mapping.h
-+++ /dev/null
-@@ -1,22 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright (C) 2012 ARM Ltd.
-- */
--#ifndef __ASM_DMA_MAPPING_H
--#define __ASM_DMA_MAPPING_H
--
--#ifdef __KERNEL__
--
--#include <linux/types.h>
--#include <linux/vmalloc.h>
--
--#include <xen/xen.h>
--#include <asm/xen/hypervisor.h>
--
--static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
--{
--	return NULL;
--}
--
--#endif	/* __KERNEL__ */
--#endif	/* __ASM_DMA_MAPPING_H */
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 4b244a037349..6578abcfbbc7 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -8,6 +8,7 @@
- #include <linux/cache.h>
- #include <linux/dma-noncoherent.h>
- #include <linux/dma-iommu.h>
-+#include <xen/xen.h>
- #include <xen/swiotlb-xen.h>
- 
- #include <asm/cacheflush.h>
+If any better solution comes to your mind in the future, I would be glad to
+amend the driver.
+
+Btw, can you provide an immutable branch for IIO subsystem to take individual
+ADC driver?
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
