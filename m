@@ -2,84 +2,107 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1502C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470DAC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5882168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAA42168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:00:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxuOHy9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfIBNAM (ORCPT
+        id S1731085AbfIBNAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:00:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:53816 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbfIBNAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:00:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4399337;
-        Mon,  2 Sep 2019 06:00:10 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE5DD3F246;
-        Mon,  2 Sep 2019 06:00:08 -0700 (PDT)
-Subject: Re: [PATCH 3/7] iommu/arm-smmu: Add tlb_sync implementation hook
-To:     Krishna Reddy <vdumpa@nvidia.com>
-Cc:     Sachin Nikam <Snikam@nvidia.com>,
-        "Thomas Zeng (SW-TEGRA)" <thomasz@nvidia.com>,
-        Juha Tukkinen <jtukkinen@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Timo Alho <talho@nvidia.com>, Yu-Huan Hsu <YHsu@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Alexander Van Brunt <avanbrunt@nvidia.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
- <1567118827-26358-4-git-send-email-vdumpa@nvidia.com>
- <554f8de1-1638-4eb9-59ae-8e1f0d786c44@arm.com>
- <BYAPR12MB2710AF5DDCB687C7E78362E5B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
- <BYAPR12MB271010C629D8DD7AEC0123D4B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3d734164-51c9-3465-cddd-276093389797@arm.com>
-Date:   Mon, 2 Sep 2019 14:00:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 2 Sep 2019 09:00:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44130 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730415AbfIBNAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 09:00:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 30so2992365wrk.11;
+        Mon, 02 Sep 2019 06:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CR+WyZAA9xMYW0zZtGve7PJv/lFxf7k0Ilvhu1URmfo=;
+        b=LxuOHy9CeNfh66hew9jbYLP7/yrWYuvIjk+SQAw37alTfS0HlaA59hIpg/f2JhdVTh
+         TxVntIVZdxc0g611JfMqOq+Vh0jqMXHfpBFkNeMTcTmiocTXdqXbYx41rfDj+6ev6wEZ
+         OcGXnB3hgSJ/mBZNzuhbIScHPA+FlhEPx3wRhoXyz7lfqYQblCRpwMGcDVHkPebOmRXy
+         Zxrh3nZN95i0WE59peE0/PnZBokMo8mcaDBP0kNXc6Kwu+/ywTT/s/PokxNmRsUwvE5z
+         kXaWoT/XTdRzebZTQrjYvB5ke/c5R4HYlJ23TAQjcHXe84FeEnb+D+z8xvEalqkVmgw5
+         ldvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CR+WyZAA9xMYW0zZtGve7PJv/lFxf7k0Ilvhu1URmfo=;
+        b=DeN6EsG6OOdBXBIurB0oryg6vFxntxARxQ4NoAbvvIAzLnOnZXaFjD82y/5dFXZC7f
+         iTCNiWIiFnrv6yW0GzsSMZ01pjd0oihzpaVKBQfnXX9j14RfmrshTksM8+My1bNxFSfr
+         51sJKL1pGzYjio/axEzPLiQ+dZVdzbjubi/JErKfBXDeanXboiHwcENbg6HI03MrdWNy
+         l7/cjkJjdRKwta/lbM4fVdLXufJ2h72SC25zIy1MjN87XDrD0aOCLNn/YlQQT6/7YH6U
+         +XRWKDEUGcHm2BFey3u8RcmOBqBbzVbfOkA4DF69yg52hMgRAmze45gWecct0F1A43TT
+         TkSQ==
+X-Gm-Message-State: APjAAAW1T1/PupYje9Vwuf7Wady32700650QXVupAlYoFpk7vVUqxGeF
+        p2WTgivPjDbaM/B05jsqAxo=
+X-Google-Smtp-Source: APXvYqy2E//Dcr0bFJY8gdWVaU6D1gsWSGVoa5CLXjgU5KRe7Z2OSvATAvGTqQrq1pFA6i5bByfd/w==
+X-Received: by 2002:adf:aa85:: with SMTP id h5mr23089367wrc.329.1567429211920;
+        Mon, 02 Sep 2019 06:00:11 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:eecb:7400:8425:c99f:73d7:9637])
+        by smtp.gmail.com with ESMTPSA id y14sm35168809wrd.84.2019.09.02.06.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 06:00:11 -0700 (PDT)
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
+Cc:     Erwan Velu <e.velu@criteo.com>, Len Brown <lenb@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/power/x86/turbostat: Fixing PKG_MIN_PWR_LVL{1|2} values
+Date:   Mon,  2 Sep 2019 15:00:07 +0200
+Message-Id: <20190902130007.14854-1-e.velu@criteo.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB271010C629D8DD7AEC0123D4B3BD0@BYAPR12MB2710.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/2019 23:49, Krishna Reddy wrote:
->>> +	if (smmu->impl->tlb_sync) {
->>> +		smmu->impl->tlb_sync(smmu, page, sync, status);
-> 
->> What I'd hoped is that rather than needing a hook for this, you could just override smmu_domain->tlb_ops from .init_context to wire up the alternate .sync method directly. That would save this extra level of indirection.
-> 
-> Hi Robin,  overriding tlb_ops->tlb_sync function is not enough here.
-> There are direct references to arm_smmu_tlb_sync_context(),  arm_smmu_tlb_sync_global() functions.
-> In arm-smmu.c.  we can replace these direct references with tlb_ops->tlb_sync() function except in one function arm_smmu_device_reset().
-> When arm_smmu_device_reset() gets called, domains are not initialized and tlb_ops is not available.
-> Should we add a new hook for arm_smmu_tlb_sync_global() or make this as a responsibility of impl->reset() hook as it gets
-> called at the same place?
+As per Intel's documentation, those 2 registers are starting from offset 47 and not 48.
+As a result, the reported values were incorrect.
 
-Ah, right, I'd forgotten about the TLB maintenance on reset. Looking 
-again, though, I think you might need to implement impl->reset anyway 
-for the sake of clearing GFSR correctly - since the value read from the 
-base instance technically may not match whatever bits might happen to be 
-set in the other instances - so I don't see any issue with just calling 
-nsmmu_tlb_sync() from there as well.
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+---
+ tools/power/x86/turbostat/turbostat.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Robin.
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 75fc4fb9901c..76456de6b140 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -2370,7 +2370,7 @@ dump_config_tdp(void)
+ 	get_msr(base_cpu, MSR_CONFIG_TDP_LEVEL_1, &msr);
+ 	fprintf(outf, "cpu%d: MSR_CONFIG_TDP_LEVEL_1: 0x%08llx (", base_cpu, msr);
+ 	if (msr) {
+-		fprintf(outf, "PKG_MIN_PWR_LVL1=%d ", (unsigned int)(msr >> 48) & 0x7FFF);
++		fprintf(outf, "PKG_MIN_PWR_LVL1=%d ", (unsigned int)(msr >> 47) & 0xFFFF);
+ 		fprintf(outf, "PKG_MAX_PWR_LVL1=%d ", (unsigned int)(msr >> 32) & 0x7FFF);
+ 		fprintf(outf, "LVL1_RATIO=%d ", (unsigned int)(msr >> 16) & 0xFF);
+ 		fprintf(outf, "PKG_TDP_LVL1=%d", (unsigned int)(msr) & 0x7FFF);
+@@ -2380,7 +2380,7 @@ dump_config_tdp(void)
+ 	get_msr(base_cpu, MSR_CONFIG_TDP_LEVEL_2, &msr);
+ 	fprintf(outf, "cpu%d: MSR_CONFIG_TDP_LEVEL_2: 0x%08llx (", base_cpu, msr);
+ 	if (msr) {
+-		fprintf(outf, "PKG_MIN_PWR_LVL2=%d ", (unsigned int)(msr >> 48) & 0x7FFF);
++		fprintf(outf, "PKG_MIN_PWR_LVL2=%d ", (unsigned int)(msr >> 47) & 0xFFFF);
+ 		fprintf(outf, "PKG_MAX_PWR_LVL2=%d ", (unsigned int)(msr >> 32) & 0x7FFF);
+ 		fprintf(outf, "LVL2_RATIO=%d ", (unsigned int)(msr >> 16) & 0xFF);
+ 		fprintf(outf, "PKG_TDP_LVL2=%d", (unsigned int)(msr) & 0x7FFF);
+-- 
+2.21.0
+
