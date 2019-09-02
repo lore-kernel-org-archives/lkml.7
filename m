@@ -2,157 +2,149 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8BAC3A59B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A782C3A59B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AED721874
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B0C2168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 03:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jy6E6K/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfIBDpF (ORCPT
+        id S1729371AbfIBDwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Sep 2019 23:45:05 -0400
-Received: from [192.198.146.188] ([192.198.146.188]:15593 "EHLO
-        E6440.gar.corp.intel.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726385AbfIBDpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Sep 2019 23:45:04 -0400
-X-Greylist: delayed 589 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Sep 2019 23:45:04 EDT
-Received: from E6440.gar.corp.intel.com (localhost [127.0.0.1])
-        by E6440.gar.corp.intel.com (Postfix) with ESMTP id 76A30C16C0;
-        Mon,  2 Sep 2019 11:35:13 +0800 (CST)
-From:   Harry Pan <harry.pan@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v2] perf/x86/intel: Update ICL Core and Package C-state event counters
-Date:   Mon,  2 Sep 2019 11:35:11 +0800
-Message-Id: <20190902033511.826-1-harry.pan@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190726090846.6109-1-harry.pan@intel.com>
-References: <20190726090846.6109-1-harry.pan@intel.com>
+        Sun, 1 Sep 2019 23:52:36 -0400
+Received: from mail-eopbgr20082.outbound.protection.outlook.com ([40.107.2.82]:23719
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729070AbfIBDwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Sep 2019 23:52:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W3Zh6CW1cB/EsPsNnGIZj0nnCRHf/1G1Q0KaIHvTExPuGQG/E0cKnDpZow+7GL1FN6ni74dh35eKEHGtJA23A0Xg0e+kaVk+IPvD1m4YRKOb7WFMSRIzaifa+HI54dFrjjy3zNMMqlS2JEf6AfZLxvDWmhGigkIRYJhjJnePIPB0ntHg8LZ5g2yYPaL2i4a/JnRmVvM/1b1nw2YVHmShKOV4Wn6u2Bbudd5fiQpTeg75pHif7gpM80o9qZPAODQczukKix7rlAumCF0+jzXqL7xKPBufGmX8/ZrlC4K1leMNXfKJCNKHl43ckJrd3mF3uoBWMCTarUaiZRv1Duyrhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iViaOJ/PuDhTV/SE7IuSMs1P/h0mpfYWWvDRLPrpPGM=;
+ b=NbDE4EpnaFwqa8i46C4YkOy8moG83W6EmqIjMyLxJSt6sxj9fH+mBMDXlSlXklOE/0WdVvqccWEoREr5ys8Zhn8DpcmjhWT4JMqrSTSa/eB1O/NqZoEHsBAKs2GRa7X4JloPzklDT0diDKh7M7fZ6Ij0z9fRtMGhtcv48Xbm5ykEV/uXEwdkBow1Xp/NpfLLtsKDLkmb39oC+g44BM5RaBlxe8ZryVmsAkddXMeeZd6zJnYBr5RHXgStkpZ2KR2A4b8WSJGjakFTYiI2QYoGlBhjuZxKW2RHPRzrIStT+KqwtqUY+5mcXlUzVluYlUsQIBM7Sc9k32gnYuIhGnjbYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iViaOJ/PuDhTV/SE7IuSMs1P/h0mpfYWWvDRLPrpPGM=;
+ b=jy6E6K/SeadzevkmE4OxyHQ05m2U9MAxu8SKe75NuKfO0uKHDtFUAHrfmghny++pyvKfTUz2VoZkOp2h64aFjGwQgHQzNJriwwp4GocsPl1uTV/0XMic346YPH8lxZnnBBH2MN88iivYYtnKTfjgFiHEDJ8tIByxU8NsOR9nhuY=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6858.eurprd04.prod.outlook.com (52.133.240.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Mon, 2 Sep 2019 03:52:29 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::c563:1a9b:3c7e:95bb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::c563:1a9b:3c7e:95bb%3]) with mapi id 15.20.2220.021; Mon, 2 Sep 2019
+ 03:52:29 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v3 00/11] *** SUBJECT HERE ***
+Thread-Topic: [PATCH v3 00/11] *** SUBJECT HERE ***
+Thread-Index: AQHVYT5exBCgPRKHQk6IMqnS6lDTvacXwNDg
+Date:   Mon, 2 Sep 2019 03:52:28 +0000
+Message-ID: <DB8PR04MB6747A1DAD5A83F686C987C6A84BE0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4336d212-aab1-4054-eb49-08d72f58f9dc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6858;
+x-ms-traffictypediagnostic: DB8PR04MB6858:|DB8PR04MB6858:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6858ABE5251CF91900332EEB84BE0@DB8PR04MB6858.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01480965DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(13464003)(189003)(199004)(9686003)(99286004)(316002)(53936002)(2906002)(26005)(6116002)(186003)(3846002)(55016002)(14454004)(74316002)(6246003)(6506007)(66066001)(53546011)(102836004)(7696005)(54906003)(478600001)(6436002)(110136005)(76176011)(256004)(33656002)(71200400001)(2201001)(86362001)(2501003)(229853002)(305945005)(7736002)(25786009)(64756008)(7416002)(52536014)(486006)(476003)(5660300002)(66446008)(446003)(11346002)(66556008)(4326008)(8936002)(66476007)(66946007)(76116006)(71190400001)(8676002)(81166006)(81156014)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6858;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: akBovAFl5Sj7wVcHtGFnk41OivYJQAc6Ty5HOxZJwZ3anoOEPhK0N2273CsD9XLFxROOCuCI7vzNpvs8O+rH4xqpUjBHyMSlwQrrI61tcb+bl09dQvkHDetXPPRqcYNSOTDxcFb1G5G4ggbn5k49RAm4aat2XyJRq7OQ7r+HbwRDNO9C1SQg2nKFe/YeaGoboo9AFd+e3ENlsrwNrQPj3sXVSndnEhDmwmvYQOHNXVZLrnaFhFrHtGjUH26Oisx+98wTUDWoR32z1cSJtNKasizVgvYMesl83bawF1b6ND8qfDS/bFbMVjxTXok5nCsePjQFfEW6eYFBYwJ1pGfnqybWhScxVmGSJz5c9CD11xDBkYFyGn0TtbCB9TwbnlsdW5Kp/i5F/DKV2mlYUAV4aIhzCWg7f8vtlv1oHeCXJOo=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4336d212-aab1-4054-eb49-08d72f58f9dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2019 03:52:29.0048
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: upsQ7OYhz4X/pfk0mylZdf9Fx5R8yCD1LwzYA59CTvPrfeWskMISwSrIhxbmQ2ssJpSvwqDRy1MCmFf8cMHWgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6858
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ice Lake microarchitecture inherits Cannon Lake, it has CC1/PC8/PC9/PC10
-residency counters.
-
-Update the list of Ice Lake PMU event counters from the snb_cstates[] list
-of events to the cnl_cstates[] list of events, which keeps all previously
-supported events and also adds the CORE_C1, PKG_C8, PKG_C9, and PKG_C10
-residency counters.
-
-This benefits users to profile them through the perf interface.
-
-Signed-off-by: Harry Pan <harry.pan@intel.com>
-
----
-
- arch/x86/events/intel/cstate.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 688592b34564..82fbc4c6e5e6 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -35,56 +35,58 @@
-  *    The counters include PKG_C*_RESIDENCY.
-  *
-  * All of these counters are specified in the Intel® 64 and IA-32
-- * Architectures Software Developer.s Manual Vol3b.
-+ * Architectures Software Developer's Manual Vol4.
-  *
-  * Model specific counters:
-  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
-  *			 perf code: 0x00
-- *			 Available model: SLM,AMT,GLM,CNL
-+ *			 Available model: SLM,AMT,GLM,CNL,ICL
-  *			 Scope: Core (each processor core has a MSR)
-  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
-  *			       perf code: 0x01
-  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,GLM,
--						CNL
-+ *						CNL,ICL
-  *			       Scope: Core
-  *	MSR_CORE_C6_RESIDENCY: CORE C6 Residency Counter
-  *			       perf code: 0x02
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-- *						SKL,KNL,GLM,CNL
-+ *						SKL,KNL,GLM,CNL,ICL
-  *			       Scope: Core
-  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
-  *			       perf code: 0x03
-- *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL
-+ *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,ICL
-  *			       Scope: Core
-  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
-  *			       perf code: 0x00
-- *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL
-+ *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-+ *						ICL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
-- *						GLM,CNL
-+ *						GLM,CNL,ICL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
-  *			       perf code: 0x02
-- *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW
-- *						SKL,KNL,GLM,CNL
-+ *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-+ *						SKL,KNL,GLM,CNL,ICL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
-  *			       perf code: 0x03
-- *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL
-+ *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL,
-+ *						ICL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
-  *			       perf code: 0x04
-- *			       Available model: HSW ULT,KBL,CNL
-+ *			       Available model: HSW ULT,KBL,CNL,ICL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
-  *			       perf code: 0x05
-- *			       Available model: HSW ULT,KBL,CNL
-+ *			       Available model: HSW ULT,KBL,CNL,ICL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
-  *			       perf code: 0x06
-- *			       Available model: HSW ULT,KBL,GLM,CNL
-+ *			       Available model: HSW ULT,KBL,GLM,CNL,ICL
-  *			       Scope: Package (physical package)
-  *
-  */
-@@ -625,8 +627,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
- 
--	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
--	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_DESKTOP, snb_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, cnl_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_DESKTOP, cnl_cstates),
- 	{ },
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
--- 
-2.21.0
-
+WGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBYaWFvd2Vp
+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqOdTCMsjVIDExOjE3DQo+
+IFRvOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0Br
+ZXJuZWwub3JnOw0KPiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hvbkB0aS5jb207
+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBu
+eHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsNCj4gUm95IFphbmcgPHJv
+eS56YW5nQG54cC5jb20+OyBqaW5nb29oYW4xQGdtYWlsLmNvbTsNCj4gZ3VzdGF2by5waW1lbnRl
+bEBzeW5vcHN5cy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
+b3JnDQo+IENjOiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgWi5x
+LiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPjsgWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSCB2MyAwMC8xMV0gKioqIFNVQkpFQ1QgSEVSRSAq
+KioNCj4gDQo+ICoqKiBCTFVSQiBIRVJFICoqKg0KDQpBZGQgc3ViamVjdCBhbmQgYmx1cmIgZm9y
+IHRoaXMgc2VyaWVzLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBYaWFvd2VpIEJhbyAo
+MTEpOg0KPiAgIFBDSTogZGVzaWdud2FyZS1lcDogQWRkIG11bHRpcGxlIFBGcyBzdXBwb3J0IGZv
+ciBEV0MNCj4gICBQQ0k6IGRlc2lnbndhcmUtZXA6IEFkZCB0aGUgZG9vcmJlbGwgbW9kZSBvZiBN
+U0ktWCBpbiBFUCBtb2RlDQo+ICAgUENJOiBkZXNpZ253YXJlLWVwOiBNb3ZlIHRoZSBmdW5jdGlv
+biBvZiBnZXR0aW5nIE1TSSBjYXBhYmlsaXR5DQo+ICAgICBmb3J3YXJkDQo+ICAgUENJOiBkZXNp
+Z253YXJlLWVwOiBNb2RpZnkgTVNJIGFuZCBNU0lYIENBUCB3YXkgb2YgZmluZGluZw0KPiAgIGR0
+LWJpbmRpbmdzOiBwY2k6IGxheWVyc2NhcGUtcGNpOiBhZGQgY29tcGF0aWJsZSBzdHJpbmdzIGZv
+ciBsczEwODhhDQo+ICAgICBhbmQgbHMyMDg4YQ0KPiAgIFBDSTogbGF5ZXJzY2FwZTogRml4IHNv
+bWUgZm9ybWF0IGlzc3VlIG9mIHRoZSBjb2RlDQo+ICAgUENJOiBsYXllcnNjYXBlOiBNb2RpZnkg
+dGhlIHdheSBvZiBnZXR0aW5nIGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJlbnQNCj4gICAgIFBFWA0K
+PiAgIFBDSTogbGF5ZXJzY2FwZTogTW9kaWZ5IHRoZSBNU0lYIHRvIHRoZSBkb29yYmVsbCBtb2Rl
+DQo+ICAgUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZSBzdXBwb3J0IGZvciBsczEwODhhIGFu
+ZCBsczIwODhhDQo+ICAgYXJtNjQ6IGR0czogbGF5ZXJzY2FwZTogQWRkIFBDSWUgRVAgbm9kZSBm
+b3IgbHMxMDg4YQ0KPiAgIG1pc2M6IHBjaV9lbmRwb2ludF90ZXN0OiBBZGQgTFMxMDg4YSBpbiBw
+Y2lfZGV2aWNlX2lkIHRhYmxlDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xh
+eWVyc2NhcGUtcGNpLnR4dCAgICAgfCAgIDQgKy0NCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kgICAgIHwgIDMxICsrKw0KPiAgZHJpdmVycy9taXNjL3Bj
+aV9lbmRwb2ludF90ZXN0LmMgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9w
+Y2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyAgICAgfCAxMDAgKysrKysrLS0N
+Cj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jICAgIHwg
+MjU1DQo+ICsrKysrKysrKysrKysrKysrLS0tLQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9k
+d2MvcGNpZS1kZXNpZ253YXJlLmMgICAgICAgfCAgNTkgKysrLS0NCj4gIGRyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oICAgICAgIHwgIDQ4ICsrKy0NCj4gIDcgZmls
+ZXMgY2hhbmdlZCwgNDA0IGluc2VydGlvbnMoKyksIDk0IGRlbGV0aW9ucygtKQ0KPiANCj4gLS0N
+Cj4gMi45LjUNCg0K
