@@ -2,170 +2,112 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0D9C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A59C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A7421882
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA4B21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 13:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgoZsB17"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlCl3abu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbfIBNfw (ORCPT
+        id S1730755AbfIBNgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 09:35:52 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50438 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730626AbfIBNfw (ORCPT
+        Mon, 2 Sep 2019 09:36:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37052 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730626AbfIBNgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:35:52 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c10so2722580wmc.0;
-        Mon, 02 Sep 2019 06:35:50 -0700 (PDT)
+        Mon, 2 Sep 2019 09:36:09 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d16so14644283wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 06:36:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4IZYZ9SbbmiPIjFQQI3+tSC3aTTev4F8DX/N/W2gHEU=;
-        b=WgoZsB17OsI8b1BPxf2haYOv230TxFH5zo/P7pAa6FFCwGCxOCHDi3jZZFjE+kJQRq
-         1Bj8+IRGAbpqLrYL3MJdHGgzQySVIeT7b+gSj0wgfopR+sJ4pGvVDj/DhLfQ/fURh5Tb
-         WXx90oCHGaYyg7BPNIF4vk3mK8rwvM9Llan4vwVrBdLszjUCoO69N/puRqhwiXQ4sSYO
-         m1UUWZrhvgzcakY1vZAqz41vOPSg12J2JKhY+d9R911YteyvdGgaUnKK0Ke/aHMvsrlU
-         CUvEbhystl1J0cxR8QN4nWJK/kSI9yQkQp6ny2Akh2lzoIBuoqFoOXhGAvyYZHH7tuR7
-         ym5A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lgluUPyzTE3k7AyBs9nIV6ho5+oXFx0a+s2dE+u1Fk8=;
+        b=UlCl3abuuJFpLnHk0GD3eI2rM9n0Azzsrf1m9RwHiYwS5Exwkvc49cN6lZTg4HtDf7
+         te3wGTJ/Q7Wy8QRj0FtydbX8PZLAfGrl8vo+++PDn7mkgS4TL0jgQ8+bXY/N6sFSQR3M
+         x0K8Ptix0M+imYJ3mhqS5fJkHGT7j2yIVNZAkfhf0gYNF27aoG1kW2R+jzzT9GQG+BTU
+         /vd3Ju6jWcKst2NaTlSZuIDgXKK13QwQqMJNF8Isx+KN9LAtfuCbQfAPBoEmmM5r8hsX
+         uKBnW3Nmo8MVLpnhW97mSpcRSvhQ1UBMILml1T2Gdw/Kt2s825Bz4yoJXO3Nff6npHJR
+         lCcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4IZYZ9SbbmiPIjFQQI3+tSC3aTTev4F8DX/N/W2gHEU=;
-        b=KzZ3jjUBQmLnhvNDRdTsEpIerVQ0S0oHzcfJeLCYyUj8+EahsW7Ie1rblXqZFbfH+v
-         yMFJx5rqa07uP/PnS8816uCjEiM0dcz6wEYp5dY+v0MSMF1lZAlth88s+mq3Cz0t1MmI
-         B88lqHtwy5Ie3Xl152s7mJDdPIhCybwqVx9cZnbjoHqMKUZ1oglon9+1o3PLUiqMiIPd
-         MTorI5QdZYgH6DaQmz4uBaHpmCMH1KSjjOAo6omS6sDTAvdMLQI+02giXCyCPVIee4mx
-         l8nbFOwR5pKrpTnD/sqv/KRj6yI6dlTmozSaPsk8jg0zN1A9y3qCpemAStzibGpOn6Df
-         oMtQ==
-X-Gm-Message-State: APjAAAWazOjJqdpvsF5GB06Wc2GCEezflRo0vsliNRdqRY67xTGSyi2D
-        Vb5n2D95K37Jh/o/FPB92cM=
-X-Google-Smtp-Source: APXvYqwzsJg7dJuqKEwIzVF50xAcslHhSLNS1ZuTGK9sjM8Uo68LREuLh2tlKO5iFRAzdobmqPoP9g==
-X-Received: by 2002:a7b:cd17:: with SMTP id f23mr36832272wmj.177.1567431349811;
-        Mon, 02 Sep 2019 06:35:49 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:eecb:7400:8425:c99f:73d7:9637])
-        by smtp.gmail.com with ESMTPSA id f75sm21640290wmf.2.2019.09.02.06.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 06:35:49 -0700 (PDT)
-From:   Erwan Velu <erwanaliasr1@gmail.com>
-X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Len Brown <lenb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Luwei Kang <luwei.kang@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH] tools/power/x86/turbostat: Reporting EPB as per Intel's spec
-Date:   Mon,  2 Sep 2019 15:35:07 +0200
-Message-Id: <20190902133509.24534-1-e.velu@criteo.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lgluUPyzTE3k7AyBs9nIV6ho5+oXFx0a+s2dE+u1Fk8=;
+        b=g2KyAZ3APG6b0wLJPO30VoJSO0+zffjLXD6jmxFJsRh/RPffakWijfnoFn/JsUJqUn
+         +PN8AdOtF7EDkrqfZxZIviP4i3zy53pM9nKjgIYqpuCi9ueRcuJeaCxJ+Kwms4yBStpc
+         scABO6Ly4BdRLrxDVYGiRehYi5B80qBPNJfCRgBsGDZa0cE9dWp0dve/Vr3LrQaC+xsT
+         cdCkWkI96iXud+6jjW1vNclVeQkNSGpnbSaxcr6E2J72A6TDppe3QAMys3hZg0nZU1Ur
+         CswEQ+PtdGuyVpXgTo0QAAWEkY4jCtF4aRldnwV069rYQ6NTFYbIcvInHehyNi1Wz1w5
+         JE7w==
+X-Gm-Message-State: APjAAAVe7gcguAi19VeVTK9bPHb6xW+cAqjoqFCi192A3Pca7vYkJuRf
+        k9Ls8MCMnRbxj5Du1psps7EUx5wAxoQeJw4r6TOcDX3h
+X-Google-Smtp-Source: APXvYqxXTnz3j1+58ZXipucuYWcIzBAoeW6774ATixJZMau34AMCKmrFZUDfhSF4cmAZHiIFE4a5YsMhxy4Bn6/LgVQ=
+X-Received: by 2002:a7b:cc94:: with SMTP id p20mr9324398wma.171.1567431367725;
+ Mon, 02 Sep 2019 06:36:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190830225514.5283-1-daniel.baluta@nxp.com> <20190902123944.GB5819@sirena.co.uk>
+In-Reply-To: <20190902123944.GB5819@sirena.co.uk>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Mon, 2 Sep 2019 16:35:56 +0300
+Message-ID: <CAEnQRZDmVoSkpf47mTHeEKodX9_x4Y_9EVrkS=ta4sWU8tD3Zw@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_sai: Set SAI Channel Mode to Output Mode
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@kernel.org>,
+        Cosmin-Gabriel Samoila <gabrielcsmo@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The actual code is reporting the EPB mode by considering a single value,
-while Intel's specfication defines ranges.
+On Mon, Sep 2, 2019 at 3:42 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Sat, Aug 31, 2019 at 01:55:14AM +0300, Daniel Baluta wrote:
+>
+> > Fix this by setting CHMOD to Output Mode so that pins will output zero
+> > when slots are masked or channels are disabled.
+>
+> This patch seems to do this unconditionally.  This is fine for
+> configurations where the SoC is the only thing driving the bus but will
+> mean that for TDM configurations where something else also drives some
+> of the slots we'll end up with both devices driving simultaneously.  The
+> safest thing would be to set this only if TDM isn't configured.
 
-This patch is about to report the EPB by considering ranges of energy_policy
-to actually report the state of the processor.
+I thought that the SAI IP is the single owner of the audio data lines,
+so even in TDM
+mode SAI IP (which is inside SoC) is the only one adding data on the bus.
 
-This avoids reporting a "custom" value while the specification describes
-an explicit state of the processor for each value.
+Now, you say that there could be two devices driving some of he masked
+slots right?
+I'm not sure how to really figure out that SAI is running in TDM mode.
 
-0-3  : Maximum performance
-4-7  : Balanced Performance
-8-11 : Balanced Efficiency
-12-15: Powersave
+RM says:
 
-This patch also introduce ENERGY_PERF_BIAS_MIN_POWERSAVE.
-The first 3 performance profiles (ENERGY_PERF_BIAS_PERFORMANCE,
-ENERGY_PERF_BIAS_BALANCE_PERFORMANCE, ENERGY_PERF_BIAS_BALANCE_POWERSAVE) where defined
-by the lowest value of the associate range while ENERGY_PERF_BIAS_POWERSAVE was
-defined by the greatest value.
+When enabled, the SAI continuously transmits and/or receives frames of
+data. Each
+frame consists of a fixed number of words and each word consists of a
+fixed number of
+bits. Within each frame, any given word can be masked causing the
+receiver to ignore
+that word and the transmitter to tri-state for the duration of that word.
 
-This was a little bit inconsistent and made more difficult to report EPB value per range.
+Will try to ask IP designer about this, thanks a lot for your comment!
 
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
----
- arch/x86/include/asm/msr-index.h      |  1 +
- tools/power/x86/turbostat/turbostat.c | 23 ++++++++++-------------
- 2 files changed, 11 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 271d837d69a8..120073dfb195 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -596,6 +596,7 @@
- #define ENERGY_PERF_BIAS_BALANCE_PERFORMANCE	4
- #define ENERGY_PERF_BIAS_NORMAL			6
- #define ENERGY_PERF_BIAS_BALANCE_POWERSAVE	8
-+#define ENERGY_PERF_BIAS_MIN_POWERSAVE		12
- #define ENERGY_PERF_BIAS_POWERSAVE		15
- 
- #define MSR_IA32_PACKAGE_THERM_STATUS		0x000001b1
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 75fc4fb9901c..9fa73b468f7e 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -3552,6 +3552,7 @@ dump_sysfs_pstate_config(void)
- int print_epb(struct thread_data *t, struct core_data *c, struct pkg_data *p)
- {
- 	unsigned long long msr;
-+	unsigned int perf_bias_value;
- 	char *epb_string;
- 	int cpu;
- 
-@@ -3572,20 +3573,16 @@ int print_epb(struct thread_data *t, struct core_data *c, struct pkg_data *p)
- 	if (get_msr(cpu, MSR_IA32_ENERGY_PERF_BIAS, &msr))
- 		return 0;
- 
--	switch (msr & 0xF) {
--	case ENERGY_PERF_BIAS_PERFORMANCE:
-+	 // Reporting perf_bias_performance as per intel specification
-+	perf_bias_value = msr & 0xF;
-+	epb_string = "powersave";
-+	if (perf_bias_value < ENERGY_PERF_BIAS_BALANCE_PERFORMANCE)
- 		epb_string = "performance";
--		break;
--	case ENERGY_PERF_BIAS_NORMAL:
--		epb_string = "balanced";
--		break;
--	case ENERGY_PERF_BIAS_POWERSAVE:
--		epb_string = "powersave";
--		break;
--	default:
--		epb_string = "custom";
--		break;
--	}
-+	else if (perf_bias_value < ENERGY_PERF_BIAS_BALANCE_POWERSAVE)
-+		epb_string = "balanced performance";
-+	else if (perf_bias_value < ENERGY_PERF_BIAS_MIN_POWERSAVE)
-+		epb_string = "balanced efficiency";
-+
- 	fprintf(outf, "cpu%d: MSR_IA32_ENERGY_PERF_BIAS: 0x%08llx (%s)\n", cpu, msr, epb_string);
- 
- 	return 0;
--- 
-2.21.0
-
+Daniel.
