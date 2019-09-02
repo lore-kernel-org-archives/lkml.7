@@ -2,95 +2,114 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DB2C41514
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E579217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="JXqy7J5Y"
+	by mail.kernel.org (Postfix) with ESMTP id D8022217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 15:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfIBPKj (ORCPT
+        id S1731891AbfIBPLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 11:10:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46415 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfIBPKj (ORCPT
+        Mon, 2 Sep 2019 11:11:03 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42056 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730708AbfIBPLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 11:10:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id x4so29607415iog.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 08:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eNoZVt93wCM2AD/WJsdKgmkl7QJYjyE8sIFzYDYEiq4=;
-        b=JXqy7J5YOfHw70u2KMsOY+LVESQvc9tJmhEt/mn5NcgBhZXYx/JSUnUdBx236ujBr0
-         k+LwyWG21gdvtU+kztx1imluhfGzI31fGEn2WgROzQeYSmNxsNksz6SG0LyBCebyUhRM
-         C6TwF5G1VeF0mfS61qmlxog6FDqv1I06Bkvrg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eNoZVt93wCM2AD/WJsdKgmkl7QJYjyE8sIFzYDYEiq4=;
-        b=ApmLMvLNAbHHaU3jGC9vK2oxenbOTMAmGCpVkjoFSB1f8aniTZFe1vdE0VNGaCbj23
-         qpralYigWinWoNyY9SKQV3bRYmGwb1KeV9xaTDpSn1LcMWenCbqbU7WajyQR2GIxVGFF
-         Ojcdj+4hm9hCPtfj3jareI4znWf8LN1KN8Hwjq8ZRQZfxMuc8YUr0FdIEL+uqkr0L8sB
-         ErDifUV1W8aoxCbRrwiha92hEwBy7i/ohGoa8PCx0ltH94ApO2T4cw9sT2x8IWSjSd5/
-         9y4ln9Zhcp9Gf0A5+7nzAfIg+4M0YhAHl4UtO429RdCpe5sm28OY0hNpOZBx2/s3/144
-         s7uA==
-X-Gm-Message-State: APjAAAXdZnQNjDUS+CqSWuWjvalQ1hEEqYQpI80QzlpXoUkWI19Jm962
-        iMjENtIFVDN69Fxol3CJ5akCaKwSd0IiGSm7yN7d6A==
-X-Google-Smtp-Source: APXvYqwZRkt8fPWRtDpiKFOKXTy8fw0RHOy/5a1qDh7rttm4qMCirS6V7hOTFzeJsTNvgEwYZnkeRnwFnPJXwIhBKN0=
-X-Received: by 2002:a6b:f80f:: with SMTP id o15mr1741553ioh.174.1567437038133;
- Mon, 02 Sep 2019 08:10:38 -0700 (PDT)
+        Mon, 2 Sep 2019 11:11:02 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i4nyu-0000hR-7J; Mon, 02 Sep 2019 15:11:00 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][V2][cifs-next] cifs: fix dereference on ses before it is null checked
+Date:   Mon,  2 Sep 2019 16:10:59 +0100
+Message-Id: <20190902151059.22088-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190830130119.446e7389@canb.auug.org.au> <CAJfpeguxmJvCV+PXr=wz5HXONKv4RDmZ1LpYNEqAtvw_smP5Ag@mail.gmail.com>
-In-Reply-To: <CAJfpeguxmJvCV+PXr=wz5HXONKv4RDmZ1LpYNEqAtvw_smP5Ag@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 2 Sep 2019 17:10:27 +0200
-Message-ID: <CAJfpegsijOi6TdRcObGSAJ+tS0JiZky=v6Wqh5u8RZTzi6tkjA@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the vfs tree with the fuse tree
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 11:00 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> On Fri, Aug 30, 2019 at 5:01 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> >
-> > Today's linux-next merge of the vfs tree got a conflict in:
-> >
-> >   fs/fuse/inode.c
-> >
-> > between commit:
-> >
-> >   1458e5e9f99a ("fuse: extract fuse_fill_super_common()")
-> >
-> > from the fuse tree and commit:
-> >
-> >   2ad9ab0f7429 ("vfs: Convert fuse to use the new mount API")
-> >   48ceb15f98c8 ("vfs: Move the subtype parameter into fuse")
->
-> And the latter is b0rked anyway.
+From: Colin Ian King <colin.king@canonical.com>
 
-Both, actually.
+The assignment of pointer server dereferences pointer ses, however,
+this dereference occurs before ses is null checked and hence we
+have a potential null pointer dereference.  Fix this by only
+dereferencing ses after it has been null checked.
 
-Pushed fixed ones to fuse.git#for-next.
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 2808c6639104 ("cifs: add new debugging macro cifs_server_dbg")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/cifs/smb2pdu.c   | 11 ++++++++---
+ fs/cifs/transport.c |  3 ++-
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-Thanks,
-Miklos
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index dbc6ef50dd45..0e92983de0b7 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -2759,8 +2759,10 @@ SMB2_ioctl(const unsigned int xid, struct cifs_tcon *tcon, u64 persistent_fid,
+ 	else
+ 		return -EIO;
+ 
++	if (!ses)
++		return -EIO;
+ 	server = ses->server;
+-	if (!ses || !(server))
++	if (!server)
+ 		return -EIO;
+ 
+ 	if (smb3_encryption_required(tcon))
+@@ -3058,13 +3060,16 @@ query_info(const unsigned int xid, struct cifs_tcon *tcon,
+ 	int rc = 0;
+ 	int resp_buftype = CIFS_NO_BUFFER;
+ 	struct cifs_ses *ses = tcon->ses;
+-	struct TCP_Server_Info *server = ses->server;
++	struct TCP_Server_Info *server;
+ 	int flags = 0;
+ 	bool allocated = false;
+ 
+ 	cifs_dbg(FYI, "Query Info\n");
+ 
+-	if (!ses || !(server))
++	if (!ses)
++		return -EIO;
++	server = ses->server;
++	if (!server)
+ 		return -EIO;
+ 
+ 	if (smb3_encryption_required(tcon))
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index 0d60bd2f4dca..a90bd4d75b4d 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -1242,12 +1242,13 @@ SendReceive(const unsigned int xid, struct cifs_ses *ses,
+ 	struct kvec iov = { .iov_base = in_buf, .iov_len = len };
+ 	struct smb_rqst rqst = { .rq_iov = &iov, .rq_nvec = 1 };
+ 	struct cifs_credits credits = { .value = 1, .instance = 0 };
+-	struct TCP_Server_Info *server = ses->server;
++	struct TCP_Server_Info *server;
+ 
+ 	if (ses == NULL) {
+ 		cifs_dbg(VFS, "Null smb session\n");
+ 		return -EIO;
+ 	}
++	server = ses->server;
+ 	if (server == NULL) {
+ 		cifs_dbg(VFS, "Null tcp session\n");
+ 		return -EIO;
+-- 
+2.20.1
+
