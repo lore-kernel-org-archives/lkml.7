@@ -2,87 +2,95 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6DEC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB14BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2BC6215EA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839BA20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 09:06:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQA/R7ER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfIBJF1 (ORCPT
+        id S1730847AbfIBJGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 05:05:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39448 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730361AbfIBJF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 05:05:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BA11FAC4A;
-        Mon,  2 Sep 2019 09:05:25 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id C80201E406C; Mon,  2 Sep 2019 10:56:28 +0200 (CEST)
-Date:   Mon, 2 Sep 2019 10:56:28 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [block/for-next] writeback: don't access page->mapping directly
- in track_foreign_dirty TP
-Message-ID: <20190902085628.GC14207@quack2.suse.cz>
-References: <20190830233954.GC2263813@devbig004.ftw2.facebook.com>
+        Mon, 2 Sep 2019 05:06:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44430 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730361AbfIBJGA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 05:06:00 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 30so2227040wrk.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 02:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jsEBeFFNvFaPm+UINQ8FKKE9kI76YVop7KZk/SgIN0w=;
+        b=EQA/R7ER71h6q2L0q6RyD91BLLw2kzWILEICeJVIqMMoaPHkQfzCy4GrQ9R5sBh0A1
+         BjOBfnt6KrqiZ0OutIgU+RMQ09MN5jKZtdJA0dsG3V8suQ8tVyr/dj1aiudZ+fxB/DDe
+         vX87A/djueXnHzTheatGtTPNSbGoQvJoLH5PhcZeJ1U41Rmp1tfFywm65VbahANHD7q5
+         u9aVEyX61rZgbeFkaNPvkmJTyfsJVCxn26LtnrUK2P559KiRyUFqVKQrj9bonn6XeO4x
+         kDCfeE46xu39tfh4otV173ZC9Pg0stVfkSFPhpGkggefW/nSFj5ZKOaLEQFKq/U+sapt
+         aOvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jsEBeFFNvFaPm+UINQ8FKKE9kI76YVop7KZk/SgIN0w=;
+        b=FNZnHTUK9hIYLhgBfGeh3KFmfR0YAwHEU/smG9ZQE7J7A8XbhYeEjbkTyE5Nx9Dwe4
+         cft2EDbX061DmkeOUziYUyK9BE9+9nrzR9QoKoEvKyd6LoqmzxXktlOXtMQK7QBsh+ZS
+         WrqpEzsfj9vVmFHe+QqvHLmPR6mQwp+BVINPq8X3v+GvwSlQJmW6s1ClGFYP6WD9vDbB
+         /puhXgtZ/IbcZUTB8oe81krUnEclfY1I5Bs6v6CxEllcFyJvEJ5zB7wpTvu8Uo7SyNTn
+         BA8cBPxXPquSvGczivq7qwvUunkPoMBYfGutKy+Ou/WUAe8IMTbhVeyLmYISSo2FZHYs
+         QDiw==
+X-Gm-Message-State: APjAAAV0a+RDCXrhjntBfXqqp4nn1crkaSRguQsF6hk1SJrgR59CQOOy
+        JSwmEXCpMjb9cnAnbjoO8mzthA==
+X-Google-Smtp-Source: APXvYqy3AlQzIqFirHwiqt0lgMFigNByRSNqVI0P1nO7V1nkPNQl8F2riQFP7gj6w0mv3ltiUhT2fA==
+X-Received: by 2002:a5d:678a:: with SMTP id v10mr9934885wru.145.1567415158006;
+        Mon, 02 Sep 2019 02:05:58 -0700 (PDT)
+Received: from dell ([95.147.198.93])
+        by smtp.gmail.com with ESMTPSA id h125sm32172794wmf.31.2019.09.02.02.05.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Sep 2019 02:05:57 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 10:05:56 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: sm501: Include the GPIO driver header
+Message-ID: <20190902090556.GC32232@dell>
+References: <20190820103715.7489-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190830233954.GC2263813@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820103715.7489-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 30-08-19 16:39:54, Tejun Heo wrote:
-> page->mapping may encode different values in it and page_mapping()
-> should always be used to access the mapping pointer.
-> track_foreign_dirty tracepoint was incorrectly accessing page->mapping
-> directly.  Use page_mapping() instead.  Also, add NULL checks while at
-> it.
+On Tue, 20 Aug 2019, Linus Walleij wrote:
+
+> This driver creates a gpio chip so it needs to include the
+> appropriate header <linux/gpio/driver.h> explicitly rather
+> than implicitly.
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: Jan Kara <jack@suse.cz>
-> Fixes: 3a8e9ac89e6a ("writeback: add tracepoints for cgroup foreign writebacks")
-
-I can see Jens already picked this up so this is just informative: The patch
-now looks good to me.
-
-								Honza
-
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  include/trace/events/writeback.h |    5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-> index 3dc9fb9e7c78..3a27335fce2c 100644
-> --- a/include/trace/events/writeback.h
-> +++ b/include/trace/events/writeback.h
-> @@ -251,9 +251,12 @@ TRACE_EVENT(track_foreign_dirty,
->  	),
->  
->  	TP_fast_assign(
-> +		struct address_space *mapping = page_mapping(page);
-> +		struct inode *inode = mapping ? mapping->host : NULL;
-> +
->  		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
->  		__entry->bdi_id		= wb->bdi->id;
-> -		__entry->ino		= page->mapping->host->i_ino;
-> +		__entry->ino		= inode ? inode->i_ino : 0;
->  		__entry->memcg_id	= wb->memcg_css->id;
->  		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
->  		__entry->page_cgroup_ino = page->mem_cgroup->css.cgroup->kn->id.ino;
+>  drivers/mfd/sm501.c | 1 +
+>  1 file changed, 1 insertion(+)
+
+Applied, thanks.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
