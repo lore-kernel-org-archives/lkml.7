@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969EDC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AB5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E75F23401
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCC0233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528779;
-	bh=AsxPs8o9ObK/Jj5GSq7R8RNxsQx5b8ropXh2gycQvB8=;
+	s=default; t=1567528785;
+	bh=8O/nJ8QsWRakObntQlxlpgwBzmx15+PaEmBLe0UqJvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmDQYJ+6L5fi35zqthVeUhxdVJV4SqbebSS3Dz08TLu7oa0kR9MGpHeQI7Hf63HO9
-	 AzneGZk7LNf1U7MLQpP3fPyWTFlPFxqUEC0RTttG1+lLyW+eF2/4FJtx/njMM71nXL
-	 lmIL/6NYjhqbDU4wcNNjHlRS3krRnPaTFhcMtxfs=
+	b=NPtahydiyx2Ye6DbT/3F2h/VFc3/yvMx5BbLcl+ChhmA1NQ/fyNd+ic6zw3mtzmco
+	 k90QqEhwuZvtMmiFj3bZYQNmM3tuE9uz9pp4SPJfHadE5ky0hXlb49oi4hQNSyp+1W
+	 dEDuHbfQRG1UuvDvZ1uyNnjN3QViLih/CP+JMjwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbfICQji (ORCPT
+        id S1731465AbfICQjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:39:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730408AbfICQZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:33 -0400
+        id S1730402AbfICQZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73A523717;
-        Tue,  3 Sep 2019 16:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41FC12377F;
+        Tue,  3 Sep 2019 16:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527932;
-        bh=AsxPs8o9ObK/Jj5GSq7R8RNxsQx5b8ropXh2gycQvB8=;
+        s=default; t=1567527930;
+        bh=8O/nJ8QsWRakObntQlxlpgwBzmx15+PaEmBLe0UqJvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aw9ACrtDI8yy5DNnJ8yfCRFrFBSi96c6F4Z/9749f6KNRfmoYciQsB5OdDwYnv+j/
-         nrKZgA+38xWzlLH7zxWd7rola9tV9vqKHfQxxak0VxH907gUr7ba9DOjfoKGNcf6IK
-         slmpF6sJ0MYTHB0NrLEKxec5mmvg4/EPjvzVxpJE=
+        b=yEJb1tIBTTEVop6iIZjIc/ueqiFD9kKfXkAKuUrugFNiENnSMfjTodlzp6y5tDxg0
+         AB0U3zplzxrvkx7MxN0yOwonn/URhhYpQ82d72HnWmpdMretcsQLedGFd9gfPssCqh
+         R+2VVFop9JTvgAm5nN6gONvcCXjqKdHvJIYSkvRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 006/167] Drivers: hv: kvp: Fix two "this statement may fall through" warnings
-Date:   Tue,  3 Sep 2019 12:22:38 -0400
-Message-Id: <20190903162519.7136-6-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        James Morris <jmorris@namei.org>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Stephan Mueller <smueller@chronox.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        James Morris <james.morris@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 005/167] keys: Fix the use of the C++ keyword "private" in uapi/linux/keyctl.h
+Date:   Tue,  3 Sep 2019 12:22:37 -0400
+Message-Id: <20190903162519.7136-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -63,67 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit fc62c3b1977d62e6374fd6e28d371bb42dfa5c9d ]
+[ Upstream commit 2ecefa0a15fd0ef88b9cd5d15ceb813008136431 ]
 
-We don't need to call process_ib_ipinfo() if message->kvp_hdr.operation is
-KVP_OP_GET_IP_INFO in kvp_send_key(), because here we just need to pass on
-the op code from the host to the userspace; when the userspace returns
-the info requested by the host, we pass the info on to the host in
-kvp_respond_to_host() -> process_ob_ipinfo(). BTW, the current buggy code
-actually doesn't cause any harm, because only message->kvp_hdr.operation
-is used by the userspace, in the case of KVP_OP_GET_IP_INFO.
+The keyctl_dh_params struct in uapi/linux/keyctl.h contains the symbol
+"private" which means that the header file will cause compilation failure
+if #included in to a C++ program.  Further, the patch that added the same
+struct to the keyutils package named the symbol "priv", not "private".
 
-The patch also adds a missing "break;" in kvp_send_key(). BTW, the current
-buggy code actually doesn't cause any harm, because in the case of
-KVP_OP_SET, the unexpected fall-through corrupts
-message->body.kvp_set.data.key_size, but that is not really used: see
-the definition of struct hv_kvp_exchg_msg_value.
+The previous attempt to fix this (commit 8a2336e549d3) did so by simply
+renaming the kernel's copy of the field to dh_private, but this then breaks
+existing userspace and as such has been reverted (commit 8c0f9f5b309d).
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Cc: K. Y. Srinivasan <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[And note, to those who think that wrapping the struct in extern "C" {}
+ will work: it won't; that only changes how symbol names are presented to
+ the assembler and linker.].
+
+Instead, insert an anonymous union around the "private" member and add a
+second member in there with the name "priv" to match the one in the
+keyutils package.  The "private" member is then wrapped in !__cplusplus
+cpp-conditionals to hide it from C++.
+
+Fixes: ddbb41148724 ("KEYS: Add KEYCTL_DH_COMPUTE command")
+Fixes: 8a2336e549d3 ("uapi/linux/keyctl.h: don't use C++ reserved keyword as a struct member name")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Randy Dunlap <rdunlap@infradead.org>
+cc: Lubomir Rintel <lkundrak@v3.sk>
+cc: James Morris <jmorris@namei.org>
+cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+cc: Stephan Mueller <smueller@chronox.de>
+cc: Andrew Morton <akpm@linux-foundation.org>
+cc: Linus Torvalds <torvalds@linux-foundation.org>
+cc: stable@vger.kernel.org
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv_kvp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/uapi/linux/keyctl.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index 5eed1e7da15c4..57715a0c81202 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -353,7 +353,6 @@ static void process_ib_ipinfo(void *in_msg, void *out_msg, int op)
+diff --git a/include/uapi/linux/keyctl.h b/include/uapi/linux/keyctl.h
+index 7b8c9e19bad1c..0f3cb13db8e93 100644
+--- a/include/uapi/linux/keyctl.h
++++ b/include/uapi/linux/keyctl.h
+@@ -65,7 +65,12 @@
  
- 		out->body.kvp_ip_val.dhcp_enabled = in->kvp_ip_val.dhcp_enabled;
- 
--	default:
- 		utf16s_to_utf8s((wchar_t *)in->kvp_ip_val.adapter_id,
- 				MAX_ADAPTER_ID_SIZE,
- 				UTF16_LITTLE_ENDIAN,
-@@ -406,7 +405,7 @@ kvp_send_key(struct work_struct *dummy)
- 		process_ib_ipinfo(in_msg, message, KVP_OP_SET_IP_INFO);
- 		break;
- 	case KVP_OP_GET_IP_INFO:
--		process_ib_ipinfo(in_msg, message, KVP_OP_GET_IP_INFO);
-+		/* We only need to pass on message->kvp_hdr.operation.  */
- 		break;
- 	case KVP_OP_SET:
- 		switch (in_msg->body.kvp_set.data.value_type) {
-@@ -446,6 +445,9 @@ kvp_send_key(struct work_struct *dummy)
- 			break;
- 
- 		}
-+
-+		break;
-+
- 	case KVP_OP_GET:
- 		message->body.kvp_set.data.key_size =
- 			utf16s_to_utf8s(
+ /* keyctl structures */
+ struct keyctl_dh_params {
+-	__s32 private;
++	union {
++#ifndef __cplusplus
++		__s32 private;
++#endif
++		__s32 priv;
++	};
+ 	__s32 prime;
+ 	__s32 base;
+ };
 -- 
 2.20.1
 
