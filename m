@@ -2,158 +2,101 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8C5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992F8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DEC2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528849;
-	bh=bNbMGqAe9otMXDvcbH3us16H3ybiZym4a+BXb5+wTts=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqKKc2/19X+W2jK7uEmkMCSknu/ficdiynuonX3NvrVroEtuLD+6HcuNzJV3J+AvE
-	 mH6xZWFYKGU7gX6gJJk9vHLWS29VEu6FmJ+GeL336OVhp3BDMU2/Ajt5B5FrRFkL3/
-	 0cyxWv4Y0DTV1+smO9UnMWge7Qcvoj/EMFApqL1A=
+	by mail.kernel.org (Postfix) with ESMTP id 73A1B233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfICQks (ORCPT
+        id S1730695AbfICQkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 3 Sep 2019 12:40:51 -0400
+Received: from mail.netline.ch ([148.251.143.178]:44907 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730324AbfICQks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 12:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbfICQY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:24:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B30F23431;
-        Tue,  3 Sep 2019 16:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527898;
-        bh=bNbMGqAe9otMXDvcbH3us16H3ybiZym4a+BXb5+wTts=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HIg1gI5BKNw/+JAjJjJ60HpubgWrgdrioNZSwWdCuFS10/TPQJz59vRit8q2OewFO
-         UjRfTt0TKEBj+vMeXxUCTTrg65cmGm/2+bJyUaimHTvwSzwSnpNCtb0NOW1NHantv+
-         TfEdCrUEqZlsRVkS6kBhDb/h4jQLzUq9kmBKcQVg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kaike Wan <kaike.wan@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 11/23] IB/hfi1: Unreserve a flushed OPFN request
-Date:   Tue,  3 Sep 2019 12:24:12 -0400
-Message-Id: <20190903162424.6877-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
-References: <20190903162424.6877-1-sashal@kernel.org>
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id C88342B2001;
+        Tue,  3 Sep 2019 18:40:45 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id OTzcp-hFgXy5; Tue,  3 Sep 2019 18:40:45 +0200 (CEST)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 819202AA15E;
+        Tue,  3 Sep 2019 18:40:45 +0200 (CEST)
+Received: from localhost ([::1])
+        by thor with esmtp (Exim 4.92.1)
+        (envelope-from <michel@daenzer.net>)
+        id 1i5BrI-0007pS-6D; Tue, 03 Sep 2019 18:40:44 +0200
+Subject: Re: [PATCH AUTOSEL 4.19 044/167] drm/amdgpu: validate user pitch
+ alignment
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Yu Zhao <yuzhao@google.com>, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-44-sashal@kernel.org>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <7957107d-634f-4771-327e-99fdd5e6474e@daenzer.net>
+Date:   Tue, 3 Sep 2019 18:40:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <20190903162519.7136-44-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+On 2019-09-03 6:23 p.m., Sasha Levin wrote:
+> From: Yu Zhao <yuzhao@google.com>
+> 
+> [ Upstream commit 89f23b6efef554766177bf51aa754bce14c3e7da ]
 
-When an OPFN request is flushed, the request is completed without
-unreserving itself from the send queue. Subsequently, when a new
-request is post sent, the following warning will be triggered:
+Hold your horses!
 
-WARNING: CPU: 4 PID: 8130 at rdmavt/qp.c:1761 rvt_post_send+0x72a/0x880 [rdmavt]
-Call Trace:
-[<ffffffffbbb61e41>] dump_stack+0x19/0x1b
-[<ffffffffbb497688>] __warn+0xd8/0x100
-[<ffffffffbb4977cd>] warn_slowpath_null+0x1d/0x20
-[<ffffffffc01c941a>] rvt_post_send+0x72a/0x880 [rdmavt]
-[<ffffffffbb4dcabe>] ? account_entity_dequeue+0xae/0xd0
-[<ffffffffbb61d645>] ? __kmalloc+0x55/0x230
-[<ffffffffc04e1a4c>] ib_uverbs_post_send+0x37c/0x5d0 [ib_uverbs]
-[<ffffffffc04e5e36>] ? rdma_lookup_put_uobject+0x26/0x60 [ib_uverbs]
-[<ffffffffc04dbce6>] ib_uverbs_write+0x286/0x460 [ib_uverbs]
-[<ffffffffbb6f9457>] ? security_file_permission+0x27/0xa0
-[<ffffffffbb641650>] vfs_write+0xc0/0x1f0
-[<ffffffffbb64246f>] SyS_write+0x7f/0xf0
-[<ffffffffbbb74ddb>] system_call_fastpath+0x22/0x27
+This commit and c4a32b266da7bb702e60381ca0c35eaddbc89a6c had to be
+reverted, as they caused regressions. See commits
+25ec429e86bb790e40387a550f0501d0ac55a47c &
+92b0730eaf2d549fdfb10ecc8b71f34b9f472c12 .
 
-This patch fixes the problem by moving rvt_qp_wqe_unreserve() into
-rvt_qp_complete_swqe() to simplify the code and make it less
-error-prone.
 
-Fixes: ca95f802ef51 ("IB/hfi1: Unreserve a reserved request when it is completed")
-Link: https://lore.kernel.org/r/20190715164528.74174.31364.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/infiniband/hw/hfi1/rc.c | 2 --
- include/rdma/rdmavt_qp.h        | 9 ++++-----
- 2 files changed, 4 insertions(+), 7 deletions(-)
+This isn't bolstering confidence in how these patches are selected...
+I'm also a little nervous about others which change values by an order
+of magnitude. There were cases before where such patches were backported
+to branches which didn't have other corresponding changes, so they ended
+up breaking stuff instead of fixing anything.
 
-diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
-index 235bdbc706acc..5c0d90418e8c4 100644
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -1835,7 +1835,6 @@ void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah)
- 		    cmp_psn(qp->s_sending_psn, qp->s_sending_hpsn) <= 0)
- 			break;
- 		trdma_clean_swqe(qp, wqe);
--		rvt_qp_wqe_unreserve(qp, wqe);
- 		trace_hfi1_qp_send_completion(qp, wqe, qp->s_last);
- 		rvt_qp_complete_swqe(qp,
- 				     wqe,
-@@ -1882,7 +1881,6 @@ struct rvt_swqe *do_rc_completion(struct rvt_qp *qp,
- 	if (cmp_psn(wqe->lpsn, qp->s_sending_psn) < 0 ||
- 	    cmp_psn(qp->s_sending_psn, qp->s_sending_hpsn) > 0) {
- 		trdma_clean_swqe(qp, wqe);
--		rvt_qp_wqe_unreserve(qp, wqe);
- 		trace_hfi1_qp_send_completion(qp, wqe, qp->s_last);
- 		rvt_qp_complete_swqe(qp,
- 				     wqe,
-diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
-index 84d0f36afc2f7..85544777587db 100644
---- a/include/rdma/rdmavt_qp.h
-+++ b/include/rdma/rdmavt_qp.h
-@@ -540,7 +540,7 @@ static inline void rvt_qp_wqe_reserve(
- /**
-  * rvt_qp_wqe_unreserve - clean reserved operation
-  * @qp - the rvt qp
-- * @wqe - the send wqe
-+ * @flags - send wqe flags
-  *
-  * This decrements the reserve use count.
-  *
-@@ -552,11 +552,9 @@ static inline void rvt_qp_wqe_reserve(
-  * the compiler does not juggle the order of the s_last
-  * ring index and the decrementing of s_reserved_used.
-  */
--static inline void rvt_qp_wqe_unreserve(
--	struct rvt_qp *qp,
--	struct rvt_swqe *wqe)
-+static inline void rvt_qp_wqe_unreserve(struct rvt_qp *qp, int flags)
- {
--	if (unlikely(wqe->wr.send_flags & RVT_SEND_RESERVE_USED)) {
-+	if (unlikely(flags & RVT_SEND_RESERVE_USED)) {
- 		atomic_dec(&qp->s_reserved_used);
- 		/* insure no compiler re-order up to s_last change */
- 		smp_mb__after_atomic();
-@@ -743,6 +741,7 @@ rvt_qp_complete_swqe(struct rvt_qp *qp,
- 	u32 byte_len, last;
- 	int flags = wqe->wr.send_flags;
- 
-+	rvt_qp_wqe_unreserve(qp, flags);
- 	rvt_put_qp_swqe(qp, wqe);
- 
- 	need_completion =
+
 -- 
-2.20.1
-
+Earthling Michel Dänzer               |               https://redhat.com
+Libre software enthusiast             |             Mesa and X developer
