@@ -2,331 +2,274 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93512C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D87C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EEF22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477F322CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfICHba (ORCPT
+        id S1727953AbfICHcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:31:30 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:42083 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725888AbfICHb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:31:27 -0400
-Received: from [109.168.11.45] (port=41542 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1i53Hd-0023u4-IW; Tue, 03 Sep 2019 09:31:21 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-To:     jacopo mondi <jacopo@jmondi.org>
-Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Peter Rosin <peda@axentia.se>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
-Message-ID: <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
-Date:   Tue, 3 Sep 2019 09:31:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 03:32:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37518 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfICHcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:32:20 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 096C5C04BD48
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 07:32:20 +0000 (UTC)
+Received: by mail-qt1-f200.google.com with SMTP id z20so12798439qtn.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:32:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YKJ/17m0nY3+PfopzWmNRULBrW/5r9BKa8USWY7P99Y=;
+        b=R8GlGY+m8dQENggbKxHYCsESobPqmFjg2sQv9IH2/HNfH7tr9xyZvih1a5PKCbQV5F
+         HexsPVllLFHu94IrzCQ0mAghQmpHaKy5voAligOU9yAz6mHRbu2u+eJSqmx8FdAszB8O
+         OcT+MBzpm3WNnItLMTvNHBmoZhFXHlmpjiO8GL9mIgwfvdJvSrV4PPe0gowLClrRmBTz
+         3/u2+ssMIJL5fOeGIG6KZUyLxhILyxnmzLX9HCXu3z357xP7rK8McujDcdj5UKVE4syo
+         ZxAW/wRpA7ybtC9EP4pirbWYm1twVcmEzjgTylRWSPjaNX/p+GJV1Lh/yp+xBsnWGvvi
+         ZaoA==
+X-Gm-Message-State: APjAAAXq7P+d0vvWQ6bRqvj7KRjMDquMrRCnpOK6UHe/lgckvXehybPg
+        zXZp1DDKvyCcXJEHRArQlvKexMtnm3eX++KwWnhFe6r9XLesRa4DTi+gvc0RnxC58bOV+rDDeNc
+        nArnZBW6h3YJd1hEDWJFWLF77
+X-Received: by 2002:a05:620a:234:: with SMTP id u20mr10853605qkm.11.1567495939311;
+        Tue, 03 Sep 2019 00:32:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwBD33tlOTzZP8VA84/vyopsm4vvDT4u6GJo95GdpFHS9UdnFj15rANJyBZtbYAXvKG/zCLwA==
+X-Received: by 2002:a05:620a:234:: with SMTP id u20mr10853568qkm.11.1567495939082;
+        Tue, 03 Sep 2019 00:32:19 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
+        by smtp.gmail.com with ESMTPSA id e7sm7324858qtp.91.2019.09.03.00.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 00:32:18 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 03:32:10 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org,
+        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        riel@surriel.com, konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Subject: Re: [PATCH v5 6/6] virtio-balloon: Add support for providing unused
+ page reports to host
+Message-ID: <20190903032759-mutt-send-email-mst@kernel.org>
+References: <20190812213158.22097.30576.stgit@localhost.localdomain>
+ <20190812213356.22097.20751.stgit@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20190901143101.humomdehy5ee73sk@vino>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812213356.22097.20751.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-thanks for your feedback.
-
-On 01/09/19 16:31, jacopo mondi wrote:
-> Hi Luca,
->    thanks for keep pushing this series! I hope we can use part of this
-> for the (long time) on-going GMSL work...
+On Mon, Aug 12, 2019 at 02:33:56PM -0700, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > 
-> I hope you will be patient enough to provide (another :) overview
-> of this work during the BoF Wolfram has organized at LPC for the next
-> week.
-
-Sure!
-
-> In the meantime I would have some comments after having a read at the
-> series and trying to apply its concept to GMSL
+> Add support for the page reporting feature provided by virtio-balloon.
+> Reporting differs from the regular balloon functionality in that is is
+> much less durable than a standard memory balloon. Instead of creating a
+> list of pages that cannot be accessed the pages are only inaccessible
+> while they are being indicated to the virtio interface. Once the
+> interface has acknowledged them they are placed back into their respective
+> free lists and are once again accessible by the guest system.
 > 
-> On Tue, Jul 23, 2019 at 10:37:19PM +0200, Luca Ceresoli wrote:
->> An ATR is a device that looks similar to an i2c-mux: it has an I2C
->> slave "upstream" port and N master "downstream" ports, and forwards
->> transactions from upstream to the appropriate downstream port. But is
->> is different in that the forwarded transaction has a different slave
->> address. The address used on the upstream bus is called the "alias"
->> and is (potentially) different from the physical slave address of the
->> downstream chip.
->>
->> Add a helper file (just like i2c-mux.c for a mux or switch) to allow
->> implementing ATR features in a device driver. The helper takes care or
->> adapter creation/destruction and translates addresses at each transaction.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>
->> ---
->>
->> Changes RFCv1 -> RFCv2:
->>
->>  RFCv1 was implemented inside i2c-mux.c and added yet more complexity
->>  there. RFCv2 creates a new file on its own, i2c-atr.c. Since many ATR
->>  features are not in a MUX and vice versa, the overlapping is low. This was
->>  almost a complete rewrite, but for the records here are the main
->>  differences from the old implementation:
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> ---
+>  drivers/virtio/Kconfig              |    1 +
+>  drivers/virtio/virtio_balloon.c     |   65 +++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/virtio_balloon.h |    1 +
+>  3 files changed, 67 insertions(+)
 > 
-> I'm not an i2c expert, but this looks very similar to me to an
-> augmented i2c-mux with the following additional features:
-> - automatic selection of the i2c address to use for the children
->   behind the mux
-> - automatic translation of the addresses the logical aliases to
->   the actual physical addresses of the slaves (with the help of the
->   deserializer address translation feature in this case).
+> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> index 078615cf2afc..4b2dd8259ff5 100644
+> --- a/drivers/virtio/Kconfig
+> +++ b/drivers/virtio/Kconfig
+> @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+>  	tristate "Virtio balloon driver"
+>  	depends on VIRTIO
+>  	select MEMORY_BALLOON
+> +	select PAGE_REPORTING
+>  	---help---
+>  	 This driver supports increasing and decreasing the amount
+>  	 of memory within a KVM guest.
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 2c19457ab573..52f9eeda1877 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/mount.h>
+>  #include <linux/magic.h>
+>  #include <linux/pseudo_fs.h>
+> +#include <linux/page_reporting.h>
+>  
+>  /*
+>   * Balloon device works in 4K page units.  So each page is pointed to by
+> @@ -37,6 +38,9 @@
+>  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
+>  	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
+>  
+> +/*  limit on the number of pages that can be on the reporting vq */
+> +#define VIRTIO_BALLOON_VRING_HINTS_MAX	16
+> +
+>  #ifdef CONFIG_BALLOON_COMPACTION
+>  static struct vfsmount *balloon_mnt;
+>  #endif
+> @@ -46,6 +50,7 @@ enum virtio_balloon_vq {
+>  	VIRTIO_BALLOON_VQ_DEFLATE,
+>  	VIRTIO_BALLOON_VQ_STATS,
+>  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+> +	VIRTIO_BALLOON_VQ_REPORTING,
+>  	VIRTIO_BALLOON_VQ_MAX
+>  };
+>  
+> @@ -113,6 +118,10 @@ struct virtio_balloon {
+>  
+>  	/* To register a shrinker to shrink memory upon memory pressure */
+>  	struct shrinker shrinker;
+> +
+> +	/* Unused page reporting device */
+> +	struct virtqueue *reporting_vq;
+> +	struct page_reporting_dev_info ph_dev_info;
+>  };
+>  
+>  static struct virtio_device_id id_table[] = {
+> @@ -152,6 +161,32 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+>  
+>  }
+>  
+> +void virtballoon_unused_page_report(struct page_reporting_dev_info *ph_dev_info,
+> +				    unsigned int nents)
+> +{
+> +	struct virtio_balloon *vb =
+> +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+> +	struct virtqueue *vq = vb->reporting_vq;
+> +	unsigned int unused, err;
+> +
+> +	/* We should always be able to add these buffers to an empty queue. */
+> +	err = virtqueue_add_inbuf(vq, ph_dev_info->sg, nents, vb,
+> +				  GFP_NOWAIT | __GFP_NOWARN);
+> +
+> +	/*
+> +	 * In the extremely unlikely case that something has changed and we
+> +	 * are able to trigger an error we will simply display a warning
+> +	 * and exit without actually processing the pages.
+> +	 */
+> +	if (WARN_ON(err))
+> +		return;
+> +
+> +	virtqueue_kick(vq);
+> +
+> +	/* When host has read buffer, this completes via balloon_ack */
+> +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
+> +}
+> +
+>  static void set_page_pfns(struct virtio_balloon *vb,
+>  			  __virtio32 pfns[], struct page *page)
+>  {
+> @@ -476,6 +511,7 @@ static int init_vqs(struct virtio_balloon *vb)
+>  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+>  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+>  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> +	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
+>  
+>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+>  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+> @@ -487,11 +523,19 @@ static int init_vqs(struct virtio_balloon *vb)
+>  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+>  	}
+>  
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+> +		names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
+> +		callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
+> +	}
+> +
+>  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
+>  					 vqs, callbacks, names, NULL, NULL);
+>  	if (err)
+>  		return err;
+>  
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+> +		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
+> +
+>  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+>  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> @@ -931,12 +975,30 @@ static int virtballoon_probe(struct virtio_device *vdev)
+>  		if (err)
+>  			goto out_del_balloon_wq;
+>  	}
+> +
+> +	vb->ph_dev_info.report = virtballoon_unused_page_report;
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+> +		unsigned int capacity;
+> +
+> +		capacity = min_t(unsigned int,
+> +				 virtqueue_get_vring_size(vb->reporting_vq) - 1,
+> +				 VIRTIO_BALLOON_VRING_HINTS_MAX);
 
-A notable difference in the hardware is that a mux needs an explicit
-procedure to select a port. That's why the select() op is mandatory for
-muxes. The ATR, at least in the DS90UB9xx case, selects the port
-automatically based on the slave address. So I added an optional
-select() op in the atr, but I suspect it's useless for "real" ATRs.
+Hmm why - 1 exactly?
+This might end up being 0 in the unusual configuration of vq size 1.
+Also, VIRTIO_BALLOON_VRING_HINTS_MAX is a power of 2 but
+virtqueue_get_vring_size(vb->reporting_vq) - 1 won't
+be if we are using split rings - donnu if that matters.
 
-More differences derive from how Linux implements muxes. The i2c-mux
-code has several flags for different locking schemes, and it has a
-fairly complex DT parsing scheme. These are mostly a historical burden.
-Adding the ATR features to i2c-mux.c was very tricky and error-prone due
-to all of this code, that's why I have moved ATR to its own file in RFCv2.
-
-> In the GMSL perspective we have similar needs but limited to the
-> selection of the i2c addresses to assign to the children behind our
-> mux. The maxims's chips work by reprogramming the remote devices and
-> do not support address translations on the deserializer side, unlike
-> what the TI chips do.
-
-Indeed, the Maxim chips implement a simple mux, so it seems like the
-only commonality with TI is the need for address pool management.
-
-> So I wonder if we could somehow split the here proposed solution in
-> two, one part to perform the address selection, the other one to
-> support address reprogramming.
-> 
-> One thing I have noticed is that it's up to the driver using the ATR
-> (the DS90UB954 deserializer in this case) picking into the alias pool
-> and assign aliases. I would have expected this to be a feature of the
-> ATR itself, if you aim to have the i2c-alias-pool as a standard
-> construct.
-> 
-> I understand the pool of free aliases 'belongs' to the base board
-> device, but the ATR could be provided with a pointer to it and the
-> routines to select and assign addresses generalized. Is there a reason
-> why you decided otherwise that I'm not seeing?
-
-I was about to do it, but changed my mind for a non-strongly-technical
-reason. The entire body of ds90_atr_attach_client() and
-ds90_atr_detach_client() is guarded by a mutex to protect the alias pool
-from concurrent access. I didn't feel comfortable in hoisting the mutex
-into the ATR code and have all the attach and detach callbacks run with
-a lock that might be unneeded in specific drivers. At least not with
-only one driver using i2c-atr.
-
-Also, I'm not even sure a mutex is really needed to protect the pool. Is
-it possible that two client adding/removal operations happen
-concurrently? SHould they be serialized at the i2c core level, the
-mutexes would be unneeded. But I haven't dug in the core enough to
-discover it. Wolfram?
-
-However, even though the alias picking code is not that much, I'm OK in
-moving it into the ATR core if it looks good.
-
-Now, I see you thinking "why not moving the ATR code _and_ the alias
-picking code in i2c-mux and benefit in the GMSL drivers?", and I'm a
-little uncomfortable about this idea. Not because the idea is bad per
-se, but because the intricacies of i2c-mux make this quite dreadful.
-
-I have had some discussion with Peter Rosin about simplifying i2c-atr,
-but they didn't show a clear path forward and were slowly abandoned.
-
->>  - change bus description
->>  - remove I2C_ATR_ARBITRATOR and I2C_ATR_GATE support
->>  - select() optional
->>  - rename i2c_atr_alloc -> i2c_atr_new, add i2c_atr_delete, move to bottom
->>  - lock the ATR, not the adapter or the muxes on the adapter
->>  - remove parent-locked code
->>  - remove I2C_MUX_LOCKED flag, now unused
->>  - remove I2C_ATR_ATR flag (always true)
->>  - translation in i2c_atr_smbus_xfer too
->>  - i2c_atr_map_msgs: don't ignore mapping errors
->>  - always require the "i2c-atr" DT node, no magic
->>  - remove ACPI support
->>  - one algo in the atrc, not one per adapter
->>  - remove unneeded i2c_atr_root_adapter
->>  - ditch force_nr
->>  - don't allocate private user memory, just provide a plain userdata pointer
->>  - consolidate all ops in a single struct, simplify naming
->>  - remove adapters individually, allocate in atrc->adapter[chan_id]
->> ---
->>  drivers/i2c/Kconfig     |   9 +
->>  drivers/i2c/Makefile    |   1 +
->>  drivers/i2c/i2c-atr.c   | 557 ++++++++++++++++++++++++++++++++++++++++
->>  include/linux/i2c-atr.h |  82 ++++++
->>  4 files changed, 649 insertions(+)
->>  create mode 100644 drivers/i2c/i2c-atr.c
->>  create mode 100644 include/linux/i2c-atr.h
->>
->> diff --git a/drivers/i2c/Kconfig b/drivers/i2c/Kconfig
->> index abedd55a1264..5df088b1d9de 100644
->> --- a/drivers/i2c/Kconfig
->> +++ b/drivers/i2c/Kconfig
->> @@ -71,6 +71,15 @@ config I2C_MUX
->>
->>  source "drivers/i2c/muxes/Kconfig"
->>
->> +config I2C_ATR
->> +	tristate "I2C Address Translator (ATR) support"
->> +	help
->> +	  Enable support for I2C Address Translator (ATR) chips.
->> +
->> +	  An ATR allows accessing multiple I2C busses from a single
->> +	  physical bus via address translation instead of bus selection as
->> +	  i2c-muxes do.
->> +
->>  config I2C_HELPER_AUTO
->>  	bool "Autoselect pertinent helper modules"
->>  	default y
->> diff --git a/drivers/i2c/Makefile b/drivers/i2c/Makefile
->> index bed6ba63c983..81849ea393c7 100644
->> --- a/drivers/i2c/Makefile
->> +++ b/drivers/i2c/Makefile
->> @@ -13,6 +13,7 @@ i2c-core-$(CONFIG_OF) 		+= i2c-core-of.o
->>  obj-$(CONFIG_I2C_SMBUS)		+= i2c-smbus.o
->>  obj-$(CONFIG_I2C_CHARDEV)	+= i2c-dev.o
->>  obj-$(CONFIG_I2C_MUX)		+= i2c-mux.o
->> +obj-$(CONFIG_I2C_ATR)		+= i2c-atr.o
->>  obj-y				+= algos/ busses/ muxes/
->>  obj-$(CONFIG_I2C_STUB)		+= i2c-stub.o
->>  obj-$(CONFIG_I2C_SLAVE_EEPROM)	+= i2c-slave-eeprom.o
->> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
->> new file mode 100644
->> index 000000000000..2b61c10a8ff6
->> --- /dev/null
->> +++ b/drivers/i2c/i2c-atr.c
->> @@ -0,0 +1,557 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/**
->> + * drivers/i2c/i2c-atr.c -- I2C Address Translator
->> + *
->> + * Copyright (c) 2019 Luca Ceresoli <luca@lucaceresoli.net>
->> + *
->> + * An I2C Address Translator (ATR) is a device with an I2C slave parent
->> + * ("upstream") port and N I2C master child ("downstream") ports, and
->> + * forwards transactions from upstream to the appropriate downstream port
->> + * with a modified slave address. The address used on the parent bus is
->> + * called the "alias" and is (potentially) different from the physical
->> + * slave address of the child bus. Address translation is done by the
->> + * hardware.
->> + *
->> + * An ATR looks similar to an i2c-mux except:
->> + * - the address on the parent and child busses can be different
->> + * - there is normally no need to select the child port; the alias used on
->> + *   the parent bus implies it
->> + *
->> + * The ATR functionality can be provided by a chip with many other
->> + * features. This file provides a helper to implement an ATR within your
->> + * driver.
->> + *
->> + * The ATR creates a new I2C "child" adapter on each child bus. Adding
->> + * devices on the child bus ends up in invoking the driver code to select
->> + * an available alias. Maintaining an appropriate pool of available aliases
->> + * and picking one for each new device is up to the driver implementer. The
->> + * ATR maintains an table of currently assigned alias and uses it
->> to modify
->> + * all I2C transactions directed to devices on the child buses.
->> + *
->> + * A typical example follows.
->> + *
->> + * Topology:
->> + *
->> + *                       Slave X @ 0x10
->> + *               .-----.   |
->> + *   .-----.     |     |---+---- B
->> + *   | CPU |--A--| ATR |
->> + *   `-----'     |     |---+---- C
->> + *               `-----'   |
->> + *                       Slave Y @ 0x10
->> + *
->> + * Alias table:
->> + *
->> + *   Client  Alias
->> + *   -------------
->> + *      X    0x20
->> + *      Y    0x30
->> + *
->> + * Transaction:
->> + *
->> + *  - Slave X driver sends a transaction (on adapter B), slave address 0x10
->> + *  - ATR driver rewrites messages with address 0x20, forwards to adapter A
->> + *  - Physical I2C transaction on bus A, slave address 0x20
->> + *  - ATR chip propagates transaction on bus B with address translated to 0x10
->> + *  - Slave X chip replies on bus B
->> + *  - ATR chip forwards reply on bus A
->> + *  - ATR driver rewrites messages with address 0x10
->> + *  - Slave X driver gets back the msgs[], with reply and address 0x10
->> + *
-> 
-> If I got you right this implements a three level translation, partly
-> performed by the ATR and partly performed by the deserializer chip.
-> The i2c alias helps the DESR to select the RX port (channel) where to
-> emit a transaction with the alias translated (with the deserializer's
-> own translation mechanism) to the physical address of the slave.
-> 
-> Quoting your here above example:
-> 
-> CPU --> 0x20 --> DESR Port0 --> 0x10 --> SLAVE
-> CPU --> 0x30 --> DESR Port1 --> 0x10 --> SLAVE
-> 
-> Did I get you right?
-
-I would not call it a three level translation, but yes, it is how it works.
-
-> I'm following the DT bindings discussion with Rob and I'm glad your
-> last reply looks very similar to what we have in our proposed GMSL
-> bindings, so I hope the two could somehow converge.
-
-Good. After all Maxim and TI chips have the same topology, so it seems
-natural that their DT description is similar.
-
--- 
-Luca
+> +		vb->ph_dev_info.capacity = capacity;
+> +
+> +		err = page_reporting_startup(&vb->ph_dev_info);
+> +		if (err)
+> +			goto out_unregister_shrinker;
+> +	}
+> +
+>  	virtio_device_ready(vdev);
+>  
+>  	if (towards_target(vb))
+>  		virtballoon_changed(vdev);
+>  	return 0;
+>  
+> +out_unregister_shrinker:
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> +		virtio_balloon_unregister_shrinker(vb);
+>  out_del_balloon_wq:
+>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+>  		destroy_workqueue(vb->balloon_wq);
+> @@ -965,6 +1027,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
+>  {
+>  	struct virtio_balloon *vb = vdev->priv;
+>  
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+> +		page_reporting_shutdown(&vb->ph_dev_info);
+>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+>  		virtio_balloon_unregister_shrinker(vb);
+>  	spin_lock_irq(&vb->stop_update_lock);
+> @@ -1034,6 +1098,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
+>  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+>  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+>  	VIRTIO_BALLOON_F_PAGE_POISON,
+> +	VIRTIO_BALLOON_F_REPORTING,
+>  };
+>  
+>  static struct virtio_driver virtio_balloon_driver = {
+> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+> index a1966cd7b677..19974392d324 100644
+> --- a/include/uapi/linux/virtio_balloon.h
+> +++ b/include/uapi/linux/virtio_balloon.h
+> @@ -36,6 +36,7 @@
+>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+>  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
+> +#define VIRTIO_BALLOON_F_REPORTING	5 /* Page reporting virtqueue */
+>  
+>  /* Size of a PFN in the balloon interface. */
+>  #define VIRTIO_BALLOON_PFN_SHIFT 12
