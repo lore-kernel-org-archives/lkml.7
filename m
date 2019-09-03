@@ -2,161 +2,261 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0CDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5C2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B0722CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnxCtdGD"
+	by mail.kernel.org (Postfix) with ESMTP id D462622CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfICSHl (ORCPT
+        id S1729751AbfICSIi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:07:41 -0400
-Received: from mail-io1-f42.google.com ([209.85.166.42]:33397 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfICSHk (ORCPT
+        Tue, 3 Sep 2019 14:08:38 -0400
+Received: from mailoutvs29.siol.net ([185.57.226.220]:41345 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727352AbfICSIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:07:40 -0400
-Received: by mail-io1-f42.google.com with SMTP id m11so6066893ioo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KcmXmd5Tfs0vBsqNXpDm8UPfgj5wJscuQmw+59dosH8=;
-        b=nnxCtdGDmSh7HnVfjv/Sf5nVb8EsLVKdfjCPLtFq3uxS7xRyZC4Luv8mJQgswc7lus
-         vxGYwN5dM9cAdla+qmT/VFpfF2UxeDPE/Kvt3sOBOmIwwj9PjoDbWhInSu6TVEthLFyC
-         8AgImbcfAcGUGccZE2iXGUn4bJoYwi1p54Ttthkjypvx+Am0+hMvwhVAp8TrLBSvVg93
-         4XMOtOSvaruK+yh8WWjm1tD/hRej78q4im3qr9ZF9day4IHirWBX91Ab5njhkVklMAIZ
-         zt0GMGCEShUFQgJrmaHT7bckUmqG0bdBAlVL5AyhrDTuDmMksqeET7jbLPnrmpHrfSvo
-         V+rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KcmXmd5Tfs0vBsqNXpDm8UPfgj5wJscuQmw+59dosH8=;
-        b=jMa5d4Jo+Lz1+d0DgZ64x174N5iyjdna1i88/ww/5iYy7ahyyQTzOBPpS88RxncFGg
-         4W6UW9OfAGSGnM4TCWN3NUt/FDqjftlP3I8FvThMVuTS9Pp7jC4poXrSG3AodoyEZJJT
-         9y7pI9dTfpngPq9ZPkFN/uwLXrzxAVK/lSfSIl97Bd4PGBC1tCySWxNwTWZsbxx3QC7u
-         9Y5W3ljdIw2mMrTfNBvWjIP0co3x1AAb/uyeyLGHT2Pzwu3ytjci0LE76BLvaCeWI/Lr
-         ULDhLRVz5FuEra4EPIQBazmxcomDYeDDzoeeN3V6a5d5lDSSb3w0uDFC6sb2FkxBDVa2
-         EObA==
-X-Gm-Message-State: APjAAAVKx0M9z1vatYy36Z34i3ACsL4LQZqYv7tdDhZgz16ajB21zYjy
-        T94p7Jj79z6S1kPnPn3z38LvfsNwzhwHvJCZwdv4ua/Ag2w16g==
-X-Google-Smtp-Source: APXvYqzrgEDJrjqTyVcrN04Q8gMvQVvTsdZ5FNhcMXQJaBZr+Y5s3gdS8unWAP+73zmomEtVo7gvjlaXGIfvU0EkO5M=
-X-Received: by 2002:a05:6602:2508:: with SMTP id i8mr30933307ioe.91.1567534059092;
- Tue, 03 Sep 2019 11:07:39 -0700 (PDT)
+        Tue, 3 Sep 2019 14:08:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id A94315219C4;
+        Tue,  3 Sep 2019 20:08:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id P2mZ8gzE8-O5; Tue,  3 Sep 2019 20:08:33 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id E59FD521C1B;
+        Tue,  3 Sep 2019 20:08:32 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 5FE0D5219C4;
+        Tue,  3 Sep 2019 20:08:28 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Jonas Karlman <jonas@kwiboo.se>, alsa-devel@alsa-project.org,
+        tzungbi@chromium.org, zhengxing@rock-chips.com,
+        kuninori.morimoto.gx@renesas.com, a.hajda@samsung.com,
+        airlied@linux.ie, kuankuan.y@gmail.com, jeffy.chen@rock-chips.com,
+        dianders@chromium.org, cain.cai@rock-chips.com,
+        linux-rockchip@lists.infradead.org, eddie.cai@rock-chips.com,
+        Laurent.pinchart@ideasonboard.com, daniel@ffwll.ch,
+        Yakir Yang <ykk@rock-chips.com>, enric.balletbo@collabora.com,
+        dgreid@chromium.org, sam@ravnborg.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status setting
+Date:   Tue, 03 Sep 2019 20:08:28 +0200
+Message-ID: <19353031.SdOy5F5fmg@jernej-laptop>
+In-Reply-To: <d8a80ba5-dd2b-f84d-bbfc-9dd5ccbc26e9@baylibre.com>
+References: <20190903055103.134764-1-cychiang@chromium.org> <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com> <d8a80ba5-dd2b-f84d-bbfc-9dd5ccbc26e9@baylibre.com>
 MIME-Version: 1.0
-References: <20190830032948.13516-1-hdanton@sina.com> <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
- <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
-In-Reply-To: <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Tue, 3 Sep 2019 23:07:28 +0500
-Message-ID: <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
-Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 13:21, Hillf Danton <hdanton@sina.com> wrote:
->
-> Describe the problems you are experiencing please.
-> Say is the screen locked up? Machine lockedup?
-> Anything unnormal after you see the warning?
->
+Hi!
 
-According to my observations, all "gnome shell stuck warning" happened
-when me not sitting on the computer and the computer was locked.
+Dne torek, 03. september 2019 ob 20:00:33 CEST je Neil Armstrong napisal(a):
+> Hi,
+> 
+> Le 03/09/2019 à 11:53, Neil Armstrong a écrit :
+> > Hi,
+> > 
+> > On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
+> >> From: Yakir Yang <ykk@rock-chips.com>
+> >> 
+> >> When transmitting IEC60985 linear PCM audio, we configure the
+> >> Audio Sample Channel Status information of all the channel
+> >> status bits in the IEC60958 frame.
+> >> Refer to 60958-3 page 10 for frequency, original frequency, and
+> >> wordlength setting.
+> >> 
+> >> This fix the issue that audio does not come out on some monitors
+> >> (e.g. LG 22CV241)
+> >> 
+> >> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> >> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> >> ---
+> >> 
+> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 +++++++++++++++++++++++
+> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
+> >>  2 files changed, 79 insertions(+)
+> >> 
+> >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> >> bd65d0479683..34d46e25d610 100644
+> >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >> @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int
+> >> freq, unsigned long pixel_clk)>> 
+> >>  	return n;
+> >>  
+> >>  }
+> >> 
+> >> +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
+> >> +{
+> >> +	u8 aud_schnl_samplerate;
+> >> +	u8 aud_schnl_8;
+> >> +
+> >> +	/* These registers are on RK3288 using version 2.0a. */
+> >> +	if (hdmi->version != 0x200a)
+> >> +		return;
+> > 
+> > Are these limited to the 2.0a version *in* RK3288, or 2.0a version on all
+> > SoCs ?
+> 
+> After investigations, Amlogic sets these registers on their 2.0a version
+> aswell, and Jernej (added in Cc) reported me Allwinner sets them on their
+> < 2.0a and > 2.0a IPs versions.
+> 
+> Can you check on the Rockchip IP versions in RK3399 ?
+> 
+> For reference, the HDMI 1.4a IP version allwinner setups is:
+> https://github.com/Allwinner-Homlet/H3-BSP4.4-linux/blob/master/drivers/vide
+> o/fbdev/sunxi/disp2/hdmi/hdmi_bsp_sun8iw7.c#L531-L539 (registers a
+> "scrambled" but a custom bit can reset to the original mapping, 0x1066 ...
+> 0x106f)
 
-I did not notice any problems at the morning (I did not even look at
-the kernel logs), I found that the problem happened when I remotely
-connected to my computer via ssh from work and accidently look dmesg
-output.
+For easier reading, here is similar, but annotated version: http://ix.io/1Ub6
+Check function bsp_hdmi_audio().
 
-At the evening after work, I even played in the "Division", and still
-not noted any problems.
+Unless there is a special reason, you can just remove that check.
 
-Now 11:01pm and "gnome shell stuck warning" not appear since 19:17. So
-looks like issue happens only when computer blocked and monitor in
-power save mode.
+Best regards,
+Jernej
+
+> 
+> Neil
+> 
+> >> +
+> >> +	switch (hdmi->sample_rate) {
+> >> +	case 32000:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
+> >> +		break;
+> >> +	case 44100:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
+> >> +		break;
+> >> +	case 48000:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
+> >> +		break;
+> >> +	case 88200:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
+> >> +		break;
+> >> +	case 96000:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
+> >> +		break;
+> >> +	case 176400:
+> >> +		aud_schnl_samplerate = 
+HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
+> >> +		break;
+> >> +	case 192000:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
+> >> +		break;
+> >> +	case 768000:
+> >> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
+> >> +		break;
+> >> +	default:
+> >> +		dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)
+\n",
+> >> +			 hdmi->sample_rate);
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	/* set channel status register */
+> >> +	hdmi_modb(hdmi, aud_schnl_samplerate, 
+HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
+> >> +		  HDMI_FC_AUDSCHNLS7);
+> >> +
+> >> +	/*
+> >> +	 * Set original frequency to be the same as frequency.
+> >> +	 * Use one-complement value as stated in IEC60958-3 page 13.
+> >> +	 */
+> >> +	aud_schnl_8 = (~aud_schnl_samplerate) <<
+> >> +			HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
+> >> +
+> >> +	/* This means word length is 16 bit. Refer to IEC60958-3 page 12. 
+*/
+> >> +	aud_schnl_8 |= 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
+> >> +
+> >> +	hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
+> >> +}
+> >> +
+> >> 
+> >>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
+> >>  
+> >>  	unsigned long pixel_clk, unsigned int sample_rate)
+> >>  
+> >>  {
+> >> 
+> >> @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi
+> >> *hdmi,>> 
+> >>  	hdmi->audio_cts = cts;
+> >>  	hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
+> >>  	spin_unlock_irq(&hdmi->audio_lock);
+> >> 
+> >> +
+> >> +	hdmi_set_schnl(hdmi);
+> >> 
+> >>  }
+> >>  
+> >>  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
+> >> 
+> >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> >> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h index
+> >> 6988f12d89d9..619ebc1c8354 100644
+> >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> >> @@ -158,6 +158,17 @@
+> >> 
+> >>  #define HDMI_FC_SPDDEVICEINF                    0x1062
+> >>  #define HDMI_FC_AUDSCONF                        0x1063
+> >>  #define HDMI_FC_AUDSSTAT                        0x1064
+> >> 
+> >> +#define HDMI_FC_AUDSV                           0x1065
+> >> +#define HDMI_FC_AUDSU                           0x1066
+> >> +#define HDMI_FC_AUDSCHNLS0                      0x1067
+> >> +#define HDMI_FC_AUDSCHNLS1                      0x1068
+> >> +#define HDMI_FC_AUDSCHNLS2                      0x1069
+> >> +#define HDMI_FC_AUDSCHNLS3                      0x106a
+> >> +#define HDMI_FC_AUDSCHNLS4                      0x106b
+> >> +#define HDMI_FC_AUDSCHNLS5                      0x106c
+> >> +#define HDMI_FC_AUDSCHNLS6                      0x106d
+> >> +#define HDMI_FC_AUDSCHNLS7                      0x106e
+> >> +#define HDMI_FC_AUDSCHNLS8                      0x106f
+> >> 
+> >>  #define HDMI_FC_DATACH0FILL                     0x1070
+> >>  #define HDMI_FC_DATACH1FILL                     0x1071
+> >>  #define HDMI_FC_DATACH2FILL                     0x1072
+> >> 
+> >> @@ -706,6 +717,15 @@ enum {
+> >> 
+> >>  /* HDMI_FC_AUDSCHNLS7 field values */
+> >>  
+> >>  	HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
+> >>  	HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
+> >> 
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
+> >> +	HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
+> >> 
+> >>  /* HDMI_FC_AUDSCHNLS8 field values */
+> >>  
+> >>  	HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
 
 
-$ dmesg -T | grep gnome
 
----> I am goto sleep
-[Tue Sep  3 01:00:10 2019] gnome shell stuck warning
-[Tue Sep  3 01:00:55 2019] gnome shell stuck warning
-[Tue Sep  3 06:54:50 2019] gnome shell stuck warning
-<--- I am wake up at 8:00 am and sitting again on the computer
----> I am went to work at 9:30
-[Tue Sep  3 10:00:05 2019] gnome shell stuck warning
-[Tue Sep  3 10:10:01 2019] gnome shell stuck warning
-[Tue Sep  3 10:13:43 2019] gnome shell stuck warning
-[Tue Sep  3 10:23:37 2019] gnome shell stuck warning
-[Tue Sep  3 10:42:07 2019] gnome shell stuck warning
-[Tue Sep  3 10:42:57 2019] gnome shell stuck warning
-[Tue Sep  3 10:59:25 2019] gnome shell stuck warning
-[Tue Sep  3 11:08:35 2019] gnome shell stuck warning
-[Tue Sep  3 11:13:19 2019] gnome shell stuck warning
-[Tue Sep  3 11:15:20 2019] gnome shell stuck warning
-[Tue Sep  3 11:26:20 2019] gnome shell stuck warning
-[Tue Sep  3 11:26:20 2019] gnome shell stuck warning
-[Tue Sep  3 11:36:30 2019] gnome shell stuck warning
-[Tue Sep  3 11:46:08 2019] gnome shell stuck warning
-[Tue Sep  3 11:53:52 2019] gnome shell stuck warning
-[Tue Sep  3 11:56:36 2019] gnome shell stuck warning
-[Tue Sep  3 12:17:10 2019] gnome shell stuck warning
-[Tue Sep  3 12:20:20 2019] gnome shell stuck warning
-[Tue Sep  3 12:20:20 2019] gnome shell stuck warning
-[Tue Sep  3 12:30:46 2019] gnome shell stuck warning
-[Tue Sep  3 12:40:52 2019] gnome shell stuck warning
-[Tue Sep  3 12:55:30 2019] gnome shell stuck warning
-[Tue Sep  3 12:57:52 2019] gnome shell stuck warning
-[Tue Sep  3 13:04:00 2019] gnome shell stuck warning
-[Tue Sep  3 13:12:38 2019] gnome shell stuck warning
-[Tue Sep  3 13:14:32 2019] gnome shell stuck warning
-[Tue Sep  3 13:53:12 2019] gnome shell stuck warning
-[Tue Sep  3 14:12:52 2019] gnome shell stuck warning
-[Tue Sep  3 14:15:54 2019] gnome shell stuck warning
-[Tue Sep  3 14:17:04 2019] gnome shell stuck warning
-[Tue Sep  3 14:21:57 2019] gnome shell stuck warning
-[Tue Sep  3 14:22:10 2019] gnome shell stuck warning
-[Tue Sep  3 14:37:42 2019] gnome shell stuck warning
-[Tue Sep  3 14:41:51 2019] gnome shell stuck warning
-[Tue Sep  3 14:42:52 2019] gnome shell stuck warning
-[Tue Sep  3 14:46:35 2019] gnome shell stuck warning
-[Tue Sep  3 15:03:18 2019] gnome shell stuck warning
-[Tue Sep  3 15:16:50 2019] gnome shell stuck warning
-[Tue Sep  3 15:27:30 2019] gnome shell stuck warning
-[Tue Sep  3 15:27:41 2019] gnome shell stuck warning
-[Tue Sep  3 16:08:06 2019] gnome shell stuck warning
-[Tue Sep  3 16:24:16 2019] gnome shell stuck warning
-[Tue Sep  3 16:33:04 2019] gnome shell stuck warning
-[Tue Sep  3 16:52:10 2019] gnome shell stuck warning
-[Tue Sep  3 17:18:27 2019] gnome shell stuck warning
-[Tue Sep  3 17:25:30 2019] gnome shell stuck warning
-[Tue Sep  3 17:41:16 2019] gnome shell stuck warning
-[Tue Sep  3 17:43:32 2019] gnome shell stuck warning
-[Tue Sep  3 17:51:10 2019] gnome shell stuck warning
-[Tue Sep  3 18:41:44 2019] gnome shell stuck warning
-[Tue Sep  3 18:44:18 2019] gnome shell stuck warning
-[Tue Sep  3 19:03:07 2019] gnome shell stuck warning
-[Tue Sep  3 19:17:58 2019] gnome shell stuck warning
-<--- Returned to home and sitting again on the computer
 
---
-Best Regards,
-Mike Gavrilov.
