@@ -2,168 +2,84 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD2BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B777AC41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E4E21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC9A22D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567536795;
+	bh=GZMceroMEVOrQ31pyHA50NTLrfUFTbE6SXOZAXZK1lU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AZw0e2P0bvaF0g2drn+zPB1/f/LuB01QWRLHVzmZIUR29EGgSvUq7DkbumcTdBy8u
+	 VOrILePSrzATPBUBz+d8bxmIhR8KnHneCVqWQsrq3PDGknp0YJAL7frhLmh+1O8jNd
+	 YAWi1xvuDhoBNaldqj3NQw+nHnSSw40XSsaITLuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfICSwz (ORCPT
+        id S1726653AbfICSxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:52:55 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50306 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfICSwz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:52:55 -0400
-Received: from jorhand-ubuntu.corp.microsoft.com (unknown [167.220.2.157])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0530520B7186;
-        Tue,  3 Sep 2019 11:52:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0530520B7186
-From:   Jordan Hand <jorhand@linux.microsoft.com>
-To:     jarkko.sakkinen@linux.intel.com
-Cc:     Jordan Hand <jorhand@linux.microsoft.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5] tpm: Parse event log from TPM2 ACPI table
-Date:   Tue,  3 Sep 2019 11:52:38 -0700
-Message-Id: <20190903185239.30643-1-jorhand@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Sep 2019 14:53:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43862 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726179AbfICSxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 14:53:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 95500B117;
+        Tue,  3 Sep 2019 18:53:12 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 20:53:05 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190903185305.GA14028@dhcp22.suse.cz>
+References: <1567177025-11016-1-git-send-email-cai@lca.pw>
+ <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
+ <1567178728.5576.32.camel@lca.pw>
+ <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
+ <20190903132231.GC18939@dhcp22.suse.cz>
+ <1567525342.5576.60.camel@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567525342.5576.60.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For systems with a TPM2 chip which use ACPI to expose event logs,
-retrieve the crypto-agile event log from the TPM2 ACPI table. The TPM2
-table is defined in section 7.3 of the TCG ACPI Specification (see link).
+On Tue 03-09-19 11:42:22, Qian Cai wrote:
+> On Tue, 2019-09-03 at 15:22 +0200, Michal Hocko wrote:
+> > On Fri 30-08-19 18:15:22, Eric Dumazet wrote:
+> > > If there is a risk of flooding the syslog, we should fix this generically
+> > > in mm layer, not adding hundred of __GFP_NOWARN all over the places.
+> > 
+> > We do already ratelimit in warn_alloc. If it isn't sufficient then we
+> > can think of a different parameters. Or maybe it is the ratelimiting
+> > which doesn't work here. Hard to tell and something to explore.
+> 
+> The time-based ratelimit won't work for skb_build() as when a system under
+> memory pressure, and the CPU is fast and IO is so slow, it could take a long
+> time to swap and trigger OOM.
 
-The TPM2 table is used by SeaBIOS in place of the TCPA table when the
-system's TPM is version 2.0 to denote (among other metadata) the location
-of the crypto-agile log.
+I really do not understand what does OOM and swapping have to do with
+the ratelimiting here. The sole purpose of the ratelimit is to reduce
+the amount of warnings to be printed. Slow IO might have an effect on
+when the OOM killer is invoked but atomic allocations are not directly
+dependent on IO.
 
-Link: https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
-Signed-off-by: Jordan Hand <jorhand@linux.microsoft.com>
----
+> I suppose what happens is those skb_build() allocations are from softirq, and
+> once one of them failed, it calls printk() which generates more interrupts.
+> Hence, the infinite loop.
 
-Notes:
-    Changelog v2:
-    - Fix compile error
-    
-    Changelog v3:
-    - Fix commit message to be more specific and remove inconsistencies.
-    - Remove acpi_tpm2 struct from earlier versions, use existing
-    acpi_tpm2_trailer instead
-    
-    Changelog v4:
-    - Address kbuild bot build errors
-    - Add changelog for all earlier versions
+Please elaborate more.
 
- drivers/char/tpm/eventlog/acpi.c | 58 +++++++++++++++++++++-----------
- 1 file changed, 39 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-index 63ada5e53f13..09059c1623fd 100644
---- a/drivers/char/tpm/eventlog/acpi.c
-+++ b/drivers/char/tpm/eventlog/acpi.c
-@@ -44,14 +44,16 @@ struct acpi_tcpa {
- /* read binary bios log */
- int tpm_read_log_acpi(struct tpm_chip *chip)
- {
--	struct acpi_tcpa *buff;
-+	struct acpi_table_header *buff;
-+	struct acpi_tcpa *tcpa;
-+	struct acpi_tpm2_trailer *tpm2_trailer;
- 	acpi_status status;
- 	void __iomem *virt;
- 	u64 len, start;
-+	int log_type;
- 	struct tpm_bios_log *log;
--
--	if (chip->flags & TPM_CHIP_FLAG_TPM2)
--		return -ENODEV;
-+	bool is_tpm2 = chip->flags & TPM_CHIP_FLAG_TPM2;
-+	acpi_string table_sig;
- 
- 	log = &chip->log;
- 
-@@ -61,26 +63,44 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	if (!chip->acpi_dev_handle)
- 		return -ENODEV;
- 
--	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
--	status = acpi_get_table(ACPI_SIG_TCPA, 1,
--				(struct acpi_table_header **)&buff);
-+	/* Find TCPA or TPM2 entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-+	table_sig = is_tpm2 ? ACPI_SIG_TPM2 : ACPI_SIG_TCPA;
-+	status = acpi_get_table(table_sig, 1, &buff);
- 
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
--	switch(buff->platform_class) {
--	case BIOS_SERVER:
--		len = buff->server.log_max_len;
--		start = buff->server.log_start_addr;
--		break;
--	case BIOS_CLIENT:
--	default:
--		len = buff->client.log_max_len;
--		start = buff->client.log_start_addr;
--		break;
-+	if (!is_tpm2) {
-+		tcpa = (struct acpi_tcpa *)buff;
-+		switch (tcpa->platform_class) {
-+		case BIOS_SERVER:
-+			len = tcpa->server.log_max_len;
-+			start = tcpa->server.log_start_addr;
-+			break;
-+		case BIOS_CLIENT:
-+		default:
-+			len = tcpa->client.log_max_len;
-+			start = tcpa->client.log_start_addr;
-+			break;
-+		}
-+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	} else if (buff->length ==
-+		   sizeof(struct acpi_table_tpm2) +
-+		   sizeof(struct acpi_tpm2_trailer)) {
-+		tpm2_trailer =
-+		    (struct acpi_tpm2_trailer *)((char *)buff +
-+						 sizeof(struct acpi_table_tpm2));
-+
-+		len = tpm2_trailer->minimum_log_length;
-+		start = tpm2_trailer->log_address;
-+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-+	} else {
-+		return -ENODEV;
- 	}
-+
- 	if (!len) {
--		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-+		dev_warn(&chip->dev, "%s: %s log area empty\n",
-+			 __func__, table_sig);
- 		return -EIO;
- 	}
- 
-@@ -98,7 +118,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	memcpy_fromio(log->bios_event_log, virt, len);
- 
- 	acpi_os_unmap_iomem(virt, len);
--	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	return log_type;
- 
- err:
- 	kfree(log->bios_event_log);
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
