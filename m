@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69765C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8603C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414F223878
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987422343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528152;
-	bh=tnVLq7a7jxRTB5YJZXORkqMQ2cdNrV82uH7qfoFQdFk=;
+	s=default; t=1567528156;
+	bh=sCWWtZ/2SA16IOUYZsBLM7a63wm5H+Q88Mz4isz8S1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMlqFV8jubnHwm6Y86mdN8Ibz4CrL4Ckq2xnJI+pI/RSo7iBgSypau0EFMIGcqcq4
-	 HPGbh2LedAJ8+WSdLr+bJTYXdZhkv3wSzcpyPYP3CyUcGEyJ/fH0jYT3+qsTkcu8vN
-	 0ZMxhHpTiPDyZYhhXwb/DQz/svmZ45nzdS9zNtO8=
+	b=s1BSDWyFpwzYOMyIRwJEuHvjL6I0N+bReSgwTL+NL+K4Ge9gUfmH2qtUS8JHayZC0
+	 b0hYOM2G4jqb6Nxcu8yvCvEdNikSwup79gGPPyojhB1D6RXfPgpu+G4yF3q0daXT16
+	 C+NI9LLhDgDDXtdcDphGNCQt++oloerjNGhSotZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbfICQ3L (ORCPT
+        id S1731322AbfICQ3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51650 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731240AbfICQ3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:29:06 -0400
+        id S1730090AbfICQ3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:29:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2422B23431;
-        Tue,  3 Sep 2019 16:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506C8238CD;
+        Tue,  3 Sep 2019 16:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528145;
-        bh=tnVLq7a7jxRTB5YJZXORkqMQ2cdNrV82uH7qfoFQdFk=;
+        s=default; t=1567528151;
+        bh=sCWWtZ/2SA16IOUYZsBLM7a63wm5H+Q88Mz4isz8S1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBZ87DteyCVjTIzaY7d/r/TGyky05qgzeh7Iz9P1hXTgogB9M0gaJcnmYoH+YsqJl
-         M5d8rS8vd9KW290eW9QT0vM/TWu+/EJA+VWJaTXpO/3vCvYufpB15qXBtSM/4tqUka
-         ojhCk/+QRweM0yZAYbDBgGW4iWiaoBWUc2CE3Ano=
+        b=lYxWfVaoW4rQTaMlLyJWuB6lwJEuapdmTqjmxK2U8zz5mk6Pv0PAFx/JHhTJzyoRi
+         jjgmcZnsOPDNLm4YNLibQ5oIrOgwopC6r8NAga6HSF3yjI9DXQEZMPebRHcxXPYAMh
+         TWOCulwaDscvPEuMide68EZD23neaY/AbZ6gpPTc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Xiaoyao Li <xiaoyao.li@linux.intel.com>,
-        Tao Xu <tao3.xu@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 135/167] KVM: VMX: check CPUID before allowing read/write of IA32_XSS
-Date:   Tue,  3 Sep 2019 12:24:47 -0400
-Message-Id: <20190903162519.7136-135-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Sergey Gorenko <sergeygo@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 139/167] RDMA/srp: Document srp_parse_in() arguments
+Date:   Tue,  3 Sep 2019 12:24:51 -0400
+Message-Id: <20190903162519.7136-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,54 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 4d763b168e9c5c366b05812c7bba7662e5ea3669 ]
+[ Upstream commit e37df2d5b569390e3b80ebed9a73fd5b9dcda010 ]
 
-Raise #GP when guest read/write IA32_XSS, but the CPUID bits
-say that it shouldn't exist.
+This patch avoids that a warning is reported when building with W=1.
 
-Fixes: 203000993de5 (kvm: vmx: add MSR logic for XSAVES)
-Reported-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Reported-by: Tao Xu <tao3.xu@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sergey Gorenko <sergeygo@mellanox.com>
+Cc: Max Gurtovoy <maxg@mellanox.com>
+Cc: Laurence Oberman <loberman@redhat.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/srp/ib_srp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 82253d31842a2..2938b4bcc9684 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4135,7 +4135,10 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		return vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index,
- 				       &msr_info->data);
- 	case MSR_IA32_XSS:
--		if (!vmx_xsaves_supported())
-+		if (!vmx_xsaves_supported() ||
-+		    (!msr_info->host_initiated &&
-+		     !(guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
-+		       guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))))
- 			return 1;
- 		msr_info->data = vcpu->arch.ia32_xss;
- 		break;
-@@ -4302,7 +4305,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 		return vmx_set_vmx_msr(vcpu, msr_index, data);
- 	case MSR_IA32_XSS:
--		if (!vmx_xsaves_supported())
-+		if (!vmx_xsaves_supported() ||
-+		    (!msr_info->host_initiated &&
-+		     !(guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
-+		       guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))))
- 			return 1;
- 		/*
- 		 * The only supported bit as of Skylake is bit 8, but
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index 2c1114ee0c6da..9da30d88a615e 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -3401,6 +3401,9 @@ static const match_table_t srp_opt_tokens = {
+ 
+ /**
+  * srp_parse_in - parse an IP address and port number combination
++ * @net:	   [in]  Network namespace.
++ * @sa:		   [out] Address family, IP address and port number.
++ * @addr_port_str: [in]  IP address and port number.
+  *
+  * Parse the following address formats:
+  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
 -- 
 2.20.1
 
