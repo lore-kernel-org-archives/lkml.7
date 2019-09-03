@@ -2,109 +2,86 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B700CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCABC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523B321897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:27:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="N9qYdaUr"
+	by mail.kernel.org (Postfix) with ESMTP id 2DBA922CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfICR11 (ORCPT
+        id S1730197AbfICR3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:27:27 -0400
-Received: from mail.alarsen.net ([144.76.18.233]:56120 "EHLO mail.alarsen.net"
+        Tue, 3 Sep 2019 13:29:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:41538 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbfICR11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:27:27 -0400
-Received: from oscar.alarsen.net (unknown [IPv6:2001:470:1f0b:246:4c62:a11:a1a:c92c])
-        by joe.alarsen.net (Postfix) with ESMTPS id DF8FC2B80D96;
-        Tue,  3 Sep 2019 19:27:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
-        t=1567531644; bh=NUJqd5fW3jGPSjQIN+tCQrdb0lPcXg5plbk8kV1a8jU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9qYdaUr+eCwCArE/7xlDbkAAll2iGrwJfxw9/Sa56FVlWlEHEllCh4HsbJVa8pLk
-         d5KMAbgyIgdgjjArQKFBgxqJjikAs2dsCz515boughNo+Boi5mRZr7cmsI2o9FUyXw
-         uR06MxZe96kSiJWvXLynrubiU8eu61460MujfJbs=
-Received: from oscar.localnet (localhost [IPv6:::1])
-        by oscar.alarsen.net (Postfix) with ESMTP id 3811B27C0D59;
-        Tue,  3 Sep 2019 19:27:22 +0200 (CEST)
-From:   Anders Larsen <al@alarsen.net>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     kernel-janitors@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fs/qnx: Delete unnecessary checks before brelse()
-Date:   Tue, 03 Sep 2019 19:27:22 +0200
-Message-ID: <21774224.cEpxz9ejUk@alarsen.net>
-In-Reply-To: <056c8b8e-abaa-8856-4953-118d14048ddc@web.de>
-References: <056c8b8e-abaa-8856-4953-118d14048ddc@web.de>
+        id S1728571AbfICR3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 13:29:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52AB3360;
+        Tue,  3 Sep 2019 10:29:09 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3302E3F59C;
+        Tue,  3 Sep 2019 10:29:08 -0700 (PDT)
+Subject: Re: [PATCH] sched: make struct task_struct::state 32-bit
+To:     Alexey Dobriyan <adobriyan@gmail.com>, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com, axboe@kernel.dk,
+        aarcange@redhat.com
+References: <20190902210558.GA23013@avx2>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <d8ad0be1-4ed7-df74-d415-2b1c9a44bac7@arm.com>
+Date:   Tue, 3 Sep 2019 18:29:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190902210558.GA23013@avx2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, 2019-09-03 19:20 Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 3 Sep 2019 19:15:09 +0200
+On 02/09/2019 22:05, Alexey Dobriyan wrote:
+> 32-bit accesses are shorter than 64-bit accesses on x86_64.
+> Nothing uses 64-bitness of ->state.
 > 
-> The brelse() function tests whether its argument is NULL
-> and then returns immediately.
-> Thus the tests around the shown calls are not needed.
+> Space savings are ~2KB on F30 kernel config.
 > 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 > ---
->  fs/qnx4/inode.c | 3 +--
->  fs/qnx6/inode.c | 6 ++----
->  2 files changed, 3 insertions(+), 6 deletions(-)
 > 
-> diff --git a/fs/qnx4/inode.c b/fs/qnx4/inode.c
-> index e8da1cde87b9..018a4c657f7c 100644
-> --- a/fs/qnx4/inode.c
-> +++ b/fs/qnx4/inode.c
-> @@ -118,8 +118,7 @@ unsigned long qnx4_block_map( struct inode *inode, long iblock )
->  				bh = NULL;
->  			}
->  		}
-> -		if ( bh )
-> -			brelse( bh );
-> +		brelse(bh);
->  	}
+>  arch/ia64/kernel/perfmon.c   |    4 ++--
+>  block/blk-mq.c               |    2 +-
+>  drivers/md/dm.c              |    4 ++--
+>  fs/userfaultfd.c             |    2 +-
+>  include/linux/sched.h        |    6 +++---
+>  include/linux/sched/debug.h  |    2 +-
+>  include/linux/sched/signal.h |    2 +-
+>  kernel/freezer.c             |    2 +-
+>  kernel/kthread.c             |    4 ++--
+>  kernel/locking/mutex.c       |    6 +++---
+>  kernel/locking/semaphore.c   |    2 +-
+>  kernel/rcu/rcutorture.c      |    4 ++--
+>  kernel/rcu/tree_stall.h      |    6 +++---
+>  kernel/sched/core.c          |    8 ++++----
+>  lib/syscall.c                |    2 +-
+>  15 files changed, 28 insertions(+), 28 deletions(-)
 > 
->  	QNX4DEBUG((KERN_INFO "qnx4: mapping block %ld of inode %ld = %ld\n",iblock,inode->i_ino,block));
-> diff --git a/fs/qnx6/inode.c b/fs/qnx6/inode.c
-> index 345db56c98fd..083170541add 100644
-> --- a/fs/qnx6/inode.c
-> +++ b/fs/qnx6/inode.c
-> @@ -472,10 +472,8 @@ static int qnx6_fill_super(struct super_block *s, void *data, int silent)
->  out1:
->  	iput(sbi->inodes);
->  out:
-> -	if (bh1)
-> -		brelse(bh1);
-> -	if (bh2)
-> -		brelse(bh2);
-> +	brelse(bh1);
-> +	brelse(bh2);
->  outnobh:
->  	kfree(qs);
->  	s->s_fs_info = NULL;
 
-Acked-by: Anders Larsen <al@alarsen.net>
+It looks like you missed a few places. There's a long prev_state in
+sched/core.c::finish_task_switch() for instance.
 
+I suppose that's where coccinelle oughta help but I'm really not fluent
+in that. Is there a way to make it match p.state accesses with p task_struct?
+And if so, can we make it change the type of the variable being read from
+/ written to?
 
+How did you come up with this changeset, did you pickaxe for some regexp?
 
-
+[...]
