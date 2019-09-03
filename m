@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1B0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DFFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A342A2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB4C2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528812;
-	bh=ZnpwUH/bPiEE4wslv4yPlhf2ZtPaAnT2HGWxhurSN98=;
+	s=default; t=1567528817;
+	bh=YEKpx2P2hrGWksNlq1jYo57hOhkCpoZ8pPpWkNg0n7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LETAAv8+C8Xvfv58euSoRB0oOYZB+kxgrEFpajv/wqJg2ITxWuOO+V2NTnOU56tnY
-	 12rthWFzI9DpJmd2gnlMLFGiPl0SvHRCITZNiqzGGj588o3I/my23oAUM1vjy+2l/O
-	 8mhF1jAYaEQHXnUYK7XWDVb5Q+4KJr6nulMxUbOw=
+	b=ZC1lJ11HdeKsPM3h+Qxl+V8o8plNbd6CbnaE8Y9eeAW3wi2BRr1HzWPJ1BBFemA24
+	 Qzc8zwIxucTrBgjNSW+yXsmLmsG6n3leXse6TeOjGftsGXwkl/hhJcJAcVEXnKspK/
+	 nwuELDj7r3pbQoL07+P0gFOdfGc0VLzM4piJn2NY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfICQZW (ORCPT
+        id S1730339AbfICQZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730307AbfICQZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:12 -0400
+        id S1730297AbfICQZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3490A2343A;
-        Tue,  3 Sep 2019 16:25:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C13DF23711;
+        Tue,  3 Sep 2019 16:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527911;
-        bh=ZnpwUH/bPiEE4wslv4yPlhf2ZtPaAnT2HGWxhurSN98=;
+        s=default; t=1567527909;
+        bh=YEKpx2P2hrGWksNlq1jYo57hOhkCpoZ8pPpWkNg0n7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+a3l8pYptK6lnQ+XfHUf+FPXUpOmv0zmCRn8M60zeClwUOwfj2ZdqUXaxvxEtpO1
-         km0lM/t5bUg80YDXDGk7QQWzlz8rBrtHf3rCYc4C5QEdJCR7/k3/Mx2jzgLmnmDNGh
-         9df/qUrFX7r4osWDGDUMS3TMBaP7h6Mi/+wkc4jI=
+        b=y6tofRjy31mgcYBs/IyrFck/TggwP24LSg7gq6ugduq5ViEoFLxNMQ2SQhpeMnRvS
+         f/ZgrDfmMvqk7+vCq2DHd6bbxrc31pHIlIOXQFzX/BhpVEiG7lANOS/ksiodX6CKZS
+         JZUsT2VgOF1wxzYE2dmw24fOyLuuQIhCIqtuwFh4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     John Harrison <John.C.Harrison@Intel.com>,
         "Robert M . Fosha" <robert.m.fosha@intel.com>,
         Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 20/23] drm/i915: Support whitelist workarounds on all engines
-Date:   Tue,  3 Sep 2019 12:24:21 -0400
-Message-Id: <20190903162424.6877-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 19/23] drm/i915: Support flags in whitlist WAs
+Date:   Tue,  3 Sep 2019 12:24:20 -0400
+Message-Id: <20190903162424.6877-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
 References: <20190903162424.6877-1-sashal@kernel.org>
@@ -64,148 +65,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: John Harrison <John.C.Harrison@Intel.com>
 
-[ Upstream commit ebd2de47a19f1c17ae47f8331aae3cd436766663 ]
+[ Upstream commit 6883eab274813d158bfcfb499aa225ece61c0f29 ]
 
-Newer hardware requires setting up whitelists on engines other than
-render. So, extend the whitelist code to support all engines.
+Newer hardware adds flags to the whitelist work-around register. These
+allow per access direction privileges and ranges.
 
 Signed-off-by: John Harrison <John.C.Harrison@Intel.com>
 Signed-off-by: Robert M. Fosha <robert.m.fosha@intel.com>
 Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
 Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
 Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618010108.27499-3-John.C.Harrison@Intel.com
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618010108.27499-2-John.C.Harrison@Intel.com
+(cherry picked from commit 5380d0b781c491d94b4f4690ecf9762c1946c4ec)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_workarounds.c | 65 +++++++++++++++++-------
- 1 file changed, 47 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/i915/i915_reg.h          | 7 +++++++
+ drivers/gpu/drm/i915/intel_workarounds.c | 9 ++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
+index 13d6bd4e17b20..cf748b80e6401 100644
+--- a/drivers/gpu/drm/i915/i915_reg.h
++++ b/drivers/gpu/drm/i915/i915_reg.h
+@@ -2510,6 +2510,13 @@ enum i915_power_well_id {
+ #define   RING_WAIT_SEMAPHORE	(1 << 10) /* gen6+ */
+ 
+ #define RING_FORCE_TO_NONPRIV(base, i) _MMIO(((base) + 0x4D0) + (i) * 4)
++#define   RING_FORCE_TO_NONPRIV_RW		(0 << 28)    /* CFL+ & Gen11+ */
++#define   RING_FORCE_TO_NONPRIV_RD		(1 << 28)
++#define   RING_FORCE_TO_NONPRIV_WR		(2 << 28)
++#define   RING_FORCE_TO_NONPRIV_RANGE_1		(0 << 0)     /* CFL+ & Gen11+ */
++#define   RING_FORCE_TO_NONPRIV_RANGE_4		(1 << 0)
++#define   RING_FORCE_TO_NONPRIV_RANGE_16	(2 << 0)
++#define   RING_FORCE_TO_NONPRIV_RANGE_64	(3 << 0)
+ #define   RING_MAX_NONPRIV_SLOTS  12
+ 
+ #define GEN7_TLB_RD_ADDR	_MMIO(0x4700)
 diff --git a/drivers/gpu/drm/i915/intel_workarounds.c b/drivers/gpu/drm/i915/intel_workarounds.c
-index 1db826b12774e..0b80fde927899 100644
+index 2fb70fab2d1c6..1db826b12774e 100644
 --- a/drivers/gpu/drm/i915/intel_workarounds.c
 +++ b/drivers/gpu/drm/i915/intel_workarounds.c
-@@ -1012,48 +1012,79 @@ static void gen9_whitelist_build(struct i915_wa_list *w)
- 	whitelist_reg(w, GEN8_HDC_CHICKEN1);
+@@ -981,7 +981,7 @@ bool intel_gt_verify_workarounds(struct drm_i915_private *i915,
  }
  
--static void skl_whitelist_build(struct i915_wa_list *w)
-+static void skl_whitelist_build(struct intel_engine_cs *engine)
+ static void
+-whitelist_reg(struct i915_wa_list *wal, i915_reg_t reg)
++whitelist_reg_ext(struct i915_wa_list *wal, i915_reg_t reg, u32 flags)
  {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	gen9_whitelist_build(w);
- 
- 	/* WaDisableLSQCROPERFforOCL:skl */
- 	whitelist_reg(w, GEN8_L3SQCREG4);
- }
- 
--static void bxt_whitelist_build(struct i915_wa_list *w)
-+static void bxt_whitelist_build(struct intel_engine_cs *engine)
- {
--	gen9_whitelist_build(w);
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
-+	gen9_whitelist_build(&engine->whitelist);
- }
- 
--static void kbl_whitelist_build(struct i915_wa_list *w)
-+static void kbl_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	gen9_whitelist_build(w);
- 
- 	/* WaDisableLSQCROPERFforOCL:kbl */
- 	whitelist_reg(w, GEN8_L3SQCREG4);
- }
- 
--static void glk_whitelist_build(struct i915_wa_list *w)
-+static void glk_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	gen9_whitelist_build(w);
- 
- 	/* WA #0862: Userspace has to set "Barrier Mode" to avoid hangs. */
- 	whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
- }
- 
--static void cfl_whitelist_build(struct i915_wa_list *w)
-+static void cfl_whitelist_build(struct intel_engine_cs *engine)
- {
--	gen9_whitelist_build(w);
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
-+	gen9_whitelist_build(&engine->whitelist);
- }
- 
--static void cnl_whitelist_build(struct i915_wa_list *w)
-+static void cnl_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	/* WaEnablePreemptionGranularityControlByUMD:cnl */
- 	whitelist_reg(w, GEN8_CS_CHICKEN1);
- }
- 
--static void icl_whitelist_build(struct i915_wa_list *w)
-+static void icl_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	/* WaAllowUMDToModifyHalfSliceChicken7:icl */
- 	whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
- 
-@@ -1069,24 +1100,22 @@ void intel_engine_init_whitelist(struct intel_engine_cs *engine)
- 	struct drm_i915_private *i915 = engine->i915;
- 	struct i915_wa_list *w = &engine->whitelist;
- 
--	GEM_BUG_ON(engine->id != RCS0);
--
- 	wa_init_start(w, "whitelist");
- 
- 	if (IS_GEN(i915, 11))
--		icl_whitelist_build(w);
-+		icl_whitelist_build(engine);
- 	else if (IS_CANNONLAKE(i915))
--		cnl_whitelist_build(w);
-+		cnl_whitelist_build(engine);
- 	else if (IS_COFFEELAKE(i915))
--		cfl_whitelist_build(w);
-+		cfl_whitelist_build(engine);
- 	else if (IS_GEMINILAKE(i915))
--		glk_whitelist_build(w);
-+		glk_whitelist_build(engine);
- 	else if (IS_KABYLAKE(i915))
--		kbl_whitelist_build(w);
-+		kbl_whitelist_build(engine);
- 	else if (IS_BROXTON(i915))
--		bxt_whitelist_build(w);
-+		bxt_whitelist_build(engine);
- 	else if (IS_SKYLAKE(i915))
--		skl_whitelist_build(w);
-+		skl_whitelist_build(engine);
- 	else if (INTEL_GEN(i915) <= 8)
+ 	struct i915_wa wa = {
+ 		.reg = reg
+@@ -990,9 +990,16 @@ whitelist_reg(struct i915_wa_list *wal, i915_reg_t reg)
+ 	if (GEM_DEBUG_WARN_ON(wal->count >= RING_MAX_NONPRIV_SLOTS))
  		return;
- 	else
+ 
++	wa.reg.reg |= flags;
+ 	_wa_add(wal, &wa);
+ }
+ 
++static void
++whitelist_reg(struct i915_wa_list *wal, i915_reg_t reg)
++{
++	whitelist_reg_ext(wal, reg, RING_FORCE_TO_NONPRIV_RW);
++}
++
+ static void gen9_whitelist_build(struct i915_wa_list *w)
+ {
+ 	/* WaVFEStateAfterPipeControlwithMediaStateClear:skl,bxt,glk,cfl */
 -- 
 2.20.1
 
