@@ -2,195 +2,322 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AA7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996CDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EAB21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595FD21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfICUds (ORCPT
+        id S1728406AbfICUdy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:33:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbfICUcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:32:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1D0E53082E72;
-        Tue,  3 Sep 2019 20:32:17 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D6A015D6B2;
-        Tue,  3 Sep 2019 20:32:16 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 81A6620BE2; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/26] nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
-Date:   Tue,  3 Sep 2019 16:31:55 -0400
-Message-Id: <20190903203215.9157-7-smayhew@redhat.com>
-In-Reply-To: <20190903203215.9157-1-smayhew@redhat.com>
-References: <20190903203215.9157-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 03 Sep 2019 20:32:17 +0000 (UTC)
+        Tue, 3 Sep 2019 16:33:54 -0400
+Received: from mail-oln040092071032.outbound.protection.outlook.com ([40.92.71.32]:11650
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726600AbfICUdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:33:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sxtmrce382C7Nzvz/x2if4akRMu8Aso5VbF7Lmhn+4AYYNVUB+y5tML4VFb03zFUNS5eMu3BekLXVux7G2Yhs5T4HtA4lYNHB6Y5H5QqvFBfPtFZdwGfX/olcMWd/cvb9qCHlYYCs2oqTLjvqo//q0/pKoyeHbLuyO4MVJgcQLzdeN4lXoPA6jYOw0Vtn0yZSkpyDREYGRgoxVScE9wBFgSLf+EZh1CNUqrJ1pdDtg+smR0MJbEYX2XsKzT4mE3ND7rxqQ49P1KeIg/4GLlNTFrDSZzz3YmwBsrAGyzwgfPSt1thHTz5kt0FhUJO++WUlz7uO/SjSykhPGTV9I13WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5vgudMTu+DzBbrHIdo/PAUYeHSgztm9UT1pB9ZHTeaA=;
+ b=imd2rhaBj+N493R4QZPOOLqdiLw0TmAoCRr2o2Y2vsMWATjZVUjldurPcas1Nmp/YLiG4ZTf8+OGDO2NrgH5N/7sUSv7PZUoy1XWYrtBiuJczTWh6X3VotHIRH9SqGuljAH5Mnh1O+pZy5BoKi4Xfm8U33Ftk2UnCY1pDOvTE8YMKNJvumThMeWW5v83Fbai50NIvSOzC3IWPlgm7DsybEtD9eFTuUK8Kb75MZ0wS2Eo4oqp/Supg1JWFCeQQ62120FQN2DjpiDQ7XwYR5FlYP5R7NdMI93MB5PpsY03XUbhx917K/gUvyZnslSb7g/arKornP4fQ+LWkU57SJuVLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (10.152.20.53) by DB5EUR03HT241.eop-EUR03.prod.protection.outlook.com
+ (10.152.21.92) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2220.16; Tue, 3 Sep
+ 2019 20:33:48 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.20.52) by
+ DB5EUR03FT045.mail.protection.outlook.com (10.152.21.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.16 via Frontend Transport; Tue, 3 Sep 2019 20:33:48 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::59e6:329d:5fc7:5181]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::59e6:329d:5fc7:5181%5]) with mapi id 15.20.2241.014; Tue, 3 Sep 2019
+ 20:33:46 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     =?Windows-1252?Q?Jernej_=8Akrabec?= <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "tzungbi@chromium.org" <tzungbi@chromium.org>,
+        "zhengxing@rock-chips.com" <zhengxing@rock-chips.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "kuankuan.y@gmail.com" <kuankuan.y@gmail.com>,
+        "jeffy.chen@rock-chips.com" <jeffy.chen@rock-chips.com>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        "cain.cai@rock-chips.com" <cain.cai@rock-chips.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "eddie.cai@rock-chips.com" <eddie.cai@rock-chips.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        Yakir Yang <ykk@rock-chips.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "dgreid@chromium.org" <dgreid@chromium.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status
+ setting
+Thread-Topic: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status
+ setting
+Thread-Index: AQHVYhuf7WuMEFP/bkanUBsGMqjnp6cZtq2AgACIEYCAAAI2AIAAKJWA
+Date:   Tue, 3 Sep 2019 20:33:46 +0000
+Message-ID: <HE1PR06MB40112AD52DAF0E837F23B441ACB90@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <20190903055103.134764-1-cychiang@chromium.org>
+ <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com>
+ <d8a80ba5-dd2b-f84d-bbfc-9dd5ccbc26e9@baylibre.com>
+ <19353031.SdOy5F5fmg@jernej-laptop>
+In-Reply-To: <19353031.SdOy5F5fmg@jernej-laptop>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR09CA0066.eurprd09.prod.outlook.com
+ (2603:10a6:7:3c::34) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:AF10315B530FE229F9A374172C0658089A8AA56BE7ABC6CA9449045236CA437D;UpperCasedChecksum:51ADB11BF299428844BA49B9481ED552C8BD419DED03D02B8B0DE302B2F8CE6B;SizeAsReceived:8834;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [bTm1tx/PMyEUqdpgzrcGqZvVyVOfVuS7]
+x-microsoft-original-message-id: <a55d0984-a1a2-706f-8af5-c7922524c518@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:DB5EUR03HT241;
+x-ms-traffictypediagnostic: DB5EUR03HT241:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-message-info: 8TA9+BaXXYlc8dR3QA3CXw4ARIh3bav/y+Z7arww+94zALge8kokweb9M/i7F+aj8pgA653Rkv1hpOcM2PPUlPrGIIMIT9UoBwvgxVtBgDlQnAdArArMe6/m8lF1GFon9E7dQN3XxwrDUiRmO93DOz8vKSjns2ZSbBzBau4udq/VbM0Q6yjLXseo5lWLSCD8
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <5F902911163D124685C903F119FA8196@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9eea3de-525e-45d6-e22f-08d730ae04f0
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 20:33:46.4790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT241
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On 2019-09-03 20:08, Jernej Škrabec wrote:
+> Hi!
+>
+> Dne torek, 03. september 2019 ob 20:00:33 CEST je Neil Armstrong napisal(a):
+>> Hi,
+>>
+>> Le 03/09/2019 à 11:53, Neil Armstrong a écrit :
+>>> Hi,
+>>>
+>>> On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
+>>>> From: Yakir Yang <ykk@rock-chips.com>
+>>>>
+>>>> When transmitting IEC60985 linear PCM audio, we configure the
+>>>> Audio Sample Channel Status information of all the channel
+>>>> status bits in the IEC60958 frame.
+>>>> Refer to 60958-3 page 10 for frequency, original frequency, and
+>>>> wordlength setting.
+>>>>
+>>>> This fix the issue that audio does not come out on some monitors
+>>>> (e.g. LG 22CV241)
+>>>>
+>>>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>>>> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+>>>> ---
+>>>>
+>>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 +++++++++++++++++++++++
+>>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
+>>>>  2 files changed, 79 insertions(+)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>>>> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+>>>> bd65d0479683..34d46e25d610 100644
+>>>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>>>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>>>> @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int
+>>>> freq, unsigned long pixel_clk)>> 
+>>>>  	return n;
+>>>>  
+>>>>  }
+>>>>
+>>>> +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
+>>>> +{
+>>>> +	u8 aud_schnl_samplerate;
+>>>> +	u8 aud_schnl_8;
+>>>> +
+>>>> +	/* These registers are on RK3288 using version 2.0a. */
+>>>> +	if (hdmi->version != 0x200a)
+>>>> +		return;
+>>> Are these limited to the 2.0a version *in* RK3288, or 2.0a version on all
+>>> SoCs ?
+>> After investigations, Amlogic sets these registers on their 2.0a version
+>> aswell, and Jernej (added in Cc) reported me Allwinner sets them on their
+>> < 2.0a and > 2.0a IPs versions.
+>>
+>> Can you check on the Rockchip IP versions in RK3399 ?
+>>
+>> For reference, the HDMI 1.4a IP version allwinner setups is:
+>> https://github.com/Allwinner-Homlet/H3-BSP4.4-linux/blob/master/drivers/vide
+>> o/fbdev/sunxi/disp2/hdmi/hdmi_bsp_sun8iw7.c#L531-L539 (registers a
+>> "scrambled" but a custom bit can reset to the original mapping, 0x1066 ...
+>> 0x106f)
+> For easier reading, here is similar, but annotated version: http://ix.io/1Ub6
+> Check function bsp_hdmi_audio().
+>
+> Unless there is a special reason, you can just remove that check.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfs/nfs4super.c | 88 +++++++++++++++++++---------------------------
- 1 file changed, 37 insertions(+), 51 deletions(-)
+Agree, this check should not be needed, AUDSCHNLS7 used to be configured in my old
+multi-channel patches that have seen lot of testing on Amlogic, Allwinner and Rockchip SoCs.
 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index a0b66f98f6ba..91ba1b6741dc 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -101,37 +101,6 @@ nfs4_remote_mount(struct file_system_type *fs_type, int flags,
- 	return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
- }
- 
--static struct vfsmount *nfs_do_root_mount(struct nfs_server *server, int flags,
--					  struct nfs_mount_info *info,
--					  const char *hostname)
--{
--	struct vfsmount *root_mnt;
--	char *root_devname;
--	size_t len;
--
--	if (IS_ERR(server))
--		return ERR_CAST(server);
--
--	len = strlen(hostname) + 5;
--	root_devname = kmalloc(len, GFP_KERNEL);
--	if (root_devname == NULL) {
--		nfs_free_server(server);
--		return ERR_PTR(-ENOMEM);
--	}
--	/* Does hostname needs to be enclosed in brackets? */
--	if (strchr(hostname, ':'))
--		snprintf(root_devname, len, "[%s]:/", hostname);
--	else
--		snprintf(root_devname, len, "%s:/", hostname);
--	info->server = server;
--	root_mnt = vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, info);
--	if (info->server)
--		nfs_free_server(info->server);
--	info->server = NULL;
--	kfree(root_devname);
--	return root_mnt;
--}
--
- struct nfs_referral_count {
- 	struct list_head list;
- 	const struct task_struct *task;
-@@ -198,11 +167,38 @@ static void nfs_referral_loop_unprotect(void)
- 	kfree(p);
- }
- 
--static struct dentry *nfs_follow_remote_path(struct vfsmount *root_mnt,
--		const char *export_path)
-+static struct dentry *do_nfs4_mount(struct nfs_server *server, int flags,
-+				    struct nfs_mount_info *info,
-+				    const char *hostname,
-+				    const char *export_path)
- {
-+	struct vfsmount *root_mnt;
- 	struct dentry *dentry;
-+	char *root_devname;
- 	int err;
-+	size_t len;
-+
-+	if (IS_ERR(server))
-+		return ERR_CAST(server);
-+
-+	len = strlen(hostname) + 5;
-+	root_devname = kmalloc(len, GFP_KERNEL);
-+	if (root_devname == NULL) {
-+		nfs_free_server(server);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	/* Does hostname needs to be enclosed in brackets? */
-+	if (strchr(hostname, ':'))
-+		snprintf(root_devname, len, "[%s]:/", hostname);
-+	else
-+		snprintf(root_devname, len, "%s:/", hostname);
-+	info->server = server;
-+	root_mnt = vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, info);
-+	if (info->server)
-+		nfs_free_server(info->server);
-+	info->server = NULL;
-+	kfree(root_devname);
- 
- 	if (IS_ERR(root_mnt))
- 		return ERR_CAST(root_mnt);
-@@ -223,22 +219,17 @@ struct dentry *nfs4_try_mount(int flags, const char *dev_name,
- 			      struct nfs_mount_info *mount_info,
- 			      struct nfs_subversion *nfs_mod)
- {
--	char *export_path;
--	struct vfsmount *root_mnt;
--	struct dentry *res;
- 	struct nfs_parsed_mount_data *data = mount_info->parsed;
-+	struct dentry *res;
- 
- 	mount_info->set_security = nfs_set_sb_security;
- 
- 	dfprintk(MOUNT, "--> nfs4_try_mount()\n");
- 
--	export_path = data->nfs_server.export_path;
--	root_mnt = nfs_do_root_mount(
--			nfs4_create_server(mount_info, &nfs_v4),
--			flags, mount_info,
--			data->nfs_server.hostname);
--
--	res = nfs_follow_remote_path(root_mnt, export_path);
-+	res = do_nfs4_mount(nfs4_create_server(mount_info, &nfs_v4),
-+			    flags, mount_info,
-+			    data->nfs_server.hostname,
-+			    data->nfs_server.export_path);
- 
- 	dfprintk(MOUNT, "<-- nfs4_try_mount() = %d%s\n",
- 		 PTR_ERR_OR_ZERO(res),
-@@ -258,8 +249,6 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
- 		.set_security = nfs_clone_sb_security,
- 		.cloned = data,
- 	};
--	char *export_path;
--	struct vfsmount *root_mnt;
- 	struct dentry *res;
- 
- 	dprintk("--> nfs4_referral_mount()\n");
-@@ -268,13 +257,10 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
- 	if (!mount_info.mntfh)
- 		return ERR_PTR(-ENOMEM);
- 
--	export_path = data->mnt_path;
--	root_mnt = nfs_do_root_mount(
--			nfs4_create_referral_server(mount_info.cloned,
--						    mount_info.mntfh),
--			flags, &mount_info, data->hostname);
-+	res = do_nfs4_mount(nfs4_create_referral_server(mount_info.cloned,
-+							mount_info.mntfh),
-+			    flags, &mount_info, data->hostname, data->mnt_path);
- 
--	res = nfs_follow_remote_path(root_mnt, export_path);
- 	dprintk("<-- nfs4_referral_mount() = %d%s\n",
- 		PTR_ERR_OR_ZERO(res),
- 		IS_ERR(res) ? " [error]" : "");
--- 
-2.17.2
+>
+> Best regards,
+> Jernej
+>
+>> Neil
+>>
+>>>> +
+>>>> +	switch (hdmi->sample_rate) {
+>>>> +	case 32000:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
+>>>> +		break;
+>>>> +	case 44100:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
+>>>> +		break;
+>>>> +	case 48000:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
+>>>> +		break;
+>>>> +	case 88200:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
+>>>> +		break;
+>>>> +	case 96000:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
+>>>> +		break;
+>>>> +	case 176400:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
+>>>> +		break;
+>>>> +	case 192000:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
+>>>> +		break;
+>>>> +	case 768000:
+>>>> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
+>>>> +		break;
+>>>> +	default:
+>>>> +		dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n",
+>>>> +			 hdmi->sample_rate);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	/* set channel status register */
+>>>> +	hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
+>>>> +		  HDMI_FC_AUDSCHNLS7);
+>>>> +
+>>>> +	/*
+>>>> +	 * Set original frequency to be the same as frequency.
+>>>> +	 * Use one-complement value as stated in IEC60958-3 page 13.
+>>>> +	 */
+>>>> +	aud_schnl_8 = (~aud_schnl_samplerate) <<
+>>>> +			HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
+>>>> +
+>>>> +	/* This means word length is 16 bit. Refer to IEC60958-3 page 12. */
+>>>> +	aud_schnl_8 |= 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
 
+This looks wrong, user can use 16 and 24 bit wide audio streams.
+
+>>>> +
+>>>> +	hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
+>>>> +}
+>>>> +
+>>>>
+>>>>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
+>>>>  
+>>>>  	unsigned long pixel_clk, unsigned int sample_rate)
+>>>>  
+>>>>  {
+>>>>
+>>>> @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi
+>>>> *hdmi,>> 
+>>>>  	hdmi->audio_cts = cts;
+>>>>  	hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
+>>>>  	spin_unlock_irq(&hdmi->audio_lock);
+>>>>
+>>>> +
+>>>> +	hdmi_set_schnl(hdmi);
+
+I will suggest this function is called from or merged with dw_hdmi_set_sample_rate().
+Similar to how AUDSCONF and AUDICONF0 is configured from dw_hdmi_set_channel_count().
+
+Regards,
+Jonas
+
+>>>>
+>>>>  }
+>>>>  
+>>>>  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+>>>> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h index
+>>>> 6988f12d89d9..619ebc1c8354 100644
+>>>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+>>>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+>>>> @@ -158,6 +158,17 @@
+>>>>
+>>>>  #define HDMI_FC_SPDDEVICEINF                    0x1062
+>>>>  #define HDMI_FC_AUDSCONF                        0x1063
+>>>>  #define HDMI_FC_AUDSSTAT                        0x1064
+>>>>
+>>>> +#define HDMI_FC_AUDSV                           0x1065
+>>>> +#define HDMI_FC_AUDSU                           0x1066
+>>>> +#define HDMI_FC_AUDSCHNLS0                      0x1067
+>>>> +#define HDMI_FC_AUDSCHNLS1                      0x1068
+>>>> +#define HDMI_FC_AUDSCHNLS2                      0x1069
+>>>> +#define HDMI_FC_AUDSCHNLS3                      0x106a
+>>>> +#define HDMI_FC_AUDSCHNLS4                      0x106b
+>>>> +#define HDMI_FC_AUDSCHNLS5                      0x106c
+>>>> +#define HDMI_FC_AUDSCHNLS6                      0x106d
+>>>> +#define HDMI_FC_AUDSCHNLS7                      0x106e
+>>>> +#define HDMI_FC_AUDSCHNLS8                      0x106f
+>>>>
+>>>>  #define HDMI_FC_DATACH0FILL                     0x1070
+>>>>  #define HDMI_FC_DATACH1FILL                     0x1071
+>>>>  #define HDMI_FC_DATACH2FILL                     0x1072
+>>>>
+>>>> @@ -706,6 +717,15 @@ enum {
+>>>>
+>>>>  /* HDMI_FC_AUDSCHNLS7 field values */
+>>>>  
+>>>>  	HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
+>>>>  	HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
+>>>>
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
+>>>> +	HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
+>>>>
+>>>>  /* HDMI_FC_AUDSCHNLS8 field values */
+>>>>  
+>>>>  	HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
