@@ -2,116 +2,75 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398EAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D949C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4037206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:31:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="To2J9hU4"
+	by mail.kernel.org (Postfix) with ESMTP id 3D12B23697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfICOb7 (ORCPT
+        id S1729592AbfICOcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:31:59 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:17012 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfICOb6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:31:58 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x83EVtVI008834
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 23:31:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x83EVtVI008834
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567521116;
-        bh=peXU42EyKwQnnz8I8342mhS/H7burl4NL19/9YgGjD0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=To2J9hU4oq963etpjneGoIRkK8muL4ge1eFeFd+JOKSAJyIFu3eQLEfFuPe/7fCfD
-         T6Ev74+Bkwbd1zwYdlvOP/d2NpKZCY+Hzd8zQD1nzMEigbEsphDDV/eIrwuyVYscvM
-         j0A2ou96yem5vS0c3y30DGhGUicO2XSK2Rst8fxojqelE7n4rTVQBy1a5c0h8ImzIr
-         rGlQg/N9hc6wngoGrFAX16cLhWEnalbrkeA0kX3OCEtSbM1PYQQre9cTthEKjkO2A7
-         ECX/HlIMqBK/5owGmVEGMlrjUp2m2wbc6DhoPmskMp4Gs9OBrMAgV/SpAdK3DsI0ri
-         PBR0ztSiH6jAA==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id n13so5548575uap.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:31:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAWoMQbXdaMTiosmZ7GQYXkAyPtz+/ZmXHykP1frurHNeKOb1v8k
-        2c5rafJMhSZ5V8vbvKnw5gtv2hGqusewGgIjOTY=
-X-Google-Smtp-Source: APXvYqx4IX1fbc76BZv6H/GxXFHjyN7GN25SCkBJrPe9gxiGH6cezOB6+0NoGTi8i0Op3jHd2IuwId/eGsLoOtOPNkg=
-X-Received: by 2002:a9f:2213:: with SMTP id 19mr4944903uad.25.1567521114572;
- Tue, 03 Sep 2019 07:31:54 -0700 (PDT)
+        Tue, 3 Sep 2019 10:32:45 -0400
+Received: from mga03.intel.com ([134.134.136.65]:33380 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728992AbfICOcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:32:45 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 07:32:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
+   d="scan'208";a="198783088"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 07:32:40 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 03 Sep 2019 17:32:40 +0300
+Date:   Tue, 3 Sep 2019 17:32:40 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: lockdep warning on thunderbolt docking
+Message-ID: <20190903143240.GH2691@lahna.fi.intel.com>
+References: <20190830125848.GA25929@owl.dominikbrodowski.net>
+ <20190831130317.GL3177@lahna.fi.intel.com>
 MIME-Version: 1.0
-References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
- <20190826113526.GA23425@infradead.org> <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
- <20190830155322.GA30046@infradead.org> <CAK7LNAR2JuZkdJGxO=f2hUxmQca5d7430NC-2hiqZwkJphJ9sA@mail.gmail.com>
- <20190902074256.GA754@infradead.org>
-In-Reply-To: <20190902074256.GA754@infradead.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 3 Sep 2019 23:31:18 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASMx7XBDUALd+UOj1jw=0kU-XoJBExCpSvKyQwV37mz7A@mail.gmail.com>
-Message-ID: <CAK7LNASMx7XBDUALd+UOj1jw=0kU-XoJBExCpSvKyQwV37mz7A@mail.gmail.com>
-Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831130317.GL3177@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 4:42 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Sat, Aug 31, 2019 at 10:04:53PM +0900, Masahiro Yamada wrote:
-> > Kbuild support two file names, "Makefile" and "Kbuild"
-> > for describing obj-y, obj-m, etc.
->
-> <snipping the basic explanation, which is documented pretty well,
-> I I think I full understand>
->
-> > Similarly, arch/$(SRCARCH)/Makefile is very special
-> > in that it is included from the top-level Makefile,
-> > and specify arch-specific compiler flags etc.
-> >
-> > We can use arch/$(SRCARCH)/Kbuild
-> > to specify obj-y, obj-m.
-> > The top-level Makefile does not need to know
-> > the directory structure under arch/$(SRCARCH)/.
-> >
-> > This is logical separation.
->
-> But only if we document this specific split and eventually stop allowing
-> to build objects from arch/$(SRCARCH)/Makefile.
+On Sat, Aug 31, 2019 at 04:03:21PM +0300, Mika Westerberg wrote:
+> Hi Dominik,
+> 
+> On Fri, Aug 30, 2019 at 02:58:48PM +0200, Dominik Brodowski wrote:
+> > When connecting a thunderbolt-enabled docking station to my work laptop,
+> > the following lockdep warning is reported on v5.3.0-rc6+ as of Thursday
+> > morning (can look up the exact git id if so required):
+> 
+> Thanks for reporting. No need to dig for the commit ID.
+> 
+> I'll take a look at this next week.
 
-I like this idea, but it would change the link order (i.e. probe order)
+This seems to be impossible case. The two code paths cannot run at the
+same time (on different CPUs) because device authorization is only
+possible after the domain itself has been added and we've got firmware
+notification that there is a device connected.
 
-For example, I want move all drivers-y in arch/x86/Makefile
-to arch/x86/Kbuild.
-
-I do not know how much we care about the probe order.
-
-
->  And in my perfect world
-> we'd eventually phase out the magic arch/$(SRCARCH)/Makefile entire=C5=80=
-y.
-> In addition to the normal Kbuild file we'd then have say (names entirely
-> made up and probably not the best idea)
->
->   arch/$(SRCARCH)/flags.mk to set the various compiler flags and co
->   arch/$(SRCARCH)/targets.mk for extra arch-specific targets
-
-I am not sure whether this split is a good idea.
-What is the problem with having the single arch-Makefile?
-
-
---=20
-Best Regards
-Masahiro Yamada
+This was added by me in commit a03e828915c0 ("thunderbolt: Serialize
+PCIe tunnel creation with PCI rescan") claiming that it prevents PCI
+rescan code to find connected devices too early but now that I have
+gotten bit more experience in PCIe, I think this is not the case. I
+think I probably actually saw some issue in PCI stack that may even be
+fixed already. I'm going to try to reproduce the original issue and see
+if we can get rid of the whole pci_rescan_remove_lock in the driver.
