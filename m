@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9B9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17FBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA6723400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD072339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528408;
-	bh=6k6iEsk2BO6LAg9UW11D+hHtec6oooCFRqedn4k9uHk=;
+	s=default; t=1567528413;
+	bh=zYpf6LcmcPRXNyxdZ9NouTwFkdG53ktbHALUub252VU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F718IgF704Px9qXM2N09LRtTFsQ9bpOI8PFq6Q0MIsVl9AkoRS8M9zPo/Lhd3fk5/
-	 VPLbW6+Z1FfdiS/oBmBijlSFHbGFTM0YHcTZIZGK/BcHuRyUX8Z/Ov5BDbHuw5NQgp
-	 6uJ+NLhQprB3EqxU17E9SN7/lRQjdN9eVEEKbPJw=
+	b=1QSQF6ixXbzr5W2DnV5z+jizkIxmj38+ynv2iTGgNV3Y6XbKaatxKVZ5Mbuu67WLv
+	 sjFwwfvEd63UPKV2GWkOPtbZzcvjAoujLFDLr3Zz7BSAOBX4knTtpwwb86HWj5AYEL
+	 3NnN4dCgOl0WuqhUWnG67sjINgMKoIriRD3iadcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbfICQbw (ORCPT
+        id S1731164AbfICQdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbfICQbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:31:45 -0400
+        id S1730823AbfICQbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:31:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B54F223789;
-        Tue,  3 Sep 2019 16:31:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE2523789;
+        Tue,  3 Sep 2019 16:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528304;
-        bh=6k6iEsk2BO6LAg9UW11D+hHtec6oooCFRqedn4k9uHk=;
+        s=default; t=1567528309;
+        bh=zYpf6LcmcPRXNyxdZ9NouTwFkdG53ktbHALUub252VU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gr28huuvCaxAEwXFDbUcKEZX7v0j3ByR3yfOLwYFrAAXiiUG3z4yqROCGBGzjfjfD
-         /6DXCq//6I9L7lBasJldfs5l5phOIlbV0GO1cNfNecUO/zLwQsU0v9HD72c/0XVnFj
-         19AIp/f3qB6ddQS1M5ooUmXNEfKcGKP5fLPRK87s=
+        b=LLt0mdXf0/xRqbpvZfMxXNOXAUNwXe5lSgAyuYzkg+uAXt3cTU7eFrTT4dF67FruS
+         wMrj70xhmsNXpeFz4b1Tb2Sbqp6VdNTSl87BSgXIOVcTMrBega2gOqvtYf2Jl6HK3r
+         RQMvb4flWiwRQPm7YwIPvcl8O//onX0Xw1QrB6vA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Snitzer <snitzer@redhat.com>,
-        Zdenek Kabelac <zkabelac@redhat.com>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 146/167] dm thin metadata: check if in fail_io mode when setting needs_check
-Date:   Tue,  3 Sep 2019 12:24:58 -0400
-Message-Id: <20190903162519.7136-146-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 148/167] ALSA: hda - Fix intermittent CORB/RIRB stall on Intel chips
+Date:   Tue,  3 Sep 2019 12:25:00 -0400
+Message-Id: <20190903162519.7136-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,53 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 54fa16ee532705985e6c946da455856f18f63ee1 ]
+[ Upstream commit 2756d9143aa517b97961e85412882b8ce31371a6 ]
 
-Check if in fail_io mode at start of dm_pool_metadata_set_needs_check().
-Otherwise dm_pool_metadata_set_needs_check()'s superblock_lock() can
-crash in dm_bm_write_lock() while accessing the block manager object
-that was previously destroyed as part of a failed
-dm_pool_abort_metadata() that ultimately set fail_io to begin with.
+It turned out that the recent Intel HD-audio controller chips show a
+significant stall during the system PM resume intermittently.  It
+doesn't happen so often and usually it may read back successfully
+after one or more seconds, but in some rare worst cases the driver
+went into fallback mode.
 
-Also, update DMERR() message to more accurately describe
-superblock_lock() failure.
+After trial-and-error, we found out that the communication stall seems
+covered by issuing the sync after each verb write, as already done for
+AMD and other chipsets.  So this patch enables the write-sync flag for
+the recent Intel chips, Skylake and onward, as a workaround.
 
-Cc: stable@vger.kernel.org
-Reported-by: Zdenek Kabelac <zkabelac@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Also, since Broxton and co have the very same driver flags as Skylake,
+refer to the Skylake driver flags instead of defining the same
+contents again for simplification.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201901
+Reported-and-tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin-metadata.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_intel.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/dm-thin-metadata.c b/drivers/md/dm-thin-metadata.c
-index ed3caceaed07c..6a26afcc1fd6b 100644
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -2001,16 +2001,19 @@ int dm_pool_register_metadata_threshold(struct dm_pool_metadata *pmd,
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 7a3e34b120b33..c3e3d80ff7203 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -329,13 +329,11 @@ enum {
  
- int dm_pool_metadata_set_needs_check(struct dm_pool_metadata *pmd)
- {
--	int r;
-+	int r = -EINVAL;
- 	struct dm_block *sblock;
- 	struct thin_disk_superblock *disk_super;
+ #define AZX_DCAPS_INTEL_SKYLAKE \
+ 	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME |\
++	 AZX_DCAPS_SYNC_WRITE |\
+ 	 AZX_DCAPS_SEPARATE_STREAM_TAG | AZX_DCAPS_I915_COMPONENT |\
+ 	 AZX_DCAPS_I915_POWERWELL)
  
- 	down_write(&pmd->root_lock);
-+	if (pmd->fail_io)
-+		goto out;
-+
- 	pmd->flags |= THIN_METADATA_NEEDS_CHECK_FLAG;
+-#define AZX_DCAPS_INTEL_BROXTON \
+-	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME |\
+-	 AZX_DCAPS_SEPARATE_STREAM_TAG | AZX_DCAPS_I915_COMPONENT |\
+-	 AZX_DCAPS_I915_POWERWELL)
++#define AZX_DCAPS_INTEL_BROXTON			AZX_DCAPS_INTEL_SKYLAKE
  
- 	r = superblock_lock(pmd, &sblock);
- 	if (r) {
--		DMERR("couldn't read superblock");
-+		DMERR("couldn't lock superblock");
- 		goto out;
- 	}
- 
+ /* quirks for ATI SB / AMD Hudson */
+ #define AZX_DCAPS_PRESET_ATI_SB \
 -- 
 2.20.1
 
