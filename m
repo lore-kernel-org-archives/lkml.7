@@ -2,466 +2,297 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC6EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1939DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB9C22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567541382;
-	bh=RWLf+gPj7WvM0+1+ogprzhLiV84KpAxi+upLU/hLfhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lyh3gTaZexzgMr0YKlDkNr819YK2gsFQsqPaHGV1s4hTpeVUz6xbZa4HpGvouVThP
-	 XaEnehj15Uy2Q+B8Bmz3zFTCMxbzdvMgsb0qhCARWsnYP+Ll826//ipbPdz6qeRiAA
-	 IBhn6u8xaUH0hjGxX6YeqT42fsWs4KmJVOjAeA4w=
+	by mail.kernel.org (Postfix) with ESMTP id D34B221883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:11:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qkU5IxFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfICUJl (ORCPT
+        id S1726375AbfICULv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfICUJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:09:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A48D21883;
-        Tue,  3 Sep 2019 20:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567541379;
-        bh=RWLf+gPj7WvM0+1+ogprzhLiV84KpAxi+upLU/hLfhE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NgsNr1ILT5Lxgh8UUAfceJTX2Z56RSAcZ+e7UhF4kYxk3mvX6teYMIhHCrrA3AsTq
-         cwMb7+Hu5jE9YyL5DVA/pUA7zq7m+dHRGbzpqX5M6BFEkoziK+NlpuULh4ZtwAdERI
-         hmVfE+3aRDTYBrysS/YDlNcr4OH7cxiw9a0jA4DA=
-Date:   Tue, 3 Sep 2019 22:09:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: cleanup explicit comparisons to NULL
-Message-ID: <20190903200937.GA18191@kroah.com>
-References: <20190903171337.22889-1-vvidic@valentin-vidic.from.hr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903171337.22889-1-vvidic@valentin-vidic.from.hr>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 3 Sep 2019 16:11:51 -0400
+Received: from mail.efficios.com ([167.114.142.138]:39168 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfICULu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:11:50 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id F320B2B2575;
+        Tue,  3 Sep 2019 16:11:48 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id rvY9gHCSTsx5; Tue,  3 Sep 2019 16:11:48 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 1CF892B2570;
+        Tue,  3 Sep 2019 16:11:48 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1CF892B2570
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1567541508;
+        bh=57WgWCutST52GXRh12pskRN7awprTjq+ZKG/doskusE=;
+        h=From:To:Date:Message-Id;
+        b=qkU5IxFt6HMH0dqvTxgm004rBycM2LaECACvPJ0zi/9ys6zyVv8rPWuUm7Wug0nqh
+         SjHLX3KDgOheZQ3e8km3u/1yw31cTJxRBFscxO2CD7R2eo2jpSlhpQ5/bDU0V5pVlO
+         6/5d3kZDhoSQP/lzx7GoeFozaWY6vd1gH6PIYnu0FkJP8ZnFfqCNJHEpCwskSZr0sN
+         ShsSWt9C3JWSXrHRj5A+ac/UyCtQLdzD5LRjbvAIDlPLK70R0kywTFt1TNNpPlU6/m
+         WFO2fYWBKoom0clHV6dutMGZ3W9OF99byrgsJWOngEGQd1mkNuV7hs6L2x7Ck7olNZ
+         UpYhKTDqnqVzw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id kjCdBeFWk0a8; Tue,  3 Sep 2019 16:11:48 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id BD8BB2B256B;
+        Tue,  3 Sep 2019 16:11:47 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state racy load
+Date:   Tue,  3 Sep 2019 16:11:34 -0400
+Message-Id: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 07:13:37PM +0200, Valentin Vidic wrote:
-> Fixes checkpatch.pl warnings:
-> 
->   CHECK: Comparison to NULL could be written "expr"
->   CHECK: Comparison to NULL could be written "!expr"
-> 
-> Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-> ---
->  drivers/staging/exfat/exfat_core.c  | 34 ++++++++---------
->  drivers/staging/exfat/exfat_super.c | 58 ++++++++++++++---------------
->  2 files changed, 46 insertions(+), 46 deletions(-)
-> 
-> diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-> index 46b9f4455da1..7b39544cdaf1 100644
-> --- a/drivers/staging/exfat/exfat_core.c
-> +++ b/drivers/staging/exfat/exfat_core.c
-> @@ -100,7 +100,7 @@ void fs_set_vol_flags(struct super_block *sb, u32 new_flag)
->  	p_fs->vol_flag = new_flag;
->  
->  	if (p_fs->vol_type == EXFAT) {
-> -		if (p_fs->pbr_bh == NULL) {
-> +		if (!p_fs->pbr_bh) {
->  			if (sector_read(sb, p_fs->PBR_sector,
->  					&p_fs->pbr_bh, 1) != FFS_SUCCESS)
->  				return;
-> @@ -543,7 +543,7 @@ s32 load_alloc_bitmap(struct super_block *sb)
->  				p_fs->vol_amap = kmalloc_array(p_fs->map_sectors,
->  							       sizeof(struct buffer_head *),
->  							       GFP_KERNEL);
-> -				if (p_fs->vol_amap == NULL)
-> +				if (!p_fs->vol_amap)
->  					return FFS_MEMORYERR;
->  
->  				sector = START_SECTOR(p_fs->map_clu);
-> @@ -685,7 +685,7 @@ void sync_alloc_bitmap(struct super_block *sb)
->  	int i;
->  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
->  
-> -	if (p_fs->vol_amap == NULL)
-> +	if (!p_fs->vol_amap)
->  		return;
->  
->  	for (i = 0; i < p_fs->map_sectors; i++)
-> @@ -714,7 +714,7 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
->  
->  	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
->  						GFP_KERNEL);
-> -	if (upcase_table == NULL)
-> +	if (!upcase_table)
->  		return FFS_MEMORYERR;
->  	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
->  
-> @@ -750,11 +750,11 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
->  			else { /* uni != index , uni != 0xFFFF */
->  				u16 col_index = get_col_index(index);
->  
-> -				if (upcase_table[col_index] == NULL) {
-> +				if (!upcase_table[col_index]) {
->  					pr_debug("alloc = 0x%X\n", col_index);
->  					upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
->  						sizeof(u16), GFP_KERNEL);
-> -					if (upcase_table[col_index] == NULL) {
-> +					if (!upcase_table[col_index]) {
->  						ret = FFS_MEMORYERR;
->  						goto error;
->  					}
-> @@ -794,7 +794,7 @@ static s32 __load_default_upcase_table(struct super_block *sb)
->  
->  	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
->  						GFP_KERNEL);
-> -	if (upcase_table == NULL)
-> +	if (!upcase_table)
->  		return FFS_MEMORYERR;
->  	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
->  
-> @@ -812,12 +812,12 @@ static s32 __load_default_upcase_table(struct super_block *sb)
->  		else { /* uni != index , uni != 0xFFFF */
->  			u16 col_index = get_col_index(index);
->  
-> -			if (upcase_table[col_index] == NULL) {
-> +			if (!upcase_table[col_index]) {
->  				pr_debug("alloc = 0x%X\n", col_index);
->  				upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
->  									sizeof(u16),
->  									GFP_KERNEL);
-> -				if (upcase_table[col_index] == NULL) {
-> +				if (!upcase_table[col_index]) {
->  					ret = FFS_MEMORYERR;
->  					goto error;
->  				}
-> @@ -1640,7 +1640,7 @@ struct dentry_t *get_entry_with_sector(struct super_block *sb, sector_t sector,
->  
->  	buf = buf_getblk(sb, sector);
->  
-> -	if (buf == NULL)
-> +	if (!buf)
->  		return NULL;
->  
->  	return (struct dentry_t *)(buf + offset);
-> @@ -1658,10 +1658,10 @@ struct dentry_t *get_entry_in_dir(struct super_block *sb, struct chain_t *p_dir,
->  
->  	buf = buf_getblk(sb, sec);
->  
-> -	if (buf == NULL)
-> +	if (!buf)
->  		return NULL;
->  
-> -	if (sector != NULL)
-> +	if (sector)
->  		*sector = sec;
->  	return (struct dentry_t *)(buf + off);
->  }
-> @@ -1721,7 +1721,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
->  	sec += START_SECTOR(clu);
->  
->  	buf = buf_getblk(sb, sec);
-> -	if (buf == NULL)
-> +	if (!buf)
->  		goto err_out;
->  
->  	ep = (struct dentry_t *)(buf + off);
-> @@ -1741,7 +1741,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
->  	pr_debug("%s: trying to kmalloc %zx bytes for %d entries\n", __func__,
->  		 bufsize, num_entries);
->  	es = kmalloc(bufsize, GFP_KERNEL);
-> -	if (es == NULL)
-> +	if (!es)
->  		goto err_out;
->  
->  	es->num_entries = num_entries;
-> @@ -1820,7 +1820,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
->  				sec++;
->  			}
->  			buf = buf_getblk(sb, sec);
-> -			if (buf == NULL)
-> +			if (!buf)
->  				goto err_out;
->  			off = 0;
->  			ep = (struct dentry_t *)(buf);
-> @@ -1872,7 +1872,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
->  				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
->  				     num_entries);
->  		buf = buf_getblk(sb, sec);
-> -		if (buf == NULL)
-> +		if (!buf)
->  			goto err_out;
->  		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
->  		pr_debug("copying %d entries from %p to sector %llu\n",
-> @@ -2649,7 +2649,7 @@ void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
->  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
->  
->  	es = get_entry_set_in_dir(sb, p_dir, entry, ES_ALL_ENTRIES, &ep);
-> -	if (es == NULL || es->num_entries < 3) {
-> +	if (!es || es->num_entries < 3) {
->  		if (es)
->  			release_entry_set(es);
->  		return;
-> diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-> index 881cd85cf677..8d93403a3308 100644
-> --- a/drivers/staging/exfat/exfat_super.c
-> +++ b/drivers/staging/exfat/exfat_super.c
-> @@ -341,7 +341,7 @@ static int exfat_cmpi(const struct dentry *dentry, unsigned int len,
->  	alen = exfat_striptail_len(name);
->  	blen = __exfat_striptail_len(len, str);
->  	if (alen == blen) {
-> -		if (t == NULL) {
-> +		if (!t) {
->  			if (strncasecmp(name->name, str, alen) == 0)
->  				return 0;
->  		} else if (nls_strnicmp(t, name->name, str, alen) == 0)
-> @@ -587,7 +587,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
->  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
->  
->  	/* check the validity of pointer parameters */
-> -	if (info == NULL)
-> +	if (!info)
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -650,7 +650,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
->  	pr_debug("%s entered\n", __func__);
->  
->  	/* check the validity of pointer parameters */
-> -	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
-> +	if (!fid || !path || (*path == '\0'))
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -743,7 +743,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
->  	int ret;
->  
->  	/* check the validity of pointer parameters */
-> -	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
-> +	if (!fid || !path || (*path == '\0'))
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -788,11 +788,11 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
->  	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
->  
->  	/* check the validity of the given file id */
-> -	if (fid == NULL)
-> +	if (!fid)
->  		return FFS_INVALIDFID;
->  
->  	/* check the validity of pointer parameters */
-> -	if (buffer == NULL)
-> +	if (!buffer)
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -811,7 +811,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
->  		count = fid->size - fid->rwoffset;
->  
->  	if (count == 0) {
-> -		if (rcount != NULL)
-> +		if (rcount)
->  			*rcount = 0;
->  		ret = FFS_EOF;
->  		goto out;
-> @@ -885,7 +885,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
->  /* How did this ever work and not leak a brlse()?? */
->  err_out:
->  	/* set the size of read bytes */
-> -	if (rcount != NULL)
-> +	if (rcount)
->  		*rcount = read_bytes;
->  
->  	if (p_fs->dev_ejected)
-> @@ -917,11 +917,11 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
->  	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
->  
->  	/* check the validity of the given file id */
-> -	if (fid == NULL)
-> +	if (!fid)
->  		return FFS_INVALIDFID;
->  
->  	/* check the validity of pointer parameters */
-> -	if (buffer == NULL)
-> +	if (!buffer)
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -937,7 +937,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
->  		fid->rwoffset = fid->size;
->  
->  	if (count == 0) {
-> -		if (wcount != NULL)
-> +		if (wcount)
->  			*wcount = 0;
->  		ret = FFS_SUCCESS;
->  		goto out;
-> @@ -1096,7 +1096,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
->  	if (p_fs->vol_type == EXFAT) {
->  		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
->  					  ES_ALL_ENTRIES, &ep);
-> -		if (es == NULL)
-> +		if (!es)
->  			goto err_out;
->  		ep2 = ep+1;
->  	} else {
-> @@ -1138,7 +1138,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
->  
->  err_out:
->  	/* set the size of written bytes */
-> -	if (wcount != NULL)
-> +	if (wcount)
->  		*wcount = write_bytes;
->  
->  	if (num_alloced == 0)
-> @@ -1225,7 +1225,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
->  	if (p_fs->vol_type == EXFAT) {
->  		es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
->  					  ES_ALL_ENTRIES, &ep);
-> -		if (es == NULL) {
-> +		if (!es) {
->  			ret = FFS_MEDIAERR;
->  			goto out;
->  			}
-> @@ -1320,11 +1320,11 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
->  	s32 new_entry = 0;
->  
->  	/* check the validity of the given file id */
-> -	if (fid == NULL)
-> +	if (!fid)
->  		return FFS_INVALIDFID;
->  
->  	/* check the validity of pointer parameters */
-> -	if ((new_path == NULL) || (*new_path == '\0'))
-> +	if (!new_path || (*new_path == '\0'))
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -1441,7 +1441,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
->  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
->  
->  	/* check the validity of the given file id */
-> -	if (fid == NULL)
-> +	if (!fid)
->  		return FFS_INVALIDFID;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -1529,7 +1529,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
->  	if (p_fs->vol_type == EXFAT) {
->  		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
->  					  ES_ALL_ENTRIES, &ep);
-> -		if (es == NULL) {
-> +		if (!es) {
->  			ret = FFS_MEDIAERR;
->  			goto out;
->  		}
-> @@ -1645,7 +1645,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
->  	if (p_fs->vol_type == EXFAT) {
->  		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
->  					  ES_2_ENTRIES, &ep);
-> -		if (es == NULL) {
-> +		if (!es) {
->  			ret = FFS_MEDIAERR;
->  			goto out;
->  		}
-> @@ -1769,7 +1769,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
->  	if (p_fs->vol_type == EXFAT) {
->  		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
->  					  ES_ALL_ENTRIES, &ep);
-> -		if (es == NULL) {
-> +		if (!es) {
->  			ret = FFS_MEDIAERR;
->  			goto out;
->  		}
-> @@ -1838,7 +1838,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
->  	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
->  
->  	/* check the validity of pointer parameters */
-> -	if (clu == NULL)
-> +	if (!clu)
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -1922,7 +1922,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
->  		if (p_fs->vol_type == EXFAT) {
->  			es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
->  						  ES_ALL_ENTRIES, &ep);
-> -			if (es == NULL) {
-> +			if (!es) {
->  				ret = FFS_MEDIAERR;
->  				goto out;
->  			}
-> @@ -1990,7 +1990,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
->  	pr_debug("%s entered\n", __func__);
->  
->  	/* check the validity of pointer parameters */
-> -	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
-> +	if (!fid || !path || (*path == '\0'))
->  		return FFS_ERROR;
->  
->  	/* acquire the lock for file system critical section */
-> @@ -2036,7 +2036,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
->  	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
->  
->  	/* check the validity of pointer parameters */
-> -	if (dir_entry == NULL)
-> +	if (!dir_entry)
->  		return FFS_ERROR;
->  
->  	/* check if the given file ID is opened */
-> @@ -2227,7 +2227,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
->  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
->  
->  	/* check the validity of the given file id */
-> -	if (fid == NULL)
-> +	if (!fid)
->  		return FFS_INVALIDFID;
->  
->  	dir.dir = fid->dir.dir;
-> @@ -3115,10 +3115,10 @@ static const char *exfat_get_link(struct dentry *dentry, struct inode *inode,
->  {
->  	struct exfat_inode_info *ei = EXFAT_I(inode);
->  
-> -	if (ei->target != NULL) {
-> +	if (ei->target) {
->  		char *cookie = ei->target;
->  
-> -		if (cookie != NULL)
-> +		if (cookie)
->  			return (char *)(ei->target);
->  	}
->  	return NULL;
-> @@ -3780,7 +3780,7 @@ static int parse_options(char *options, int silent, int *debug,
->  	if (!options)
->  		goto out;
->  
-> -	while ((p = strsep(&options, ",")) != NULL) {
-> +	while (p = strsep(&options, ",")) {
+The membarrier_state field is located within the mm_struct, which
+is not guaranteed to exist when used from runqueue-lock-free iteration
+on runqueues by the membarrier system call.
 
-There was an "extra" set of () in here to keep gcc happy, otherwise we
-now have:
-drivers/staging/exfat/exfat_super.c: In function parse_options:
-drivers/staging/exfat/exfat_super.c:3785:9: warning: suggest parentheses around assignment used as truth value [-Wparentheses]
- 3785 |  while (p = strsep(&options, ",")) {
-      |         ^
+Copy the membarrier_state from the mm_struct into the next task_struct
+in the scheduler prepare task switch. Upon membarrier registration,
+iterate over each runqueue and copy the membarrier_state from the
+mm_struct into all currently running task struct which have the same mm
+as the current task.
 
-So I can't take this patch, sorry.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Chris Metcalf <cmetcalf@ezchip.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Kirill Tkhai <tkhai@yandex.ru>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/sched.h     |  4 ++
+ include/linux/sched/mm.h  | 13 +++++++
+ kernel/sched/core.c       |  1 +
+ kernel/sched/membarrier.c | 78 ++++++++++++++++++++++++++++-----------
+ 4 files changed, 74 insertions(+), 22 deletions(-)
 
-Please fix up and resend.
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9f51932bd543..e24d52a4c37a 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1130,6 +1130,10 @@ struct task_struct {
+ 	unsigned long			numa_pages_migrated;
+ #endif /* CONFIG_NUMA_BALANCING */
+ 
++#ifdef CONFIG_MEMBARRIER
++	atomic_t membarrier_state;
++#endif
++
+ #ifdef CONFIG_RSEQ
+ 	struct rseq __user *rseq;
+ 	u32 rseq_sig;
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 4a7944078cc3..3577cd7b3dbb 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -371,7 +371,17 @@ static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
+ static inline void membarrier_execve(struct task_struct *t)
+ {
+ 	atomic_set(&t->mm->membarrier_state, 0);
++	atomic_set(&t->membarrier_state, 0);
+ }
++
++static inline void membarrier_prepare_task_switch(struct task_struct *t)
++{
++	if (!t->mm)
++		return;
++	atomic_set(&t->membarrier_state,
++		   atomic_read(&t->mm->membarrier_state));
++}
++
+ #else
+ #ifdef CONFIG_ARCH_HAS_MEMBARRIER_CALLBACKS
+ static inline void membarrier_arch_switch_mm(struct mm_struct *prev,
+@@ -386,6 +396,9 @@ static inline void membarrier_execve(struct task_struct *t)
+ static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
+ {
+ }
++static inline void membarrier_prepare_task_switch(struct task_struct *t)
++{
++}
+ #endif
+ 
+ #endif /* _LINUX_SCHED_MM_H */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 010d578118d6..8d4f1f20db15 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3038,6 +3038,7 @@ prepare_task_switch(struct rq *rq, struct task_struct *prev,
+ 	perf_event_task_sched_out(prev, next);
+ 	rseq_preempt(prev);
+ 	fire_sched_out_preempt_notifiers(prev, next);
++	membarrier_prepare_task_switch(next);
+ 	prepare_task(next);
+ 	prepare_arch_switch(next);
+ }
+diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+index aa8d75804108..d564ca1b5d69 100644
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -72,8 +72,8 @@ static int membarrier_global_expedited(void)
+ 
+ 		rcu_read_lock();
+ 		p = task_rcu_dereference(&cpu_rq(cpu)->curr);
+-		if (p && p->mm && (atomic_read(&p->mm->membarrier_state) &
+-				   MEMBARRIER_STATE_GLOBAL_EXPEDITED)) {
++		if (p && (atomic_read(&p->membarrier_state) &
++			  MEMBARRIER_STATE_GLOBAL_EXPEDITED)) {
+ 			if (!fallback)
+ 				__cpumask_set_cpu(cpu, tmpmask);
+ 			else
+@@ -177,6 +177,46 @@ static int membarrier_private_expedited(int flags)
+ 	return 0;
+ }
+ 
++static void sync_other_runqueues_membarrier_state(struct mm_struct *mm)
++{
++	int cpu;
++
++	if (num_online_cpus() == 1)
++		return;
++
++	/*
++	 * For multi-mm user threads, we need to ensure all future scheduler
++	 * executions will observe @mm's new membarrier state.
++	 */
++	synchronize_rcu();
++
++	/*
++	 * For each cpu runqueue (except the current cpu), if the task's mm
++	 * match @mm, ensure that all @mm's membarrier state set bits are also
++	 * set in in the runqueue's current task membarrier state.
++	 *
++	 * Use an atomic_or() to set the task membarrier state, thus ensuring
++	 * this operation is always additive. This is important in case many
++	 * different membarrier registration commands are invoked concurrently,
++	 * given that they do not hold the mmap_sem.
++	 */
++	cpus_read_lock();
++	for_each_online_cpu(cpu) {
++		struct task_struct *p;
++
++		/* Skip current CPU. */
++		if (cpu == raw_smp_processor_id())
++			continue;
++		rcu_read_lock();
++		p = task_rcu_dereference(&cpu_rq(cpu)->curr);
++		if (p && p->mm == mm)
++			atomic_or(atomic_read(&mm->membarrier_state),
++				  &p->membarrier_state);
++		rcu_read_unlock();
++	}
++	cpus_read_unlock();
++}
++
+ static int membarrier_register_global_expedited(void)
+ {
+ 	struct task_struct *p = current;
+@@ -186,6 +226,8 @@ static int membarrier_register_global_expedited(void)
+ 	    MEMBARRIER_STATE_GLOBAL_EXPEDITED_READY)
+ 		return 0;
+ 	atomic_or(MEMBARRIER_STATE_GLOBAL_EXPEDITED, &mm->membarrier_state);
++	atomic_or(MEMBARRIER_STATE_GLOBAL_EXPEDITED, &p->membarrier_state);
++
+ 	if (atomic_read(&mm->mm_users) == 1 && get_nr_threads(p) == 1) {
+ 		/*
+ 		 * For single mm user, single threaded process, we can
+@@ -196,12 +238,7 @@ static int membarrier_register_global_expedited(void)
+ 		 */
+ 		smp_mb();
+ 	} else {
+-		/*
+-		 * For multi-mm user threads, we need to ensure all
+-		 * future scheduler executions will observe the new
+-		 * thread flag state for this mm.
+-		 */
+-		synchronize_rcu();
++		sync_other_runqueues_membarrier_state(mm);
+ 	}
+ 	atomic_or(MEMBARRIER_STATE_GLOBAL_EXPEDITED_READY,
+ 		  &mm->membarrier_state);
+@@ -213,12 +250,14 @@ static int membarrier_register_private_expedited(int flags)
+ {
+ 	struct task_struct *p = current;
+ 	struct mm_struct *mm = p->mm;
+-	int state = MEMBARRIER_STATE_PRIVATE_EXPEDITED_READY;
++	int ready_state = MEMBARRIER_STATE_PRIVATE_EXPEDITED_READY,
++	    set_state = MEMBARRIER_STATE_PRIVATE_EXPEDITED;
+ 
+ 	if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
+ 		if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
+ 			return -EINVAL;
+-		state = MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY;
++		ready_state =
++			MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY;
+ 	}
+ 
+ 	/*
+@@ -226,20 +265,15 @@ static int membarrier_register_private_expedited(int flags)
+ 	 * groups, which use the same mm. (CLONE_VM but not
+ 	 * CLONE_THREAD).
+ 	 */
+-	if (atomic_read(&mm->membarrier_state) & state)
++	if ((atomic_read(&mm->membarrier_state) & ready_state))
+ 		return 0;
+-	atomic_or(MEMBARRIER_STATE_PRIVATE_EXPEDITED, &mm->membarrier_state);
+ 	if (flags & MEMBARRIER_FLAG_SYNC_CORE)
+-		atomic_or(MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE,
+-			  &mm->membarrier_state);
+-	if (!(atomic_read(&mm->mm_users) == 1 && get_nr_threads(p) == 1)) {
+-		/*
+-		 * Ensure all future scheduler executions will observe the
+-		 * new thread flag state for this process.
+-		 */
+-		synchronize_rcu();
+-	}
+-	atomic_or(state, &mm->membarrier_state);
++		set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE;
++	atomic_or(set_state, &mm->membarrier_state);
++	atomic_or(set_state, &p->membarrier_state);
++	if (!(atomic_read(&mm->mm_users) == 1 && get_nr_threads(p) == 1))
++		sync_other_runqueues_membarrier_state(mm);
++	atomic_or(ready_state, &mm->membarrier_state);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
-thanks,
-
-greg k-h
