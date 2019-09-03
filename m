@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734EBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28695C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48565238C5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3669238F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527970;
-	bh=j4U6Ljf6O8MuuDNBh0JD/FTMKkRy5XfBCdGOCI5OmOQ=;
+	s=default; t=1567527973;
+	bh=qUDXs+NRk9kq4QOIe8TO4tnvqCIQP/qICPClCjAc3Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pb6A77UpNq0+JhbZsWxHFu+uzn7a62XKSk4pBlLX7eL92kCuXhsEk+cnw4qsbHnDH
-	 s5Z6FA5Si1rOlYTeii0DX09PK20oXh4p2FtANnmG7W6Cp5Lnp6ZBWS2gGaa/vgAksY
-	 FA7yCVDboltrbLzEZEyUb9tW6R5A3rAzakRjr1oE=
+	b=vS6djtXoHZfnt1eGlGH8G+PkqIxz5B42ldXaMWgYoKTFJDJdqDoD/MrzqAeP3MC7e
+	 qGAMbTeF/KCrA09W/nuRy9YfSj5UvjcGZSi5Bt0PSF+R7pKvIH//NHxL32ZjPY6EtO
+	 Q0ZIr4fc1/WFad10VWipNyjR4DJS/I2ARDNXAOHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfICQ0J (ORCPT
+        id S1729873AbfICQ0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbfICQZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:53 -0400
+        id S1730103AbfICQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16DFD2343A;
-        Tue,  3 Sep 2019 16:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A4823717;
+        Tue,  3 Sep 2019 16:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527952;
-        bh=j4U6Ljf6O8MuuDNBh0JD/FTMKkRy5XfBCdGOCI5OmOQ=;
+        s=default; t=1567527953;
+        bh=qUDXs+NRk9kq4QOIe8TO4tnvqCIQP/qICPClCjAc3Kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjqJpx0pChAiv26AZgrp2JFSRchiyz2tduBiAVRFtf9EcAnBLWaOOebesqW/8+NYC
-         EZZ7rP0xHAAhp7DurgqYX7PGqRmIaIEw2tRxj2KoSzG0c6AydKmsASvxZsBbNcRsVH
-         /uBRXRBztNqNo6FatH4A9rcKP8SoWYJJaZCYivZ0=
+        b=dmWpGoTvgLAU39UmPomTJN0cDldoLCAmFcFhgkXF/7hPqzeFCfo3PQRxaknskDlvn
+         Hki1MiXQwZ3+1HJnxHqOT1rGq97dGgDqNrI/u7C8w+OyvENyYaklTy2tyfYXpKuxrv
+         g9oavyA++9iG5MnftRgY0vzrVhW1kh7DmUNcHTq4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, ronald@innovation.ch,
+Cc:     Lyude Paul <lyude@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Sasha Levin <sashal@kernel.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 018/167] drm/i915/gen9+: Fix initial readout for Y tiled framebuffers
-Date:   Tue,  3 Sep 2019 12:22:50 -0400
-Message-Id: <20190903162519.7136-18-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 019/167] drm/atomic_helper: Disallow new modesets on unregistered connectors
+Date:   Tue,  3 Sep 2019 12:22:51 -0400
+Message-Id: <20190903162519.7136-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,89 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 914a4fd8cd28016038ce749a818a836124a8d270 ]
+[ Upstream commit 4d80273976bf880c4bed9359b8f2d45663140c86 ]
 
-If BIOS configured a Y tiled FB we failed to set up the backing object
-tiling accordingly, leading to a lack of GT fence installed and a
-garbled console.
+With the exception of modesets which would switch the DPMS state of a
+connector from on to off, we want to make sure that we disallow all
+modesets which would result in enabling a new monitor or a new mode
+configuration on a monitor if the connector for the display in question
+is no longer registered. This allows us to stop userspace from trying to
+enable new displays on connectors for an MST topology that were just
+removed from the system, without preventing userspace from disabling
+DPMS on those connectors.
 
-The problem was bisected to
-commit 011f22eb545a ("drm/i915: Do NOT skip the first 4k of stolen memory for pre-allocated buffers v2")
-but it just revealed a pre-existing issue.
+Changes since v5:
+- Fix typo in comment, nothing else
 
-Kudos to Ville who suspected a missing fence looking at the corruption
-on the screen.
-
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: <ronald@innovation.ch>
-Cc: <stable@vger.kernel.org>
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reported-by: <ronald@innovation.ch>
-Tested-by: <ronald@innovation.ch>
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108264
-Fixes: bc8d7dffacb1 ("drm/i915/skl: Provide a Skylake version of get_plane_config()")
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181016160011.28347-1-imre.deak@intel.com
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: stable@vger.kernel.org
+Link: https://patchwork.freedesktop.org/patch/msgid/20181008232437.5571-2-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_display.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_atomic_helper.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index f5367bdc04049..2622dfc7d2d9a 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -2712,6 +2712,17 @@ intel_alloc_initial_plane_obj(struct intel_crtc *crtc,
- 	if (size_aligned * 2 > dev_priv->stolen_usable_size)
- 		return false;
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index c22062cc99923..71c70a031a043 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -307,6 +307,26 @@ update_connector_routing(struct drm_atomic_state *state,
+ 		return 0;
+ 	}
  
-+	switch (fb->modifier) {
-+	case DRM_FORMAT_MOD_LINEAR:
-+	case I915_FORMAT_MOD_X_TILED:
-+	case I915_FORMAT_MOD_Y_TILED:
-+		break;
-+	default:
-+		DRM_DEBUG_DRIVER("Unsupported modifier for initial FB: 0x%llx\n",
-+				 fb->modifier);
-+		return false;
++	crtc_state = drm_atomic_get_new_crtc_state(state,
++						   new_connector_state->crtc);
++	/*
++	 * For compatibility with legacy users, we want to make sure that
++	 * we allow DPMS On->Off modesets on unregistered connectors. Modesets
++	 * which would result in anything else must be considered invalid, to
++	 * avoid turning on new displays on dead connectors.
++	 *
++	 * Since the connector can be unregistered at any point during an
++	 * atomic check or commit, this is racy. But that's OK: all we care
++	 * about is ensuring that userspace can't do anything but shut off the
++	 * display on a connector that was destroyed after its been notified,
++	 * not before.
++	 */
++	if (!READ_ONCE(connector->registered) && crtc_state->active) {
++		DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] is not registered\n",
++				 connector->base.id, connector->name);
++		return -EINVAL;
 +	}
 +
- 	mutex_lock(&dev->struct_mutex);
- 	obj = i915_gem_object_create_stolen_for_preallocated(dev_priv,
- 							     base_aligned,
-@@ -2721,8 +2732,17 @@ intel_alloc_initial_plane_obj(struct intel_crtc *crtc,
- 	if (!obj)
- 		return false;
+ 	funcs = connector->helper_private;
  
--	if (plane_config->tiling == I915_TILING_X)
--		obj->tiling_and_stride = fb->pitches[0] | I915_TILING_X;
-+	switch (plane_config->tiling) {
-+	case I915_TILING_NONE:
-+		break;
-+	case I915_TILING_X:
-+	case I915_TILING_Y:
-+		obj->tiling_and_stride = fb->pitches[0] | plane_config->tiling;
-+		break;
-+	default:
-+		MISSING_CASE(plane_config->tiling);
-+		return false;
-+	}
+ 	if (funcs->atomic_best_encoder)
+@@ -351,7 +371,6 @@ update_connector_routing(struct drm_atomic_state *state,
  
- 	mode_cmd.pixel_format = fb->format->format;
- 	mode_cmd.width = fb->width;
-@@ -8812,6 +8832,7 @@ skylake_get_initial_plane_config(struct intel_crtc *crtc,
- 		fb->modifier = I915_FORMAT_MOD_X_TILED;
- 		break;
- 	case PLANE_CTL_TILED_Y:
-+		plane_config->tiling = I915_TILING_Y;
- 		if (val & PLANE_CTL_RENDER_DECOMPRESSION_ENABLE)
- 			fb->modifier = I915_FORMAT_MOD_Y_TILED_CCS;
- 		else
+ 	set_best_encoder(state, new_connector_state, new_encoder);
+ 
+-	crtc_state = drm_atomic_get_new_crtc_state(state, new_connector_state->crtc);
+ 	crtc_state->connectors_changed = true;
+ 
+ 	DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] using [ENCODER:%d:%s] on [CRTC:%d:%s]\n",
 -- 
 2.20.1
 
