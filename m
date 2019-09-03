@@ -2,149 +2,121 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96363C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EBCC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1C1215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15ED22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="h45CkPWo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WECgJvE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfICGV5 (ORCPT
+        id S1727298AbfICGV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:21:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62070 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfICGV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:21:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46MxgQ3B6xzB09ZG;
-        Tue,  3 Sep 2019 08:21:54 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=h45CkPWo; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PtKxy15SB0Br; Tue,  3 Sep 2019 08:21:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46MxgQ1prczB09ZC;
-        Tue,  3 Sep 2019 08:21:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567491714; bh=h5hnU1hsq4biEly8U4JQAFzas83dMfNa9k2nCVtK7tY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h45CkPWoTzyoKFVn9Nc2M8HOq5pLKsqSVRdHx2mrovdONdgHRr0tMeGiyQLfJagB6
-         w5OqF7hKXVCWMK3h+NHD+9raP2qPJa31UY1nZcI0+gjCvdXJFMDNlwmvQadEj/sd9r
-         bG/ibTuw/ulnmma6iBpuJZaUUl8VLO6PKHwxViiU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 234418B7A3;
-        Tue,  3 Sep 2019 08:21:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GESt_EghkgFG; Tue,  3 Sep 2019 08:21:55 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDD568B761;
-        Tue,  3 Sep 2019 08:21:53 +0200 (CEST)
-Subject: Re: [PATCH v2 5/6] powerpc: Remove 'extern' from func prototypes in
- cache headers
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190903052407.16638-1-alastair@au1.ibm.com>
- <20190903052407.16638-6-alastair@au1.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <1a59f400-7e04-ef34-9b9e-eb5143fe261c@c-s.fr>
-Date:   Tue, 3 Sep 2019 08:21:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 02:21:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34873 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfICGV6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:21:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n10so6007776wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=yGyIrrLARg5qwoC8MjSZ4CSFbPrX3vElTlOaYxFgRnQ=;
+        b=WECgJvE2QdLRhFj3i4AxCxgR1vpUfhF1VNqwGZrLdkOacFB3XcpZNKbAF3NPedfZ/9
+         NBL/hguADRwjl3TUHJEJH0iVlHeLIR4wEQwX2cSmF6t8kcuSlI4rmHAOymYXKvv3tYY2
+         w0Wt4JwGqayHRUygZM/OOR7JTKFcpDZ745eZFw2fInD7Z0RvyY0IqhSWczFLRF3LEOyq
+         6QKJzl3cJs5W83haW4N35dmVvoJWgr0cK4u5ldys+zILBsGfeAIJS5o7Yg70dH+Mw/eH
+         tHzP7IJmd7dBNszmnvjZvVfwOEWtD9w0hV2ZrcLP2P/xH2smB/BG3P1QGDaGfyLNV0vB
+         hUQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=yGyIrrLARg5qwoC8MjSZ4CSFbPrX3vElTlOaYxFgRnQ=;
+        b=JUmMo10liUY9/PnToZKoNckcpuDZ7qYsG6r8FrnOO9mDWVE7tNYSq8kClzbMDLIBDt
+         h1rdHCi9YPCWTCMGpQkhnYADu5et5p3Fhiom7GDfoZxDbTVAV3EdgifEi+6skbyconEx
+         s9Mjqxq75mf/0oKThiJxy8CWmO6TZIPEXB/3ec9PuTkDAtn3jprEmfOTIR9sQt8W9Fbe
+         FzlvwZLgVitji4LE22PO3d3lTHnpFRXMc3e76exX2SWeP/GcsYFo7I9Lbb5gkUEq+Hvg
+         QQ1/ovG1/60RmC0iWHkvxCy4ZNBaZDq0x45FMPINUAlxBxMmJVhAzK15BpMe+snerDYH
+         e2Rw==
+X-Gm-Message-State: APjAAAW55WQWGgrrEhrcCfC3tQDii9Fl8Pkn+n+pCRmiG2JH1FC2iybg
+        M/U3l5GJgvlFnISKgOZzjsvo6Q==
+X-Google-Smtp-Source: APXvYqzO8/MDChhFJYV9n2Mdiniy4ia5sEDZAcYL4Cu8Zn76jxIlVNCV1TBkQZbX2z2LJb8KuGs6CQ==
+X-Received: by 2002:a7b:c5d6:: with SMTP id n22mr23766517wmk.65.1567491715654;
+        Mon, 02 Sep 2019 23:21:55 -0700 (PDT)
+Received: from dell ([95.147.198.93])
+        by smtp.gmail.com with ESMTPSA id c132sm21978999wme.27.2019.09.02.23.21.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Sep 2019 23:21:55 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 07:21:53 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Message-ID: <20190903062153.GD26880@dell>
+References: <20190902132400.14084-1-lee.jones@linaro.org>
+ <20190903054451.GV6167@minitux>
+ <20190903062040.GC26880@dell>
 MIME-Version: 1.0
-In-Reply-To: <20190903052407.16638-6-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903062040.GC26880@dell>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 03 Sep 2019, Lee Jones wrote:
 
-
-Le 03/09/2019 à 07:23, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+> On Mon, 02 Sep 2019, Bjorn Andersson wrote:
 > 
-> The 'extern' keyword does not value-add for function prototypes.
-
-Is it worth it ? That kind of change is nice cleanup but the drawback is 
-to kill automatic backports of fixes.
-
+> > On Mon 02 Sep 06:24 PDT 2019, Lee Jones wrote:
+> > 
+> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > 
+> > > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+> > > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+> > > 
+> > > Supported by this patch is: keyboard, battery monitoring, UFS storage,
+> > > USB host and Bluetooth.
+> > 
+> > Applied this to next-20190829 and booted it, got a little bit of EFI FB,
+> > then the screen goes blank and after a while I'm back in GRUB.
+> > 
+> > I've not been able to figure out what's causing this though.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/include/asm/cache.h      | 8 ++++----
->   arch/powerpc/include/asm/cacheflush.h | 6 +++---
->   2 files changed, 7 insertions(+), 7 deletions(-)
+> Probably DMA.  There is still an issue in the COM GENI Serial Engine
+> Driver which reboots the system when a DMA transaction is initiated.
 > 
-> diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
-> index 91c808c6738b..54fffdf5a6ec 100644
-> --- a/arch/powerpc/include/asm/cache.h
-> +++ b/arch/powerpc/include/asm/cache.h
-> @@ -102,10 +102,10 @@ static inline u32 l1_icache_bytes(void)
->   #define __read_mostly __attribute__((__section__(".data..read_mostly")))
->   
->   #ifdef CONFIG_PPC_BOOK3S_32
-> -extern long _get_L2CR(void);
-> -extern long _get_L3CR(void);
-> -extern void _set_L2CR(unsigned long);
-> -extern void _set_L3CR(unsigned long);
-> +long _get_L2CR(void);
-> +long _get_L3CR(void);
-> +void _set_L2CR(unsigned long val);
-> +void _set_L3CR(unsigned long val);
->   #else
->   #define _get_L2CR()	0L
->   #define _get_L3CR()	0L
-> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
-> index 4a1c9f0200e1..fa10dc19206c 100644
-> --- a/arch/powerpc/include/asm/cacheflush.h
-> +++ b/arch/powerpc/include/asm/cacheflush.h
-> @@ -38,15 +38,15 @@ static inline void flush_cache_vmap(unsigned long start, unsigned long end) { }
->   #endif
->   
->   #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
-> -extern void flush_dcache_page(struct page *page);
-> +void flush_dcache_page(struct page *page);
->   #define flush_dcache_mmap_lock(mapping)		do { } while (0)
->   #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
->   
->   void flush_icache_range(unsigned long start, unsigned long stop);
-> -extern void flush_icache_user_range(struct vm_area_struct *vma,
-> +void flush_icache_user_range(struct vm_area_struct *vma,
->   				    struct page *page, unsigned long addr,
->   				    int len);
-
-You have to re-align the other parameters to the ( of the first line.
-
-> -extern void flush_dcache_icache_page(struct page *page);
-> +void flush_dcache_icache_page(struct page *page);
->   void __flush_dcache_icache(void *page);
->   
->   /**
+> However, with a workaround patch applied to the Serial Engine driver
+> (drivers/soc/qcom/qcom-geni-se.c) this DTS has no issue booting the
+> system.
 > 
+> We have ~12 weeks to either fix or elegantly work around the Serial
+> Engine issue.  IMHO is makes no sense to hold back this enablement
+> patch (which cannot go in via the -rcs) for something which is likely
+> to be fixed and applied during v3.4-rcX.
 
-Christophe
+NB: If you're worried about other entities thinking the platform boots
+fault free due to this DTS patch being applied, I would suggest we
+place a little "NB:" note in the changelog to explain the situation.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
