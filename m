@@ -2,145 +2,163 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1851AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A13C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA55217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UMkvzjLs"
+	by mail.kernel.org (Postfix) with ESMTP id 74F5122CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfICK6d (ORCPT
+        id S1728893AbfICK6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:58:33 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33732 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbfICK6c (ORCPT
+        Tue, 3 Sep 2019 06:58:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47457 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfICK6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:58:32 -0400
-Received: by mail-ed1-f66.google.com with SMTP id o9so6545412edq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 03:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1fmMyGS0tNg2ZrUjMXrQHItun5hzN9B9+GAHYDnxm80=;
-        b=UMkvzjLsCC2sjAxyLFkC+oxnIHOCVIrCP8LNWhgtHwHfHVoDJNqWNA1lb/Wtp8jGo2
-         GCGAA8VSliVvR7CFYm9CMTgUUn06B+IoCzWE6JtVQRmjVzPXu3RQfegMMdsswRxHLQfT
-         B+9IEE/xV2uvU/uuhS+1E9HVKQPPbYYMvBYLQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=1fmMyGS0tNg2ZrUjMXrQHItun5hzN9B9+GAHYDnxm80=;
-        b=sCnTtgxhfZj/ejwq7JuHhvxqRTv342Ull1/1HpJhp9Tv4NQTla268fgXvyK/KyI0Zh
-         plyUL90ywt1JC6HBOkdIOcQS3Jw7VvCFu0ucwiRYK3XCm8dIg9dfH8rw03Cghld83k45
-         AkKT+MMU33Q+HtjUbqwQ4XRYv6FkLCVIhQf3HuJeZMPqDaANrorYb1J+ZaE9JhP3ZWZv
-         VTlFIy+5lik8kfI+TvhhhUmdjfMnzWGzgBcVcfP2k0FQo0BPKlegWj7QsLESa8F5YCwt
-         iAUtICvmPHzRF+xrfpIADYV99oFPG2gnwxb7UAxYrvSTJA1zPTcs+6AI/0UssmBJlcTH
-         oOvQ==
-X-Gm-Message-State: APjAAAVtXhzMuWq+jdk7+Fc0izOryMhnognGaPnFKXhlVHIjv2IPpoa3
-        D0rt5pp8DG1Fv+tdsT29ScJ7Qg==
-X-Google-Smtp-Source: APXvYqw5isHmx06+1+EN3i1c9akHWdMgAFkS8ga2Hxp68Sh6sDTlsUNHiff4YPNE1vu4FjaDz+IcUQ==
-X-Received: by 2002:a17:906:ce48:: with SMTP id se8mr22871363ejb.98.1567508310915;
-        Tue, 03 Sep 2019 03:58:30 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id p11sm146389edh.77.2019.09.03.03.58.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 03:58:30 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 12:58:28 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] drm/vram: use drm_gem_ttm_print_info
-Message-ID: <20190903105828.GW2112@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190903101248.12879-1-kraxel@redhat.com>
- <20190903101248.12879-4-kraxel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903101248.12879-4-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 3 Sep 2019 06:58:44 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i56WC-0006J1-Qf; Tue, 03 Sep 2019 12:58:36 +0200
+Message-ID: <1567508315.5229.3.camel@pengutronix.de>
+Subject: Re: [PATCH 03/12] media: hantro: Fix H264 motion vector buffer
+ offset
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 03 Sep 2019 12:58:35 +0200
+In-Reply-To: <HE1PR06MB40115337CD86C429EF24430CACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB40115337CD86C429EF24430CACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 12:12:45PM +0200, Gerd Hoffmann wrote:
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+Hi Jonas,
+
+On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:
+> A decoded 8-bit 4:2:0 frame need memory for up to 448 macroblocks
+> and is laid out in memory as follow:
+
+Do you mean "A decoded 8-bit 4:2:0 frame needs up to 448 bytes per
+macroblock"?
+
+A 1280x720 frame already consists of 3600 macroblocks (each 16x16 Y +
+2x8x8 Cb,Cr).
+
+> +-------------------+
+> > Y-plane   256 MBs |
+
+So that looks like it should be 256 bytes * number of macroblocks
+instead, same for the following two.
+
+> +-------------------+
+> > UV-plane  128 MBs |
+> +-------------------+
+> > MV buffer  64 MBs |
+> 
+> +-------------------+
+>
+> The motion vector buffer offset is currently correct for 4:2:0 because
+> the extra space for motion vectors is overallocated with an extra 64 MBs.
+> 
+> Wrong offset for both destination and motion vector buffer are used
+> for the bottom field of field encoded content, wrong offset is
+> also used for 4:0:0 (monochrome) content.
+> 
+> Fix this by always setting the motion vector address to the expected
+> 384 MBs offset for 4:2:0 and 256 MBs offset for 4:0:0 content.
+
+Expected by whom? For example, could these be placed in separate buffers
+instead of appended to the VB2 allocated buffers?
+
+> Also use correct destination and motion vector buffer offset
+> for the bottom field of field encoded content.
+> 
+> While at it also extend the check for 4:0:0 (monochrome) to include an
+> additional check for High Profile (100).
+> 
+> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 > ---
->  drivers/gpu/drm/drm_gem_vram_helper.c | 4 +++-
->  drivers/gpu/drm/Kconfig               | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
+>  .../staging/media/hantro/hantro_g1_h264_dec.c | 33 +++++++++++--------
+>  1 file changed, 19 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-> index fd751078bae1..71552f757b4a 100644
-> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-or-later
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 7ab534936843..159bd67e0a36 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -19,6 +19,9 @@
+>  #include "hantro_hw.h"
+>  #include "hantro_v4l2.h"
 >  
-> +#include <drm/drm_gem_ttm_helper.h>
->  #include <drm/drm_gem_vram_helper.h>
->  #include <drm/drm_device.h>
->  #include <drm/drm_mode.h>
-> @@ -633,5 +634,6 @@ static const struct drm_gem_object_funcs drm_gem_vram_object_funcs = {
->  	.pin	= drm_gem_vram_object_pin,
->  	.unpin	= drm_gem_vram_object_unpin,
->  	.vmap	= drm_gem_vram_object_vmap,
-> -	.vunmap	= drm_gem_vram_object_vunmap
-> +	.vunmap	= drm_gem_vram_object_vunmap,
-> +	.print_info = drm_gem_ttm_print_info,
-
-Yeah definitely link to the new way of doing stuff in the kerneldoc of the
-previous patch. For this.
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
->  };
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index f7b25519f95c..1be8ad30d8fe 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -169,6 +169,7 @@ config DRM_VRAM_HELPER
->  	tristate
->  	depends on DRM
->  	select DRM_TTM
-> +	select DRM_TTM_HELPER
-
-Select isn't recursive, which means anyone who selects vram helpers now
-also needs to select ttm helpers. This is already broken with DRM_TTM I
-think ...
--Daniel
-
-
->  	help
->  	  Helpers for VRAM memory management
+> +#define MV_OFFSET_420	384
+> +#define MV_OFFSET_400	256
+> +
+>  static void set_params(struct hantro_ctx *ctx)
+>  {
+>  	const struct hantro_h264_dec_ctrls *ctrls = &ctx->h264_dec.ctrls;
+> @@ -49,8 +52,8 @@ static void set_params(struct hantro_ctx *ctx)
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
 >  
-> -- 
-> 2.18.1
-> 
+>  	/* Decoder control register 1. */
+> -	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(sps->pic_width_in_mbs_minus1 + 1) |
+> -	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(sps->pic_height_in_map_units_minus1 + 1) |
+> +	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(H264_MB_WIDTH(ctx->dst_fmt.width)) |
+> +	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(H264_MB_HEIGHT(ctx->dst_fmt.height)) |
+>  	      G1_REG_DEC_CTRL1_REF_FRAMES(sps->max_num_ref_frames);
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
+>  
+> @@ -79,7 +82,7 @@ static void set_params(struct hantro_ctx *ctx)
+>  		reg |= G1_REG_DEC_CTRL4_CABAC_E;
+>  	if (sps->flags & V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE)
+>  		reg |= G1_REG_DEC_CTRL4_DIR_8X8_INFER_E;
+> -	if (sps->chroma_format_idc == 0)
+> +	if (sps->profile_idc >= 100 && sps->chroma_format_idc == 0)
+>  		reg |= G1_REG_DEC_CTRL4_BLACKWHITE_E;
+>  	if (pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED)
+>  		reg |= G1_REG_DEC_CTRL4_WEIGHT_PRED_E;
+> @@ -233,6 +236,7 @@ static void set_buffers(struct hantro_ctx *ctx)
+>  	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+>  	struct hantro_dev *vpu = ctx->dev;
+>  	dma_addr_t src_dma, dst_dma;
+> +	unsigned int offset = MV_OFFSET_420;
+>  
+>  	src_buf = hantro_get_src_buf(ctx);
+>  	dst_buf = hantro_get_dst_buf(ctx);
+> @@ -243,19 +247,20 @@ static void set_buffers(struct hantro_ctx *ctx)
+>  
+>  	/* Destination (decoded frame) buffer. */
+>  	dst_dma = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+> +	if (ctrls->slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> +		dst_dma += ALIGN(ctx->dst_fmt.width, H264_MB_DIM);
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+How does this work? Does userspace decode two fields into the same
+capture buffer and the hardware writes each field with a stride of 2
+lines? I suppose this corresponds to V4L2_FIELD_INTERLACED. Could this
+also be made to support V4L2_FIELD_SEQ_TB output?
+
+regards
+Philipp
