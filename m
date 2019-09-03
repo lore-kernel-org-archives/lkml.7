@@ -2,134 +2,158 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F16C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0947FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE3A22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YuGW0e5H"
+	by mail.kernel.org (Postfix) with ESMTP id DCE3322CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfICQwK (ORCPT
+        id S1729953AbfICQxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:52:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39237 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbfICQwK (ORCPT
+        Tue, 3 Sep 2019 12:53:45 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:18166 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbfICQxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:52:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s12so4141073pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=h8ngCQI7EcgQWs7APOFWbvcG4aSSwNLHZV1kuBNnkzI=;
-        b=YuGW0e5HrYZ6b94ppeM5MXTtua4CcL16l3ub8KkaJuMmVJgtVIA/KuvNZdHKhrB1aP
-         b3xLah9iPDQQvqGgTvGVB8dqgoQ9yfLVsPeFjXoqLZvmFulF6BltLka8xKVVoApPI6WU
-         4RodOC944LFAyTo5JOofVH8PPXRQOMmmtgcaA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=h8ngCQI7EcgQWs7APOFWbvcG4aSSwNLHZV1kuBNnkzI=;
-        b=CF8ppEGKmckKAPUsFp3TEr0iOl7vW8gQlavzf65aGRq3Xa4o6JnTjpofRiyaugfIqw
-         sVAuX7lU4sEELBS5cqjxGXthhcGzo/lfdzG1p/cFBszyy7A5AHK5liSn1y/BHAD56ff5
-         QZnzb9qgeDPmgzwSO6ORJ0gCLxYcYIEVNgo3ZBaIjRtu3tXRU+LeUH12LX9p/BKlicYc
-         BKsfz+R5tM8X/cWumlOpL14T3vV7ryGnXUmkMQefVKmQduWjH/pZR3xF6YqWGROSrDDn
-         sq3nIE6bi/9mZjh1iGQ0jidg3TBImEpTjEL6Lamq6ScVeIc/QLkyLb2DATL6N4jHcXyE
-         +n3g==
-X-Gm-Message-State: APjAAAVrxY+uBZfLOEx6y7oSBN3os7//2w/Vw24HJbLPjDttXzyBqGKD
-        gB1+DADXp78KjK5RzgUj7r/uCu2824/mMQ==
-X-Google-Smtp-Source: APXvYqwtlv4autqI3NKfe7BRjyKjRftw9BYTCaZgTZpqVeHhpReslgkrKgkusl97Sb4RiFhhgxGohA==
-X-Received: by 2002:a63:ee08:: with SMTP id e8mr31805414pgi.70.1567529529306;
-        Tue, 03 Sep 2019 09:52:09 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v12sm16966488pff.40.2019.09.03.09.52.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 09:52:08 -0700 (PDT)
-Message-ID: <5d6e9a38.1c69fb81.ad03c.cb4c@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 3 Sep 2019 12:53:44 -0400
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x83GrQDM037052;
+        Wed, 4 Sep 2019 01:53:26 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
+ Wed, 04 Sep 2019 01:53:26 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
+Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x83GrNwl037038
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 4 Sep 2019 01:53:25 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Mark Brown <broonie@kernel.org>,
+        David Yang <yangxiaohua@everest-semi.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH v3 2/4] ASoC: es8316: add clock control of MCLK
+Date:   Wed,  4 Sep 2019 01:53:20 +0900
+Message-Id: <20190903165322.20791-2-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190903165322.20791-1-katsuhiro@katsuster.net>
+References: <20190903165322.20791-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a950f3986375ee4893dff156dc2f9554338c27d8.camel@linux.intel.com>
-References: <20190829224110.91103-1-swboyd@chromium.org> <20190829224110.91103-5-swboyd@chromium.org> <a950f3986375ee4893dff156dc2f9554338c27d8.camel@linux.intel.com>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v6 4/4] tpm: tpm_tis_spi: Support cr50 devices
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 03 Sep 2019 09:52:07 -0700
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jarkko Sakkinen (2019-09-03 09:39:51)
-> On Thu, 2019-08-29 at 15:41 -0700, Stephen Boyd wrote:
-> > From: Andrey Pronin <apronin@chromium.org>
-> >=20
-> > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> > firmware. The firmware running on the currently supported H1 Secure
-> > Microcontroller requires a special driver to handle its specifics:
-> >=20
-> >  - need to ensure a certain delay between SPI transactions, or else
-> >    the chip may miss some part of the next transaction
-> >  - if there is no SPI activity for some time, it may go to sleep,
-> >    and needs to be waken up before sending further commands
-> >  - access to vendor-specific registers
-> >=20
-> > Cr50 firmware has a requirement to wait for the TPM to wakeup before
-> > sending commands over the SPI bus. Otherwise, the firmware could be in
-> > deep sleep and not respond. The method to wait for the device to wakeup
-> > is slightly different than the usual flow control mechanism described in
-> > the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
-> > start a SPI transfer so we can keep track of the last time the TPM
-> > driver accessed the SPI bus to support the flow control mechanism.
-> >=20
-> > Split the cr50 logic off into a different file to keep it out of the
-> > normal code flow of the existing SPI driver while making it all part of
-> > the same module when the code is optionally compiled into the same
-> > module. Export a new function, tpm_tis_spi_init(), and the associated
-> > read/write/transfer APIs so that we can do this. Make the cr50 code wrap
-> > the tpm_tis_spi_phy struct with its own struct to override the behavior
-> > of tpm_tis_spi_transfer() by supplying a custom flow control hook. This
-> > shares the most code between the core driver and the cr50 support
-> > without combining everything into the core driver or exporting module
-> > symbols.
-> >=20
-> > Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> > Cc: Andrey Pronin <apronin@chromium.org>
-> > Cc: Duncan Laurie <dlaurie@chromium.org>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Guenter Roeck <groeck@chromium.org>
-> > Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
->=20
-> Had to time to look at this patch set after all before LPC. I just
-> realized that the kconfig has taken away. Not sure why is that
-> because there's been only request to not have a new LKM. There
-> still should be ability opt-out to have Cr50 support in vmlinux.
->=20
+This patch introduce clock property for MCLK master freq control.
+Driver will set rate of MCLK master if set_sysclk is called and
+changing sysclk by board driver.
 
-That's fair. I'll put the Kconfig option back. There's still the small
-issue of what to do about the module name. Should I rename the
-tpm_tis_spi.c file to something else so that the module can keep the
-same name? Or was the tpm_tis_spi_mod.ko trick from v5 good enough?
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+
+---
+
+Changes from v1:
+  - Output logs if clock error is found
+  - Disable and unprepare mclk when remove this driver
+---
+ sound/soc/codecs/es8316.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index 229808fa627c..ab41f2c056bd 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/acpi.h>
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/mod_devicetable.h>
+@@ -33,6 +34,7 @@ static const unsigned int supported_mclk_lrck_ratios[] = {
+ 
+ struct es8316_priv {
+ 	struct mutex lock;
++	struct clk *mclk;
+ 	struct regmap *regmap;
+ 	struct snd_soc_component *component;
+ 	struct snd_soc_jack *jack;
+@@ -363,12 +365,19 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+ {
+ 	struct snd_soc_component *component = codec_dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
++	int ret;
+ 
+ 	es8316->sysclk = freq;
+ 
+ 	if (freq == 0)
+ 		return 0;
+ 
++	if (es8316->mclk) {
++		ret = clk_set_rate(es8316->mclk, freq);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -693,9 +702,26 @@ static int es8316_set_jack(struct snd_soc_component *component,
+ static int es8316_probe(struct snd_soc_component *component)
+ {
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
++	int ret;
+ 
+ 	es8316->component = component;
+ 
++	es8316->mclk = devm_clk_get(component->dev, "mclk");
++	if (PTR_ERR(es8316->mclk) == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++	if (IS_ERR(es8316->mclk)) {
++		dev_err(component->dev, "clock is invalid, ignored\n");
++		es8316->mclk = NULL;
++	}
++
++	if (es8316->mclk) {
++		ret = clk_prepare_enable(es8316->mclk);
++		if (ret) {
++			dev_err(component->dev, "unable to enable clock\n");
++			return ret;
++		}
++	}
++
+ 	/* Reset codec and enable current state machine */
+ 	snd_soc_component_write(component, ES8316_RESET, 0x3f);
+ 	usleep_range(5000, 5500);
+@@ -718,8 +744,17 @@ static int es8316_probe(struct snd_soc_component *component)
+ 	return 0;
+ }
+ 
++static void es8316_remove(struct snd_soc_component *component)
++{
++	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
++
++	if (es8316->mclk)
++		clk_disable_unprepare(es8316->mclk);
++}
++
+ static const struct snd_soc_component_driver soc_component_dev_es8316 = {
+ 	.probe			= es8316_probe,
++	.remove			= es8316_remove,
+ 	.set_jack		= es8316_set_jack,
+ 	.controls		= es8316_snd_controls,
+ 	.num_controls		= ARRAY_SIZE(es8316_snd_controls),
+-- 
+2.23.0.rc1
 
