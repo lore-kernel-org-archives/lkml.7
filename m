@@ -2,246 +2,72 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 536B1C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81537C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223DA2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528857;
-	bh=rGd/jhcohvfr33CDRbiPtj5fZm7BrKnfFVmg+V1ROq8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x05PiBeHIMQFYI8PFlczeoUmIUJgphuj5N1tGpUQ/fAaDhdyj+V9z/2MeGZd9QROP
-	 GqH6SEUkqdJei3CmwJ/+ENiKxB7/4RqgjJ3V6m0wlVJhCF6yYKl2Tw7hOPVm/IFSDo
-	 wwHiVIGwQ4Y9cdGIVu017biedNzMGTjBl8SdZVao=
+	by mail.kernel.org (Postfix) with ESMTP id 5F863233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbfICQY7 (ORCPT
+        id S1730770AbfICQlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:41:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46290 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729692AbfICQY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:24:56 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730072AbfICQlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:41:08 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7180D23431;
-        Tue,  3 Sep 2019 16:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527895;
-        bh=rGd/jhcohvfr33CDRbiPtj5fZm7BrKnfFVmg+V1ROq8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUqcepTJ6LgnAJIOMseZF84yO5EobLQD5i64G+KJl65lz5Nh3fFA6S2Zu6otmOrMZ
-         /Tg5WYB1F0HMvkrb6LRAMhW93GsFm6NeSgewmEmmAiVQtu4tyQcbuZ4WCDa6vkxNae
-         iEnQEPDuTizlctaxziOkk6mODUqVANS/jAqDUaf4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 08/23] iwlwifi: pcie: add support for qu c-step devices
-Date:   Tue,  3 Sep 2019 12:24:09 -0400
-Message-Id: <20190903162424.6877-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
-References: <20190903162424.6877-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 792408553F;
+        Tue,  3 Sep 2019 16:41:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D7F419C78;
+        Tue,  3 Sep 2019 16:41:04 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <TYAPR01MB454492E48362BED351E797B2D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <TYAPR01MB454492E48362BED351E797B2D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717348608.2204.16592073177201775472.stgit@warthog.procyon.org.uk>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     dhowells@redhat.com,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
+        "raven@themaw.net" <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/11] Add a general, global device notification watch list [ver #7]
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28300.1567528863.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Sep 2019 17:41:03 +0100
+Message-ID: <28301.1567528863@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 03 Sep 2019 16:41:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com> wrote:
 
-Add support for C-step devices.  Currently we don't have a nice way of
-matching the step and choosing the proper configuration, so we need to
-switch the config structs one by one.
+> It seems to lack modification for arch/arm64.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
----
- .../net/wireless/intel/iwlwifi/cfg/22000.c    | 53 +++++++++++++++++++
- .../net/wireless/intel/iwlwifi/iwl-config.h   |  7 +++
- drivers/net/wireless/intel/iwlwifi/iwl-csr.h  |  2 +
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 21 ++++++++
- 4 files changed, 83 insertions(+)
+Fixed.
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-index 93526dfaf7912..1f500cddb3a75 100644
---- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-+++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-@@ -80,7 +80,9 @@
- #define IWL_22000_QU_B_HR_B_FW_PRE	"iwlwifi-Qu-b0-hr-b0-"
- #define IWL_22000_HR_B_FW_PRE		"iwlwifi-QuQnj-b0-hr-b0-"
- #define IWL_22000_HR_A0_FW_PRE		"iwlwifi-QuQnj-a0-hr-a0-"
-+#define IWL_QU_C_HR_B_FW_PRE		"iwlwifi-Qu-c0-hr-b0-"
- #define IWL_QU_B_JF_B_FW_PRE		"iwlwifi-Qu-b0-jf-b0-"
-+#define IWL_QU_C_JF_B_FW_PRE		"iwlwifi-Qu-c0-jf-b0-"
- #define IWL_QUZ_A_HR_B_FW_PRE		"iwlwifi-QuZ-a0-hr-b0-"
- #define IWL_QUZ_A_JF_B_FW_PRE		"iwlwifi-QuZ-a0-jf-b0-"
- #define IWL_QNJ_B_JF_B_FW_PRE		"iwlwifi-QuQnj-b0-jf-b0-"
-@@ -109,6 +111,8 @@
- 	IWL_QUZ_A_HR_B_FW_PRE __stringify(api) ".ucode"
- #define IWL_QUZ_A_JF_B_MODULE_FIRMWARE(api) \
- 	IWL_QUZ_A_JF_B_FW_PRE __stringify(api) ".ucode"
-+#define IWL_QU_C_HR_B_MODULE_FIRMWARE(api) \
-+	IWL_QU_C_HR_B_FW_PRE __stringify(api) ".ucode"
- #define IWL_QU_B_JF_B_MODULE_FIRMWARE(api) \
- 	IWL_QU_B_JF_B_FW_PRE __stringify(api) ".ucode"
- #define IWL_QNJ_B_JF_B_MODULE_FIRMWARE(api)		\
-@@ -256,6 +260,30 @@ const struct iwl_cfg iwl_ax201_cfg_qu_hr = {
- 	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
- };
- 
-+const struct iwl_cfg iwl_ax101_cfg_qu_c0_hr_b0 = {
-+	.name = "Intel(R) Wi-Fi 6 AX101",
-+	.fw_name_pre = IWL_QU_C_HR_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+};
-+
-+const struct iwl_cfg iwl_ax201_cfg_qu_c0_hr_b0 = {
-+	.name = "Intel(R) Wi-Fi 6 AX201 160MHz",
-+	.fw_name_pre = IWL_QU_C_HR_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+};
-+
- const struct iwl_cfg iwl_ax101_cfg_quz_hr = {
- 	.name = "Intel(R) Wi-Fi 6 AX101",
- 	.fw_name_pre = IWL_QUZ_A_HR_B_FW_PRE,
-@@ -372,6 +400,30 @@ const struct iwl_cfg iwl9560_2ac_160_cfg_qu_b0_jf_b0 = {
- 	IWL_DEVICE_22500,
- };
- 
-+const struct iwl_cfg iwl9461_2ac_cfg_qu_c0_jf_b0 = {
-+	.name = "Intel(R) Wireless-AC 9461",
-+	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+};
-+
-+const struct iwl_cfg iwl9462_2ac_cfg_qu_c0_jf_b0 = {
-+	.name = "Intel(R) Wireless-AC 9462",
-+	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+};
-+
-+const struct iwl_cfg iwl9560_2ac_cfg_qu_c0_jf_b0 = {
-+	.name = "Intel(R) Wireless-AC 9560",
-+	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+};
-+
-+const struct iwl_cfg iwl9560_2ac_160_cfg_qu_c0_jf_b0 = {
-+	.name = "Intel(R) Wireless-AC 9560 160MHz",
-+	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+};
-+
- const struct iwl_cfg iwl9560_2ac_cfg_qnj_jf_b0 = {
- 	.name = "Intel(R) Wireless-AC 9560 160MHz",
- 	.fw_name_pre = IWL_QNJ_B_JF_B_FW_PRE,
-@@ -590,6 +642,7 @@ MODULE_FIRMWARE(IWL_22000_HR_A_F0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_B_F0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_B_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_A0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
-+MODULE_FIRMWARE(IWL_QU_C_HR_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_QU_B_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_QUZ_A_HR_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_QUZ_A_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-index bc267bd2c3b0e..1c1bf1b281cd9 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-@@ -565,10 +565,13 @@ extern const struct iwl_cfg iwl22000_2ac_cfg_hr;
- extern const struct iwl_cfg iwl22000_2ac_cfg_hr_cdb;
- extern const struct iwl_cfg iwl22000_2ac_cfg_jf;
- extern const struct iwl_cfg iwl_ax101_cfg_qu_hr;
-+extern const struct iwl_cfg iwl_ax101_cfg_qu_c0_hr_b0;
- extern const struct iwl_cfg iwl_ax101_cfg_quz_hr;
- extern const struct iwl_cfg iwl22000_2ax_cfg_hr;
- extern const struct iwl_cfg iwl_ax200_cfg_cc;
- extern const struct iwl_cfg iwl_ax201_cfg_qu_hr;
-+extern const struct iwl_cfg iwl_ax201_cfg_qu_hr;
-+extern const struct iwl_cfg iwl_ax201_cfg_qu_c0_hr_b0;
- extern const struct iwl_cfg iwl_ax201_cfg_quz_hr;
- extern const struct iwl_cfg iwl_ax1650i_cfg_quz_hr;
- extern const struct iwl_cfg iwl_ax1650s_cfg_quz_hr;
-@@ -580,6 +583,10 @@ extern const struct iwl_cfg iwl9461_2ac_cfg_qu_b0_jf_b0;
- extern const struct iwl_cfg iwl9462_2ac_cfg_qu_b0_jf_b0;
- extern const struct iwl_cfg iwl9560_2ac_cfg_qu_b0_jf_b0;
- extern const struct iwl_cfg iwl9560_2ac_160_cfg_qu_b0_jf_b0;
-+extern const struct iwl_cfg iwl9461_2ac_cfg_qu_c0_jf_b0;
-+extern const struct iwl_cfg iwl9462_2ac_cfg_qu_c0_jf_b0;
-+extern const struct iwl_cfg iwl9560_2ac_cfg_qu_c0_jf_b0;
-+extern const struct iwl_cfg iwl9560_2ac_160_cfg_qu_c0_jf_b0;
- extern const struct iwl_cfg killer1550i_2ac_cfg_qu_b0_jf_b0;
- extern const struct iwl_cfg killer1550s_2ac_cfg_qu_b0_jf_b0;
- extern const struct iwl_cfg iwl22000_2ax_cfg_jf;
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-csr.h b/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-index 93da96a7247c3..cb4c5514a5560 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-@@ -328,6 +328,8 @@ enum {
- #define CSR_HW_REV_TYPE_NONE		(0x00001F0)
- #define CSR_HW_REV_TYPE_QNJ		(0x0000360)
- #define CSR_HW_REV_TYPE_QNJ_B0		(0x0000364)
-+#define CSR_HW_REV_TYPE_QU_B0		(0x0000334)
-+#define CSR_HW_REV_TYPE_QU_C0		(0x0000338)
- #define CSR_HW_REV_TYPE_QUZ		(0x0000354)
- #define CSR_HW_REV_TYPE_HR_CDB		(0x0000340)
- #define CSR_HW_REV_TYPE_SO		(0x0000370)
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index fe645380bd2fa..ea2a03d4bf55c 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -1039,6 +1039,27 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		}
- 		iwl_trans->cfg = cfg;
- 	}
-+
-+	/*
-+	 * This is a hack to switch from Qu B0 to Qu C0.  We need to
-+	 * do this for all cfgs that use Qu B0.  All this code is in
-+	 * urgent need for a refactor, but for now this is the easiest
-+	 * thing to do to support Qu C-step.
-+	 */
-+	if (iwl_trans->hw_rev == CSR_HW_REV_TYPE_QU_C0) {
-+		if (iwl_trans->cfg == &iwl_ax101_cfg_qu_hr)
-+			iwl_trans->cfg = &iwl_ax101_cfg_qu_c0_hr_b0;
-+		else if (iwl_trans->cfg == &iwl_ax201_cfg_qu_hr)
-+			iwl_trans->cfg = &iwl_ax201_cfg_qu_c0_hr_b0;
-+		else if (iwl_trans->cfg == &iwl9461_2ac_cfg_qu_b0_jf_b0)
-+			iwl_trans->cfg = &iwl9461_2ac_cfg_qu_c0_jf_b0;
-+		else if (iwl_trans->cfg == &iwl9462_2ac_cfg_qu_b0_jf_b0)
-+			iwl_trans->cfg = &iwl9462_2ac_cfg_qu_c0_jf_b0;
-+		else if (iwl_trans->cfg == &iwl9560_2ac_cfg_qu_b0_jf_b0)
-+			iwl_trans->cfg = &iwl9560_2ac_cfg_qu_c0_jf_b0;
-+		else if (iwl_trans->cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
-+			iwl_trans->cfg = &iwl9560_2ac_160_cfg_qu_c0_jf_b0;
-+	}
- #endif
- 
- 	pci_set_drvdata(pdev, iwl_trans);
--- 
-2.20.1
-
+David
