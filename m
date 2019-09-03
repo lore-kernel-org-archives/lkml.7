@@ -2,121 +2,121 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FDAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2F6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1A422D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="f5zi/b69"
+	by mail.kernel.org (Postfix) with ESMTP id 6166F2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567522798;
+	bh=r1dGTU09uOiL3xCXgprleyqpzShijOgQ2UNAYYJDUpY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FyKPu26vJiBz9IpKM9soxZqgXj5BKALH9Z3YcQBQG14GhlvYHdBssd0Ozk+PkZPN7
+	 nXRSeogwcCpryF3jSqQ19ck8H3zyYZVsGkyjIGmceDFOsbZrndh3tK5c/859smyOOs
+	 /whyNV0vcoRXy5oVMgEFgdPzkRAFN4vOeXGbhQOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfICO7u (ORCPT
+        id S1729641AbfICO75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:59:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38759 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729053AbfICO7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:59:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o184so18631892wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CqMvdMuRx1qQHVU6PsmLAtqbm2AbeFoogKgqN4O+tSA=;
-        b=f5zi/b698/9ce0EI/0V5aE6hF/KZbZrznmm772xUFPscWQ5AbEAsN04/9GLV4caC6C
-         OU3jz7W+RqTX4V2EjDf//x+SAmuaXx/xoqARkHje20dPb6HeUlkBmuKNug4qdILB+w2w
-         fKu7QYfe1O7EGsARq8M2/eZzbkcECKULQOllc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CqMvdMuRx1qQHVU6PsmLAtqbm2AbeFoogKgqN4O+tSA=;
-        b=AL2a/MjNnVNLe5nD1zEfeKGkGB6kc0U/n/fqC1po82Ih0yjNe1X74GMhL1Qz1KFYNz
-         UQRomenzfSxaosRMq+Mr9nSMiwl9HFRNswNZ8it2g2hhSBID1/n0yqWChFzutiQJ75oE
-         thjs11IZpUGNnYGNiDl0sTBl8+ZKne8RoTnkuketi1GTWDTTIlYqb1c5ynipixIX7sXi
-         VOPvm1TF/kE1OX+ZesDJmFREd6I2Kt6p/5c4uBof+fjfEkMcS6veTK//wHeIGAe6OlHz
-         k5PlFO6sN9n0wkm7TBh6hwwKa7hY/VRG5fl1v1UFvrhm2crbW+qBizmgKQD1kB4l5XJj
-         xjbg==
-X-Gm-Message-State: APjAAAWS/NyR24w8lgEeqiQecQh1iYRZjmW50Nh7W9Ns99je32fEa2I3
-        6sghrqYappRrGPVU5FBuEhl85K4OP9YDZhBARKmK0A==
-X-Google-Smtp-Source: APXvYqyMDrC72Rn8SGS9zV3V1JTPQD8z+XJgk2vmjSjqKrUk9al9ywXNHTlnAeCv+NEEzalejtMsFou6QtPU8/C8cNY=
-X-Received: by 2002:a1c:eb0c:: with SMTP id j12mr565277wmh.132.1567522786724;
- Tue, 03 Sep 2019 07:59:46 -0700 (PDT)
+        Tue, 3 Sep 2019 10:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728679AbfICO75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:59:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE7CC22D6D;
+        Tue,  3 Sep 2019 14:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567522796;
+        bh=r1dGTU09uOiL3xCXgprleyqpzShijOgQ2UNAYYJDUpY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DtgSNN539VQj9J36MgDl+JFmjW8DX+T2BDAngoMe1t0XeSDAd31597Iu6zA1mFUT3
+         OmfV6n0WeuyjDjZ1+FnBYw/h2nY8S4K0zadTI+Kc0r9zofd//pIoCvl6yATzXPmp/+
+         Hb1DMAj016A8z07m37goOjsH4hmd3twuzbegMObY=
+Date:   Tue, 3 Sep 2019 15:59:50 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, rjw@rjwysocki.net,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com,
+        catalin.marinas@arm.com, morten.rasmussen@arm.com,
+        chris.redpath@arm.com, dietmar.eggemann@arm.com,
+        patrick.bellasi@arm.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, qperret@qperret.net, corbet@lwn.net
+Subject: Re: [PATCH] mailmap: Update email address for Quentin Perret
+Message-ID: <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
+References: <20190902105036.32419-1-quentin.perret@arm.com>
 MIME-Version: 1.0
-References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
-In-Reply-To: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Tue, 3 Sep 2019 20:29:35 +0530
-Message-ID: <CABe79T7=Kat6DjUDmOvfA79Ex0tzuU7ov4aoZodbeB=UO8DOZg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Reset xHCI port PHY on disconnect
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902105036.32419-1-quentin.perret@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathias,
+Hi Quentin,
 
-Could you please help to review this patch series?
+[+Jon]
 
-Regards,
-Srinath.
+On Mon, Sep 02, 2019 at 11:50:36AM +0100, Quentin Perret wrote:
+> My @arm.com email address will stop working in a few weeks, so add an
+> entry to .mailmap so others have a way to reach me if they want to.
+> 
+> While at it, move some entries around to keep the file in alphabetical
+> order.
+> 
+> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+> ---
+> Hi guys,
+> 
+> Will/Catalin: any chance this could be merged via the arm64 tree ?
 
-On Wed, Jul 31, 2019 at 3:50 PM Srinath Mannam
-<srinath.mannam@broadcom.com> wrote:
->
-> This patch set adds a quirk in xHCI driver to reset PHY of xHCI port on
-> its disconnect event.
->
-> This patch set is based on Linux-5.2-rc4.
->
-> Changes from v1:
->   - Addressed Mathias's comments
->     - Modified mapping of HC ports and their corresponding PHYs
->   - Addressed Rob's comments
->     - Removed usb-phy-port-reset DT property.
->     - Added quirk in platform data using HCI compatible string.
->   - Add phy ports in phy attr structure to have enabled ports bitmask.
->   - Modified #phy-cells of sr-phy to pass phy ports bitmask.
->
-> Srinath Mannam (4):
->   phy: Add phy ports in attrs
->   dt-bindings: phy: Modify Stingray USB PHY #phy-cells
->   phy: sr-usb: Set phy ports
->   dt-bindings: usb-xhci: Add platform specific compatible for Stingray
->     xHCI
->   drivers: xhci: Add quirk to reset xHCI port PHY
->
->  .../devicetree/bindings/phy/brcm,stingray-usb-phy.txt | 14 ++++++++------
->  Documentation/devicetree/bindings/usb/usb-xhci.txt    |  1 +
->  drivers/phy/broadcom/phy-bcm-sr-usb.c                 |  9 ++++++++-
->  drivers/usb/core/hcd.c                                |  6 ++++++
->  drivers/usb/core/phy.c                                | 19 +++++++++++++++++++
->  drivers/usb/core/phy.h                                |  1 +
->  drivers/usb/host/xhci-plat.c                          | 10 ++++++++++
->  drivers/usb/host/xhci-plat.h                          |  1 +
->  drivers/usb/host/xhci-ring.c                          |  9 ++++++---
->  drivers/usb/host/xhci.h                               |  1 +
->  include/linux/phy/phy.h                               | 10 ++++++++++
->  include/linux/usb/hcd.h                               |  1 +
->  12 files changed, 72 insertions(+), 10 deletions(-)
->
-> --
-> 2.7.4
->
+Since this isn't really an arm64 change (there's no change to MAINTAINERS),
+I'd rather it went via Andrew or Jon. However, there was some resistance
+last time this sort of email change happened:
+
+  http://lkml.kernel.org/r/20190806112959.14845da4@lwn.net
+
+so I'm not sure what the current preference is. Jon? What's the best way
+for get_maintainer.pl to retrieve up-to-date contact details for developers
+who aren't in MAINTAINERS?
+
+Will
+
+> diff --git a/.mailmap b/.mailmap
+> index afaad605284a..934d848f0b2f 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -180,6 +180,11 @@ Mythri P K <mythripk@ti.com>
+>  Nguyen Anh Quynh <aquynh@gmail.com>
+>  Nicolas Pitre <nico@fluxnic.net> <nicolas.pitre@linaro.org>
+>  Nicolas Pitre <nico@fluxnic.net> <nico@linaro.org>
+> +Oleksij Rempel <linux@rempel-privat.de> <bug-track@fisher-privat.net>
+> +Oleksij Rempel <linux@rempel-privat.de> <external.Oleksij.Rempel@de.bosch.com>
+> +Oleksij Rempel <linux@rempel-privat.de> <fixed-term.Oleksij.Rempel@de.bosch.com>
+> +Oleksij Rempel <linux@rempel-privat.de> <o.rempel@pengutronix.de>
+> +Oleksij Rempel <linux@rempel-privat.de> <ore@pengutronix.de>
+>  Paolo 'Blaisorblade' Giarrusso <blaisorblade@yahoo.it>
+>  Patrick Mochel <mochel@digitalimplant.org>
+>  Paul Burton <paul.burton@mips.com> <paul.burton@imgtec.com>
+> @@ -190,11 +195,7 @@ Pratyush Anand <pratyush.anand@gmail.com> <pratyush.anand@st.com>
+>  Praveen BP <praveenbp@ti.com>
+>  Punit Agrawal <punitagrawal@gmail.com> <punit.agrawal@arm.com>
+>  Qais Yousef <qsyousef@gmail.com> <qais.yousef@imgtec.com>
+> -Oleksij Rempel <linux@rempel-privat.de> <bug-track@fisher-privat.net>
+> -Oleksij Rempel <linux@rempel-privat.de> <external.Oleksij.Rempel@de.bosch.com>
+> -Oleksij Rempel <linux@rempel-privat.de> <fixed-term.Oleksij.Rempel@de.bosch.com>
+> -Oleksij Rempel <linux@rempel-privat.de> <o.rempel@pengutronix.de>
+> -Oleksij Rempel <linux@rempel-privat.de> <ore@pengutronix.de>
+> +Quentin Perret <qperret@qperret.net> <quentin.perret@arm.com>
+>  Rajesh Shah <rajesh.shah@intel.com>
+>  Ralf Baechle <ralf@linux-mips.org>
+>  Ralf Wildenhues <Ralf.Wildenhues@gmx.de>
