@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E76C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279F9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0528A21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F6A21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfICUcU (ORCPT
+        id S1727572AbfICUcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:32:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43240 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 16:32:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47358 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfICUcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:32:17 -0400
+        id S1727423AbfICUcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:32:20 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6EE388980E4;
-        Tue,  3 Sep 2019 20:32:16 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5AF56190C022;
+        Tue,  3 Sep 2019 20:32:20 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DCABB5D6B2;
-        Tue,  3 Sep 2019 20:32:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 271075D6B2;
+        Tue,  3 Sep 2019 20:32:20 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 6161D203E6; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
+        id B1B2220D2E; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/26] saner calling conventions for nfs_fs_mount_common()
-Date:   Tue,  3 Sep 2019 16:31:50 -0400
-Message-Id: <20190903203215.9157-2-smayhew@redhat.com>
+Subject: [PATCH v2 13/26] nfs: get rid of mount_info ->fill_super()
+Date:   Tue,  3 Sep 2019 16:32:02 -0400
+Message-Id: <20190903203215.9157-14-smayhew@redhat.com>
 In-Reply-To: <20190903203215.9157-1-smayhew@redhat.com>
 References: <20190903203215.9157-1-smayhew@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Tue, 03 Sep 2019 20:32:16 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 03 Sep 2019 20:32:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -48,91 +48,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Allow it to take ERR_PTR() for server and return ERR_CAST() of it in
-such case.  All callers used to open-code that...
+The only possible values are nfs_fill_super and nfs_clone_super.  The
+latter is used only when crossing into a submount and it is almost
+identical to the former; the only differences are
+	* ->s_time_gran unconditionally set to 1 (even for v2 mounts).
+Regression dating back to 2012, actually.
+	* ->s_blocksize/->s_blocksize_bits set to that of parent.
+
+Rather than messing with the method, stash ->s_blocksize_bits in
+mount_info in submount case and after the (now unconditional)
+call of nfs_fill_super() override ->s_blocksize/->s_blocksize_bits
+if that has been set.
 
 Reviewed-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/nfs/nfs4super.c | 16 +---------------
- fs/nfs/super.c     | 11 ++++-------
- 2 files changed, 5 insertions(+), 22 deletions(-)
+ fs/nfs/internal.h  |  4 +--
+ fs/nfs/namespace.c |  2 +-
+ fs/nfs/nfs4super.c |  1 -
+ fs/nfs/super.c     | 66 +++++++++++-----------------------------------
+ 4 files changed, 18 insertions(+), 55 deletions(-)
 
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 444d0fc2bcca..fa737e37f7c9 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -144,7 +144,7 @@ struct nfs_mount_request {
+ };
+ 
+ struct nfs_mount_info {
+-	void (*fill_super)(struct super_block *, struct nfs_mount_info *);
++	unsigned int inherited_bsize;
+ 	int (*set_security)(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ 	struct nfs_parsed_mount_data *parsed;
+ 	struct nfs_clone_mount *cloned;
+@@ -403,8 +403,6 @@ int nfs_set_sb_security(struct super_block *, struct dentry *, struct nfs_mount_
+ int nfs_clone_sb_security(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ struct dentry *nfs_fs_mount(struct file_system_type *, int, const char *, void *);
+ void nfs_kill_super(struct super_block *);
+-void nfs_fill_super(struct super_block *, struct nfs_mount_info *);
+-void nfs_clone_super(struct super_block *, struct nfs_mount_info *);
+ 
+ extern struct rpc_stat nfs_rpcstat;
+ 
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 970f92a860ed..7bc5b9b8f5ea 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -229,7 +229,7 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry, struct nfs_fh *fh,
+ 		.authflavor = authflavor,
+ 	};
+ 	struct nfs_mount_info mount_info = {
+-		.fill_super = nfs_clone_super,
++		.inherited_bsize = sb->s_blocksize_bits,
+ 		.set_security = nfs_clone_sb_security,
+ 		.cloned = &mountdata,
+ 		.mntfh = fh,
 diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 04c57066a11a..baece9857bcf 100644
+index b6cf62125380..d387c3c3b600 100644
 --- a/fs/nfs/nfs4super.c
 +++ b/fs/nfs/nfs4super.c
-@@ -110,21 +110,12 @@ nfs4_remote_mount(struct file_system_type *fs_type, int flags,
+@@ -224,7 +224,6 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
  {
- 	struct nfs_mount_info *mount_info = info;
- 	struct nfs_server *server;
--	struct dentry *mntroot = ERR_PTR(-ENOMEM);
- 
- 	mount_info->set_security = nfs_set_sb_security;
- 
- 	/* Get a volume representation */
- 	server = nfs4_create_server(mount_info, &nfs_v4);
--	if (IS_ERR(server)) {
--		mntroot = ERR_CAST(server);
--		goto out;
--	}
--
--	mntroot = nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4);
--
--out:
--	return mntroot;
-+	return nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4);
- }
- 
- static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type,
-@@ -280,11 +271,6 @@ nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
- 
- 	/* create a new volume representation */
- 	server = nfs4_create_referral_server(mount_info.cloned, mount_info.mntfh);
--	if (IS_ERR(server)) {
--		mntroot = ERR_CAST(server);
--		goto out;
--	}
--
- 	mntroot = nfs_fs_mount_common(server, flags, dev_name, &mount_info, &nfs_v4);
- out:
- 	nfs_free_fhandle(mount_info.mntfh);
+ 	struct nfs_clone_mount *data = raw_data;
+ 	struct nfs_mount_info mount_info = {
+-		.fill_super = nfs_fill_super,
+ 		.set_security = nfs_clone_sb_security,
+ 		.cloned = data,
+ 		.nfs_mod = &nfs_v4,
 diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 703f595dce90..467d7a636f0b 100644
+index 157d340333c8..89751ce21110 100644
 --- a/fs/nfs/super.c
 +++ b/fs/nfs/super.c
-@@ -1903,9 +1903,6 @@ struct dentry *nfs_try_mount(int flags, const char *dev_name,
- 	else
- 		server = nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
+@@ -2339,29 +2339,9 @@ nfs_remount(struct super_block *sb, int *flags, char *raw_data)
+ EXPORT_SYMBOL_GPL(nfs_remount);
  
--	if (IS_ERR(server))
--		return ERR_CAST(server);
+ /*
+- * Initialise the common bits of the superblock
++ * Finish setting up an NFS superblock
+  */
+-static void nfs_initialise_sb(struct super_block *sb)
+-{
+-	struct nfs_server *server = NFS_SB(sb);
 -
- 	return nfs_fs_mount_common(server, flags, dev_name, mount_info, nfs_mod);
+-	sb->s_magic = NFS_SUPER_MAGIC;
+-
+-	/* We probably want something more informative here */
+-	snprintf(sb->s_id, sizeof(sb->s_id),
+-		 "%u:%u", MAJOR(sb->s_dev), MINOR(sb->s_dev));
+-
+-	if (sb->s_blocksize == 0)
+-		sb->s_blocksize = nfs_block_bits(server->wsize,
+-						 &sb->s_blocksize_bits);
+-
+-	nfs_super_set_maxbytes(sb, server->maxfilesize);
+-}
+-
+-/*
+- * Finish setting up an NFS2/3 superblock
+- */
+-void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
++static void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
+ {
+ 	struct nfs_parsed_mount_data *data = mount_info->parsed;
+ 	struct nfs_server *server = NFS_SB(sb);
+@@ -2382,35 +2362,17 @@ void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
+ 		sb->s_export_op = &nfs_export_ops;
+ 	}
+ 
+- 	nfs_initialise_sb(sb);
+-}
+-EXPORT_SYMBOL_GPL(nfs_fill_super);
+-
+-/*
+- * Finish setting up a cloned NFS2/3/4 superblock
+- */
+-void nfs_clone_super(struct super_block *sb,
+-			    struct nfs_mount_info *mount_info)
+-{
+-	const struct super_block *old_sb = mount_info->cloned->sb;
+-	struct nfs_server *server = NFS_SB(sb);
++	sb->s_magic = NFS_SUPER_MAGIC;
+ 
+-	sb->s_blocksize_bits = old_sb->s_blocksize_bits;
+-	sb->s_blocksize = old_sb->s_blocksize;
+-	sb->s_maxbytes = old_sb->s_maxbytes;
+-	sb->s_xattr = old_sb->s_xattr;
+-	sb->s_op = old_sb->s_op;
+-	sb->s_time_gran = 1;
+-	sb->s_export_op = old_sb->s_export_op;
++	/* We probably want something more informative here */
++	snprintf(sb->s_id, sizeof(sb->s_id),
++		 "%u:%u", MAJOR(sb->s_dev), MINOR(sb->s_dev));
+ 
+-	if (server->nfs_client->rpc_ops->version != 2) {
+-		/* The VFS shouldn't apply the umask to mode bits. We will do
+-		 * so ourselves when necessary.
+-		 */
+-		sb->s_flags |= SB_POSIXACL;
+-	}
++	if (sb->s_blocksize == 0)
++		sb->s_blocksize = nfs_block_bits(server->wsize,
++						 &sb->s_blocksize_bits);
+ 
+- 	nfs_initialise_sb(sb);
++	nfs_super_set_maxbytes(sb, server->maxfilesize);
  }
- EXPORT_SYMBOL_GPL(nfs_try_mount);
-@@ -2641,6 +2638,9 @@ struct dentry *nfs_fs_mount_common(struct nfs_server *server,
+ 
+ static int nfs_compare_mount_options(const struct super_block *s, const struct nfs_server *b, int flags)
+@@ -2676,8 +2638,13 @@ static struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
+ 	}
+ 
+ 	if (!s->s_root) {
++		unsigned bsize = mount_info->inherited_bsize;
+ 		/* initial superblock/root creation */
+-		mount_info->fill_super(s, mount_info);
++		nfs_fill_super(s, mount_info);
++		if (bsize) {
++			s->s_blocksize_bits = bsize;
++			s->s_blocksize = 1U << bsize;
++		}
+ 		nfs_get_cache_cookie(s, mount_info->parsed, mount_info->cloned);
+ 		if (!(server->flags & NFS_MOUNT_UNSHARED))
+ 			s->s_iflags |= SB_I_MULTIROOT;
+@@ -2712,7 +2679,6 @@ struct dentry *nfs_fs_mount(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *raw_data)
+ {
+ 	struct nfs_mount_info mount_info = {
+-		.fill_super = nfs_fill_super,
+ 		.set_security = nfs_set_sb_security,
  	};
- 	int error;
- 
-+	if (IS_ERR(server))
-+		return ERR_CAST(server);
-+
- 	if (server->flags & NFS_MOUNT_UNSHARED)
- 		compare_super = NULL;
- 
-@@ -2789,10 +2789,7 @@ nfs_xdev_mount(struct file_system_type *fs_type, int flags,
- 	/* create a new volume representation */
- 	server = nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), data->fh, data->fattr, data->authflavor);
- 
--	if (IS_ERR(server))
--		mntroot = ERR_CAST(server);
--	else
--		mntroot = nfs_fs_mount_common(server, flags,
-+	mntroot = nfs_fs_mount_common(server, flags,
- 				dev_name, &mount_info, nfs_mod);
- 
- 	dprintk("<-- nfs_xdev_mount() = %ld\n",
+ 	struct dentry *mntroot = ERR_PTR(-ENOMEM);
 -- 
 2.17.2
 
