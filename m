@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1BEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE64C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94CB21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1092821897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfICUsR (ORCPT
+        id S1727651AbfICUsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:48:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39630 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 16:48:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39392 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfICUsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:48:15 -0400
+        id S1725994AbfICUsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:48:20 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F1CC918C4272;
-        Tue,  3 Sep 2019 20:48:14 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 99C2F7FDE5;
+        Tue,  3 Sep 2019 20:48:19 +0000 (UTC)
 Received: from malachite.bss.redhat.com (dhcp-10-20-1-34.bss.redhat.com [10.20.1.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E252C1001B02;
-        Tue,  3 Sep 2019 20:48:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 406911001B02;
+        Tue,  3 Sep 2019 20:48:15 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         amd-gfx@lists.freedesktop.org
@@ -38,83 +38,153 @@ Cc:     Juston Li <juston.li@intel.com>, Imre Deak <imre.deak@intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/27] drm/dp_mst: Refactor drm_dp_send_enum_path_resources
-Date:   Tue,  3 Sep 2019 16:45:47 -0400
-Message-Id: <20190903204645.25487-10-lyude@redhat.com>
+Subject: [PATCH v2 10/27] drm/dp_mst: Remove huge conditional in drm_dp_mst_handle_up_req()
+Date:   Tue,  3 Sep 2019 16:45:48 -0400
+Message-Id: <20190903204645.25487-11-lyude@redhat.com>
 In-Reply-To: <20190903204645.25487-1-lyude@redhat.com>
 References: <20190903204645.25487-1-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 03 Sep 2019 20:48:15 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 03 Sep 2019 20:48:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use more pointers so we don't have to write out
-txmsg->reply.u.path_resources each time. Also, fix line wrapping +
-rearrange local variables.
+Which reduces indentation and makes this function more legible.
 
 Cc: Juston Li <juston.li@intel.com>
 Cc: Imre Deak <imre.deak@intel.com>
 Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
 Cc: Harry Wentland <hwentlan@amd.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 90 +++++++++++++--------------
+ 1 file changed, 45 insertions(+), 45 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index af3189df28aa..241c66f75bed 100644
+index 241c66f75bed..43452872efad 100644
 --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2437,12 +2437,14 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
- 	kfree(txmsg);
- }
+@@ -3245,7 +3245,9 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
  
--static int drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
--					   struct drm_dp_mst_branch *mstb,
--					   struct drm_dp_mst_port *port)
-+static int
-+drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
-+				struct drm_dp_mst_branch *mstb,
-+				struct drm_dp_mst_port *port)
+ static int drm_dp_mst_handle_up_req(struct drm_dp_mst_topology_mgr *mgr)
  {
--	int len;
-+	struct drm_dp_enum_path_resources_ack_reply *path_res;
- 	struct drm_dp_sideband_msg_tx *txmsg;
-+	int len;
- 	int ret;
+-	int ret = 0;
++	struct drm_dp_sideband_msg_req_body msg;
++	struct drm_dp_mst_branch *mstb = NULL;
++	bool seqno;
  
- 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-@@ -2456,14 +2458,20 @@ static int drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
- 
- 	ret = drm_dp_mst_wait_tx_reply(mstb, txmsg);
- 	if (ret > 0) {
-+		path_res = &txmsg->reply.u.path_resources;
-+
- 		if (txmsg->reply.reply_type == DP_SIDEBAND_REPLY_NAK) {
- 			DRM_DEBUG_KMS("enum path resources nak received\n");
- 		} else {
--			if (port->port_num != txmsg->reply.u.path_resources.port_number)
-+			if (port->port_num != path_res->port_number)
- 				DRM_ERROR("got incorrect port in response\n");
--			DRM_DEBUG_KMS("enum path resources %d: %d %d\n", txmsg->reply.u.path_resources.port_number, txmsg->reply.u.path_resources.full_payload_bw_number,
--			       txmsg->reply.u.path_resources.avail_payload_bw_number);
--			port->available_pbn = txmsg->reply.u.path_resources.avail_payload_bw_number;
-+
-+			DRM_DEBUG_KMS("enum path resources %d: %d %d\n",
-+				      path_res->port_number,
-+				      path_res->full_payload_bw_number,
-+				      path_res->avail_payload_bw_number);
-+			port->available_pbn =
-+				path_res->avail_payload_bw_number;
- 		}
+ 	if (!drm_dp_get_one_sb_msg(mgr, true)) {
+ 		memset(&mgr->up_req_recv, 0,
+@@ -3253,62 +3255,60 @@ static int drm_dp_mst_handle_up_req(struct drm_dp_mst_topology_mgr *mgr)
+ 		return 0;
  	}
  
+-	if (mgr->up_req_recv.have_eomt) {
+-		struct drm_dp_sideband_msg_req_body msg;
+-		struct drm_dp_mst_branch *mstb = NULL;
+-		bool seqno;
+-
+-		if (!mgr->up_req_recv.initial_hdr.broadcast) {
+-			mstb = drm_dp_get_mst_branch_device(mgr,
+-							    mgr->up_req_recv.initial_hdr.lct,
+-							    mgr->up_req_recv.initial_hdr.rad);
+-			if (!mstb) {
+-				DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
+-				memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
+-				return 0;
+-			}
++	if (!mgr->up_req_recv.have_eomt)
++		return 0;
++
++	if (!mgr->up_req_recv.initial_hdr.broadcast) {
++		mstb = drm_dp_get_mst_branch_device(mgr,
++						    mgr->up_req_recv.initial_hdr.lct,
++						    mgr->up_req_recv.initial_hdr.rad);
++		if (!mstb) {
++			DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
++			memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
++			return 0;
+ 		}
++	}
+ 
+-		seqno = mgr->up_req_recv.initial_hdr.seqno;
+-		drm_dp_sideband_parse_req(&mgr->up_req_recv, &msg);
++	seqno = mgr->up_req_recv.initial_hdr.seqno;
++	drm_dp_sideband_parse_req(&mgr->up_req_recv, &msg);
+ 
+-		if (msg.req_type == DP_CONNECTION_STATUS_NOTIFY) {
+-			drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
++	if (msg.req_type == DP_CONNECTION_STATUS_NOTIFY) {
++		drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
+ 
+-			if (!mstb)
+-				mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.conn_stat.guid);
++		if (!mstb)
++			mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.conn_stat.guid);
+ 
+-			if (!mstb) {
+-				DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
+-				memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
+-				return 0;
+-			}
++		if (!mstb) {
++			DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
++			memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
++			return 0;
++		}
+ 
+-			drm_dp_update_port(mstb, &msg.u.conn_stat);
++		drm_dp_update_port(mstb, &msg.u.conn_stat);
+ 
+-			DRM_DEBUG_KMS("Got CSN: pn: %d ldps:%d ddps: %d mcs: %d ip: %d pdt: %d\n", msg.u.conn_stat.port_number, msg.u.conn_stat.legacy_device_plug_status, msg.u.conn_stat.displayport_device_plug_status, msg.u.conn_stat.message_capability_status, msg.u.conn_stat.input_port, msg.u.conn_stat.peer_device_type);
+-			drm_kms_helper_hotplug_event(mgr->dev);
+-
+-		} else if (msg.req_type == DP_RESOURCE_STATUS_NOTIFY) {
+-			drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
+-			if (!mstb)
+-				mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.resource_stat.guid);
++		DRM_DEBUG_KMS("Got CSN: pn: %d ldps:%d ddps: %d mcs: %d ip: %d pdt: %d\n", msg.u.conn_stat.port_number, msg.u.conn_stat.legacy_device_plug_status, msg.u.conn_stat.displayport_device_plug_status, msg.u.conn_stat.message_capability_status, msg.u.conn_stat.input_port, msg.u.conn_stat.peer_device_type);
++		drm_kms_helper_hotplug_event(mgr->dev);
+ 
+-			if (!mstb) {
+-				DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
+-				memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
+-				return 0;
+-			}
++	} else if (msg.req_type == DP_RESOURCE_STATUS_NOTIFY) {
++		drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
++		if (!mstb)
++			mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.resource_stat.guid);
+ 
+-			DRM_DEBUG_KMS("Got RSN: pn: %d avail_pbn %d\n", msg.u.resource_stat.port_number, msg.u.resource_stat.available_pbn);
++		if (!mstb) {
++			DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
++			memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
++			return 0;
+ 		}
+ 
+-		if (mstb)
+-			drm_dp_mst_topology_put_mstb(mstb);
+-
+-		memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
++		DRM_DEBUG_KMS("Got RSN: pn: %d avail_pbn %d\n", msg.u.resource_stat.port_number, msg.u.resource_stat.available_pbn);
+ 	}
+-	return ret;
++
++	if (mstb)
++		drm_dp_mst_topology_put_mstb(mstb);
++
++	memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
++
++	return 0;
+ }
+ 
+ /**
 -- 
 2.21.0
 
