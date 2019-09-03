@@ -2,72 +2,93 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCBFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B768C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C98422CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:50:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sZFcdOJs"
+	by mail.kernel.org (Postfix) with ESMTP id 7E15021883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfICGuL (ORCPT
+        id S1727113AbfICGvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:50:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44968 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfICGuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:50:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wDAicFjVrqvRiLBg0KBDH0Vwt5aH3GKjpzdO4BtXzH0=; b=sZFcdOJsYz6De6oed/+j0vHkJ
-        yyBVrEke53E8gQClnChkWR6mKVb8ZTdFreg0DLR0TsH8YL+o96fLWMIQNPCN4yDUz0kiAXIUEzmJM
-        U6va1LKR526+ngiF/VqOTLMm3lV+Su7G6e3yq+QHJ6/STGvwTY6qABL0YUXzHBJcgY9Y7IQVQUR/Q
-        8S2aNrz+BdS+0Em8X1LPeoOPPzn8H7iWJ4uL+KmVPiJjGFoCdBW2QWxi/EhmuKMHLd+qU0Inbt8/0
-        81/d1CaohrvJM2NT9PUXuLRwquPoxpT0+2HQk9NB5wKJqW8pKIGXdaYLNV80078oemej5U92zihQx
-        WFe0VrPLA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i52di-0006eH-8n; Tue, 03 Sep 2019 06:50:06 +0000
-Date:   Mon, 2 Sep 2019 23:50:06 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5/8] x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files
-Message-ID: <20190903065006.GB9914@infradead.org>
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903001816.288373651@stormcage.eag.rdlabs.hpecorp.net>
+        Tue, 3 Sep 2019 02:51:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726180AbfICGvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:51:38 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6F0BF84B5CCF034E3493;
+        Tue,  3 Sep 2019 14:51:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
+ 14:51:29 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] iommu/arm-smmu-v3: Fix build error without CONFIG_PCI_ATS
+Date:   Tue, 3 Sep 2019 14:50:56 +0800
+Message-ID: <20190903065056.17988-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190903024212.20300-1-yuehaibing@huawei.com>
+References: <20190903024212.20300-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903001816.288373651@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +extern int _is_uv_hubbed(int uvtype);
-> +#define is_uv_hubbed _is_uv_hubbed
+If CONFIG_PCI_ATS is not set, building fails:
 
-> +static inline int _is_uv_hubbed(int uv)	{ return 0; }
-> +#define is_uv_hubbed _is_uv_hubbed
+drivers/iommu/arm-smmu-v3.c: In function arm_smmu_ats_supported:
+drivers/iommu/arm-smmu-v3.c:2325:35: error: struct pci_dev has no member named ats_cap; did you mean msi_cap?
+  return !pdev->untrusted && pdev->ats_cap;
+                                   ^~~~~~~
 
-Another two instances of these weird indirections..
+ats_cap should only used when CONFIG_PCI_ATS is defined,
+so use #ifdef block to guard this.
+
+Fixes: bfff88ec1afe ("iommu/arm-smmu-v3: Rework enabling/disabling of ATS for PCI masters")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: Add arm_smmu_ats_supported() of no CONFIG_PCI_ATS
+---
+ drivers/iommu/arm-smmu-v3.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 66bf641..8da93e7 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2311,6 +2311,7 @@ static void arm_smmu_install_ste_for_dev(struct arm_smmu_master *master)
+ 	}
+ }
+ 
++#ifdef CONFIG_PCI_ATS
+ static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
+ {
+ 	struct pci_dev *pdev;
+@@ -2324,6 +2325,12 @@ static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
+ 	pdev = to_pci_dev(master->dev);
+ 	return !pdev->untrusted && pdev->ats_cap;
+ }
++#else
++static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
++{
++	return false;
++}
++#endif
+ 
+ static void arm_smmu_enable_ats(struct arm_smmu_master *master)
+ {
+-- 
+2.7.4
+
+
