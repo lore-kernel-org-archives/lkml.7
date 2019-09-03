@@ -2,136 +2,321 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D767C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487AFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727462053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C7F2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfICHnX (ORCPT
+        id S1728108AbfICHnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:43:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:64981 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfICHnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:43:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 00:43:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="382990308"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2019 00:43:20 -0700
-Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Sep 2019 00:43:20 -0700
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Sep 2019 00:43:20 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.113]) with mapi id 14.03.0439.000;
- Tue, 3 Sep 2019 15:43:18 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Zhang, Tina" <tina.zhang@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-CC:     "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        Tue, 3 Sep 2019 03:43:32 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41365 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfICHnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:43:31 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1i53TL-00028A-NP; Tue, 03 Sep 2019 09:43:27 +0200
+Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
+ controller power key support
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Yuan, Hang" <hang.yuan@intel.com>
-Subject: RE: [PATCH v5 0/6] Deliver vGPU display refresh event to userspace
-Thread-Topic: [PATCH v5 0/6] Deliver vGPU display refresh event to userspace
-Thread-Index: AQHVU9to+4gNt2b3FUamU8p730xOLqcYv20AgADjiYA=
-Date:   Tue, 3 Sep 2019 07:43:17 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D560E0C@SHSMSX104.ccr.corp.intel.com>
-References: <20190816023528.30210-1-tina.zhang@intel.com>
- <237F54289DF84E4997F34151298ABEBC8771E7AE@SHSMSX101.ccr.corp.intel.com>
-In-Reply-To: <237F54289DF84E4997F34151298ABEBC8771E7AE@SHSMSX101.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzMwZmIxMjYtMzQzMC00MjllLTk2MjItZjc5ZjJhMzNiNjFkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibUlvalB4MW1UUGIrSlwvSXZMV2VpdVV0VldVTXh4ZW40a00xM2NSNjExUWo2XC9sdEdPNjFkXC9UNFB4V3hqc1dSaiJ9
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+ <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+ <6d8dd5df-02da-b4cd-e61d-a4a15d0bf0c8@pengutronix.de>
+ <DB3PR0402MB391602C6B425DD7EBFB9AF1DF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <dbe0ba0a-29bc-ee96-541d-244b3dbf0b81@pengutronix.de>
+ <DB3PR0402MB3916FB4618F86DD891013FEEF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <4f2aa5a1-d8db-0fa9-3104-5e4b2a036b36@pengutronix.de>
+Date:   Tue, 3 Sep 2019 09:43:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <DB3PR0402MB3916FB4618F86DD891013FEEF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBaaGFuZywgVGluYQ0KPiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMywgMjAxOSA5
-OjI3IEFNDQo+IA0KPiBIaSwNCj4gDQo+IFNvbWUgcGVvcGxlIGFyZSBhc2tpbmcgd2hldGhlciB0
-aGUgZGlzcGxheSByZWZyZXNoIGlycSBjb3VsZCBiZSBwcm92aWRlZCBieQ0KPiBxZW11IHZmaW8g
-ZGlzcGxheT8NCj4gDQo+IFNvbWUgYmFja2dyb3VuZDogY3VycmVudGx5LCB3ZSBoYXZlIHR3byBk
-aXNwbGF5IHRpbWVycy4gT25lIGlzIHByb3ZpZGVkIGJ5DQo+IFFFTVUgVUkgYW5kIHRoZSBvdGhl
-ciBvbmUgaXMgcHJvdmlkZWQgYnkgdGhlIHZncHUuIFRoZSB2Z3B1IGRpc3BsYXkNCj4gZnJhbWVi
-dWZmZXIgY29uc3VtZXJzIChpLmUuIFFFTVUgVUlzKSBkZXBlbmQgb24gdGhlIFVJIHRpbWVyIHRv
-IGNvbnN1bWUNCj4gdGhlIGNvbnRlbnRzIGluIHRoZSB2Z3B1IGRpc3BsYXkgZnJhbWVidWZmZXIs
-IG1lYW53aGlsZSB0aGUgZGlzcGxheQ0KPiBmcmFtZWJ1ZmZlciBwcm9kdWNlciAoZS5nLiBndnQt
-ZyBkaXNwbGF5IG1vZGVsKSB1cGRhdGVzIHRoZSBmcmFtZWJ1ZmZlcg0KPiBjb250ZW50IGFjY29y
-ZGluZyB0byB0aGUgdmJsYW5rIHRpbWVyIHByb3ZpZGVkIGJ5IGdwdSB2ZW5kb3IgZHJpdmVyLiBT
-aW5jZQ0KPiB0aGVzZSB0d28gdGltZXJzIGFyZSBub3Qgc3luY2VkLCB0ZWFyaW5nIGNvdWxkIGJl
-IG5vdGljZWQuDQo+IA0KPiBTbywgdGhlb3JldGljYWxseSB0byBzb2x2ZSB0aGlzIHRlYXJpbmcg
-cHJvYmxlbSwgd2UgY291bGQgaGF2ZSB0d28gb3B0aW9uczoNCj4gDQo+IE9wdGlvbiAxOiBMaWtl
-IHdoYXQgd2UgaGF2ZSBpbiB0aGlzIHBhdGNoIHNldDogc3RvcCB0aGUgUUVNVSBVSSB0aW1lciBh
-bmQgbGV0DQo+IGJvdGggdGhlIGZyYW1lYnVmZmVyIGNvbnN1bWVycyBhbmQgdGhlIGZyYW1lYnVm
-ZmVyIHByb2R1Y2VyIHN5bmMgdG8gdGhlDQo+IGRpc3BsYXkgcmVmcmVzaCBldmVudCBwcm92aWRl
-ZCBieSB2ZW5kb3IgZHJpdmVyLiBTbywgUUVNVSBVSSBjYW4gZG8gdGhlDQo+IHJlZnJlc2ggZGVw
-ZW5kaW5nIG9uIHRoaXMgZGlzcGxheSByZWZyZXNoIGV2ZW50IHRvIG1ha2Ugc3VyZSB0byBoYXZl
-IGEgdGVhci0NCj4gZnJlZSBmcmFtZWJ1ZmZlci4NCj4gDQo+IE9wdGlvbiAyOiBRRU1VIHByb3Zp
-ZGVzIHRoZSBlbXVsYXRlZCBkaXNwbGF5IHJlZnJlc2ggZXZlbnQgdG8gdGhlIHZncHVzDQo+IHBy
-b3ZpZGVkIGJ5IHZlbmRvciBkcml2ZXIuIEZvciB2Z3B1cywgdGhlIGRpc3BsYXkgcmVmcmVzaCBl
-dmVudCBjYW4gYmUNCj4gY29uc2lkZXJlZCBhcyB0aGUgdmJsYW5rIGV2ZW50IHdoaWNoIGlzIGxl
-dmVyYWdlZCBieSBndWVzdCB3aW5kb3cgbWFuYWdlcg0KPiB0byBkbyB0aGUgcGxhbmUgdXBkYXRl
-IG9yIG1vZGUtc2V0dGluZy4NCj4gDQo+IFBlb3BsZSBhcmUgYXNraW5nIGlmIG9wdGlvbiAyIGNv
-dWxkIGJlIGEgYmV0dGVyIGNob2ljZS4NCj4gDQoNCkkgdGhpbmsgdGhlIGFuc3dlciBpcyBzcGVj
-aWZpYyB0byBkaWZmZXJlbnQgdXNhZ2VzLiBOb25lIGlzIHBlcmZlY3QgaW4gYWxsDQpzY2VuYXJp
-b3MuIFRoZSBrZXkgaXMgdG8gZmluZCBvdXQgd2hvIGlzIHRoZSBwcmltYXJ5IGRpc3BsYXkgdG8g
-c2hvdyB0aGUgDQpndWVzdCBmcmFtZWJ1ZmZlciwgdGhlbiB0aGF0IGd1eSBpcyBjYXJlZCBhYm91
-dCB0ZWFyaW5nIHRodXMgc2hvdWxkIGJlIA0KdGhlIHNvdXJjZSBvZiB2YmxhbmsgZXZlbnQ6DQoN
-CjEpIEd1ZXN0IGZyYW1lYnVmZmVyIGlzIGRpcmVjdGx5IHByb2dyYW1tZWQgdG8sIGFuZCBzaG93
-biBpbiB0aGUgbG9jYWwNCmRpc3BsYXkuIEluIHN1Y2ggY2FzZSwgdGhlIHBoeXNpY2FsIHZibGFu
-ayBldmVudCBzaG91bGQgYmUgdGhlIHNvdXJjZSBvZg0KdmlydHVhbCB2YmxhbmsgZXZlbnQsIGku
-ZS4ga2VybmVsIEdWVC1nIGRyaXZlciBzaG91bGQgZW11bGF0ZSB0aGUgZXZlbnQNCmluIGhvc3Qg
-dmJsYW5rIGV2ZW50IGhhbmRsZXIuDQoNCjIpIEd1ZXN0IGZyYW1lYnVmZmVyIGlzIHNob3duIGlu
-IHRoZSBRZW11IFVJLiBUaGVuLCBuYXR1cmFsbHkgUWVtdSBVSQ0Kc2hvdWxkIGJlIHRoZSBzb3Vy
-Y2Ugb2YgdmlydHVhbCB2YmxhbmsgZXZlbnQsIGJhc2VkIG9uIGl0cyBvd24gdGVhcmluZw0KcmVx
-dWlyZW1lbnQ6DQoNCglhKSBHdWVzdCBmcmFtZWJ1ZmZlciBpcyBzaG93biBpbiB0aGUgbG9jYWwg
-YXBwbGljYXRpb24gd2luZG93LA0Kd2hpY2ggaXMgdXBkYXRlZCBieSB0aGUgUWVtdSBVSSB0aW1l
-ci4gVGhlbiB2aXJ0dWFsIHZibGFuayBzaG91bGQgYmUNCnNlbnQgYXQgZW5kIG9mIHRoZSBVSSB0
-aW1lciBoYW5kbGVyLCB0byBtYWtlIHN1cmUgbm8gY2hhbmdlIGhhcHBlbmVkDQp3aGVuIHRoZSBn
-dWVzdCBmcmFtZWJ1ZmZlciBpcyBjb21wb3NpdGVkIGFzIHRoZSBzb3VyY2UgdGV4dHVyZS4NCg0K
-CWIpIFFlbXUgVUkgbWF5IHByb2dyYW0gZ3Vlc3QgZnJhbWVidWZmZXIgZGlyZWN0bHkgdG8gdGhl
-DQpwaHlzaWNhbCBwbGFuZSwgdGhyb3VnaCB3aGF0ZXZlciBpbnRlcmZhY2UgdGhhdCBrZXJuZWwg
-Z2Z4IGRyaXZlciBwcm92aWRlcy4NCkluIHN1Y2ggY2FzZSwgUWVtdSBVSSBzaG91bGQgd2FpdCBm
-b3IgdmJsYW5rIG5vdGlmaWNhdGlvbiBmcm9tIGtlcm5lbCwgDQphbmQgdGhlbiB0cmlnZ2VyIHRo
-ZSB2aXJ0dWFsIHZibGFuayBldmVudC4NCg0KCWMpIFFlbXUgVUkgbWF5IGZ1cnRoZXIgcm91dGUg
-dGhlIGd1ZXN0IGZyYW1lYnVmZmVyIHRvIHJlbW90ZQ0KY2xpZW50LCBlLmcuIHRocm91Z2ggdm5j
-LiBUaGVuIHZpcnR1YWwgdmJsYW5rIGV2ZW50IHNob3VsZCBiZSBlbXVsYXRlZA0KYWNjb3JkaW5n
-IHRvIHRlYXJpbmcgcmVxdWlyZW1lbnQgaW4gdm5jIHByb3RvY29sLg0KDQozKSBjb21iaW5hdGlv
-biBvZiAxKSBhbmQgMiksIHdoZXJlIGVpdGhlciBsb2NhbCBkaXNwbGF5IG9yIFFlbXUgVUkgaXMN
-CmNvbnNpZGVyZWQgYXMgcHJpbWFyeSBkaXNwbGF5IHdpdGggdGhlIG90aGVyIGZvciBkaWFnbm9z
-dGljIHB1cnBvc2UuDQpUaGVuIHRoZSB0ZWFyaW5nIG9mIHRoZSBwcmltYXJ5IGRpc3BsYXkgc2hv
-dWxkIGRyaXZlIHRoZSBlbXVsYXRpb24gb2YNCnZpcnR1YWwgdmJsYW5rLCB3aGlsZSB0aGUgb3Ro
-ZXIgb25lIG1heSBzdWZmZXIgZnJvbSB0ZWFyaW5nIGlzc3VlLg0KDQpBY2NvcmRpbmdseSwgd2Ug
-bWF5IHdhbnQgYSBrZXJuZWwgaW50ZXJmYWNlIGFsbG93aW5nIHVzZXIgc3BhY2UNCnRvIHNwZWNp
-ZnkgdGhlIHNvdXJjZSBvZiB2YmxhbmsgZW11bGF0aW9uOiBpbiBrZXJuZWwgb3IgZnJvbSB1c2Vy
-DQpzcGFjZS4gSWYgdGhlIGZvcm1lciBpcyBzcGVjaWZpZWQsIHRoZW4gdmlydHVhbCB2Ymxhbmsg
-aXMgZHJpdmVuIGJ5IA0KcGh5c2ljYWwgdmJsYW5rIGV2ZW50LiBPdGhlcndpc2UsIHVzZXIgc3Bh
-Y2Ugc2hvdWxkIHRyaWdnZXIgdGhlDQp2aXJ0dWFsIHZibGFuayBpbmplY3Rpb24uIEp1c3QgbGVh
-dmUgYWxsIHRoZSBkZWNpc2lvbnMgdG8gdXNlciBzcGFjZS4gOi0pDQoNClRoYW5rcw0KS2V2aW4N
-CiANCg==
+
+
+On 03.09.19 09:35, Anson Huang wrote:
+> Hi, Oleksij
+> 
+>> On 03.09.19 08:48, Anson Huang wrote:
+>>> Hi, Oleksij
+>>>
+>>>> On 03.09.19 16:03, Anson Huang wrote:
+>>>>> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+>>>>> inside, the system controller is in charge of controlling power,
+>>>>> clock and power key etc..
+>>>>>
+>>>>> Adds i.MX system controller power key driver support, Linux kernel
+>>>>> has to communicate with system controller via MU (message unit) IPC
+>>>>> to get power key's status.
+>>>>>
+>>>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>>>> ---
+>>>>> Changes since V1:
+>>>>> 	- remove "wakeup-source" property operation, scu power key uses
+>>>> generic scu irq,
+>>>>> 	  no need to have this property for device wakeup operation.
+>>>>> ---
+>>>>>     drivers/input/keyboard/Kconfig         |   7 ++
+>>>>>     drivers/input/keyboard/Makefile        |   1 +
+>>>>>     drivers/input/keyboard/imx_sc_pwrkey.c | 169
+>>>> +++++++++++++++++++++++++++++++++
+>>>>>     3 files changed, 177 insertions(+)
+>>>>>     create mode 100644 drivers/input/keyboard/imx_sc_pwrkey.c
+>>>>>
+>>>>> diff --git a/drivers/input/keyboard/Kconfig
+>>>>> b/drivers/input/keyboard/Kconfig index 2e6d288..3aaeb9c 100644
+>>>>> --- a/drivers/input/keyboard/Kconfig
+>>>>> +++ b/drivers/input/keyboard/Kconfig
+>>>>> @@ -469,6 +469,13 @@ config KEYBOARD_IMX
+>>>>>     	  To compile this driver as a module, choose M here: the
+>>>>>     	  module will be called imx_keypad.
+>>>>>
+>>>>> +config KEYBOARD_IMX_SC_PWRKEY
+>>>>> +	tristate "IMX SCU Power Key Driver"
+>>>>> +	depends on IMX_SCU
+>>>>> +	help
+>>>>> +	  This is the system controller powerkey driver for NXP i.MX SoCs with
+>>>>> +	  system controller inside.
+>>>>
+>>>> The KEY is configurable over devicetree, why is it called PWRKEY? It
+>>>> looks for me as generic SCU key handler.
+>>>
+>>> We always use it as power key, NOT a generic key, as it has HW
+>>> function designed for power key purpose.
+>>
+>> gpio-key driver is mostly used for power or reboot key. And it is still called
+>> gpio-key driver. If it is used for power key only, why is it configurable? I can
+>> configure it as KEY_ENTER or some thing different. This driver has not
+>> KEY_POWER specific any thing.
+> 
+> Understood, I am making the V3 with all "power" removed, just using the "key".
+> 
+>>
+>>>
+>>>>
+>>>>>     config KEYBOARD_NEWTON
+>>>>>     	tristate "Newton keyboard"
+>>>>>     	select SERIO
+>>>>> diff --git a/drivers/input/keyboard/Makefile
+>>>>> b/drivers/input/keyboard/Makefile index 9510325..9ea5585 100644
+>>>>> --- a/drivers/input/keyboard/Makefile
+>>>>> +++ b/drivers/input/keyboard/Makefile
+>>>>> @@ -29,6 +29,7 @@ obj-$(CONFIG_KEYBOARD_HIL)		+=
+>> hil_kbd.o
+>>>>>     obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
+>>>>>     obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
+>>>>>     obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
+>>>>> +obj-$(CONFIG_KEYBOARD_IMX_SC_PWRKEY)	+= imx_sc_pwrkey.o
+>>>>>     obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
+>>>>>     obj-$(CONFIG_KEYBOARD_HP7XX)		+= jornada720_kbd.o
+>>>>>     obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
+>>>>> diff --git a/drivers/input/keyboard/imx_sc_pwrkey.c
+>>>>> b/drivers/input/keyboard/imx_sc_pwrkey.c
+>>>>> new file mode 100644
+>>>>> index 0000000..53aa9a4
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/input/keyboard/imx_sc_pwrkey.c
+>>>>> @@ -0,0 +1,169 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>> +/*
+>>>>> + * Copyright 2019 NXP.
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/device.h>
+>>>>> +#include <linux/err.h>
+>>>>> +#include <linux/firmware/imx/sci.h> #include <linux/init.h>
+>>>>> +#include <linux/input.h> #include <linux/interrupt.h> #include
+>>>>> +<linux/jiffies.h> #include <linux/kernel.h> #include
+>>>>> +<linux/module.h> #include <linux/of.h> #include
+>>>>> +<linux/of_address.h> #include <linux/platform_device.h>
+>>>>> +
+>>>>> +#define DEBOUNCE_TIME	100
+>>>>> +#define REPEAT_INTERVAL	60
+>>>>> +
+>>>>> +#define SC_IRQ_BUTTON		1
+>>>>> +#define SC_IRQ_GROUP_WAKE	3
+>>>>> +#define IMX_SC_MISC_FUNC_GET_BUTTON_STATUS	18
+>>>>> +
+>>>>> +struct imx_pwrkey_drv_data {
+>>>>> +	int keycode;
+>>>>> +	bool keystate;  /* 1: pressed, 0: release */
+>>>>> +	bool delay_check;
+>>>>> +	struct delayed_work check_work;
+>>>>> +	struct input_dev *input;
+>>>>> +};
+>>>>> +
+>>>>> +struct imx_sc_msg_pwrkey {
+>>>>> +	struct imx_sc_rpc_msg hdr;
+>>>>> +	u8 state;
+>>>>> +};
+>>>>> +static struct imx_pwrkey_drv_data *pdata;
+>>>>
+>>>> Why is it global struct? It seems to be flexible configurable over devicetree.
+>>>> So I would assume it should be able to handle more then one button.
+>>>> Please remove global variables, make it allocatable per OF node.
+>>>
+>>> There is ONLY one button available for SC key, but yes, I think I can
+>>> make the structure private and get all necessary data from the structure
+>> using container_of.
+>>
+>> And we will never need more then 640 kB RAM ;)
+>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fen.wi
+>> kiquote.org%2Fwiki%2FTalk%3ABill_Gates&amp;data=02%7C01%7Canson.hu
+>> ang%40nxp.com%7C4d4d7458087747e0d8f008d7304057e9%7C686ea1d3bc2
+>> b4c6fa92cd99c5c301635%7C0%7C0%7C637030925236150243&amp;sdata=w
+>> %2FGXBaHfnBdLwjTxjbzWSPeIw3ExL%2Fs9IMOgF1onL6A%3D&amp;reserved
+>> =0
+>>
+>>>
+>>>>
+>>>> Please use different name "pdata" is usually used as platform data.
+>>>> Please, use "priv".
+>>>
+>>> OK.
+>>>
+>>>>
+>>>>> +static struct imx_sc_ipc *pwrkey_ipc_handle;
+>>>>
+>>>> same as before, no global variables.
+>>>
+>>> Will move it into private platform data structure.
+>>>
+>>>>
+>>>>> +
+>>>>> +static int imx_sc_pwrkey_notify(struct notifier_block *nb,
+>>>>> +				unsigned long event, void *group) {
+>>>>> +	if ((event & SC_IRQ_BUTTON) && (*(u8 *)group ==
+>>>> SC_IRQ_GROUP_WAKE)
+>>>>> +	    && !pdata->delay_check) {
+>>>>> +		pdata->delay_check = 1;
+>>>>> +		schedule_delayed_work(&pdata->check_work,
+>>>>> +				      msecs_to_jiffies(REPEAT_INTERVAL));
+>>>>> +	}
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void imx_sc_check_for_events(struct work_struct *work) {
+>>>>> +	struct input_dev *input = pdata->input;
+>>>>> +	struct imx_sc_msg_pwrkey msg;
+>>>>> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+>>>>> +	bool state;
+>>>>> +
+>>>>> +	hdr->ver = IMX_SC_RPC_VERSION;
+>>>>> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
+>>>>> +	hdr->func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS;
+>>>>> +	hdr->size = 1;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * Current SCU firmware does NOT have return value for
+>>>>> +	 * this API, that means it is always successful.
+>>>>> +	 */
+>>>>
+>>>> It is not true for the kernel part:
+>>>> https://elixir.
+>>>>
+>> bootlin.com%2Flinux%2Flatest%2Fsource%2Fdrivers%2Ffirmware%2Fimx%2F
+>>>> imx-
+>>>>
+>> scu.c%23L157&amp;data=02%7C01%7Canson.huang%40nxp.com%7C7a5ed3
+>>>>
+>> ef3b2541e61be808d7303810a9%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C
+>>>>
+>> 0%7C0%7C637030889669489141&amp;sdata=d3uw6x6WCPeavJu3QYf9o9cxx
+>>>> Rx4mJar04fQFLF9EhE%3D&amp;reserved=0
+>>>>
+>>>> imx_scu_call_rpc() may fail in different ways and provide proper error
+>> value.
+>>>> Please use it.
+>>>
+>>> There are about 3 APIs are special, this API is one of them, this API
+>>> has no return value from SCU FW API, but it has response data from it,
+>>> so that means if we set the response to false, the stack will be free
+>>> and mailbox will have NULL pointer issue when response data passed
+>>> from SCU FW. If we set the response to true, as the SCU FW has no
+>>> return value, the return value will be the msg->func which will be
+>>> already failed, that is why we have to skip the return value check. This is
+>> one restriction/bug of SCU FW, we will notify SCU FW owner to fix/improve.
+>>
+>> Ok, I see. imx_scu_call_rpc() can return kernel side errors, for example from
+>> imx-scu.c framework EINVAL or ETIMEDOUT or what ever error mbox
+>> framework may also provide.
+>> Aaaannnndd... it can extract an error from SCU package and return it over
+>> same way as other errors.
+>>
+>> And current SCU version has some bugs, so it is providing wrong error value.
+>> Soo... as usual the NXP has decided to make the linux kernel a bit more
+>> worse to make the SCU firmware happy? Is it what you trying to describe?
+>> Really ?! :D
+>>
+>> Please. Fix the SCU first. The provide fixed kernel patch.
+> 
+> Understood, I will notify SCU owner to fix it, meanwhile it does NOT block this driver,
+> I will add return value check in this driver.
+
+It is great! Thank you!
+
+Kind regards,
+Oleksij Rempel
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
