@@ -1,525 +1,116 @@
 Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1707C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AD3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EC7215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44131215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pwupB7ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfICOfL (ORCPT
+        id S1729641AbfICOgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:35:11 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:49327 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729573AbfICOfI (ORCPT
+        Tue, 3 Sep 2019 10:36:12 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:52847 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICOgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:35:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id j23so12622833iog.16
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:35:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=jec/Ra5GNrcyEymYVqUVNgWogybFrHUiJN1qV6vB/yM=;
-        b=E5vkObLm6XGYIbHB3PLahRYxAnmqvt2C/AutGRyZdY6Lae9yI+auHtnnlroOe6qqwr
-         8ISFUsDfVOgm/ST4BnbBdmaJ0Y4wWK/Wz9aQjcYSHth4mFQNJaSbPfPI9wueAUwGqM6r
-         6wFbWhL3K0wtQzCDJ/br6ARz5KlGld1B9AOZpuJz6qYWFh7bzwzSIwNRr8I1dCcxNuwq
-         PMrqDJV4Zb2AffkSVPSEqdQqTMBbd+89Te1JpdVgII1Pl62XCEhW6D0iExQhhJdCwcKl
-         0tgJ21Aam7XpVGBhcphnBXnhV6GJeFC+mSEbn9n+NXnnylLF372PoEF/vaBv349UnrTd
-         vjkw==
-X-Gm-Message-State: APjAAAUk8IB/HfxGAeLUuRzzTKZUuetYBfrlNQTlR+OcdQve9TiRrDue
-        0VT6yPjQnc5C2UnTttPFVpj75XiGSQOcRzwenQ9RUfuL4XqR
-X-Google-Smtp-Source: APXvYqw+nyjc5WbikgKoPnYYpTrRUmgtztguYJaqolLr+QBCZEknaipFKO42lcVJW2dZSA/A32QEaW7dYivQX3L6KAwVKq9GDiBc
+        Tue, 3 Sep 2019 10:36:12 -0400
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x83EZwT2022252;
+        Tue, 3 Sep 2019 23:35:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x83EZwT2022252
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567521359;
+        bh=9ktFv0qZHrNLdzrwjcOGtLvCO084ibPuQ/N0Fl+gU7A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pwupB7wsJBDjVzey/sEx5VW86n2PROIGMQzx4U5hbo4a2h1b5xQ3WdE1N979d6J9F
+         DR+sWBkxx1pqUQpBr95IPreqDLj+oXd5PXqzsJlDGkLnuyh+1JGmEUSG+cx/Yr6T9M
+         8XXa7wb/o+/xYDFkxQQNQRPAxmiZ7zn/zGSIl3V7eJ5e8O3p1rQ8/LHhzq1UbOgOXy
+         o8ZjOCmMkgfHGvJJ4Y4jgYQNLYt9m48u54KLC/kBtr3wn9wl2uncITqiOjZFA7vPdS
+         uANvM0rSylpeKXcguYLy5cNM41i00pNLod0U4A8YGBQQTI9B+j/wUMTHmvbdidQQnh
+         CTVSmoc3uvgjg==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id q186so2377422vkb.0;
+        Tue, 03 Sep 2019 07:35:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4FuSRzkv9Azw5gmRvFJzevb9Qz9Nf3l28VgFj+68j0aeojXOu
+        COmHAOxt1jTEGPmYzymf4qZGviU2leW3Ze8jN10=
+X-Google-Smtp-Source: APXvYqy0zd0XCOiNJxfynAjeoj6yEDocIr/Bo5zsIY6FWiw85VvyTZZTmXSZF7V1YGMIunqTucAAB2GBOylGzkFGOFU=
+X-Received: by 2002:a1f:294a:: with SMTP id p71mr10414923vkp.74.1567521358284;
+ Tue, 03 Sep 2019 07:35:58 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b494:: with SMTP id d142mr21230442iof.156.1567521307066;
- Tue, 03 Sep 2019 07:35:07 -0700 (PDT)
-Date:   Tue, 03 Sep 2019 07:35:07 -0700
-In-Reply-To: <0000000000003d789d05915a9fa3@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000af90d20591a6fea0@google.com>
-Subject: Re: memory leak in nr_rx_frame (2)
-From:   syzbot <syzbot+0145ea560de205bc09f0@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
+In-Reply-To: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 3 Sep 2019 23:35:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS5eYnsuaZ2XxCb1HXmV=QqfgPZNz_E=Ad+CZnDdLdO8A@mail.gmail.com>
+Message-ID: <CAK7LNAS5eYnsuaZ2XxCb1HXmV=QqfgPZNz_E=Ad+CZnDdLdO8A@mail.gmail.com>
+Subject: Re: [PATCH v2] merge_config.sh: ignore unwanted grep errors
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Mark Brown <broonie@kernel.org>, Jon Hunter <jonathanh@nvidia.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Tue, Sep 3, 2019 at 12:19 AM Guillaume Tucker
+<guillaume.tucker@collabora.com> wrote:
+>
+> The merge_config.sh script verifies that all the config options have
+> their expected value in the resulting file and prints any issues as
+> warnings.  These checks aren't intended to be treated as errors given
+> the current implementation.  However, since "set -e" was added, if the
+> grep command to look for a config option does not find it the script
+> will then abort prematurely.
+>
+> Handle the case where the grep exit status is non-zero by setting
+> ACTUAL_VAL to an empty string to restore previous functionality.
+>
+> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> Cc: Jon Hunter <jonathanh@nvidia.com>
+> ---
 
-HEAD commit:    089cf7f6 Linux 5.3-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14100532600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b10436cfda3838d9
-dashboard link: https://syzkaller.appspot.com/bug?extid=0145ea560de205bc09f0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124dcf8e600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115f2346600000
+Applied to linux-kbuild.
+Thanks.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0145ea560de205bc09f0@syzkaller.appspotmail.com
 
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88810de01800 (size 2048):
-   comm "softirq", pid 0, jiffies 4294947090 (age 27.260s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     06 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000002377dcf>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000002377dcf>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<0000000002377dcf>] slab_alloc mm/slab.c:3319 [inline]
-     [<0000000002377dcf>] __do_kmalloc mm/slab.c:3653 [inline]
-     [<0000000002377dcf>] __kmalloc+0x169/0x300 mm/slab.c:3664
-     [<00000000af16d1f0>] kmalloc include/linux/slab.h:557 [inline]
-     [<00000000af16d1f0>] sk_prot_alloc+0x112/0x170 net/core/sock.c:1603
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-     [<00000000e98df687>] cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-     [<00000000e98df687>] do_idle+0x1ea/0x2c0 kernel/sched/idle.c:263
-     [<000000001e3f823f>] cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
 
-BUG: memory leak
-unreferenced object 0xffff88810fa3c9a0 (size 32):
-   comm "softirq", pid 0, jiffies 4294947090 (age 27.260s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     03 00 00 00 03 00 00 00 0f 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000e9077829>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e9077829>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000e9077829>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000e9077829>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<0000000037f78c54>] kmalloc include/linux/slab.h:552 [inline]
-     [<0000000037f78c54>] kzalloc include/linux/slab.h:748 [inline]
-     [<0000000037f78c54>] selinux_sk_alloc_security+0x48/0xb0  
-security/selinux/hooks.c:5073
-     [<00000000313a65ff>] security_sk_alloc+0x49/0x70  
-security/security.c:2029
-     [<00000000ffa4a0b0>] sk_prot_alloc+0x12d/0x170 net/core/sock.c:1606
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+> Notes:
+>     v2: use true rather than echo as per Jon Hunter's suggestion
+>
+>  scripts/kconfig/merge_config.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+> index d924c51d28b7..f2cc10b1d404 100755
+> --- a/scripts/kconfig/merge_config.sh
+> +++ b/scripts/kconfig/merge_config.sh
+> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+>  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
+>
+>         REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
+> -       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
+> +       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || true)
+>         if [ "x$REQUESTED_VAL" != "x$ACTUAL_VAL" ] ; then
+>                 echo "Value requested for $CFG not in final .config"
+>                 echo "Requested value:  $REQUESTED_VAL"
+> --
+> 2.20.1
+>
 
-BUG: memory leak
-unreferenced object 0xffff88810de01800 (size 2048):
-   comm "softirq", pid 0, jiffies 4294947090 (age 30.780s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     06 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000002377dcf>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000002377dcf>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<0000000002377dcf>] slab_alloc mm/slab.c:3319 [inline]
-     [<0000000002377dcf>] __do_kmalloc mm/slab.c:3653 [inline]
-     [<0000000002377dcf>] __kmalloc+0x169/0x300 mm/slab.c:3664
-     [<00000000af16d1f0>] kmalloc include/linux/slab.h:557 [inline]
-     [<00000000af16d1f0>] sk_prot_alloc+0x112/0x170 net/core/sock.c:1603
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-     [<00000000e98df687>] cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-     [<00000000e98df687>] do_idle+0x1ea/0x2c0 kernel/sched/idle.c:263
-     [<000000001e3f823f>] cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
 
-BUG: memory leak
-unreferenced object 0xffff88810fa3c9a0 (size 32):
-   comm "softirq", pid 0, jiffies 4294947090 (age 30.780s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     03 00 00 00 03 00 00 00 0f 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000e9077829>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e9077829>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000e9077829>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000e9077829>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<0000000037f78c54>] kmalloc include/linux/slab.h:552 [inline]
-     [<0000000037f78c54>] kzalloc include/linux/slab.h:748 [inline]
-     [<0000000037f78c54>] selinux_sk_alloc_security+0x48/0xb0  
-security/selinux/hooks.c:5073
-     [<00000000313a65ff>] security_sk_alloc+0x49/0x70  
-security/security.c:2029
-     [<00000000ffa4a0b0>] sk_prot_alloc+0x12d/0x170 net/core/sock.c:1606
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-
-BUG: memory leak
-unreferenced object 0xffff88810de01800 (size 2048):
-   comm "softirq", pid 0, jiffies 4294947090 (age 32.010s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     06 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000002377dcf>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000002377dcf>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<0000000002377dcf>] slab_alloc mm/slab.c:3319 [inline]
-     [<0000000002377dcf>] __do_kmalloc mm/slab.c:3653 [inline]
-     [<0000000002377dcf>] __kmalloc+0x169/0x300 mm/slab.c:3664
-     [<00000000af16d1f0>] kmalloc include/linux/slab.h:557 [inline]
-     [<00000000af16d1f0>] sk_prot_alloc+0x112/0x170 net/core/sock.c:1603
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-     [<00000000e98df687>] cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-     [<00000000e98df687>] do_idle+0x1ea/0x2c0 kernel/sched/idle.c:263
-     [<000000001e3f823f>] cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
-
-BUG: memory leak
-unreferenced object 0xffff88810fa3c9a0 (size 32):
-   comm "softirq", pid 0, jiffies 4294947090 (age 32.010s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     03 00 00 00 03 00 00 00 0f 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000e9077829>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e9077829>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000e9077829>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000e9077829>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<0000000037f78c54>] kmalloc include/linux/slab.h:552 [inline]
-     [<0000000037f78c54>] kzalloc include/linux/slab.h:748 [inline]
-     [<0000000037f78c54>] selinux_sk_alloc_security+0x48/0xb0  
-security/selinux/hooks.c:5073
-     [<00000000313a65ff>] security_sk_alloc+0x49/0x70  
-security/security.c:2029
-     [<00000000ffa4a0b0>] sk_prot_alloc+0x12d/0x170 net/core/sock.c:1606
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-
-BUG: memory leak
-unreferenced object 0xffff88810de01800 (size 2048):
-   comm "softirq", pid 0, jiffies 4294947090 (age 32.080s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     06 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000002377dcf>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000002377dcf>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<0000000002377dcf>] slab_alloc mm/slab.c:3319 [inline]
-     [<0000000002377dcf>] __do_kmalloc mm/slab.c:3653 [inline]
-     [<0000000002377dcf>] __kmalloc+0x169/0x300 mm/slab.c:3664
-     [<00000000af16d1f0>] kmalloc include/linux/slab.h:557 [inline]
-     [<00000000af16d1f0>] sk_prot_alloc+0x112/0x170 net/core/sock.c:1603
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-     [<00000000e98df687>] cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-     [<00000000e98df687>] do_idle+0x1ea/0x2c0 kernel/sched/idle.c:263
-     [<000000001e3f823f>] cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
-
-BUG: memory leak
-unreferenced object 0xffff88810fa3c9a0 (size 32):
-   comm "softirq", pid 0, jiffies 4294947090 (age 32.080s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     03 00 00 00 03 00 00 00 0f 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000e9077829>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e9077829>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000e9077829>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000e9077829>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<0000000037f78c54>] kmalloc include/linux/slab.h:552 [inline]
-     [<0000000037f78c54>] kzalloc include/linux/slab.h:748 [inline]
-     [<0000000037f78c54>] selinux_sk_alloc_security+0x48/0xb0  
-security/selinux/hooks.c:5073
-     [<00000000313a65ff>] security_sk_alloc+0x49/0x70  
-security/security.c:2029
-     [<00000000ffa4a0b0>] sk_prot_alloc+0x12d/0x170 net/core/sock.c:1606
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-
-BUG: memory leak
-unreferenced object 0xffff88810de01800 (size 2048):
-   comm "softirq", pid 0, jiffies 4294947090 (age 32.150s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     06 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000002377dcf>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000002377dcf>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<0000000002377dcf>] slab_alloc mm/slab.c:3319 [inline]
-     [<0000000002377dcf>] __do_kmalloc mm/slab.c:3653 [inline]
-     [<0000000002377dcf>] __kmalloc+0x169/0x300 mm/slab.c:3664
-     [<00000000af16d1f0>] kmalloc include/linux/slab.h:557 [inline]
-     [<00000000af16d1f0>] sk_prot_alloc+0x112/0x170 net/core/sock.c:1603
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-     [<00000000e98df687>] cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-     [<00000000e98df687>] do_idle+0x1ea/0x2c0 kernel/sched/idle.c:263
-     [<000000001e3f823f>] cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
-
-BUG: memory leak
-unreferenced object 0xffff88810fa3c9a0 (size 32):
-   comm "softirq", pid 0, jiffies 4294947090 (age 32.150s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     03 00 00 00 03 00 00 00 0f 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000e9077829>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e9077829>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000e9077829>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000e9077829>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<0000000037f78c54>] kmalloc include/linux/slab.h:552 [inline]
-     [<0000000037f78c54>] kzalloc include/linux/slab.h:748 [inline]
-     [<0000000037f78c54>] selinux_sk_alloc_security+0x48/0xb0  
-security/selinux/hooks.c:5073
-     [<00000000313a65ff>] security_sk_alloc+0x49/0x70  
-security/security.c:2029
-     [<00000000ffa4a0b0>] sk_prot_alloc+0x12d/0x170 net/core/sock.c:1606
-     [<00000000b9033c4c>] sk_alloc+0x35/0x2f0 net/core/sock.c:1657
-     [<00000000fb9e6269>] nr_make_new net/netrom/af_netrom.c:476 [inline]
-     [<00000000fb9e6269>] nr_rx_frame+0x339/0x8ee net/netrom/af_netrom.c:959
-     [<00000000fca3a307>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:59
-     [<0000000009d4e723>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<0000000047ea1d35>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<0000000047ea1d35>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<0000000047ea1d35>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000e53c6536>] __do_softirq+0x115/0x33f kernel/softirq.c:292
-     [<0000000024be59bc>] invoke_softirq kernel/softirq.c:373 [inline]
-     [<0000000024be59bc>] irq_exit+0xbb/0xe0 kernel/softirq.c:413
-     [<0000000080d19282>] exiting_irq arch/x86/include/asm/apic.h:537  
-[inline]
-     [<0000000080d19282>] smp_apic_timer_interrupt+0x96/0x190  
-arch/x86/kernel/apic/apic.c:1133
-     [<000000000e93dbd5>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:830
-     [<000000002864ce39>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000007e3841ad>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000546bc34f>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-
-executing program
-executing program
-executing program
-
+-- 
+Best Regards
+Masahiro Yamada
