@@ -2,88 +2,133 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0402AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DC2C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DF321881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:22:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dnowmga+"
+	by mail.kernel.org (Postfix) with ESMTP id 14E0C21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfICFWd (ORCPT
+        id S1726452AbfICFYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:22:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45841 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfICFWd (ORCPT
+        Tue, 3 Sep 2019 01:24:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725848AbfICFYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:22:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so2451649pfb.12;
-        Mon, 02 Sep 2019 22:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PG4gs15gIZ4A13AM7KKBtxfHSobNNxID1O7jVrr704s=;
-        b=Dnowmga+8FytPRC2oXActJjrzdSdzqoiEHPYcxadH83Lyo7BNsdvs7VtAK5N+Y5HTh
-         9SwRvLqy23QG9Gf+njtCCn6zJWNccBpObYcunOGxLPu5C2TFX6wWHqrn8BGl810LfPad
-         5oe24tdoOsB68DmHjdE0swC/HPEI4bbAIxSCjFBfpRj4yR890BYNIccWZ+qUQ2k/BTfx
-         nReAInNBxiVFLgEoakH66wVVImN/uTQf3wPlEqQBkiOqun2dAp2uuNiF2tsDeXakWNaZ
-         BsiZbKDprfINyL2+Jf0Lg2a/SODVYKj6vE0zhBZrJv7ZpLY47/D3uPLq7o2w3kZFho7W
-         kMoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PG4gs15gIZ4A13AM7KKBtxfHSobNNxID1O7jVrr704s=;
-        b=cjFXKDSjRwh6abEXkelofoCetvaJxQ9lrBsUjbafV1r4atEHD002VS+7ACKNI+pCHS
-         TJ8CjokFWaugwfjdAVIv/FVkZauABYQjQFk+P6YlmbyDOEUXWEdLN+yMidBJ7CqKkLE4
-         Qfiz4s0uBkaGmE/1TJGywxDBeAPiDvhgrwXUC72LkUcX70qktjtCgF+lI3VmfHje5B/N
-         iJMwB4NnCTgjpS+aEcwUdCKcaFu3VDMYe/C3S0+2sQ76peQGINnlep+/cOenxZEYAQQU
-         AE3SBeKwaRyWI87qYx+6hwtS3EJDXTbzNfUmPfPUn2C9tVPviXtH6ya+IHtWij/EAlyO
-         ah5w==
-X-Gm-Message-State: APjAAAVPB6qvWBhY6m1f+WVNVzim8XOO7b4cJyHD2giBm7r7Ywep8TTj
-        fBftOJnJFESIVW2sQExQhneXctVPHyIyA8+p4PLCIJgM
-X-Google-Smtp-Source: APXvYqyHperALgm8lL5IUNIg8lI94/bFS4z+MWn1R8zmDLyouND7eyQlZJ7RsDFiVza98N/nXlfou84UJx/41OzfdbU=
-X-Received: by 2002:a63:211c:: with SMTP id h28mr28193617pgh.438.1567488152793;
- Mon, 02 Sep 2019 22:22:32 -0700 (PDT)
+        Tue, 3 Sep 2019 01:24:54 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x835MSxx153363
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 01:24:53 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ushh38s65-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:24:52 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 3 Sep 2019 06:24:51 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Sep 2019 06:24:47 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x835Okha47775760
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 05:24:46 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D21AAE055;
+        Tue,  3 Sep 2019 05:24:46 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A885DAE04D;
+        Tue,  3 Sep 2019 05:24:45 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Sep 2019 05:24:45 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5E4F8A00EC;
+        Tue,  3 Sep 2019 15:24:44 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] powerpc: convert cache asm to C
+Date:   Tue,  3 Sep 2019 15:23:54 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
-In-Reply-To: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
-From:   Dexuan-Linux Cui <dexuan.linux@gmail.com>
-Date:   Mon, 2 Sep 2019 22:22:21 -0700
-Message-ID: <CAA42JLZySdadoL5LAhofXZx3T41A9hm=_izyrRs0MHbSbMf3MA@mail.gmail.com>
-Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot panic
-To:     Qian Cai <cai@lca.pw>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, v-lide@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090305-0020-0000-0000-00000366F23E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090305-0021-0000-0000-000021BC593F
+Message-Id: <20190903052407.16638-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 9:22 PM Qian Cai <cai@lca.pw> wrote:
->
-> The linux-next commit "fs/namei.c: keep track of nd->root refcount status=
-=E2=80=9D [1] causes boot panic on all
-> architectures here on today=E2=80=99s linux-next (0902). Reverted it will=
- fix the issue.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-I believe I'm seeing the same issue with next-20190902 in a Linux VM
-running on Hyper-V (next-20190830 is good).
+This series addresses a few issues discovered in how we flush caches:
+1. Flushes were truncated at 4GB, so larger flushes were incorrect.
+2. Flushing the dcache in arch_add_memory was unnecessary
 
-git-bisect points to the same commit in linux-next:
-    e013ec23b823 ("fs/namei.c: keep track of nd->root refcount status")
+This series also converts much of the cache assembler to C, with the
+aim of making it easier to maintain.
 
-I can reproduce the issue every time I reboot the system.
+Alastair D'Silva (6):
+  powerpc: Allow flush_icache_range to work across ranges >4GB
+  powerpc: define helpers to get L1 icache sizes
+  powerpc: Convert flush_icache_range & friends to C
+  powerpc: Chunk calls to flush_dcache_range in arch_*_memory
+  powerpc: Remove 'extern' from func prototypes in cache headers
+  powerpc: Don't flush caches when adding memory
 
-Thanks,
-Dexuan
+Changelog:
+ V2:
+     - Replace C implementation of flush_dcache_icache_phys() with
+       inline assembler authored by Christophe Leroy
+     - Add memory clobbers for iccci implementation
+     - Give __flush_dcache_icache a real implementation, it can't
+       just be a wrapper around flush_icache_range()
+     - Remove PPC64_CACHES from misc_64.S
+     - Replace code duplicating clean_dcache_range() in
+       flush_icache_range() with a call to clean_dcache_range()
+     - Replace #ifdef CONFIG_44x with IS_ENABLED(...) in
+       flush_icache_cange()
+     - Use 1GB chunks instead of 16GB in arch_*_memory
+
+
+ arch/powerpc/include/asm/cache.h      |  63 ++++++----
+ arch/powerpc/include/asm/cacheflush.h |  37 +++---
+ arch/powerpc/kernel/misc_32.S         | 117 -------------------
+ arch/powerpc/kernel/misc_64.S         | 102 -----------------
+ arch/powerpc/mm/mem.c                 | 159 +++++++++++++++++++++++++-
+ 5 files changed, 213 insertions(+), 265 deletions(-)
+
+-- 
+2.21.0
+
