@@ -2,90 +2,90 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF573C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40618C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BCF23431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131B423431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:36:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eu4SuX4X";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n4N6oMCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfICNdX (ORCPT
+        id S1729241AbfICNg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:33:23 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41965 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfICNdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:33:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 06:33:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="198770919"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 06:33:20 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 03 Sep 2019 16:33:19 +0300
-Date:   Tue, 3 Sep 2019 16:33:19 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Brad Campbell <lists2009@fnarfbargle.com>
-Cc:     linux-kernel@vger.kernel.org, michael.jamet@intel.com,
-        YehezkelShB@gmail.com
-Subject: Re: Thunderbolt DP oddity on v5.2.9 on iMac 12,2
-Message-ID: <20190903133319.GG2691@lahna.fi.intel.com>
-References: <20190828073302.GO3177@lahna.fi.intel.com>
- <7c9474d2-d948-4d1d-6f7b-94335b8b1f15@fnarfbargle.com>
- <20190828102342.GT3177@lahna.fi.intel.com>
- <e3a8fa91-2cfd-76a4-641c-610c32122833@fnarfbargle.com>
- <20190828131943.GZ3177@lahna.fi.intel.com>
- <be32b369-b013-cca8-5475-9b56acaa3e18@fnarfbargle.com>
- <20190903101325.GC2691@lahna.fi.intel.com>
- <71e34f9e-8e0d-f5f2-bc55-006aeb8a383b@fnarfbargle.com>
- <20190903115527.GE2691@lahna.fi.intel.com>
- <30fe86c0-e4f9-e852-a4d8-7b8263b373ef@fnarfbargle.com>
+        Tue, 3 Sep 2019 09:36:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48834 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbfICNg1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:36:27 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DD0A3605A2; Tue,  3 Sep 2019 13:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567517785;
+        bh=T4+qthdIa+JdtJ1JZNw78DDAC6sdnSeXsq52RWos8i8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=eu4SuX4XJTg98x2tGFMxG20wx4cFDttZSQzpbJg3b6Wn1pO346QTjqcrRO3rxZxjJ
+         KUYy1H6vDhwFTMKl0B4xb+w+mEmMtbryFE88MC7ogW7bf+f5yHdmFPpt1cYRe74B2z
+         rybsJ5EqkOjXuBHzp4eS6OSoZAUib3VzPelsncUA=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB942602CA;
+        Tue,  3 Sep 2019 13:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567517785;
+        bh=T4+qthdIa+JdtJ1JZNw78DDAC6sdnSeXsq52RWos8i8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=n4N6oMCI7ZAh48ltOR5O3mymXNlUO4JcKKK99is1xAel8K0RsIq0Mrj8yLzJLlctL
+         gr79ARrs4bsck8Od+R9MUGVVnLj3WhaC/HwYmQDERP7t4fOGClJUggt0H4bnpZwlcL
+         JLPn0o7Fm41sqbVjRi0Q1rqaTvhu3NZvjQHeQhwQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CB942602CA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30fe86c0-e4f9-e852-a4d8-7b8263b373ef@fnarfbargle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtw88: remove redundant assignment to pointer
+ debugfs_topdir
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190822113728.25494-1-colin.king@canonical.com>
+References: <20190822113728.25494-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190903133625.DD0A3605A2@smtp.codeaurora.org>
+Date:   Tue,  3 Sep 2019 13:36:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:54:02PM +0800, Brad Campbell wrote:
-> On 3/9/19 7:55 pm, Mika Westerberg wrote:
-> > On Tue, Sep 03, 2019 at 07:11:32PM +0800, Brad Campbell wrote:
-> > 
-> > I think the problem is that for some reason, probably because this is
-> > first generation hardware with all the bugs included, you cannot read
-> > the second dword from DP adapter path config space (you can write it
-> > though).
-> > 
-> > I've updated the patch so that it reads only the first dword when it
-> > discovers paths and also when it disables them. Can you try it out and
-> > see if it makes a difference? This should also get rid of the warnings
-> > you get.
-> > 
+Colin King <colin.king@canonical.com> wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> It would seem so. Now I get 3 heads on a cold or warm boot and no warnings
-> in the log, so it looks like that did the job. I've attached the dmesg from
-> the last cold boot for reference.
-
-Great, thanks for checking. I will create a proper patch and submit
-upstream hopefully later this week or early next.
-
-> I forgot to mention I did try the chained monitors over the weekend, but
-> that resulted in some carnage (corrupted displays and some form of hard lock
-> when starting X). I've not had a chance to get netconsole configured up to
-> catch any wreckage when it explodes as it didn't leave anything on disk.
+> Pointer debugfs_topdir is initialized to a value that is never read
+> and it is re-assigned later. The initialization is redundant and can
+> be removed.
 > 
-> I will do that in the next couple of days just for completeness.
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Yeah, it would be interesting to see where it blows up. From graphics
-perspective the two cases should not make any difference.
+Patch applied to wireless-drivers-next.git, thanks.
+
+9f7d65fb3935 rtw88: remove redundant assignment to pointer debugfs_topdir
+
+-- 
+https://patchwork.kernel.org/patch/11109159/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
