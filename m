@@ -2,172 +2,156 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F321C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2451DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4899120870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63F720870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b="Fh7/Pj/T"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ddSKJmtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbfICREX (ORCPT
+        id S1730089AbfICRFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:04:23 -0400
-Received: from mail-eopbgr820047.outbound.protection.outlook.com ([40.107.82.47]:14198
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728571AbfICREW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:04:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SEW3U1DrhnPq/q/gBkOWs/xb9KTcblgjxz1Xth7vc0LAA6vZLSCtvOInon/zzStnTfKQ+MYlhqaEVW9hGiZqX9sKE2SLGW9er/xrKYvcQdsUOOC2M+FDEG6SSew6A2khnGCrTrucSd3nmjDuUl07nWG/Q/O3z7uztSSlh1HT4xpBhEv5HtUcnZko6lw6r3TQNn1WK7xPCDG2HbsNPdPIeqZBRK7TG9f6NxzJ6Ou+y6pBBEOdT3/AF6wgqCXEIfPaaUXI4JPOYjrhuC49OwwXMe7Fx1nsL+Hb0B/4/TI6X+4+mJufNSPoP46EwwXYjTQR0CD7j9Ar/ZzrGusC2f1i5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FE1vkhZEcBTm/jJaftv+DejwqE1+7/QXcmbHN3bXq44=;
- b=BxBIxDSyWngWgnAnu4zY5SnlMgQO+dp4wYAr3yyX60f16TzBQ1ZVh0Dp2Yoa00eHhDWzVIpyx0GzxN+rAUikxSgcjCEOgUGh45A2+yyT2I47Jxu84JZdQi6FSTr5BGjSE8dXwxywbA8HvAhhqB76UUPXcvRszhH34HB2nTD1oFrnRuWes0kx1veRQvHG8Qie1enNtdow7TUPOg8xUfT6vu/j0C4kM2YktH785IbmP3oYr9VsCE6g5E+HmhF2GNnBKahsMp7d4m2BaD5QCWUbdTtDZF/SF33vdg4tn+5DMS9eGqcVLi6uX87ySKckPBCKenVcK9RPFLei+v3vM0hHQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FE1vkhZEcBTm/jJaftv+DejwqE1+7/QXcmbHN3bXq44=;
- b=Fh7/Pj/Tz6qTg6pwJFWwPoWjdGD4hjMuoFrrhuzUoGPXiWeVUI8YRCLfoNA+gLGOzhV/fZ2ATzYq486DYIL/HpIgdl2fE+6emFst9fUM+rLyRbDMS+qalTxEFacb6Y/GGpdENom0+juoWNAM6GSbUQk8Cma2Ysj4jJLNDvq0jXk=
-Received: from BY5PR19MB3176.namprd19.prod.outlook.com (10.255.160.21) by
- BY5PR19MB3221.namprd19.prod.outlook.com (10.255.160.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Tue, 3 Sep 2019 17:04:20 +0000
-Received: from BY5PR19MB3176.namprd19.prod.outlook.com
- ([fe80::844f:102f:5181:c074]) by BY5PR19MB3176.namprd19.prod.outlook.com
- ([fe80::844f:102f:5181:c074%3]) with mapi id 15.20.2220.022; Tue, 3 Sep 2019
- 17:04:20 +0000
-From:   Matt Lupfer <mlupfer@ddn.com>
-To:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matt Lupfer <mlupfer@ddn.com>
-Subject: [PATCH] scsi: virtio_scsi: unplug LUNs when events missed
-Thread-Topic: [PATCH] scsi: virtio_scsi: unplug LUNs when events missed
-Thread-Index: AQHVYnmgUCG1mM4ObEKGSGCIQ1xBzg==
-Date:   Tue, 3 Sep 2019 17:04:20 +0000
-Message-ID: <20190903170408.32286-1-mlupfer@ddn.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR03CA0002.namprd03.prod.outlook.com
- (2603:10b6:404:23::12) To BY5PR19MB3176.namprd19.prod.outlook.com
- (2603:10b6:a03:184::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mlupfer@ddn.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.23.0
-x-originating-ip: [107.128.241.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc3df57e-7d38-49e1-eba6-08d73090c2ff
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR19MB3221;
-x-ms-traffictypediagnostic: BY5PR19MB3221:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR19MB322198CDECF53BC0BF569074AEB90@BY5PR19MB3221.namprd19.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(376002)(136003)(366004)(346002)(396003)(189003)(199004)(36756003)(71190400001)(71200400001)(14454004)(25786009)(4326008)(256004)(478600001)(5024004)(66556008)(66476007)(66446008)(64756008)(66946007)(476003)(6486002)(2616005)(86362001)(486006)(8676002)(81156014)(102836004)(81166006)(8936002)(50226002)(386003)(7736002)(6506007)(305945005)(6116002)(3846002)(26005)(5660300002)(2906002)(316002)(186003)(110136005)(54906003)(1076003)(52116002)(99286004)(6512007)(66066001)(6436002)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR19MB3221;H:BY5PR19MB3176.namprd19.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ddn.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RUmvvb9EMpVdSOP5wT+r+RINhpPJNUTNk4b/DHOnu/M9IaKFyUuNdjjERa6bKk9Dlx7GAd/jpk+NfTC1NMisgz1/mRYDu88+JzI6xKs0bzTtIDN6z75g4F+4KINMOilhmac2lvQTI9JNkrG/AuJlorJQpAWs/VmufEgi+1MF7gm2PL8nKxRItYFYrAII8cjyZ63KzlJy7NrG7i+bnqZZ7jeyAMAjBQLAYopZwt58iONTQ8gzKDzdjEJz5rMgPePiTLnUErMmRrAQPHgZfOvTPblMYn+Ex9PjJ7pdsQliJTjN1cc7MX8Htfa9fXXFEm1Daa5eiQyLzn3roSXB/Ed9sHjYpOnbftguKWZalCSPcCGKgMuh1nG2vJWhClcL7Ex4iZ5sPeUhnsoe5mDBpc78zl0kfnlxDmUggZ3OQ5BzJR8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Sep 2019 13:05:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:23676 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729056AbfICRFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 13:05:23 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46NCxq6NB6z9ttSV;
+        Tue,  3 Sep 2019 19:05:19 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ddSKJmtr; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 2vuLju-xL0CH; Tue,  3 Sep 2019 19:05:19 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46NCxq4srnz9ttSS;
+        Tue,  3 Sep 2019 19:05:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567530319; bh=AnfdWi7CX7QvptJ7TwWSoc3U0kxIA1QpOhq4tZSTQk8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ddSKJmtrXauwW4OQ6ofNnTtFBI+TtMnI5tc2ICEKqvmDV99s9XBTUUvaCveYJKiOn
+         dYmIPLo+ZtS6vMUnwVYFivmyZt1RnNbsVJ6GjmLVgcgR9Dm/hCzcW2WxA8EJJ9pdsg
+         5W2eLVduyBHO62mxytTV99pyvo02DZ/JJikdgzLk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 640B18B881;
+        Tue,  3 Sep 2019 19:05:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id wUZWLHRixqsD; Tue,  3 Sep 2019 19:05:21 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 308678B86E;
+        Tue,  3 Sep 2019 19:05:20 +0200 (CEST)
+Subject: Re: [PATCH v2 3/6] powerpc: Convert flush_icache_range & friends to C
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Alastair D'Silva <alastair@au1.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>, alastair@d-silva.org,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Allison Randal <allison@lohutok.net>
+References: <20190903052407.16638-1-alastair@au1.ibm.com>
+ <20190903052407.16638-4-alastair@au1.ibm.com>
+ <20190903130430.GC31406@gate.crashing.org>
+ <d268ee78-607e-5eb3-ed89-d5c07f672046@c-s.fr>
+ <20190903160415.GA9749@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <321b003a-9633-5ff4-c4a2-59a47ec23421@c-s.fr>
+Date:   Tue, 3 Sep 2019 19:05:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: ddn.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc3df57e-7d38-49e1-eba6-08d73090c2ff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 17:04:20.2709
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Vt/yFrolFeFtItMqa33m8bCgerKq3VBWspQM6MbtqDFP9VNcOVTyV6OM4vFl5w1v
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR19MB3221
+In-Reply-To: <20190903160415.GA9749@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The event handler calls scsi_scan_host() when events are missed, which
-will hotplug new LUNs.  However, this function won't remove any
-unplugged LUNs.  The result is that hotunplug doesn't work properly when
-the number of unplugged LUNs exceeds the event queue size (currently 8).
 
-Scan existing LUNs when events are missed to check if they are still
-present.  If not, remove them.
 
-Signed-off-by: Matt Lupfer <mlupfer@ddn.com>
----
- drivers/scsi/virtio_scsi.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Le 03/09/2019 à 18:04, Segher Boessenkool a écrit :
+> On Tue, Sep 03, 2019 at 04:28:09PM +0200, Christophe Leroy wrote:
+>> Le 03/09/2019 à 15:04, Segher Boessenkool a écrit :
+>>> On Tue, Sep 03, 2019 at 03:23:57PM +1000, Alastair D'Silva wrote:
+>>>> +	asm volatile(
+>>>> +		"   mtctr %2;"
+>>>> +		"   mtmsr %3;"
+>>>> +		"   isync;"
+>>>> +		"0: dcbst   0, %0;"
+>>>> +		"   addi    %0, %0, %4;"
+>>>> +		"   bdnz    0b;"
+>>>> +		"   sync;"
+>>>> +		"   mtctr %2;"
+>>>> +		"1: icbi    0, %1;"
+>>>> +		"   addi    %1, %1, %4;"
+>>>> +		"   bdnz    1b;"
+>>>> +		"   sync;"
+>>>> +		"   mtmsr %5;"
+>>>> +		"   isync;"
+>>>> +		: "+r" (loop1), "+r" (loop2)
+>>>> +		: "r" (nb), "r" (msr), "i" (bytes), "r" (msr0)
+>>>> +		: "ctr", "memory");
+>>>
+>>> This outputs as one huge assembler statement, all on one line.  That's
+>>> going to be fun to read or debug.
+>>
+>> Do you mean \n has to be added after the ; ?
+> 
+> Something like that.  There is no really satisfying way for doing huge
+> inline asm, and maybe that is a good thing ;-)
+> 
+> Often people write \n\t at the end of each line of inline asm.  This works
+> pretty well (but then there are labels, oh joy).
+> 
+>>> loop1 and/or loop2 can be assigned the same register as msr0 or nb.  They
+>>> need to be made earlyclobbers.  (msr is fine, all of its reads are before
+>>> any writes to loop1 or loop2; and bytes is fine, it's not a register).
+>>
+>> Can you explicit please ? Doesn't '+r' means that they are input and
+>> output at the same time ?
+> 
+> That is what + means, yes -- that this output is an input as well.  It is
+> the same to write
+> 
+>    asm("mov %1,%0 ; mov %0,42" : "+r"(x), "=r"(y));
+> or to write
+>    asm("mov %1,%0 ; mov %0,42" : "=r"(x), "=r"(y) : "0"(x));
+> 
+> (So not "at the same time" as in "in the same machine instruction", but
+> more loosely, as in "in the same inline asm statement").
+> 
+>> "to be made earlyclobbers", what does this means exactly ? How to do that ?
+> 
+> You write &, like "+&r" in this case.  It means the machine code writes
+> to this register before it has consumed all asm inputs (remember, GCC
+> does not understand (or even parse!) the assembler string).
+> 
+> So just
+> 
+> 		: "+&r" (loop1), "+&r" (loop2)
+> 
+> will do.  (Why are they separate though?  It could just be one loop var).
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index 297e1076e571..18df77bf371b 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -324,6 +324,36 @@ static void virtscsi_handle_param_change(struct virtio=
-_scsi *vscsi,
- 	scsi_device_put(sdev);
- }
-=20
-+static void virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
-+{
-+	struct scsi_device *sdev;
-+	struct Scsi_Host *shost =3D virtio_scsi_host(vscsi->vdev);
-+	unsigned char scsi_cmd[MAX_COMMAND_SIZE];
-+	int result, inquiry_len, inq_result_len =3D 256;
-+	char *inq_result =3D kmalloc(inq_result_len, GFP_KERNEL);
-+
-+	shost_for_each_device(sdev, shost) {
-+		inquiry_len =3D sdev->inquiry_len ? sdev->inquiry_len : 36;
-+
-+		memset(scsi_cmd, 0, sizeof(scsi_cmd));
-+		scsi_cmd[0] =3D INQUIRY;
-+		scsi_cmd[4] =3D (unsigned char) inquiry_len;
-+
-+		memset(inq_result, 0, inq_result_len);
-+
-+		result =3D scsi_execute_req(sdev, scsi_cmd, DMA_FROM_DEVICE,
-+					  inq_result, inquiry_len, NULL,
-+					  2, 3, NULL);
-+
-+		if (result =3D=3D 0 && inq_result[0] >> 5) {
-+			/* PQ indicates the LUN is not attached */
-+			scsi_remove_device(sdev);
-+		}
-+	}
-+
-+	kfree(inq_result);
-+}
-+
- static void virtscsi_handle_event(struct work_struct *work)
- {
- 	struct virtio_scsi_event_node *event_node =3D
-@@ -335,6 +365,7 @@ static void virtscsi_handle_event(struct work_struct *w=
-ork)
- 	    cpu_to_virtio32(vscsi->vdev, VIRTIO_SCSI_T_EVENTS_MISSED)) {
- 		event->event &=3D ~cpu_to_virtio32(vscsi->vdev,
- 						   VIRTIO_SCSI_T_EVENTS_MISSED);
-+		virtscsi_rescan_hotunplug(vscsi);
- 		scsi_scan_host(virtio_scsi_host(vscsi->vdev));
- 	}
-=20
---=20
-2.23.0
+Yes it could just be a single loop var, but in that case it would have 
+to be reset at the start of the second loop, which means we would have 
+to pass 'addr' for resetting the loop anyway, so I opted to do it 
+outside the inline asm by using to separate loop vars set to their 
+starting value outside the inline asm.
 
+Christophe
