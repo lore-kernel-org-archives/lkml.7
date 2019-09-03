@@ -2,102 +2,95 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA30C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38773C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7992341F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528641;
-	bh=SebfApjkwn1FtARA0bW+W3QhdPA0kSbofoRWILz9//k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q0z7shtqTYizByxrHTOSAEXwU9tQMWdMyuDLlFXHuEELP/pP+0hGd+FFHYTWB8uJf
-	 n0V3aORzNaQDDSWqxTiWkv1GwWohnLCxMS4VKUH4yRDNL9ralNrTLk+OfwEspHmx3z
-	 PTsKV9/fZ7WdugnkFoAEHHYrCfr+8mXoAgSkg5gQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0FDBE2377B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbfICQhU (ORCPT
+        id S1731375AbfICQhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47762 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:37:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45328 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730699AbfICQ0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730717AbfICQhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:37:14 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C097023789;
-        Tue,  3 Sep 2019 16:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528002;
-        bh=SebfApjkwn1FtARA0bW+W3QhdPA0kSbofoRWILz9//k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exo/CpjhndAhqYDRinw3Nn8NFh+8It3G8hqp6KRMFkqTRvuW1gYAxJkctfWRYQ3yi
-         6XZysL7gyVqlr+tajulalyj+MYUN3p+hxlnv8ZCa+M8RzTlOpcelNXZYl1b6r+g35q
-         03MbKVV6oGR4Ica8J7WEeFfKOhGLBYvwl6d/Rvx8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 048/167] media: vim2m: only cancel work if it is for right context
-Date:   Tue,  3 Sep 2019 12:23:20 -0400
-Message-Id: <20190903162519.7136-48-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 08C61308FC22;
+        Tue,  3 Sep 2019 16:37:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EED7E608AB;
+        Tue,  3 Sep 2019 16:37:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190903085706.7700-1-hdanton@sina.com>
+References: <20190903085706.7700-1-hdanton@sina.com> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] General notification queue with user mmap()'able ring buffer [ver #7]
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27532.1567528630.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Sep 2019 17:37:10 +0100
+Message-ID: <27533.1567528630@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 03 Sep 2019 16:37:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+Hillf Danton <hdanton@sina.com> wrote:
 
-[ Upstream commit 240809ef6630a4ce57c273c2d79ffb657cd361eb ]
+> > +	for (i = 0; i < wf->nr_filters; i++) {
+> > +		wt = &wf->filters[i];
+> > +		if (n->type == wt->type &&
+> > +		    (wt->subtype_filter[n->subtype >> 5] &
+> > +		     (1U << (n->subtype & 31))) &&
+> 
+> Replace the pure numbers with something easier to understand.
 
-cancel_delayed_work_sync() was called for any queue, but it should only
-be called for the queue that is associated with the currently running job.
+How about the following:
 
-Otherwise, if two filehandles are streaming at the same time, then closing the
-first will cancel the work which might still be running for a job from the
-second filehandle. As a result the second filehandle will never be able to
-finish the job and an attempt to stop streaming on that second filehandle will
-stall.
+static bool filter_watch_notification(const struct watch_filter *wf,
+				      const struct watch_notification *n)
+{
+	const struct watch_type_filter *wt;
+	unsigned int st_bits = sizeof(wt->subtype_filter[0]) * 8;
+	unsigned int st_index = n->subtype / st_bits;
+	unsigned int st_bit = 1U << (n->subtype % st_bits);
+	int i;
 
-Fixes: 52117be68b82 ("media: vim2m: use cancel_delayed_work_sync instead of flush_schedule_work")
+	if (!test_bit(n->type, wf->type_filter))
+		return false;
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.20 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/vim2m.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+	for (i = 0; i < wf->nr_filters; i++) {
+		wt = &wf->filters[i];
+		if (n->type == wt->type &&
+		    (wt->subtype_filter[st_index] & st_bit) &&
+		    (n->info & wt->info_mask) == wt->info_filter)
+			return true;
+	}
 
-diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
-index de7f9fe7e7cd9..7b8cf661f2386 100644
---- a/drivers/media/platform/vim2m.c
-+++ b/drivers/media/platform/vim2m.c
-@@ -801,7 +801,9 @@ static void vim2m_stop_streaming(struct vb2_queue *q)
- 	struct vb2_v4l2_buffer *vbuf;
- 	unsigned long flags;
- 
--	cancel_delayed_work_sync(&dev->work_run);
-+	if (v4l2_m2m_get_curr_priv(dev->m2m_dev) == ctx)
-+		cancel_delayed_work_sync(&dev->work_run);
-+
- 	for (;;) {
- 		if (V4L2_TYPE_IS_OUTPUT(q->type))
- 			vbuf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
--- 
-2.20.1
+	return false; /* If there is a filter, the default is to reject. */
+}
 
+David
