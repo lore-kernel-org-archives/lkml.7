@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BC3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA30C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC4A2341F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7992341F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528637;
-	bh=zcaZGov+Sx+qJqjVxtWIJ7I6t8QnU1clZteyGB2qa3g=;
+	s=default; t=1567528641;
+	bh=SebfApjkwn1FtARA0bW+W3QhdPA0kSbofoRWILz9//k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpF2h4JqJ25HPBeIToKzvxGUPECesVT+t5FN+Xx6nHvqVCogONLfmotsgI9maPcqx
-	 hA3KALtEOgyupTo9YuSa9Y46IcVlLCZP0gZ8fX1J2TYiGHojLBkifcBedETzQYozdi
-	 UOgS0pUymrxN6+3Od9NaxuPb32yyKQS0GXVhxevg=
+	b=q0z7shtqTYizByxrHTOSAEXwU9tQMWdMyuDLlFXHuEELP/pP+0hGd+FFHYTWB8uJf
+	 n0V3aORzNaQDDSWqxTiWkv1GwWohnLCxMS4VKUH4yRDNL9ralNrTLk+OfwEspHmx3z
+	 PTsKV9/fZ7WdugnkFoAEHHYrCfr+8mXoAgSkg5gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730700AbfICQ0n (ORCPT
+        id S1731005AbfICQhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47382 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730639AbfICQ02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:28 -0400
+        id S1730699AbfICQ0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FCA623789;
-        Tue,  3 Sep 2019 16:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C097023789;
+        Tue,  3 Sep 2019 16:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527987;
-        bh=zcaZGov+Sx+qJqjVxtWIJ7I6t8QnU1clZteyGB2qa3g=;
+        s=default; t=1567528002;
+        bh=SebfApjkwn1FtARA0bW+W3QhdPA0kSbofoRWILz9//k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdfBNDRh/pm8ntzl4p7nJ5u+9va6LwUYeejYRS3PrDLUlGAclwkc2rycQlD1Q8qZj
-         4f/s8lHO87pgp3F/8gFDu+WdKt2oSKtw2pQmnrrSA/dbStI7wZikgJMTxKw3DEFIy2
-         NZ+i+PX1gRyC5AUyGjqyl2Y4OnG+buc7bh0uYUbo=
+        b=exo/CpjhndAhqYDRinw3Nn8NFh+8It3G8hqp6KRMFkqTRvuW1gYAxJkctfWRYQ3yi
+         6XZysL7gyVqlr+tajulalyj+MYUN3p+hxlnv8ZCa+M8RzTlOpcelNXZYl1b6r+g35q
+         03MbKVV6oGR4Ica8J7WEeFfKOhGLBYvwl6d/Rvx8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 041/167] scsi: megaraid_sas: Add check for reset adapter bit
-Date:   Tue,  3 Sep 2019 12:23:13 -0400
-Message-Id: <20190903162519.7136-41-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 048/167] media: vim2m: only cancel work if it is for right context
+Date:   Tue,  3 Sep 2019 12:23:20 -0400
+Message-Id: <20190903162519.7136-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,84 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit de93b40d98ead27ee2f7f7df93fdd4914a6c8d8d ]
+[ Upstream commit 240809ef6630a4ce57c273c2d79ffb657cd361eb ]
 
-For SAS3 and later controllers, FW sets the reset adapter bit indicating
-the driver to perform a controller reset.  Driver needs to check if this
-bit is set before doing a reset.  This reduces the driver probe failure
-time to 180seconds in case there is a faulty controller connected.
+cancel_delayed_work_sync() was called for any queue, but it should only
+be called for the queue that is associated with the currently running job.
 
-Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Otherwise, if two filehandles are streaming at the same time, then closing the
+first will cancel the work which might still be running for a job from the
+second filehandle. As a result the second filehandle will never be able to
+finish the job and an attempt to stop streaming on that second filehandle will
+stall.
+
+Fixes: 52117be68b82 ("media: vim2m: use cancel_delayed_work_sync instead of flush_schedule_work")
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: <stable@vger.kernel.org>      # for v4.20 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 33 +++++++++++++++--------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ drivers/media/platform/vim2m.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index b6fc7c6337610..749f10146f630 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5218,7 +5218,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
- {
- 	u32 max_sectors_1;
- 	u32 max_sectors_2, tmp_sectors, msix_enable;
--	u32 scratch_pad_2, scratch_pad_3, scratch_pad_4;
-+	u32 scratch_pad_2, scratch_pad_3, scratch_pad_4, status_reg;
- 	resource_size_t base_addr;
- 	struct megasas_register_set __iomem *reg_set;
- 	struct megasas_ctrl_info *ctrl_info = NULL;
-@@ -5226,6 +5226,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 	int i, j, loop, fw_msix_count = 0;
- 	struct IOV_111 *iovPtr;
- 	struct fusion_context *fusion;
-+	bool do_adp_reset = true;
+diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
+index de7f9fe7e7cd9..7b8cf661f2386 100644
+--- a/drivers/media/platform/vim2m.c
++++ b/drivers/media/platform/vim2m.c
+@@ -801,7 +801,9 @@ static void vim2m_stop_streaming(struct vb2_queue *q)
+ 	struct vb2_v4l2_buffer *vbuf;
+ 	unsigned long flags;
  
- 	fusion = instance->ctrl_context;
- 
-@@ -5274,19 +5275,29 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 	}
- 
- 	if (megasas_transition_to_ready(instance, 0)) {
--		atomic_set(&instance->fw_reset_no_pci_access, 1);
--		instance->instancet->adp_reset
--			(instance, instance->reg_set);
--		atomic_set(&instance->fw_reset_no_pci_access, 0);
--		dev_info(&instance->pdev->dev,
--			"FW restarted successfully from %s!\n",
--			__func__);
-+		if (instance->adapter_type >= INVADER_SERIES) {
-+			status_reg = instance->instancet->read_fw_status_reg(
-+					instance->reg_set);
-+			do_adp_reset = status_reg & MFI_RESET_ADAPTER;
-+		}
- 
--		/*waitting for about 30 second before retry*/
--		ssleep(30);
-+		if (do_adp_reset) {
-+			atomic_set(&instance->fw_reset_no_pci_access, 1);
-+			instance->instancet->adp_reset
-+				(instance, instance->reg_set);
-+			atomic_set(&instance->fw_reset_no_pci_access, 0);
-+			dev_info(&instance->pdev->dev,
-+				 "FW restarted successfully from %s!\n",
-+				 __func__);
+-	cancel_delayed_work_sync(&dev->work_run);
++	if (v4l2_m2m_get_curr_priv(dev->m2m_dev) == ctx)
++		cancel_delayed_work_sync(&dev->work_run);
 +
-+			/*waiting for about 30 second before retry*/
-+			ssleep(30);
- 
--		if (megasas_transition_to_ready(instance, 0))
-+			if (megasas_transition_to_ready(instance, 0))
-+				goto fail_ready_state;
-+		} else {
- 			goto fail_ready_state;
-+		}
- 	}
- 
- 	megasas_init_ctrl_params(instance);
+ 	for (;;) {
+ 		if (V4L2_TYPE_IS_OUTPUT(q->type))
+ 			vbuf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
 -- 
 2.20.1
 
