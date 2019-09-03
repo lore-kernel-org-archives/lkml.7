@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A95C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212C52343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6288223431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528257;
-	bh=P+e9KRq2RbmuZr+hTt0ka7y0UD+ZQcVJc5pyEkgLWLo=;
+	s=default; t=1567528266;
+	bh=tV9a9uvOlH4HopRvLe6hsbfjnMkwSk+2KuG5xrr9efw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PilRtozgZ3YajhP8/8T3gtADikaKbgmgiu4lug7Rtyn9Jr+k6cFuz9bOLNmXV72qW
-	 360Qh9/SLB0GdGUvWwxRgqbdVjNnms0GeIlnjVLkg7fb0cUGAW4DSeF/cfyNsrHIin
-	 oH96/mgcfOzWgevoBrUVJpVNyjNAs50lCzv1eVgI=
+	b=0Pq9larglDW/oZxLCRNDM0A4SInPYrgXOW9NLFg/Mv4pCOoy2mzpFNuToAmmsQpx1
+	 yRAV1ztPyyyI82cK9tMcr8w8OzVebz3HAwj08C3skOxkaaVuQH+m2ninjlY7MWBTsY
+	 +0CfcmyxvKSpW+o2Vf7Gqq/NEes/fhxZ4DSbt45Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfICQa4 (ORCPT
+        id S1729860AbfICQ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50898 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbfICQ2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:43 -0400
+        id S1729083AbfICQ2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9B9E23431;
-        Tue,  3 Sep 2019 16:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6A923789;
+        Tue,  3 Sep 2019 16:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528122;
-        bh=P+e9KRq2RbmuZr+hTt0ka7y0UD+ZQcVJc5pyEkgLWLo=;
+        s=default; t=1567528110;
+        bh=tV9a9uvOlH4HopRvLe6hsbfjnMkwSk+2KuG5xrr9efw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7JgiXNFAnaDt+EjZO38JIMck6eCi9yGfhmVRdraGEsVppoTXE7M6CpLhOo9+5xs+
-         9QmcALgdxl/9Lfl2zT/BBpNhr0rm5Fx5cnxARej7U7Q/ttX0RVskSZ1B8gLQNHsIip
-         jMO4HdcxHwngQsIEhFKsm1DBwtzDsYSQpAOpMApM=
+        b=xY0XNu1E2uX/707hqBAY2wIK/ifAHk6iB2MDT7Skf5fm6NkqTxq5JSq3C0yhyUiHX
+         3dtMrINLx53oyf0lWfPCcw31ss8qxiMtnX56eCPDrblSm15W49mmsQ+kkTkC54hlCM
+         ke1oKz3pltGlbRoTi7xLmuMwQ4FKxDhwjL5ILGgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 119/167] cifs: add spinlock for the openFileList to cifsInodeInfo
-Date:   Tue,  3 Sep 2019 12:24:31 -0400
-Message-Id: <20190903162519.7136-119-sashal@kernel.org>
+Cc:     Kent Russell <kent.russell@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.rg, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 114/167] drm/amdkfd: Add missing Polaris10 ID
+Date:   Tue,  3 Sep 2019 12:24:26 -0400
+Message-Id: <20190903162519.7136-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,110 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Kent Russell <kent.russell@amd.com>
 
-[ Upstream commit 487317c99477d00f22370625d53be3239febabbe ]
+[ Upstream commit 0a5a9c276c335870a1cecc4f02b76d6d6f663c8b ]
 
-We can not depend on the tcon->open_file_lock here since in multiuser mode
-we may have the same file/inode open via multiple different tcons.
+This was added to amdgpu but was missed in amdkfd
 
-The current code is race prone and will crash if one user deletes a file
-at the same time a different user opens/create the file.
-
-To avoid this we need to have a spinlock attached to the inode and not the tcon.
-
-RHBZ:  1580165
-
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Kent Russell <kent.russell@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.rg
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsfs.c   | 1 +
- fs/cifs/cifsglob.h | 5 +++++
- fs/cifs/file.c     | 8 ++++++--
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-index fb32f3d6925e8..64e3888f30e6d 100644
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -292,6 +292,7 @@ cifs_alloc_inode(struct super_block *sb)
- 	cifs_inode->uniqueid = 0;
- 	cifs_inode->createtime = 0;
- 	cifs_inode->epoch = 0;
-+	spin_lock_init(&cifs_inode->open_file_lock);
- 	generate_random_uuid(cifs_inode->lease_key);
- 
- 	/*
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 0ee0072c1f362..57af9bac0045a 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1287,6 +1287,7 @@ struct cifsInodeInfo {
- 	struct rw_semaphore lock_sem;	/* protect the fields above */
- 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
- 	struct list_head openFileList;
-+	spinlock_t	open_file_lock;	/* protects openFileList */
- 	__u32 cifsAttrs; /* e.g. DOS archive bit, sparse, compressed, system */
- 	unsigned int oplock;		/* oplock/lease level we have */
- 	unsigned int epoch;		/* used to track lease state changes */
-@@ -1687,10 +1688,14 @@ require use of the stronger protocol */
-  *  tcp_ses_lock protects:
-  *	list operations on tcp and SMB session lists
-  *  tcon->open_file_lock protects the list of open files hanging off the tcon
-+ *  inode->open_file_lock protects the openFileList hanging off the inode
-  *  cfile->file_info_lock protects counters and fields in cifs file struct
-  *  f_owner.lock protects certain per file struct operations
-  *  mapping->page_lock protects certain per page operations
-  *
-+ *  Note that the cifs_tcon.open_file_lock should be taken before
-+ *  not after the cifsInodeInfo.open_file_lock
-+ *
-  *  Semaphores
-  *  ----------
-  *  sesSem     operations on smb session
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 933013543edab..8703b5f26f452 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -336,10 +336,12 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 	list_add(&cfile->tlist, &tcon->openFileList);
- 
- 	/* if readable file instance put first in list*/
-+	spin_lock(&cinode->open_file_lock);
- 	if (file->f_mode & FMODE_READ)
- 		list_add(&cfile->flist, &cinode->openFileList);
- 	else
- 		list_add_tail(&cfile->flist, &cinode->openFileList);
-+	spin_unlock(&cinode->open_file_lock);
- 	spin_unlock(&tcon->open_file_lock);
- 
- 	if (fid->purge_cache)
-@@ -411,7 +413,9 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
- 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
- 
- 	/* remove it from the lists */
-+	spin_lock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->flist);
-+	spin_unlock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->tlist);
- 
- 	if (list_empty(&cifsi->openFileList)) {
-@@ -1929,10 +1933,10 @@ struct cifsFileInfo *find_writable_file(struct cifsInodeInfo *cifs_inode,
- 		if (!rc)
- 			return inv_file;
- 		else {
--			spin_lock(&tcon->open_file_lock);
-+			spin_lock(&cifs_inode->open_file_lock);
- 			list_move_tail(&inv_file->flist,
- 					&cifs_inode->openFileList);
--			spin_unlock(&tcon->open_file_lock);
-+			spin_unlock(&cifs_inode->open_file_lock);
- 			cifsFileInfo_put(inv_file);
- 			++refind;
- 			inv_file = NULL;
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 5aba50f63ac6f..938d0053a8208 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -310,6 +310,7 @@ static const struct kfd_deviceid supported_devices[] = {
+ 	{ 0x67CF, &polaris10_device_info },	/* Polaris10 */
+ 	{ 0x67D0, &polaris10_vf_device_info },	/* Polaris10 vf*/
+ 	{ 0x67DF, &polaris10_device_info },	/* Polaris10 */
++	{ 0x6FDF, &polaris10_device_info },	/* Polaris10 */
+ 	{ 0x67E0, &polaris11_device_info },	/* Polaris11 */
+ 	{ 0x67E1, &polaris11_device_info },	/* Polaris11 */
+ 	{ 0x67E3, &polaris11_device_info },	/* Polaris11 */
 -- 
 2.20.1
 
