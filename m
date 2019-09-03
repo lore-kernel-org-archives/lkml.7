@@ -2,82 +2,104 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E267C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF478C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A82A22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C664B22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGHwRhNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfICMxJ (ORCPT
+        id S1729268AbfICMxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:53:09 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51257 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728538AbfICMxI (ORCPT
+        Tue, 3 Sep 2019 08:53:15 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38565 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729255AbfICMxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:53:08 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i58J0-0001Lr-Ol; Tue, 03 Sep 2019 14:53:06 +0200
-Message-ID: <1567515184.5229.5.camel@pengutronix.de>
-Subject: Re: [PATCH 02/12] media: hantro: Do not reorder H264 scaling list
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Date:   Tue, 03 Sep 2019 14:53:04 +0200
-In-Reply-To: <DB6PR06MB4007C140420365E83064C5BEACB90@DB6PR06MB4007.eurprd06.prod.outlook.com>
-References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <20190901124531.23645-1-jonas@kwiboo.se>
-         <HE1PR06MB40116C92C3D52C5957EF48E9ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <1567432843.3666.6.camel@pengutronix.de>
-         <HE1PR06MB4011A8F99D58E5ACFAE3CECAACBE0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <DB6PR06MB4007C140420365E83064C5BEACB90@DB6PR06MB4007.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 3 Sep 2019 08:53:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h3so9060845ljb.5;
+        Tue, 03 Sep 2019 05:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SEZthYw524yVcJR/0nWXghYNjoOOpe+Twe/N3MC7BsU=;
+        b=dGHwRhNcCRm2RuYWrzGQbdU0QOFB6cskl4jxwYgbQUSJKWCB7a0Yh5i6KQNYUGD3k9
+         CrPcANF1TKqyqFbRuEWiRz3r/MhDhfGLYnNwOccAuoDBtA7s3hCzWZiWw9op9Wwmh5Aw
+         cMeZTzFC7Ya1VV9CdqdjswusVnnldfaJFkPJQ4xAh6T5oySe0xQL93jte/krorO8J1Xh
+         5wdd5lQ8nq6ptFyMdfkMaX6JjaNPngcUts1j2wGlsrQVKf2XfrSpeVN5PBI0+CdPHcOb
+         dJV4EhK7MggwWmq2OOmDZqz+Y1gc6KtNEfTYVoiPknkAGF2gPijh2v/eoIAH5NghAZii
+         /cYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SEZthYw524yVcJR/0nWXghYNjoOOpe+Twe/N3MC7BsU=;
+        b=OhGUe9hGHMoRR5sc/RqJAH47M1uiDjW9OOT8W7IzGKuCN7jAgUlgcVfXmydaboKsQz
+         rLGxYDIpYtPS51Y6+Gn9nXZnY5ufCpQqTyIfTNiFnTBwCWnc4StTk8ak0J2sARH6ezum
+         RTfM3a8ircq9ZFCsIGdoh8tAVIKnKimoVOvHjbXAxT6ebR3cR8d1pJKlknHSDdyhg05i
+         Htshkd6y220KXLTPiHI16MqzdhKX7pPknuVgCVZnRNLZ9szckxhX7+4H90APLJPvVPxL
+         FVbGqRe1DhmgaXIUlcidVj3N2bdiqekyizlKEK8ID2bLc74VDs9geCsqJD8UuGU+IbPa
+         etmw==
+X-Gm-Message-State: APjAAAURBxTG2g8mYk/3jkzBIcwITUnqYtgq0G2etyzYMXRTP2KxvG7V
+        5WmiNxJXMtCqm3bvqiWaML8=
+X-Google-Smtp-Source: APXvYqxX8GaR3Tgn3fK7mMSvyl0/rvSNlrXhvq24Tmm6N0Z4610MsOOhUJdJdbGb8S88MQu7J1iu5g==
+X-Received: by 2002:a2e:9dc7:: with SMTP id x7mr4875440ljj.189.1567515191984;
+        Tue, 03 Sep 2019 05:53:11 -0700 (PDT)
+Received: from SKHMSE-04.hynixad.com ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id k6sm246364lja.78.2019.09.03.05.53.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 05:53:11 -0700 (PDT)
+From:   Andrei Leonvikov <andreil499@gmail.com>
+X-Google-Original-From: Andrei Leonvikov
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrei Leonchikov <andreil499@gmail.com>
+Subject: [PATCH 1/1] Fix ARI enabling for a NVME devices
+Date:   Tue,  3 Sep 2019 12:53:15 +0000
+Message-Id: <20190903125315.10349-1-andreil499@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-03 at 07:54 +0000, Jonas Karlman wrote:
-[...]
-> After a closer look both ffmpeg and rkmpp only apply zig-zag scan and not field scan,
-> ffmpeg will memcpy the scaling_matrix4/8 as is for vaapi, vdpau and nvdec,
-> for dxva2 there is a workaround flag that controls if zig-zag should be applied or not.
-> 
-> I suggest a clarification of the expect order of values and use of the same value order as vaapi, vdpau and nvdec.
-> i.e. have the scaling list values in "matrix order"/"raster order", after zig-zag scan has been applied,
-> as is currently expected by cedrus and hantro after this patch.
-> 
-> I would also suggest a change to the expected order of the 8x8 scaling lists to follow the H264 standard,
-> instead of the ffmpeg order like this patch and cedrus driver currently expects.
-> 
-> Expected scaling list order would then be,
-> for 4x4: Intra Y, Intra Cb, Intra Cr, Inter Y, Inter Cb, Inter Cr,
-> for 8x8: Intra Y, Inter Y, Intra Cb, Inter Cb, Intra Cr, Inter Cr.
+From: Andrei Leonchikov <andreil499@gmail.com>
 
-I'm in favor of both, it seems unnecessary to reorder the lists in
-userspace only to have the kernel reorder them back before passing them
-to the hardware.
+Signed-off-by: Andrei Leonchikov <andreil499@gmail.com>
+---
+ drivers/pci/pci.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-regards
-Philipp
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1b27b5af3..ed5f0888c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3149,9 +3149,12 @@ void pci_configure_ari(struct pci_dev *dev)
+ 	if (!bridge)
+ 		return;
+ 
+-	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
+-	if (!(cap & PCI_EXP_DEVCAP2_ARI))
+-		return;
++	if ((dev->driver != NULL) && (strncmp(dev->driver->name, "nvme", 4) == 0)) {
++		// for NVME device this field always zero, but ARI can be enabled
++		pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
++		if (!(cap & PCI_EXP_DEVCAP2_ARI))
++			return;
++	}
+ 
+ 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
+ 		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+-- 
+2.21.0
+
