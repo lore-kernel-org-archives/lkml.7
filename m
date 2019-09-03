@@ -2,163 +2,237 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A13C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEB1C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F5122CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C630217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567508612;
+	bh=dSw60VTrT8ZizL2EKH0X+I5o/zpqz+2te5KeeEekHbI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CHJq6KAL4UnqiaZmNVK7iE+AxcfBfv8l/QlE6wpBF1/VPIIa4dOeLt9YNao6gvKJv
+	 jyPK/S41Z+q4mD5P1i4qmdrSz+uIC+X2cbclxt3w8YUzuxEL8KvAOQEEZtsRt8BqLz
+	 NX1GoUx9CfvKrSRLVeacNlNFm2nGWZNOdpgqklMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfICK6p (ORCPT
+        id S1728780AbfICLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:58:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47457 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfICK6o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:58:44 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i56WC-0006J1-Qf; Tue, 03 Sep 2019 12:58:36 +0200
-Message-ID: <1567508315.5229.3.camel@pengutronix.de>
-Subject: Re: [PATCH 03/12] media: hantro: Fix H264 motion vector buffer
- offset
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Sep 2019 12:58:35 +0200
-In-Reply-To: <HE1PR06MB40115337CD86C429EF24430CACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <20190901124531.23645-1-jonas@kwiboo.se>
-         <HE1PR06MB40115337CD86C429EF24430CACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+        Tue, 3 Sep 2019 07:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbfICLDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:03:31 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C3B323431;
+        Tue,  3 Sep 2019 11:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567508609;
+        bh=dSw60VTrT8ZizL2EKH0X+I5o/zpqz+2te5KeeEekHbI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uzTd6T4U+Tkd4n8KJZfUZ9olVCK+fqZXolNXxUwUJrBUsir3ogtElmBagVAL/4uYZ
+         F+78m8TgdsRpaQrVlJ1p8t97yLZ/YqboZ6I8dOjTUL309wm6v7TlnTdmrWHoSTMQx5
+         wHd/On3QCQvzFpIIPLu+hqpW/AQ6m0/EiPPoBwr8=
+Received: by mail-lj1-f180.google.com with SMTP id e17so4563943ljf.13;
+        Tue, 03 Sep 2019 04:03:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAWRikgdLAcFYwGBDCHgwZZ7AZyhxQKgZEcXFXv9afwOz2Iwl1HG
+        7HcSu3//Y7W0odc5qzKJRGvrEjgU4blrxG7AgLI=
+X-Google-Smtp-Source: APXvYqyxHRs9YFFhl8+XZLTud4OWgRTCDnadBxI1NInauI7nndzlvmqFXuAOtRIDnpazy3S3n5w09bq4y/zI/IQu5B8=
+X-Received: by 2002:a2e:9b13:: with SMTP id u19mr19855964lji.40.1567508607223;
+ Tue, 03 Sep 2019 04:03:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
+ <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
+ <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com> <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 3 Sep 2019 13:03:15 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
+Message-ID: <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
+Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
+ to json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, notify@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
-
-On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:
-> A decoded 8-bit 4:2:0 frame need memory for up to 448 macroblocks
-> and is laid out in memory as follow:
-
-Do you mean "A decoded 8-bit 4:2:0 frame needs up to 448 bytes per
-macroblock"?
-
-A 1280x720 frame already consists of 3600 macroblocks (each 16x16 Y +
-2x8x8 Cb,Cr).
-
-> +-------------------+
-> > Y-plane   256 MBs |
-
-So that looks like it should be 256 bytes * number of macroblocks
-instead, same for the following two.
-
-> +-------------------+
-> > UV-plane  128 MBs |
-> +-------------------+
-> > MV buffer  64 MBs |
-> 
-> +-------------------+
+On Tue, 3 Sep 2019 at 10:25, Rob Herring <robh+dt@kernel.org> wrote:
 >
-> The motion vector buffer offset is currently correct for 4:2:0 because
-> the extra space for motion vectors is overallocated with an extra 64 MBs.
-> 
-> Wrong offset for both destination and motion vector buffer are used
-> for the bottom field of field encoded content, wrong offset is
-> also used for 4:0:0 (monochrome) content.
-> 
-> Fix this by always setting the motion vector address to the expected
-> 384 MBs offset for 4:2:0 and 256 MBs offset for 4:0:0 content.
+> On Tue, Sep 3, 2019 at 8:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >
+> > > > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
+> > > > format using json-schema.
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
+> > > >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
+> > > >  2 files changed, 93 insertions(+), 72 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > >
+> > >
+> > > > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..818c6f3488ef
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > > > @@ -0,0 +1,93 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Samsung Exynos SoC series Power Management Unit (PMU)
+> > > > +
+> > > > +maintainers:
+> > > > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    items:
+> > > > +      - enum:
+> > > > +          - samsung,exynos3250-pmu
+> > > > +          - samsung,exynos4210-pmu
+> > > > +          - samsung,exynos4412-pmu
+> > > > +          - samsung,exynos5250-pmu
+> > > > +          - samsung,exynos5260-pmu
+> > > > +          - samsung,exynos5410-pmu
+> > > > +          - samsung,exynos5420-pmu
+> > > > +          - samsung,exynos5433-pmu
+> > > > +          - samsung,exynos7-pmu
+> > > > +      - const: syscon
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  '#clock-cells':
+> > > > +    const: 1
+> > > > +
+> > > > +  clock-names:
+> > > > +    description:
+> > > > +      list of clock names for particular CLKOUT mux inputs
+> > > > +    # TODO: what is the maximum number of elements (mux inputs)?
+> > > > +    minItems: 1
+> > > > +    maxItems: 32
+> > > > +    items:
+> > > > +      - enum:
+> > >
+> > > This isn't correct as you are only defining possible names for the
+> > > first item. Drop the '-' (making items a schema instead of a list) and
+> > > then it applies to all. However, doing that will cause a meta-schema
+> > > error which I need to fix to allow. Or if there's a small set of
+> > > possibilities of number of inputs, you can list them under a 'oneOf'
+> > > list.
+> >
+> > Mhmm, I cannot test it or I have an error in the schema. if I
+> > understand correctly, this would be:
+> >
+> >   clock-names:
+> >     description:
+> >       List of clock names for particular CLKOUT mux inputs
+> >     minItems: 1
+> >     maxItems: 16
+> >     items:
+> >       clkout0
+> >       clkout1
+> >       clkout2
+> >       clkout3
+> >       clkout4
+> >       clkout5
+> >       clkout6
+> >       clkout7
+> >       clkout8
+> >       clkout9
+> >       clkout10
+> >       clkout11
+> >       clkout12
+> >       clkout13
+> >       clkout14
+> >       clkout15
+> >       clkout16
+> >
+> > Now it produces the error "ignoring, error in schema 'items'" but
+> > maybe it is expected with current meta-schema?
+>
+> 'make dt_binding_check' will give more detailed errors.
+>
+> Are the inputs always contiguous 0-N? If so, you want:
+>
+> items:
+>   - const: clkout0
+>   - const: clkout1
+>   - const: clkout2
+>   ...
+>
+> If you want to express any number and order of strings is valid, then you need:
+>
+> items:
+>   enum:
+>     - clkout0
+>     - clkout1
+>     - clkout2
+>
+> Doing that is discouraged for bindings though. Currently, it will
+> generate an error from the meta-schema, but we could change that.
 
-Expected by whom? For example, could these be placed in separate buffers
-instead of appended to the VB2 allocated buffers?
+It's the second case. The inputs are not contiguous. Examples:
 
-> Also use correct destination and motion vector buffer offset
-> for the bottom field of field encoded content.
-> 
-> While at it also extend the check for 4:0:0 (monochrome) to include an
-> additional check for High Profile (100).
-> 
-> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
->  .../staging/media/hantro/hantro_g1_h264_dec.c | 33 +++++++++++--------
->  1 file changed, 19 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> index 7ab534936843..159bd67e0a36 100644
-> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> @@ -19,6 +19,9 @@
->  #include "hantro_hw.h"
->  #include "hantro_v4l2.h"
->  
-> +#define MV_OFFSET_420	384
-> +#define MV_OFFSET_400	256
-> +
->  static void set_params(struct hantro_ctx *ctx)
->  {
->  	const struct hantro_h264_dec_ctrls *ctrls = &ctx->h264_dec.ctrls;
-> @@ -49,8 +52,8 @@ static void set_params(struct hantro_ctx *ctx)
->  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
->  
->  	/* Decoder control register 1. */
-> -	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(sps->pic_width_in_mbs_minus1 + 1) |
-> -	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(sps->pic_height_in_map_units_minus1 + 1) |
-> +	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(H264_MB_WIDTH(ctx->dst_fmt.width)) |
-> +	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(H264_MB_HEIGHT(ctx->dst_fmt.height)) |
->  	      G1_REG_DEC_CTRL1_REF_FRAMES(sps->max_num_ref_frames);
->  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
->  
-> @@ -79,7 +82,7 @@ static void set_params(struct hantro_ctx *ctx)
->  		reg |= G1_REG_DEC_CTRL4_CABAC_E;
->  	if (sps->flags & V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE)
->  		reg |= G1_REG_DEC_CTRL4_DIR_8X8_INFER_E;
-> -	if (sps->chroma_format_idc == 0)
-> +	if (sps->profile_idc >= 100 && sps->chroma_format_idc == 0)
->  		reg |= G1_REG_DEC_CTRL4_BLACKWHITE_E;
->  	if (pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED)
->  		reg |= G1_REG_DEC_CTRL4_WEIGHT_PRED_E;
-> @@ -233,6 +236,7 @@ static void set_buffers(struct hantro_ctx *ctx)
->  	struct vb2_v4l2_buffer *src_buf, *dst_buf;
->  	struct hantro_dev *vpu = ctx->dev;
->  	dma_addr_t src_dma, dst_dma;
-> +	unsigned int offset = MV_OFFSET_420;
->  
->  	src_buf = hantro_get_src_buf(ctx);
->  	dst_buf = hantro_get_dst_buf(ctx);
-> @@ -243,19 +247,20 @@ static void set_buffers(struct hantro_ctx *ctx)
->  
->  	/* Destination (decoded frame) buffer. */
->  	dst_dma = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
-> +	if (ctrls->slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
-> +		dst_dma += ALIGN(ctx->dst_fmt.width, H264_MB_DIM);
+system-controller {
+    compatible = "samsung,exynos3250-pmu", "syscon";
+    clock-names = "clkout8";
+    clocks = <&cmu CLK_FIN_PLL>;
+}
 
-How does this work? Does userspace decode two fields into the same
-capture buffer and the hardware writes each field with a stride of 2
-lines? I suppose this corresponds to V4L2_FIELD_INTERLACED. Could this
-also be made to support V4L2_FIELD_SEQ_TB output?
+system-controller {
+    compatible = "samsung,exynos4412-pmu", "syscon";
+    clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
+                  "clkout4", "clkout8", "clkout9";
+    clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
+             <&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
+             <&clock CLK_OUT_CPU>, <&clock CLK_XXTI>, <&clock CLK_XUSBXTI>;
+}
 
-regards
-Philipp
+The bindings never required any specific ordering. Also the driver
+just go through all indices and parses them.
+
+Your second syntax fails:
+Documentation/devicetree/bindings/arm/samsung/pmu.yaml:
+properties:clock-names:items: {'enum': ['clkout0', 'clkout1',
+'clkout2', 'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7',
+'clkout8', 'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13',
+'clkout14', 'clkout15', 'clkout16']} is not of type 'array'
+
+Best regards,
+Krzysztof
