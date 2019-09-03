@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320A4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D16CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8122343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216B123711
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527895;
-	bh=oHmhB6wQ5R2u5r/utTznpdUHEvwdMvW1jS9PJZ83jUc=;
+	s=default; t=1567527901;
+	bh=ClRwCvx8HHpkFwO3LeGjqjqNIj13E59y3JUVDZqeXGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m1MqIJOsUgpK1PMl64Gphene+GdDQvsoUpqb5sWU7Ax4ElPfnMPMVupiwckIXJTJK
-	 coCqRTrxth1MKEh5RAeSY7Cqwthnw3JZhK5ELCoZftyuQaDJ/AKeQHcyGaEmYI34LB
-	 HZ/Bq/cpAKE+U59ZYknvRc3fvJNQfq0HTOUvWjtw=
+	b=peVLeLVb/LEawh+OlAjikLoRkMBYVCN23o3X40bf1GD3NyB688paz0nMbpNiOeu22
+	 qWP1HwtArqfnbPvLTUNx2KiMwsDGRfctKT3CAuR408AaqqNIikzs3WpmrOhDGl+pYX
+	 8C7bxZi3RBrj9AzalyqeqgIcCA4uKe/y7V164bS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfICQYy (ORCPT
+        id S1730230AbfICQZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729692AbfICQYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:24:51 -0400
+        id S1730194AbfICQY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:24:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E7C2343A;
-        Tue,  3 Sep 2019 16:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D52523697;
+        Tue,  3 Sep 2019 16:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527890;
-        bh=oHmhB6wQ5R2u5r/utTznpdUHEvwdMvW1jS9PJZ83jUc=;
+        s=default; t=1567527896;
+        bh=ClRwCvx8HHpkFwO3LeGjqjqNIj13E59y3JUVDZqeXGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFpEme8XyY/W0axwEtecAOZ7Ptd4BGjw1yfRHZp/2fwnkMrfy5p9dSsZvYRIvFAKg
-         9VHu7DE7L/GY2/H3eGWXu+mEzgFxHeMg86GlRmGyTD9Sdn7i1Q4UMAsU6PUDqSPxkj
-         4MSPHA8WLnQ0Dh4iZsMEtRwWIv5hQnROhMrRp3rA=
+        b=gfpXAegAvu3TWt4HSrhXA9VdtXFeb2ze8ju3j2jm8R20jV3e8axUYvR35XCcwC8d4
+         MqJgrxEqqsykGqY9mz6JUL2xRt+AsAh7N8n89ylk6+YdYjh64S5Edlzyeis7P5qxnb
+         q7wSPaz7sP52tYhH3RMRRoiEzRUt10LcKUEGFIis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ihab Zhaika <ihab.zhaika@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 07/23] iwlwifi: change 0x02F0 fw from qu to quz
-Date:   Tue,  3 Sep 2019 12:24:08 -0400
-Message-Id: <20190903162424.6877-7-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 09/23] IB/rdmavt: Add new completion inline
+Date:   Tue,  3 Sep 2019 12:24:10 -0400
+Message-Id: <20190903162424.6877-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
 References: <20190903162424.6877-1-sashal@kernel.org>
@@ -60,275 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ihab Zhaika <ihab.zhaika@intel.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-change the fw of 0x02F0 platform from qu to quz
+There is opencoded send completion logic all over all
+the drivers.
 
-Signed-off-by: Ihab Zhaika <ihab.zhaika@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+We need to convert to this routine to enforce ordering
+issues for completions.  This routine fixes an ordering
+issue where the read of the SWQE fields necessary for creating
+the completion can race with a post send if the post send catches
+a send queue at the edge of being full.  Is is possible in that situation
+to read SWQE fields that are being written.
+
+This new routine insures that SWQE fields are read prior to advancing
+the index that post send uses to determine queue fullness.
+
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 ---
- .../net/wireless/intel/iwlwifi/cfg/22000.c    |  88 +++++++++++++++
- .../net/wireless/intel/iwlwifi/iwl-config.h   |   6 ++
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 100 +++++++++---------
- 3 files changed, 144 insertions(+), 50 deletions(-)
+ include/rdma/rdmavt_qp.h | 72 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-index e40fa12212b75..93526dfaf7912 100644
---- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-+++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-@@ -82,6 +82,7 @@
- #define IWL_22000_HR_A0_FW_PRE		"iwlwifi-QuQnj-a0-hr-a0-"
- #define IWL_QU_B_JF_B_FW_PRE		"iwlwifi-Qu-b0-jf-b0-"
- #define IWL_QUZ_A_HR_B_FW_PRE		"iwlwifi-QuZ-a0-hr-b0-"
-+#define IWL_QUZ_A_JF_B_FW_PRE		"iwlwifi-QuZ-a0-jf-b0-"
- #define IWL_QNJ_B_JF_B_FW_PRE		"iwlwifi-QuQnj-b0-jf-b0-"
- #define IWL_CC_A_FW_PRE			"iwlwifi-cc-a0-"
- #define IWL_22000_SO_A_JF_B_FW_PRE	"iwlwifi-so-a0-jf-b0-"
-@@ -106,6 +107,8 @@
- 	IWL_22000_HR_A0_FW_PRE __stringify(api) ".ucode"
- #define IWL_QUZ_A_HR_B_MODULE_FIRMWARE(api) \
- 	IWL_QUZ_A_HR_B_FW_PRE __stringify(api) ".ucode"
-+#define IWL_QUZ_A_JF_B_MODULE_FIRMWARE(api) \
-+	IWL_QUZ_A_JF_B_FW_PRE __stringify(api) ".ucode"
- #define IWL_QU_B_JF_B_MODULE_FIRMWARE(api) \
- 	IWL_QU_B_JF_B_FW_PRE __stringify(api) ".ucode"
- #define IWL_QNJ_B_JF_B_MODULE_FIRMWARE(api)		\
-@@ -381,6 +384,90 @@ const struct iwl_cfg iwl9560_2ac_cfg_qnj_jf_b0 = {
- 	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
- };
+diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
+index 68e38c20afc04..6014f17669071 100644
+--- a/include/rdma/rdmavt_qp.h
++++ b/include/rdma/rdmavt_qp.h
+@@ -737,6 +737,78 @@ static inline void rvt_put_qp_swqe(struct rvt_qp *qp, struct rvt_swqe *wqe)
+ 		atomic_dec(&ibah_to_rvtah(wqe->ud_wr.ah)->refcount);
+ }
  
-+const struct iwl_cfg iwl9560_2ac_cfg_quz_a0_jf_b0_soc = {
-+	.name = "Intel(R) Wireless-AC 9560 160MHz",
-+	.fw_name_pre = IWL_QUZ_A_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+	.integrated = true,
-+	.soc_latency = 5000,
-+};
++/**
++ * rvt_qp_sqwe_incr - increment ring index
++ * @qp: the qp
++ * @val: the starting value
++ *
++ * Return: the new value wrapping as appropriate
++ */
++static inline u32
++rvt_qp_swqe_incr(struct rvt_qp *qp, u32 val)
++{
++	if (++val >= qp->s_size)
++		val = 0;
++	return val;
++}
 +
-+const struct iwl_cfg iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc = {
-+	.name = "Intel(R) Wireless-AC 9560 160MHz",
-+	.fw_name_pre = IWL_QUZ_A_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+	.integrated = true,
-+	.soc_latency = 5000,
-+};
++/**
++ * rvt_qp_complete_swqe - insert send completion
++ * @qp - the qp
++ * @wqe - the send wqe
++ * @opcode - wc operation (driver dependent)
++ * @status - completion status
++ *
++ * Update the s_last information, and then insert a send
++ * completion into the completion
++ * queue if the qp indicates it should be done.
++ *
++ * See IBTA 10.7.3.1 for info on completion
++ * control.
++ *
++ * Return: new last
++ */
++static inline u32
++rvt_qp_complete_swqe(struct rvt_qp *qp,
++		     struct rvt_swqe *wqe,
++		     enum ib_wc_opcode opcode,
++		     enum ib_wc_status status)
++{
++	bool need_completion;
++	u64 wr_id;
++	u32 byte_len, last;
++	int flags = wqe->wr.send_flags;
 +
-+const struct iwl_cfg iwl9461_2ac_cfg_quz_a0_jf_b0_soc = {
-+	.name = "Intel(R) Dual Band Wireless AC 9461",
-+	.fw_name_pre = IWL_QUZ_A_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+	.integrated = true,
-+	.soc_latency = 5000,
-+};
++	rvt_put_qp_swqe(qp, wqe);
 +
-+const struct iwl_cfg iwl9462_2ac_cfg_quz_a0_jf_b0_soc = {
-+	.name = "Intel(R) Dual Band Wireless AC 9462",
-+	.fw_name_pre = IWL_QUZ_A_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+	.integrated = true,
-+	.soc_latency = 5000,
-+};
++	need_completion =
++		!(flags & RVT_SEND_RESERVE_USED) &&
++		(!(qp->s_flags & RVT_S_SIGNAL_REQ_WR) ||
++		(flags & IB_SEND_SIGNALED) ||
++		status != IB_WC_SUCCESS);
++	if (need_completion) {
++		wr_id = wqe->wr.wr_id;
++		byte_len = wqe->length;
++		/* above fields required before writing s_last */
++	}
++	last = rvt_qp_swqe_incr(qp, qp->s_last);
++	/* see rvt_qp_is_avail() */
++	smp_store_release(&qp->s_last, last);
++	if (need_completion) {
++		struct ib_wc w = {
++			.wr_id = wr_id,
++			.status = status,
++			.opcode = opcode,
++			.qp = &qp->ibqp,
++			.byte_len = byte_len,
++		};
 +
-+const struct iwl_cfg iwl9560_killer_s_2ac_cfg_quz_a0_jf_b0_soc = {
-+	.name = "Killer (R) Wireless-AC 1550s Wireless Network Adapter (9560NGW)",
-+	.fw_name_pre = IWL_QUZ_A_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+	.integrated = true,
-+	.soc_latency = 5000,
-+};
++		rvt_cq_enter(ibcq_to_rvtcq(qp->ibqp.send_cq), &w,
++			     status != IB_WC_SUCCESS);
++	}
++	return last;
++}
 +
-+const struct iwl_cfg iwl9560_killer_i_2ac_cfg_quz_a0_jf_b0_soc = {
-+	.name = "Killer (R) Wireless-AC 1550i Wireless Network Adapter (9560NGW)",
-+	.fw_name_pre = IWL_QUZ_A_JF_B_FW_PRE,
-+	IWL_DEVICE_22500,
-+	/*
-+	 * This device doesn't support receiving BlockAck with a large bitmap
-+	 * so we need to restrict the size of transmitted aggregation to the
-+	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
-+	 */
-+	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
-+	.integrated = true,
-+	.soc_latency = 5000,
-+};
-+
- const struct iwl_cfg killer1550i_2ac_cfg_qu_b0_jf_b0 = {
- 	.name = "Killer (R) Wireless-AC 1550i Wireless Network Adapter (9560NGW)",
- 	.fw_name_pre = IWL_QU_B_JF_B_FW_PRE,
-@@ -505,6 +592,7 @@ MODULE_FIRMWARE(IWL_22000_HR_B_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_A0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_QU_B_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_QUZ_A_HR_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
-+MODULE_FIRMWARE(IWL_QUZ_A_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_QNJ_B_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_CC_A_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_SO_A_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-index dbe6437249f07..bc267bd2c3b0e 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-@@ -540,14 +540,20 @@ extern const struct iwl_cfg iwl9260_killer_2ac_cfg;
- extern const struct iwl_cfg iwl9270_2ac_cfg;
- extern const struct iwl_cfg iwl9460_2ac_cfg;
- extern const struct iwl_cfg iwl9560_2ac_cfg;
-+extern const struct iwl_cfg iwl9560_2ac_cfg_quz_a0_jf_b0_soc;
- extern const struct iwl_cfg iwl9560_2ac_160_cfg;
-+extern const struct iwl_cfg iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc;
- extern const struct iwl_cfg iwl9460_2ac_cfg_soc;
- extern const struct iwl_cfg iwl9461_2ac_cfg_soc;
-+extern const struct iwl_cfg iwl9461_2ac_cfg_quz_a0_jf_b0_soc;
- extern const struct iwl_cfg iwl9462_2ac_cfg_soc;
-+extern const struct iwl_cfg iwl9462_2ac_cfg_quz_a0_jf_b0_soc;
- extern const struct iwl_cfg iwl9560_2ac_cfg_soc;
- extern const struct iwl_cfg iwl9560_2ac_160_cfg_soc;
- extern const struct iwl_cfg iwl9560_killer_2ac_cfg_soc;
- extern const struct iwl_cfg iwl9560_killer_s_2ac_cfg_soc;
-+extern const struct iwl_cfg iwl9560_killer_i_2ac_cfg_quz_a0_jf_b0_soc;
-+extern const struct iwl_cfg iwl9560_killer_s_2ac_cfg_quz_a0_jf_b0_soc;
- extern const struct iwl_cfg iwl9460_2ac_cfg_shared_clk;
- extern const struct iwl_cfg iwl9461_2ac_cfg_shared_clk;
- extern const struct iwl_cfg iwl9462_2ac_cfg_shared_clk;
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index 09cf5f4fccb0f..fe645380bd2fa 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -513,56 +513,56 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
- 	{IWL_PCI_DEVICE(0x24FD, 0x9074, iwl8265_2ac_cfg)},
+ extern const int  ib_rvt_state_ops[];
  
- /* 9000 Series */
--	{IWL_PCI_DEVICE(0x02F0, 0x0030, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0034, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0038, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x003C, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0060, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0064, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x00A0, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x00A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0230, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0234, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0238, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x023C, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0260, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x0264, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x02A0, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x02A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x1551, iwl9560_killer_s_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x1552, iwl9560_killer_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x2030, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x2034, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x4030, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x4034, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x40A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x4234, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x02F0, 0x42A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0030, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0034, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0038, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x003C, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0060, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0064, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x00A0, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x00A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0230, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0234, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0238, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x023C, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0260, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x0264, iwl9461_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x02A0, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x02A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x1551, iwl9560_killer_s_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x1552, iwl9560_killer_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x2030, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x2034, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x4030, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x4034, iwl9560_2ac_160_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x40A4, iwl9462_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x4234, iwl9560_2ac_cfg_soc)},
--	{IWL_PCI_DEVICE(0x06F0, 0x42A4, iwl9462_2ac_cfg_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0030, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0034, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0038, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x003C, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0060, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0064, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x00A0, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x00A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0230, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0234, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0238, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x023C, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0260, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x0264, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x02A0, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x02A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x1551, iwl9560_killer_s_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x1552, iwl9560_killer_i_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x2030, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x2034, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x4030, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x4034, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x40A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x4234, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x02F0, 0x42A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0030, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0034, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0038, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x003C, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0060, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0064, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x00A0, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x00A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0230, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0234, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0238, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x023C, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0260, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x0264, iwl9461_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x02A0, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x02A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x1551, iwl9560_killer_s_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x1552, iwl9560_killer_i_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x2030, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x2034, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x4030, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x4034, iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x40A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x4234, iwl9560_2ac_cfg_quz_a0_jf_b0_soc)},
-+	{IWL_PCI_DEVICE(0x06F0, 0x42A4, iwl9462_2ac_cfg_quz_a0_jf_b0_soc)},
- 	{IWL_PCI_DEVICE(0x2526, 0x0010, iwl9260_2ac_160_cfg)},
- 	{IWL_PCI_DEVICE(0x2526, 0x0014, iwl9260_2ac_160_cfg)},
- 	{IWL_PCI_DEVICE(0x2526, 0x0018, iwl9260_2ac_160_cfg)},
+ struct rvt_dev_info;
 -- 
 2.20.1
 
