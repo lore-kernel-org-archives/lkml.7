@@ -6,124 +6,172 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EAAC41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED167C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB5221883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4B121883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Wp8V5Z1s"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SQfrkEOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfICUQd (ORCPT
+        id S1726882AbfICUTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:16:33 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33697 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfICUQd (ORCPT
+        Tue, 3 Sep 2019 16:19:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43736 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfICUTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:16:33 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l2so13954003oil.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 13:16:32 -0700 (PDT)
+        Tue, 3 Sep 2019 16:19:07 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 90so14317511otg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 13:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fuNE/PbARI4X1SDUxOJdVor+kM6vEl0qwdmklg5gRIk=;
-        b=Wp8V5Z1smuTXbcTb6H9dhtUg3fTNi/mBMD9NogWFulevqru5aJyg/yQzbZhd87dUxi
-         GW/j6TPJ+e/rsZ29asl2NBU01ok4D9DELsYRWUfiS2R0LRUooQvzgulfFX9enb/cBznF
-         xNn2mRFf723WAOBbPHUafZPHQ2U4e7jxWkRvk=
+         :cc;
+        bh=pQDe8GS2DK5QAF5G4mPztvXfIYARywD4cCZcsg+EDeg=;
+        b=SQfrkEOLJ2NtiynlPnRv5C/m4DqjwHs6SF78jB00qsHzfW34cQ/rqafSCO2w6xEpEH
+         +btn5MG5Cfm7e6Wagu0HtR+CZ8fstG7p3HnqvoFT/g0d+H919b+MOw5HOHFIiIb27l5L
+         D5s6hnSGvzxqC5LgqfJFcNx5KvHy675fn8xnI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fuNE/PbARI4X1SDUxOJdVor+kM6vEl0qwdmklg5gRIk=;
-        b=c01ofAK1EKH0sW9+Sn92PMC+mduIkLpkT94ah1FNYt42yJNp4fXXw0oUJsfWmDcqgH
-         h8x0GFB+TMtiEPbbPjuZoCPWRMF96pzLUb1MCDwzKi3GjvclVkzDm3canDJQuSuWdX5z
-         fEywJbxLCDX7SVprzxA6zUE/YL5ad45exhDV7/TwT4XzSF2E4oPdsjrOwgLS/ifgab47
-         sfaWA1w4Ghqht/R9rW0h4QDbFl7HPBOqfDzInH1YGeQRK6WMJiFkisMk5ot0EdTKDkKu
-         QJuejV/zP4vOuaEIu4VjiO4n8LzOE/3poDMKgr3fkTqh9ImpMr+0t8yspFSNlDGPWGlY
-         di8w==
-X-Gm-Message-State: APjAAAVBPPZHTjTe3pvrfzhePQij+Nx24TN5KnicQAm4Ouyou63sykLO
-        wDhaiLBQkW52Lv+p+yzW4/AwrYyMG3MdrI1u/5HMpA==
-X-Google-Smtp-Source: APXvYqybfiWx6mjrzM5ZXEiVGtvosvX11hiUT74UWVUuMP6ub2AGecgFs301Pxu/2I2tVSX5lPGvb8Ws7uu8YHor0Lc=
-X-Received: by 2002:aca:e182:: with SMTP id y124mr820605oig.132.1567541792385;
- Tue, 03 Sep 2019 13:16:32 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=pQDe8GS2DK5QAF5G4mPztvXfIYARywD4cCZcsg+EDeg=;
+        b=Pc1FwGQvZSZX8NkfCf4S58dmPgqTGdbc4XOHyVPMkGHuHav5PbzqLT5zfrmEZ5Kjpc
+         hjeJZDiQMh351PKF5MVwZtWRAPY73z7t8iIadXzvkGonKCP3qF/MlT5QePlXVWEVZ1nS
+         155BvTMtZWIiJAK4y6NT7SiOr6MEMJTTYFHVc9Ju2VT0nwOCCybyG3IKUYqGZ4XTya5G
+         yD8547Snf7lHYkjlgkUHRhbnQAR1AhNmKOm5R1id0uClUtFwaTmTRvsYsKACTr5jGpeS
+         3UtPPtyNsANyP2nX+kdZqe902kDQSWiG9y0il+5jyW+9ILjiG2xdMkXzBnteN3EbkSKp
+         dTWg==
+X-Gm-Message-State: APjAAAVzN/8dj2hmc9X2mL+eHjgqYq9UQU7lMKskEcHoz+b4VGjnBpas
+        bAoEFYpFXh/9LYgGadM/uzzoehKOfBwDwfw72stXbA==
+X-Google-Smtp-Source: APXvYqzxY0YNMGI+0S485LDg8UpxCx09ufZBbGKgZ4ZGR0qDcK8RpGdEXIZejdCmxMxR12RgGhED4XMzbqohDgtomSw=
+X-Received: by 2002:a9d:7006:: with SMTP id k6mr26989061otj.303.1567541946232;
+ Tue, 03 Sep 2019 13:19:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190903162519.7136-1-sashal@kernel.org> <20190903162519.7136-44-sashal@kernel.org>
- <7957107d-634f-4771-327e-99fdd5e6474e@daenzer.net> <20190903170347.GA24357@kroah.com>
- <20190903200139.GJ5281@sasha-vm>
-In-Reply-To: <20190903200139.GJ5281@sasha-vm>
+References: <20190830032948.13516-1-hdanton@sina.com> <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
+ <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com> <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
+In-Reply-To: <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
 From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 3 Sep 2019 22:16:21 +0200
-Message-ID: <CAKMK7uFpBnkF4xABdkDMZ8TYhL4jg6ZuGyHGyVeBxc9rkyUtXQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 044/167] drm/amdgpu: validate user pitch alignment
-To:     Sasha Levin <sashal@kernel.org>, Dave Airlie <airlied@linux.ie>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, Yu Zhao <yuzhao@google.com>,
-        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Tue, 3 Sep 2019 22:18:55 +0200
+Message-ID: <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
+Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        stable <stable@vger.kernel.org>
+        Linux kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 10:01 PM Sasha Levin <sashal@kernel.org> wrote:
+On Tue, Sep 3, 2019 at 8:07 PM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
 >
-> On Tue, Sep 03, 2019 at 07:03:47PM +0200, Greg KH wrote:
-> >On Tue, Sep 03, 2019 at 06:40:43PM +0200, Michel D=C3=A4nzer wrote:
-> >> On 2019-09-03 6:23 p.m., Sasha Levin wrote:
-> >> > From: Yu Zhao <yuzhao@google.com>
-> >> >
-> >> > [ Upstream commit 89f23b6efef554766177bf51aa754bce14c3e7da ]
-> >>
-> >> Hold your horses!
-> >>
-> >> This commit and c4a32b266da7bb702e60381ca0c35eaddbc89a6c had to be
-> >> reverted, as they caused regressions. See commits
-> >> 25ec429e86bb790e40387a550f0501d0ac55a47c &
-> >> 92b0730eaf2d549fdfb10ecc8b71f34b9f472c12 .
-> >>
-> >>
-> >> This isn't bolstering confidence in how these patches are selected...
+> On Tue, 3 Sep 2019 at 13:21, Hillf Danton <hdanton@sina.com> wrote:
 > >
-> >The patch _itself_ said to be backported to the stable trees from 4.2
-> >and newer.  Why wouldn't we be confident in doing this?
+> > Describe the problems you are experiencing please.
+> > Say is the screen locked up? Machine lockedup?
+> > Anything unnormal after you see the warning?
 > >
-> >If the patch doesn't want to be backported, then do not add the cc:
-> >stable line to it...
 >
-> This patch was picked because it has a stable tag, which you presumably
-> saw as your Reviewed-by tag is in the patch. This is why it was
-> backported; it doesn't take AI to backport patches tagged for stable...
+> According to my observations, all "gnome shell stuck warning" happened
+> when me not sitting on the computer and the computer was locked.
 >
-> The revert of this patch, however:
+> I did not notice any problems at the morning (I did not even look at
+> the kernel logs), I found that the problem happened when I remotely
+> connected to my computer via ssh from work and accidently look dmesg
+> output.
 >
->  1. Didn't have a stable tag.
->  2. Didn't have a "Fixes:" tag.
->  3. Didn't have the usual "the reverts commit ..." string added by git
->  when one does a revert.
+> At the evening after work, I even played in the "Division", and still
+> not noted any problems.
 >
-> Which is why we still kick patches for review, even though they had a
-> stable tag, just so people could take a look and confirm we're not
-> missing anything - like we did here.
->
-> I'm not sure what you expected me to do differently here.
+> Now 11:01pm and "gnome shell stuck warning" not appear since 19:17. So
+> looks like issue happens only when computer blocked and monitor in
+> power save mode.
 
-Yeah this looks like fail on the revert side, they need to reference
-the reverted commit somehow ...
+I'd bet on runtime pm or some other power saving feature in amdgpu
+shutting the interrupt handling down before we've handled all the
+interrupts. That would then result in a stuck fence.
 
-Alex, why got this dropped? Is this more fallout from the back&forth
-shuffling you're doing between your internal branches behind the
-firewall, and the public history?
-
-Also adding Dave Airlie.
+Do we already know which fence is stuck? All the debuggin on the
+dma_fence_wait side is just looking at the messenger, this isn't the
+source of the problem.
 -Daniel
---=20
+
+>
+> $ dmesg -T | grep gnome
+>
+> ---> I am goto sleep
+> [Tue Sep  3 01:00:10 2019] gnome shell stuck warning
+> [Tue Sep  3 01:00:55 2019] gnome shell stuck warning
+> [Tue Sep  3 06:54:50 2019] gnome shell stuck warning
+> <--- I am wake up at 8:00 am and sitting again on the computer
+> ---> I am went to work at 9:30
+> [Tue Sep  3 10:00:05 2019] gnome shell stuck warning
+> [Tue Sep  3 10:10:01 2019] gnome shell stuck warning
+> [Tue Sep  3 10:13:43 2019] gnome shell stuck warning
+> [Tue Sep  3 10:23:37 2019] gnome shell stuck warning
+> [Tue Sep  3 10:42:07 2019] gnome shell stuck warning
+> [Tue Sep  3 10:42:57 2019] gnome shell stuck warning
+> [Tue Sep  3 10:59:25 2019] gnome shell stuck warning
+> [Tue Sep  3 11:08:35 2019] gnome shell stuck warning
+> [Tue Sep  3 11:13:19 2019] gnome shell stuck warning
+> [Tue Sep  3 11:15:20 2019] gnome shell stuck warning
+> [Tue Sep  3 11:26:20 2019] gnome shell stuck warning
+> [Tue Sep  3 11:26:20 2019] gnome shell stuck warning
+> [Tue Sep  3 11:36:30 2019] gnome shell stuck warning
+> [Tue Sep  3 11:46:08 2019] gnome shell stuck warning
+> [Tue Sep  3 11:53:52 2019] gnome shell stuck warning
+> [Tue Sep  3 11:56:36 2019] gnome shell stuck warning
+> [Tue Sep  3 12:17:10 2019] gnome shell stuck warning
+> [Tue Sep  3 12:20:20 2019] gnome shell stuck warning
+> [Tue Sep  3 12:20:20 2019] gnome shell stuck warning
+> [Tue Sep  3 12:30:46 2019] gnome shell stuck warning
+> [Tue Sep  3 12:40:52 2019] gnome shell stuck warning
+> [Tue Sep  3 12:55:30 2019] gnome shell stuck warning
+> [Tue Sep  3 12:57:52 2019] gnome shell stuck warning
+> [Tue Sep  3 13:04:00 2019] gnome shell stuck warning
+> [Tue Sep  3 13:12:38 2019] gnome shell stuck warning
+> [Tue Sep  3 13:14:32 2019] gnome shell stuck warning
+> [Tue Sep  3 13:53:12 2019] gnome shell stuck warning
+> [Tue Sep  3 14:12:52 2019] gnome shell stuck warning
+> [Tue Sep  3 14:15:54 2019] gnome shell stuck warning
+> [Tue Sep  3 14:17:04 2019] gnome shell stuck warning
+> [Tue Sep  3 14:21:57 2019] gnome shell stuck warning
+> [Tue Sep  3 14:22:10 2019] gnome shell stuck warning
+> [Tue Sep  3 14:37:42 2019] gnome shell stuck warning
+> [Tue Sep  3 14:41:51 2019] gnome shell stuck warning
+> [Tue Sep  3 14:42:52 2019] gnome shell stuck warning
+> [Tue Sep  3 14:46:35 2019] gnome shell stuck warning
+> [Tue Sep  3 15:03:18 2019] gnome shell stuck warning
+> [Tue Sep  3 15:16:50 2019] gnome shell stuck warning
+> [Tue Sep  3 15:27:30 2019] gnome shell stuck warning
+> [Tue Sep  3 15:27:41 2019] gnome shell stuck warning
+> [Tue Sep  3 16:08:06 2019] gnome shell stuck warning
+> [Tue Sep  3 16:24:16 2019] gnome shell stuck warning
+> [Tue Sep  3 16:33:04 2019] gnome shell stuck warning
+> [Tue Sep  3 16:52:10 2019] gnome shell stuck warning
+> [Tue Sep  3 17:18:27 2019] gnome shell stuck warning
+> [Tue Sep  3 17:25:30 2019] gnome shell stuck warning
+> [Tue Sep  3 17:41:16 2019] gnome shell stuck warning
+> [Tue Sep  3 17:43:32 2019] gnome shell stuck warning
+> [Tue Sep  3 17:51:10 2019] gnome shell stuck warning
+> [Tue Sep  3 18:41:44 2019] gnome shell stuck warning
+> [Tue Sep  3 18:44:18 2019] gnome shell stuck warning
+> [Tue Sep  3 19:03:07 2019] gnome shell stuck warning
+> [Tue Sep  3 19:17:58 2019] gnome shell stuck warning
+> <--- Returned to home and sitting again on the computer
+>
+> --
+> Best Regards,
+> Mike Gavrilov.
+
+
+
+-- 
 Daniel Vetter
 Software Engineer, Intel Corporation
 +41 (0) 79 365 57 48 - http://blog.ffwll.ch
