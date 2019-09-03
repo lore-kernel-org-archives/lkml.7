@@ -2,77 +2,100 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271D7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDC1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0424D208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E592208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbfICQIl (ORCPT
+        id S1729987AbfICQIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:08:41 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:32898 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728679AbfICQIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:08:40 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1i5BLi-0007Ci-LT; Tue, 03 Sep 2019 10:08:08 -0600
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20190831000139.7662-1-logang@deltatee.com>
- <20190831152910.GA29439@localhost.localdomain>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
-Date:   Tue, 3 Sep 2019 10:08:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 12:08:51 -0400
+Received: from tartarus.angband.pl ([54.37.238.230]:46552 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbfICQIu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:08:50 -0400
+Received: from [2a02:a31c:853f:a300::4] (helo=valinor.angband.pl)
+        by tartarus.angband.pl with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1i5BML-0005on-BJ; Tue, 03 Sep 2019 18:08:47 +0200
+Received: from kilobyte by valinor.angband.pl with local (Exim 4.92.1)
+        (envelope-from <kilobyte@valinor.angband.pl>)
+        id 1i5BMK-000EhM-Ch; Tue, 03 Sep 2019 18:08:44 +0200
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Adam Borowski <kilobyte@angband.pl>
+Date:   Tue,  3 Sep 2019 18:08:40 +0200
+Message-Id: <20190903160840.56652-1-kilobyte@angband.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190831152910.GA29439@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: martin.petersen@oracle.com, hare@suse.com, kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, keith.busch@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a02:a31c:853f:a300::4
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+Subject: [PATCH] Documentation: sysrq: don't recommend 'S' 'U' before 'B'
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on tartarus.angband.pl)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This advice is obsolete and slightly harmful for filesystems from this
+millenium: any modern filesystem can handle unexpected crashes without
+requiring fsck -- and on the other hand, trying to write to the disk when
+the kernel is in a bad state risks introducing corruption.
 
+For ext2, any unsafe shutdown meant widespread breakage, but it's no longer
+a reasonable filesystem for any non-special use.
 
-On 2019-08-31 9:29 a.m., Keith Busch wrote:
-> On Fri, Aug 30, 2019 at 06:01:39PM -0600, Logan Gunthorpe wrote:
->> To fix this, assign the subsystem's instance based on the instance
->> number of the controller's instance that first created it. There should
->> always be fewer subsystems than controllers so the should not be a need
->> to create extra subsystems that overlap existing controllers.
-> 
-> The subsystem's lifetime is not tied to the controller's. When the
-> controller is removed and releases its instance, the next controller
-> to take that available instance will create naming collisions with the
-> subsystem still using it.
-> 
+Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+---
+ Documentation/admin-guide/sysrq.rst | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-Hmm, yes, ok.
+diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
+index 7b9035c01a2e..72b2cfb066f4 100644
+--- a/Documentation/admin-guide/sysrq.rst
++++ b/Documentation/admin-guide/sysrq.rst
+@@ -171,22 +171,20 @@ It seems others find it useful as (System Attention Key) which is
+ useful when you want to exit a program that will not let you switch consoles.
+ (For example, X or a svgalib program.)
+ 
+-``reboot(b)`` is good when you're unable to shut down. But you should also
+-``sync(s)`` and ``umount(u)`` first.
++``reboot(b)`` is good when you're unable to shut down, it is an equivalent
++of pressing the "reset" button.
+ 
+ ``crash(c)`` can be used to manually trigger a crashdump when the system is hung.
+ Note that this just triggers a crash if there is no dump mechanism available.
+ 
+-``sync(s)`` is great when your system is locked up, it allows you to sync your
+-disks and will certainly lessen the chance of data loss and fscking. Note
+-that the sync hasn't taken place until you see the "OK" and "Done" appear
+-on the screen. (If the kernel is really in strife, you may not ever get the
+-OK or Done message...)
++``sync(s)`` is handy before yanking removable medium or after using a rescue
++shell that provides no graceful shutdown -- it will ensure your data is
++safely written to the disk. Note that the sync hasn't taken place until you see
++the "OK" and "Done" appear on the screen.
+ 
+-``umount(u)`` is basically useful in the same ways as ``sync(s)``. I generally
+-``sync(s)``, ``umount(u)``, then ``reboot(b)`` when my system locks. It's saved
+-me many a fsck. Again, the unmount (remount read-only) hasn't taken place until
+-you see the "OK" and "Done" message appear on the screen.
++``umount(u)`` can be used to mark filesystems as properly unmounted. From the
++running system's point of view, they will be remounted read-only. The remount
++isn't complete until you see the "OK" and "Done" message appear on the screen.
+ 
+ The loglevels ``0``-``9`` are useful when your console is being flooded with
+ kernel messages you do not want to see. Selecting ``0`` will prevent all but
+-- 
+2.23.0
 
-So perhaps we can just make the subsystem prefer the ctrl's instance
-when allocating the ID? Then at least, in the common case, the
-controller numbers will match the subsystem numbers. Only when there's
-random hot-plugs would the numbers get out of sync.
-
-Logan
