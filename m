@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F1DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E203DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06CC2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9182339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528436;
-	bh=9hITkvwS7RUR+NOyuSsEcOigWPALmP3ru1eoSEaWVu0=;
+	s=default; t=1567528442;
+	bh=z04+1h1s5hTR+aw24LvmqbSECzVvja8kNEUB03vK7iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4Erp0IProhEtOqEgADQ4BFnBdroqJIDO8BarBlZSPBzsONZE1lkB0DgJ7dI7VQuf
-	 e3uE4DG7TQb2sH3KxBkPJs27t7GaMzUpFjbw4F9xdgC7odGTaD3v3PVJ2UmTvV7/Xb
-	 bRuzGUaP99DArYf5vjSDwnq5o84jqEJ2g9fKexvU=
+	b=kPaWLG38qxfegMtGo/qh4usINNBknAaVjq0dD3A/7gQZSND87J5C0lCOYvkIPmFbS
+	 oBCAFAueMAmH81ujSr7zLAAMvtWmiUO0y/ppdhSFLQWpSpPAK5tKpmvQ5Fn24sjhmx
+	 9Ry1Xy+WxGiXsN03fWyXtHEgSfWi1dGkxsRns6yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbfICQd4 (ORCPT
+        id S1731204AbfICQeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731068AbfICQ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:15 -0400
+        id S1731059AbfICQ2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98AE62343A;
-        Tue,  3 Sep 2019 16:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D82238CE;
+        Tue,  3 Sep 2019 16:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528094;
-        bh=9hITkvwS7RUR+NOyuSsEcOigWPALmP3ru1eoSEaWVu0=;
+        s=default; t=1567528092;
+        bh=z04+1h1s5hTR+aw24LvmqbSECzVvja8kNEUB03vK7iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMdJoln4t0/ssmwLXtcysSY4uJyat4IGu3tSASucMvwMEPxLYfSn9ghU+BKVPLq8S
-         xTklqDU3CqBQMBUZw76wCkf6qtcpTRLy6CGV6kaLpJpPowB1Px7fe5DhX+LsK6LtnS
-         RA6zvstvN2uCTOVmW0rrMqjLI6IXIHHjyVpgU4DY=
+        b=KwPrnaKY3fu83bMrZpNH9eLR9X6f70JmdcBF2XN+NzcaPCLLb8IJ2yd6/oV0JFzYU
+         M5G1TepLVGPDYqNqqBrrVmdj2wi9bwIZ8+mMgMXb2VXvieRHHOEgKmgO4mXsU7ehJU
+         Tu5aQk54/wz4qy8KNcy9RxAmvZjOXVbmee+pVAeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 103/167] PCI: Add macro for Switchtec quirk declarations
-Date:   Tue,  3 Sep 2019 12:24:15 -0400
-Message-Id: <20190903162519.7136-103-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 101/167] dt-bindings: mmc: Add supports-cqe property
+Date:   Tue,  3 Sep 2019 12:24:13 -0400
+Message-Id: <20190903162519.7136-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,124 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 01d5d7fa8376c6b5acda86e16fcad22de6bba486 ]
+[ Upstream commit c7fddbd5db5cffd10ed4d18efa20e36803d1899f ]
 
-Add SWITCHTEC_QUIRK() to reduce redundancy in declaring devices that use
-quirk_switchtec_ntb_dma_alias().
+Add supports-cqe optional property for MMC hosts.
 
-By itself, this is no functional change, but a subsequent patch updates
-SWITCHTEC_QUIRK() to fix ad281ecf1c7d ("PCI: Add DMA alias quirk for
-Microsemi Switchtec NTB").
+This property is used to identify the specific host controller
+supporting command queue.
 
-Fixes: ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec NTB")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-[bhelgaas: split to separate patch]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 90 +++++++++++++++++---------------------------
- 1 file changed, 34 insertions(+), 56 deletions(-)
+ Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 28c64f84bfe72..6cda8b7ecc821 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5082,59 +5082,37 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
- 	pci_iounmap(pdev, mmio);
- 	pci_disable_device(pdev);
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8531,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8532,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8533,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8534,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8535,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8536,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8543,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8544,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8545,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8546,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8551,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8552,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8553,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8554,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8555,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8556,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8561,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8562,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8563,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8564,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8565,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8566,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8571,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8572,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8573,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8574,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8575,
--			quirk_switchtec_ntb_dma_alias);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8576,
--			quirk_switchtec_ntb_dma_alias);
-+#define SWITCHTEC_QUIRK(vid) \
-+	DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
-+				quirk_switchtec_ntb_dma_alias)
-+
-+SWITCHTEC_QUIRK(0x8531);  /* PFX 24xG3 */
-+SWITCHTEC_QUIRK(0x8532);  /* PFX 32xG3 */
-+SWITCHTEC_QUIRK(0x8533);  /* PFX 48xG3 */
-+SWITCHTEC_QUIRK(0x8534);  /* PFX 64xG3 */
-+SWITCHTEC_QUIRK(0x8535);  /* PFX 80xG3 */
-+SWITCHTEC_QUIRK(0x8536);  /* PFX 96xG3 */
-+SWITCHTEC_QUIRK(0x8541);  /* PSX 24xG3 */
-+SWITCHTEC_QUIRK(0x8542);  /* PSX 32xG3 */
-+SWITCHTEC_QUIRK(0x8543);  /* PSX 48xG3 */
-+SWITCHTEC_QUIRK(0x8544);  /* PSX 64xG3 */
-+SWITCHTEC_QUIRK(0x8545);  /* PSX 80xG3 */
-+SWITCHTEC_QUIRK(0x8546);  /* PSX 96xG3 */
-+SWITCHTEC_QUIRK(0x8551);  /* PAX 24XG3 */
-+SWITCHTEC_QUIRK(0x8552);  /* PAX 32XG3 */
-+SWITCHTEC_QUIRK(0x8553);  /* PAX 48XG3 */
-+SWITCHTEC_QUIRK(0x8554);  /* PAX 64XG3 */
-+SWITCHTEC_QUIRK(0x8555);  /* PAX 80XG3 */
-+SWITCHTEC_QUIRK(0x8556);  /* PAX 96XG3 */
-+SWITCHTEC_QUIRK(0x8561);  /* PFXL 24XG3 */
-+SWITCHTEC_QUIRK(0x8562);  /* PFXL 32XG3 */
-+SWITCHTEC_QUIRK(0x8563);  /* PFXL 48XG3 */
-+SWITCHTEC_QUIRK(0x8564);  /* PFXL 64XG3 */
-+SWITCHTEC_QUIRK(0x8565);  /* PFXL 80XG3 */
-+SWITCHTEC_QUIRK(0x8566);  /* PFXL 96XG3 */
-+SWITCHTEC_QUIRK(0x8571);  /* PFXI 24XG3 */
-+SWITCHTEC_QUIRK(0x8572);  /* PFXI 32XG3 */
-+SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
-+SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
-+SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
-+SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index f5a0923b34ca1..cdbcfd3a4ff21 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -62,6 +62,8 @@ Optional properties:
+   be referred to mmc-pwrseq-simple.txt. But now it's reused as a tunable delay
+   waiting for I/O signalling and card power supply to be stable, regardless of
+   whether pwrseq-simple is used. Default to 10ms if no available.
++- supports-cqe : The presence of this property indicates that the corresponding
++  MMC host controller supports HW command queue feature.
+ 
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
 -- 
 2.20.1
 
