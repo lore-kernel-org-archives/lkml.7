@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6F2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7EE238CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED93238CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528146;
-	bh=w77g1XRuir6cwf+dV8sn+KOaE+5X5efzEZQPmAsp56U=;
+	s=default; t=1567528148;
+	bh=k43lpHa8oYsSyGhdj7LkLtLpSfsE8H1gy9AvVldfH6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUAz/v4uxnqTgU60anvmmeQyGp8k3WSUoyfegpWj+oWZOvwSA0JP5srarkcOB/qjv
-	 LatWAW7NEli70ZN76ZhpXOrDuueJxVOTruWt9IYrgMLGBLDgzpM9+dM/6xXpVX5b8/
-	 bn0TWU24elAJ7CRaFd3JYzys1gG3Z8tS+ZSzO+fA=
+	b=14A7A7ggeE/sF9gCRKVajI3zTfi0dqdNCM9xxGb+rIMBJizuD9MPb68p1WWdX+Zeu
+	 UAhCY1W3OlvwWG3e5vVUzxEVrS3wc1uDhuI/FwsoUYC8GUEXRRUbmyE85rGiBZ9DcJ
+	 kQw16yXHKX0cRznlJHs2zhEWyzyI/nsOTabLcKDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbfICQ3F (ORCPT
+        id S1731290AbfICQ3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51542 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731240AbfICQ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:29:02 -0400
+        id S1731262AbfICQ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:29:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1406238CE;
-        Tue,  3 Sep 2019 16:29:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3255238CD;
+        Tue,  3 Sep 2019 16:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528141;
-        bh=w77g1XRuir6cwf+dV8sn+KOaE+5X5efzEZQPmAsp56U=;
+        s=default; t=1567528143;
+        bh=k43lpHa8oYsSyGhdj7LkLtLpSfsE8H1gy9AvVldfH6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qls+6Th++vb1CIghRY7es90shyC9G1RLgs4e5hHWcoNKu1ARmrMIZWqirjyFl50e/
-         gSmriw68UYQ4UxR/Z+fYSUQFiZHSujOJXlxWNxo7jKn4XWHswPtxGQeryRhgvVAGEN
-         HzR0HPAEn058vA0cpfLeLAntjSA+GuVdPI+dpNhM=
+        b=mFub4kFEuVxMvfpY2rfNzFE7jm/Q3k/WDlHxvVQkY4iBeziR+j8A9od8Hxt0h8esj
+         /f3c5vFXQuqxOKNhz/DC6qNp6WujxTg+jgA1VbizYrdX/kTrv5rsSmntm9qWjxQEvP
+         P6oPNzo6t1LBYfezXFbPedd8Sy6s1QS4/gTWYjAk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 132/167] KVM: x86: optimize check for valid PAT value
-Date:   Tue,  3 Sep 2019 12:24:44 -0400
-Message-Id: <20190903162519.7136-132-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 134/167] KVM: VMX: Fix handling of #MC that occurs during VM-Entry
+Date:   Tue,  3 Sep 2019 12:24:46 -0400
+Message-Id: <20190903162519.7136-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,84 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 674ea351cdeb01d2740edce31db7f2d79ce6095d ]
+[ Upstream commit beb8d93b3e423043e079ef3dda19dad7b28467a8 ]
 
-This check will soon be done on every nested vmentry and vmexit,
-"parallelize" it using bitwise operations.
+A previous fix to prevent KVM from consuming stale VMCS state after a
+failed VM-Entry inadvertantly blocked KVM's handling of machine checks
+that occur during VM-Entry.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Per Intel's SDM, a #MC during VM-Entry is handled in one of three ways,
+depending on when the #MC is recognoized.  As it pertains to this bug
+fix, the third case explicitly states EXIT_REASON_MCE_DURING_VMENTRY
+is handled like any other VM-Exit during VM-Entry, i.e. sets bit 31 to
+indicate the VM-Entry failed.
+
+If a machine-check event occurs during a VM entry, one of the following occurs:
+ - The machine-check event is handled as if it occurred before the VM entry:
+        ...
+ - The machine-check event is handled after VM entry completes:
+        ...
+ - A VM-entry failure occurs as described in Section 26.7. The basic
+   exit reason is 41, for "VM-entry failure due to machine-check event".
+
+Explicitly handle EXIT_REASON_MCE_DURING_VMENTRY as a one-off case in
+vmx_vcpu_run() instead of binning it into vmx_complete_atomic_exit().
+Doing so allows vmx_vcpu_run() to handle VMX_EXIT_REASONS_FAILED_VMENTRY
+in a sane fashion and also simplifies vmx_complete_atomic_exit() since
+VMCS.VM_EXIT_INTR_INFO is guaranteed to be fresh.
+
+Fixes: b060ca3b2e9e7 ("kvm: vmx: Handle VMLAUNCH/VMRESUME failure properly")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mtrr.c | 10 +---------
- arch/x86/kvm/vmx.c  |  2 +-
- arch/x86/kvm/x86.h  | 10 ++++++++++
- 3 files changed, 12 insertions(+), 10 deletions(-)
+ arch/x86/kvm/vmx.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kvm/mtrr.c b/arch/x86/kvm/mtrr.c
-index e9ea2d45ae66b..9f72cc427158e 100644
---- a/arch/x86/kvm/mtrr.c
-+++ b/arch/x86/kvm/mtrr.c
-@@ -48,11 +48,6 @@ static bool msr_mtrr_valid(unsigned msr)
- 	return false;
- }
- 
--static bool valid_pat_type(unsigned t)
--{
--	return t < 8 && (1 << t) & 0xf3; /* 0, 1, 4, 5, 6, 7 */
--}
--
- static bool valid_mtrr_type(unsigned t)
- {
- 	return t < 8 && (1 << t) & 0x73; /* 0, 1, 4, 5, 6 */
-@@ -67,10 +62,7 @@ bool kvm_mtrr_valid(struct kvm_vcpu *vcpu, u32 msr, u64 data)
- 		return false;
- 
- 	if (msr == MSR_IA32_CR_PAT) {
--		for (i = 0; i < 8; i++)
--			if (!valid_pat_type((data >> (i * 8)) & 0xff))
--				return false;
--		return true;
-+		return kvm_pat_valid(data);
- 	} else if (msr == MSR_MTRRdefType) {
- 		if (data & ~0xcff)
- 			return false;
 diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index ee9ff20da3902..feff7ed44a2bb 100644
+index e4bba840a0708..82253d31842a2 100644
 --- a/arch/x86/kvm/vmx.c
 +++ b/arch/x86/kvm/vmx.c
-@@ -4266,7 +4266,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		break;
- 	case MSR_IA32_CR_PAT:
- 		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
--			if (!kvm_mtrr_valid(vcpu, MSR_IA32_CR_PAT, data))
-+			if (!kvm_pat_valid(data))
- 				return 1;
- 			vmcs_write64(GUEST_IA32_PAT, data);
- 			vcpu->arch.pat = data;
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 8889e0c029a70..3a91ea760f073 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -345,6 +345,16 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
- 	__this_cpu_write(current_vcpu, NULL);
- }
+@@ -10438,28 +10438,21 @@ static void vmx_apicv_post_state_restore(struct kvm_vcpu *vcpu)
  
+ static void vmx_complete_atomic_exit(struct vcpu_vmx *vmx)
+ {
+-	u32 exit_intr_info = 0;
+-	u16 basic_exit_reason = (u16)vmx->exit_reason;
+-
+-	if (!(basic_exit_reason == EXIT_REASON_MCE_DURING_VMENTRY
+-	      || basic_exit_reason == EXIT_REASON_EXCEPTION_NMI))
++	if (vmx->exit_reason != EXIT_REASON_EXCEPTION_NMI)
+ 		return;
+ 
+-	if (!(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+-		exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
+-	vmx->exit_intr_info = exit_intr_info;
++	vmx->exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
+ 
+ 	/* if exit due to PF check for async PF */
+-	if (is_page_fault(exit_intr_info))
++	if (is_page_fault(vmx->exit_intr_info))
+ 		vmx->vcpu.arch.apf.host_apf_reason = kvm_read_and_reset_pf_reason();
+ 
+ 	/* Handle machine checks before interrupts are enabled */
+-	if (basic_exit_reason == EXIT_REASON_MCE_DURING_VMENTRY ||
+-	    is_machine_check(exit_intr_info))
++	if (is_machine_check(vmx->exit_intr_info))
+ 		kvm_machine_check();
+ 
+ 	/* We need to handle NMIs before interrupts are enabled */
+-	if (is_nmi(exit_intr_info)) {
++	if (is_nmi(vmx->exit_intr_info)) {
+ 		kvm_before_interrupt(&vmx->vcpu);
+ 		asm("int $2");
+ 		kvm_after_interrupt(&vmx->vcpu);
+@@ -10980,6 +10973,9 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	vmx->idt_vectoring_info = 0;
+ 
+ 	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
++	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
++		kvm_machine_check();
 +
-+static inline bool kvm_pat_valid(u64 data)
-+{
-+	if (data & 0xF8F8F8F8F8F8F8F8ull)
-+		return false;
-+	/* 0, 1, 4, 5, 6, 7 are valid values.  */
-+	return (data | ((data & 0x0202020202020202ull) << 1)) == data;
-+}
-+
- void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
- void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
-+
- #endif
+ 	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+ 		return;
+ 
 -- 
 2.20.1
 
