@@ -2,164 +2,136 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECA9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31995C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2E922CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122F122CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfICIP0 (ORCPT
+        id S1728074AbfICIQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:15:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32391 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfICIP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:15:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 01:15:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="176512353"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.196.103]) ([10.239.196.103])
-  by orsmga008.jf.intel.com with ESMTP; 03 Sep 2019 01:15:24 -0700
-Subject: Re: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, mingo@redhat.com,
-        tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-References: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
- <1562947506.12920.0.camel@kernel.org>
- <ac10cc35-96f4-7f67-a259-2398d3136417@linux.intel.com>
- <20190812230403.01491479@oasis.local.home>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Message-ID: <5706f93f-201c-47d7-fe30-e68c2d668e21@linux.intel.com>
-Date:   Tue, 3 Sep 2019 16:15:23 +0800
+        Tue, 3 Sep 2019 04:16:19 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:17438 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfICIQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:16:18 -0400
+Received: from [10.18.29.226] (10.18.29.226) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 3 Sep
+ 2019 16:16:57 +0800
+Subject: Re: [PATCH 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567493475-75451-5-git-send-email-jianxin.pan@amlogic.com>
+ <97a462d6-d98e-f778-96d5-bacd4801df6b@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <f06ab4c9-4b86-3b6f-062d-b5fe365bcd10@amlogic.com>
+Date:   Tue, 3 Sep 2019 16:16:57 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812230403.01491479@oasis.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <97a462d6-d98e-f778-96d5-bacd4801df6b@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.29.226]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi Steve,
+Hi Neil,
 
-On 8/13/2019 11:04 AM, Steven Rostedt wrote:
-> On Tue, 13 Aug 2019 09:04:28 +0800
-> Xing Zhengjun <zhengjun.xing@linux.intel.com> wrote:
-> 
->> Hi Steve,
->>
->>      Could you help to review? Thanks.
-> 
-> Thanks for the ping. Yes, I'll take a look at it. I'll be pulling in a
-> lot of patches that have queued up.
-> 
-> -- Steve
+Thanks for your time.
+Please see my comments below.
 
-Could you help to review? Thanks.
-
+On 2019/9/3 15:42, Neil Armstrong wrote:
+> Hi,
 > 
+> On 03/09/2019 08:51, Jianxin Pan wrote:
+>> Add basic support for the Amlogic A1 based Amlogic AD401 board:
+>> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+[...]
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +	memory@0 {
+>> +		device_type = "memory";
+>> +		linux,usable-memory = <0x0 0x0 0x0 0x8000000>;
 > 
->>
->> On 7/13/2019 12:05 AM, Tom Zanussi wrote:
->>> Hi Zhengjun,
->>>
->>> On Fri, 2019-07-12 at 09:53 +0800, Zhengjun Xing wrote:
->>>> Add "gfp_t" support in synthetic_events, then the "gfp_t" type
->>>> parameter in some functions can be traced.
->>>>
->>>> Prints the gfp flags as hex in addition to the human-readable flag
->>>> string.  Example output:
->>>>
->>>>     whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
->>>> (GFP_ATOMIC|__GFP_ZERO)
->>>>       rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
->>>>       rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
->>>>
->>>> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
->>>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->>>
->>> Looks good to me, thanks!
->>>
->>> Tom
->>>    
->>>> ---
->>>>    kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
->>>>    1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/kernel/trace/trace_events_hist.c
->>>> b/kernel/trace/trace_events_hist.c
->>>> index ca6b0dff60c5..30f0f32aca62 100644
->>>> --- a/kernel/trace/trace_events_hist.c
->>>> +++ b/kernel/trace/trace_events_hist.c
->>>> @@ -13,6 +13,10 @@
->>>>    #include <linux/rculist.h>
->>>>    #include <linux/tracefs.h>
->>>>    
->>>> +/* for gfp flag names */
->>>> +#include <linux/trace_events.h>
->>>> +#include <trace/events/mmflags.h>
->>>> +
->>>>    #include "tracing_map.h"
->>>>    #include "trace.h"
->>>>    #include "trace_dynevent.h"
->>>> @@ -752,6 +756,8 @@ static int synth_field_size(char *type)
->>>>    		size = sizeof(unsigned long);
->>>>    	else if (strcmp(type, "pid_t") == 0)
->>>>    		size = sizeof(pid_t);
->>>> +	else if (strcmp(type, "gfp_t") == 0)
->>>> +		size = sizeof(gfp_t);
->>>>    	else if (synth_field_is_string(type))
->>>>    		size = synth_field_string_size(type);
->>>>    
->>>> @@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
->>>>    		fmt = "%lu";
->>>>    	else if (strcmp(type, "pid_t") == 0)
->>>>    		fmt = "%d";
->>>> +	else if (strcmp(type, "gfp_t") == 0)
->>>> +		fmt = "%x";
->>>>    	else if (synth_field_is_string(type))
->>>>    		fmt = "%s";
->>>>    
->>>> @@ -834,9 +842,20 @@ static enum print_line_t
->>>> print_synth_event(struct trace_iterator *iter,
->>>>    					 i == se->n_fields - 1 ? ""
->>>> : " ");
->>>>    			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
->>>>    		} else {
->>>> +			struct trace_print_flags __flags[] = {
->>>> +			    __def_gfpflag_names, {-1, NULL} };
->>>> +
->>>>    			trace_seq_printf(s, print_fmt, se-
->>>>> fields[i]->name,
->>>>    					 entry->fields[n_u64],
->>>>    					 i == se->n_fields - 1 ? ""
->>>> : " ");
->>>> +
->>>> +			if (strcmp(se->fields[i]->type, "gfp_t") ==
->>>> 0) {
->>>> +				trace_seq_puts(s, " (");
->>>> +				trace_print_flags_seq(s, "|",
->>>> +						      entry-
->>>>> fields[n_u64],
->>>> +						      __flags);
->>>> +				trace_seq_putc(s, ')');
->>>> +			}
->>>>    			n_u64++;
->>>>    		}
->>>>    	}
+> I'll prefer usage of reg, it's handled the same but linux,usable-memory
+> is not documented.
+> 
+OK, I will fix it in the next version. Thanks for your review.
+>> +	};
+>> +};
+>> +
+>> +&uart_AO_B {
+>> +	status = "okay";
+>> +	/*pinctrl-0 = <&uart_ao_a_pins>;*/
+>> +	/*pinctrl-names = "default";*/
+> 
+> Please remove these lines instead of commenting them.
+> 
+OK, I will fix it in the next version.
+>> +};
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> new file mode 100644
+>> index 00000000..b98d648
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -0,0 +1,121 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+[...]
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+> 
+> Isn't there secmon reserved memory ?
+> 
+A1 uses internal SRAM as secmon memory.
+And there is no secmon reserved memory in ddr side.
+>> +
+>> +		linux,cma {
+>> +			compatible = "shared-dma-pool";
+>> +			reusable;
+>> +			size = <0x0 0x800000>;
+[...]
 >>
 > 
+> Thanks,
+> Neil
+> 
+> .
+> 
 
--- 
-Zhengjun Xing
