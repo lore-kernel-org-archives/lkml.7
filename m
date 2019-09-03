@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4A2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CABC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D1B238CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13303238C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528140;
-	bh=SQyxLkOf/O6d/Hq0r71pzE4mhrqkkJQ4k3Ezo+dnXf8=;
+	s=default; t=1567528142;
+	bh=D53RVInm+WvjnzHlUjJv9yLcH4RX6DkgvOJfq7/ArCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/pWdUD1czdvkFZlMElijmHjUxfdjxQvEUTHQRojeidLldbWWgHM0J/8zOyZlJb3L
-	 cJcJQqH5YACQmieA5SlfsbMYDwaN6qKEbgdZbMhUEeq4dliJsFi/JLWC/SqDYr6Si8
-	 qK5GVE3hAekNocj+BE7w8PVbFAL8pUmq1RRn4ml8=
+	b=sO+UGQ5Egh8yUHXGKhmr+gbmG/c6VxbV+QcxyW4Z9eZjL9mYQXD1UiM4dOk5hm7mH
+	 BYuJ/tsqM8RFqAgLunQ3TSZkIBi3Rgl4BY72XBcw/xtTXVHSaLsrSiJohC91XJk4XU
+	 SJbSD6JRZjOZFMTXFDHAEkQ0StHaXlnuCx3GKTNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfICQ27 (ORCPT
+        id S1731224AbfICQ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51200 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731178AbfICQ2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:51 -0400
+        id S1730722AbfICQ2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 484A223431;
-        Tue,  3 Sep 2019 16:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF87238C7;
+        Tue,  3 Sep 2019 16:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528130;
-        bh=SQyxLkOf/O6d/Hq0r71pzE4mhrqkkJQ4k3Ezo+dnXf8=;
+        s=default; t=1567528128;
+        bh=D53RVInm+WvjnzHlUjJv9yLcH4RX6DkgvOJfq7/ArCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkM0G6QgRKkAg2Co4fV7zfWiXzV5PGWWecY75fvaWTt0+9fAQt108wqMMTlq0/6aI
-         5NP65ZCAvOjRfm4LuPDo8NDee/78KjtUwPkWMP1H1kwiAgeB2/LFvxQZZbJy459ksD
-         G90h5aDqkHvbIZ84JgBvCGSonsfV70vRcmA5oBbo=
+        b=pOZSL76gW/ADx9vfCyRlB9cZsHKYAvm4Wd+j/U8ikyWIVZ03k+i/1PcJjmLiMVc9w
+         Svxi4yUO4DZmzwi16A6FWk3qtUPxu+/RolhlUysvCPaTWpV2omhoxlQYP+mY2H5hwx
+         x8RWMcTKBut5s9kOoc4oyGNLZesJuGDrjO7tRspo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Hannes Reinecke <hare@suse.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
         target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 125/167] scsi: target/iblock: Fix overrun in WRITE SAME emulation
-Date:   Tue,  3 Sep 2019 12:24:37 -0400
-Message-Id: <20190903162519.7136-125-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 124/167] scsi: target/core: Use the SECTOR_SHIFT constant
+Date:   Tue,  3 Sep 2019 12:24:36 -0400
+Message-Id: <20190903162519.7136-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,44 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 5676234f20fef02f6ca9bd66c63a8860fce62645 ]
+[ Upstream commit 80b045b385cfef10939c913fbfeb19ce5491c1f2 ]
 
-WRITE SAME corrupts data on the block device behind iblock if the command
-is emulated. The emulation code issues (M - 1) * N times more bios than
-requested, where M is the number of 512 blocks per real block size and N is
-the NUMBER OF LOGICAL BLOCKS specified in WRITE SAME command. So, for a
-device with 4k blocks, 7 * N more LBAs gets written after the requested
-range.
+Instead of duplicating the SECTOR_SHIFT definition from <linux/blkdev.h>,
+use it. This patch does not change any functionality.
 
-The issue happens because the number of 512 byte sectors to be written is
-decreased one by one while the real bios are typically from 1 to 8 512 byte
-sectors per bio.
-
-Fixes: c66ac9db8d4a ("[SCSI] target: Add LIO target core v4.0.0-rc6")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_iblock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/target/target_core_iblock.c | 4 ++--
+ drivers/target/target_core_iblock.h | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
-index 1bc9b14236d8b..854b2bcca7c1a 100644
+index ce1321a5cb7bf..1bc9b14236d8b 100644
 --- a/drivers/target/target_core_iblock.c
 +++ b/drivers/target/target_core_iblock.c
-@@ -515,7 +515,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
+@@ -514,7 +514,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
+ 		}
  
  		/* Always in 512 byte units for Linux/Block */
- 		block_lba += sg->length >> SECTOR_SHIFT;
--		sectors -= 1;
-+		sectors -= sg->length >> SECTOR_SHIFT;
+-		block_lba += sg->length >> IBLOCK_LBA_SHIFT;
++		block_lba += sg->length >> SECTOR_SHIFT;
+ 		sectors -= 1;
  	}
  
- 	iblock_submit_bios(&list);
+@@ -757,7 +757,7 @@ iblock_execute_rw(struct se_cmd *cmd, struct scatterlist *sgl, u32 sgl_nents,
+ 		}
+ 
+ 		/* Always in 512 byte units for Linux/Block */
+-		block_lba += sg->length >> IBLOCK_LBA_SHIFT;
++		block_lba += sg->length >> SECTOR_SHIFT;
+ 		sg_num--;
+ 	}
+ 
+diff --git a/drivers/target/target_core_iblock.h b/drivers/target/target_core_iblock.h
+index 9cc3843404d44..cefc641145b3b 100644
+--- a/drivers/target/target_core_iblock.h
++++ b/drivers/target/target_core_iblock.h
+@@ -9,7 +9,6 @@
+ #define IBLOCK_VERSION		"4.0"
+ 
+ #define IBLOCK_MAX_CDBS		16
+-#define IBLOCK_LBA_SHIFT	9
+ 
+ struct iblock_req {
+ 	refcount_t pending;
 -- 
 2.20.1
 
