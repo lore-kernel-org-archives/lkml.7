@@ -2,448 +2,145 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_ALL,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC443C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A795C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBEF22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315D721881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567530907;
+	bh=OSLmOk411KxiFHHCV+W1uKZOEHEE0C5o+v/gcwu0ju4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ru25E+P2XPRDjpDjmJarU9CBndovp2rH/aghcuE8v5dawCgpotnhF6vNEB3/K6Jhr
+	 DPCR5COBLnJ6kMwuB0nvoZfHGlgoaJhRAv0a5MvhE+qxNLMJJtrcF1K4yEykSFm4Ko
+	 5FAd6mXQu3AKG3F5IhQg3wIYvD/2RVGhXf09luTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbfICRNr (ORCPT
+        id S1730119AbfICRPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:13:47 -0400
-Received: from valentin-vidic.from.hr ([94.229.67.141]:50863 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfICRNr (ORCPT
+        Tue, 3 Sep 2019 13:15:06 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35642 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729602AbfICRPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:13:47 -0400
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id C022D3A32A; Tue,  3 Sep 2019 19:13:39 +0200 (CEST)
-From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Subject: [PATCH] staging: exfat: cleanup explicit comparisons to NULL
-Date:   Tue,  3 Sep 2019 19:13:37 +0200
-Message-Id: <20190903171337.22889-1-vvidic@valentin-vidic.from.hr>
-X-Mailer: git-send-email 2.20.1
+        Tue, 3 Sep 2019 13:15:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l14so16857992lje.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 10:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zskmDepAoYGDM2vsnfTsS2NJQ+a6MJpoSPuXkuTieC8=;
+        b=THmlsaA4/2mA8W02bhAhSN/r3Tex4qC+qdE5Lg3zEcIf0wKe2y1jw9/41Wv1tkdvKz
+         gmzJif1kJ426jx7GcpaRh0xAvOcbdOmjThrBCzkXPp1fXUHWqjofhnSw0R8zSHDHacwK
+         zG8mBvBJoWwrbfszjmkXrtcpBgSKk8yhdxkOg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zskmDepAoYGDM2vsnfTsS2NJQ+a6MJpoSPuXkuTieC8=;
+        b=Y+HtZoYZjmIHV5jNRE6R8c38hlcID6fj7WqNWv6vz8/vYguQjxND/bSO8n79h3LjQ4
+         ZseIA8sjM1bI4Uo/0XsDPCSoXtR7wvzfPaGuddLqtpITQiXccD4U9gINQA/pxTMQLeEF
+         f2t8L4hrA1dwS6VaUAfzdWgx+8nQ7x/Mm7iY+kh4MlD9X6gxOuSeGVyOkB5N0Mm5wW65
+         SBbJgagTSh5UuXQW2nJdSJXRM3kFIiECPirQCr1nKbHxhhavCn1/ub/oa5yw1yHXo+3H
+         aDoK4UBswV2JYpYcHmKjj8BQl0JtFdfBlbifE10lDisRYzB8L7iuGXyxgEn6WtCO3qde
+         Gqhw==
+X-Gm-Message-State: APjAAAUAUq12bD1tnQO20Mgp/ViLAnuhELdQN6leIrpy3jHmFv9tstwl
+        5lH0QeizR4rXF85AGaQAhj/vvWh3f6s=
+X-Google-Smtp-Source: APXvYqz15cTwhtvnw9RlpSEml2n2m7QGnBD/iDKMJ9BGsj5eCWJI6uVdX1mtUrniNiuBou47FLR+ZQ==
+X-Received: by 2002:a2e:7c0b:: with SMTP id x11mr20267951ljc.85.1567530901959;
+        Tue, 03 Sep 2019 10:15:01 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id 81sm478460lje.70.2019.09.03.10.15.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2019 10:15:01 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id w6so8130106lfl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 10:15:00 -0700 (PDT)
+X-Received: by 2002:a19:f204:: with SMTP id q4mr7436354lfh.29.1567530900455;
+ Tue, 03 Sep 2019 10:15:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190903160036.2400-1-mathieu.desnoyers@efficios.com>
+ <20190903160036.2400-2-mathieu.desnoyers@efficios.com> <CAHk-=wg3YyA95bevUaW_fTxmq58ffoHgfFANk-8_RJcGESXEsw@mail.gmail.com>
+ <1188636562.23.1567529794307.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1188636562.23.1567529794307.JavaMail.zimbra@efficios.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 3 Sep 2019 10:14:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgD6U97778Zz_-iMtyu47Nn3L9Mr2K5wq1afiMyE=eosg@mail.gmail.com>
+Message-ID: <CAHk-=wgD6U97778Zz_-iMtyu47Nn3L9Mr2K5wq1afiMyE=eosg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] Fix: sched: task_rcu_dereference: check
+ probe_kernel_address return value
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes checkpatch.pl warnings:
+On Tue, Sep 3, 2019 at 9:56 AM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> Then I must be misunderstanding something.
+>
+> probe_kernel_address() is a macro wrapping probe_kernel_read().
 
-  CHECK: Comparison to NULL could be written "expr"
-  CHECK: Comparison to NULL could be written "!expr"
+Don't look at probe_kernel_address().
 
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
----
- drivers/staging/exfat/exfat_core.c  | 34 ++++++++---------
- drivers/staging/exfat/exfat_super.c | 58 ++++++++++++++---------------
- 2 files changed, 46 insertions(+), 46 deletions(-)
+As long as you only look at that, you will be missing the big picture.
 
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 46b9f4455da1..7b39544cdaf1 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -100,7 +100,7 @@ void fs_set_vol_flags(struct super_block *sb, u32 new_flag)
- 	p_fs->vol_flag = new_flag;
- 
- 	if (p_fs->vol_type == EXFAT) {
--		if (p_fs->pbr_bh == NULL) {
-+		if (!p_fs->pbr_bh) {
- 			if (sector_read(sb, p_fs->PBR_sector,
- 					&p_fs->pbr_bh, 1) != FFS_SUCCESS)
- 				return;
-@@ -543,7 +543,7 @@ s32 load_alloc_bitmap(struct super_block *sb)
- 				p_fs->vol_amap = kmalloc_array(p_fs->map_sectors,
- 							       sizeof(struct buffer_head *),
- 							       GFP_KERNEL);
--				if (p_fs->vol_amap == NULL)
-+				if (!p_fs->vol_amap)
- 					return FFS_MEMORYERR;
- 
- 				sector = START_SECTOR(p_fs->map_clu);
-@@ -685,7 +685,7 @@ void sync_alloc_bitmap(struct super_block *sb)
- 	int i;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
--	if (p_fs->vol_amap == NULL)
-+	if (!p_fs->vol_amap)
- 		return;
- 
- 	for (i = 0; i < p_fs->map_sectors; i++)
-@@ -714,7 +714,7 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
- 
- 	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
- 						GFP_KERNEL);
--	if (upcase_table == NULL)
-+	if (!upcase_table)
- 		return FFS_MEMORYERR;
- 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
- 
-@@ -750,11 +750,11 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
- 			else { /* uni != index , uni != 0xFFFF */
- 				u16 col_index = get_col_index(index);
- 
--				if (upcase_table[col_index] == NULL) {
-+				if (!upcase_table[col_index]) {
- 					pr_debug("alloc = 0x%X\n", col_index);
- 					upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
- 						sizeof(u16), GFP_KERNEL);
--					if (upcase_table[col_index] == NULL) {
-+					if (!upcase_table[col_index]) {
- 						ret = FFS_MEMORYERR;
- 						goto error;
- 					}
-@@ -794,7 +794,7 @@ static s32 __load_default_upcase_table(struct super_block *sb)
- 
- 	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
- 						GFP_KERNEL);
--	if (upcase_table == NULL)
-+	if (!upcase_table)
- 		return FFS_MEMORYERR;
- 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
- 
-@@ -812,12 +812,12 @@ static s32 __load_default_upcase_table(struct super_block *sb)
- 		else { /* uni != index , uni != 0xFFFF */
- 			u16 col_index = get_col_index(index);
- 
--			if (upcase_table[col_index] == NULL) {
-+			if (!upcase_table[col_index]) {
- 				pr_debug("alloc = 0x%X\n", col_index);
- 				upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
- 									sizeof(u16),
- 									GFP_KERNEL);
--				if (upcase_table[col_index] == NULL) {
-+				if (!upcase_table[col_index]) {
- 					ret = FFS_MEMORYERR;
- 					goto error;
- 				}
-@@ -1640,7 +1640,7 @@ struct dentry_t *get_entry_with_sector(struct super_block *sb, sector_t sector,
- 
- 	buf = buf_getblk(sb, sector);
- 
--	if (buf == NULL)
-+	if (!buf)
- 		return NULL;
- 
- 	return (struct dentry_t *)(buf + offset);
-@@ -1658,10 +1658,10 @@ struct dentry_t *get_entry_in_dir(struct super_block *sb, struct chain_t *p_dir,
- 
- 	buf = buf_getblk(sb, sec);
- 
--	if (buf == NULL)
-+	if (!buf)
- 		return NULL;
- 
--	if (sector != NULL)
-+	if (sector)
- 		*sector = sec;
- 	return (struct dentry_t *)(buf + off);
- }
-@@ -1721,7 +1721,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
- 	sec += START_SECTOR(clu);
- 
- 	buf = buf_getblk(sb, sec);
--	if (buf == NULL)
-+	if (!buf)
- 		goto err_out;
- 
- 	ep = (struct dentry_t *)(buf + off);
-@@ -1741,7 +1741,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
- 	pr_debug("%s: trying to kmalloc %zx bytes for %d entries\n", __func__,
- 		 bufsize, num_entries);
- 	es = kmalloc(bufsize, GFP_KERNEL);
--	if (es == NULL)
-+	if (!es)
- 		goto err_out;
- 
- 	es->num_entries = num_entries;
-@@ -1820,7 +1820,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
- 				sec++;
- 			}
- 			buf = buf_getblk(sb, sec);
--			if (buf == NULL)
-+			if (!buf)
- 				goto err_out;
- 			off = 0;
- 			ep = (struct dentry_t *)(buf);
-@@ -1872,7 +1872,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
- 				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
- 				     num_entries);
- 		buf = buf_getblk(sb, sec);
--		if (buf == NULL)
-+		if (!buf)
- 			goto err_out;
- 		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
- 		pr_debug("copying %d entries from %p to sector %llu\n",
-@@ -2649,7 +2649,7 @@ void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
- 	es = get_entry_set_in_dir(sb, p_dir, entry, ES_ALL_ENTRIES, &ep);
--	if (es == NULL || es->num_entries < 3) {
-+	if (!es || es->num_entries < 3) {
- 		if (es)
- 			release_entry_set(es);
- 		return;
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 881cd85cf677..8d93403a3308 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -341,7 +341,7 @@ static int exfat_cmpi(const struct dentry *dentry, unsigned int len,
- 	alen = exfat_striptail_len(name);
- 	blen = __exfat_striptail_len(len, str);
- 	if (alen == blen) {
--		if (t == NULL) {
-+		if (!t) {
- 			if (strncasecmp(name->name, str, alen) == 0)
- 				return 0;
- 		} else if (nls_strnicmp(t, name->name, str, alen) == 0)
-@@ -587,7 +587,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
- 	/* check the validity of pointer parameters */
--	if (info == NULL)
-+	if (!info)
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -650,7 +650,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
- 	pr_debug("%s entered\n", __func__);
- 
- 	/* check the validity of pointer parameters */
--	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
-+	if (!fid || !path || (*path == '\0'))
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -743,7 +743,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
- 	int ret;
- 
- 	/* check the validity of pointer parameters */
--	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
-+	if (!fid || !path || (*path == '\0'))
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -788,11 +788,11 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
- 
- 	/* check the validity of the given file id */
--	if (fid == NULL)
-+	if (!fid)
- 		return FFS_INVALIDFID;
- 
- 	/* check the validity of pointer parameters */
--	if (buffer == NULL)
-+	if (!buffer)
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -811,7 +811,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- 		count = fid->size - fid->rwoffset;
- 
- 	if (count == 0) {
--		if (rcount != NULL)
-+		if (rcount)
- 			*rcount = 0;
- 		ret = FFS_EOF;
- 		goto out;
-@@ -885,7 +885,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- /* How did this ever work and not leak a brlse()?? */
- err_out:
- 	/* set the size of read bytes */
--	if (rcount != NULL)
-+	if (rcount)
- 		*rcount = read_bytes;
- 
- 	if (p_fs->dev_ejected)
-@@ -917,11 +917,11 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
- 
- 	/* check the validity of the given file id */
--	if (fid == NULL)
-+	if (!fid)
- 		return FFS_INVALIDFID;
- 
- 	/* check the validity of pointer parameters */
--	if (buffer == NULL)
-+	if (!buffer)
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -937,7 +937,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 		fid->rwoffset = fid->size;
- 
- 	if (count == 0) {
--		if (wcount != NULL)
-+		if (wcount)
- 			*wcount = 0;
- 		ret = FFS_SUCCESS;
- 		goto out;
-@@ -1096,7 +1096,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 	if (p_fs->vol_type == EXFAT) {
- 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
- 					  ES_ALL_ENTRIES, &ep);
--		if (es == NULL)
-+		if (!es)
- 			goto err_out;
- 		ep2 = ep+1;
- 	} else {
-@@ -1138,7 +1138,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 
- err_out:
- 	/* set the size of written bytes */
--	if (wcount != NULL)
-+	if (wcount)
- 		*wcount = write_bytes;
- 
- 	if (num_alloced == 0)
-@@ -1225,7 +1225,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
- 	if (p_fs->vol_type == EXFAT) {
- 		es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
- 					  ES_ALL_ENTRIES, &ep);
--		if (es == NULL) {
-+		if (!es) {
- 			ret = FFS_MEDIAERR;
- 			goto out;
- 			}
-@@ -1320,11 +1320,11 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
- 	s32 new_entry = 0;
- 
- 	/* check the validity of the given file id */
--	if (fid == NULL)
-+	if (!fid)
- 		return FFS_INVALIDFID;
- 
- 	/* check the validity of pointer parameters */
--	if ((new_path == NULL) || (*new_path == '\0'))
-+	if (!new_path || (*new_path == '\0'))
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -1441,7 +1441,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
- 	/* check the validity of the given file id */
--	if (fid == NULL)
-+	if (!fid)
- 		return FFS_INVALIDFID;
- 
- 	/* acquire the lock for file system critical section */
-@@ -1529,7 +1529,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
- 	if (p_fs->vol_type == EXFAT) {
- 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
- 					  ES_ALL_ENTRIES, &ep);
--		if (es == NULL) {
-+		if (!es) {
- 			ret = FFS_MEDIAERR;
- 			goto out;
- 		}
-@@ -1645,7 +1645,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 	if (p_fs->vol_type == EXFAT) {
- 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
- 					  ES_2_ENTRIES, &ep);
--		if (es == NULL) {
-+		if (!es) {
- 			ret = FFS_MEDIAERR;
- 			goto out;
- 		}
-@@ -1769,7 +1769,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
- 	if (p_fs->vol_type == EXFAT) {
- 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
- 					  ES_ALL_ENTRIES, &ep);
--		if (es == NULL) {
-+		if (!es) {
- 			ret = FFS_MEDIAERR;
- 			goto out;
- 		}
-@@ -1838,7 +1838,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
- 	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
- 
- 	/* check the validity of pointer parameters */
--	if (clu == NULL)
-+	if (!clu)
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -1922,7 +1922,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
- 		if (p_fs->vol_type == EXFAT) {
- 			es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
- 						  ES_ALL_ENTRIES, &ep);
--			if (es == NULL) {
-+			if (!es) {
- 				ret = FFS_MEDIAERR;
- 				goto out;
- 			}
-@@ -1990,7 +1990,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
- 	pr_debug("%s entered\n", __func__);
- 
- 	/* check the validity of pointer parameters */
--	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
-+	if (!fid || !path || (*path == '\0'))
- 		return FFS_ERROR;
- 
- 	/* acquire the lock for file system critical section */
-@@ -2036,7 +2036,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
- 
- 	/* check the validity of pointer parameters */
--	if (dir_entry == NULL)
-+	if (!dir_entry)
- 		return FFS_ERROR;
- 
- 	/* check if the given file ID is opened */
-@@ -2227,7 +2227,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
- 	/* check the validity of the given file id */
--	if (fid == NULL)
-+	if (!fid)
- 		return FFS_INVALIDFID;
- 
- 	dir.dir = fid->dir.dir;
-@@ -3115,10 +3115,10 @@ static const char *exfat_get_link(struct dentry *dentry, struct inode *inode,
- {
- 	struct exfat_inode_info *ei = EXFAT_I(inode);
- 
--	if (ei->target != NULL) {
-+	if (ei->target) {
- 		char *cookie = ei->target;
- 
--		if (cookie != NULL)
-+		if (cookie)
- 			return (char *)(ei->target);
- 	}
- 	return NULL;
-@@ -3780,7 +3780,7 @@ static int parse_options(char *options, int silent, int *debug,
- 	if (!options)
- 		goto out;
- 
--	while ((p = strsep(&options, ",")) != NULL) {
-+	while (p = strsep(&options, ",")) {
- 		int token;
- 
- 		if (!*p)
-@@ -4044,7 +4044,7 @@ static int __init exfat_init_inodecache(void)
- 					       (SLAB_RECLAIM_ACCOUNT |
- 						SLAB_MEM_SPREAD),
- 					       init_once);
--	if (exfat_inode_cachep == NULL)
-+	if (!exfat_inode_cachep)
- 		return -ENOMEM;
- 	return 0;
- }
--- 
-2.20.1
+Instead, look at the code below it:
 
+        /*
+         * Pairs with atomic_dec_and_test() in put_task_struct(). If this task
+         * was already freed we can not miss the preceding update of this
+         * pointer.
+         */
+        smp_rmb();
+        if (unlikely(task != READ_ONCE(*ptask)))
+                goto retry;
+
+
+That code is the code that verifies "ok, the pointer was valid over
+the whole sequence, so the probe_kernel_address() must have succeeded"
+
+So the code *does* check for success, but it does so using a
+*stronger* check than the return value of probe_kernel_address().
+
+If the task on the runqueue hasn't changed, then the
+probe_kernel_read() cannot have failed.
+
+But the reverse test is not true: if the probe_kernel_read()
+succeeded, that doesn't guarantee that the value we read was
+consistent.
+
+So the check for failure is there, and the check that does exist is
+the correct and stronger check.
+
+Which is why checking the return value of probe_kernel_read() is
+immaterial and pointless.
+
+But a comment about this above the probe_kernel_read() may indeed be
+worth it, since it seems to be unclear to so many people.
+
+The code basically just wants to do a kernel memory access, knowing
+that it's speculative. And the _only_ reason for using
+probe_kernel_read() is that with DEBUG_PAGEALLOC you might have a page
+fault on the speculative access.
+
+But we do the speculation verification check afterwards, and that's
+the important part.
+
+                      Linus
