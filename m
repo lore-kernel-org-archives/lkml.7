@@ -2,152 +2,351 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720F1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E88C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4179D215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="p5seTyJF"
+	by mail.kernel.org (Postfix) with ESMTP id DD45D215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfICNUx (ORCPT
+        id S1729361AbfICNV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:20:53 -0400
-Received: from mout.web.de ([217.72.192.78]:48199 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbfICNUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:20:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567516843;
-        bh=8p6F/11SX6cVpViLiKvZcfvZTKjngOdYepqGz4ztNyg=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=p5seTyJFOtpIJJHnrG3yU7LAaVnrr1A1ePV70hLqP9B2CgAQ1dSoVE1GkqdlcLDfD
-         KM9rjzoYVPfEMWUCrCU1nufOdQ+V75OlxTOxug/77k+TM730xKksfAeiC7B3XirVDi
-         WfILzeL2FPXnnktNeUlgIEjfamlfx9Xrw72NquZk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.133.43]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LwqJw-1iGBKl2TN2-016Kpq; Tue, 03
- Sep 2019 15:20:43 +0200
-To:     cluster-devel@redhat.com,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] gfs2: Delete an unnecessary check before brelse()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0ce30a08-be05-8211-27b4-47d0397ba330@web.de>
-Date:   Tue, 3 Sep 2019 15:20:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SGxoDjSyOvQOvRDOqpSUATKqC/64l3Cg2KFvmAKuI0LhdScNLQk
- fq8cfoqATJHq9tAemX6uLBCjexPyRe9R2ygElolFu6LenFIxgm+i5OHY2i4/7nfukXYwHdO
- thFojfhLpQ/dFjgOHnAGSkma647c/05FvJy7NfcU4siXjSvzJElxckMLUjGmGPLB6lO9VW2
- mdk/M3E+PW83PeGVd9IHQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IHK5K+LR3xE=:4cYlU05DLFEoIZKXzcyPTF
- VbOQL/WnMxM2NFe2ptbJ6WhWA96jdLpzLoTMRX0je/hIwd6JlczmozWm7Aec4geHXBA0A7IF4
- EWbqaOdwyZioV5KxgkWkvdeR/CrC2prSQOjU3YZrbklRw8AXstNx3uCKEw2gSFTYhfMdmbMEK
- RSX03OVNhgRAHOCfDBheQ/1JcxlTAcOJesWo/KOmdyFznFxRC5n+Kt8Z3DZtYisdhKPoWbRdd
- PQq7q4XCk5JL6KvYZCzuqPZOsVP9cDCxa4U55gb7EtlfjcP03bUEbvngH5VW5RWtZ/gxlr7Yy
- mAG3QZwyPPNXUI+ci7os0zToaIHzLx6bVdBvkUxdfnNF3kTQmSL3tLyCPiHduF1+0MIHvmmAP
- 6QQ93HFl51l8lRtQ9UBSWzrEXbrIYTXVDCBG3liMSSQzhHPpj7n8hw8UlyS1Ze2xcPBzCgt1O
- bGlGiYz6B0EYT1ELs4IpRVUyBh1U4p/Ke7STVniAewn2ZV8AMx7+7bcPQb3m2sHgGc8zg506F
- aqyGqYEkxBfMl6XYXWLgtXGfegkZ+p4mMGxPpM20umcrUwaIhoMgZlmWgW39CoIe1QsMBwUSl
- +2gEDfyw2Z9lilziM60YYBRUxtK6STVoXA7ZAXZHNSqlvbccBbkiUe49sCEfvZezS6SXF0EsW
- 9977mJ9HpnchI5Z1fDJ6PPGPaAJpLsKSPnmlzfOiF/Vz+dU8IxGoXWO73ct/FfuIU26eFK8CD
- PHTgu6LqwplEVhrYG9s3PHykude5J4ydJ0NxvQB3C4227vwsVJ7KKMb3jkNlo/wyAvWKTiDkE
- A6B+uV15yltb2D9GJ1U7hdRbxUFvgDZfkib1dFJbRBMW6zROi5B2q4o0THwR21EYeFoAB9QAV
- EN/71XFNMLbLAN+iTwbmSKFGov6fAeh9NtyFFffC8BE4h6FhsezEsKcS2JYSK6EriV/QChFuf
- Umzv+7xSh8uwI7vplGB1Gp+oZkr/9I0C9l1tKK5JoCIfY5yObb7BzmyshZtjYBPuiluX8iHad
- 3WwNDilGNV8/tOZU1aDSVC7nB7rKSWJBRuSQHac3vRBWt1hbiQ+BDUR7wvdGS0RU+7eq8K2Lg
- t1CKxcaL9eYQ9Gp0T97FZCAejrM3TeSyTfBVjl5ZSoLbKLxtc9iA0r20aTXUKUt1S3v7oTHVk
- 9s7MGnqJniYnO6rPkPg3hQYI6wjnHxL/ikBKgZVjrMyMDtxQ==
+        Tue, 3 Sep 2019 09:21:58 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42145 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728538AbfICNV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:21:57 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i58kn-0004s9-08; Tue, 03 Sep 2019 15:21:49 +0200
+Message-ID: <1567516908.5229.7.camel@pengutronix.de>
+Subject: Re: [RFC 08/12] media: hantro: Fix H264 decoding of field encoded
+ content
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 03 Sep 2019 15:21:48 +0200
+In-Reply-To: <HE1PR06MB4011EA39133818A85768B91FACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB4011EA39133818A85768B91FACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 3 Sep 2019 15:10:05 +0200
+On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:
+> This need code cleanup and formatting
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 
-The brelse() function tests whether its argument is NULL
-and then returns immediately.
-Thus the test around the call is not needed.
+The previous patches all work, but this patch breaks decoding of
+progressive content for me (i.MX8MQ with FFmpeg based on Ezequiel's
+branch).
 
-This issue was detected by using the Coccinelle software.
+regards
+Philipp
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- fs/gfs2/dir.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/gfs2/dir.c b/fs/gfs2/dir.c
-index 6f35d19eec25..eb9c0578978f 100644
-=2D-- a/fs/gfs2/dir.c
-+++ b/fs/gfs2/dir.c
-@@ -1463,8 +1463,7 @@ static int gfs2_dir_read_leaf(struct inode *inode, s=
-truct dir_context *ctx,
- 				sort_offset : entries, copied);
- out_free:
- 	for(i =3D 0; i < leaf; i++)
--		if (larr[i])
--			brelse(larr[i]);
-+		brelse(larr[i]);
- 	kvfree(larr);
- out:
- 	return error;
-=2D-
-2.23.0
-
+> ---
+>  .../staging/media/hantro/hantro_g1_h264_dec.c |  26 ++--
+>  drivers/staging/media/hantro/hantro_h264.c    | 126 ++++++++++++------
+>  drivers/staging/media/hantro/hantro_hw.h      |   4 +
+>  3 files changed, 100 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 16f21d258f6a..bc628ef73b29 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -130,28 +130,20 @@ static void set_params(struct hantro_ctx *ctx)
+>  
+>  static void set_ref(struct hantro_ctx *ctx)
+>  {
+> +	const struct v4l2_ctrl_h264_decode_params *dec_param;
+> +	const struct v4l2_ctrl_h264_slice_params *slice;
+>  	struct v4l2_h264_dpb_entry *dpb = ctx->h264_dec.dpb;
+>  	const u8 *b0_reflist, *b1_reflist, *p_reflist;
+>  	struct hantro_dev *vpu = ctx->dev;
+> -	u32 dpb_longterm = 0;
+> -	u32 dpb_valid = 0;
+>  	int reg_num;
+>  	u32 reg;
+>  	int i;
+>  
+> -	/*
+> -	 * Set up bit maps of valid and long term DPBs.
+> -	 * NOTE: The bits are reversed, i.e. MSb is DPB 0.
+> -	 */
+> -	for (i = 0; i < HANTRO_H264_DPB_SIZE; ++i) {
+> -		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE)
+> -			dpb_valid |= BIT(HANTRO_H264_DPB_SIZE - 1 - i);
+> +	dec_param = ctx->h264_dec.ctrls.decode;
+> +	slice = ctx->h264_dec.ctrls.slices;
+>  
+> -		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
+> -			dpb_longterm |= BIT(HANTRO_H264_DPB_SIZE - 1 - i);
+> -	}
+> -	vdpu_write_relaxed(vpu, dpb_valid << 16, G1_REG_VALID_REF);
+> -	vdpu_write_relaxed(vpu, dpb_longterm << 16, G1_REG_LT_REF);
+> +	vdpu_write_relaxed(vpu, ctx->h264_dec.dpb_valid, G1_REG_VALID_REF);
+> +	vdpu_write_relaxed(vpu, ctx->h264_dec.dpb_longterm, G1_REG_LT_REF);
+>  
+>  	/*
+>  	 * Set up reference frame picture numbers.
+> @@ -223,10 +215,8 @@ static void set_ref(struct hantro_ctx *ctx)
+>  
+>  	/* Set up addresses of DPB buffers. */
+>  	for (i = 0; i < HANTRO_H264_DPB_SIZE; i++) {
+> -		struct vb2_buffer *buf =  hantro_h264_get_ref_buf(ctx, i);
+> -
+> -		vdpu_write_relaxed(vpu, vb2_dma_contig_plane_dma_addr(buf, 0),
+> -				   G1_REG_ADDR_REF(i));
+> +		dma_addr_t addr = hantro_h264_get_ref_dma_addr(ctx, i);
+> +		vdpu_write_relaxed(vpu, addr, G1_REG_ADDR_REF(i));
+>  	}
+>  }
+>  
+> diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+> index a77cc28e180a..85c86d728b1a 100644
+> --- a/drivers/staging/media/hantro/hantro_h264.c
+> +++ b/drivers/staging/media/hantro/hantro_h264.c
+> @@ -228,17 +228,65 @@ static void prepare_table(struct hantro_ctx *ctx)
+>  {
+>  	const struct hantro_h264_dec_ctrls *ctrls = &ctx->h264_dec.ctrls;
+>  	const struct v4l2_ctrl_h264_decode_params *dec_param = ctrls->decode;
+> +	const struct v4l2_ctrl_h264_slice_params *slices = ctrls->slices;
+>  	struct hantro_h264_dec_priv_tbl *tbl = ctx->h264_dec.priv.cpu;
+>  	const struct v4l2_h264_dpb_entry *dpb = ctx->h264_dec.dpb;
+> +	u32 dpb_longterm = 0;
+> +	u32 dpb_valid = 0;
+>  	int i;
+>  
+> +	/*
+> +	 * Set up bit maps of valid and long term DPBs.
+> +	 * NOTE: The bits are reversed, i.e. MSb is DPB 0.
+> +	 */
+> +	if ((slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC) || (slices[0].flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)) {
+> +		for (i = 0; i < HANTRO_H264_DPB_SIZE * 2; ++i) {
+> +			// check for correct reference use
+> +			u32 flag = (i & 0x1) ? V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM : V4L2_H264_DPB_ENTRY_FLAG_REF_TOP;
+> +			if (dpb[i / 2].flags & flag)
+> +				dpb_valid |= BIT(HANTRO_H264_DPB_SIZE * 2 - 1 - i);
+> +
+> +			if (dpb[i / 2].flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
+> +				dpb_longterm |= BIT(HANTRO_H264_DPB_SIZE * 2 - 1 - i);
+> +		}
+> +
+> +		ctx->h264_dec.dpb_valid = dpb_valid;
+> +		ctx->h264_dec.dpb_longterm = dpb_longterm;
+> +	} else {
+> +		for (i = 0; i < HANTRO_H264_DPB_SIZE; ++i) {
+> +			if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE)
+> +				dpb_valid |= BIT(HANTRO_H264_DPB_SIZE - 1 - i);
+> +
+> +			if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
+> +				dpb_longterm |= BIT(HANTRO_H264_DPB_SIZE - 1 - i);
+> +		}
+> +
+> +		ctx->h264_dec.dpb_valid = dpb_valid << 16;
+> +		ctx->h264_dec.dpb_longterm = dpb_longterm << 16;
+> +	}
+> +
+>  	for (i = 0; i < HANTRO_H264_DPB_SIZE; ++i) {
+> -		tbl->poc[i * 2] = dpb[i].top_field_order_cnt;
+> -		tbl->poc[i * 2 + 1] = dpb[i].bottom_field_order_cnt;
+> +		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE) {
+> +			tbl->poc[i * 2] = dpb[i].top_field_order_cnt;
+> +			tbl->poc[i * 2 + 1] = dpb[i].bottom_field_order_cnt;
+> +		} else {
+> +			tbl->poc[i * 2] = 0;
+> +			tbl->poc[i * 2 + 1] = 0;
+> +		}
+>  	}
+>  
+> -	tbl->poc[32] = dec_param->top_field_order_cnt;
+> -	tbl->poc[33] = dec_param->bottom_field_order_cnt;
+> +	if ((slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC) || !(slices[0].flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)) {
+> +		if ((slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
+> +			tbl->poc[32] = (slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD) ?
+> +					dec_param->bottom_field_order_cnt :
+> +					dec_param->top_field_order_cnt;
+> +		else
+> +			tbl->poc[32] = min(dec_param->top_field_order_cnt, dec_param->bottom_field_order_cnt);
+> +		tbl->poc[33] = 0;
+> +	} else {
+> +		tbl->poc[32] = dec_param->top_field_order_cnt;
+> +		tbl->poc[33] = dec_param->bottom_field_order_cnt;
+> +	}
+>  
+>  	reorder_scaling_list(ctx);
+>  }
+> @@ -251,51 +299,36 @@ struct hantro_h264_reflist_builder {
+>  	u8 num_valid;
+>  };
+>  
+> -static s32 get_poc(enum v4l2_field field, s32 top_field_order_cnt,
+> -		   s32 bottom_field_order_cnt)
+> -{
+> -	switch (field) {
+> -	case V4L2_FIELD_TOP:
+> -		return top_field_order_cnt;
+> -	case V4L2_FIELD_BOTTOM:
+> -		return bottom_field_order_cnt;
+> -	default:
+> -		break;
+> -	}
+> -
+> -	return min(top_field_order_cnt, bottom_field_order_cnt);
+> -}
+> -
+>  static void
+>  init_reflist_builder(struct hantro_ctx *ctx,
+>  		     struct hantro_h264_reflist_builder *b)
+>  {
+>  	const struct v4l2_ctrl_h264_decode_params *dec_param;
+> -	struct vb2_v4l2_buffer *buf = hantro_get_dst_buf(ctx);
+> +	const struct v4l2_ctrl_h264_slice_params *slices;
+>  	const struct v4l2_h264_dpb_entry *dpb = ctx->h264_dec.dpb;
+> -	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
+>  	unsigned int i;
+>  
+>  	dec_param = ctx->h264_dec.ctrls.decode;
+> +	slices = ctx->h264_dec.ctrls.slices;
+>  
+>  	memset(b, 0, sizeof(*b));
+>  	b->dpb = dpb;
+> -	b->curpoc = get_poc(buf->field, dec_param->top_field_order_cnt,
+> -			    dec_param->bottom_field_order_cnt);
+> +	b->curpoc = (slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD) ?
+> +		    dec_param->bottom_field_order_cnt :
+> +		    dec_param->top_field_order_cnt;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(ctx->h264_dec.dpb); i++) {
+> -		int buf_idx;
+> -
+> -		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> +		u32 ref_flag = dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME;
+> +		if (!ref_flag)
+>  			continue;
+>  
+> -		buf_idx = vb2_find_timestamp(cap_q, dpb[i].reference_ts, 0);
+> -		if (buf_idx < 0)
+> -			continue;
+> +		if (ref_flag == V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME)
+> +			b->pocs[i] = min(dpb[i].bottom_field_order_cnt, dpb[i].top_field_order_cnt);
+> +		else if (ref_flag == V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM)
+> +			b->pocs[i] = dpb[i].bottom_field_order_cnt;
+> +		else if (ref_flag == V4L2_H264_DPB_ENTRY_FLAG_REF_TOP)
+> +			b->pocs[i] = dpb[i].top_field_order_cnt;
+>  
+> -		buf = to_vb2_v4l2_buffer(vb2_get_buffer(cap_q, buf_idx));
+> -		b->pocs[i] = get_poc(buf->field, dpb[i].top_field_order_cnt,
+> -				     dpb[i].bottom_field_order_cnt);
+>  		b->unordered_reflist[b->num_valid] = i;
+>  		b->num_valid++;
+>  	}
+> @@ -448,8 +481,7 @@ build_b_ref_lists(const struct hantro_h264_reflist_builder *builder,
+>  static bool dpb_entry_match(const struct v4l2_h264_dpb_entry *a,
+>  			    const struct v4l2_h264_dpb_entry *b)
+>  {
+> -	return a->top_field_order_cnt == b->top_field_order_cnt &&
+> -	       a->bottom_field_order_cnt == b->bottom_field_order_cnt;
+> +	return a->reference_ts == b->reference_ts;
+>  }
+>  
+>  static void update_dpb(struct hantro_ctx *ctx)
+> @@ -463,13 +495,13 @@ static void update_dpb(struct hantro_ctx *ctx)
+>  
+>  	/* Disable all entries by default. */
+>  	for (i = 0; i < ARRAY_SIZE(ctx->h264_dec.dpb); i++)
+> -		ctx->h264_dec.dpb[i].flags &= ~V4L2_H264_DPB_ENTRY_FLAG_ACTIVE;
+> +		ctx->h264_dec.dpb[i].flags = 0;
+>  
+>  	/* Try to match new DPB entries with existing ones by their POCs. */
+>  	for (i = 0; i < ARRAY_SIZE(dec_param->dpb); i++) {
+>  		const struct v4l2_h264_dpb_entry *ndpb = &dec_param->dpb[i];
+>  
+> -		if (!(ndpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> +		if (!(ndpb->flags & V4L2_H264_DPB_ENTRY_FLAG_VALID))
+>  			continue;
+>  
+>  		/*
+> @@ -480,8 +512,7 @@ static void update_dpb(struct hantro_ctx *ctx)
+>  			struct v4l2_h264_dpb_entry *cdpb;
+>  
+>  			cdpb = &ctx->h264_dec.dpb[j];
+> -			if (cdpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE ||
+> -			    !dpb_entry_match(cdpb, ndpb))
+> +			if (!dpb_entry_match(cdpb, ndpb))
+>  				continue;
+>  
+>  			*cdpb = *ndpb;
+> @@ -541,6 +572,25 @@ struct vb2_buffer *hantro_h264_get_ref_buf(struct hantro_ctx *ctx,
+>  	return buf;
+>  }
+>  
+> +dma_addr_t hantro_h264_get_ref_dma_addr(struct hantro_ctx *ctx,
+> +					unsigned int dpb_idx)
+> +{
+> +	struct v4l2_h264_dpb_entry *dpb = ctx->h264_dec.dpb;
+> +	const struct v4l2_ctrl_h264_decode_params *dec_param = ctx->h264_dec.ctrls.decode;
+> +	const struct v4l2_ctrl_h264_slice_params *slices = ctx->h264_dec.ctrls.slices;
+> +
+> +	struct vb2_buffer *buf = hantro_h264_get_ref_buf(ctx, dpb_idx);
+> +	s32 cur_poc = slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD ?
+> +		      dec_param->bottom_field_order_cnt :
+> +		      dec_param->top_field_order_cnt;
+> +	u32 flags = dpb[dpb_idx].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE ? 0x2 : 0;
+> +	flags |= abs(dpb[dpb_idx].top_field_order_cnt - cur_poc) <
+> +		 abs(dpb[dpb_idx].bottom_field_order_cnt - cur_poc) ?
+> +		 0x1 : 0;
+> +
+> +	return vb2_dma_contig_plane_dma_addr(buf, 0) | flags;
+> +}
+> +
+>  int hantro_h264_dec_prepare_run(struct hantro_ctx *ctx)
+>  {
+>  	struct hantro_h264_dec_hw_ctx *h264_ctx = &ctx->h264_dec;
+> diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+> index 8adad8ac9b1d..d58f2a36ca40 100644
+> --- a/drivers/staging/media/hantro/hantro_hw.h
+> +++ b/drivers/staging/media/hantro/hantro_hw.h
+> @@ -86,6 +86,8 @@ struct hantro_h264_dec_hw_ctx {
+>  	struct v4l2_h264_dpb_entry dpb[HANTRO_H264_DPB_SIZE];
+>  	struct hantro_h264_dec_reflists reflists;
+>  	struct hantro_h264_dec_ctrls ctrls;
+> +	u32 dpb_longterm;
+> +	u32 dpb_valid;
+>  };
+>  
+>  /**
+> @@ -157,6 +159,8 @@ void hantro_jpeg_enc_exit(struct hantro_ctx *ctx);
+>  
+>  struct vb2_buffer *hantro_h264_get_ref_buf(struct hantro_ctx *ctx,
+>  					   unsigned int dpb_idx);
+> +dma_addr_t hantro_h264_get_ref_dma_addr(struct hantro_ctx *ctx,
+> +					unsigned int dpb_idx);
+>  int hantro_h264_dec_prepare_run(struct hantro_ctx *ctx);
+>  void hantro_g1_h264_dec_run(struct hantro_ctx *ctx);
+>  int hantro_h264_dec_init(struct hantro_ctx *ctx);
