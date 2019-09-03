@@ -2,253 +2,140 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643B6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D47C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2825722CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:50:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nt2xVI4j"
+	by mail.kernel.org (Postfix) with ESMTP id A91D42087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfICVuS (ORCPT
+        id S1726925AbfICVvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:50:18 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33227 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfICVuR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:50:17 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t11so2451120plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkHv7aeAus4diANg1wa54ZbIxaxA/Tq3Ei6vs6FUsos=;
-        b=Nt2xVI4juiydMdYr+RAc8fXr2SLTlZDIHooNPlH4/K2VrMPCQxF1ciTdjdZpCugV9z
-         gGlCrWpub8e51uI1VMQpOV+KemHr9nVuBIAlT/8W8p3IRworYJtWxDjQ8UBnepggIaK7
-         sgQTBCSzJVcK4Zg4NcBIJDwPE1s60AQQ8JnWshGKGzfia6o1qdSSswt7D5aOg9Cn4vCj
-         44PT77nW9hG2x0BJ9qcwcEVxYXhAMxxEa7o8Nt9zYHvC01b/tEsvKLo8aOC7ixvToTET
-         sDtW5HZOgXVPV6hxIMhM6l7mANcyodkJcD8HdH1/UizAzqnUMTCTe2BfkUrqDb2T+pDD
-         A5gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkHv7aeAus4diANg1wa54ZbIxaxA/Tq3Ei6vs6FUsos=;
-        b=eiUz+KrZPpR/SMZ4u+iJkVXsfDTvhHhZQqTC8AouuRcizxratSmmzKKrUBYdKCiVHq
-         HIcDvSYLQ3DglWjrkOUSeQ6O96i1Br7d+UU2M97OTE3WKfO/oDE76t01NLBiUlqXlARC
-         BvWA8d0nQNLc6xGt05uiQ1avn56lzhVBsPxeVf+BWdi5qjr9FbMoHvn7H8d1TNMEMMj7
-         hkVfACFUvUDYl/jZTzAxameXJ2zetE+PKv4lcIZXN/W28KK0MN4gllfExn87awLtAb0E
-         Dzfr6w2ckICwS2t1xNZkcaic1UPfvgnxwTU2o5ASJVKV2FDjAeZIZWcDP4bW8EYrgoxI
-         nnSg==
-X-Gm-Message-State: APjAAAX56iq6amouT9A9HEJ/GWMswGObeKmwkfQjSiGOhTe28ls+jK7w
-        ckGAqiPZCPivyd565OS3IRfWr4e8fxctOLwtAelfCw==
-X-Google-Smtp-Source: APXvYqy4zWCYgU5e2xW0beLNgOBUiYaYxDq89cCLExVhtfVeyi9sS8nrD9SLD7FG6I0GQCSAL67t/E7yAKElaEQ8DTk=
-X-Received: by 2002:a17:902:7296:: with SMTP id d22mr17503056pll.179.1567547415436;
- Tue, 03 Sep 2019 14:50:15 -0700 (PDT)
+        Tue, 3 Sep 2019 17:51:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:44452 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfICVvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 17:51:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6401D337;
+        Tue,  3 Sep 2019 14:51:39 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1A7FE3F718;
+        Tue,  3 Sep 2019 14:51:37 -0700 (PDT)
+Subject: Re: [PATCH] sched: make struct task_struct::state 32-bit
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com, axboe@kernel.dk,
+        aarcange@redhat.com
+References: <20190902210558.GA23013@avx2>
+ <d8ad0be1-4ed7-df74-d415-2b1c9a44bac7@arm.com> <20190903181920.GA22358@avx2>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <92ead22e-0580-c720-1a29-7db79d76f7d7@arm.com>
+Date:   Tue, 3 Sep 2019 22:51:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190831162555.31887-1-yamada.masahiro@socionext.com> <20190831162555.31887-2-yamada.masahiro@socionext.com>
-In-Reply-To: <20190831162555.31887-2-yamada.masahiro@socionext.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 3 Sep 2019 14:50:04 -0700
-Message-ID: <CAKwvOdm0zcyaBLdSVc7PmjUa-wyVuCaN=6qZoPLvnoJC1ammog@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to KBUILD_EXTRA_WARN
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190903181920.GA22358@avx2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 9:26 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> KBUILD_ENABLE_EXTRA_GCC_CHECKS started as a switch to add extra warning
-> options for GCC, but now it is a historical misnomer since we use it
-> also for Clang, DTC, and even kernel-doc.
+On 03/09/2019 19:19, Alexey Dobriyan wrote:
+> On Tue, Sep 03, 2019 at 06:29:06PM +0100, Valentin Schneider wrote:
+>> On 02/09/2019 22:05, Alexey Dobriyan wrote:
+>>> 32-bit accesses are shorter than 64-bit accesses on x86_64.
+>>> Nothing uses 64-bitness of ->state.
+> 
+>> It looks like you missed a few places. There's a long prev_state in
+>> sched/core.c::finish_task_switch() for instance.
+>>
+>> I suppose that's where coccinelle oughta help but I'm really not fluent
+>> in that. Is there a way to make it match p.state accesses with p task_struct?
+>> And if so, can we make it change the type of the variable being read from
+>> / written to?
+> 
+> Coccinelle is interesting: basic
+> 
+> 	- foo
+> 	+ bar
+> 
+> doesn't find "foo" in function arguments.
+> 
+> I'm scared of coccinelle.> 
 
-Thanks for the patch!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+So am I, but I'm even more scared of having no other way of verifying this
+than doing it "by hand". It's nothing critical here - just some variables
+that will remain long instead of being int, but I'd like to have some way to
+verify the change. A coccinelle script would be great, even if it misses
+some places, I can at least have some trust in it.
 
->
-> Rename it to more sensible, and shorter KBUILD_EXTRA_WARN.
->
-> For the backward compatibility, KBUILD_ENABLE_EXTRA_GCC_CHECKS is still
-> supported (but not advertised in the documentation).
->
-> I also fixed up 'make help', and updated the documentation.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-> Changes in v3:
->   - new patch
->
-> Changes in v2: None
->
->  Documentation/kbuild/kbuild.rst | 14 +++++++++-----
->  Makefile                        |  2 +-
->  scripts/Makefile.build          |  2 +-
->  scripts/Makefile.extrawarn      | 13 +++++++++----
->  scripts/Makefile.lib            |  4 ++--
->  scripts/genksyms/Makefile       |  2 +-
->  6 files changed, 23 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-> index 62f9d86c082c..f1e5dce86af7 100644
-> --- a/Documentation/kbuild/kbuild.rst
-> +++ b/Documentation/kbuild/kbuild.rst
-> @@ -105,6 +105,15 @@ The output directory can also be specified using "O=...".
->
->  Setting "O=..." takes precedence over KBUILD_OUTPUT.
->
-> +KBUILD_EXTRA_WARN
-> +-----------------
-> +Specify the extra build checks. The same value can be assigned by passing
-> +W=... from the command line.
-> +
-> +See `make help` for the list of the supported values.
-> +
-> +Setting "W=..." takes precedence over KBUILD_EXTRA_WARN.
-> +
->  KBUILD_DEBARCH
->  --------------
->  For the deb-pkg target, allows overriding the normal heuristics deployed by
-> @@ -241,11 +250,6 @@ To get all available archs you can also specify all. E.g.::
->
->      $ make ALLSOURCE_ARCHS=all tags
->
-> -KBUILD_ENABLE_EXTRA_GCC_CHECKS
-> -------------------------------
-> -If enabled over the make command line with "W=1", it turns on additional
-> -gcc -W... options for more extensive build-time checking.
-> -
->  KBUILD_BUILD_TIMESTAMP
->  ----------------------
->  Setting this to a date string overrides the timestamp used in the
-> diff --git a/Makefile b/Makefile
-> index 06e1e21c0f45..016d72eb3ddf 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1538,7 +1538,7 @@ help:
->         @echo  '  make C=1   [targets] Check re-compiled c source with $$CHECK (sparse by default)'
->         @echo  '  make C=2   [targets] Force check of all c source with $$CHECK'
->         @echo  '  make RECORDMCOUNT_WARN=1 [targets] Warn about ignored mcount sections'
-> -       @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
-> +       @echo  '  make W=n   [targets] Enable extra checks, n=1,2,3 where'
->         @echo  '                1: warnings which may be relevant and do not occur too often'
->         @echo  '                2: warnings which occur quite often but may still be relevant'
->         @echo  '                3: more obscure warnings, can most likely be ignored'
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 2a21ca86b720..f72aba64d611 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -85,7 +85,7 @@ else ifeq ($(KBUILD_CHECKSRC),2)
->          cmd_force_checksrc = $(CHECK) $(CHECKFLAGS) $(c_flags) $<
->  endif
->
-> -ifneq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
-> +ifneq ($(KBUILD_EXTRA_WARN),)
->    cmd_checkdoc = $(srctree)/scripts/kernel-doc -none $<
->  endif
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index d226c5fb13e2..53eb7e0c6a5a 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -8,14 +8,19 @@
->
->  KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
->
-> +# backward compatibility
-> +KBUILD_EXTRA_WARN ?= $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)
-> +
->  ifeq ("$(origin W)", "command line")
-> -  export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
-> +  KBUILD_EXTRA_WARN := $(W)
->  endif
->
-> +export KBUILD_EXTRA_WARN
-> +
->  #
->  # W=1 - warnings which may be relevant and do not occur too often
->  #
-> -ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +ifneq ($(findstring 1, $(KBUILD_EXTRA_WARN)),)
->
->  KBUILD_CFLAGS += -Wextra -Wunused -Wno-unused-parameter
->  KBUILD_CFLAGS += -Wmissing-declarations
-> @@ -48,7 +53,7 @@ endif
->  #
->  # W=2 - warnings which occur quite often but may still be relevant
->  #
-> -ifneq ($(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +ifneq ($(findstring 2, $(KBUILD_EXTRA_WARN)),)
->
->  KBUILD_CFLAGS += -Wcast-align
->  KBUILD_CFLAGS += -Wdisabled-optimization
-> @@ -65,7 +70,7 @@ endif
->  #
->  # W=3 - more obscure warnings, can most likely be ignored
->  #
-> -ifneq ($(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +ifneq ($(findstring 3, $(KBUILD_EXTRA_WARN)),)
->
->  KBUILD_CFLAGS += -Wbad-function-cast
->  KBUILD_CFLAGS += -Wcast-qual
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 7ab17712ab24..df83967268ba 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -248,7 +248,7 @@ quiet_cmd_gzip = GZIP    $@
->  DTC ?= $(objtree)/scripts/dtc/dtc
->
->  # Disable noisy checks by default
-> -ifeq ($(findstring 1,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->  DTC_FLAGS += -Wno-unit_address_vs_reg \
->         -Wno-unit_address_format \
->         -Wno-avoid_unnecessary_addr_size \
-> @@ -259,7 +259,7 @@ DTC_FLAGS += -Wno-unit_address_vs_reg \
->         -Wno-pci_device_reg
->  endif
->
-> -ifneq ($(findstring 2,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
->  DTC_FLAGS += -Wnode_name_chars_strict \
->         -Wproperty_name_chars_strict
->  endif
-> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-> index baf44ed0a93a..78629f515e78 100644
-> --- a/scripts/genksyms/Makefile
-> +++ b/scripts/genksyms/Makefile
-> @@ -12,7 +12,7 @@ genksyms-objs := genksyms.o parse.tab.o lex.lex.o
->  #
->  # Just in case, run "$(YACC) --version" without suppressing stderr
->  # so that 'bison: not found' will be displayed if it is missing.
-> -ifeq ($(findstring 1,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->
->  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
->        cmd_bison_no_warn = $(YACC) --version >/dev/null; \
-> --
-> 2.17.1
->
+If I have to verify the whole tree by hand, even with grep/ag, I don't trust
+I'll do it right.
 
 
--- 
-Thanks,
-~Nick Desaulniers
+I gave Coccinelle a try, I think I got something for in-function variables:
+
+---
+@state_var@
+struct task_struct *p;
+identifier prev_state;
+@@
+prev_state = p->state
+
+@@
+identifier state_var.prev_state;
+@@
+- long prev_state;
++ int prev_state;
+---
+
+I tried something for function parameters, which seems to be feasible
+according to [1], but couldn't get it to work (yet). Here's what I have
+so far:
+
+---
+@func_param@
+identifier func;
+identifier p;
+identifier state;
+identifier mask;
+@@
+
+func(struct task_struct *p, const struct cpumask *mask, long state)
+{
+...
+}
+
+@@
+identifier func_param.func;
+identifier func_param.state;
+expression E1;
+expression E2;
+@@
+
+func(E1,
+- long state,
++ int state,
+E2)
+---
+
+(it should match against kernel/kthread.c::__kthread_bind_mask() but it
+complains about me not knowing how to write coccinelle patches).
+
+With a mix of these we might get somewhere...
+
+[1]: http://coccinelle.lip6.fr/docs/main_grammar016.html
+
+>> How did you come up with this changeset, did you pickaxe for some regexp?
+> 
+> No, manually, backtracking up to the call chain.
+> Maybe I missed a few places.
+> 
