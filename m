@@ -2,136 +2,135 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889F0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2376BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B28022CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567547202;
-	bh=OP29gy/q+Cu68z+EtjpWoGyc83iGnUe1WahW7rKmtJU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dQGAqgkjAXFek3lBmakHFpgO6wTDMFgdHP+RpGqdepTzoU8y+PoCaZ04tqIbKKPS3
-	 olEgcnX7VLortbpN05rb6THz68dJ5ncsXnQAeKhugej0nRl/i+9xl/AzIpJxAOLsTP
-	 dxDD5niVdT2yT+9OUkZBWKQoGo/1gDlveHggApEo=
+	by mail.kernel.org (Postfix) with ESMTP id F3CFB22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfICVql (ORCPT
+        id S1727097AbfICVsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfICVql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:46:41 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C18C022CF8
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 21:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567547200;
-        bh=OP29gy/q+Cu68z+EtjpWoGyc83iGnUe1WahW7rKmtJU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CD6/9CM1nKcIzrbPVDQFlgnKevgZNXmRfLLC6PyzUU/mCHfU3iVEH4CGTWufDJwfm
-         qS1yJoSThByNKWmHG8XrhXhForrSoQrkKjc/rwJBxAjJDMqkBbjYony0DU8r71kWro
-         3KTryIXmbZM88cQ6U4i08+KJlFlSkKvQ8zduc6hY=
-Received: by mail-wr1-f54.google.com with SMTP id y8so18999593wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:46:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAV0foZD80Mc3sysMQBXac7BBYkg4TVMa0b501L/vIa9NrTD+F5o
-        xm7OCCCSCR+SlzcJQ9hd/5vgFSj0UH9SP3Y/mIE37Q==
-X-Google-Smtp-Source: APXvYqz4RxECik3SSeHnQ6uGsdoUHoPvfoX8v95tD35kbPoLbUJAHEgyU34VuuCfEWn1rCU4+4Q1Ye17KG1ilOuoQ0w=
-X-Received: by 2002:adf:eec5:: with SMTP id a5mr45408830wrp.352.1567547198323;
- Tue, 03 Sep 2019 14:46:38 -0700 (PDT)
+        Tue, 3 Sep 2019 17:48:32 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33990 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfICVsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 17:48:31 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q203so8395980qke.1;
+        Tue, 03 Sep 2019 14:48:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QSeacdjH5KAA63hvqQ3TjMDtSK79CrnZ88ADfY1YuBk=;
+        b=VTqX9qS4xLMsnfmi7LgqloDsV8yxTDCMh/D4j4kIDQdX0rYvHrovcIg0frBYzptj5u
+         UG6d8Jn/smiI5LS6VNAk41ZSUvmDhrK4ho400cWMDCrSnNbs7SSRVa64rEFU9X+xe3jh
+         uOcwEmT2377giYg9IH9N8eZImDav4F8u1WeU6lNwBOS2s1ay+z9o4lo0VLMHW1qHijia
+         Jq1Zgv6HLeIKwMIC1q5iMTVQsMciA985agehwZN57tlRyZhbDUw0Acqq5vq78QXHoESR
+         n5o/desuwnLptOwLgftJUgaMav/Fm6OXWCfkkEPqdnP6kX2NJ0Fz9L5kg3U+GL0q0I4H
+         yI4w==
+X-Gm-Message-State: APjAAAW79fkYytVri2gwoXokP49e+yvTC3ca2WAA2iU/qKxWfz9x9LDJ
+        XnWs3bdG7fG9B2Ngq1CfV5KILI8cfKJWLQIYORo=
+X-Google-Smtp-Source: APXvYqzGKjDEhNTaKl3R14NK+vIWHogZl6KI2fkl/dkDT6OD3zO0Nzt0XMYejfSqEsJrSDvEjDRIjXOnS1JgTvyNhZE=
+X-Received: by 2002:a37:4fcf:: with SMTP id d198mr36096134qkb.394.1567547310386;
+ Tue, 03 Sep 2019 14:48:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190903131504.18935-1-thomas_os@shipmail.org>
- <20190903131504.18935-4-thomas_os@shipmail.org> <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
- <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
- <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com> <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
- <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com> <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
-In-Reply-To: <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 3 Sep 2019 14:46:27 -0700
-X-Gmail-Original-Message-ID: <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
-Message-ID: <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
- memory encryption
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        pv-drivers@vmware.com,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+References: <1567523922.5576.57.camel@lca.pw> <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
+ <20190903211747.GD2899@mit.edu> <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
+In-Reply-To: <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 3 Sep 2019 23:48:14 +0200
+Message-ID: <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
+Subject: Re: "beyond 2038" warnings from loopback mount is noisy
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Qian Cai <cai@lca.pw>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 2:05 PM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
->
-> On 9/3/19 10:51 PM, Dave Hansen wrote:
-> > On 9/3/19 1:36 PM, Thomas Hellstr=C3=B6m (VMware) wrote:
-> >> So the question here should really be, can we determine already at mma=
-p
-> >> time whether backing memory will be unencrypted and adjust the *real*
-> >> vma->vm_page_prot under the mmap_sem?
-> >>
-> >> Possibly, but that requires populating the buffer with memory at mmap
-> >> time rather than at first fault time.
-> > I'm not connecting the dots.
+On Tue, Sep 3, 2019 at 11:31 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> On Tue, Sep 3, 2019 at 2:18 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> > On Tue, Sep 03, 2019 at 09:18:44AM -0700, Deepa Dinamani wrote:
+> > >
+> > > This prints a warning for each inode that doesn't extend limits beyond
+> > > 2038. It is rate limited by the ext4_warning_inode().
+> > > Looks like your filesystem has inodes that cannot be extended.
+> > > We could use a different rate limit or ignore this corner case. Do the
+> > > maintainers have a preference?
 > >
-> > vma->vm_page_prot is used to create a VMA's PTEs regardless of if they
-> > are created at mmap() or fault time.  If we establish a good
-> > vma->vm_page_prot, can't we just use it forever for demand faults?
+> > We need to drop this commit (ext4: Initialize timestamps limits), or
+> > at least the portion which adds the call to the EXT4_INODE_SET_XTIME
+> > macro in ext4.h.
 >
-> With SEV I think that we could possibly establish the encryption flags
-> at vma creation time. But thinking of it, it would actually break with
-> SME where buffer content can be moved between encrypted system memory
-> and unencrypted graphics card PCI memory behind user-space's back. That
-> would imply killing all user-space encrypted PTEs and at fault time set
-> up new ones pointing to unencrypted PCI memory..
->
-> >
-> > Or, are you concerned that if an attempt is made to demand-fault page
-> > that's incompatible with vma->vm_page_prot that we have to SEGV?
-> >
-> >> And it still requires knowledge whether the device DMA is always
-> >> unencrypted (or if SEV is active).
-> > I may be getting mixed up on MKTME (the Intel memory encryption) and
-> > SEV.  Is SEV supported on all memory types?  Page cache, hugetlbfs,
-> > anonymous?  Or just anonymous?
->
-> SEV AFAIK encrypts *all* memory except DMA memory. To do that it uses a
-> SWIOTLB backed by unencrypted memory, and it also flips coherent DMA
-> memory to unencrypted (which is a very slow operation and patch 4 deals
-> with caching such memory).
->
+> As Arnd said, I think this can be fixed by warning only when the inode
+> size is not uniformly 128 bytes in ext4.h. Is this an acceptable
+> solution or we want to drop this warning altogether?
 
-I'm still lost.  You have some fancy VMA where the backing pages
-change behind the application's back.  This isn't particularly novel
--- plain old anonymous memory and plain old mapped files do this too.
-Can't you all the insert_pfn APIs and call it a day?  What's so
-special that you need all this magic?  ISTM you should be able to
-allocate memory that's addressable by the device (dma_alloc_coherent()
-or whatever) and then map it into user memory just like you'd map any
-other page.
+I think the warning as it was intended makes sense, the idea
+was never to warn on every inode update for file systems that
+cannot handle future dates, only to warn when we
 
-I feel like I'm missing something here.
+a) try to set a future date
+b) fail to do that because the space cannot be made available.
+
+> Arnd, should I be sending a pull request again with the fix? Or, we
+> drop the ext4 patch and I can send it to the maintainers directly?
+
+I would prefer to fix it on top of the patches I already merged.
+
+Maybe something like:
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 9e3ae3be3de9..5a971d1b6d5e 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -835,7 +835,9 @@ do {
+                                 \
+                }
+         \
+        else    {\
+                (raw_inode)->xtime = cpu_to_le32(clamp_t(int32_t,
+(inode)->xtime.tv_sec, S32_MIN, S32_MAX));    \
+-               ext4_warning_inode(inode, "inode does not support
+timestamps beyond 2038"); \
++               if (((inode)->xtime.tv_sec != (raw_inode)->xtime) &&     \
++                   ((inode)->i_sb->s_time_max > S32_MAX))
+         \
++                       ext4_warning_inode(inode, "inode does not
+support timestamps beyond 2038"); \
+        } \
+ } while (0)
+
+> > In cases where the inode size is such that there is no chance at all
+> > to support timestamps beyond 2038, a single warning at mount time, or
+> > maybe a warning at mkfs time might be acceptable.  But there's no
+> > point printing a warning time each time we set a timestamp on such a
+> > file system.  It's not going to change, and past a certain point, we
+> > need to trust that people who are using 128 byte inodes did so knowing
+> > what the tradeoffs might be.  After all, it is *not* the default.
+>
+> We have a single mount time warning already in place here. I did not
+> realize some people actually chose to use 128 byte inodes on purpose.
+
+This is also new to me, as I always assumed a normal ext4 would be y2038
+safe. I suspect that a few of those users are unaware of the y2038
+problem they might run into because of that, but that's what the mount-time
+warning should help with.
+
+However, I did expect that people might have legacy ext3 file system
+images that they mount, and printing a warning for each write would
+also be wrong for those.
+
+      Arnd
