@@ -2,102 +2,206 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4014C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0227AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DD322CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C824922CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfICKid (ORCPT
+        id S1728654AbfICKkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:38:33 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:46896 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727969AbfICKid (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:38:33 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x83AcVOR030408
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 06:38:31 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x83AcQr7002493
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 06:38:31 -0400
-Received: by mail-qk1-f197.google.com with SMTP id m2so18568095qkk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 03:38:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=5NzM42bVBs/7E1wOe1xuaPM9MIvXN3HbYxHW7n917YA=;
-        b=IWOP2VQcGN06soEJDaPxbfKTiPQPnaKg2Xh+QLlNqIJWyGLM2p2aDLPr2RLe9T3ceL
-         aCeBBckzISHSXpsR1iFYP1n1Wp1IEpSXfyXp1Uvi7+KtLD4XQyhx88K8HV0yvo+7NB8t
-         rfxx8U8qxLKnpRinhY9OvhqeiCXkLuTCmCc+kFgHgnhrka+z0cWhr9wEXLbgaFDw5tG/
-         XQSphOxCW85VugBmQ3PLcegMEGZRi5oADl4HRmoRQsQP7mCoMa5odB/xdjxOkGK2MZh8
-         Y7DTf4jfAzV1+3wwdf9c/PBxdFLf7WKrH2ujGB0UDrq+kYk1HQr7ixNHoPJLMYwfPpPr
-         qFlQ==
-X-Gm-Message-State: APjAAAXIXWx+7waNuOWVQTpGp7jjoB6e7Ai+F9MbudErnoDyC439EfGq
-        EnLJDIySb057zNFtXN/vYba/IoONqu9zH8McAN6lGl2xREtUTQX9svIFwEJ+X3wLE+R9osrF2Ox
-        jw7xLH+Orf1QJdTm+QGTXSTOvaqQZJOZJVXE=
-X-Received: by 2002:ae9:f707:: with SMTP id s7mr6182268qkg.195.1567507105962;
-        Tue, 03 Sep 2019 03:38:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxWzAd/YkPdEwKrKndHsYVVM6A2kzLmUcxv8tYM8Rx+8yEZ8dsBvvPMA5hbgaaKxPYWJ0qAZA==
-X-Received: by 2002:ae9:f707:: with SMTP id s7mr6182250qkg.195.1567507105758;
-        Tue, 03 Sep 2019 03:38:25 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id n12sm254398qkk.78.2019.09.03.03.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 03:38:24 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-cc:     Pablo Pellecchia <pablo9891@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/checkpatch.pl - don't check for const structs if list is empty
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 03 Sep 2019 06:38:23 -0400
-Message-ID: <542749.1567507103@turing-police>
+        Tue, 3 Sep 2019 06:40:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49884 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726840AbfICKkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:40:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A71E6AD46;
+        Tue,  3 Sep 2019 10:40:00 +0000 (UTC)
+Subject: Re: [mainline][BUG][PPC][btrfs][bisected 00801a] kernel BUG at
+ fs/btrfs/locking.c:71!
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     mpe <mpe@ellerman.id.au>, Brian King <brking@linux.vnet.ibm.com>,
+        chandan <chandan@linux.vnet.ibm.com>,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        David Sterba <dsterba@suse.com>, josef@toxicpanda.com,
+        linux-btrfs@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1567500907.5082.12.camel@abdul>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7139ac07-db63-b984-c416-d1c94337c9bf@suse.com>
+Date:   Tue, 3 Sep 2019 13:39:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1567500907.5082.12.camel@abdul>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the list of structures we expect to be const is empty (due to file permissions,
-or the file being empty, etc), we get odd complaints about structures:
 
-[/usr/src/linux-next] scripts/checkpatch.pl -f drivers/staging/netlogic/platform_net.h
-No structs that should be const will be found - file '/usr/src/linux-next/scripts/const_structs.checkpatch': Permission denied
-WARNING: struct  should normally be const
-#9: FILE: drivers/staging/netlogic/platform_net.h:9:
-+struct xlr_net_data {
 
-WARNING: struct  should normally be const
-#20: FILE: drivers/staging/netlogic/platform_net.h:20:
-+	struct xlr_fmn_info *gmac_fmn_info;
+On 3.09.19 г. 11:55 ч., Abdul Haleem wrote:
+> Greeting's
+> 
+> Mainline kernel panics with LTP/fs_fill-dir tests for btrfs file system on my P9 box running mainline kernel 5.3.0-rc5
+> 
+> BUG_ON was first introduced by below commit
+> 
+> commit 00801ae4bb2be5f5af46502ef239ac5f4b536094
+> Author: David Sterba <dsterba@suse.com>
+> Date:   Thu May 2 16:53:47 2019 +0200
+> 
+>     btrfs: switch extent_buffer write_locks from atomic to int
+>     
+>     The write_locks is either 0 or 1 and always updated under the lock,
+>     so we don't need the atomic_t semantics.
+>     
+>     Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+>     Signed-off-by: David Sterba <dsterba@suse.com>
+> 
+> diff --git a/fs/btrfs/locking.c b/fs/btrfs/locking.c
+> index 2706676279..98fccce420 100644
+> --- a/fs/btrfs/locking.c
+> +++ b/fs/btrfs/locking.c
+> @@ -58,17 +58,17 @@ static void btrfs_assert_tree_read_locked(struct
+> extent_buffer *eb)
+>  
+>  static void btrfs_assert_tree_write_locks_get(struct extent_buffer *eb)
+>  {
+> -       atomic_inc(&eb->write_locks);
+> +       eb->write_locks++;
+>  }
+>  
+>  static void btrfs_assert_tree_write_locks_put(struct extent_buffer *eb)
+>  {
+> -       atomic_dec(&eb->write_locks);
+> +       eb->write_locks--;
+>  }
+>  
+>  void btrfs_assert_tree_locked(struct extent_buffer *eb)
+>  {
+> -       BUG_ON(!atomic_read(&eb->write_locks));
+> +       BUG_ON(!eb->write_locks);
+>  }
+>  
+> 
+> tests logs:
+> avocado-misc-tests/io/disk/ltp_fs.py:LtpFs.test_fs_run;fs_fill-dir-ext3-61cd:  [ 3376.022096] EXT4-fs (nvme0n1): mounting ext3 file system using the ext4 subsystem
+> EXT4-fs (nvme0n1): mounted filesystem with ordered data mode. Opts: (null)
+> EXT4-fs (loop1): mounting ext2 file system using the ext4 subsystem
+> EXT4-fs (loop1): mounted filesystem without journal. Opts: (null)
+> EXT4-fs (loop1): mounting ext3 file system using the ext4 subsystem
+> EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
+> EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
+> XFS (loop1): Mounting V5 Filesystem
+> XFS (loop1): Ending clean mount
+> XFS (loop1): Unmounting Filesystem
+> BTRFS: device fsid 7c08f81b-6642-4a06-9182-2884e80d56ee devid 1 transid 5 /dev/loop1
+> BTRFS info (device loop1): disk space caching is enabled
+> BTRFS info (device loop1): has skinny extents
+> BTRFS info (device loop1): enabling ssd optimizations
+> BTRFS info (device loop1): creating UUID tree
+> ------------[ cut here ]------------
+> kernel BUG at fs/btrfs/locking.c:71!
+> Oops: Exception in kernel mode, sig: 5 [#1]
+> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> Dumping ftrace buffer:
+>    (ftrace buffer empty)
+> Modules linked in: fuse(E) vfat(E) fat(E) btrfs(E) xor(E)
+> zstd_decompress(E) zstd_compress(E) raid6_pq(E) xfs(E) raid0(E)
+> linear(E) dm_round_robin(E) dm_queue_length(E) dm_service_time(E)
+> dm_multipath(E) loop(E) rpadlpar_io(E) rpaphp(E) lpfc(E) bnx2x(E)
+> xt_CHECKSUM(E) xt_MASQUERADE(E) tun(E) bridge(E) stp(E) llc(E) kvm_pr(E)
+> kvm(E) tcp_diag(E) udp_diag(E) inet_diag(E) unix_diag(E)
+> af_packet_diag(E) netlink_diag(E) ip6t_rpfilter(E) ipt_REJECT(E)
+> nf_reject_ipv4(E) ip6t_REJECT(E) nf_reject_ipv6(E) xt_conntrack(E)
+> ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E)
+> ip6table_mangle(E) ip6table_security(E) ip6table_raw(E) iptable_nat(E)
+> nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E)
+> iptable_mangle(E) iptable_security(E) iptable_raw(E) ebtable_filter(E)
+> ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) sunrpc(E)
+> raid10(E) xts(E) pseries_rng(E) vmx_crypto(E) sg(E) uio_pdrv_genirq(E)
+> uio(E) binfmt_misc(E) sch_fq_codel(E) ip_tables(E)
+>  ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sd_mod(E) ibmvscsi(E)
+> scsi_transport_srp(E) ibmveth(E) nvmet_fc(E) nvmet(E) nvme_fc(E)
+> nvme_fabrics(E) scsi_transport_fc(E) mdio(E) libcrc32c(E) ptp(E)
+> pps_core(E) nvme(E) nvme_core(E) dm_mirror(E) dm_region_hash(E)
+> dm_log(E) dm_mod(E) [last unloaded: lpfc]
+> CPU: 14 PID: 1803 Comm: kworker/u32:8 Tainted: G            E     5.3.0-rc5-autotest-autotest #1
+> Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
+> NIP:  c00800000164dd70 LR: c00800000164df00 CTR: c000000000a817a0
+> REGS: c00000000260b5d0 TRAP: 0700   Tainted: G            E      (5.3.0-rc5-autotest-autotest)
+> MSR:  8000000102029033 <SF,VEC,EE,ME,IR,DR,RI,LE,TM[E]>  CR: 22444082  XER: 00000000
+> CFAR: c00800000164defc IRQMASK: 0
+> GPR00: c0080000015c55f4 c00000000260b860 c008000001703b00 c000000267a29af0
+> GPR04: 0000000000000000 0000000000000001 0000000000000000 0000000000000000
+> GPR08: 0000000000000000 0000000000000001 0000000000000000 0000000000000004
+> GPR12: 0000000000004000 c00000001ec58e00 0000000000000000 0000000000000000
+> GPR16: 0000000000010000 0000000000000004 0000000000000001 0000000000000001
+> GPR20: 0000000000000000 0000000000000001 000000003e0f83e1 c00000025a7cbef0
+> GPR24: c00000000260ba26 0000000040000000 c0000000014a26e8 0000000000000003
+> GPR28: 0000000000000004 c00000025f2010a0 c000000267a29af0 0000000000000000
+> NIP [c00800000164dd70] btrfs_assert_tree_locked+0x10/0x20 [btrfs]
+> LR [c00800000164df00] btrfs_set_lock_blocking_write+0x60/0x100 [btrfs]
+> Call Trace:
+> [c00000000260b860] [c00000000260b8e0] 0xc00000000260b8e0 (unreliable)
+> [c00000000260b890] [c0080000015c55f4] btrfs_set_path_blocking+0xb4/0xc0 [btrfs]
+> [c00000000260b8e0] [c0080000015cb808] btrfs_search_slot+0x8e8/0xb80 [btrfs]
 
-total: 0 errors, 2 warnings, 0 checks, 21 lines checked
-
-Fix it so that it actually *obeys* what it said about not finding structures.
-
-Reported-by: Pablo Pellecchia <pablo9891@gmail.com>
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
----
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index f4b6127ff469..103c67665f61 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -6497,7 +6497,7 @@ sub process {
- 
- # check for various structs that are normally const (ops, kgdb, device_tree)
- # and avoid what seem like struct definitions 'struct foo {'
--		if ($line !~ /\bconst\b/ &&
-+		if ($line !~ /\bconst\b/ && $const_structs ne "" &&
- 		    $line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/) {
- 			WARN("CONST_STRUCT",
- 			     "struct $1 should normally be const\n" . $herecurr);
+Can you provide the line numbers btrfs_search_slot+0x8e8/0xb80
+corresponds to?
 
