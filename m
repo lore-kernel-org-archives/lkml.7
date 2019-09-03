@@ -4,150 +4,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CC2C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A97FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8739B21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119A922CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1Lpt51w"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="A4TG8WeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfICBdA (ORCPT
+        id S1726540AbfICBdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 21:33:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35875 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfICBc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 21:32:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so15593726wrd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 18:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uFS2gOcYr8n/ORpATsI1tuRB3yF1KuNhjqNeg1CIjrE=;
-        b=R1Lpt51wO+GzINS3yWChj0BXJMJqkMP9mu6bSaU5xh7eK2U7gKQYnWPZixECbB7E2z
-         Qf0Rd22TO25rNh/j6ZmaqL3NQXKxSydxgAZClM6F4+xFQzMurJ4pR08CINMOu9KE0wby
-         +U9N+RQHPY9nCCjZ+/t65IkRtr18tQ+0Vg1jpCk5xIRu2cBgBut9+qtvZ3U1MXykbeIJ
-         +La4378jP6SneFiirqWrq/MI8Xfeq2Px3oyDErIsGA7P08U2ETtUMZDeO5MrkM1lZ+ye
-         Wm/kjvarMmzB572BllROeT5Zd+d9r989UwjmNkmxE/pQRLfjeHx2tHRYJQSgobS9URj/
-         eVFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uFS2gOcYr8n/ORpATsI1tuRB3yF1KuNhjqNeg1CIjrE=;
-        b=t/inoX783n5oJHvsWJZU9CLkrDApr3EFLrS4rqpnUU56W80c5EuwB43wIEpSyVZJEX
-         yOAriQ/jEaYX9kcfDQYvGIb4dze3m05TbDrZ2l0V7XnZ4SpcAgebZjYnW+7v70wZkzRo
-         ggiUoQn4mfyggSuy0gH7QUDikmaw+ReHyYRFJINkNHVfrVJSpLR8FU+PtYw6WrO0ayjY
-         5nvpPU0kYKJ1qC+mBMng9sSJwd+Q0pP2KkilN4ZTH1GUz3HFBQaHW20dxbK9C1PHLAjq
-         ugkpvSQogHPKHWz8tv+s+FClwJHUlARD/ccc4127kyedciWkBAbkpYhaLo9MvPhuFFFS
-         LPbg==
-X-Gm-Message-State: APjAAAXeytSWHLcWsboS0ZxsqQkpuzPXr/e/X14OfqKerEwt7gu1SGG0
-        pY0BYSPqwT8GH8fRo7blF5ZXxa/KPWQQp7RHxc1DQg==
-X-Google-Smtp-Source: APXvYqywEhSAzEzmZtouqsNLkCC21lslmkYtGd0pJB5YXkRwe5tytIQ1eMiVj7rGRvIQoLguHC7TQ2mmRCWTSeERGPw=
-X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr40375615wrx.241.1567474377709;
- Mon, 02 Sep 2019 18:32:57 -0700 (PDT)
+        Mon, 2 Sep 2019 21:33:52 -0400
+Received: from mail-eopbgr150040.outbound.protection.outlook.com ([40.107.15.40]:11921
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725306AbfICBdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 21:33:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lVrqxpoDR+4TrGVjUqQ+gEGhPC1E2nx1mxw3LVU9Jnd+lEZSPp/DNSQEAup8qhzjVsx8ryfQ4CRMfUj9dlpI7my7MrKnFzKihwJKzPONKP5xqYnnP70xpvFYeuWGGnqixHu7azMdTWtohZI+EKhpJnwaaW1DcBHlcd2EMgklkXYNnEFze0qkFWL7+jZad8Rye9ZPBZjHANKwG6ICt2ISXQD6s8Tz+ePHhGcoI/kW7pvpHaFO4e4jJlrQqiRTF395HP1r/EW0wMtrCrH5dMAdI5cRuRSnVyoqFrvcOXxBRunsepAeL17ibSl/UJ1tgkSfO12Mfwf0O3WnlBTD2QPMDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/DOADx+psDt4dToHwJNRvHYgrc8d4scsqS0URHGsMqY=;
+ b=UZpcYBLqQIN3FRxatUTbYJDYOmChQeelrWHfArXAabCqVUprIuCrt6fRg+cybvK0HaqvT6bscUfKxdvH6qtWe6Ul6uOpkH6p9bVnC2s039te46tYLEcU4ofL7acupyunl13/HTLxzUDeRx0wH0UM8HbScaiBcAvB/Jws8Lzoism3uUYQvoNQfjFCPOCsVKMkAPiOWcW+kAVORFecaGuhQjb27odT7cZjLKyrp4F/1CJcekdmFeOzCB+H7l7XVtsr81c9j044RUk22o+U1vHJ2B2UFrlZu2O2mwCVNST3xMtqL1NUkt0/GXFWu5FtySE813M/oONC/bo4C6v49lDFoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/DOADx+psDt4dToHwJNRvHYgrc8d4scsqS0URHGsMqY=;
+ b=A4TG8WeBO2t4888eRSpymDZNSiJEgCmZ0BQKRwKdBuez+zUywSPSiHdBZEV2wHI5GcHsRbiSTxKMRKOF9guYyt5h1Sa4vsdgCN6bE8EGzffm3pBHndsIJqX1lJX3G42RK1N4Nh622p8w8i53VQSw5GvxeU2UCdSFYce8zunZy+8=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3250.eurprd04.prod.outlook.com (10.173.254.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Tue, 3 Sep 2019 01:33:48 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5dd3:ddc9:411a:db41]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5dd3:ddc9:411a:db41%3]) with mapi id 15.20.2220.022; Tue, 3 Sep 2019
+ 01:33:48 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH v3 05/11] dt-bindings: pci: layerscape-pci: add compatible
+ strings for ls1088a and ls2088a
+Thread-Topic: [PATCH v3 05/11] dt-bindings: pci: layerscape-pci: add
+ compatible strings for ls1088a and ls2088a
+Thread-Index: AQHVYT5jmPfE5iaogkycau2MGZNxFacYUkAAgADaAhA=
+Date:   Tue, 3 Sep 2019 01:33:47 +0000
+Message-ID: <AM5PR04MB329957D1325CED60804D0C08F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-6-xiaowei.bao@nxp.com>
+ <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9e2a9617-5fc6-4c20-f837-08d7300ec47e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3250;
+x-ms-traffictypediagnostic: AM5PR04MB3250:|AM5PR04MB3250:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB3250A437F9476D024EF62E7BF5B90@AM5PR04MB3250.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01494FA7F7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(13464003)(199004)(189003)(11346002)(7736002)(25786009)(4326008)(8676002)(76116006)(66946007)(9686003)(305945005)(6436002)(66446008)(66476007)(66556008)(64756008)(52536014)(186003)(5660300002)(6246003)(81166006)(81156014)(54906003)(256004)(14444005)(8936002)(74316002)(66066001)(2906002)(53936002)(316002)(6116002)(3846002)(71200400001)(476003)(86362001)(55016002)(33656002)(446003)(229853002)(486006)(6916009)(44832011)(14454004)(7696005)(6506007)(53546011)(76176011)(478600001)(102836004)(99286004)(26005)(7416002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3250;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: D4QgtriG5I47aYMdGldkYwh7Ir+CHuoSX+PqsZqd6QFnnVaGv+yGdXulnD/J4qO88bhWwjeagHkrJ0d883/jWkZ4ABN2EKoQpcKrVzzc0gfZj2/0mODj3JChrd47HJtHK2rzd6eFUjytQGWfml4W05Af/8Cg8xINjwIqAxrdXDUKyQZgs3U1otnE59mq7AYQaMRySMky/Lmlyj6sPsfpUo1O0kE5GW6N+/ws3L+snukBbv1+/1gg2eFQo41sL63eRxKdDfxYx7t0Ls+mfMoupz+37ONOpPay2xKXSrPdBpiFsJPMgmwvRNw1ZGq7RO3gkxSexdx+czbuVAsdDy/txjClpBTnMJRV9RGrBY2iSSEX9dZqXQYRJ28envDs7qqhY6HjTNm4Hxt2WWvQcANMuL7wB1YkQ6OF+AjoWa3Fg38=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190902141910.1080-1-yuehaibing@huawei.com>
-In-Reply-To: <20190902141910.1080-1-yuehaibing@huawei.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 2 Sep 2019 18:32:45 -0700
-Message-ID: <CAKv+Gu-KFp13gnx=cnVRrU4_sD8qLLXFcTOK8zuc7MC+B+GmcQ@mail.gmail.com>
-Subject: Re: [PATCH -next] crypto: inside-secure - Fix build error without CONFIG_PCI
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e2a9617-5fc6-4c20-f837-08d7300ec47e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 01:33:47.9426
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t11BTwtdiL4iWOpMHEWGXLpWmc4Yrog+ohSGFvnOeQj1pv+KW5e0gm6uPD4nMzMW0/DTYbdqNULec8+CH6j8XQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3250
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Sep 2019 at 07:19, YueHaibing <yuehaibing@huawei.com> wrote:
->
-> If CONFIG_PCI is not set, building fails:
->
-> rivers/crypto/inside-secure/safexcel.c: In function safexcel_request_ring_irq:
-> drivers/crypto/inside-secure/safexcel.c:944:9: error: implicit declaration of function pci_irq_vector;
->  did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
->    irq = pci_irq_vector(pci_pdev, irqid);
->          ^~~~~~~~~~~~~~
->
-> Use #ifdef block to guard this.
->
-> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for PCI based FPGA development board")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/crypto/inside-secure/safexcel.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-> index e12a2a3..c23fe34 100644
-> --- a/drivers/crypto/inside-secure/safexcel.c
-> +++ b/drivers/crypto/inside-secure/safexcel.c
-> @@ -937,7 +937,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
->         int ret, irq;
->         struct device *dev;
->
-> -       if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
-> +#if IS_ENABLED(CONFIG_PCI)
-
-please don't use IS_ENABLED() with preprocessor conditionals - just
-use #ifdef CONFIG_PCI instead
-
-> +       if (is_pci_dev) {
->                 struct pci_dev *pci_pdev = pdev;
->
->                 dev = &pci_pdev->dev;
-> @@ -947,7 +948,10 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
->                                 irqid, irq);
->                         return irq;
->                 }
-> -       } else if (IS_ENABLED(CONFIG_OF)) {
-> +       } else
-> +#endif
-> +       {
-> +#if IS_ENABLED(CONFIG_OF)
->                 struct platform_device *plf_pdev = pdev;
->                 char irq_name[6] = {0}; /* "ringX\0" */
->
-> @@ -960,6 +964,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
->                                 irq_name, irq);
->                         return irq;
->                 }
-> +#endif
->         }
->
->         ret = devm_request_threaded_irq(dev, irq, handler,
-> @@ -1137,7 +1142,8 @@ static int safexcel_probe_generic(void *pdev,
->
->         safexcel_configure(priv);
->
-> -       if (IS_ENABLED(CONFIG_PCI) && priv->version == EIP197_DEVBRD) {
-> +#if IS_ENABLED(CONFIG_PCI)
-> +       if (priv->version == EIP197_DEVBRD) {
->                 /*
->                  * Request MSI vectors for global + 1 per ring -
->                  * or just 1 for older dev images
-> @@ -1153,6 +1159,7 @@ static int safexcel_probe_generic(void *pdev,
->                         return ret;
->                 }
->         }
-> +#endif
->
->         /* Register the ring IRQ handlers and configure the rings */
->         priv->ring = devm_kcalloc(dev, priv->config.rings,
-> --
-> 2.7.4
->
->
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
+YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo51MIyyNUgMjA6MzINCj4gVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvDQo+IExp
+IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlzaUBh
+cm0uY29tOyBNLmguDQo+IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUg
+PG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamlu
+Z29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51
+eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gYXJuZEBhcm5kYi5k
+ZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VA
+bnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwNS8xMV0gZHQtYmluZGluZ3M6IHBj
+aTogbGF5ZXJzY2FwZS1wY2k6IGFkZCBjb21wYXRpYmxlDQo+IHN0cmluZ3MgZm9yIGxzMTA4OGEg
+YW5kIGxzMjA4OGENCj4gDQo+IE9uIE1vbiwgU2VwIDAyLCAyMDE5IGF0IDExOjE3OjEwQU0gKzA4
+MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGxz
+MTA4OGEgYW5kIGxzMjA4OGEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8
+eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoNCj4gPiAgLSBObyBjaGFuZ2Uu
+DQo+ID4gdjM6DQo+ID4gIC0gVXNlIG9uZSB2YWxpZCBjb21iaW5hdGlvbiBvZiBjb21wYXRpYmxl
+IHN0cmluZ3MuDQo+ID4NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bj
+aS9sYXllcnNjYXBlLXBjaS50eHQgfCA0ICsrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0K
+PiA+IGluZGV4IGUyMGNlYWEuLjc2MmFlNDEgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0K
+PiA+IEBAIC0yMiw3ICsyMiw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAg
+ImZzbCxsczEwNDNhLXBjaWUiDQo+ID4gICAgICAgICAgImZzbCxsczEwMTJhLXBjaWUiDQo+ID4g
+ICAgRVAgbW9kZToNCj4gPiAtCSJmc2wsbHMxMDQ2YS1wY2llLWVwIiwgImZzbCxscy1wY2llLWVw
+Ig0KPiA+ICsJImZzbCxsczEwNDZhLXBjaWUtZXAiICJmc2wsbHMtcGNpZS1lcCINCj4gPiArCSJm
+c2wsbHMxMDg4YS1wY2llLWVwIiAiZnNsLGxzLXBjaWUtZXAiDQo+ID4gKwkiZnNsLGxzMjA4OGEt
+cGNpZS1lcCIgImZzbCxscy1wY2llLWVwIg0KPiANCj4gVGhpcyBpc24ndCBjb25zaXN0ZW50IHdp
+dGggIltQQVRDSCB2MyAwOS8xMV0gUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZS4uLiINCj4g
+YXMgdGhhdCBwYXRjaCBkcm9wcyB0aGUgZmFsbGJhY2sgImZzbCxscy1wY2llLWVwIi4gRWl0aGVy
+IHRoZSBmYWxsYmFjayBtdXN0IGJlDQo+IHByZXNlcnZlZCBpbiB0aGUgZHJpdmVyLCBvciB5b3Ug
+bmVlZCB0byBkcm9wIGl0IGhlcmUuDQo+IA0KPiBXaGF0IGlmIHRoZXJlIGFyZSBleGlzdGluZyB1
+c2VycyB0aGF0IGRlcGVuZCBvbiB0aGUgZmFsbGJhY2s/DQo+IA0KPiAoSSdtIGFsc28gbm90IHN1
+cmUgaWYgdGhhdCBjb21tYSBzaG91bGQgaGF2ZSBiZWVuIGRyb3BwZWQpLg0KDQpIaSBBbmRyZXcs
+DQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50cywgSSBsb3NlIHRoZSBjb21tYS4NCg0KVGhhbmtz
+IA0KWGlhb3dlaQ0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+
+ICAtIHJlZzogYmFzZSBhZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJvbGxl
+ciByZWdpc3RlciBibG9ja3MuDQo+ID4gIC0gaW50ZXJydXB0czogQSBsaXN0IG9mIGludGVycnVw
+dCBvdXRwdXRzIG9mIHRoZSBjb250cm9sbGVyLiBNdXN0IGNvbnRhaW4gYW4NCj4gPiAgICBlbnRy
+eSBmb3IgZWFjaCBlbnRyeSBpbiB0aGUgaW50ZXJydXB0LW5hbWVzIHByb3BlcnR5Lg0KPiA+IC0t
+DQo+ID4gMi45LjUNCj4gPg0K
