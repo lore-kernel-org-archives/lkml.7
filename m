@@ -2,69 +2,181 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F1DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3F1233A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06CC2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567528436;
+	bh=9hITkvwS7RUR+NOyuSsEcOigWPALmP3ru1eoSEaWVu0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w4Erp0IProhEtOqEgADQ4BFnBdroqJIDO8BarBlZSPBzsONZE1lkB0DgJ7dI7VQuf
+	 e3uE4DG7TQb2sH3KxBkPJs27t7GaMzUpFjbw4F9xdgC7odGTaD3v3PVJ2UmTvV7/Xb
+	 bRuzGUaP99DArYf5vjSDwnq5o84jqEJ2g9fKexvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfICQds (ORCPT
+        id S1731011AbfICQd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:33:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:40480 "EHLO foss.arm.com"
+        Tue, 3 Sep 2019 12:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbfICQbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:31:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80A9C360;
-        Tue,  3 Sep 2019 09:31:48 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59C973F246;
-        Tue,  3 Sep 2019 09:31:47 -0700 (PDT)
-Subject: Re: [PATCH] sched: make struct task_struct::state 32-bit
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     mingo@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        linux-block@vger.kernel.org, dm-devel@redhat.com, axboe@kernel.dk,
-        aarcange@redhat.com
-References: <20190902210558.GA23013@avx2>
- <7b94004e-4a65-462b-cd6b-5cbd23d607bf@arm.com> <20190903162303.GA2173@avx2>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <64003dcd-d954-b76d-856a-214ff11ac000@arm.com>
-Date:   Tue, 3 Sep 2019 17:31:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731068AbfICQ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AE62343A;
+        Tue,  3 Sep 2019 16:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567528094;
+        bh=9hITkvwS7RUR+NOyuSsEcOigWPALmP3ru1eoSEaWVu0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VMdJoln4t0/ssmwLXtcysSY4uJyat4IGu3tSASucMvwMEPxLYfSn9ghU+BKVPLq8S
+         xTklqDU3CqBQMBUZw76wCkf6qtcpTRLy6CGV6kaLpJpPowB1Px7fe5DhX+LsK6LtnS
+         RA6zvstvN2uCTOVmW0rrMqjLI6IXIHHjyVpgU4DY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 103/167] PCI: Add macro for Switchtec quirk declarations
+Date:   Tue,  3 Sep 2019 12:24:15 -0400
+Message-Id: <20190903162519.7136-103-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190903162303.GA2173@avx2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Logan Gunthorpe <logang@deltatee.com>
 
+[ Upstream commit 01d5d7fa8376c6b5acda86e16fcad22de6bba486 ]
 
-On 03/09/2019 17:23, Alexey Dobriyan wrote:
-> On Tue, Sep 03, 2019 at 12:02:38AM +0100, Valentin Schneider wrote:
->> struct task_struct {
->> 	struct thread_info         thread_info;          /*     0    24 */
->> 	volatile int               state;                /*    24     4 */
->>
->> 	/* XXX 4 bytes hole, try to pack */
->>
->> 	void *                     stack;                /*    32     8 */
->>
->> Though seeing as this is also the boundary of the randomized layout we can't
->> really do much better without changing the boundary itself. So much for
->> cacheline use :/
-> 
-> Cacheline use of task_struct is pretty hopeless because of all the ifdefs.
-> 
+Add SWITCHTEC_QUIRK() to reduce redundancy in declaring devices that use
+quirk_switchtec_ntb_dma_alias().
 
-Yeah I figured, then had a minute of silence for those forsaken bytes.
+By itself, this is no functional change, but a subsequent patch updates
+SWITCHTEC_QUIRK() to fix ad281ecf1c7d ("PCI: Add DMA alias quirk for
+Microsemi Switchtec NTB").
+
+Fixes: ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec NTB")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+[bhelgaas: split to separate patch]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/quirks.c | 90 +++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 56 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 28c64f84bfe72..6cda8b7ecc821 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5082,59 +5082,37 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+ 	pci_iounmap(pdev, mmio);
+ 	pci_disable_device(pdev);
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8531,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8532,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8533,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8534,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8535,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8536,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8543,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8544,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8545,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8546,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8551,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8552,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8553,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8554,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8555,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8556,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8561,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8562,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8563,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8564,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8565,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8566,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8571,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8572,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8573,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8574,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8575,
+-			quirk_switchtec_ntb_dma_alias);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, 0x8576,
+-			quirk_switchtec_ntb_dma_alias);
++#define SWITCHTEC_QUIRK(vid) \
++	DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
++				quirk_switchtec_ntb_dma_alias)
++
++SWITCHTEC_QUIRK(0x8531);  /* PFX 24xG3 */
++SWITCHTEC_QUIRK(0x8532);  /* PFX 32xG3 */
++SWITCHTEC_QUIRK(0x8533);  /* PFX 48xG3 */
++SWITCHTEC_QUIRK(0x8534);  /* PFX 64xG3 */
++SWITCHTEC_QUIRK(0x8535);  /* PFX 80xG3 */
++SWITCHTEC_QUIRK(0x8536);  /* PFX 96xG3 */
++SWITCHTEC_QUIRK(0x8541);  /* PSX 24xG3 */
++SWITCHTEC_QUIRK(0x8542);  /* PSX 32xG3 */
++SWITCHTEC_QUIRK(0x8543);  /* PSX 48xG3 */
++SWITCHTEC_QUIRK(0x8544);  /* PSX 64xG3 */
++SWITCHTEC_QUIRK(0x8545);  /* PSX 80xG3 */
++SWITCHTEC_QUIRK(0x8546);  /* PSX 96xG3 */
++SWITCHTEC_QUIRK(0x8551);  /* PAX 24XG3 */
++SWITCHTEC_QUIRK(0x8552);  /* PAX 32XG3 */
++SWITCHTEC_QUIRK(0x8553);  /* PAX 48XG3 */
++SWITCHTEC_QUIRK(0x8554);  /* PAX 64XG3 */
++SWITCHTEC_QUIRK(0x8555);  /* PAX 80XG3 */
++SWITCHTEC_QUIRK(0x8556);  /* PAX 96XG3 */
++SWITCHTEC_QUIRK(0x8561);  /* PFXL 24XG3 */
++SWITCHTEC_QUIRK(0x8562);  /* PFXL 32XG3 */
++SWITCHTEC_QUIRK(0x8563);  /* PFXL 48XG3 */
++SWITCHTEC_QUIRK(0x8564);  /* PFXL 64XG3 */
++SWITCHTEC_QUIRK(0x8565);  /* PFXL 80XG3 */
++SWITCHTEC_QUIRK(0x8566);  /* PFXL 96XG3 */
++SWITCHTEC_QUIRK(0x8571);  /* PFXI 24XG3 */
++SWITCHTEC_QUIRK(0x8572);  /* PFXI 32XG3 */
++SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
++SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
++SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
++SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+-- 
+2.20.1
+
