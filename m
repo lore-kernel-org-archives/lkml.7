@@ -2,108 +2,496 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D87C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B527FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB23522DCC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uYPuC0yV"
+	by mail.kernel.org (Postfix) with ESMTP id 848BE22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfICLg7 (ORCPT
+        id S1728970AbfICLgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:36:59 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46383 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbfICLgy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:36:54 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so15769693wrt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9KHg7Qe2ES8vkKFWvrCHSGJdsSSlcK8bcwIxUgcjXNM=;
-        b=uYPuC0yVQGlcY2cTAR5JGAnD5f2N1lZR4isNU72syvJSAYwVtciTX7bqqDdw2BvR7i
-         JLKZ19hueQKoiIP5/2imTa6n2YbhWYxYPl3RjTCWdicnvkkeFTC+WQT0bDPD8yhI10J/
-         yftzHRMVwND/+L70ex2h5fnZjX995Qo8yVg2vEjjan6rWeAblQBbFz+eUh5BT+evLMqJ
-         7SAjxQ7Aq28+4bX6+0rkkQDX45fIlOqlxaOxWYVpUWy0p/68DUoV8tSy8RXvpkOMAPl1
-         jwkaveo27gIfLpaRnTCmlicPnPu8rsKSvjE/BiHMxoZAwPd64BOAy0ZUGcv/fsqFTDA+
-         sKOA==
+        Tue, 3 Sep 2019 07:36:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52798 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728933AbfICLgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:36:50 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA21C8535D
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:36:48 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id n2so2024755wru.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:36:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=9KHg7Qe2ES8vkKFWvrCHSGJdsSSlcK8bcwIxUgcjXNM=;
-        b=rWy5eofOIJjZXBe11SWL0a9nlvxYYAJ6wQCvgqFH4mzQPbynkylHsjqEa4ofzMB7gA
-         vp1q3v6mwzHIEVdq9FMD4weJfrAp3IMQsvZpVghESN0t6KRf7HG5kcTQdHVtdQ010k4G
-         u663rJNxSEIWr2KWy6fuStwUGbjyh5BDlnZ+W53X/HC1dKwgp/Z28UiEX89SXyVvK21A
-         A6IeBu527myprMjNL5LKQW22qsTXEwY1BS0GI6N5eIgmsD/DtddGkvTuD4PgXdjIm/Rx
-         68vIElnHfpsPLQNFw+IoGh8e4Q81Cu2SjXWE1F2rweVjyn9cUkgp47W0zagUl5rQtysR
-         EXFQ==
-X-Gm-Message-State: APjAAAV/aJ1mzXioxO/2H/EZSI71tbe6mmj5Wl98I45SxNRIeeMshWoc
-        7NHXhPYrb5gJ8VoBWnPucmxryR1/KDSBKw==
-X-Google-Smtp-Source: APXvYqxH3YjlOc0QiUvufW8q79U+uj37cujkxwcAjATvhnH7t23jzxkO+dFnCBlBh+/2zAahJaCltA==
-X-Received: by 2002:adf:fcc1:: with SMTP id f1mr12863956wrs.308.1567510612755;
-        Tue, 03 Sep 2019 04:36:52 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id y186sm32950067wmd.26.2019.09.03.04.36.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GsTPmCBROXkWENE8u9zhZAvKwRylFezdTcPk/AGw/ug=;
+        b=GGOVpnrZ4xlPs5D3If0q4USHBrbt67q1MxjzdexDl8FtaXPR9XfUYV4jFBMzBPCq2A
+         9Ctw3Zatm4+EVxQN4ZILU9hjAGlB7xd+rMQEygAgonZR/NFDBUSYQFSVHsEZnromz6mk
+         wgz7eJQa6+d/2MMxbXxpuRsR6oSKWVjcTb/kPCBQXIvZXUNJqqfxBGpJDyCCmsCvCfnp
+         lplP0Uek595WTeDkoq7gsDhVf5fhUnRdtjw7FhVC/brrHqPFhux1w7HE2rNacuR91kbV
+         jNMZDnGWDmG9qhRc4xfsl8Lj5XhNNN4TuV929l2v0eePDQbnz8XQv8yB5ZWaaMVBP1qC
+         6vaA==
+X-Gm-Message-State: APjAAAUaQhpYlhub8u7gjvb8ZYd3t4hRen4aa6KX2QVFjJxUK23Tz7qK
+        VFE3nRZjcwPpBjABqJhlyOAt9JRoUKmoeMCe12kabjt7RdeXFdxet2bqBZ9ox6GiJcdl5gHoHbO
+        olTJWpDecuOb3yaQ9EpTOFS0I
+X-Received: by 2002:a1c:cf8c:: with SMTP id f134mr36659168wmg.174.1567510607222;
+        Tue, 03 Sep 2019 04:36:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyaQmM6ki55/MXLUqsRFjhUVH9FR9teEsXG03/JzDrxL6iIV536blqTA9FvfRi/RsyYgT+xpA==
+X-Received: by 2002:a1c:cf8c:: with SMTP id f134mr36659137wmg.174.1567510606923;
+        Tue, 03 Sep 2019 04:36:46 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id v186sm40446906wmb.5.2019.09.03.04.36.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:36:52 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Guo Ren <guoren@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] csky: Move static keyword to the front of declaration
-Date:   Tue,  3 Sep 2019 13:36:51 +0200
-Message-Id: <20190903113651.3862-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 03 Sep 2019 04:36:46 -0700 (PDT)
+From:   Miklos Szeredi <mszeredi@redhat.com>
+To:     virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH v4 02/16] fuse: convert to use the new mount API
+Date:   Tue,  3 Sep 2019 13:36:26 +0200
+Message-Id: <20190903113640.7984-3-mszeredi@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190903113640.7984-1-mszeredi@redhat.com>
+References: <20190903113640.7984-1-mszeredi@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declaration of
-csky_pmu_of_device_ids, and resolve the following compiler
-warning that can be seen when building with warnings
-enabled (W=1):
+From: David Howells <dhowells@redhat.com>
 
-arch/csky/kernel/perf_event.c:1340:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+Convert the fuse filesystem to the new internal mount API as the old
+one will be obsoleted and removed.  This allows greater flexibility in
+communication of mount parameters between userspace, the VFS and the
+filesystem.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+See Documentation/filesystems/mount_api.txt for more information.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
-Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
+ fs/fuse/inode.c | 292 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 167 insertions(+), 125 deletions(-)
 
- arch/csky/kernel/perf_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.c
-index 4c1a1934d76a..bc33e4ed189d 100644
---- a/arch/csky/kernel/perf_event.c
-+++ b/arch/csky/kernel/perf_event.c
-@@ -1337,7 +1337,7 @@ int csky_pmu_device_probe(struct platform_device *pdev,
- 	return ret;
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 4bb885b0f032..2597ed237ada 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -15,7 +15,8 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+-#include <linux/parser.h>
++#include <linux/fs_context.h>
++#include <linux/fs_parser.h>
+ #include <linux/statfs.h>
+ #include <linux/random.h>
+ #include <linux/sched.h>
+@@ -59,7 +60,13 @@ MODULE_PARM_DESC(max_user_congthresh,
+ /** Congestion starts at 75% of maximum */
+ #define FUSE_DEFAULT_CONGESTION_THRESHOLD (FUSE_DEFAULT_MAX_BACKGROUND * 3 / 4)
+ 
+-struct fuse_mount_data {
++#ifdef CONFIG_BLOCK
++static struct file_system_type fuseblk_fs_type;
++#endif
++
++struct fuse_fs_context {
++	const char	*subtype;
++	bool		is_bdev;
+ 	int fd;
+ 	unsigned rootmode;
+ 	kuid_t user_id;
+@@ -443,6 +450,8 @@ static int fuse_statfs(struct dentry *dentry, struct kstatfs *buf)
  }
  
--const static struct of_device_id csky_pmu_of_device_ids[] = {
-+static const struct of_device_id csky_pmu_of_device_ids[] = {
- 	{.compatible = "csky,csky-pmu"},
- 	{},
+ enum {
++	OPT_SOURCE,
++	OPT_SUBTYPE,
+ 	OPT_FD,
+ 	OPT_ROOTMODE,
+ 	OPT_USER_ID,
+@@ -454,111 +463,110 @@ enum {
+ 	OPT_ERR
+ };
+ 
+-static const match_table_t tokens = {
+-	{OPT_FD,			"fd=%u"},
+-	{OPT_ROOTMODE,			"rootmode=%o"},
+-	{OPT_USER_ID,			"user_id=%u"},
+-	{OPT_GROUP_ID,			"group_id=%u"},
+-	{OPT_DEFAULT_PERMISSIONS,	"default_permissions"},
+-	{OPT_ALLOW_OTHER,		"allow_other"},
+-	{OPT_MAX_READ,			"max_read=%u"},
+-	{OPT_BLKSIZE,			"blksize=%u"},
+-	{OPT_ERR,			NULL}
++static const struct fs_parameter_spec fuse_param_specs[] = {
++	fsparam_string	("source",		OPT_SOURCE),
++	fsparam_u32	("fd",			OPT_FD),
++	fsparam_u32oct	("rootmode",		OPT_ROOTMODE),
++	fsparam_u32	("user_id",		OPT_USER_ID),
++	fsparam_u32	("group_id",		OPT_GROUP_ID),
++	fsparam_flag	("default_permissions",	OPT_DEFAULT_PERMISSIONS),
++	fsparam_flag	("allow_other",		OPT_ALLOW_OTHER),
++	fsparam_u32	("max_read",		OPT_MAX_READ),
++	fsparam_u32	("blksize",		OPT_BLKSIZE),
++	__fsparam(fs_param_is_string, "subtype", OPT_SUBTYPE,
++		  fs_param_v_optional),
++	{}
++};
++
++static const struct fs_parameter_description fuse_fs_parameters = {
++	.name		= "fuse",
++	.specs		= fuse_param_specs,
+ };
+ 
+-static int fuse_match_uint(substring_t *s, unsigned int *res)
++static int fuse_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ {
+-	int err = -ENOMEM;
+-	char *buf = match_strdup(s);
+-	if (buf) {
+-		err = kstrtouint(buf, 10, res);
+-		kfree(buf);
++	struct fs_parse_result result;
++	struct fuse_fs_context *ctx = fc->fs_private;
++	int opt;
++
++	opt = fs_parse(fc, &fuse_fs_parameters, param, &result);
++	if (opt < 0)
++		return opt;
++
++	switch (opt) {
++	case OPT_SOURCE:
++		if (fc->source)
++			return invalf(fc, "fuse: Multiple sources specified");
++		fc->source = param->string;
++		param->string = NULL;
++		break;
++
++	case OPT_SUBTYPE:
++		if (ctx->subtype)
++			return invalf(fc, "fuse: Multiple subtypes specified");
++		ctx->subtype = param->string;
++		param->string = NULL;
++		return 0;
++
++	case OPT_FD:
++		ctx->fd = result.uint_32;
++		ctx->fd_present = 1;
++		break;
++
++	case OPT_ROOTMODE:
++		if (!fuse_valid_type(result.uint_32))
++			return invalf(fc, "fuse: Invalid rootmode");
++		ctx->rootmode = result.uint_32;
++		ctx->rootmode_present = 1;
++		break;
++
++	case OPT_USER_ID:
++		ctx->user_id = make_kuid(fc->user_ns, result.uint_32);
++		if (!uid_valid(ctx->user_id))
++			return invalf(fc, "fuse: Invalid user_id");
++		ctx->user_id_present = 1;
++		break;
++
++	case OPT_GROUP_ID:
++		ctx->group_id = make_kgid(fc->user_ns, result.uint_32);
++		if (!gid_valid(ctx->group_id))
++			return invalf(fc, "fuse: Invalid group_id");
++		ctx->group_id_present = 1;
++		break;
++
++	case OPT_DEFAULT_PERMISSIONS:
++		ctx->default_permissions = 1;
++		break;
++
++	case OPT_ALLOW_OTHER:
++		ctx->allow_other = 1;
++		break;
++
++	case OPT_MAX_READ:
++		ctx->max_read = result.uint_32;
++		break;
++
++	case OPT_BLKSIZE:
++		if (!ctx->is_bdev)
++			return invalf(fc, "fuse: blksize only supported for fuseblk");
++		ctx->blksize = result.uint_32;
++		break;
++
++	default:
++		return -EINVAL;
+ 	}
+-	return err;
++
++	return 0;
+ }
+ 
+-static int parse_fuse_opt(char *opt, struct fuse_mount_data *d, int is_bdev,
+-			  struct user_namespace *user_ns)
++static void fuse_free_fc(struct fs_context *fc)
+ {
+-	char *p;
+-	memset(d, 0, sizeof(struct fuse_mount_data));
+-	d->max_read = ~0;
+-	d->blksize = FUSE_DEFAULT_BLKSIZE;
+-
+-	while ((p = strsep(&opt, ",")) != NULL) {
+-		int token;
+-		int value;
+-		unsigned uv;
+-		substring_t args[MAX_OPT_ARGS];
+-		if (!*p)
+-			continue;
+-
+-		token = match_token(p, tokens, args);
+-		switch (token) {
+-		case OPT_FD:
+-			if (match_int(&args[0], &value))
+-				return 0;
+-			d->fd = value;
+-			d->fd_present = 1;
+-			break;
+-
+-		case OPT_ROOTMODE:
+-			if (match_octal(&args[0], &value))
+-				return 0;
+-			if (!fuse_valid_type(value))
+-				return 0;
+-			d->rootmode = value;
+-			d->rootmode_present = 1;
+-			break;
+-
+-		case OPT_USER_ID:
+-			if (fuse_match_uint(&args[0], &uv))
+-				return 0;
+-			d->user_id = make_kuid(user_ns, uv);
+-			if (!uid_valid(d->user_id))
+-				return 0;
+-			d->user_id_present = 1;
+-			break;
+-
+-		case OPT_GROUP_ID:
+-			if (fuse_match_uint(&args[0], &uv))
+-				return 0;
+-			d->group_id = make_kgid(user_ns, uv);
+-			if (!gid_valid(d->group_id))
+-				return 0;
+-			d->group_id_present = 1;
+-			break;
+-
+-		case OPT_DEFAULT_PERMISSIONS:
+-			d->default_permissions = 1;
+-			break;
+-
+-		case OPT_ALLOW_OTHER:
+-			d->allow_other = 1;
+-			break;
+-
+-		case OPT_MAX_READ:
+-			if (match_int(&args[0], &value))
+-				return 0;
+-			d->max_read = value;
+-			break;
+-
+-		case OPT_BLKSIZE:
+-			if (!is_bdev || match_int(&args[0], &value))
+-				return 0;
+-			d->blksize = value;
+-			break;
+-
+-		default:
+-			return 0;
+-		}
+-	}
++	struct fuse_fs_context *ctx = fc->fs_private;
+ 
+-	if (!d->fd_present || !d->rootmode_present ||
+-	    !d->user_id_present || !d->group_id_present)
+-		return 0;
+-
+-	return 1;
++	if (ctx) {
++		kfree(ctx->subtype);
++		kfree(ctx);
++	}
+ }
+ 
+ static int fuse_show_options(struct seq_file *m, struct dentry *root)
+@@ -1075,12 +1083,12 @@ void fuse_dev_free(struct fuse_dev *fud)
+ }
+ EXPORT_SYMBOL_GPL(fuse_dev_free);
+ 
+-static int fuse_fill_super(struct super_block *sb, void *data, int silent)
++static int fuse_fill_super(struct super_block *sb, struct fs_context *fsc)
+ {
++	struct fuse_fs_context *ctx = fsc->fs_private;
+ 	struct fuse_dev *fud;
+ 	struct fuse_conn *fc;
+ 	struct inode *root;
+-	struct fuse_mount_data d;
+ 	struct file *file;
+ 	struct dentry *root_dentry;
+ 	struct fuse_req *init_req;
+@@ -1093,19 +1101,19 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	sb->s_flags &= ~(SB_NOSEC | SB_I_VERSION);
+ 
+-	if (!parse_fuse_opt(data, &d, is_bdev, sb->s_user_ns))
+-		goto err;
+-
+ 	if (is_bdev) {
+ #ifdef CONFIG_BLOCK
+ 		err = -EINVAL;
+-		if (!sb_set_blocksize(sb, d.blksize))
++		if (!sb_set_blocksize(sb, ctx->blksize))
+ 			goto err;
+ #endif
+ 	} else {
+ 		sb->s_blocksize = PAGE_SIZE;
+ 		sb->s_blocksize_bits = PAGE_SHIFT;
+ 	}
++
++	sb->s_subtype = ctx->subtype;
++	ctx->subtype = NULL;
+ 	sb->s_magic = FUSE_SUPER_MAGIC;
+ 	sb->s_op = &fuse_super_operations;
+ 	sb->s_xattr = fuse_xattr_handlers;
+@@ -1116,7 +1124,7 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (sb->s_user_ns != &init_user_ns)
+ 		sb->s_iflags |= SB_I_UNTRUSTED_MOUNTER;
+ 
+-	file = fget(d.fd);
++	file = fget(ctx->fd);
+ 	err = -EINVAL;
+ 	if (!file)
+ 		goto err;
+@@ -1159,17 +1167,17 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+ 		fc->dont_mask = 1;
+ 	sb->s_flags |= SB_POSIXACL;
+ 
+-	fc->default_permissions = d.default_permissions;
+-	fc->allow_other = d.allow_other;
+-	fc->user_id = d.user_id;
+-	fc->group_id = d.group_id;
+-	fc->max_read = max_t(unsigned, 4096, d.max_read);
++	fc->default_permissions = ctx->default_permissions;
++	fc->allow_other = ctx->allow_other;
++	fc->user_id = ctx->user_id;
++	fc->group_id = ctx->group_id;
++	fc->max_read = max_t(unsigned, 4096, ctx->max_read);
+ 
+ 	/* Used by get_root_inode() */
+ 	sb->s_fs_info = fc;
+ 
+ 	err = -ENOMEM;
+-	root = fuse_get_root_inode(sb, d.rootmode);
++	root = fuse_get_root_inode(sb, ctx->rootmode);
+ 	sb->s_d_op = &fuse_root_dentry_operations;
+ 	root_dentry = d_make_root(root);
+ 	if (!root_dentry)
+@@ -1229,11 +1237,50 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+ 	return err;
+ }
+ 
+-static struct dentry *fuse_mount(struct file_system_type *fs_type,
+-		       int flags, const char *dev_name,
+-		       void *raw_data)
++static int fuse_get_tree(struct fs_context *fc)
+ {
+-	return mount_nodev(fs_type, flags, raw_data, fuse_fill_super);
++	struct fuse_fs_context *ctx = fc->fs_private;
++
++	if (!ctx->fd_present || !ctx->rootmode_present ||
++	    !ctx->user_id_present || !ctx->group_id_present)
++		return -EINVAL;
++
++#ifdef CONFIG_BLOCK
++	if (ctx->is_bdev)
++		return vfs_get_block_super(fc, fuse_fill_super);
++#endif
++
++	return get_tree_nodev(fc, fuse_fill_super);
++}
++
++static const struct fs_context_operations fuse_context_ops = {
++	.free		= fuse_free_fc,
++	.parse_param	= fuse_parse_param,
++	.get_tree	= fuse_get_tree,
++};
++
++/*
++ * Set up the filesystem mount context.
++ */
++static int fuse_init_fs_context(struct fs_context *fc)
++{
++	struct fuse_fs_context *ctx;
++
++	ctx = kzalloc(sizeof(struct fuse_fs_context), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->max_read = ~0;
++	ctx->blksize = FUSE_DEFAULT_BLKSIZE;
++
++#ifdef CONFIG_BLOCK
++	if (fc->fs_type == &fuseblk_fs_type)
++		ctx->is_bdev = true;
++#endif
++
++	fc->fs_private = ctx;
++	fc->ops = &fuse_context_ops;
++	return 0;
+ }
+ 
+ static void fuse_sb_destroy(struct super_block *sb)
+@@ -1262,19 +1309,13 @@ static struct file_system_type fuse_fs_type = {
+ 	.owner		= THIS_MODULE,
+ 	.name		= "fuse",
+ 	.fs_flags	= FS_HAS_SUBTYPE | FS_USERNS_MOUNT,
+-	.mount		= fuse_mount,
++	.init_fs_context = fuse_init_fs_context,
++	.parameters	= &fuse_fs_parameters,
+ 	.kill_sb	= fuse_kill_sb_anon,
+ };
+ MODULE_ALIAS_FS("fuse");
+ 
+ #ifdef CONFIG_BLOCK
+-static struct dentry *fuse_mount_blk(struct file_system_type *fs_type,
+-			   int flags, const char *dev_name,
+-			   void *raw_data)
+-{
+-	return mount_bdev(fs_type, flags, dev_name, raw_data, fuse_fill_super);
+-}
+-
+ static void fuse_kill_sb_blk(struct super_block *sb)
+ {
+ 	fuse_sb_destroy(sb);
+@@ -1284,7 +1325,8 @@ static void fuse_kill_sb_blk(struct super_block *sb)
+ static struct file_system_type fuseblk_fs_type = {
+ 	.owner		= THIS_MODULE,
+ 	.name		= "fuseblk",
+-	.mount		= fuse_mount_blk,
++	.init_fs_context = fuse_init_fs_context,
++	.parameters	= &fuse_fs_parameters,
+ 	.kill_sb	= fuse_kill_sb_blk,
+ 	.fs_flags	= FS_REQUIRES_DEV | FS_HAS_SUBTYPE,
  };
 -- 
-2.22.1
+2.21.0
 
