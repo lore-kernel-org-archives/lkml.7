@@ -2,167 +2,114 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AE0C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E453EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB17622CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA780215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSJnFgvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfICGTy (ORCPT
+        id S1727173AbfICGUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:19:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6183 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726980AbfICGTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:19:53 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3346C78A70894A92193E;
-        Tue,  3 Sep 2019 14:19:48 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
- 14:19:41 +0800
-Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <dalias@libc.org>, <linux-sh@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
-        <heiko.carstens@de.ibm.com>, <linuxarm@huawei.com>,
-        <jiaxun.yang@flygoat.com>, <linux-kernel@vger.kernel.org>,
-        <mwb@linux.vnet.ibm.com>, <paulus@samba.org>, <hpa@zytor.com>,
-        <sparclinux@vger.kernel.org>, <chenhc@lemote.com>,
-        <will@kernel.org>, <linux-s390@vger.kernel.org>,
-        <ysato@users.sourceforge.jp>, <mpe@ellerman.id.au>,
-        <x86@kernel.org>, <rppt@linux.ibm.com>, <borntraeger@de.ibm.com>,
-        <dledford@redhat.com>, <mingo@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <benh@kernel.crashing.org>,
-        <jhogan@kernel.org>, <nfont@linux.vnet.ibm.com>,
-        <mattst88@gmail.com>, <len.brown@intel.com>, <gor@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <ink@jurassic.park.msu.ru>,
-        <cai@lca.pw>, <luto@kernel.org>, <tglx@linutronix.de>,
-        <naveen.n.rao@linux.vnet.ibm.com>,
-        <linux-arm-kernel@lists.infradead.org>, <rth@twiddle.net>,
-        <axboe@kernel.dk>, <robin.murphy@arm.com>,
-        <linux-mips@vger.kernel.org>, <ralf@linux-mips.org>,
-        <tbogendoerfer@suse.de>, <paul.burton@mips.com>,
-        <linux-alpha@vger.kernel.org>, <bp@alien8.de>,
-        <akpm@linux-foundation.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
- <20190831161247.GM2369@hirez.programming.kicks-ass.net>
- <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
- <20190902072542.GN2369@hirez.programming.kicks-ass.net>
- <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
- <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <1f48081c-c9d6-8f3e-9559-8b0bec98f125@huawei.com>
-Date:   Tue, 3 Sep 2019 14:19:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Tue, 3 Sep 2019 02:20:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36433 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfICGUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:20:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so16051832wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YKY88mE2T1JIVhonH4BKsN4In+EOCkLewu/cYwg0NFI=;
+        b=oSJnFgvpy0N/Nmx5iIH3UkDpNMrRdPCgW0b4jddqpLvi4/d1Rkz0iH9x6JROMRweXs
+         XdX7jguoInFB7gtTaGYBrXzI6qz0J0da8yO+VYo7yCy4565Z/40NDO3pHW7vWgx5Vf0o
+         Vxlbis9eTsOPTASQ0Oky9OzE/ET2cNCAJ4t62ZXj4YjOhG+UraKA6e0MvanYzVQ8NR1K
+         o9Y685UaF4FtTl+zcgsEUNhEVPOcbPUi24DqfjU46CfvhOizKa8OuRggtVCAjBunUn/s
+         klakPSif8jugFhmBXjktCEhCN3hZu5YWuyvSxMGJof5mdhJTcriZLh8wDRDbg/PKbQNP
+         jIYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YKY88mE2T1JIVhonH4BKsN4In+EOCkLewu/cYwg0NFI=;
+        b=DtTXqBzZqCCeQuPuOh9RzAABzc/sLns5eX7q0STfGJjkEJ3dE0xYXLDfCmHqyj2ecY
+         iKUNoISMhn4idF+P0MH4PCRX2wO4ONxg8YPx4bj/Tv1+eWocfTvTP3mbCbug14hHBPWD
+         711UehN5FsdN1Wg3+c2QT2CER1HkA2ZCpJxweVdJ5P/XdWr5eExXo2/yPUdsDjkHFOYx
+         AMwfJxh2aVplNVUt4VXq5C6sGuAfIXQeyw9MHjHl+YQGD1g+K8WXnHdRLwYIAyUMZ8xE
+         K2bcb1/38j41ULMBwW7WhsiazL12JEGn/dG3chrQlriJj53/GBO7DRxBzL3cDcTjQMVD
+         0a3w==
+X-Gm-Message-State: APjAAAWYuKvtCiDGwEoB+MuY7r+sJARuTO+98+PLNo7NdIjzZMy/fvAf
+        8vxl+JXLYlmcl+tZDefxNZ44kw==
+X-Google-Smtp-Source: APXvYqzxTP9Izgjyqm7VZnX7b5HaQgM+sZAiS2X6RszH2QLjrimvK7wmFA+TGBzFrnlM0Gq6VvNosA==
+X-Received: by 2002:adf:e912:: with SMTP id f18mr38483436wrm.46.1567491642530;
+        Mon, 02 Sep 2019 23:20:42 -0700 (PDT)
+Received: from dell ([95.147.198.93])
+        by smtp.gmail.com with ESMTPSA id o193sm19866846wme.39.2019.09.02.23.20.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Sep 2019 23:20:41 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 07:20:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Message-ID: <20190903062040.GC26880@dell>
+References: <20190902132400.14084-1-lee.jones@linaro.org>
+ <20190903054451.GV6167@minitux>
 MIME-Version: 1.0
-In-Reply-To: <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903054451.GV6167@minitux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/2 20:56, Peter Zijlstra wrote:
-> On Mon, Sep 02, 2019 at 08:25:24PM +0800, Yunsheng Lin wrote:
->> On 2019/9/2 15:25, Peter Zijlstra wrote:
->>> On Mon, Sep 02, 2019 at 01:46:51PM +0800, Yunsheng Lin wrote:
->>>> On 2019/9/1 0:12, Peter Zijlstra wrote:
->>>
->>>>> 1) because even it is not set, the device really does belong to a node.
->>>>> It is impossible a device will have magic uniform access to memory when
->>>>> CPUs cannot.
->>>>
->>>> So it means dev_to_node() will return either NUMA_NO_NODE or a
->>>> valid node id?
->>>
->>> NUMA_NO_NODE := -1, which is not a valid node number. It is also, like I
->>> said, not a valid device location on a NUMA system.
->>>
->>> Just because ACPI/BIOS is shit, doesn't mean the device doesn't have a
->>> node association. It just means we don't know and might have to guess.
->>
->> How do we guess the device's location when ACPI/BIOS does not set it?
-> 
-> See device_add(), it looks to the device's parent and on NO_NODE, puts
-> it there.
-> 
-> Lacking any hints, just stick it to node0 and print a FW_BUG or
-> something.
-> 
->> It seems dev_to_node() does not do anything about that and leave the
->> job to the caller or whatever function that get called with its return
->> value, such as cpumask_of_node().
-> 
-> Well, dev_to_node() doesn't do anything; nor should it. It are the
-> callers of set_dev_node() that should be taking care.
-> 
-> Also note how device_add() sets the device node to the parent device's
-> node on NUMA_NO_NODE. Arguably we should change it to complain when it
-> finds NUMA_NO_NODE and !parent.
+On Mon, 02 Sep 2019, Bjorn Andersson wrote:
 
-Is it possible that the node id set by device_add() become invalid
-if the node is offlined, then dev_to_node() may return a invalid
-node id.
-
-From the comment in select_fallback_rq(), it seems that a node can
-be offlined, not sure if node offline process has taken cared of that?
-
-	/*
-         * If the node that the CPU is on has been offlined, cpu_to_node()
-         * will return -1. There is no CPU on the node, and we should
-         * select the CPU on the other node.
-         */
-
-
-With the above assumption that a device is always on a valid node,
-the node id returned from dev_to_node() can be safely passed to
-cpumask_of_node() without any checking?
-
+> On Mon 02 Sep 06:24 PDT 2019, Lee Jones wrote:
 > 
-> ---
->  drivers/base/core.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > 
+> > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+> > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+> > 
+> > Supported by this patch is: keyboard, battery monitoring, UFS storage,
+> > USB host and Bluetooth.
 > 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index f0dd8e38fee3..2caf204966a0 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -2120,8 +2120,16 @@ int device_add(struct device *dev)
->  		dev->kobj.parent = kobj;
->  
->  	/* use parent numa_node */
-> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
-> -		set_dev_node(dev, dev_to_node(parent));
-> +	if (dev_to_node(dev) == NUMA_NO_NODE) {
-> +		if (parent)
-> +			set_dev_node(dev, dev_to_node(parent));
-> +#ifdef CONFIG_NUMA
-> +		else {
-> +			pr_err("device: '%s': has no assigned NUMA node\n", dev_name(dev));
-> +			set_dev_node(dev, 0);
-> +		}
-> +#endif
-> +	}
->  
->  	/* first, register with generic layer. */
->  	/* we require the name to be set before, and pass NULL */
+> Applied this to next-20190829 and booted it, got a little bit of EFI FB,
+> then the screen goes blank and after a while I'm back in GRUB.
 > 
-> .
-> 
+> I've not been able to figure out what's causing this though.
 
+Probably DMA.  There is still an issue in the COM GENI Serial Engine
+Driver which reboots the system when a DMA transaction is initiated.
+
+However, with a workaround patch applied to the Serial Engine driver
+(drivers/soc/qcom/qcom-geni-se.c) this DTS has no issue booting the
+system.
+
+We have ~12 weeks to either fix or elegantly work around the Serial
+Engine issue.  IMHO is makes no sense to hold back this enablement
+patch (which cannot go in via the -rcs) for something which is likely
+to be fixed and applied during v3.4-rcX.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
