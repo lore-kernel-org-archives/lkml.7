@@ -2,95 +2,96 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5556AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5E9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5F320870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940B423878
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0+3XwuE5"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1Q9bi1VI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfICOGV (ORCPT
+        id S1729476AbfICOGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:06:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52686 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfICOGV (ORCPT
+        Tue, 3 Sep 2019 10:06:41 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38122 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICOGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:06:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tW7Nkc6OzeenJ5t90aISNMAX0ToDybVNohTWVX2i9+g=; b=0+3XwuE5ycxa+akInZ8/eLOrW
-        C1xKxEw1NhPAOzGzBwInUN6l7UgvqnBv5fQ11FQ66xHp1/ShCQUS6jm7iL2ir1TZVVMQGZJMeoM0B
-        Z3M/lAvaNfabp9HqAsTI5GdQAiIQAkbmTHZEGWB5EEPwItFNvP84tVxB8976uo1L9blqWEeJD7qvP
-        7DfgpzNvvEs/67tCHjEMGZldDejQvYRrnYEITVWGFxoyiaTz9k0dWUMDtsV7FX0kE2ewC4d0fx3PY
-        dkaTVyh8eA4UWVyraDN2K6T8YhBh7zkMDVn5wfbMyNwavxGgtzc9hMeyngJnprXSL6M0hzR9B8ldX
-        xNVGxXcKw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i59Rp-0007Ht-VC; Tue, 03 Sep 2019 14:06:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 77D933011DF;
-        Tue,  3 Sep 2019 16:05:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 606D92097776C; Tue,  3 Sep 2019 16:06:14 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 16:06:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Yin, Fengwei" <fengwei.yin@intel.com>
-Cc:     linux-kernel@vger.kernel.org, "He, Min" <min.he@intel.com>,
-        "Zhao, Yakui" <yakui.zhao@intel.com>
-Subject: Re: About compiler memory barrier for atomic_set/atomic_read on x86
-Message-ID: <20190903140614.GR2349@hirez.programming.kicks-ass.net>
-References: <256e8ee2-a23c-28e9-3988-8b77307c001a@intel.com>
+        Tue, 3 Sep 2019 10:06:40 -0400
+Received: by mail-io1-f65.google.com with SMTP id p12so36185709iog.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=0p3oWLhAQWaGVemN+5EpRiaC7HumZE71N/2ba/fW6JY=;
+        b=1Q9bi1VIzUqAMTYaHO9z9TpvDFwOZ+0dH9NVanlMlykig3srm3wskTSPXdjXa6Jrbv
+         1HA9BfwMkf/TPF5ev2nhry6re0D+KIJQzTm5/b/mIcWDg0+kDFx3xVuf1mbs0cEldcw0
+         bJxlBU0u0D0soKewZHyXOY5hYpTi15LMaAa3ctQ8YWhToZhcZ3rXitF6ziQCUZA47GaT
+         x/vdPsZUW30aYziNM+ESkpRcvfYkBt9uAjhT8ChgpTCNP0okGG0g5jVB54W4cytIaFAT
+         t9cjEpdy0S6rd1jiLNmOzj6kqyfKx3lJfYKaNgr+XxD3Heed5+Y72l169Gnpcr3/oqxX
+         M+Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0p3oWLhAQWaGVemN+5EpRiaC7HumZE71N/2ba/fW6JY=;
+        b=GjUL5/pfHpH9EQt7Trx3zSOID0U8L9YF01OcTO37LRasII7BwdOmWw8vt/yGj7fr7a
+         kGfPvXktwcc8yZmzoh9BzV0hoeJMiheLy1vso/Td4qwHVMABPn4DHgm/bFvauw35uwnc
+         d78cWAvQvgYUJoS6mtjxdienwSyigl4xlvHSw32Uhng7Vyjtc5RvvC34J0c3+RPQKdgc
+         pHwVGoOj6jpByvJ7+O0mOv6SAP+Rot+8ge5DB1iI9B+Mj4AAhrm/NHU5qjnk6g/wGtMY
+         HIX5i653/CoKVDbtZ3qtb3TJvpAgBr6cw3ssg6Ad/OdB19M830mgCTyQfd0Iygub5fWW
+         8mcQ==
+X-Gm-Message-State: APjAAAVrfg3E0/dcvswRmt0wEmDZpdSiTbCit8V3VbiB9UQKZk7R8zXU
+        NWMLbA8l5tGOF+znplB0CH+3Nw==
+X-Google-Smtp-Source: APXvYqx03uOP/C8Dqwl5Q+wDp0JvHsGemvVGA6YOvYAgWggFpmv/rcZ3Ucmu6Ek5/kCC5fF+sj+pcg==
+X-Received: by 2002:a05:6602:2508:: with SMTP id i8mr29737153ioe.91.1567519600140;
+        Tue, 03 Sep 2019 07:06:40 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k21sm15220719iob.49.2019.09.03.07.06.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 07:06:39 -0700 (PDT)
+Subject: Re: [RESEND PATCH 0/4] Remove elevator kernel parameter
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+References: <20190828011930.29791-1-marcos.souza.org@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <80b367d6-393e-330a-c5df-f48e73bae86b@kernel.dk>
+Date:   Tue, 3 Sep 2019 08:06:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <256e8ee2-a23c-28e9-3988-8b77307c001a@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190828011930.29791-1-marcos.souza.org@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 09:23:41PM +0800, Yin, Fengwei wrote:
-> Hi Peter,
-> There is one question regarding following commit:
+On 8/27/19 7:19 PM, Marcos Paulo de Souza wrote:
+> This is just a resend, now with reviews by Hannes and Bob in place. These
+> patches were based in linux-block/for-next branch.
 > 
-> commit 69d927bba39517d0980462efc051875b7f4db185
-> Author: Peter Zijlstra <peterz@infradead.org>
-> Date:   Wed Apr 24 13:38:23 2019 +0200
+> Original cover letter:
+> After the first patch sent[1], together with some background from Jens[2], this
+> patchset aims to remove completely elevator kernel parameter, since it is not
+> being used since blk-mq was set by default.
 > 
->     x86/atomic: Fix smp_mb__{before,after}_atomic()
-> 
->     Recent probing at the Linux Kernel Memory Model uncovered a
->     'surprise'. Strongly ordered architectures where the atomic RmW
->     primitive implies full memory ordering and
->     smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-> 
-> This change made atomic RmW operations include compiler barrier. And made
-> __smp_mb__before_atomic/__smp_mb__after_atomic not include compiler
-> barrier any more for x86.
-> 
-> We face the issue to handle atomic_set/atomic_read which is mapped to
-> WRITE_ONCE/READ_ONCE on x86. These two functions don't include compiler
-> barrier actually (if operator size is less than 8 bytes).
-> 
-> Before the commit 69d927bba39517d0980462efc051875b7f4db185, we could use
-> __smp_mb__before_atomic/__smp_mb__after_atomic together with these two
-> functions to make sure the memory order. It can't work after the commit
-> 69d927bba39517d0980462efc051875b7f4db185. I am wandering whether
-> we should make atomic_set/atomic_read also include compiler memory
-> barrier on x86? Thanks.
+> Along with elevator code, some documentation was also updated to remove elevator
+> references.
 
-No; using smp_mb__{before,after}_atomic() with atomic_{set,read}() is
-_wrong_! And it is documented as such; see Documentation/atomic_t.txt.
+Applied, but:
+
+1) Folded patch 1+2
+2) Patch 3+4 .txt files are dead
+
+-- 
+Jens Axboe
+
