@@ -2,79 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273E8C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA35AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C4D20882
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567540160;
-	bh=HAGOtl8SPG8pETUP9XU4SnDqczahEFprNicQCkAJysA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dNjR4ljYm8dYkTy3jeC9L9Qibk61BZifFSPO2GLQtkcRNPX7WZsDsrhphtXrxfjd4
-	 tVBfF52JcSnUP4IKfP0UP/cjj4jA+ekPYXDuvoxWpiuM06lNhmMCakodMDZF+gOKdZ
-	 ZNK6CzJ8BWNsLtVQqcMlU570w1aZFIWIVQDQ8ljE=
+	by mail.kernel.org (Postfix) with ESMTP id B5E8A20882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfICTtT (ORCPT
+        id S1726763AbfICTuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfICTtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:49:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA2D20882;
-        Tue,  3 Sep 2019 19:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567540158;
-        bh=HAGOtl8SPG8pETUP9XU4SnDqczahEFprNicQCkAJysA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qWLUXKHde2suG63juiMAr7g5T0QCuZhAX7vkDmkKlvZadIQ8/iuX9mmtjgLf8v+0X
-         vf8P4ZkI3SKdzsEnIzfTl9lR02VPe31h6WGzRgmkyv2Id83Uz7cLcrU2yfYX6GQ6Nc
-         XMNghrUbnCD/enXKXkW4lYMwzjoT1F/6wMGA07sw=
-Date:   Tue, 3 Sep 2019 21:48:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] interconnect changes for 5.4
-Message-ID: <20190903194852.GB13390@kroah.com>
-References: <97f47b2a-7aee-ab4b-7510-43c509db982a@linaro.org>
+        Tue, 3 Sep 2019 15:50:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39398 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfICTuS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:50:18 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n7so21510024qtb.6;
+        Tue, 03 Sep 2019 12:50:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VPptNHDgIrbyunwZQp87iOUTMUhTiMYxTTIn/hXA+LU=;
+        b=kM+ot8AL2uMvl03OY7A0/LZA6tHBB19rbVZbrZfhatMbp3bhBNiMvJIs7sXfmVmxdE
+         E8tnnnnLafy65mjSH+WhzTiW63zmq59DnbE7u7HWXY0kM1XjD+oq90ldUl5ka4z45+Gq
+         Pb/YAXazqxUr6LUyWbGHXLRk9YBLc+OpPW44ohX7kHNgM5jmlqkUsbdaBkC4Jhnk/gXX
+         qPTUyDBpHIf63D3wG4V/rqg9SspItxezN8zF+dyT8VbqvNis3J4wj9ENDkiXEd3D0Owa
+         Wr2ehIeexrTYdfPsuFHnWJzH1b3gzEDNDNpw4tGi+iJmaOixSqKU78JJk+pZ4iXsUksS
+         62Nw==
+X-Gm-Message-State: APjAAAVJDzUu1PWaVvWmunOiu8uHl4ifa5+w93wyr9FCFwHZe8Ez9x+t
+        6O06fO+12Ck7eRIJS010F9DKjIof+axEjxyQX8c=
+X-Google-Smtp-Source: APXvYqwmWvykYLIsIXv/rExQqRH4453QTzFrznyO0uRb5z3SOOF3l6nvFg1g5Nl4d6IaoTvNw7tWKpHG/sajdmkrkk0=
+X-Received: by 2002:ac8:6b1a:: with SMTP id w26mr11811379qts.304.1567540217416;
+ Tue, 03 Sep 2019 12:50:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97f47b2a-7aee-ab4b-7510-43c509db982a@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1567523922.5576.57.camel@lca.pw> <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
+ <CABeXuvq7n+ZW7-HOiur+cyQXBjYKKWw1nRgFTJXTBZ9JNusPeg@mail.gmail.com>
+ <1567534549.5576.62.camel@lca.pw> <82F89AEA-994B-44B5-93E7-CD339E4F78F6@dilger.ca>
+In-Reply-To: <82F89AEA-994B-44B5-93E7-CD339E4F78F6@dilger.ca>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 3 Sep 2019 21:50:00 +0200
+Message-ID: <CAK8P3a19PNVv0tEd8h93F9iszcCC-AmeqZ=pFkuSAyxAfhaQ-Q@mail.gmail.com>
+Subject: Re: "beyond 2038" warnings from loopback mount is noisy
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Qian Cai <cai@lca.pw>, Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 06:14:19PM +0300, Georgi Djakov wrote:
-> Hi Greg,
-> 
-> This is a pull request with interconnect patches for the 5.4 merge window.
-> The patches have been for a while in linux-next without reported issues. The
-> details are in the signed tag. Please consider pulling into char-misc-next.
-> 
-> Thanks,
-> Georgi
-> 
-> The following changes since commit d45331b00ddb179e291766617259261c112db872:
-> 
->   Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
-> 
-> are available in the Git repository at:
-> 
->   https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.4-rc1
+On Tue, Sep 3, 2019 at 9:39 PM Andreas Dilger <adilger@dilger.ca> wrote:
+>
+> On Sep 3, 2019, at 12:15 PM, Qian Cai <cai@lca.pw> wrote:
+> >
+> > On Tue, 2019-09-03 at 09:36 -0700, Deepa Dinamani wrote:
+> >> We might also want to consider updating the file system the LTP is
+> >> being run on here.
+> >
+> > It simply format (mkfs.ext4) a loop back device on ext4 with the kernel.
+> >
+> > CONFIG_EXT4_FS=m
+> > # CONFIG_EXT4_USE_FOR_EXT2 is not set
+> > # CONFIG_EXT4_FS_POSIX_ACL is not set
+> > # CONFIG_EXT4_FS_SECURITY is not set
+> > # CONFIG_EXT4_DEBUG is not set
+> >
+> > using e2fsprogs-1.44.6. Do you mean people now need to update the kernel to
+> > enable additional config to avoid the spam of warnings now?
+>
+> Strange.  The defaults for mkfs.ext4 _should_ default to use options that
+> allow enough space for the extra timestamps.
+>
+> Can you please provide "dumpe2fs -h" output for your filesystem, and the
+> formatting options that you used when creating this filesystem.
 
-Pulled and pushed out, thanks.
+According to the man page,
 
-greg k-h
+        "The default inode size is controlled by the mke2fs.conf(5)
+file.  In the
+         mke2fs.conf file shipped with  e2fsprogs, the default inode size is 256
+         bytes for most file systems, except for small file systems
+where the inode
+         size will be 128 bytes."
+
+If this (small file systems) is the problem, then I think we need to
+do two things:
+
+1. Change the per-inode warning to not warn if the inode size for the
+    file system is less than 256. We already get a mount-time warning
+    in that case.
+
+2. Change the mkfs.ext4 defaults to never pick a 128 byte inode unless
+    the user really wants this (maybe not even then).
+
+          Arnd
