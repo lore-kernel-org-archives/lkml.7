@@ -2,203 +2,106 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57091C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CF0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FAD21883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42E321883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfICWzF (ORCPT
+        id S1727286AbfICXDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 18:55:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11750 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbfICWzF (ORCPT
+        Tue, 3 Sep 2019 19:03:36 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52781 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726440AbfICXDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 18:55:05 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83MqdRY005311
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 18:55:03 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ut1bv0272-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 18:55:03 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 3 Sep 2019 23:55:01 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Sep 2019 23:54:56 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83MssVe50004060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 22:54:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8319E5204E;
-        Tue,  3 Sep 2019 22:54:54 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.191.35])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8E51452051;
-        Tue,  3 Sep 2019 22:54:52 +0000 (GMT)
-Subject: Re: [PATCH v3 4/4] powerpc: load firmware trusted keys/hashes into
- kernel keyring
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Tue, 03 Sep 2019 18:54:51 -0400
-In-Reply-To: <1566825818-9731-5-git-send-email-nayna@linux.ibm.com>
-References: <1566825818-9731-1-git-send-email-nayna@linux.ibm.com>
-         <1566825818-9731-5-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090322-4275-0000-0000-00000360BA63
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090322-4276-0000-0000-00003872FD9F
-Message-Id: <1567551291.4937.8.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909030229
+        Tue, 3 Sep 2019 19:03:35 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-96.corp.google.com [104.133.0.96] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x83N3PY0026192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 3 Sep 2019 19:03:26 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 0FD5242049E; Tue,  3 Sep 2019 19:03:25 -0400 (EDT)
+Date:   Tue, 3 Sep 2019 19:03:25 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: Re: "beyond 2038" warnings from loopback mount is noisy
+Message-ID: <20190903230324.GI2899@mit.edu>
+References: <1567523922.5576.57.camel@lca.pw>
+ <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
+ <20190903211747.GD2899@mit.edu>
+ <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
+ <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
+ <20190903223815.GH2899@mit.edu>
+ <CABeXuvp2F4cr_77UJDYVfQ=gD8QXn+t4X3Qxs6YbyMXYJYO7mg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABeXuvp2F4cr_77UJDYVfQ=gD8QXn+t4X3Qxs6YbyMXYJYO7mg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-26 at 09:23 -0400, Nayna Jain wrote:
-> The keys used to verify the Host OS kernel are managed by firmware as
-> secure variables. This patch loads the verification keys into the .platform
-> keyring and revocation hashes into .blacklist keyring. This enables
-> verification and loading of the kernels signed by the boot time keys which
-> are trusted by firmware.
+On Tue, Sep 03, 2019 at 03:47:54PM -0700, Deepa Dinamani wrote:
+> > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > > index 9e3ae3be3de9..5a971d1b6d5e 100644
+> > > --- a/fs/ext4/ext4.h
+> > > +++ b/fs/ext4/ext4.h
+> > > @@ -835,7 +835,9 @@ do {
+> > >                                  \
+> > >                 }
+> > >          \
+> > >         else    {\
+> > >                 (raw_inode)->xtime = cpu_to_le32(clamp_t(int32_t,
+> > > (inode)->xtime.tv_sec, S32_MIN, S32_MAX));    \
+> > > -               ext4_warning_inode(inode, "inode does not support
+> > > timestamps beyond 2038"); \
+> > > +               if (((inode)->xtime.tv_sec != (raw_inode)->xtime) &&     \
+> > > +                   ((inode)->i_sb->s_time_max > S32_MAX))
+> > >          \
+> > > +                       ext4_warning_inode(inode, "inode does not
+> > > support timestamps beyond 2038"); \
+> > >         } \
+> > >  } while (0)
+> >
+> > Sure, that's much less objectionable.
 > 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> The reason it was warning for every update was because of the
+> ratelimiting. I think ratelimiting is not working well here. I will
+> check that part.
 
-Feel free to add my tag after addressing the formatting issues.
+If you are calling ext4_warning_inode() on every single update, you
+really can't depend on rate limiting to prevent log spam.  The problem
+is sometimes we *do* need more than say, one ext4 warning every hour.
+Rate limiting is a last-ditch prevention against an unintentional
+denial of service attack against the system, but we can't depend on it
+as license to call ext4_warning() every time we set a timestamp.  That
+happens essentially constantly on a running system.  So if you set the
+limits aggressively enough that it's not seriously annoying, it will
+suppress all other potential uses of ext4_warning() --- essentially,
+it will make ext4_warning useless.
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+The other concern I would have if that warning message is being
+constantly called, post 2038, is that even *with* rate limiting, it
+will turn into a massive scalability bottleneck --- remember, the
+ratelimit structure has a spinlock, so even if you are suppressing
+things so that we're only logging one message an hour, if it's being
+called hundreds of times a second from multiple CPU's, the cache line
+thrashing will make this to be a performance *nightmare*.
 
-> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-> new file mode 100644
-> index 000000000000..359d5063d4da
-> --- /dev/null
-> +++ b/security/integrity/platform_certs/load_powerpc.c
-> @@ -0,0 +1,88 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain <nayna@linux.ibm.com>
-> + *
-> + *      - loads keys and hashes stored and controlled by the firmware.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/sched.h>
-> +#include <linux/cred.h>
-> +#include <linux/err.h>
-> +#include <linux/slab.h>
-> +#include <asm/secboot.h>
-> +#include <asm/secvar.h>
-> +#include "keyring_handler.h"
-> +
-> +/*
-> + * Get a certificate list blob from the named secure variable.
-> + */
-> +static __init void *get_cert_list(u8 *key, unsigned long keylen, uint64_t *size)
-> +{
-> +	int rc;
-> +	void *db;
-> +
-> +	rc = secvar_ops->get(key, keylen, NULL, size);
-> +	if (rc) {
-> +		pr_err("Couldn't get size: %d\n", rc);
-> +		return NULL;
-> +	}
-> +
-> +	db = kmalloc(*size, GFP_KERNEL);
-> +	if (!db)
-> +		return NULL;
-> +
-> +	rc = secvar_ops->get(key, keylen, db, size);
-> +	if (rc) {
-> +		kfree(db);
-> +		pr_err("Error reading db var: %d\n", rc);
-> +		return NULL;
-> +	}
-> +
-> +	return db;
-> +}
-> +
-> +/*
-> + * Load the certs contained in the keys databases into the platform trusted
-> + * keyring and the blacklisted X.509 cert SHA256 hashes into the blacklist
-> + * keyring.
-> + */
-> +static int __init load_powerpc_certs(void)
-> +{
-> +	void *db = NULL, *dbx = NULL;
-> +	uint64_t dbsize = 0, dbxsize = 0;
-> +	int rc = 0;
-> +
-> +	if (!secvar_ops)
-> +		return -ENODEV;
-> +
-> +	/* Get db, and dbx.  They might not exist, so it isn't
-> +	 * an error if we can't get them.
-> +	 */
-> +	db = get_cert_list("db", 3, &dbsize);
-> +	if (!db) {
-> +		pr_err("Couldn't get db list from firmware\n");
-> +	} else {
-> +		rc = parse_efi_signature_list("powerpc:db",
-> +				db, dbsize, get_handler_for_db);
-> +		if (rc)
-> +			pr_err("Couldn't parse db signatures: %d\n",
-> +					rc);
-
-There's no need to split this line.
-
-> +		kfree(db);
-> +	}
-> +
-> +	dbx = get_cert_list("dbx", 3,  &dbxsize);
-> +	if (!dbx) {
-> +		pr_info("Couldn't get dbx list from firmware\n");
-> +	} else {
-> +		rc = parse_efi_signature_list("powerpc:dbx",
-> +				dbx, dbxsize,
-> +				get_handler_for_dbx);
-
-Formatting of this line is off.
-
-> +		if (rc)
-> +			pr_err("Couldn't parse dbx signatures: %d\n", rc);
-> +		kfree(dbx);
-> +	}
-> +
-> +	return rc;
-> +}
-> +late_initcall(load_powerpc_certs);
-
+		       	    	       - Ted
