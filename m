@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F96C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2533FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6B02087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E810F2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rZfGqhhA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bMz72/LN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfICLjv (ORCPT
+        id S1729015AbfICLjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:39:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34186 "EHLO
+        Tue, 3 Sep 2019 07:39:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34202 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfICLjv (ORCPT
+        with ESMTP id S1728938AbfICLjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:39:51 -0400
+        Tue, 3 Sep 2019 07:39:52 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83BdbjY148414;
-        Tue, 3 Sep 2019 11:39:37 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83BdF9H148215;
+        Tue, 3 Sep 2019 11:39:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Yg3gXbo1BBpCILnBXocPDkPieXl1D3dVfuZvhW7kQfs=;
- b=rZfGqhhAN7xrF0O6CEgjZtKEzfiV1wV7SaOUXdY6BkaF/53eqOIKsUbNfucCvvNexvgl
- Ah2/A1y4WVZzqq5gbGTHHY7Q4wLgPtXxC4lpU6Mk4Hmh1YGUQxS/wtEtl4TF8SsNYqnA
- i2Hm2QVgrf+NA+2fsxNUzVFgAM2CqWCVPzzgYKEPPjMF6/XNewWOL3Vse8ydlflYPxjV
- HQHpCarTfdc8yNE22JZBwe6jCDhjbDJhoVLtGzHZhfxL/mbC71FXp3DM/uJp//TUf7b3
- 4vlK1yWFzkG28INp1Ryq1QK9bYvROOM2hTS+yDoMfqlTb4yWVOKimvZ/dCQl793BM/fn 1w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uspv805p7-1
+ bh=E0jQ7jyc8AqvEpKvZdMNJiONt/Ni4i9ODdH4V2+XbUg=;
+ b=bMz72/LNaEssxjtgUN3dCqZ8LPtMe5wXVOU1BV+SsIU/7p6RbjJjDoXAMSKJS4Cu8kWC
+ a195LmIcgORaRe9zoA2/JAmpj9bTmYk8iWHgQcRAqn6KyBL1WHLweSzH9C1cK965A2/G
+ jR+vc80RYU/hxKY056BqN85ewrGHHDzSSYaINako1xKUwxFF4mH/bBPHyo7LhwhU58bv
+ 9a+SYBji6huW+sItyBJH82h6/bThsU1ur3t5aa6l4PeCMVPaftSrMM5BOvitAhuv1ZZJ
+ 1gBR8RWhIwKKeaLdrr5bqUAj+tEiWwYMm4vqJG4O2gU7Sy0OfH13CFBfraXPvhfAkK6y 1w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2uspv805ny-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 11:39:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83BcHBY070771;
-        Tue, 3 Sep 2019 11:39:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2us5pgs2m1-1
+        Tue, 03 Sep 2019 11:39:33 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83Bcd45155283;
+        Tue, 3 Sep 2019 11:39:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2us4wdqyxf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 11:39:36 +0000
+        Tue, 03 Sep 2019 11:39:33 +0000
 Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x83Bda3R016520;
-        Tue, 3 Sep 2019 11:39:36 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x83BdWpQ028470;
+        Tue, 3 Sep 2019 11:39:32 GMT
 Received: from paddy.uk.oracle.com (/10.175.205.235)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 04:39:36 -0700
+        with ESMTP ; Tue, 03 Sep 2019 04:39:31 -0700
 From:   Joao Martins <joao.m.martins@oracle.com>
 To:     linux-pm@vger.kernel.org
 Cc:     Joao Martins <joao.m.martins@oracle.com>,
@@ -59,9 +59,9 @@ Cc:     Joao Martins <joao.m.martins@oracle.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         linux-kernel@vger.kernel.org,
         Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org
-Subject: [PATCH v1 3/4] cpuidle-haltpoll: return -ENODEV on modinit failure
-Date:   Tue,  3 Sep 2019 12:39:12 +0100
-Message-Id: <20190903113913.9257-4-joao.m.martins@oracle.com>
+Subject: [PATCH v1 1/4] cpuidle: allow governor switch on cpuidle_register_driver()
+Date:   Tue,  3 Sep 2019 12:39:10 +0100
+Message-Id: <20190903113913.9257-2-joao.m.martins@oracle.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190903113913.9257-1-joao.m.martins@oracle.com>
 References: <20190903113913.9257-1-joao.m.martins@oracle.com>
@@ -70,13 +70,13 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=893
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1909030123
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=954 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1909030123
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,34 +84,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a user loads cpuidle-haltpoll on a non KVM guest the module will
-successfully load, even though idle driver registration didn't take
-place.
 
-We should instead return -ENODEV signaling the user that the driver can't
-be loaded, like other error paths in haltpoll_init().  An example of such
-error paths is when we return -EBUSY when attempting to register an idle
-driver when it had one already (e.g. intel_idle loads at boot and then we
-attempt to insert module cpuidle-haltpoll).
+The recently introduced haltpoll driver is largely only useful with
+haltpoll governor. To allow drivers to associate with a particular idle
+behaviour, add a @governor property to 'struct cpuidle_driver' and thus
+allow a cpuidle driver to switch to a *preferred* governor on idle driver
+registration. We save the previous governor, and when an idle driver is
+unregistered we switch back to that.
+
+The @governor can be overridden by cpuidle.governor= boot param or
+alternatively be ignored if the governor doesn't exist.
 
 Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
 ---
- drivers/cpuidle/cpuidle-haltpoll.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpuidle/cpuidle.h  |  1 +
+ drivers/cpuidle/driver.c   | 26 ++++++++++++++++++++++++++
+ drivers/cpuidle/governor.c |  6 +++---
+ include/linux/cpuidle.h    |  3 +++
+ 4 files changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index 519e90d125cf..7a0239ef717e 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -99,7 +99,7 @@ static int __init haltpoll_init(void)
- 	cpuidle_poll_state_init(drv);
+diff --git a/drivers/cpuidle/cpuidle.h b/drivers/cpuidle/cpuidle.h
+index d6613101af92..c046f49c1920 100644
+--- a/drivers/cpuidle/cpuidle.h
++++ b/drivers/cpuidle/cpuidle.h
+@@ -22,6 +22,7 @@ extern void cpuidle_install_idle_handler(void);
+ extern void cpuidle_uninstall_idle_handler(void);
  
- 	if (!kvm_para_available())
--		return 0;
-+		return -ENODEV;
+ /* governors */
++extern struct cpuidle_governor *cpuidle_find_governor(const char *str);
+ extern int cpuidle_switch_governor(struct cpuidle_governor *gov);
  
- 	ret = cpuidle_register_driver(drv);
- 	if (ret < 0)
+ /* sysfs */
+diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
+index dc32f34e68d9..16a3f6c5ad69 100644
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -87,6 +87,7 @@ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ #else
+ 
+ static struct cpuidle_driver *cpuidle_curr_driver;
++static struct cpuidle_governor *cpuidle_prev_governor;
+ 
+ /**
+  * __cpuidle_get_cpu_driver - return the global cpuidle driver pointer.
+@@ -254,12 +255,25 @@ static void __cpuidle_unregister_driver(struct cpuidle_driver *drv)
+  */
+ int cpuidle_register_driver(struct cpuidle_driver *drv)
+ {
++	struct cpuidle_governor *gov;
+ 	int ret;
+ 
+ 	spin_lock(&cpuidle_driver_lock);
+ 	ret = __cpuidle_register_driver(drv);
+ 	spin_unlock(&cpuidle_driver_lock);
+ 
++	if (!ret && !strlen(param_governor) && drv->governor &&
++	    (cpuidle_get_driver() == drv)) {
++		mutex_lock(&cpuidle_lock);
++		gov = cpuidle_find_governor(drv->governor);
++		if (gov) {
++			cpuidle_prev_governor = cpuidle_curr_governor;
++			if (cpuidle_switch_governor(gov) < 0)
++				cpuidle_prev_governor = NULL;
++		}
++		mutex_unlock(&cpuidle_lock);
++	}
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(cpuidle_register_driver);
+@@ -274,9 +288,21 @@ EXPORT_SYMBOL_GPL(cpuidle_register_driver);
+  */
+ void cpuidle_unregister_driver(struct cpuidle_driver *drv)
+ {
++	bool enabled = (cpuidle_get_driver() == drv);
++
+ 	spin_lock(&cpuidle_driver_lock);
+ 	__cpuidle_unregister_driver(drv);
+ 	spin_unlock(&cpuidle_driver_lock);
++
++	if (!enabled)
++		return;
++
++	mutex_lock(&cpuidle_lock);
++	if (cpuidle_prev_governor) {
++		if (!cpuidle_switch_governor(cpuidle_prev_governor))
++			cpuidle_prev_governor = NULL;
++	}
++	mutex_unlock(&cpuidle_lock);
+ }
+ EXPORT_SYMBOL_GPL(cpuidle_unregister_driver);
+ 
+diff --git a/drivers/cpuidle/governor.c b/drivers/cpuidle/governor.c
+index 2e3e14192bee..08707759469e 100644
+--- a/drivers/cpuidle/governor.c
++++ b/drivers/cpuidle/governor.c
+@@ -22,12 +22,12 @@ LIST_HEAD(cpuidle_governors);
+ struct cpuidle_governor *cpuidle_curr_governor;
+ 
+ /**
+- * __cpuidle_find_governor - finds a governor of the specified name
++ * cpuidle_find_governor - finds a governor of the specified name
+  * @str: the name
+  *
+  * Must be called with cpuidle_lock acquired.
+  */
+-static struct cpuidle_governor * __cpuidle_find_governor(const char *str)
++struct cpuidle_governor *cpuidle_find_governor(const char *str)
+ {
+ 	struct cpuidle_governor *gov;
+ 
+@@ -87,7 +87,7 @@ int cpuidle_register_governor(struct cpuidle_governor *gov)
+ 		return -ENODEV;
+ 
+ 	mutex_lock(&cpuidle_lock);
+-	if (__cpuidle_find_governor(gov->name) == NULL) {
++	if (cpuidle_find_governor(gov->name) == NULL) {
+ 		ret = 0;
+ 		list_add_tail(&gov->governor_list, &cpuidle_governors);
+ 		if (!cpuidle_curr_governor ||
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 1a9f54eb3aa1..2dc4c6b19c25 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -121,6 +121,9 @@ struct cpuidle_driver {
+ 
+ 	/* the driver handles the cpus in cpumask */
+ 	struct cpumask		*cpumask;
++
++	/* preferred governor to switch at register time */
++	const char		*governor;
+ };
+ 
+ #ifdef CONFIG_CPU_IDLE
 -- 
 2.17.1
 
