@@ -2,101 +2,133 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB70C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B6B20828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCDE22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gL4pS1x5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y3AMEKKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfICGNu (ORCPT
+        id S1727044AbfICGOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:13:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40632 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfICGNu (ORCPT
+        Tue, 3 Sep 2019 02:14:07 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38130 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbfICGOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:13:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c3so16018099wrd.7;
-        Mon, 02 Sep 2019 23:13:48 -0700 (PDT)
+        Tue, 3 Sep 2019 02:14:06 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w11so7446214plp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=empVtvEx6pDVT5ENsHzRlwPA+mxpcVViT9/7IGzqxCw=;
-        b=gL4pS1x54DZxWW4miqt/kKn4qepS4++BA54/8kpLBWo9AlDViATDSEXs0aEo8Wcwd0
-         ZRQG0G8cIvW2ujXNywia/By2NMJszN59oMV2SvpYMKbvYKj+eppXvb0CEUCwtabtpUbK
-         +uRIEY2CFkW4RxGHECWa/RINC/EYWtF7BvIq3yA+VaHejuiq+GbmYpq4WFGZZJMx5nUQ
-         LBvPSbFQNIpGTAp/SH18T5q552YhV3/bU7Jr/KkGuYY1yd+g05EPULKG/xTYp+Rdwm2Q
-         3RPS+rLQ/woRMl36TpeGOU0PKVk5Ir/BE1baoWQjdHwiMoTyMkOKu2KIl5yCN0ajBObC
-         abZg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X56IDYGgH848OXVqS7siup3yiE3wR0xEVNMSreTqgdo=;
+        b=y3AMEKKLSVUNqigZFRl6vqbivo8ONu2wWnALKLMDMc58mKXv8dt1WPoc5s1l7AoJkd
+         bEd1/DYAizZBXBqpKoDvl0EwvbqFaBz5xRhAGLQZ7xmctZRSQ1LnS/PPfEZMDqiYjrOz
+         J5oppKWr7CODmyaxen0zqJKrJYVK40EJM1RvSaQwkVQ0z3SBy6X41YZKS2wrAxRKC0gd
+         B7bcAj3+Z9+/j+VwkhNq/gdzmyT5fuCFtrXdI1sANy1IuHwIolvMPMl9caZ6GZdzsGUf
+         C4ByUzzvg9vWkZfp3cCL+GDvvMtxUe0f603Gm4VlXnGPwkXyFph0x0XaNn3I3vyu1b4Y
+         uyrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=empVtvEx6pDVT5ENsHzRlwPA+mxpcVViT9/7IGzqxCw=;
-        b=Y0UiqejEYPMA7XXvVG9ojOU5XifMYqkeRbABsryL6YrP/DwabhqVxcw0fiazkaV0Oz
-         FuSZ3AERVWCWJdI2mw4XVmYFL6ONDL4iJJif360rIWoqf9nMRDc9i2Lhhm0kaknb/2DV
-         jWPKyYWSfXI1CKGApfd6Wbqn36UARrG3cTxnanjYgn/7e4KkU1VRC5EXZTUYCzvKveQC
-         hH1A/UeEbcT52RSTABhjcN6fj4thnBKOMFj+jG43jEn3yrkYGnpZUL/GSryQkSzOWy4O
-         AIe36xkO3t7Klq8msv+hJLiAx9Nb2jxkRqPXgLB5V7Vwe5lWHne24snqBH3XB4Uh2Xpk
-         jrwg==
-X-Gm-Message-State: APjAAAVbzVAjVyV26NTMCOuuxR77s9Imxdor/+G4ZWO2P6SDNsygs2B2
-        tJy/tG6M5vDZEy744rcBHiLVM5Sc
-X-Google-Smtp-Source: APXvYqyidkaIBWeokEwUvUdm2z7JJtEyzifdyUQL8jBcD3bXgJ/UVJN5NyXFOagfYKiXbYwVWT0g0Q==
-X-Received: by 2002:a5d:428c:: with SMTP id k12mr6012125wrq.196.1567491227920;
-        Mon, 02 Sep 2019 23:13:47 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f04:7c00:f018:f11c:b684:4652? (p200300EA8F047C00F018F11CB6844652.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:f018:f11c:b684:4652])
-        by smtp.googlemail.com with ESMTPSA id l20sm16190210wrb.61.2019.09.02.23.13.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X56IDYGgH848OXVqS7siup3yiE3wR0xEVNMSreTqgdo=;
+        b=uhBLXTX7SIi4+QiuB/Rc+pB/34B3tY2ufXyIcBmVaaBtzEJn3m35Vmba9F20M1TAi3
+         zNACFcRCN82ib3bepXfLVZOxAYwrbeLZW5oQwjjI9MfDQRmKT5/6IDLcdtpi8VhO7qdf
+         9Sj1eMsmn+bpkuliTe1FEOq0DDj3LB08bZbtoUgtR/CqH0EFr1est3lYu4BtdMNhSi94
+         akfzj0wEYgkLU09MSPYzkiMTl6BdJJ9dRnuYy/oCkhkfPVveUji8NgQl7n/4S7DbuZLX
+         WsJrJ/uzikBcHJ5OGmJU7sVwLm/kLLwxesAatHL49lBDFijuHNcoND6jmlZFRWCn1jNs
+         nDFw==
+X-Gm-Message-State: APjAAAVZcg6bBf08Y1auuYkMFYF5LRpMlAbwMWRFT50UayXYMR6FaDVc
+        cgM89vFDyC1lzv+oiXkm5/LPbQ==
+X-Google-Smtp-Source: APXvYqy2jgf96BPa+1HJhxpna1B7VYdeAxyhRykT9911XHflctDbHWllU730nibd82llGhzGl3E/gQ==
+X-Received: by 2002:a17:902:1122:: with SMTP id d31mr34104469pla.254.1567491245848;
+        Mon, 02 Sep 2019 23:14:05 -0700 (PDT)
+Received: from localhost ([122.167.132.221])
+        by smtp.gmail.com with ESMTPSA id p10sm18500683pff.132.2019.09.02.23.14.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 23:13:47 -0700 (PDT)
-Subject: Re: [PATCH net-next] r8152: modify rtl8152_set_speed function
-To:     Hayes Wang <hayeswang@realtek.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1394712342-15778-326-Taiwan-albertk@realtek.com>
- <280e6a3d-c6c3-ef32-a65d-19566190a1d3@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DAB41@RTITMBSVM03.realtek.com.tw>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <aa9513ff-3cef-4b9f-ecbd-1310660a911c@gmail.com>
-Date:   Tue, 3 Sep 2019 08:13:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 02 Sep 2019 23:14:05 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 11:44:03 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
+Message-ID: <20190903061403.k3d333f54gj2kuxi@vireshk-i7>
+References: <cover.1567421750.git.hns@goldelico.com>
+ <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
+ <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
+ <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18DAB41@RTITMBSVM03.realtek.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.2019 05:16, Hayes Wang wrote:
-> Heiner Kallweit [mailto:hkallweit1@gmail.com]
->> Sent: Tuesday, September 03, 2019 2:37 AM
-> [...]
->> Seeing all this code it might be a good idea to switch this driver
->> to phylib, similar to what I did with r8169 some time ago.
+On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
 > 
-> It is too complex to be completed for me at the moment.
-> If this patch is unacceptable, I would submit other
-> patches first. Thanks.
+> > Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
+> > 
+> > On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+> >> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
+> >> 1GHz capability is automatically detected.
+> >> 
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> ---
+> >> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
+> >> 1 file changed, 7 deletions(-)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> >> index 5441e9ffdbb4..e98b0c615f19 100644
+> >> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> >> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> >> @@ -11,13 +11,6 @@
+> >> 	cpus {
+> >> 		cpu@0 {
+> >> 			cpu0-supply = <&vcc>;
+> >> -			operating-points = <
+> >> -				/* kHz    uV */
+> >> -				300000  1012500
+> >> -				600000  1200000
+> >> -				800000  1325000
+> >> -				1000000	1375000
+> >> -			>;
+> >> 		};
+> >> 	};
+> > 
+> > This should be merged with 2/5 ?
 > 
-My remark isn't directly related to your patch and wasn't
-meant as an immediate ToDo. It's just a hint, because I think
-using phylib could help to significantly simplify the driver.
+> Well, it bloats 2/5.
 
-> Best Regards,
-> Hayes
-> 
-> 
-Heiner
+It is logically the right place to do this as that's where we are
+adding opp-v2.
+
+> What I hope (I can't test) is that this opp-v1 table
+> is ignored if an opp-v2 table exists. So that it can be
+> removed by a separate follow-up patch.
+
+It should work as that's what we are doing in OPP core, but I still
+feel this better get merged with 2/5.
+
+-- 
+viresh
