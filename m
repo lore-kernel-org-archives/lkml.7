@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14640C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0FDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06FE2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4332A2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528654;
-	bh=CtmaAsWwoZNRqt4zv2q01+SAMp6zV/HtcJVWUSCftAM=;
+	s=default; t=1567528662;
+	bh=fNXofpzU+Gy9im9kY+0bK089WAnmTKpFoRAQ0B2B5SQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3RWWnz8G4skm/GTC8LMrhnq1B0fCqJWFAK6LvYX+LaZhJIBM/HL4cfFIwdJVESay
-	 nTwwzItbJO/DPIERyvUOIWx8CYQcsJYUK+gHBnUaOBzuDyy0q/CZBKYfoyHqlyNece
-	 UugiMTbv6fDy23p1wyS5Rb/s7bRwHT1oG3kmhQu0=
+	b=WpO+0lI8ESVDBqrze7CbDaXZVAebJgONIGwweFHKvROqSHSc6Agk4d4N1iZJKImxX
+	 6SwMJNVqXcilH/JijLnLueILVLdJLb5g9xh5yapr4C8mH8Kg0Bixccmjt9LZN93NEr
+	 /YPwosc034Qnn3rdN1/vfdL2wKR8trYWRQ5n7bCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfICQhd (ORCPT
+        id S1731385AbfICQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730681AbfICQ0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:40 -0400
+        id S1730167AbfICQ0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1C95238CD;
-        Tue,  3 Sep 2019 16:26:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6392E2343A;
+        Tue,  3 Sep 2019 16:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527999;
-        bh=CtmaAsWwoZNRqt4zv2q01+SAMp6zV/HtcJVWUSCftAM=;
+        s=default; t=1567527992;
+        bh=fNXofpzU+Gy9im9kY+0bK089WAnmTKpFoRAQ0B2B5SQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ic2JiOQPcqIEQEZ0YjDuEQUMveZhrfqz6n9swfKlx4pCr76LmWUVAPcvzFWmezygT
-         0EKoBEU5HBRo3PVh0TN4Em6gcYoZAqyQxiMVYuJR+HuNR1TPAt/iKabTt82qAFedtI
-         R2wOadfLF+tsvOfgKB4Nh4cyLUqMkyNuqQYHOo8E=
+        b=Lgzuaa7Kv6VmYnyPenymH4S1oxJwoF+rcTq75BIVOdoLpGpVq0xAwJSqDTtsiSTPW
+         4GiMIxY8GOVJV4heLFXeOj55qnNsE2kNcx0jgzjAaquofKhn9kEwZOYGFru7WGcDke
+         c1rd1d9Vb5jnOuN5P6hHD0kHOEQT+XZ52NTG0iHQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 047/167] btrfs: Use real device structure to verify dev extent
-Date:   Tue,  3 Sep 2019 12:23:19 -0400
-Message-Id: <20190903162519.7136-47-sashal@kernel.org>
+Cc:     Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 043/167] powerpc/pkeys: Fix handling of pkey state across fork()
+Date:   Tue,  3 Sep 2019 12:23:15 -0400
+Message-Id: <20190903162519.7136-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,72 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Ram Pai <linuxram@us.ibm.com>
 
-[ Upstream commit 1b3922a8bc74231f9a767d1be6d9a061a4d4eeab ]
+[ Upstream commit 2cd4bd192ee94848695c1c052d87913260e10f36 ]
 
-[BUG]
-Linux v5.0-rc1 will fail fstests/btrfs/163 with the following kernel
-message:
+Protection key tracking information is not copied over to the
+mm_struct of the child during fork(). This can cause the child to
+erroneously allocate keys that were already allocated. Any allocated
+execute-only key is lost aswell.
 
-  BTRFS error (device dm-6): dev extent devid 1 physical offset 13631488 len 8388608 is beyond device boundary 0
-  BTRFS error (device dm-6): failed to verify dev extents against chunks: -117
-  BTRFS error (device dm-6): open_ctree failed
+Add code; called by dup_mmap(), to copy the pkey state from parent to
+child explicitly.
 
-[CAUSE]
-Commit cf90d884b347 ("btrfs: Introduce mount time chunk <-> dev extent
-mapping check") introduced strict check on dev extents.
+This problem was originally found by Dave Hansen on x86, which turns
+out to be a problem on powerpc aswell.
 
-We use btrfs_find_device() with dev uuid and fs uuid set to NULL, and
-only dependent on @devid to find the real device.
-
-For seed devices, we call clone_fs_devices() in open_seed_devices() to
-allow us search seed devices directly.
-
-However clone_fs_devices() just populates devices with devid and dev
-uuid, without populating other essential members, like disk_total_bytes.
-
-This makes any device returned by btrfs_find_device(fs_info, devid,
-NULL, NULL) is just a dummy, with 0 disk_total_bytes, and any dev
-extents on the seed device will not pass the device boundary check.
-
-[FIX]
-This patch will try to verify the device returned by btrfs_find_device()
-and if it's a dummy then re-search in seed devices.
-
-Fixes: cf90d884b347 ("btrfs: Introduce mount time chunk <-> dev extent mapping check")
-CC: stable@vger.kernel.org # 4.19+
-Reported-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
+Cc: stable@vger.kernel.org # v4.16+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/powerpc/include/asm/mmu_context.h | 15 +++++++++------
+ arch/powerpc/mm/pkeys.c                | 10 ++++++++++
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index c20708bfae561..a8297e7489d98 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7469,6 +7469,18 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
- 		ret = -EUCLEAN;
- 		goto out;
- 	}
+diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+index b694d6af11508..ae953958c0f33 100644
+--- a/arch/powerpc/include/asm/mmu_context.h
++++ b/arch/powerpc/include/asm/mmu_context.h
+@@ -217,12 +217,6 @@ static inline void enter_lazy_tlb(struct mm_struct *mm,
+ #endif
+ }
+ 
+-static inline int arch_dup_mmap(struct mm_struct *oldmm,
+-				struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+ #ifndef CONFIG_PPC_BOOK3S_64
+ static inline void arch_exit_mmap(struct mm_struct *mm)
+ {
+@@ -247,6 +241,7 @@ static inline void arch_bprm_mm_init(struct mm_struct *mm,
+ #ifdef CONFIG_PPC_MEM_KEYS
+ bool arch_vma_access_permitted(struct vm_area_struct *vma, bool write,
+ 			       bool execute, bool foreign);
++void arch_dup_pkeys(struct mm_struct *oldmm, struct mm_struct *mm);
+ #else /* CONFIG_PPC_MEM_KEYS */
+ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ 		bool write, bool execute, bool foreign)
+@@ -259,6 +254,7 @@ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ #define thread_pkey_regs_save(thread)
+ #define thread_pkey_regs_restore(new_thread, old_thread)
+ #define thread_pkey_regs_init(thread)
++#define arch_dup_pkeys(oldmm, mm)
+ 
+ static inline u64 pte_to_hpte_pkey_bits(u64 pteflags)
+ {
+@@ -267,5 +263,12 @@ static inline u64 pte_to_hpte_pkey_bits(u64 pteflags)
+ 
+ #endif /* CONFIG_PPC_MEM_KEYS */
+ 
++static inline int arch_dup_mmap(struct mm_struct *oldmm,
++				struct mm_struct *mm)
++{
++	arch_dup_pkeys(oldmm, mm);
++	return 0;
++}
 +
-+	/* It's possible this device is a dummy for seed device */
-+	if (dev->disk_total_bytes == 0) {
-+		dev = find_device(fs_info->fs_devices->seed, devid, NULL);
-+		if (!dev) {
-+			btrfs_err(fs_info, "failed to find seed devid %llu",
-+				  devid);
-+			ret = -EUCLEAN;
-+			goto out;
-+		}
-+	}
+ #endif /* __KERNEL__ */
+ #endif /* __ASM_POWERPC_MMU_CONTEXT_H */
+diff --git a/arch/powerpc/mm/pkeys.c b/arch/powerpc/mm/pkeys.c
+index b271b283c785e..25a8dd9cd71db 100644
+--- a/arch/powerpc/mm/pkeys.c
++++ b/arch/powerpc/mm/pkeys.c
+@@ -414,3 +414,13 @@ bool arch_vma_access_permitted(struct vm_area_struct *vma, bool write,
+ 
+ 	return pkey_access_permitted(vma_pkey(vma), write, execute);
+ }
 +
- 	if (physical_offset + physical_len > dev->disk_total_bytes) {
- 		btrfs_err(fs_info,
- "dev extent devid %llu physical offset %llu len %llu is beyond device boundary %llu",
++void arch_dup_pkeys(struct mm_struct *oldmm, struct mm_struct *mm)
++{
++	if (static_branch_likely(&pkey_disabled))
++		return;
++
++	/* Duplicate the oldmm pkey state in mm: */
++	mm_pkey_allocation_map(mm) = mm_pkey_allocation_map(oldmm);
++	mm->context.execute_only_pkey = oldmm->context.execute_only_pkey;
++}
 -- 
 2.20.1
 
