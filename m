@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D93C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A341C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B13C22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55FA22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfICLgu (ORCPT
+        id S1728987AbfICLgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:36:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53029 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 07:36:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:6272 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbfICLgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:36:47 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        id S1728951AbfICLgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:36:51 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EF6C285539
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:36:46 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id b1so10265301wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:36:46 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1082D757C8
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:36:50 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id f10so6870687wmh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:36:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+R6u9BwnxHtMmSw8yzvUPcyLZu2IYokosGRavDc1YJk=;
-        b=FnwgqXM4AMHn2XXPXvxYqByX6WvGPTDDo/P2+FFf+7JfCgwBE6UM1UKQneVytXA/rn
-         o186VN3vpOiGq2nyoh9K1RZ+KPv/v/mtOKGV107Ec2uCekj8YnnqWHHUIZHHAYbJGMek
-         /LU8m79bPMOWGj3MEz4ppO87We+f7UAlkiYo45q1DQXNh12+fDMeycvP2nfyyLDAtkLO
-         L9bsMuW8Q4fw7mFaFybkN/K93I1cHC/vW8YHVJ/M6eho6iNQrlUcON4Og+J0JLhCQkDQ
-         uisI2xTpNzIPmBtJMOck/c8MeM80irvrUh0LdQyKEviZck3ggOQiIVG7VkRypqDTI4R1
-         BZjA==
-X-Gm-Message-State: APjAAAXRWK/4kBRhvIlEWxQFj0Se+3SLnDXQfoxVZGRf1MOG8EvX4siQ
-        qmbY93wW3b1fe+xMACsLWXpdYvK6XdCs5p78+pcu9y7GVdVC79MC5q5Bv9Z2rwFBXERMlNlcyGK
-        cLVF5K/FraMr5k9U/YOZb/kpf
-X-Received: by 2002:a05:600c:24d0:: with SMTP id 16mr40897761wmu.83.1567510605637;
-        Tue, 03 Sep 2019 04:36:45 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzNzoTb5kcCzSeUblWBr3WZS6gFDMXCvybTGTUc/KXpnyf6okjLS075SUWlCDpw2Sh6TqadCg==
-X-Received: by 2002:a05:600c:24d0:: with SMTP id 16mr40897738wmu.83.1567510605375;
-        Tue, 03 Sep 2019 04:36:45 -0700 (PDT)
+        bh=P3ITaB+F8loZbcEn4YrJIgIB7m3BqeKZtOyPY/Ayk1w=;
+        b=i2aj3xenvtusW2bN9L7EoQs9v+ZDxuC8I9YZ3ImzyxyQPbPBVJwTSybqJAof0XXHfs
+         u3+QBAM6K+GTcU5+mTGDdRLdWc8kMeGP2lsiWPy95esUURtiqajTjRnglXA+jexKNRT9
+         4rJ6Ad6+AS3AnEj83YHYhKnbPcWLxsYomM+ID+psa27FUYMYfemxchzR5i8xjalGDtpB
+         A34Ao4gWnQjopboOMgucDYv9sLJpBrtPrUAIHpLmZf9pXl45SFB1+4awKNRu3Xr5bDPM
+         u4m0V97IA5waKRgbIjXzXUyfvYUnBYoqaue6iUhYSjlbIp48VqNCCubCSrHo4jZfcD+r
+         l2iQ==
+X-Gm-Message-State: APjAAAVdBi5HuoZXPdS7KKpbnp4R9M0ZbruiYmpohLGakqSZH92ZD8QC
+        sw085Ue2pvvtETqyHK23uoww1I17HOP53SHUedN6g9vnXb/mqQQSEcA8ZisNqub0CBEcKSFvi0T
+        HrMkyfi433+25/vB+50QF4B8e
+X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr38940117wrw.53.1567510608782;
+        Tue, 03 Sep 2019 04:36:48 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwu8OC/y6yanKYsj1cT00XOuOjwHESvhNUhBsPBTa/oAejpHDFyTDxNuNmfoqJGHtub3HzQeg==
+X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr38940087wrw.53.1567510608580;
+        Tue, 03 Sep 2019 04:36:48 -0700 (PDT)
 Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id v186sm40446906wmb.5.2019.09.03.04.36.43
+        by smtp.gmail.com with ESMTPSA id v186sm40446906wmb.5.2019.09.03.04.36.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:36:44 -0700 (PDT)
+        Tue, 03 Sep 2019 04:36:47 -0700 (PDT)
 From:   Miklos Szeredi <mszeredi@redhat.com>
 To:     virtualization@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org
@@ -58,11 +57,10 @@ Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Vivek Goyal <vgoyal@redhat.com>,
         "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v4 01/16] vfs: Create fs_context-aware mount_bdev() replacement
-Date:   Tue,  3 Sep 2019 13:36:25 +0200
-Message-Id: <20190903113640.7984-2-mszeredi@redhat.com>
+Subject: [PATCH v4 03/16] vfs: subtype handling moved to fuse
+Date:   Tue,  3 Sep 2019 13:36:27 +0200
+Message-Id: <20190903113640.7984-4-mszeredi@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190903113640.7984-1-mszeredi@redhat.com>
 References: <20190903113640.7984-1-mszeredi@redhat.com>
@@ -75,205 +73,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Create a function, vfs_get_block_super(), that is fs_context-aware and a
-replacement for mount_bdev().  It caches the block device pointer and file
-open mode in the fs_context struct so that this information can be passed
-into sget_fc()'s test and set functions.
+The unused vfs code can be removed.  Don't pass empty subtype (same as if
+->parse callback isn't called).
+
+The bits that are left involve determining whether it's permitted to split the
+filesystem type string passed in to mount(2).  Consequently, this means that we
+cannot get rid of the FS_HAS_SUBTYPE flag unless we define that a type string
+with a dot in it always indicates a subtype specification.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: linux-block@vger.kernel.org
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- fs/fs_context.c            |   2 +
- fs/super.c                 | 111 ++++++++++++++++++++++++++++++++++++-
- include/linux/fs_context.h |   9 +++
- 3 files changed, 121 insertions(+), 1 deletion(-)
+ fs/fs_context.c            | 14 --------------
+ fs/fuse/inode.c            |  3 +--
+ fs/namespace.c             |  2 --
+ fs/proc_namespace.c        |  2 +-
+ fs/super.c                 |  5 -----
+ include/linux/fs_context.h |  1 -
+ 6 files changed, 2 insertions(+), 25 deletions(-)
 
 diff --git a/fs/fs_context.c b/fs/fs_context.c
-index 103643c68e3f..270ecae32216 100644
+index 270ecae32216..f6dee3b2b7de 100644
 --- a/fs/fs_context.c
 +++ b/fs/fs_context.c
-@@ -501,6 +501,8 @@ void put_fs_context(struct fs_context *fc)
- 
- 	if (fc->need_free && fc->ops && fc->ops->free)
- 		fc->ops->free(fc);
-+	if (fc->dev_destructor)
-+		fc->dev_destructor(fc);
- 
- 	security_free_mnt_opts(&fc->security);
+@@ -508,7 +508,6 @@ void put_fs_context(struct fs_context *fc)
  	put_net(fc->net_ns);
-diff --git a/fs/super.c b/fs/super.c
-index 5960578a4076..80b56bc7d2db 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1212,6 +1212,110 @@ int get_tree_single(struct fs_context *fc,
- EXPORT_SYMBOL(get_tree_single);
+ 	put_user_ns(fc->user_ns);
+ 	put_cred(fc->cred);
+-	kfree(fc->subtype);
+ 	put_fc_log(fc);
+ 	put_filesystem(fc->fs_type);
+ 	kfree(fc->source);
+@@ -575,17 +574,6 @@ static int legacy_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 		return 0;
+ 	}
  
- #ifdef CONFIG_BLOCK
-+static void fc_bdev_destructor(struct fs_context *fc)
-+{
-+	if (fc->bdev) {
-+		blkdev_put(fc->bdev, fc->bdev_mode);
-+		fc->bdev = NULL;
-+	}
-+}
-+
-+static int set_bdev_super_fc(struct super_block *s, struct fs_context *fc)
-+{
-+	s->s_mode = fc->bdev_mode;
-+	s->s_bdev = fc->bdev;
-+	s->s_dev = s->s_bdev->bd_dev;
-+	s->s_bdi = bdi_get(s->s_bdev->bd_bdi);
-+	fc->bdev = NULL;
-+	return 0;
-+}
-+
-+static int test_bdev_super_fc(struct super_block *s, struct fs_context *fc)
-+{
-+	return s->s_bdev == fc->bdev;
-+}
-+
-+/**
-+ * vfs_get_block_super - Get a superblock based on a single block device
-+ * @fc: The filesystem context holding the parameters
-+ * @keying: How to distinguish superblocks
-+ * @fill_super: Helper to initialise a new superblock
-+ */
-+int vfs_get_block_super(struct fs_context *fc,
-+			int (*fill_super)(struct super_block *,
-+					  struct fs_context *))
-+{
-+	struct block_device *bdev;
-+	struct super_block *s;
-+	int error = 0;
-+
-+	fc->bdev_mode = FMODE_READ | FMODE_EXCL;
-+	if (!(fc->sb_flags & SB_RDONLY))
-+		fc->bdev_mode |= FMODE_WRITE;
-+
-+	if (!fc->source)
-+		return invalf(fc, "No source specified");
-+
-+	bdev = blkdev_get_by_path(fc->source, fc->bdev_mode, fc->fs_type);
-+	if (IS_ERR(bdev)) {
-+		errorf(fc, "%s: Can't open blockdev", fc->source);
-+		return PTR_ERR(bdev);
-+	}
-+
-+	fc->dev_destructor = fc_bdev_destructor;
-+	fc->bdev = bdev;
-+
-+	/* Once the superblock is inserted into the list by sget_fc(), s_umount
-+	 * will protect the lockfs code from trying to start a snapshot while
-+	 * we are mounting
-+	 */
-+	mutex_lock(&bdev->bd_fsfreeze_mutex);
-+	if (bdev->bd_fsfreeze_count > 0) {
-+		mutex_unlock(&bdev->bd_fsfreeze_mutex);
-+		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
-+		return -EBUSY;
-+	}
-+
-+	fc->sb_flags |= SB_NOSEC;
-+	s = sget_fc(fc, test_bdev_super_fc, set_bdev_super_fc);
-+	mutex_unlock(&bdev->bd_fsfreeze_mutex);
-+	if (IS_ERR(s))
-+		return PTR_ERR(s);
-+
-+	if (s->s_root) {
-+		/* Don't summarily change the RO/RW state. */
-+		if ((fc->sb_flags ^ s->s_flags) & SB_RDONLY) {
-+			warnf(fc, "%pg: Can't mount, would change RO state", bdev);
-+			error = -EBUSY;
-+			goto error_sb;
-+		}
-+
-+		/* Leave fc->bdev to fc_bdev_destructor() to clean up to avoid
-+		 * locking conflicts.
-+		 */
-+	} else {
-+		snprintf(s->s_id, sizeof(s->s_id), "%pg", bdev);
-+		sb_set_blocksize(s, block_size(bdev));
-+		error = fill_super(s, fc);
-+		if (error)
-+			goto error_sb;
-+
-+		s->s_flags |= SB_ACTIVE;
-+		bdev->bd_super = s;
-+	}
-+
-+	BUG_ON(fc->root);
-+	fc->root = dget(s->s_root);
-+	return 0;
-+
-+error_sb:
-+	deactivate_locked_super(s);
-+	/* Leave fc->bdev to fc_bdev_destructor() to clean up */
-+	return error;
-+}
-+EXPORT_SYMBOL(vfs_get_block_super);
-+
-+
- static int set_bdev_super(struct super_block *s, void *data)
- {
- 	s->s_bdev = data;
-@@ -1411,8 +1515,13 @@ int vfs_get_tree(struct fs_context *fc)
- 	 * on the superblock.
- 	 */
- 	error = fc->ops->get_tree(fc);
--	if (error < 0)
-+	if (error < 0) {
-+		if (fc->dev_destructor) {
-+			fc->dev_destructor(fc);
-+			fc->dev_destructor = NULL;
-+		}
- 		return error;
-+	}
+-	if ((fc->fs_type->fs_flags & FS_HAS_SUBTYPE) &&
+-	    strcmp(param->key, "subtype") == 0) {
+-		if (param->type != fs_value_is_string)
+-			return invalf(fc, "VFS: Legacy: Non-string subtype");
+-		if (fc->subtype)
+-			return invalf(fc, "VFS: Legacy: Multiple subtype");
+-		fc->subtype = param->string;
+-		param->string = NULL;
+-		return 0;
+-	}
+-
+ 	if (ctx->param_type == LEGACY_FS_MONOLITHIC_PARAMS)
+ 		return invalf(fc, "VFS: Legacy: Can't mix monolithic and individual options");
  
- 	if (!fc->root) {
- 		pr_err("Filesystem %s get_tree() didn't set fc->root\n",
-diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
-index 7c6fe3d47fa6..ed5b4349671e 100644
---- a/include/linux/fs_context.h
-+++ b/include/linux/fs_context.h
-@@ -88,6 +88,9 @@ struct fs_context {
- 	struct mutex		uapi_mutex;	/* Userspace access mutex */
- 	struct file_system_type	*fs_type;
- 	void			*fs_private;	/* The filesystem's context */
-+	union {
-+		struct block_device *bdev;	/* The backing blockdev (if applicable) */
-+	};
- 	struct dentry		*root;		/* The root and superblock */
- 	struct user_namespace	*user_ns;	/* The user namespace for this mount */
- 	struct net		*net_ns;	/* The network namespace for this mount */
-@@ -97,6 +100,7 @@ struct fs_context {
- 	const char		*subtype;	/* The subtype to set on the superblock */
- 	void			*security;	/* Linux S&M options */
- 	void			*s_fs_info;	/* Proposed s_fs_info */
-+	fmode_t			bdev_mode;	/* File open mode for bdev */
- 	unsigned int		sb_flags;	/* Proposed superblock flags (SB_*) */
- 	unsigned int		sb_flags_mask;	/* Superblock flags that were changed */
- 	unsigned int		s_iflags;	/* OR'd with sb->s_iflags */
-@@ -105,6 +109,7 @@ struct fs_context {
- 	enum fs_context_phase	phase:8;	/* The phase the context is in */
- 	bool			need_free:1;	/* Need to call ops->free() */
- 	bool			global:1;	/* Goes into &init_user_ns */
-+	void (*dev_destructor)(struct fs_context *fc); /* For block or mtd */
+@@ -742,8 +730,6 @@ void vfs_clean_context(struct fs_context *fc)
+ 	fc->s_fs_info = NULL;
+ 	fc->sb_flags = 0;
+ 	security_free_mnt_opts(&fc->security);
+-	kfree(fc->subtype);
+-	fc->subtype = NULL;
+ 	kfree(fc->source);
+ 	fc->source = NULL;
+ 
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 2597ed237ada..e3375ce8e97f 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -473,8 +473,7 @@ static const struct fs_parameter_spec fuse_param_specs[] = {
+ 	fsparam_flag	("allow_other",		OPT_ALLOW_OTHER),
+ 	fsparam_u32	("max_read",		OPT_MAX_READ),
+ 	fsparam_u32	("blksize",		OPT_BLKSIZE),
+-	__fsparam(fs_param_is_string, "subtype", OPT_SUBTYPE,
+-		  fs_param_v_optional),
++	fsparam_string	("subtype",		OPT_SUBTYPE),
+ 	{}
  };
  
- struct fs_context_operations {
-@@ -154,6 +159,10 @@ extern int get_tree_single(struct fs_context *fc,
- 			 int (*fill_super)(struct super_block *sb,
- 					   struct fs_context *fc));
+diff --git a/fs/namespace.c b/fs/namespace.c
+index d28d30b13043..105f995543f6 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2768,8 +2768,6 @@ static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
+ 				put_filesystem(type);
+ 				return -EINVAL;
+ 			}
+-		} else {
+-			subtype = "";
+ 		}
+ 	}
  
-+extern int vfs_get_block_super(struct fs_context *fc,
-+			       int (*fill_super)(struct super_block *sb,
-+						 struct fs_context *fc));
-+
- extern const struct file_operations fscontext_fops;
+diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
+index e16fb8f2049e..273ee82d8aa9 100644
+--- a/fs/proc_namespace.c
++++ b/fs/proc_namespace.c
+@@ -88,7 +88,7 @@ static inline void mangle(struct seq_file *m, const char *s)
+ static void show_type(struct seq_file *m, struct super_block *sb)
+ {
+ 	mangle(m, sb->s_type->name);
+-	if (sb->s_subtype && sb->s_subtype[0]) {
++	if (sb->s_subtype) {
+ 		seq_putc(m, '.');
+ 		mangle(m, sb->s_subtype);
+ 	}
+diff --git a/fs/super.c b/fs/super.c
+index 80b56bc7d2db..e30a4279784c 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1535,11 +1535,6 @@ int vfs_get_tree(struct fs_context *fc)
+ 	sb = fc->root->d_sb;
+ 	WARN_ON(!sb->s_bdi);
  
- /*
+-	if (fc->subtype && !sb->s_subtype) {
+-		sb->s_subtype = fc->subtype;
+-		fc->subtype = NULL;
+-	}
+-
+ 	/*
+ 	 * Write barrier is for super_cache_count(). We place it before setting
+ 	 * SB_BORN as the data dependency between the two functions is the
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index ed5b4349671e..461d37912bed 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -97,7 +97,6 @@ struct fs_context {
+ 	const struct cred	*cred;		/* The mounter's credentials */
+ 	struct fc_log		*log;		/* Logging buffer */
+ 	const char		*source;	/* The source name (eg. dev path) */
+-	const char		*subtype;	/* The subtype to set on the superblock */
+ 	void			*security;	/* Linux S&M options */
+ 	void			*s_fs_info;	/* Proposed s_fs_info */
+ 	fmode_t			bdev_mode;	/* File open mode for bdev */
 -- 
 2.21.0
 
