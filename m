@@ -2,108 +2,101 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE1AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C08C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189E822D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75462077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="lsQzpqdA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uqN08YPj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mcK3nweo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfICJT6 (ORCPT
+        id S1728360AbfICJVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:19:58 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52225 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbfICJT5 (ORCPT
+        Tue, 3 Sep 2019 05:21:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33892 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfICJVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:19:57 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 538BB22128;
-        Tue,  3 Sep 2019 05:19:56 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 03 Sep 2019 05:19:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=z2lVEw1JSBkzTGutlvzaxeAhxEw
-        JaiOIlS/JJN0dpKg=; b=lsQzpqdAVeNrHPs6hMk5PlYQiNtwVTsruYFTburpR37
-        q5oNhvcf1SnQkCabmh76ZhRr7FdGOCMvZDttwpMOXiAUxc6eoAnfQ8Hyl+ljx19S
-        AQIHaZH2vV/teQPUUd/uZBuxkoBqDShKdkqqsQiScuUOcSKuHpQAJ7lExBbGDD6e
-        VvdCNqtJmmFv1hG2563Xi/vRbsprA6Rr9Mhz63eWStrcHEeTalJ7WKc/rN4V6vK+
-        c6Drl7z4fx1FvDpr3wjPEontvdIgZzyGPf8V4H50FSXPpEb1LooSvdf+UlJfYRLU
-        ugcFduESTpMJXD3Ol5l18GP2y79zEZWGImWCzlKj4nw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=z2lVEw
-        1JSBkzTGutlvzaxeAhxEwJaiOIlS/JJN0dpKg=; b=uqN08YPj2wGNbCz6j3w8w7
-        SPNz0nPZoUf+rzv/RwXGDIbkotY4P8hKqI+UuGu2Klps9fVY1yAG36c4HHFgOdH5
-        nQDoz9zltKwEwjmoBfa51Gb0n353YA1vY+wEpRoBlkR5YJZyfc0ugiMiu9obT7GM
-        ENrJfPfTSFyOsYdASqwe/yjlxmZcoZaNzioEpi4QKvE+i0I+ztuN66TttVxkBOOP
-        XHQ32JJiK8in3fPOyKL/qxFklN5P+UKdGFDnkQO2H60bLbzvodJtXSK+EV9vXlNQ
-        yPCIKfWqt9HLStsjC30qrcS4PptiWCB12PIv0VqytzjHNb3teE0Y5uRIBGI7tMyA
-        ==
-X-ME-Sender: <xms:OzBuXS7KelHOV6s07gWBJLgEU1CGD0i5MZa-3yIh_MSZKkV-wr_yqw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejvddgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehlfihnrdhnvg
-    htnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomhep
-    ghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:OzBuXWR-itCUfIXRrxKUidqjY7FTdGPBp1bQhVeSh_ZEbG56C-upMg>
-    <xmx:OzBuXXlIfCGvRWy9-66UGpoY0M3tF-SILrxS8yO4xJEG77VPF2wSqQ>
-    <xmx:OzBuXaS1-sPBcPyzDNmZhEskXp4A88BcJp5b7YK4o2BisuKYMcGSoQ>
-    <xmx:PDBuXQWTYX9BnbntqHeuKR2NBkWkfzWsjmcfk9tBOMgcjMJSvBlsdQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 13D35D6005F;
-        Tue,  3 Sep 2019 05:19:54 -0400 (EDT)
-Date:   Tue, 3 Sep 2019 11:19:53 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Julius Werner <jwerner@chromium.org>,
-        USB Storage list <usb-storage@lists.one-eyed-alien.net>,
-        Dan Williams <dcbw@redhat.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH] usb: storage: Add ums-cros-aoa driver
-Message-ID: <20190903091953.GA12325@kroah.com>
-References: <CAODwPW8gTZ_2WEc9n=WJ2PEmQk2anTQYfwQ-898+kOq6wsjnZw@mail.gmail.com>
- <Pine.LNX.4.44L0.1908301337150.1459-100000@iolanthe.rowland.org>
- <20190902164724.GA22619@kroah.com>
- <1567500374.2878.2.camel@suse.com>
+        Tue, 3 Sep 2019 05:21:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g128so12262776oib.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=glcXCjwyqn+HnwC7gVzkRUcxL2AdvVixrYcSTi4w1PU=;
+        b=mcK3nweohShcW2LEUMICZbVwxHtOCjxDYckZO4FfQk37KTz/3nkpuLr77dDXYzZxz4
+         or6nYv7Vg04A1VkSOntYcSGuOqoqBc18fkMHF5EOKyAIqXvwp60PwkudRRdzqpEHTOFk
+         JLUS6thW/ybzyOX6jTAyx3Unl97exqbMOO6GeRaRFWf1SY5GCKm30eGiO8rfMkr3asm9
+         n9ZKT/aUSiJNjGdOwETM2FY7y6I/HELN4jGiEPOdSvReA9SfLXUItg4zcRumbYr8rFLS
+         AISiYddP9X8DEDcdhNBOCX3wfjYOsXuM5YhVNqcg7RQCwdHTaQXTkVVoWXBZTuA8RhFS
+         X7Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=glcXCjwyqn+HnwC7gVzkRUcxL2AdvVixrYcSTi4w1PU=;
+        b=rP4fa7GUJC+pa07gNsht45LjHBHLf0D80NPWMkMfeiA7ogto91y5NRd60TsvEMGhjb
+         sjlxDwNlNyuOjYRTBCnWp7l5sYSgfsMNP445npTux/ILxxykCHXB6hpLO82+7aOngpCU
+         plH+C83rwchhXc7j7xQz9CUIQn/P5REbCjktmZcZqHXKcvD2NqHcC65liZDrJEwugPI9
+         +9GGrcePlGo9he31lyt9mSmMIbTSAh34uvv6s13mKKusjUc7XE/re2JYey3okFH3ys7D
+         2uyAdEdM0ChNY3yfI5qPsSg1u5QBSvwwOjzdsCrMvTqom4Js+exqwbMHIUx/WZmS+D5u
+         tJZA==
+X-Gm-Message-State: APjAAAV15wjnKY7wlUvQc7z9n8BdQmn7q5qPn/40lW/rWX5ZGh0Z5m9c
+        W6Wa1kk0X7Vk23qgnG9GCjrscbEElJP5ntAqgjgRSg==
+X-Google-Smtp-Source: APXvYqzo2nUjiHesbwnB0H1Z1h3L+spUHg2mts+oMbRKV6XXnJiqEYS55mFoFRlt4i5wbRS3LbqfxQhk9ndU172nJWQ=
+X-Received: by 2002:aca:e183:: with SMTP id y125mr14148339oig.27.1567502465778;
+ Tue, 03 Sep 2019 02:21:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567500374.2878.2.camel@suse.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190826072929.7696-1-zhang.lyra@gmail.com>
+In-Reply-To: <20190826072929.7696-1-zhang.lyra@gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 3 Sep 2019 17:20:54 +0800
+Message-ID: <CAMz4ku+j-pSnfp1SJ4WN5seYe=vXxLGH+khaGNrseXi8+WKkoA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] keep console alive even if missing the 'enable' clock
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Orson Zhai <orsonzhai@gmail.com>,
+        linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:46:14AM +0200, Oliver Neukum wrote:
-> Am Montag, den 02.09.2019, 18:47 +0200 schrieb Greg KH:
-> > 
-> > This should work just fine today.  Add a new device id to the "new_id"
-> > file and then tell the driver to bind.  That's pretty much the same as a
-> > "force_bind", right?
-> 
-> That looks like a race condition by design to me.
+On Mon, 26 Aug 2019 at 15:29, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> After the commit 4007098f4ce4 (serial: sprd: Add power management for the Spreadtrum serial controller),
+> the 'enable' clock was forced to be configured in device tree, otherwise the uart devices couldn't be
+> probed successfully.
+>
+> With this patch-set, the uart device which is used as console would be allowed to register even without
+> any clock configured in device tree, this will make debug easier.
 
-How?
+Tested on my board, works well and looks good to me. So for the whole series:
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Tested-by: Baolin Wang <baolin.wang@linaro.org>
 
-Anyway, this should all "just work" somehow, there's an old lwn.net
-article I wrote about this over a decade ago when it was added.  A
-number of subsystems use this all the time (vfio?) and I haven't heard
-any issues with it in a long time.
+>
+> Chunyan Zhang (3):
+>   serial: sprd: check the right port and membase
+>   serial: sprd: add console_initcall in sprd's uart driver
+>   serial: sprd: keep console alive even if missing the 'enable' clock
+>
+>  drivers/tty/serial/sprd_serial.c | 42 ++++++++++++++++++++++++++------
+>  1 file changed, 34 insertions(+), 8 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-thanks,
 
-greg k-h
+-- 
+Baolin Wang
+Best Regards
