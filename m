@@ -2,86 +2,142 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4DEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21421C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8030921883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E758C21883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYs1vRw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfICKNA (ORCPT
+        id S1728757AbfICKM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:13:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60130 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbfICKM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:12:56 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7742FA36EFE;
-        Tue,  3 Sep 2019 10:12:56 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-72.ams2.redhat.com [10.36.117.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8ABF96012C;
-        Tue,  3 Sep 2019 10:12:53 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id E8B6F31F47; Tue,  3 Sep 2019 12:12:49 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 6/6] drm/qxl: use drm_gem_ttm_print_info
-Date:   Tue,  3 Sep 2019 12:12:48 +0200
-Message-Id: <20190903101248.12879-7-kraxel@redhat.com>
-In-Reply-To: <20190903101248.12879-1-kraxel@redhat.com>
-References: <20190903101248.12879-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 03 Sep 2019 10:12:56 +0000 (UTC)
+        Tue, 3 Sep 2019 06:12:58 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45400 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbfICKMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:12:54 -0400
+Received: by mail-ed1-f67.google.com with SMTP id f19so4001576eds.12;
+        Tue, 03 Sep 2019 03:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nlLiM8uLHsTDV4s6ID+NIMbu8WjtXqoyK3qwNgbSYiM=;
+        b=vYs1vRw1/oFdO+o5wGpcE2A/R7zo/Kl/5y58VHC1qwuEW+S49QlOrlhnRmwC9HOsAY
+         FnBil7y+kIKi95xbWFV+xx3t15Km/EPCz+JVokw+S1BC468rqY8g6vTsTucryzndRCoX
+         6c6hrOy9+gS837EAp89pk5tjCAsuXUzbZESD9axQkdFT1bkr/p3ijDTqUdPwx3wmareF
+         PCe40FAwiA2tv/zIEw8RLstnK1sCgwoVB12HgxWeNhHtqTsCzhxzcqdSKpS7XlIx1NSy
+         8mq73tvcH1hbcn7mwhGf0UgtHak8edsOPJ/jwm8875dUUNt2G5pzdVwp7fSj1jKy9Hcw
+         JdEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nlLiM8uLHsTDV4s6ID+NIMbu8WjtXqoyK3qwNgbSYiM=;
+        b=W/YLNTr5EJxg5x/CymgyOJpyn0qMVL+IhtpRQNvxNuPtM2g6PdE1E9RmMS+nH0SvVs
+         5HBlgWX2hwgw8xHfcgSBEJComVEOqW7ZHo8WJvMRt99bhQNs+Ijv/crYsyflkh6+MfTa
+         zgC/d9gP/3eY0b3Z93OHpguzOBEa3SYWbDtDpgsteg6Tw7J3xxWbcTEcZ/DHcKzaVL82
+         BaO6p7TPAtvJ4new5nstdmqTbDbO/NxPtXL/r5XvkY5vrzSAwjAhP+MtlcdWmK+xWgwf
+         aODq+6YS/hTnxT9Hs+5u7pi9zuWGspKIXVJOHEHWWKEtXcBb74lDb+/GTPA7IseAg51K
+         mU8w==
+X-Gm-Message-State: APjAAAW5dlMfOuHJO6C5QjIrauAEu2ZjqSXlteNZD7U1xX+aDj/1C1xi
+        e0ZfPPbtp3L/zqfQJuflviazXdc7KUDbzxM3LMg=
+X-Google-Smtp-Source: APXvYqwk7nOMr1+qIcSpfZV7tnQtSDqzNfFRemJjn8SDcf/xGL+pUZVZJfwXknVYstIzNG+hA++Oic1gK1++akzHGwQ=
+X-Received: by 2002:a50:d552:: with SMTP id f18mr11387509edj.36.1567505572724;
+ Tue, 03 Sep 2019 03:12:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190903010817.GA13595@embeddedor> <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
+In-Reply-To: <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 3 Sep 2019 13:12:41 +0300
+Message-ID: <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com>
+Subject: Re: [PATCH] net: sched: taprio: Fix potential integer overflow in taprio_set_picos_per_byte
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/gpu/drm/qxl/qxl_drv.h    | 1 +
- drivers/gpu/drm/qxl/qxl_object.c | 1 +
- 2 files changed, 2 insertions(+)
+On Tue, 3 Sep 2019 at 10:19, Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 9/3/19 3:08 AM, Gustavo A. R. Silva wrote:
+> > Add suffix LL to constant 1000 in order to avoid a potential integer
+> > overflow and give the compiler complete information about the proper
+> > arithmetic to use. Notice that this constant is being used in a context
+> > that expects an expression of type s64, but it's currently evaluated
+> > using 32-bit arithmetic.
+> >
+> > Addresses-Coverity-ID: 1453459 ("Unintentional integer overflow")
+> > Fixes: f04b514c0ce2 ("taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_byte")
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > ---
+> >  net/sched/sch_taprio.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+> > index 8d8bc2ec5cd6..956f837436ea 100644
+> > --- a/net/sched/sch_taprio.c
+> > +++ b/net/sched/sch_taprio.c
+> > @@ -966,7 +966,7 @@ static void taprio_set_picos_per_byte(struct net_device *dev,
+> >
+> >  skip:
+> >       picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
+> > -                                speed * 1000 * 1000);
+> > +                                speed * 1000LL * 1000);
+> >
+> >       atomic64_set(&q->picos_per_byte, picos_per_byte);
+> >       netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
+> >
+>
+> But, why even multiplying by 1,000,000 in the first place, this seems silly,
+> a standard 32 bit divide could be used instead.
+>
+> ->
+>
+> diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+> index 8d8bc2ec5cd6281d811fd5d8a5c5211ebb0edd73..944b1af3215668e927d486b6c6c65c4599fb9539 100644
+> --- a/net/sched/sch_taprio.c
+> +++ b/net/sched/sch_taprio.c
+> @@ -965,8 +965,7 @@ static void taprio_set_picos_per_byte(struct net_device *dev,
+>                 speed = ecmd.base.speed;
+>
+>  skip:
+> -       picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
+> -                                  speed * 1000 * 1000);
+> +       picos_per_byte = (USEC_PER_SEC * 8) / speed;
+>
+>         atomic64_set(&q->picos_per_byte, picos_per_byte);
+>         netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
+>
+>
+>
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.h b/drivers/gpu/drm/qxl/qxl_drv.h
-index 9e034c5fa87d..d4051409ce64 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.h
-+++ b/drivers/gpu/drm/qxl/qxl_drv.h
-@@ -38,6 +38,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_gem_ttm_helper.h>
- #include <drm/drm_ioctl.h>
- #include <drm/drm_gem.h>
- #include <drm/qxl_drm.h>
-diff --git a/drivers/gpu/drm/qxl/qxl_object.c b/drivers/gpu/drm/qxl/qxl_object.c
-index 29aab7b14513..c013c516f561 100644
---- a/drivers/gpu/drm/qxl/qxl_object.c
-+++ b/drivers/gpu/drm/qxl/qxl_object.c
-@@ -86,6 +86,7 @@ static const struct drm_gem_object_funcs qxl_object_funcs = {
- 	.get_sg_table = qxl_gem_prime_get_sg_table,
- 	.vmap = qxl_gem_prime_vmap,
- 	.vunmap = qxl_gem_prime_vunmap,
-+	.print_info = drm_gem_ttm_print_info,
- };
- 
- int qxl_bo_create(struct qxl_device *qdev,
--- 
-2.18.1
+Right. And while we're at it, there's still the potential
+division-by-zero problem which I still don't know how to solve without
+implementing a full-blown __ethtool_get_link_ksettings parser that
+checks against all the possible outputs it can have under the "no
+carrier" condition - see "[RFC PATCH 1/1] phylink: Set speed to
+SPEED_UNKNOWN when there is no PHY connected" for details.
+And there's also a third fix to be made: the netdev_dbg should be made
+to print "speed" instead of "ecmd.base.speed".
 
+Thanks,
+-Vladimir
