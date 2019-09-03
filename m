@@ -2,160 +2,401 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E54C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A14C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496BC22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA3E21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="IScayxGl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="D85dO2rk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfICIEH (ORCPT
+        id S1727667AbfICIFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:04:07 -0400
-Received: from mail-eopbgr80139.outbound.protection.outlook.com ([40.107.8.139]:43751
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725878AbfICID4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:03:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ktkq4MTcTcmhWLAQk4KIdlFm56mXXrQOximKDx24sO2Km851bAZEk7bjysBsToLAcjPjcBOIlflnWqy31h/bCVA012T468J5/b9o/sbHa3JS6pje1QOFdr3c4KwNEolGv20ZRMdLtNHTLInW0BPct7KpQnM+Ph+Mai5poFKkGcZIyWkma7wOCeO8M6hG5QG9/f0NlfKwCQboUYPQqWpeOLxxb6porGBOreBPjpzi/HpM0zwwWpvSM16vyYjwVERZIVuG1ZBJ6wwikgnzNZ75RS/QpivULeJfiCzjcZgfbRqRXuOr0E7JFboSFoVGNLUP6wC+ZIjqMsPaInCShcSHhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bEgRLsbzkLrfeBS5G4W+sYllsyyyYJOWE4eQFNNxvmc=;
- b=MigaTzJCO6t1w7lk/6oKytfx8hpJqzJGieOpwPB4m01SSge7KKhhy40YqkI0OQWfpgjanS5UFboEL1o8rG2UI3Ch0N3DfpdVFMMttHxeDBb5r8Tl4fLeuT8Ywx94FvwLURIeCI/WzMpgrWUsfTIfQVMiGLO0i+S0BwgtI1DsVCN8EO0FT8QnxSlVtKUHKtaLDdGq6c2wYiB1c9GzvIgTdUlW/cNw+E1xowehxrFvzZZ0HTNwuHFZjd1WpiwfAT7CvlB60IhD495fd3TiwlkUvSWq+Q2gRNK8X/dtb5j/iegCbDT+0GIHtq2o1N+RzFN8Rd0SvO3pKaKJ63cWKMthaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bEgRLsbzkLrfeBS5G4W+sYllsyyyYJOWE4eQFNNxvmc=;
- b=IScayxGl/DbgfJ9BhMXAWEKpd/aQlKpqYF6enrnORFS2DHlGrdXNCHXN1FRCNSSHnBJ33kYOojwI1y4EUvTAV66dRcjc4xBMqHRQCCX9SUq9orXx0HM7Wi6v6e+bNkVWtwXn3ChPQkx5dSXq1II4RAP43eEy8LJZCFWWK4Lzjwk=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB4014.eurprd05.prod.outlook.com (52.134.18.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.19; Tue, 3 Sep 2019 08:03:48 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::f59f:a307:9c53:63b9]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::f59f:a307:9c53:63b9%6]) with mapi id 15.20.2220.022; Tue, 3 Sep 2019
- 08:03:48 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Luka Pivk <luka.pivk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH 2/3] ARM: dts: imx6ull-colibri: add phy-supply and respective
- regulator
-Thread-Topic: [PATCH 2/3] ARM: dts: imx6ull-colibri: add phy-supply and
- respective regulator
-Thread-Index: AQHVYi4dgCofqQaHw0euB7fgm+76EA==
-Date:   Tue, 3 Sep 2019 08:03:48 +0000
-Message-ID: <20190903080336.32288-3-philippe.schenker@toradex.com>
-References: <20190903080336.32288-1-philippe.schenker@toradex.com>
-In-Reply-To: <20190903080336.32288-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0802CA0015.eurprd08.prod.outlook.com
- (2603:10a6:800:aa::25) To VI1PR0502MB3965.eurprd05.prod.outlook.com
- (2603:10a6:803:23::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.23.0
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 25618a1b-46c4-48f8-3152-08d730453feb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB4014;
-x-ms-traffictypediagnostic: VI1PR0502MB4014:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB401433A0AAE959057A37044AF4B90@VI1PR0502MB4014.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1079;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39840400004)(376002)(346002)(136003)(396003)(366004)(199004)(189003)(6436002)(66066001)(81166006)(110136005)(54906003)(5660300002)(71200400001)(305945005)(2501003)(25786009)(476003)(81156014)(2616005)(44832011)(6512007)(66446008)(99286004)(66946007)(66556008)(186003)(64756008)(66476007)(26005)(6486002)(71190400001)(4326008)(53936002)(446003)(52116002)(486006)(102836004)(11346002)(1076003)(7416002)(6116002)(478600001)(86362001)(50226002)(14454004)(2906002)(36756003)(8936002)(76176011)(3846002)(6506007)(386003)(316002)(256004)(8676002)(7736002)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB4014;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vGDY6ey//ua0XfWuOXEAIwabyuvQsJZ3+tqslkQlcHwPYdOAJ9Hu7NlA+e0jkhgOtObPfMOyWX5WCjjNhqDJC36QIhI2uGdAT4mA4inrsaO33EZAgZXFnNmE3yO3Z38WBRa89RYwVjiwy/BmAg+ncnKcvtsE1Uq0k84w/XKayzShhBLdm0Wlo9COBI/7srQ/0PzHCqc0CZqsxH96VLELZC6uoAVbcrQ8Rh7riGaRC3KF+qUjxmN2u+kFPwn5RNGqoz6AEo79Rnc+rRr41EEV9sNSLlKjf6eMOC8mRHEw4D4VX0WbEq7ecfn/mTAsM4pvFaTg37U6usDBoMOFJ8574pfgkeu/pptSJXSGYlswRWXk80lmWM6bogAsyz84kgAXyCqy4eX4JaPeA9ni3RgbQZbSZod3vz5WYUEvU1tVU9c=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Sep 2019 04:05:16 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38070 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfICIFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:05:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id p12so33905550iog.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pYYZchTkTnHaaYUPZ9aSFMmI9ZgRbXHQopY1f0OJvLU=;
+        b=D85dO2rkGDxWItS4+Vv6mrgY+n6ZYU+qG9cJ24pWQe71OTpSk7O/m7HqQ/yhvUnGP/
+         2UcDj48UswSDkOTqNSEHCfqubDGVKHbe+tnzR8pHH+soD/2kZWId08ePrtSabQqhXxpl
+         S+A5SStZdKvklHl7z2L6boDBMXQcxdTNjNi8o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pYYZchTkTnHaaYUPZ9aSFMmI9ZgRbXHQopY1f0OJvLU=;
+        b=SA1zvtemv5BR0kGkOVSUlIZppqnaMCEQdtq5uVcShSNKN/ivQTvBM4NZo0DIWep2rF
+         C5Vc+GyfB7kxcH7NHT/ciToBm8c/BWBfHjSS5j/Xd6VMWW8kxgKzLb0fKE7ssZpAKDlO
+         gvnrIIotzIj9M+/qmQpwFOq8Xau7EYBx7Hti0hftjZG3qwqtYIG6FcDymbtNS6TIDSLF
+         nqkSLlObTteDWUSGsFzPTf2bydftHY3wJCRCijdZG8t4jfc8JIPeAkOtCG+R4QlFQPCl
+         TmQpul74i717vHtVUK59rxuIvdv3ov5MfDVKNdGowWL85rhF0FWWv95a/+msMKqqvoN1
+         AULg==
+X-Gm-Message-State: APjAAAXr7+6xnHbT/vgnQGSbzdCmT/riSIcEZ4th1v3W/YAjW2V4PiEL
+        DflRQLObyoBF5p1b6W9MN7B9uCWUx+l3UaSHBHz/Sg==
+X-Google-Smtp-Source: APXvYqxFcbUqeehr5Ugpif2bQhvKi5Xl3qPp5YojMTiUxbzHxFlX2TqDf0tY+v8jLZVSVlZXjpE5dmUSPI1IH4fxYKo=
+X-Received: by 2002:a5e:d70b:: with SMTP id v11mr5001741iom.252.1567497913964;
+ Tue, 03 Sep 2019 01:05:13 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25618a1b-46c4-48f8-3152-08d730453feb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 08:03:48.1478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NQ6RxuET5OLB/e5sh5KafK4gln9dnvRvDNP11PjR5rUSho9E5oM74I+CXQ7Au7keCkVkI7ra61dk/jaYOBE5HWEEjbOXw8oTn7/V1JC6nO8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB4014
+References: <20190821173742.24574-1-vgoyal@redhat.com>
+In-Reply-To: <20190821173742.24574-1-vgoyal@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 3 Sep 2019 10:05:02 +0200
+Message-ID: <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
+To:     Vivek Goyal <vgoyal@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds regulator-fixed-clock, a fixed-regulator that turns on and
-off with a clock and add it to the phy.
+[Cc:  virtualization@lists.linux-foundation.org, "Michael S. Tsirkin"
+<mst@redhat.com>, Jason Wang <jasowang@redhat.com>]
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
+It'd be nice to have an ACK for this from the virtio maintainers.
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Thanks,
+Miklos
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index d56728f03c35..76021b842a97 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -47,6 +47,17 @@
- 		states =3D <1800000 0x1 3300000 0x0>;
- 		vin-supply =3D <&reg_module_3v3>;
- 	};
-+
-+	reg_eth_phy: regulator-eth-phy {
-+		compatible =3D "regulator-fixed-clock";
-+		regulator-boot-on;
-+		regulator-name =3D "eth_phy";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		clocks =3D <&clks IMX6UL_CLK_ENET2_REF_125M>;
-+		startup-delay-us =3D <150000>;
-+		vin-supply =3D <&reg_module_3v3>;
-+	};
- };
-=20
- &adc1 {
-@@ -66,6 +77,7 @@
- 	pinctrl-0 =3D <&pinctrl_enet2>;
- 	phy-mode =3D "rmii";
- 	phy-handle =3D <&ethphy1>;
-+	phy-supply =3D <&reg_eth_phy>;
- 	status =3D "okay";
-=20
- 	mdio {
---=20
-2.23.0
-
+On Wed, Aug 21, 2019 at 7:38 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> Hi,
+>
+> Here are the V3 patches for virtio-fs filesystem. This time I have
+> broken the patch series in two parts. This is first part which does
+> not contain DAX support. Second patch series will contain the patches
+> for DAX support.
+>
+> I have also dropped RFC tag from first patch series as we believe its
+> in good enough shape that it should get a consideration for inclusion
+> upstream.
+>
+> These patches apply on top of 5.3-rc5 kernel and are also available
+> here.
+>
+> https://github.com/rhvgoyal/linux/commits/vivek-5.3-aug-21-2019
+>
+> Patches for V1 and V2 were posted here.
+>
+> https://lwn.net/ml/linux-fsdevel/20181210171318.16998-1-vgoyal@redhat.com=
+/
+> http://lkml.iu.edu/hypermail/linux/kernel/1905.1/07232.html
+>
+> More information about the project can be found here.
+>
+> https://virtio-fs.gitlab.io
+>
+> Changes from V2
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> - Various bug fixes and performance improvements.
+>
+> HOWTO
+> =3D=3D=3D=3D=3D=3D
+> We have put instructions on how to use it here.
+>
+> https://virtio-fs.gitlab.io/
+>
+> Some Performance Numbers
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> I have basically run bunch of fio jobs to get a sense of speed of
+> various operations. I wrote a simple wrapper script to run fio jobs
+> 3 times and take their average and report it. These scripts are available
+> here.
+>
+> https://github.com/rhvgoyal/virtiofs-tests
+>
+> I set up a directory on ramfs on host and exported that directory inside
+> guest using virtio-9p and virtio-fs and ran tests inside guests. Ran
+> tests with cache=3Dnone both for virtio-9p and virtio-fs so that no cachi=
+ng
+> happens in guest. For virtio-fs, I ran an additional set of tests with
+> dax enabled. Dax is not part of first patch series but I included
+> results here because dax seems to get the maximum performance advantage
+> and its shows the real potential of virtio-fs.
+>
+> Test Setup
+> -----------
+> - A fedora 28 host with 32G RAM, 2 sockets (6 cores per socket, 2
+>   threads per core)
+>
+> - Using ramfs on host as backing store. 4 fio files of 2G each.
+>
+> - Created a VM with 16 VCPUS and 8GB memory. An 8GB cache window (for dax
+>   mmap).
+>
+> Test Results
+> ------------
+> - Results in three configurations have been reported. 9p (cache=3Dnone),
+>   virtio-fs (cache=3Dnone) and virtio-fs (cache=3Dnone + dax).
+>
+>   There are other caching modes as well but to me cache=3Dnone seemed mos=
+t
+>   interesting for now because it does not cache anything in guest
+>   and provides strong coherence. Other modes which provide less strong
+>   coherence and hence are faster are yet to be benchmarked.
+>
+> - Three fio ioengines psync, libaio and mmap have been used.
+>
+> - I/O Workload of randread, radwrite, seqread and seqwrite have been run.
+>
+> - Each file size is 2G. Block size 4K. iodepth=3D16
+>
+> - "multi" means same operation was done with 4 jobs and each job is
+>   operating on a file of size 2G.
+>
+> - Some results are "0 (KiB/s)". That means that particular operation is
+>   not supported in that configuration.
+>
+> NAME                    I/O Operation           BW(Read/Write)
+>
+> 9p-cache-none           seqread-psync           27(MiB/s)
+> virtiofs-cache-none     seqread-psync           35(MiB/s)
+> virtiofs-dax-cache-none seqread-psync           245(MiB/s)
+>
+> 9p-cache-none           seqread-psync-multi     117(MiB/s)
+> virtiofs-cache-none     seqread-psync-multi     162(MiB/s)
+> virtiofs-dax-cache-none seqread-psync-multi     894(MiB/s)
+>
+> 9p-cache-none           seqread-mmap            24(MiB/s)
+> virtiofs-cache-none     seqread-mmap            0(KiB/s)
+> virtiofs-dax-cache-none seqread-mmap            168(MiB/s)
+>
+> 9p-cache-none           seqread-mmap-multi      115(MiB/s)
+> virtiofs-cache-none     seqread-mmap-multi      0(KiB/s)
+> virtiofs-dax-cache-none seqread-mmap-multi      614(MiB/s)
+>
+> 9p-cache-none           seqread-libaio          26(MiB/s)
+> virtiofs-cache-none     seqread-libaio          139(MiB/s)
+> virtiofs-dax-cache-none seqread-libaio          160(MiB/s)
+>
+> 9p-cache-none           seqread-libaio-multi    129(MiB/s)
+> virtiofs-cache-none     seqread-libaio-multi    142(MiB/s)
+> virtiofs-dax-cache-none seqread-libaio-multi    577(MiB/s)
+>
+> 9p-cache-none           randread-psync          29(MiB/s)
+> virtiofs-cache-none     randread-psync          34(MiB/s)
+> virtiofs-dax-cache-none randread-psync          256(MiB/s)
+>
+> 9p-cache-none           randread-psync-multi    139(MiB/s)
+> virtiofs-cache-none     randread-psync-multi    153(MiB/s)
+> virtiofs-dax-cache-none randread-psync-multi    245(MiB/s)
+>
+> 9p-cache-none           randread-mmap           22(MiB/s)
+> virtiofs-cache-none     randread-mmap           0(KiB/s)
+> virtiofs-dax-cache-none randread-mmap           162(MiB/s)
+>
+> 9p-cache-none           randread-mmap-multi     111(MiB/s)
+> virtiofs-cache-none     randread-mmap-multi     0(KiB/s)
+> virtiofs-dax-cache-none randread-mmap-multi     215(MiB/s)
+>
+> 9p-cache-none           randread-libaio         26(MiB/s)
+> virtiofs-cache-none     randread-libaio         135(MiB/s)
+> virtiofs-dax-cache-none randread-libaio         157(MiB/s)
+>
+> 9p-cache-none           randread-libaio-multi   133(MiB/s)
+> virtiofs-cache-none     randread-libaio-multi   245(MiB/s)
+> virtiofs-dax-cache-none randread-libaio-multi   163(MiB/s)
+>
+> 9p-cache-none           seqwrite-psync          28(MiB/s)
+> virtiofs-cache-none     seqwrite-psync          34(MiB/s)
+> virtiofs-dax-cache-none seqwrite-psync          203(MiB/s)
+>
+> 9p-cache-none           seqwrite-psync-multi    128(MiB/s)
+> virtiofs-cache-none     seqwrite-psync-multi    155(MiB/s)
+> virtiofs-dax-cache-none seqwrite-psync-multi    717(MiB/s)
+>
+> 9p-cache-none           seqwrite-mmap           0(KiB/s)
+> virtiofs-cache-none     seqwrite-mmap           0(KiB/s)
+> virtiofs-dax-cache-none seqwrite-mmap           165(MiB/s)
+>
+> 9p-cache-none           seqwrite-mmap-multi     0(KiB/s)
+> virtiofs-cache-none     seqwrite-mmap-multi     0(KiB/s)
+> virtiofs-dax-cache-none seqwrite-mmap-multi     511(MiB/s)
+>
+> 9p-cache-none           seqwrite-libaio         27(MiB/s)
+> virtiofs-cache-none     seqwrite-libaio         128(MiB/s)
+> virtiofs-dax-cache-none seqwrite-libaio         141(MiB/s)
+>
+> 9p-cache-none           seqwrite-libaio-multi   119(MiB/s)
+> virtiofs-cache-none     seqwrite-libaio-multi   242(MiB/s)
+> virtiofs-dax-cache-none seqwrite-libaio-multi   505(MiB/s)
+>
+> 9p-cache-none           randwrite-psync         27(MiB/s)
+> virtiofs-cache-none     randwrite-psync         34(MiB/s)
+> virtiofs-dax-cache-none randwrite-psync         189(MiB/s)
+>
+> 9p-cache-none           randwrite-psync-multi   137(MiB/s)
+> virtiofs-cache-none     randwrite-psync-multi   150(MiB/s)
+> virtiofs-dax-cache-none randwrite-psync-multi   233(MiB/s)
+>
+> 9p-cache-none           randwrite-mmap          0(KiB/s)
+> virtiofs-cache-none     randwrite-mmap          0(KiB/s)
+> virtiofs-dax-cache-none randwrite-mmap          120(MiB/s)
+>
+> 9p-cache-none           randwrite-mmap-multi    0(KiB/s)
+> virtiofs-cache-none     randwrite-mmap-multi    0(KiB/s)
+> virtiofs-dax-cache-none randwrite-mmap-multi    200(MiB/s)
+>
+> 9p-cache-none           randwrite-libaio        25(MiB/s)
+> virtiofs-cache-none     randwrite-libaio        124(MiB/s)
+> virtiofs-dax-cache-none randwrite-libaio        131(MiB/s)
+>
+> 9p-cache-none           randwrite-libaio-multi  125(MiB/s)
+> virtiofs-cache-none     randwrite-libaio-multi  241(MiB/s)
+> virtiofs-dax-cache-none randwrite-libaio-multi  163(MiB/s)
+>
+> Conclusions
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> - In general virtio-fs seems faster than virtio-9p. Using dax makes it
+>   really interesting.
+>
+> Note:
+>   Right now dax window is 8G and max fio file size is 8G as well (4
+>   files of 2G each). That means everything fits into dax window and no
+>   reclaim is needed. Dax window reclaim logic is slower and if file
+>   size is bigger than dax window size, performance slows down.
+>
+> Description from previous postings
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Design Overview
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> With the goal of designing something with better performance and local fi=
+le
+> system semantics, a bunch of ideas were proposed.
+>
+> - Use fuse protocol (instead of 9p) for communication between guest
+>   and host. Guest kernel will be fuse client and a fuse server will
+>   run on host to serve the requests.
+>
+> - For data access inside guest, mmap portion of file in QEMU address
+>   space and guest accesses this memory using dax. That way guest page
+>   cache is bypassed and there is only one copy of data (on host). This
+>   will also enable mmap(MAP_SHARED) between guests.
+>
+> - For metadata coherency, there is a shared memory region which contains
+>   version number associated with metadata and any guest changing metadata
+>   updates version number and other guests refresh metadata on next
+>   access. This is yet to be implemented.
+>
+> How virtio-fs differs from existing approaches
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> The unique idea behind virtio-fs is to take advantage of the co-location
+> of the virtual machine and hypervisor to avoid communication (vmexits).
+>
+> DAX allows file contents to be accessed without communication with the
+> hypervisor. The shared memory region for metadata avoids communication in
+> the common case where metadata is unchanged.
+>
+> By replacing expensive communication with cheaper shared memory accesses,
+> we expect to achieve better performance than approaches based on network
+> file system protocols. In addition, this also makes it easier to achieve
+> local file system semantics (coherency).
+>
+> These techniques are not applicable to network file system protocols sinc=
+e
+> the communications channel is bypassed by taking advantage of shared memo=
+ry
+> on a local machine. This is why we decided to build virtio-fs rather than
+> focus on 9P or NFS.
+>
+> Caching Modes
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Like virtio-9p, different caching modes are supported which determine the
+> coherency level as well. The =E2=80=9Ccache=3DFOO=E2=80=9D and =E2=80=9Cw=
+riteback=E2=80=9D options control the
+> level of coherence between the guest and host filesystems.
+>
+> - cache=3Dnone
+>   metadata, data and pathname lookup are not cached in guest. They are al=
+ways
+>   fetched from host and any changes are immediately pushed to host.
+>
+> - cache=3Dalways
+>   metadata, data and pathname lookup are cached in guest and never expire=
+.
+>
+> - cache=3Dauto
+>   metadata and pathname lookup cache expires after a configured amount of=
+ time
+>   (default is 1 second). Data is cached while the file is open (close to =
+open
+>   consistency).
+>
+> - writeback/no_writeback
+>   These options control the writeback strategy.  If writeback is disabled=
+,
+>   then normal writes will immediately be synchronized with the host fs. I=
+f
+>   writeback is enabled, then writes may be cached in the guest until the =
+file
+>   is closed or an fsync(2) performed. This option has no effect on mmap-e=
+d
+>   writes or writes going through the DAX mechanism.
+>
+> Thanks
+> Vivek
+>
+> Miklos Szeredi (2):
+>   fuse: delete dentry if timeout is zero
+>   fuse: Use default_file_splice_read for direct IO
+>
+> Stefan Hajnoczi (6):
+>   fuse: export fuse_end_request()
+>   fuse: export fuse_len_args()
+>   fuse: export fuse_get_unique()
+>   fuse: extract fuse_fill_super_common()
+>   fuse: add fuse_iqueue_ops callbacks
+>   virtio_fs: add skeleton virtio_fs.ko module
+>
+> Vivek Goyal (5):
+>   fuse: Export fuse_send_init_request()
+>   Export fuse_dequeue_forget() function
+>   fuse: Separate fuse device allocation and installation in fuse_conn
+>   virtio-fs: Do not provide abort interface in fusectl
+>   init/do_mounts.c: add virtio_fs root fs support
+>
+>  fs/fuse/Kconfig                 |   11 +
+>  fs/fuse/Makefile                |    1 +
+>  fs/fuse/control.c               |    4 +-
+>  fs/fuse/cuse.c                  |    4 +-
+>  fs/fuse/dev.c                   |   89 ++-
+>  fs/fuse/dir.c                   |   26 +-
+>  fs/fuse/file.c                  |   15 +-
+>  fs/fuse/fuse_i.h                |  120 +++-
+>  fs/fuse/inode.c                 |  203 +++---
+>  fs/fuse/virtio_fs.c             | 1061 +++++++++++++++++++++++++++++++
+>  fs/splice.c                     |    3 +-
+>  include/linux/fs.h              |    2 +
+>  include/uapi/linux/virtio_fs.h  |   41 ++
+>  include/uapi/linux/virtio_ids.h |    1 +
+>  init/do_mounts.c                |   10 +
+>  15 files changed, 1462 insertions(+), 129 deletions(-)
+>  create mode 100644 fs/fuse/virtio_fs.c
+>  create mode 100644 include/uapi/linux/virtio_fs.h
+>
+> --
+> 2.20.1
+>
