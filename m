@@ -2,104 +2,62 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F572C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54634C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D06223401
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qAtXA0e8"
+	by mail.kernel.org (Postfix) with ESMTP id 312C8206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfICTNs (ORCPT
+        id S1726635AbfICTPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:13:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35924 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfICTNr (ORCPT
+        Tue, 3 Sep 2019 15:15:05 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:58040 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfICTPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:13:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f19so8306010plr.3;
-        Tue, 03 Sep 2019 12:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aGI2PbPIJQALrxl14ziGNHj3QYOWoIQatp475h7SnX0=;
-        b=qAtXA0e8WdSGRQ3ajL4OLTJPMnyLQNbP9S2ShIFHuHR5hOM+62ZietAU+9mh+34NK9
-         4vKheyVkai6NGUr95Qf7Ad90n3EvTzuNtNXxEXY5DPC5iR4s/OaGQ3DV/aAlu0RYAX4Z
-         NwhrhbRub0kxEu11fJfusyw1+YAXVxl9DBQMbqOP14Ce0t61JMndP1O29C9FTr1mWKeM
-         5f6WYNc6+d8mt0+Y9f32/ytCEqWJa7Q66AZ3RBRacy2jPOxICQIPIetV4oJvAgR8GlRy
-         SmCvUYQ6snAtZ/1vbNDabhCuAXG+pFDG9qcwD8GJngzC8nOZsDehMe2v6LQzvkWYw2ty
-         CcCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=aGI2PbPIJQALrxl14ziGNHj3QYOWoIQatp475h7SnX0=;
-        b=iW8Fs4FzRdcW5sJD0VuAl2KPmxl2js6xUzpLJqAY52W4nXPw7BLjmwp41ALeruEGZl
-         NADh6BacIXJqbN4LRe0/VgzJFBZDgmuH3xG935uvDRu0Vjj6ivmCXpDQTyQDNeSw2EUQ
-         ENv6V0cceKEy+BQmlD9fQO/VhHX5kvhHvU7WqECMZTJtBjQRvV9Hn945hRjJQWfhuJr0
-         3xR4K3Xu7H3eG8EGmnpgtSEvczzVtoCW6MS7PdJicatKwXsdmPLjaXu6TvaNrQJX/7nk
-         1LyjldsOVo3dpzHCFynYOgvshgb9wch+0WfJKJJDblsMGZO0szDKFAPqHynoqCXQrRxx
-         hvWw==
-X-Gm-Message-State: APjAAAV7i38J3clVminqhZW1s+U4Hf7Q/PXbO3+cDnHgxO2b0ymI1/yk
-        lFb6RSE+MX2EvqOpzPc4hm/cl77Q
-X-Google-Smtp-Source: APXvYqxaCu86zrm4zGGsidJnCOntcGmvnJbxy1KNbIMqvjqOorUhebhZ/DRO9GCJxf2D098XLI4/Dg==
-X-Received: by 2002:a17:902:20c2:: with SMTP id v2mr33879476plg.209.1567538026954;
-        Tue, 03 Sep 2019 12:13:46 -0700 (PDT)
-Received: from sultan-box.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id 67sm318952pjo.29.2019.09.03.12.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 12:13:45 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-Cc:     sultan@kerneltoast.com, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org, sebastian@breakpoint.cc,
-        tglx@linutronix.de, rostedt@goodmis.org
-Subject: [PATCH] rt-tests: backfire: Don't include asm/uaccess.h directly
-Date:   Tue,  3 Sep 2019 12:13:21 -0700
-Message-Id: <20190903191321.6762-1-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 3 Sep 2019 15:15:05 -0400
+Received: from [10.91.6.157] (unknown [167.220.2.157])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B6D6020B7186;
+        Tue,  3 Sep 2019 12:15:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B6D6020B7186
+Subject: Re: [PATCH v4] tpm: Parse event log from TPM2 ACPI table
+To:     jarkko.sakkinen@linux.intel.com, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190831051027.11544-1-jorhand@linux.microsoft.com>
+ <20190903182742.rmqthgu6rms3uill@cantor>
+From:   Jordan Hand <jorhand@linux.microsoft.com>
+Message-ID: <e86fd977-9c16-68df-e38e-4f9650ec5ac9@linux.microsoft.com>
+Date:   Tue, 3 Sep 2019 12:15:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190903182742.rmqthgu6rms3uill@cantor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+On 9/3/19 11:27 AM, Jerry Snitselaar wrote:
+>> +        len = tpm2_trailer.minimum_log_length;
+>> +        start = tpm2_trailer.log_address;
+> 
+> Are your builds not failing here? Both v3 and v4 have this.
+> 
 
-Architecture-specific uaccess.h headers can have dependencies on
-linux/uaccess.h (i.e., VERIFY_WRITE), so it cannot be included directly.
-Since linux/uaccess.h includes asm/uaccess.h, just do that instead.
+Ya, I saw the kbuild bot failure and fixed in v5. I'm not entirely sure
+why I didn't catch it locally. Maybe a was compiling against the wrong
+tree or something silly like that.
 
-This fixes compile errors with certain kernels and architectures.
-
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- src/backfire/backfire.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/src/backfire/backfire.c b/src/backfire/backfire.c
-index aaf9c4a..a8ac9f5 100644
---- a/src/backfire/backfire.c
-+++ b/src/backfire/backfire.c
-@@ -30,8 +30,8 @@
- #include <linux/miscdevice.h>
- #include <linux/proc_fs.h>
- #include <linux/spinlock.h>
-+#include <linux/uaccess.h>
- 
--#include <asm/uaccess.h>
- #include <asm/system.h>
- 
- #define BACKFIRE_MINOR MISC_DYNAMIC_MINOR
--- 
-2.23.0
-
+Thanks,
+Jordan
