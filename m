@@ -2,109 +2,118 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF54EC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADBAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A152B20828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2446722CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbfICQDo (ORCPT
+        id S1729877AbfICQFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:03:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17506 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728571AbfICQDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:03:44 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83Fw3BH016754;
-        Tue, 3 Sep 2019 12:03:29 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2usryr6h97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 12:03:29 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x83G1OjL032076;
-        Tue, 3 Sep 2019 16:03:28 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 2uqgh6kfyv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 16:03:28 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83G3Rwq46792968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 16:03:27 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85F20BE062;
-        Tue,  3 Sep 2019 16:03:27 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0A3ABE053;
-        Tue,  3 Sep 2019 16:03:25 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.133.34])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Tue,  3 Sep 2019 16:03:25 +0000 (GMT)
-References: <20190902163951.6280e030@canb.auug.org.au> <20190902140347.GA23482@8bytes.org> <d2493e6b-08fa-9ea8-a0a4-076def54e91b@amd.com> <20190903152849.770ae819@canb.auug.org.au> <20190903132038.GE11530@8bytes.org>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Lendacky\, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iommu: Don't use sme_active() in generic code
-In-reply-to: <20190903132038.GE11530@8bytes.org>
-Date:   Tue, 03 Sep 2019 13:03:21 -0300
-Message-ID: <87mufll646.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=957 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909030164
+        Tue, 3 Sep 2019 12:05:03 -0400
+Received: from gate.crashing.org ([63.228.1.57]:55972 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728571AbfICQFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:05:03 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x83G4HnT010981;
+        Tue, 3 Sep 2019 11:04:17 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x83G4F0O010980;
+        Tue, 3 Sep 2019 11:04:15 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 3 Sep 2019 11:04:15 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>, alastair@d-silva.org,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [PATCH v2 3/6] powerpc: Convert flush_icache_range & friends to C
+Message-ID: <20190903160415.GA9749@gate.crashing.org>
+References: <20190903052407.16638-1-alastair@au1.ibm.com> <20190903052407.16638-4-alastair@au1.ibm.com> <20190903130430.GC31406@gate.crashing.org> <d268ee78-607e-5eb3-ed89-d5c07f672046@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d268ee78-607e-5eb3-ed89-d5c07f672046@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 03, 2019 at 04:28:09PM +0200, Christophe Leroy wrote:
+> Le 03/09/2019 à 15:04, Segher Boessenkool a écrit :
+> >On Tue, Sep 03, 2019 at 03:23:57PM +1000, Alastair D'Silva wrote:
+> >>+	asm volatile(
+> >>+		"   mtctr %2;"
+> >>+		"   mtmsr %3;"
+> >>+		"   isync;"
+> >>+		"0: dcbst   0, %0;"
+> >>+		"   addi    %0, %0, %4;"
+> >>+		"   bdnz    0b;"
+> >>+		"   sync;"
+> >>+		"   mtctr %2;"
+> >>+		"1: icbi    0, %1;"
+> >>+		"   addi    %1, %1, %4;"
+> >>+		"   bdnz    1b;"
+> >>+		"   sync;"
+> >>+		"   mtmsr %5;"
+> >>+		"   isync;"
+> >>+		: "+r" (loop1), "+r" (loop2)
+> >>+		: "r" (nb), "r" (msr), "i" (bytes), "r" (msr0)
+> >>+		: "ctr", "memory");
+> >
+> >This outputs as one huge assembler statement, all on one line.  That's
+> >going to be fun to read or debug.
+> 
+> Do you mean \n has to be added after the ; ?
 
-Joerg Roedel <joro@8bytes.org> writes:
+Something like that.  There is no really satisfying way for doing huge
+inline asm, and maybe that is a good thing ;-)
 
-> On Tue, Sep 03, 2019 at 03:28:49PM +1000, Stephen Rothwell wrote:
->> Hi all,
->> 
->> On Mon, 2 Sep 2019 14:26:40 +0000 "Lendacky, Thomas" <Thomas.Lendacky@amd.com> wrote:
->> > Maybe we should make this mem_encrypt_active(), since this will probably
->> > be needed if/when an IOMMU device is eventually added to a guest, and the
->> > referenced commit below doesn't remove that call.
->> 
->> I have done that for today:
->
-> Thanks Stephen and Tom. I queued the attached patch into the iommu tree
-> to fix the problem.
->
-> From 2896ba40d0becdb72b45f096cad70633abc014f6 Mon Sep 17 00:00:00 2001
-> From: Joerg Roedel <jroedel@suse.de>
-> Date: Tue, 3 Sep 2019 15:15:44 +0200
-> Subject: [PATCH] iommu: Don't use sme_active() in generic code
->
-> Switch to the generic function mem_encrypt_active() because
-> sme_active() is x86 specific and can't be called from
-> generic code on other platforms than x86.
->
-> Fixes: 2cc13bb4f59f ("iommu: Disable passthrough mode when SME is active")
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Often people write \n\t at the end of each line of inline asm.  This works
+pretty well (but then there are labels, oh joy).
 
-Thank you!
+> >loop1 and/or loop2 can be assigned the same register as msr0 or nb.  They
+> >need to be made earlyclobbers.  (msr is fine, all of its reads are before
+> >any writes to loop1 or loop2; and bytes is fine, it's not a register).
+> 
+> Can you explicit please ? Doesn't '+r' means that they are input and 
+> output at the same time ?
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+That is what + means, yes -- that this output is an input as well.  It is
+the same to write
+
+  asm("mov %1,%0 ; mov %0,42" : "+r"(x), "=r"(y));
+or to write
+  asm("mov %1,%0 ; mov %0,42" : "=r"(x), "=r"(y) : "0"(x));
+
+(So not "at the same time" as in "in the same machine instruction", but
+more loosely, as in "in the same inline asm statement").
+
+> "to be made earlyclobbers", what does this means exactly ? How to do that ?
+
+You write &, like "+&r" in this case.  It means the machine code writes
+to this register before it has consumed all asm inputs (remember, GCC
+does not understand (or even parse!) the assembler string).
+
+So just
+
+		: "+&r" (loop1), "+&r" (loop2)
+
+will do.  (Why are they separate though?  It could just be one loop var).
+
+
+Segher
