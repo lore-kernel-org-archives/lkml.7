@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B2FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC65C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC03A23431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8630B238CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528084;
-	bh=Jx4h1OLqgtM+TERApXP4s/2ms0EySlgEHJea4wI2Qf4=;
+	s=default; t=1567528089;
+	bh=5a1NYFVj1E1tb2pLQaCqcgLB6whCrKzXo36U2GMgsaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fpj3aZKmSQJ2i7FZ4fsjc6fkqdmUZ3egyAxy3wdMbuLJZhPeJ6O7vntqwKyd5R2LA
-	 jxHl/uYCv8SVfW9hwGMntLZ/33VYFWmblaOciJZD7I3brfFpGS/+ke/8uZlfs7+hov
-	 Y6xdkTmXxjSJcrsszUJg+uOjjnttmubVeCSDX9so=
+	b=jvgZXOcSFsMO9ehMD7CLbJ9Q6u7IsLuPUYpaUkgrvBDzfVrjvmCu394bEvNi3cDRg
+	 sT+23IebNd2M0MG00WVdECv/gSyIQaVTtH4030ObbARjQloEZSSxQ0IrTRX9YfEsKn
+	 d0tgtKjjjVmguGy4dx8zSjXIGDhWoPgeYJvE0Mkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfICQ2E (ORCPT
+        id S1731043AbfICQ2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49562 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730986AbfICQ15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:57 -0400
+        id S1731007AbfICQ2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98772238C5;
-        Tue,  3 Sep 2019 16:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4592343A;
+        Tue,  3 Sep 2019 16:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528076;
-        bh=Jx4h1OLqgtM+TERApXP4s/2ms0EySlgEHJea4wI2Qf4=;
+        s=default; t=1567528079;
+        bh=5a1NYFVj1E1tb2pLQaCqcgLB6whCrKzXo36U2GMgsaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DH7yIoGwDMBTdYv3qFeQSRvtY6GlzdhCxWqSgXJkLrP2DfIg7UOCxa4i1de3YteXg
-         WcuQj56idzDoSJ1zcLdkuf2TIW4dob1UErDoo/PyCrrNuwMyIHTUw3yGKPZvG0GEwB
-         zqIcSldOknaaGI+tu1ZWQxM2e9SDdpqwtqZPuQdo=
+        b=RGaNe4JkYsKmE5ZyCo4ArOqL+e+29APDnPc//nQOcJ9y5UALfmKwW/d1nP+tATRJR
+         +a4eFzckfO2YkKmZzozJEgsCcDVkhKnUtSKUSHW7CvwHnrtwzCmlbvHSBsf1v/ERTy
+         S/wEN2Rtd1uKl4ytOD7kQdDGfTP2pwWwiJGTQ1sY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 089/167] usb: typec: tcpm: Try PD-2.0 if sink does not respond to 3.0 source-caps
-Date:   Tue,  3 Sep 2019 12:24:01 -0400
-Message-Id: <20190903162519.7136-89-sashal@kernel.org>
+Cc:     Ben Gardon <bgardon@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/167] kvm: mmu: Fix overflow on kvm mmu page limit calculation
+Date:   Tue,  3 Sep 2019 12:24:04 -0400
+Message-Id: <20190903162519.7136-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,78 +59,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ben Gardon <bgardon@google.com>
 
-[ Upstream commit 976daf9d1199932df80e7b04546d1a1bd4ed5ece ]
+[ Upstream commit bc8a3d8925a8fa09fa550e0da115d95851ce33c6 ]
 
-PD 2.0 sinks are supposed to accept src-capabilities with a 3.0 header and
-simply ignore any src PDOs which the sink does not understand such as PPS
-but some 2.0 sinks instead ignore the entire PD_DATA_SOURCE_CAP message,
-causing contract negotiation to fail.
+KVM bases its memory usage limits on the total number of guest pages
+across all memslots. However, those limits, and the calculations to
+produce them, use 32 bit unsigned integers. This can result in overflow
+if a VM has more guest pages that can be represented by a u32. As a
+result of this overflow, KVM can use a low limit on the number of MMU
+pages it will allocate. This makes KVM unable to map all of guest memory
+at once, prompting spurious faults.
 
-This commit fixes such sinks not working by re-trying the contract
-negotiation with PD-2.0 source-caps messages if we don't have a contract
-after PD_N_HARD_RESET_COUNT hard-reset attempts.
+Tested: Ran all kvm-unit-tests on an Intel Haswell machine. This patch
+	introduced no new failures.
 
-The problem fixed by this commit was noticed with a Type-C to VGA dongle.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Gardon <bgardon@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpm.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 12 ++++++------
+ arch/x86/kvm/mmu.c              | 13 ++++++-------
+ arch/x86/kvm/mmu.h              |  2 +-
+ arch/x86/kvm/x86.c              |  4 ++--
+ 4 files changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 5f29ce8d6c3f9..e8524ad5a4c0a 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -37,6 +37,7 @@
- 	S(SRC_ATTACHED),			\
- 	S(SRC_STARTUP),				\
- 	S(SRC_SEND_CAPABILITIES),		\
-+	S(SRC_SEND_CAPABILITIES_TIMEOUT),	\
- 	S(SRC_NEGOTIATE_CAPABILITIES),		\
- 	S(SRC_TRANSITION_SUPPLY),		\
- 	S(SRC_READY),				\
-@@ -2987,10 +2988,34 @@ static void run_state_machine(struct tcpm_port *port)
- 			/* port->hard_reset_count = 0; */
- 			port->caps_count = 0;
- 			port->pd_capable = true;
--			tcpm_set_state_cond(port, hard_reset_state(port),
-+			tcpm_set_state_cond(port, SRC_SEND_CAPABILITIES_TIMEOUT,
- 					    PD_T_SEND_SOURCE_CAP);
- 		}
- 		break;
-+	case SRC_SEND_CAPABILITIES_TIMEOUT:
-+		/*
-+		 * Error recovery for a PD_DATA_SOURCE_CAP reply timeout.
-+		 *
-+		 * PD 2.0 sinks are supposed to accept src-capabilities with a
-+		 * 3.0 header and simply ignore any src PDOs which the sink does
-+		 * not understand such as PPS but some 2.0 sinks instead ignore
-+		 * the entire PD_DATA_SOURCE_CAP message, causing contract
-+		 * negotiation to fail.
-+		 *
-+		 * After PD_N_HARD_RESET_COUNT hard-reset attempts, we try
-+		 * sending src-capabilities with a lower PD revision to
-+		 * make these broken sinks work.
-+		 */
-+		if (port->hard_reset_count < PD_N_HARD_RESET_COUNT) {
-+			tcpm_set_state(port, HARD_RESET_SEND, 0);
-+		} else if (port->negotiated_rev > PD_REV20) {
-+			port->negotiated_rev--;
-+			port->hard_reset_count = 0;
-+			tcpm_set_state(port, SRC_SEND_CAPABILITIES, 0);
-+		} else {
-+			tcpm_set_state(port, hard_reset_state(port), 0);
-+		}
-+		break;
- 	case SRC_NEGOTIATE_CAPABILITIES:
- 		ret = tcpm_pd_check_request(port);
- 		if (ret < 0) {
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index b6417454a9d79..0d3f5cf3ff3ea 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -117,7 +117,7 @@ static inline gfn_t gfn_to_index(gfn_t gfn, gfn_t base_gfn, int level)
+ }
+ 
+ #define KVM_PERMILLE_MMU_PAGES 20
+-#define KVM_MIN_ALLOC_MMU_PAGES 64
++#define KVM_MIN_ALLOC_MMU_PAGES 64UL
+ #define KVM_MMU_HASH_SHIFT 12
+ #define KVM_NUM_MMU_PAGES (1 << KVM_MMU_HASH_SHIFT)
+ #define KVM_MIN_FREE_MMU_PAGES 5
+@@ -796,9 +796,9 @@ enum kvm_irqchip_mode {
+ };
+ 
+ struct kvm_arch {
+-	unsigned int n_used_mmu_pages;
+-	unsigned int n_requested_mmu_pages;
+-	unsigned int n_max_mmu_pages;
++	unsigned long n_used_mmu_pages;
++	unsigned long n_requested_mmu_pages;
++	unsigned long n_max_mmu_pages;
+ 	unsigned int indirect_shadow_pages;
+ 	unsigned long mmu_valid_gen;
+ 	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
+@@ -1201,8 +1201,8 @@ void kvm_mmu_clear_dirty_pt_masked(struct kvm *kvm,
+ 				   gfn_t gfn_offset, unsigned long mask);
+ void kvm_mmu_zap_all(struct kvm *kvm);
+ void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen);
+-unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm);
+-void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned int kvm_nr_mmu_pages);
++unsigned long kvm_mmu_calculate_mmu_pages(struct kvm *kvm);
++void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned long kvm_nr_mmu_pages);
+ 
+ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3);
+ bool pdptrs_changed(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index cdc0c460950f3..88940261fb537 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -1954,7 +1954,7 @@ static int is_empty_shadow_page(u64 *spt)
+  * aggregate version in order to make the slab shrinker
+  * faster
+  */
+-static inline void kvm_mod_used_mmu_pages(struct kvm *kvm, int nr)
++static inline void kvm_mod_used_mmu_pages(struct kvm *kvm, unsigned long nr)
+ {
+ 	kvm->arch.n_used_mmu_pages += nr;
+ 	percpu_counter_add(&kvm_total_used_mmu_pages, nr);
+@@ -2704,7 +2704,7 @@ static bool prepare_zap_oldest_mmu_page(struct kvm *kvm,
+  * Changing the number of mmu pages allocated to the vm
+  * Note: if goal_nr_mmu_pages is too small, you will get dead lock
+  */
+-void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned int goal_nr_mmu_pages)
++void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned long goal_nr_mmu_pages)
+ {
+ 	LIST_HEAD(invalid_list);
+ 
+@@ -5926,10 +5926,10 @@ int kvm_mmu_module_init(void)
+ /*
+  * Caculate mmu pages needed for kvm.
+  */
+-unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm)
++unsigned long kvm_mmu_calculate_mmu_pages(struct kvm *kvm)
+ {
+-	unsigned int nr_mmu_pages;
+-	unsigned int  nr_pages = 0;
++	unsigned long nr_mmu_pages;
++	unsigned long nr_pages = 0;
+ 	struct kvm_memslots *slots;
+ 	struct kvm_memory_slot *memslot;
+ 	int i;
+@@ -5942,8 +5942,7 @@ unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm)
+ 	}
+ 
+ 	nr_mmu_pages = nr_pages * KVM_PERMILLE_MMU_PAGES / 1000;
+-	nr_mmu_pages = max(nr_mmu_pages,
+-			   (unsigned int) KVM_MIN_ALLOC_MMU_PAGES);
++	nr_mmu_pages = max(nr_mmu_pages, KVM_MIN_ALLOC_MMU_PAGES);
+ 
+ 	return nr_mmu_pages;
+ }
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 1fab69c0b2f32..65892288bf510 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -69,7 +69,7 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
+ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
+ 				u64 fault_address, char *insn, int insn_len);
+ 
+-static inline unsigned int kvm_mmu_available_pages(struct kvm *kvm)
++static inline unsigned long kvm_mmu_available_pages(struct kvm *kvm)
+ {
+ 	if (kvm->arch.n_max_mmu_pages > kvm->arch.n_used_mmu_pages)
+ 		return kvm->arch.n_max_mmu_pages -
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index ed6b43f344b0c..4f564dc17c333 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4116,7 +4116,7 @@ static int kvm_vm_ioctl_set_identity_map_addr(struct kvm *kvm,
+ }
+ 
+ static int kvm_vm_ioctl_set_nr_mmu_pages(struct kvm *kvm,
+-					  u32 kvm_nr_mmu_pages)
++					 unsigned long kvm_nr_mmu_pages)
+ {
+ 	if (kvm_nr_mmu_pages < KVM_MIN_ALLOC_MMU_PAGES)
+ 		return -EINVAL;
+@@ -4130,7 +4130,7 @@ static int kvm_vm_ioctl_set_nr_mmu_pages(struct kvm *kvm,
+ 	return 0;
+ }
+ 
+-static int kvm_vm_ioctl_get_nr_mmu_pages(struct kvm *kvm)
++static unsigned long kvm_vm_ioctl_get_nr_mmu_pages(struct kvm *kvm)
+ {
+ 	return kvm->arch.n_max_mmu_pages;
+ }
 -- 
 2.20.1
 
