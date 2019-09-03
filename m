@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97144C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CD8215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB5323431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528340;
-	bh=yruG6zYRqI5FfoP6ioRKtGvCg1Enlfzh6rJyvHXfJSE=;
+	s=default; t=1567528343;
+	bh=VdilDWcuzsVVqy1xSRAXyAiXDXeSNGwCwiyBUksGKcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ehV4bHkXcanOEwdHpn+iFr4lWLLDqaHrcnBAl9WNb2fyVqHb8+p2Pk2Tr+vMsuXNP
-	 MWBOmR7VPd2GcWMDa3K1gX1TcCNN4+tEGphAWD9MARzMD+5/6uv4KFl0gC/rjpEomu
-	 uJD6KwQN9BkNqyoMEDNPjuD1SlQWlw38GPm33gG0=
+	b=b9fdiKqGyBQ8v3nxU5Pw6q2XPmBsLBWKoi7RA29eBKcj+h9Wv4IXDD3XWxTVllC3p
+	 lFN7FGIYhsDpqJSG1bF6iFI6ulN9WlFKywIFqcilGqfWaTzf2TcorDrwIhWlAGpWHg
+	 lGyHypysbaF5Em2sWckgQBbHcQM3kit7q54Wby40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfICQcT (ORCPT
+        id S1730820AbfICQcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730214AbfICQcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:32:15 -0400
+        id S1731304AbfICQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:32:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADE6238C7;
-        Tue,  3 Sep 2019 16:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CFAC238C5;
+        Tue,  3 Sep 2019 16:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528334;
-        bh=yruG6zYRqI5FfoP6ioRKtGvCg1Enlfzh6rJyvHXfJSE=;
+        s=default; t=1567528338;
+        bh=VdilDWcuzsVVqy1xSRAXyAiXDXeSNGwCwiyBUksGKcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVTi4ZV/E9IaigAGJOtcWfATBHZ3GB19otH+z+A9B1fgyKUYjAvxbisOoyaE6E+f7
-         I4zisdWzHUrq3tBI/sWm1MMCkE0dXt+qtWVeEzv0fTAs/TLUrWEyQSG7FzOUw5bATT
-         jPakjaABNZpX245JXAHcM/1DU8tBO9Eef4N7wBbc=
+        b=d/7Bc1Bwa7ewAtqfeuhjYSz2KvJdqiyWDiXRhbpc7QsWzNBvojbLma6+0DaooH9Ym
+         kXdim2N0tQyIkWy2omFVU78de4IczZjMWc5l6jR2qdo8w/j4XCCd5Ab2Oo/kfMpkz4
+         6ccYk8343tkVw8Pn5yFaziHsi3efiUZj1HU/d6jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Theodore Ts'o <tytso@mit.edu>, Dan Rue <dan.rue@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 164/167] ext4: don't perform block validity checks on the journal inode
-Date:   Tue,  3 Sep 2019 12:25:16 -0400
-Message-Id: <20190903162519.7136-164-sashal@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <drake@endlessm.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 167/167] PCI: Reset both NVIDIA GPU and HDA in ThinkPad P50 workaround
+Date:   Tue,  3 Sep 2019 12:25:19 -0400
+Message-Id: <20190903162519.7136-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,57 +66,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 ]
+[ Upstream commit ad54567ad5d8e938ee6cf02e4f3867f18835ae6e ]
 
-Since the journal inode is already checked when we added it to the
-block validity's system zone, if we check it again, we'll just trigger
-a failure.
+quirk_reset_lenovo_thinkpad_50_nvgpu() resets NVIDIA GPUs to work around
+an apparent BIOS defect.  It previously used pci_reset_function(), and
+the available method was a bus reset, which was fine because there was
+only one function on the bus.  After b516ea586d71 ("PCI: Enable NVIDIA
+HDA controllers"), there are now two functions (the HDA controller and
+the GPU itself) on the bus, so the reset fails.
 
-This was causing failures like this:
+Use pci_reset_bus() explicitly instead of pci_reset_function() since it's
+OK to reset both devices.
 
-[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
-#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
-[   53.938480] Aborting journal on device sda-8.
-
-... but only if the system was under enough memory pressure that
-logical->physical mapping for the journal inode gets pushed out of the
-extent cache.  (This is why it wasn't noticed earlier.)
-
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Reported-by: Dan Rue <dan.rue@linaro.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+[bhelgaas: commit log, add e0547c81bfcf]
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Fixes: e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary")
+Link: https://lore.kernel.org/r/20190801220117.14952-1-lyude@redhat.com
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Ben Skeggs <bskeggs@redhat.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Daniel Drake <drake@endlessm.com>
+Cc: Aaron Plattner <aplattner@nvidia.com>
+Cc: Peter Wu <peter@lekensteyn.nl>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Maik Freudenberg <hhfeuer@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/pci/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 45aea792d22a0..00bf0b67aae87 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -518,10 +518,14 @@ __read_extent_tree_block(const char *function, unsigned int line,
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 311f8a33e62ff..06be52912dcdb 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5162,7 +5162,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ 	 */
+ 	if (ioread32(map + 0x2240c) & 0x2) {
+ 		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
+-		ret = pci_reset_function(pdev);
++		ret = pci_reset_bus(pdev);
+ 		if (ret < 0)
+ 			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
  	}
- 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
- 		return bh;
--	err = __ext4_ext_check(function, line, inode,
--			       ext_block_hdr(bh), depth, pblk);
--	if (err)
--		goto errout;
-+	if (!ext4_has_feature_journal(inode->i_sb) ||
-+	    (inode->i_ino !=
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
-+		err = __ext4_ext_check(function, line, inode,
-+				       ext_block_hdr(bh), depth, pblk);
-+		if (err)
-+			goto errout;
-+	}
- 	set_buffer_verified(bh);
- 	/*
- 	 * If this is a leaf block, cache all of its entries
 -- 
 2.20.1
 
