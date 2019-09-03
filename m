@@ -2,202 +2,196 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31444C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E81C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0398322CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFF421897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="ELdqVliy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfICUeV (ORCPT
+        id S1727257AbfICUfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:34:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52688 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfICUcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:32:17 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 85C6EC058CBD;
-        Tue,  3 Sep 2019 20:32:16 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE248608C2;
-        Tue,  3 Sep 2019 20:32:15 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 6D4B020ACC; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/26] nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
-Date:   Tue,  3 Sep 2019 16:31:52 -0400
-Message-Id: <20190903203215.9157-4-smayhew@redhat.com>
-In-Reply-To: <20190903203215.9157-1-smayhew@redhat.com>
-References: <20190903203215.9157-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 03 Sep 2019 20:32:16 +0000 (UTC)
+        Tue, 3 Sep 2019 16:35:30 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:34082 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfICUfa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:35:30 -0400
+Received: by mail-yw1-f66.google.com with SMTP id n126so6415965ywf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 13:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pwr73Ifq5MZWDOqqYWVQ92kOUvydUL8kklQud78eUJs=;
+        b=ELdqVliyxeTW51ck6ee9Q2LraeCgUxfmOGv6+fiEQimkCVjhBsD0gEFVO66Dbyfn0g
+         G1X3aEEQl4YN95BV8MPCAEv3ZTd2YyFmrTZRumnAQnKdQNuknxSIgNveJ2oosciek7Ay
+         5oO3x3M3mQsIuE2ARuQ2ETH5jVeeFB2JftVPut9IGtPxIzpczsosbGc0RBiKc/S8z7iL
+         uzmOSJxRb3pFLBTCp49IvcL96BhnVEdcQqC6kG3jOLZtMZxtG52TcqTmnYoSBB38oJ0f
+         RX8JxSX/FbNQCz5wI14K1b8itHtewNvBXxteMX8t4BIpBcgFU3qWDHRm7L4ykZm9MZNu
+         /siA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pwr73Ifq5MZWDOqqYWVQ92kOUvydUL8kklQud78eUJs=;
+        b=eAE1q9+JEw63aCMwOHwvjtEnYtWvbpyJ/GGuXToZYhjPEi+6AQ8FONK6Kbr/0Jz9pg
+         RI5LZrF02dYlpO8KetCDosc05kshx7Sq4pyGVE59CFLcS8dqTGLXagAe2WRT5bKqu109
+         q/KklXtN1cNfzkhfvjwJ7BqbNvIqiN/65nnzYOTO58i/FX3j8ml8lJQFyoCMnnzZgTM5
+         Sw6XRQnU5KKJeTGAMPm5enf3tCCuEuT67rPMmg6TZAeaqIH763lW0XiwZoaVX2edy/+i
+         A/hRHbKzJKPzzwML595CvKZE7vNG+rwegBcLeQISS8Gk0HSCbLQS0OGNA+TaAEgrwaTg
+         jTmw==
+X-Gm-Message-State: APjAAAWmnVc1bDPXqRfcHA3QzsQlPbS7yrmm2FzGxvcvwTX5aesWH3uW
+        pIsYsGNck/UHBf+0y3xipdf3Mg==
+X-Google-Smtp-Source: APXvYqwfJOUxosRmo8V5dxesORSeHIuM6ShnQY1aGpiUXTG5KqY5PTIzvrDeoLFx+EYtGBdQr4va3Q==
+X-Received: by 2002:a81:84d4:: with SMTP id u203mr26754902ywf.106.1567542929119;
+        Tue, 03 Sep 2019 13:35:29 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id g69sm3777935ywb.97.2019.09.03.13.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 13:35:25 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 16:35:24 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Allison Randal <allison@lohutok.net>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/10] drm/msm: add kms->flush_commit()
+Message-ID: <20190903203524.GJ218215@art_vandelay>
+References: <20190829164601.11615-1-robdclark@gmail.com>
+ <20190829164601.11615-7-robdclark@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829164601.11615-7-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Thu, Aug 29, 2019 at 09:45:14AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Add ->flush_commit(crtc_mask).  Currently a no-op, but kms backends
+> should migrate writing flush registers to this hook, so we can decouple
+> pushing updates to hardware, and flushing the updates.
+> 
+> Once we add async commit support, the hw updates will be pushed down to
+> the hw synchronously, but flushing the updates will be deferred until as
+> close to vblank as possible, so that multiple updates can be combined in
+> a single frame.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  |  6 ++++
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c |  6 ++++
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c |  6 ++++
+>  drivers/gpu/drm/msm/msm_atomic.c         |  9 ++++--
+>  drivers/gpu/drm/msm/msm_kms.h            | 40 ++++++++++++++++++++++--
+>  5 files changed, 63 insertions(+), 4 deletions(-)
+> 
 
-Do that (fhandle allocation, setting struct server up) in
-nfs4_referral_mount() and nfs4_try_mount() resp. and pass the
-server and pointer to mount_info into nfs_do_root_mount() so that
-nfs4_remote_referral_mount()/nfs_remote_mount() could be merged.
+/snip
 
-Since we are moving stuff from ->mount() instances to the points
-prior to vfs_kern_mount() that would trigger those, we need to
-make sure that do_nfs_root_mount() will do the corresponding
-cleanup itself if it doesn't trigger those ->mount() instances.
+> diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
+> index 10dd171b43f8..bb70c1758c72 100644
+> --- a/drivers/gpu/drm/msm/msm_kms.h
+> +++ b/drivers/gpu/drm/msm/msm_kms.h
+> @@ -30,12 +30,47 @@ struct msm_kms_funcs {
+>  	irqreturn_t (*irq)(struct msm_kms *kms);
+>  	int (*enable_vblank)(struct msm_kms *kms, struct drm_crtc *crtc);
+>  	void (*disable_vblank)(struct msm_kms *kms, struct drm_crtc *crtc);
+> -	/* modeset, bracketing atomic_commit(): */
+> +
+> +	/*
+> +	 * Atomic commit handling:
+> +	 */
+> +
+> +	/**
+> +	 * Prepare for atomic commit.  This is called after any previous
+> +	 * (async or otherwise) commit has completed.
+> +	 */
+>  	void (*prepare_commit)(struct msm_kms *kms, struct drm_atomic_state *state);
+> +
+> +	/**
+> +	 * Flush an atomic commit.  This is called after the hardware
+> +	 * updates have already been pushed down to effected planes/
+> +	 * crtcs/encoders/connectors.
+> +	 */
+> +	void (*flush_commit)(struct msm_kms *kms, unsigned crtc_mask);
+> +
+> +	/* TODO remove ->commit(), use ->flush_commit() instead: */
+>  	void (*commit)(struct msm_kms *kms, struct drm_atomic_state *state);
+> -	void (*complete_commit)(struct msm_kms *kms, unsigned crtc_mask);
+> +
+> +	/**
+> +	 * Wait for any in-progress flush to complete on the specified
+> +	 * crtcs.  This should not block if there is no in-progress
+> +	 * commit (ie. don't just wait for a vblank), as it will also
+> +	 * be called before ->prepare_commit() to ensure any potential
+> +	 * "async" commit has completed.
+> +	 */
+>  	void (*wait_flush)(struct msm_kms *kms, unsigned crtc_mask);
+>  
+> +	/**
+> +	 * Clean up are commit is completed.  This is called after
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfs/nfs4super.c | 67 ++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 32 deletions(-)
+s/are/our/?
 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 4591d6618efa..773c347df3ab 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -108,32 +108,37 @@ static struct dentry *
- nfs4_remote_mount(struct file_system_type *fs_type, int flags,
- 		  const char *dev_name, void *info)
- {
--	struct nfs_mount_info *mount_info = info;
--
--	mount_info->set_security = nfs_set_sb_security;
--
--	/* Get a volume representation */
--	mount_info->server = nfs4_create_server(mount_info, &nfs_v4);
--	return nfs_fs_mount_common(flags, dev_name, mount_info, &nfs_v4);
-+	return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
- }
- 
- static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type,
--		int flags, void *data, const char *hostname)
-+					  struct nfs_server *server, int flags,
-+					  struct nfs_mount_info *info,
-+					  const char *hostname)
- {
- 	struct vfsmount *root_mnt;
- 	char *root_devname;
- 	size_t len;
- 
-+	if (IS_ERR(server))
-+		return ERR_CAST(server);
-+
- 	len = strlen(hostname) + 5;
- 	root_devname = kmalloc(len, GFP_KERNEL);
--	if (root_devname == NULL)
-+	if (root_devname == NULL) {
-+		nfs_free_server(server);
- 		return ERR_PTR(-ENOMEM);
-+	}
- 	/* Does hostname needs to be enclosed in brackets? */
- 	if (strchr(hostname, ':'))
- 		snprintf(root_devname, len, "[%s]:/", hostname);
- 	else
- 		snprintf(root_devname, len, "%s:/", hostname);
--	root_mnt = vfs_kern_mount(fs_type, flags, root_devname, data);
-+	info->server = server;
-+	root_mnt = vfs_kern_mount(fs_type, flags, root_devname, info);
-+	if (info->server)
-+		nfs_free_server(info->server);
-+	info->server = NULL;
- 	kfree(root_devname);
- 	return root_mnt;
- }
-@@ -234,11 +239,15 @@ struct dentry *nfs4_try_mount(int flags, const char *dev_name,
- 	struct dentry *res;
- 	struct nfs_parsed_mount_data *data = mount_info->parsed;
- 
-+	mount_info->set_security = nfs_set_sb_security;
-+
- 	dfprintk(MOUNT, "--> nfs4_try_mount()\n");
- 
- 	export_path = data->nfs_server.export_path;
- 	data->nfs_server.export_path = "/";
--	root_mnt = nfs_do_root_mount(&nfs4_remote_fs_type, flags, mount_info,
-+	root_mnt = nfs_do_root_mount(&nfs4_remote_fs_type,
-+			nfs4_create_server(mount_info, &nfs_v4),
-+			flags, mount_info,
- 			data->nfs_server.hostname);
- 	data->nfs_server.export_path = export_path;
- 
-@@ -254,25 +263,7 @@ static struct dentry *
- nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
- 			   const char *dev_name, void *raw_data)
- {
--	struct nfs_mount_info mount_info = {
--		.fill_super = nfs_fill_super,
--		.set_security = nfs_clone_sb_security,
--		.cloned = raw_data,
--	};
--	struct dentry *mntroot = ERR_PTR(-ENOMEM);
--
--	dprintk("--> nfs4_referral_get_sb()\n");
--
--	mount_info.mntfh = nfs_alloc_fhandle();
--	if (mount_info.cloned == NULL || mount_info.mntfh == NULL)
--		goto out;
--
--	/* create a new volume representation */
--	mount_info.server = nfs4_create_referral_server(mount_info.cloned, mount_info.mntfh);
--	mntroot = nfs_fs_mount_common(flags, dev_name, &mount_info, &nfs_v4);
--out:
--	nfs_free_fhandle(mount_info.mntfh);
--	return mntroot;
-+	return nfs_fs_mount_common(flags, dev_name, raw_data, &nfs_v4);
- }
- 
- /*
-@@ -282,23 +273,35 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
- 		int flags, const char *dev_name, void *raw_data)
- {
- 	struct nfs_clone_mount *data = raw_data;
-+	struct nfs_mount_info mount_info = {
-+		.fill_super = nfs_fill_super,
-+		.set_security = nfs_clone_sb_security,
-+		.cloned = data,
-+	};
- 	char *export_path;
- 	struct vfsmount *root_mnt;
- 	struct dentry *res;
- 
- 	dprintk("--> nfs4_referral_mount()\n");
- 
-+	mount_info.mntfh = nfs_alloc_fhandle();
-+	if (!mount_info.mntfh)
-+		return ERR_PTR(-ENOMEM);
-+
- 	export_path = data->mnt_path;
- 	data->mnt_path = "/";
--
- 	root_mnt = nfs_do_root_mount(&nfs4_remote_referral_fs_type,
--			flags, data, data->hostname);
-+			nfs4_create_referral_server(mount_info.cloned,
-+						    mount_info.mntfh),
-+			flags, &mount_info, data->hostname);
- 	data->mnt_path = export_path;
- 
- 	res = nfs_follow_remote_path(root_mnt, export_path);
- 	dprintk("<-- nfs4_referral_mount() = %d%s\n",
- 		PTR_ERR_OR_ZERO(res),
- 		IS_ERR(res) ? " [error]" : "");
-+
-+	nfs_free_fhandle(mount_info.mntfh);
- 	return res;
- }
- 
+With that fixed,
+
+Reviewed-by: Sean Paul <sean@poorly.run>
+
+
+
+> +	 * ->wait_flush(), to give the backend a chance to do any
+> +	 * post-commit cleanup.
+> +	 */
+> +	void (*complete_commit)(struct msm_kms *kms, unsigned crtc_mask);
+> +
+> +	/*
+> +	 * Format handling:
+> +	 */
+> +
+>  	/* get msm_format w/ optional format modifiers from drm_mode_fb_cmd2 */
+>  	const struct msm_format *(*get_format)(struct msm_kms *kms,
+>  					const uint32_t format,
+> @@ -45,6 +80,7 @@ struct msm_kms_funcs {
+>  			const struct msm_format *msm_fmt,
+>  			const struct drm_mode_fb_cmd2 *cmd,
+>  			struct drm_gem_object **bos);
+> +
+>  	/* misc: */
+>  	long (*round_pixclk)(struct msm_kms *kms, unsigned long rate,
+>  			struct drm_encoder *encoder);
+> -- 
+> 2.21.0
+> 
+
 -- 
-2.17.2
-
+Sean Paul, Software Engineer, Google / Chromium OS
