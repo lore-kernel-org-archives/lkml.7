@@ -2,77 +2,88 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED80C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1B822CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C5E21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfICHg7 (ORCPT
+        id S1727984AbfICHhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:36:59 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:36343 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfICHg7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:36:59 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x837atqU020683, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x837atqU020683
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 3 Sep 2019 15:36:56 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Tue, 3 Sep
- 2019 15:36:55 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] r8152: modify rtl8152_set_speed function
-Thread-Topic: [PATCH net-next] r8152: modify rtl8152_set_speed function
-Thread-Index: AQHVYYTrRMaVJv63vEGfeZKbVbiDuqcYMZIAgAEQO0D//7KEAIAAiqfA//9+BQCAAIbSYP//gQCAABEh6DA=
-Date:   Tue, 3 Sep 2019 07:36:54 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18DADA1@RTITMBSVM03.realtek.com.tw>
-References: <1394712342-15778-326-Taiwan-albertk@realtek.com>
- <280e6a3d-c6c3-ef32-a65d-19566190a1d3@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DAB41@RTITMBSVM03.realtek.com.tw>
- <aa9513ff-3cef-4b9f-ecbd-1310660a911c@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DACE1@RTITMBSVM03.realtek.com.tw>
- <56675c6b-c792-245e-54d0-eacd50e7a139@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DAD2A@RTITMBSVM03.realtek.com.tw>
- <32d490ae-70af-ba86-93de-be342a2a7e39@gmail.com>
-In-Reply-To: <32d490ae-70af-ba86-93de-be342a2a7e39@gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 3 Sep 2019 03:37:23 -0400
+Received: from sauhun.de ([88.99.104.3]:49762 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfICHhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:37:22 -0400
+Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
+        by pokefinder.org (Postfix) with ESMTPSA id 7167C2C4F2F;
+        Tue,  3 Sep 2019 09:37:20 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 09:37:20 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     jacopo mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Message-ID: <20190903073719.GA1020@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVpbmVyIEthbGx3ZWl0IFttYWlsdG86aGthbGx3ZWl0MUBnbWFpbC5jb21dDQo+IFNlbnQ6IFR1
-ZXNkYXksIFNlcHRlbWJlciAwMywgMjAxOSAzOjEzIFBNDQpbLi4uXQ0KPiA+IFNvbWUgb2Ygb3Vy
-IGNoaXBzIHN1cHBvcnQgdGhlIGZlYXR1cmUgb2YgVVBTLiBXaGVuIHNhdGlzZnlpbmcgY2VydGFp
-bg0KPiA+IGNvbmRpdGlvbiwgdGhlIGh3IHdvdWxkIHJlY292ZXIgdGhlIHNldHRpbmdzIG9mIHNw
-ZWVkLiBUaGVyZWZvcmUsIEkgaGF2ZQ0KPiA+IHRvIHJlY29yZCB0aGUgc2V0dGluZ3Mgb2YgdGhl
-IHNwZWVkLCBhbmQgc2V0IHRoZW0gdG8gaHcuDQo+ID4NCj4gTm90IGtub3dpbmcgdGhlIFVQUyBm
-ZWF0dXJlIGluIGRldGFpbDoNCj4gSW4gbmV0LW5leHQgSSBjaGFuZ2VkIHRoZSBzb2Z0d2FyZSAi
-UEhZIHNwZWVkLWRvd24iIGltcGxlbWVudGF0aW9uIHRvDQo+IGJlIG1vcmUgZ2VuZXJpYy4gSXQg
-c3RvcmVzIHRoZSBvbGQgYWR2ZXJ0aXNlZCBzZXR0aW5ncyBpbiBhIG5ldw0KPiBwaHlfZGV2aWNl
-IG1lbWJlciBhZHZfb2xkLCBhbmQgcmVzdG9yZXMgdGhlbSBpbiBwaHlfc3BlZWRfdXAoKS4NCj4g
-TWF5YmUgd2hhdCB5b3UgbmVlZCBpcyBzaW1pbGFyLg0KDQpJdCBpcyBhIGZlYXR1cmUgYWJvdXQg
-cG93ZXIgc2F2aW5nLiBXaGVuIHNvbWUgY29uZGl0aW9ucyBhcmUNCnNhdGlzZmllZCwgdGhlIHBv
-d2VyIG9mIFBIWSB3b3VsZCBiZSBjdXQuIEFuZCB0aGUgaHcgd291bGQNCnJlc3RvcmUgdGhlIFBI
-WSBzZXR0aW5ncyBpbmNsdWRpbmcgdGhlIHNwZWVkIGF1dG9tYXRpY2FsbHksDQp3aGVuIGxlYXZp
-bmcgcG93ZXIgc2F2aW5nIG1vZGUuDQoNCkJlc3QgUmVnYXJkcywNCkhheWVzDQoNCg0K
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> Adding the ATR features to i2c-mux.c was very tricky and error-prone due
+> to all of this code, that's why I have moved ATR to its own file in RFCv2.
+
+I forgot to say that I like this.
+
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uGCoACgkQFA3kzBSg
+KbZidw/9EM+Hx6X3hquMtRxGgJV6HJWi8UYyPYgFrwAIYCAt7gtjHWnk1cNizf98
+4DSVtoi6zpMeLx4zM76DZ3P2nnDSDNQ+QwJRYRIoWLs3yWkZ56EPQvCxcc4lhNRW
++XDgzFLnoVnkn4PJlAjztG7xcVm0u9XfM+8Ion0U9A9E7wIR1ml3XwctccOL0Zd7
+VW2zR+nzhEEH9iV/bCKeKTQXg75YgHyIIUlJm48FuP1mA5uWMqtX9hf5h6ctRZK4
+AYcxw1uLOICIBmbW5WaTOHq0xd3TaE4R0+lI9fcODckq7CVFijl1/odDsmgy/ISU
+24A0v/ulqd6b8XMXq3DyU3hyFmbwbJjWitI0nYQKdpCvF9hNFJ5KR++ko/P2I4s8
+inR7erFYYab2RSo0VKsZLgB4t45jmbQmCQtwKjla9uDcz2lHgG5/JzumGaPYdDEa
+DdQZOM8vz1GxM/3Yf2sCNkE2WJ5S0dT8PvrtsIhkn4Sqd9WiGPDiyjpK9mhdU1ap
+H9aXNKDRl+t4/x0zRe1K1gCydQzRsmLByXzAbs/sq+aKtUHl/obBKt9j6XFHMStG
+hOdIT2mQCys07yZpSK/LApFds0PbYBIB8XQjEsXIzGbSwau0BUJl3Ezwn7seZeer
+1SKdzmZlqUCJTeGdvjz6ef8RWeFRKrtl4srdu6ApbgvYAxGvcVk=
+=RqGE
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
