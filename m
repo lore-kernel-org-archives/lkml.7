@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9B0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2BAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9BE2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561942339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528756;
-	bh=CC0jLTX4WDNq6QPJuI18WeL6EaFRS3B/x7g/1f+OPqk=;
+	s=default; t=1567528760;
+	bh=XlxNZltnNdt+6EtfyRaBtW3SLGlCNlWUzNKBkJGyq/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBUs3CyIdvlg7V02vxE+HGbIF7+Q354/2LG2MpdA7Xj4QhT2WUwIQGEC303DyLEkt
-	 1GrciexvIDV58tV7FDYTG6+vL9Nm2/u4uWR9wOGJViaxeausi6hyDSLcmpCG+2k1Wr
-	 Qw2rsvhf9wa5cbmO7J8seXAJJq0Iz/9Gunj3moAU=
+	b=Rrw/LNKph5LUe59ylJ3xCJXlBYc3dfq2IsoqM8dOkoXnaxYzCOr9P5qPz7Nxf8Jw1
+	 9ZYuAoFhLVq/4W78dOT/rfCuCR7J79odfg1zlHyHgpHW36+NwrwAAy3xddswXusxib
+	 wg7oU8AOT5EZt3HeoVoKmQGsBgYIE44krFgyd9Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbfICQZv (ORCPT
+        id S1730470AbfICQZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46008 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbfICQZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:45 -0400
+        id S1730432AbfICQZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C44C2343A;
-        Tue,  3 Sep 2019 16:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB692377D;
+        Tue,  3 Sep 2019 16:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527944;
-        bh=CC0jLTX4WDNq6QPJuI18WeL6EaFRS3B/x7g/1f+OPqk=;
+        s=default; t=1567527938;
+        bh=XlxNZltnNdt+6EtfyRaBtW3SLGlCNlWUzNKBkJGyq/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glqzn8vVQSqMROJNOcBuCiRlfPSNXnrEG+6n6A+hVwT+iC3C0rCDlmToSk8+goWHq
-         r+axZ4hmuO2dASkWiU9/J59kdtKzRLYkc9jVF6L8uWhqFHD4Ehxz0QsXMVcVoCeORj
-         dSWnqy6otg9qiFCyUR4QLO0qoo0MvsRjPEFg+kz4=
+        b=SaY/pN1ZiAJlU8M2uM47SkfHk8jxx4hJgAqdtycNv+Y77a5Furqy3hLKY9svk2wRa
+         1LnX+yJt05B6Z5D3bTDRyJ6P2j3indIBuYK10fDja9Vja9PMrHUmCi0HiXJRCmtyBP
+         QWRDfiJlaaV2N6lIE9f1k60PIFY9Xo9dIdVVB2do=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 012/167] KVM: x86: hyperv: consistently use 'hv_vcpu' for 'struct kvm_vcpu_hv' variables
-Date:   Tue,  3 Sep 2019 12:22:44 -0400
-Message-Id: <20190903162519.7136-12-sashal@kernel.org>
+Cc:     Feifei Xu <Feifei.Xu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 009/167] drm/amdgpu/gfx9: Update gfx9 golden settings.
+Date:   Tue,  3 Sep 2019 12:22:41 -0400
+Message-Id: <20190903162519.7136-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,94 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Feifei Xu <Feifei.Xu@amd.com>
 
-[ Upstream commit 1779a39f786397760ae7a7cc03cf37697d8ae58d ]
+[ Upstream commit 54d682d9a5b357eb711994fa94ef1bc44d7ce9d9 ]
 
-Rename 'hv' to 'hv_vcpu' in kvm_hv_set_msr/kvm_hv_get_msr(); 'hv' is
-'reserved' for 'struct kvm_hv' variables across the file.
+Update the goldensettings for vega20.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Feifei Xu <Feifei.Xu@amd.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/hyperv.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 73fa074b9089a..3f2775aac5545 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1042,20 +1042,20 @@ static u64 current_task_runtime_100ns(void)
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 46568497ef181..f040ec10eecf6 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -82,7 +82,7 @@ MODULE_FIRMWARE("amdgpu/raven_rlc.bin");
  
- static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
+ static const struct soc15_reg_golden golden_settings_gc_9_0[] =
  {
--	struct kvm_vcpu_hv *hv = &vcpu->arch.hyperv;
-+	struct kvm_vcpu_hv *hv_vcpu = &vcpu->arch.hyperv;
- 
- 	switch (msr) {
- 	case HV_X64_MSR_VP_INDEX:
- 		if (!host || (u32)data >= KVM_MAX_VCPUS)
- 			return 1;
--		hv->vp_index = (u32)data;
-+		hv_vcpu->vp_index = (u32)data;
- 		break;
- 	case HV_X64_MSR_VP_ASSIST_PAGE: {
- 		u64 gfn;
- 		unsigned long addr;
- 
- 		if (!(data & HV_X64_MSR_VP_ASSIST_PAGE_ENABLE)) {
--			hv->hv_vapic = data;
-+			hv_vcpu->hv_vapic = data;
- 			if (kvm_lapic_enable_pv_eoi(vcpu, 0))
- 				return 1;
- 			break;
-@@ -1066,7 +1066,7 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
- 			return 1;
- 		if (__clear_user((void __user *)addr, PAGE_SIZE))
- 			return 1;
--		hv->hv_vapic = data;
-+		hv_vcpu->hv_vapic = data;
- 		kvm_vcpu_mark_page_dirty(vcpu, gfn);
- 		if (kvm_lapic_enable_pv_eoi(vcpu,
- 					    gfn_to_gpa(gfn) | KVM_MSR_ENABLED))
-@@ -1082,7 +1082,7 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
- 	case HV_X64_MSR_VP_RUNTIME:
- 		if (!host)
- 			return 1;
--		hv->runtime_offset = data - current_task_runtime_100ns();
-+		hv_vcpu->runtime_offset = data - current_task_runtime_100ns();
- 		break;
- 	case HV_X64_MSR_SCONTROL:
- 	case HV_X64_MSR_SVERSION:
-@@ -1174,11 +1174,11 @@ static int kvm_hv_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata,
- 			  bool host)
- {
- 	u64 data = 0;
--	struct kvm_vcpu_hv *hv = &vcpu->arch.hyperv;
-+	struct kvm_vcpu_hv *hv_vcpu = &vcpu->arch.hyperv;
- 
- 	switch (msr) {
- 	case HV_X64_MSR_VP_INDEX:
--		data = hv->vp_index;
-+		data = hv_vcpu->vp_index;
- 		break;
- 	case HV_X64_MSR_EOI:
- 		return kvm_hv_vapic_msr_read(vcpu, APIC_EOI, pdata);
-@@ -1187,10 +1187,10 @@ static int kvm_hv_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata,
- 	case HV_X64_MSR_TPR:
- 		return kvm_hv_vapic_msr_read(vcpu, APIC_TASKPRI, pdata);
- 	case HV_X64_MSR_VP_ASSIST_PAGE:
--		data = hv->hv_vapic;
-+		data = hv_vcpu->hv_vapic;
- 		break;
- 	case HV_X64_MSR_VP_RUNTIME:
--		data = current_task_runtime_100ns() + hv->runtime_offset;
-+		data = current_task_runtime_100ns() + hv_vcpu->runtime_offset;
- 		break;
- 	case HV_X64_MSR_SCONTROL:
- 	case HV_X64_MSR_SVERSION:
+-	SOC15_REG_GOLDEN_VALUE(GC, 0, mmDB_DEBUG2, 0xf00fffff, 0x00000420),
++	SOC15_REG_GOLDEN_VALUE(GC, 0, mmDB_DEBUG2, 0xf00fffff, 0x00000400),
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmGB_GPU_ID, 0x0000000f, 0x00000000),
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmPA_SC_BINNER_EVENT_CNTL_3, 0x00000003, 0x82400024),
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmPA_SC_ENHANCE, 0x3fffffff, 0x00000001),
 -- 
 2.20.1
 
