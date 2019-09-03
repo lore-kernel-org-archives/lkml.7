@@ -2,111 +2,222 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5A3C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492FCC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5292623400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2213822DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kghVqH9g"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="f3oSBmbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbfICA31 (ORCPT
+        id S1725953AbfICAeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 20:29:27 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55215 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfICA31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 20:29:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mnrh4nfXz9sBF;
-        Tue,  3 Sep 2019 10:29:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567470564;
-        bh=kRsR/fjmnRdyi+3hg0btWrEuAKdQggHirBw6zRr60Ws=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kghVqH9gpZyfvRaErHT/0zN292YSTP85UTk+btTklGj1GpsB0Bnd0IDUMV5wdr1uN
-         TV/Kb7Gy6o4vCWzW7FUdtkDLW5NXnJPM9v6zhBtABkecZysq2Hg3ncCFbYL0sIxltx
-         SpKQzBvUEtFkcOEkE37wzkc7cj34WeAdTOySs/Y7JWJNcAbV5y/Osl+ZNfuml9t/1j
-         bKWI/4U2LXAfTf/FhnTtbW2OE6hriSHDCGe2QlSsRZs4a6mpfQMp+nuIkiO0WEt9US
-         aISWmHd3/BHWH5WxZYf9aVkwUI1m6u2bVwHEPmYHW4FSpQLYCkCSUfB/idEqdFOeM+
-         cDT+aRCdHW8Cg==
-Date:   Tue, 3 Sep 2019 10:29:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the keys tree
-Message-ID: <20190903102922.0268fd2f@canb.auug.org.au>
-In-Reply-To: <14616.1567468394@warthog.procyon.org.uk>
-References: <20190903092121.0b817e0c@canb.auug.org.au>
-        <20190902161935.78bf56f1@canb.auug.org.au>
-        <20190829153116.7ffc7470@canb.auug.org.au>
-        <16836.1567440079@warthog.procyon.org.uk>
-        <20190903090722.556b66ba@canb.auug.org.au>
-        <14616.1567468394@warthog.procyon.org.uk>
+        Mon, 2 Sep 2019 20:34:46 -0400
+Received: from mail-eopbgr1320101.outbound.protection.outlook.com ([40.107.132.101]:35381
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725306AbfICAeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 20:34:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QkXwnH2QTF20bE1g/GWKBc2BEI2yrZZqfqAU3z1E4Tps2Jkc8NvU9gBKtiMQk+md0LB3CsDjyRXvPA+G+eoKmDQs1Y1PD9YfeGbtNxRUzwWV3AK+ixLogHpaogF5zWA249pdH/GOHYFI8C5OoGtt7eFfTJpvSAIg8qm9cX2Nra6D/5DWykOm+SFk61shdv9/Oe1Ag4JLXfZSkp/0D3OKtM/H3ISXhvwt28ZsE5H8Pj+RK/WdALhsgJc+3f/S/DDTQTpIxaKQ3ycGscQUkk5fOrWGMsF5NsjkD4GdeOwH7yotXyb/veUkos58VfYX14FqXcd/HL7Ja07M6DL0hJrpeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mhz1An8bmEF08N3HCpOEWBQd4f+18ZJ30Kh87oDetCk=;
+ b=jsBYeJ5s+cJNgxu53zhDOx/Y4foIGbVDeYU/uZU8cF4RQAkPPfMg6fIkbjMEJbR9wNgmE5IMxozb26jlOqFdSZ1OOdt56PUetTNneVaEyY6F5cRP4dioSNTIb+bBIGDUbK1lJ0v1mom26fQZra2sx8LvQAMo2fr1GbUk19tG0XszJZ/jSadodOZfMvkC1RHi2ZIBQEQgNOsrSQLnnoh/BrW33l20DBBsNN4tI81RByaYMhgTdmoiZfD3Ql6uXy5Yc+Y+Xq08a6VYXkbtyqPXwKk7mFpCg4kkP32LsGJN6xkkVtq7S1/45bOpc02AGLnXmoFH+CN5BC1QPNbmOjuI7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mhz1An8bmEF08N3HCpOEWBQd4f+18ZJ30Kh87oDetCk=;
+ b=f3oSBmbpKVsewQ/3SLkkeYb8oDgUCiUfmGCX9EGT6ZwW/gVUnifqm1+0moNNA0u5Cz+yzzfKPMC7RQIAwGcox/UCydAJLQmXl1NREB5A8yfDT3ERA+UfLRnNjKSokGb8inWHkowVYdPKcyzxyRJQAcqxaoh5pwWZ7IvXGh8SBQg=
+Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
+ KU1P153MB0135.APCP153.PROD.OUTLOOK.COM (10.170.172.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.1; Tue, 3 Sep 2019 00:34:31 +0000
+Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+ ([fe80::f112:af3b:a908:db07]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+ ([fe80::f112:af3b:a908:db07%7]) with mapi id 15.20.2263.004; Tue, 3 Sep 2019
+ 00:34:31 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhgPsqanQ
+Date:   Tue, 3 Sep 2019 00:34:31 +0000
+Message-ID: <KU1P153MB0166994305CF5B9CFA612AA7BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-14T01:06:51.2322584Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ab25360d-4a75-4436-9390-ec9b2f112f8b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:45b3:904b:db76:f1a7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6d042a3-3053-44f3-551a-08d730067cb8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KU1P153MB0135;
+x-ms-traffictypediagnostic: KU1P153MB0135:|KU1P153MB0135:|KU1P153MB0135:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <KU1P153MB01352A5EB3C3370A69F87395BFB90@KU1P153MB0135.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01494FA7F7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(39860400002)(366004)(346002)(396003)(376002)(136003)(189003)(199004)(54534003)(476003)(229853002)(8936002)(478600001)(33656002)(9686003)(81166006)(81156014)(53936002)(6436002)(76116006)(66946007)(71200400001)(71190400001)(8676002)(2906002)(2201001)(7416002)(6246003)(305945005)(14444005)(10290500003)(55016002)(316002)(52536014)(14454004)(256004)(22452003)(99286004)(5660300002)(4326008)(25786009)(8990500004)(110136005)(54906003)(6116002)(74316002)(46003)(186003)(86362001)(102836004)(66556008)(66476007)(66446008)(64756008)(446003)(6506007)(2501003)(10090500001)(486006)(53546011)(11346002)(7736002)(76176011)(7696005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0135;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: j8sULtPSLpIJEtVb3s/JVvvJcFkW62CpVZNgEq75naYn+6uZmmc8ILl+/KVReNXQox/QBYSrb+rYuoRP4BYaib53EcYZL4U6yY9TSaQZZMi6yw+AsQeBQGLmso6bxqRA2b+DNpehu29Tl293FAzRGWBwqkBHat9XT6y/dDEZGS3x8CWQyNplU7TcAl9f73D2cWQnlxgJRBtmpWQ+YrvalWKYaUPtWb/AHnnYQc/M6APvCnW/2QRSbp/OJpJgYTG1ffbmyY3ZzwwI8ZSBj9B+E++NILkneL3gmZkq23YJvlowvTZ81i11JIgdeG0ZV5jZbKXMXdEoNn3ltil2Vq1goQpInIjEq0F3KfH3ckKY3ZhVVonFOjh2bJJXLFQJCdsuXmrNNo3ETRqwEwQ1ZxVHQl/EWRcIson1aejMzi4J/TU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/k/jpeBvWwx01Wkh17hpg.qx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6d042a3-3053-44f3-551a-08d730067cb8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 00:34:31.1039
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: J7YM1tYxy59yq3E99tTEKZNVFr49g55VxDE7TjUiHSv5ZKmmNY3yLWesJ8n2OMAC6oGNlm8S+a4GH4O5gqQn8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k/jpeBvWwx01Wkh17hpg.qx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi David,
-
-On Tue, 03 Sep 2019 00:53:14 +0100 David Howells <dhowells@redhat.com> wrot=
-e:
->
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> From: Dexuan Cui <decui@microsoft.com>
+> Sent: Tuesday, August 13, 2019 6:07 PM
+> To: lorenzo.pieralisi@arm.com; bhelgaas@google.com;
+> linux-pci@vger.kernel.org
+> Cc: Michael Kelley <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org=
+;
+> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sas=
+ha
+> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
+> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
+> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
+> <sthemmin@microsoft.com>; jackm@mellanox.com; Dexuan Cui
+> <decui@microsoft.com>
+> Subject: [PATCH v2] PCI: PM: Move to D0 before calling
+> pci_legacy_resume_early()
 >=20
-> > > I was doing an x86_64 allmodconfig build which seems to build (all of=
-?)
-> > > the samples. =20
-> >=20
-> > Of course, this breaks our crossbuilds :-(
-> >=20
-> > e.g. S390 allyesconfig build:
-> >=20
-> > /usr/bin/ld: cannot find -lkeyutils =20
 >=20
-> Is it a requirement that stuff in samples/ should be able to build without
-> resorting to external userspace headers?  Or, at least, those outside of =
-the C
-> library?
+> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
+>=20
+> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
+> but the current code misses the pci_legacy_resume_early() path, so the
+> state remains in PCI_UNKNOWN in that path. As a result, in the resume
+> phase of hibernation, this causes an error for the Mellanox VF driver,
+> which fails to enable MSI-X because pci_msi_supported() is false due
+> to dev->current_state !=3D PCI_D0:
+>=20
+> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
+> mlx4_core a6d1:00:02.0: Sending reset
+> mlx4_core a6d1:00:02.0: Sending vhcr0
+> mlx4_core a6d1:00:02.0: HCA minimum page size:512
+> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
+> aborting
+> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+> PM: Device a6d1:00:02.0 failed to thaw: error -95
+>=20
+> To be more accurate, the "resume" phase means the "thaw" callbacks which
+> run before the system enters hibernation: when the user runs the command
+> "echo disk > /sys/power/state" for hibernation, first the kernel "freezes=
+"
+> all the devices and creates a hibernation image, then the kernel "thaws"
+> the devices including the disk/NIC, writes the memory to the disk, and
+> powers down. This patch fixes the error message for the Mellanox VF drive=
+r
+> in this phase.
+>=20
+> When the system starts again, a fresh kernel starts to run, and when the
+> kernel detects that a hibernation image was saved, the kernel "quiesces"
+> the devices, and then "restores" the devices from the saved image. In thi=
+s
+> path:
+> device_resume_noirq() -> ... ->
+>   pci_pm_restore_noirq() ->
+>     pci_pm_default_resume_early() ->
+>       pci_power_up() moves the device states back to PCI_D0. This path is
+> not broken and doesn't need my patch.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>=20
+> changes in v2:
+> 	Updated the changelog with more details.
+>=20
+>  drivers/pci/pci-driver.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 36dbe960306b..27dfc68db9e7 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  			return error;
+>  	}
+>=20
+> -	if (pci_has_legacy_pm_support(pci_dev))
+> -		return pci_legacy_resume_early(dev);
+> -
+>  	/*
+>  	 * pci_restore_state() requires the device to be in D0 (because of MSI
+>  	 * restoration among other things), so force it into D0 in case the
+>  	 * driver's "freeze" callbacks put it into a low-power state directly.
+>  	 */
+>  	pci_set_power_state(pci_dev, PCI_D0);
+> +
+> +	if (pci_has_legacy_pm_support(pci_dev))
+> +		return pci_legacy_resume_early(dev);
+> +
+>  	pci_restore_state(pci_dev);
+>=20
+>  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> --
 
-Well, this is the only samples failure in the current build ...
+Hi, Lorenzo, Bjorn,
 
---=20
-Cheers,
-Stephen Rothwell
+Can you please take a look at the v2 ?
 
---Sig_/k/jpeBvWwx01Wkh17hpg.qx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ts+IACgkQAVBC80lX
-0GxFigf+L+6cUzLRMAv9GIN4LAlCEJSOdaa58XFtQtrvhvDh/MqMl6kwoxerrIFA
-Hw8mYpzo7lKWg+2ZpR+l5vN3y+9hj0F7ztMVlq+NLF10FJkWm7lqhY1HY6fG60yw
-wcl1vjXSFW4iZR3pIojHdFBO35xgOE0oklaP6mcHlgADBm/M7k9m5ZVb2yp+M4tm
-fzl9VySBAaK8U7BYMB0VEKsEH4T6Kl3q7lY7JdG8YOFDNk9b/eizKyLCeF81z+mG
-fb5E4CjE14Ut1/tDJt3LlXgEejjQgmU7tR+xsvfUoNFWma18/fcfhNou4U6LACwQ
-DilYcQxT0UJDUSvUbEn05c2ddt/D9A==
-=cBHe
------END PGP SIGNATURE-----
-
---Sig_/k/jpeBvWwx01Wkh17hpg.qx--
+Thanks,
+-- Dexuan
