@@ -2,256 +2,155 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDA1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEEDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1248220882
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A11822CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nsA6l+Ha"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="pkx+xcp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfICWH2 (ORCPT
+        id S1726935AbfICWIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 18:07:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41146 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfICWH1 (ORCPT
+        Tue, 3 Sep 2019 18:08:38 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:26175 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfICWIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 18:07:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so5129979pfo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 15:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xyqj5HyWdFbW4BPgeZq1CM5418QyoyNXiQU5VxTQbtc=;
-        b=nsA6l+Ha2FFi4VBb0F0uWiZiigDZwKek/olDL51vD8SpAe8XFT/s4OpuVKir4GbSx4
-         rXcYC1/+VhWmsT2aAz0jiI4lOkSqLWoRZBV+jGc/tAW+VQQF+7gYUcD15KCsiQLT6kzC
-         AEeplgAuLFvEK4J9o/C6X88Rpv0hvWujXLib3Dq9YVCYCMLqKvLfb/Uv4OPQJCw5yXC2
-         5YAmHCKpXKXEyAIssble4tDsISkB9TRIEJmp0NT0VdKpZap55VBhFIsAOPZ5gTWhTi4A
-         Ll05VUT1pAV/a0hdziLPiqRfi73fvocQBsrH8ilBRE7W5OxmcyDUqUt4DTVKFDkS0yF4
-         k3gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xyqj5HyWdFbW4BPgeZq1CM5418QyoyNXiQU5VxTQbtc=;
-        b=HOCMSpwLfqXc2XC6v6YS2U+3UFt+aYQZOSDITCBwVfQGwa0KgVO2WuoLLwho3vlplL
-         6zg2QjreHWp79aXp19Gowe6MIvHW/vySne2cD0QJ4a8DGerxEvpnnmQ/LMPyg0X9BSCO
-         5BpRQGt1LFziSAyC+dM3ttGWFN7QVvGT2tNTPswTrrCw335544odRMLX+ZLiDzVmrnRv
-         HEYZ5U95X/Q1VfYrnmFMPuACZk9cCUGA2mOegbJd2049xXcldPZNBjWvGU3f5Z6J7g5R
-         MrbsXh+9EOncULhcPW8kNum833pilDttTDENUxzKO0jrcA6NB+mH5aTo52wVz/zRdJzy
-         YMXw==
-X-Gm-Message-State: APjAAAWPyi1NXuF5jExrWiDmU++oICQMY3b8x6wy7v2E8whrlre+Twr8
-        NKwo5Id3xwFIT3660ztc/WMfHg==
-X-Google-Smtp-Source: APXvYqxsSRqBiVf5iRXpEV7HJElzXLdICeegbw39QL0RCNGLwECf6l/l16uZspZ0J4FdMyte/RTmMg==
-X-Received: by 2002:a62:7641:: with SMTP id r62mr41077659pfc.201.1567548446176;
-        Tue, 03 Sep 2019 15:07:26 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 74sm3173206pfy.78.2019.09.03.15.07.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Sep 2019 15:07:25 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 16:07:23 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <Robert.Walker@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v1 2/3] perf cs-etm: Add callchain to instruction sample
-Message-ID: <20190903220723.GC25787@xps15>
-References: <20190830062421.31275-1-leo.yan@linaro.org>
- <20190830062421.31275-3-leo.yan@linaro.org>
+        Tue, 3 Sep 2019 18:08:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id A5E7F3FA6C;
+        Wed,  4 Sep 2019 00:08:30 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=pkx+xcp7;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vesswdzBSj4G; Wed,  4 Sep 2019 00:08:29 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 4CC3A3F867;
+        Wed,  4 Sep 2019 00:08:28 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id BE2E7360160;
+        Wed,  4 Sep 2019 00:08:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567548507; bh=PP08vBRpPI309PnHgg45hbLsURQYHx2L5Y1XUs0y6nM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pkx+xcp7hRW0GXq5L6+AefZWEbZg0UOumvBTFZnEqaoGsI8veT+gNordaidfuAVSR
+         FIujzRE3rpKodpvIxbxht6Ig9OXw1ylUXalqIMSnaL22ANMUIbkhue7Rhe2PYqta59
+         4FvVjoE0Af4SpyxGZ2Fsgsy/eKc99JNsguqTla4Q=
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        pv-drivers@vmware.com,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-4-thomas_os@shipmail.org>
+ <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
+ <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+ <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
+ <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+ <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <44b094c8-63fe-d9e5-1bf4-7da0788caccf@shipmail.org>
+Date:   Wed, 4 Sep 2019 00:08:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830062421.31275-3-leo.yan@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 02:24:20PM +0800, Leo Yan wrote:
-> Firstly, this patch adds support for the thread stack; when every branch
-> packet is coming we will push or pop the stack based on the sample
-> flags.
-> 
-> Secondly, based on the thread stack we can synthesize call chain for the
-> instruction sample, this can be used by itrace option '--itrace=g'.
+On 9/3/19 11:46 PM, Andy Lutomirski wrote:
+> On Tue, Sep 3, 2019 at 2:05 PM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> On 9/3/19 10:51 PM, Dave Hansen wrote:
+>>> On 9/3/19 1:36 PM, Thomas Hellström (VMware) wrote:
+>>>> So the question here should really be, can we determine already at mmap
+>>>> time whether backing memory will be unencrypted and adjust the *real*
+>>>> vma->vm_page_prot under the mmap_sem?
+>>>>
+>>>> Possibly, but that requires populating the buffer with memory at mmap
+>>>> time rather than at first fault time.
+>>> I'm not connecting the dots.
+>>>
+>>> vma->vm_page_prot is used to create a VMA's PTEs regardless of if they
+>>> are created at mmap() or fault time.  If we establish a good
+>>> vma->vm_page_prot, can't we just use it forever for demand faults?
+>> With SEV I think that we could possibly establish the encryption flags
+>> at vma creation time. But thinking of it, it would actually break with
+>> SME where buffer content can be moved between encrypted system memory
+>> and unencrypted graphics card PCI memory behind user-space's back. That
+>> would imply killing all user-space encrypted PTEs and at fault time set
+>> up new ones pointing to unencrypted PCI memory..
+>>
+>>> Or, are you concerned that if an attempt is made to demand-fault page
+>>> that's incompatible with vma->vm_page_prot that we have to SEGV?
+>>>
+>>>> And it still requires knowledge whether the device DMA is always
+>>>> unencrypted (or if SEV is active).
+>>> I may be getting mixed up on MKTME (the Intel memory encryption) and
+>>> SEV.  Is SEV supported on all memory types?  Page cache, hugetlbfs,
+>>> anonymous?  Or just anonymous?
+>> SEV AFAIK encrypts *all* memory except DMA memory. To do that it uses a
+>> SWIOTLB backed by unencrypted memory, and it also flips coherent DMA
+>> memory to unencrypted (which is a very slow operation and patch 4 deals
+>> with caching such memory).
+>>
+> I'm still lost.  You have some fancy VMA where the backing pages
+> change behind the application's back.  This isn't particularly novel
+> -- plain old anonymous memory and plain old mapped files do this too.
+> Can't you all the insert_pfn APIs and call it a day?  What's so
+> special that you need all this magic?  ISTM you should be able to
+> allocate memory that's addressable by the device (dma_alloc_coherent()
+> or whatever) and then map it into user memory just like you'd map any
+> other page.
 >
+> I feel like I'm missing something here.
 
-In most cases using the word "secondly" is a good indication the patch should be
-split.
- 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 74 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 73 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 882a0718033d..ad573d3bd305 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -17,6 +17,7 @@
->  #include <stdlib.h>
->  
->  #include "auxtrace.h"
-> +#include "callchain.h"
->  #include "color.h"
->  #include "cs-etm.h"
->  #include "cs-etm-decoder/cs-etm-decoder.h"
-> @@ -69,6 +70,7 @@ struct cs_etm_traceid_queue {
->  	size_t last_branch_pos;
->  	union perf_event *event_buf;
->  	struct thread *thread;
-> +	struct ip_callchain *chain;
->  	struct branch_stack *last_branch;
->  	struct branch_stack *last_branch_rb;
->  	struct cs_etm_packet *prev_packet;
-> @@ -246,6 +248,16 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->  	if (!tidq->prev_packet)
->  		goto out_free;
->  
-> +	if (etm->synth_opts.callchain) {
-> +		size_t sz = sizeof(struct ip_callchain);
-> +
-> +		/* Add 1 to callchain_sz for callchain context */
-> +		sz += (etm->synth_opts.callchain_sz + 1) * sizeof(u64);
-> +		tidq->chain = zalloc(sz);
-> +		if (!tidq->chain)
-> +			goto out_free;
-> +	}
-> +
->  	if (etm->synth_opts.last_branch) {
->  		size_t sz = sizeof(struct branch_stack);
->  
-> @@ -270,6 +282,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->  	zfree(&tidq->last_branch);
->  	zfree(&tidq->prev_packet);
->  	zfree(&tidq->packet);
-> +	zfree(&tidq->chain);
->  out:
->  	return rc;
->  }
-> @@ -541,6 +554,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
->  		zfree(&tidq->last_branch_rb);
->  		zfree(&tidq->prev_packet);
->  		zfree(&tidq->packet);
-> +		zfree(&tidq->chain);
->  		zfree(&tidq);
->  
->  		/*
-> @@ -1121,6 +1135,41 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
->  			   sample->insn_len, (void *)sample->insn);
->  }
->  
-> +static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-> +				    struct cs_etm_traceid_queue *tidq)
-> +{
-> +	struct cs_etm_auxtrace *etm = etmq->etm;
-> +	u8 trace_chan_id = tidq->trace_chan_id;
-> +	int insn_len;
-> +	u64 from_ip, to_ip;
-> +
-> +	if (etm->synth_opts.callchain || etm->synth_opts.thread_stack) {
-> +
-> +		from_ip = cs_etm__last_executed_instr(tidq->prev_packet);
-> +		to_ip = cs_etm__first_executed_instr(tidq->packet);
-> +
-> +		/*
-> +		 * T32 instruction size might be 32-bit or 16-bit, decide by
-> +		 * calling cs_etm__t32_instr_size().
-> +		 */
-> +		if (tidq->prev_packet->isa == CS_ETM_ISA_T32)
-> +			insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
-> +							  from_ip);
-> +		/* Otherwise, A64 and A32 instruction size are always 32-bit. */
-> +		else
-> +			insn_len = 4;
-> +
-> +		thread_stack__event(tidq->thread, tidq->prev_packet->cpu,
-> +				    tidq->prev_packet->flags,
-> +				    from_ip, to_ip, insn_len,
-> +				    etmq->buffer->buffer_nr);
-> +	} else {
-> +		thread_stack__set_trace_nr(tidq->thread,
-> +					   tidq->prev_packet->cpu,
-> +					   etmq->buffer->buffer_nr);
+Yes, so in this case we use dma_alloc_coherent().
 
-Please add a comment on what the above does.  As a rule of thumb I add a comment
-per addition in a patch in order to help people understand what is happening and
-some of the reasonning behing the code.
+With SEV, that gives us unencrypted pages. (Pages whose linear kernel 
+map is marked unencrypted). With SME that (typcially) gives us encrypted 
+pages. In both these cases, vm_get_page_prot() returns
+an encrypted page protection, which lands in vma->vm_page_prot.
 
-> +	}
-> +}
-> +
->  static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  					    struct cs_etm_traceid_queue *tidq,
->  					    u64 addr, u64 period)
-> @@ -1146,6 +1195,14 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  
->  	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
->  
-> +	if (etm->synth_opts.callchain) {
-> +		thread_stack__sample(tidq->thread, tidq->packet->cpu,
-> +				     tidq->chain,
-> +				     etm->synth_opts.callchain_sz + 1,
-> +				     sample.ip, etm->kernel_start);
-> +		sample.callchain = tidq->chain;
-> +	}
-> +
->  	if (etm->synth_opts.last_branch) {
->  		cs_etm__copy_last_branch_rb(etmq, tidq);
->  		sample.branch_stack = tidq->last_branch;
-> @@ -1329,6 +1386,8 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  		attr.sample_type &= ~(u64)PERF_SAMPLE_ADDR;
->  	}
->  
-> +	if (etm->synth_opts.callchain)
-> +		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
->  	if (etm->synth_opts.last_branch)
->  		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
->  
-> @@ -1397,6 +1456,9 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->  		tidq->period_instructions = instrs_over;
->  	}
->  
-> +	if (tidq->prev_packet->last_instr_taken_branch)
-> +		cs_etm__add_stack_event(etmq, tidq);
-> +
->  	if (etm->sample_branches) {
->  		bool generate_sample = false;
->  
-> @@ -2596,7 +2658,17 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->  	} else {
->  		itrace_synth_opts__set_default(&etm->synth_opts,
->  				session->itrace_synth_opts->default_no_sample);
-> -		etm->synth_opts.callchain = false;
-> +
-> +		etm->synth_opts.thread_stack =
-> +				session->itrace_synth_opts->thread_stack;
-> +	}
-> +
-> +	if (etm->synth_opts.callchain && !symbol_conf.use_callchain) {
-> +		symbol_conf.use_callchain = true;
-> +		if (callchain_register_param(&callchain_param) < 0) {
-> +			symbol_conf.use_callchain = false;
-> +			etm->synth_opts.callchain = false;
-> +		}
->  	}
->  
->  	err = cs_etm__synth_events(etm, session);
-> -- 
-> 2.17.1
-> 
+In the SEV case, we therefore need to modify the page protection to 
+unencrypted. Hence we need to know whether we're running under SEV and 
+therefore need to modify the protection. If not, the user-space PTE 
+would incorrectly have the encryption flag set.
+
+/Thomas
+
+
