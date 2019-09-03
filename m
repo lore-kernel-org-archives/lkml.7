@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253D0C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BC3C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8435233A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC4A2341F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528634;
-	bh=hZ88OPcW/uIsLOuymIz8Dzs7/P+IEy5pFES3O5z/m9Y=;
+	s=default; t=1567528637;
+	bh=zcaZGov+Sx+qJqjVxtWIJ7I6t8QnU1clZteyGB2qa3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDmQ+K9+pLfdXL4XuplHMoii86AXQWaz6sLamLrdbDPTKWutVMdk9gJ/zIf2vVcIk
-	 +DexBk1v4CjHgxe8FXjofwCnj4Mwgz4beZ59mYQIL1G4uiMjAwvNDLDr0VxebbO36r
-	 LloMJrNp6mOCCPwsiZRy+6t4WMOejbD6izs3Ce3s=
+	b=RpF2h4JqJ25HPBeIToKzvxGUPECesVT+t5FN+Xx6nHvqVCogONLfmotsgI9maPcqx
+	 hA3KALtEOgyupTo9YuSa9Y46IcVlLCZP0gZ8fX1J2TYiGHojLBkifcBedETzQYozdi
+	 UOgS0pUymrxN6+3Od9NaxuPb32yyKQS0GXVhxevg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbfICQhN (ORCPT
+        id S1730700AbfICQ0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:26:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730717AbfICQ0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:49 -0400
+        id S1730639AbfICQ02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8111C23789;
-        Tue,  3 Sep 2019 16:26:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FCA623789;
+        Tue,  3 Sep 2019 16:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528009;
-        bh=hZ88OPcW/uIsLOuymIz8Dzs7/P+IEy5pFES3O5z/m9Y=;
+        s=default; t=1567527987;
+        bh=zcaZGov+Sx+qJqjVxtWIJ7I6t8QnU1clZteyGB2qa3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6kivvQWi/ogWyC37hh++fgdoHhbOhoYii2TvwnFTkfH4f6Zn7Y/1UMlp1a8Dx4bB
-         Q1qu4tf0HSxVr5/H4uMiX5AAPFk86INWlG6o/iqsO5EL+byFlP73Z5fF3CZtR7AGnv
-         xtAdIDA/cOa6NCDIyjUe8LTrV0s6wNSMAuppfHb8=
+        b=RdfBNDRh/pm8ntzl4p7nJ5u+9va6LwUYeejYRS3PrDLUlGAclwkc2rycQlD1Q8qZj
+         4f/s8lHO87pgp3F/8gFDu+WdKt2oSKtw2pQmnrrSA/dbStI7wZikgJMTxKw3DEFIy2
+         NZ+i+PX1gRyC5AUyGjqyl2Y4OnG+buc7bh0uYUbo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricardo Biehl Pasquali <pasqualirb@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 051/167] ALSA: pcm: Return 0 when size < start_threshold in capture
-Date:   Tue,  3 Sep 2019 12:23:23 -0400
-Message-Id: <20190903162519.7136-51-sashal@kernel.org>
+Cc:     Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 041/167] scsi: megaraid_sas: Add check for reset adapter bit
+Date:   Tue,  3 Sep 2019 12:23:13 -0400
+Message-Id: <20190903162519.7136-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -58,46 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Biehl Pasquali <pasqualirb@gmail.com>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-[ Upstream commit 62ba568f7aef4beb0eda945a2b2a91b7a2b8f215 ]
+[ Upstream commit de93b40d98ead27ee2f7f7df93fdd4914a6c8d8d ]
 
-In __snd_pcm_lib_xfer(), when capture, if state is PREPARED
-and size is less than start_threshold nothing can be done.
-As there is no error, 0 is returned.
+For SAS3 and later controllers, FW sets the reset adapter bit indicating
+the driver to perform a controller reset.  Driver needs to check if this
+bit is set before doing a reset.  This reduces the driver probe failure
+time to 180seconds in case there is a faulty controller connected.
 
-Signed-off-by: Ricardo Biehl Pasquali <pasqualirb@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_lib.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 33 +++++++++++++++--------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index 4e6110d778bd2..7f71c2449af5e 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -2173,11 +2173,16 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
- 		goto _end_unlock;
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index b6fc7c6337610..749f10146f630 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -5218,7 +5218,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ {
+ 	u32 max_sectors_1;
+ 	u32 max_sectors_2, tmp_sectors, msix_enable;
+-	u32 scratch_pad_2, scratch_pad_3, scratch_pad_4;
++	u32 scratch_pad_2, scratch_pad_3, scratch_pad_4, status_reg;
+ 	resource_size_t base_addr;
+ 	struct megasas_register_set __iomem *reg_set;
+ 	struct megasas_ctrl_info *ctrl_info = NULL;
+@@ -5226,6 +5226,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ 	int i, j, loop, fw_msix_count = 0;
+ 	struct IOV_111 *iovPtr;
+ 	struct fusion_context *fusion;
++	bool do_adp_reset = true;
  
- 	if (!is_playback &&
--	    runtime->status->state == SNDRV_PCM_STATE_PREPARED &&
--	    size >= runtime->start_threshold) {
--		err = snd_pcm_start(substream);
--		if (err < 0)
-+	    runtime->status->state == SNDRV_PCM_STATE_PREPARED) {
-+		if (size >= runtime->start_threshold) {
-+			err = snd_pcm_start(substream);
-+			if (err < 0)
-+				goto _end_unlock;
+ 	fusion = instance->ctrl_context;
+ 
+@@ -5274,19 +5275,29 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ 	}
+ 
+ 	if (megasas_transition_to_ready(instance, 0)) {
+-		atomic_set(&instance->fw_reset_no_pci_access, 1);
+-		instance->instancet->adp_reset
+-			(instance, instance->reg_set);
+-		atomic_set(&instance->fw_reset_no_pci_access, 0);
+-		dev_info(&instance->pdev->dev,
+-			"FW restarted successfully from %s!\n",
+-			__func__);
++		if (instance->adapter_type >= INVADER_SERIES) {
++			status_reg = instance->instancet->read_fw_status_reg(
++					instance->reg_set);
++			do_adp_reset = status_reg & MFI_RESET_ADAPTER;
++		}
+ 
+-		/*waitting for about 30 second before retry*/
+-		ssleep(30);
++		if (do_adp_reset) {
++			atomic_set(&instance->fw_reset_no_pci_access, 1);
++			instance->instancet->adp_reset
++				(instance, instance->reg_set);
++			atomic_set(&instance->fw_reset_no_pci_access, 0);
++			dev_info(&instance->pdev->dev,
++				 "FW restarted successfully from %s!\n",
++				 __func__);
++
++			/*waiting for about 30 second before retry*/
++			ssleep(30);
+ 
+-		if (megasas_transition_to_ready(instance, 0))
++			if (megasas_transition_to_ready(instance, 0))
++				goto fail_ready_state;
 +		} else {
-+			/* nothing to do */
-+			err = 0;
- 			goto _end_unlock;
+ 			goto fail_ready_state;
 +		}
  	}
  
- 	runtime->twake = runtime->control->avail_min ? : 1;
+ 	megasas_init_ctrl_params(instance);
 -- 
 2.20.1
 
