@@ -2,86 +2,91 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA37C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CBC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9057923401
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4898523401
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DJN8UxEp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bNeeRYqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbfICNGe (ORCPT
+        id S1729386AbfICNGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:06:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42928 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729259AbfICNGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:06:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 06:06:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="183548878"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2019 06:06:32 -0700
-From:   richard.gong@linux.intel.com
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sen.li@intel.com, richard.gong@intel.com
-Subject: [PATCHv5 4/4] MAINTAINERS: add maintainer for Intel Stratix10 FW drivers
-Date:   Tue,  3 Sep 2019 08:18:21 -0500
-Message-Id: <1567516701-26026-5-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567516701-26026-1-git-send-email-richard.gong@linux.intel.com>
-References: <1567516701-26026-1-git-send-email-richard.gong@linux.intel.com>
+        Tue, 3 Sep 2019 09:06:40 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58520 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbfICNGj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:06:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E38C36090E; Tue,  3 Sep 2019 13:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567515997;
+        bh=iYGhXpPlajGpKbgH+Vr47Mz8PaZJai97C3ZVp5vJip0=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=DJN8UxEpeLXw+LNie/A0qWBTUGTZBwqVQGYr5b4G+FThYhhV+aEY9MPSpDkmuIqkh
+         oZIpks6R2pbUFc6jEpwOwvrXhiGkjFcuykPgbKHKGscHuml/7ftxlocoH2vnnwltdV
+         PdAwOtcYuSKt6m7v7JEy3h5IOBtd9VcDlNgamBnc=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4616602F2;
+        Tue,  3 Sep 2019 13:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567515997;
+        bh=iYGhXpPlajGpKbgH+Vr47Mz8PaZJai97C3ZVp5vJip0=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=bNeeRYqTRtYpuIsgSbAPI/D9RUHO0pja5RYmMoKD0/sjflArFZVcUyEKpt3yRWbBG
+         K+T2AHXjNc2WcVFxcKxQDb+QO8Nhp/wBx5Xb6U2DjQwsAQTD1BQCLGdt6hi9l5c48x
+         zLo/GDuxby3CRwugfbTlPSfBPh4rdG7068ZCK1sY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A4616602F2
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rtlwifi: fix non-kerneldoc comment in usb.c
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <34195.1565229118@turing-police>
+References: <34195.1565229118@turing-police>
+To:     "Valdis =?utf-8?q?Kl=C4=93tnieks?= " <valdis.kletnieks@vt.edu>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190903130637.E38C36090E@smtp.codeaurora.org>
+Date:   Tue,  3 Sep 2019 13:06:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+"Valdis wrote:
 
-Add myself as maintainer for the newly created Intel Stratix10
-firmware drivers.
+> Fix spurious warning message when building with W=1:
+> 
+>   CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
+> drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understand  * on line 243 - I thought it was a doc line
+> drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understand  * on line 760 - I thought it was a doc line
+> drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understand  * on line 790 - I thought it was a doc line
+> 
+> Clean up the comment format.
+> 
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
-Reviewed-by: Alan Tull <atull@kernel.org>
----
-v2: removed RSU binding text file
-v3: no change
-v4: no change
-v5: s/richard.gong@intel.com/richard.gong@linux.intel.com
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4761f09..4387504 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8396,6 +8396,17 @@ F:	drivers/platform/x86/intel_speed_select_if/
- F:	tools/power/x86/intel-speed-select/
- F:	include/uapi/linux/isst_if.h
- 
-+INTEL STRATIX10 FIRMWARE DRIVERS
-+M:	Richard Gong <richard.gong@linux.intel.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/firmware/stratix10-rsu.c
-+F:	drivers/firmware/stratix10-svc.c
-+F:	include/linux/firmware/intel/stratix10-smc.h
-+F:	include/linux/firmware/intel/stratix10-svc-client.h
-+F:	Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
-+F:	Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
-+
- INTEL TELEMETRY DRIVER
- M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
- M:	"David E. Box" <david.e.box@linux.intel.com>
+b6326fc025aa rtlwifi: fix non-kerneldoc comment in usb.c
+
 -- 
-2.7.4
+https://patchwork.kernel.org/patch/11083073/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
