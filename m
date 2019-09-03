@@ -2,149 +2,113 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76C9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE58C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9122420674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8D120674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="piNmEVL1"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="YpxITNYJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PwfKBbhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfICMoR (ORCPT
+        id S1729179AbfICMpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:44:17 -0400
-Received: from mout.web.de ([212.227.17.12]:59177 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbfICMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:44:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567514650;
-        bh=OB42t441CkjUlM1xTY9OGP06693iK0948hcgi9EiEaI=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=piNmEVL1DWo/PMf5GIczGhNf0CJqcg8I50t6Sc8YLLKwEFeRrUGF6jPArwPAOPmvp
-         8pVrwi4hbiiwhjF8meDrwiFKEYIyI8qIqD/nlPHxyMb5bALS5bddLi4R3laNjDq5Ux
-         pE5V+DqdlzJf8XApYOxc+O3VVlNS4SmzsJfr9f2A=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.133.43]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEVhF-1hynZo3b7B-00Fk6p; Tue, 03
- Sep 2019 14:44:09 +0200
-To:     linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] ext2: Delete an unnecessary check before brelse()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <51dea296-2207-ebc0-bac3-13f3e5c3b235@web.de>
-Date:   Tue, 3 Sep 2019 14:44:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Tue, 3 Sep 2019 08:45:31 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:55323 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725782AbfICMpa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:45:30 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id BE72421F2E;
+        Tue,  3 Sep 2019 08:45:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 03 Sep 2019 08:45:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=MIZWO/r5WYB1ZmJJ7B8lddyJnVF
+        yg+qUjv42zSxUqt0=; b=YpxITNYJslSW1rZgpIoPl5+IM9y17nEwlw4O7z2QmG7
+        SFyWS6hscPNDH/RBVBpP6XAvURfgbip1bM/4DmR3slsgnPCeq/CSBndgNRbq+qcB
+        MFVztMkcLRCkvswpbB6WT1MNMnOSGRsV7WweL+jBHtiQtavnxOendn+JBWZ6h+PL
+        UuUecnKYOBA84l7Dmo2Wub1ssIulrupTd+xz7tkYySrVEhIPcaHe7lDkTiUglaO2
+        mUJJyPlNU7JcetuWjtyQzQdmXtJ34qQUcf1LRKORpeou2kxu38zKS11NySdEDNaY
+        vD9Mc/GlW+PPORuRS1pnlJ2QC2IlXuLOudnUTamQpsA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=MIZWO/
+        r5WYB1ZmJJ7B8lddyJnVFyg+qUjv42zSxUqt0=; b=PwfKBbhs0K48qaOLrvdzE5
+        pnSCoTF02Nc0tuXuMuJ6ECD9L09iHhA4JPiQPVLi8jqgbvgrmKk/vEf1AdrEzXNu
+        ot8Ni4Sxr4OpitfZYZmyRdNvSevN9oMTuCmbJj5RF60ZpAXReDS1yyrzmE+zL0kN
+        pwRo1I08so8k7txh1/6CtR6Xs+PEElDKwtKyiQjKIl0zQLivScXT+wfVeNbJ2C1+
+        Kije2LAwXPQAje3EbbCd/5DieXpKfIXUQSHfVriQ5zqFy1tpEBlu0xI07eVCGvBX
+        Cm86foaabB9v4kxUVqMkY/xRlltWPnU9AtAuyjIcYG2q9SW/zHDH6MnzN3Me7krA
+        ==
+X-ME-Sender: <xms:aWBuXaHJEL_wvL6RIxE8cXqRUzkXedDrT0uGhaRozG3QvRuZTL4FnA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejfedgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:aWBuXSZMSm--u0-7G9yA86f6dcfE7NJfGCPNQ4yE5XJffU2AjjtV4A>
+    <xmx:aWBuXcLYSZk_gHQe9K5RghidwiXL3sGmgDa-3MfDUksGYkerumEvZQ>
+    <xmx:aWBuXVyjZyzeTamMj24KaKLxWdMGDhEGMm_MC8kalXnuhv-Lhvv-VQ>
+    <xmx:aWBuXW62BIDK1Rwyvv7DuNM25f7N7yHc2oPD15nHM1sv37HTVSLr1Q>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F2908D60068;
+        Tue,  3 Sep 2019 08:45:28 -0400 (EDT)
+Date:   Tue, 3 Sep 2019 14:45:27 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        USB Storage list <usb-storage@lists.one-eyed-alien.net>,
+        Dan Williams <dcbw@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] usb: storage: Add ums-cros-aoa driver
+Message-ID: <20190903124527.GB493@kroah.com>
+References: <CAODwPW8gTZ_2WEc9n=WJ2PEmQk2anTQYfwQ-898+kOq6wsjnZw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1908301337150.1459-100000@iolanthe.rowland.org>
+ <20190902164724.GA22619@kroah.com>
+ <1567500374.2878.2.camel@suse.com>
+ <20190903091953.GA12325@kroah.com>
+ <1567505043.2878.4.camel@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fDKb4hhNMYZ9p7iiL29GGAMRQGX7LPMidSNO+OnTKZ78fOm7c6J
- BFisXkPeKxMsK37Ku8FRDkpbsPvtUV/gfS05RjhPaHadUTHkfS1RdjYf2kAe5pehUXYY8N2
- sbnFXk7D8AQcYWDMsN7sF6upjqh5VMmWwdy0XRusMVOlgL+dH9ndq6/5/KE55/nVTkolY9J
- IBrF1kj+0beDEtnNUMKgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1WAao00adBI=:5FDVXGdCEhCxWD/GZiDAbj
- qlo/6vlG2hkOkp30I9oWBPMrMfm2Ips+u0YbLNbCcux4zyLTVUVek44zn+cgAsZBRjcxMGkyY
- hJkKF+4K3aVqP2swznTj0kpHRHlEM4YGoorQLTiQKCiVONgS+Uz2J2HlwwME18amYaRe/rFKX
- tbvdpWBQDBtqzCmqY8IRRdMbV2cfFlVmv1bRUYxLQVxioVUd2Ud2xcpXa/zHAX+6+gT0dVfQV
- qjQWwmAq0PJNrRNWljT6Z9AezCKpDUe2k/MbUt6E5bPzGlYbE0bzFrqGbdT81s9rCRyziyUEu
- 7HGVJplqTQDknsCmCsPvroUZ97dUG7j7dfNtpIhvfrnIwFnC9+JowTwK/LtOm3hlXu0QkUQER
- LbPWWgMxdXO6j66SIzxFgMgEGNv43gLVuplmku8jArAje/zZc3tQZ0i0qdGA3n2CDk9VQArQE
- AD2Tn9gJ1p3CXMKUO8pZg0xok6riffIj9kCqTGvhn9HXzxHve/ENIWKBI7a3JamHzI8I23EmD
- LVemdo+HsNnMHOvzKuK36wlSYpq/rx4ki9vqFzM/iZNpgi+pMnQyaqSu6O0/F+KpBf99D7138
- xcvvzHgzWS5ILUr4jXMXqGqx8SKXNELUAGZJ0zPFhgMyMUd0qe536ZlvTNVPhG4e2WKEK1WS2
- 6zp5qpAOyN3YX8t0BJQph1NUIS8JDqyeSJBEDCbLKA7Nckr3axvxzVvCnxIy8YuZW0dn79nwq
- FciJYy2ArTQfFdsvr938css8RBzCh2TsoXDuujPr9opnzWA0kwCLDGnqpmdaqdydwuHVShH/I
- igLAHTZu5G0FNkG2y9XjehMw9oodp5mq0tgNBtMChBSAXxZLVXzSm6tXW19ohPK+LnzZRa/0G
- RHMvBvcUC/wMEpGOiBW8QBb9ii1xubjt9G0PfbqTtJygLCMj7a9IrpddILBCOJixxAZ7soGRe
- liJXOU4J7XTWkmtzo0Zm+IeUJBlLV1fe8IDqsV6TliB75zq5dCHynPaxp4aKobZxUQiQnx5lr
- goaJrxGgs5XgAvEbGDa8FRzt+JztnkLG00jpK6jt98GE4+C2W/LxnWA2l0wD9t93msqaVNTIt
- L7X9cU1ctck3xl05fZ7jeQXCZIJ3DWlJIsqpU11te5ahUTn7INMjBxqy9XngE3Ay7uf14mzov
- KNJMgUdCWlO41DQbLRxHED/yKnEwZvkarahU/9wCu3Q28lyA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567505043.2878.4.camel@suse.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 3 Sep 2019 14:40:18 +0200
+On Tue, Sep 03, 2019 at 12:04:03PM +0200, Oliver Neukum wrote:
+> Am Dienstag, den 03.09.2019, 11:19 +0200 schrieb Greg KH:
+> > On Tue, Sep 03, 2019 at 10:46:14AM +0200, Oliver Neukum wrote:
+> > > Am Montag, den 02.09.2019, 18:47 +0200 schrieb Greg KH:
+> > > > 
+> > > > This should work just fine today.  Add a new device id to the "new_id"
+> > > > file and then tell the driver to bind.  That's pretty much the same as a
+> > > > "force_bind", right?
+> > > 
+> > > That looks like a race condition by design to me.
+> > 
+> > How?
+> 
+> You have one of these files and potentially multiple devices
+> to be bound. You need a locking scheme. As soon as the acts
+> of specifying and binding are distinct.
 
-The brelse() function tests whether its argument is NULL
-and then returns immediately.
-Thus the test around the call is not needed.
+What needs to be locked here?
 
-This issue was detected by using the Coccinelle software.
+totally confused,
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- fs/ext2/super.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/ext2/super.c b/fs/ext2/super.c
-index baa36c6fb71e..30c630d73f0f 100644
-=2D-- a/fs/ext2/super.c
-+++ b/fs/ext2/super.c
-@@ -162,8 +162,7 @@ static void ext2_put_super (struct super_block * sb)
- 	}
- 	db_count =3D sbi->s_gdb_count;
- 	for (i =3D 0; i < db_count; i++)
--		if (sbi->s_group_desc[i])
--			brelse (sbi->s_group_desc[i]);
-+		brelse(sbi->s_group_desc[i]);
- 	kfree(sbi->s_group_desc);
- 	kfree(sbi->s_debts);
- 	percpu_counter_destroy(&sbi->s_freeblocks_counter);
-=2D-
-2.23.0
-
+greg k-h
