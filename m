@@ -2,142 +2,71 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DFEC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202B9215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DB6215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfICWil (ORCPT
+        id S1727521AbfICWjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 18:38:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26578 "EHLO mga04.intel.com"
+        Tue, 3 Sep 2019 18:39:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47028 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfICWil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 18:38:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 15:38:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,464,1559545200"; 
-   d="scan'208";a="189969649"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Sep 2019 15:38:40 -0700
-Message-ID: <59052137a61bab9e8d312d51644aade3953ba339.camel@intel.com>
-Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Tue, 03 Sep 2019 15:29:10 -0700
-In-Reply-To: <20190902092816.GK27757@arm.com>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
-         <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
-         <201908292224.007EB4D5@keescook> <20190830083415.GI27757@arm.com>
-         <5ddd0306f42c2b53ffbd8ee8c9b948c1d529cf98.camel@intel.com>
-         <20190902092816.GK27757@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725882AbfICWjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 18:39:12 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 225807F750;
+        Tue,  3 Sep 2019 22:39:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BF44194B2;
+        Tue,  3 Sep 2019 22:39:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <23d61564-026e-b37a-8b16-ce68d5949f6c@schaufler-ca.com>
+References: <23d61564-026e-b37a-8b16-ce68d5949f6c@schaufler-ca.com> <87bf0363-af77-1e5a-961f-72730e39e3a6@schaufler-ca.com> <e36fa722-a300-2abf-ae9c-a0246fc66d0e@schaufler-ca.com> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717352917.2204.17206219813087348132.stgit@warthog.procyon.org.uk> <4910.1567525310@warthog.procyon.org.uk> <11467.1567534014@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/11] smack: Implement the watch_key and post_notification hooks [untested] [ver #7]
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <14968.1567550348.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Sep 2019 23:39:08 +0100
+Message-ID: <14969.1567550348@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 03 Sep 2019 22:39:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-02 at 10:28 +0100, Dave Martin wrote:
-> On Fri, Aug 30, 2019 at 06:03:27PM +0100, Yu-cheng Yu wrote:
-> > On Fri, 2019-08-30 at 09:34 +0100, Dave Martin wrote:
-> > > On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
-> > > > On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
-> > > > > ELF program properties will needed for detecting whether to enable
-> > > > > optional architecture or ABI features for a new ELF process.
-> > > > > 
-> > > > > For now, there are no generic properties that we care about, so do
-> > > > > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > > > > 
-> > > > > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > > > > phdrs entry (if any), and notify each property to the arch code.
-> > > > > 
-> > > > > For now, the added code is not used.
-> > > > > 
-> > > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > > > 
-> > > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > 
-> > > Thanks for the review.
-> > > 
-> > > Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
-> > > early-terminate the scan if we can, but my feeling so far was that the
-> > > scan is cheap, the number of properties is unlikely to be more than a
-> > > smallish integer, and the code separation benefits of just calling the
-> > > arch code for every property probably likely outweigh the costs of
-> > > having to iterate over every property.  We could always optimise it
-> > > later if necessary.
-> > > 
-> > > I need to double-check that there's no way we can get stuck in an
-> > > infinite loop with the current code, though I've not seen it in my
-> > > testing.  I should throw some malformed notes at it though.
-> > 
-> > Here is my arch_parse_elf_property() and objdump of the property.
-> > The parser works fine.
-> 
-> [...]
-> 
-> > int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
-> >           
-> >                    bool compat, struct arch_elf_state *state)
-> > {
-> >         if (type
-> > != GNU_PROPERTY_X86_FEATURE_1_AND)
-> >                 return -ENOENT;
-> 
-> For error returns, I was following this convention:
-> 
-> 	EIO: invalid ELF file
-> 
-> 	ENOEXEC: valid ELF file, but we can't (or won't) support it
-> 
-> 	0: OK, or don't care
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-From errno-base.h, EIO is for I/O error; ENOEXEC is for Exec format error.
-Is this closer to what is happening?
+> I rebuilt with keys-next, updated the tests again, and now
+> the suite looks to be running trouble free.
 
-> 
-> This function gets called for every property, including properties that
-> the arch code may not be interested in, so for properties you don't care
-> about here you should return 0.
+Glad to hear that, thanks.
 
-Yes.
+> I do see a message SKIP DUE TO DISABLED SELINUX which I take to mean that
+> there is an SELinux specific test.
 
-> 
-> > 
-> >         if (datasz < sizeof(unsigned int))
-> >                 return -ENOEXEC;
-> 
-> Should this be != ?
-> 
-> According to the draft x86-64 psABI spec [1],
-> X86_PROPERTY_FEATURE_1_AND (and all properties based on
-> GNU_PROPERTY_X86_UINT32_AND_LO) has data consisting of a single 4-byte
-> unsigned integer.
-> 
-> >         state->gnu_property = *(unsigned int *)data;
-> >         return 0;
-> > }
+tests/bugzillas/bz1031154/runtest.sh
 
-Yes, I will change it.
-
-Thanks,
-Yu-cheng
+David
