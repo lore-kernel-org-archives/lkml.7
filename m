@@ -2,123 +2,127 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD5C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1452C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F24121897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CBC20882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfICGbm (ORCPT
+        id S1727077AbfICGcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:31:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727025AbfICGbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:31:42 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 031D9A36F07;
-        Tue,  3 Sep 2019 06:31:42 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 130595DA5B;
-        Tue,  3 Sep 2019 06:31:31 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 14:31:26 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190903063125.GA21022@ming.t460p>
-References: <20190827085344.30799-2-ming.lei@redhat.com>
- <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
- <20190827225827.GA5263@ming.t460p>
- <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
- <20190828110633.GC15524@ming.t460p>
- <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de>
- <20190828135054.GA23861@ming.t460p>
- <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
- <20190903033001.GB23861@ming.t460p>
- <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+        Tue, 3 Sep 2019 02:32:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36615 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfICGcS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:32:18 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1i52MR-0002QC-PT; Tue, 03 Sep 2019 08:32:15 +0200
+Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com,
+        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org,
+        olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com,
+        bjorn.andersson@linaro.org, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, stefan@agner.ch,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch,
+        m.felsch@pengutronix.de, ping.bai@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
+Date:   Tue, 3 Sep 2019 08:32:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 03 Sep 2019 06:31:42 +0000 (UTC)
+In-Reply-To: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
-
-On Tue, Sep 03, 2019 at 07:59:39AM +0200, Daniel Lezcano wrote:
-> 
-> Hi Ming Lei,
-> 
-> On 03/09/2019 05:30, Ming Lei wrote:
-> 
-> [ ... ]
-> 
-> 
-> >>> 2) irq/timing doesn't cover softirq
-> >>
-> >> That's solvable, right?
-> > 
-> > Yeah, we can extend irq/timing, but ugly for irq/timing, since irq/timing
-> > focuses on hardirq predication, and softirq isn't involved in that
-> > purpose.
-> > 
-> >>  
-> >>> Daniel, could you take a look and see if irq flood detection can be
-> >>> implemented easily by irq/timing.c?
-> >>
-> >> I assume you can take a look as well, right?
-> > 
-> > Yeah, I have looked at the code for a while, but I think that irq/timing
-> > could become complicated unnecessarily for covering irq flood detection,
-> > meantime it is much less efficient for detecting IRQ flood.
-> 
-> In the series, there is nothing describing rigorously the problem (I can
-> only guess) and why the proposed solution solves it.
-> 
-> What is your definition of an 'irq flood'? A high irq load? An irq
-> arriving while we are processing the previous one in the bottom halves?
-
-So far, it means that handling interrupt & softirq takes all utilization
-of one CPU, then processes can't be run on this CPU basically, usually
-sort of CPU lockup warning will be triggered.
-
-> 
-> The patch 2/4 description says "however IO completion is only done on
-> one of these submission CPU cores". That describes the bottleneck and
-> then the patch says "Add IRQF_RESCUE_THREAD to create one interrupt
-> thread handler", what is the rational between the bottleneck (problem)
-> and the irqf_rescue_thread (solution)?
-
-The solution is to switch to handle this interrupt on the created rescue
-irq thread context when irq flood is detected, and 'this interrupt' means
-the interrupt requested with IRQF_RESCUE_THREAD.
-
-> 
-> Is it really the solution to track the irq timings to detect a flood?
-
-The solution tracks the time taken on running do_IRQ() for each CPU.
 
 
-Thanks,
-Ming
+On 03.09.19 16:03, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and power key event etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to get power key event, add binding doc for i.MX system
+> controller power key driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- remove "wakeup-source" property, as it is NOT needed for SCU interrupt;
+> 	- remove "status" in example.
+> ---
+>   .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
+>   1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index c149fad..f93e2e4 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -157,6 +157,15 @@ Required properties:
+>   Optional properties:
+>   - timeout-sec: contains the watchdog timeout in seconds.
+>   
+> +Power key bindings based on SCU Message Protocol
+> +------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be:
+> +              "fsl,imx8qxp-sc-pwrkey"
+> +              followed by "fsl,imx-sc-pwrkey";
+> +- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
+
+linux,keycodes is required parameter. So, this kay cab be anything. Why the compatible is 
+called pwrkey? Probably it is better to call it "*-sc-key"
+
+> +
+>   Example (imx8qxp):
+>   -------------
+>   aliases {
+> @@ -220,6 +229,11 @@ firmware {
+>   			compatible = "fsl,imx8qxp-sc-rtc";
+>   		};
+>   
+> +		scu_pwrkey: scu-pwrkey {
+> +			compatible = "fsl,imx8qxp-sc-pwrkey", "fsl,imx-sc-pwrkey";
+> +			linux,keycode = <KEY_POWER>;
+> +		};
+> +
+>   		watchdog {
+>   			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+>   			timeout-sec = <60>;
+> 
+
+Kind regards,
+Oleksij Rempel
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
