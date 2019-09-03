@@ -2,86 +2,109 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BDFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF54EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF6E23717
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A152B20828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbfICQDj (ORCPT
+        id S1729859AbfICQDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:03:39 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:20703 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbfICQDj (ORCPT
+        Tue, 3 Sep 2019 12:03:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17506 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728571AbfICQDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:03:39 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x83G3JSd025010;
-        Wed, 4 Sep 2019 01:03:19 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Wed, 04 Sep 2019 01:03:19 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x83G3Ihr025006
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 4 Sep 2019 01:03:18 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v2 1/3] ASoC: es8316: judge PCM rate at later timing
-To:     Mark Brown <broonie@kernel.org>
-Cc:     David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190831162650.19822-1-katsuhiro@katsuster.net>
- <20190902120248.GA5819@sirena.co.uk>
- <1a3c5934-4731-d474-e9d5-795e8337b180@katsuster.net>
- <20190903111138.GA6247@sirena.co.uk>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <c142c351-5559-b162-e68f-98cf86b039aa@katsuster.net>
-Date:   Wed, 4 Sep 2019 01:03:18 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 12:03:44 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83Fw3BH016754;
+        Tue, 3 Sep 2019 12:03:29 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2usryr6h97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 12:03:29 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x83G1OjL032076;
+        Tue, 3 Sep 2019 16:03:28 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03wdc.us.ibm.com with ESMTP id 2uqgh6kfyv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 16:03:28 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83G3Rwq46792968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 16:03:27 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85F20BE062;
+        Tue,  3 Sep 2019 16:03:27 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0A3ABE053;
+        Tue,  3 Sep 2019 16:03:25 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.133.34])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue,  3 Sep 2019 16:03:25 +0000 (GMT)
+References: <20190902163951.6280e030@canb.auug.org.au> <20190902140347.GA23482@8bytes.org> <d2493e6b-08fa-9ea8-a0a4-076def54e91b@amd.com> <20190903152849.770ae819@canb.auug.org.au> <20190903132038.GE11530@8bytes.org>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Lendacky\, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu: Don't use sme_active() in generic code
+In-reply-to: <20190903132038.GE11530@8bytes.org>
+Date:   Tue, 03 Sep 2019 13:03:21 -0300
+Message-ID: <87mufll646.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20190903111138.GA6247@sirena.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=957 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
 
-On 2019/09/03 20:11, Mark Brown wrote:
-> On Tue, Sep 03, 2019 at 04:19:10AM +0900, Katsuhiro Suzuki wrote:
->> On 2019/09/02 21:02, Mark Brown wrote:
-> 
->>> The best way to handle this is to try to support both fixed and variable
->>> clock rates, some other drivers do this by setting constraints based on
->>> MCLK only if the MCLK has been set to a non-zero value.  They have the
->>> machine drivers reset the clock rate to 0 when it goes idle so that no
->>> constraints are applied then.  This means that if the machine has a
-> 
->> In my understanding, fixed and variable clock both use set_sysclk() for
->> telling their MCLK to codec driver. For fixed MCLK cases we need to
->> apply constraint but for variable MCLK cases we should not set
->> constraints at set_sysclk(). How can we identify these two cases...?
-> 
-> Like I say it's usually done by settingthe MCLK to 0 when not in use and
-> then not applying any constraints if there's no MCLK set.
-> 
+Joerg Roedel <joro@8bytes.org> writes:
 
-Ah... I understand. Current implementation refuses MCLK == 0.
-I'll change to accept MCLK == 0 for fixed clock users and send v3 patch.
+> On Tue, Sep 03, 2019 at 03:28:49PM +1000, Stephen Rothwell wrote:
+>> Hi all,
+>> 
+>> On Mon, 2 Sep 2019 14:26:40 +0000 "Lendacky, Thomas" <Thomas.Lendacky@amd.com> wrote:
+>> > Maybe we should make this mem_encrypt_active(), since this will probably
+>> > be needed if/when an IOMMU device is eventually added to a guest, and the
+>> > referenced commit below doesn't remove that call.
+>> 
+>> I have done that for today:
+>
+> Thanks Stephen and Tom. I queued the attached patch into the iommu tree
+> to fix the problem.
+>
+> From 2896ba40d0becdb72b45f096cad70633abc014f6 Mon Sep 17 00:00:00 2001
+> From: Joerg Roedel <jroedel@suse.de>
+> Date: Tue, 3 Sep 2019 15:15:44 +0200
+> Subject: [PATCH] iommu: Don't use sme_active() in generic code
+>
+> Switch to the generic function mem_encrypt_active() because
+> sme_active() is x86 specific and can't be called from
+> generic code on other platforms than x86.
+>
+> Fixes: 2cc13bb4f59f ("iommu: Disable passthrough mode when SME is active")
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
-Best Regards,
-Katsuhiro Suzuki
+Thank you!
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
