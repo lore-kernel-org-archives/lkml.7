@@ -2,602 +2,205 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C93C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934CAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D77F22DCC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669DB22DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfICICP (ORCPT
+        id S1728228AbfICIC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:02:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:33548 "EHLO foss.arm.com"
+        Tue, 3 Sep 2019 04:02:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57546 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfICICO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:02:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0CEF1570;
-        Tue,  3 Sep 2019 01:02:13 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ACDE83F246;
-        Tue,  3 Sep 2019 01:02:03 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1726698AbfICICZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:02:25 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 05DAC368DA
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 08:02:25 +0000 (UTC)
+Received: by mail-qt1-f200.google.com with SMTP id n59so6546685qtd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:02:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tqCkfqH7gNS4v8r5mA/wKlGmZiJHgBi9F1jKsdzHHz0=;
+        b=qZt8/hH/8bhJx50QV25U/LkhebSxVkC4kbYb/ljbjuqDQWawhMV5RL7V4hzsSvBuFw
+         Olxt7KS1kzZ7SNDsChYpv8IRkSmuFIvZPI0QTYNZt+C3p7FKbhYKJ3sYquWrJExmecef
+         sIss+FV4acDOexhIRsetgcn/SQx65mm7AM1sQ6LRmeP4SGA+Tywiysov7mv6ZnKgVW+c
+         wf3AWHOxHEhbOqSQR0zFJatNGSt/2SgPQUuDAM0aEir7ACPSe+w7hlDOdfaYyXgpGci+
+         vujHWwo5oTmqIvQhQXaM7a6ogFgpn9ntv8UgchB9j426Il1uz95M1cx7JLWLjRbrsGLm
+         kb8A==
+X-Gm-Message-State: APjAAAVHJ6k8e4cV6sX9UIFN0zndf2f6pb/KYx01nO8piofCxcSGtghr
+        truX2hEy5hRgIK4UNZhkz7AH3A9ZmMe2YkXi2mFo9yrYW9+QuS2cZbGNWVDmQycAC0aqIKnwFDj
+        SOaKkyrEvQGp7l00hkVjjCCH4
+X-Received: by 2002:aed:33e5:: with SMTP id v92mr12222669qtd.147.1567497744143;
+        Tue, 03 Sep 2019 01:02:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyuUlYSMv2CLngbEmx53BEDUm/0zAjPvH3fNP5QH85y4mmph/dg308bwbBgDMAKoys2slIKfg==
+X-Received: by 2002:aed:33e5:: with SMTP id v92mr12222643qtd.147.1567497743814;
+        Tue, 03 Sep 2019 01:02:23 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
+        by smtp.gmail.com with ESMTPSA id v5sm3806669qtk.66.2019.09.03.01.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 01:02:23 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 04:02:17 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture page table helpers
-Date:   Tue,  3 Sep 2019 13:31:46 +0530
-Message-Id: <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: request for stable (was Re: [PATCH v4 0/5] vsock/virtio:
+ optimizations to increase the throughput)
+Message-ID: <20190903040141-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-1-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a test module which will validate architecture page table helpers
-and accessors regarding compliance with generic MM semantics expectations.
-This will help various architectures in validating changes to the existing
-page table helpers or addition of new ones.
+Patches 1,3 and 4 are needed for stable.
+Dave, could you queue them there please?
 
-Test page table and memory pages creating it's entries at various level are
-all allocated from system memory with required alignments. If memory pages
-with required size and alignment could not be allocated, then all depending
-individual tests are skipped.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Steven Price <Steven.Price@arm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Sri Krishna chowdary <schowdary@nvidia.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
-
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- mm/Kconfig.debug       |  14 ++
- mm/Makefile            |   1 +
- mm/arch_pgtable_test.c | 425 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 440 insertions(+)
- create mode 100644 mm/arch_pgtable_test.c
-
-diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-index 327b3ebf23bf..ce9c397f7b07 100644
---- a/mm/Kconfig.debug
-+++ b/mm/Kconfig.debug
-@@ -117,3 +117,17 @@ config DEBUG_RODATA_TEST
-     depends on STRICT_KERNEL_RWX
-     ---help---
-       This option enables a testcase for the setting rodata read-only.
-+
-+config DEBUG_ARCH_PGTABLE_TEST
-+	bool "Test arch page table helpers for semantics compliance"
-+	depends on MMU
-+	depends on DEBUG_KERNEL
-+	help
-+	  This options provides a kernel module which can be used to test
-+	  architecture page table helper functions on various platform in
-+	  verifying if they comply with expected generic MM semantics. This
-+	  will help architectures code in making sure that any changes or
-+	  new additions of these helpers will still conform to generic MM
-+	  expected semantics.
-+
-+	  If unsure, say N.
-diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..bb572c5aa8c5 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_HWPOISON_INJECT) += hwpoison-inject.o
- obj-$(CONFIG_DEBUG_KMEMLEAK) += kmemleak.o
- obj-$(CONFIG_DEBUG_KMEMLEAK_TEST) += kmemleak-test.o
- obj-$(CONFIG_DEBUG_RODATA_TEST) += rodata_test.o
-+obj-$(CONFIG_DEBUG_ARCH_PGTABLE_TEST) += arch_pgtable_test.o
- obj-$(CONFIG_PAGE_OWNER) += page_owner.o
- obj-$(CONFIG_CLEANCACHE) += cleancache.o
- obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
-diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
-new file mode 100644
-index 000000000000..f15be8a73723
---- /dev/null
-+++ b/mm/arch_pgtable_test.c
-@@ -0,0 +1,425 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * This kernel module validates architecture page table helpers &
-+ * accessors and helps in verifying their continued compliance with
-+ * generic MM semantics.
-+ *
-+ * Copyright (C) 2019 ARM Ltd.
-+ *
-+ * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-+ */
-+#define pr_fmt(fmt) "arch_pgtable_test: %s " fmt, __func__
-+
-+#include <linux/kernel.h>
-+#include <linux/hugetlb.h>
-+#include <linux/mm.h>
-+#include <linux/mman.h>
-+#include <linux/mm_types.h>
-+#include <linux/module.h>
-+#include <linux/printk.h>
-+#include <linux/swap.h>
-+#include <linux/swapops.h>
-+#include <linux/pfn_t.h>
-+#include <linux/gfp.h>
-+#include <linux/spinlock.h>
-+#include <linux/sched/mm.h>
-+#include <asm/pgalloc.h>
-+#include <asm/pgtable.h>
-+
-+/*
-+ * Basic operations
-+ *
-+ * mkold(entry)			= An old and not a young entry
-+ * mkyoung(entry)		= A young and not an old entry
-+ * mkdirty(entry)		= A dirty and not a clean entry
-+ * mkclean(entry)		= A clean and not a dirty entry
-+ * mkwrite(entry)		= A write and not a write protected entry
-+ * wrprotect(entry)		= A write protected and not a write entry
-+ * pxx_bad(entry)		= A mapped and non-table entry
-+ * pxx_same(entry1, entry2)	= Both entries hold the exact same value
-+ */
-+#define VADDR_TEST	(PGDIR_SIZE + PUD_SIZE + PMD_SIZE + PAGE_SIZE)
-+#define VMA_TEST_FLAGS	(VM_READ|VM_WRITE|VM_EXEC)
-+#define RANDOM_NZVALUE	(0xbe)
-+
-+static bool pud_aligned;
-+static bool pmd_aligned;
-+
-+extern struct mm_struct *mm_alloc(void);
-+
-+static void pte_basic_tests(struct page *page, pgprot_t prot)
-+{
-+	pte_t pte = mk_pte(page, prot);
-+
-+	WARN_ON(!pte_same(pte, pte));
-+	WARN_ON(!pte_young(pte_mkyoung(pte)));
-+	WARN_ON(!pte_dirty(pte_mkdirty(pte)));
-+	WARN_ON(!pte_write(pte_mkwrite(pte)));
-+	WARN_ON(pte_young(pte_mkold(pte)));
-+	WARN_ON(pte_dirty(pte_mkclean(pte)));
-+	WARN_ON(pte_write(pte_wrprotect(pte)));
-+}
-+
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE
-+static void pmd_basic_tests(struct page *page, pgprot_t prot)
-+{
-+	pmd_t pmd;
-+
-+	/*
-+	 * Memory block here must be PMD_SIZE aligned. Abort this
-+	 * test in case we could not allocate such a memory block.
-+	 */
-+	if (!pmd_aligned) {
-+		pr_warn("Could not proceed with PMD tests\n");
-+		return;
-+	}
-+
-+	pmd = mk_pmd(page, prot);
-+	WARN_ON(!pmd_same(pmd, pmd));
-+	WARN_ON(!pmd_young(pmd_mkyoung(pmd)));
-+	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd)));
-+	WARN_ON(!pmd_write(pmd_mkwrite(pmd)));
-+	WARN_ON(pmd_young(pmd_mkold(pmd)));
-+	WARN_ON(pmd_dirty(pmd_mkclean(pmd)));
-+	WARN_ON(pmd_write(pmd_wrprotect(pmd)));
-+	/*
-+	 * A huge page does not point to next level page table
-+	 * entry. Hence this must qualify as pmd_bad().
-+	 */
-+	WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
-+}
-+#else
-+static void pmd_basic_tests(struct page *page, pgprot_t prot) { }
-+#endif
-+
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+static void pud_basic_tests(struct page *page, pgprot_t prot)
-+{
-+	pud_t pud;
-+
-+	/*
-+	 * Memory block here must be PUD_SIZE aligned. Abort this
-+	 * test in case we could not allocate such a memory block.
-+	 */
-+	if (!pud_aligned) {
-+		pr_warn("Could not proceed with PUD tests\n");
-+		return;
-+	}
-+
-+	pud = pfn_pud(page_to_pfn(page), prot);
-+	WARN_ON(!pud_same(pud, pud));
-+	WARN_ON(!pud_young(pud_mkyoung(pud)));
-+	WARN_ON(!pud_write(pud_mkwrite(pud)));
-+	WARN_ON(pud_write(pud_wrprotect(pud)));
-+	WARN_ON(pud_young(pud_mkold(pud)));
-+
-+#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-+	/*
-+	 * A huge page does not point to next level page table
-+	 * entry. Hence this must qualify as pud_bad().
-+	 */
-+	WARN_ON(!pud_bad(pud_mkhuge(pud)));
-+#endif
-+}
-+#else
-+static void pud_basic_tests(struct page *page, pgprot_t prot) { }
-+#endif
-+
-+static void p4d_basic_tests(struct page *page, pgprot_t prot)
-+{
-+	p4d_t p4d;
-+
-+	memset(&p4d, RANDOM_NZVALUE, sizeof(p4d_t));
-+	WARN_ON(!p4d_same(p4d, p4d));
-+}
-+
-+static void pgd_basic_tests(struct page *page, pgprot_t prot)
-+{
-+	pgd_t pgd;
-+
-+	memset(&pgd, RANDOM_NZVALUE, sizeof(pgd_t));
-+	WARN_ON(!pgd_same(pgd, pgd));
-+}
-+
-+#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-+static void pud_clear_tests(pud_t *pudp)
-+{
-+	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
-+	pud_clear(pudp);
-+	WARN_ON(!pud_none(READ_ONCE(*pudp)));
-+}
-+
-+static void pud_populate_tests(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
-+{
-+	/*
-+	 * This entry points to next level page table page.
-+	 * Hence this must not qualify as pud_bad().
-+	 */
-+	pmd_clear(pmdp);
-+	pud_clear(pudp);
-+	pud_populate(mm, pudp, pmdp);
-+	WARN_ON(pud_bad(READ_ONCE(*pudp)));
-+}
-+#else
-+static void pud_clear_tests(pud_t *pudp) { }
-+static void pud_populate_tests(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
-+{
-+}
-+#endif
-+
-+#if !defined(__PAGETABLE_PUD_FOLDED) && !defined(__ARCH_HAS_5LEVEL_HACK)
-+static void p4d_clear_tests(p4d_t *p4dp)
-+{
-+	memset(p4dp, RANDOM_NZVALUE, sizeof(p4d_t));
-+	p4d_clear(p4dp);
-+	WARN_ON(!p4d_none(READ_ONCE(*p4dp)));
-+}
-+
-+static void p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
-+{
-+	/*
-+	 * This entry points to next level page table page.
-+	 * Hence this must not qualify as p4d_bad().
-+	 */
-+	pud_clear(pudp);
-+	p4d_clear(p4dp);
-+	p4d_populate(mm, p4dp, pudp);
-+	WARN_ON(p4d_bad(READ_ONCE(*p4dp)));
-+}
-+#else
-+static void p4d_clear_tests(p4d_t *p4dp) { }
-+static void p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
-+{
-+}
-+#endif
-+
-+#ifndef __PAGETABLE_P4D_FOLDED
-+static void pgd_clear_tests(pgd_t *pgdp)
-+{
-+	memset(pgdp, RANDOM_NZVALUE, sizeof(pgd_t));
-+	pgd_clear(pgdp);
-+	WARN_ON(!pgd_none(READ_ONCE(*pgdp)));
-+}
-+
-+static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-+{
-+	/*
-+	 * This entry points to next level page table page.
-+	 * Hence this must not qualify as pgd_bad().
-+	 */
-+	p4d_clear(p4dp);
-+	pgd_clear(pgdp);
-+	pgd_populate(mm, pgdp, p4dp);
-+	WARN_ON(pgd_bad(READ_ONCE(*pgdp)));
-+}
-+#else
-+static void pgd_clear_tests(pgd_t *pgdp) { }
-+static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-+{
-+}
-+#endif
-+
-+static void pte_clear_tests(pte_t *ptep)
-+{
-+	memset(ptep, RANDOM_NZVALUE, sizeof(pte_t));
-+	pte_clear(NULL, 0, ptep);
-+	WARN_ON(!pte_none(READ_ONCE(*ptep)));
-+}
-+
-+static void pmd_clear_tests(pmd_t *pmdp)
-+{
-+	memset(pmdp, RANDOM_NZVALUE, sizeof(pmd_t));
-+	pmd_clear(pmdp);
-+	WARN_ON(!pmd_none(READ_ONCE(*pmdp)));
-+}
-+
-+static void pmd_populate_tests(struct mm_struct *mm, pmd_t *pmdp,
-+			       pgtable_t pgtable)
-+{
-+	/*
-+	 * This entry points to next level page table page.
-+	 * Hence this must not qualify as pmd_bad().
-+	 */
-+	pmd_clear(pmdp);
-+	pmd_populate(mm, pmdp, pgtable);
-+	WARN_ON(pmd_bad(READ_ONCE(*pmdp)));
-+}
-+
-+static bool pfn_range_valid(struct zone *z, unsigned long start_pfn,
-+			    unsigned long nr_pages)
-+{
-+	unsigned long i, end_pfn = start_pfn + nr_pages;
-+	struct page *page;
-+
-+	for (i = start_pfn; i < end_pfn; i++) {
-+		if (!pfn_valid(i))
-+			return false;
-+
-+		page = pfn_to_page(i);
-+
-+		if (page_zone(page) != z)
-+			return false;
-+
-+		if (PageReserved(page))
-+			return false;
-+
-+		if (page_count(page) > 0)
-+			return false;
-+
-+		if (PageHuge(page))
-+			return false;
-+	}
-+	return true;
-+}
-+
-+static struct page *alloc_gigantic_page(nodemask_t *nodemask,
-+					int nid, gfp_t gfp_mask, int order)
-+{
-+	struct zonelist *zonelist;
-+	struct zone *zone;
-+	struct zoneref *z;
-+	enum zone_type zonesel;
-+	unsigned long ret, pfn, flags, nr_pages;
-+
-+	nr_pages = 1UL << order;
-+	zonesel = gfp_zone(gfp_mask);
-+	zonelist = node_zonelist(nid, gfp_mask);
-+	for_each_zone_zonelist_nodemask(zone, z, zonelist, zonesel, nodemask) {
-+		spin_lock_irqsave(&zone->lock, flags);
-+		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
-+		while (zone_spans_pfn(zone, pfn + nr_pages - 1)) {
-+			if (pfn_range_valid(zone, pfn, nr_pages)) {
-+				spin_unlock_irqrestore(&zone->lock, flags);
-+				ret = alloc_contig_range(pfn, pfn + nr_pages,
-+							 MIGRATE_MOVABLE,
-+							 gfp_mask);
-+				if (!ret)
-+					return pfn_to_page(pfn);
-+				spin_lock_irqsave(&zone->lock, flags);
-+			}
-+			pfn += nr_pages;
-+		}
-+		spin_unlock_irqrestore(&zone->lock, flags);
-+	}
-+	return NULL;
-+}
-+
-+static struct page *alloc_mapped_page(void)
-+{
-+	gfp_t gfp_mask = GFP_KERNEL | __GFP_ZERO;
-+	struct page *page = NULL;
-+
-+	page = alloc_gigantic_page(&node_states[N_MEMORY], first_memory_node,
-+				   gfp_mask, get_order(PUD_SIZE));
-+	if (page) {
-+		pud_aligned = true;
-+		pmd_aligned = true;
-+		return page;
-+	}
-+
-+	page = alloc_pages(gfp_mask, get_order(PMD_SIZE));
-+	if (page) {
-+		pmd_aligned = true;
-+		return page;
-+	}
-+	return alloc_page(gfp_mask);
-+}
-+
-+static void free_mapped_page(struct page *page)
-+{
-+	if (pud_aligned) {
-+		unsigned long pfn = page_to_pfn(page);
-+
-+		free_contig_range(pfn, 1ULL << get_order(PUD_SIZE));
-+		return;
-+	}
-+
-+	if (pmd_aligned) {
-+		int order = get_order(PMD_SIZE);
-+
-+		free_pages((unsigned long)page_address(page), order);
-+		return;
-+	}
-+	free_page((unsigned long)page_address(page));
-+}
-+
-+static int __init arch_pgtable_tests_init(void)
-+{
-+	struct mm_struct *mm;
-+	struct page *page;
-+	pgd_t *pgdp;
-+	p4d_t *p4dp, *saved_p4dp;
-+	pud_t *pudp, *saved_pudp;
-+	pmd_t *pmdp, *saved_pmdp;
-+	pte_t *ptep, *saved_ptep;
-+	pgprot_t prot = vm_get_page_prot(VMA_TEST_FLAGS);
-+	unsigned long vaddr = VADDR_TEST;
-+
-+	mm = mm_alloc();
-+	if (!mm) {
-+		pr_err("mm_struct allocation failed\n");
-+		return 1;
-+	}
-+
-+	page = alloc_mapped_page();
-+	if (!page) {
-+		pr_err("memory allocation failed\n");
-+		return 1;
-+	}
-+
-+	pgdp = pgd_offset(mm, vaddr);
-+	p4dp = p4d_alloc(mm, pgdp, vaddr);
-+	pudp = pud_alloc(mm, p4dp, vaddr);
-+	pmdp = pmd_alloc(mm, pudp, vaddr);
-+	ptep = pte_alloc_map(mm, pmdp, vaddr);
-+
-+	/*
-+	 * Save all the page table page addresses as the page table
-+	 * entries will be used for testing with random or garbage
-+	 * values. These saved addresses will be used for freeing
-+	 * page table pages.
-+	 */
-+	saved_p4dp = p4d_offset(pgdp, 0UL);
-+	saved_pudp = pud_offset(p4dp, 0UL);
-+	saved_pmdp = pmd_offset(pudp, 0UL);
-+	saved_ptep = pte_offset_map(pmdp, 0UL);
-+
-+	pte_basic_tests(page, prot);
-+	pmd_basic_tests(page, prot);
-+	pud_basic_tests(page, prot);
-+	p4d_basic_tests(page, prot);
-+	pgd_basic_tests(page, prot);
-+
-+	pte_clear_tests(ptep);
-+	pmd_clear_tests(pmdp);
-+	pud_clear_tests(pudp);
-+	p4d_clear_tests(p4dp);
-+	pgd_clear_tests(pgdp);
-+
-+	pmd_populate_tests(mm, pmdp, (pgtable_t) page);
-+	pud_populate_tests(mm, pudp, pmdp);
-+	p4d_populate_tests(mm, p4dp, pudp);
-+	pgd_populate_tests(mm, pgdp, p4dp);
-+
-+	p4d_free(mm, saved_p4dp);
-+	pud_free(mm, saved_pudp);
-+	pmd_free(mm, saved_pmdp);
-+	pte_free(mm, (pgtable_t) virt_to_page(saved_ptep));
-+
-+	mm_dec_nr_puds(mm);
-+	mm_dec_nr_pmds(mm);
-+	mm_dec_nr_ptes(mm);
-+	__mmdrop(mm);
-+
-+	free_mapped_page(page);
-+	return 0;
-+}
-+
-+static void __exit arch_pgtable_tests_exit(void) { }
-+
-+module_init(arch_pgtable_tests_init);
-+module_exit(arch_pgtable_tests_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Anshuman Khandual <anshuman.khandual@arm.com>");
-+MODULE_DESCRIPTION("Test archicture page table helpers");
--- 
-2.20.1
-
+On Wed, Jul 17, 2019 at 01:30:25PM +0200, Stefano Garzarella wrote:
+> This series tries to increase the throughput of virtio-vsock with slight
+> changes.
+> While I was testing the v2 of this series I discovered an huge use of memory,
+> so I added patch 1 to mitigate this issue. I put it in this series in order
+> to better track the performance trends.
+> 
+> v4:
+> - rebased all patches on current master (conflicts is Patch 4)
+> - Patch 1: added Stefan's R-b
+> - Patch 3: removed lock when buf_alloc is written [David];
+>            moved this patch after "vsock/virtio: reduce credit update messages"
+>            to make it clearer
+> - Patch 4: vhost_exceeds_weight() is recently introduced, so I've solved some
+>            conflicts
+> 
+> v3: https://patchwork.kernel.org/cover/10970145
+> 
+> v2: https://patchwork.kernel.org/cover/10938743
+> 
+> v1: https://patchwork.kernel.org/cover/10885431
+> 
+> Below are the benchmarks step by step. I used iperf3 [1] modified with VSOCK
+> support. As Micheal suggested in the v1, I booted host and guest with 'nosmap'.
+> 
+> A brief description of patches:
+> - Patches 1:   limit the memory usage with an extra copy for small packets
+> - Patches 2+3: reduce the number of credit update messages sent to the
+>                transmitter
+> - Patches 4+5: allow the host to split packets on multiple buffers and use
+>                VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max packet size allowed
+> 
+>                     host -> guest [Gbps]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.032     0.030    0.048    0.051
+> 64         0.061     0.059    0.108    0.117
+> 128        0.122     0.112    0.227    0.234
+> 256        0.244     0.241    0.418    0.415
+> 512        0.459     0.466    0.847    0.865
+> 1K         0.927     0.919    1.657    1.641
+> 2K         1.884     1.813    3.262    3.269
+> 4K         3.378     3.326    6.044    6.195
+> 8K         5.637     5.676   10.141   11.287
+> 16K        8.250     8.402   15.976   16.736
+> 32K       13.327    13.204   19.013   20.515
+> 64K       21.241    21.341   20.973   21.879
+> 128K      21.851    22.354   21.816   23.203
+> 256K      21.408    21.693   21.846   24.088
+> 512K      21.600    21.899   21.921   24.106
+> 
+>                     guest -> host [Gbps]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.045     0.046    0.057    0.057
+> 64         0.089     0.091    0.103    0.104
+> 128        0.170     0.179    0.192    0.200
+> 256        0.364     0.351    0.361    0.379
+> 512        0.709     0.699    0.731    0.790
+> 1K         1.399     1.407    1.395    1.427
+> 2K         2.670     2.684    2.745    2.835
+> 4K         5.171     5.199    5.305    5.451
+> 8K         8.442     8.500   10.083    9.941
+> 16K       12.305    12.259   13.519   15.385
+> 32K       11.418    11.150   11.988   24.680
+> 64K       10.778    10.659   11.589   35.273
+> 128K      10.421    10.339   10.939   40.338
+> 256K      10.300     9.719   10.508   36.562
+> 512K       9.833     9.808   10.612   35.979
+> 
+> As Stefan suggested in the v1, I measured also the efficiency in this way:
+>     efficiency = Mbps / (%CPU_Host + %CPU_Guest)
+> 
+> The '%CPU_Guest' is taken inside the VM. I know that it is not the best way,
+> but it's provided for free from iperf3 and could be an indication.
+> 
+>         host -> guest efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.35      0.45     0.79     1.02
+> 64         0.56      0.80     1.41     1.54
+> 128        1.11      1.52     3.03     3.12
+> 256        2.20      2.16     5.44     5.58
+> 512        4.17      4.18    10.96    11.46
+> 1K         8.30      8.26    20.99    20.89
+> 2K        16.82     16.31    39.76    39.73
+> 4K        30.89     30.79    74.07    75.73
+> 8K        53.74     54.49   124.24   148.91
+> 16K       80.68     83.63   200.21   232.79
+> 32K      132.27    132.52   260.81   357.07
+> 64K      229.82    230.40   300.19   444.18
+> 128K     332.60    329.78   331.51   492.28
+> 256K     331.06    337.22   339.59   511.59
+> 512K     335.58    328.50   331.56   504.56
+> 
+>         guest -> host efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.43      0.43     0.53     0.56
+> 64         0.85      0.86     1.04     1.10
+> 128        1.63      1.71     2.07     2.13
+> 256        3.48      3.35     4.02     4.22
+> 512        6.80      6.67     7.97     8.63
+> 1K        13.32     13.31    15.72    15.94
+> 2K        25.79     25.92    30.84    30.98
+> 4K        50.37     50.48    58.79    59.69
+> 8K        95.90     96.15   107.04   110.33
+> 16K      145.80    145.43   143.97   174.70
+> 32K      147.06    144.74   146.02   282.48
+> 64K      145.25    143.99   141.62   406.40
+> 128K     149.34    146.96   147.49   489.34
+> 256K     156.35    149.81   152.21   536.37
+> 512K     151.65    150.74   151.52   519.93
+> 
+> [1] https://github.com/stefano-garzarella/iperf/
+> 
+> Stefano Garzarella (5):
+>   vsock/virtio: limit the memory used per-socket
+>   vsock/virtio: reduce credit update messages
+>   vsock/virtio: fix locking in virtio_transport_inc_tx_pkt()
+>   vhost/vsock: split packets to send using multiple buffers
+>   vsock/virtio: change the maximum packet size allowed
+> 
+>  drivers/vhost/vsock.c                   | 68 ++++++++++++-----
+>  include/linux/virtio_vsock.h            |  4 +-
+>  net/vmw_vsock/virtio_transport.c        |  1 +
+>  net/vmw_vsock/virtio_transport_common.c | 99 ++++++++++++++++++++-----
+>  4 files changed, 134 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.20.1
