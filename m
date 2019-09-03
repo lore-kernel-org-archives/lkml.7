@@ -2,223 +2,116 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0137C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D24FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EE62087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567511191;
-	bh=hjXB5zrAlbTGRagxVZE7j5GOOPzJkb7UeLQkAGA61YQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=av3BpGEjWjFa2t9jlB45tX9tZn0aMpiLOgtERfYFptRX/MgJD7agKneXzJjvQmgE2
-	 5faEwXujfX7c9UNeAfKdOX921/DZIH+kWonaf4jJrFGz7kIR+55VjQjFuJmnDLWVa1
-	 mYbjC+BeD7H720cavOWe+2b+xE0E8PJCsbBRzISM=
+	by mail.kernel.org (Postfix) with ESMTP id D0AB22087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ0krnZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfICLqb (ORCPT
+        id S1728874AbfICLva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbfICLqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:46:30 -0400
-Received: from earth.universe (host-091-097-188-078.ewe-ip-backbone.de [91.97.188.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F1802087E;
-        Tue,  3 Sep 2019 11:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567511188;
-        bh=hjXB5zrAlbTGRagxVZE7j5GOOPzJkb7UeLQkAGA61YQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IRaArMa3l3ntQ50WqO+vNR8rBmdA49vi3zMTbSZxD+4MfqDPHkhWK/DP1oAyKSY7i
-         QJ3tR5oCmArTs2l9KjDCXnX+Nse6ZlL865H8heuEqXwUt6n28TXajf5jbSrNihQkDy
-         rnxuaUduxU3CzRGAhZgiMbNbWQuCwK+IPi4B7xbU=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 0A1173C0CFA; Tue,  3 Sep 2019 13:46:26 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 13:46:25 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
- to json-schema
-Message-ID: <20190903114625.pdbs52h3vv7hr2sx@earth.universe>
-References: <20190902150336.3600-1-krzk@kernel.org>
- <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
- <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
- <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rm6mpfm2xfn242zu"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Tue, 3 Sep 2019 07:51:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42460 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfICLv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:51:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b16so17125214wrq.9;
+        Tue, 03 Sep 2019 04:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LFB91c3nmv/pz8b+u80goQVipPJpjyjQS62qRFXUgtQ=;
+        b=bJ0krnZRH3xIjehbkmbbVQxBnkUa74KSuTBDO//BQo0cigELoAv1mrtFxrColLkIZM
+         omcKsHUfEe9PPcv836qz1cl2MBhLKye0mZu2NLvhOEuEaN2UywKFLZ39fexi+pwe18ZQ
+         2HXkAewEgMuqKFVDkXpvnuXzhsuDab9mG1+oyzKqcOX+Vz/UIMWwhjq8h4oNkYiITH4K
+         H4wY8S4xnA712lpsnpJoBc4BIEgALRz3H2B6LkKSuQunJ7ug5co/gSfJKJfL6YrUlc24
+         oAiOd5ckrjC+FCtJF4F4lWHxd71KtESgi9ImmMb1SNcvCF+fPxFyc7pEJXOsLPtJUBGa
+         l2Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LFB91c3nmv/pz8b+u80goQVipPJpjyjQS62qRFXUgtQ=;
+        b=qYIWYDir8ccONDlup4/U8gsh3CsbmWs7OvcbR5N1Aml1TDTp+Mc9COQvohSm5PTGUH
+         /Y9d1xdZOHfGeRrWmrX8CQZzTgAZl0aO7M8gj5q9nEx4kFBRH68HzbvUU519JMQ+m0cR
+         F8njjRdKfmVuzTWh6Jx68vKao2SmZe28uaX01zQ9JHitnwAeqJKfFNfglMuYxRSb2heW
+         vFsi2lyi4MwRuHpna2ET/rohnsx+hk2g3RxEqSqw13KYWy3xmjsArWAiJqgAscEUWX7W
+         L7T2TK0HIRKH7dUXwmvDRV/fmotbhdpW6Jmn3DFolkfWVDqxwjG4vhQoXEQvMDBuSRbS
+         b4ig==
+X-Gm-Message-State: APjAAAXOpR0R0mf2Ff7OObe8eBsFPomhssit6rzAuflKdalBOLX6VNJa
+        d5NbpbIx4/wJw/w7r3lMZKt6nuOZ
+X-Google-Smtp-Source: APXvYqwbEWX6uMe+Chq94s40RNi2NT4phCD3BvTPenhL7mFjVNrfZ2XEQ/SieLlzjcCHquFVjwcwPg==
+X-Received: by 2002:a5d:4bc1:: with SMTP id l1mr8441064wrt.259.1567511487060;
+        Tue, 03 Sep 2019 04:51:27 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id a192sm22926128wma.1.2019.09.03.04.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 04:51:26 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH] mmc: sdhci: Fix incorrect switch to HS mode
+Date:   Tue,  3 Sep 2019 07:51:14 -0400
+Message-Id: <20190903115114.33053-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When switching from any MMC speed mode that requires 1.8v
+(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+ends up configured for SDR12 with a 50MHz clock which is an illegal
+mode.
 
---rm6mpfm2xfn242zu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This happens because the SDHCI_CTRL_VDD_180 bit in the
+SDHCI_HOST_CONTROL2 register is left set and when this bit is
+set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+because there is no UHS mode being set.
 
-On Tue, Sep 03, 2019 at 10:00:12AM +0100, Rob Herring wrote:
-> On Tue, Sep 3, 2019 at 8:47 AM Krzysztof Kozlowski <krzk@kernel.org> wrot=
-e:
-> >
-> > On Tue, 3 Sep 2019 at 09:14, Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> =
-wrote:
-> > > >
-> > > > Convert the Syscon reboot bindings to DT schema format using
-> > > > json-schema.
-> > > >
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
-> > > >  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
-> > > >  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++=
-++++
-> > > >  2 files changed, 68 insertions(+), 30 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/power/reset/s=
-yscon-reboot.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/power/reset/s=
-yscon-reboot.yaml
-> > >
-> > > > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-r=
-eboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.ya=
-ml
-> > > > new file mode 100644
-> > > > index 000000000000..a583f3dc8ef4
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.y=
-aml
-> > > > @@ -0,0 +1,68 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Generic SYSCON mapped register reset driver
-> > > > +
-> > > > +maintainers:
-> > > > +  - Sebastian Reichel <sre@kernel.org>
-> > > > +
-> > > > +description: |+
-> > > > +  This is a generic reset driver using syscon to map the reset reg=
-ister.
-> > > > +  The reset is generally performed with a write to the reset regis=
-ter
-> > > > +  defined by the register map pointed by syscon reference plus the=
- offset
-> > > > +  with the value and mask defined in the reboot node.
-> > > > +  Default will be little endian mode, 32 bit access only.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: syscon-reboot
-> > > > +
-> > > > +  mask:
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +    description: Update only the register bits defined by the mask=
- (32 bit).
-> > > > +    maxItems: 1
-> > >
-> > > Drop this as that is already defined for uint32.
-> > >
-> > > It also doesn't actually work. The $ref has to be under an 'allOf' if
-> > > you have additional schemas. A quirk of json-schema...
-> > >
-> > > > +
-> > > > +  offset:
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +    description: Offset in the register map for the reboot registe=
-r (in bytes).
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  regmap:
-> > > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > > +    description: Phandle to the register map node.
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  value:
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +    description: The reset value written to the reboot register (3=
-2 bit access).
-> > > > +    maxItems: 1
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - regmap
-> > > > +  - offset
-> > > > +
-> > > > +allOf:
-> > > > +  - if:
-> > > > +      properties:
-> > > > +        value:
-> > > > +          not:
-> > > > +            type: array
-> > >
-> > > I think you could make this a bit more readable with:
-> > >
-> > > if:
-> > >   not:
-> > >     required:
-> > >       - value
-> >
-> > I do not understand how does it work (value is not mentioned in the
-> > required fields so why checking of it?)... but it works fine.
->=20
-> What's under required doesn't have to be listed as a property.
->=20
-> > > However, if the tree is free of legacy usage, then you could just dro=
-p all this.
-> >
-> > One of them - mask or value - has to be provided.
->=20
-> Or both, right?
->=20
-> Actually, a better way to express it is probably this:
->=20
-> oneOf:
->   - required: [ value ]
->   - required: [ mask ]
->   - required: [ value, mask ]
+The fix is to change sdhci_set_uhs_signaling() to set the
+SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+any switch to HS mode.
 
-Looks good to me.
+This was found on a new eMMC controller that does strict checking
+of the speed mode and the corresponding clock rate. It caused the
+switch to HS400 mode to fail because part of the sequence to switch
+to HS400 requires a switch from HS200 to HS before going to HS400.
 
--- Sebastian
+This fix was suggested by Adrian Hunter
 
---rm6mpfm2xfn242zu
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+ drivers/mmc/host/sdhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 61d845fe0b97..068149640ecd 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1858,7 +1858,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_SD_HS ||
++		 timing == MMC_TIMING_MMC_HS ||
++		 timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+-- 
+2.17.1
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1uUo4ACgkQ2O7X88g7
-+ppzuQ/+Mm+oWf+fmnYvUJtDmORKgyTJp1OBcKig4qxPW9n/Izdh2SPEE9D7TQ8m
-ah+S75p/HMZjTAyBwvqS3JaCiOyJZwgPeUuFZaqdDJXTzmSY9/w9iP9taSTq8y3L
-Q2j/c9kb2F/5fSjBv/h6bA8Tpd+Sxp9g13PLiHAwbTPerNdc82OjFeiGZieURxpo
-6thT8M2rssCuasjW53rF+MmdXEdqVW9qSpQC8CqRfQc5iaaYZZB9k/3fJxR2cWH7
-uBz38jC0xbWWoS9Rh9uGwAlXx2qG6Re3YX2jiH1FXNYmVsP1FJBjkMbsY3ZhiUGf
-gzTKBCGZXNJOY6Nq1oyfhb5cQIMuddDUw7XMhy/k59Pe72cwSrDk6qxzXgEDYNVc
-3w8LXWXJBMGTNR2+JlVpybY1ham5VQE5cM+uOsbpqHFhUWG6orMLfHY6TPBvXeE5
-4l2CBH+gSUb2j/2BlLVQ2gYPcU2Q0EZ9kNkx90zPZW96MWYOOJ4lrHJWqaHrEZ05
-aIexGNoVeQQAJdEN6wN4OinBo8qAVwXMJmQtDDrkjxGx3w4MOOnK2Y3qy4pzbZkR
-GZwZOXBgAhq0MrR3IjLagPyp6OUgm5BpMP9YajHFGuUKTJCoUmxqskPyi5Gdg/Y+
-CniPzO+lL/K04tjWoOcEjIM4b2ecgYyrd6gHpzZOHSAYJqkzsRM=
-=qj1A
------END PGP SIGNATURE-----
-
---rm6mpfm2xfn242zu--
