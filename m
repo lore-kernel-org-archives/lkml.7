@@ -2,64 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8FCC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D88C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B125C204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DE622DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfICVSC (ORCPT
+        id S1726810AbfICV0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:18:02 -0400
-Received: from smtprelay0243.hostedemail.com ([216.40.44.243]:50939 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726375AbfICVSB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:18:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id B1FED100E86CC;
-        Tue,  3 Sep 2019 21:17:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: trade03_4529f89b0df58
-X-Filterd-Recvd-Size: 1411
-Received: from XPS-9350 (unknown [172.58.30.235])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  3 Sep 2019 21:17:55 +0000 (UTC)
-Message-ID: <7cd37b0130f9dcabc00721913b63cab222267a78.camel@perches.com>
-Subject: Re: [PATCH] mailmap: Update email address for Quentin Perret
-From:   Joe Perches <joe@perches.com>
-To:     Will Deacon <will@kernel.org>,
-        Quentin Perret <quentin.perret@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, rjw@rjwysocki.net,
-        vincent.guittot@linaro.org, juri.lelli@redhat.com,
-        catalin.marinas@arm.com, morten.rasmussen@arm.com,
-        chris.redpath@arm.com, dietmar.eggemann@arm.com,
-        patrick.bellasi@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, qperret@qperret.net, corbet@lwn.net
-Date:   Tue, 03 Sep 2019 14:17:25 -0700
-In-Reply-To: <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
-References: <20190902105036.32419-1-quentin.perret@arm.com>
-         <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 3 Sep 2019 17:26:46 -0400
+Received: from mga01.intel.com ([192.55.52.88]:58077 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbfICV0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 17:26:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 14:26:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,464,1559545200"; 
+   d="scan'208";a="383234073"
+Received: from ellie.jf.intel.com (HELO ellie) ([10.24.13.22])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2019 14:26:45 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: sched: taprio: Fix potential integer overflow in taprio_set_picos_per_byte
+In-Reply-To: <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com>
+References: <20190903010817.GA13595@embeddedor> <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com> <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com>
+Date:   Tue, 03 Sep 2019 14:26:45 -0700
+Message-ID: <8736hd9ilm.fsf@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-03 at 15:59 +0100, Will Deacon wrote:
-> What's the best way
-> for get_maintainer.pl to retrieve up-to-date contact details for developers
-> who aren't in MAINTAINERS?
+Hi,
 
-Updated .mailmap entries.
+Vladimir Oltean <olteanv@gmail.com> writes:
 
+> Right. And while we're at it, there's still the potential
+> division-by-zero problem which I still don't know how to solve without
+> implementing a full-blown __ethtool_get_link_ksettings parser that
+> checks against all the possible outputs it can have under the "no
+> carrier" condition - see "[RFC PATCH 1/1] phylink: Set speed to
+> SPEED_UNKNOWN when there is no PHY connected" for details.
+> And there's also a third fix to be made: the netdev_dbg should be made
+> to print "speed" instead of "ecmd.base.speed".
 
+For the ksettings part I am thinking on adding something like this to
+ethtool.c. Do you think anything is missing (apart from the
+documentation)?
+
+->
+
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 95991e43..d37c80b 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -177,6 +177,9 @@ void ethtool_convert_legacy_u32_to_link_mode(unsigned long *dst,
+ bool ethtool_convert_link_mode_to_legacy_u32(u32 *legacy_u32,
+ 				     const unsigned long *src);
+ 
++u32 ethtool_link_ksettings_to_speed(const struct ethtool_link_ksettings *settings,
++				    u32 default_speed);
++
+ /**
+  * struct ethtool_ops - optional netdev operations
+  * @get_drvinfo: Report driver/device information.  Should only set the
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index 6288e69..80e3db3 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -539,6 +539,18 @@ struct ethtool_link_usettings {
+ 	} link_modes;
+ };
+ 
++u32 ethtool_link_ksettings_to_speed(const struct ethtool_link_ksettings *settings,
++				   u32 default_speed)
++{
++	if (settings->base.speed == SPEED_UNKNOWN)
++		return default_speed;
++
++	if (settings->base.speed == 0)
++		return default_speed;
++
++	return settings->base.speed;
++}
++
+ /* Internal kernel helper to query a device ethtool_link_settings. */
+ int __ethtool_get_link_ksettings(struct net_device *dev,
+ 				 struct ethtool_link_ksettings *link_ksettings)
