@@ -2,157 +2,137 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E085C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA26C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367E9206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567494898;
-	bh=rmcusr+wX8XSoyTKS/POm0d6XCyEv2vtg7TEOgrvejY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dfB/UYERBqIGq68nXaHvia43WDPIox9hT0EPEbPvQy4hqNJiWDehYQExVfxdG7GJC
-	 zn0Bb8Z1LiQCjAqAcqI3KYjiU0215JzK2qPDVxepXiTurdjBcQsJWta9mkfgMQqmBz
-	 b7oJVXrHxN1WFat1nhohlazh1LB76b0DFIeTfOB8=
+	by mail.kernel.org (Postfix) with ESMTP id AF8AA21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdjKZTcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfICHO5 (ORCPT
+        id S1727242AbfICHT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfICHO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:14:56 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74981217D7;
-        Tue,  3 Sep 2019 07:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567494895;
-        bh=rmcusr+wX8XSoyTKS/POm0d6XCyEv2vtg7TEOgrvejY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DJPxAl2yzJI+3FIKE1T1OUwMcHqsYY+kv+DlJu92XYT6S/sz5ectt4g4SN98sH9hf
-         Az089OpQh3UZnaPX3g6S34Vf8t8Ud0K2rqxOKSz9aAY926Ddu2RpV6i2BIBq30H3MO
-         yFdQSh83KrRQ3FjSidynESJWedug5HIiZrPrsq/c=
-Received: by mail-qt1-f179.google.com with SMTP id r5so13211326qtd.0;
-        Tue, 03 Sep 2019 00:14:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAVX3xwR6VxZ62aSr4mD3qiBFDvhWfsC03vELukiJ93MG8m/BUcq
-        FRRLgKiGSxBrvuBMHdJ+Ag9dGjw2ASwCEAbWYg==
-X-Google-Smtp-Source: APXvYqz5XsmuqNHJeQd9JXH675NAbzJ/857uySOgwZxnQXo+VM/m8JVVJovCqZIOtCBeOhAnCvckhUeip7egvh2w+c0=
-X-Received: by 2002:ac8:31b3:: with SMTP id h48mr32610749qte.300.1567494894631;
- Tue, 03 Sep 2019 00:14:54 -0700 (PDT)
+        Tue, 3 Sep 2019 03:19:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34558 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfICHT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:19:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so16246705wrn.1;
+        Tue, 03 Sep 2019 00:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GqH/uYZ59Bqs/aZMOtR7L5hy5zatr+ayALX3/njulog=;
+        b=SdjKZTcKow3BwpqzEoZ74B/a0a4BzQMcq17IpfK/VbNfdBnz0guteqJRqoqJCjFdMu
+         O/i3gQWktka6LrFwgkXToXYMiwvtpvBOh/4yTyuiHz4kOhmmoucFxSsnBzj7Mr1SyOUM
+         lu/wG6vKwhcX8EpVp0Sfwen11G38vEkqDJ7hJx3O0MXKqq0zlfBHPf6q2IQ90WNTNeF+
+         D0EEaNDCEixjvBR1jXcNRV0FjOq6HZbRSK1APaZK29E8vIUrEAllRVwmHqqQ8P1xeQDr
+         XhRfqLbQVaYKxJ7FRbMCe/dfJPVZvG0WYrHZ9o6xwm1XR9ZrKPFdVLUG4BbRAXcjmuj3
+         Y/wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GqH/uYZ59Bqs/aZMOtR7L5hy5zatr+ayALX3/njulog=;
+        b=RrsVxAOKmRhqhKAdR6LdzQW5dEniuIP+OZQZXd49qmPXJY1EJhMZBBvY82t5pqiXg1
+         3nFU4Fng1RiZ9PlgzEwEyY8PaFP5vBeZLz8jMEfp9qYtq7yD7QGcQxHFDbR9+nwm+tTN
+         NyaNP0E8uHccNVlM5j70kL82AIy/vIXW+JoS7sj06Nkg5qjf7xQnvJG/OX+7qhyzgpGF
+         qNCFPtHFZ0VSdRtne+atIV8J6L4+zttCm/0CBvjMHirwv8JdqBRbrtaV+AYb2XeUelBI
+         BzjppKkA6ailjeN4PuqyXy7MeFd9tVUS6GxoDYRGuQFkw7TZbaerg/pRe0Y0RmAem+D6
+         scVg==
+X-Gm-Message-State: APjAAAW6mJiNO1RSot94wwiOTw8zGUIq5lVwqV+1Ek+go8Gp2Q53m+Xa
+        dtE3Nf2UTXGDjN4AjkAhUDLE204r
+X-Google-Smtp-Source: APXvYqxOocrTfmKiAGEZz4fx57g2L5+yjh0cPJzIhAabUSSgcLVev56Qus1QEHOFR5x1pb8KHAwiug==
+X-Received: by 2002:adf:a415:: with SMTP id d21mr7857725wra.94.1567495164717;
+        Tue, 03 Sep 2019 00:19:24 -0700 (PDT)
+Received: from [192.168.8.147] (85.162.185.81.rev.sfr.net. [81.185.162.85])
+        by smtp.gmail.com with ESMTPSA id n12sm23312517wmc.24.2019.09.03.00.19.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2019 00:19:23 -0700 (PDT)
+Subject: Re: [PATCH] net: sched: taprio: Fix potential integer overflow in
+ taprio_set_picos_per_byte
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190903010817.GA13595@embeddedor>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
+Date:   Tue, 3 Sep 2019 09:19:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190902150336.3600-1-krzk@kernel.org>
-In-Reply-To: <20190902150336.3600-1-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Sep 2019 08:14:43 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
-Message-ID: <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
- to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190903010817.GA13595@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert the Syscon reboot bindings to DT schema format using
-> json-schema.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+
+On 9/3/19 3:08 AM, Gustavo A. R. Silva wrote:
+> Add suffix LL to constant 1000 in order to avoid a potential integer
+> overflow and give the compiler complete information about the proper
+> arithmetic to use. Notice that this constant is being used in a context
+> that expects an expression of type s64, but it's currently evaluated
+> using 32-bit arithmetic.
+> 
+> Addresses-Coverity-ID: 1453459 ("Unintentional integer overflow")
+> Fixes: f04b514c0ce2 ("taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_byte")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
->  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++++++
->  2 files changed, 68 insertions(+), 30 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+>  net/sched/sch_taprio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+> index 8d8bc2ec5cd6..956f837436ea 100644
+> --- a/net/sched/sch_taprio.c
+> +++ b/net/sched/sch_taprio.c
+> @@ -966,7 +966,7 @@ static void taprio_set_picos_per_byte(struct net_device *dev,
+>  
+>  skip:
+>  	picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
+> -				   speed * 1000 * 1000);
+> +				   speed * 1000LL * 1000);
+>  
+>  	atomic64_set(&q->picos_per_byte, picos_per_byte);
+>  	netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
+> 
 
-> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-> new file mode 100644
-> index 000000000000..a583f3dc8ef4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic SYSCON mapped register reset driver
-> +
-> +maintainers:
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +description: |+
-> +  This is a generic reset driver using syscon to map the reset register.
-> +  The reset is generally performed with a write to the reset register
-> +  defined by the register map pointed by syscon reference plus the offset
-> +  with the value and mask defined in the reboot node.
-> +  Default will be little endian mode, 32 bit access only.
-> +
-> +properties:
-> +  compatible:
-> +    const: syscon-reboot
-> +
-> +  mask:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Update only the register bits defined by the mask (32 bit).
-> +    maxItems: 1
+But, why even multiplying by 1,000,000 in the first place, this seems silly,
+a standard 32 bit divide could be used instead.
 
-Drop this as that is already defined for uint32.
+->
 
-It also doesn't actually work. The $ref has to be under an 'allOf' if
-you have additional schemas. A quirk of json-schema...
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index 8d8bc2ec5cd6281d811fd5d8a5c5211ebb0edd73..944b1af3215668e927d486b6c6c65c4599fb9539 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -965,8 +965,7 @@ static void taprio_set_picos_per_byte(struct net_device *dev,
+                speed = ecmd.base.speed;
+ 
+ skip:
+-       picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
+-                                  speed * 1000 * 1000);
++       picos_per_byte = (USEC_PER_SEC * 8) / speed;
+ 
+        atomic64_set(&q->picos_per_byte, picos_per_byte);
+        netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
 
-> +
-> +  offset:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Offset in the register map for the reboot register (in bytes).
-> +    maxItems: 1
-> +
-> +  regmap:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to the register map node.
-> +    maxItems: 1
-> +
-> +  value:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: The reset value written to the reboot register (32 bit access).
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - regmap
-> +  - offset
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        value:
-> +          not:
-> +            type: array
 
-I think you could make this a bit more readable with:
 
-if:
-  not:
-    required:
-      - value
-
-However, if the tree is free of legacy usage, then you could just drop all this.
-
-Rob
