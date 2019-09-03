@@ -4,51 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E768C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ACEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DF8238CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955B3238F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528300;
-	bh=1b2pBWdsuCL4bQpDtgYR8JYPmnX0yzH8g3x5zMn5w3E=;
+	s=default; t=1567528304;
+	bh=YyjbxgNl4LnQZCMq5LMk+9ESz9qxxJdoYR7Pz12nRbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a65MKVWiZKLWAgzOzd3sti2FOH4PLfloqcwJrVdhICvdZtDHOECo+n3XX2FMZdcoN
-	 xgQ8v5dH9ViUTHORgQJrwHXpgnTBFIC1BzH/WZqG/3Ef0axN2N75FOex8JJsHwJQdz
-	 0Er/nwxdplgHTgFQ1P2gbE9jd5WrAsj+dD0tge4I=
+	b=EDhv9DyvMF7JC2l7boAwWHMhh44uawg4x9qn/dvqCt85q+uY5YatXEMDfiBPbFiO4
+	 satLei5xgBERokOWtrYf7kpac95IJgypXu/VrXEtZAaP4GIcueYFTQhzvngbqAdNts
+	 lXV/eFjltn16i1VGAUX5IL62jjSkvGJwPapWHAJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfICQ2T (ORCPT
+        id S1730930AbfICQbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:28:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730610AbfICQ2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:16 -0400
+        id S1730435AbfICQbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:31:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A108323431;
-        Tue,  3 Sep 2019 16:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A04B23878;
+        Tue,  3 Sep 2019 16:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528095;
-        bh=1b2pBWdsuCL4bQpDtgYR8JYPmnX0yzH8g3x5zMn5w3E=;
+        s=default; t=1567528299;
+        bh=YyjbxgNl4LnQZCMq5LMk+9ESz9qxxJdoYR7Pz12nRbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pUtbeoBdZYU9OTs3+t+ABi8QDl2X3yDtoWe+UPNd9fRPHOJ/1fEzkOQl7kLXXUTHs
-         IRvyc8ErzygYpNfAuqnjuOfMYPsvDhQISMtJ0SWWtpSSf1O/gOYR6Z6EMz+dS76RK5
-         mjh5UjjJfSymiPxQ/8y5fknclzH/qd/2aFWA/oM4=
+        b=zJvX6x1UD5UrLH+bRnEY0vHe+QQk+FLxXSzwFWosrVWuSB0YcECOKmxI3bS3QHIE+
+         lmQ5LY2Fs1qfOIVpKxMQRF3OpTFfC+y7hNsEWFdF2p0ceNLO10b7XGKrbQ/wHw4JUK
+         LpPnLjcV3DznFrGAOBBHydkXljj/r3SJKjmA1ViE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lyude Paul <lyude@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Karol Herbst <kherbst@redhat.com>,
-        Ben Skeggs <skeggsb@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 104/167] PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary
-Date:   Tue,  3 Sep 2019 12:24:16 -0400
-Message-Id: <20190903162519.7136-104-sashal@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>, bhe@redhat.com,
+        dyoung@redhat.com, kexec@lists.infradead.org, mingo@redhat.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 143/167] resource: Fix find_next_iomem_res() iteration issue
+Date:   Tue,  3 Sep 2019 12:24:55 -0400
+Message-Id: <20190903162519.7136-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,153 +69,242 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit e0547c81bfcfad01cbbfa93a5e66bb98ab932f80 ]
+[ Upstream commit 010a93bf97c72f43aac664d0a685942f83d1a103 ]
 
-On ThinkPad P50 SKUs with an Nvidia Quadro M1000M instead of the M2000M
-variant, the BIOS does not always reset the secondary Nvidia GPU during
-reboot if the laptop is configured in Hybrid Graphics mode.  The reason is
-unknown, but the following steps and possibly a good bit of patience will
-reproduce the issue:
+Previously find_next_iomem_res() used "*res" as both an input parameter for
+the range to search and the type of resource to search for, and an output
+parameter for the resource we found, which makes the interface confusing.
 
-  1. Boot up the laptop normally in Hybrid Graphics mode
-  2. Make sure nouveau is loaded and that the GPU is awake
-  3. Allow the Nvidia GPU to runtime suspend itself after being idle
-  4. Reboot the machine, the more sudden the better (e.g. sysrq-b may help)
-  5. If nouveau loads up properly, reboot the machine again and go back to
-     step 2 until you reproduce the issue
+The current callers use find_next_iomem_res() incorrectly because they
+allocate a single struct resource and use it for repeated calls to
+find_next_iomem_res().  When find_next_iomem_res() returns a resource, it
+overwrites the start, end, flags, and desc members of the struct.  If we
+call find_next_iomem_res() again, we must update or restore these fields.
+The previous code restored res.start and res.end, but not res.flags or
+res.desc.
 
-This results in some very strange behavior: the GPU will be left in exactly
-the same state it was in when the previously booted kernel started the
-reboot.  This has all sorts of bad side effects: for starters, this
-completely breaks nouveau starting with a mysterious EVO channel failure
-that happens well before we've actually used the EVO channel for anything:
+Since the callers did not restore res.flags, if they searched for flags
+IORESOURCE_MEM | IORESOURCE_BUSY and found a resource with flags
+IORESOURCE_MEM | IORESOURCE_BUSY | IORESOURCE_SYSRAM, the next search would
+incorrectly skip resources unless they were also marked as
+IORESOURCE_SYSRAM.
 
-  nouveau 0000:01:00.0: disp: chid 0 mthd 0000 data 00000400 00001000 00000002
+Fix this by restructuring the interface so it takes explicit "start, end,
+flags" parameters and uses "*res" only as an output parameter.
 
-This causes a timeout trying to bring up the GR ctx:
+Based on a patch by Lianbo Jiang <lijiang@redhat.com>.
 
-  nouveau 0000:01:00.0: timeout
-  WARNING: CPU: 0 PID: 12 at drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf100.c:1547 gf100_grctx_generate+0x7b2/0x850 [nouveau]
-  Hardware name: LENOVO 20EQS64N0B/20EQS64N0B, BIOS N1EET82W (1.55 ) 12/18/2018
-  Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
-  ...
-  nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
-  nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
-  nouveau 0000:01:00.0: fifo: fault 01 [WRITE] at 0000000000008000 engine 00 [GR] client 15 [HUB/SCC_NB] reason c4 [] on channel -1 [0000000000 unknown]
+ [ bp: While at it:
+   - make comments kernel-doc style.
+   -
 
-The GPU never manages to recover.  Booting without loading nouveau causes
-issues as well, since the GPU starts sending spurious interrupts that cause
-other device's IRQs to get disabled by the kernel:
-
-  irq 16: nobody cared (try booting with the "irqpoll" option)
-  ...
-  handlers:
-  [<000000007faa9e99>] i801_isr [i2c_i801]
-  Disabling IRQ #16
-  ...
-  serio: RMI4 PS/2 pass-through port at rmi4-00.fn03
-  i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
-  i801_smbus 0000:00:1f.4: Transaction timeout
-  rmi4_f03 rmi4-00.fn03: rmi_f03_pt_write: Failed to write to F03 TX register (-110).
-  i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
-  i801_smbus 0000:00:1f.4: Transaction timeout
-  rmi4_physical rmi4-00: rmi_driver_set_irq_bits: Failed to change enabled interrupts!
-
-This causes the touchpad and sometimes other things to get disabled.
-
-Since this happens without nouveau, we can't fix this problem from nouveau
-itself.
-
-Add a PCI quirk for the specific P50 variant of this GPU.  Make sure the
-GPU is advertising NoReset- so we don't reset the GPU when the machine is
-in Dedicated graphics mode (where the GPU being initialized by the BIOS is
-normal and expected).  Map the GPU MMIO space and read the magic 0x2240c
-register, which will have bit 1 set if the device was POSTed during a
-previous boot.  Once we've confirmed all of this, reset the GPU and
-re-disable it - bringing it back to a healthy state.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203003
-Link: https://lore.kernel.org/lkml/20190212220230.1568-1-lyude@redhat.com
-Signed-off-by: Lyude Paul <lyude@redhat.com>
+Originally-by: http://lore.kernel.org/lkml/20180921073211.20097-2-lijiang@redhat.com
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: nouveau@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: Karol Herbst <kherbst@redhat.com>
-Cc: Ben Skeggs <skeggsb@gmail.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Brijesh Singh <brijesh.singh@amd.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: H. Peter Anvin <hpa@zytor.com>
+CC: Lianbo Jiang <lijiang@redhat.com>
+CC: Takashi Iwai <tiwai@suse.de>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
+CC: bhe@redhat.com
+CC: dan.j.williams@intel.com
+CC: dyoung@redhat.com
+CC: kexec@lists.infradead.org
+CC: mingo@redhat.com
+CC: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/153805812916.1157.177580438135143788.stgit@bhelgaas-glaptop.roam.corp.google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 58 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ kernel/resource.c | 96 +++++++++++++++++++++--------------------------
+ 1 file changed, 42 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 6cda8b7ecc821..311f8a33e62ff 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5116,3 +5116,61 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
- SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
-+
-+/*
-+ * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
-+ * not always reset the secondary Nvidia GPU between reboots if the system
-+ * is configured to use Hybrid Graphics mode.  This results in the GPU
-+ * being left in whatever state it was in during the *previous* boot, which
-+ * causes spurious interrupts from the GPU, which in turn causes us to
-+ * disable the wrong IRQ and end up breaking the touchpad.  Unsurprisingly,
-+ * this also completely breaks nouveau.
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 155ec873ea4d1..38b8d11c9eaf4 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -318,24 +318,27 @@ int release_resource(struct resource *old)
+ 
+ EXPORT_SYMBOL(release_resource);
+ 
+-/*
+- * Finds the lowest iomem resource existing within [res->start..res->end].
+- * The caller must specify res->start, res->end, res->flags, and optionally
+- * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
+- * This function walks the whole tree and not just first level children until
+- * and unless first_level_children_only is true.
++/**
++ * Finds the lowest iomem resource that covers part of [start..end].  The
++ * caller must specify start, end, flags, and desc (which may be
++ * IORES_DESC_NONE).
 + *
-+ * Luckily, it seems a simple reset of the Nvidia GPU brings it back to a
-+ * clean state and fixes all these issues.
++ * If a resource is found, returns 0 and *res is overwritten with the part
++ * of the resource that's within [start..end]; if none is found, returns
++ * -1.
 + *
-+ * When the machine is configured in Dedicated display mode, the issue
-+ * doesn't occur.  Fortunately the GPU advertises NoReset+ when in this
-+ * mode, so we can detect that and avoid resetting it.
-+ */
-+static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-+{
-+	void __iomem *map;
-+	int ret;
++ * This function walks the whole tree and not just first level children
++ * unless @first_level_children_only is true.
+  */
+-static int find_next_iomem_res(struct resource *res, unsigned long desc,
+-			       bool first_level_children_only)
++static int find_next_iomem_res(resource_size_t start, resource_size_t end,
++			       unsigned long flags, unsigned long desc,
++			       bool first_level_children_only,
++			       struct resource *res)
+ {
+-	resource_size_t start, end;
+ 	struct resource *p;
+ 	bool sibling_only = false;
+ 
+ 	BUG_ON(!res);
+-
+-	start = res->start;
+-	end = res->end;
+ 	BUG_ON(start >= end);
+ 
+ 	if (first_level_children_only)
+@@ -344,7 +347,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+ 	read_lock(&resource_lock);
+ 
+ 	for (p = iomem_resource.child; p; p = next_resource(p, sibling_only)) {
+-		if ((p->flags & res->flags) != res->flags)
++		if ((p->flags & flags) != flags)
+ 			continue;
+ 		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
+ 			continue;
+@@ -359,32 +362,31 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+ 	read_unlock(&resource_lock);
+ 	if (!p)
+ 		return -1;
 +
-+	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
-+	    pdev->subsystem_device != 0x222e ||
-+	    !pdev->reset_fn)
-+		return;
-+
-+	if (pci_enable_device_mem(pdev))
-+		return;
-+
-+	/*
-+	 * Based on nvkm_device_ctor() in
-+	 * drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
-+	 */
-+	map = pci_iomap(pdev, 0, 0x23000);
-+	if (!map) {
-+		pci_err(pdev, "Can't map MMIO space\n");
-+		goto out_disable;
-+	}
-+
-+	/*
-+	 * Make sure the GPU looks like it's been POSTed before resetting
-+	 * it.
-+	 */
-+	if (ioread32(map + 0x2240c) & 0x2) {
-+		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
-+		ret = pci_reset_function(pdev);
-+		if (ret < 0)
-+			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
-+	}
-+
-+	iounmap(map);
-+out_disable:
-+	pci_disable_device(pdev);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-+			      PCI_CLASS_DISPLAY_VGA, 8,
-+			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+ 	/* copy data */
+-	if (res->start < p->start)
+-		res->start = p->start;
+-	if (res->end > p->end)
+-		res->end = p->end;
++	res->start = max(start, p->start);
++	res->end = min(end, p->end);
+ 	res->flags = p->flags;
+ 	res->desc = p->desc;
+ 	return 0;
+ }
+ 
+-static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+-				 bool first_level_children_only,
+-				 void *arg,
++static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
++				 unsigned long flags, unsigned long desc,
++				 bool first_level_children_only, void *arg,
+ 				 int (*func)(struct resource *, void *))
+ {
+-	u64 orig_end = res->end;
++	struct resource res;
+ 	int ret = -1;
+ 
+-	while ((res->start < res->end) &&
+-	       !find_next_iomem_res(res, desc, first_level_children_only)) {
+-		ret = (*func)(res, arg);
++	while (start < end &&
++	       !find_next_iomem_res(start, end, flags, desc,
++				    first_level_children_only, &res)) {
++		ret = (*func)(&res, arg);
+ 		if (ret)
+ 			break;
+ 
+-		res->start = res->end + 1;
+-		res->end = orig_end;
++		start = res.end + 1;
+ 	}
+ 
+ 	return ret;
+@@ -407,13 +409,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+ int walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start,
+ 		u64 end, void *arg, int (*func)(struct resource *, void *))
+ {
+-	struct resource res;
+-
+-	res.start = start;
+-	res.end = end;
+-	res.flags = flags;
+-
+-	return __walk_iomem_res_desc(&res, desc, false, arg, func);
++	return __walk_iomem_res_desc(start, end, flags, desc, false, arg, func);
+ }
+ EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
+ 
+@@ -427,13 +423,9 @@ EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
+ int walk_system_ram_res(u64 start, u64 end, void *arg,
+ 				int (*func)(struct resource *, void *))
+ {
+-	struct resource res;
++	unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ 
+-	res.start = start;
+-	res.end = end;
+-	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+-
+-	return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
++	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+ 				     arg, func);
+ }
+ 
+@@ -444,13 +436,9 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+ int walk_mem_res(u64 start, u64 end, void *arg,
+ 		 int (*func)(struct resource *, void *))
+ {
+-	struct resource res;
++	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+ 
+-	res.start = start;
+-	res.end = end;
+-	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+-
+-	return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
++	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+ 				     arg, func);
+ }
+ 
+@@ -464,25 +452,25 @@ int walk_mem_res(u64 start, u64 end, void *arg,
+ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+ 		void *arg, int (*func)(unsigned long, unsigned long, void *))
+ {
++	resource_size_t start, end;
++	unsigned long flags;
+ 	struct resource res;
+ 	unsigned long pfn, end_pfn;
+-	u64 orig_end;
+ 	int ret = -1;
+ 
+-	res.start = (u64) start_pfn << PAGE_SHIFT;
+-	res.end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
+-	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+-	orig_end = res.end;
+-	while ((res.start < res.end) &&
+-		(find_next_iomem_res(&res, IORES_DESC_NONE, true) >= 0)) {
++	start = (u64) start_pfn << PAGE_SHIFT;
++	end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
++	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++	while (start < end &&
++	       !find_next_iomem_res(start, end, flags, IORES_DESC_NONE,
++				    true, &res)) {
+ 		pfn = (res.start + PAGE_SIZE - 1) >> PAGE_SHIFT;
+ 		end_pfn = (res.end + 1) >> PAGE_SHIFT;
+ 		if (end_pfn > pfn)
+ 			ret = (*func)(pfn, end_pfn - pfn, arg);
+ 		if (ret)
+ 			break;
+-		res.start = res.end + 1;
+-		res.end = orig_end;
++		start = res.end + 1;
+ 	}
+ 	return ret;
+ }
 -- 
 2.20.1
 
