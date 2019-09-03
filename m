@@ -2,468 +2,332 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B98C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5604AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C4521897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B73920882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfICG3K (ORCPT
+        id S1727284AbfICG32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:29:10 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:47018 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfICG3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:29:08 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A8BA1A0080;
-        Tue,  3 Sep 2019 08:29:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 950691A024D;
-        Tue,  3 Sep 2019 08:29:00 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 94C13402BE;
-        Tue,  3 Sep 2019 14:28:54 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>,
-        Martin Fuzzey <mfuzzey@parkeon.com>
-Subject: [v3,2/2] rtc: pcf85263/pcf85363: support PM, wakeup device, improve performance
-Date:   Tue,  3 Sep 2019 14:18:53 +0800
-Message-Id: <20190903061853.19793-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190903061853.19793-1-biwen.li@nxp.com>
-References: <20190903061853.19793-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 3 Sep 2019 02:29:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52263 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfICG32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:29:28 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1i52Jg-0001vX-Jw; Tue, 03 Sep 2019 08:29:24 +0200
+Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
+ controller power key support
+To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com,
+        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org,
+        olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com,
+        bjorn.andersson@linaro.org, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, stefan@agner.ch,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch,
+        m.felsch@pengutronix.de, ping.bai@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+ <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <6d8dd5df-02da-b4cd-e61d-a4a15d0bf0c8@pengutronix.de>
+Date:   Tue, 3 Sep 2019 08:29:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add some features as follow:
-    - Set quartz oscillator load capacitance by DT
-      (generate more accuracy frequency)
-    - Set quartz oscillator drive control by DT
-      (reduce/increase the current consumption)
-    - Set low jitter mode by DT
-      (improve jitter performance)
-    - Set wakeup source by DT
-      (wakeup device from suspend
-    - Select interrupt output pin by DT
-      (INTA/TS(INTB))
-    - Add power management
-    - Add ioctl to check rtc status
-      (check whether oscillator of pcf85263/pcf85363 is stopped)
+Hi,
 
-Datasheet url:
-    - https://www.nxp.com/docs/en/data-sheet/PCF85263A.pdf
-    - https://www.nxp.com/docs/en/data-sheet/PCF85363A.pdf
+On 03.09.19 16:03, Anson Huang wrote:
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+> inside, the system controller is in charge of controlling power,
+> clock and power key etc..
+> 
+> Adds i.MX system controller power key driver support, Linux kernel
+> has to communicate with system controller via MU (message unit) IPC
+> to get power key's status.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- remove "wakeup-source" property operation, scu power key uses generic scu irq,
+> 	  no need to have this property for device wakeup operation.
+> ---
+>   drivers/input/keyboard/Kconfig         |   7 ++
+>   drivers/input/keyboard/Makefile        |   1 +
+>   drivers/input/keyboard/imx_sc_pwrkey.c | 169 +++++++++++++++++++++++++++++++++
+>   3 files changed, 177 insertions(+)
+>   create mode 100644 drivers/input/keyboard/imx_sc_pwrkey.c
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 2e6d288..3aaeb9c 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -469,6 +469,13 @@ config KEYBOARD_IMX
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called imx_keypad.
+>   
+> +config KEYBOARD_IMX_SC_PWRKEY
+> +	tristate "IMX SCU Power Key Driver"
+> +	depends on IMX_SCU
+> +	help
+> +	  This is the system controller powerkey driver for NXP i.MX SoCs with
+> +	  system controller inside.
 
-Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v3:
-	- Fix compilation error
+The KEY is configurable over devicetree, why is it called PWRKEY? It looks for me as 
+generic SCU key handler.
 
-Change in v2:
-	- Replace properties name
-	  quartz-load-capacitance -> quartz-load-femtofarads
-	  quartz-drive-strength -> nxp,quartz-drive-strength
-	  quartz-low-jitter -> nxp,quartz-low-jitter
-	- Set default interrupt-output-pin as "INTA"
+>   config KEYBOARD_NEWTON
+>   	tristate "Newton keyboard"
+>   	select SERIO
+> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> index 9510325..9ea5585 100644
+> --- a/drivers/input/keyboard/Makefile
+> +++ b/drivers/input/keyboard/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
+>   obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
+>   obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
+>   obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
+> +obj-$(CONFIG_KEYBOARD_IMX_SC_PWRKEY)	+= imx_sc_pwrkey.o
+>   obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
+>   obj-$(CONFIG_KEYBOARD_HP7XX)		+= jornada720_kbd.o
+>   obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
+> diff --git a/drivers/input/keyboard/imx_sc_pwrkey.c b/drivers/input/keyboard/imx_sc_pwrkey.c
+> new file mode 100644
+> index 0000000..53aa9a4
+> --- /dev/null
+> +++ b/drivers/input/keyboard/imx_sc_pwrkey.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/firmware/imx/sci.h>
+> +#include <linux/init.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define DEBOUNCE_TIME	100
+> +#define REPEAT_INTERVAL	60
+> +
+> +#define SC_IRQ_BUTTON		1
+> +#define SC_IRQ_GROUP_WAKE	3
+> +#define IMX_SC_MISC_FUNC_GET_BUTTON_STATUS	18
+> +
+> +struct imx_pwrkey_drv_data {
+> +	int keycode;
+> +	bool keystate;  /* 1: pressed, 0: release */
+> +	bool delay_check;
+> +	struct delayed_work check_work;
+> +	struct input_dev *input;
+> +};
+> +
+> +struct imx_sc_msg_pwrkey {
+> +	struct imx_sc_rpc_msg hdr;
+> +	u8 state;
+> +};
+> +static struct imx_pwrkey_drv_data *pdata;
 
- drivers/rtc/rtc-pcf85363.c | 278 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 265 insertions(+), 13 deletions(-)
+Why is it global struct? It seems to be flexible configurable over devicetree. So I would 
+assume it should be able to handle more then one button. Please remove global variables, 
+make it allocatable per OF node.
 
-diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
-index 3450d615974d..81a9af16d5bc 100644
---- a/drivers/rtc/rtc-pcf85363.c
-+++ b/drivers/rtc/rtc-pcf85363.c
-@@ -18,6 +18,16 @@
- #include <linux/of_device.h>
- #include <linux/regmap.h>
- 
-+/* Quartz capacitance */
-+#define PCF85363_QUARTZCAP_7pF		0
-+#define PCF85363_QUARTZCAP_6pF		1
-+#define PCF85363_QUARTZCAP_12p5pF	2
-+
-+/* Quartz drive strength */
-+#define PCF85363_QUARTZDRIVE_100ko	0
-+#define PCF85363_QUARTZDRIVE_60ko	1
-+#define PCF85363_QUARTZDRIVE_500ko	2
-+
- /*
-  * Date/Time registers
-  */
-@@ -96,10 +106,20 @@
- #define FLAGS_PIF	BIT(7)
- 
- #define PIN_IO_INTAPM	GENMASK(1, 0)
--#define PIN_IO_INTA_CLK	0
--#define PIN_IO_INTA_BAT	1
--#define PIN_IO_INTA_OUT	2
--#define PIN_IO_INTA_HIZ	3
-+#define PIN_IO_INTAPM_SHIFT	0
-+#define PIN_IO_INTA_CLK	(0 << PIN_IO_INTAPM_SHIFT)
-+#define PIN_IO_INTA_BAT	(1 << PIN_IO_INTAPM_SHIFT)
-+#define PIN_IO_INTA_OUT	(2 << PIN_IO_INTAPM_SHIFT)
-+#define PIN_IO_INTA_HIZ	(3 << PIN_IO_INTAPM_SHIFT)
-+
-+#define PIN_IO_TSPM	 GENMASK(3, 2)
-+#define PIN_IO_TSPM_SHIFT	2
-+#define PIN_IO_TS_DISABLE	(0x0 << PIN_IO_TSPM_SHIFT)
-+#define PIN_IO_TS_INTB_OUT	(0x1 << PIN_IO_TSPM_SHIFT)
-+#define PIN_IO_TS_CLK_OUT	(0x2 << PIN_IO_TSPM_SHIFT)
-+#define PIN_IO_TS_IN	(0x3 << PIN_IO_TSPM_SHIFT)
-+
-+#define PIN_IO_CLKPM	BIT(7) /* 0 = enable CLK pin,1 = disable CLK pin */
- 
- #define STOP_EN_STOP	BIT(0)
- 
-@@ -107,9 +127,33 @@
- 
- #define NVRAM_SIZE	0x40
- 
-+#define DT_SECS_OS BIT(7)
-+
-+#define CTRL_OSCILLATOR_CL_MASK	GENMASK(1, 0)
-+#define CTRL_OSCILLATOR_CL_SHIFT	0
-+#define CTRL_OSCILLATOR_OSCD_MASK	GENMASK(3, 2)
-+#define CTRL_OSCILLATOR_OSCD_SHIFT	2
-+#define CTRL_OSCILLATOR_LOWJ		BIT(4)
-+
-+#define CTRL_FUNCTION_COF_OFF	0x7 /* No clock output */
-+
-+enum pcf85363_irqpin {
-+	IRQPIN_INTA,
-+	IRQPIN_INTB
-+};
-+
-+static const char *const pcf85363_irqpin_names[] = {
-+	[IRQPIN_INTA] = "INTA",
-+	[IRQPIN_INTB] = "INTB"
-+};
-+
-+
- struct pcf85363 {
-+	struct device *dev;
- 	struct rtc_device	*rtc;
- 	struct regmap		*regmap;
-+	enum pcf85363_irqpin irq_pin;
-+	int irq;
- };
- 
- struct pcf85x63_config {
-@@ -210,14 +254,26 @@ static int _pcf85363_rtc_alarm_irq_enable(struct pcf85363 *pcf85363, unsigned
- {
- 	unsigned int alarm_flags = ALRM_SEC_A1E | ALRM_MIN_A1E | ALRM_HR_A1E |
- 				   ALRM_DAY_A1E | ALRM_MON_A1E;
--	int ret;
-+	int ret, reg;
- 
- 	ret = regmap_update_bits(pcf85363->regmap, DT_ALARM_EN, alarm_flags,
- 				 enabled ? alarm_flags : 0);
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_update_bits(pcf85363->regmap, CTRL_INTA_EN,
-+	switch (pcf85363->irq_pin) {
-+	case IRQPIN_INTA:
-+		reg = CTRL_INTA_EN;
-+		break;
-+
-+	case IRQPIN_INTB:
-+		reg = CTRL_INTB_EN;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+	ret = regmap_update_bits(pcf85363->regmap, reg,
- 				 INT_A1IE, enabled ? INT_A1IE : 0);
- 
- 	if (ret || enabled)
-@@ -282,12 +338,55 @@ static irqreturn_t pcf85363_rtc_handle_irq(int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
-+static int pcf85363_osc_is_stopped(struct pcf85363 *pcf85363)
-+{
-+	unsigned int regval;
-+	int ret;
-+
-+	ret = regmap_read(pcf85363->regmap, DT_SECS, &regval);
-+	if (ret)
-+		return ret;
-+
-+	ret = regval & DT_SECS_OS ? 1 : 0;
-+	if (ret)
-+		dev_warn(pcf85363->dev, "Oscillator stop detected, date/time is not reliable.\n");
-+
-+	return ret;
-+}
-+
-+static int pcf85363_ioctl(struct device *dev,
-+			  unsigned int cmd, unsigned long arg)
-+{
-+	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
-+	int ret;
-+
-+	switch (cmd) {
-+	case RTC_VL_READ:
-+		ret = pcf85363_osc_is_stopped(pcf85363);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (copy_to_user((void __user *)arg, &ret, sizeof(int)))
-+			return -EFAULT;
-+		return 0;
-+
-+	case RTC_VL_CLR:
-+		return regmap_update_bits(pcf85363->regmap,
-+					  DT_SECS,
-+					  DT_SECS_OS, 0);
-+	default:
-+		return -ENOIOCTLCMD;
-+	}
-+}
-+
- static const struct rtc_class_ops rtc_ops = {
-+	.ioctl = pcf85363_ioctl,
- 	.read_time	= pcf85363_rtc_read_time,
- 	.set_time	= pcf85363_rtc_set_time,
- };
- 
- static const struct rtc_class_ops rtc_ops_alarm = {
-+	.ioctl = pcf85363_ioctl,
- 	.read_time	= pcf85363_rtc_read_time,
- 	.set_time	= pcf85363_rtc_set_time,
- 	.read_alarm	= pcf85363_rtc_read_alarm,
-@@ -355,6 +454,107 @@ static const struct pcf85x63_config pcf_85363_config = {
- 	.num_nvram = 2
- };
- 
-+/*
-+ * On some boards the interrupt line may not be wired to the CPU but only to
-+ * a power supply circuit.
-+ * In that case no interrupt will be specified in the device tree but the
-+ * wakeup-source DT property may be used to enable wakeup programming in
-+ * sysfs
-+ */
-+static bool pcf85363_can_wakeup_machine(struct pcf85363 *pcf85363)
-+{
-+	return pcf85363->irq ||
-+		of_property_read_bool(pcf85363->dev->of_node, "wakeup-source");
-+}
-+
-+static int pcf85363_init_hw(struct pcf85363 *pcf85363)
-+{
-+	struct device_node *np = pcf85363->dev->of_node;
-+	unsigned int regval;
-+	u32 propval;
-+	int ret;
-+
-+	/* Determine if oscilator has been stopped (probably low power) */
-+	ret = pcf85363_osc_is_stopped(pcf85363);
-+	if (ret < 0) {
-+		/* Log here since this is the first hw access on probe */
-+		dev_err(pcf85363->dev, "Unable to read register\n");
-+
-+		return ret;
-+	}
-+
-+	ret = regmap_read(pcf85363->regmap, CTRL_OSCILLATOR, &regval);
-+	if (ret)
-+		return ret;
-+
-+	/* Set oscilator register */
-+	propval = PCF85363_QUARTZCAP_12p5pF;
-+	of_property_read_u32(np, "quartz-load-femtofarads", &propval);
-+	regval |= ((propval << CTRL_OSCILLATOR_CL_SHIFT)
-+		    & CTRL_OSCILLATOR_CL_MASK);
-+
-+	propval = PCF85363_QUARTZDRIVE_100ko;
-+	of_property_read_u32(np, "nxp,quartz-drive-strength", &propval);
-+	regval |= ((propval << CTRL_OSCILLATOR_OSCD_SHIFT)
-+		    & CTRL_OSCILLATOR_OSCD_MASK);
-+
-+	if (of_property_read_bool(np, "nxp,quartz-low-jitter"))
-+		regval |= CTRL_OSCILLATOR_LOWJ;
-+
-+	ret = regmap_write(pcf85363->regmap, CTRL_OSCILLATOR, regval);
-+	if (ret)
-+		return ret;
-+
-+	/* Set function register
-+	 * (100th second disabled
-+	 * no periodic interrupt
-+	 * real-time clock mode
-+	 * RTC stop is controlled by STOP bit only
-+	 * no clock output)
-+	 */
-+	ret = regmap_write(pcf85363->regmap, CTRL_FUNCTION,
-+			   CTRL_FUNCTION_COF_OFF);
-+	if (ret)
-+		return ret;
-+
-+	/* Set all interrupts to disabled, level mode */
-+	ret = regmap_write(pcf85363->regmap, CTRL_INTA_EN,
-+			   INT_ILP);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(pcf85363->regmap, CTRL_INTB_EN,
-+			   INT_ILP);
-+	if (ret)
-+		return ret;
-+
-+	/* Determine which interrupt pin the board uses */
-+	pcf85363->irq_pin = IRQPIN_INTA;
-+	if (pcf85363_can_wakeup_machine(pcf85363)) {
-+		if (of_property_match_string(pcf85363->dev->of_node,
-+					     "interrupt-output-pin",
-+					     "INTB") >= 0)
-+			pcf85363->irq_pin = IRQPIN_INTB;
-+	}
-+
-+	/* Setup IO pin config register */
-+	regval = PIN_IO_CLKPM; /* disable CLK pin*/
-+	switch (pcf85363->irq_pin) {
-+	case IRQPIN_INTA:
-+		regval |= (PIN_IO_INTA_OUT | PIN_IO_TS_DISABLE);
-+		break;
-+	case IRQPIN_INTB:
-+		regval |= (PIN_IO_INTA_HIZ | PIN_IO_TS_INTB_OUT);
-+		break;
-+	default:
-+		dev_err(pcf85363->dev, "Failed to set interrupt out pin\n");
-+		return -EINVAL;
-+	}
-+	ret = regmap_write(pcf85363->regmap, CTRL_PIN_IO, regval);
-+
-+	return ret;
-+}
-+
-+
- static int pcf85363_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
-@@ -394,9 +594,11 @@ static int pcf85363_probe(struct i2c_client *client,
- 		return PTR_ERR(pcf85363->regmap);
- 	}
- 
-+	pcf85363->irq = client->irq;
-+	pcf85363->dev = &client->dev;
- 	i2c_set_clientdata(client, pcf85363);
- 
--	pcf85363->rtc = devm_rtc_allocate_device(&client->dev);
-+	pcf85363->rtc = devm_rtc_allocate_device(pcf85363->dev);
- 	if (IS_ERR(pcf85363->rtc))
- 		return PTR_ERR(pcf85363->rtc);
- 
-@@ -404,20 +606,28 @@ static int pcf85363_probe(struct i2c_client *client,
- 	pcf85363->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
- 	pcf85363->rtc->range_max = RTC_TIMESTAMP_END_2099;
- 
--	if (client->irq > 0) {
-+	ret = pcf85363_init_hw(pcf85363);
-+	if (ret)
-+		return ret;
-+
-+	if (pcf85363->irq > 0) {
- 		regmap_write(pcf85363->regmap, CTRL_FLAGS, 0);
--		regmap_update_bits(pcf85363->regmap, CTRL_PIN_IO,
--				   PIN_IO_INTA_OUT, PIN_IO_INTAPM);
--		ret = devm_request_threaded_irq(&client->dev, client->irq,
-+		ret = devm_request_threaded_irq(pcf85363->dev, pcf85363->irq,
- 						NULL, pcf85363_rtc_handle_irq,
--						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_ONESHOT,
- 						"pcf85363", client);
--		if (ret)
-+		if (ret) {
- 			dev_warn(&client->dev, "unable to request IRQ, alarms disabled\n");
-+			pcf85363->irq = 0;
-+		}
- 		else
- 			pcf85363->rtc->ops = &rtc_ops_alarm;
- 	}
- 
-+	if (pcf85363_can_wakeup_machine(pcf85363))
-+		device_init_wakeup(pcf85363->dev, true);
-+
- 	ret = rtc_register_device(pcf85363->rtc);
- 
- 	for (i = 0; i < config->num_nvram; i++) {
-@@ -425,6 +635,10 @@ static int pcf85363_probe(struct i2c_client *client,
- 		rtc_nvmem_register(pcf85363->rtc, &nvmem_cfg[i]);
- 	}
- 
-+	/* We cannot support UIE mode if we do not have an IRQ line */
-+	if (!pcf85363->irq)
-+		pcf85363->rtc->uie_unsupported = 1;
-+
- 	return ret;
- }
- 
-@@ -435,12 +649,50 @@ static const struct of_device_id dev_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, dev_ids);
- 
-+static int pcf85363_remove(struct i2c_client *client)
-+{
-+	struct pcf85363 *pcf85363 = i2c_get_clientdata(client);
-+
-+	if (pcf85363_can_wakeup_machine(pcf85363))
-+		device_init_wakeup(pcf85363->dev, false);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int pcf85363_suspend(struct device *dev)
-+{
-+	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (device_may_wakeup(dev))
-+		ret = enable_irq_wake(pcf85363->irq);
-+
-+	return ret;
-+}
-+
-+static int pcf85363_resume(struct device *dev)
-+{
-+	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (device_may_wakeup(dev))
-+		ret = disable_irq_wake(pcf85363->irq);
-+
-+	return ret;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(pcf85363_pm_ops, pcf85363_suspend,  pcf85363_resume);
-+
- static struct i2c_driver pcf85363_driver = {
- 	.driver	= {
- 		.name	= "pcf85363",
- 		.of_match_table = of_match_ptr(dev_ids),
-+		.pm = &pcf85363_pm_ops,
- 	},
- 	.probe	= pcf85363_probe,
-+	.remove	= pcf85363_remove,
- };
- 
- module_i2c_driver(pcf85363_driver);
+Please use different name "pdata" is usually used as platform data. Please, use "priv".
+
+> +static struct imx_sc_ipc *pwrkey_ipc_handle;
+
+same as before, no global variables.
+
+> +
+> +static int imx_sc_pwrkey_notify(struct notifier_block *nb,
+> +				unsigned long event, void *group)
+> +{
+> +	if ((event & SC_IRQ_BUTTON) && (*(u8 *)group == SC_IRQ_GROUP_WAKE)
+> +	    && !pdata->delay_check) {
+> +		pdata->delay_check = 1;
+> +		schedule_delayed_work(&pdata->check_work,
+> +				      msecs_to_jiffies(REPEAT_INTERVAL));
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_sc_check_for_events(struct work_struct *work)
+> +{
+> +	struct input_dev *input = pdata->input;
+> +	struct imx_sc_msg_pwrkey msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	bool state;
+> +
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
+> +	hdr->func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS;
+> +	hdr->size = 1;
+> +
+> +	/*
+> +	 * Current SCU firmware does NOT have return value for
+> +	 * this API, that means it is always successful.
+> +	 */
+
+It is not true for the kernel part:
+https://elixir.bootlin.com/linux/latest/source/drivers/firmware/imx/imx-scu.c#L157
+
+imx_scu_call_rpc() may fail in different ways and provide proper error value. Please use it.
+
+> +	imx_scu_call_rpc(pwrkey_ipc_handle, &msg, true); > +	state = msg.state;
+
+the conversation u8 to bool should be done here.
+
+> +
+> +	if (!state && !pdata->keystate)
+> +		state = true;
+> +
+> +	if (state ^ pdata->keystate) {
+> +		pm_wakeup_event(input->dev.parent, 0);
+> +		pdata->keystate = !!state;
+
+		the state is already bool. Why do you need extra conversations?
+
+> +		input_event(input, EV_KEY, pdata->keycode, !!state);
+
+same here.
+
+> +		input_sync(input);
+> +		if (!state)
+> +			pdata->delay_check = 0;
+> +		pm_relax(pdata->input->dev.parent);
+> +	}
+> +
+> +	if (state)
+> +		schedule_delayed_work(&pdata->check_work,
+> +				      msecs_to_jiffies(DEBOUNCE_TIME));
+> +}
+> +
+> +static struct notifier_block imx_sc_pwrkey_notifier = {
+> +	.notifier_call = imx_sc_pwrkey_notify,
+> +};
+> +
+> +static int imx_sc_pwrkey_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct input_dev *input;
+> +	int ret;
+> +
+> +	ret = imx_scu_get_handle(&pwrkey_ipc_handle);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return -ENOMEM;
+> +
+> +	if (of_property_read_u32(np, "linux,keycode", &pdata->keycode) > +		pdata->keycode = KEY_POWER;
+
+According binding documentation, linux,keycode is requered parameter, in this case you 
+should fail if it is not set.
+
+> +		dev_warn(&pdev->dev, "KEY_POWER without setting in dts\n");
+> +	}
+> +
+> +	INIT_DELAYED_WORK(&pdata->check_work, imx_sc_check_for_events);
+> +
+> +	input = devm_input_allocate_device(&pdev->dev);
+> +	if (!input) {
+> +		dev_err(&pdev->dev, "failed to allocate the input device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	input->name = pdev->name;
+> +	input->phys = "imx-sc-pwrkey/input0";
+> +	input->id.bustype = BUS_HOST;
+> +
+> +	input_set_capability(input, EV_KEY, pdata->keycode);
+> +
+> +	ret = input_register_device(input);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to register input device\n");
+> +		return ret;
+> +	}
+> +
+> +	pdata->input = input;
+> +	platform_set_drvdata(pdev, pdata);
+> +
+> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
+> +	if (ret) {
+> +		dev_warn(&pdev->dev, "enable scu group irq failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = imx_scu_irq_register_notifier(&imx_sc_pwrkey_notifier);
+> +	if (ret) {
+> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
+> +		dev_warn(&pdev->dev, "register scu notifier failed\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id imx_sc_pwrkey_ids[] = {
+> +	{ .compatible = "fsl,imx-sc-pwrkey" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_sc_pwrkey_ids);
+> +
+> +static struct platform_driver imx_sc_pwrkey_driver = {
+> +	.driver = {
+> +		.name = "imx-sc-pwrkey",
+> +		.of_match_table = imx_sc_pwrkey_ids,
+> +	},
+> +	.probe = imx_sc_pwrkey_probe,
+> +};
+> +module_platform_driver(imx_sc_pwrkey_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("i.MX System Controller Power Key Driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+Kind regards,
+Oleksij Rempel
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
