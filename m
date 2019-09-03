@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8CFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572ABC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A90B23431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E0823789
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528012;
-	bh=MVLZQSfnTmoyEXqpBENYUw+6JiZTtBhjO8y0I001DNE=;
+	s=default; t=1567528021;
+	bh=IDegn3PA5hO68dkXxmfnYOmtBRQOB+r1GrT3sBEHpmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zrILegn35gdslIxypPSQxtJik2DhntuU29RGp7ij7gQ3LIXGKkYmGzW8wS554SMC6
-	 XUMdB110Rscu75jiVl4hnE/mFAlRtgk+PjfDV8ic889tgm02MAQBEyF+H5k6AjrWks
-	 zeL5s0o7+K2KKjvZGrYblkB3Lz3qQJQ9KEA0G4cw=
+	b=0MwYR4veo+weOGNmLn9e4RRRctxpCKKLFus8fAehwyaH53qy9+SkGdWLDjfd36Tk2
+	 92j2aQiRQHHm6iHV7gug0oMcUvYkntHuHy+UausAYE8ZO3HtwZqi2Wn7D/gHyT1/rp
+	 z5NpwjuPKK0ZOBvzNQWIhMfTuGb5wo5eTPHdBVEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbfICQ0w (ORCPT
+        id S1730428AbfICQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbfICQ0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:39 -0400
+        id S1730725AbfICQ0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C801C23789;
-        Tue,  3 Sep 2019 16:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91511238C5;
+        Tue,  3 Sep 2019 16:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527998;
-        bh=MVLZQSfnTmoyEXqpBENYUw+6JiZTtBhjO8y0I001DNE=;
+        s=default; t=1567528011;
+        bh=IDegn3PA5hO68dkXxmfnYOmtBRQOB+r1GrT3sBEHpmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bXkJ/O7JARS5aeZkot+zMCtqc0dt/SRkCy8nV9vip8XzTU5bMFFenKtmY/YT4fCI
-         QXwT1tuonGPzMHTdBITgs2WY9ex12YnjxUdxjDgnBc3hnuMACesSzV0/PMB0Bqv6RS
-         aS+JvRAiDyVl+24fJt47RHnN06rA+NL5xnbZF3WY=
+        b=wCZXqinraaRzNmx7nhj7DvbnWaAMutnvb+qZUS0eV5h2E0Hsc2HLLMKWt23TskIPn
+         Zz2xiTG8kLOBtnybQs0m439SxjnxXDys4hv9XvQKsmNx6WyOzdlJKSI/zabszKPwAU
+         TZa3iFGuz3rOQtnqErw4vLM++qm4Wd5Nl/X+1d8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/167] btrfs: volumes: Make sure no dev extent is beyond device boundary
-Date:   Tue,  3 Sep 2019 12:23:18 -0400
-Message-Id: <20190903162519.7136-46-sashal@kernel.org>
+Cc:     Ricardo Biehl Pasquali <pasqualirb@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 052/167] ALSA: pcm: Update hardware pointer before start capture
+Date:   Tue,  3 Sep 2019 12:23:24 -0400
+Message-Id: <20190903162519.7136-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -58,55 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Ricardo Biehl Pasquali <pasqualirb@gmail.com>
 
-[ Upstream commit 05a37c48604c19b50873fd9663f9140c150469d1 ]
+[ Upstream commit 64b6acf60b665fffd419c23886a1cbeeb253cfb4 ]
 
-Add extra dev extent end check against device boundary.
+This ensures the transfer loop won't waste a run to read
+the few frames (if any) between start and hw_ptr update.
+It will wait for the next interrupt with wait_for_avail().
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Ricardo Biehl Pasquali <pasqualirb@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ sound/core/pcm_lib.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 6e008bd5c8cd1..c20708bfae561 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7411,6 +7411,7 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
- 	struct extent_map_tree *em_tree = &fs_info->mapping_tree.map_tree;
- 	struct extent_map *em;
- 	struct map_lookup *map;
-+	struct btrfs_device *dev;
- 	u64 stripe_len;
- 	bool found = false;
- 	int ret = 0;
-@@ -7460,6 +7461,22 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
- 			physical_offset, devid);
- 		ret = -EUCLEAN;
- 	}
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 7f71c2449af5e..40013b26f6719 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -2172,6 +2172,10 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
+ 	if (err < 0)
+ 		goto _end_unlock;
+ 
++	runtime->twake = runtime->control->avail_min ? : 1;
++	if (runtime->status->state == SNDRV_PCM_STATE_RUNNING)
++		snd_pcm_update_hw_ptr(substream);
 +
-+	/* Make sure no dev extent is beyond device bondary */
-+	dev = btrfs_find_device(fs_info, devid, NULL, NULL);
-+	if (!dev) {
-+		btrfs_err(fs_info, "failed to find devid %llu", devid);
-+		ret = -EUCLEAN;
-+		goto out;
-+	}
-+	if (physical_offset + physical_len > dev->disk_total_bytes) {
-+		btrfs_err(fs_info,
-+"dev extent devid %llu physical offset %llu len %llu is beyond device boundary %llu",
-+			  devid, physical_offset, physical_len,
-+			  dev->disk_total_bytes);
-+		ret = -EUCLEAN;
-+		goto out;
-+	}
- out:
- 	free_extent_map(em);
- 	return ret;
+ 	if (!is_playback &&
+ 	    runtime->status->state == SNDRV_PCM_STATE_PREPARED) {
+ 		if (size >= runtime->start_threshold) {
+@@ -2185,10 +2189,8 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
+ 		}
+ 	}
+ 
+-	runtime->twake = runtime->control->avail_min ? : 1;
+-	if (runtime->status->state == SNDRV_PCM_STATE_RUNNING)
+-		snd_pcm_update_hw_ptr(substream);
+ 	avail = snd_pcm_avail(substream);
++
+ 	while (size > 0) {
+ 		snd_pcm_uframes_t frames, appl_ptr, appl_ofs;
+ 		snd_pcm_uframes_t cont;
 -- 
 2.20.1
 
