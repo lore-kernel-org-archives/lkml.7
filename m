@@ -2,81 +2,101 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D1BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C5EC41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB3A21881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBF021881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567531216;
+	bh=qvFsCRgKgh5ADPL1mu3UHu+wcd5jVJx/3dVzpGxE5Ls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m26VHyJYBKEgzXkqQnYqJtuNV2nhDuXD/BhO8v7+vqDJxYoaK2c/cNTQyi4lni71N
+	 +8z3uZ5Ta9rMZ8Ugurnh4Id7SRxnaahjhZ5FxVEpZ7VmBcFrzqoepqGT3qtYPD7S2E
+	 OosTAoWXJAhq/rdEzTrM+YVBSe+wmL/TAQlOw6AU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfICRST (ORCPT
+        id S1730017AbfICRUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:18:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54310 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbfICRSS (ORCPT
+        Tue, 3 Sep 2019 13:20:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33154 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728854AbfICRUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:18:18 -0400
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <cascardo@canonical.com>)
-        id 1i5CRc-0006nB-Lt; Tue, 03 Sep 2019 17:18:17 +0000
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Subject: [PATCH] alarmtimer: use EOPNOTSUPP instead of ENOTSUPP
-Date:   Tue,  3 Sep 2019 14:18:02 -0300
-Message-Id: <20190903171802.28314-1-cascardo@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 3 Sep 2019 13:20:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id u16so18368221wrr.0;
+        Tue, 03 Sep 2019 10:20:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rar4+uC5q12KPtiyVYMv+PjJypYyOCyJrBGvZDXzi2k=;
+        b=GGmG9O3WqKE+O+cfhWFrCy4Zl9a1IwKnoMIcs4y4V6L/lpE7DKS9n4H85/cEHsqoM1
+         250VEhWOgfJO1QTyt4aFScWXLX4f0SEQ5bsBksj5FQ9UVAcxJgpsGgafXCBD+EA+Js9L
+         k6/zVpINrtxu9OkzNm80vdY2JVjLgyYGIc9XYIi4Jt1/gm3ugkTNz7KN4VxIpjFR/aHF
+         pgxJ3lGrQFeA7GSw1CQrl7LZ6ADUAVAW8oReDxGjSXdDkFHmFsy4eK5rwxBhbTYgO/Yx
+         Yh5oDTboYPV3zS0TGzgUGc3Z6z4VkRSuFB6IXYy8vb71YdUF6S+n1Cs7XzgP8oDbLW9e
+         O4OA==
+X-Gm-Message-State: APjAAAXkHB+Ae391EBWINSyF/v6ugdhqrRFPEMXes/o38oHFdgObkDcC
+        tD3YhqzpZjlelFWllKo9bA==
+X-Google-Smtp-Source: APXvYqyjkukxdrT5Es1J9haZ+DcUHsFn8ngRxdUl3OZDcQKy38QGzV98Fy3y/684yQ4P6QtkGLVBdA==
+X-Received: by 2002:adf:c613:: with SMTP id n19mr24481531wrg.109.1567531212863;
+        Tue, 03 Sep 2019 10:20:12 -0700 (PDT)
+Received: from localhost ([176.12.107.132])
+        by smtp.gmail.com with ESMTPSA id f10sm14511981wrm.31.2019.09.03.10.20.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 10:20:12 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 18:20:10 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Remove unused includes and superfluous struct
+ declaration
+Message-ID: <20190903172010.GA26505@bogus>
+References: <20190901112506.8469-1-kw@linux.com>
+ <20190903113059.2901-1-kw@linux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903113059.2901-1-kw@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ENOTSUPP is not supposed to be returned to userspace. This was found on an
-OpenPower machine, where the RTC does not support set_alarm.
+On Tue, Sep 03, 2019 at 01:30:59PM +0200, Krzysztof Wilczynski wrote:
+> Remove <linux/pci.h> and <linux/msi.h> from being included
+> directly as part of the include/linux/of_pci.h, and remove
+> superfluous declaration of struct of_phandle_args.
+> 
+> Move users of include <linux/of_pci.h> to include <linux/pci.h>
+> and <linux/msi.h> directly rather than rely on both being
+> included transitively through <linux/of_pci.h>.
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---
+>  drivers/iommu/of_iommu.c                          | 2 ++
+>  drivers/irqchip/irq-gic-v2m.c                     | 1 +
+>  drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
+>  drivers/pci/controller/pci-aardvark.c             | 1 +
+>  drivers/pci/controller/pci-thunder-pem.c          | 1 +
+>  drivers/pci/pci.c                                 | 1 +
+>  drivers/pci/probe.c                               | 1 +
+>  include/linux/of_pci.h                            | 5 ++---
+>  9 files changed, 11 insertions(+), 3 deletions(-)
 
-On that system, before the patch, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...)
-would result in "524 Unknown error 524", while after the patch, we get
-"95 Operation not supported".
-
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
----
- kernel/time/alarmtimer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 57518efc3810..b7d75a9e8ccf 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -672,7 +672,7 @@ static int alarm_timer_create(struct k_itimer *new_timer)
- 	enum  alarmtimer_type type;
- 
- 	if (!alarmtimer_get_rtcdev())
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	if (!capable(CAP_WAKE_ALARM))
- 		return -EPERM;
-@@ -790,7 +790,7 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
- 	int ret = 0;
- 
- 	if (!alarmtimer_get_rtcdev())
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	if (flags & ~TIMER_ABSTIME)
- 		return -EINVAL;
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
