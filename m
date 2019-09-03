@@ -4,52 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E0EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B343C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC4C23400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0295B23400
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528388;
-	bh=4Gj6mzOunVxYRVwiGI77AcUDa7ZD2zhYF2T7DezbG98=;
+	s=default; t=1567528397;
+	bh=RnF9yfW2THGGX/asy4zb05YAO7hpaGDMbNjZA2wFmEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJTWe+dC+g8w6g1KlNlSJoc6TYZrzIr5NIdhVIRfuMe/YiruNwFWIDSaQ0IaFzr0/
-	 bP+2yPbdXxR+PaOiECRRrUsDKh4ULc5RW4uD8IAcWi2p7OawJC1egNMcBeYLuB1NGh
-	 kaV+9ygZQin+1Y4jBHokt4dJ4Z1aVGwLnd8Q4xBk=
+	b=KVkZe8ppmPnCG9xt54LvnstjFAXr6Ke34Ies2YqVgZ2KWMy/4e8X+7N2m+TXg0T06
+	 EkSRoBU0+i1m9v0UhIGcB52CE5LNfjGeslcu+TMH7KMoyhqGtXco9MobIghIqz8UvV
+	 /h2S/5gcdHpdH1nh2X8HUSLYCerPZ18cSPn2H67w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731395AbfICQdH (ORCPT
+        id S1731129AbfICQdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55400 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730808AbfICQcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:32:05 -0400
+        id S1731380AbfICQcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:32:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3BD3238CE;
-        Tue,  3 Sep 2019 16:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E833E2343A;
+        Tue,  3 Sep 2019 16:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528324;
-        bh=4Gj6mzOunVxYRVwiGI77AcUDa7ZD2zhYF2T7DezbG98=;
+        s=default; t=1567528321;
+        bh=RnF9yfW2THGGX/asy4zb05YAO7hpaGDMbNjZA2wFmEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbZeJZ1Ng8JIFE8KG+2+8gpeBY8pcGaV8k/YYvsbPvd8FFa2Z2/qn5eDaswT0ACPm
-         yaWKti+HEe14SFskRK10t9DV0j65dFitAJ5LBDSJDgqhGsdMZev/EdDvUgZ1r6w9ps
-         TgfQhn0we5uVU4sejpgRczfJJaN5Ya70/RG8f9Aw=
+        b=slfWfLXHZZVAmSNcnTPW8w/eTMbUaneu1iVM1F1tTR02J4ghbItk4vuuyIffcsi2Y
+         bup8wZR8FY3tnOpFNVAc9KnlGLt63ZEL1gM7j8gz+ZeVT8jdKm0Uoh6zjRGCLccwNO
+         dEaISpfIPpFMMtlDnFj8D8n5g6650UQE0qIJj6+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 156/167] NFSv4: Fix delegation state recovery
-Date:   Tue,  3 Sep 2019 12:25:08 -0400
-Message-Id: <20190903162519.7136-156-sashal@kernel.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 154/167] mm/migrate.c: initialize pud_entry in migrate_vma()
+Date:   Tue,  3 Sep 2019 12:25:06 -0400
+Message-Id: <20190903162519.7136-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,119 +64,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-[ Upstream commit 5eb8d18ca0e001c6055da2b7f30d8f6dca23a44f ]
+[ Upstream commit 7b358c6f12dc82364f6d317f8c8f1d794adbc3f5 ]
 
-Once we clear the NFS_DELEGATED_STATE flag, we're telling
-nfs_delegation_claim_opens() that we're done recovering all open state
-for that stateid, so we really need to ensure that we test for all
-open modes that are currently cached and recover them before exiting
-nfs4_open_delegation_recall().
+When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
+migrate_vma_collect() which initializes a struct mm_walk but didn't
+initialize mm_walk.pud_entry.  (Found by code inspection) Use a C
+structure initialization to make sure it is set to NULL.
 
-Fixes: 24311f884189d ("NFSv4: Recovery of recalled read delegations...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.3+
+Link: http://lkml.kernel.org/r/20190719233225.12243-1-rcampbell@nvidia.com
+Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use with device memory")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c |  2 +-
- fs/nfs/delegation.h |  2 +-
- fs/nfs/nfs4proc.c   | 25 ++++++++++++-------------
- 3 files changed, 14 insertions(+), 15 deletions(-)
+ mm/migrate.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 75fe92eaa6818..1624618c2bc72 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
- 		/* Block nfs4_proc_unlck */
- 		mutex_lock(&sp->so_delegreturn_mutex);
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
--		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
-+		err = nfs4_open_delegation_recall(ctx, state, stateid);
- 		if (!err)
- 			err = nfs_delegation_claim_locks(ctx, state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index bb1ef8c37af42..c95477823fa6b 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -61,7 +61,7 @@ void nfs_reap_expired_delegations(struct nfs_client *clp);
- 
- /* NFSv4 delegation-related procedures */
- int nfs4_proc_delegreturn(struct inode *inode, struct rpc_cred *cred, const nfs4_stateid *stateid, int issync);
--int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid, fmode_t type);
-+int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid);
- int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state, const nfs4_stateid *stateid);
- bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
- bool nfs4_refresh_delegation_stateid(nfs4_stateid *dst, struct inode *inode);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 31ae3bd5d9d20..621e3cf90f4eb 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2113,12 +2113,10 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 		case -NFS4ERR_BAD_HIGH_SLOT:
- 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
- 		case -NFS4ERR_DEADSESSION:
--			set_bit(NFS_DELEGATED_STATE, &state->flags);
- 			nfs4_schedule_session_recovery(server->nfs_client->cl_session, err);
- 			return -EAGAIN;
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_STALE_STATEID:
--			set_bit(NFS_DELEGATED_STATE, &state->flags);
- 			/* Don't recall a delegation if it was lost */
- 			nfs4_schedule_lease_recovery(server->nfs_client);
- 			return -EAGAIN;
-@@ -2139,7 +2137,6 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 			return -EAGAIN;
- 		case -NFS4ERR_DELAY:
- 		case -NFS4ERR_GRACE:
--			set_bit(NFS_DELEGATED_STATE, &state->flags);
- 			ssleep(1);
- 			return -EAGAIN;
- 		case -ENOMEM:
-@@ -2155,8 +2152,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- }
- 
- int nfs4_open_delegation_recall(struct nfs_open_context *ctx,
--		struct nfs4_state *state, const nfs4_stateid *stateid,
--		fmode_t type)
-+		struct nfs4_state *state, const nfs4_stateid *stateid)
+diff --git a/mm/migrate.c b/mm/migrate.c
+index b2ea7d1e6f248..0c48191a90368 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2328,16 +2328,13 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+  */
+ static void migrate_vma_collect(struct migrate_vma *migrate)
  {
- 	struct nfs_server *server = NFS_SERVER(state->inode);
- 	struct nfs4_opendata *opendata;
-@@ -2167,20 +2163,23 @@ int nfs4_open_delegation_recall(struct nfs_open_context *ctx,
- 	if (IS_ERR(opendata))
- 		return PTR_ERR(opendata);
- 	nfs4_stateid_copy(&opendata->o_arg.u.delegation, stateid);
--	nfs_state_clear_delegation(state);
--	switch (type & (FMODE_READ|FMODE_WRITE)) {
--	case FMODE_READ|FMODE_WRITE:
--	case FMODE_WRITE:
-+	if (!test_bit(NFS_O_RDWR_STATE, &state->flags)) {
- 		err = nfs4_open_recover_helper(opendata, FMODE_READ|FMODE_WRITE);
- 		if (err)
--			break;
-+			goto out;
-+	}
-+	if (!test_bit(NFS_O_WRONLY_STATE, &state->flags)) {
- 		err = nfs4_open_recover_helper(opendata, FMODE_WRITE);
- 		if (err)
--			break;
--		/* Fall through */
--	case FMODE_READ:
-+			goto out;
-+	}
-+	if (!test_bit(NFS_O_RDONLY_STATE, &state->flags)) {
- 		err = nfs4_open_recover_helper(opendata, FMODE_READ);
-+		if (err)
-+			goto out;
- 	}
-+	nfs_state_clear_delegation(state);
-+out:
- 	nfs4_opendata_put(opendata);
- 	return nfs4_handle_delegation_recall_error(server, state, stateid, NULL, err);
- }
+-	struct mm_walk mm_walk;
+-
+-	mm_walk.pmd_entry = migrate_vma_collect_pmd;
+-	mm_walk.pte_entry = NULL;
+-	mm_walk.pte_hole = migrate_vma_collect_hole;
+-	mm_walk.hugetlb_entry = NULL;
+-	mm_walk.test_walk = NULL;
+-	mm_walk.vma = migrate->vma;
+-	mm_walk.mm = migrate->vma->vm_mm;
+-	mm_walk.private = migrate;
++	struct mm_walk mm_walk = {
++		.pmd_entry = migrate_vma_collect_pmd,
++		.pte_hole = migrate_vma_collect_hole,
++		.vma = migrate->vma,
++		.mm = migrate->vma->vm_mm,
++		.private = migrate,
++	};
+ 
+ 	mmu_notifier_invalidate_range_start(mm_walk.mm,
+ 					    migrate->start,
 -- 
 2.20.1
 
