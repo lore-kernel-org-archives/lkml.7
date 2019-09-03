@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572ABC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B854C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E0823789
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A5A23789
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528021;
-	bh=IDegn3PA5hO68dkXxmfnYOmtBRQOB+r1GrT3sBEHpmM=;
+	s=default; t=1567528024;
+	bh=U8Q/brz7/SXnxP9IztjpaNyjAEnLVU06LFBDqXK0GF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MwYR4veo+weOGNmLn9e4RRRctxpCKKLFus8fAehwyaH53qy9+SkGdWLDjfd36Tk2
-	 92j2aQiRQHHm6iHV7gug0oMcUvYkntHuHy+UausAYE8ZO3HtwZqi2Wn7D/gHyT1/rp
-	 z5NpwjuPKK0ZOBvzNQWIhMfTuGb5wo5eTPHdBVEI=
+	b=yPrUjeoHNVcEGEeZOvFOzU4WtwFk4DTCqcTTXL52YTLsKr0QaCyn7cwmm9wZvIX1F
+	 QYXnAwjgTgDZIrb4GtBXQx3ogEKdbNzlXVZwGMaPOjn6CU6Q8ijJYsl+GlIQOY+cEb
+	 go/NwDfNBmGPbJpzVvKYdMWNtfvYiOAPXKVqdJds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfICQ07 (ORCPT
+        id S1730765AbfICQ1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47964 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730725AbfICQ0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:51 -0400
+        id S1730739AbfICQ05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91511238C5;
-        Tue,  3 Sep 2019 16:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 490CF23431;
+        Tue,  3 Sep 2019 16:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528011;
-        bh=IDegn3PA5hO68dkXxmfnYOmtBRQOB+r1GrT3sBEHpmM=;
+        s=default; t=1567528016;
+        bh=U8Q/brz7/SXnxP9IztjpaNyjAEnLVU06LFBDqXK0GF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCZXqinraaRzNmx7nhj7DvbnWaAMutnvb+qZUS0eV5h2E0Hsc2HLLMKWt23TskIPn
-         Zz2xiTG8kLOBtnybQs0m439SxjnxXDys4hv9XvQKsmNx6WyOzdlJKSI/zabszKPwAU
-         TZa3iFGuz3rOQtnqErw4vLM++qm4Wd5Nl/X+1d8Q=
+        b=jw3vXNMqZPJLgD/bnNxDtJDWhSWwWVFunfwErW1UOyO0Pp2ODOuV1OD1e0a/0CHZ3
+         Qthyq1NpPaMsysDR/MauQmVQ+ctjXpjolJSSNqz7CdpbQBT0epV3W7CrhQ6Dw7CSzR
+         XLY+YtvKi0GAHvdxBGJGoR+SuNTz1x5FtsYB+5Qg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricardo Biehl Pasquali <pasqualirb@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 052/167] ALSA: pcm: Update hardware pointer before start capture
-Date:   Tue,  3 Sep 2019 12:23:24 -0400
-Message-Id: <20190903162519.7136-52-sashal@kernel.org>
+Cc:     Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 054/167] IB/uverbs: Fix OOPs upon device disassociation
+Date:   Tue,  3 Sep 2019 12:23:26 -0400
+Message-Id: <20190903162519.7136-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -58,48 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Biehl Pasquali <pasqualirb@gmail.com>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-[ Upstream commit 64b6acf60b665fffd419c23886a1cbeeb253cfb4 ]
+[ Upstream commit 425784aa5b029eeb80498c73a68f62c3ad1d3b3f ]
 
-This ensures the transfer loop won't waste a run to read
-the few frames (if any) between start and hw_ptr update.
-It will wait for the next interrupt with wait_for_avail().
+The async_file might be freed before the disassociation has been ended,
+causing qp shutdown to use after free on it.
 
-Signed-off-by: Ricardo Biehl Pasquali <pasqualirb@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Since uverbs_destroy_ufile_hw is not a fence, it returns if a
+disassociation is ongoing in another thread. It has to be written this way
+to avoid deadlock. However this means that the ufile FD close cannot
+destroy anything that may still be used by an active kref, such as the the
+async_file.
+
+To fix that move the kref_put() to be in ib_uverbs_release_file().
+
+ BUG: unable to handle kernel paging request at ffffffffba682787
+ PGD bc80e067 P4D bc80e067 PUD bc80f063 PMD 1313df163 PTE 80000000bc682061
+ Oops: 0003 [#1] SMP PTI
+ CPU: 1 PID: 32410 Comm: bash Tainted: G           OE 4.20.0-rc6+ #3
+ Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+ RIP: 0010:__pv_queued_spin_lock_slowpath+0x1b3/0x2a0
+ Code: 98 83 e2 60 49 89 df 48 8b 04 c5 80 18 72 ba 48 8d
+		ba 80 32 02 00 ba 00 80 00 00 4c 8d 65 14 41 bd 01 00 00 00 48 01 c7 85
+		d2 <48> 89 2f 48 89 fb 74 14 8b 45 08 85 c0 75 42 84 d2 74 6b f3 90 83
+ RSP: 0018:ffffc1bbc064fb58 EFLAGS: 00010006
+ RAX: ffffffffba65f4e7 RBX: ffff9f209c656c00 RCX: 0000000000000001
+ RDX: 0000000000008000 RSI: 0000000000000000 RDI: ffffffffba682787
+ RBP: ffff9f217bb23280 R08: 0000000000000001 R09: 0000000000000000
+ R10: ffff9f209d2c7800 R11: ffffffffffffffe8 R12: ffff9f217bb23294
+ R13: 0000000000000001 R14: 0000000000000000 R15: ffff9f209c656c00
+ FS:  00007fac55aad740(0000) GS:ffff9f217bb00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: ffffffffba682787 CR3: 000000012f8e0000 CR4: 00000000000006e0
+ Call Trace:
+  _raw_spin_lock_irq+0x27/0x30
+  ib_uverbs_release_uevent+0x1e/0xa0 [ib_uverbs]
+  uverbs_free_qp+0x7e/0x90 [ib_uverbs]
+  destroy_hw_idr_uobject+0x1c/0x50 [ib_uverbs]
+  uverbs_destroy_uobject+0x2e/0x180 [ib_uverbs]
+  __uverbs_cleanup_ufile+0x73/0x90 [ib_uverbs]
+  uverbs_destroy_ufile_hw+0x5d/0x120 [ib_uverbs]
+  ib_uverbs_remove_one+0xea/0x240 [ib_uverbs]
+  ib_unregister_device+0xfb/0x200 [ib_core]
+  mlx5_ib_remove+0x51/0xe0 [mlx5_ib]
+  mlx5_remove_device+0xc1/0xd0 [mlx5_core]
+  mlx5_unregister_device+0x3d/0xb0 [mlx5_core]
+  remove_one+0x2a/0x90 [mlx5_core]
+  pci_device_remove+0x3b/0xc0
+  device_release_driver_internal+0x16d/0x240
+  unbind_store+0xb2/0x100
+  kernfs_fop_write+0x102/0x180
+  __vfs_write+0x36/0x1a0
+  ? __alloc_fd+0xa9/0x170
+  ? set_close_on_exec+0x49/0x70
+  vfs_write+0xad/0x1a0
+  ksys_write+0x52/0xc0
+  do_syscall_64+0x5b/0x180
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fac551aac60
+
+Cc: <stable@vger.kernel.org> # 4.2
+Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_lib.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/uverbs_main.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index 7f71c2449af5e..40013b26f6719 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -2172,6 +2172,10 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
- 	if (err < 0)
- 		goto _end_unlock;
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index 50152c1b10045..357de3b4fdddf 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -265,6 +265,9 @@ void ib_uverbs_release_file(struct kref *ref)
+ 	if (atomic_dec_and_test(&file->device->refcount))
+ 		ib_uverbs_comp_dev(file->device);
  
-+	runtime->twake = runtime->control->avail_min ? : 1;
-+	if (runtime->status->state == SNDRV_PCM_STATE_RUNNING)
-+		snd_pcm_update_hw_ptr(substream);
-+
- 	if (!is_playback &&
- 	    runtime->status->state == SNDRV_PCM_STATE_PREPARED) {
- 		if (size >= runtime->start_threshold) {
-@@ -2185,10 +2189,8 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
- 		}
++	if (file->async_file)
++		kref_put(&file->async_file->ref,
++			 ib_uverbs_release_async_event_file);
+ 	kobject_put(&file->device->kobj);
+ 	kfree(file);
+ }
+@@ -915,10 +918,6 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
  	}
+ 	mutex_unlock(&file->device->lists_mutex);
  
--	runtime->twake = runtime->control->avail_min ? : 1;
--	if (runtime->status->state == SNDRV_PCM_STATE_RUNNING)
--		snd_pcm_update_hw_ptr(substream);
- 	avail = snd_pcm_avail(substream);
-+
- 	while (size > 0) {
- 		snd_pcm_uframes_t frames, appl_ptr, appl_ofs;
- 		snd_pcm_uframes_t cont;
+-	if (file->async_file)
+-		kref_put(&file->async_file->ref,
+-			 ib_uverbs_release_async_event_file);
+-
+ 	kref_put(&file->ref, ib_uverbs_release_file);
+ 
+ 	return 0;
 -- 
 2.20.1
 
