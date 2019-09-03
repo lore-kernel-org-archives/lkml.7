@@ -4,63 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909EAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D21C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6873A217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02B0217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfICLmi (ORCPT
+        id S1729184AbfICLmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:42:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35324 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 07:42:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35540 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbfICLmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:42:22 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        id S1729052AbfICLmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:42:10 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6A257356C5
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:42:21 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id x1so4985821wrn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:42:21 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 16E004E4E6
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:42:10 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id x12so1279300wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:42:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OAN7nnEOH+Yjifk4c+jX2lC/QmauX+hAkPf3AFHmQks=;
-        b=TY/ghuzDmXSA6Yr7RbKjzaa/go2R9sYNBeE6CVUfRxICG6XPcVk/ljXQhAp7zXC3HK
-         cEQ45IkVvA6VpL57ODbQ6svTBrhtu8vNc3GWO7xT+CuMVpz5/U0FSg5LbZNUjFS/7X/1
-         xEDMWJmxTK81I3106jo/q6Za4TSrXaHhKkmayqTA/M//NOKdRV5w6KCX0aTwMmtHVB2C
-         ExdlxKambJObp5i7x9ObAHggYRMCQH2M4uuAch6BDsxN7D90J+YdTClNNUGMQieSRTiX
-         IYltplbjbdY8NnTGaHBzslriItV0YUAkFMbm5kK17XjhatJ3G+JHd1jqAddwShS7p34V
-         Jp9A==
-X-Gm-Message-State: APjAAAUH63SWMg66xgBHT2SbEWyhsW7KOVRa0dAfly/Gu6ZZzg+l3Bwf
-        qpqoPypKAmLZ+yuFs15GoQKEi/79UWdGqmkaiBM3V0jx6o1fCnSLDx9BpLOBjr4/xBk7/xOw0Q9
-        1/PQr0+GUIBffQ/VINCFcFaHl
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr28211443wru.209.1567510939823;
-        Tue, 03 Sep 2019 04:42:19 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwxBZwbWA+ixdgpc74X3E/33uuCSu4TTuS7g05oqkicDMw4i1d0jy4fyCnvZ596KAZw2h29cw==
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr28211419wru.209.1567510939587;
-        Tue, 03 Sep 2019 04:42:19 -0700 (PDT)
+        bh=mq6DklOvXBQpcnChGI+5PjZr8M6YoeohLU7OSViViJw=;
+        b=Cv8EaQufo+Da/jhXnT8X8DCx6aP8guZPBL5OQ9PtHeBlT+8CGNX048V1iFdvzuICtk
+         FxSt+XMa6Hah+QobDd5+xecTu++sf5jNCCCnwWH0Ok2jWf0WmKTdMkiHenyCO7WMmGNg
+         hEG5QfBKukH+0IFDFlOrOl+Vy6MBUx4A1nqUJaYqdXBmYy2nKTSaiYWmB6EWROhZbwqr
+         q+P/1hTRdrMe96DbeZmibB5z+vecTOq+jgrGqBT+CzyzrY/aFIMlg7YPpUWKm8ymS8dS
+         rFwk2odbPu6Cx14VsT5CezePVjSVtMTUOrHY1D1sShLcA2Hu/Y4DmBdZzC31Qd07yMz+
+         gaNA==
+X-Gm-Message-State: APjAAAU1w8U2JFxK+V6jmYf9N/KPiA49odgL3CYttMMKXfe3QWjfHfhO
+        5+hDD95xC2KaM9mA5t1E2bMlUNNcu5CywhB6nRj9wv3Pw6liLejc9MKCFRJcpaI1402CN+M1VyD
+        I82RyBaF8Ilr2enIuUYEUQGOv
+X-Received: by 2002:a1c:544e:: with SMTP id p14mr15475611wmi.72.1567510928431;
+        Tue, 03 Sep 2019 04:42:08 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzAd+VVNnldowkP9l4jOCMO8pjBOGYGrhwFwSOLXZizZO/tlwztV+AmVXjYo65zGv8LUNFz4Q==
+X-Received: by 2002:a1c:544e:: with SMTP id p14mr15475591wmi.72.1567510928273;
+        Tue, 03 Sep 2019 04:42:08 -0700 (PDT)
 Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id x6sm2087551wmf.38.2019.09.03.04.42.18
+        by smtp.gmail.com with ESMTPSA id x6sm2087551wmf.38.2019.09.03.04.42.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:42:19 -0700 (PDT)
+        Tue, 03 Sep 2019 04:42:07 -0700 (PDT)
 From:   Miklos Szeredi <mszeredi@redhat.com>
 To:     virtualization@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org,
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org,
         "Michael S. Tsirkin" <mst@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
         "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v4 16/16] virtio-fs: add Documentation/filesystems/virtiofs.rst
-Date:   Tue,  3 Sep 2019 13:42:03 +0200
-Message-Id: <20190903114203.8278-11-mszeredi@redhat.com>
+Subject: [PATCH v4 08/16] fuse: export fuse_dequeue_forget() function
+Date:   Tue,  3 Sep 2019 13:41:55 +0200
+Message-Id: <20190903114203.8278-3-mszeredi@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190903113640.7984-1-mszeredi@redhat.com>
 References: <20190903113640.7984-1-mszeredi@redhat.com>
@@ -71,125 +69,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hajnoczi <stefanha@redhat.com>
+From: Vivek Goyal <vgoyal@redhat.com>
 
-Add information about the new "virtiofs" file system.
+File systems like virtio-fs need to do not have to play directly with
+forget list data structures. There is a helper function use that instead.
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Rename dequeue_forget() to fuse_dequeue_forget() and export it so that
+stacked filesystems can use it.
+
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- Documentation/filesystems/index.rst    | 10 +++++
- Documentation/filesystems/virtiofs.rst | 60 ++++++++++++++++++++++++++
- MAINTAINERS                            | 11 +++++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/filesystems/virtiofs.rst
+ fs/fuse/dev.c    | 13 +++++++------
+ fs/fuse/fuse_i.h |  4 ++++
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2de2fe2ab078..56e94bfc580f 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -32,3 +32,13 @@ filesystem implementations.
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 167f476fbe16..c0c30a225e78 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1185,9 +1185,9 @@ __releases(fiq->waitq.lock)
+ 	return err ? err : reqsize;
+ }
  
-    journalling
-    fscrypt
-+
-+Filesystems
-+===========
-+
-+Documentation for filesystem implementations.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   virtiofs
-diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
-new file mode 100644
-index 000000000000..4f338e3cb3f7
---- /dev/null
-+++ b/Documentation/filesystems/virtiofs.rst
-@@ -0,0 +1,60 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================================
-+virtiofs: virtio-fs host<->guest shared file system
-+===================================================
-+
-+- Copyright (C) 2019 Red Hat, Inc.
-+
-+Introduction
-+============
-+The virtiofs file system for Linux implements a driver for the paravirtualized
-+VIRTIO "virtio-fs" device for guest<->host file system sharing.  It allows a
-+guest to mount a directory that has been exported on the host.
-+
-+Guests often require access to files residing on the host or remote systems.
-+Use cases include making files available to new guests during installation,
-+booting from a root file system located on the host, persistent storage for
-+stateless or ephemeral guests, and sharing a directory between guests.
-+
-+Although it is possible to use existing network file systems for some of these
-+tasks, they require configuration steps that are hard to automate and they
-+expose the storage network to the guest.  The virtio-fs device was designed to
-+solve these problems by providing file system access without networking.
-+
-+Furthermore the virtio-fs device takes advantage of the co-location of the
-+guest and host to increase performance and provide semantics that are not
-+possible with network file systems.
-+
-+Usage
-+=====
-+Mount file system with tag ``myfs`` on ``/mnt``:
-+
-+.. code-block:: sh
-+
-+  guest# mount -t virtiofs myfs /mnt
-+
-+Please see https://virtio-fs.gitlab.io/ for details on how to configure QEMU
-+and the virtiofsd daemon.
-+
-+Internals
-+=========
-+Since the virtio-fs device uses the FUSE protocol for file system requests, the
-+virtiofs file system for Linux is integrated closely with the FUSE file system
-+client.  The guest acts as the FUSE client while the host acts as the FUSE
-+server.  The /dev/fuse interface between the kernel and userspace is replaced
-+with the virtio-fs device interface.
-+
-+FUSE requests are placed into a virtqueue and processed by the host.  The
-+response portion of the buffer is filled in by the host and the guest handles
-+the request completion.
-+
-+Mapping /dev/fuse to virtqueues requires solving differences in semantics
-+between /dev/fuse and virtqueues.  Each time the /dev/fuse device is read, the
-+FUSE client may choose which request to transfer, making it possible to
-+prioritize certain requests over others.  Virtqueues have queue semantics and
-+it is not possible to change the order of requests that have been enqueued.
-+This is especially important if the virtqueue becomes full since it is then
-+impossible to add high priority requests.  In order to address this difference,
-+the virtio-fs device uses a "hiprio" virtqueue specifically for requests that
-+have priority over normal requests.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9cbcf167bdd0..459b3fa8e25e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17117,6 +17117,17 @@ S:	Supported
- F:	drivers/s390/virtio/
- F:	arch/s390/include/uapi/asm/virtio-ccw.h
+-static struct fuse_forget_link *dequeue_forget(struct fuse_iqueue *fiq,
+-					       unsigned max,
+-					       unsigned *countp)
++struct fuse_forget_link *fuse_dequeue_forget(struct fuse_iqueue *fiq,
++					     unsigned int max,
++					     unsigned int *countp)
+ {
+ 	struct fuse_forget_link *head = fiq->forget_list_head.next;
+ 	struct fuse_forget_link **newhead = &head;
+@@ -1206,6 +1206,7 @@ static struct fuse_forget_link *dequeue_forget(struct fuse_iqueue *fiq,
  
-+VIRTIO FILE SYSTEM
-+M:	Stefan Hajnoczi <stefanha@redhat.com>
-+M:	Miklos Szeredi <miklos@szeredi.hu>
-+L:	virtualization@lists.linux-foundation.org
-+L:	linux-fsdevel@vger.kernel.org
-+W:	https://virtio-fs.gitlab.io/
-+S:	Supported
-+F:	fs/fuse/virtio_fs.c
-+F:	include/uapi/linux/virtio_fs.h
-+F:	Documentation/filesystems/virtiofs.rst
+ 	return head;
+ }
++EXPORT_SYMBOL(fuse_dequeue_forget);
+ 
+ static int fuse_read_single_forget(struct fuse_iqueue *fiq,
+ 				   struct fuse_copy_state *cs,
+@@ -1213,7 +1214,7 @@ static int fuse_read_single_forget(struct fuse_iqueue *fiq,
+ __releases(fiq->waitq.lock)
+ {
+ 	int err;
+-	struct fuse_forget_link *forget = dequeue_forget(fiq, 1, NULL);
++	struct fuse_forget_link *forget = fuse_dequeue_forget(fiq, 1, NULL);
+ 	struct fuse_forget_in arg = {
+ 		.nlookup = forget->forget_one.nlookup,
+ 	};
+@@ -1261,7 +1262,7 @@ __releases(fiq->waitq.lock)
+ 	}
+ 
+ 	max_forgets = (nbytes - ih.len) / sizeof(struct fuse_forget_one);
+-	head = dequeue_forget(fiq, max_forgets, &count);
++	head = fuse_dequeue_forget(fiq, max_forgets, &count);
+ 	spin_unlock(&fiq->waitq.lock);
+ 
+ 	arg.count = count;
+@@ -2249,7 +2250,7 @@ void fuse_abort_conn(struct fuse_conn *fc)
+ 			clear_bit(FR_PENDING, &req->flags);
+ 		list_splice_tail_init(&fiq->pending, &to_end);
+ 		while (forget_pending(fiq))
+-			kfree(dequeue_forget(fiq, 1, NULL));
++			kfree(fuse_dequeue_forget(fiq, 1, NULL));
+ 		wake_up_all_locked(&fiq->waitq);
+ 		spin_unlock(&fiq->waitq.lock);
+ 		kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 7e19c936ece8..6533be37873f 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -820,6 +820,10 @@ void fuse_queue_forget(struct fuse_conn *fc, struct fuse_forget_link *forget,
+ 
+ struct fuse_forget_link *fuse_alloc_forget(void);
+ 
++struct fuse_forget_link *fuse_dequeue_forget(struct fuse_iqueue *fiq,
++					     unsigned int max,
++					     unsigned int *countp);
 +
- VIRTIO GPU DRIVER
- M:	David Airlie <airlied@linux.ie>
- M:	Gerd Hoffmann <kraxel@redhat.com>
+ /* Used by READDIRPLUS */
+ void fuse_force_forget(struct file *file, u64 nodeid);
+ 
 -- 
 2.21.0
 
