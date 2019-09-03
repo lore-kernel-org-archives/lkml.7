@@ -2,102 +2,114 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0195EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0186BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F9422CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D114422CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntv7CEao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfICSNu (ORCPT
+        id S1729946AbfICSPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:13:50 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:35214 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfICSNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:13:50 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1i5DJ1-0005Zx-O9; Tue, 03 Sep 2019 12:13:28 -0600
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Keith Busch <keith.busch@intel.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20190831000139.7662-1-logang@deltatee.com>
- <20190831152910.GA29439@localhost.localdomain>
- <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
- <20190903164620.GA20847@localhost.localdomain>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <d71107d2-c133-9f51-c271-688516641703@deltatee.com>
-Date:   Tue, 3 Sep 2019 12:13:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 14:15:04 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:32948 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfICSPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 14:15:03 -0400
+Received: by mail-yw1-f66.google.com with SMTP id e65so6154176ywh.0;
+        Tue, 03 Sep 2019 11:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fXkAkHucmqjgRur+IjQhyi5kKT37YWuWTzD3VpWtsg0=;
+        b=ntv7CEaollKFU9wsGZi+urn8zpOjY8CZrCGX9uanU9rEkUUwtoG2BQKLAK4j1JP31E
+         mdAOGt7iwUcrZFg0chBC92R/1SxbUnu3D5LM/lSWidgtI3+jzUkg7qUbKq9A1FYQsL87
+         jolqCgEbdAjycGAxGkfudyhK36bxCTFhbAaTL/y1zJSRQWu2gJ82rLSCp6OFDDovL62y
+         mmopsdkjOUsLZqJ4BRQpHvitszF5ZpPn9a5Ir/XLS6LpB+nCi3iMo3rthv/EkBgG8zLW
+         0TrqloJ1w2W/HGRBbXst7/kckF8TRQmcHaqxhUtGGsIKfK0iy9YRoMT99XNzZYi159Kp
+         MVJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fXkAkHucmqjgRur+IjQhyi5kKT37YWuWTzD3VpWtsg0=;
+        b=QiwMPgxkx56aWfvgSpvWmBjTor/0kNHzXKGKtEVuK2cVSN4K44VoiUWUEl435kuQkQ
+         9/j695MjjQZ9u4RnaHCsLV5w6HuLVt2Z6pPs2egj5RhVaJR3uNC7ucTonwOMNSRL/1BR
+         YteX5G3snVrhpfkV8VgX2YdxpuW+olgv61PLumqcDfmo+tPq4mlywFBu4wILeyMrXEQs
+         0bzatt6aagwmSql1TMeAY/NJGUM+MBwLd25b25YhmTdo5jcLT0BYWupjot8ndkJyczi3
+         urrGO3PgaaWS8ygzHx+5gh7WthRBmhFUfwLmqQWB5uq0k3okWsVWpW6p5UYJw0a6vYSL
+         iRhA==
+X-Gm-Message-State: APjAAAUSsqKPIPELuv2FnlyiayW2Jazo8plWTfkKQpVRbWXVa5s8hbL0
+        bQCLEX6saL7nInd9M5bfps/qP7nQ4pkIpdLPMaE=
+X-Google-Smtp-Source: APXvYqzUteMvbu/JD+RSQQW5D8Phtl/I5oQ+l/SfFU9QA9W63S8MlbNMxGvgLrr0HNBCbU2A7ewkAz85UTDHn8mvceY=
+X-Received: by 2002:a0d:df13:: with SMTP id i19mr26242555ywe.264.1567534502345;
+ Tue, 03 Sep 2019 11:15:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190903164620.GA20847@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: martin.petersen@oracle.com, hare@suse.com, axboe@fb.com, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, keith.busch@intel.com, kbusch@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190830095639.4562-1-kkamagui@gmail.com> <20190830095639.4562-3-kkamagui@gmail.com>
+ <20190830124334.GA10004@ziepe.ca> <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com> <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CF04@ALPMBAPA12.e2k.ad.ge.com>
+In-Reply-To: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CF04@ALPMBAPA12.e2k.ad.ge.com>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Wed, 4 Sep 2019 03:14:48 +0900
+Message-ID: <CAHjaAcQ9+w_iQfSeGr+TgELN5w8+iAjix22q7SpPjKvyh_W_uA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
+ supporting AMD's fTPM
+To:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> I tried your patch out on my systems with a "reserved" but not "NVS"
+> region conflict, and you are correct - the region is not busy, and
+> the driver is able to map the buffers with your patch.
+>
+> > First of all, I misunderstood your message.
+> > I have to tell you about the buffer size exactly. The command and response
+> > buffer sizes in ACPI table were 0x1000 and this was 4K, not 1K. The sizes in
+> > the control register were 0x4000 and this was 16K (large buffer size), not 4K.
+> > I have been using the TPM for my research and the typical cases like creating
+> > public/private keys, encrypting/decrypting data, sealing/unsealing a secrete,
+> > and getting random numbers are not over 4K buffer. So, as you know, I think
+> > the 4K buffer can handle the most cases and the current implementation of
+> > crb_fixup_cmd_size() works well. If you concern the specific case that uses
+> > over 4K buffer, please let me know.
+>
+> I have read postings of some systems where ACPI says 1K, but in all of my cases
+> that I can test,  you are correct that ACPI is saying 4K instead of the device's 16K.
+> I tried really hard, but couldn't send any valid requests over 4K, (I believe that's
+> actually the max by the spec), and therefore never saw any failures on my
+> systems. I think the driver behavior is wrong for those other cases, but perhaps
+> this should wait until someone can get access and do the testing.
+>
+> So I'm happy with your patches, other than what is decided for the nvs driver
+> conflict. I'm testing them on some production systems, and have seen no other
+> issues.
+>
+> dave
 
+Thank you for your help and testing. I would like to make patch v2 to
+change the point that kbuild robot told me.
+If you don't mind, may I add "tested-by" tag to patch v2 with your
+name and email address?
 
-On 2019-09-03 10:46 a.m., Keith Busch wrote:
-> On Tue, Sep 03, 2019 at 10:08:01AM -0600, Logan Gunthorpe wrote:
->> On 2019-08-31 9:29 a.m., Keith Busch wrote:
->>> On Fri, Aug 30, 2019 at 06:01:39PM -0600, Logan Gunthorpe wrote:
->>>> To fix this, assign the subsystem's instance based on the instance
->>>> number of the controller's instance that first created it. There should
->>>> always be fewer subsystems than controllers so the should not be a need
->>>> to create extra subsystems that overlap existing controllers.
->>>
->>> The subsystem's lifetime is not tied to the controller's. When the
->>> controller is removed and releases its instance, the next controller
->>> to take that available instance will create naming collisions with the
->>> subsystem still using it.
->>>
->>
->> Hmm, yes, ok.
->>
->> So perhaps we can just make the subsystem prefer the ctrl's instance
->> when allocating the ID? Then at least, in the common case, the
->> controller numbers will match the subsystem numbers. Only when there's
->> random hot-plugs would the numbers get out of sync.
-> 
-> I really don't know about a patch that works only on static
-> configurations. Connects and disconnects do happen on live systems,
-> so the numerals will inevitably get out of sync.
-
-Well this depends on how big a problem we think the number mismatch is.
-Right now it's pretty annoying because numbers aren't matching for
-non-CMIC controllers in simple setups on boot. I think having a small
-patch that makes it more consistent for the static would be worth it and
-if CMIC controllers with significant hot-plug events have mismatches
-that seems more understandable to me.
-
-> Could we possibly make /dev/nvmeX be a subsystem handle without causing
-> trouble for anyone? This would essentially be the same thing as today
-> for non-CMIC controllers with a device-per-controller and only affects
-> the CMIC ones.
-
-Well then we'd have to be able to do everything that's possible with a
-controller via the subsystem and it would have to multiplex all admin
-commands for CMIC ones, etc to a sensible controller. This might make
-sense in the long term but it sounds like a larger project than I have
-time to take on.
-
-Logan
+Seunghun
