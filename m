@@ -2,141 +2,452 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_ALL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC6AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64FAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344822087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="WUVpWvQY"
+	by mail.kernel.org (Postfix) with ESMTP id AD77621883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfICVBB (ORCPT
+        id S1726946AbfICVEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:01:01 -0400
-Received: from mail-eopbgr800104.outbound.protection.outlook.com ([40.107.80.104]:7800
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725953AbfICVBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:01:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MSFlb6L76FOTBkw9d6tZAq1mBDr9HFVAykGZL/beLoWPflucXzLRmh98Bcbifd89Rq0zen2N7vG4mOQVar54Q2cIccB04hLAKpM4JVo83Wf8R4tYvDanxtljPru5LlYEJw6SB8Vf11KGqD/8gJfe6Eq42U71q75qpM2/4DbboTjgJHSeja4BAu+sX0DMqBiGCsjY7WJawVkgPbSAN4x9mpxb3SZUay02jma1UuCxP9al9xUhMbpRtdN8ezgi66pdGQFARhb6pyYA7Bc/7Om/9b6Jr7cfjDIf5cDpW2ysWas/4n+t7OPLtMWXhCNI5crYhPCG/kQax7emR0XhOJb2Wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cHe+nRs17sEsXXBKjE7Wm2h+HNWZwys85dH9KzCIaeg=;
- b=ZyP3V5fQY8R88Xz3MjEZh1/Zri1phSJJMs/II1Hf7Cem98/DTCUUN8LfT1p1vZkAff1DuQYosaoz7cpd9bV/nKyNOii8yIE9LX3KtFwIuRLitvlcrkOsr0+GdGQaIpbB3YypjVaGucQkeDzGPQ/ABRRDuwMn+Ve/HdmQ0Y5YZgTezc+KgT5s7MnOkdZxL1qLZFFOawGCsPOoRHhCEDQy51Pq9RXoQ9bfphF7OaJJimSlAA/KREZSnSf+ikkb3T9plwtEmtdW/e9gX+FLkg1Ulc59itZN5Rj6VBGksDrd/nSDkvjM9PRSSVTY6iLo0jywkYfkQ+fir6zzJk3CROdPOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cHe+nRs17sEsXXBKjE7Wm2h+HNWZwys85dH9KzCIaeg=;
- b=WUVpWvQYd/b8YHlZ30o06xC6aGkigy7yGaOccKHGj8bkXL4Zr4q2EPO+X8+sHD7nGFPxzyHZPHuYAV4MOv1ZXuMJiyPfggUa3DlBzLAL7MgqScsDXCabNCqmMgRrG22PVupe1utSHJozh1gyQ9CCZPFPtUQvOJdSCbXca0tCsh8=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1551.namprd22.prod.outlook.com (10.174.170.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Tue, 3 Sep 2019 21:00:57 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2220.021; Tue, 3 Sep 2019
- 21:00:57 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "salyzyn@android.com" <salyzyn@android.com>,
-        "0x7f454c46@gmail.com" <0x7f454c46@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2 3/8] mips: compat: vdso: Use legacy syscalls as
- fallback
-Thread-Topic: [PATCH v2 3/8] mips: compat: vdso: Use legacy syscalls as
- fallback
-Thread-Index: AQHVYpquVTUocwY3d0uz1j8PNA3NAg==
-Date:   Tue, 3 Sep 2019 21:00:57 +0000
-Message-ID: <MWHPR2201MB1277ED2AD21C031201F749EAC1B90@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190830135902.20861-4-vincenzo.frascino@arm.com>
-In-Reply-To: <20190830135902.20861-4-vincenzo.frascino@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0480.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a2::36) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.196.167.206]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ff988808-de10-4ae0-5a8f-08d730b1d103
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1551;
-x-ms-traffictypediagnostic: MWHPR2201MB1551:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB15518335CDAC1F1178B5C2DBC1B90@MWHPR2201MB1551.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(136003)(39850400004)(376002)(199004)(189003)(55236004)(316002)(42882007)(7736002)(305945005)(4326008)(8936002)(6916009)(74316002)(386003)(6506007)(256004)(7696005)(81166006)(76176011)(102836004)(54906003)(186003)(25786009)(8676002)(81156014)(71200400001)(71190400001)(26005)(229853002)(478600001)(966005)(99286004)(5660300002)(52536014)(3846002)(6116002)(2906002)(52116002)(33656002)(14454004)(486006)(53936002)(6246003)(64756008)(66476007)(66556008)(66946007)(446003)(44832011)(66446008)(9686003)(11346002)(7416002)(4744005)(476003)(6436002)(6306002)(55016002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1551;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Lo0x0Jh2oXuLX5JZhpQmBBuMCZ2IPJFHMZClsa04RSG3Z92aOAe+YdCS3uEyrWFlmyVdZdwwhFWq+CTTQK33S56C7wxAXE2keHyhUDXp/EbHEViNgnsdQ82KpsmlCUmFGDRq6seiug3JSkpTCW7fp6AsttfNsfP/NX3UuzcGjCwRxv9iaieV4IC/J8TE6Kho/gJdbvDtm953vZLuaa29ChN4IOaq2gesawcKrVdGFEoLyNuqPhxT0yMuxk5XMHHStlI7JFScGK95JUbvoNFo7o3ain73ae25TF6crmmee96djOsa5PINRVFfeG4b9eh8YoUbzl1H93ZuwUzDpqvAg52zC4e6p2D84mlsR3OzdFY6XCnIzwySaiLEusFNODKg+HrCNwMyUo1MxIoN8akRnDqlbpcubbyGwBHIyFH3uJ8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Sep 2019 17:04:47 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:51135 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfICVEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 17:04:46 -0400
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id D8C543A624; Tue,  3 Sep 2019 22:57:12 +0200 (CEST)
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Subject: [PATCH v2] staging: exfat: cleanup explicit comparisons to NULL
+Date:   Tue,  3 Sep 2019 22:56:59 +0200
+Message-Id: <20190903205659.18856-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903200937.GA18191@kroah.com>
+References: <20190903200937.GA18191@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff988808-de10-4ae0-5a8f-08d730b1d103
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 21:00:57.1566
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FsCJgR/o5cPJLaGQBxzwofEvEivm+RyDYhetHFlca0WvlvLtRW12y77S8Y9XM46+oWy7g7q9MongdJBtbWKUzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1551
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Fixes checkpatch.pl warnings:
 
-Vincenzo Frascino wrote:
-> The generic VDSO implementation uses the Y2038 safe clock_gettime64() and
-> clock_getres_time64() syscalls as fallback for 32bit VDSO. This breaks
-> seccomp setups because these syscalls might be not (yet) allowed.
->=20
-> Implement the 32bit variants which use the legacy syscalls and select the
-> variant in the core library.
->=20
-> The 64bit time variants are not removed because they are required for the
-> time64 based vdso accessors.
+  CHECK: Comparison to NULL could be written "expr"
+  CHECK: Comparison to NULL could be written "!expr"
 
-Applied to mips-next.
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+---
+v2: fix gcc warning in strsep call
 
-> commit 932bb934ed4d
-> https://git.kernel.org/mips/c/932bb934ed4d
->=20
-> Fixes: 00b26474c2f1 ("lib/vdso: Provide generic VDSO implementation")
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
+ drivers/staging/exfat/exfat_core.c  | 34 ++++++++---------
+ drivers/staging/exfat/exfat_super.c | 58 ++++++++++++++---------------
+ 2 files changed, 46 insertions(+), 46 deletions(-)
 
-Thanks,
-    Paul
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index da8c58149c35..995358cc7c79 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -100,7 +100,7 @@ void fs_set_vol_flags(struct super_block *sb, u32 new_flag)
+ 	p_fs->vol_flag = new_flag;
+ 
+ 	if (p_fs->vol_type == EXFAT) {
+-		if (p_fs->pbr_bh == NULL) {
++		if (!p_fs->pbr_bh) {
+ 			if (sector_read(sb, p_fs->PBR_sector,
+ 					&p_fs->pbr_bh, 1) != FFS_SUCCESS)
+ 				return;
+@@ -543,7 +543,7 @@ s32 load_alloc_bitmap(struct super_block *sb)
+ 				p_fs->vol_amap = kmalloc_array(p_fs->map_sectors,
+ 							       sizeof(struct buffer_head *),
+ 							       GFP_KERNEL);
+-				if (p_fs->vol_amap == NULL)
++				if (!p_fs->vol_amap)
+ 					return FFS_MEMORYERR;
+ 
+ 				sector = START_SECTOR(p_fs->map_clu);
+@@ -685,7 +685,7 @@ void sync_alloc_bitmap(struct super_block *sb)
+ 	int i;
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+-	if (p_fs->vol_amap == NULL)
++	if (!p_fs->vol_amap)
+ 		return;
+ 
+ 	for (i = 0; i < p_fs->map_sectors; i++)
+@@ -714,7 +714,7 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
+ 
+ 	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
+ 						GFP_KERNEL);
+-	if (upcase_table == NULL)
++	if (!upcase_table)
+ 		return FFS_MEMORYERR;
+ 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
+ 
+@@ -750,11 +750,11 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
+ 			} else { /* uni != index , uni != 0xFFFF */
+ 				u16 col_index = get_col_index(index);
+ 
+-				if (upcase_table[col_index] == NULL) {
++				if (!upcase_table[col_index]) {
+ 					pr_debug("alloc = 0x%X\n", col_index);
+ 					upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
+ 						sizeof(u16), GFP_KERNEL);
+-					if (upcase_table[col_index] == NULL) {
++					if (!upcase_table[col_index]) {
+ 						ret = FFS_MEMORYERR;
+ 						goto error;
+ 					}
+@@ -794,7 +794,7 @@ static s32 __load_default_upcase_table(struct super_block *sb)
+ 
+ 	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
+ 						GFP_KERNEL);
+-	if (upcase_table == NULL)
++	if (!upcase_table)
+ 		return FFS_MEMORYERR;
+ 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
+ 
+@@ -812,12 +812,12 @@ static s32 __load_default_upcase_table(struct super_block *sb)
+ 		} else { /* uni != index , uni != 0xFFFF */
+ 			u16 col_index = get_col_index(index);
+ 
+-			if (upcase_table[col_index] == NULL) {
++			if (!upcase_table[col_index]) {
+ 				pr_debug("alloc = 0x%X\n", col_index);
+ 				upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
+ 									sizeof(u16),
+ 									GFP_KERNEL);
+-				if (upcase_table[col_index] == NULL) {
++				if (!upcase_table[col_index]) {
+ 					ret = FFS_MEMORYERR;
+ 					goto error;
+ 				}
+@@ -1640,7 +1640,7 @@ struct dentry_t *get_entry_with_sector(struct super_block *sb, sector_t sector,
+ 
+ 	buf = buf_getblk(sb, sector);
+ 
+-	if (buf == NULL)
++	if (!buf)
+ 		return NULL;
+ 
+ 	return (struct dentry_t *)(buf + offset);
+@@ -1658,10 +1658,10 @@ struct dentry_t *get_entry_in_dir(struct super_block *sb, struct chain_t *p_dir,
+ 
+ 	buf = buf_getblk(sb, sec);
+ 
+-	if (buf == NULL)
++	if (!buf)
+ 		return NULL;
+ 
+-	if (sector != NULL)
++	if (sector)
+ 		*sector = sec;
+ 	return (struct dentry_t *)(buf + off);
+ }
+@@ -1721,7 +1721,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 	sec += START_SECTOR(clu);
+ 
+ 	buf = buf_getblk(sb, sec);
+-	if (buf == NULL)
++	if (!buf)
+ 		goto err_out;
+ 
+ 	ep = (struct dentry_t *)(buf + off);
+@@ -1741,7 +1741,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 	pr_debug("%s: trying to kmalloc %zx bytes for %d entries\n", __func__,
+ 		 bufsize, num_entries);
+ 	es = kmalloc(bufsize, GFP_KERNEL);
+-	if (es == NULL)
++	if (!es)
+ 		goto err_out;
+ 
+ 	es->num_entries = num_entries;
+@@ -1820,7 +1820,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 				sec++;
+ 			}
+ 			buf = buf_getblk(sb, sec);
+-			if (buf == NULL)
++			if (!buf)
+ 				goto err_out;
+ 			off = 0;
+ 			ep = (struct dentry_t *)(buf);
+@@ -1872,7 +1872,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
+ 				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
+ 				     num_entries);
+ 		buf = buf_getblk(sb, sec);
+-		if (buf == NULL)
++		if (!buf)
+ 			goto err_out;
+ 		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
+ 		pr_debug("copying %d entries from %p to sector %llu\n",
+@@ -2651,7 +2651,7 @@ void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	es = get_entry_set_in_dir(sb, p_dir, entry, ES_ALL_ENTRIES, &ep);
+-	if (es == NULL || es->num_entries < 3) {
++	if (!es || es->num_entries < 3) {
+ 		if (es)
+ 			release_entry_set(es);
+ 		return;
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 280bf0d1cf0b..0cd93b9742a6 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -341,7 +341,7 @@ static int exfat_cmpi(const struct dentry *dentry, unsigned int len,
+ 	alen = exfat_striptail_len(name);
+ 	blen = __exfat_striptail_len(len, str);
+ 	if (alen == blen) {
+-		if (t == NULL) {
++		if (!t) {
+ 			if (strncasecmp(name->name, str, alen) == 0)
+ 				return 0;
+ 		} else {
+@@ -589,7 +589,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* check the validity of pointer parameters */
+-	if (info == NULL)
++	if (!info)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -652,7 +652,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 	pr_debug("%s entered\n", __func__);
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
++	if (!fid || !path || (*path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -745,7 +745,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+ 	int ret;
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
++	if (!fid || !path || (*path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -790,11 +790,11 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* check the validity of pointer parameters */
+-	if (buffer == NULL)
++	if (!buffer)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -813,7 +813,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 		count = fid->size - fid->rwoffset;
+ 
+ 	if (count == 0) {
+-		if (rcount != NULL)
++		if (rcount)
+ 			*rcount = 0;
+ 		ret = FFS_EOF;
+ 		goto out;
+@@ -887,7 +887,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ /* How did this ever work and not leak a brlse()?? */
+ err_out:
+ 	/* set the size of read bytes */
+-	if (rcount != NULL)
++	if (rcount)
+ 		*rcount = read_bytes;
+ 
+ 	if (p_fs->dev_ejected)
+@@ -920,11 +920,11 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* check the validity of pointer parameters */
+-	if (buffer == NULL)
++	if (!buffer)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -940,7 +940,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 		fid->rwoffset = fid->size;
+ 
+ 	if (count == 0) {
+-		if (wcount != NULL)
++		if (wcount)
+ 			*wcount = 0;
+ 		ret = FFS_SUCCESS;
+ 		goto out;
+@@ -1099,7 +1099,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL)
++		if (!es)
+ 			goto err_out;
+ 		ep2 = ep+1;
+ 	} else {
+@@ -1141,7 +1141,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 
+ err_out:
+ 	/* set the size of written bytes */
+-	if (wcount != NULL)
++	if (wcount)
+ 		*wcount = write_bytes;
+ 
+ 	if (num_alloced == 0)
+@@ -1228,7 +1228,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 			}
+@@ -1323,11 +1323,11 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 	s32 new_entry = 0;
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((new_path == NULL) || (*new_path == '\0'))
++	if (!new_path || (*new_path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -1444,7 +1444,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -1532,7 +1532,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 		}
+@@ -1648,7 +1648,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_2_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 		}
+@@ -1772,7 +1772,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 		}
+@@ -1842,7 +1842,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
+ 
+ 	/* check the validity of pointer parameters */
+-	if (clu == NULL)
++	if (!clu)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -1926,7 +1926,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 		if (p_fs->vol_type == EXFAT) {
+ 			es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
+ 						  ES_ALL_ENTRIES, &ep);
+-			if (es == NULL) {
++			if (!es) {
+ 				ret = FFS_MEDIAERR;
+ 				goto out;
+ 			}
+@@ -1994,7 +1994,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 	pr_debug("%s entered\n", __func__);
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
++	if (!fid || !path || (*path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -2040,7 +2040,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
+ 	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
+ 
+ 	/* check the validity of pointer parameters */
+-	if (dir_entry == NULL)
++	if (!dir_entry)
+ 		return FFS_ERROR;
+ 
+ 	/* check if the given file ID is opened */
+@@ -2231,7 +2231,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	dir.dir = fid->dir.dir;
+@@ -3119,10 +3119,10 @@ static const char *exfat_get_link(struct dentry *dentry, struct inode *inode,
+ {
+ 	struct exfat_inode_info *ei = EXFAT_I(inode);
+ 
+-	if (ei->target != NULL) {
++	if (ei->target) {
+ 		char *cookie = ei->target;
+ 
+-		if (cookie != NULL)
++		if (cookie)
+ 			return (char *)(ei->target);
+ 	}
+ 	return NULL;
+@@ -3784,7 +3784,7 @@ static int parse_options(char *options, int silent, int *debug,
+ 	if (!options)
+ 		goto out;
+ 
+-	while ((p = strsep(&options, ",")) != NULL) {
++	while ((p = strsep(&options, ","))) {
+ 		int token;
+ 
+ 		if (!*p)
+@@ -4048,7 +4048,7 @@ static int __init exfat_init_inodecache(void)
+ 					       (SLAB_RECLAIM_ACCOUNT |
+ 						SLAB_MEM_SPREAD),
+ 					       init_once);
+-	if (exfat_inode_cachep == NULL)
++	if (!exfat_inode_cachep)
+ 		return -ENOMEM;
+ 	return 0;
+ }
+-- 
+2.20.1
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
