@@ -2,132 +2,126 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A62C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1D9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9242341E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:12:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c1TFU48C"
+	by mail.kernel.org (Postfix) with ESMTP id B133722D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567537940;
+	bh=itqwQCZDB4ttkHgg3r+F0wV8QT9Spwk8P89uzAsUKYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L7V4IoQ1caQZxxwNePr1ORKBij+Z4YVBe53yHkq+CNUbJ2VTKZR6hzhgR4qc50b9n
+	 KouVEfRCXi4dZsKEiVgkKpR+8gmvDfNPtkwNqD5Uxamf0Tpqvcj3QBCZe077+WUfPS
+	 LI2Nw9SipSXoL1ZHMmwq+j8dCsucyilIBqqfD+OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfICTMP (ORCPT
+        id S1726589AbfICTMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:12:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47162 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfICTMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:12:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83J9MVT177797;
-        Tue, 3 Sep 2019 19:09:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=2mnaEi4L6RKyN2rqDPfcG1hrO0FOASLbWMPnmPGtg2k=;
- b=c1TFU48Cf0EWzEvaGESz7u27kDH+yXPTHUB2YfG+Q8pGkt3HI7D1lfjjgeC1UL/nvPGx
- +muoXQerj4apyXXK3bIcFmE6ErGW9gXzY9glmUbosfxEbUFtw8mqNYHi7zjIr90Xhfw+
- lbmGplCZ67qLwwctTonIu3/Ig9om8sDAepk+yEbQhe/3ZRyKgP2Pa3CsLSJonJg4IHlV
- Ej3DcE7viPLfHyLf7/pNh3haTrLz/gBOeZIS/AK7ar+0V6s8zl+GWPEG/0x07y6nSOUE
- Zi4e38vIZw/KIuT7XR0OyHStl0lwWdcvH2fN+Ir+bTRKCmJUTXxhkxPSeQiWLPDpxWyv bw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2usx2pg047-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 19:09:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83J88mv133260;
-        Tue, 3 Sep 2019 19:09:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2usu50xefm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 19:09:18 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x83J8NJs024856;
-        Tue, 3 Sep 2019 19:08:27 GMT
-Received: from [192.168.1.184] (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 12:08:23 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (1.0)
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-From:   Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: iPad Mail (16G77)
-In-Reply-To: <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
-Date:   Tue, 3 Sep 2019 15:08:22 -0400
-Cc:     Wolfgang Walter <linux@stwm.de>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org, km@cm4all.com,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <70F51337-A68B-473B-88B9-0CAC3D6F2AB9@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu> <ufay2zduosz.fsf@epithumia.math.uh.edu> <ufa5zm9s7kz.fsf@epithumia.math.uh.edu> <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
-To:     Jason L Tibbitts III <tibbs@math.uh.edu>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=928
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909030189
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=976 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909030189
+        Tue, 3 Sep 2019 15:12:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53292 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbfICTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:12:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 44953AC90;
+        Tue,  3 Sep 2019 19:12:15 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 21:12:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        David Rientjes <rientjes@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
+Message-ID: <20190903191213.GB14028@dhcp22.suse.cz>
+References: <20190903144512.9374-1-mhocko@kernel.org>
+ <1567522966.5576.51.camel@lca.pw>
+ <20190903151307.GZ14028@dhcp22.suse.cz>
+ <1567524778.5576.59.camel@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567524778.5576.59.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 03-09-19 11:32:58, Qian Cai wrote:
+> On Tue, 2019-09-03 at 17:13 +0200, Michal Hocko wrote:
+> > On Tue 03-09-19 11:02:46, Qian Cai wrote:
+> > > On Tue, 2019-09-03 at 16:45 +0200, Michal Hocko wrote:
+> > > > From: Michal Hocko <mhocko@suse.com>
+> > > > 
+> > > > dump_tasks has been introduced by quite some time ago fef1bdd68c81
+> > > > ("oom: add sysctl to enable task memory dump"). It's primary purpose is
+> > > > to help analyse oom victim selection decision. This has been certainly
+> > > > useful at times when the heuristic to chose a victim was much more
+> > > > volatile. Since a63d83f427fb ("oom: badness heuristic rewrite")
+> > > > situation became much more stable (mostly because the only selection
+> > > > criterion is the memory usage) and reports about a wrong process to
+> > > > be shot down have become effectively non-existent.
+> > > 
+> > > Well, I still see OOM sometimes kills wrong processes like ssh, systemd
+> > > processes while LTP OOM tests with staight-forward allocation patterns.
+> > 
+> > Please report those. Most cases I have seen so far just turned out to
+> > work as expected and memory hogs just used oom_score_adj or similar.
+> > 
+> > > I just
+> > > have not had a chance to debug them fully. The situation could be worse with
+> > > more complex allocations like random stress or fuzzy testing.
+> > 
+> > Nothing really prevents enabling the sysctl when doing OOM oriented
+> > testing.
+> > 
+> > > > dump_tasks can generate a lot of output to the kernel log. It is not
+> > > > uncommon that even relative small system has hundreds of tasks running.
+> > > > Generating a lot of output to the kernel log both makes the oom report
+> > > > less convenient to process and also induces a higher load on the printk
+> > > > subsystem which can lead to other problems (e.g. longer stalls to flush
+> > > > all the data to consoles).
+> > > 
+> > > It is only generate output for the victim process where I tested on those
+> > > large
+> > > NUMA machines and the output is fairly manageable.
+> > 
+> > The main question here is whether that information is useful by
+> > _default_ because it is certainly not free. It takes both time to crawl
+> > all processes and cpu cycles to get that information to the console
+> > because printk is not free either. So if it more of "nice to have" than
+> > necessary for oom analysis then it should be disabled by default IMHO.
+> 
+> It also feels like more a band-aid micro-optimization with the side-effect that
+> affecting debuggability, as there could be loads of console output anyway during
+> a kernel OOM event including failed allocation warnings. I suppose if you want
+> to change the default behavior, the bar is high with more data and
+> justification.
 
-On Sep 3, 2019, at 3:06 PM, Jason L Tibbitts III <tibbs@math.uh.edu> wrote:
+Any specific idea what that justification should be?
 
->>>>>> "WW" =3D=3D Wolfgang Walter <linux@stwm.de> writes:
->=20
-> WW> What filesystem do you use on the server? xfs?
->=20
-> Yeah, it's XFS.
->=20
-> WW> If yes, does it use 64bit inodes (or started to use them)?
->=20
-> These filesystems aren't super old, and were all created with the
-> default RHEL7 options.
+Because this is not something that you could measure very easily. It is
+very subjective and far from black and white. And I am fully aware of
+that. Hence RFC. That is why we should apply some common sense
+and cost/benefit evaluation.
 
-I think that means no 64-bit inodes.
+The cost of an additional output should be quite clear. Now we can
+argue about the benefit. I argue that for an absolute majority of oom
+report I have seen throughout past many years the task list was the
+least useful information of the report. Sure I could go there and double
+check that the victim was selected as designed. In minority cases I
+could use that the task list to confirm that expected-to-be-victim had
+OOM_SCORE_ADJ_MIN for some reason and that was why something esle has
+been selected. Those configuration issues tend to be reproducible and
+are easier to debug with sysctl enabled.
 
-
-> I'm not sure how to check that 64 bit inodes are
-> being used, though.  xfs_info says:
->=20
-> meta-data=3D/dev/mapper/nas-faculty--08 isize=3D256    agcount=3D4, agsize=
-=3D3276800 blks
->         =3D                       sectsz=3D512   attr=3D2, projid32bit=3D1=
-
->         =3D                       crc=3D0        finobt=3D0 spinodes=3D0
-> data     =3D                       bsize=3D4096   blocks=3D13107200, imaxp=
-ct=3D25
->         =3D                       sunit=3D0      swidth=3D0 blks
-> naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0 ftype=3D0
-> log      =3Dinternal               bsize=3D4096   blocks=3D6400, version=3D=
-2
->         =3D                       sectsz=3D512   sunit=3D0 blks, lazy-coun=
-t=3D1
-> realtime =3Dnone                   extsz=3D4096   blocks=3D0, rtextents=3D=
-0
->=20
-> WW> Do you set a fsid when you export the filesystem?
->=20
-> I have never done so on any server.
->=20
-> And note that the servers are basically unchanged for quite some time,
-> while the problem I'm having is new.  I want to find some server-related
-> cause for this but so far I haven't been able to do so.  It seems my
-> best option now seems to be to migrate all data off of this server and
-> then wipe, reinstall and see if the problem reoccurs.
->=20
-> - J<
-
+All that being said, arguments tend to weigh more towards IMO.
+-- 
+Michal Hocko
+SUSE Labs
