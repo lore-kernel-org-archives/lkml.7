@@ -2,113 +2,91 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08AFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F0C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB8723400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5516A217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="PserZJww";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1AxtKOYr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cw59jTH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfICSdg (ORCPT
+        id S1726462AbfICSdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:33:36 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40073 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725882AbfICSdf (ORCPT
+        Tue, 3 Sep 2019 14:33:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33811 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfICSdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:33:35 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6A2FE2B0E;
-        Tue,  3 Sep 2019 14:33:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 03 Sep 2019 14:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=0oVSMAna4kl3ETzzaxWLpTjV167
-        ytiAyprd3AP+QQXw=; b=PserZJwwfQjDUhVLwb/5F3N1u/ETLAjozYldNmdsd59
-        C12dTcJOKvfjFMJBpYqcE8lBbu0G0B2EDDZYNbYj/XcdoDJtgKOyyD/lx4zM6Cqr
-        pcJl1oXdXENQcB5/nnaKcxQf+4JqmtgAD+/gFV858lksC6KktQpTM7cy7ZC7aZS8
-        SodE2PzZRNgZlOc54gsETmMzAz8B38LtP/0B8lS2afS8Vs0bXIC/6ysCrs+QuSem
-        UARqh0pvVnp3bA77ndzrjJx/vaRQiHyIUz47S/JU4ESiceV8nhQmih9l2reoxiHl
-        hdyrCqMewL20r9tRgsHcFIhf0hxxUDg0+SVlqF78iMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=0oVSMA
-        na4kl3ETzzaxWLpTjV167ytiAyprd3AP+QQXw=; b=1AxtKOYrmlq6eSttWS8/0h
-        N1IF6Kb+qO2ihJcgUrNpcbYIG5QSGOOfP/6eRXt4Gkke1NPTbn8mJOFpOIZVNYvD
-        8BVqaZ8yqdXg90wcl2h3qjoC3X4DKIDFenHStLj0GQnytHkQ6HAiWub0QwH5/bXL
-        c0ky4AFwOfUcfKzViNlffue+Mkr9eveH2sYngzmZA1ksbs7Yua27CeVl82WgcVGU
-        EboAfYV6A3wmQr6RfTvWZR2aA4kUxPotd75gmPsmRLXl6/QPXcOdKtpluPBQdgYH
-        mtRiH9J3+NqwxPyRFOgzXjPFCcQHB9+NhSZ9Cp71/JUfpNMkxlOPzJac8c/07URg
-        ==
-X-ME-Sender: <xms:_bFuXeHlbcEIwt-w9gyEdsbOdEogfPHRw0o8ZvVgB95SsAe78d2Yiw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejfedgleejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehnvggvuggvug
-    drnhgvthenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:_bFuXcsXOYeI7lCn8pNMPn4p_9g9uT5VRTOnQAjwrQotwpYtt9WjUw>
-    <xmx:_bFuXXDPFV3bBOQY7O5eBBTgLN_G1b-brbKWrUSDd_dwJGmjKv6PVQ>
-    <xmx:_bFuXRQEfS3vOYsq_2-4MSqwe95WFfcClzC6irEJKVdPhLu60ecP7A>
-    <xmx:_rFuXXSQVSipUIezTmy7mUaCzax62G-NbHj3REnGt3Qaj66pFKTQjw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 30D57D6005E;
-        Tue,  3 Sep 2019 14:33:33 -0400 (EDT)
-Date:   Tue, 3 Sep 2019 20:33:31 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     Baolin Wang <baolin.wang@linaro.org>, stable@vger.kernel.org,
-        vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
-        hariprasad.kelam@gmail.com, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, arnd@arndb.de, orsonzhai@gmail.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [BACKPORT 4.14.y 4/8] net: sctp: fix warning "NULL check before
- some freeing functions is not needed"
-Message-ID: <20190903183331.GB26562@kroah.com>
-References: <cover.1567492316.git.baolin.wang@linaro.org>
- <0e71732006c11f119826b3be9c1a9ccd102742d8.1567492316.git.baolin.wang@linaro.org>
- <20190903145206.GB3499@localhost.localdomain>
+        Tue, 3 Sep 2019 14:33:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b24so11334958pfp.1;
+        Tue, 03 Sep 2019 11:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8fPcA2n/gw3WbMf6U41vJ1QWvF2zPzp7zyhN3MXEYHU=;
+        b=Cw59jTH88uVS+Va/wBCMnpIyhKcT9Dw92ntEcxEBuhJFwbCaAmy8++hfXyusGDgNez
+         inMV5uLSyb0TsjeNgzYvk3bAjm+S7ckPGHxbpW1bFsmrERMtVcnwSXGPdNX1LdQjb03K
+         UIROHm2T7k1E6YtQn+VUuvtG8I/znJf8F+yBhIrNCpXiX+e+dIMWY9g/9ilivZMcV72+
+         xbWSQrFd4Fg9ay34H9UqldiQyVGThM6EzzrO2NWxY8wR4K15oy2YTaVrsncE92yQhP99
+         r80PMf5LO4PvZ9MjjxHGjjf5ZZMVsJaAnWq5QUGCiOc9MdQADZRZo1HfI8Qfm/BXDIcj
+         sdOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8fPcA2n/gw3WbMf6U41vJ1QWvF2zPzp7zyhN3MXEYHU=;
+        b=l9PfEPeH/05pFVHIgaFN5JCVe1f6ephuBiAhyV0ruDJjFopb7j0i6CXfdaNhAdxISc
+         pbiZy8Kft1xfIBT/t7KzvmIG4eJoP2iz+I0Bhm8FsAF0/vaGBKqEZYRKyy49ar3ig5Yv
+         StN4GwVcPGgfZu21SAuqb3n+yGmXPlcfTok0z+alYrkf5qhghRhAdl9FotIyuvGZqQ2n
+         ZtC+e2AfjYiIOwQR3ua92IGkdURat3hm0+lj5clg16iFfOkGx1MG5TT3kuXEHS9/3rZF
+         TbR0M6pREXzvwb5Hds8IoJ+zYIHofD7IpKOv5oCpPt76HEYVKxDbp2gUTaXTRBgxdoo5
+         Mtxw==
+X-Gm-Message-State: APjAAAX3FlQzz9Emz/Kk+oSn2zvmIhj548qMr/N8VsWUYRlyUnPXkEoO
+        AXOCm7ZVdQEFYm15UXtMXVg8Rr1Y
+X-Google-Smtp-Source: APXvYqzMaN+LKRUINHBzLWlDSuuzKG7G8aylSlRYk/1SS1pGn9mlUOUJebB6VBCjDhcuDnthBL0ESA==
+X-Received: by 2002:a62:8246:: with SMTP id w67mr43013468pfd.226.1567535623359;
+        Tue, 03 Sep 2019 11:33:43 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a186sm20119246pge.0.2019.09.03.11.33.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 11:33:42 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 11:33:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 0/3] hwmon: convert remaining drivers to
+ i2c_new_dummy_device()
+Message-ID: <20190903183340.GA29077@roeck-us.net>
+References: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903145206.GB3499@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 11:52:06AM -0300, Marcelo Ricardo Leitner wrote:
-> On Tue, Sep 03, 2019 at 02:58:16PM +0800, Baolin Wang wrote:
-> > From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> > 
-> > This patch removes NULL checks before calling kfree.
-> > 
-> > fixes below issues reported by coccicheck
-> > net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
-> > freeing functions is not needed.
-> > net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
-> > freeing functions is not needed.
-> > net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
-> > freeing functions is not needed.
-> > net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
-> > freeing functions is not needed.
+On Tue, Sep 03, 2019 at 08:12:53PM +0200, Wolfram Sang wrote:
+> This series is part of a tree-wide movement to replace the I2C API call
+> 'i2c_new_dummy' which returns NULL with its new counterpart returning an
+> ERRPTR.
 > 
-> Hi. This doesn't seem the kind of patch that should be backported to
-> such old/stable releases. After all, it's just a cleanup.
+> This series fixes the remaining hwmon drivers which could not be
+> converted by my cocci script. So, I did it manually, yet all drivers
+> still follow the same pattern. Build tested by me and by buildbot. No
+> tests on HW have been performed, so testing is appreciated.
+> 
+I still have the previous version (with RFT) in my queue.
+Question is what to do with it; I have not seen any test feedback.
+I tend to just apply the series and wait for fallout.
+Any objections ?
 
-I agree, this does not seem necessary _unless_ it is needed for a later
-real fix.
-
-thanks,
-
-greg k-h
+Guenter
