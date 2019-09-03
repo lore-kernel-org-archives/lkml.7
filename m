@@ -2,73 +2,149 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBB1C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96363C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1FA215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1C1215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="h45CkPWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfICGUy (ORCPT
+        id S1727255AbfICGV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:20:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59974 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 02:21:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62070 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfICGUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:20:54 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5110C10C6964;
-        Tue,  3 Sep 2019 06:20:54 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-67.ams2.redhat.com [10.36.117.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 01DE65D6B7;
-        Tue,  3 Sep 2019 06:20:54 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id C038A783D; Tue,  3 Sep 2019 08:20:52 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 08:20:52 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 3/5] drm/vram: add vram-mm debugfs file
-Message-ID: <20190903062052.nn57achxfkvnpysr@sirius.home.kraxel.org>
-References: <20190902124126.7700-1-kraxel@redhat.com>
- <20190902124126.7700-4-kraxel@redhat.com>
- <2110d38c-1793-a5c9-921c-94ccfe2205cb@suse.de>
+        id S1725919AbfICGV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:21:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46MxgQ3B6xzB09ZG;
+        Tue,  3 Sep 2019 08:21:54 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=h45CkPWo; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id PtKxy15SB0Br; Tue,  3 Sep 2019 08:21:54 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46MxgQ1prczB09ZC;
+        Tue,  3 Sep 2019 08:21:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567491714; bh=h5hnU1hsq4biEly8U4JQAFzas83dMfNa9k2nCVtK7tY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=h45CkPWoTzyoKFVn9Nc2M8HOq5pLKsqSVRdHx2mrovdONdgHRr0tMeGiyQLfJagB6
+         w5OqF7hKXVCWMK3h+NHD+9raP2qPJa31UY1nZcI0+gjCvdXJFMDNlwmvQadEj/sd9r
+         bG/ibTuw/ulnmma6iBpuJZaUUl8VLO6PKHwxViiU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 234418B7A3;
+        Tue,  3 Sep 2019 08:21:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id GESt_EghkgFG; Tue,  3 Sep 2019 08:21:55 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDD568B761;
+        Tue,  3 Sep 2019 08:21:53 +0200 (CEST)
+Subject: Re: [PATCH v2 5/6] powerpc: Remove 'extern' from func prototypes in
+ cache headers
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190903052407.16638-1-alastair@au1.ibm.com>
+ <20190903052407.16638-6-alastair@au1.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1a59f400-7e04-ef34-9b9e-eb5143fe261c@c-s.fr>
+Date:   Tue, 3 Sep 2019 08:21:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2110d38c-1793-a5c9-921c-94ccfe2205cb@suse.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 03 Sep 2019 06:20:54 +0000 (UTC)
+In-Reply-To: <20190903052407.16638-6-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
 
-> > +++ b/include/drm/drm_gem_vram_helper.h
-> > @@ -123,6 +123,7 @@ int drm_gem_vram_driver_dumb_mmap_offset(struct drm_file *file,
-> >   * &struct drm_driver with default functions.
-> >   */
-> >  #define DRM_GEM_VRAM_DRIVER \
-> > +	.debugfs_init             = drm_vram_mm_debugfs_init, \
+
+Le 03/09/2019 à 07:23, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> > +int drm_vram_mm_debugfs_init(struct drm_minor *minor);
+> The 'extern' keyword does not value-add for function prototypes.
+
+Is it worth it ? That kind of change is nice cleanup but the drawback is 
+to kill automatic backports of fixes.
+
 > 
-> I cannot find a caller of this function. Will this be called form
-> drm_debugfs_init()?
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>   arch/powerpc/include/asm/cache.h      | 8 ++++----
+>   arch/powerpc/include/asm/cacheflush.h | 6 +++---
+>   2 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+> index 91c808c6738b..54fffdf5a6ec 100644
+> --- a/arch/powerpc/include/asm/cache.h
+> +++ b/arch/powerpc/include/asm/cache.h
+> @@ -102,10 +102,10 @@ static inline u32 l1_icache_bytes(void)
+>   #define __read_mostly __attribute__((__section__(".data..read_mostly")))
+>   
+>   #ifdef CONFIG_PPC_BOOK3S_32
+> -extern long _get_L2CR(void);
+> -extern long _get_L3CR(void);
+> -extern void _set_L2CR(unsigned long);
+> -extern void _set_L3CR(unsigned long);
+> +long _get_L2CR(void);
+> +long _get_L3CR(void);
+> +void _set_L2CR(unsigned long val);
+> +void _set_L3CR(unsigned long val);
+>   #else
+>   #define _get_L2CR()	0L
+>   #define _get_L3CR()	0L
+> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+> index 4a1c9f0200e1..fa10dc19206c 100644
+> --- a/arch/powerpc/include/asm/cacheflush.h
+> +++ b/arch/powerpc/include/asm/cacheflush.h
+> @@ -38,15 +38,15 @@ static inline void flush_cache_vmap(unsigned long start, unsigned long end) { }
+>   #endif
+>   
+>   #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+> -extern void flush_dcache_page(struct page *page);
+> +void flush_dcache_page(struct page *page);
+>   #define flush_dcache_mmap_lock(mapping)		do { } while (0)
+>   #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
+>   
+>   void flush_icache_range(unsigned long start, unsigned long stop);
+> -extern void flush_icache_user_range(struct vm_area_struct *vma,
+> +void flush_icache_user_range(struct vm_area_struct *vma,
+>   				    struct page *page, unsigned long addr,
+>   				    int len);
 
-Yes, via drm_driver->debugfs_init which is set above.
+You have to re-align the other parameters to the ( of the first line.
 
-cheers,
-  Gerd
+> -extern void flush_dcache_icache_page(struct page *page);
+> +void flush_dcache_icache_page(struct page *page);
+>   void __flush_dcache_icache(void *page);
+>   
+>   /**
+> 
 
+Christophe
