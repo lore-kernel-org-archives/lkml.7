@@ -2,215 +2,234 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969F0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52DCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1D820882
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Bc9wK/zb"
+	by mail.kernel.org (Postfix) with ESMTP id 8AAA1207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567541122;
+	bh=B604DJtcbchDhoWcRSXAzluu/YDFHz4o+bNtfjaMBY4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fvrDSkNL7yeCKGaotwljMRHf4nzYDUru6CtVP+SUHkvPNtAFz8tM9zzHXK9o77VgF
+	 otWylV1Dc4E40l4g+Dpsq7/L7WBsZhiVOk9PBqA7tKvbsvNsG7dmtLLas+cRTwPdRB
+	 FI8Dafhn3ysQAILn0hKAnghvN5mG8NkM8gYoIJk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfICUFR (ORCPT
+        id S1726980AbfICUFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:05:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42898 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfICUFQ (ORCPT
+        Tue, 3 Sep 2019 16:05:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38514 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726876AbfICUFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:05:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w22so3106295pfi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 13:05:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=29Qri/KXgUDgYfdOZ88fjJJOMZcARQYfy1B4reZQb8c=;
-        b=Bc9wK/zblLGMuThMFStgTMR+Yuk5YZw/2OmzZKkNBCmEcFehCD/s4K1pbKKLrFQA05
-         mPmHzEIztfOvQcEOIKXnzaWKwPLSifbtOQKvCSKx1ILGYfhNrkkFERSz53zkUM9YgF5j
-         2Qzq8rXeRv4y/MaRj50LsMtZJS/kv+gom5Ifo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=29Qri/KXgUDgYfdOZ88fjJJOMZcARQYfy1B4reZQb8c=;
-        b=G1qClCbmsxP02ciYIzUkxCCqjQUgRqRQK8GerZErkILo1rfWDdeNZSHWt2Z1YUXHlw
-         xYlRotwblNlQ1xHgB7NQPTkNRVBWmR7kD19pl6g7Jpn5udFYz+lUgtUxPO7q0b93hjUU
-         /JLYyUaWKv3gkpHechmA7bJsBP//ktbgyzd3hq+hUzQ+kJugk6O9Dx444NvHR3Zp7eIg
-         wu45l10nQmkrMMu8rNr0Q1X2lH9x9p/CMA8A7yFeMzcQqw0mf4+9nmxQmUIs270NLTD7
-         7LIfFz4zxqwmj3ReoDPQ6kkexDk24i0nmEfXvLZVmgVVOYnuuFFkavPmMBtNGLzlUAOh
-         CzEQ==
-X-Gm-Message-State: APjAAAU2IMwjeiUwT9DSrwgHnBCnOlb7UMv/8p8Gjbapkw1oDgIxjQoK
-        a0jjKq+rH1C1AL2jFw5aTZ3jBe6j/Rw=
-X-Google-Smtp-Source: APXvYqzWwyyPykUJ8+f6u/buSmFd9exUPGkAK1eD0pBWdCTcvskP3nkPl9BvPjdTnUwebYQ7ayLfuA==
-X-Received: by 2002:a17:90a:d990:: with SMTP id d16mr1009540pjv.55.1567541114848;
-        Tue, 03 Sep 2019 13:05:14 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k36sm16606308pgl.42.2019.09.03.13.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 13:05:14 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Tim Murray <timmurray@google.com>, carmenjackson@google.com,
-        mayankgupta@google.com, dancol@google.com, rostedt@goodmis.org,
-        minchan@kernel.org, akpm@linux-foundation.org,
-        kernel-team@android.com,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Jerome Glisse" <jglisse@redhat.com>, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH] mm: emit tracepoint when RSS changes by threshold
-Date:   Tue,  3 Sep 2019 16:05:03 -0400
-Message-Id: <20190903200503.147973-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+        Tue, 3 Sep 2019 16:05:19 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83K4VuQ112369;
+        Tue, 3 Sep 2019 16:04:46 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2usx1nskjx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 16:04:45 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x83K4iqV113755;
+        Tue, 3 Sep 2019 16:04:44 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2usx1nskhx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 16:04:44 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x83K4IwQ010729;
+        Tue, 3 Sep 2019 20:04:43 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02wdc.us.ibm.com with ESMTP id 2uqgh6vpsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 20:04:43 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83K4gIN8388940
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 20:04:42 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58B28B205F;
+        Tue,  3 Sep 2019 20:04:42 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 257F9B2065;
+        Tue,  3 Sep 2019 20:04:42 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Sep 2019 20:04:42 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4C2E616C1074; Tue,  3 Sep 2019 13:04:46 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 13:04:46 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH -rcu dev 2/2] rcu/dyntick-idle: Add better tracing
+Message-ID: <20190903200446.GE4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190830162348.192303-1-joel@joelfernandes.org>
+ <20190830162348.192303-2-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830162348.192303-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=970 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Useful to track how RSS is changing per TGID. Several Android teams have
-been using this patch in various kernel trees for half a year now. Many
-reported to me it is really useful.
+On Fri, Aug 30, 2019 at 12:23:48PM -0400, Joel Fernandes (Google) wrote:
+> The dyntick-idle traces are a bit confusing. This patch makes it simpler
+> and adds some missing cases such as EQS-enter due to user vs idle mode.
+> 
+> Following are the changes:
+> (1) Add a new context field to trace_rcu_dyntick tracepoint. This
+>     context field can be "USER", "IDLE" or "IRQ".
+> 
+> (2) Remove the "++=" and "--=" strings and replace them with
+>    "StillNonIdle". This is much easier on the eyes, and the -- and ++
+>    are easily apparent in the dynticks_nesting counters we are printing
+>    anyway.
+> 
+> This patch is based on the previous patches to simplify rcu_dyntick
+> counters [1] and with these traces, I have verified the counters are
+> working properly.
+> 
+> [1]
+> Link: https://lore.kernel.org/patchwork/patch/1120021/
+> Link: https://lore.kernel.org/patchwork/patch/1120022/
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Initial patch developed by Tim Murray. Changes I made from original patch:
-o Prevent any additional space consumed by mm_struct.
-o Keep overhead low by checking if tracing is enabled.
-o Add some noise reduction and lower overhead by emitting only on
-  threshold changes.
+This looks fine, but depends on the earlier patch.
 
-Co-developed-by: Tim Murray <timmurray@google.com>
-Signed-off-by: Tim Murray <timmurray@google.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+							Thanx, Paul
 
----
-
-Cc: carmenjackson@google.com
-Cc: mayankgupta@google.com
-Cc: dancol@google.com
-Cc: rostedt@goodmis.org
-Cc: minchan@kernel.org
-Cc: akpm@linux-foundation.org
-Cc: kernel-team@android.com
-
- include/linux/mm.h          | 14 +++++++++++---
- include/trace/events/kmem.h | 21 +++++++++++++++++++++
- mm/memory.c                 | 20 ++++++++++++++++++++
- 3 files changed, 52 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0334ca97c584..823aaf759bdb 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1671,19 +1671,27 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- 	return (unsigned long)val;
- }
- 
-+void mm_trace_rss_stat(int member, long count, long value);
-+
- static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
- {
--	atomic_long_add(value, &mm->rss_stat.count[member]);
-+	long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
-+
-+	mm_trace_rss_stat(member, count, value);
- }
- 
- static inline void inc_mm_counter(struct mm_struct *mm, int member)
- {
--	atomic_long_inc(&mm->rss_stat.count[member]);
-+	long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
-+
-+	mm_trace_rss_stat(member, count, 1);
- }
- 
- static inline void dec_mm_counter(struct mm_struct *mm, int member)
- {
--	atomic_long_dec(&mm->rss_stat.count[member]);
-+	long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
-+
-+	mm_trace_rss_stat(member, count, -1);
- }
- 
- /* Optimized variant when page is already known not to be PageAnon */
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index eb57e3037deb..8b88e04fafbf 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -315,6 +315,27 @@ TRACE_EVENT(mm_page_alloc_extfrag,
- 		__entry->change_ownership)
- );
- 
-+TRACE_EVENT(rss_stat,
-+
-+	TP_PROTO(int member,
-+		long count),
-+
-+	TP_ARGS(member, count),
-+
-+	TP_STRUCT__entry(
-+		__field(int, member)
-+		__field(long, size)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->member = member;
-+		__entry->size = (count << PAGE_SHIFT);
-+	),
-+
-+	TP_printk("member=%d size=%ldB",
-+		__entry->member,
-+		__entry->size)
-+	);
- #endif /* _TRACE_KMEM_H */
- 
- /* This part must be outside protection */
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..9d81322c24a3 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -72,6 +72,8 @@
- #include <linux/oom.h>
- #include <linux/numa.h>
- 
-+#include <trace/events/kmem.h>
-+
- #include <asm/io.h>
- #include <asm/mmu_context.h>
- #include <asm/pgalloc.h>
-@@ -140,6 +142,24 @@ static int __init init_zero_pfn(void)
- }
- core_initcall(init_zero_pfn);
- 
-+/*
-+ * This threshold is the boundary in the value space, that the counter has to
-+ * advance before we trace it. Should be a power of 2. It is to reduce unwanted
-+ * trace overhead. The counter is in units of number of pages.
-+ */
-+#define TRACE_MM_COUNTER_THRESHOLD 128
-+
-+void mm_trace_rss_stat(int member, long count, long value)
-+{
-+	long thresh_mask = ~(TRACE_MM_COUNTER_THRESHOLD - 1);
-+
-+	if (!trace_rss_stat_enabled())
-+		return;
-+
-+	/* Threshold roll-over, trace it */
-+	if ((count & thresh_mask) != ((count - value) & thresh_mask))
-+		trace_rss_stat(member, count);
-+}
- 
- #if defined(SPLIT_RSS_COUNTING)
- 
--- 
-2.23.0.187.g17f5b7556c-goog
+> ---
+>  include/trace/events/rcu.h | 13 ++++++++-----
+>  kernel/rcu/tree.c          | 19 +++++++++++++------
+>  2 files changed, 21 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index 66122602bd08..474c1f7e7104 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -449,12 +449,14 @@ TRACE_EVENT_RCU(rcu_fqs,
+>   */
+>  TRACE_EVENT_RCU(rcu_dyntick,
+>  
+> -	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
+> +	TP_PROTO(const char *polarity, const char *context, long oldnesting,
+> +		 long newnesting, atomic_t dynticks),
+>  
+> -	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
+> +	TP_ARGS(polarity, context, oldnesting, newnesting, dynticks),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(const char *, polarity)
+> +		__field(const char *, context)
+>  		__field(long, oldnesting)
+>  		__field(long, newnesting)
+>  		__field(int, dynticks)
+> @@ -462,14 +464,15 @@ TRACE_EVENT_RCU(rcu_dyntick,
+>  
+>  	TP_fast_assign(
+>  		__entry->polarity = polarity;
+> +		__entry->context = context;
+>  		__entry->oldnesting = oldnesting;
+>  		__entry->newnesting = newnesting;
+>  		__entry->dynticks = atomic_read(&dynticks);
+>  	),
+>  
+> -	TP_printk("%s %lx %lx %#3x", __entry->polarity,
+> -		  __entry->oldnesting, __entry->newnesting,
+> -		  __entry->dynticks & 0xfff)
+> +	TP_printk("%s %s %lx %lx %#3x", __entry->polarity,
+> +		__entry->context, __entry->oldnesting, __entry->newnesting,
+> +		__entry->dynticks & 0xfff)
+>  );
+>  
+>  /*
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 417dd00b9e87..463407762b5a 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -533,7 +533,8 @@ static void rcu_eqs_enter(bool user)
+>  	}
+>  
+>  	lockdep_assert_irqs_disabled();
+> -	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("Start"), (user ? TPS("USER") : TPS("IDLE")),
+> +			  rdp->dynticks_nesting, 0, rdp->dynticks);
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	do_nocb_deferred_wakeup(rdp);
+> @@ -606,14 +607,17 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+>  	 * leave it in non-RCU-idle state.
+>  	 */
+>  	if (rdp->dynticks_nmi_nesting != 1) {
+> -		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
+> +		trace_rcu_dyntick(TPS("StillNonIdle"), TPS("IRQ"),
+> +				  rdp->dynticks_nmi_nesting,
+> +				  rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
+>  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+>  			   rdp->dynticks_nmi_nesting - 2);
+>  		return;
+>  	}
+>  
+>  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+> -	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("Start"), TPS("IRQ"), rdp->dynticks_nmi_nesting,
+> +			  0, rdp->dynticks);
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+>  
+>  	if (irq)
+> @@ -700,7 +704,8 @@ static void rcu_eqs_exit(bool user)
+>  	rcu_dynticks_task_exit();
+>  	rcu_dynticks_eqs_exit();
+>  	rcu_cleanup_after_idle();
+> -	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("End"), (user ? TPS("USER") : TPS("IDLE")),
+> +			  rdp->dynticks_nesting, 1, rdp->dynticks);
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	WRITE_ONCE(rdp->dynticks_nesting, 1);
+>  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+> @@ -787,9 +792,11 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+>  		rdp->rcu_forced_tick = true;
+>  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+>  	}
+> -	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+> -			  rdp->dynticks_nmi_nesting,
+> +
+> +	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
+> +			  TPS("IRQ"), rdp->dynticks_nmi_nesting,
+>  			  rdp->dynticks_nmi_nesting + incby, rdp->dynticks);
+> +
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+>  		   rdp->dynticks_nmi_nesting + incby);
+>  	barrier();
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
