@@ -2,103 +2,140 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DA5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE4FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A9022CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NfkZw4ey"
+	by mail.kernel.org (Postfix) with ESMTP id 90A5420828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfICCjp (ORCPT
+        id S1727042AbfICCk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 22:39:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35147 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfICCjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 22:39:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 205so7377575pfw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 19:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iMDW/m3hv6pM+84dygmzOuAaegfuHoNMyS2NH8pm8Tg=;
-        b=NfkZw4eyCld6HLQ14Z0yBRk9nQWDeOJzJn3bGZI69PVFoufD62dwEMB2i+VaoSFwST
-         xxSVybA3SHPnkk8EGa8GpTs5c7d6IYiOeSnBofD39vIoUZirmiRTKoBhZkeEg30uORP5
-         XhMCtZE2WHfl0k5/FsjZy+cw1ZCnKOb6IShidLwJrcKLV7A0WABr/WBwZy4oQsdmCnyM
-         Ru0F8hmsIVkOFjKQl8GOBxIxiv/YSgV/3HHLQPqX55Q9x9R8nLHWy7B4YIKjfC05jQZk
-         7HhFchFD0OaZjNwAMtpFY7ZWtRk0RQobeY2GvpY7520XLZQBQIRjPSOJzYDg7jceTgLG
-         R5oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iMDW/m3hv6pM+84dygmzOuAaegfuHoNMyS2NH8pm8Tg=;
-        b=LE1u4T1FkP63YucKtL1nL/8VrwwYOv7/WKcEOtlHgO1vXWZJOpuY+D5NiU9mBQtN66
-         KW/XfJpfrRJtCpS7jCpYG8UyRtiK2fnT+WgPI/bjaJJpzNA58nSneCh0x7u7A+HtJeqz
-         z0xaxGIORLsTCztTtKlmAC/MpNpfghk9uzkzROFfKBnvnpb29bRODho1nJpi/aWeI+XX
-         KshKTbmDJOXn0wM3+tupkzkUXdBA8yqOYJhSrOznDhlqa6RqhxfRKAh9el3BP3kYQG7w
-         r/KtRBf2+EapCL9L7anSRoXDVtmcX+4BUgNqdPGV1zoZneIVhqnNrhEGY1B6/QbKbIaF
-         52dg==
-X-Gm-Message-State: APjAAAW7MQisyDENFTW0F6DTAzsD3xO67F1SDEp8RImIwPUSAEDUNape
-        pKm4ZRbXXXGUoOnL9nd3g8MyfA==
-X-Google-Smtp-Source: APXvYqyEZC6bVMU9/I4/7wZb0vVsPM80Gk3t1roo/YA9fCGd/tMfPnLz7IzwHQ2W3GuO5dvE77vpdA==
-X-Received: by 2002:a17:90a:148:: with SMTP id z8mr16008922pje.96.1567478384117;
-        Mon, 02 Sep 2019 19:39:44 -0700 (PDT)
-Received: from localhost ([122.167.132.221])
-        by smtp.gmail.com with ESMTPSA id c127sm1785472pfb.5.2019.09.02.19.39.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 19:39:43 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 08:09:41 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [RFC 2/5] ARM: dts: add support for opp-v2 for omap34xx and
- omap36xx
-Message-ID: <20190903023941.pgh24mz4jh325xrc@vireshk-i7>
-References: <cover.1567421750.git.hns@goldelico.com>
- <d0dc1623ed6b1bd657f169dc2b4482b269bdba37.1567421751.git.hns@goldelico.com>
- <20190903023805.qum23m7tge3zkb5a@vireshk-i7>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903023805.qum23m7tge3zkb5a@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 2 Sep 2019 22:40:57 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:34420 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbfICCk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 22:40:57 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C4B1B20010C;
+        Tue,  3 Sep 2019 04:40:54 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 34891200214;
+        Tue,  3 Sep 2019 04:40:50 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 46BC6402B7;
+        Tue,  3 Sep 2019 10:40:44 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: [v2,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date:   Tue,  3 Sep 2019 10:30:37 +0800
+Message-Id: <20190903023038.16921-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-09-19, 08:08, Viresh Kumar wrote:
-> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
-> > +		opp1-125000000 {
-> > +			opp-hz = /bits/ 64 <125000000>;
-> > +			// we currently only select the max voltage from table Table 3-3 of the omap3530 Data sheet (SPRS507F)
-> > +			// <target min max> could also be single <target>
-> > +			opp-microvolt = <975000 975000 975000>;
-> > +			// first value is silicon revision, second one 720MHz Device Identification
-> 
-> > +			opp-supported-hw = <0xffffffff 3>;
-> 
-> I don't see the driver changes using this field, am I missing
-> something ?
+Add some properties for pcf85263/pcf85363 as follows:
+  - interrupt-output-pin: string type
+  - quartz-load-femtofarads: integer type
+  - nxp,quartz-drive-strength: integer type
+  - nxp,quartz-low-jitter: bool type
+  - wakeup-source: bool type
 
-The driver already had them it seems. Hmm..
+Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v2:
+	- Replace properties name
+	  quartz-load-capacitance -> quartz-load-femtofarads
+	  quartz-drive-strength -> nxp,quartz-drive-strength
+	  quartz-low-jitter -> nxp,quartz-low-jitter
+	- Replace drive strength name
+	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+	- Set default interrupt-output-pin as "INTA"
 
+ .../devicetree/bindings/rtc/pcf85363.txt      | 29 +++++++++++++++++++
+ include/dt-bindings/rtc/pcf85363.h            | 15 ++++++++++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 include/dt-bindings/rtc/pcf85363.h
+
+diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+index 94adc1cf93d9..588f688b30d1 100644
+--- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
++++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+@@ -8,10 +8,39 @@ Required properties:
+ Optional properties:
+ - interrupts: IRQ line for the RTC (not implemented).
+ 
++- interrupt-output-pin: The interrupt output pin must be
++  "INTA" or "INTB", default value is "INTA"
++
++- quartz-load-femtofarads: The internal capacitor to select for the quartz:
++	PCF85263_QUARTZCAP_7pF		[0]
++	PCF85263_QUARTZCAP_6pF		[1]
++	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
++
++- nxp,quartz-drive-strength: Drive strength for the quartz:
++	PCF85263_QUARTZDRIVE_100ko	[0] DEFAULT
++	PCF85263_QUARTZDRIVE_60ko	[1]
++	PCF85263_QUARTZDRIVE_500ko	[2]
++
++- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
++  which reduces jitter at the cost of increased power consumption.
++
++- wakeup-source: Boolean property, Please refer to
++  Documentation/devicetree/bindings/power/wakeup-source.txt
++
+ Example:
+ 
+ pcf85363: pcf85363@51 {
+ 	compatible = "nxp,pcf85363";
+ 	reg = <0x51>;
++
++	interrupt-parent = <&gpio1>;
++	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++
++	#include <dt-bindings/rtc/pcf85363.h>
++	wakeup-source;
++	interrupt-output-pin = "INTA";
++	quartz-load-femtofarads = <PCF85363_QUARTZCAP_12p5pF>;
++	nxp,quartz-drive-strength = <PCF85363_QUARTZDRIVE_60ko>;
++	nxp,quartz-low-jitter;
+ };
+ 
+diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+new file mode 100644
+index 000000000000..f71b151bc481
+--- /dev/null
++++ b/include/dt-bindings/rtc/pcf85363.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DT_BINDINGS_RTC_PCF85363_H
++#define _DT_BINDINGS_RTC_PCF85363_H
++
++/* Quartz capacitance */
++#define PCF85363_QUARTZCAP_7pF		0
++#define PCF85363_QUARTZCAP_6pF		1
++#define PCF85363_QUARTZCAP_12p5pF	2
++
++/* Quartz drive strength */
++#define PCF85363_QUARTZDRIVE_100ko	0
++#define PCF85363_QUARTZDRIVE_60ko	1
++#define PCF85363_QUARTZDRIVE_500ko	2
++
++#endif /* _DT_BINDINGS_RTC_PCF85363_H */
 -- 
-viresh
+2.17.1
+
