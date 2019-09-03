@@ -2,183 +2,198 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69521C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFA7C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A9022CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhxlaIHT"
+	by mail.kernel.org (Postfix) with ESMTP id 2DA5622CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfICXcG (ORCPT
+        id S1727428AbfICXft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 19:32:06 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46611 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfICXcF (ORCPT
+        Tue, 3 Sep 2019 19:35:49 -0400
+Received: from smtprelay0241.hostedemail.com ([216.40.44.241]:58829 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbfICXfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 19:32:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so4049515pfg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 16:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LfTKMbZe2QVHemXyI/fIb1Ivk454nudy7JvQKOTshZI=;
-        b=hhxlaIHTv3gXPMOEiEPTnhAjD9Y6bAgnhOJMrJaoKWITBLAEEXo3g+Dr2AbD2y2cNW
-         aVavGUpAgsD4jBtLtEdcSxEL4wLAtcHcQKJ+FN+dvjfpwYreNISdkKS6biYVAK6DtoAA
-         Zk0HK2Zi15ceZYkRx0KmoAQUwfHZ/KUWv1S/klYU/mGRS+G98nPqD3x9ggg1VsPL/TRD
-         tan1EttguFZmZzPYbMfKngbDKfMfRPDmpDkOw1ekyVuS2GOV7CzX1zIu+KtLeRFee8U3
-         p7MkywnwKuyKa3RQPnqFQoCteQJuhSKOBDHg/btqO/Wkmv67b/R11k8TlQP68drElMhr
-         MsEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LfTKMbZe2QVHemXyI/fIb1Ivk454nudy7JvQKOTshZI=;
-        b=GRIW4yOZxxsMwJErZCPZEeniznEN2LQ9dQluYnKXHqvuveKxxX6oKmR5msEkKV53mD
-         nGfwFHw0bkAbreX4419+oVS+uE5EoOTl9bK2/1R8jcKGTdU3B2DCCHeknGoxH22qCPir
-         vS7ODb+/PoCbc244WjQlyS0SN8dicYvoVUzEORzHSdJp4eHyOqgmwSkd376gtE4Of5LH
-         c+2drjDvsgHEy4JXF6HubwlxlKqtAxaYlKSR/NOS13V9ywNncnGGoZXP+NFfc2aYHGzL
-         rm+daz6ZeDFKgliqdSWUePTzHQeyrAmbAWcJs9j4kX7HVUlTGttVeuT2TdD035YPWhuL
-         y2RA==
-X-Gm-Message-State: APjAAAV858rwXnKinQFWdHnHMnHSI06CEgrqCX5CM+x/pT/3fVJD2/YT
-        S3N5u78eFZFQCWqG2pQTN/0tzA==
-X-Google-Smtp-Source: APXvYqzOEVmuwaiwOAKa84Gb6UNz3WotsIqSI/TBfnStU4C0+10SnuM4+VTmlepgJynzri/fsmD3jg==
-X-Received: by 2002:a63:3fc9:: with SMTP id m192mr33069603pga.429.1567553524617;
-        Tue, 03 Sep 2019 16:32:04 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a29sm29714392pfr.152.2019.09.03.16.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 16:32:03 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 16:34:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Jack Pham <jackp@codeaurora.org>,
-        Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>,
-        robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Message-ID: <20190903233410.GQ26807@tuxbook-pro>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
- <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
- <20190223165218.GB572@tuxbook-pro>
- <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
- <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
- <20190830164520.GK26807@tuxbook-pro>
- <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
- <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
- <20190903173924.GB9754@jackp-linux.qualcomm.com>
- <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
+        Tue, 3 Sep 2019 19:35:48 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2927E804AB8A;
+        Tue,  3 Sep 2019 23:35:46 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: queen31_6c0423b00a718
+X-Filterd-Recvd-Size: 10233
+Received: from XPS-9350 (unknown [172.58.30.235])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  3 Sep 2019 23:35:41 +0000 (UTC)
+Message-ID: <7778af20a8e13e6e906ee3d2030ca6af4ba1c37d.camel@perches.com>
+Subject: Re: [PATCH v3] kunit: fix failure to build without printk
+From:   Joe Perches <joe@perches.com>
+To:     Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org
+Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
+        sboyd@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Tim.Bird@sony.com
+Date:   Tue, 03 Sep 2019 16:35:09 -0700
+In-Reply-To: <20190903232112.181303-1-brendanhiggins@google.com>
+References: <20190903232112.181303-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
-
-> Quoting Jack Pham (2019-09-03 10:39:24)
-> > On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
-> > > On 8/30/19 20:28, Stephen Boyd wrote:
-> > > > Quoting Bjorn Andersson (2019-08-30 09:45:20)
-> > > >> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
-> > > >>
-> > > >>>>>
-> > > >>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
-> > > >>>>> you should represent this external to this node and use of_graph to
-> > > >>>>> query it.
-> > > >>>>
-> > > >>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
-> > > >>>> node (that interface does not exist).
-> > > >>>>
-> > > >>>> rob, do you have a suggestion?
-> > > >>>
-> > > >>> Shouldn't the vbus supply be in the phy? Or is this a situation where
-> > > >>> the phy itself doesn't have the vbus supply going to it because the PMIC
-> > > >>> gets in the way and handles the vbus for the connector by having the SoC
-> > > >>> communicate with the PMIC about when to turn the vbus on and off, etc?
-> > > >>>
-> > > >>
-> > > >> That's correct, the VBUS comes out of the PMIC and goes directly to the
-> > > >> connector.
-> > > >>
-> > > >> The additional complicating factor here is that the connector is wired
-> > > >> to a USB2 phy as well, so we need to wire up detection and vbus control
-> > > >> to both of them - but I think this will be fine, if we can only figure
-> > > >> out a sane way of getting hold of the vbus-supply.
-> > > >>
-> > > > 
-> > > > Does it really matter to describe this situation though? Maybe it's
-> > > > simpler to throw the vbus supply into the phy and control it from the
-> > > > phy driver, even if it never really goes there. Or put it into the
-> > > > toplevel usb controller?
-> > > > 
-> > > that would work for me - the connector definition seemed a better way to
-> > > explain the connectivity but since we cant retrieve the supply from the
-> > > external node is not of much functional use.
-> > > 
-> > > but please let me know how to proceed. shall I add the supply back to
-> > > the phy?
+On Tue, 2019-09-03 at 16:21 -0700, Brendan Higgins wrote:
+> Previously KUnit assumed that printk would always be present, which is
+> not a valid assumption to make. Fix that by removing call to
+> vprintk_emit, and calling printk directly.
 > 
-> So does the vbus actually go to the phy? I thought it never went there
-> and the power for the phy was different (and possibly lower in voltage).
+> This fixes a build error[1] reported by Randy.
 > 
-
-No, the PHYs use different - lower voltage - supplies to operate. VBUS
-is coming from a 5V supply straight to the connector and plug-detect
-logic (which is passive in this design).
-
-> > 
-> > Putting it in the toplevel usb node makes sense to me, since that's
-> > usually the driver that knows when it's switching into host mode and
-> > needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
-> > do this but there's precedent in a couple of the other dwc3 "glues"--see
-> > Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
-> > 
-> > One exception is if the PMIC is also USB-PD capable and can do power
-> > role swap, in which case the VBUS control needs to be done by the TCPM,
-> > so that'd be a case where having vbus-supply in the connector node might
-> > make more sense.
-> > 
+> For context this change comes after much discussion. My first stab[2] at
+> this was just to make the KUnit logging code compile out; however, it
+> was agreed that if we were going to use vprintk_emit, then vprintk_emit
+> should provide a no-op stub, which lead to my second attempt[3]. In
+> response to me trying to stub out vprintk_emit, Sergey Senozhatsky
+> suggested a way for me to remove our usage of vprintk_emit, which led to
+> my third attempt at solving this[4].
 > 
-> The other way is to implement the code to get the vbus supply out of a
-> connector. Then any driver can do the work if it knows it needs to and
-> we don't have to care that the vbus isn't going somewhere. I suppose
-> that would need an of_regulator_get() sort of API that can get the
-> regulator out of there? Or to make the connector into a struct device
-> that can get the regulator out per some generic connector driver and
-> then pass it through to the USB controller when it asks for it. Maybe
-> try to prototype that out?
+> In my previous version of this patch[4], I completely removed
+> vprintk_emit, as suggested by Sergey; however, there was a bit of debate
+> over whether Sergey's solution was the best. The debate arose due to
+> Sergey's version resulting in a checkpatch warning, which resulted in a
+> debate over correct printk usage. Joe Perches offered an alternative fix
+> which was somewhat less far reaching than what Sergey had suggested and
+> importantly relied on continuing to use %pV. Much of the debated
+> centered around whether %pV should be widely used, and whether Sergey's
+> version would result in object size bloat. Ultimately, we decided to go
+> with Sergey's version.
 > 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Link[1]: https://lore.kernel.org/linux-kselftest/c7229254-0d90-d90e-f3df-5b6d6fc0b51f@infradead.org/
+> Link[2]: https://lore.kernel.org/linux-kselftest/20190827174932.44177-1-brendanhiggins@google.com/
+> Link[3]: https://lore.kernel.org/linux-kselftest/20190827234835.234473-1-brendanhiggins@google.com/
+> Link[4]: https://lore.kernel.org/linux-kselftest/20190828093143.163302-1-brendanhiggins@google.com/
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Tim.Bird@sony.com
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> ---
+> 
+> Sorry for the long commit message, but given the long discussion (and
+> some of the confusion that occurred in the discussion), it seemed
+> appropriate to summarize the discussion around this patch up to this
+> point (especially since one of the proposed patches was under a separate
+> patch subject).
+> 
+> No changes have been made to this patch since v2, other than the commit
+> log.
+[]
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+[]
+> @@ -339,9 +339,8 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+>  
+>  void kunit_cleanup(struct kunit *test);
+>  
+> -void __printf(3, 4) kunit_printk(const char *level,
+> -				 const struct kunit *test,
+> -				 const char *fmt, ...);
+> +#define kunit_print_level(KERN_LEVEL, test, fmt, ...) \
+> +	printk(KERN_LEVEL "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
 
-The examples given in the DT bindings describes the connector as a child
-of a PMIC, with of_graph somehow tying it to the various inputs. But in
-these examples vbus is handled by implicitly inside the MFD, where
-extcon is informed about the plug event they toggle vbus as well.
+Non trivial notes:
 
-In our case we have a extcon-usb-gpio to detect mode, which per Jorge's
-proposal will trickle down to the PHY and become a regulator calls on
-either some external regulator or more typically one of the chargers in
-the system.
+Please do not use KERN_LEVEL as a macro argument.
+It would just be a source of possible confusion.
+
+Please use level or lvl like nearly every other macro
+that does this uses.
+
+And there is nothing wrong with using kunit_printk and it's
+not necessary to use an odd name like kunit_printk_level.
+
+$ git grep -P 'define\s+\w+_printk\(.*\b(level|lvl)'
+drivers/block/drbd/drbd_int.h:#define drbd_printk(level, obj, fmt, args...) \
+drivers/edac/amd76x_edac.c:#define amd76x_printk(level, fmt, arg...) \
+drivers/edac/amd76x_edac.c:#define amd76x_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/cpc925_edac.c:#define cpc925_printk(level, fmt, arg...) \
+drivers/edac/cpc925_edac.c:#define cpc925_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/e752x_edac.c:#define e752x_printk(level, fmt, arg...) \
+drivers/edac/e752x_edac.c:#define e752x_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/e7xxx_edac.c:#define e7xxx_printk(level, fmt, arg...) \
+drivers/edac/e7xxx_edac.c:#define e7xxx_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/edac_mc.h:#define edac_printk(level, prefix, fmt, arg...) \
+drivers/edac/edac_mc.h:#define edac_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/edac_mc.h:#define edac_mc_chipset_printk(mci, level, prefix, fmt, arg...) \
+drivers/edac/edac_mc.h:#define edac_device_printk(ctl, level, fmt, arg...) \
+drivers/edac/edac_mc.h:#define edac_pci_printk(ctl, level, fmt, arg...) \
+drivers/edac/fsl_ddr_edac.h:#define fsl_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/i10nm_base.c:#define i10nm_printk(level, fmt, arg...)      \
+drivers/edac/i5000_edac.c:#define i5000_printk(level, fmt, arg...) \
+drivers/edac/i5000_edac.c:#define i5000_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/i5400_edac.c:#define i5400_printk(level, fmt, arg...) \
+drivers/edac/i5400_edac.c:#define i5400_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/i7300_edac.c:#define i7300_printk(level, fmt, arg...) \
+drivers/edac/i7300_edac.c:#define i7300_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/i7core_edac.c:#define i7core_printk(level, fmt, arg...)                    \
+drivers/edac/i7core_edac.c:#define i7core_mc_printk(mci, level, fmt, arg...)            \
+drivers/edac/i82860_edac.c:#define i82860_printk(level, fmt, arg...) \
+drivers/edac/i82860_edac.c:#define i82860_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/i82875p_edac.c:#define i82875p_printk(level, fmt, arg...) \
+drivers/edac/i82875p_edac.c:#define i82875p_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/i82975x_edac.c:#define i82975x_printk(level, fmt, arg...) \
+drivers/edac/i82975x_edac.c:#define i82975x_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/ie31200_edac.c:#define ie31200_printk(level, fmt, arg...) \
+drivers/edac/mpc85xx_edac.h:#define mpc85xx_printk(level, fmt, arg...) \
+drivers/edac/mv64x60_edac.h:#define mv64x60_printk(level, fmt, arg...) \
+drivers/edac/mv64x60_edac.h:#define mv64x60_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/pnd2_edac.c:#define pnd2_printk(level, fmt, arg...)                        \
+drivers/edac/pnd2_edac.c:#define pnd2_mc_printk(mci, level, fmt, arg...)        \
+drivers/edac/ppc4xx_edac.c:#define ppc4xx_edac_printk(level, fmt, arg...) \
+drivers/edac/ppc4xx_edac.c:#define ppc4xx_edac_mc_printk(level, mci, fmt, arg...) \
+drivers/edac/r82600_edac.c:#define r82600_printk(level, fmt, arg...) \
+drivers/edac/r82600_edac.c:#define r82600_mc_printk(mci, level, fmt, arg...) \
+drivers/edac/sb_edac.c:#define sbridge_printk(level, fmt, arg...)                       \
+drivers/edac/sb_edac.c:#define sbridge_mc_printk(mci, level, fmt, arg...)               \
+drivers/edac/skx_base.c:#define skx_printk(level, fmt, arg...)                  \
+drivers/edac/skx_base.c:#define skx_mc_printk(mci, level, fmt, arg...)          \
+drivers/edac/skx_common.h:#define skx_printk(level, fmt, arg...)                        \
+drivers/edac/skx_common.h:#define skx_mc_printk(mci, level, fmt, arg...)                \
+drivers/infiniband/hw/usnic/usnic_log.h:#define usnic_printk(lvl, args...) \
+drivers/infiniband/ulp/ipoib/ipoib.h:#define ipoib_printk(level, priv, format, arg...)  \
+drivers/input/mouse/psmouse.h:#define psmouse_printk(level, psmouse, format, ...)       \
+drivers/media/tuners/mc44s803.c:#define mc_printk(level, format, arg...)        \
+drivers/media/tuners/tda18271-priv.h:#define tda_printk(st, lvl, fmt, arg...)                   \
+drivers/media/usb/uvc/uvcvideo.h:#define uvc_printk(level, msg...) \
+drivers/net/ethernet/freescale/ucc_geth.c:#define ugeth_printk(level, format, arg...)  \
+drivers/net/ethernet/netronome/nfp/nfpcore/nfp_cpp.h:#define nfp_printk(level, cpp, fmt, args...) \
+drivers/net/phy/phylink.c:#define phylink_printk(level, pl, fmt, ...) \
+drivers/scsi/ipr.h:#define ipr_res_printk(level, ioa_cfg, bus, target, lun, fmt, ...) \
+drivers/scsi/ipr.h:#define ipr_ra_printk(level, ioa_cfg, ra, fmt, ...) \
+drivers/scsi/qla4xxx/ql4_def.h:#define ql4_printk(level, ha, format, arg...) \
+drivers/scsi/sym53c8xx_2/sym_hipd.c:#define sym_printk(lvl, tp, cp, fmt, v...) do { \
+drivers/usb/atm/usbatm.h:#define atm_printk(level, instance, format, arg...)    \
+include/linux/hid.h:#define hid_printk(level, hid, fmt, arg...)         \
+include/linux/netdevice.h:#define netif_printk(priv, type, level, dev, fmt, args...)    \
+include/linux/pci.h:#define pci_printk(level, pdev, fmt, arg...) \
+include/media/v4l2-common.h:#define v4l_printk(level, name, adapter, addr, fmt, arg...) \
+include/media/v4l2-common.h:#define v4l_client_printk(level, client, fmt, arg...)                           \
+include/media/v4l2-common.h:#define v4l2_printk(level, dev, fmt, arg...) \
+include/net/cfg80211.h:#define wiphy_printk(level, wiphy, format, args...)              \
+include/sound/core.h:#define __snd_printk(level, file, line, format, ...) \
+net/bridge/br_private.h:#define br_printk(level, br, format, args...)   \
 
 
-So if we come up with a struct device for the connector and some API for
-toggling the vbus we're going to have to fairly abstract entities
-representing pretty much the same thing - and in a design with a mux we
-would have a different setup.
-
-Regards,
-Bjorn
