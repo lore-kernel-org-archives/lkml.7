@@ -2,115 +2,100 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AD3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA79C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44131215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:36:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pwupB7ws"
+	by mail.kernel.org (Postfix) with ESMTP id DA3BA23431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567521488;
+	bh=NYvh1Ty2TcysP6q9uoPqBfVZ4o8Dsna8O9GWcNeTjPM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aigzq3jfCkz9zVE/8hOEF9L3kR2kUxM/Htwi57Ovgd+yJn3kjK3jUrGj6t2ar2jXw
+	 OmvQJULyjBZkkDmmBOwKZAvOMKI1JEzscWGlv98slu0hYRaZlHmyPpW0uv6pSUnd9+
+	 WeFjfbfe0GhBc0C2IJTKS3ed9dGU0KOLPqCaSAGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbfICOgM (ORCPT
+        id S1729525AbfICOiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:36:12 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:52847 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfICOgM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:36:12 -0400
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x83EZwT2022252;
-        Tue, 3 Sep 2019 23:35:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x83EZwT2022252
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567521359;
-        bh=9ktFv0qZHrNLdzrwjcOGtLvCO084ibPuQ/N0Fl+gU7A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pwupB7wsJBDjVzey/sEx5VW86n2PROIGMQzx4U5hbo4a2h1b5xQ3WdE1N979d6J9F
-         DR+sWBkxx1pqUQpBr95IPreqDLj+oXd5PXqzsJlDGkLnuyh+1JGmEUSG+cx/Yr6T9M
-         8XXa7wb/o+/xYDFkxQQNQRPAxmiZ7zn/zGSIl3V7eJ5e8O3p1rQ8/LHhzq1UbOgOXy
-         o8ZjOCmMkgfHGvJJ4Y4jgYQNLYt9m48u54KLC/kBtr3wn9wl2uncITqiOjZFA7vPdS
-         uANvM0rSylpeKXcguYLy5cNM41i00pNLod0U4A8YGBQQTI9B+j/wUMTHmvbdidQQnh
-         CTVSmoc3uvgjg==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id q186so2377422vkb.0;
-        Tue, 03 Sep 2019 07:35:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAV4FuSRzkv9Azw5gmRvFJzevb9Qz9Nf3l28VgFj+68j0aeojXOu
-        COmHAOxt1jTEGPmYzymf4qZGviU2leW3Ze8jN10=
-X-Google-Smtp-Source: APXvYqy0zd0XCOiNJxfynAjeoj6yEDocIr/Bo5zsIY6FWiw85VvyTZZTmXSZF7V1YGMIunqTucAAB2GBOylGzkFGOFU=
-X-Received: by 2002:a1f:294a:: with SMTP id p71mr10414923vkp.74.1567521358284;
- Tue, 03 Sep 2019 07:35:58 -0700 (PDT)
+        Tue, 3 Sep 2019 10:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfICOiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:38:07 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0D520828;
+        Tue,  3 Sep 2019 14:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567521486;
+        bh=NYvh1Ty2TcysP6q9uoPqBfVZ4o8Dsna8O9GWcNeTjPM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OJb3Kho20mdnwL0J0X12EPvZi+YCveo7/1MvWOJty8arm52+WGvg72faQoeDkDslp
+         gcXbCoUgsYIImpD8m9W/cZZXzmw/u/1Ai/IOtMCjmud5lXAkRUAZliTRZJFjfkXUvV
+         F/jRoBkgB+zfTcpRpoe3lmbufzbFVwL5ziqsj2V4=
+Date:   Tue, 3 Sep 2019 15:38:01 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, catalin.marinas@arm.com,
+        0x7f454c46@gmail.com, salyzyn@android.com, paul.burton@mips.com,
+        luto@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH v2 1/8] arm64: compat: vdso: Expose BUILD_VDSO32
+Message-ID: <20190903143800.k6r663abs2g2ddpg@willie-the-truck>
+References: <20190830135902.20861-1-vincenzo.frascino@arm.com>
+ <20190830135902.20861-2-vincenzo.frascino@arm.com>
+ <c0b1673d-e37d-a526-0862-ad07f779f5bf@arm.com>
 MIME-Version: 1.0
-References: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
-In-Reply-To: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 3 Sep 2019 23:35:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS5eYnsuaZ2XxCb1HXmV=QqfgPZNz_E=Ad+CZnDdLdO8A@mail.gmail.com>
-Message-ID: <CAK7LNAS5eYnsuaZ2XxCb1HXmV=QqfgPZNz_E=Ad+CZnDdLdO8A@mail.gmail.com>
-Subject: Re: [PATCH v2] merge_config.sh: ignore unwanted grep errors
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Mark Brown <broonie@kernel.org>, Jon Hunter <jonathanh@nvidia.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0b1673d-e37d-a526-0862-ad07f779f5bf@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 12:19 AM Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
->
-> The merge_config.sh script verifies that all the config options have
-> their expected value in the resulting file and prints any issues as
-> warnings.  These checks aren't intended to be treated as errors given
-> the current implementation.  However, since "set -e" was added, if the
-> grep command to look for a config option does not find it the script
-> will then abort prematurely.
->
-> Handle the case where the grep exit status is non-zero by setting
-> ACTUAL_VAL to an empty string to restore previous functionality.
->
-> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
-> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-> Cc: Jon Hunter <jonathanh@nvidia.com>
-> ---
+On Tue, Sep 03, 2019 at 03:36:16PM +0100, Vincenzo Frascino wrote:
+> On 8/30/19 2:58 PM, Vincenzo Frascino wrote:
+> > clock_gettime32 and clock_getres_time32 should be compiled only with the
+> > 32 bit vdso library.
+> > 
+> > Expose BUILD_VDSO32 when arm64 compat is compiled, to provide an
+> > indication to the generic library to include these symbols.
+> > 
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > ---
+> >  arch/arm64/include/asm/vdso/compat_gettimeofday.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> > index c50ee1b7d5cd..fe7afe0f1a3d 100644
+> > --- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> > +++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> > @@ -17,6 +17,7 @@
+> >  #define VDSO_HAS_CLOCK_GETRES		1
+> >  
+> >  #define VDSO_HAS_32BIT_FALLBACK		1
+> > +#define BUILD_VDSO32			1
+> >  
+> >  static __always_inline
+> >  int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
+> > 
+> 
+> This patch is independent from the rest and touches only arch code. Can it go in
+> via the arm64 tree?
 
-Applied to linux-kbuild.
-Thanks.
+Why not take it via -tip along with patch 6? Otherwise we'll get a silly
+conflict. I'd assumed this series was going in as one thing.
 
-
-
-> Notes:
->     v2: use true rather than echo as per Jon Hunter's suggestion
->
->  scripts/kconfig/merge_config.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
-> index d924c51d28b7..f2cc10b1d404 100755
-> --- a/scripts/kconfig/merge_config.sh
-> +++ b/scripts/kconfig/merge_config.sh
-> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
->  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
->
->         REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
-> -       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
-> +       ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || true)
->         if [ "x$REQUESTED_VAL" != "x$ACTUAL_VAL" ] ; then
->                 echo "Value requested for $CFG not in final .config"
->                 echo "Requested value:  $REQUESTED_VAL"
-> --
-> 2.20.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+Will
