@@ -2,142 +2,122 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21421C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E78C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E758C21883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYs1vRw1"
+	by mail.kernel.org (Postfix) with ESMTP id B671A21883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfICKM6 (ORCPT
+        id S1728576AbfICKMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:12:58 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45400 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbfICKMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:12:54 -0400
-Received: by mail-ed1-f67.google.com with SMTP id f19so4001576eds.12;
-        Tue, 03 Sep 2019 03:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nlLiM8uLHsTDV4s6ID+NIMbu8WjtXqoyK3qwNgbSYiM=;
-        b=vYs1vRw1/oFdO+o5wGpcE2A/R7zo/Kl/5y58VHC1qwuEW+S49QlOrlhnRmwC9HOsAY
-         FnBil7y+kIKi95xbWFV+xx3t15Km/EPCz+JVokw+S1BC468rqY8g6vTsTucryzndRCoX
-         6c6hrOy9+gS837EAp89pk5tjCAsuXUzbZESD9axQkdFT1bkr/p3ijDTqUdPwx3wmareF
-         PCe40FAwiA2tv/zIEw8RLstnK1sCgwoVB12HgxWeNhHtqTsCzhxzcqdSKpS7XlIx1NSy
-         8mq73tvcH1hbcn7mwhGf0UgtHak8edsOPJ/jwm8875dUUNt2G5pzdVwp7fSj1jKy9Hcw
-         JdEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nlLiM8uLHsTDV4s6ID+NIMbu8WjtXqoyK3qwNgbSYiM=;
-        b=W/YLNTr5EJxg5x/CymgyOJpyn0qMVL+IhtpRQNvxNuPtM2g6PdE1E9RmMS+nH0SvVs
-         5HBlgWX2hwgw8xHfcgSBEJComVEOqW7ZHo8WJvMRt99bhQNs+Ijv/crYsyflkh6+MfTa
-         zgC/d9gP/3eY0b3Z93OHpguzOBEa3SYWbDtDpgsteg6Tw7J3xxWbcTEcZ/DHcKzaVL82
-         BaO6p7TPAtvJ4new5nstdmqTbDbO/NxPtXL/r5XvkY5vrzSAwjAhP+MtlcdWmK+xWgwf
-         aODq+6YS/hTnxT9Hs+5u7pi9zuWGspKIXVJOHEHWWKEtXcBb74lDb+/GTPA7IseAg51K
-         mU8w==
-X-Gm-Message-State: APjAAAW5dlMfOuHJO6C5QjIrauAEu2ZjqSXlteNZD7U1xX+aDj/1C1xi
-        e0ZfPPbtp3L/zqfQJuflviazXdc7KUDbzxM3LMg=
-X-Google-Smtp-Source: APXvYqwk7nOMr1+qIcSpfZV7tnQtSDqzNfFRemJjn8SDcf/xGL+pUZVZJfwXknVYstIzNG+hA++Oic1gK1++akzHGwQ=
-X-Received: by 2002:a50:d552:: with SMTP id f18mr11387509edj.36.1567505572724;
- Tue, 03 Sep 2019 03:12:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190903010817.GA13595@embeddedor> <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
-In-Reply-To: <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 3 Sep 2019 13:12:41 +0300
-Message-ID: <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com>
-Subject: Re: [PATCH] net: sched: taprio: Fix potential integer overflow in taprio_set_picos_per_byte
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 3 Sep 2019 06:12:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:15620 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726840AbfICKMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:12:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E07B67EB89;
+        Tue,  3 Sep 2019 10:12:52 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-72.ams2.redhat.com [10.36.117.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DE26196AE;
+        Tue,  3 Sep 2019 10:12:49 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 164CD31F38; Tue,  3 Sep 2019 12:12:49 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/6] drm: add drm_print_bits
+Date:   Tue,  3 Sep 2019 12:12:43 +0200
+Message-Id: <20190903101248.12879-2-kraxel@redhat.com>
+In-Reply-To: <20190903101248.12879-1-kraxel@redhat.com>
+References: <20190903101248.12879-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 03 Sep 2019 10:12:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 10:19, Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 9/3/19 3:08 AM, Gustavo A. R. Silva wrote:
-> > Add suffix LL to constant 1000 in order to avoid a potential integer
-> > overflow and give the compiler complete information about the proper
-> > arithmetic to use. Notice that this constant is being used in a context
-> > that expects an expression of type s64, but it's currently evaluated
-> > using 32-bit arithmetic.
-> >
-> > Addresses-Coverity-ID: 1453459 ("Unintentional integer overflow")
-> > Fixes: f04b514c0ce2 ("taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_byte")
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > ---
-> >  net/sched/sch_taprio.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-> > index 8d8bc2ec5cd6..956f837436ea 100644
-> > --- a/net/sched/sch_taprio.c
-> > +++ b/net/sched/sch_taprio.c
-> > @@ -966,7 +966,7 @@ static void taprio_set_picos_per_byte(struct net_device *dev,
-> >
-> >  skip:
-> >       picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
-> > -                                speed * 1000 * 1000);
-> > +                                speed * 1000LL * 1000);
-> >
-> >       atomic64_set(&q->picos_per_byte, picos_per_byte);
-> >       netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
-> >
->
-> But, why even multiplying by 1,000,000 in the first place, this seems silly,
-> a standard 32 bit divide could be used instead.
->
-> ->
->
-> diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-> index 8d8bc2ec5cd6281d811fd5d8a5c5211ebb0edd73..944b1af3215668e927d486b6c6c65c4599fb9539 100644
-> --- a/net/sched/sch_taprio.c
-> +++ b/net/sched/sch_taprio.c
-> @@ -965,8 +965,7 @@ static void taprio_set_picos_per_byte(struct net_device *dev,
->                 speed = ecmd.base.speed;
->
->  skip:
-> -       picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
-> -                                  speed * 1000 * 1000);
-> +       picos_per_byte = (USEC_PER_SEC * 8) / speed;
->
->         atomic64_set(&q->picos_per_byte, picos_per_byte);
->         netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
->
->
->
+New helper to print named bits of some value (think flags fields).
 
-Right. And while we're at it, there's still the potential
-division-by-zero problem which I still don't know how to solve without
-implementing a full-blown __ethtool_get_link_ksettings parser that
-checks against all the possible outputs it can have under the "no
-carrier" condition - see "[RFC PATCH 1/1] phylink: Set speed to
-SPEED_UNKNOWN when there is no PHY connected" for details.
-And there's also a third fix to be made: the netdev_dbg should be made
-to print "speed" instead of "ecmd.base.speed".
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ include/drm/drm_print.h     |  3 +++
+ drivers/gpu/drm/drm_print.c | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-Thanks,
--Vladimir
+diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+index a5d6f2f3e430..8658c1da1c7d 100644
+--- a/include/drm/drm_print.h
++++ b/include/drm/drm_print.h
+@@ -88,6 +88,9 @@ __printf(2, 3)
+ void drm_printf(struct drm_printer *p, const char *f, ...);
+ void drm_puts(struct drm_printer *p, const char *str);
+ void drm_print_regset32(struct drm_printer *p, struct debugfs_regset32 *regset);
++void drm_print_bits(struct drm_printer *p, unsigned int indent,
++		    const char *label, unsigned int value,
++		    const char *bits[], unsigned int nbits);
+ 
+ __printf(2, 0)
+ /**
+diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+index a17c8a14dba4..7f7aba920f51 100644
+--- a/drivers/gpu/drm/drm_print.c
++++ b/drivers/gpu/drm/drm_print.c
+@@ -179,6 +179,42 @@ void drm_printf(struct drm_printer *p, const char *f, ...)
+ }
+ EXPORT_SYMBOL(drm_printf);
+ 
++/**
++ * drm_print_bits - print bits to a &drm_printer stream
++ *
++ * Print bits (in flag fields for example) in human readable form.
++ *
++ * @p: the &drm_printer
++ * @indent: Tab indentation level (max 5)
++ * @label: field label.
++ * @value: field value.
++ * @bits: Array with bit names.
++ * @nbits: bit name array size.
++ */
++void drm_print_bits(struct drm_printer *p, unsigned int indent,
++		    const char *label, unsigned int value,
++		    const char *bits[], unsigned int nbits)
++{
++	bool first = true;
++	unsigned int i;
++
++	for (i = 0; i < nbits; i++) {
++		if (!(value & (1 << i)))
++			continue;
++		if (!bits[i])
++			continue;
++		if (first) {
++			first = false;
++			drm_printf_indent(p, indent, "%s=%s",
++					  label, bits[i]);
++		} else
++			drm_printf(p, ",%s", bits[i]);
++	}
++	if (!first)
++		drm_printf(p, "\n");
++}
++EXPORT_SYMBOL(drm_print_bits);
++
+ void drm_dev_printk(const struct device *dev, const char *level,
+ 		    const char *format, ...)
+ {
+-- 
+2.18.1
+
