@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134F6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F44C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D279C23431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB0423431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuSTDxro"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BgIkoA6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbfICOW7 (ORCPT
+        id S1729696AbfICOXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:22:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34418 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729633AbfICOWs (ORCPT
+        Tue, 3 Sep 2019 10:23:07 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38491 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729053AbfICOWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:22:48 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z21so13064740lfe.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:22:47 -0700 (PDT)
+        Tue, 3 Sep 2019 10:22:44 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c12so13053280lfh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oRUCHCrSXAlVd+d5h26u6KUeDoevWOErPZA9CCjpQxk=;
-        b=cuSTDxro2oT3broDfM4Vhr93npdKcTrzQwf/hurN/LzTaOclC+JagWmOYz8XhLpzp1
-         WQfMy9rnaUZWsyQJ2l0461oXe37BJnCpWuYs2kyrijCXRdsx7onpMgb3djgBof//Yh6k
-         TE7eq/LEiVO1FXLbK6yNgRwFuzlA8aZOe1WBgrM2i/W1seNF+h/tBzhoyQKVAb0XfH9x
-         siDR1HffQVdt+yQmle0S3R6LFECw7C5/ni/D5ULuKwwCKg/MGpyU+NJaIhY+WcM6uNxw
-         V5c/yQAX+33zQRNvcNGYfO3vCrMHdFTlGzCDKZtpZET7N3SUkhWtkU2A5MMP8Z0NmHvk
-         /a7w==
+        bh=bNF5KDT4NEO2S6l4e9LzOtvZky1MgilMfLbdgvOUK14=;
+        b=BgIkoA6S9HEs9gXOS1K2J8v1hct1nLo6iRbl+eWQRpwvWRAnL1gvf+6nlbSL6YQA3L
+         YP0IzSVlJneAEtl8OLa9/CxAxpo1o1UsJgnOMYY2+Zi4BENlVOUxJ1C4U9RQXv43lRDA
+         Mz84ak/0jeQjZANy0DnEaYTuPY760zFCzRlpLRpdw40SCH9Llqye34JP95vSzumbnnZS
+         Zl2imszSl55QYmDXEmgLQ9Dg/rJzzHYX38Ck6g9OKS68zEeA4dAh3UGChi8gTj+nVrn9
+         2zFV28zKr4MoIj3TQjSFs0sV4I1qy2pFogTq2GA7SqZOvrq66YCj9MZziPPTklnjOHlO
+         Lb7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=oRUCHCrSXAlVd+d5h26u6KUeDoevWOErPZA9CCjpQxk=;
-        b=bcJncCesCYDQy+dLhgtrMzzNK6Jti8bxqUX0dRUi5DrjEvmBumcqcbGTf+Xf4QbVFT
-         XoMy9RBldEHF2R5kkBMPgk+vm62MmhfdLFLfc7kAD6+RgXjgSYfhPzAS+QQ6QLLrqEdO
-         p7CUIlQVk3/49djD0gTrwn2Uwyrhl+LuDa2nUYKz2SeGy4YAurELYhAd5mUW/0ZTWfN1
-         0T8gqu/tBDuL3xLy5x76OdrqCVrJdIuY3NGUdHu00jko6oJFOzA9m49oFbIHpS9cp6Zd
-         mpZC7oJV1MCAU8ikT5Qfn3V8f44Qx4dh+nqfpqWQYOvoaSSHOsya7wImh1rdHga9/aZR
-         5ouw==
-X-Gm-Message-State: APjAAAVdhnNS/9ZvsXpc1aW1l+/Hy57L0gLPfy7RDeIBnH4wkqv6E/jh
-        ZGqrrJIEc0y6Gjj7L7HvR0kiTQ==
-X-Google-Smtp-Source: APXvYqxulXC0EVgK6/kIKcgM16qMgDbBItv63++f/7a5797d7tuL/bpKNSln0qr1e0rf25vagSHLrQ==
-X-Received: by 2002:a05:6512:499:: with SMTP id v25mr16750469lfq.30.1567520566370;
-        Tue, 03 Sep 2019 07:22:46 -0700 (PDT)
+        bh=bNF5KDT4NEO2S6l4e9LzOtvZky1MgilMfLbdgvOUK14=;
+        b=PVFVxGGk6o3V7bJnv+9fz7dor9tDytukM3T7n+dlPho/tem45MnA1ge/D6nHHzD66h
+         D4niqTJCXEO9nUS3lEsq1d9afKHF1hh6Bb9oY2w/UHPBJM2SgFbt5jsX6Cvynzfi2ug3
+         qk1IZDUpsJpdgWIBW5thkB01iRAPb0t/uxjkpcj4HX6Y0dJVNSIZpLm9QOq8sJ8qaUxo
+         JPzWE42UU8Fb2C4EbHjGfMRuEaQiL0IMIgFIkcZKmUPs7FNzxtTtlzNFoncFqjN01ujm
+         RlBCEMMxGJv5SOSKuhRWIRli20RLH7e1M/c7bpPRUy1fTU+uDwc9d5pSFEDV3UADYFvR
+         8Yvg==
+X-Gm-Message-State: APjAAAWZfhKt+61pqcCX0I78XlX4nHGJZ5GCMCcyuN+8+yppWZ7QP2YV
+        utj8DF8LGhWRXTCj80XE2Y5vsQ==
+X-Google-Smtp-Source: APXvYqyEEebdpTgfyZ3xa8X0pagg//6S5aVso4T3Lot6sSeBRjWR2Wwn14JGYYaV9PjJ35e0VWgv9Q==
+X-Received: by 2002:ac2:4c2f:: with SMTP id u15mr20191218lfq.174.1567520562816;
+        Tue, 03 Sep 2019 07:22:42 -0700 (PDT)
 Received: from uffe-XPS-13-9360.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v10sm2430862ljc.64.2019.09.03.07.22.45
+        by smtp.gmail.com with ESMTPSA id v10sm2430862ljc.64.2019.09.03.07.22.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 07:22:45 -0700 (PDT)
+        Tue, 03 Sep 2019 07:22:42 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -65,9 +65,9 @@ Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
         Yong Mao <yong.mao@mediatek.com>,
         Chaotian Jing <chaotian.jing@mediatek.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] mmc: sdhci: Drop redundant code for SDIO IRQs
-Date:   Tue,  3 Sep 2019 16:22:06 +0200
-Message-Id: <20190903142207.5825-11-ulf.hansson@linaro.org>
+Subject: [PATCH 07/11] mmc: core: WARN if SDIO IRQs are enabled for non-powered card in suspend
+Date:   Tue,  3 Sep 2019 16:22:03 +0200
+Message-Id: <20190903142207.5825-8-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190903142207.5825-1-ulf.hansson@linaro.org>
 References: <20190903142207.5825-1-ulf.hansson@linaro.org>
@@ -76,114 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nowadays sdhci prevents runtime suspend when SDIO IRQs are enabled.
-
-However, some variants such as sdhci-esdhc-imx's, tries to allow runtime
-suspend while having the SDIO IRQs enabled, but without supporting remote
-wakeups. This support is a bit questionable, especially if the host device
-have a PM domain attached that can be power gated, but more importantly,
-the code have also become redundant (which was not the case when it was
-introduced).
-
-Rather than keeping the redundant code around, let's drop it and leave this
-to be revisited later on.
+To make sure SDIO func drivers behaves correctly during system
+suspend/resume, let add a WARN_ON in case the condition is a non-powered
+SDIO card and there are some SDIO IRQs still being claimed.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/mmc/host/sdhci-esdhc-imx.c | 34 +++++++++++++-----------------
- drivers/mmc/host/sdhci.c           |  2 +-
- drivers/mmc/host/sdhci.h           |  5 -----
- 3 files changed, 16 insertions(+), 25 deletions(-)
+ drivers/mmc/core/sdio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 776a94216248..1c988d6a2433 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1666,12 +1666,10 @@ static int sdhci_esdhc_runtime_suspend(struct device *dev)
- 	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
- 		mmc_retune_needed(host->mmc);
- 
--	if (!sdhci_sdio_irq_enabled(host)) {
--		imx_data->actual_clock = host->mmc->actual_clock;
--		esdhc_pltfm_set_clock(host, 0);
--		clk_disable_unprepare(imx_data->clk_per);
--		clk_disable_unprepare(imx_data->clk_ipg);
--	}
-+	imx_data->actual_clock = host->mmc->actual_clock;
-+	esdhc_pltfm_set_clock(host, 0);
-+	clk_disable_unprepare(imx_data->clk_per);
-+	clk_disable_unprepare(imx_data->clk_ipg);
- 	clk_disable_unprepare(imx_data->clk_ahb);
- 
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-@@ -1695,15 +1693,15 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
- 	if (err)
- 		goto remove_pm_qos_request;
- 
--	if (!sdhci_sdio_irq_enabled(host)) {
--		err = clk_prepare_enable(imx_data->clk_per);
--		if (err)
--			goto disable_ahb_clk;
--		err = clk_prepare_enable(imx_data->clk_ipg);
--		if (err)
--			goto disable_per_clk;
--		esdhc_pltfm_set_clock(host, imx_data->actual_clock);
--	}
-+	err = clk_prepare_enable(imx_data->clk_per);
-+	if (err)
-+		goto disable_ahb_clk;
+diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+index 8dd8fc32ecca..c557f1519b77 100644
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -951,6 +951,8 @@ static int mmc_sdio_pre_suspend(struct mmc_host *host)
+  */
+ static int mmc_sdio_suspend(struct mmc_host *host)
+ {
++	WARN_ON(host->sdio_irqs && !mmc_card_keep_power(host));
 +
-+	err = clk_prepare_enable(imx_data->clk_ipg);
-+	if (err)
-+		goto disable_per_clk;
-+
-+	esdhc_pltfm_set_clock(host, imx_data->actual_clock);
- 
- 	err = sdhci_runtime_resume_host(host, 0);
- 	if (err)
-@@ -1715,11 +1713,9 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
- 	return err;
- 
- disable_ipg_clk:
--	if (!sdhci_sdio_irq_enabled(host))
--		clk_disable_unprepare(imx_data->clk_ipg);
-+	clk_disable_unprepare(imx_data->clk_ipg);
- disable_per_clk:
--	if (!sdhci_sdio_irq_enabled(host))
--		clk_disable_unprepare(imx_data->clk_per);
-+	clk_disable_unprepare(imx_data->clk_per);
- disable_ahb_clk:
- 	clk_disable_unprepare(imx_data->clk_ahb);
- remove_pm_qos_request:
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 2a9be044448a..a7df22ed65aa 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3046,7 +3046,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
- 
- 	spin_lock(&host->lock);
- 
--	if (host->runtime_suspended && !sdhci_sdio_irq_enabled(host)) {
-+	if (host->runtime_suspended) {
- 		spin_unlock(&host->lock);
- 		return IRQ_NONE;
- 	}
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index cf3d1ed91909..8effaac61c3a 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -753,11 +753,6 @@ static inline void sdhci_read_caps(struct sdhci_host *host)
- 	__sdhci_read_caps(host, NULL, NULL, NULL);
- }
- 
--static inline bool sdhci_sdio_irq_enabled(struct sdhci_host *host)
--{
--	return !!(host->flags & SDHCI_SDIO_IRQ_ENABLED);
--}
--
- u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
- 		   unsigned int *actual_clock);
- void sdhci_set_clock(struct sdhci_host *host, unsigned int clock);
+ 	/* Prevent processing of SDIO IRQs in suspended state. */
+ 	mmc_card_set_suspended(host->card);
+ 	cancel_delayed_work_sync(&host->sdio_irq_work);
 -- 
 2.17.1
 
