@@ -2,74 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AA6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD8EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8732122CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D6C21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfICUak (ORCPT
+        id S1727372AbfICUcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:30:40 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38248 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfICUak (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:30:40 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E3DD480F8A; Tue,  3 Sep 2019 22:30:23 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 22:30:36 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-Message-ID: <20190903203036.GA923@bug>
-References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
- <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
- <20190902181207.GA18577@kroah.com>
- <1cd468a3-b6e5-a93b-739a-f30288318356@gmail.com>
- <20190902190843.GB25019@kroah.com>
- <CAC5umyjTJSMdKMtZbF8Uxky6nOrAHesTHmZRV5VA1uPwX2rtxA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAC5umyjTJSMdKMtZbF8Uxky6nOrAHesTHmZRV5VA1uPwX2rtxA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 3 Sep 2019 16:32:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43526 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbfICUcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:32:17 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C5311026FEA;
+        Tue,  3 Sep 2019 20:32:17 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA3AB6012C;
+        Tue,  3 Sep 2019 20:32:16 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id A519120CEB; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 11/26] nfs: unexport nfs_fs_mount_common()
+Date:   Tue,  3 Sep 2019 16:32:00 -0400
+Message-Id: <20190903203215.9157-12-smayhew@redhat.com>
+In-Reply-To: <20190903203215.9157-1-smayhew@redhat.com>
+References: <20190903203215.9157-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 03 Sep 2019 20:32:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-> > Also, you all didn't document the heck out of this.  So no, I really do
-> > not want to see this patch accepted as-is.
-> >
-> > > Provided that will be fixed, can we count on your ack for the
-> > > implementation of the solution you proposed? :-)
-> >
-> > Let's see the patch that actually implements what I suggested first :)
-> 
-> I'd propose introducing a new procfs file (/proc/led-triggers) and new
-> /sys/class/leds/<led>/current-trigger api.
+Make it static, even.  And remove a stale extern of (long-gone)
+nfs_xdev_mount_common() from internal.h, while we are at it.
 
-No.
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ fs/nfs/internal.h | 3 ---
+ fs/nfs/super.c    | 5 +++--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-Your patch is good, it just needs adding comment:
- /* It was stupid to create 10000 cpu triggers, but we are
-stuck with it now. Don't make that mistake again. We work around it here by creating binary
-attribute, which is not limited by length. This is _not_ good design, do not copy it. */
-
-Best regards,
-									Pavel
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index ac3478827a83..207d1574e246 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -404,10 +404,7 @@ bool nfs_auth_info_match(const struct nfs_auth_info *, rpc_authflavor_t);
+ struct dentry *nfs_try_mount(int, const char *, struct nfs_mount_info *);
+ int nfs_set_sb_security(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ int nfs_clone_sb_security(struct super_block *, struct dentry *, struct nfs_mount_info *);
+-struct dentry *nfs_fs_mount_common(int, const char *, struct nfs_mount_info *);
+ struct dentry *nfs_fs_mount(struct file_system_type *, int, const char *, void *);
+-struct dentry * nfs_xdev_mount_common(struct file_system_type *, int,
+-		const char *, struct nfs_mount_info *);
+ void nfs_kill_super(struct super_block *);
+ void nfs_fill_super(struct super_block *, struct nfs_mount_info *);
+ void nfs_clone_super(struct super_block *, struct nfs_mount_info *);
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index d80992d2b6fe..c3ee83c17f07 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1893,6 +1893,8 @@ static struct nfs_server *nfs_try_mount_request(struct nfs_mount_info *mount_inf
+ 	return nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
+ }
+ 
++static struct dentry *nfs_fs_mount_common(int, const char *, struct nfs_mount_info *);
++
+ struct dentry *nfs_try_mount(int flags, const char *dev_name,
+ 			     struct nfs_mount_info *mount_info)
+ {
+@@ -2623,7 +2625,7 @@ int nfs_clone_sb_security(struct super_block *s, struct dentry *mntroot,
+ }
+ EXPORT_SYMBOL_GPL(nfs_clone_sb_security);
+ 
+-struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
++static struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
+ 				   struct nfs_mount_info *mount_info)
+ {
+ 	struct super_block *s;
+@@ -2705,7 +2707,6 @@ struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
+ 	deactivate_locked_super(s);
+ 	goto out;
+ }
+-EXPORT_SYMBOL_GPL(nfs_fs_mount_common);
+ 
+ struct dentry *nfs_fs_mount(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *raw_data)
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+2.17.2
+
