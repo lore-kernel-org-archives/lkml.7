@@ -2,158 +2,155 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE80C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D75C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74DB21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wL2ybVnw"
+	by mail.kernel.org (Postfix) with ESMTP id 766D520882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfICG2M (ORCPT
+        id S1726840AbfICG2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:28:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40498 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfICG2L (ORCPT
+        Tue, 3 Sep 2019 02:28:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57070 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725848AbfICG2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:28:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so8546294pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3UjuVbvJVhJAU0IH4ZbNm2Jlx5L7+f9v4Qm0AxsrvR0=;
-        b=wL2ybVnw/vZTE94Xlb5xNn6xFzOU0UBcajT5ZX8iLCFCwV0n5PB4oIlQz48eacDYVj
-         ytsZyjwjhWQ1OyE6tUH5+Fw3vuDDJRwzLal/K5HBzVBwgrKvvmMe5GeNlWO1WhxyccUV
-         TwlIgLZwtVm9qfRHB4O//OKoPLU1wfEtKHfj06We2tjZQBl2SBKGSCKkfScfh/XMv6a3
-         Jxwa+zf0f/0wDZhgKmHEzqJdf/zypEzxM+/ZA4H8i6bRuUpTHWUWP8CO2c1uSie3Gvy5
-         DPrjLacNZAls6mFBSNsEmMyRo9L784IaV/PYWdAlL4gBtSGkIK6Qvsz1M7uDfjwIDexd
-         VLCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3UjuVbvJVhJAU0IH4ZbNm2Jlx5L7+f9v4Qm0AxsrvR0=;
-        b=gc6BHYqLgq6nL6iarH8penouLseRo5HfcZ9+sNmWk4w20VJeOXpTQS/rM3CFU/Z57u
-         sW1H15wSYPXctij3wEd6U5NOF0K3Ny941LIGXl61zgQ7WfYMU82aZyG+B1K5HpBy1rC+
-         9E/sq2w6jQnWE12jatn9nsod3yD/gIKR53YaNm7Eug6x5ob5GVKN1vO7m3Drszb5XaH6
-         ZgEFqAeV4UB5VWIrhwzZL3Fcyg43rs88bP5vgRAGDfyCqx/2C1uIqyXq+f1WUNdWEN/5
-         c9CCfufjC7iJNpGZjbf9/T3F67htmr8SfoKKg5PeA2aCXsCUD8lysMxaIB9Qwpami9Cv
-         wRDA==
-X-Gm-Message-State: APjAAAXc0Le0P7mE6HfTO92P+UOoiSA5kijhMJmO/WYNZFkkE+MJBcdX
-        bJ20++ZPnGNj06x4hnIXdUtwiQ==
-X-Google-Smtp-Source: APXvYqwazyPlv855qi7l9Cvtv6Ry/4WLau0L7ow/Xvvtoyuzbt1Tlw+/d8AZcxMClQX/5LVzlajoKw==
-X-Received: by 2002:a62:e802:: with SMTP id c2mr2520855pfi.212.1567492090953;
-        Mon, 02 Sep 2019 23:28:10 -0700 (PDT)
-Received: from localhost ([122.167.132.221])
-        by smtp.gmail.com with ESMTPSA id b5sm23696486pfp.38.2019.09.02.23.28.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 23:28:10 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 11:58:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
-Message-ID: <20190903062808.p6jkgwylyqxcjs4z@vireshk-i7>
-References: <cover.1567421750.git.hns@goldelico.com>
- <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
- <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
- <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
- <20190903061403.k3d333f54gj2kuxi@vireshk-i7>
- <6B7B0EDB-8A60-48A0-AFAB-8A266358300C@goldelico.com>
+        Tue, 3 Sep 2019 02:28:46 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x836SFbA071879
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 02:28:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uqmhtstwn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:28:32 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 3 Sep 2019 07:27:22 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Sep 2019 07:27:18 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x836RHRc40763552
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 06:27:17 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2584C11C05B;
+        Tue,  3 Sep 2019 06:27:17 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CDDEE11C054;
+        Tue,  3 Sep 2019 06:27:16 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Sep 2019 06:27:16 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 50186A00EC;
+        Tue,  3 Sep 2019 16:27:15 +1000 (AEST)
+Subject: Re: [PATCH v2 6/6] powerpc: Don't flush caches when adding memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, Qian Cai <cai@lca.pw>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Tue, 03 Sep 2019 16:27:15 +1000
+In-Reply-To: <e6713f8a-6465-f9fe-40e9-91d52aa06195@c-s.fr>
+References: <20190903052407.16638-1-alastair@au1.ibm.com>
+         <20190903052407.16638-7-alastair@au1.ibm.com>
+         <e6713f8a-6465-f9fe-40e9-91d52aa06195@c-s.fr>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6B7B0EDB-8A60-48A0-AFAB-8A266358300C@goldelico.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090306-0016-0000-0000-000002A5F738
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090306-0017-0000-0000-000033065C4F
+Message-Id: <864c4b01a9c12f82a32de264fbb0b2acb39592e4.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-09-19, 08:23, H. Nikolaus Schaller wrote:
+On Tue, 2019-09-03 at 08:23 +0200, Christophe Leroy wrote:
 > 
-> > Am 03.09.2019 um 08:14 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
+> Le 03/09/2019 à 07:24, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
 > > 
-> > On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
-> >> 
-> >>> Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
-> >>> 
-> >>> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
-> >>>> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
-> >>>> 1GHz capability is automatically detected.
-> >>>> 
-> >>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >>>> ---
-> >>>> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
-> >>>> 1 file changed, 7 deletions(-)
-> >>>> 
-> >>>> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >>>> index 5441e9ffdbb4..e98b0c615f19 100644
-> >>>> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >>>> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >>>> @@ -11,13 +11,6 @@
-> >>>> 	cpus {
-> >>>> 		cpu@0 {
-> >>>> 			cpu0-supply = <&vcc>;
-> >>>> -			operating-points = <
-> >>>> -				/* kHz    uV */
-> >>>> -				300000  1012500
-> >>>> -				600000  1200000
-> >>>> -				800000  1325000
-> >>>> -				1000000	1375000
-> >>>> -			>;
-> >>>> 		};
-> >>>> 	};
-> >>> 
-> >>> This should be merged with 2/5 ?
-> >> 
-> >> Well, it bloats 2/5.
+> > This operation takes a significant amount of time when hotplugging
+> > large amounts of memory (~50 seconds with 890GB of persistent
+> > memory).
 > > 
-> > It is logically the right place to do this as that's where we are
-> > adding opp-v2.
+> > This was orignally in commit fb5924fddf9e
+> > ("powerpc/mm: Flush cache on memory hot(un)plug") to support
+> > memtrace,
+> > but the flush on add is not needed as it is flushed on remove.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/mm/mem.c | 7 -------
+> >   1 file changed, 7 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> > index 854aaea2c6ae..2a14b5b93e19 100644
+> > --- a/arch/powerpc/mm/mem.c
+> > +++ b/arch/powerpc/mm/mem.c
+> > @@ -111,7 +111,6 @@ int __ref arch_add_memory(int nid, u64 start,
+> > u64 size,
+> >   {
+> >   	unsigned long start_pfn = start >> PAGE_SHIFT;
+> >   	unsigned long nr_pages = size >> PAGE_SHIFT;
+> > -	u64 i;
+> >   	int rc;
+> >   
+> >   	resize_hpt_for_hotplug(memblock_phys_mem_size());
+> > @@ -124,12 +123,6 @@ int __ref arch_add_memory(int nid, u64 start,
+> > u64 size,
+> >   		return -EFAULT;
+> >   	}
+> >   
+> > -	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+> > -		flush_dcache_range(start + i,
+> > -				   min(start + size, start + i +
+> > FLUSH_CHUNK_SIZE));
+> > -		cond_resched();
+> > -	}
+> > -
 > 
-> Well, sometimes the philosophy of patches is to add something new
-> first and remove the old in a second separate patch if the system
-> can live with both. This makes it easier to digest single patches
-> (because they are smaller) and might also better pinpoint an issue
-> by bisect.
+> So you are removing the code you added in patch 4. Why not move this
+> one 
+> before patch 4 ?
+> 
 
-Right, but you already removed some of the opp-v1 stuff in patch 2/5.
-Why leave this one out ?
-
-> > 
-> >> What I hope (I can't test) is that this opp-v1 table
-> >> is ignored if an opp-v2 table exists. So that it can be
-> >> removed by a separate follow-up patch.
-> > 
-> > It should work as that's what we are doing in OPP core, but I still
-> > feel this better get merged with 2/5.
-> 
-> Ok, I see. Noted for RFCv2.
-> 
-> There will also be a big batch of changes for the compatible record
-> (omap3530->omap35xx, add omap34xx where needed) of ca. 10 board definition
-> DTS files. Should this then also become part of the new 2/5?
-
-Compatible thing should be separate patch anyway, I was just talking
-about replacing opp-v1 with v2.
+I put them in this order so that if someone did want the flushes in
+arch_add_memory, they could drop the later patch, but not trigger RCU
+stalls.
 
 -- 
-viresh
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
