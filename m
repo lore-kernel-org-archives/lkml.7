@@ -2,168 +2,125 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9A2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3308C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E97207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15032168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QAGZVubg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="d5pyVlMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfICUlu (ORCPT
+        id S1726810AbfICUqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:41:50 -0400
-Received: from mail.efficios.com ([167.114.142.138]:48680 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfICUlt (ORCPT
+        Tue, 3 Sep 2019 16:46:30 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:55741 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfICUq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:41:49 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 56F032B2FED;
-        Tue,  3 Sep 2019 16:41:48 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id YGe_ofTvY5TO; Tue,  3 Sep 2019 16:41:48 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id E3F942B2FE8;
-        Tue,  3 Sep 2019 16:41:47 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E3F942B2FE8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1567543307;
-        bh=kzbhdxL6p5DVUn//4xlV8bUJLkFCNwDgZOU5rVYtjZo=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=QAGZVubgcPGJTtBDr1bZtaI93DEcxBG552w5ddI7wME23neccf4IK82x+KTg2V5GK
-         qxI/CbcmcauVtv1odvRNG1/k8DZanCIOGey/OKJR4S2s/1GFUTRhQQ5U74Nc65pq+Z
-         tRB6ZGHVoqHgkEtq5w66456VfFXf+nKYulNt4HSFb5NfcyiCQyCypEjb5swSbWWDjL
-         XJ2MI/13Ety0vpqOJk9F4Z0nLOztTTrW0wFZI5T20h1RijonD6defKy4eNEZt2Dur+
-         w292u1muSB65YX/7d5ysT44X0BAYId6pymLNcn0waVJkFgX7MzZjebyNQnTd/1zuFj
-         3shykfPVFauEw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id f_nSfkUuR3DT; Tue,  3 Sep 2019 16:41:47 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id C94F62B2FDA;
-        Tue,  3 Sep 2019 16:41:47 -0400 (EDT)
-Date:   Tue, 3 Sep 2019 16:41:47 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     paulmck <paulmck@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
-        Mike Galbraith <efault@gmx.de>,
+        Tue, 3 Sep 2019 16:46:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 5AF213F7AA;
+        Tue,  3 Sep 2019 22:46:22 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=d5pyVlMA;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id cm5YpwMMBdsT; Tue,  3 Sep 2019 22:46:21 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8EA0F3F346;
+        Tue,  3 Sep 2019 22:46:19 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 2309F360160;
+        Tue,  3 Sep 2019 22:46:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567543579; bh=ReJ050/HhfY0Ips2NyF/JTyfejqDhdHoI69hGH+hQng=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=d5pyVlMAIlG8kSjxdJ6L4TE+ZbVRlWIQ0rnwBa/UmsyM4NifbUmke10ZyTcfAn3Zv
+         vUi7fIUcBPjcDYXRdoH5OFN7o7UnEzFdVJpQg2EO1+5b7rwG/jYnHaN2xKjTSqk3Wn
+         8CDZYzOZUAiaMay+Q4PbIPxy6QBIXcZs2oPHLRpc=
+Subject: Re: [PATCH v2 1/4] x86/mm: Export force_dma_unencrypted
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com, linux-kernel@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Message-ID: <1029906102.725.1567543307658.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190903202434.GX2349@hirez.programming.kicks-ass.net>
-References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com> <20190903202434.GX2349@hirez.programming.kicks-ass.net>
-Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
- racy load
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-2-thomas_os@shipmail.org>
+ <20190903134627.GA2951@infradead.org>
+ <f85e7fa6-54e1-7ac5-ce6c-96349c7af322@shipmail.org>
+ <20190903162204.GB23281@infradead.org>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <558f1224-d157-5848-1752-1430a5b3947e@shipmail.org>
+Date:   Tue, 3 Sep 2019 22:46:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
-Thread-Topic: sched/membarrier: p->mm->membarrier_state racy load
-Thread-Index: VxBHx0Ijjv+FZdN+7ID1WvH9d1Li7A==
+In-Reply-To: <20190903162204.GB23281@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Sep 3, 2019, at 4:24 PM, Peter Zijlstra peterz@infradead.org wrote:
+On 9/3/19 6:22 PM, Christoph Hellwig wrote:
+> On Tue, Sep 03, 2019 at 04:32:45PM +0200, Thomas Hellström (VMware) wrote:
+>> Is this a layer violation concern, that is, would you be ok with a similar
+>> helper for TTM, or is it that you want to force the graphics drivers into
+>> adhering strictly to the DMA api, even when it from an engineering
+>> perspective makes no sense?
+> >From looking at DRM I strongly believe that making DRM use the DMA
+> mapping properly makes a lot of sense from the engineering perspective,
+> and this series is a good argument for that positions.
 
-> On Tue, Sep 03, 2019 at 04:11:34PM -0400, Mathieu Desnoyers wrote:
-> 
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index 9f51932bd543..e24d52a4c37a 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -1130,6 +1130,10 @@ struct task_struct {
->>  	unsigned long			numa_pages_migrated;
->>  #endif /* CONFIG_NUMA_BALANCING */
->>  
->> +#ifdef CONFIG_MEMBARRIER
->> +	atomic_t membarrier_state;
->> +#endif
->> +
->>  #ifdef CONFIG_RSEQ
->>  	struct rseq __user *rseq;
->>  	u32 rseq_sig;
->> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
->> index 4a7944078cc3..3577cd7b3dbb 100644
->> --- a/include/linux/sched/mm.h
->> +++ b/include/linux/sched/mm.h
->> @@ -371,7 +371,17 @@ static inline void
->> membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
->>  static inline void membarrier_execve(struct task_struct *t)
->>  {
->>  	atomic_set(&t->mm->membarrier_state, 0);
->> +	atomic_set(&t->membarrier_state, 0);
->>  }
->> +
->> +static inline void membarrier_prepare_task_switch(struct task_struct *t)
->> +{
->> +	if (!t->mm)
->> +		return;
->> +	atomic_set(&t->membarrier_state,
->> +		   atomic_read(&t->mm->membarrier_state));
->> +}
->> +
-> 
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index 010d578118d6..8d4f1f20db15 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -3038,6 +3038,7 @@ prepare_task_switch(struct rq *rq, struct task_struct
->> *prev,
->>  	perf_event_task_sched_out(prev, next);
->>  	rseq_preempt(prev);
->>  	fire_sched_out_preempt_notifiers(prev, next);
->> +	membarrier_prepare_task_switch(next);
->>  	prepare_task(next);
->>  	prepare_arch_switch(next);
->>  }
-> 
-> 
-> Yuck yuck yuck..
-> 
-> so the problem I have with this is that we add yet another cacheline :/
-> 
-> Why can't we frob this state into a line/word we already have to
-> unconditionally touch, like the thread_info::flags word for example.
-> 
-> The above also does the store unconditionally, even though, in the most
-> common case, it won't have to.
+What I mean with "from an engineering perspective" is that drivers would 
+end up with a non-trivial amount of code supporting purely academic 
+cases: Setups where software rendering would be faster than gpu 
+accelerated, and setups on platforms where the driver would never run 
+anyway because the device would never be supported on that platform...
 
-This approach would require to reserve TIF flags in each supported
-architecture, which I would like to avoid if possible.
+>   If DRM was using
+> the DMA properl we would not need this series to start with, all the
+> SEV handling is hidden behind the DMA API.  While we had occasional
+> bugs in that support fixing it meant that it covered all drivers
+> properly using that API.
 
-As discussed on IRC, one alternative for the multi-threaded case would
-be to grab the task list lock and iterate over all existing tasks to
-set the bit, so we don't have to touch an extra cache line from the
-scheduler.
+That is not really true. The dma API can't handle faulting of coherent 
+pages which is what this series is really all about supporting also with 
+SEV active. To handle the case where we move graphics buffers or send 
+them to swap space while user-space have them mapped.
 
-In order to keep the speed of the common single-threaded library
-constructor common case fast, we simply set the bit in the current
-task struct, and rely on clone() propagating the flag to children
-threads (which it already does).
+To do that and still be fully dma-api compliant we would ideally need, 
+for example, an exported dma_pgprot(). (dma_pgprot() by the way is still 
+suffering from one of the bugs that you mention above).
 
-Thanks,
+Still, I need a way forward and my questions weren't really answered by 
+this.
 
-Mathieu
+/Thomas
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+
+
+
+
