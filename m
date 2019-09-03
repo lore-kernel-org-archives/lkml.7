@@ -2,145 +2,173 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A8DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1278C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488CE22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8830A22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:15:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oJ6IszhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfICKN3 (ORCPT
+        id S1728678AbfICKPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:13:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:42467 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbfICKN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:13:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 03:13:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="198739823"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 03:13:26 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 03 Sep 2019 13:13:25 +0300
-Date:   Tue, 3 Sep 2019 13:13:25 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Brad Campbell <lists2009@fnarfbargle.com>
-Cc:     linux-kernel@vger.kernel.org, michael.jamet@intel.com,
-        YehezkelShB@gmail.com
-Subject: Re: Thunderbolt DP oddity on v5.2.9 on iMac 12,2
-Message-ID: <20190903101325.GC2691@lahna.fi.intel.com>
-References: <472bee84-d62b-bfcb-eb83-db881165756b@fnarfbargle.com>
- <20190828073302.GO3177@lahna.fi.intel.com>
- <7c9474d2-d948-4d1d-6f7b-94335b8b1f15@fnarfbargle.com>
- <20190828102342.GT3177@lahna.fi.intel.com>
- <e3a8fa91-2cfd-76a4-641c-610c32122833@fnarfbargle.com>
- <20190828131943.GZ3177@lahna.fi.intel.com>
- <be32b369-b013-cca8-5475-9b56acaa3e18@fnarfbargle.com>
+        Tue, 3 Sep 2019 06:15:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40990 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICKPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:15:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83AD7kj076681;
+        Tue, 3 Sep 2019 10:13:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=+anirc1ufKGxJEU4Z3PGmZS+/UggyBKlolV/D6idGx4=;
+ b=oJ6IszhCYg8UZZC98Psi/7dz6TtNj0ADinKqQ/cZM2pOQMV2oOgl8VGH4KJ+8Cz0n5sb
+ kqlLMUqnLuENqbMfLHtxRIDqXqRzI91bNGm13xds4bQAzV5R3kbXuXbjPosV7d6YzSZ4
+ wPCeqtSLCf2WxjxAQXzP+E7ujZue6950wH/pwJ6+hFC7ERmmOmGAASN3kUAmGkcJH/Io
+ 92vuoOk6yI21GTh+L/b5B0BVI88dRO83ayVo1XLmKRgqfsfQG9SbBVL7Mn+EqonKec84
+ 6ZfDcHWenf0DaVnX6WOaxw6Le1quHVlLHNGCr5ZhsNmuJYAKo4lD6kQi5MEL7zM+vcUp jg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2usnssr4ft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 10:13:41 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83ADM9u145634;
+        Tue, 3 Sep 2019 10:13:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2us4wdmpev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 10:13:40 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x83ADa4O013873;
+        Tue, 3 Sep 2019 10:13:36 GMT
+Received: from [10.175.205.235] (/10.175.205.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Sep 2019 03:13:36 -0700
+Subject: Re: Is: Default governor regardless of cpuidle driver Was: [PATCH v2]
+ cpuidle-haltpoll: vcpu hotplug support
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        kvm-devel <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <20190829151027.9930-1-joao.m.martins@oracle.com>
+ <c8cf8dcc-76a3-3e15-f514-2cb9df1bbbdc@oracle.com>
+ <20190829172343.GA18825@amt.cnet>
+ <CAJZ5v0j8BEjdNyAn=ut9BxSH5Gphs_AivADPwXX=rJ1TF1+88A@mail.gmail.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <457e8ca1-beb3-ca39-b257-e7bc6bb35d4d@oracle.com>
+Date:   Tue, 3 Sep 2019 11:13:31 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be32b369-b013-cca8-5475-9b56acaa3e18@fnarfbargle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAJZ5v0j8BEjdNyAn=ut9BxSH5Gphs_AivADPwXX=rJ1TF1+88A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909030106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909030105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brad,
-
-On Thu, Aug 29, 2019 at 12:27:08AM +0800, Brad Campbell wrote:
-> It wouldn't surprise me if the firmware was doing something funky. It was
-> one of the first Thunderbolt equipped models and the support docs explicitly
-> say only one Thunderbolt display in Windows and two in later versions of
-> OSX. It almost needs a quirk to say "firmware does something we don't like,
-> reset the controller and re-discover from scratch".
+On 9/2/19 10:55 PM, Rafael J. Wysocki wrote:
+> On Thu, Aug 29, 2019 at 7:24 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>>
+>> On Thu, Aug 29, 2019 at 06:16:05PM +0100, Joao Martins wrote:
+>>> On 8/29/19 4:10 PM, Joao Martins wrote:
+>>>> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
+>>>> past the online ones and thus fail to register the idle driver.
+>>>> This is because cpuidle_add_sysfs() will return with -ENODEV as a
+>>>> consequence from get_cpu_device() return no device for a non-existing
+>>>> CPU.
+>>>>
+>>>> Instead switch to cpuidle_register_driver() and manually register each
+>>>> of the present cpus through cpuhp_setup_state() callback and future
+>>>> ones that get onlined. This mimmics similar logic that intel_idle does.
+>>>>
+>>>> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
+>>>> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+>>>> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>>>> ---
+>>>
+>>> While testing the above, I found out another issue on the haltpoll series.
+>>> But I am not sure what is best suited to cpuidle framework, hence requesting
+>>> some advise if below is a reasonable solution or something else is preferred.
+>>>
+>>> Essentially after haltpoll governor got introduced and regardless of the cpuidle
+>>> driver the default governor is gonna be haltpoll for a guest (given haltpoll
+>>> governor doesn't get registered for baremetal).
+>>
+>> Right.
+>>
+>>> Right now, for a KVM guest, the
+>>> idle governors have these ratings:
+>>>
+>>>  * ladder            -> 10
+>>>  * teo               -> 19
+>>>  * menu              -> 20
+>>>  * haltpoll          -> 21
+>>>  * ladder + nohz=off -> 25
+>>
+>> Yes. PowerPC KVM guests crash currently due to the use of the haltpoll
+>> governor (have a patch in my queue to fix this, but your solution
+>> embraces more cases).
+>>
+>>> When a guest is booted with MWAIT and intel_idle is probed and sucessfully
+>>> registered, we will end up with a haltpoll governor being used as opposed to
+>>> 'menu' (which used to be the default case). This would prevent IIUC that other
+>>> C-states get used other than poll_state (state 0) and state 1.
+>>>
+>>> Given that haltpoll governor is largely only useful with a cpuidle-haltpoll
+>>> it doesn't look reasonable to be the default? What about using haltpoll governor
+>>> as default when haltpoll idle driver registers or modloads.
+>>>
+>>> My idea to achieve the above would be to decrease the rating to 9 (before the
+>>> lowest rated governor) and retain old defaults before haltpoll. Then we would
+>>> allow a cpuidle driver to define a preferred governor to switch on idle driver
+>>> registration. Naturally all of would be ignored if overidden by
+>>> cpuidle.governor=.
+>>>
+>>> The diff below the scissors line is an example of that.
+>>>
+>>> Thoughts?
+>>
+>> Works for me. Rafael?
 > 
-> Anyway, I'm not in any hurry. It doesn't get rebooted often and it's not in
-> any way preventing me using the machine. In fact, upgrading the third head
-> from an old 24" 1920x1200 to the second Thunderbolt display has been
-> invaluable.
+> It works for me too, basically, except that I would rename
+> cpuidle_default_governor in the patch to cpuidle_prev_governor.
+> 
 
-Can you apply the below patch and then boot with two monitors connected?
-Then send me the dmesg. It does not fix anything but should log a bit
-more.
+Great! I'll send over a series with this then (splitted accordingly).
 
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index 1f7a9e1cc09c..28a72336558a 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -313,8 +313,10 @@ static struct tb_port *tb_find_unused_port(struct tb_switch *sw,
- 			continue;
- 		if (!sw->ports[i].cap_adap)
- 			continue;
--		if (tb_port_is_enabled(&sw->ports[i]))
-+		if (tb_port_is_enabled(&sw->ports[i])) {
-+			tb_port_dbg(&sw->ports[i], "this already enabled\n");
- 			continue;
-+		}
- 		return &sw->ports[i];
- 	}
- 	return NULL;
-@@ -365,16 +367,25 @@ static int tb_tunnel_dp(struct tb *tb, struct tb_port *out)
- 	struct tb_tunnel *tunnel;
- 	struct tb_port *in;
- 
--	if (tb_port_is_enabled(out))
-+	tb_port_dbg(out, "trying to tunnel DP\n");
-+
-+	if (tb_port_is_enabled(out)) {
-+		tb_port_dbg(out, "DP OUT port already enabled\n");
- 		return 0;
-+	}
-+
-+	tb_port_dbg(out, "finding free DP IN port\n");
- 
- 	do {
- 		sw = tb_to_switch(sw->dev.parent);
- 		if (!sw)
- 			return 0;
-+		tb_sw_dbg(sw, "finding available DP IN\n");
- 		in = tb_find_unused_port(sw, TB_TYPE_DP_HDMI_IN);
- 	} while (!in);
- 
-+	tb_port_dbg(in, "found DP IN\n");
-+
- 	tunnel = tb_tunnel_alloc_dp(tb, in, out);
- 	if (!tunnel) {
- 		tb_port_dbg(out, "DP tunnel allocation failed\n");
-diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
-index 5a99234826e7..93c2c965bdde 100644
---- a/drivers/thunderbolt/tunnel.c
-+++ b/drivers/thunderbolt/tunnel.c
-@@ -351,9 +351,23 @@ struct tb_tunnel *tb_tunnel_discover_dp(struct tb *tb, struct tb_port *in)
- 	struct tb_tunnel *tunnel;
- 	struct tb_port *port;
- 	struct tb_path *path;
-+	u32 data[2];
-+	int ret;
-+
-+	tb_port_dbg(in, "start DP discover\n");
- 
--	if (!tb_dp_port_is_enabled(in))
-+	if (!tb_dp_port_is_enabled(in)) {
-+		tb_port_dbg(in, "DP port enabled\n");
- 		return NULL;
-+	}
-+
-+	ret = tb_port_read(in, data, TB_CFG_PORT, in->cap_adap,
-+			   ARRAY_SIZE(data));
-+	if (ret)
-+		return NULL;
-+
-+	tb_port_dbg(in, "data[0]=0x%08x\n", data[0]);
-+	tb_port_dbg(in, "data[1]=0x%08x\n", data[1]);
- 
- 	tunnel = tb_tunnel_alloc(tb, 3, TB_TUNNEL_DP);
- 	if (!tunnel)
+Also, In the course of hotplug/hotunplug testing, I found two small issues with
+modload/modunload -- regardless of the hotplug patch. So I am gonna add that to
+the series too.
+
+	Joao
