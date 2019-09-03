@@ -4,51 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64669C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3D7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A53F2343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663442343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528190;
-	bh=mIWbGUdjvLUSWtsFuJdn5JZh9DqkmnUUxnlmJ5dx0ls=;
+	s=default; t=1567528195;
+	bh=BvuGDEuuCV3tL/5E1orvDAlLtATndOot/2zhu3g99Hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SKxdRnS4eu5BiSt1doBael3k74MbQFazZlSD4kAPVUdxWzoNIVlQ0hc/L0GID945Q
-	 VrxuKq52p+paWe8LvhrU5QBbAXpdCcWwdGfULb5mWlu+lhepPNQVk2LW6ilEDAO5e5
-	 0V9OA+RVS3qXjr9CYuRIIF3K8YqrNhrBHeDjw0ME=
+	b=Ja5gD5Ihb5HKZaCqT6UgpgxJiXqEbhv60Vku2Saf8ZflsE/RhvakSbq5LsmyGkNvo
+	 7JVxq+fgfdMfUMow+ioGyn4DrnB9HCJiTxkW5zf8ywXCK/wpRIrr/79Qrh1nHJVAxa
+	 BM7XZnoVUFl3QwAeOUR1XUCfafVOwzJ/R3XiNoyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbfICQ3t (ORCPT
+        id S1730281AbfICQ3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730770AbfICQ3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:29:09 -0400
+        id S1731178AbfICQ3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:29:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C18E238CE;
-        Tue,  3 Sep 2019 16:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0FAD238CD;
+        Tue,  3 Sep 2019 16:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528148;
-        bh=mIWbGUdjvLUSWtsFuJdn5JZh9DqkmnUUxnlmJ5dx0ls=;
+        s=default; t=1567528139;
+        bh=BvuGDEuuCV3tL/5E1orvDAlLtATndOot/2zhu3g99Hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0ZPEqMv7s+F44QLMcpSo0NSYuQ0RGsEuPl+hDTHJU+L5ZuMBxLgkEGQjfz8rZz/L
-         hemNhZGcDkKuqdG/b5ExbgW9XOdibtHk9uDvhH72EWzKLlKVpJLlwxUmpwxUxt/UHk
-         7xRHFdM30YFwKs1d2U10flpA1GPrY+DCpNVzNnsk=
+        b=NUHfoW2crAgzF6TnIUp4UUPUrNyye2F9Je9v7Gc6FKADdb4hIrV+E1brLoxEcxFem
+         VeQlfyX5bA2yTnAb54DTYNbv9Jh9KINO4EYQ7EpBu+e/oO13yyvRe++TyBWdIusu8k
+         0Gj4PZoYC95ICGaHWZfESAvZdI740XbZpt8zcWT0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Neuling <mikey@neuling.org>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 137/167] KVM: PPC: Book3S HV: Fix CR0 setting in TM emulation
-Date:   Tue,  3 Sep 2019 12:24:49 -0400
-Message-Id: <20190903162519.7136-137-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 130/167] ALSA: hda - Don't resume forcibly i915 HDMI/DP codec
+Date:   Tue,  3 Sep 2019 12:24:42 -0400
+Message-Id: <20190903162519.7136-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,61 +57,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Neuling <mikey@neuling.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 3fefd1cd95df04da67c83c1cb93b663f04b3324f ]
+[ Upstream commit 4914da2fb0c89205790503f20dfdde854f3afdd8 ]
 
-When emulating tsr, treclaim and trechkpt, we incorrectly set CR0. The
-code currently sets:
-    CR0 <- 00 || MSR[TS]
-but according to the ISA it should be:
-    CR0 <-  0 || MSR[TS] || 0
+We apply the codec resume forcibly at system resume callback for
+updating and syncing the jack detection state that may have changed
+during sleeping.  This is, however, superfluous for the codec like
+Intel HDMI/DP, where the jack detection is managed via the audio
+component notification; i.e. the jack state change shall be reported
+sooner or later from the graphics side at mode change.
 
-This fixes the bit shift to put the bits in the correct location.
+This patch changes the codec resume callback to avoid the forcible
+resume conditionally with a new flag, codec->relaxed_resume, for
+reducing the resume time.  The flag is set in the codec probe.
 
-This is a data integrity issue as CR0 is corrupted.
+Although this doesn't fix the entire bug mentioned in the bugzilla
+entry below, it's still a good optimization and some improvements are
+seen.
 
-Fixes: 4bb3c7a0208f ("KVM: PPC: Book3S HV: Work around transactional memory bugs in POWER9")
-Cc: stable@vger.kernel.org # v4.17+
-Tested-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=201901
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv_tm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_codec.c  | 8 ++++++--
+ sound/pci/hda/hda_codec.h  | 2 ++
+ sound/pci/hda/patch_hdmi.c | 6 +++++-
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv_tm.c b/arch/powerpc/kvm/book3s_hv_tm.c
-index 888e2609e3f15..31cd0f327c8a2 100644
---- a/arch/powerpc/kvm/book3s_hv_tm.c
-+++ b/arch/powerpc/kvm/book3s_hv_tm.c
-@@ -131,7 +131,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcpu *vcpu)
- 		}
- 		/* Set CR0 to indicate previous transactional state */
- 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
--			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
-+			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
- 		/* L=1 => tresume, L=0 => tsuspend */
- 		if (instr & (1 << 21)) {
- 			if (MSR_TM_SUSPENDED(msr))
-@@ -175,7 +175,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcpu *vcpu)
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index a6233775e779f..82b0dc9f528f0 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -2947,15 +2947,19 @@ static int hda_codec_runtime_resume(struct device *dev)
+ #ifdef CONFIG_PM_SLEEP
+ static int hda_codec_force_resume(struct device *dev)
+ {
++	struct hda_codec *codec = dev_to_hda_codec(dev);
++	bool forced_resume = !codec->relaxed_resume;
+ 	int ret;
  
- 		/* Set CR0 to indicate previous transactional state */
- 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
--			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
-+			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
- 		vcpu->arch.shregs.msr &= ~MSR_TS_MASK;
- 		return RESUME_GUEST;
+ 	/* The get/put pair below enforces the runtime resume even if the
+ 	 * device hasn't been used at suspend time.  This trick is needed to
+ 	 * update the jack state change during the sleep.
+ 	 */
+-	pm_runtime_get_noresume(dev);
++	if (forced_resume)
++		pm_runtime_get_noresume(dev);
+ 	ret = pm_runtime_force_resume(dev);
+-	pm_runtime_put(dev);
++	if (forced_resume)
++		pm_runtime_put(dev);
+ 	return ret;
+ }
  
-@@ -205,7 +205,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcpu *vcpu)
+diff --git a/sound/pci/hda/hda_codec.h b/sound/pci/hda/hda_codec.h
+index acacc19002658..2003403ce1c82 100644
+--- a/sound/pci/hda/hda_codec.h
++++ b/sound/pci/hda/hda_codec.h
+@@ -261,6 +261,8 @@ struct hda_codec {
+ 	unsigned int auto_runtime_pm:1; /* enable automatic codec runtime pm */
+ 	unsigned int force_pin_prefix:1; /* Add location prefix */
+ 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
++	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
++
+ #ifdef CONFIG_PM
+ 	unsigned long power_on_acct;
+ 	unsigned long power_off_acct;
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 35931a18418f3..e4fbfb5557ab7 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2293,8 +2293,10 @@ static void generic_hdmi_free(struct hda_codec *codec)
+ 	struct hdmi_spec *spec = codec->spec;
+ 	int pin_idx, pcm_idx;
  
- 		/* Set CR0 to indicate previous transactional state */
- 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
--			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
-+			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
- 		vcpu->arch.shregs.msr = msr | MSR_TS_S;
- 		return RESUME_GUEST;
- 	}
+-	if (codec_has_acomp(codec))
++	if (codec_has_acomp(codec)) {
+ 		snd_hdac_acomp_register_notifier(&codec->bus->core, NULL);
++		codec->relaxed_resume = 0;
++	}
+ 
+ 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
+ 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
+@@ -2550,6 +2552,8 @@ static void register_i915_notifier(struct hda_codec *codec)
+ 	spec->drm_audio_ops.pin_eld_notify = intel_pin_eld_notify;
+ 	snd_hdac_acomp_register_notifier(&codec->bus->core,
+ 					&spec->drm_audio_ops);
++	/* no need for forcible resume for jack check thanks to notifier */
++	codec->relaxed_resume = 1;
+ }
+ 
+ /* setup_stream ops override for HSW+ */
 -- 
 2.20.1
 
