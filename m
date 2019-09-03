@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2113C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF09CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD7023431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A290B2343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528051;
-	bh=jsNo2JAtwLO5t8pQDhbmm0cWLOVY3Kf9g8u0X5fQFxs=;
+	s=default; t=1567528054;
+	bh=sbK5B/opJnQEx+K1ODNhGx45T5DJfZruAsq8wAn4Bos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfAHrV5Ko38LRp0brilHwwiQW+975xSeyvybf23pX63hzHYT9b/Dmlh3+hpjzlLZO
-	 ILKuq2TKNOx1jiS4Unm1CARnJbVlu86nmGLBhy1Rvsy/tqceWPo4TACt1JhIld1yM9
-	 aWoO/Oa5Bla4N54XvAGgyjPbG3cfI0VCJNyIjuuY=
+	b=UbZKOuXpctYNjE2QOzj6/7/8SrMkDUuIll7M4qLXkhKjm78EbXOUNtGuyhB4EzmS+
+	 RujPO0+5ZB0Cx7/O4Uu/4wMKACRAxpj5ueeTQhwYJWEIIZ1iXZ+ZuMTuoagdeTU37A
+	 VtEqcBPL3o2/d9m+dFoi0dxWp2ngL6biY5vUlf2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbfICQ1a (ORCPT
+        id S1730302AbfICQ1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48774 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbfICQ10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:26 -0400
+        id S1730397AbfICQ1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0800238D0;
-        Tue,  3 Sep 2019 16:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87AF2343A;
+        Tue,  3 Sep 2019 16:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528045;
-        bh=jsNo2JAtwLO5t8pQDhbmm0cWLOVY3Kf9g8u0X5fQFxs=;
+        s=default; t=1567528044;
+        bh=sbK5B/opJnQEx+K1ODNhGx45T5DJfZruAsq8wAn4Bos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZ4TzqjvCH5uSy+yH+F8qU8tUoSiWk1csju1R6EAe+Yqqoj+JEhHMDu0qbbwBrNOy
-         un9/6bm/Kku14QmjqCM6L1evoR5aRLfGMXEQnMIcSxEqaoCG+mm7cBJ4JXY3Qq3537
-         4+qIn7tqCgkLaVTQZKlPegFnoJ1WRMghsDSd1Mvc=
+        b=d6xenguK16vj27748FFp7cDN9UFKsYJnCGJ0RpN8mwXBdMwnXVq1wjPg5niEegoAM
+         0lgpGa6ZDYM9FGRDuGFKYiIaY5p17I/b8T6RJxNujP80kjT4R7yObau+YHJGOMcDfV
+         OQ7IBwVZajJvHn0nt+1IzykjuQ1ds+BQEuW17dVw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 069/167] mt76: fix corrupted software generated tx CCMP PN
-Date:   Tue,  3 Sep 2019 12:23:41 -0400
-Message-Id: <20190903162519.7136-69-sashal@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 068/167] iio: adc: exynos-adc: Use proper number of channels for Exynos4x12
+Date:   Tue,  3 Sep 2019 12:23:40 -0400
+Message-Id: <20190903162519.7136-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -58,34 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 906d2d3f874a54183df5a609fda180adf0462428 ]
+[ Upstream commit 103cda6a3b8d2c10d5f8cd7abad118e9db8f4776 ]
 
-Since ccmp_pn is u8 *, the second half needs to start at array index 4
-instead of 0. Fixes a connection stall after a certain amount of traffic
+Exynos4212 and Exynos4412 have only four ADC channels so using
+"samsung,exynos-adc-v1" compatible (for eight channels ADCv1) on them is
+wrong.  Add a new compatible for Exynos4x12.
 
-Fixes: 23405236460b9 ("mt76: fix transmission of encrypted management frames")
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/iio/adc/samsung,exynos-adc.txt     |  4 +++-
+ drivers/iio/adc/exynos_adc.c                    | 17 +++++++++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
-index 6542644bc3259..cec31f0c3017b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
-@@ -402,7 +402,7 @@ void mt76x2_mac_write_txwi(struct mt76x2_dev *dev, struct mt76x2_txwi *txwi,
- 		ccmp_pn[6] = pn >> 32;
- 		ccmp_pn[7] = pn >> 40;
- 		txwi->iv = *((__le32 *)&ccmp_pn[0]);
--		txwi->eiv = *((__le32 *)&ccmp_pn[1]);
-+		txwi->eiv = *((__le32 *)&ccmp_pn[4]);
- 	}
+diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
+index a10c1f89037de..e1fe02f3e3e9c 100644
+--- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
+@@ -11,11 +11,13 @@ New driver handles the following
  
- 	spin_lock_bh(&dev->mt76.lock);
+ Required properties:
+ - compatible:		Must be "samsung,exynos-adc-v1"
+-				for exynos4412/5250 controllers.
++				for Exynos5250 controllers.
+ 			Must be "samsung,exynos-adc-v2" for
+ 				future controllers.
+ 			Must be "samsung,exynos3250-adc" for
+ 				controllers compatible with ADC of Exynos3250.
++			Must be "samsung,exynos4212-adc" for
++				controllers compatible with ADC of Exynos4212 and Exynos4412.
+ 			Must be "samsung,exynos7-adc" for
+ 				the ADC in Exynos7 and compatibles
+ 			Must be "samsung,s3c2410-adc" for
+diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index 41da522fc6735..1ca2c4d39f878 100644
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -115,6 +115,7 @@
+ #define MAX_ADC_V2_CHANNELS		10
+ #define MAX_ADC_V1_CHANNELS		8
+ #define MAX_EXYNOS3250_ADC_CHANNELS	2
++#define MAX_EXYNOS4212_ADC_CHANNELS	4
+ #define MAX_S5PV210_ADC_CHANNELS	10
+ 
+ /* Bit definitions common for ADC_V1 and ADC_V2 */
+@@ -271,6 +272,19 @@ static void exynos_adc_v1_start_conv(struct exynos_adc *info,
+ 	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
+ }
+ 
++/* Exynos4212 and 4412 is like ADCv1 but with four channels only */
++static const struct exynos_adc_data exynos4212_adc_data = {
++	.num_channels	= MAX_EXYNOS4212_ADC_CHANNELS,
++	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
++	.needs_adc_phy	= true,
++	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
++
++	.init_hw	= exynos_adc_v1_init_hw,
++	.exit_hw	= exynos_adc_v1_exit_hw,
++	.clear_irq	= exynos_adc_v1_clear_irq,
++	.start_conv	= exynos_adc_v1_start_conv,
++};
++
+ static const struct exynos_adc_data exynos_adc_v1_data = {
+ 	.num_channels	= MAX_ADC_V1_CHANNELS,
+ 	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
+@@ -492,6 +506,9 @@ static const struct of_device_id exynos_adc_match[] = {
+ 	}, {
+ 		.compatible = "samsung,s5pv210-adc",
+ 		.data = &exynos_adc_s5pv210_data,
++	}, {
++		.compatible = "samsung,exynos4212-adc",
++		.data = &exynos4212_adc_data,
+ 	}, {
+ 		.compatible = "samsung,exynos-adc-v1",
+ 		.data = &exynos_adc_v1_data,
 -- 
 2.20.1
 
