@@ -2,200 +2,162 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6207BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4BFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBDC22D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84F622CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567535557;
+	bh=jkqGLIjzZlBP8ZD7zxshQdo67YM0NVdk0TFH7QzG15I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HV051QGJ/Ah6qmnElpwTASWsru24CfFadhOeK+sgQJZIYi/ECaGMCpcjkWGIOrc3h
+	 OKyIbVzbKi7jwi5xAfabNEfXT5H7AY64c4S/zjYjhMn2Nn/0MFg5oIAATj/1UNQoZ5
+	 D+ZY4RAp4BpRnKqlpZCC+lnbumPbmt1thPz3Fjw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfICS1u (ORCPT
+        id S1726365AbfICScf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:27:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34891 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 14:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfICS1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:27:50 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725977AbfICScf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 14:32:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 554753680A
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 18:27:49 +0000 (UTC)
-Received: by mail-qk1-f199.google.com with SMTP id d9so20074730qko.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:27:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=07Nosu99Mp1zqKp4ye8H9IkjaI2ZBjCJN3UDTKMkL/I=;
-        b=IQBnwxp3z/g8oPYx5QdetsSJ1dDZTE8oc6W0bQrCnEvHcxqiRSUkVsVo9Dz9uTCq11
-         zKpBNT8+lgtn24tKPVCbc9TAYAGcTQ8r1LroHqYnKt1tf2/fpxyHUY3dP6PezImNBN9/
-         OsVXYsaWbWO2KCHt7KlgjyV7wQhIRG+s28gFY8TblzjjMGLzDAioMTDqcV1rfoKHgf9c
-         4xf+fnbRibBoQVpgYvI4DWoU400Gy9mBGBn4bocnzUWbEoZaGxVZKUoC4YqUEQnxHC4B
-         je7BapGsAoahnX+70Crs8/T0dvh5Onp/HcXnwucemRy/s6LQbisFzgOidSipNRsK4bvJ
-         B7Lg==
-X-Gm-Message-State: APjAAAXOJNA5miq/hxvh4Z8ZsmMpWZe2qlEZTC3dAJ1ueeApjHj2NkXp
-        6RmODVBZWaZSk4hcjO5Ujcg0NKz+XJPUBH/4L6cs81toaqAEIRdABbLcel4/6RDn5VHkiHBqbOp
-        uuQ9zpdAmiI9cF/1CMZletr6B
-X-Received: by 2002:aed:27c1:: with SMTP id m1mr15498663qtg.197.1567535268660;
-        Tue, 03 Sep 2019 11:27:48 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqztOEl0H8g/hPHQCmeKx+cH2srAaosbtrUNr/jReZ5cxMrICdEyZyhC5Lxe2bZk0gPYyqchpw==
-X-Received: by 2002:aed:27c1:: with SMTP id m1mr15498636qtg.197.1567535268421;
-        Tue, 03 Sep 2019 11:27:48 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id c26sm10902892qtk.93.2019.09.03.11.27.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 11:27:47 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 11:27:42 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Jordan Hand <jorhand@linux.microsoft.com>
-Cc:     jarkko.sakkinen@linux.intel.com, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tpm: Parse event log from TPM2 ACPI table
-Message-ID: <20190903182742.rmqthgu6rms3uill@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jordan Hand <jorhand@linux.microsoft.com>,
-        jarkko.sakkinen@linux.intel.com, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190831051027.11544-1-jorhand@linux.microsoft.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AA2EF20828;
+        Tue,  3 Sep 2019 18:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567535554;
+        bh=jkqGLIjzZlBP8ZD7zxshQdo67YM0NVdk0TFH7QzG15I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s9d0jflia/PLY0CpCVjU9z1Z0F0GVvm3dNgSdhJSLaq6Wu8sFSDR1yj1rW40z3UGT
+         Uti7o5qkX2wt0RIArZu4aphafAIQObs88DqjvYiONNknTxUthUiecAqqacR2EEagKY
+         gPgM34SROg3fJeGsyYRlzgV3G7QsgeZO4vfAJVvA=
+Date:   Tue, 3 Sep 2019 20:32:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
+ /sys/class/leds/<led>/trigger
+Message-ID: <20190903183231.GA26562@kroah.com>
+References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
+ <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
+ <20190902181207.GA18577@kroah.com>
+ <1cd468a3-b6e5-a93b-739a-f30288318356@gmail.com>
+ <20190902190843.GB25019@kroah.com>
+ <CAC5umyjTJSMdKMtZbF8Uxky6nOrAHesTHmZRV5VA1uPwX2rtxA@mail.gmail.com>
+ <20190903140719.GA9506@kroah.com>
+ <CAC5umyhApkfo+-7+nPFn20MLpG7dxrSE1+1FPhZp+p=hCsopeg@mail.gmail.com>
+ <52bef6f9-7d96-627b-069e-02b3ffa0559e@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190831051027.11544-1-jorhand@linux.microsoft.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <52bef6f9-7d96-627b-069e-02b3ffa0559e@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Aug 30 19, Jordan Hand wrote:
->For systems with a TPM2 chip which use ACPI to expose event logs, retrieve the
->crypto-agile event log from the TPM2 ACPI table. The TPM2 table is defined
->in section 7.3 of the TCG ACPI Specification (see link).
->
->The TPM2 table is used by SeaBIOS in place of the TCPA table when the system's
->TPM is version 2.0 to denote (among other metadata) the location of the
->crypto-agile log.
->
->Link: https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
->Signed-off-by: Jordan Hand <jorhand@linux.microsoft.com>
->---
-> drivers/char/tpm/eventlog/acpi.c | 60 ++++++++++++++++++++++----------
-> 1 file changed, 41 insertions(+), 19 deletions(-)
->
->diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
->index 63ada5e53f13..38a8bcec1dd5 100644
->--- a/drivers/char/tpm/eventlog/acpi.c
->+++ b/drivers/char/tpm/eventlog/acpi.c
->@@ -41,17 +41,23 @@ struct acpi_tcpa {
-> 	};
-> };
->
->+/* If an event log is present, the TPM2 ACPI table will contain the full
->+ * trailer
->+ */
->+
-> /* read binary bios log */
-> int tpm_read_log_acpi(struct tpm_chip *chip)
-> {
->-	struct acpi_tcpa *buff;
->+	struct acpi_table_header *buff;
->+	struct acpi_tcpa *tcpa;
->+	struct acpi_tpm2_trailer *tpm2_trailer;
-> 	acpi_status status;
-> 	void __iomem *virt;
-> 	u64 len, start;
->+	int log_type;
-> 	struct tpm_bios_log *log;
->-
->-	if (chip->flags & TPM_CHIP_FLAG_TPM2)
->-		return -ENODEV;
->+	bool is_tpm2 = chip->flags & TPM_CHIP_FLAG_TPM2;
->+	acpi_string table_sig;
->
-> 	log = &chip->log;
->
->@@ -61,26 +67,42 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
-> 	if (!chip->acpi_dev_handle)
-> 		return -ENODEV;
->
->-	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
->-	status = acpi_get_table(ACPI_SIG_TCPA, 1,
->-				(struct acpi_table_header **)&buff);
->+	/* Find TCPA or TPM2 entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
->+	table_sig = is_tpm2 ? ACPI_SIG_TPM2 : ACPI_SIG_TCPA;
->+	status = acpi_get_table(table_sig, 1, &buff);
->
-> 	if (ACPI_FAILURE(status))
-> 		return -ENODEV;
->
->-	switch(buff->platform_class) {
->-	case BIOS_SERVER:
->-		len = buff->server.log_max_len;
->-		start = buff->server.log_start_addr;
->-		break;
->-	case BIOS_CLIENT:
->-	default:
->-		len = buff->client.log_max_len;
->-		start = buff->client.log_start_addr;
->-		break;
->+	if (!is_tpm2) {
->+		tcpa = (struct acpi_tcpa *)buff;
->+		switch (tcpa->platform_class) {
->+		case BIOS_SERVER:
->+			len = tcpa->server.log_max_len;
->+			start = tcpa->server.log_start_addr;
->+			break;
->+		case BIOS_CLIENT:
->+		default:
->+			len = tcpa->client.log_max_len;
->+			start = tcpa->client.log_start_addr;
->+			break;
->+		}
->+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
->+	} else if (buff->length ==
->+		   sizeof(struct acpi_table_tpm2) +
->+		   sizeof(struct acpi_tpm2_trailer)) {
->+		tpm2_trailer = (struct acpi_tpm2_trailer *)buff;
->+
->+		len = tpm2_trailer.minimum_log_length;
->+		start = tpm2_trailer.log_address;
+On Tue, Sep 03, 2019 at 08:18:36PM +0200, Jacek Anaszewski wrote:
+> On 9/3/19 4:21 PM, Akinobu Mita wrote:
+> > 2019年9月3日(火) 23:07 Greg KH <gregkh@linuxfoundation.org>:
+> >>
+> >> On Tue, Sep 03, 2019 at 10:55:40PM +0900, Akinobu Mita wrote:
+> >>> 2019年9月3日(火) 4:08 Greg KH <gregkh@linuxfoundation.org>:
+> >>>>
+> >>>> On Mon, Sep 02, 2019 at 08:47:02PM +0200, Jacek Anaszewski wrote:
+> >>>>> On 9/2/19 8:12 PM, Greg KH wrote:
+> >>>>>> On Sun, Sep 01, 2019 at 06:53:34PM +0200, Jacek Anaszewski wrote:
+> >>>>>>> Hi Akinobu,
+> >>>>>>>
+> >>>>>>> Thank you for the patch.
+> >>>>>>>
+> >>>>>>> I have one nit below but in general it looks good to me.
+> >>>>>>> I've tested it with 2000 mtd triggers (~14kB file size)
+> >>>>>>> and it worked flawlessly.
+> >>>>>>>
+> >>>>>>> Still, I would like to have ack from Greg for it.
+> >>>>>>>
+> >>>>>>> Adding Greg on Cc.
+> >>>>>>>
+> >>>>>>> On 8/29/19 4:49 PM, Akinobu Mita wrote:
+> >>>>>>>> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+> >>>>>>>> However, the size of this file is limited to PAGE_SIZE because of the
+> >>>>>>>> limitation for sysfs attribute.
+> >>>>>>>>
+> >>>>>>>> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+> >>>>>>>> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+> >>>>>>>> and which trigger is currently activated.
+> >>>>>>>>
+> >>>>>>>> This converts /sys/class/leds/<led>/trigger to bin attribute and removes
+> >>>>>>>> the PAGE_SIZE limitation.
+> >>>>>>
+> >>>>>> But this is NOT a binary file.  A sysfs binary file is used for when the
+> >>>>>> kernel passes data to or from hardware without any parsing of the data
+> >>>>>> by the kernel.
+> >>>>>>
+> >>>>>> You are not doing that here, you are abusing the "one value per file"
+> >>>>>> rule of sysfs so much that you are forced to work around the limitation
+> >>>>>> it put in place on purpose to keep you from doing stuff like this.
+> >>>>>>
+> >>>>>> Please fix this "correctly" by creating a new api that works properly
+> >>>>>> and just live with the fact that this file will never work correctly and
+> >>>>>> move everyone to use the new api instead.
+> >>>>>>
+> >>>>>> Don't keep on abusing the interface by workarounds like this, it is not
+> >>>>>> ok.
+> >>>>>
+> >>>>> In the message [0] you pledged to give us exception for that, provided
+> >>>>> it will be properly documented in the code. I suppose you now object
+> >>>>> because the patch does not meet that condition.
+> >>>>
+> >>>> Well, I honestly don't remember writing that email, but it was 5 months
+> >>>> and many thousands of emails ago :)
+> >>>>
+> >>>> Also, you all didn't document the heck out of this.  So no, I really do
+> >>>> not want to see this patch accepted as-is.
+> >>>>
+> >>>>> Provided that will be fixed, can we count on your ack for the
+> >>>>> implementation of the solution you proposed? :-)
+> >>>>
+> >>>> Let's see the patch that actually implements what I suggested first :)
+> >>>
+> >>> I'd propose introducing a new procfs file (/proc/led-triggers) and new
+> >>> /sys/class/leds/<led>/current-trigger api.
+> >>>
+> >>> Reading /proc/led-triggers file shows all available triggers.
+> >>> This violates "one value per file", but it's a procfs file.
+> >>
+> >> No, procfs files are ONLY for process-related things.  Don't keep the
+> >> insanity of this file format by just moving it out of sysfs and into
+> >> procfs :)
+> > 
+> > I see.
+> > 
+> > How about creating one file or directory for each led-trigger in
+> > /sys/kernel/led-triggers directory?
+> > 
+> > e.g.
+> > 
+> > $ ls /sys/kernel/led-triggers
+> > audio-micmute                              ide-disk        phy0assoc
+> > audio-mute                                 kbd-altgrlock   phy0radio
+> > ...
+> > hidpp_battery_3-full                       panic
+> I think that /sys/class/leds/triggers would better reflect the reality.
+> After all LED Trigger core belongs to LED subsystem.
 
-Are your builds not failing here? Both v3 and v4 have this.
+Yes, sorry, I missed that "kernel" directory, that's a non-starter, use
+the class directory as that is what it is for here.
 
->+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
->+	} else {
->+		return -ENODEV;
-> 	}
->+
-> 	if (!len) {
->-		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
->+		dev_warn(&chip->dev, "%s: %s log area empty\n",
->+			 __func__, table_sig);
-> 		return -EIO;
-> 	}
->
->@@ -98,7 +120,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
-> 	memcpy_fromio(log->bios_event_log, virt, len);
->
-> 	acpi_os_unmap_iomem(virt, len);
->-	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
->+	return log_type;
->
-> err:
-> 	kfree(log->bios_event_log);
->-- 
->2.20.1
->
+greg k-h
