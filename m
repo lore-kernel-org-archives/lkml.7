@@ -2,114 +2,89 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A6C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE09C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168FB22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567492236;
-	bh=PNDgAQs78MSbUv+4jSX7U1x7Syw3aaKg9ZwbknDGfpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r1Yqipyir/2utbQQw1DtJG0Mlcnoe+NBZXO/t5wysDzD+LKpSqc18QxwpTRnVl8gZ
-	 hQ4V+wobNBLZSjkrlP+rlRCbRTYIUA9aqZzmApkPIt3ST2pO+qMiv9eMgnWyRDt/UJ
-	 ARlQecG4VNCd2s49/oXmQu7YogzKXNMzVDvpncQI=
+	by mail.kernel.org (Postfix) with ESMTP id C93D820882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfICGaf (ORCPT
+        id S1727079AbfICGbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfICGae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:30:34 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB09120882;
-        Tue,  3 Sep 2019 06:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567492233;
-        bh=PNDgAQs78MSbUv+4jSX7U1x7Syw3aaKg9ZwbknDGfpU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2flIbda+GBUm/IB7GHSnk6uGdGg0zgS5DOJ+/IYOI0/7RxHS85LYg1CpCRZ5uXKP+
-         1xprgvh3okb4QOafNS8bl7iN0uwzrb5gsZMPqlFFm2mfJ/u2XkC71UU1Dypl1bZgCB
-         giogOpYJbdIltm4YZZA3oIaIqs7T3Ca005jAjOcc=
-Date:   Tue, 3 Sep 2019 07:30:29 +0100
-From:   Will Deacon <will@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     robin.murphy@arm.com, joro@8bytes.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] iommu/arm-smmu-v3: Fix build error without
- CONFIG_PCI_ATS
-Message-ID: <20190903063028.6ryuk5dmaohi2fqa@willie-the-truck>
-References: <20190903024212.20300-1-yuehaibing@huawei.com>
+        Tue, 3 Sep 2019 02:31:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34858 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725888AbfICGbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:31:09 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7037E8B6A2F31DF55807;
+        Tue,  3 Sep 2019 14:31:07 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 3 Sep 2019
+ 14:30:56 +0800
+Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
+To:     <dsterba@suse.cz>, Chao Yu <chao@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-erofs@lists.ozlabs.org>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815044155.88483-12-gaoxiang25@huawei.com>
+ <20190902125711.GA23462@infradead.org> <20190902130644.GT2752@suse.cz>
+ <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
+ <20190902142037.GW2752@twin.jikos.cz>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <12d37c63-dd0e-04fb-91f8-f4b930e867e5@huawei.com>
+Date:   Tue, 3 Sep 2019 14:30:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903024212.20300-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190902142037.GW2752@twin.jikos.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:42:12AM +0800, YueHaibing wrote:
-> If CONFIG_PCI_ATS is not set, building fails:
+On 2019/9/2 22:20, David Sterba wrote:
+> Oh right, I think the reasons are historical and that we can remove the
+> options nowadays. From the compatibility POV this should be safe, with
+> ACLs compiled out, no tool would use them, and no harm done when the
+> code is present but not used.
 > 
-> drivers/iommu/arm-smmu-v3.c: In function arm_smmu_ats_supported:
-> drivers/iommu/arm-smmu-v3.c:2325:35: error: struct pci_dev has no member named ats_cap; did you mean msi_cap?
->   return !pdev->untrusted && pdev->ats_cap;
->                                    ^~~~~~~
-> 
-> ats_cap should only used when CONFIG_PCI_ATS is defined,
-> so use #ifdef block to guard this.
-> 
-> Fixes: bfff88ec1afe ("iommu/arm-smmu-v3: Rework enabling/disabling of ATS for PCI masters")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 66bf641..44ac9ac 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2313,7 +2313,7 @@ static void arm_smmu_install_ste_for_dev(struct arm_smmu_master *master)
->  
->  static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
->  {
-> -	struct pci_dev *pdev;
-> +	struct pci_dev *pdev __maybe_unused;
->  	struct arm_smmu_device *smmu = master->smmu;
->  	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
->  
-> @@ -2321,8 +2321,10 @@ static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
->  	    !(fwspec->flags & IOMMU_FWSPEC_PCI_RC_ATS) || pci_ats_disabled())
->  		return false;
->  
-> +#ifdef CONFIG_PCI_ATS
->  	pdev = to_pci_dev(master->dev);
->  	return !pdev->untrusted && pdev->ats_cap;
-> +#endif
->  }
+> There were some efforts by embedded guys to make parts of kernel more
+> configurable to allow removing subsystems to reduce the final image
+> size. In this case I don't think it would make any noticeable
+> difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
+> while the whole module is over 1.3MiB.
 
-Hmm, I really don't like the missing return statement here, even though we
-never get this far thanks to the feature not getting set during ->probe().
-I'd actually prefer just to duplicate the function:
+Actually, btrfs's LOC is about 20 times larger than erofs's, acl part's LOC
+could be very small one in btrfs.
 
-#ifndef CONFIG_PCI_ATS
-static bool
-arm_smmu_ats_supported(struct arm_smmu_master *master) { return false; }
-#else
-<current code here>
-#endif
+EROFS can be slimmed about 10% size if we disable XATTR/ACL config, which is
+worth to keep that, at least for now.
 
-Can you send a v2 like that, please?
+Thanks,
 
-Will
+
