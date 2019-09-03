@@ -2,117 +2,101 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990CFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B79AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8F322CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C8522CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kSu3Gk9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfICQQy (ORCPT
+        id S1730014AbfICQRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:16:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:44742 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfICQQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:16:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:16:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="184805065"
-Received: from vkuppusa-mobl2.ger.corp.intel.com ([10.252.39.67])
-  by orsmga003.jf.intel.com with ESMTP; 03 Sep 2019 09:16:50 -0700
-Message-ID: <3f3ce42707f09eded801ff8543be6aee6ef35cf8.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism
- for supporting AMD's fTPM
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Seunghun Han <kkamagui@gmail.com>,
-        "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Sep 2019 19:16:49 +0300
-In-Reply-To: <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
-References: <20190830095639.4562-1-kkamagui@gmail.com>
-         <20190830095639.4562-3-kkamagui@gmail.com>
-         <20190830124334.GA10004@ziepe.ca>
-         <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
-         <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
-         <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Tue, 3 Sep 2019 12:17:03 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:47491 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbfICQRD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:17:03 -0400
+Received: by mail-pf1-f201.google.com with SMTP id t65so6181415pfd.14
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UrlqrCIUzfMhHCe5wLYX0g77V45RijxDNiDyP3pgT14=;
+        b=kSu3Gk9PM4NfwgdqpreP7IkrcxZKUGfh/Gg2sQoZAg2CdsYxa8/nOjytFhOHd2YQvY
+         sDChXAY8pVl0ut4pI8JJimC7cOyd0egf6mtNQrRgTeRRPhG86RGOVUOEOHm74Xvg0TSJ
+         ilk0dgeJec4iYaHwUhXXDvtacqrE65ifpiOtnrVSuFXQ6jBzvaqUGoRcTYsid92kONeh
+         nsaIodZbK3IpsB54D+2AxH8vC8Pa1ApnCRHrDR46CLc6OcRjEgX4OygtVvPXTFgfl1Fw
+         Pm3d5HVb8TQJLgrIL17SUCFT602XI4YiwEeKAzmEfeBcYZma/vBqdO3qUAl1OwUUXSlw
+         96CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UrlqrCIUzfMhHCe5wLYX0g77V45RijxDNiDyP3pgT14=;
+        b=H3zrX0mFSj2hxeXoK/118Ta6Md+O92WPn5UHmbkVExhyvMUfwl8YXducNDkTobPJSz
+         asBwb4U2pmrkO0012UK1S6fVWPbMBCLkuFRM8l7ekDlUb373LXRXSbizoCBbL+3JelcN
+         Q4tJhp6TIIe9b4gyKRSfbT/iphf+nRCP/UvUu8O/IQ5xiRijYMdrN3bckBgRMHga+154
+         EJxFOyiU9i8InwOI37HbgLrhHkkO7TBsevY24Q2LMPEDJZqqm9v67/+40rByTtdnmA1d
+         qi6XIa6jfP/V7lW7U0fxvLwM8XnjLWwWPk0QWnYNz7W5hXNv0GbHcpzG4zPil+RrfBLW
+         Pnfw==
+X-Gm-Message-State: APjAAAXE3H7u12nTC136enCV+uA/OFiD9KnXnzUo+ozF4mWxPcpARLcg
+        XgyMwtmPxnsQlPuFqhWRtDHl7Qtag34=
+X-Google-Smtp-Source: APXvYqx514tvSIuvTeW1+JBrh6dQloiVYGBy9lkamMCGeewg5BgyrCFeE8lQdhAeGjwqHdAf0hlbC5cQ+lQ=
+X-Received: by 2002:a65:684a:: with SMTP id q10mr31337177pgt.417.1567527422227;
+ Tue, 03 Sep 2019 09:17:02 -0700 (PDT)
+Date:   Tue,  3 Sep 2019 09:16:51 -0700
+Message-Id: <20190903161655.107408-1-hridya@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v3 0/4] Add binder state and statistics to binderfs
+From:   Hridya Valsaraju <hridya@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Hridya Valsaraju <hridya@google.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-03 at 18:56 +0900, Seunghun Han wrote:
-> Thank you for your notification. I am sorry. I missed it and
-> misunderstood Jarkko's idea. So, I would like to invite Matthew
-> Garrett to this thread and attach my opinion on that. The problem is
-> that command and response buffers are in ACPI NVS area. ACPI NVS area
-> is saved and restored by drivers/acpi/nvs.c during hibernation, so
-> command and response buffers in ACPI NVS are also handled by nvs.c
-> file. However, TPM CRB driver uses the buffers to control a TPM
-> device, therefore, something may break.
-> 
-> I agree on that point. To remove uncertainty and find the solution,
-> I read the threads we discussed and did research about two points, 1)
-> the race condition and 2) the unexpected behavior of the TPM device.
-> 
-> 1) The race condition concern comes from unknowing buffer access order
-> while hibernation.
-> If nvs.c and TPM CRB driver access the buffers concurrently, the race
-> condition occurs. Then, we can't know the contents of the buffers
-> deterministically, and it may occur the failure of TPM device.
-> However, hibernation_snapshot() function calls dpm_suspend() and
-> suspend_nvs_save() in order when the system enters into hibernation.
-> It also calls suspend_nvs_restore() and dpm_resume() in order when the
-> system exits from hibernation. So, no race condition occurs while
-> hibernation, and we always guarantee the contents of buffers as we
-> expect.
-> 
-> 2) The unexpected behavior of the TPM device.
-> If nvs.c saves and restores the contents of the TPM CRB buffers while
-> hibernation, it may occur the unexpected behavior of the TPM device
-> because the buffers are used to control the TPM device. When the
-> system entered into hibernation, suspend_nvs_save() saved the command
-> and response buffers, and they had the last command and response data.
-> After exiting from hibernation, suspend_nvs_restore() restored the
-> last command and response data into the buffers and nothing happened.
-> I realized that they were just buffers. If we want to send a command
-> to the TPM device, we have to set the CRB_START_INVOKE bit to a
-> control_start register of a control area. The control area was not in
-> the ACPI NVS area, so it was not affected by nvs.c file. We can
-> guarantee the behavior of the TPM device.
-> 
-> Because of these two reasons, I agreed on Jarkko's idea in
-> https://lkml.org/lkml/2019/8/29/962 . It seems that removing or
-> changing regions described in the ACPI table is not natural after
-> setup. In my view, saving and restoring buffers was OK like other NVS
-> areas were expected because the buffers were in ACPI NVS area.
-> 
-> So, I made and sent this patch series. I would like to solve this
-> AMD's fTPM problem because I have been doing research on TPM and this
-> problem is critical for me (as you know fTPM doesn't work). If you
-> have any other concern or advice on the patch I made, please let me
-> know.
+Currently, the only way to access binder state and
+statistics is through debugfs. We need a way to
+access the same even when debugfs is not mounted.
+These patches add a mount option to make this
+information available in binderfs without affecting
+its presence in debugfs. The following debugfs nodes
+will be made available in a binderfs instance when
+mounted with the mount option 'stats=global' or 'stats=local'.
 
-Please take time to edit your responses. Nobody will read that properly
-because it is way too exhausting. A long prose only indicates unclear
-thoughts in the end. If you know what you are doing, you can put things
-into nutshell only in few senteces.
+ /sys/kernel/debug/binder/failed_transaction_log
+ /sys/kernel/debug/binder/proc
+ /sys/kernel/debug/binder/state
+ /sys/kernel/debug/binder/stats
+ /sys/kernel/debug/binder/transaction_log
+ /sys/kernel/debug/binder/transactions
 
-/Jarkko
+Hridya Valsaraju (4):
+  binder: add a mount option to show global stats
+  binder: Add stats, state and transactions files
+  binder: Make transaction_log available in binderfs
+  binder: Add binder_proc logging to binderfs
+
+ drivers/android/binder.c          |  95 ++++++-----
+ drivers/android/binder_internal.h |  84 ++++++++++
+ drivers/android/binderfs.c        | 255 ++++++++++++++++++++++++++----
+ 3 files changed, 362 insertions(+), 72 deletions(-)
+
+-- 
+2.23.0.187.g17f5b7556c-goog
 
