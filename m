@@ -2,54 +2,80 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC74C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9221EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEF721897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hj+GjKX+"
+	by mail.kernel.org (Postfix) with ESMTP id 5E15E22CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567542464;
+	bh=Xo3JmxG1Xn+/3QMtyBlY/OrPIc3ddtJe0NaS40GlwsY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nL2jBlOFH6ntPvH92TZOjDEDvnRRul5PsYw1A+z8EkOhyl3IBex+huTiJtOSFk72j
+	 9nyUaa+6sXXQKmYXMYpkdgSBtLvrc2E0Be2D9K/G/TRq82nLJUzWT3DWjKyADYx6Ir
+	 NjgHRKJu0yvYJ713mbrmcG32x26X/XywXcUYT/eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfICUZC (ORCPT
+        id S1726589AbfICU1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:25:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56046 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfICUZC (ORCPT
+        Tue, 3 Sep 2019 16:27:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35756 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfICU1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:25:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p20SyTx54rQ/rC+3qpXB42zmxOwM1gRNChHwv7aAJrA=; b=Hj+GjKX+XYxMqwKRCr3w9n0OH
-        HaWSG8j4sBxXXbxzPg4lNXG/rE+AkXLoQ7QOha+I9U3H8FDJH48jzqm+z0rnwuB2y8ruG8L+iZnGt
-        LZQ1bwk5JomqBCBeNo20IrgZcfvMYbMpNC9t/RbZ9Sg2ky0p4ECFL3Hu5AVjAqHIg8C+SOjjOmhIX
-        het5zMb36g/vkzCJIG3oC1yuopVxwluJB4blqZ9pdzJbXSLU7iAIYw75UL8355tQU/Ntdh7fvV+TK
-        xBj8XcNwJsGZewyQVRdpO9k+fs5tzcXMWYxCH5e8qgRCl5hAY+M2TzGUatT0RHqA2d4F9XMWbLefk
-        toOtPHU+A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5FLx-0003LC-HJ; Tue, 03 Sep 2019 20:24:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2A6873011DF;
-        Tue,  3 Sep 2019 22:23:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6411420977768; Tue,  3 Sep 2019 22:24:34 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 22:24:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Tue, 3 Sep 2019 16:27:43 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l14so17405256lje.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 13:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NttQlTrgoQqeJsrwFCIQEzQDFFhogn465ZV/EkbS+7E=;
+        b=LIrW6+s+UdxIvDPx++Jy0TZph0UYUw/kNm6sZL/xUdiBOdgDh0YOw7rU5moz8m/Gap
+         JhY7huteA/txS9RL1A0skkkaaV7ZR8uX3k/eyXNVWiVZLNmNRW/lsKoBvj7dOhH0HFSR
+         fXNNjDw48A/NMTNvYE0lKb7n9d4acztXdqt+0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NttQlTrgoQqeJsrwFCIQEzQDFFhogn465ZV/EkbS+7E=;
+        b=q7oomfp3IaqOqHDvaMMtJ6ngEeSrChai9nMgjA7ZIveT/MfIzHx3DKkhZY3OqCefT+
+         yKSmzeknxy3aaKHcc1i6FzCazP0lUfK563kgHl8cCAaAvjDFZkcHN2X+S3SQV8ibcHN3
+         NMjuOYQq3dd/LzAlKxh9sHZdZlrV9YHkRKEaswPLoWSZyaD5jxECtf49lNfX90LFyzEU
+         o+RlXfhTEj2bshRP00WqSwwd6vAmc99Idh0vZU/hw8ILBSM1I6QRM4eMo19nxHv5Lq6Q
+         pMImqhw1do85XeSaorrc7IMwSPz8PFsPMdFIA2Qae8PIOK/pYBaUIZMQ+nnegGBVZgLU
+         bWHw==
+X-Gm-Message-State: APjAAAUYa9AXbVcR/IKvohtcmJtwtKr23sPn5GqG0p842VTUdJMpfbqU
+        OPsohbP3hlXB9kbw1k41ZzOGC3DsqyI=
+X-Google-Smtp-Source: APXvYqwSF2e+hj9OZT45MDLewm5vFCXFjFLozQL7fiJ4MeJ/7baT+00BBZxF/sl2baqpXCcA8tcAoA==
+X-Received: by 2002:a2e:96da:: with SMTP id d26mr11862911ljj.7.1567542460732;
+        Tue, 03 Sep 2019 13:27:40 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id d28sm2325786lfq.88.2019.09.03.13.27.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2019 13:27:39 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id x18so17423416ljh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 13:27:39 -0700 (PDT)
+X-Received: by 2002:a2e:8507:: with SMTP id j7mr7221358lji.156.1567542459326;
+ Tue, 03 Sep 2019 13:27:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 3 Sep 2019 13:27:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg61zhuzhnrh_t=cAhgm+adNfsnS0A_cD=TOQAriHNDew@mail.gmail.com>
+Message-ID: <CAHk-=wg61zhuzhnrh_t=cAhgm+adNfsnS0A_cD=TOQAriHNDew@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load
 To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Russell King - ARM Linux admin <linux@armlinux.org.uk>,
         Chris Metcalf <cmetcalf@ezchip.com>,
@@ -57,77 +83,23 @@ Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
- racy load
-Message-ID: <20190903202434.GX2349@hirez.programming.kicks-ass.net>
-References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:11:34PM -0400, Mathieu Desnoyers wrote:
+On Tue, Sep 3, 2019 at 1:11 PM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> +       cpus_read_lock();
+> +       for_each_online_cpu(cpu) {
 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 9f51932bd543..e24d52a4c37a 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1130,6 +1130,10 @@ struct task_struct {
->  	unsigned long			numa_pages_migrated;
->  #endif /* CONFIG_NUMA_BALANCING */
->  
-> +#ifdef CONFIG_MEMBARRIER
-> +	atomic_t membarrier_state;
-> +#endif
-> +
->  #ifdef CONFIG_RSEQ
->  	struct rseq __user *rseq;
->  	u32 rseq_sig;
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index 4a7944078cc3..3577cd7b3dbb 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -371,7 +371,17 @@ static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
->  static inline void membarrier_execve(struct task_struct *t)
->  {
->  	atomic_set(&t->mm->membarrier_state, 0);
-> +	atomic_set(&t->membarrier_state, 0);
->  }
-> +
-> +static inline void membarrier_prepare_task_switch(struct task_struct *t)
-> +{
-> +	if (!t->mm)
-> +		return;
-> +	atomic_set(&t->membarrier_state,
-> +		   atomic_read(&t->mm->membarrier_state));
-> +}
-> +
+This would likely be better off using mm_cpumask(mm) instead of all
+online CPU's.
 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 010d578118d6..8d4f1f20db15 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3038,6 +3038,7 @@ prepare_task_switch(struct rq *rq, struct task_struct *prev,
->  	perf_event_task_sched_out(prev, next);
->  	rseq_preempt(prev);
->  	fire_sched_out_preempt_notifiers(prev, next);
-> +	membarrier_prepare_task_switch(next);
->  	prepare_task(next);
->  	prepare_arch_switch(next);
->  }
+Plus doing the rcu_read_lock() inside the loop seems pointless. Even
+with a lot of cores, it's not going to loop _that_ many times for RCU
+latency to be an issue.
 
-
-Yuck yuck yuck..
-
-so the problem I have with this is that we add yet another cacheline :/
-
-Why can't we frob this state into a line/word we already have to
-unconditionally touch, like the thread_info::flags word for example.
-
-The above also does the store unconditionally, even though, in the most
-common case, it won't have to.
+              Linus
