@@ -2,248 +2,247 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE9BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D5FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266472087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED5922D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CrmQncz1"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="taVd6utE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfICJtm (ORCPT
+        id S1728637AbfICJtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:49:42 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42272 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfICJtl (ORCPT
+        Tue, 3 Sep 2019 05:49:52 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16788 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726840AbfICJtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:49:41 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y91so5987771ede.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jLcQOot9GdKqXYO6fhYKSeZ7HqaIU2YpPDjXsGcAvU0=;
-        b=CrmQncz1FCiE3DaF8A2LAEjZMALNs1KCHon23f8MQJIGeyi6g4pYpUbvKdMuwrNTlE
-         HQeBZ5XEUBmqPMzDddNr9SV/dLnqCZA1MNwVHMCBueME0s8e7uJbqt6MLbonJerbpIan
-         e0jBv4PrOhm2NENTxz6UMtvGzTE1R8r2H2dew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=jLcQOot9GdKqXYO6fhYKSeZ7HqaIU2YpPDjXsGcAvU0=;
-        b=l23FE6vQ469En2zowU6pi0ithtRlM4PjQ4WyL2BMlrNBvubf/BUXgc8q24POVD5Oqo
-         sSsRy0Y/99Wvs3hB3xtOYUk/FT1KkRHazsw4OGwc+x4rbMdwFmlRq/6cNR55gujTB10v
-         u1B9FtuiG8fIVzZAXCYhEwL7rKvDLFnaFtX/g4XTCKi58ImhLgKf8JnTkRe5WzFVwIGZ
-         p4BRV4WCGnVaeQ5MTjamfd4DVzxlQWaJYKWg82bcjoRRCaMayYQeUb0Kui/8ix7S7eSF
-         aphsoXRoM7lYDoMnX9yyon7iV4S0wtFwnevOuScxIKU3xjgCG3hNUcRitE/fXQln3s3Q
-         ztVQ==
-X-Gm-Message-State: APjAAAWPtt1PweYg1ej3Ceq7FUzwUFFAYIIkfoWvWmlVRRh+3Zr8VOi9
-        N9UWKu8TKiRonIDnE8HUSWYU8w==
-X-Google-Smtp-Source: APXvYqwwWVog1noytlBhfYNIVapYScGvOz1JmwK9UQ6cIHb8v2kyeG73ZD31j1kKrDLcB4SxQ3fv5w==
-X-Received: by 2002:a50:b885:: with SMTP id l5mr34180216ede.190.1567504179249;
-        Tue, 03 Sep 2019 02:49:39 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id c6sm3447641edx.20.2019.09.03.02.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 02:49:38 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 11:49:36 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 01/17] drm/ttm: turn ttm_bo_device.vma_manager into a
- pointer
-Message-ID: <20190903094936.GR2112@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190808134417.10610-1-kraxel@redhat.com>
- <20190808134417.10610-2-kraxel@redhat.com>
+        Tue, 3 Sep 2019 05:49:52 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x839f35N006869;
+        Tue, 3 Sep 2019 11:49:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=qAPgp0EL893ZaRTISydhUDXeZQ3+/E80TJjDmAJXx5Q=;
+ b=taVd6utEbIlSPk9e7arumd8UuD3ssEO0SJK3MH5YmXM9d014PMtOZ8akkZexU97nSoBW
+ qCY0RtB1BO/hT3GCsV/w0W2yB2GJDXSBJjPAXmX/VJxXLiBmMqtwSy5OsAFGlzbinslj
+ pYrgzpjQYvWOqMFAnRoxKotHeh46F0pulaADwR9ICuu1cszefzmtvEXZqHyVby/yvaw8
+ /amMaZEeVAi4eYRsZPqkmBYQMf8dE0eimPs238Km9db/PAIw6Dqnx2X0oW4RXlMs3g9Y
+ q5V91LXy4lOoaZVTUjyIN9GkiM5gN/PwApPElwjzUwcDqWMKMHecdImkDzn07l8NZ5sk Nw== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2uqenv1y63-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 03 Sep 2019 11:49:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9D29223;
+        Tue,  3 Sep 2019 09:49:28 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EFD722C2A0B;
+        Tue,  3 Sep 2019 11:49:27 +0200 (CEST)
+Received: from [10.48.0.131] (10.75.127.45) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Sep
+ 2019 11:49:27 +0200
+Subject: Re: [PATCH v5 1/2] rpmsg: core: add API to get message length
+To:     Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        xiang xiao <xiaoxiang781216@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+References: <1567005566-10986-1-git-send-email-arnaud.pouliquen@st.com>
+ <1567005566-10986-2-git-send-email-arnaud.pouliquen@st.com>
+ <7dc4d1cf-4f15-19ab-b8dd-424175f2a11a@ti.com>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Message-ID: <f6f2ad3e-123a-268b-2586-544752c54db7@st.com>
+Date:   Tue, 3 Sep 2019 11:49:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808134417.10610-2-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7dc4d1cf-4f15-19ab-b8dd-424175f2a11a@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-03_01:2019-09-03,2019-09-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:44:01PM +0200, Gerd Hoffmann wrote:
-> Rename the embedded struct vma_offset_manager, it is named _vma_manager
-> now.  ttm_bo_device.vma_manager is a pointer now, pointing to the
-> embedded ttm_bo_device._vma_manager by default.
-> 
-> Add ttm_bo_device_init_with_vma_manager() function which allows to
-> initialize ttm with a different vma manager.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+hi Suman
 
-I think a todo to convert all other ttm drivers over and then move
-_vma_manager into vmwgfx would be nice. If you're not volunteering
-yourself for this ofc.
--Daniel
-
-> ---
->  include/drm/ttm/ttm_bo_driver.h | 11 +++++++++--
->  drivers/gpu/drm/ttm/ttm_bo.c    | 29 +++++++++++++++++++++--------
->  drivers/gpu/drm/ttm/ttm_bo_vm.c |  6 +++---
->  3 files changed, 33 insertions(+), 13 deletions(-)
+On 8/29/19 12:34 AM, Suman Anna wrote:
+> Hi Arnaud,
 > 
-> diff --git a/include/drm/ttm/ttm_bo_driver.h b/include/drm/ttm/ttm_bo_driver.h
-> index 3f1935c19a66..2f84d6bcd1a7 100644
-> --- a/include/drm/ttm/ttm_bo_driver.h
-> +++ b/include/drm/ttm/ttm_bo_driver.h
-> @@ -441,7 +441,8 @@ extern struct ttm_bo_global {
->   *
->   * @driver: Pointer to a struct ttm_bo_driver struct setup by the driver.
->   * @man: An array of mem_type_managers.
-> - * @vma_manager: Address space manager
-> + * @vma_manager: Address space manager (pointer)
-> + * @_vma_manager: Address space manager (enbedded)
->   * lru_lock: Spinlock that protects the buffer+device lru lists and
->   * ddestroy lists.
->   * @dev_mapping: A pointer to the struct address_space representing the
-> @@ -464,7 +465,8 @@ struct ttm_bo_device {
->  	/*
->  	 * Protected by internal locks.
->  	 */
-> -	struct drm_vma_offset_manager vma_manager;
-> +	struct drm_vma_offset_manager *vma_manager;
-> +	struct drm_vma_offset_manager _vma_manager;
->  
->  	/*
->  	 * Protected by the global:lru lock.
-> @@ -597,6 +599,11 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
->  		       struct ttm_bo_driver *driver,
->  		       struct address_space *mapping,
->  		       bool need_dma32);
-> +int ttm_bo_device_init_with_vma_manager(struct ttm_bo_device *bdev,
-> +					struct ttm_bo_driver *driver,
-> +					struct address_space *mapping,
-> +					struct drm_vma_offset_manager *vma_manager,
-> +					bool need_dma32);
->  
->  /**
->   * ttm_bo_unmap_virtual
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-> index 10a861a1690c..0ed1a1182962 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo.c
-> @@ -672,7 +672,7 @@ static void ttm_bo_release(struct kref *kref)
->  	struct ttm_bo_device *bdev = bo->bdev;
->  	struct ttm_mem_type_manager *man = &bdev->man[bo->mem.mem_type];
->  
-> -	drm_vma_offset_remove(&bdev->vma_manager, &bo->base.vma_node);
-> +	drm_vma_offset_remove(bdev->vma_manager, &bo->base.vma_node);
->  	ttm_mem_io_lock(man, false);
->  	ttm_mem_io_free_vm(bo);
->  	ttm_mem_io_unlock(man);
-> @@ -1353,7 +1353,7 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
->  	 */
->  	if (bo->type == ttm_bo_type_device ||
->  	    bo->type == ttm_bo_type_sg)
-> -		ret = drm_vma_offset_add(&bdev->vma_manager, &bo->base.vma_node,
-> +		ret = drm_vma_offset_add(bdev->vma_manager, &bo->base.vma_node,
->  					 bo->mem.num_pages);
->  
->  	/* passed reservation objects should already be locked,
-> @@ -1704,7 +1704,7 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev)
->  			pr_debug("Swap list %d was clean\n", i);
->  	spin_unlock(&glob->lru_lock);
->  
-> -	drm_vma_offset_manager_destroy(&bdev->vma_manager);
-> +	drm_vma_offset_manager_destroy(&bdev->_vma_manager);
->  
->  	if (!ret)
->  		ttm_bo_global_release();
-> @@ -1713,10 +1713,11 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev)
->  }
->  EXPORT_SYMBOL(ttm_bo_device_release);
->  
-> -int ttm_bo_device_init(struct ttm_bo_device *bdev,
-> -		       struct ttm_bo_driver *driver,
-> -		       struct address_space *mapping,
-> -		       bool need_dma32)
-> +int ttm_bo_device_init_with_vma_manager(struct ttm_bo_device *bdev,
-> +					struct ttm_bo_driver *driver,
-> +					struct address_space *mapping,
-> +					struct drm_vma_offset_manager *vma_manager,
-> +					bool need_dma32)
->  {
->  	struct ttm_bo_global *glob = &ttm_bo_glob;
->  	int ret;
-> @@ -1737,7 +1738,8 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
->  	if (unlikely(ret != 0))
->  		goto out_no_sys;
->  
-> -	drm_vma_offset_manager_init(&bdev->vma_manager,
-> +	bdev->vma_manager = vma_manager;
-> +	drm_vma_offset_manager_init(&bdev->_vma_manager,
->  				    DRM_FILE_PAGE_OFFSET_START,
->  				    DRM_FILE_PAGE_OFFSET_SIZE);
->  	INIT_DELAYED_WORK(&bdev->wq, ttm_bo_delayed_workqueue);
-> @@ -1754,6 +1756,17 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
->  	ttm_bo_global_release();
->  	return ret;
->  }
-> +EXPORT_SYMBOL(ttm_bo_device_init_with_vma_manager);
-> +
-> +int ttm_bo_device_init(struct ttm_bo_device *bdev,
-> +		       struct ttm_bo_driver *driver,
-> +		       struct address_space *mapping,
-> +		       bool need_dma32)
-> +{
-> +	return ttm_bo_device_init_with_vma_manager(bdev, driver, mapping,
-> +						   &bdev->_vma_manager,
-> +						   need_dma32);
-> +}
->  EXPORT_SYMBOL(ttm_bo_device_init);
->  
->  /*
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> index 85f5bcbe0c76..d4eecde8d050 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> @@ -409,16 +409,16 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(struct ttm_bo_device *bdev,
->  	struct drm_vma_offset_node *node;
->  	struct ttm_buffer_object *bo = NULL;
->  
-> -	drm_vma_offset_lock_lookup(&bdev->vma_manager);
-> +	drm_vma_offset_lock_lookup(bdev->vma_manager);
->  
-> -	node = drm_vma_offset_lookup_locked(&bdev->vma_manager, offset, pages);
-> +	node = drm_vma_offset_lookup_locked(bdev->vma_manager, offset, pages);
->  	if (likely(node)) {
->  		bo = container_of(node, struct ttm_buffer_object,
->  				  base.vma_node);
->  		bo = ttm_bo_get_unless_zero(bo);
->  	}
->  
-> -	drm_vma_offset_unlock_lookup(&bdev->vma_manager);
-> +	drm_vma_offset_unlock_lookup(bdev->vma_manager);
->  
->  	if (!bo)
->  		pr_err("Could not find buffer object to map\n");
-> -- 
-> 2.18.1
+> On 8/28/19 10:19 AM, Arnaud Pouliquen wrote:
+>> Return the rpmsg buffer size for sending message, so rpmsg users
+>> can split a long message in several sub rpmsg buffers.
 > 
+> Thanks for the patch, I also have a need for the same to be able to
+> compute permissible payload size. Minor comments below.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thanks for your review. i will update it ASAP. Then if you need it and 
+ack it, i suppose that we could request Bjorn to integrate it in a first 
+step, if the rpmsg tty driver has not a level of quality sufficient to 
+be accepted...
+
+Regards
+Arnaud
+> 
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>> V4 to V5 :
+>>    - rename rpmsg_get_buf_payload_size to rpmsg_get_mtu
+>>
+>>   drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>>   drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>>   drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>>   include/linux/rpmsg.h            | 10 ++++++++++
+>>   4 files changed, 43 insertions(+)
+>>
+>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>> index 8122807db380..daca2e24fc71 100644
+>> --- a/drivers/rpmsg/rpmsg_core.c
+>> +++ b/drivers/rpmsg/rpmsg_core.c
+>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>   }
+>>   EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>>   
+>> +/**
+>> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+>> + * @ept: the rpmsg endpoint
+>> + *
+>> + * This function returns maximum buffer size available for a single message.
+>> + *
+>> + * Return: the maximum transmission size on success and an appropriate error
+>> + * value on failure.
+>> + */
+>> +
+>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>> +{
+>> +	if (WARN_ON(!ept))
+>> +		return -EINVAL;
+>> +	if (!ept->ops->get_buf_mtu)
+> 
+> How about calling the ops just get_mtu or rename the function to follow
+> the ops name, like all the others.
+> 
+>> +		return -ENXIO;
+> 
+> Perhaps ENOTSUPP or EOPNOTSUPP.
+> 
+>> +
+>> +	return ept->ops->get_buf_mtu(ept);
+>> +}
+>> +EXPORT_SYMBOL(rpmsg_get_mtu);
+>> +
+>>   /*
+>>    * match an rpmsg channel with a channel info struct.
+>>    * this is used to make sure we're not creating rpmsg devices for channels
+>> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+>> index 0d791c30b7ea..645c402569ac 100644
+>> --- a/drivers/rpmsg/rpmsg_internal.h
+>> +++ b/drivers/rpmsg/rpmsg_internal.h
+>> @@ -46,6 +46,7 @@ struct rpmsg_device_ops {
+>>    * @trysend:		see @rpmsg_trysend(), required
+>>    * @trysendto:		see @rpmsg_trysendto(), optional
+>>    * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+>> + * @get_buf_payload_size: see @rpmsg_get_buf_payload_size(), optional
+> 
+> Missed updating the kerneldoc to the new name.
+> 
+>>    *
+>>    * Indirection table for the operations that a rpmsg backend should implement.
+>>    * In addition to @destroy_ept, the backend must at least implement @send and
+>> @@ -65,6 +66,7 @@ struct rpmsg_endpoint_ops {
+>>   			     void *data, int len);
+>>   	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+>>   			     poll_table *wait);
+>> +	ssize_t (*get_buf_mtu)(struct rpmsg_endpoint *ept);
+>>   };
+>>   
+>>   int rpmsg_register_device(struct rpmsg_device *rpdev);
+>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> index e757f0038a1c..f80b1ad23e7e 100644
+>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> @@ -178,6 +178,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
+>>   				  int len, u32 dst);
+>>   static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>   					   u32 dst, void *data, int len);
+>> +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept);
+> 
+> Minor nit, virtio_rpmsg_ prefix similar to all the other ops.
+> 
+> regards
+> Suman
+> 
+>>   
+>>   static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>   	.destroy_ept = virtio_rpmsg_destroy_ept,
+>> @@ -187,6 +188,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>   	.trysend = virtio_rpmsg_trysend,
+>>   	.trysendto = virtio_rpmsg_trysendto,
+>>   	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
+>> +	.get_buf_mtu = virtio_get_buf_mtu,
+>>   };
+>>   
+>>   /**
+>> @@ -702,6 +704,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>   	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
+>>   }
+>>   
+>> +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept)
+>> +{
+>> +	struct rpmsg_device *rpdev = ept->rpdev;
+>> +	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
+>> +
+>> +	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
+>> +}
+>> +
+>>   static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
+>>   			     struct rpmsg_hdr *msg, unsigned int len)
+>>   {
+>> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+>> index 9fe156d1c018..9d638bf2bdce 100644
+>> --- a/include/linux/rpmsg.h
+>> +++ b/include/linux/rpmsg.h
+>> @@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>   __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+>>   			poll_table *wait);
+>>   
+>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+>> +
+>>   #else
+>>   
+>>   static inline int register_rpmsg_device(struct rpmsg_device *dev)
+>> @@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+>>   	return 0;
+>>   }
+>>   
+>> +static ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>> +{
+>> +	/* This shouldn't be possible */
+>> +	WARN_ON(1);
+>> +
+>> +	return -ENXIO;
+>> +}
+>> +
+>>   #endif /* IS_ENABLED(CONFIG_RPMSG) */
+>>   
+>>   /* use a macro to avoid include chaining to get THIS_MODULE */
+>>
+> 
