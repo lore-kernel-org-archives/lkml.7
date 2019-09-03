@@ -2,132 +2,185 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C3BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEA9C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605BC21881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gx11pokC"
+	by mail.kernel.org (Postfix) with ESMTP id E604121881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567497518;
+	bh=UXh12NkSwZ12hWkXETNI+YE3LiuTShuDOHt89Jbh128=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A9w5J39pn8ZukCG+Sn0lYBGO+rN+Dkpg+DUqFR62qjy2i79p7J0MoTKTQCp2GD0cK
+	 F7oA/hkUA3E8g5saLynHTe8VmoLuDHDEoWwp5/UiX0gnpGBXElPdzfEeFiNLHsnlAf
+	 o2uBWPDkItH//QjGRAhzLg/sf7yHlj85eleJkZsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfICHy6 (ORCPT
+        id S1727628AbfICH6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:54:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34456 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfICHy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:54:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=G28iE/deGPG0P4VQTMIwzwCBVO7DdIpw/n7sMkoDPlI=; b=Gx11pokC7ZUSl6Ij7jfDO7foa
-        BzXtIUvI7BsKuZKZpzM+5G7ZKYV2bgimYA3TvtJtVnJmrEnfKf4/DZYEwLbWECE1CXBm38zkHi+33
-        uAl73vaUfsiml7p5HmwBrZr7owO5zm1VQYk0wiXRzfwITffEOTqlRY2wp1pjlRiwzPUUqryDTiTVk
-        SaUovfNgliw3iF28YkNVvFDQ7BMk89W+Cy4V6ekrFWKmxau3LTU03Zy3bshbvteHJqKf62dyihpPN
-        8pJwTi952NtGpBG4HsfMuKd9nAW69xR2W9ZRvjh33aDIekkJwH93lq1b+vDAJoxE1OTiWvP+L+OnS
-        cx2bk6/1Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i53dU-0008BU-Bc; Tue, 03 Sep 2019 07:53:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6470330116F;
-        Tue,  3 Sep 2019 09:53:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6EFC529C073C2; Tue,  3 Sep 2019 09:53:52 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 09:53:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, dalias@libc.org,
-        linux-sh@vger.kernel.org, catalin.marinas@arm.com,
-        dave.hansen@linux.intel.com, heiko.carstens@de.ibm.com,
-        linuxarm@huawei.com, jiaxun.yang@flygoat.com,
-        linux-mips@vger.kernel.org, mwb@linux.vnet.ibm.com,
-        paulus@samba.org, hpa@zytor.com, sparclinux@vger.kernel.org,
-        chenhc@lemote.com, will@kernel.org, cai@lca.pw,
-        linux-s390@vger.kernel.org, ysato@users.sourceforge.jp,
-        mpe@ellerman.id.au, x86@kernel.org, rppt@linux.ibm.com,
-        borntraeger@de.ibm.com, dledford@redhat.com, mingo@redhat.com,
-        jeffrey.t.kirsher@intel.com, benh@kernel.crashing.org,
-        jhogan@kernel.org, nfont@linux.vnet.ibm.com, mattst88@gmail.com,
-        len.brown@intel.com, gor@linux.ibm.com, anshuman.khandual@arm.com,
-        bp@alien8.de, luto@kernel.org, tglx@linutronix.de,
-        naveen.n.rao@linux.vnet.ibm.com,
-        linux-arm-kernel@lists.infradead.org, rth@twiddle.net,
-        axboe@kernel.dk, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        tbogendoerfer@suse.de, paul.burton@mips.com,
-        linux-alpha@vger.kernel.org, ink@jurassic.park.msu.ru,
-        akpm@linux-foundation.org, robin.murphy@arm.com,
-        davem@davemloft.net
-Subject: [PATCH] x86/mm: Fix cpumask_of_node() error condition
-Message-ID: <20190903075352.GY2369@hirez.programming.kicks-ass.net>
-References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
- <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
- <20190831085539.GG2369@hirez.programming.kicks-ass.net>
- <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
- <20190831161247.GM2369@hirez.programming.kicks-ass.net>
- <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
- <20190902072542.GN2369@hirez.programming.kicks-ass.net>
- <20190902181731.GB35858@gmail.com>
+        Tue, 3 Sep 2019 03:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbfICH6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:58:36 -0400
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D827321881;
+        Tue,  3 Sep 2019 07:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567497515;
+        bh=UXh12NkSwZ12hWkXETNI+YE3LiuTShuDOHt89Jbh128=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=am7+Xbi2YfzdQSUw6p4YYdjuXFciTPcfw96UlPxdv1inY3pLUnYIUWWTTdp7gOu6j
+         mbOKZWr7h3x4jVZ7l5VuM603tR4gC52GePWzV1gNGQzP/qU2s4yOLmczxTPXfsHYeP
+         bsIivXjLkyEM2heVUy+enefLtMFc34vgtmnSlwbY=
+Received: by mail-lf1-f52.google.com with SMTP id u29so12081415lfk.7;
+        Tue, 03 Sep 2019 00:58:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAV73T5Ovkcgc1rE1XJcip6UUKUltD1FDhRq3L4+IJAmd2gUe7md
+        LN2c3MfXKplbpkNgqz/eWw5MQmh3KOYphcZrHak=
+X-Google-Smtp-Source: APXvYqzrJeKyNEvczFZsfe2tgLAYBl9BS475I7A9xOTHksgZrFCcJ43dEFvCe2Ya4ROGp9gR8nfJe7d+AYReOk1iVIQ=
+X-Received: by 2002:a19:c649:: with SMTP id w70mr20083717lff.33.1567497513112;
+ Tue, 03 Sep 2019 00:58:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902181731.GB35858@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
+ <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 3 Sep 2019 09:58:21 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
+Message-ID: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
+Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
+ to json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, notify@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 08:17:31PM +0200, Ingo Molnar wrote:
+On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
+> > format using json-schema.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
+> >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
+> >  2 files changed, 93 insertions(+), 72 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+>
+>
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > new file mode 100644
+> > index 000000000000..818c6f3488ef
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > @@ -0,0 +1,93 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung Exynos SoC series Power Management Unit (PMU)
+> > +
+> > +maintainers:
+> > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - samsung,exynos3250-pmu
+> > +          - samsung,exynos4210-pmu
+> > +          - samsung,exynos4412-pmu
+> > +          - samsung,exynos5250-pmu
+> > +          - samsung,exynos5260-pmu
+> > +          - samsung,exynos5410-pmu
+> > +          - samsung,exynos5420-pmu
+> > +          - samsung,exynos5433-pmu
+> > +          - samsung,exynos7-pmu
+> > +      - const: syscon
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  '#clock-cells':
+> > +    const: 1
+> > +
+> > +  clock-names:
+> > +    description:
+> > +      list of clock names for particular CLKOUT mux inputs
+> > +    # TODO: what is the maximum number of elements (mux inputs)?
+> > +    minItems: 1
+> > +    maxItems: 32
+> > +    items:
+> > +      - enum:
+>
+> This isn't correct as you are only defining possible names for the
+> first item. Drop the '-' (making items a schema instead of a list) and
+> then it applies to all. However, doing that will cause a meta-schema
+> error which I need to fix to allow. Or if there's a small set of
+> possibilities of number of inputs, you can list them under a 'oneOf'
+> list.
 
-> Nitpicking: please also fix the kernel message to say ">=".
+Mhmm, I cannot test it or I have an error in the schema. if I
+understand correctly, this would be:
 
-Full patch below.
+  clock-names:
+    description:
+      List of clock names for particular CLKOUT mux inputs
+    minItems: 1
+    maxItems: 16
+    items:
+      clkout0
+      clkout1
+      clkout2
+      clkout3
+      clkout4
+      clkout5
+      clkout6
+      clkout7
+      clkout8
+      clkout9
+      clkout10
+      clkout11
+      clkout12
+      clkout13
+      clkout14
+      clkout15
+      clkout16
 
----
-Subject: x86/mm: Fix cpumask_of_node() error condition
+Now it produces the error "ignoring, error in schema 'items'" but
+maybe it is expected with current meta-schema?
 
-When CONFIG_DEBUG_PER_CPU_MAPS we validate that the @node argument of
-cpumask_of_node() is a valid node_id. It however forgets to check for
-negative numbers. Fix this by explicitly casting to unsigned.
-
-  (unsigned)node >= nr_node_ids
-
-verifies: 0 <= node < nr_node_ids
-
-Also ammend the error message to match the condition.
-
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/mm/numa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index e6dad600614c..4123100e0eaf 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (node >= nr_node_ids) {
-+	if ((unsigned)node >= nr_node_ids) {
- 		printk(KERN_WARNING
--			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-+			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
- 			node, nr_node_ids);
- 		dump_stack();
- 		return cpu_none_mask;
+Best regards,
+Krzysztof
