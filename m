@@ -2,127 +2,95 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB5CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5556AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E8C20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5F320870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5WaH2n/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0+3XwuE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfICOFS (ORCPT
+        id S1729451AbfICOGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:05:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41262 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfICOFR (ORCPT
+        Tue, 3 Sep 2019 10:06:21 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52686 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICOGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:05:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so7940207pls.8;
-        Tue, 03 Sep 2019 07:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qtPPg5GqUhEobWxZd2+sHLIYtebNTUnoITCh7ZrUMVw=;
-        b=q5WaH2n/KEV7bv90Rzgt4ZxK6vTg4R3z/QjtWRq9YmtVxEgl1bSDYsI28rRpFhMOUY
-         ty/MkrHMs3Kku2/prOEGnwtMlVDOTWJjwi3ewVOTcqKlbqqXH0aypsVkvih1oE3S1fFj
-         RpLFBXtbECANC3dQXCrOz/r6ge05qOha7+DmmvPi5DIWzHcMYs5LO4ckS0gh+g2Qy90l
-         VYhilCAsod2I736k+txNQ6cNwkVAxsjpWIgkkcsJJlBO8kfno25x83vLlZFI9vYervJ0
-         UJC8UrE412R9A2CbrWWuYZUVJeEkKkQsc3QaqB9bpuAmHpbpsWKSu/lOOdHgaXi4gANY
-         v+jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qtPPg5GqUhEobWxZd2+sHLIYtebNTUnoITCh7ZrUMVw=;
-        b=KhgYQIAWFRS6B/D2QQ43DB/7UWosq/3aCqw3avaZP+C5E4lExp9hheN+ewnzhymvdZ
-         CqG3gyDOMKZl5hbRMt1z9vYq2yf+9nv5sx26CXbe55TTysbT+PRxeH6LplOY5dTZN982
-         +kn1x5k+GjbdFge/Mob+t61wK2t0rkLjSklSjUPXUnfyGtpC7Suq1RcUntr9PZr7Xphf
-         sXaldWOUfT5odc0COHNr+w2fqFzNZOvFollAWO6IhU5z43Y7jIiwmigvvpfqfGuz74uS
-         TbKUtvTkqqYAqJsJfn9Hjr9QUhu3uh8uCswlzwTL/2EXjzLeKKE6g3RcCxFct49mbjW9
-         1+Dg==
-X-Gm-Message-State: APjAAAUzDpo/b5DWdbltltyCqo4NunDqLaMLR701LscaWFTTKvuZO8LQ
-        cSzeWuVUrLp0qKf4p82dUb0=
-X-Google-Smtp-Source: APXvYqzkqnsdir2zt5OJPtTipf1rSsjwGymZG1cnM9kXXpM+tj3z1yhdNDaMT7pwxwBSXTpc9VEM+A==
-X-Received: by 2002:a17:902:9041:: with SMTP id w1mr36170722plz.83.1567519517159;
-        Tue, 03 Sep 2019 07:05:17 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q186sm6777816pfb.47.2019.09.03.07.05.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 07:05:16 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 07:05:15 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-Subject: Re: [PATCH] hwmon: fix devm_platform_ioremap_resource.cocci warnings
-Message-ID: <20190903140515.GA16775@roeck-us.net>
-References: <alpine.DEB.2.21.1909030646180.3228@hadrien>
+        Tue, 3 Sep 2019 10:06:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tW7Nkc6OzeenJ5t90aISNMAX0ToDybVNohTWVX2i9+g=; b=0+3XwuE5ycxa+akInZ8/eLOrW
+        C1xKxEw1NhPAOzGzBwInUN6l7UgvqnBv5fQ11FQ66xHp1/ShCQUS6jm7iL2ir1TZVVMQGZJMeoM0B
+        Z3M/lAvaNfabp9HqAsTI5GdQAiIQAkbmTHZEGWB5EEPwItFNvP84tVxB8976uo1L9blqWEeJD7qvP
+        7DfgpzNvvEs/67tCHjEMGZldDejQvYRrnYEITVWGFxoyiaTz9k0dWUMDtsV7FX0kE2ewC4d0fx3PY
+        dkaTVyh8eA4UWVyraDN2K6T8YhBh7zkMDVn5wfbMyNwavxGgtzc9hMeyngJnprXSL6M0hzR9B8ldX
+        xNVGxXcKw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i59Rp-0007Ht-VC; Tue, 03 Sep 2019 14:06:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 77D933011DF;
+        Tue,  3 Sep 2019 16:05:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 606D92097776C; Tue,  3 Sep 2019 16:06:14 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 16:06:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Yin, Fengwei" <fengwei.yin@intel.com>
+Cc:     linux-kernel@vger.kernel.org, "He, Min" <min.he@intel.com>,
+        "Zhao, Yakui" <yakui.zhao@intel.com>
+Subject: Re: About compiler memory barrier for atomic_set/atomic_read on x86
+Message-ID: <20190903140614.GR2349@hirez.programming.kicks-ass.net>
+References: <256e8ee2-a23c-28e9-3988-8b77307c001a@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1909030646180.3228@hadrien>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <256e8ee2-a23c-28e9-3988-8b77307c001a@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:47:52AM +0200, Julia Lawall wrote:
-> From: kbuild test robot <lkp@intel.com>
+On Tue, Sep 03, 2019 at 09:23:41PM +0800, Yin, Fengwei wrote:
+> Hi Peter,
+> There is one question regarding following commit:
 > 
->  Use devm_platform_ioremap_resource helper which wraps
->  platform_get_resource() and devm_ioremap_resource() together.
+> commit 69d927bba39517d0980462efc051875b7f4db185
+> Author: Peter Zijlstra <peterz@infradead.org>
+> Date:   Wed Apr 24 13:38:23 2019 +0200
 > 
-> Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+>     x86/atomic: Fix smp_mb__{before,after}_atomic()
 > 
-> Fixes: 658e687b4218 ("hwmon: Add Synaptics AS370 PVT sensor driver")
-> CC: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-> Reviewed-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>     Recent probing at the Linux Kernel Memory Model uncovered a
+>     'surprise'. Strongly ordered architectures where the atomic RmW
+>     primitive implies full memory ordering and
+>     smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
+> 
+> This change made atomic RmW operations include compiler barrier. And made
+> __smp_mb__before_atomic/__smp_mb__after_atomic not include compiler
+> barrier any more for x86.
+> 
+> We face the issue to handle atomic_set/atomic_read which is mapped to
+> WRITE_ONCE/READ_ONCE on x86. These two functions don't include compiler
+> barrier actually (if operator size is less than 8 bytes).
+> 
+> Before the commit 69d927bba39517d0980462efc051875b7f4db185, we could use
+> __smp_mb__before_atomic/__smp_mb__after_atomic together with these two
+> functions to make sure the memory order. It can't work after the commit
+> 69d927bba39517d0980462efc051875b7f4db185. I am wandering whether
+> we should make atomic_set/atomic_read also include compiler memory
+> barrier on x86? Thanks.
 
-Applied to hwmon-next.
-
-Thanks,
-Guenter
-
-> ---
-> 
-> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-> head:   9c551fac9ea9629cdc6deb205292c2bbe7b38917
-> commit: 658e687b4218b42d03a5b0b79a292c9c48f1ddaf [32/34] hwmon: Add Synaptics AS370 PVT sensor driver
-> :::::: branch date: 7 hours ago
-> :::::: commit date: 7 hours ago
-> 
-> Please take the patch only if it's a positive warning. Thanks!
-> 
->  as370-hwmon.c |    4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> --- a/drivers/hwmon/as370-hwmon.c
-> +++ b/drivers/hwmon/as370-hwmon.c
-> @@ -103,7 +103,6 @@ static const struct hwmon_chip_info as37
-> 
->  static int as370_hwmon_probe(struct platform_device *pdev)
->  {
-> -	struct resource *res;
->  	struct device *hwmon_dev;
->  	struct as370_hwmon *hwmon;
->  	struct device *dev = &pdev->dev;
-> @@ -112,8 +111,7 @@ static int as370_hwmon_probe(struct plat
->  	if (!hwmon)
->  		return -ENOMEM;
-> 
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	hwmon->base = devm_ioremap_resource(&pdev->dev, res);
-> +	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(hwmon->base))
->  		return PTR_ERR(hwmon->base);
+No; using smp_mb__{before,after}_atomic() with atomic_{set,read}() is
+_wrong_! And it is documented as such; see Documentation/atomic_t.txt.
