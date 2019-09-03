@@ -2,189 +2,133 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79CCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161C2C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1E423400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528686;
-	bh=UkABqeVisaqgrxZN86IYbyP7ntuQZtygLb/rJADdP10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kFsIJSdAiOaHWiGv0ivpkOXwvORJlURkdoqWQHapc42Ab4cEBHdlEiA+51BPY1Lzr
-	 quNNQDgKPniFMmYs2SKr7rMgPSGUSnjnCoa0KjsA24O+DOECTgXmMf5FnJ4SNoiiLt
-	 iy1kH/L0OWXx1LpWUbhKNYhhx8MjwGkbyb34s+I8=
+	by mail.kernel.org (Postfix) with ESMTP id EC5CF215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbfICQiB (ORCPT
+        id S1731193AbfICQiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbfICQ0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E955D23950;
-        Tue,  3 Sep 2019 16:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527984;
-        bh=UkABqeVisaqgrxZN86IYbyP7ntuQZtygLb/rJADdP10=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLjYCPntUQ/eNj9zwq/smjKcmxjhdC8UOUW5aov/wUdNOa22FnOSy4MyldVnHZdC1
-         D/TrzIkGRbwFEwq1PYDpWnTkTG3kVlDSF8Id+9uwljMAoJT3fh1B7SVZxD9CG7k3qx
-         VSVYLLJBypwe4NKH4UobdumIyEjVaiuM5Xhof9u8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 039/167] btrfs: Fix error handling in btrfs_cleanup_ordered_extents
-Date:   Tue,  3 Sep 2019 12:23:11 -0400
-Message-Id: <20190903162519.7136-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+        Tue, 3 Sep 2019 12:38:11 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:49717 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730418AbfICQiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:38:08 -0400
+Received: by mail-io1-f70.google.com with SMTP id j23so13053930iog.16
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:38:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6951hsx/JflbcnHJ38448inFnROH/ckXY2OtbJ5vDFE=;
+        b=V/+OcJ7xIiKib0cDEqjNC0mE+wmyWeO7yI/F2gBrkg7oxniUYfi7MMcxbnpM4vcwMM
+         r+QmqlO+VAMEOW9nBu22VIwONJJYUs6IHlWFWX8eEH1w323suubH+w4WytyLDCa6UecK
+         aVznF6eaYo+EY9gtAXj0iE7Ah+drG8dIGyOkUBXuvfMmiduhxPGKagQ5zAZV45W+qsaW
+         qCU8MSH2KasuGfDF72JKmkbPKqPmdr0VCyXyxvdOiYhrQ+dlXH20kDL+2z+Jzr/TC8KK
+         HiWek/AgGtFkZAiwbzl/8aKKzKq+haz8YB67IfQMjYVthT4MDX0NbE0reMN3CEOgjbKf
+         09UA==
+X-Gm-Message-State: APjAAAWohz70bWh01ZMm+31xCdeyKkzCJNskMHFA4bCDyxj3gdU+2RQh
+        zy5ZpxJmVMVd65BEV04hnYrDhmqkjfJbzrIQlL9/36KHGTXE
+X-Google-Smtp-Source: APXvYqwrU6A8cwbVDiefeDbG61BgxpLVwJThXBg0CYPw9OE/gQx+fwY2U7wsQYTgYqSjABN+gvG8aW/NDEw/iSL4rXBccyWNsVTY
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:f307:: with SMTP id m7mr13064789ioh.84.1567528687722;
+ Tue, 03 Sep 2019 09:38:07 -0700 (PDT)
+Date:   Tue, 03 Sep 2019 09:38:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009b6b880591a8b697@google.com>
+Subject: WARNING in posix_cpu_timer_del (3)
+From:   syzbot <syzbot+dabf3198a30ed5a2158f@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+Hello,
 
-[ Upstream commit d1051d6ebf8ef3517a5a3cf82bba8436d190f1c2 ]
+syzbot found the following crash on:
 
-Running btrfs/124 in a loop hung up on me sporadically with the
-following call trace:
+HEAD commit:    6d028043 Add linux-next specific files for 20190830
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=179e59de600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82a6bec43ab0cb69
+dashboard link: https://syzkaller.appspot.com/bug?extid=dabf3198a30ed5a2158f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bb4546600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13af4356600000
 
-	btrfs           D    0  5760   5324 0x00000000
-	Call Trace:
-	 ? __schedule+0x243/0x800
-	 schedule+0x33/0x90
-	 btrfs_start_ordered_extent+0x10c/0x1b0 [btrfs]
-	 ? wait_woken+0xa0/0xa0
-	 btrfs_wait_ordered_range+0xbb/0x100 [btrfs]
-	 btrfs_relocate_block_group+0x1ff/0x230 [btrfs]
-	 btrfs_relocate_chunk+0x49/0x100 [btrfs]
-	 btrfs_balance+0xbeb/0x1740 [btrfs]
-	 btrfs_ioctl_balance+0x2ee/0x380 [btrfs]
-	 btrfs_ioctl+0x1691/0x3110 [btrfs]
-	 ? lockdep_hardirqs_on+0xed/0x180
-	 ? __handle_mm_fault+0x8e7/0xfb0
-	 ? _raw_spin_unlock+0x24/0x30
-	 ? __handle_mm_fault+0x8e7/0xfb0
-	 ? do_vfs_ioctl+0xa5/0x6e0
-	 ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
-	 do_vfs_ioctl+0xa5/0x6e0
-	 ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-	 ksys_ioctl+0x3a/0x70
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x60/0x1b0
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dabf3198a30ed5a2158f@syzkaller.appspotmail.com
 
-This happens because during page writeback it's valid for
-writepage_delalloc to instantiate a delalloc range which doesn't belong
-to the page currently being written back.
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 9805 at kernel/time/posix-cpu-timers.c:401  
+posix_cpu_timer_del+0x2f0/0x3b0 kernel/time/posix-cpu-timers.c:401
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9805 Comm: syz-executor380 Not tainted 5.3.0-rc6-next-20190830  
+#75
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:220
+  __warn.cold+0x2f/0x3c kernel/panic.c:581
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:posix_cpu_timer_del+0x2f0/0x3b0 kernel/time/posix-cpu-timers.c:401
+Code: 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85  
+b5 00 00 00 48 83 bb c8 00 00 00 00 74 16 e8 00 58 0d 00 <0f> 0b e9 87 fe  
+ff ff e8 c4 38 48 00 e9 dd fd ff ff e8 ea 57 0d 00
+RSP: 0018:ffff88809ac87a30 EFLAGS: 00010093
+RAX: ffff888090a6e0c0 RBX: ffff88809ae762e0 RCX: 1ffff1101214dd2a
+RDX: 0000000000000000 RSI: ffffffff8164fe10 RDI: ffff88809ae763a8
+RBP: ffff88809ac87ac0 R08: 0000000000000002 R09: ffff888090a6e958
+R10: fffffbfff138aef8 R11: ffffffff89c577c7 R12: ffff88809b326100
+R13: 1ffff11013590f47 R14: ffff88809ac87a98 R15: ffff88809ae76338
+  timer_delete_hook kernel/time/posix-timers.c:978 [inline]
+  itimer_delete kernel/time/posix-timers.c:1021 [inline]
+  exit_itimers+0xdb/0x2e0 kernel/time/posix-timers.c:1041
+  do_exit+0x1980/0x2e60 kernel/exit.c:853
+  do_group_exit+0x135/0x360 kernel/exit.c:983
+  get_signal+0x47c/0x2500 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446679
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffff909e168 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: 0000000000000000 RBX: 0000000000017a92 RCX: 0000000000446679
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc2c
+RBP: 00000000006dbc2c R08: 000000037ffffa00 R09: 000000037ffffa00
+R10: 00007ffff909e180 R11: 0000000000000246 R12: 00000000006dbc20
+R13: 0000000000000000 R14: 000000000000002d R15: 20c49ba5e353f7cf
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-The reason this case is valid is due to find_lock_delalloc_range
-returning any available range after the passed delalloc_start and
-ignoring whether the page under writeback is within that range.
 
-In turn ordered extents (OE) are always created for the returned range
-from find_lock_delalloc_range. If, however, a failure occurs while OE
-are being created then the clean up code in btrfs_cleanup_ordered_extents
-will be called.
-
-Unfortunately the code in btrfs_cleanup_ordered_extents doesn't consider
-the case of such 'foreign' range being processed and instead it always
-assumes that the range OE are created for belongs to the page. This
-leads to the first page of such foregin range to not be cleaned up since
-it's deliberately missed and skipped by the current cleaning up code.
-
-Fix this by correctly checking whether the current page belongs to the
-range being instantiated and if so adjsut the range parameters passed
-for cleaning up. If it doesn't, then just clean the whole OE range
-directly.
-
-Fixes: 524272607e88 ("btrfs: Handle delalloc error correctly to avoid ordered extent hang")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index bfacce295ef1e..98c535ae038da 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -110,17 +110,17 @@ static void __endio_write_update_ordered(struct inode *inode,
-  * extent_clear_unlock_delalloc() to clear both the bits EXTENT_DO_ACCOUNTING
-  * and EXTENT_DELALLOC simultaneously, because that causes the reserved metadata
-  * to be released, which we want to happen only when finishing the ordered
-- * extent (btrfs_finish_ordered_io()). Also note that the caller of
-- * btrfs_run_delalloc_range already does proper cleanup for the first page of
-- * the range, that is, it invokes the callback writepage_end_io_hook() for the
-- * range of the first page.
-+ * extent (btrfs_finish_ordered_io()).
-  */
- static inline void btrfs_cleanup_ordered_extents(struct inode *inode,
--						 const u64 offset,
--						 const u64 bytes)
-+						 struct page *locked_page,
-+						 u64 offset, u64 bytes)
- {
- 	unsigned long index = offset >> PAGE_SHIFT;
- 	unsigned long end_index = (offset + bytes - 1) >> PAGE_SHIFT;
-+	u64 page_start = page_offset(locked_page);
-+	u64 page_end = page_start + PAGE_SIZE - 1;
-+
- 	struct page *page;
- 
- 	while (index <= end_index) {
-@@ -131,8 +131,18 @@ static inline void btrfs_cleanup_ordered_extents(struct inode *inode,
- 		ClearPagePrivate2(page);
- 		put_page(page);
- 	}
--	return __endio_write_update_ordered(inode, offset + PAGE_SIZE,
--					    bytes - PAGE_SIZE, false);
-+
-+	/*
-+	 * In case this page belongs to the delalloc range being instantiated
-+	 * then skip it, since the first page of a range is going to be
-+	 * properly cleaned up by the caller of run_delalloc_range
-+	 */
-+	if (page_start >= offset && page_end <= (offset + bytes - 1)) {
-+		offset += PAGE_SIZE;
-+		bytes -= PAGE_SIZE;
-+	}
-+
-+	return __endio_write_update_ordered(inode, offset, bytes, false);
- }
- 
- static int btrfs_dirty_inode(struct inode *inode);
-@@ -1629,7 +1639,8 @@ int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
- 					   write_flags);
- 	}
- 	if (ret)
--		btrfs_cleanup_ordered_extents(inode, start, end - start + 1);
-+		btrfs_cleanup_ordered_extents(inode, locked_page, start,
-+					      end - start + 1);
- 	return ret;
- }
- 
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
