@@ -2,119 +2,171 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224B8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C6EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82682173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C16A2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567532893;
-	bh=fpHWju9iDAcUth0qUXFxtfbspBkgFy3ozSWAWork6T8=;
+	s=default; t=1567532930;
+	bh=2uD++TBraCQkPObAZLDBJSUyD8SNOUu4nKap+J4/iFo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s3e7+3nPwErGgTXQg1h1XTfUmw33S3K+VXuz+KShPZvyMVnCjNTVM8KZnJYG6JAbM
-	 VySriLntFTZ3hFS7dlcgPocsuuexSg5O5rkMJpgNcSIGdCjw5tjiEB20tIqdcM/htF
-	 ZeMTg64qh44y0qqJs/xqpV/sA6nAp268Veh1iVM0=
+	b=yU7jwKPIvJ6hC6nhps+QTxPYD1/QGXF6FA4o2S8PpmSlcxHQKzJ/oywfbbaYnfZMz
+	 doV2P1IFJH93TJd/x9fFZPE/ECZn0onImasThlvSMZdyaF7SDoGo/dfWpWUqQr8nun
+	 60P8CWOd07a3fp1YeaiIp60iV0/A47968rUKZZww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfICRsM (ORCPT
+        id S1730067AbfICRst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:48:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48438 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfICRsL (ORCPT
+        Tue, 3 Sep 2019 13:48:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38456 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfICRst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:48:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Zvy0cmcCS2UqHRB6ROv3+py+lgL7vtVDSDbGP6ppS/Q=; b=oJ1NeYUe3QPF59vT/aorPVMR+
-        JYiFvXyF5mjFZEqRUjNCtIKJpxwQ2Fy1ty/ow3ho0KrzoqLyw7xPWsahEk8nCno2KOau9dYfA4lHr
-        9zKk7LlbJA+6oisS5wm8o9S8PBsvFclpl684Ji+hRyPHd5gweZvwNoMvwOGm7oxpb0tyA=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i5CuQ-0000uI-0y; Tue, 03 Sep 2019 17:48:02 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 294862740A97; Tue,  3 Sep 2019 18:48:01 +0100 (BST)
-Date:   Tue, 3 Sep 2019 18:48:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] ASoC: es8316: judge PCM rate at later timing
-Message-ID: <20190903174801.GD7916@sirena.co.uk>
-References: <20190903165322.20791-1-katsuhiro@katsuster.net>
+        Tue, 3 Sep 2019 13:48:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so454609wme.3;
+        Tue, 03 Sep 2019 10:48:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WxydxVU2CFhWd0QEZ7Dd4XKp/p4c1U4sKS90L0qSlNM=;
+        b=fNo9/JTji/ZWhxc4b/MqAsCMKbFZCAXiK+GboO+RfDmR9hWvzXCMWpt30FYPgUMCBf
+         x5cNSil1QzKGFENXmDFegZFVOjdxNInsb5u5+NTuQpdbdK2vd+vjyft0Al8YbWUQ+EI7
+         H9B1244sWceQSFPZy0O22lhnxudrdhi5g8FyaEgKO472W822uiD1Il3ri8g8Ca6m+ItF
+         kmoUPtsr9yFhXVIg95Lb+vLDm2hJsbNidNadFxkr8hbCpEWEh4bT8uiIbKhxFAuCmUsC
+         s7rX/ULitc+/GlFMUcgACg1BxzaqNzeOPjmU+VWe0OfSCDhrVqz9fYJbJ9SBfCFlERX5
+         N0xA==
+X-Gm-Message-State: APjAAAVduPZ7pxX/vO4cl9fNVkpgOGN22uLq6cDL9+QD+bwTtLe0C1bV
+        ZkvueHEfKweflD4Bmibl/DadtV/BtQ==
+X-Google-Smtp-Source: APXvYqwKKZxGa3P7rOKwJCnEa107FksH8qZoSDy9XKQWNeIR+1mSDDCxud+EJcVbOMGJguXrzvC05Q==
+X-Received: by 2002:a1c:1d8d:: with SMTP id d135mr635821wmd.7.1567532926783;
+        Tue, 03 Sep 2019 10:48:46 -0700 (PDT)
+Received: from localhost ([176.12.107.132])
+        by smtp.gmail.com with ESMTPSA id n12sm162415wmc.24.2019.09.03.10.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 10:48:46 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 18:48:44 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add binding for IT6505.
+Message-ID: <20190903174844.GA4044@bogus>
+References: <1567507915-9844-1-git-send-email-allen.chen@ite.com.tw>
+ <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rqzD5py0kzyFAOWN"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903165322.20791-1-katsuhiro@katsuster.net>
-X-Cookie: You will pass away very quickly.
+In-Reply-To: <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 03, 2019 at 06:51:53PM +0800, allen wrote:
+> From: Allen Chen <allen.chen@ite.com.tw>
+> 
+> Add a DT binding documentation for IT6505.
+> 
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> 
+> ---
+> Comments in v1 would be addressed later in v3.
+> ---
+>  .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
 
---rqzD5py0kzyFAOWN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This won't apply. Base your patches on current (latest -rc) kernels.
 
-On Wed, Sep 04, 2019 at 01:53:19AM +0900, Katsuhiro Suzuki wrote:
+We've moved to a DT schema format. Minimally vendor-prefixes.txt will 
+have to change. It's also preferred for display bridges.
 
-> Root cause of this strange behavior is changing constraints list at
-> set_sysclk timing. It seems that is too early to determine. So this
-> patch does not use constraints list and check PCM rate limit more
-> later timing at hw_params.
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> new file mode 100644
+> index 0000000..c3506ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> @@ -0,0 +1,30 @@
+> +iTE it6505 DP bridge bindings
+> +
+> +Required properties:
+> +        - compatible: "ite,it6505"
+> +        - reg: i2c address of the bridge
+> +        - ovdd-supply: I/O voltage
+> +        - pwr18-supply: Core voltage
+> +        - interrupts: interrupt specifier of INT pin
+> +        - reset-gpios: gpio specifier of RESET pin
+> +
+> +Example:
+> +	it6505dptx: it6505dptx@5c {
 
-hw_params is a bit late to impose constraints, you want them to be
-available to be available to the application before it gets as far as
-picking the parameters it wants so that you don't get hw_params failing
-due to an invalid configuration.  That makes everything run more
-smoothly, applications should be able to trust the constraints they got
-and some will not handle failures well.
+dp-bridge@5c
 
-The way this works with the variable MCLKs is that you end up in one of
-two cases (wm8731 and wm8741 do this):
+> +                compatible = "ite,it6505";
+> +                status = "okay";
 
-   1. The system is idle, MCLK is set to 0.  In this case no constraints
-      are set and we just set MCLK to whatever is required in hw_params()
-      in the machine driver.
-   2. One direction is active, MCLK is set to whatever that needed.  In
-      this case startup() sets constraints derived from the MCLK.
+Don't show status in examples.
 
-There are races in this if streams are being started and torn down
-simultaneously, there's not much we can do about them with the API the
-way it is so we do have to validate in hw_params() anyway but it should
-be validation not constraint imposition.
+> +                interrupt-parent = <&pio>;
 
-If the system has a fixed MCLK it just sets that on probe then we always
-get the constraints applied on startup through the same code that
-handles case 2.
+And interrupt-parent.
 
---rqzD5py0kzyFAOWN
-Content-Type: application/pgp-signature; name="signature.asc"
+> +                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
+> +                reg = <0x5c>;
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&it6505_pins>;
+> +                ovdd-supply = <&mt6358_vsim1_reg>;
+> +                pwr18-supply = <&it6505_pp18_reg>;
+> +                reset-gpios = <&pio 179 1>;
+> +                hpd-gpios = <&pio 9 0>;
 
------BEGIN PGP SIGNATURE-----
+This goes in a connector node.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1up1AACgkQJNaLcl1U
-h9BQogf+P2FPf4VyCSSMUsxKQIRYcVqySrIM/8U5LYf3W/Ti2KizQbw7G/N19kU5
-Q1USsYI+BktP4bDUdRukW6qnNYp4kQTzVlhdS+JWz8s5sBDrErcKA0gOfBTDzfX2
-jtM/LGASFQUhHV7i23g3FYyfmYkLR6fw6As3XI1gTWwZWpwb8L07XWZpy1YPs/ca
-4m6Tnt1qb12CSzV1sclwRovoVWpwnDL7XYyTjRV3d2ywl9nyrKjke8TZP+PBKXlB
-n+6Q+uBSHmxKBaBOlHkymNojgXP5pNrd2Dsq/Ngf/VBMnHOEAUNh1kWlHZAhqTPq
-THnfPYSffJSt83BF5PwCEeRdv66pSg==
-=QPbn
------END PGP SIGNATURE-----
+> +                extcon = <&usbc_extcon>;
 
---rqzD5py0kzyFAOWN--
+extcon is deprecated. Drop or use the usb-connector binding.
+
+Plus this is not documented above.
+
+> +                port {
+
+Need to list what each port is. You're going to need an output port too 
+for a dp-connector or usb-c connector.
+
+> +                        it6505_in: endpoint {
+> +                                remote-endpoint = <&dpi_out>;
+> +                        };
+> +                };
+> +        };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c3fc51..c088646 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -184,6 +184,7 @@ iom	Iomega Corporation
+>  isee	ISEE 2007 S.L.
+>  isil	Intersil
+>  issi	Integrated Silicon Solutions Inc.
+> +ite	iTE Tech. Inc.
+>  itead	ITEAD Intelligent Systems Co.Ltd
+>  iwave  iWave Systems Technologies Pvt. Ltd.
+>  jdi	Japan Display Inc.
+> -- 
+> 1.9.1
+> 
