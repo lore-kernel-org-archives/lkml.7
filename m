@@ -2,65 +2,94 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447DFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D683EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F724206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49BF206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbfICMhW (ORCPT
+        id S1729142AbfICMhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:37:22 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:56902 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICMhW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:37:22 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i583j-0001Tj-PU; Tue, 03 Sep 2019 12:37:19 +0000
-Date:   Tue, 3 Sep 2019 13:37:19 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Message-ID: <20190903123719.GF1131@ZenIV.linux.org.uk>
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
+        Tue, 3 Sep 2019 08:37:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58450 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728994AbfICMhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:37:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF030B028;
+        Tue,  3 Sep 2019 12:37:49 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id D3BB9DA8CD; Tue,  3 Sep 2019 14:38:09 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 14:38:09 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        mpe <mpe@ellerman.id.au>, Brian King <brking@linux.vnet.ibm.com>,
+        chandan <chandan@linux.vnet.ibm.com>,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>, josef@toxicpanda.com,
+        linux-btrfs@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [mainline][BUG][PPC][btrfs][bisected 00801a] kernel BUG at
+ fs/btrfs/locking.c:71!
+Message-ID: <20190903123809.GC2752@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        mpe <mpe@ellerman.id.au>, Brian King <brking@linux.vnet.ibm.com>,
+        chandan <chandan@linux.vnet.ibm.com>,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>, josef@toxicpanda.com,
+        linux-btrfs@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1567500907.5082.12.camel@abdul>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1567500907.5082.12.camel@abdul>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 12:21:36AM -0400, Qian Cai wrote:
-> The linux-next commit "fs/namei.c: keep track of nd->root refcount status” [1] causes boot panic on all
-> architectures here on today’s linux-next (0902). Reverted it will fix the issue.
+On Tue, Sep 03, 2019 at 02:25:07PM +0530, Abdul Haleem wrote:
+> Greeting's
+> 
+> Mainline kernel panics with LTP/fs_fill-dir tests for btrfs file system on my P9 box running mainline kernel 5.3.0-rc5
+> 
+> BUG_ON was first introduced by below commit
 
-<swearing>
+Well, technically the bug_on was there already the only change is the
+handling of the updates of the value.
 
-OK, I see what's going on.  Incremental to be folded in:
+> commit 00801ae4bb2be5f5af46502ef239ac5f4b536094
+> Author: David Sterba <dsterba@suse.com>
+> Date:   Thu May 2 16:53:47 2019 +0200
+> 
+>     btrfs: switch extent_buffer write_locks from atomic to int
+>     
+>     The write_locks is either 0 or 1 and always updated under the lock,
+>     so we don't need the atomic_t semantics.
 
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 20ce2f917ef4..2ed0942a67f8 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -20,8 +20,8 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
- #define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
- #define LOOKUP_DIRECTORY	0x0002	/* require a directory */
- #define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
--#define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
--#define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
-+#define LOOKUP_EMPTY		0x8000	/* accept empty path [user_... only] */
-+#define LOOKUP_DOWN		0x10000	/* follow mounts in the starting point */
- 
- #define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
- #define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+Assuming the code was correct before the patch, if this got broken one
+of the above does not hold anymore:
+
+* 0/1 updates -- this can be verified in code that all the state
+  transitions are valid, ie. initial 0, locked update to 1, locked
+  update 1->0
+
+* atomic_t -> int behaves differently and the changes of the value get
+  mixed up, eg. on the instruction level where intel architecture does
+  'inc' while p9 does I-don't-know-what a RMW update?
+
+But even with a RMW, this should not matter due to
+write_lock/write_unlock around all the updates.
