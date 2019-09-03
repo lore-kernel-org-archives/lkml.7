@@ -2,97 +2,157 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458FEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B905C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194BB22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6548422CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pr0+4L4t"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="O1AJjw9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfICVma (ORCPT
+        id S1727443AbfICVmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:42:30 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33284 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfICVm3 (ORCPT
+        Tue, 3 Sep 2019 17:42:32 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35521 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfICVmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:42:29 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a22so423673ljd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:42:28 -0700 (PDT)
+        Tue, 3 Sep 2019 17:42:31 -0400
+Received: by mail-qt1-f196.google.com with SMTP id k10so11677736qth.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BE22rdpGi0wj7EdpVjb4I26895Qlqc0EPZOEPPFnqZo=;
-        b=pr0+4L4tXZKc3JFEDLzqAuzNkEU+eT3ZMdCa+GLkHKvWHop1oZuC3E06bnwvKkck1K
-         A+H8W2OkRAKOWg5kXs8/UXRl47Cy0vte71lA+B3XGTdnqAqOAJXtQrIWXPH1GvqFocEM
-         /g6t2giGYIPyplxKwitHuEcX7eF3c5UL/p0x4KimiOcc7AauAgWWQ28JtZNYkTdGzK96
-         jkPYTcaGI1Wvme3qUbbsrWx7XCljWeyxjvFKq5zfqCe1sCITwPUiA5+2aaU9OcbtNc5V
-         si35Ip6/glndUW84qWWIyjC9zEEInds/62VywYgdLJK+Ys1alXfDZZvO8Jk4sOq2qH3+
-         PzRw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pl0EFO8E1nfGtt6lAyaMFxbDT0oySOj2vcl1/yE6fuc=;
+        b=O1AJjw9H+q73tzV8SB4rLexieHhdXCpsG0KlCAt7kOVuqXmwHubQrJbyjHWSKgI+wD
+         dpXLwWNGmdiAixAuxOZWkUIC/v1edpjmLJS33gaWveupe3ifXG0+Hz/8Lg8t2xH2395Q
+         KG3gUrFgoBti/TFwbEDjB8B1SLpMCWD0Gl7MnDjnUc+8narW/tU/cDNATM480b+1qIr4
+         /99TzaSZxKMKlVN1DFVVd3OPQZGc6CzY8ECuZNiMpHJMP0+vX3LZJQkYSBvm5Ls/KB5L
+         /eDn1+QA1h5z7oG2w62KhZNsucEoIVbp9U5l+/4HSXAF6lBe/XdMUCioAP2LM1wQOmDU
+         kz8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BE22rdpGi0wj7EdpVjb4I26895Qlqc0EPZOEPPFnqZo=;
-        b=k8GlD9QBaollgcsDTG7pqkHf+05+d+aM9km1tJ3S7Hy7bem7hlrUR/yOaN+lXpPfJh
-         cH5v1hjfSAGHsE7mUKFe7SvclYzlig/XDqO0KMBwZeLlaJYs7YJOlqIRBcs/kbMn+tHa
-         EywuGcOIwFUoQaj49MT16odf4d9dwXRW+8UvC5qwuERpGLt03j41sB9iFPQpaZIXVIss
-         YPefv7B/pMhYj35DtUqSBM7WzwKYjZXokNY6PgS1D8R5GYyJ+aBvjPGyhOwnaXOfP0S8
-         JAaUs7PQ+g4+TX2ZWzq4Z+gC9TGxTqTqAWNcZqCOFwZSPYYUQvQdur2qQ7t1WjVyczPK
-         hKhA==
-X-Gm-Message-State: APjAAAX8jLlvxzgxjtXHnVFzTPGUgxlysG9Ar23F13pddph3lta3AwdE
-        5Qd1hCm0y5QlwqHvlp1qFS6p7q5GGigc2matuV0=
-X-Google-Smtp-Source: APXvYqzAMS9MZNAZGHChQ9oaIQKvzlBk9um2dNn1JwEC3QyBkv82BbGYL5E8ee1wZ6MWmqxI/zMHjvg4hK/ofe2+P3Y=
-X-Received: by 2002:a2e:8658:: with SMTP id i24mr19669320ljj.188.1567546947949;
- Tue, 03 Sep 2019 14:42:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190903204645.25487-1-lyude@redhat.com> <20190903204645.25487-16-lyude@redhat.com>
-In-Reply-To: <20190903204645.25487-16-lyude@redhat.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Wed, 4 Sep 2019 07:42:16 +1000
-Message-ID: <CAPM=9ty-264nFotVRy7VwMw_BQPo-=7su7y3J2MjC9Sdkxcu+A@mail.gmail.com>
-Subject: Re: [PATCH v2 15/27] drm/dp_mst: Cleanup drm_dp_send_link_address() a bit
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Imre Deak <imre.deak@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Juston Li <juston.li@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Harry Wentland <hwentlan@amd.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Pl0EFO8E1nfGtt6lAyaMFxbDT0oySOj2vcl1/yE6fuc=;
+        b=OkrtCRzXikmcOnAhNSRFwgZ8+U30hnShMIA1dTkFNr9+B9Si17K6fkAiAYrYGF+i4A
+         6j2RnkDNrJQbTT15RdxS+zlJIBa3TAkbG2Q7mnURY3o1qNFOZjSe44dS+xNm28/CEar5
+         FR/I8SGeX2NhAQNOETjrFiKb0NWns6NH3umjL5Utsz2yrjD8wMU+NuexrXmIx5JHcgPV
+         FNvwVarqNXlewvNqAClhK9Lalw7zo5waOHdB1F77SATIH2mYVn18Q8x90Mj2vz02oUKt
+         VJ4rOPWUkogY31ESXMIO9ALIIFdxPwRsoOtuTtEGT0bjajxQV7omEPxEdN/axn/fdtHF
+         GwcQ==
+X-Gm-Message-State: APjAAAWyegdANnfaFRNMitA45Znv7ygJizJ167gmr3E+iMoUkkzCxzeH
+        hR8Qiqp+ZdmO/SCnOBxntP/42A==
+X-Google-Smtp-Source: APXvYqxiY0uxaPcETg9MrwEvJU+9N/SUjCvN24j9vnpNDyM0XRV86hk6cR3lDrnZPxruLaXF6CMRTg==
+X-Received: by 2002:ac8:53d6:: with SMTP id c22mr11155371qtq.381.1567546950696;
+        Tue, 03 Sep 2019 14:42:30 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o9sm8933907qtr.71.2019.09.03.14.42.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 14:42:29 -0700 (PDT)
+Message-ID: <1567546948.5576.68.camel@lca.pw>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 03 Sep 2019 17:42:28 -0400
+In-Reply-To: <20190903185305.GA14028@dhcp22.suse.cz>
+References: <1567177025-11016-1-git-send-email-cai@lca.pw>
+         <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
+         <1567178728.5576.32.camel@lca.pw>
+         <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
+         <20190903132231.GC18939@dhcp22.suse.cz> <1567525342.5576.60.camel@lca.pw>
+         <20190903185305.GA14028@dhcp22.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 06:48, Lyude Paul <lyude@redhat.com> wrote:
->
-> Declare local pointer to the drm_dp_link_address_ack_reply struct
-> instead of constantly dereferencing it through the union in
-> txmsg->reply. Then, invert the order of conditionals so we don't have to
-> do the bulk of the work inside them, and can wrap lines even less. Then
-> finally, rearrange variable declarations a bit.
->
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+On Tue, 2019-09-03 at 20:53 +0200, Michal Hocko wrote:
+> On Tue 03-09-19 11:42:22, Qian Cai wrote:
+> > On Tue, 2019-09-03 at 15:22 +0200, Michal Hocko wrote:
+> > > On Fri 30-08-19 18:15:22, Eric Dumazet wrote:
+> > > > If there is a risk of flooding the syslog, we should fix this
+> > > > generically
+> > > > in mm layer, not adding hundred of __GFP_NOWARN all over the places.
+> > > 
+> > > We do already ratelimit in warn_alloc. If it isn't sufficient then we
+> > > can think of a different parameters. Or maybe it is the ratelimiting
+> > > which doesn't work here. Hard to tell and something to explore.
+> > 
+> > The time-based ratelimit won't work for skb_build() as when a system under
+> > memory pressure, and the CPU is fast and IO is so slow, it could take a long
+> > time to swap and trigger OOM.
+> 
+> I really do not understand what does OOM and swapping have to do with
+> the ratelimiting here. The sole purpose of the ratelimit is to reduce
+> the amount of warnings to be printed. Slow IO might have an effect on
+> when the OOM killer is invoked but atomic allocations are not directly
+> dependent on IO.
 
-Reviewed-by: Dave Airlie <airlied@redhat.com>
+When there is a heavy memory pressure, the system is trying hard to reclaim
+memory to fill up the watermark. However, the IO is slow to page out, but the
+memory pressure keep draining atomic reservoir, and some of those skb_build()
+will fail eventually.
+
+Only if there is a fast IO, it will finish swapping sooner and then invoke the
+OOM to end the memory pressure.
+
+> 
+> > I suppose what happens is those skb_build() allocations are from softirq,
+> > and
+> > once one of them failed, it calls printk() which generates more interrupts.
+> > Hence, the infinite loop.
+> 
+> Please elaborate more.
+> 
+
+If you look at the original report, the failed allocation dump_stack() is,
+
+ <IRQ>
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ alloc_pages_current+0x9c/0x110
+ allocate_slab+0x34a/0x11f0
+ new_slab+0x46/0x70
+ ___slab_alloc+0x604/0x950
+ __slab_alloc+0x12/0x20
+ kmem_cache_alloc+0x32a/0x400
+ __build_skb+0x23/0x60
+ build_skb+0x1a/0xb0
+ igb_clean_rx_irq+0xafc/0x1010 [igb]
+ igb_poll+0x4bb/0xe30 [igb]
+ net_rx_action+0x244/0x7a0
+ __do_softirq+0x1a0/0x60a
+ irq_exit+0xb5/0xd0
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
+
+Since it has no __GFP_NOWARN to begin with, it will call,
+
+printk
+  vprintk_default
+    vprintk_emit
+      wake_up_klogd
+        irq_work_queue
+          __irq_work_queue_local
+            arch_irq_work_raise
+              apic->send_IPI_self(IRQ_WORK_VECTOR)
+                smp_irq_work_interrupt
+                  exiting_irq
+                    irq_exit
+
+and end up processing pending net_rx_action softirqs again which are plenty due
+to connected via ssh etc.
