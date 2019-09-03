@@ -2,106 +2,112 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E10C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895C5C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE3821881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7D622CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbfICRwV (ORCPT
+        id S1730115AbfICRxc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:52:21 -0400
-Received: from sauhun.de ([88.99.104.3]:56570 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbfICRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:52:21 -0400
-Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
-        by pokefinder.org (Postfix) with ESMTPSA id 434A72C4F2F;
-        Tue,  3 Sep 2019 19:52:19 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 19:52:18 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: cht-wc: drop check because i2c_unregister_device()
- is NULL safe
-Message-ID: <20190903175218.GE2171@ninjato>
-References: <20190820153441.7693-1-wsa+renesas@sang-engineering.com>
+        Tue, 3 Sep 2019 13:53:32 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:60516 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728967AbfICRxc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 13:53:32 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 445299E774F;
+        Tue,  3 Sep 2019 18:53:30 +0100 (BST)
+Date:   Tue, 3 Sep 2019 18:53:28 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 066/167] iio: adc: exynos-adc: Add S5PV210
+ variant
+Message-ID: <20190903185328.74299c4d@archlinux>
+In-Reply-To: <20190903162519.7136-66-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
+        <20190903162519.7136-66-sashal@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zaRBsRFn0XYhEU69"
-Content-Disposition: inline
-In-Reply-To: <20190820153441.7693-1-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue,  3 Sep 2019 12:23:38 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
---zaRBsRFn0XYhEU69
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Jonathan Bakker <xc-racer2@live.ca>
+> 
+> [ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
+> 
+> S5PV210's ADC variant is almost the same as v1 except that it has 10
+> channels and doesn't require the pmu register
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-On Tue, Aug 20, 2019 at 05:34:40PM +0200, Wolfram Sang wrote:
-> No need to check the argument of i2c_unregister_device() because the
-> function itself does it.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I have no particular objection to adding new IDs (which is more
+or less what this patch is), but I didn't know autosel was
+picking them up.  So a bit of surprise... If intentional
+then fine to apply to stable.
+
 > ---
-
-Hans, are you OK with this change?
-
-> Build tested only, buildbot is happy, too.
->=20
-> Please apply to your tree.
->=20
->  drivers/i2c/busses/i2c-cht-wc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht=
--wc.c
-> index 66af44bfa67d..3e2608a65c06 100644
-> --- a/drivers/i2c/busses/i2c-cht-wc.c
-> +++ b/drivers/i2c/busses/i2c-cht-wc.c
-> @@ -363,8 +363,7 @@ static int cht_wc_i2c_adap_i2c_remove(struct platform=
-_device *pdev)
+>  drivers/iio/adc/exynos_adc.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+> index 4be29ed447559..41da522fc6735 100644
+> --- a/drivers/iio/adc/exynos_adc.c
+> +++ b/drivers/iio/adc/exynos_adc.c
+> @@ -115,6 +115,7 @@
+>  #define MAX_ADC_V2_CHANNELS		10
+>  #define MAX_ADC_V1_CHANNELS		8
+>  #define MAX_EXYNOS3250_ADC_CHANNELS	2
+> +#define MAX_S5PV210_ADC_CHANNELS	10
+>  
+>  /* Bit definitions common for ADC_V1 and ADC_V2 */
+>  #define ADC_CON_EN_START	(1u << 0)
+> @@ -282,6 +283,16 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
+>  	.start_conv	= exynos_adc_v1_start_conv,
+>  };
+>  
+> +static const struct exynos_adc_data exynos_adc_s5pv210_data = {
+> +	.num_channels	= MAX_S5PV210_ADC_CHANNELS,
+> +	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
+> +
+> +	.init_hw	= exynos_adc_v1_init_hw,
+> +	.exit_hw	= exynos_adc_v1_exit_hw,
+> +	.clear_irq	= exynos_adc_v1_clear_irq,
+> +	.start_conv	= exynos_adc_v1_start_conv,
+> +};
+> +
+>  static void exynos_adc_s3c2416_start_conv(struct exynos_adc *info,
+>  					  unsigned long addr)
 >  {
->  	struct cht_wc_i2c_adap *adap =3D platform_get_drvdata(pdev);
-> =20
-> -	if (adap->client)
-> -		i2c_unregister_device(adap->client);
-> +	i2c_unregister_device(adap->client);
->  	i2c_del_adapter(&adap->adapter);
->  	irq_domain_remove(adap->irq_domain);
-> =20
-> --=20
-> 2.20.1
->=20
+> @@ -478,6 +489,9 @@ static const struct of_device_id exynos_adc_match[] = {
+>  	}, {
+>  		.compatible = "samsung,s3c6410-adc",
+>  		.data = &exynos_adc_s3c64xx_data,
+> +	}, {
+> +		.compatible = "samsung,s5pv210-adc",
+> +		.data = &exynos_adc_s5pv210_data,
+>  	}, {
+>  		.compatible = "samsung,exynos-adc-v1",
+>  		.data = &exynos_adc_v1_data,
 
---zaRBsRFn0XYhEU69
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uqFIACgkQFA3kzBSg
-KbYEShAAn8nHT+tj4NkyfQNhwUjViQWeCDdZadCW/I2GsqpDBmOx7e4StF2KhDD6
-Qz1G1zUAiV+wLVgnfengL0a2RZrt/7bMEqA5dDOtzHbV4K5CCziGLGdlS5r3YuLm
-pkkRiET8q2ArMmfFoyWtmRrmIjzFKmBrDO+hwxmurkqWZm7vrjAbSvL7R7GJ2HCR
-gx1NdXCLfRRTEaLZoJlLS3JRIRthWgTUvIbkgcbF+DxUzjcHqHe7EMiWIOEQlOAs
-dlk5p14R+fiNL4K8i8Y2JLS/8iAcmTJHjvMu+BjX2fSUQZB3yAnhwOT7iWqUaYdH
-fgK1s8Me6+/BRjmA3sjOg+0I37aw33C0etNJ5+SxlUiosWRQrMU8aipo4MLgTFfN
-waGi/4KWZkxI3lheqS7rq3FyBPrdkwfURNG03GC4FeKZ7W1IMQLUm+8L0h04u72z
-s8Tf7YusuEvboTnegieKtj2yU3lVGpHW6mvjM5c+76TKQQOw9AxtvpadpF+DXVYg
-Pzbz9pRH2mnQ2nd6VQKSBW3W9aYsjOWUeVbcXiJOFb59KQm5BniyuUY5sgsK/9V5
-aIQb7ElFsFKfxjDIVQg9w0N85bMv3KFebqy44M0htvN68A2653aQjXKk4lO5WO8G
-zMsOoib97DRmWzpqi/3zGiQI/yiXdES+yrT7Uyu0YdxqGO/59vA=
-=dUSq
------END PGP SIGNATURE-----
-
---zaRBsRFn0XYhEU69--
