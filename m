@@ -2,250 +2,1076 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BE2C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DD8C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED3A208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E855208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfICMIS (ORCPT
+        id S1729233AbfICMIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:08:18 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41686 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbfICMIM (ORCPT
+        Tue, 3 Sep 2019 08:08:23 -0400
+Received: from regular1.263xmail.com ([211.150.70.204]:58090 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728094AbfICMIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:08:12 -0400
-Received: by mail-io1-f72.google.com with SMTP id t8so22681205iom.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:08:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=/khp7RLKDbuAFdo3jKpk9UJZrZZoyaQ8xZvd94qR6QY=;
-        b=sS29gvg/BkWTOcj3u4iKtgsgtHluEwJSkG9g9Sup2R4nh5gcJK9f8xJ3PiBVsTop1c
-         XSA4fO/Ve/ITFXaJPZjoPQpwC2JzLGW1I/ghJTA6eBxPc3s0tRZjKjvFPADA7HFk+0sL
-         q10qWtpQquIdvE+2xZ7mptMgAvgJ2lak9fg/uhkQKzhgkBDFVXdSuIh4LukeTdUONCJw
-         Yt6m3JL7cerx8kBlJRhCghr/WjOsnBgW3+KxB72bmJKAli1DeuW/Ny4lbIJ+hMSp/WuP
-         HIwacONZo2q5fbpvCAnabY0bMCW5bys/QITZfZK0kGLbjdaB0X3V79wT648te5lubH7D
-         0YYw==
-X-Gm-Message-State: APjAAAU4umkVFX83ER95Nz+f5Ygfd3buj9tWq3HQU4aLYp03MQjmK6SJ
-        pl2oIEggair4HF+KZhao2bCB9Od2RkceE3xxVA2Mt00fvpTT
-X-Google-Smtp-Source: APXvYqyo05hyAl/TPp/osCOoUfM+aWgFBqmLOv4KRwCriyc4cYP690ztriQ3FeUVkBLx2u8jY48YkdQVAdGAYmf/Qa7ItGu3ALER
-MIME-Version: 1.0
-X-Received: by 2002:a6b:bc47:: with SMTP id m68mr340143iof.70.1567512491131;
- Tue, 03 Sep 2019 05:08:11 -0700 (PDT)
-Date:   Tue, 03 Sep 2019 05:08:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003712560591a4f1b1@google.com>
-Subject: KASAN: use-after-free Read in rsi_rx_done_handler
-From:   syzbot <syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com>
-To:     amitkarwar@gmail.com, andreyknvl@google.com, davem@davemloft.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, siva8118@gmail.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Tue, 3 Sep 2019 08:08:18 -0400
+Received: from finley.xiao?rock-chips.com (unknown [192.168.167.224])
+        by regular1.263xmail.com (Postfix) with ESMTP id 2FB3B22F;
+        Tue,  3 Sep 2019 20:01:24 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P13045T140284270724864S1567511992953411_;
+        Tue, 03 Sep 2019 20:01:22 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <8a95ed918e57b6c91652e1e410dfc878>
+X-RL-SENDER: finley.xiao@rock-chips.com
+X-SENDER: xf@rock-chips.com
+X-LOGIN-NAME: finley.xiao@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Finley Xiao <finley.xiao@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zhangqing@rock-chips.com, huangtao@rock-chips.com,
+        tony.xie@rock-chips.com, andy.yan@rock-chips.com,
+        Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH v1 3/3] clk: rockchip: Add clock controller for the RK3308
+Date:   Tue,  3 Sep 2019 19:59:47 +0800
+Message-Id: <20190903115947.26618-4-finley.xiao@rock-chips.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190903115947.26618-1-finley.xiao@rock-chips.com>
+References: <20190903115947.26618-1-finley.xiao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add the clock tree definition for the new RK3308 SoC.
 
-syzbot found the following crash on:
-
-HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1031c5f2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-dashboard link: https://syzkaller.appspot.com/bug?extid=b563b7f8dbe8223a51e8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in rsi_rx_done_handler+0x3ba/0x490  
-drivers/net/wireless/rsi/rsi_91x_usb.c:267
-Read of size 8 at addr ffff8881cebc0fe8 by task kworker/0:2/102
-
-CPU: 0 PID: 102 Comm: kworker/0:2 Not tainted 5.3.0-rc5+ #28
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  rsi_rx_done_handler+0x3ba/0x490 drivers/net/wireless/rsi/rsi_91x_usb.c:267
-  __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1657
-  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1722
-  dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1965
-  call_timer_fn+0x179/0x650 kernel/time/timer.c:1322
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers kernel/time/timer.c:1685 [inline]
-  __run_timers kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x5cc/0x14b0 kernel/time/timer.c:1698
-  __do_softirq+0x221/0x912 kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x178/0x1a0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1095
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:console_unlock+0xa2a/0xc40 kernel/printk/printk.c:2471
-Code: 00 89 ee 48 c7 c7 20 89 d3 86 e8 61 ad 03 00 65 ff 0d 72 b5 d9 7e e9  
-db f9 ff ff e8 80 a0 15 00 e8 2b ca 1a 00 ff 74 24 30 9d <e9> 18 fe ff ff  
-e8 6c a0 15 00 48 8d 7d 08 48 89 f8 48 c1 e8 03 42
-RSP: 0018:ffff8881d5077200 EFLAGS: 00000216 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000200 RCX: 0000000000000006
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881d5068844
-RBP: 0000000000000000 R08: ffff8881d5068000 R09: fffffbfff11ad791
-R10: fffffbfff11ad790 R11: ffffffff88d6bc87 R12: 000000000000004d
-R13: dffffc0000000000 R14: ffffffff829090d0 R15: ffffffff87077430
-  vprintk_emit+0x171/0x3e0 kernel/printk/printk.c:1986
-  vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:386
-  printk+0xba/0xed kernel/printk/printk.c:2046
-  really_probe.cold+0x69/0x1f6 drivers/base/dd.c:628
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 102:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  rsi_init_usb_interface drivers/net/wireless/rsi/rsi_91x_usb.c:599 [inline]
-  rsi_probe+0x11a/0x15a0 drivers/net/wireless/rsi/rsi_91x_usb.c:780
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 102:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1474 [inline]
-  slab_free mm/slub.c:3016 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3957
-  rsi_91x_deinit+0x270/0x2f0 drivers/net/wireless/rsi/rsi_91x_main.c:407
-  rsi_probe+0xcec/0x15a0 drivers/net/wireless/rsi/rsi_91x_usb.c:834
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881cebc0f00
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 232 bytes inside of
-  512-byte region [ffff8881cebc0f00, ffff8881cebc1100)
-The buggy address belongs to the page:
-page:ffffea00073af000 refcount:1 mapcount:0 mapping:ffff8881da002500  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 0000000000000000 0000000b00000001 ffff8881da002500
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881cebc0e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8881cebc0f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881cebc0f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff8881cebc1000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cebc1080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/clk/rockchip/Makefile     |   1 +
+ drivers/clk/rockchip/clk-rk3308.c | 955 ++++++++++++++++++++++++++++++++++++++
+ drivers/clk/rockchip/clk.h        |  13 +
+ 3 files changed, 969 insertions(+)
+ create mode 100644 drivers/clk/rockchip/clk-rk3308.c
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/clk/rockchip/Makefile b/drivers/clk/rockchip/Makefile
+index ff35ab463a6f..7c5b5813a87c 100644
+--- a/drivers/clk/rockchip/Makefile
++++ b/drivers/clk/rockchip/Makefile
+@@ -20,6 +20,7 @@ obj-y	+= clk-rk3128.o
+ obj-y	+= clk-rk3188.o
+ obj-y	+= clk-rk3228.o
+ obj-y	+= clk-rk3288.o
++obj-y	+= clk-rk3308.o
+ obj-y	+= clk-rk3328.o
+ obj-y	+= clk-rk3368.o
+ obj-y	+= clk-rk3399.o
+diff --git a/drivers/clk/rockchip/clk-rk3308.c b/drivers/clk/rockchip/clk-rk3308.c
+new file mode 100644
+index 000000000000..b0baf87a283e
+--- /dev/null
++++ b/drivers/clk/rockchip/clk-rk3308.c
+@@ -0,0 +1,955 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (c) 2019 Rockchip Electronics Co. Ltd.
++ * Author: Finley Xiao <finley.xiao@rock-chips.com>
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/syscore_ops.h>
++#include <dt-bindings/clock/rk3308-cru.h>
++#include "clk.h"
++
++#define RK3308_GRF_SOC_STATUS0		0x380
++
++enum rk3308_plls {
++	apll, dpll, vpll0, vpll1,
++};
++
++static struct rockchip_pll_rate_table rk3308_pll_rates[] = {
++	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
++	RK3036_PLL_RATE(1608000000, 1, 67, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1584000000, 1, 66, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1560000000, 1, 65, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1536000000, 1, 64, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1512000000, 1, 63, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1488000000, 1, 62, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1464000000, 1, 61, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1440000000, 1, 60, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1416000000, 1, 59, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1392000000, 1, 58, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1368000000, 1, 57, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1344000000, 1, 56, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1320000000, 1, 55, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1296000000, 1, 54, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1272000000, 1, 53, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1248000000, 1, 52, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1200000000, 1, 50, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1188000000, 2, 99, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1104000000, 1, 46, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1100000000, 12, 550, 1, 1, 1, 0),
++	RK3036_PLL_RATE(1008000000, 1, 84, 2, 1, 1, 0),
++	RK3036_PLL_RATE(1000000000, 6, 500, 2, 1, 1, 0),
++	RK3036_PLL_RATE(984000000, 1, 82, 2, 1, 1, 0),
++	RK3036_PLL_RATE(960000000, 1, 80, 2, 1, 1, 0),
++	RK3036_PLL_RATE(936000000, 1, 78, 2, 1, 1, 0),
++	RK3036_PLL_RATE(912000000, 1, 76, 2, 1, 1, 0),
++	RK3036_PLL_RATE(900000000, 4, 300, 2, 1, 1, 0),
++	RK3036_PLL_RATE(888000000, 1, 74, 2, 1, 1, 0),
++	RK3036_PLL_RATE(864000000, 1, 72, 2, 1, 1, 0),
++	RK3036_PLL_RATE(840000000, 1, 70, 2, 1, 1, 0),
++	RK3036_PLL_RATE(816000000, 1, 68, 2, 1, 1, 0),
++	RK3036_PLL_RATE(800000000, 6, 400, 2, 1, 1, 0),
++	RK3036_PLL_RATE(700000000, 6, 350, 2, 1, 1, 0),
++	RK3036_PLL_RATE(696000000, 1, 58, 2, 1, 1, 0),
++	RK3036_PLL_RATE(624000000, 1, 52, 2, 1, 1, 0),
++	RK3036_PLL_RATE(600000000, 1, 75, 3, 1, 1, 0),
++	RK3036_PLL_RATE(594000000, 2, 99, 2, 1, 1, 0),
++	RK3036_PLL_RATE(504000000, 1, 63, 3, 1, 1, 0),
++	RK3036_PLL_RATE(500000000, 6, 250, 2, 1, 1, 0),
++	RK3036_PLL_RATE(408000000, 1, 68, 2, 2, 1, 0),
++	RK3036_PLL_RATE(312000000, 1, 52, 2, 2, 1, 0),
++	RK3036_PLL_RATE(216000000, 1, 72, 4, 2, 1, 0),
++	RK3036_PLL_RATE(96000000, 1, 64, 4, 4, 1, 0),
++	{ /* sentinel */ },
++};
++
++#define RK3308_DIV_ACLKM_MASK		0x7
++#define RK3308_DIV_ACLKM_SHIFT		12
++#define RK3308_DIV_PCLK_DBG_MASK	0xf
++#define RK3308_DIV_PCLK_DBG_SHIFT	8
++
++#define RK3308_CLKSEL0(_aclk_core, _pclk_dbg)				\
++{									\
++	.reg = RK3308_CLKSEL_CON(0),					\
++	.val = HIWORD_UPDATE(_aclk_core, RK3308_DIV_ACLKM_MASK,		\
++			     RK3308_DIV_ACLKM_SHIFT) |			\
++	       HIWORD_UPDATE(_pclk_dbg, RK3308_DIV_PCLK_DBG_MASK,	\
++			     RK3308_DIV_PCLK_DBG_SHIFT),		\
++}
++
++#define RK3308_CPUCLK_RATE(_prate, _aclk_core, _pclk_dbg)		\
++{									\
++	.prate = _prate,						\
++	.divs = {							\
++		RK3308_CLKSEL0(_aclk_core, _pclk_dbg),			\
++	},								\
++}
++
++static struct rockchip_cpuclk_rate_table rk3308_cpuclk_rates[] __initdata = {
++	RK3308_CPUCLK_RATE(1608000000, 1, 7),
++	RK3308_CPUCLK_RATE(1512000000, 1, 7),
++	RK3308_CPUCLK_RATE(1488000000, 1, 5),
++	RK3308_CPUCLK_RATE(1416000000, 1, 5),
++	RK3308_CPUCLK_RATE(1392000000, 1, 5),
++	RK3308_CPUCLK_RATE(1296000000, 1, 5),
++	RK3308_CPUCLK_RATE(1200000000, 1, 5),
++	RK3308_CPUCLK_RATE(1104000000, 1, 5),
++	RK3308_CPUCLK_RATE(1008000000, 1, 5),
++	RK3308_CPUCLK_RATE(912000000, 1, 5),
++	RK3308_CPUCLK_RATE(816000000, 1, 3),
++	RK3308_CPUCLK_RATE(696000000, 1, 3),
++	RK3308_CPUCLK_RATE(600000000, 1, 3),
++	RK3308_CPUCLK_RATE(408000000, 1, 1),
++	RK3308_CPUCLK_RATE(312000000, 1, 1),
++	RK3308_CPUCLK_RATE(216000000,  1, 1),
++	RK3308_CPUCLK_RATE(96000000, 1, 1),
++};
++
++static const struct rockchip_cpuclk_reg_data rk3308_cpuclk_data = {
++	.core_reg = RK3308_CLKSEL_CON(0),
++	.div_core_shift = 0,
++	.div_core_mask = 0xf,
++	.mux_core_alt = 1,
++	.mux_core_main = 0,
++	.mux_core_shift = 6,
++	.mux_core_mask = 0x3,
++};
++
++PNAME(mux_pll_p)		= { "xin24m" };
++PNAME(mux_usb480m_p)		= { "xin24m", "usb480m_phy", "clk_rtc32k" };
++PNAME(mux_armclk_p)		= { "apll_core", "vpll0_core", "vpll1_core" };
++PNAME(mux_dpll_vpll0_p)		= { "dpll", "vpll0" };
++PNAME(mux_dpll_vpll0_xin24m_p)	= { "dpll", "vpll0", "xin24m" };
++PNAME(mux_dpll_vpll0_vpll1_p)	= { "dpll", "vpll0", "vpll1" };
++PNAME(mux_dpll_vpll0_vpll1_xin24m_p)	= { "dpll", "vpll0", "vpll1", "xin24m" };
++PNAME(mux_dpll_vpll0_vpll1_usb480m_xin24m_p)	= { "dpll", "vpll0", "vpll1", "usb480m", "xin24m" };
++PNAME(mux_vpll0_vpll1_p)	= { "vpll0", "vpll1" };
++PNAME(mux_vpll0_vpll1_xin24m_p)	= { "vpll0", "vpll1", "xin24m" };
++PNAME(mux_uart0_p)		= { "clk_uart0_src", "dummy", "clk_uart0_frac" };
++PNAME(mux_uart1_p)		= { "clk_uart1_src", "dummy", "clk_uart1_frac" };
++PNAME(mux_uart2_p)		= { "clk_uart2_src", "dummy", "clk_uart2_frac" };
++PNAME(mux_uart3_p)		= { "clk_uart3_src", "dummy", "clk_uart3_frac" };
++PNAME(mux_uart4_p)		= { "clk_uart4_src", "dummy", "clk_uart4_frac" };
++PNAME(mux_timer_src_p)		= { "xin24m", "clk_rtc32k" };
++PNAME(mux_dclk_vop_p)		= { "dclk_vop_src", "dclk_vop_frac", "xin24m" };
++PNAME(mux_nandc_p)		= { "clk_nandc_div", "clk_nandc_div50" };
++PNAME(mux_sdmmc_p)		= { "clk_sdmmc_div", "clk_sdmmc_div50" };
++PNAME(mux_sdio_p)		= { "clk_sdio_div", "clk_sdio_div50" };
++PNAME(mux_emmc_p)		= { "clk_emmc_div", "clk_emmc_div50" };
++PNAME(mux_mac_p)		= { "clk_mac_src", "mac_clkin" };
++PNAME(mux_mac_rmii_sel_p)	= { "clk_mac_rx_tx_div20", "clk_mac_rx_tx_div2" };
++PNAME(mux_ddrstdby_p)		= { "clk_ddrphy1x_out", "clk_ddr_stdby_div4" };
++PNAME(mux_rtc32k_p)		= { "xin32k", "clk_pvtm_32k", "clk_rtc32k_frac", "clk_rtc32k_div" };
++PNAME(mux_usbphy_ref_p)		= { "xin24m", "clk_usbphy_ref_src" };
++PNAME(mux_wifi_src_p)		= { "clk_wifi_dpll", "clk_wifi_vpll0" };
++PNAME(mux_wifi_p)		= { "clk_wifi_osc", "clk_wifi_src" };
++PNAME(mux_pdm_p)		= { "clk_pdm_src", "clk_pdm_frac" };
++PNAME(mux_i2s0_8ch_tx_p)	= { "clk_i2s0_8ch_tx_src", "clk_i2s0_8ch_tx_frac", "mclk_i2s0_8ch_in" };
++PNAME(mux_i2s0_8ch_tx_rx_p)	= { "clk_i2s0_8ch_tx_mux", "clk_i2s0_8ch_rx_mux"};
++PNAME(mux_i2s0_8ch_tx_out_p)	= { "clk_i2s0_8ch_tx", "xin12m" };
++PNAME(mux_i2s0_8ch_rx_p)	= { "clk_i2s0_8ch_rx_src", "clk_i2s0_8ch_rx_frac", "mclk_i2s0_8ch_in" };
++PNAME(mux_i2s0_8ch_rx_tx_p)	= { "clk_i2s0_8ch_rx_mux", "clk_i2s0_8ch_tx_mux"};
++PNAME(mux_i2s1_8ch_tx_p)	= { "clk_i2s1_8ch_tx_src", "clk_i2s1_8ch_tx_frac", "mclk_i2s1_8ch_in" };
++PNAME(mux_i2s1_8ch_tx_rx_p)	= { "clk_i2s1_8ch_tx_mux", "clk_i2s1_8ch_rx_mux"};
++PNAME(mux_i2s1_8ch_tx_out_p)	= { "clk_i2s1_8ch_tx", "xin12m" };
++PNAME(mux_i2s1_8ch_rx_p)	= { "clk_i2s1_8ch_rx_src", "clk_i2s1_8ch_rx_frac", "mclk_i2s1_8ch_in" };
++PNAME(mux_i2s1_8ch_rx_tx_p)	= { "clk_i2s1_8ch_rx_mux", "clk_i2s1_8ch_tx_mux"};
++PNAME(mux_i2s2_8ch_tx_p)	= { "clk_i2s2_8ch_tx_src", "clk_i2s2_8ch_tx_frac", "mclk_i2s2_8ch_in" };
++PNAME(mux_i2s2_8ch_tx_rx_p)	= { "clk_i2s2_8ch_tx_mux", "clk_i2s2_8ch_rx_mux"};
++PNAME(mux_i2s2_8ch_tx_out_p)	= { "clk_i2s2_8ch_tx", "xin12m" };
++PNAME(mux_i2s2_8ch_rx_p)	= { "clk_i2s2_8ch_rx_src", "clk_i2s2_8ch_rx_frac", "mclk_i2s2_8ch_in" };
++PNAME(mux_i2s2_8ch_rx_tx_p)	= { "clk_i2s2_8ch_rx_mux", "clk_i2s2_8ch_tx_mux"};
++PNAME(mux_i2s3_8ch_tx_p)	= { "clk_i2s3_8ch_tx_src", "clk_i2s3_8ch_tx_frac", "mclk_i2s3_8ch_in" };
++PNAME(mux_i2s3_8ch_tx_rx_p)	= { "clk_i2s3_8ch_tx_mux", "clk_i2s3_8ch_rx_mux"};
++PNAME(mux_i2s3_8ch_tx_out_p)	= { "clk_i2s3_8ch_tx", "xin12m" };
++PNAME(mux_i2s3_8ch_rx_p)	= { "clk_i2s3_8ch_rx_src", "clk_i2s3_8ch_rx_frac", "mclk_i2s3_8ch_in" };
++PNAME(mux_i2s3_8ch_rx_tx_p)	= { "clk_i2s3_8ch_rx_mux", "clk_i2s3_8ch_tx_mux"};
++PNAME(mux_i2s0_2ch_p)		= { "clk_i2s0_2ch_src", "clk_i2s0_2ch_frac", "mclk_i2s0_2ch_in" };
++PNAME(mux_i2s0_2ch_out_p)	= { "clk_i2s0_2ch", "xin12m" };
++PNAME(mux_i2s1_2ch_p)		= { "clk_i2s1_2ch_src", "clk_i2s1_2ch_frac", "mclk_i2s1_2ch_in"};
++PNAME(mux_i2s1_2ch_out_p)	= { "clk_i2s1_2ch", "xin12m" };
++PNAME(mux_spdif_tx_src_p)	= { "clk_spdif_tx_div", "clk_spdif_tx_div50" };
++PNAME(mux_spdif_tx_p)		= { "clk_spdif_tx_src", "clk_spdif_tx_frac", "mclk_i2s0_2ch_in" };
++PNAME(mux_spdif_rx_src_p)	= { "clk_spdif_rx_div", "clk_spdif_rx_div50" };
++PNAME(mux_spdif_rx_p)		= { "clk_spdif_rx_src", "clk_spdif_rx_frac" };
++
++static struct rockchip_pll_clock rk3308_pll_clks[] __initdata = {
++	[apll] = PLL(pll_rk3328, PLL_APLL, "apll", mux_pll_p,
++		     0, RK3308_PLL_CON(0),
++		     RK3308_MODE_CON, 0, 0, 0, rk3308_pll_rates),
++	[dpll] = PLL(pll_rk3328, PLL_DPLL, "dpll", mux_pll_p,
++		     0, RK3308_PLL_CON(8),
++		     RK3308_MODE_CON, 2, 1, 0, rk3308_pll_rates),
++	[vpll0] = PLL(pll_rk3328, PLL_VPLL0, "vpll0", mux_pll_p,
++		     0, RK3308_PLL_CON(16),
++		     RK3308_MODE_CON, 4, 2, 0, rk3308_pll_rates),
++	[vpll1] = PLL(pll_rk3328, PLL_VPLL1, "vpll1", mux_pll_p,
++		     0, RK3308_PLL_CON(24),
++		     RK3308_MODE_CON, 6, 3, 0, rk3308_pll_rates),
++};
++
++#define MFLAGS CLK_MUX_HIWORD_MASK
++#define DFLAGS CLK_DIVIDER_HIWORD_MASK
++#define GFLAGS (CLK_GATE_HIWORD_MASK | CLK_GATE_SET_TO_DISABLE)
++
++static struct rockchip_clk_branch rk3308_uart0_fracmux __initdata =
++	MUX(0, "clk_uart0_mux", mux_uart0_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(11), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_uart1_fracmux __initdata =
++	MUX(0, "clk_uart1_mux", mux_uart1_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(14), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_uart2_fracmux __initdata =
++	MUX(0, "clk_uart2_mux", mux_uart2_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(17), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_uart3_fracmux __initdata =
++	MUX(0, "clk_uart3_mux", mux_uart3_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(20), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_uart4_fracmux __initdata =
++	MUX(0, "clk_uart4_mux", mux_uart4_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(23), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_dclk_vop_fracmux __initdata =
++	MUX(0, "dclk_vop_mux", mux_dclk_vop_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(8), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_rtc32k_fracmux __initdata =
++	MUX(SCLK_RTC32K, "clk_rtc32k", mux_rtc32k_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(2), 8, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_pdm_fracmux __initdata =
++	MUX(0, "clk_pdm_mux", mux_pdm_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(46), 15, 1, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s0_8ch_tx_fracmux __initdata =
++	MUX(SCLK_I2S0_8CH_TX_MUX, "clk_i2s0_8ch_tx_mux", mux_i2s0_8ch_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(52), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s0_8ch_rx_fracmux __initdata =
++	MUX(SCLK_I2S0_8CH_RX_MUX, "clk_i2s0_8ch_rx_mux", mux_i2s0_8ch_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(54), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s1_8ch_tx_fracmux __initdata =
++	MUX(SCLK_I2S1_8CH_TX_MUX, "clk_i2s1_8ch_tx_mux", mux_i2s1_8ch_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(56), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s1_8ch_rx_fracmux __initdata =
++	MUX(SCLK_I2S1_8CH_RX_MUX, "clk_i2s1_8ch_rx_mux", mux_i2s1_8ch_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(58), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s2_8ch_tx_fracmux __initdata =
++	MUX(SCLK_I2S2_8CH_TX_MUX, "clk_i2s2_8ch_tx_mux", mux_i2s2_8ch_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(60), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s2_8ch_rx_fracmux __initdata =
++	MUX(SCLK_I2S2_8CH_RX_MUX, "clk_i2s2_8ch_rx_mux", mux_i2s2_8ch_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(62), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s3_8ch_tx_fracmux __initdata =
++	MUX(SCLK_I2S3_8CH_TX_MUX, "clk_i2s3_8ch_tx_mux", mux_i2s3_8ch_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(64), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s3_8ch_rx_fracmux __initdata =
++	MUX(SCLK_I2S3_8CH_RX_MUX, "clk_i2s3_8ch_rx_mux", mux_i2s3_8ch_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(66), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s0_2ch_fracmux __initdata =
++	MUX(0, "clk_i2s0_2ch_mux", mux_i2s0_2ch_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(68), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_i2s1_2ch_fracmux __initdata =
++	MUX(0, "clk_i2s1_2ch_mux", mux_i2s1_2ch_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(70), 10, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_spdif_tx_fracmux __initdata =
++	MUX(0, "clk_spdif_tx_mux", mux_spdif_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(48), 14, 2, MFLAGS);
++
++static struct rockchip_clk_branch rk3308_spdif_rx_fracmux __initdata =
++	MUX(0, "clk_spdif_rx_mux", mux_spdif_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(50), 15, 1, MFLAGS);
++
++
++static struct rockchip_clk_branch rk3308_clk_branches[] __initdata = {
++	/*
++	 * Clock-Architecture Diagram 1
++	 */
++
++	MUX(USB480M, "usb480m", mux_usb480m_p, CLK_SET_RATE_PARENT,
++			RK3308_MODE_CON, 8, 2, MFLAGS),
++	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
++
++	/*
++	 * Clock-Architecture Diagram 2
++	 */
++
++	GATE(0, "apll_core", "apll", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(0), 0, GFLAGS),
++	GATE(0, "vpll0_core", "vpll0", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(0), 0, GFLAGS),
++	GATE(0, "vpll1_core", "vpll1", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(0), 0, GFLAGS),
++	COMPOSITE_NOMUX(0, "pclk_core_dbg", "armclk", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(0), 8, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
++			RK3308_CLKGATE_CON(0), 2, GFLAGS),
++	COMPOSITE_NOMUX(0, "aclk_core", "armclk", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(0), 12, 3, DFLAGS | CLK_DIVIDER_READ_ONLY,
++			RK3308_CLKGATE_CON(0), 1, GFLAGS),
++
++	GATE(0, "clk_jtag", "jtag_clkin", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(0), 3, GFLAGS),
++
++	GATE(SCLK_PVTM_CORE, "clk_pvtm_core", "xin24m", 0,
++			RK3308_CLKGATE_CON(0), 4, GFLAGS),
++
++	/*
++	 * Clock-Architecture Diagram 3
++	 */
++
++	COMPOSITE_NODIV(ACLK_BUS_SRC, "clk_bus_src", mux_dpll_vpll0_vpll1_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(5), 6, 2, MFLAGS,
++			RK3308_CLKGATE_CON(1), 0, GFLAGS),
++	COMPOSITE_NOMUX(PCLK_BUS, "pclk_bus", "clk_bus_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(6), 8, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 3, GFLAGS),
++	GATE(PCLK_DDR, "pclk_ddr", "pclk_bus", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 15, GFLAGS),
++	COMPOSITE_NOMUX(HCLK_BUS, "hclk_bus", "clk_bus_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(6), 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 2, GFLAGS),
++	COMPOSITE_NOMUX(ACLK_BUS, "aclk_bus", "clk_bus_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(5), 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 1, GFLAGS),
++
++	COMPOSITE(0, "clk_uart0_src", mux_dpll_vpll0_vpll1_usb480m_xin24m_p, 0,
++			RK3308_CLKSEL_CON(10), 13, 3, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 9, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_uart0_frac", "clk_uart0_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(12), 0,
++			RK3308_CLKGATE_CON(1), 11, GFLAGS,
++			&rk3308_uart0_fracmux),
++	GATE(SCLK_UART0, "clk_uart0", "clk_uart0_mux", 0,
++			RK3308_CLKGATE_CON(1), 12, GFLAGS),
++
++	COMPOSITE(0, "clk_uart1_src", mux_dpll_vpll0_vpll1_usb480m_xin24m_p, 0,
++			RK3308_CLKSEL_CON(13), 13, 3, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 13, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_uart1_frac", "clk_uart1_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(15), 0,
++			RK3308_CLKGATE_CON(1), 15, GFLAGS,
++			&rk3308_uart1_fracmux),
++	GATE(SCLK_UART1, "clk_uart1", "clk_uart1_mux", 0,
++			RK3308_CLKGATE_CON(2), 0, GFLAGS),
++
++	COMPOSITE(0, "clk_uart2_src", mux_dpll_vpll0_vpll1_usb480m_xin24m_p, 0,
++			RK3308_CLKSEL_CON(16), 13, 3, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(2), 1, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_uart2_frac", "clk_uart2_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(18), 0,
++			RK3308_CLKGATE_CON(2), 3, GFLAGS,
++			&rk3308_uart2_fracmux),
++	GATE(SCLK_UART2, "clk_uart2", "clk_uart2_mux", CLK_SET_RATE_PARENT,
++			RK3308_CLKGATE_CON(2), 4, GFLAGS),
++
++	COMPOSITE(0, "clk_uart3_src", mux_dpll_vpll0_vpll1_usb480m_xin24m_p, 0,
++			RK3308_CLKSEL_CON(19), 13, 3, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(2), 5, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_uart3_frac", "clk_uart3_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(21), 0,
++			RK3308_CLKGATE_CON(2), 7, GFLAGS,
++			&rk3308_uart3_fracmux),
++	GATE(SCLK_UART3, "clk_uart3", "clk_uart3_mux", 0,
++			RK3308_CLKGATE_CON(2), 8, GFLAGS),
++
++	COMPOSITE(0, "clk_uart4_src", mux_dpll_vpll0_vpll1_usb480m_xin24m_p, 0,
++			RK3308_CLKSEL_CON(22), 13, 3, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(2), 9, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_uart4_frac", "clk_uart4_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(24), 0,
++			RK3308_CLKGATE_CON(2), 11, GFLAGS,
++			&rk3308_uart4_fracmux),
++	GATE(SCLK_UART4, "clk_uart4", "clk_uart4_mux", 0,
++			RK3308_CLKGATE_CON(2), 12, GFLAGS),
++
++	COMPOSITE(SCLK_I2C0, "clk_i2c0", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(25), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(2), 13, GFLAGS),
++	COMPOSITE(SCLK_I2C1, "clk_i2c1", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(26), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(2), 14, GFLAGS),
++	COMPOSITE(SCLK_I2C2, "clk_i2c2", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(27), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(2), 15, GFLAGS),
++	COMPOSITE(SCLK_I2C3, "clk_i2c3", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(28), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(3), 0, GFLAGS),
++
++	COMPOSITE(SCLK_PWM0, "clk_pwm0", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(29), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(3), 1, GFLAGS),
++	COMPOSITE(SCLK_PWM1, "clk_pwm1", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(74), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(15), 0, GFLAGS),
++	COMPOSITE(SCLK_PWM2, "clk_pwm2", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(75), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(15), 1, GFLAGS),
++
++	COMPOSITE(SCLK_SPI0, "clk_spi0", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(30), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(3), 2, GFLAGS),
++	COMPOSITE(SCLK_SPI1, "clk_spi1", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(31), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(3), 3, GFLAGS),
++	COMPOSITE(SCLK_SPI2, "clk_spi2", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(32), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(3), 4, GFLAGS),
++
++	GATE(SCLK_TIMER0, "sclk_timer0", "xin24m", 0,
++			RK3308_CLKGATE_CON(3), 10, GFLAGS),
++	GATE(SCLK_TIMER1, "sclk_timer1", "xin24m", 0,
++			RK3308_CLKGATE_CON(3), 11, GFLAGS),
++	GATE(SCLK_TIMER2, "sclk_timer2", "xin24m", 0,
++			RK3308_CLKGATE_CON(3), 12, GFLAGS),
++	GATE(SCLK_TIMER3, "sclk_timer3", "xin24m", 0,
++			RK3308_CLKGATE_CON(3), 13, GFLAGS),
++	GATE(SCLK_TIMER4, "sclk_timer4", "xin24m", 0,
++			RK3308_CLKGATE_CON(3), 14, GFLAGS),
++	GATE(SCLK_TIMER5, "sclk_timer5", "xin24m", 0,
++			RK3308_CLKGATE_CON(3), 15, GFLAGS),
++
++	COMPOSITE_NOMUX(SCLK_TSADC, "clk_tsadc", "xin24m", 0,
++			RK3308_CLKSEL_CON(33), 0, 11, DFLAGS,
++			RK3308_CLKGATE_CON(3), 5, GFLAGS),
++	COMPOSITE_NOMUX(SCLK_SARADC, "clk_saradc", "xin24m", 0,
++			RK3308_CLKSEL_CON(34), 0, 11, DFLAGS,
++			RK3308_CLKGATE_CON(3), 6, GFLAGS),
++
++	COMPOSITE_NOMUX(SCLK_OTP, "clk_otp", "xin24m", 0,
++			RK3308_CLKSEL_CON(35), 0, 4, DFLAGS,
++			RK3308_CLKGATE_CON(3), 7, GFLAGS),
++	COMPOSITE_NOMUX(SCLK_OTP_USR, "clk_otp_usr", "clk_otp", 0,
++			RK3308_CLKSEL_CON(35), 4, 2, DFLAGS,
++			RK3308_CLKGATE_CON(3), 8, GFLAGS),
++
++	GATE(SCLK_CPU_BOOST, "clk_cpu_boost", "xin24m", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(3), 9, GFLAGS),
++
++	COMPOSITE(SCLK_CRYPTO, "clk_crypto", mux_dpll_vpll0_vpll1_p, 0,
++			RK3308_CLKSEL_CON(7), 6, 2, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 4, GFLAGS),
++	COMPOSITE(SCLK_CRYPTO_APK, "clk_crypto_apk", mux_dpll_vpll0_vpll1_p, 0,
++			RK3308_CLKSEL_CON(7), 14, 2, MFLAGS, 8, 5, DFLAGS,
++			RK3308_CLKGATE_CON(1), 5, GFLAGS),
++
++	COMPOSITE(0, "dclk_vop_src", mux_dpll_vpll0_vpll1_p, 0,
++			RK3308_CLKSEL_CON(8), 10, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(1), 6, GFLAGS),
++	COMPOSITE_FRACMUX(0, "dclk_vop_frac", "dclk_vop_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(9), 0,
++			RK3308_CLKGATE_CON(1), 7, GFLAGS,
++			&rk3308_dclk_vop_fracmux),
++	GATE(DCLK_VOP, "dclk_vop", "dclk_vop_mux", 0,
++			RK3308_CLKGATE_CON(1), 8, GFLAGS),
++
++	/*
++	 * Clock-Architecture Diagram 4
++	 */
++
++	COMPOSITE_NODIV(ACLK_PERI_SRC, "clk_peri_src", mux_dpll_vpll0_vpll1_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(36), 6, 2, MFLAGS,
++			RK3308_CLKGATE_CON(8), 0, GFLAGS),
++	COMPOSITE_NOMUX(ACLK_PERI, "aclk_peri", "clk_peri_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(36), 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(8), 1, GFLAGS),
++	COMPOSITE_NOMUX(HCLK_PERI, "hclk_peri", "clk_peri_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(37), 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(8), 2, GFLAGS),
++	COMPOSITE_NOMUX(PCLK_PERI, "pclk_peri", "clk_peri_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(37), 8, 5, DFLAGS,
++			RK3308_CLKGATE_CON(8), 3, GFLAGS),
++
++	COMPOSITE(SCLK_NANDC_DIV, "clk_nandc_div", mux_dpll_vpll0_vpll1_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(38), 6, 2, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(8), 4, GFLAGS),
++	COMPOSITE(SCLK_NANDC_DIV50, "clk_nandc_div50", mux_dpll_vpll0_vpll1_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(38), 6, 2, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(8), 4, GFLAGS),
++	COMPOSITE_NODIV(SCLK_NANDC, "clk_nandc", mux_nandc_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
++			RK3308_CLKSEL_CON(38), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(8), 5, GFLAGS),
++
++	COMPOSITE(SCLK_SDMMC_DIV, "clk_sdmmc_div", mux_dpll_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(39), 8, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(8), 6, GFLAGS),
++	COMPOSITE(SCLK_SDMMC_DIV50, "clk_sdmmc_div50", mux_dpll_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(39), 8, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(8), 6, GFLAGS),
++	COMPOSITE_NODIV(SCLK_SDMMC, "clk_sdmmc", mux_sdmmc_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
++			RK3308_CLKSEL_CON(39), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(8), 7, GFLAGS),
++	MMC(SCLK_SDMMC_DRV,     "sdmmc_drv",    "clk_sdmmc", RK3308_SDMMC_CON0, 1),
++	MMC(SCLK_SDMMC_SAMPLE,  "sdmmc_sample", "clk_sdmmc", RK3308_SDMMC_CON1, 1),
++
++	COMPOSITE(SCLK_SDIO_DIV, "clk_sdio_div", mux_dpll_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(40), 8, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(8), 8, GFLAGS),
++	COMPOSITE(SCLK_SDIO_DIV50, "clk_sdio_div50", mux_dpll_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(40), 8, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(8), 8, GFLAGS),
++	COMPOSITE_NODIV(SCLK_SDIO, "clk_sdio", mux_sdio_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
++			RK3308_CLKSEL_CON(40), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(8), 9, GFLAGS),
++	MMC(SCLK_SDIO_DRV,		"sdio_drv",    "clk_sdio",	RK3308_SDIO_CON0,  1),
++	MMC(SCLK_SDIO_SAMPLE,	"sdio_sample", "clk_sdio",	RK3308_SDIO_CON1,  1),
++
++	COMPOSITE(SCLK_EMMC_DIV, "clk_emmc_div", mux_dpll_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(41), 8, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(8), 10, GFLAGS),
++	COMPOSITE(SCLK_EMMC_DIV50, "clk_emmc_div50", mux_dpll_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(41), 8, 2, MFLAGS, 0, 8, DFLAGS,
++			RK3308_CLKGATE_CON(8), 10, GFLAGS),
++	COMPOSITE_NODIV(SCLK_EMMC, "clk_emmc", mux_emmc_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
++			RK3308_CLKSEL_CON(41), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(8), 11, GFLAGS),
++	MMC(SCLK_EMMC_DRV,     "emmc_drv",     "clk_emmc",  RK3308_EMMC_CON0,  1),
++	MMC(SCLK_EMMC_SAMPLE,  "emmc_sample",  "clk_emmc",  RK3308_EMMC_CON1,  1),
++
++	COMPOSITE(SCLK_SFC, "clk_sfc", mux_dpll_vpll0_vpll1_p, 0,
++			RK3308_CLKSEL_CON(42), 14, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(8), 12, GFLAGS),
++
++	GATE(SCLK_OTG_ADP, "clk_otg_adp", "clk_rtc32k", 0,
++			RK3308_CLKGATE_CON(8), 13, GFLAGS),
++
++	COMPOSITE(SCLK_MAC_SRC, "clk_mac_src", mux_dpll_vpll0_vpll1_p, 0,
++			RK3308_CLKSEL_CON(43), 6, 2, MFLAGS, 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(8), 14, GFLAGS),
++	MUX(SCLK_MAC, "clk_mac", mux_mac_p,  CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(43), 14, 1, MFLAGS),
++	GATE(SCLK_MAC_REF, "clk_mac_ref", "clk_mac", 0,
++			RK3308_CLKGATE_CON(9), 1, GFLAGS),
++	GATE(SCLK_MAC_RX_TX, "clk_mac_rx_tx", "clk_mac", 0,
++			RK3308_CLKGATE_CON(9), 0, GFLAGS),
++	FACTOR(0, "clk_mac_rx_tx_div2", "clk_mac_rx_tx", 0, 1, 2),
++	FACTOR(0, "clk_mac_rx_tx_div20", "clk_mac_rx_tx", 0, 1, 20),
++	MUX(SCLK_MAC_RMII, "clk_mac_rmii_sel", mux_mac_rmii_sel_p,  CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(43), 15, 1, MFLAGS),
++
++	COMPOSITE(SCLK_OWIRE, "clk_owire", mux_dpll_vpll0_xin24m_p, 0,
++			RK3308_CLKSEL_CON(44), 14, 2, MFLAGS, 8, 6, DFLAGS,
++			RK3308_CLKGATE_CON(8), 15, GFLAGS),
++
++	/*
++	 * Clock-Architecture Diagram 5
++	 */
++
++	GATE(0, "clk_ddr_mon_timer", "xin24m", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(0), 12, GFLAGS),
++
++	GATE(0, "clk_ddr_mon", "clk_ddrphy1x_out", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 10, GFLAGS),
++	GATE(0, "clk_ddr_upctrl", "clk_ddrphy1x_out", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 11, GFLAGS),
++	GATE(0, "clk_ddr_msch", "clk_ddrphy1x_out", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 12, GFLAGS),
++	GATE(0, "clk_ddr_msch_peribus", "clk_ddrphy1x_out", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 13, GFLAGS),
++
++	COMPOSITE(SCLK_DDRCLK, "clk_ddrphy4x_src", mux_dpll_vpll0_vpll1_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(1), 6, 2, MFLAGS, 0, 3, DFLAGS,
++			RK3308_CLKGATE_CON(0), 10, GFLAGS),
++	GATE(0, "clk_ddrphy4x", "clk_ddrphy4x_src", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(0), 11, GFLAGS),
++	FACTOR_GATE(0, "clk_ddr_stdby_div4", "clk_ddrphy4x", CLK_IGNORE_UNUSED, 1, 4,
++			RK3308_CLKGATE_CON(0), 13, GFLAGS),
++	COMPOSITE_NODIV(0, "clk_ddrstdby", mux_ddrstdby_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(1), 8, 1, MFLAGS,
++			RK3308_CLKGATE_CON(4), 14, GFLAGS),
++
++	/*
++	 * Clock-Architecture Diagram 6
++	 */
++
++	GATE(PCLK_PMU, "pclk_pmu", "pclk_bus", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 5, GFLAGS),
++	GATE(SCLK_PMU, "clk_pmu", "pclk_bus", CLK_IGNORE_UNUSED,
++			RK3308_CLKGATE_CON(4), 6, GFLAGS),
++
++	COMPOSITE_FRACMUX(0, "clk_rtc32k_frac", "xin24m", CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(3), 0,
++			RK3308_CLKGATE_CON(4), 3, GFLAGS,
++			&rk3308_rtc32k_fracmux),
++	MUX(0, "clk_rtc32k_div_src", mux_vpll0_vpll1_p, 0,
++			RK3308_CLKSEL_CON(2), 10, 1, MFLAGS),
++	COMPOSITE_NOMUX(0, "clk_rtc32k_div", "clk_rtc32k_div_src", CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(4), 0, 16, DFLAGS,
++			RK3308_CLKGATE_CON(4), 2, GFLAGS),
++
++	COMPOSITE(0, "clk_usbphy_ref_src", mux_dpll_vpll0_p, 0,
++			RK3308_CLKSEL_CON(72), 6, 1, MFLAGS, 0, 6, DFLAGS,
++			RK3308_CLKGATE_CON(4), 7, GFLAGS),
++	COMPOSITE_NODIV(SCLK_USBPHY_REF, "clk_usbphy_ref", mux_usbphy_ref_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(72), 7, 1, MFLAGS,
++			RK3308_CLKGATE_CON(4), 8, GFLAGS),
++
++	GATE(0, "clk_wifi_dpll", "dpll", 0,
++			RK3308_CLKGATE_CON(15), 2, GFLAGS),
++	GATE(0, "clk_wifi_vpll0", "vpll0", 0,
++			RK3308_CLKGATE_CON(15), 3, GFLAGS),
++	GATE(0, "clk_wifi_osc", "xin24m", 0,
++			RK3308_CLKGATE_CON(15), 4, GFLAGS),
++	COMPOSITE(0, "clk_wifi_src", mux_wifi_src_p, 0,
++			RK3308_CLKSEL_CON(44), 6, 1, MFLAGS, 0, 6, DFLAGS,
++			RK3308_CLKGATE_CON(4), 0, GFLAGS),
++	COMPOSITE_NODIV(SCLK_WIFI, "clk_wifi", mux_wifi_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(44), 7, 1, MFLAGS,
++			RK3308_CLKGATE_CON(4), 1, GFLAGS),
++
++	GATE(SCLK_PVTM_PMU, "clk_pvtm_pmu", "xin24m", 0,
++			RK3308_CLKGATE_CON(4), 4, GFLAGS),
++
++	/*
++	 * Clock-Architecture Diagram 7
++	 */
++
++	COMPOSITE_NODIV(0, "clk_audio_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(45), 6, 2, MFLAGS,
++			RK3308_CLKGATE_CON(10), 0, GFLAGS),
++	COMPOSITE_NOMUX(HCLK_AUDIO, "hclk_audio", "clk_audio_src", 0,
++			RK3308_CLKSEL_CON(45), 0, 5, DFLAGS,
++			RK3308_CLKGATE_CON(10), 1, GFLAGS),
++	COMPOSITE_NOMUX(PCLK_AUDIO, "pclk_audio", "clk_audio_src", 0,
++			RK3308_CLKSEL_CON(45), 8, 5, DFLAGS,
++			RK3308_CLKGATE_CON(10), 2, GFLAGS),
++
++	COMPOSITE(0, "clk_pdm_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(46), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(10), 3, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_pdm_frac", "clk_pdm_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(47), 0,
++			RK3308_CLKGATE_CON(10), 4, GFLAGS,
++			&rk3308_pdm_fracmux),
++	GATE(SCLK_PDM, "clk_pdm", "clk_pdm_mux", 0,
++			RK3308_CLKGATE_CON(10), 5, GFLAGS),
++
++	COMPOSITE(SCLK_I2S0_8CH_TX_SRC, "clk_i2s0_8ch_tx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(52), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(10), 12, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s0_8ch_tx_frac", "clk_i2s0_8ch_tx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(53), 0,
++			RK3308_CLKGATE_CON(10), 13, GFLAGS,
++			&rk3308_i2s0_8ch_tx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S0_8CH_TX, "clk_i2s0_8ch_tx", mux_i2s0_8ch_tx_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(52), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(10), 14, GFLAGS),
++	COMPOSITE_NODIV(SCLK_I2S0_8CH_TX_OUT, "clk_i2s0_8ch_tx_out", mux_i2s0_8ch_tx_out_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(52), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(10), 15, GFLAGS),
++
++	COMPOSITE(SCLK_I2S0_8CH_RX_SRC, "clk_i2s0_8ch_rx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(54), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(11), 0, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s0_8ch_rx_frac", "clk_i2s0_8ch_rx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(55), 0,
++			RK3308_CLKGATE_CON(11), 1, GFLAGS,
++			&rk3308_i2s0_8ch_rx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S0_8CH_RX, "clk_i2s0_8ch_rx", mux_i2s0_8ch_rx_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(54), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(11), 2, GFLAGS),
++	GATE(SCLK_I2S0_8CH_RX_OUT, "clk_i2s0_8ch_rx_out", "clk_i2s0_8ch_rx", 0,
++			RK3308_CLKGATE_CON(11), 3, GFLAGS),
++
++	COMPOSITE(SCLK_I2S1_8CH_TX_SRC, "clk_i2s1_8ch_tx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(56), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(11), 4, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s1_8ch_tx_frac", "clk_i2s1_8ch_tx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(57), 0,
++			RK3308_CLKGATE_CON(11), 5, GFLAGS,
++			&rk3308_i2s1_8ch_tx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S1_8CH_TX, "clk_i2s1_8ch_tx", mux_i2s1_8ch_tx_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(56), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(11), 6, GFLAGS),
++	COMPOSITE_NODIV(SCLK_I2S1_8CH_TX_OUT, "clk_i2s1_8ch_tx_out", mux_i2s1_8ch_tx_out_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(56), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(11), 7, GFLAGS),
++
++	COMPOSITE(SCLK_I2S1_8CH_RX_SRC, "clk_i2s1_8ch_rx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(58), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(11), 8, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s1_8ch_rx_frac", "clk_i2s1_8ch_rx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(59), 0,
++			RK3308_CLKGATE_CON(11), 9, GFLAGS,
++			&rk3308_i2s1_8ch_rx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S1_8CH_RX, "clk_i2s1_8ch_rx", mux_i2s1_8ch_rx_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(58), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(11), 10, GFLAGS),
++	GATE(SCLK_I2S1_8CH_RX_OUT, "clk_i2s1_8ch_rx_out", "clk_i2s1_8ch_rx", 0,
++			RK3308_CLKGATE_CON(11), 11, GFLAGS),
++
++	COMPOSITE(SCLK_I2S2_8CH_TX_SRC, "clk_i2s2_8ch_tx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(60), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(11), 12, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s2_8ch_tx_frac", "clk_i2s2_8ch_tx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(61), 0,
++			RK3308_CLKGATE_CON(11), 13, GFLAGS,
++			&rk3308_i2s2_8ch_tx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S2_8CH_TX, "clk_i2s2_8ch_tx", mux_i2s2_8ch_tx_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(60), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(11), 14, GFLAGS),
++	COMPOSITE_NODIV(SCLK_I2S2_8CH_TX_OUT, "clk_i2s2_8ch_tx_out", mux_i2s2_8ch_tx_out_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(60), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(11), 15, GFLAGS),
++
++	COMPOSITE(SCLK_I2S2_8CH_RX_SRC, "clk_i2s2_8ch_rx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(62), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(12), 0, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s2_8ch_rx_frac", "clk_i2s2_8ch_rx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(63), 0,
++			RK3308_CLKGATE_CON(12), 1, GFLAGS,
++			&rk3308_i2s2_8ch_rx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S2_8CH_RX, "clk_i2s2_8ch_rx", mux_i2s2_8ch_rx_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(62), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(12), 2, GFLAGS),
++	GATE(SCLK_I2S2_8CH_RX_OUT, "clk_i2s2_8ch_rx_out", "clk_i2s2_8ch_rx", 0,
++			RK3308_CLKGATE_CON(12), 3, GFLAGS),
++
++	COMPOSITE(SCLK_I2S3_8CH_TX_SRC, "clk_i2s3_8ch_tx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(64), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(12), 4, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s3_8ch_tx_frac", "clk_i2s3_8ch_tx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(65), 0,
++			RK3308_CLKGATE_CON(12), 5, GFLAGS,
++			&rk3308_i2s3_8ch_tx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S3_8CH_TX, "clk_i2s3_8ch_tx", mux_i2s3_8ch_tx_rx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(64), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(12), 6, GFLAGS),
++	COMPOSITE_NODIV(SCLK_I2S3_8CH_TX_OUT, "clk_i2s3_8ch_tx_out", mux_i2s3_8ch_tx_out_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(64), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(12), 7, GFLAGS),
++
++	COMPOSITE(SCLK_I2S3_8CH_RX_SRC, "clk_i2s3_8ch_rx_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(66), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(12), 8, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s3_8ch_rx_frac", "clk_i2s3_8ch_rx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(67), 0,
++			RK3308_CLKGATE_CON(12), 9, GFLAGS,
++			&rk3308_i2s3_8ch_rx_fracmux),
++	COMPOSITE_NODIV(SCLK_I2S3_8CH_RX, "clk_i2s3_8ch_rx", mux_i2s3_8ch_rx_tx_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(66), 12, 1, MFLAGS,
++			RK3308_CLKGATE_CON(12), 10, GFLAGS),
++	GATE(SCLK_I2S3_8CH_RX_OUT, "clk_i2s3_8ch_rx_out", "clk_i2s3_8ch_rx", 0,
++			RK3308_CLKGATE_CON(12), 11, GFLAGS),
++
++	COMPOSITE(SCLK_I2S0_2CH_SRC, "clk_i2s0_2ch_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(68), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(12), 12, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s0_2ch_frac", "clk_i2s0_2ch_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(69), 0,
++			RK3308_CLKGATE_CON(12), 13, GFLAGS,
++			&rk3308_i2s0_2ch_fracmux),
++	GATE(SCLK_I2S0_2CH, "clk_i2s0_2ch", "clk_i2s0_2ch_mux", 0,
++			RK3308_CLKGATE_CON(12), 14, GFLAGS),
++	COMPOSITE_NODIV(SCLK_I2S0_2CH_OUT, "clk_i2s0_2ch_out", mux_i2s0_2ch_out_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(68), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(12), 15, GFLAGS),
++
++	COMPOSITE(SCLK_I2S1_2CH_SRC, "clk_i2s1_2ch_src", mux_vpll0_vpll1_xin24m_p, 0,
++			RK3308_CLKSEL_CON(70), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(13), 0, GFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_i2s1_2ch_frac", "clk_i2s1_2ch_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(71), 0,
++			RK3308_CLKGATE_CON(13), 1, GFLAGS,
++			&rk3308_i2s1_2ch_fracmux),
++	GATE(SCLK_I2S1_2CH, "clk_i2s1_2ch", "clk_i2s1_2ch_mux", 0,
++			RK3308_CLKGATE_CON(13), 2, GFLAGS),
++	COMPOSITE_NODIV(SCLK_I2S1_2CH_OUT, "clk_i2s1_2ch_out", mux_i2s1_2ch_out_p, CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(70), 15, 1, MFLAGS,
++			RK3308_CLKGATE_CON(13), 3, GFLAGS),
++
++	COMPOSITE(SCLK_SPDIF_TX_DIV, "clk_spdif_tx_div", mux_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(48), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(10), 6, GFLAGS),
++	COMPOSITE(SCLK_SPDIF_TX_DIV50, "clk_spdif_tx_div50", mux_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(48), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(10), 6, GFLAGS),
++	MUX(0, "clk_spdif_tx_src", mux_spdif_tx_src_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
++			RK3308_CLKSEL_CON(48), 12, 1, MFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_spdif_tx_frac", "clk_spdif_tx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(49), 0,
++			RK3308_CLKGATE_CON(10), 7, GFLAGS,
++			&rk3308_spdif_tx_fracmux),
++	GATE(SCLK_SPDIF_TX, "clk_spdif_tx", "clk_spdif_tx_mux", 0,
++			RK3308_CLKGATE_CON(10), 8, GFLAGS),
++
++	COMPOSITE(SCLK_SPDIF_RX_DIV, "clk_spdif_rx_div", mux_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(50), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(10), 9, GFLAGS),
++	COMPOSITE(SCLK_SPDIF_RX_DIV50, "clk_spdif_rx_div50", mux_vpll0_vpll1_xin24m_p, CLK_IGNORE_UNUSED,
++			RK3308_CLKSEL_CON(50), 8, 2, MFLAGS, 0, 7, DFLAGS,
++			RK3308_CLKGATE_CON(10), 9, GFLAGS),
++	MUX(0, "clk_spdif_rx_src", mux_spdif_rx_src_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
++			RK3308_CLKSEL_CON(50), 14, 1, MFLAGS),
++	COMPOSITE_FRACMUX(0, "clk_spdif_rx_frac", "clk_spdif_rx_src", CLK_SET_RATE_PARENT,
++			RK3308_CLKSEL_CON(51), 0,
++			RK3308_CLKGATE_CON(10), 10, GFLAGS,
++			&rk3308_spdif_rx_fracmux),
++	GATE(SCLK_SPDIF_RX, "clk_spdif_rx", "clk_spdif_rx_mux", 0,
++			RK3308_CLKGATE_CON(10), 11, GFLAGS),
++
++	/*
++	 * Clock-Architecture Diagram 8
++	 */
++
++	GATE(0, "aclk_core_niu", "aclk_core", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(0), 5, GFLAGS),
++	GATE(0, "pclk_core_dbg_niu", "aclk_core", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(0), 6, GFLAGS),
++	GATE(0, "pclk_core_dbg_daplite", "pclk_core_dbg", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(0), 7, GFLAGS),
++	GATE(0, "aclk_core_perf", "pclk_core_dbg", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(0), 8, GFLAGS),
++	GATE(0, "pclk_core_grf", "pclk_core_dbg", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(0), 9, GFLAGS),
++
++	GATE(0, "aclk_peri_niu", "aclk_peri", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(9), 2, GFLAGS),
++	GATE(0, "aclk_peribus_niu", "aclk_peri", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(9), 3, GFLAGS),
++	GATE(ACLK_MAC, "aclk_mac", "aclk_peri", 0, RK3308_CLKGATE_CON(9), 4, GFLAGS),
++
++	GATE(0, "hclk_peri_niu", "hclk_peri", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(9), 5, GFLAGS),
++	GATE(HCLK_NANDC, "hclk_nandc", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 6, GFLAGS),
++	GATE(HCLK_SDMMC, "hclk_sdmmc", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 7, GFLAGS),
++	GATE(HCLK_SDIO, "hclk_sdio", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 8, GFLAGS),
++	GATE(HCLK_EMMC, "hclk_emmc", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 9, GFLAGS),
++	GATE(HCLK_SFC, "hclk_sfc", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 10, GFLAGS),
++	GATE(HCLK_OTG, "hclk_otg", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 11, GFLAGS),
++	GATE(HCLK_HOST, "hclk_host", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 12, GFLAGS),
++	GATE(HCLK_HOST_ARB, "hclk_host_arb", "hclk_peri", 0, RK3308_CLKGATE_CON(9), 13, GFLAGS),
++
++	GATE(0, "pclk_peri_niu", "pclk_peri", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(9), 14, GFLAGS),
++	GATE(PCLK_MAC, "pclk_mac", "pclk_peri", 0, RK3308_CLKGATE_CON(9), 15, GFLAGS),
++
++	GATE(0, "hclk_audio_niu", "hclk_audio", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(14), 0, GFLAGS),
++	GATE(HCLK_PDM, "hclk_pdm", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 1, GFLAGS),
++	GATE(HCLK_SPDIFTX, "hclk_spdiftx", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 2, GFLAGS),
++	GATE(HCLK_SPDIFRX, "hclk_spdifrx", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 3, GFLAGS),
++	GATE(HCLK_I2S0_8CH, "hclk_i2s0_8ch", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 4, GFLAGS),
++	GATE(HCLK_I2S1_8CH, "hclk_i2s1_8ch", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 5, GFLAGS),
++	GATE(HCLK_I2S2_8CH, "hclk_i2s2_8ch", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 6, GFLAGS),
++	GATE(HCLK_I2S3_8CH, "hclk_i2s3_8ch", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 7, GFLAGS),
++	GATE(HCLK_I2S0_2CH, "hclk_i2s0_2ch", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 8, GFLAGS),
++	GATE(HCLK_I2S1_2CH, "hclk_i2s1_2ch", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 9, GFLAGS),
++	GATE(HCLK_VAD, "hclk_vad", "hclk_audio", 0, RK3308_CLKGATE_CON(14), 10, GFLAGS),
++
++	GATE(0, "pclk_audio_niu", "pclk_audio", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(14), 11, GFLAGS),
++	GATE(PCLK_ACODEC, "pclk_acodec", "pclk_audio", 0, RK3308_CLKGATE_CON(14), 12, GFLAGS),
++
++	GATE(0, "aclk_bus_niu", "aclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(5), 0, GFLAGS),
++	GATE(0, "aclk_intmem", "aclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(5), 1, GFLAGS),
++	GATE(ACLK_CRYPTO, "aclk_crypto", "aclk_bus", 0, RK3308_CLKGATE_CON(5), 2, GFLAGS),
++	GATE(ACLK_VOP, "aclk_vop", "aclk_bus", 0, RK3308_CLKGATE_CON(5), 3, GFLAGS),
++	GATE(0, "aclk_gic", "aclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(5), 4, GFLAGS),
++	/* aclk_dmaci0 is controlled by sgrf_clkgat_con. */
++	SGRF_GATE(ACLK_DMAC0, "aclk_dmac0", "aclk_bus"),
++	/* aclk_dmac1 is controlled by sgrf_clkgat_con. */
++	SGRF_GATE(ACLK_DMAC1, "aclk_dmac1", "aclk_bus"),
++	/* watchdog pclk is controlled by sgrf_clkgat_con. */
++	SGRF_GATE(PCLK_WDT, "pclk_wdt", "pclk_bus"),
++
++	GATE(0, "hclk_bus_niu", "hclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(5), 5, GFLAGS),
++	GATE(0, "hclk_rom", "hclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(5), 6, GFLAGS),
++	GATE(HCLK_CRYPTO, "hclk_crypto", "hclk_bus", 0, RK3308_CLKGATE_CON(5), 7, GFLAGS),
++	GATE(HCLK_VOP, "hclk_vop", "hclk_bus", 0, RK3308_CLKGATE_CON(5), 8, GFLAGS),
++
++	GATE(0, "pclk_bus_niu", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(5), 9, GFLAGS),
++	GATE(PCLK_UART0, "pclk_uart0", "pclk_bus", 0, RK3308_CLKGATE_CON(5), 10, GFLAGS),
++	GATE(PCLK_UART1, "pclk_uart1", "pclk_bus", 0, RK3308_CLKGATE_CON(5), 11, GFLAGS),
++	GATE(PCLK_UART2, "pclk_uart2", "pclk_bus", 0, RK3308_CLKGATE_CON(5), 12, GFLAGS),
++	GATE(PCLK_UART3, "pclk_uart3", "pclk_bus", 0, RK3308_CLKGATE_CON(5), 13, GFLAGS),
++	GATE(PCLK_UART4, "pclk_uart4", "pclk_bus", 0, RK3308_CLKGATE_CON(5), 14, GFLAGS),
++	GATE(PCLK_I2C0, "pclk_i2c0", "pclk_bus", 0, RK3308_CLKGATE_CON(5), 15, GFLAGS),
++	GATE(PCLK_I2C1, "pclk_i2c1", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 0, GFLAGS),
++	GATE(PCLK_I2C2, "pclk_i2c2", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 1, GFLAGS),
++	GATE(PCLK_I2C3, "pclk_i2c3", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 2, GFLAGS),
++	GATE(PCLK_PWM0, "pclk_pwm0", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 3, GFLAGS),
++	GATE(PCLK_SPI0, "pclk_spi0", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 4, GFLAGS),
++	GATE(PCLK_SPI1, "pclk_spi1", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 5, GFLAGS),
++	GATE(PCLK_SPI2, "pclk_spi2", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 6, GFLAGS),
++	GATE(PCLK_SARADC, "pclk_saradc", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 7, GFLAGS),
++	GATE(PCLK_TSADC, "pclk_tsadc", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 8, GFLAGS),
++	GATE(PCLK_TIMER, "pclk_timer", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 9, GFLAGS),
++	GATE(PCLK_OTP_NS, "pclk_otp_ns", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 10, GFLAGS),
++	GATE(PCLK_GPIO0, "pclk_gpio0", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 12, GFLAGS),
++	GATE(PCLK_GPIO1, "pclk_gpio1", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 13, GFLAGS),
++	GATE(PCLK_GPIO2, "pclk_gpio2", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 14, GFLAGS),
++	GATE(PCLK_GPIO3, "pclk_gpio3", "pclk_bus", 0, RK3308_CLKGATE_CON(6), 15, GFLAGS),
++	GATE(PCLK_GPIO4, "pclk_gpio4", "pclk_bus", 0, RK3308_CLKGATE_CON(7), 0, GFLAGS),
++	GATE(PCLK_SGRF, "pclk_sgrf", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 1, GFLAGS),
++	GATE(PCLK_GRF, "pclk_grf", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 2, GFLAGS),
++	GATE(PCLK_USBSD_DET, "pclk_usbsd_det", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 3, GFLAGS),
++	GATE(PCLK_DDR_UPCTL, "pclk_ddr_upctl", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 4, GFLAGS),
++	GATE(PCLK_DDR_MON, "pclk_ddr_mon", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 5, GFLAGS),
++	GATE(PCLK_DDRPHY, "pclk_ddrphy", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 6, GFLAGS),
++	GATE(PCLK_DDR_STDBY, "pclk_ddr_stdby", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 7, GFLAGS),
++	GATE(PCLK_USB_GRF, "pclk_usb_grf", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 8, GFLAGS),
++	GATE(PCLK_CRU, "pclk_cru", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 9, GFLAGS),
++	GATE(PCLK_OTP_PHY, "pclk_otp_phy", "pclk_bus", 0, RK3308_CLKGATE_CON(7), 10, GFLAGS),
++	GATE(PCLK_CPU_BOOST, "pclk_cpu_boost", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 11, GFLAGS),
++	GATE(PCLK_PWM1, "pclk_pwm1", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 12, GFLAGS),
++	GATE(PCLK_PWM2, "pclk_pwm2", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 13, GFLAGS),
++	GATE(PCLK_CAN, "pclk_can", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 14, GFLAGS),
++	GATE(PCLK_OWIRE, "pclk_owire", "pclk_bus", CLK_IGNORE_UNUSED, RK3308_CLKGATE_CON(7), 15, GFLAGS),
++};
++
++static const char *const rk3308_critical_clocks[] __initconst = {
++	"aclk_bus",
++	"hclk_bus",
++	"pclk_bus",
++	"aclk_peri",
++	"hclk_peri",
++	"pclk_peri",
++	"hclk_audio",
++	"pclk_audio",
++	"sclk_ddrc",
++};
++
++static void __init rk3308_clk_init(struct device_node *np)
++{
++	struct rockchip_clk_provider *ctx;
++	void __iomem *reg_base;
++
++	reg_base = of_iomap(np, 0);
++	if (!reg_base) {
++		pr_err("%s: could not map cru region\n", __func__);
++		return;
++	}
++
++	ctx = rockchip_clk_init(np, reg_base, CLK_NR_CLKS);
++	if (IS_ERR(ctx)) {
++		pr_err("%s: rockchip clk init failed\n", __func__);
++		iounmap(reg_base);
++		return;
++	}
++
++	rockchip_clk_register_plls(ctx, rk3308_pll_clks,
++				   ARRAY_SIZE(rk3308_pll_clks),
++				   RK3308_GRF_SOC_STATUS0);
++	rockchip_clk_register_branches(ctx, rk3308_clk_branches,
++				       ARRAY_SIZE(rk3308_clk_branches));
++	rockchip_clk_protect_critical(rk3308_critical_clocks,
++				      ARRAY_SIZE(rk3308_critical_clocks));
++
++	rockchip_clk_register_armclk(ctx, ARMCLK, "armclk",
++				     mux_armclk_p, ARRAY_SIZE(mux_armclk_p),
++				     &rk3308_cpuclk_data, rk3308_cpuclk_rates,
++				     ARRAY_SIZE(rk3308_cpuclk_rates));
++
++	rockchip_register_softrst(np, 10, reg_base + RK3308_SOFTRST_CON(0),
++				  ROCKCHIP_SOFTRST_HIWORD_MASK);
++
++	rockchip_register_restart_notifier(ctx, RK3308_GLB_SRST_FST, NULL);
++
++	rockchip_clk_of_add_provider(np, ctx);
++}
++
++CLK_OF_DECLARE(rk3308_cru, "rockchip,rk3308-cru", rk3308_clk_init);
+diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
+index b811597a3d38..2271a84124b0 100644
+--- a/drivers/clk/rockchip/clk.h
++++ b/drivers/clk/rockchip/clk.h
+@@ -121,6 +121,19 @@ struct clk;
+ #define RK3288_EMMC_CON0		0x218
+ #define RK3288_EMMC_CON1		0x21c
+ 
++#define RK3308_PLL_CON(x)		RK2928_PLL_CON(x)
++#define RK3308_CLKSEL_CON(x)		((x) * 0x4 + 0x100)
++#define RK3308_CLKGATE_CON(x)		((x) * 0x4 + 0x300)
++#define RK3308_GLB_SRST_FST		0xb8
++#define RK3308_SOFTRST_CON(x)		((x) * 0x4 + 0x400)
++#define RK3308_MODE_CON			0xa0
++#define RK3308_SDMMC_CON0		0x480
++#define RK3308_SDMMC_CON1		0x484
++#define RK3308_SDIO_CON0		0x488
++#define RK3308_SDIO_CON1		0x48c
++#define RK3308_EMMC_CON0		0x490
++#define RK3308_EMMC_CON1		0x494
++
+ #define RK3328_PLL_CON(x)		RK2928_PLL_CON(x)
+ #define RK3328_CLKSEL_CON(x)		((x) * 0x4 + 0x100)
+ #define RK3328_CLKGATE_CON(x)		((x) * 0x4 + 0x200)
+-- 
+2.11.0
+
+
+
