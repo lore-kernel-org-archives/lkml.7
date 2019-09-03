@@ -2,97 +2,133 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C34C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0543C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3292173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pMEcCRDv"
+	by mail.kernel.org (Postfix) with ESMTP id A1AD422D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfICFCZ (ORCPT
+        id S1726401AbfICFSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:02:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44701 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfICFCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:02:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q21so4971491pfn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 22:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7/XFYjbQfFP5x0DF9Qiwr9ncORMF1Jj8/HTtQ1v/Yi4=;
-        b=pMEcCRDvv3iUpNrnyTmlREY9J4bbkQdpcQduoRHI6B2nA2MCK4maxSlD1kRaIYDRL8
-         kNq475LYtyniC/mM1vBCMCed1xtdKd4/mBitl1hXgPNBkT8B64/Z9UiDO7Yurz4N5hhl
-         12BB/IjNsulBlioZeTLzTkyLsAkn0rY10naYykqYOSjRO0RAy3IEwAxZ+/SX2ScLijEt
-         0yChUxXqBrfFCGTNdgj4il/oBKOMsH2Pws6rlp8ME/2bm6dH4k04t9CWexOZX/Bdzta/
-         wyGmQPmgju9DjwuLvziyqUHo3UiOb7ArqYwPBMkd9nZNM9ikU/vCpWN0BM5CM98gD3b8
-         NiIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7/XFYjbQfFP5x0DF9Qiwr9ncORMF1Jj8/HTtQ1v/Yi4=;
-        b=rhaZ2eh5E/Dp95hQ8hYfFAt5mVCvLbvnCz0806MWBRQyZg9/1zi23DG+JKbT51A3a6
-         1zdwOG5o21eIwAKSQcxh4YU6tyNCcxSoJHaxIdSpG9dhZDfxE4nP9Acey+xc7ze5p6Sh
-         NDgHkFqupaidzozBVLKY48bp9mOW5ZJ5pZi0pwd8WhFXdC2pt4/X0ndIn95v6wLvyO1K
-         SQDw5Hy/Eb6k4A1sM33OOa3/XJvxRchhWz3FYWMoji3OvOQRSVZ4cAQIf1aS9EUBSxOY
-         BCz9UzzQFKudN0nxOvLMLXUAYUXRkEQpr8rqWYghSe8hkSKP/z3XTsPV9nk4OwQ395qw
-         8NkA==
-X-Gm-Message-State: APjAAAWaN+NNETEfXPqEFsncGD0CyMrFLzzUzpl9pzdbpPy7L5B/d64v
-        RDT6Yx6u7L9sD2r3QPst2A4=
-X-Google-Smtp-Source: APXvYqx2LqOE/JZ+pFr3rcvl9oJcjMZhtdB9rWps67FavH+XmYFIgKiB7VyNdR3KFHE1JINKu7M+4Q==
-X-Received: by 2002:a65:41c2:: with SMTP id b2mr28211445pgq.320.1567486944711;
-        Mon, 02 Sep 2019 22:02:24 -0700 (PDT)
-Received: from localhost ([175.223.38.155])
-        by smtp.gmail.com with ESMTPSA id w13sm3685940pfi.30.2019.09.02.22.02.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 22:02:24 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 14:02:20 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     James Byrne <james.byrne@origamienergy.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ABI: Update dev-kmsg documentation to match current
- kernel behaviour
-Message-ID: <20190903050220.GB3978@jagdpanzerIV>
-References: <0102016cf1b26630-8e9b337b-da49-43c6-b028-4250c2fac3ef-000000@eu-west-1.amazonses.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0102016cf1b26630-8e9b337b-da49-43c6-b028-4250c2fac3ef-000000@eu-west-1.amazonses.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 3 Sep 2019 01:18:48 -0400
+Received: from comms.puri.sm ([159.203.221.185]:57946 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfICFSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 01:18:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 85016DF845;
+        Mon,  2 Sep 2019 22:18:46 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7NVHnKCLjrdH; Mon,  2 Sep 2019 22:18:45 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH] iio: imu: st_lsm6dsx: replace underscore with hyphen in device name
+Date:   Tue,  3 Sep 2019 07:18:02 +0200
+Message-Id: <20190903051802.22716-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (09/02/19 11:18), James Byrne wrote:
-> Commit 5aa068ea4082 ("printk: remove games with previous record flags")
-> abolished the practice of setting the log flag to 'c' for the first
-> continuation line and '+' for subsequent lines. Now all continuation
-> lines are flagged with 'c' and '+' is never used.
->
-> Update the 'dev-kmsg' documentation to remove the reference to the
-> obsolete '+' flag. In addition, state explicitly that only 8 bits of the
-> <N> syslog prefix are used for the facility number when writing to
-> /dev/kmsg.
->
-> Signed-off-by: James Byrne <james.byrne@origamienergy.com>
+With the underscore character in the lsm9ds1_imu device name, we get the
+following error below, so use a dash, just like the other device names do too.
 
-Looks good to me.
+[    3.961399] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+[    4.010581] Mem abort info:
+[    4.013838]   ESR = 0x96000004
+[    4.023602]   Exception class = DABT (current EL), IL = 32 bits
+[    4.047993]   SET = 0, FnV = 0
+[    4.052690]   EA = 0, S1PTW = 0
+[    4.056015] Data abort info:
+[    4.059020]   ISV = 0, ISS = 0x00000004
+[    4.080106]   CM = 0, WnR = 0
+[    4.085237] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e4f61000
+[    4.092194] [0000000000000018] pgd=0000000000000000
+[    4.097474] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[    4.103286] Modules linked in: tcpci st_sensors st_lsm6dsx_i2c(+) tcpm st_lsm6dsx industrialio_triggered_buffer kfifo_buf vcnl4000 roles typec goodix snd_soc_sgtl5000 bq25890_charger snvs_pwrkey imx_sdma virt_dma qoriq_thermal imx2_wdt snd_soc_fsl_sai aes_ce_blk imx_pcm_dma crypto_simd watchdog crct10dif_ce ghash_ce sha2_ce snd_soc_simple_card snd_soc_gtm601 snd_soc_simple_card_utils sha1_ce snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore gpio_vibra usb_f_acm u_serial usb_f_rndis g_multi usb_f_mass_storage u_ether libcomposite ip_tables x_tables ipv6 nf_defrag_ipv6 xhci_plat_hcd xhci_hcd usbcore dwc3 ulpi udc_core usb_common phy_fsl_imx8mq_usb
+[    4.105389] bq25890-charger 0-006b: Capacity for 3784000 is 86%
+[    4.164061] CPU: 1 PID: 344 Comm: systemd-udevd Tainted: G        W         5.3.0-rc2-g24e3d989d49f-dirty #161
+[    4.164063] Hardware name: Purism Librem 5 devkit (DT)
+[    4.164067] pstate: 80000005 (Nzcv daif -PAN -UAO)
+[    4.164082] pc : st_lsm6dsx_i2c_probe+0x18/0x80 [st_lsm6dsx_i2c]
+[    4.164093] lr : i2c_device_probe+0x1f0/0x2b8
+[    4.164094] sp : ffff8000a499f970
+[    4.164097] x29: ffff8000a499f970 x28: 0000000000000000
+[    4.164100] x27: ffff000010b70000 x26: ffff8000a499fd68
+[    4.164104] x25: ffff000010860000 x24: ffff000008a8b038
+[    4.164108] x23: ffff000008a8b038 x22: ffff000008a8b000
+[    4.164111] x21: ffff8000a55b2400 x20: ffff000008a89000
+[    4.164115] x19: ffff8000a55b2400 x18: ffffffffffffffff
+[    4.164118] x17: 0000000000000000 x16: 0000000000000000
+[    4.164121] x15: 0000000000040000 x14: 00000000fffffff0
+[    4.164125] x13: ffff000010b6c898 x12: 0000000000000030
+[    4.164128] x11: 0000000000000000 x10: 0101010101010101
+[    4.260542] x9 : fffffffffffffffc x8 : 0000000000000008
+[    4.266073] x7 : 0000000000000004 x6 : 1e0e1a00f2ade4ef
+[    4.271605] x5 : 6f642d72001a0e1e x4 : 8080808000000000
+[    4.277136] x3 : 0000000000000000 x2 : ffff000008a8a000
+[    4.282667] x1 : 0000000000000000 x0 : ffff8000a55b2400
+[    4.288199] Call trace:
+[    4.290753]  st_lsm6dsx_i2c_probe+0x18/0x80 [st_lsm6dsx_i2c]
+[    4.296648]  i2c_device_probe+0x1f0/0x2b8
+[    4.300825]  really_probe+0x168/0x368
+[    4.304638]  driver_probe_device.part.2+0x10c/0x128
+[    4.309716]  device_driver_attach+0x74/0xa0
+[    4.314071]  __driver_attach+0x84/0x130
+[    4.318065]  bus_for_each_dev+0x68/0xc8
+[    4.322058]  driver_attach+0x20/0x28
+[    4.325780]  bus_add_driver+0xd4/0x1f8
+[    4.329683]  driver_register+0x60/0x110
+[    4.333677]  i2c_register_driver+0x44/0x98
+[    4.337944]  st_lsm6dsx_driver_init+0x1c/0x1000 [st_lsm6dsx_i2c]
+[    4.344200]  do_one_initcall+0x58/0x1a8
+[    4.348195]  do_init_module+0x54/0x1d4
+[    4.352098]  load_module+0x1998/0x1c40
+[    4.356001]  __se_sys_finit_module+0xc0/0xd8
+[    4.360446]  __arm64_sys_finit_module+0x14/0x20
+[    4.365166]  el0_svc_common.constprop.0+0xb0/0x168
+[    4.370154]  el0_svc_handler+0x18/0x20
+[    4.374056]  el0_svc+0x8/0xc
+[    4.377059] Code: d2800003 910003fd a90153f3 aa0003f3 (f9400c34)
+[    4.383406] ---[ end trace 6dfe010c028e3371 ]---
 
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+---
 
-	-ss
+While this patch fixes my (formerly already mentioned) issue, it's
+a question actually: Why does is this underscore character a problem?
+
+thanks,
+
+                        martin
+
+
+
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index 5e3cd96b0059..80e42c7dbcbe 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -24,7 +24,7 @@
+ #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
+ #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
+ #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
+-#define ST_LSM9DS1_DEV_NAME	"lsm9ds1_imu"
++#define ST_LSM9DS1_DEV_NAME	"lsm9ds1-imu"
+ 
+ enum st_lsm6dsx_hw_id {
+ 	ST_LSM6DS3_ID,
+-- 
+2.20.1
+
