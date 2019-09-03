@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5131BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D634CC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C222173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF544206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567511880;
-	bh=N9Yg7kPna+lT8B9VkTurxmMJRls7hGLvXL6opIIjx90=;
+	s=default; t=1567511883;
+	bh=Z3h9T05PJl46FqOMJHSrX0SvpMfLiYQMca9NAhh9Pm8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=NV5EyExdlOgg8ZVTvvV+cOLdQSUrEfGes9EqJ9ltE0sYNz0QFkqYRWYalYP1/1Tid
-	 WhcpWEZZ6JTWjZgDmvohczhQBJ/iiAh3As1ENCy8GX7TruyIGXFn1apE7W98ycQqLj
-	 I6/TY62QyVCtnf9V+lk46qhQzqsn+BppfWUiy3MI=
+	b=BHRaQ75C7QtYRoX/Q+otEbt2PzWgkTnKUPvp/YyuqRt+lnSTS6Pu9aJcjqoJaIXCv
+	 zmLxZY8NbxmZmQ7i32T3sPPHeh6NKSuHgDk3M8nhaZktKVJCFpiZKWShHJpQrM55lb
+	 KGb9J40VyVNjQEIhlZVzjCjDwfQ+VQG6wq58h75w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfICL57 (ORCPT
+        id S1729060AbfICL56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:57:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53128 "EHLO
+        Tue, 3 Sep 2019 07:57:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53126 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfICL54 (ORCPT
+        with ESMTP id S1729033AbfICL54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 07:57:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1sZR0jM6bSKmi2RDe14AoOgOh3ZcP38nZLHlmDYc7z8=; b=msNKnC9/TNrR
-        UlW226Cz+yKvUAC86LEjs3KYAnXCDCXeYLouIltTnS/EVUrdG3b+QMX+SP/GllbYwrlxRZ7yMNn1T
-        k59Q8GzHYkbfLm9mKpgYmZabOYarOdIducgyDlrzo+Me4GUvQ10unTQsWn/1P0ERCft8G5eX8ScpN
-        Dh9k4=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        List-Archive; bh=cgxtaWs//pWcWZQdK/XoplWjvgqpaZGkl5enIyRVTjU=; b=B3tLuBNEB1du
+        xHMinHE6b1SDBxOOXLbRMKvex5t9HBuTBpeXaU2gvU/W/0UPZOCtL7m41UYCxMURP3mP1EL3KtQBc
+        xdi0KEVOdwHWHQfTFHe4lYSwqgd7eNToJdLZkFSfSwGcwE5i/QBMQIrij3jijFIcBF48p3SK9nXte
+        edmqk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i57RV-0008Ly-Cv; Tue, 03 Sep 2019 11:57:49 +0000
+        id 1i57RV-0008M4-Qw; Tue, 03 Sep 2019 11:57:49 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D6F002742D39; Tue,  3 Sep 2019 12:57:48 +0100 (BST)
+        id 44CAB2742D32; Tue,  3 Sep 2019 12:57:49 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Keiji Hayashibara <hayashibara.keiji@socionext.com>
 Cc:     broonie@kernel.org, hayashibara.keiji@socionext.com,
@@ -52,11 +52,11 @@ Cc:     broonie@kernel.org, hayashibara.keiji@socionext.com,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, masami.hiramatsu@linaro.org,
         yamada.masahiro@socionext.com
-Subject: Applied "spi: uniphier: introduce polling mode" to the spi tree
-In-Reply-To: <1567488661-11428-4-git-send-email-hayashibara.keiji@socionext.com>
+Subject: Applied "spi: uniphier: fix wrong register overwrite" to the spi tree
+In-Reply-To: <1567488661-11428-2-git-send-email-hayashibara.keiji@socionext.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190903115748.D6F002742D39@ypsilon.sirena.org.uk>
-Date:   Tue,  3 Sep 2019 12:57:48 +0100 (BST)
+Message-Id: <20190903115749.44CAB2742D32@ypsilon.sirena.org.uk>
+Date:   Tue,  3 Sep 2019 12:57:49 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: uniphier: introduce polling mode
+   spi: uniphier: fix wrong register overwrite
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,156 +89,33 @@ to this mail.
 Thanks,
 Mark
 
-From 37ffab81709805c674f164948e03ba0d3fe371b6 Mon Sep 17 00:00:00 2001
+From 3c633f9dbd824b2f8e5e1a3c1fd533c1b2801be5 Mon Sep 17 00:00:00 2001
 From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Date: Tue, 3 Sep 2019 14:31:01 +0900
-Subject: [PATCH] spi: uniphier: introduce polling mode
+Date: Tue, 3 Sep 2019 14:30:59 +0900
+Subject: [PATCH] spi: uniphier: fix wrong register overwrite
 
-Introduce new polling mode for short size transfer. Either the estimated
-transfer time is estimated to exceed 200us, or polling loop actually exceeds
-200us, it switches to irq mode.
+When it changes the spi mode, the register is overwritten incorrectly.
+This commit fixes this register overwrite.
 
 Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Link: https://lore.kernel.org/r/1567488661-11428-4-git-send-email-hayashibara.keiji@socionext.com
+Link: https://lore.kernel.org/r/1567488661-11428-2-git-send-email-hayashibara.keiji@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-uniphier.c | 81 +++++++++++++++++++++++++++++++-------
- 1 file changed, 66 insertions(+), 15 deletions(-)
+ drivers/spi/spi-uniphier.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
-index 226f8508bff2..938f8873e63f 100644
+index 5a6137fe172d..50f12fb20403 100644
 --- a/drivers/spi/spi-uniphier.c
 +++ b/drivers/spi/spi-uniphier.c
-@@ -7,6 +7,7 @@
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -16,6 +17,7 @@
- #include <asm/unaligned.h>
+@@ -214,6 +214,7 @@ static void uniphier_spi_setup_transfer(struct spi_device *spi,
+ 	if (!priv->is_save_param || priv->mode != spi->mode) {
+ 		uniphier_spi_set_mode(spi);
+ 		priv->mode = spi->mode;
++		priv->is_save_param = false;
+ 	}
  
- #define SSI_TIMEOUT_MS		2000
-+#define SSI_POLL_TIMEOUT_US	200
- #define SSI_MAX_CLK_DIVIDER	254
- #define SSI_MIN_CLK_DIVIDER	4
- 
-@@ -289,21 +291,23 @@ static void uniphier_spi_recv(struct uniphier_spi_priv *priv)
- 
- static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
- {
--	unsigned int tx_count;
-+	unsigned int fifo_threshold, fill_bytes;
- 	u32 val;
- 
--	tx_count = DIV_ROUND_UP(priv->tx_bytes,
-+	fifo_threshold = DIV_ROUND_UP(priv->rx_bytes,
- 				bytes_per_word(priv->bits_per_word));
--	tx_count = min(tx_count, SSI_FIFO_DEPTH);
-+	fifo_threshold = min(fifo_threshold, SSI_FIFO_DEPTH);
-+
-+	fill_bytes = fifo_threshold - (priv->rx_bytes - priv->tx_bytes);
- 
- 	/* set fifo threshold */
- 	val = readl(priv->base + SSI_FC);
- 	val &= ~(SSI_FC_TXFTH_MASK | SSI_FC_RXFTH_MASK);
--	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, tx_count);
--	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, tx_count);
-+	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, fifo_threshold);
-+	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, fifo_threshold);
- 	writel(val, priv->base + SSI_FC);
- 
--	while (tx_count--)
-+	while (fill_bytes--)
- 		uniphier_spi_send(priv);
- }
- 
-@@ -322,20 +326,14 @@ static void uniphier_spi_set_cs(struct spi_device *spi, bool enable)
- 	writel(val, priv->base + SSI_FPS);
- }
- 
--static int uniphier_spi_transfer_one(struct spi_master *master,
--				     struct spi_device *spi,
--				     struct spi_transfer *t)
-+static int uniphier_spi_transfer_one_irq(struct spi_master *master,
-+					 struct spi_device *spi,
-+					 struct spi_transfer *t)
- {
- 	struct uniphier_spi_priv *priv = spi_master_get_devdata(master);
- 	struct device *dev = master->dev.parent;
- 	unsigned long time_left;
- 
--	/* Terminate and return success for 0 byte length transfer */
--	if (!t->len)
--		return 0;
--
--	uniphier_spi_setup_transfer(spi, t);
--
- 	reinit_completion(&priv->xfer_done);
- 
- 	uniphier_spi_fill_tx_fifo(priv);
-@@ -355,6 +353,59 @@ static int uniphier_spi_transfer_one(struct spi_master *master,
- 	return priv->error;
- }
- 
-+static int uniphier_spi_transfer_one_poll(struct spi_master *master,
-+					  struct spi_device *spi,
-+					  struct spi_transfer *t)
-+{
-+	struct uniphier_spi_priv *priv = spi_master_get_devdata(master);
-+	int loop = SSI_POLL_TIMEOUT_US * 10;
-+
-+	while (priv->tx_bytes) {
-+		uniphier_spi_fill_tx_fifo(priv);
-+
-+		while ((priv->rx_bytes - priv->tx_bytes) > 0) {
-+			while (!(readl(priv->base + SSI_SR) & SSI_SR_RNE)
-+								&& loop--)
-+				ndelay(100);
-+
-+			if (loop == -1)
-+				goto irq_transfer;
-+
-+			uniphier_spi_recv(priv);
-+		}
-+	}
-+
-+	return 0;
-+
-+irq_transfer:
-+	return uniphier_spi_transfer_one_irq(master, spi, t);
-+}
-+
-+static int uniphier_spi_transfer_one(struct spi_master *master,
-+				     struct spi_device *spi,
-+				     struct spi_transfer *t)
-+{
-+	struct uniphier_spi_priv *priv = spi_master_get_devdata(master);
-+	unsigned long threshold;
-+
-+	/* Terminate and return success for 0 byte length transfer */
-+	if (!t->len)
-+		return 0;
-+
-+	uniphier_spi_setup_transfer(spi, t);
-+
-+	/*
-+	 * If the transfer operation will take longer than
-+	 * SSI_POLL_TIMEOUT_US, it should use irq.
-+	 */
-+	threshold = DIV_ROUND_UP(SSI_POLL_TIMEOUT_US * priv->speed_hz,
-+					USEC_PER_SEC * BITS_PER_BYTE);
-+	if (t->len > threshold)
-+		return uniphier_spi_transfer_one_irq(master, spi, t);
-+	else
-+		return uniphier_spi_transfer_one_poll(master, spi, t);
-+}
-+
- static int uniphier_spi_prepare_transfer_hardware(struct spi_master *master)
- {
- 	struct uniphier_spi_priv *priv = spi_master_get_devdata(master);
+ 	if (!priv->is_save_param || priv->bits_per_word != t->bits_per_word) {
 -- 
 2.20.1
 
