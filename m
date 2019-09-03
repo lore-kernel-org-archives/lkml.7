@@ -2,173 +2,94 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C022C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB81C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CEA2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+5mHo0P"
+	by mail.kernel.org (Postfix) with ESMTP id 7760A22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567540017;
+	bh=iGpP72X9Gfm1P4HKsR74LYZo3Ydpk9P15xifOisfBxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XO4QprbE33sO3WkjyqLMJAo1X7Fyx8MeBu6Fbb536pVyZ7c8gezUSrjej+4Fsv1fr
+	 JOal9ZuaHRnehGQPpbP+my6tDHb6jwW0yB6tcMAJuujNEyg72gMHe0sORzp7vxdFkL
+	 72f/4INaYqdrFUxFJlZ6Xtm3gj8//q3EDz3gLnv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfICTqg (ORCPT
+        id S1726937AbfICTq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:46:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35068 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfICTqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:46:36 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n4so9765834pgv.2;
-        Tue, 03 Sep 2019 12:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=igmg6AwfGYbAp3MYYh4Kk1p8kAHB/xsXsNHr4nn4ius=;
-        b=F+5mHo0Pc7wnq15LIJvJIQhoNZSBBx0k7UKN/GWlOYX6SiT5NSARfjS+20qm8DAiwQ
-         Nja+QjRQCT0Y3r5yxoXNjObBW75vUPa/AizhaAyD8fu3HnSV7HfuPErQqNTPhiStKhRC
-         GXtvBQ3Ux0FNL/klbVHk3QqZHt1jlRnbRGXjGoOcNbnWT/I4rsoBqLrMeATw6NPrAELp
-         YZnvCNsN2sCumcv6io1UtHFvyPR4U4/jZ+7tiCCkqe6OIymoLNFOTHO89Bk4C1W1WZU4
-         PKlT0wsaogeaQ/A0EyJtS6Af9k+hAEAzuo2rKz+0nU/gI+CSkROmWzSdAGvZ3YFC//aW
-         KggA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=igmg6AwfGYbAp3MYYh4Kk1p8kAHB/xsXsNHr4nn4ius=;
-        b=IL7gSAvne1KqEv+YiI5zIdjoiAigSkXXn7/8D2Bs3YJMOYlmEZ2Bu+VBGCHy0DxoX+
-         3xgRm9r2xiKS50nKJwP73/VJfp44fNS09GPMUUN/5urzlz1moY9ubExpXRKn8hEWVuxi
-         FD3vUP0gaQ5K/Gl92oVRRNeEsSixTp7WG50Klo0/i6LM+S2wd63SfF9t8BUcsS0A+wez
-         zswbDTOrRO2u5UWf+vEWlrw/8jjsRHCmMX3E29QztpYmr9Ff8ih4kTwuURAwlAVjaR94
-         iouwMtsNSwbbFeqavram99OXDyGzB7w63gVeJcNvLe9OyQjbASCzWjNGUMJZOh2iPhXs
-         LzIg==
-X-Gm-Message-State: APjAAAV8VW3+RmTczYDj0kDTDCkb/JGB0XkTaQVuO6buQ67V7zWA8rxD
-        k9rR9Gf1yABKTIP5DF3Oi2M=
-X-Google-Smtp-Source: APXvYqz/z1n6VqRkLqpP+JOl2WoAy7bUZcayG7Qzi21C1gIKdqgyDS1yRSB/5vrBmOM0cmx5lGt+4g==
-X-Received: by 2002:a63:2744:: with SMTP id n65mr31585095pgn.277.1567539995164;
-        Tue, 03 Sep 2019 12:46:35 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s5sm343566pjo.26.2019.09.03.12.46.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 12:46:34 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 12:46:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Rudolf Marek <r.marek@assembler.cz>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 3/3] hwmon: w83793d: convert to use
- devm_i2c_new_dummy_device
-Message-ID: <20190903194633.GB32299@roeck-us.net>
-References: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
- <20190903181256.13450-4-wsa+renesas@sang-engineering.com>
+        Tue, 3 Sep 2019 15:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfICTq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:46:56 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 792C321881;
+        Tue,  3 Sep 2019 19:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567540015;
+        bh=iGpP72X9Gfm1P4HKsR74LYZo3Ydpk9P15xifOisfBxo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dukkqYi+oIhKbc5l4o0v/PgTWPmdhzuAp1/a1bTLNTKocjXl5O/F3bHdUaJtpa0tV
+         5L87acgduZm74OZL7niFVcxCJBRY89xN+UhwedzmFyxm1UWyXZNG/sw+PEP7/NOK2O
+         GuMT+liOsStYPwbJHAyztoZ7vvDT3M89tOkVkzZU=
+Date:   Tue, 3 Sep 2019 15:46:54 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 066/167] iio: adc: exynos-adc: Add S5PV210
+ variant
+Message-ID: <20190903194654.GI5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-66-sashal@kernel.org>
+ <20190903185328.74299c4d@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190903181256.13450-4-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903185328.74299c4d@archlinux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:12:56PM +0200, Wolfram Sang wrote:
-> And simplify the error handling.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Tue, Sep 03, 2019 at 06:53:28PM +0100, Jonathan Cameron wrote:
+>On Tue,  3 Sep 2019 12:23:38 -0400
+>Sasha Levin <sashal@kernel.org> wrote:
+>
+>> From: Jonathan Bakker <xc-racer2@live.ca>
+>>
+>> [ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
+>>
+>> S5PV210's ADC variant is almost the same as v1 except that it has 10
+>> channels and doesn't require the pmu register
+>>
+>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>I have no particular objection to adding new IDs (which is more
+>or less what this patch is), but I didn't know autosel was
+>picking them up.  So a bit of surprise... If intentional
+>then fine to apply to stable.
 
-Applied to hwmon-next.
+I dragged it in because 103cda6a3b8d2 ("iio: adc: exynos-adc: Use proper
+number of channels for Exynos4x12") which is tagged for stable depended
+on this patch, and given it just adds new IDs which is part of what we
+take for stable I just took it in as is.
 
+--
 Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/w83793.c | 30 ++++++++----------------------
->  1 file changed, 8 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/hwmon/w83793.c b/drivers/hwmon/w83793.c
-> index 46f5dfec8d0a..9df48b70c70c 100644
-> --- a/drivers/hwmon/w83793.c
-> +++ b/drivers/hwmon/w83793.c
-> @@ -1551,9 +1551,6 @@ static int w83793_remove(struct i2c_client *client)
->  	for (i = 0; i < ARRAY_SIZE(w83793_temp); i++)
->  		device_remove_file(dev, &w83793_temp[i].dev_attr);
->  
-> -	i2c_unregister_device(data->lm75[0]);
-> -	i2c_unregister_device(data->lm75[1]);
-> -
->  	/* Decrease data reference counter */
->  	mutex_lock(&watchdog_data_mutex);
->  	kref_put(&data->kref, w83793_release_resources);
-> @@ -1565,7 +1562,7 @@ static int w83793_remove(struct i2c_client *client)
->  static int
->  w83793_detect_subclients(struct i2c_client *client)
->  {
-> -	int i, id, err;
-> +	int i, id;
->  	int address = client->addr;
->  	u8 tmp;
->  	struct i2c_adapter *adapter = client->adapter;
-> @@ -1580,8 +1577,7 @@ w83793_detect_subclients(struct i2c_client *client)
->  					"invalid subclient "
->  					"address %d; must be 0x48-0x4f\n",
->  					force_subclients[i]);
-> -				err = -EINVAL;
-> -				goto ERROR_SC_0;
-> +				return -EINVAL;
->  			}
->  		}
->  		w83793_write_value(client, W83793_REG_I2C_SUBADDR,
-> @@ -1591,28 +1587,21 @@ w83793_detect_subclients(struct i2c_client *client)
->  
->  	tmp = w83793_read_value(client, W83793_REG_I2C_SUBADDR);
->  	if (!(tmp & 0x08))
-> -		data->lm75[0] = i2c_new_dummy(adapter, 0x48 + (tmp & 0x7));
-> +		data->lm75[0] = devm_i2c_new_dummy_device(&client->dev, adapter,
-> +							  0x48 + (tmp & 0x7));
->  	if (!(tmp & 0x80)) {
-> -		if ((data->lm75[0] != NULL)
-> +		if (!IS_ERR(data->lm75[0])
->  		    && ((tmp & 0x7) == ((tmp >> 4) & 0x7))) {
->  			dev_err(&client->dev,
->  				"duplicate addresses 0x%x, "
->  				"use force_subclients\n", data->lm75[0]->addr);
-> -			err = -ENODEV;
-> -			goto ERROR_SC_1;
-> +			return -ENODEV;
->  		}
-> -		data->lm75[1] = i2c_new_dummy(adapter,
-> -					      0x48 + ((tmp >> 4) & 0x7));
-> +		data->lm75[1] = devm_i2c_new_dummy_device(&client->dev, adapter,
-> +							  0x48 + ((tmp >> 4) & 0x7));
->  	}
->  
->  	return 0;
-> -
-> -	/* Undo inits in case of errors */
-> -
-> -ERROR_SC_1:
-> -	i2c_unregister_device(data->lm75[0]);
-> -ERROR_SC_0:
-> -	return err;
->  }
->  
->  /* Return 0 if detection is successful, -ENODEV otherwise */
-> @@ -1945,9 +1934,6 @@ static int w83793_probe(struct i2c_client *client,
->  
->  	for (i = 0; i < ARRAY_SIZE(w83793_temp); i++)
->  		device_remove_file(dev, &w83793_temp[i].dev_attr);
-> -
-> -	i2c_unregister_device(data->lm75[0]);
-> -	i2c_unregister_device(data->lm75[1]);
->  free_mem:
->  	kfree(data);
->  exit:
-> -- 
-> 2.20.1
-> 
+Sasha
