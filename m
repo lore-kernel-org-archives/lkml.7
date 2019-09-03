@@ -2,88 +2,141 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B60DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D0AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFE620449
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567529276;
-	bh=XRlHukoBOT+zjHGZh/2kvhy6cB36w9lH0hg7z+Y4xbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lpyP9jkYwMm8GcYff0w4dBBwVP9Dh8csVsf6mqtOrRDx5igYeKV/oyZpMdifNCG66
-	 ZsQ1E/jDkML5ZPn7nLXtHMO40IhEAMTC/2MqQ8Gk5o2lcJT+1Q+uhysbB9PyQiKksl
-	 7RSwwI+PT+3RLEIMCJ5+IL3QxCHQKGG9cRmZX4yc=
+	by mail.kernel.org (Postfix) with ESMTP id 6CD3422CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbfICQrz (ORCPT
+        id S1729832AbfICQtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:47:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46235 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbfICQrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:47:55 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:47:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="207151406"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Sep 2019 09:47:53 -0700
-Date:   Tue, 3 Sep 2019 10:46:20 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Keith Busch <keith.busch@intel.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-Message-ID: <20190903164620.GA20847@localhost.localdomain>
-References: <20190831000139.7662-1-logang@deltatee.com>
- <20190831152910.GA29439@localhost.localdomain>
- <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
+        Tue, 3 Sep 2019 12:49:33 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:51492 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727624AbfICQtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:49:32 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i5Bzn-0000Wr-Nx; Tue, 03 Sep 2019 10:49:31 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i5Bzm-0004Pi-UU; Tue, 03 Sep 2019 10:49:31 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-snps-arc@lists.infradead.org
+References: <20190903162519.7136-1-sashal@kernel.org>
+        <20190903162519.7136-111-sashal@kernel.org>
+Date:   Tue, 03 Sep 2019 11:49:16 -0500
+In-Reply-To: <20190903162519.7136-111-sashal@kernel.org> (Sasha Levin's
+        message of "Tue, 3 Sep 2019 12:24:23 -0400")
+Message-ID: <87ef0xqq9f.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain
+X-XM-SPF: eid=1i5Bzm-0004Pi-UU;;;mid=<87ef0xqq9f.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/8C8aNV+b5wpsSiXnS9u4Q5EGxnuEWRB8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH AUTOSEL 4.19 111/167] signal/arc: Use force_sig_fault where appropriate
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:08:01AM -0600, Logan Gunthorpe wrote:
-> On 2019-08-31 9:29 a.m., Keith Busch wrote:
-> > On Fri, Aug 30, 2019 at 06:01:39PM -0600, Logan Gunthorpe wrote:
-> >> To fix this, assign the subsystem's instance based on the instance
-> >> number of the controller's instance that first created it. There should
-> >> always be fewer subsystems than controllers so the should not be a need
-> >> to create extra subsystems that overlap existing controllers.
-> > 
-> > The subsystem's lifetime is not tied to the controller's. When the
-> > controller is removed and releases its instance, the next controller
-> > to take that available instance will create naming collisions with the
-> > subsystem still using it.
-> > 
-> 
-> Hmm, yes, ok.
-> 
-> So perhaps we can just make the subsystem prefer the ctrl's instance
-> when allocating the ID? Then at least, in the common case, the
-> controller numbers will match the subsystem numbers. Only when there's
-> random hot-plugs would the numbers get out of sync.
+Sasha Levin <sashal@kernel.org> writes:
 
-I really don't know about a patch that works only on static
-configurations. Connects and disconnects do happen on live systems,
-so the numerals will inevitably get out of sync.
+> From: "Eric W. Biederman" <ebiederm@xmission.com>
+>
+> [ Upstream commit 15773ae938d8d93d982461990bebad6e1d7a1830 ]
 
-Could we possibly make /dev/nvmeX be a subsystem handle without causing
-trouble for anyone? This would essentially be the same thing as today
-for non-CMIC controllers with a device-per-controller and only affects
-the CMIC ones.
+To the best of my knowledge this is just a clean up, no changes in
+behavior are present.
+
+The only reason I can see to backport this is so that later fixes could
+be applied cleanly.
+
+So while I have no objections to this patch being backported I don't see
+why you would want to either.
+
+> Acked-by: Vineet Gupta <vgupta@synopsys.com>
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/arc/mm/fault.c | 20 +++++---------------
+>  1 file changed, 5 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+> index f28db0b112a30..a0366f9dca051 100644
+> --- a/arch/arc/mm/fault.c
+> +++ b/arch/arc/mm/fault.c
+> @@ -66,14 +66,12 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+>  	struct vm_area_struct *vma = NULL;
+>  	struct task_struct *tsk = current;
+>  	struct mm_struct *mm = tsk->mm;
+> -	siginfo_t info;
+> +	int si_code;
+>  	int ret;
+>  	vm_fault_t fault;
+>  	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
+>  	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+>  
+> -	clear_siginfo(&info);
+> -
+>  	/*
+>  	 * We fault-in kernel-space virtual memory on-demand. The
+>  	 * 'reference' page table is init_mm.pgd.
+> @@ -91,7 +89,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+>  			return;
+>  	}
+>  
+> -	info.si_code = SEGV_MAPERR;
+> +	si_code = SEGV_MAPERR;
+>  
+>  	/*
+>  	 * If we're in an interrupt or have no user
+> @@ -119,7 +117,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+>  	 * we can handle it..
+>  	 */
+>  good_area:
+> -	info.si_code = SEGV_ACCERR;
+> +	si_code = SEGV_ACCERR;
+>  
+>  	/* Handle protection violation, execute on heap or stack */
+>  
+> @@ -204,11 +202,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+>  	/* User mode accesses just cause a SIGSEGV */
+>  	if (user_mode(regs)) {
+>  		tsk->thread.fault_address = address;
+> -		info.si_signo = SIGSEGV;
+> -		info.si_errno = 0;
+> -		/* info.si_code has been set above */
+> -		info.si_addr = (void __user *)address;
+> -		force_sig_info(SIGSEGV, &info, tsk);
+> +		force_sig_fault(SIGSEGV, si_code, (void __user *)address, tsk);
+>  		return;
+>  	}
+>  
+> @@ -243,9 +237,5 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+>  		goto no_context;
+>  
+>  	tsk->thread.fault_address = address;
+> -	info.si_signo = SIGBUS;
+> -	info.si_errno = 0;
+> -	info.si_code = BUS_ADRERR;
+> -	info.si_addr = (void __user *)address;
+> -	force_sig_info(SIGBUS, &info, tsk);
+> +	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address, tsk);
+>  }
