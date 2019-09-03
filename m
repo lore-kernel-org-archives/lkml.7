@@ -2,149 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E2AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F10EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E407120674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C0E215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="t9gbLmy1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ua+qEoKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfICPJq (ORCPT
+        id S1729835AbfICPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:09:46 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:47801 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfICPJp (ORCPT
+        Tue, 3 Sep 2019 11:10:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40456 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbfICPKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:09:45 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x83F9Qi2024319;
-        Wed, 4 Sep 2019 00:09:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x83F9Qi2024319
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567523367;
-        bh=9jJVopxdMBKe7W7BiHbj/Q49/78YA2fNno5GdQEz8rw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t9gbLmy1iw1YX1L3bT6MP0HnyJdqqiaUGTR/l02FTP9HIzOEQFIQmIguBszfG3pkG
-         ERFW99pBXV48FTPvVLfH5ePDwuRRbXOpQW9Qo3K1MF7fyfLDzOGcybtvTiU8ozHkR9
-         OVof0XITnRIIgOrMW9E8vSbGtS/AqkWyXiOMCFCH5SnaE/R6VmjpwFQMufLT9A4lNk
-         mssfe+UZARJBckaM4vgKHPludgXjpdoSib8/ITCYwLRFkXMVYesrLKBXhqZx74uXPB
-         uXB3xjS7bGVzi8xPqAeGTOA+XxhEFw5Q+q5pDgtt9yioRCK6amLV7rai/yQma+QlM/
-         WDLROFr5jK3dg==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id t136so3637831vkt.9;
-        Tue, 03 Sep 2019 08:09:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAXQdwfYrH4kp1fNhUyUXV6anY26GrDy2E0PvP+cv1bAf5SBx39q
-        QuZuS8ngnRHN9hOV79z9ddc6HSJFgfxqpA5woSc=
-X-Google-Smtp-Source: APXvYqwi+lp9AaDuvR/fu0AbuDkOFmi+pQ++9wBOAlZmiyjg5RAdj3/t55OpBvKp1YW16iXsWocw8XeYzOLdsa8Cw1o=
-X-Received: by 2002:a1f:9e83:: with SMTP id h125mr6551608vke.84.1567523365548;
- Tue, 03 Sep 2019 08:09:25 -0700 (PDT)
+        Tue, 3 Sep 2019 11:10:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kMYjLPkGWlldvgkaEMtVa8ofXfOGNI4Vt2JfjkgF+V8=; b=ua+qEoKR5NGKobxrhyfObMiaz
+        28qJVK5Cmtj469tUpUMjB5lIhBAeCh8YKXRWmBqvQ4pA4q2geWOc7hwsuuLD8+20ifshN6X4mmUS8
+        dnku9KimzBjhNU+wOPyckNP9v2fCKVt0JqP6dfPr2Iy2wR6+wKii5AXoHWgk31haG0tSLeZ9E705l
+        OgK0SqS7wfjf5NjzHOsFVLkmeE914uKAhFYNYTgaxuyEY7xR1vymBvwcopjWnk96vWdEiuI0IbOp7
+        HGt1Xj+QSm5q/t4M5uq0KOhEsWQL/MElDbumvXJxhbLoV4Mop2RQClRXXx2FzsZes+pqT9yHt9vfO
+        O3Dtop/1A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5ARj-0008Bn-Vp; Tue, 03 Sep 2019 15:10:15 +0000
+Date:   Tue, 3 Sep 2019 08:10:15 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Bob Kasten <robert.a.kasten@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Chad Mynhier <chad.mynhier@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <jweiner@fb.com>
+Subject: Re: [PATCH v5 2/2] mm,thp: Add experimental config option
+ RO_EXEC_FILEMAP_HUGE_FAULT_THP
+Message-ID: <20190903151015.GF29434@bombadil.infradead.org>
+References: <20190902092341.26712-1-william.kucharski@oracle.com>
+ <20190902092341.26712-3-william.kucharski@oracle.com>
+ <20190903121424.GT14028@dhcp22.suse.cz>
+ <20190903122208.GE29434@bombadil.infradead.org>
+ <20190903125150.GW14028@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190820170941.26193-1-yamada.masahiro@socionext.com>
- <20190820170941.26193-2-yamada.masahiro@socionext.com> <ed251c63-10e0-bd8a-1a9b-be9ade5cad3f@gmail.com>
-In-Reply-To: <ed251c63-10e0-bd8a-1a9b-be9ade5cad3f@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 4 Sep 2019 00:08:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARd1KFq=GRYQUr16KaiiRzh4ARX5eOpcRcUrZSVgHdhJA@mail.gmail.com>
-Message-ID: <CAK7LNARd1KFq=GRYQUr16KaiiRzh4ARX5eOpcRcUrZSVgHdhJA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kbuild, arc: add CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
- for ARC
-To:     Vineet Gupta <vineetg76@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903125150.GW14028@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 1:43 AM Vineet Gupta <vineetg76@gmail.com> wrote:
->
-> On 8/20/19 10:09 AM, Masahiro Yamada wrote:
-> > arch/arc/Makefile overrides -O2 with -O3. This is the only user of
-> > ARCH_CFLAGS. There is no user of ARCH_CPPFLAGS or ARCH_AFLAGS.
-> > My plan is to remove ARCH_{CPP,A,C}FLAGS after refactoring the ARC
-> > Makefile.
->
-> Why, it seems like a good generic facility for arches to over-ride stuff
-> (specially adding any toggles at the end of cmdline).
->
-> And even if there are no current users, it would be good to have. I under=
-stand we
-> don't keep code for future, but strictly this is meta-code ;-)
+On Tue, Sep 03, 2019 at 02:51:50PM +0200, Michal Hocko wrote:
+> On Tue 03-09-19 05:22:08, Matthew Wilcox wrote:
+> > On Tue, Sep 03, 2019 at 02:14:24PM +0200, Michal Hocko wrote:
+> > > On Mon 02-09-19 03:23:41, William Kucharski wrote:
+> > > > Add filemap_huge_fault() to attempt to satisfy page
+> > > > faults on memory-mapped read-only text pages using THP when possible.
+> > > 
+> > > This deserves much more description of how the thing is implemented and
+> > > expected to work. For one thing it is not really clear to me why you
+> > > need CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP at all. You need a support
+> > > from the filesystem anyway. So who is going to enable/disable this
+> > > config?
+> > 
+> > There are definitely situations in which enabling this code will crash
+> > the kernel.  But we want to get filesystems to a point where they can
+> > start working on their support for large pages.  So our workaround is
+> > to try to get the core pieces merged under a CONFIG_I_KNOW_WHAT_IM_DOING
+> > flag and let people play with it.  Then continue to work on the core
+> > to eliminate those places that are broken.
+> 
+> I am not sure I understand. Each fs has to opt in to the feature
+> anyway. If it doesn't then there should be no risk of regression, right?
+> I do not expect any fs would rush an implementation in while not being
+> sure about the correctness. So how exactly does a config option help
+> here.
 
-We can re-add it whenever we need it.
+Filesystems won't see large pages unless they've opted into them.
+But there's a huge amount of page-cache work that needs to get done
+before this can be enabled by default.  For example, truncate() won't
+work properly.
 
+Rather than try to do all the page cache work upfront, then wait for the
+filesystems to catch up, we want to get some basics merged.  Since we've
+been talking about this for so long without any movement in the kernel
+towards actual support, this felt like a good way to go.
 
+We could, of course, develop the entire thing out of tree, but that's
+likely to lead to pain and anguish.
 
-> > Currently, ARC has no way to enable -Wmaybe-uninitialized because both
-> > -O3 and -Os disable it. Enabling it will be useful for compile-testing.
-> > This commit allows allmodconfig (, which defaults to -O2) to enable it.
->
-> But this is a separate issue and was done on purpose because of unbearabl=
-e build
-> spew at the time. As an experiment I enabled it in current kernel and at =
--O3 we
-> still get the dreaded spew in net/sunrpc/xdr.c and some more in net/ipv4.=
- The spew
-> doesn't happen at -O2 and seems not ARC specific as I can see this with A=
-RM -O3
-> build with gcc 7.3 (buildroot 2018.08)
->
-> | $ make ARCH=3Darm CROSS_COMPILE=3Darm-linux- net
-> | ......
-> | ......
-> | ../net/sunrpc/xdr.c: In function =E2=80=98xdr_encode_word=E2=80=99:
-> | ../net/sunrpc/xdr.c:1199:2: warning: =E2=80=98subbuf.tail[0].iov_base=
-=E2=80=99 may be used
-> | uninitialized in this function [-Wmaybe-uninitialized]
-> |  memcpy(subbuf->tail[0].iov_base, obj, this_len);
-> |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> | ../net/sunrpc/xdr.c:1205:17: note: =E2=80=98subbuf.tail[0].iov_base=E2=
-=80=99 was declared here
-> |  struct xdr_buf subbuf;
->
->
-> I understand the value of this toggle, but the spew is too much and at ti=
-mes
-> obfuscated likely other real issues.
-> > Add CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=3Dy to all the defconfig file=
-s
-> > in arch/arc/configs/ in order to keep the current config settings.
->
-> My first reaction to adding this to all defconfigs was that this was inel=
-egant :
-> for lack of better word :-)
->
-> But indeed it seems better this way as we can now experiment with -O2 vs.=
- -O3 from
-> config, rather than hardwiring to -O3.
->
-> So if you could please split out the Wmaybe-uninitialized change
-
-I could not understand your request.
-
-I added 'imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED'
-for CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3.
-
-I cannot split it out. Otherwise, you will see false-positive
-maybe-uninitialized warnings.
-
-
-> Acked-by: Vineet Gupta <vgupta@synopsys.com>
-
-Thanks.
-
-
---=20
-Best Regards
-Masahiro Yamada
