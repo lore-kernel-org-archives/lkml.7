@@ -2,159 +2,711 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C1BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12894C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9DF208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FC0fNf03"
+	by mail.kernel.org (Postfix) with ESMTP id C3FF9208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567512868;
+	bh=GY9a6VTvioNZO8JPJ05RyoUfoqxsJgo//gjWBz2L7jI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0PIj2DFLizoqudfTvW3ZdwEyuGoYxQ0IhPodtVW4zHe+mE6m4frcOM4gZPPODjvji
+	 2/axTnFAMjMI+a0s7dOnJ0l/cexl3vyJkc09xZnZ3pBxEKIFLppQD8+99a6gaBZI2q
+	 u7IMYRYEP52/Qq6ZoE1frsnDv8QmEYDi6wan9t/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfICMNJ (ORCPT
+        id S1729004AbfICMO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:13:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34937 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728679AbfICMNJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:13:09 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 205so8211775pfw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aciZLK4eHf2hi5CLyys3bwv1SZObhD4X2AM1NactPFs=;
-        b=FC0fNf03T8of5RPMxHUv9Yg92YKEFmswhiyMfatSIkD8a392Kh/qXDsXxDCenIbu1Q
-         eLTkb2CBu3qAvIP3PAKAWPk7IkKQGA4tXvbafs0OFUzEnt8dOZfxDPE3QO2GEyimqVPg
-         KSfXyitZWOIdaktqLESxcsxBIDkrx0ZGRCT+0bSHcjA+4XNCpWP+vHjuXj79rxMINcEZ
-         J3B99m1m4kJor3RNVOgTSE/ZI32faSwl7AA7PV3J3H4/Ty7hPkESADiD77SYWHxAR2aV
-         WqTujB7WiXmqcxB8900DQfQncjeWc6gWD4hk4GNZTTXKOGmQfKi933jpaekwfO1UGRmo
-         YYKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aciZLK4eHf2hi5CLyys3bwv1SZObhD4X2AM1NactPFs=;
-        b=gHsH+s+ja8JQybZa/3MmdG9uxXZsV03PGFGwNMIiFmduJT6r9c1fWV5YcOFxomUZv+
-         essVCRP1a6T41a1Bx5FKsFV6prBxEcoVBuPOkGMdLbbxudaaXwzT/JET5FNQB4NdBYJW
-         6ypZbF/uYAph9SkgiULhqQYa9YpUk9RJ4brczmvXaBewiRUbyC5TXXkbj70NDkGan09X
-         m0+N5DCj0fKKc31hdi4gI9MAQSuZBIfsLeJbtRzXvcTrqdqT2FZM13aQTE+KIMkdp0eV
-         eB5O+V5+X6Zb+Rbbz/de/7vZ3678Cllxy1lN2N/3Xc2R8EUBe2jTFvii0aL2THrY62rt
-         0Y7g==
-X-Gm-Message-State: APjAAAVFGQQcatjEebEL8ybzpOW1B6k8zuZOZbAad30LEhYv6pS/MvB4
-        C2WK8h11rPaZLvYL/HVXF8+QVh77L/bEzhVvAAEqaw==
-X-Google-Smtp-Source: APXvYqy7SPW3b+w0c6uj6yKM7FtVAbLfbdKXEzs6Lf0QeaBLM8Tpt/fY4DMZVbIkAFmN55lFmx9f7M8ge1hnfyZsPMk=
-X-Received: by 2002:a17:90a:ff08:: with SMTP id ce8mr8045016pjb.123.1567512787737;
- Tue, 03 Sep 2019 05:13:07 -0700 (PDT)
+        Tue, 3 Sep 2019 08:14:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40134 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727077AbfICMO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:14:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2BF44AD3C;
+        Tue,  3 Sep 2019 12:14:25 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 14:14:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Bob Kasten <robert.a.kasten@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Chad Mynhier <chad.mynhier@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <jweiner@fb.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v5 2/2] mm,thp: Add experimental config option
+ RO_EXEC_FILEMAP_HUGE_FAULT_THP
+Message-ID: <20190903121424.GT14028@dhcp22.suse.cz>
+References: <20190902092341.26712-1-william.kucharski@oracle.com>
+ <20190902092341.26712-3-william.kucharski@oracle.com>
 MIME-Version: 1.0
-References: <00000000000043c9390591a4f14b@google.com>
-In-Reply-To: <00000000000043c9390591a4f14b@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 3 Sep 2019 14:12:56 +0200
-Message-ID: <CAAeHK+xdsA1wSBsrCJZsrB8FAvXtzt9JkDaeMK52v6FQe7Lbbw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Write in usbhid_open
-To:     syzbot <syzbot+058e326a87dbb54f2426@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902092341.26712-3-william.kucharski@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 2:08 PM syzbot
-<syzbot+058e326a87dbb54f2426@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16ab9982600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=058e326a87dbb54f2426
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+058e326a87dbb54f2426@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: use-after-free in clear_bit
-> include/asm-generic/bitops-instrumented.h:56 [inline]
-> BUG: KASAN: use-after-free in usbhid_open+0x263/0x390
-> drivers/hid/usbhid/hid-core.c:727
-> Write of size 8 at addr ffff8881c89228c0 by task syz-executor.1/10380
->
-> CPU: 0 PID: 10380 Comm: syz-executor.1 Not tainted 5.3.0-rc5+ #28
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
->   clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
->   usbhid_open+0x263/0x390 drivers/hid/usbhid/hid-core.c:727
->   hid_hw_open+0xd2/0x160 drivers/hid/hid-core.c:2023
->   hidraw_open+0x256/0x740 drivers/hid/hidraw.c:288
->   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
->   do_dentry_open+0x494/0x1120 fs/open.c:797
->   do_last fs/namei.c:3416 [inline]
->   path_openat+0x1430/0x3f50 fs/namei.c:3533
->   do_filp_open+0x1a1/0x280 fs/namei.c:3563
->   do_sys_open+0x3c0/0x580 fs/open.c:1089
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x413761
-> Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48
-> 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48
-> 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> RSP: 002b:00007f50d4f077a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-> RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000413761
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007f50d4f07850
-> RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000293 R12: 00007f50d4f086d4
-> R13: 00000000004c8c86 R14: 00000000004dfc10 R15: 00000000ffffffff
->
-> The buggy address belongs to the page:
-> page:ffffea0007224880 refcount:0 mapcount:0 mapping:0000000000000000
-> index:0x0
-> flags: 0x200000000000000()
-> raw: 0200000000000000 0000000000000000 dead000000000122 0000000000000000
-> raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881c8922780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff8881c8922800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > ffff8881c8922880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->                                             ^
->   ffff8881c8922900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff8881c8922980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On Mon 02-09-19 03:23:41, William Kucharski wrote:
+> Add filemap_huge_fault() to attempt to satisfy page
+> faults on memory-mapped read-only text pages using THP when possible.
 
-#syz dup: general protection fault in __pm_runtime_resume
+This deserves much more description of how the thing is implemented and
+expected to work. For one thing it is not really clear to me why you
+need CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP at all. You need a support
+from the filesystem anyway. So who is going to enable/disable this
+config?
+
+I cannot really comment on fs specific parts but filemap_huge_fault
+sounds convoluted so much I cannot wrap my head around it. One thing
+stand out though. The generic filemap_huge_fault depends on ->readpage
+doing the right thing which sounds quite questionable to me. If nothing
+else  I would expect ->readpages to do the job.
+
+I am sorry to chime in at v5 without studying all previous 4 versions
+(ENOTIME) but if those are deliberate decisions then they should better
+be described in the changelog.
+
+> Signed-off-by: William Kucharski <william.kucharski@oracle.com>
+> ---
+>  include/linux/mm.h |   2 +
+>  mm/Kconfig         |  15 ++
+>  mm/filemap.c       | 398 +++++++++++++++++++++++++++++++++++++++++++--
+>  mm/huge_memory.c   |   3 +
+>  mm/mmap.c          |  39 ++++-
+>  mm/rmap.c          |   4 +-
+>  mm/vmscan.c        |   2 +-
+>  7 files changed, 446 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0334ca97c584..2a5311721739 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2433,6 +2433,8 @@ extern void truncate_inode_pages_final(struct address_space *);
+>  
+>  /* generic vm_area_ops exported for stackable file systems */
+>  extern vm_fault_t filemap_fault(struct vm_fault *vmf);
+> +extern vm_fault_t filemap_huge_fault(struct vm_fault *vmf,
+> +			enum page_entry_size pe_size);
+>  extern void filemap_map_pages(struct vm_fault *vmf,
+>  		pgoff_t start_pgoff, pgoff_t end_pgoff);
+>  extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 56cec636a1fc..2debaded0e4d 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -736,4 +736,19 @@ config ARCH_HAS_PTE_SPECIAL
+>  config ARCH_HAS_HUGEPD
+>  	bool
+>  
+> +config RO_EXEC_FILEMAP_HUGE_FAULT_THP
+> +	bool "read-only exec filemap_huge_fault THP support (EXPERIMENTAL)"
+> +	depends on TRANSPARENT_HUGE_PAGECACHE && SHMEM
+> +
+> +	help
+> +	    Introduce filemap_huge_fault() to automatically map executable
+> +	    read-only pages of mapped files of suitable size and alignment
+> +	    using THP if possible.
+> +
+> +	    This is marked experimental because it is a new feature and is
+> +	    dependent upon filesystmes implementing readpages() in a way
+> +	    that will recognize large THP pages and read file content to
+> +	    them without polluting the pagecache with PAGESIZE pages due
+> +	    to readahead.
+> +
+>  endmenu
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 38b46fc00855..5947d432a4e6 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -199,13 +199,12 @@ static void unaccount_page_cache_page(struct address_space *mapping,
+>  	nr = hpage_nr_pages(page);
+>  
+>  	__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, -nr);
+> -	if (PageSwapBacked(page)) {
+> +
+> +	if (PageSwapBacked(page))
+>  		__mod_node_page_state(page_pgdat(page), NR_SHMEM, -nr);
+> -		if (PageTransHuge(page))
+> -			__dec_node_page_state(page, NR_SHMEM_THPS);
+> -	} else {
+> -		VM_BUG_ON_PAGE(PageTransHuge(page), page);
+> -	}
+> +
+> +	if (PageTransHuge(page))
+> +		__dec_node_page_state(page, NR_SHMEM_THPS);
+>  
+>  	/*
+>  	 * At this point page must be either written or cleaned by
+> @@ -303,6 +302,9 @@ static void page_cache_delete_batch(struct address_space *mapping,
+>  			break;
+>  		if (xa_is_value(page))
+>  			continue;
+> +
+> +VM_BUG_ON_PAGE(xa_is_internal(page), page);
+> +
+>  		if (!tail_pages) {
+>  			/*
+>  			 * Some page got inserted in our range? Skip it. We
+> @@ -315,6 +317,11 @@ static void page_cache_delete_batch(struct address_space *mapping,
+>  				continue;
+>  			}
+>  			WARN_ON_ONCE(!PageLocked(page));
+> +
+> +			/*
+> +			 * If a THP is in the page cache, set the succeeding
+> +			 * cache entries for the PMD-sized page to NULL.
+> +			 */
+>  			if (PageTransHuge(page) && !PageHuge(page))
+>  				tail_pages = HPAGE_PMD_NR - 1;
+>  			page->mapping = NULL;
+> @@ -324,8 +331,6 @@ static void page_cache_delete_batch(struct address_space *mapping,
+>  			 */
+>  			i++;
+>  		} else {
+> -			VM_BUG_ON_PAGE(page->index + HPAGE_PMD_NR - tail_pages
+> -					!= pvec->pages[i]->index, page);
+>  			tail_pages--;
+>  		}
+>  		xas_store(&xas, NULL);
+> @@ -881,7 +886,10 @@ static int __add_to_page_cache_locked(struct page *page,
+>  		mapping->nrpages++;
+>  
+>  		/* hugetlb pages do not participate in page cache accounting */
+> -		if (!huge)
+> +		if (PageTransHuge(page) && !huge)
+> +			__mod_node_page_state(page_pgdat(page),
+> +				NR_FILE_PAGES, HPAGE_PMD_NR);
+> +		else
+>  			__inc_node_page_state(page, NR_FILE_PAGES);
+>  unlock:
+>  		xas_unlock_irq(&xas);
+> @@ -1663,7 +1671,8 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
+>  no_page:
+>  	if (!page && (fgp_flags & FGP_CREAT)) {
+>  		int err;
+> -		if ((fgp_flags & FGP_WRITE) && mapping_cap_account_dirty(mapping))
+> +		if ((fgp_flags & FGP_WRITE) &&
+> +			mapping_cap_account_dirty(mapping))
+>  			gfp_mask |= __GFP_WRITE;
+>  		if (fgp_flags & FGP_NOFS)
+>  			gfp_mask &= ~__GFP_FS;
+> @@ -2643,6 +2652,372 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+>  }
+>  EXPORT_SYMBOL(filemap_fault);
+>  
+> +#ifdef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+> +/*
+> + * There is a change coming to store only the head page of a compound page in
+> + * the head cache.
+> + *
+> + * When that change is present in the kernel, remove this #define
+> + */
+> +#define	PAGE_CACHE_STORE_COMPOUND_TAIL_PAGES
+> +
+> +/*
+> + * Check for an entry in the page cache which would conflict with the address
+> + * range we wish to map using a THP or is otherwise unusable to map a large
+> + * cached page.
+> + *
+> + * The routine will return true if a usable page is found in the page cache
+> + * (and *pagep will be set to the address of the cached page), or if no
+> + * cached page is found (and *pagep will be set to NULL).
+> + */
+> +static bool
+> +filemap_huge_check_pagecache_usable(struct xa_state *xas,
+> +	struct page **pagep, pgoff_t hindex, pgoff_t hindex_max)
+> +{
+> +	struct page *page;
+> +
+> +	while (1) {
+> +		xas_set(xas, hindex);
+> +		page = xas_find(xas, hindex_max);
+> +
+> +		if (xas_retry(xas, page))
+> +			continue;
+> +
+> +		/*
+> +		 * A found entry is unusable if:
+> +		 *	+ the entry is an Xarray value, not a pointer
+> +		 *	+ the entry is an internal Xarray node
+> +		 *	+ the entry is not a compound page
+> +		 *	+ the order of the compound page is < HPAGE_PMD_ORDER
+> +		 *	+ the page index is not what we expect it to be
+> +		 */
+> +		if (!page)
+> +			break;
+> +
+> +		if (xa_is_value(page) || xa_is_internal(page))
+> +			return false;
+> +
+> +#ifdef PAGE_CACHE_STORE_COMPOUND_TAIL_PAGES
+> +		if ((!PageCompound(page)) || (page != compound_head(page)))
+> +#else
+> +		if (!PageCompound(page))
+> +#endif
+> +			return false;
+> +
+> +		if (compound_order(page) < HPAGE_PMD_ORDER)
+> +			return false;
+> +
+> +		if (page->index != hindex)
+> +			return false;
+> +
+> +		break;
+> +	}
+> +
+> +	*pagep = page;
+> +	return true;
+> +}
+> +
+> +/**
+> + * filemap_huge_fault - read in file data for page fault handling to THP
+> + * @vmf:	struct vm_fault containing details of the fault
+> + * @pe_size:	large page size to map, currently this must be PE_SIZE_PMD
+> + *
+> + * filemap_huge_fault() is invoked via the vma operations vector for a
+> + * mapped memory region to read in file data to a transparent huge page during
+> + * a page fault.
+> + *
+> + * If for any reason we can't allocate a THP, map it or add it to the page
+> + * cache, VM_FAULT_FALLBACK will be returned which will cause the fault
+> + * handler to try mapping the page using a PAGESIZE page, usually via
+> + * filemap_fault() if so speicifed in the vma operations vector.
+> + *
+> + * Returns either VM_FAULT_FALLBACK or the result of calling allcc_set_pte()
+> + * to map the new THP.
+> + *
+> + * NOTE: This routine depends upon the file system's readpage routine as
+> + *       specified in the address space operations vector to recognize when it
+> + *	 is being passed a large page and to read the approprate amount of data
+> + *	 in full and without polluting the page cache for the large page itself
+> + *	 with PAGESIZE pages to perform a buffered read or to pollute what
+> + *	 would be the page cache space for any succeeding pages with PAGESIZE
+> + *	 pages due to readahead.
+> + *
+> + *	 It is VITAL that this routine not be enabled without such filesystem
+> + *	 support. As there is no way to determine how many bytes were read by
+> + *	 the readpage() operation, if only a PAGESIZE page is read, this routine
+> + *	 will map the THP containing only the first PAGESIZE bytes of file data
+> + *	 to satisfy the fault, which is never the result desired.
+> + */
+> +vm_fault_t filemap_huge_fault(struct vm_fault *vmf,
+> +		enum page_entry_size pe_size)
+> +{
+> +	struct file *filp = vmf->vma->vm_file;
+> +	struct address_space *mapping = filp->f_mapping;
+> +	struct vm_area_struct *vma = vmf->vma;
+> +
+> +	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+> +	pgoff_t hindex = round_down(vmf->pgoff, HPAGE_PMD_NR);
+> +	pgoff_t hindex_max = hindex + HPAGE_PMD_NR - 1;
+> +
+> +	struct page *cached_page, *hugepage;
+> +	struct page *new_page = NULL;
+> +
+> +	vm_fault_t ret = VM_FAULT_FALLBACK;
+> +	unsigned long nr;
+> +
+> +	int error;
+> +	bool retry_lookup = true;
+> +
+> +	XA_STATE_ORDER(xas, &mapping->i_pages, hindex, HPAGE_PMD_ORDER);
+> +
+> +	/*
+> +	 * Return VM_FAULT_FALLBACK if:
+> +	 *
+> +	 *	+ pe_size != PE_SIZE_PMD
+> +	 *	+ FAULT_FLAG_WRITE is set in vmf->flags
+> +	 *	+ vma isn't aligned to allow a PMD mapping
+> +	 *	+ PMD would extend beyond the end of the vma
+> +	 */
+> +	if (pe_size != PE_SIZE_PMD || (vmf->flags & FAULT_FLAG_WRITE) ||
+> +	    (haddr < vma->vm_start ||
+> +	    ((haddr + HPAGE_PMD_SIZE) > vma->vm_end)))
+> +		return ret;
+> +
+> +retry_lookup:
+> +	rcu_read_lock();
+> +
+> +	if (!filemap_huge_check_pagecache_usable(&xas, &cached_page, hindex,
+> +	    hindex_max)) {
+> +		/* found a conflicting entry in the page cache, so fallback */
+> +		rcu_read_unlock();
+> +		return ret;
+> +	} else if (cached_page) {
+> +		/* found a valid cached page, so map it */
+> +		rcu_read_unlock();
+> +		lock_page(cached_page);
+> +
+> +		/* was the cached page truncated while waiting for the lock? */
+> +		if (unlikely(cached_page->mapping != mapping)) {
+> +			unlock_page(cached_page);
+> +
+> +			/* retry once */
+> +			if (retry_lookup) {
+> +				retry_lookup = false;
+> +				goto retry_lookup;
+> +			}
+> +
+> +			return ret;
+> +		}
+> +
+> +		if (unlikely(!PageUptodate(cached_page))) {
+> +			unlock_page(cached_page);
+> +			return ret;
+> +		}
+> +
+> +		VM_BUG_ON_PAGE(cached_page->index != hindex, cached_page);
+> +
+> +		hugepage = cached_page;
+> +		goto map_huge;
+> +	}
+> +
+> +	rcu_read_unlock();
+> +
+> +	/* allocate huge THP page in VMA */
+> +	new_page = __page_cache_alloc(vmf->gfp_mask | __GFP_COMP |
+> +		__GFP_NOWARN | __GFP_NORETRY, HPAGE_PMD_ORDER);
+> +
+> +	if (unlikely(!new_page))
+> +		return ret;
+> +
+> +	do {
+> +		xas_lock_irq(&xas);
+> +		xas_set(&xas, hindex);
+> +		xas_create_range(&xas);
+> +
+> +		if (!(xas_error(&xas)))
+> +			break;
+> +
+> +		xas_unlock_irq(&xas);
+> +
+> +		if (!xas_nomem(&xas, GFP_KERNEL)) {
+> +			/* error creating range, so free THP and fallback */
+> +			if (new_page)
+> +				put_page(new_page);
+> +
+> +			return ret;
+> +		}
+> +	} while (1);
+> +
+> +	/* i_pages is locked here */
+> +
+> +	/*
+> +	 * Double check that an entry did not sneak into the page cache while
+> +	 * creating Xarray entries for the new page.
+> +	 */
+> +	if (!filemap_huge_check_pagecache_usable(&xas, &cached_page, hindex,
+> +	    hindex_max)) {
+> +		/*
+> +		 * An unusable entry was found, so delete the newly allocated
+> +		 * page and fallback.
+> +		 */
+> +		put_page(new_page);
+> +		xas_unlock_irq(&xas);
+> +		return ret;
+> +	} else if (cached_page) {
+> +		/*
+> +		 * A valid large page was found in the page cache, so free the
+> +		 * newly allocated page and map the cached page instead.
+> +		 */
+> +		put_page(new_page);
+> +		new_page = NULL;
+> +		xas_unlock_irq(&xas);
+> +
+> +		lock_page(cached_page);
+> +
+> +		/* was the cached page truncated while waiting for the lock? */
+> +		if (unlikely(cached_page->mapping != mapping)) {
+> +			unlock_page(cached_page);
+> +
+> +			/* retry once */
+> +			if (retry_lookup) {
+> +				retry_lookup = false;
+> +				goto retry_lookup;
+> +			}
+> +
+> +			return ret;
+> +		}
+> +
+> +		if (unlikely(!PageUptodate(cached_page))) {
+> +			unlock_page(cached_page);
+> +			return ret;
+> +		}
+> +
+> +		VM_BUG_ON_PAGE(cached_page->index != hindex, cached_page);
+> +
+> +		hugepage = cached_page;
+> +		goto map_huge;
+> +	}
+> +
+> +	prep_transhuge_page(new_page);
+> +	new_page->mapping = mapping;
+> +	new_page->index = hindex;
+> +	__SetPageLocked(new_page);
+> +
+> +	count_vm_event(THP_FILE_ALLOC);
+> +	xas_set(&xas, hindex);
+> +
+> +	for (nr = 0; nr < HPAGE_PMD_NR; nr++) {
+> +#ifdef PAGE_CACHE_STORE_COMPOUND_TAIL_PAGES
+> +		/*
+> +		 * Store pointers to both head and tail pages of a compound
+> +		 * page in the page cache.
+> +		 */
+> +		xas_store(&xas, new_page + nr);
+> +#else
+> +		/*
+> +		 * All entries for a compound page in the page cache should
+> +		 * point to the head page.
+> +		 */
+> +		xas_store(&xas, new_page);
+> +#endif
+> +		xas_next(&xas);
+> +	}
+> +
+> +	mapping->nrpages += HPAGE_PMD_NR;
+> +	xas_unlock_irq(&xas);
+> +
+> +	/*
+> +	 * The readpage() operation below is expected to fill the large
+> +	 * page with data without polluting the page cache with
+> +	 * PAGESIZE entries due to a buffered read and/or readahead().
+> +	 *
+> +	 * A filesystem's vm_operations_struct huge_fault field should
+> +	 * never point to this routine without such a capability, and
+> +	 * without it a call to this routine would eventually just
+> +	 * fall through to the normal fault op anyway.
+> +	 */
+> +	error = mapping->a_ops->readpage(vmf->vma->vm_file, new_page);
+> +
+> +	if (unlikely(error)) {
+> +		ret = VM_FAULT_SIGBUS;
+> +		goto delete_hugepage_from_page_cache;
+> +	}
+> +
+> +	if (wait_on_page_locked_killable(new_page)) {
+> +		ret = VM_FAULT_SIGSEGV;
+> +		goto delete_hugepage_from_page_cache;
+> +	}
+> +
+> +	if (!PageUptodate(new_page)) {
+> +		/* EIO */
+> +		ret = VM_FAULT_SIGBUS;
+> +		goto delete_hugepage_from_page_cache;
+> +	}
+> +
+> +	lock_page(new_page);
+> +
+> +	/* did the page get truncated while waiting for the lock? */
+> +	if (unlikely(new_page->mapping != mapping)) {
+> +		unlock_page(new_page);
+> +		goto delete_hugepage_from_page_cache;
+> +	}
+> +
+> +	__inc_node_page_state(new_page, NR_SHMEM_THPS);
+> +	__mod_node_page_state(page_pgdat(new_page),
+> +		NR_FILE_PAGES, HPAGE_PMD_NR);
+> +	__mod_node_page_state(page_pgdat(new_page),
+> +		NR_SHMEM, HPAGE_PMD_NR);
+> +
+> +	hugepage = new_page;
+> +
+> +map_huge:
+> +	/* map hugepage at the PMD level */
+> +
+> +	ret = alloc_set_pte(vmf, vmf->memcg, hugepage);
+> +
+> +	VM_BUG_ON_PAGE((!(pmd_trans_huge(*vmf->pmd))), hugepage);
+> +	VM_BUG_ON_PAGE(!(PageTransHuge(hugepage)), hugepage);
+> +
+> +	if (likely(!(ret & VM_FAULT_ERROR))) {
+> +		vmf->address = haddr;
+> +		vmf->page = hugepage;
+> +
+> +		page_ref_add(hugepage, HPAGE_PMD_NR);
+> +		count_vm_event(THP_FILE_MAPPED);
+> +	} else {
+> +		if (new_page) {
+> +			__mod_node_page_state(page_pgdat(new_page),
+> +				NR_FILE_PAGES, -HPAGE_PMD_NR);
+> +			__mod_node_page_state(page_pgdat(new_page),
+> +				NR_SHMEM, -HPAGE_PMD_NR);
+> +			__dec_node_page_state(new_page, NR_SHMEM_THPS);
+> +
+> +delete_hugepage_from_page_cache:
+> +			xas_lock_irq(&xas);
+> +			xas_set(&xas, hindex);
+> +
+> +			for (nr = 0; nr < HPAGE_PMD_NR; nr++) {
+> +				xas_store(&xas, NULL);
+> +				xas_next(&xas);
+> +			}
+> +
+> +			new_page->mapping = NULL;
+> +			xas_unlock_irq(&xas);
+> +
+> +			mapping->nrpages -= HPAGE_PMD_NR;
+> +			unlock_page(new_page);
+> +			page_ref_dec(new_page);	/* decrement page coche ref */
+> +			put_page(new_page);	/* done with page */
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	unlock_page(hugepage);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(filemap_huge_fault);
+> +#endif
+> +
+>  void filemap_map_pages(struct vm_fault *vmf,
+>  		pgoff_t start_pgoff, pgoff_t end_pgoff)
+>  {
+> @@ -2925,7 +3300,8 @@ struct page *read_cache_page(struct address_space *mapping,
+>  EXPORT_SYMBOL(read_cache_page);
+>  
+>  /**
+> - * read_cache_page_gfp - read into page cache, using specified page allocation flags.
+> + * read_cache_page_gfp - read into page cache, using specified page allocation
+> + *			 flags.
+>   * @mapping:	the page's address_space
+>   * @index:	the page index
+>   * @gfp:	the page allocator flags to use if allocating
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index de1f15969e27..ea3dbb6fa538 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -544,8 +544,11 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+>  
+>  	if (addr)
+>  		goto out;
+> +
+> +#ifndef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+>  	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+>  		goto out;
+> +#endif
+>  
+>  	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
+>  	if (addr)
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 7e8c3e8ae75f..d8b3bce71075 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1391,6 +1391,8 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+>  	struct mm_struct *mm = current->mm;
+>  	int pkey = 0;
+>  
+> +	unsigned long vm_maywrite = VM_MAYWRITE;
+> +
+>  	*populate = 0;
+>  
+>  	if (!len)
+> @@ -1426,10 +1428,41 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+>  	if (mm->map_count > sysctl_max_map_count)
+>  		return -ENOMEM;
+>  
+> -	/* Obtain the address to map to. we verify (or select) it and ensure
+> +	/*
+> +	 * Obtain the address to map to. we verify (or select) it and ensure
+>  	 * that it represents a valid section of the address space.
+>  	 */
+> -	addr = get_unmapped_area(file, addr, len, pgoff, flags);
+> +
+> +#ifdef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+> +	/*
+> +	 * If THP is enabled, it's a read-only executable that is
+> +	 * MAP_PRIVATE mapped, the length is larger than a PMD page
+> +	 * and either it's not a MAP_FIXED mapping or the passed address is
+> +	 * properly aligned for a PMD page, attempt to get an appropriate
+> +	 * address at which to map a PMD-sized THP page, otherwise call the
+> +	 * normal routine.
+> +	 */
+> +	if ((prot & PROT_READ) && (prot & PROT_EXEC) &&
+> +		(!(prot & PROT_WRITE)) && (flags & MAP_PRIVATE) &&
+> +		(!(flags & MAP_FIXED)) && len >= HPAGE_PMD_SIZE) {
+> +		addr = thp_get_unmapped_area(file, addr, len, pgoff, flags);
+> +
+> +		if (addr && (!(addr & ~HPAGE_PMD_MASK))) {
+> +			/*
+> +			 * If we got a suitable THP mapping address, shut off
+> +			 * VM_MAYWRITE for the region, since it's never what
+> +			 * we would want.
+> +			 */
+> +			vm_maywrite = 0;
+> +		} else
+> +			addr = get_unmapped_area(file, addr, len, pgoff, flags);
+> +	} else {
+> +#endif
+> +		addr = get_unmapped_area(file, addr, len, pgoff, flags);
+> +#ifdef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+> +	}
+> +#endif
+> +
+>  	if (offset_in_page(addr))
+>  		return addr;
+>  
+> @@ -1451,7 +1484,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+>  	 * of the memory object, so we don't do any here.
+>  	 */
+>  	vm_flags |= calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
+> -			mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
+> +			mm->def_flags | VM_MAYREAD | vm_maywrite | VM_MAYEXEC;
+>  
+>  	if (flags & MAP_LOCKED)
+>  		if (!can_do_mlock())
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 003377e24232..aacc6e330329 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1192,7 +1192,7 @@ void page_add_file_rmap(struct page *page, bool compound)
+>  		}
+>  		if (!atomic_inc_and_test(compound_mapcount_ptr(page)))
+>  			goto out;
+> -		VM_BUG_ON_PAGE(!PageSwapBacked(page), page);
+> +
+>  		__inc_node_page_state(page, NR_SHMEM_PMDMAPPED);
+>  	} else {
+>  		if (PageTransCompound(page) && page_mapping(page)) {
+> @@ -1232,7 +1232,7 @@ static void page_remove_file_rmap(struct page *page, bool compound)
+>  		}
+>  		if (!atomic_add_negative(-1, compound_mapcount_ptr(page)))
+>  			goto out;
+> -		VM_BUG_ON_PAGE(!PageSwapBacked(page), page);
+> +
+>  		__dec_node_page_state(page, NR_SHMEM_PMDMAPPED);
+>  	} else {
+>  		if (!atomic_add_negative(-1, &page->_mapcount))
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index a6c5d0b28321..47a19c59c9a2 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -930,7 +930,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
+>  	 * Note that if SetPageDirty is always performed via set_page_dirty,
+>  	 * and thus under the i_pages lock, then this ordering is not required.
+>  	 */
+> -	if (unlikely(PageTransHuge(page)) && PageSwapCache(page))
+> +	if (unlikely(PageTransHuge(page)))
+>  		refcount = 1 + HPAGE_PMD_NR;
+>  	else
+>  		refcount = 2;
+> -- 
+> 2.21.0
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
