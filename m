@@ -2,155 +2,143 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D75C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C21C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766D520882
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B57520882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfICG2q (ORCPT
+        id S1727046AbfICG3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:28:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57070 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbfICG2q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:28:46 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x836SFbA071879
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 02:28:45 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uqmhtstwn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:28:32 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Sep 2019 07:27:22 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Sep 2019 07:27:18 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x836RHRc40763552
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 06:27:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2584C11C05B;
-        Tue,  3 Sep 2019 06:27:17 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDDEE11C054;
-        Tue,  3 Sep 2019 06:27:16 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Sep 2019 06:27:16 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 50186A00EC;
-        Tue,  3 Sep 2019 16:27:15 +1000 (AEST)
-Subject: Re: [PATCH v2 6/6] powerpc: Don't flush caches when adding memory
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, Qian Cai <cai@lca.pw>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Tue, 03 Sep 2019 16:27:15 +1000
-In-Reply-To: <e6713f8a-6465-f9fe-40e9-91d52aa06195@c-s.fr>
-References: <20190903052407.16638-1-alastair@au1.ibm.com>
-         <20190903052407.16638-7-alastair@au1.ibm.com>
-         <e6713f8a-6465-f9fe-40e9-91d52aa06195@c-s.fr>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090306-0016-0000-0000-000002A5F738
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090306-0017-0000-0000-000033065C4F
-Message-Id: <864c4b01a9c12f82a32de264fbb0b2acb39592e4.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909030071
+        Tue, 3 Sep 2019 02:29:07 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46958 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfICG3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:29:07 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0FC0B1A02B3;
+        Tue,  3 Sep 2019 08:29:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 764581A0050;
+        Tue,  3 Sep 2019 08:28:59 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8A3D9402B7;
+        Tue,  3 Sep 2019 14:28:53 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date:   Tue,  3 Sep 2019 14:18:52 +0800
+Message-Id: <20190903061853.19793-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-03 at 08:23 +0200, Christophe Leroy wrote:
-> 
-> Le 03/09/2019 à 07:24, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > This operation takes a significant amount of time when hotplugging
-> > large amounts of memory (~50 seconds with 890GB of persistent
-> > memory).
-> > 
-> > This was orignally in commit fb5924fddf9e
-> > ("powerpc/mm: Flush cache on memory hot(un)plug") to support
-> > memtrace,
-> > but the flush on add is not needed as it is flushed on remove.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/mm/mem.c | 7 -------
-> >   1 file changed, 7 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> > index 854aaea2c6ae..2a14b5b93e19 100644
-> > --- a/arch/powerpc/mm/mem.c
-> > +++ b/arch/powerpc/mm/mem.c
-> > @@ -111,7 +111,6 @@ int __ref arch_add_memory(int nid, u64 start,
-> > u64 size,
-> >   {
-> >   	unsigned long start_pfn = start >> PAGE_SHIFT;
-> >   	unsigned long nr_pages = size >> PAGE_SHIFT;
-> > -	u64 i;
-> >   	int rc;
-> >   
-> >   	resize_hpt_for_hotplug(memblock_phys_mem_size());
-> > @@ -124,12 +123,6 @@ int __ref arch_add_memory(int nid, u64 start,
-> > u64 size,
-> >   		return -EFAULT;
-> >   	}
-> >   
-> > -	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
-> > -		flush_dcache_range(start + i,
-> > -				   min(start + size, start + i +
-> > FLUSH_CHUNK_SIZE));
-> > -		cond_resched();
-> > -	}
-> > -
-> 
-> So you are removing the code you added in patch 4. Why not move this
-> one 
-> before patch 4 ?
-> 
+Add some properties for pcf85263/pcf85363 as follows:
+  - interrupt-output-pin: string type
+  - quartz-load-femtofarads: integer type
+  - nxp,quartz-drive-strength: integer type
+  - nxp,quartz-low-jitter: bool type
+  - wakeup-source: bool type
 
-I put them in this order so that if someone did want the flushes in
-arch_add_memory, they could drop the later patch, but not trigger RCU
-stalls.
+Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v3:
+	- None
 
+Change in v2:
+	- Replace properties name
+	  quartz-load-capacitance -> quartz-load-femtofarads
+	  quartz-drive-strength -> nxp,quartz-drive-strength
+	  quartz-low-jitter -> nxp,quartz-low-jitter
+	- Replace drive strength name
+	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+	- Set default interrupt-output-pin as "INTA"
+
+ .../devicetree/bindings/rtc/pcf85363.txt      | 29 +++++++++++++++++++
+ include/dt-bindings/rtc/pcf85363.h            | 15 ++++++++++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 include/dt-bindings/rtc/pcf85363.h
+
+diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+index 94adc1cf93d9..588f688b30d1 100644
+--- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
++++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+@@ -8,10 +8,39 @@ Required properties:
+ Optional properties:
+ - interrupts: IRQ line for the RTC (not implemented).
+ 
++- interrupt-output-pin: The interrupt output pin must be
++  "INTA" or "INTB", default value is "INTA"
++
++- quartz-load-femtofarads: The internal capacitor to select for the quartz:
++	PCF85263_QUARTZCAP_7pF		[0]
++	PCF85263_QUARTZCAP_6pF		[1]
++	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
++
++- nxp,quartz-drive-strength: Drive strength for the quartz:
++	PCF85263_QUARTZDRIVE_100ko	[0] DEFAULT
++	PCF85263_QUARTZDRIVE_60ko	[1]
++	PCF85263_QUARTZDRIVE_500ko	[2]
++
++- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
++  which reduces jitter at the cost of increased power consumption.
++
++- wakeup-source: Boolean property, Please refer to
++  Documentation/devicetree/bindings/power/wakeup-source.txt
++
+ Example:
+ 
+ pcf85363: pcf85363@51 {
+ 	compatible = "nxp,pcf85363";
+ 	reg = <0x51>;
++
++	interrupt-parent = <&gpio1>;
++	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++
++	#include <dt-bindings/rtc/pcf85363.h>
++	wakeup-source;
++	interrupt-output-pin = "INTA";
++	quartz-load-femtofarads = <PCF85363_QUARTZCAP_12p5pF>;
++	nxp,quartz-drive-strength = <PCF85363_QUARTZDRIVE_60ko>;
++	nxp,quartz-low-jitter;
+ };
+ 
+diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+new file mode 100644
+index 000000000000..f71b151bc481
+--- /dev/null
++++ b/include/dt-bindings/rtc/pcf85363.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DT_BINDINGS_RTC_PCF85363_H
++#define _DT_BINDINGS_RTC_PCF85363_H
++
++/* Quartz capacitance */
++#define PCF85363_QUARTZCAP_7pF		0
++#define PCF85363_QUARTZCAP_6pF		1
++#define PCF85363_QUARTZCAP_12p5pF	2
++
++/* Quartz drive strength */
++#define PCF85363_QUARTZDRIVE_100ko	0
++#define PCF85363_QUARTZDRIVE_60ko	1
++#define PCF85363_QUARTZDRIVE_500ko	2
++
++#endif /* _DT_BINDINGS_RTC_PCF85363_H */
 -- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+2.17.1
 
