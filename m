@@ -2,121 +2,89 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3809EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE60C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6EE22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3185D21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7jca7Fl"
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Cn915Kxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfICUNk (ORCPT
+        id S1727608AbfICUNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:13:40 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46780 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfICUND (ORCPT
+        Tue, 3 Sep 2019 16:13:49 -0400
+Received: from a9-36.smtp-out.amazonses.com ([54.240.9.36]:59984 "EHLO
+        a9-36.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725882AbfICUNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:13:03 -0400
-Received: by mail-lf1-f68.google.com with SMTP id t8so1485101lfc.13;
-        Tue, 03 Sep 2019 13:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DVgj8XCKgz3RPtqDOp3TFgbusGBaGE3UZiXYJQE5YAA=;
-        b=m7jca7Fl/b8d6z/zX+kZ2AuRa6Nwt92MF8QyW6Ku5LA/OTZmZpd4zrMukkUmLsmRRQ
-         AXmb4Zw06TQfoYbUAcqKbgjisEqqKG51N0VkaW4srhbRW8WQxHbHK0DDIclplczcYzKx
-         qVjaEYEtY7z/bFYoQ7tYwIsA3vBtwotrMnFCmJgHeJY4xWDVVxhGvvYi4qVD1rjhR+T5
-         mluXvO69RN1NHr47r1YjK0+27ee/uPxtAgsFSYHkc6KptTGhC9qyNiUCp93nBDhaQCmD
-         6cy3aVqltP8y/+lXzFOhiqZnieJDzBK10tdxRw5T6EZJzTuMpXZyeaueoz0/KMQXUNI2
-         5tTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DVgj8XCKgz3RPtqDOp3TFgbusGBaGE3UZiXYJQE5YAA=;
-        b=ucQKtPF1jBoKtyaLfltx4MmZfna5MDzrnnO60f5OK/M1Et5GgwhreN1lEjxz9SwhzG
-         DQG/WvpDfh6w927Ixyn1/alvEWYBMtHIlT2xLaZOPkr4HjCIrQ2abT0gLHiuhGa0BFuZ
-         EhiHeBv+rymRNI8Gl50VfYvxZ9Di8/14TUbTMz3Rd+bea01WQsXyQ9/MxAzQEOJ+XNB7
-         bwDUSj8RrEsm1gD4ZPuy7EtydBFWXI2hl6NuptgbsP3cRFvbmAFhRkgqz72+GTbgn6Zj
-         WRNWvaUTqPs0B0iLDUnQukNyAhUHRCNSWvNhAzLm/8ekjrKBpgp+HEPoOLXc1yw4U5DW
-         FDZw==
-X-Gm-Message-State: APjAAAWdtiIr9qlxMD1IMi4T2zrYZhXVAXATOthiBjXB+D14GYGtosJS
-        S7psrIGTjklrRlyO1RsRbtbSfcgw5/OkYg==
-X-Google-Smtp-Source: APXvYqx4zk1y64c29k/34P0hqbCBcB68Fkz1iNXi6yjO4vno3fSms0xb4uXiBmILvmAI1sG5ZHGkJw==
-X-Received: by 2002:a19:644c:: with SMTP id b12mr4613090lfj.104.1567541580950;
-        Tue, 03 Sep 2019 13:13:00 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id u14sm2960884ljd.14.2019.09.03.13.12.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 13:13:00 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH v3 2/9] media: ov6650: Fix control handler not freed on init error
-Date:   Tue,  3 Sep 2019 22:11:37 +0200
-Message-Id: <20190903201144.13219-3-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190903201144.13219-1-jmkrzyszt@gmail.com>
-References: <20190903201144.13219-1-jmkrzyszt@gmail.com>
+        Tue, 3 Sep 2019 16:13:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1567541625;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=3CTlLgcwUNm+oBDTSqVhwT6v0ROJvSsfzOlbmJ233Hs=;
+        b=Cn915KxoRAOo3PmJZOOm/ld4evNzr6pLGhw1L27Pj4A6Fs/aZr4YyJgWGbjjuYtj
+        jeVgNkAMHrsCuy8IfzOPqbjM31SPPbl46ewrDDjxMgWc5IdaUb6qSn4OWC/M8d9fnKh
+        6hQcvnAzb8uFmTKLv3L+pNjqUii1U+7KYP92y6TI=
+Date:   Tue, 3 Sep 2019 20:13:45 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+In-Reply-To: <20190901005205.GA2431@bombadil.infradead.org>
+Message-ID: <0100016cf8c3033d-bbcc9ba3-2d59-4654-a7c2-8ba094f8a7de-000000@email.amazonses.com>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com> <20190828194607.GB6590@bombadil.infradead.org> <20190829073921.GA21880@dhcp22.suse.cz>
+ <0100016ce39e6bb9-ad20e033-f3f4-4e6d-85d6-87e7d07823ae-000000@email.amazonses.com> <20190901005205.GA2431@bombadil.infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.09.03-54.240.9.36
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit afd9690c72c3 ("[media] ov6650: convert to the control
-framework"), if an error occurs during initialization of a control
-handler, resources possibly allocated to the handler are not freed
-before device initialiaton is aborted.  Fix it.
+On Sat, 31 Aug 2019, Matthew Wilcox wrote:
 
-Fixes: afd9690c72c3 ("[media] ov6650: convert to the control framework")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/i2c/ov6650.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> > The current behavior without special alignment for these caches has been
+> > in the wild for over a decade. And this is now coming up?
+>
+> In the wild ... and rarely enabled.  When it is enabled, it may or may
+> not be noticed as data corruption, or tripping other debugging asserts.
+> Users then turn off the rare debugging option.
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 53550cae2353..cb2aa76cd6cc 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -989,8 +989,10 @@ static int ov6650_probe(struct i2c_client *client,
- 			V4L2_CID_GAMMA, 0, 0xff, 1, 0x12);
- 
- 	priv->subdev.ctrl_handler = &priv->hdl;
--	if (priv->hdl.error)
--		return priv->hdl.error;
-+	if (priv->hdl.error) {
-+		ret = priv->hdl.error;
-+		goto ectlhdlfree;
-+	}
- 
- 	v4l2_ctrl_auto_cluster(2, &priv->autogain, 0, true);
- 	v4l2_ctrl_auto_cluster(3, &priv->autowb, 0, true);
-@@ -1008,8 +1010,10 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->subdev.internal_ops = &ov6650_internal_ops;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
--	if (ret)
--		v4l2_ctrl_handler_free(&priv->hdl);
-+	if (!ret)
-+		return 0;
-+ectlhdlfree:
-+	v4l2_ctrl_handler_free(&priv->hdl);
- 
- 	return ret;
- }
--- 
-2.21.0
+Its enabled in all full debug session as far as I know. Fedora for
+example has been running this for ages to find breakage in device drivers
+etc etc.
 
+> > If there is an exceptional alignment requirement then that needs to be
+> > communicated to the allocator. A special flag or create a special
+> > kmem_cache or something.
+>
+> The only way I'd agree to that is if we deliberately misalign every
+> allocation that doesn't have this special flag set.  Because right now,
+> breakage happens everywhere when these debug options are enabled, and
+> the very people who need to be helped are being hurt by the debugging.
+
+That is customarily occurring for testing by adding "slub_debug" to the
+kernel commandline (or adding debug kernel options) and since my
+information is that this is done frequently (and has been for over a
+decade now) I am having a hard time believing the stories of great
+breakage here. These drivers were not tested with debugging on before?
+Never ran with a debug kernel?
