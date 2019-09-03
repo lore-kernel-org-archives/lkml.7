@@ -2,132 +2,134 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46416C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8EFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204AF2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A1C2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="K7h+72f5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfICFlv (ORCPT
+        id S1726683AbfICFmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:41:51 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39597 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfICFlu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:41:50 -0400
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1i51Za-0005vB-Fx; Tue, 03 Sep 2019 07:41:46 +0200
-Subject: Re: [PATCH] ACPI: support for NXP i2c controller
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Chuanhua Han <chuanhua.han@nxp.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Tue, 3 Sep 2019 01:42:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:54713 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfICFmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 01:42:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mwp06shwz9s7T;
+        Tue,  3 Sep 2019 15:42:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567489353;
+        bh=4QAshjM4ER/rbKtuwZWCPMrtMyIAHnxw2gh7SK0PWlk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K7h+72f5D/cy+PoimSdCH85Y8F8s1uR0NCQeFaf6cPXyhjrpcMCBe3w89wIS+ewUM
+         CMejem4DARxDSEkUGSGteIvSfjdRyXjrbGwv9Q90NOhhUzsvNMrHbpAl9oI0e1gLzh
+         Av/mAdFlSeOPqZDgX8KKlEQVmoRVmk2gAoFfFDSmAMIsYrAOQVjNNwffhyRa1JI6iP
+         MZhKLqrp91AjRveaCsQLNuX+ONmsRvAFy0jNKVesLit+E+RozHooAm2ld0awucMKRJ
+         gIRVnf5zHZEO53SRhJBcE1klJLCR1dNunCauP1wAkDKytkducCXZoQdkH0tGeNihz+
+         Vhs+NinSJCmGw==
+Date:   Tue, 3 Sep 2019 15:42:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
-        Udit Kumar <udit.kumar@nxp.com>
-References: <20190711102601.20582-1-chuanhua.han@nxp.com>
- <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
- <CAHp75VfFtMMQhetRFHrx=Ft7OWwyMqLrwP3sPjT6YVtr8xCHoQ@mail.gmail.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <896b88d4-9d1b-922b-1784-55ef9a1a1830@pengutronix.de>
-Date:   Tue, 3 Sep 2019 07:41:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Christoph Hellwig <hch@lst.de>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: linux-next: build failure after merge of the hmm tree
+Message-ID: <20190903154232.636d9b3d@canb.auug.org.au>
+In-Reply-To: <CAPcyv4hyEK=jA=ATyzjKbJDeQfpOyRo4pxoFCTf1LHa-muC14w@mail.gmail.com>
+References: <20190902205017.3eca5b70@canb.auug.org.au>
+        <20190902105137.GC20@mellanox.com>
+        <20190903094511.2704484a@canb.auug.org.au>
+        <CAPcyv4hyEK=jA=ATyzjKbJDeQfpOyRo4pxoFCTf1LHa-muC14w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfFtMMQhetRFHrx=Ft7OWwyMqLrwP3sPjT6YVtr8xCHoQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/9nyjpxpV4rf1Yo/trBf+IH6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/9nyjpxpV4rf1Yo/trBf+IH6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 02.09.19 23:16, Andy Shevchenko wrote:
-> On Mon, Sep 2, 2019 at 11:58 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>
->> On Thu, Jul 11, 2019 at 12:35 PM Chuanhua Han <chuanhua.han@nxp.com> wrote:
->>>
->>> Enable NXP i2c controller to boot with ACPI
->>>
->>> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
->>> Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
->>> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
->>
->> Wolfram, any objections to this from the i2c side?
-> 
-> May I propose amendment(s)?
-> 
->>> @@ -44,6 +44,7 @@
->>>   #include <linux/pm_runtime.h>
->>>   #include <linux/sched.h>
->>>   #include <linux/slab.h>
-> 
->>> +#include <linux/acpi.h>
-> 
-> If it's kept in order, better to go with it. (Yes, it is as I have checked)
-> However, property.h should be included instead, see below.
-> 
->>>          const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
->>>                                                             &pdev->dev);
->>> +       const struct acpi_device_id *acpi_id =
->>> +                       acpi_match_device(i2c_imx_acpi_ids,
->>> +                                         &pdev->dev);
-> 
-> 
->>>          if (of_id)
->>>                  i2c_imx->hwdata = of_id->data;
->>> +       else if (acpi_id)
->>> +               i2c_imx->hwdata = (struct imx_i2c_hwdata *)
->>> +                               acpi_id->driver_data;
-> 
-> 
-> The above altogher may be replaced with
-> 
-> const struct imx_i2c_hwdata *match;
-> ...
-> match = device_get_match_data(&pdev->dev);
-> if (match)
->   i2c_imx->hwdata = match;
-> else
-> ...
+Hi Dan,
 
-Instead of "may be replaced", I would say: it should be replaced :)
+On Mon, 2 Sep 2019 22:31:00 -0700 Dan Williams <dan.j.williams@intel.com> w=
+rote:
+>
+> On Mon, Sep 2, 2019 at 4:45 PM Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+> >
+> > Hi Jason,
+> >
+> > On Mon, 2 Sep 2019 10:51:41 +0000 Jason Gunthorpe <jgg@mellanox.com> wr=
+ote: =20
+> > >
+> > > On Mon, Sep 02, 2019 at 08:50:17PM +1000, Stephen Rothwell wrote: =20
+> > > =20
+> > > > ERROR: "nd_region_provider_data" [drivers/acpi/nfit/nfit.ko] undefi=
+ned!
+> > > > ERROR: "to_nd_blk_region" [drivers/acpi/nfit/nfit.ko] undefined!
+> > > > ERROR: "nvdimm_region_notify" [drivers/acpi/nfit/nfit.ko] undefined!
+> > > > ERROR: "nvdimm_blk_region_create" [drivers/acpi/nfit/nfit.ko] undef=
+ined!
+> > > >
+> > > > Caused by commit
+> > > >
+> > > >   126470c8a58b ("libnvdimm: Enable unit test infrastructure compile=
+ checks")
+> > > >
+> > > > I have reverted that commit for today. =20
+> > >
+> > > Looks like more kconfig trouble, can you send Dan your kconfig? I'll
+> > > drop this patch again
+> > > =20
+> >
+> > Thanks.  It was just an x86_64 allmodconfig build.  I don't actually
+> > have the .config file (it gets cleaned up, sorry). =20
+>=20
+> Strange. x86_64 allmodconfig is certainly a 0day build target. Could
+> this be toolchain dependent?
 
->>> +               .acpi_match_table = ACPI_PTR(i2c_imx_acpi_ids),
-> 
-> Since there is no #ifdef guard no need to use ACPI_PTR().
-> 
+Possible, I guess.  I am cross compiling on a PowerPC LE host
 
-What iMX/(other NXP?) SoCs are with ACPI support?  Where I can get one? I would like to 
-know more about it.
+$ x86_64-linux-gnu-gcc --version
+x86_64-linux-gnu-gcc (Debian 9.2.1-4) 9.2.1 20190821
 
-Kind regards,
-Oleksij Rempel
+$ x86_64-linux-gnu-ld --version
+GNU ld (GNU Binutils for Debian) 2.32.51.20190821
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+It could also be an interaction with something else in linux-next.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/9nyjpxpV4rf1Yo/trBf+IH6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1t/UgACgkQAVBC80lX
+0GyU5ggAgc/GarWvyXNTtugs2EAr9rchCYNiLJoswER8xyi53fApo2iYWkN8dnRp
+A9luQjB3L3y1X+33SwvW4igJ9Ipq7IQ61GE76yHuFneUuuUcnxuevR1wf4SX5ASw
+t5Yc4EjFKNZ36F7xhpjEtqMcsuJCu8/3wPXcNRZnHh16QBo3n7o7uTvci4fMT0Qr
+8SUGpGu+dLu1pe78cnuBBMywcT4WvS0Zkliw+msLB7VIiiydaOC9bQGEMpECdRNe
+oVM0CAs1pwRsI1k0AkrBDo7lb1kgY57Pts62cJz+MJMbUg3nt4nlQPh0c+tKS3FJ
+txaYSe7QGbiR6AXAvNOxIqTmObb2RQ==
+=StVB
+-----END PGP SIGNATURE-----
+
+--Sig_/9nyjpxpV4rf1Yo/trBf+IH6--
