@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88DBC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEDCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82484238C5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B5623789
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528199;
-	bh=JY321FLVpt2Dz+pjMSYaH1fx+xAPV6b3/H00N/2uyEU=;
+	s=default; t=1567528202;
+	bh=bxrFUI1nG1BmpNN44zCd3k8niYE3OXSaDuE/GDf/GAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVYlL/ekyUJMbv6LcKOHt0U+W8xInXC/pIZigs7prDDzvvWTa+O3FJANeKoY80Ih0
-	 oq94bP94zD3fs4qEA8sJnexNDQuLjWhIxknwlR8TYmumzqZl2ynd303rrIkLs14OB2
-	 Qsz9vjXOCx5qGIik7kaWl9NIzd8nfzx+Jdjv5eFE=
+	b=GvIYo+VsufbOgw8pyPxl2c3NfB5GYq7kxrMLLBQjET+Myz7kU801WVoLS8VaiYJBi
+	 mdzywp3QMDhuKLIiu1K8YOTLBEYInaO/CQvY9uekGok2VeTJof4yMyiCa9tmPbW0ks
+	 UEGprbIgReIkQ4ufnAE9c2rU4j8fvkWpC4l40FVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfICQ3D (ORCPT
+        id S1730295AbfICQaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:29:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51508 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:30:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730751AbfICQ3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:29:01 -0400
+        id S1731246AbfICQ3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:29:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1BF4238C7;
-        Tue,  3 Sep 2019 16:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D727323431;
+        Tue,  3 Sep 2019 16:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528140;
-        bh=JY321FLVpt2Dz+pjMSYaH1fx+xAPV6b3/H00N/2uyEU=;
+        s=default; t=1567528142;
+        bh=bxrFUI1nG1BmpNN44zCd3k8niYE3OXSaDuE/GDf/GAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yC5CdqcYOkDUIOxKz9JegaPZ6IeWp0LskpFVqNHHV7sb49WqWu031EhisVtyrKYf+
-         6x+Ijy8ns9hvpXykScwvHZcOrNW81b8ayErE47Fhaynef1TYr2jxDVHAePp6zC8TEV
-         rRIsi4rUDP6G3FeYDhIXMWBvnV9YmfoI+37HC4Q8=
+        b=ECElFg7DzI8TItT3ZMmA1DUp0iAhIukaTJEF5Z0ExfsZE3+59eHKQoGubXV5cJISx
+         71+6Y+8A1H7ylo6bd1epYuqW1ATj1/TE33q1ksbWJMl+FBmUxxGXr+7/8SI7YM2tsC
+         N8vRxBDWu10P1TSs4WQozikZC+DztdltxvGmFcAA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 131/167] ceph: use ceph_evict_inode to cleanup inode's resource
-Date:   Tue,  3 Sep 2019 12:24:43 -0400
-Message-Id: <20190903162519.7136-131-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 133/167] KVM: VMX: Always signal #GP on WRMSR to MSR_IA32_CR_PAT with bad value
+Date:   Tue,  3 Sep 2019 12:24:45 -0400
+Message-Id: <20190903162519.7136-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,77 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yan, Zheng" <zyan@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 87bc5b895d94a0f40fe170d4cf5771c8e8f85d15 ]
+[ Upstream commit d28f4290b53a157191ed9991ad05dffe9e8c0c89 ]
 
-remove_session_caps() relies on __wait_on_freeing_inode(), to wait for
-freeing inode to remove its caps. But VFS wakes freeing inode waiters
-before calling destroy_inode().
+The behavior of WRMSR is in no way dependent on whether or not KVM
+consumes the value.
 
+Fixes: 4566654bb9be9 ("KVM: vmx: Inject #GP on invalid PAT CR")
 Cc: stable@vger.kernel.org
-Link: https://tracker.ceph.com/issues/40102
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 7 +++++--
- fs/ceph/super.c | 2 +-
- fs/ceph/super.h | 2 +-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ arch/x86/kvm/vmx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 3e518c2ae2bf9..2a64e8f695b93 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -528,13 +528,16 @@ static void ceph_i_callback(struct rcu_head *head)
- 	kmem_cache_free(ceph_inode_cachep, ci);
- }
- 
--void ceph_destroy_inode(struct inode *inode)
-+void ceph_evict_inode(struct inode *inode)
- {
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_inode_frag *frag;
- 	struct rb_node *n;
- 
--	dout("destroy_inode %p ino %llx.%llx\n", inode, ceph_vinop(inode));
-+	dout("evict_inode %p ino %llx.%llx\n", inode, ceph_vinop(inode));
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index feff7ed44a2bb..e4bba840a0708 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -4265,9 +4265,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 					      MSR_TYPE_W);
+ 		break;
+ 	case MSR_IA32_CR_PAT:
++		if (!kvm_pat_valid(data))
++			return 1;
 +
-+	truncate_inode_pages_final(&inode->i_data);
-+	clear_inode(inode);
- 
- 	ceph_fscache_unregister_inode_cookie(ci);
- 
-diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-index c5cf46e43f2e7..02528e11bf331 100644
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -827,9 +827,9 @@ static int ceph_remount(struct super_block *sb, int *flags, char *data)
- 
- static const struct super_operations ceph_super_ops = {
- 	.alloc_inode	= ceph_alloc_inode,
--	.destroy_inode	= ceph_destroy_inode,
- 	.write_inode    = ceph_write_inode,
- 	.drop_inode	= ceph_drop_inode,
-+	.evict_inode	= ceph_evict_inode,
- 	.sync_fs        = ceph_sync_fs,
- 	.put_super	= ceph_put_super,
- 	.remount_fs	= ceph_remount,
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index d8579a56e5dc2..6ef2a3b60951a 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -854,7 +854,7 @@ static inline bool __ceph_have_pending_cap_snap(struct ceph_inode_info *ci)
- extern const struct inode_operations ceph_file_iops;
- 
- extern struct inode *ceph_alloc_inode(struct super_block *sb);
--extern void ceph_destroy_inode(struct inode *inode);
-+extern void ceph_evict_inode(struct inode *inode);
- extern int ceph_drop_inode(struct inode *inode);
- 
- extern struct inode *ceph_get_inode(struct super_block *sb,
+ 		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
+-			if (!kvm_pat_valid(data))
+-				return 1;
+ 			vmcs_write64(GUEST_IA32_PAT, data);
+ 			vcpu->arch.pat = data;
+ 			break;
 -- 
 2.20.1
 
