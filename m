@@ -2,92 +2,168 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C22FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2006BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59D021897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IEo9UD6C"
+	by mail.kernel.org (Postfix) with ESMTP id EBF78217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfICBeS (ORCPT
+        id S1726260AbfICBjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 21:34:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45417 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfICBeS (ORCPT
+        Mon, 2 Sep 2019 21:39:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2193 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725854AbfICBjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 21:34:18 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g16so3243209otp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 18:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9RyAJR0cZy5gUrJpmgleotGVW6Am+iWZW2mEmMmd/TI=;
-        b=IEo9UD6CA5e2Wlj1p54d79TtAP8JAyvFbYls0jhsiuyDJ/VcOiVzT43lPXuavDqntP
-         QMOW9VUOt10GQUAL2tHf1xwcjTQtxTjP3jilVhXPjA0Otxgz/VSCJznWdr6VtKG2HATU
-         aCf52sJu/ctiCYWfUsQwlmswPsG174Z9R+x4fPcmOhcNV7PFmLwnshipHntpfo/PT5Ez
-         17MfStpajZxrAhUjZK/0sKru663HXA7EnNDblOQCrGsNGFaEb/eYLY0kdL3cK1jSAAII
-         ANNOGoaOk4GkDe0CuxqMQ07mC4imPv5gPf3e8ikX9t3ePfHqD+4frSeSRonsVBP7sRHr
-         jJkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9RyAJR0cZy5gUrJpmgleotGVW6Am+iWZW2mEmMmd/TI=;
-        b=pFV4FOfCvKffTtEOdSzA+2R3mt6F0KUKExR1MN2XK7L6DNnHcTtmuaSrzr6VHEARB+
-         +0A/KDhK+ARq8Qi01ZlzkiqczelsZYm2qumi8GxsAjkWsAwRgKWVa06rvrA3nMR1atve
-         zU+3eMGe/qNwDi76oSN1q86XRKAmlkM6B8XxVSnadZWO0Spfo/Bp+pN8FunFHl6RQoZO
-         yvUBIZES5KdY6m4OpqLXLMYPZPdL+j7y8VEkaDNvXUR1am9sGu5Y/xImq4wmaAyrjPUa
-         RdYFh4FtWnw1RLBU+OLGDDeJUYFkXv9rwpEQSGwOkbSHwynrMcZo3TLbEC4jPejKpPsV
-         PYEg==
-X-Gm-Message-State: APjAAAVRMDXX362j4W8wVjP2YekqVXDKsa7V/ZOrhLefNOaOhIuHXZ9n
-        StjRNOIpxhVXW0XgOSx7nuTwQzR1Z+NEH3Z3lp5K19vS8gQ=
-X-Google-Smtp-Source: APXvYqwoH8r7iV28PdkpLbkgPHOKvEZqjvHZEuungti6w8x742pHbmbQLEilAiXKR4/T2TisQwpnAHUHB+WXyuzBEDk=
-X-Received: by 2002:a9d:2642:: with SMTP id a60mr913485otb.247.1567474457558;
- Mon, 02 Sep 2019 18:34:17 -0700 (PDT)
+        Mon, 2 Sep 2019 21:39:21 -0400
+X-UUID: 6d6db5c5ebc44cf2b5ad3837c9d4759b-20190903
+X-UUID: 6d6db5c5ebc44cf2b5ad3837c9d4759b-20190903
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1775787851; Tue, 03 Sep 2019 09:39:12 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 3 Sep 2019 09:39:12 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 3 Sep 2019 09:39:12 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH] arm64: dts: mt8183: Add gce setting in display node
+Date:   Tue, 3 Sep 2019 09:39:10 +0800
+Message-ID: <20190903013910.30225-1-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <cover.1564566425.git.baolin.wang@linaro.org> <20190902210409.c4mdm6akdlgctgsq@earth.universe>
-In-Reply-To: <20190902210409.c4mdm6akdlgctgsq@earth.universe>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 3 Sep 2019 09:34:06 +0800
-Message-ID: <CAMz4kuJzKgiPzecRROMMMzs73_2Vnf=NLF8fFMqbA0CBF7kn1Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Optimize the Spreadtrum SC27xx fuel gauge
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>, yuanjiang.yu@unisoc.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+In order to use GCE function, we need add some informations
+into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
 
-On Tue, 3 Sep 2019 at 05:04, Sebastian Reichel <sre@kernel.org> wrote:
->
-> Hi,
->
-> On Wed, Jul 31, 2019 at 06:00:22PM +0800, Baolin Wang wrote:
-> > This patch set adds new attributes for userspace, and fixes the the
-> > accuracy issue of coulomb counter calculation, as well as optimizing
-> > the battery capacity calibration in some abnormal scenarios.
-> >
-> > Any comments are welcome. Thanks.
->
-> Thanks, queued. I slightly modified patch 4, so that int_mode is
-> 'bool' instead of 'int'.
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-OK. Thanks.
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 5616d158a4fa..b7d294c1c5b4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -485,6 +485,11 @@
+ 			compatible = "mediatek,mt8183-display";
+ 			reg = <0 0x14000000 0 0x1000>;
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
++				 <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
++			mediatek,gce-events = <CMDQ_EVENT_MUTEX_STREAM_DONE0>,
++					      <CMDQ_EVENT_MUTEX_STREAM_DONE1>;
+ 		};
+ 
+ 		ovl0: ovl@14008000 {
+@@ -494,6 +499,7 @@
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
+ 			mediatek,larb = <&larb0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x8000 0x1000>;
+ 		};
+ 
+ 		ovl_2l0: ovl@14009000 {
+@@ -503,6 +509,7 @@
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_OVL0_2L>;
+ 			mediatek,larb = <&larb0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x9000 0x1000>;
+ 		};
+ 
+ 		ovl_2l1: ovl@1400a000 {
+@@ -512,6 +519,7 @@
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_OVL1_2L>;
+ 			mediatek,larb = <&larb0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xa000 0x1000>;
+ 		};
+ 
+ 		rdma0: rdma@1400b000 {
+@@ -522,6 +530,7 @@
+ 			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
+ 			mediatek,larb = <&larb0>;
+ 			mediatek,rdma_fifo_size = <5>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xb000 0x1000>;
+ 		};
+ 
+ 		rdma1: rdma@1400c000 {
+@@ -532,6 +541,7 @@
+ 			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
+ 			mediatek,larb = <&larb0>;
+ 			mediatek,rdma_fifo_size = <2>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
+ 		};
+ 
+ 		color0: color@1400e000 {
+@@ -541,6 +551,7 @@
+ 			interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
+ 		};
+ 
+ 		ccorr0: ccorr@1400f000 {
+@@ -549,6 +560,7 @@
+ 			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_CCORR0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
+ 		};
+ 
+ 		aal0: aal@14010000 {
+@@ -558,6 +570,7 @@
+ 			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_AAL0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
+ 		};
+ 
+ 		gamma0: gamma@14011000 {
+@@ -567,6 +580,7 @@
+ 			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_GAMMA0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
+ 		};
+ 
+ 		dither0: dither@14012000 {
+@@ -575,6 +589,7 @@
+ 			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+ 			clocks = <&mmsys CLK_MM_DISP_DITHER0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
+ 		};
+ 
+ 		mutex: mutex@14016000 {
 -- 
-Baolin Wang
-Best Regards
+2.18.0
+
