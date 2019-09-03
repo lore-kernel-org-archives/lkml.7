@@ -2,198 +2,117 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFA7C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D060C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA5622CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7AB22CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfICXft (ORCPT
+        id S1727653AbfICXgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 19:35:49 -0400
-Received: from smtprelay0241.hostedemail.com ([216.40.44.241]:58829 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726090AbfICXfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 19:35:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2927E804AB8A;
-        Tue,  3 Sep 2019 23:35:46 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: queen31_6c0423b00a718
-X-Filterd-Recvd-Size: 10233
-Received: from XPS-9350 (unknown [172.58.30.235])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  3 Sep 2019 23:35:41 +0000 (UTC)
-Message-ID: <7778af20a8e13e6e906ee3d2030ca6af4ba1c37d.camel@perches.com>
-Subject: Re: [PATCH v3] kunit: fix failure to build without printk
-From:   Joe Perches <joe@perches.com>
-To:     Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
-        sboyd@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Tim.Bird@sony.com
-Date:   Tue, 03 Sep 2019 16:35:09 -0700
-In-Reply-To: <20190903232112.181303-1-brendanhiggins@google.com>
-References: <20190903232112.181303-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 3 Sep 2019 19:36:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50861 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbfICXgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 19:36:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 16:36:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,464,1559545200"; 
+   d="scan'208";a="357911314"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga005.jf.intel.com with ESMTP; 03 Sep 2019 16:36:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>
+Subject: [PATCH] KVM: x86: Manually calculate reserved bits when loading PDPTRS
+Date:   Tue,  3 Sep 2019 16:36:45 -0700
+Message-Id: <20190903233645.21125-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-03 at 16:21 -0700, Brendan Higgins wrote:
-> Previously KUnit assumed that printk would always be present, which is
-> not a valid assumption to make. Fix that by removing call to
-> vprintk_emit, and calling printk directly.
-> 
-> This fixes a build error[1] reported by Randy.
-> 
-> For context this change comes after much discussion. My first stab[2] at
-> this was just to make the KUnit logging code compile out; however, it
-> was agreed that if we were going to use vprintk_emit, then vprintk_emit
-> should provide a no-op stub, which lead to my second attempt[3]. In
-> response to me trying to stub out vprintk_emit, Sergey Senozhatsky
-> suggested a way for me to remove our usage of vprintk_emit, which led to
-> my third attempt at solving this[4].
-> 
-> In my previous version of this patch[4], I completely removed
-> vprintk_emit, as suggested by Sergey; however, there was a bit of debate
-> over whether Sergey's solution was the best. The debate arose due to
-> Sergey's version resulting in a checkpatch warning, which resulted in a
-> debate over correct printk usage. Joe Perches offered an alternative fix
-> which was somewhat less far reaching than what Sergey had suggested and
-> importantly relied on continuing to use %pV. Much of the debated
-> centered around whether %pV should be widely used, and whether Sergey's
-> version would result in object size bloat. Ultimately, we decided to go
-> with Sergey's version.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link[1]: https://lore.kernel.org/linux-kselftest/c7229254-0d90-d90e-f3df-5b6d6fc0b51f@infradead.org/
-> Link[2]: https://lore.kernel.org/linux-kselftest/20190827174932.44177-1-brendanhiggins@google.com/
-> Link[3]: https://lore.kernel.org/linux-kselftest/20190827234835.234473-1-brendanhiggins@google.com/
-> Link[4]: https://lore.kernel.org/linux-kselftest/20190828093143.163302-1-brendanhiggins@google.com/
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Tim.Bird@sony.com
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> ---
-> 
-> Sorry for the long commit message, but given the long discussion (and
-> some of the confusion that occurred in the discussion), it seemed
-> appropriate to summarize the discussion around this patch up to this
-> point (especially since one of the proposed patches was under a separate
-> patch subject).
-> 
-> No changes have been made to this patch since v2, other than the commit
-> log.
-[]
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-[]
-> @@ -339,9 +339,8 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
->  
->  void kunit_cleanup(struct kunit *test);
->  
-> -void __printf(3, 4) kunit_printk(const char *level,
-> -				 const struct kunit *test,
-> -				 const char *fmt, ...);
-> +#define kunit_print_level(KERN_LEVEL, test, fmt, ...) \
-> +	printk(KERN_LEVEL "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
+Manually generate the PDPTR reserved bit mask when explicitly loading
+PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+current paging mode, which is unlikely to be PAE paging in the vast
+majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
+__set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
+PDPTR, or more likely, miss a reserved bit check and subsequently fail
+a VM-Enter due to a bad VMCS.GUEST_PDPTR.
 
-Non trivial notes:
+Add a one off helper to generate the reserved bits instead of sharing
+code across the MMU's calculations and the PDPTR emulation.  The PDPTR
+reserved bits are basically set in stone, and pushing a helper into
+the MMU's calculation adds unnecessary complexity without improving
+readability.
 
-Please do not use KERN_LEVEL as a macro argument.
-It would just be a source of possible confusion.
+Oppurtunistically fix/update the comment for load_pdptrs().
 
-Please use level or lvl like nearly every other macro
-that does this uses.
+Note, the buggy commit also introduced a deliberate functional change,
+"Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
+effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
+Fix page-tables reserved bits").  A bit of SDM archaeology shows that
+the SDM from late 2008 had a bug (likely a copy+paste error) where it
+listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
+for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
+always have been reserved.
 
-And there is nothing wrong with using kunit_printk and it's
-not necessary to use an odd name like kunit_printk_level.
+Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
+Cc: stable@vger.kernel.org
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Reported-by: Doug Reiland <doug.reiland@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/x86.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-$ git grep -P 'define\s+\w+_printk\(.*\b(level|lvl)'
-drivers/block/drbd/drbd_int.h:#define drbd_printk(level, obj, fmt, args...) \
-drivers/edac/amd76x_edac.c:#define amd76x_printk(level, fmt, arg...) \
-drivers/edac/amd76x_edac.c:#define amd76x_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/cpc925_edac.c:#define cpc925_printk(level, fmt, arg...) \
-drivers/edac/cpc925_edac.c:#define cpc925_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/e752x_edac.c:#define e752x_printk(level, fmt, arg...) \
-drivers/edac/e752x_edac.c:#define e752x_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/e7xxx_edac.c:#define e7xxx_printk(level, fmt, arg...) \
-drivers/edac/e7xxx_edac.c:#define e7xxx_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/edac_mc.h:#define edac_printk(level, prefix, fmt, arg...) \
-drivers/edac/edac_mc.h:#define edac_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/edac_mc.h:#define edac_mc_chipset_printk(mci, level, prefix, fmt, arg...) \
-drivers/edac/edac_mc.h:#define edac_device_printk(ctl, level, fmt, arg...) \
-drivers/edac/edac_mc.h:#define edac_pci_printk(ctl, level, fmt, arg...) \
-drivers/edac/fsl_ddr_edac.h:#define fsl_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/i10nm_base.c:#define i10nm_printk(level, fmt, arg...)      \
-drivers/edac/i5000_edac.c:#define i5000_printk(level, fmt, arg...) \
-drivers/edac/i5000_edac.c:#define i5000_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/i5400_edac.c:#define i5400_printk(level, fmt, arg...) \
-drivers/edac/i5400_edac.c:#define i5400_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/i7300_edac.c:#define i7300_printk(level, fmt, arg...) \
-drivers/edac/i7300_edac.c:#define i7300_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/i7core_edac.c:#define i7core_printk(level, fmt, arg...)                    \
-drivers/edac/i7core_edac.c:#define i7core_mc_printk(mci, level, fmt, arg...)            \
-drivers/edac/i82860_edac.c:#define i82860_printk(level, fmt, arg...) \
-drivers/edac/i82860_edac.c:#define i82860_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/i82875p_edac.c:#define i82875p_printk(level, fmt, arg...) \
-drivers/edac/i82875p_edac.c:#define i82875p_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/i82975x_edac.c:#define i82975x_printk(level, fmt, arg...) \
-drivers/edac/i82975x_edac.c:#define i82975x_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/ie31200_edac.c:#define ie31200_printk(level, fmt, arg...) \
-drivers/edac/mpc85xx_edac.h:#define mpc85xx_printk(level, fmt, arg...) \
-drivers/edac/mv64x60_edac.h:#define mv64x60_printk(level, fmt, arg...) \
-drivers/edac/mv64x60_edac.h:#define mv64x60_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/pnd2_edac.c:#define pnd2_printk(level, fmt, arg...)                        \
-drivers/edac/pnd2_edac.c:#define pnd2_mc_printk(mci, level, fmt, arg...)        \
-drivers/edac/ppc4xx_edac.c:#define ppc4xx_edac_printk(level, fmt, arg...) \
-drivers/edac/ppc4xx_edac.c:#define ppc4xx_edac_mc_printk(level, mci, fmt, arg...) \
-drivers/edac/r82600_edac.c:#define r82600_printk(level, fmt, arg...) \
-drivers/edac/r82600_edac.c:#define r82600_mc_printk(mci, level, fmt, arg...) \
-drivers/edac/sb_edac.c:#define sbridge_printk(level, fmt, arg...)                       \
-drivers/edac/sb_edac.c:#define sbridge_mc_printk(mci, level, fmt, arg...)               \
-drivers/edac/skx_base.c:#define skx_printk(level, fmt, arg...)                  \
-drivers/edac/skx_base.c:#define skx_mc_printk(mci, level, fmt, arg...)          \
-drivers/edac/skx_common.h:#define skx_printk(level, fmt, arg...)                        \
-drivers/edac/skx_common.h:#define skx_mc_printk(mci, level, fmt, arg...)                \
-drivers/infiniband/hw/usnic/usnic_log.h:#define usnic_printk(lvl, args...) \
-drivers/infiniband/ulp/ipoib/ipoib.h:#define ipoib_printk(level, priv, format, arg...)  \
-drivers/input/mouse/psmouse.h:#define psmouse_printk(level, psmouse, format, ...)       \
-drivers/media/tuners/mc44s803.c:#define mc_printk(level, format, arg...)        \
-drivers/media/tuners/tda18271-priv.h:#define tda_printk(st, lvl, fmt, arg...)                   \
-drivers/media/usb/uvc/uvcvideo.h:#define uvc_printk(level, msg...) \
-drivers/net/ethernet/freescale/ucc_geth.c:#define ugeth_printk(level, format, arg...)  \
-drivers/net/ethernet/netronome/nfp/nfpcore/nfp_cpp.h:#define nfp_printk(level, cpp, fmt, args...) \
-drivers/net/phy/phylink.c:#define phylink_printk(level, pl, fmt, ...) \
-drivers/scsi/ipr.h:#define ipr_res_printk(level, ioa_cfg, bus, target, lun, fmt, ...) \
-drivers/scsi/ipr.h:#define ipr_ra_printk(level, ioa_cfg, ra, fmt, ...) \
-drivers/scsi/qla4xxx/ql4_def.h:#define ql4_printk(level, ha, format, arg...) \
-drivers/scsi/sym53c8xx_2/sym_hipd.c:#define sym_printk(lvl, tp, cp, fmt, v...) do { \
-drivers/usb/atm/usbatm.h:#define atm_printk(level, instance, format, arg...)    \
-include/linux/hid.h:#define hid_printk(level, hid, fmt, arg...)         \
-include/linux/netdevice.h:#define netif_printk(priv, type, level, dev, fmt, args...)    \
-include/linux/pci.h:#define pci_printk(level, pdev, fmt, arg...) \
-include/media/v4l2-common.h:#define v4l_printk(level, name, adapter, addr, fmt, arg...) \
-include/media/v4l2-common.h:#define v4l_client_printk(level, client, fmt, arg...)                           \
-include/media/v4l2-common.h:#define v4l2_printk(level, dev, fmt, arg...) \
-include/net/cfg80211.h:#define wiphy_printk(level, wiphy, format, args...)              \
-include/sound/core.h:#define __snd_printk(level, file, line, format, ...) \
-net/bridge/br_private.h:#define br_printk(level, br, format, args...)   \
-
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 290c3c3efb87..548cc6ef5408 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -674,8 +674,14 @@ static int kvm_read_nested_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 				       data, offset, len, access);
+ }
+ 
++static inline u64 pdptr_rsvd_bits(struct kvm_vcpu *vcpu)
++{
++	return rsvd_bits(cpuid_maxphyaddr(vcpu), 63) | rsvd_bits(5, 8) |
++	       rsvd_bits(1, 2);
++}
++
+ /*
+- * Load the pae pdptrs.  Return true is they are all valid.
++ * Load the pae pdptrs.  Return 1 if they are all valid, 0 otherwise.
+  */
+ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+ {
+@@ -694,8 +700,7 @@ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+ 	}
+ 	for (i = 0; i < ARRAY_SIZE(pdpte); ++i) {
+ 		if ((pdpte[i] & PT_PRESENT_MASK) &&
+-		    (pdpte[i] &
+-		     vcpu->arch.mmu->guest_rsvd_check.rsvd_bits_mask[0][2])) {
++		    (pdpte[i] & pdptr_rsvd_bits(vcpu))) {
+ 			ret = 0;
+ 			goto out;
+ 		}
+-- 
+2.22.0
 
