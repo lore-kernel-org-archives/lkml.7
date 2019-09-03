@@ -2,45 +2,37 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_ALL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590C9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC443C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3407C2341E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBEF22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfICRNW (ORCPT
+        id S1730032AbfICRNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:13:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37426 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfICRNV (ORCPT
+        Tue, 3 Sep 2019 13:13:47 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:50863 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727624AbfICRNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:13:21 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id E4F3228A124
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution changes
-Date:   Tue,  3 Sep 2019 14:12:56 -0300
-Message-Id: <20190903171256.25052-1-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 3 Sep 2019 13:13:47 -0400
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id C022D3A32A; Tue,  3 Sep 2019 19:13:39 +0200 (CEST)
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Subject: [PATCH] staging: exfat: cleanup explicit comparisons to NULL
+Date:   Tue,  3 Sep 2019 19:13:37 +0200
+Message-Id: <20190903171337.22889-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,72 +40,410 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-changed the conditions under S_FMT was allowed for OUTPUT
-CAPTURE buffers.
+Fixes checkpatch.pl warnings:
 
-However, and according to the mem-to-mem stateless decoder specification,
-in order to support dynamic resolution changes, S_FMT should be allowed
-even if OUTPUT buffers have been allocated.
+  CHECK: Comparison to NULL could be written "expr"
+  CHECK: Comparison to NULL could be written "!expr"
 
-Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
-modification, provided the pixel format stays the same.
-
-Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
-
-Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 ---
- drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/staging/exfat/exfat_core.c  | 34 ++++++++---------
+ drivers/staging/exfat/exfat_super.c | 58 ++++++++++++++---------------
+ 2 files changed, 46 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-index 3dae52abb96c..d48b548842cf 100644
---- a/drivers/staging/media/hantro/hantro_v4l2.c
-+++ b/drivers/staging/media/hantro/hantro_v4l2.c
-@@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
- 	struct hantro_ctx *ctx = fh_to_ctx(priv);
-+	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
- 	const struct hantro_fmt *formats;
- 	unsigned int num_fmts;
--	struct vb2_queue *vq;
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index 46b9f4455da1..7b39544cdaf1 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -100,7 +100,7 @@ void fs_set_vol_flags(struct super_block *sb, u32 new_flag)
+ 	p_fs->vol_flag = new_flag;
+ 
+ 	if (p_fs->vol_type == EXFAT) {
+-		if (p_fs->pbr_bh == NULL) {
++		if (!p_fs->pbr_bh) {
+ 			if (sector_read(sb, p_fs->PBR_sector,
+ 					&p_fs->pbr_bh, 1) != FFS_SUCCESS)
+ 				return;
+@@ -543,7 +543,7 @@ s32 load_alloc_bitmap(struct super_block *sb)
+ 				p_fs->vol_amap = kmalloc_array(p_fs->map_sectors,
+ 							       sizeof(struct buffer_head *),
+ 							       GFP_KERNEL);
+-				if (p_fs->vol_amap == NULL)
++				if (!p_fs->vol_amap)
+ 					return FFS_MEMORYERR;
+ 
+ 				sector = START_SECTOR(p_fs->map_clu);
+@@ -685,7 +685,7 @@ void sync_alloc_bitmap(struct super_block *sb)
+ 	int i;
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+-	if (p_fs->vol_amap == NULL)
++	if (!p_fs->vol_amap)
+ 		return;
+ 
+ 	for (i = 0; i < p_fs->map_sectors; i++)
+@@ -714,7 +714,7 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
+ 
+ 	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
+ 						GFP_KERNEL);
+-	if (upcase_table == NULL)
++	if (!upcase_table)
+ 		return FFS_MEMORYERR;
+ 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
+ 
+@@ -750,11 +750,11 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
+ 			else { /* uni != index , uni != 0xFFFF */
+ 				u16 col_index = get_col_index(index);
+ 
+-				if (upcase_table[col_index] == NULL) {
++				if (!upcase_table[col_index]) {
+ 					pr_debug("alloc = 0x%X\n", col_index);
+ 					upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
+ 						sizeof(u16), GFP_KERNEL);
+-					if (upcase_table[col_index] == NULL) {
++					if (!upcase_table[col_index]) {
+ 						ret = FFS_MEMORYERR;
+ 						goto error;
+ 					}
+@@ -794,7 +794,7 @@ static s32 __load_default_upcase_table(struct super_block *sb)
+ 
+ 	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
+ 						GFP_KERNEL);
+-	if (upcase_table == NULL)
++	if (!upcase_table)
+ 		return FFS_MEMORYERR;
+ 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
+ 
+@@ -812,12 +812,12 @@ static s32 __load_default_upcase_table(struct super_block *sb)
+ 		else { /* uni != index , uni != 0xFFFF */
+ 			u16 col_index = get_col_index(index);
+ 
+-			if (upcase_table[col_index] == NULL) {
++			if (!upcase_table[col_index]) {
+ 				pr_debug("alloc = 0x%X\n", col_index);
+ 				upcase_table[col_index] = kmalloc_array(UTBL_ROW_COUNT,
+ 									sizeof(u16),
+ 									GFP_KERNEL);
+-				if (upcase_table[col_index] == NULL) {
++				if (!upcase_table[col_index]) {
+ 					ret = FFS_MEMORYERR;
+ 					goto error;
+ 				}
+@@ -1640,7 +1640,7 @@ struct dentry_t *get_entry_with_sector(struct super_block *sb, sector_t sector,
+ 
+ 	buf = buf_getblk(sb, sector);
+ 
+-	if (buf == NULL)
++	if (!buf)
+ 		return NULL;
+ 
+ 	return (struct dentry_t *)(buf + offset);
+@@ -1658,10 +1658,10 @@ struct dentry_t *get_entry_in_dir(struct super_block *sb, struct chain_t *p_dir,
+ 
+ 	buf = buf_getblk(sb, sec);
+ 
+-	if (buf == NULL)
++	if (!buf)
+ 		return NULL;
+ 
+-	if (sector != NULL)
++	if (sector)
+ 		*sector = sec;
+ 	return (struct dentry_t *)(buf + off);
+ }
+@@ -1721,7 +1721,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 	sec += START_SECTOR(clu);
+ 
+ 	buf = buf_getblk(sb, sec);
+-	if (buf == NULL)
++	if (!buf)
+ 		goto err_out;
+ 
+ 	ep = (struct dentry_t *)(buf + off);
+@@ -1741,7 +1741,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 	pr_debug("%s: trying to kmalloc %zx bytes for %d entries\n", __func__,
+ 		 bufsize, num_entries);
+ 	es = kmalloc(bufsize, GFP_KERNEL);
+-	if (es == NULL)
++	if (!es)
+ 		goto err_out;
+ 
+ 	es->num_entries = num_entries;
+@@ -1820,7 +1820,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 				sec++;
+ 			}
+ 			buf = buf_getblk(sb, sec);
+-			if (buf == NULL)
++			if (!buf)
+ 				goto err_out;
+ 			off = 0;
+ 			ep = (struct dentry_t *)(buf);
+@@ -1872,7 +1872,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
+ 				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
+ 				     num_entries);
+ 		buf = buf_getblk(sb, sec);
+-		if (buf == NULL)
++		if (!buf)
+ 			goto err_out;
+ 		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
+ 		pr_debug("copying %d entries from %p to sector %llu\n",
+@@ -2649,7 +2649,7 @@ void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	es = get_entry_set_in_dir(sb, p_dir, entry, ES_ALL_ENTRIES, &ep);
+-	if (es == NULL || es->num_entries < 3) {
++	if (!es || es->num_entries < 3) {
+ 		if (es)
+ 			release_entry_set(es);
+ 		return;
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 881cd85cf677..8d93403a3308 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -341,7 +341,7 @@ static int exfat_cmpi(const struct dentry *dentry, unsigned int len,
+ 	alen = exfat_striptail_len(name);
+ 	blen = __exfat_striptail_len(len, str);
+ 	if (alen == blen) {
+-		if (t == NULL) {
++		if (!t) {
+ 			if (strncasecmp(name->name, str, alen) == 0)
+ 				return 0;
+ 		} else if (nls_strnicmp(t, name->name, str, alen) == 0)
+@@ -587,7 +587,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* check the validity of pointer parameters */
+-	if (info == NULL)
++	if (!info)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -650,7 +650,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 	pr_debug("%s entered\n", __func__);
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
++	if (!fid || !path || (*path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -743,7 +743,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
  	int ret;
  
--	/* Change not allowed if queue is busy. */
--	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
--	if (vb2_is_busy(vq))
--		return -EBUSY;
--
- 	if (!hantro_is_encoder_ctx(ctx)) {
- 		struct vb2_queue *peer_vq;
+ 	/* check the validity of pointer parameters */
+-	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
++	if (!fid || !path || (*path == '\0'))
+ 		return FFS_ERROR;
  
-+		/*
-+		 * In other to support dynamic resolution change,
-+		 * the decoder admits a resolution change, as long
-+		 * as the pixelformat remains. Can't be done if streaming.
-+		 */
-+		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
-+		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
-+			return -EBUSY;
- 		/*
- 		 * Since format change on the OUTPUT queue will reset
- 		 * the CAPTURE queue, we can't allow doing so
-@@ -389,6 +392,13 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
- 					  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
- 		if (vb2_is_busy(peer_vq))
- 			return -EBUSY;
-+	} else {
-+		/*
-+		 * The encoder doesn't admit a format change if
-+		 * there are OUTPUT buffers allocated.
-+		 */
-+		if (vb2_is_busy(vq))
-+			return -EBUSY;
+ 	/* acquire the lock for file system critical section */
+@@ -788,11 +788,11 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* check the validity of pointer parameters */
+-	if (buffer == NULL)
++	if (!buffer)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -811,7 +811,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 		count = fid->size - fid->rwoffset;
+ 
+ 	if (count == 0) {
+-		if (rcount != NULL)
++		if (rcount)
+ 			*rcount = 0;
+ 		ret = FFS_EOF;
+ 		goto out;
+@@ -885,7 +885,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ /* How did this ever work and not leak a brlse()?? */
+ err_out:
+ 	/* set the size of read bytes */
+-	if (rcount != NULL)
++	if (rcount)
+ 		*rcount = read_bytes;
+ 
+ 	if (p_fs->dev_ejected)
+@@ -917,11 +917,11 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* check the validity of pointer parameters */
+-	if (buffer == NULL)
++	if (!buffer)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -937,7 +937,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 		fid->rwoffset = fid->size;
+ 
+ 	if (count == 0) {
+-		if (wcount != NULL)
++		if (wcount)
+ 			*wcount = 0;
+ 		ret = FFS_SUCCESS;
+ 		goto out;
+@@ -1096,7 +1096,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL)
++		if (!es)
+ 			goto err_out;
+ 		ep2 = ep+1;
+ 	} else {
+@@ -1138,7 +1138,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 
+ err_out:
+ 	/* set the size of written bytes */
+-	if (wcount != NULL)
++	if (wcount)
+ 		*wcount = write_bytes;
+ 
+ 	if (num_alloced == 0)
+@@ -1225,7 +1225,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 			}
+@@ -1320,11 +1320,11 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 	s32 new_entry = 0;
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((new_path == NULL) || (*new_path == '\0'))
++	if (!new_path || (*new_path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -1441,7 +1441,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -1529,7 +1529,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 		}
+@@ -1645,7 +1645,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_2_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 		}
+@@ -1769,7 +1769,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
+ 	if (p_fs->vol_type == EXFAT) {
+ 		es = get_entry_set_in_dir(sb, &(fid->dir), fid->entry,
+ 					  ES_ALL_ENTRIES, &ep);
+-		if (es == NULL) {
++		if (!es) {
+ 			ret = FFS_MEDIAERR;
+ 			goto out;
+ 		}
+@@ -1838,7 +1838,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
+ 
+ 	/* check the validity of pointer parameters */
+-	if (clu == NULL)
++	if (!clu)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -1922,7 +1922,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 		if (p_fs->vol_type == EXFAT) {
+ 			es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
+ 						  ES_ALL_ENTRIES, &ep);
+-			if (es == NULL) {
++			if (!es) {
+ 				ret = FFS_MEDIAERR;
+ 				goto out;
+ 			}
+@@ -1990,7 +1990,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 	pr_debug("%s entered\n", __func__);
+ 
+ 	/* check the validity of pointer parameters */
+-	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
++	if (!fid || !path || (*path == '\0'))
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+@@ -2036,7 +2036,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
+ 	struct file_id_t *fid = &(EXFAT_I(inode)->fid);
+ 
+ 	/* check the validity of pointer parameters */
+-	if (dir_entry == NULL)
++	if (!dir_entry)
+ 		return FFS_ERROR;
+ 
+ 	/* check if the given file ID is opened */
+@@ -2227,7 +2227,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* check the validity of the given file id */
+-	if (fid == NULL)
++	if (!fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	dir.dir = fid->dir.dir;
+@@ -3115,10 +3115,10 @@ static const char *exfat_get_link(struct dentry *dentry, struct inode *inode,
+ {
+ 	struct exfat_inode_info *ei = EXFAT_I(inode);
+ 
+-	if (ei->target != NULL) {
++	if (ei->target) {
+ 		char *cookie = ei->target;
+ 
+-		if (cookie != NULL)
++		if (cookie)
+ 			return (char *)(ei->target);
  	}
+ 	return NULL;
+@@ -3780,7 +3780,7 @@ static int parse_options(char *options, int silent, int *debug,
+ 	if (!options)
+ 		goto out;
  
- 	ret = vidioc_try_fmt_out_mplane(file, priv, f);
+-	while ((p = strsep(&options, ",")) != NULL) {
++	while (p = strsep(&options, ",")) {
+ 		int token;
+ 
+ 		if (!*p)
+@@ -4044,7 +4044,7 @@ static int __init exfat_init_inodecache(void)
+ 					       (SLAB_RECLAIM_ACCOUNT |
+ 						SLAB_MEM_SPREAD),
+ 					       init_once);
+-	if (exfat_inode_cachep == NULL)
++	if (!exfat_inode_cachep)
+ 		return -ENOMEM;
+ 	return 0;
+ }
 -- 
-2.22.0
+2.20.1
 
