@@ -2,147 +2,149 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB8BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C166C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2911F21883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D3621883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwjoZ5Dx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfICIzq (ORCPT
+        id S1728335AbfICI4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:55:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5730 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726946AbfICIzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:55:45 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9048D9AD3D7876E57CA4;
-        Tue,  3 Sep 2019 16:55:43 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
- 16:55:39 +0800
-Subject: Re: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
- retransmit queue
-To:     Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        <eric.dumazet@gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        "cpaasch@apple.com" <cpaasch@apple.com>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "matthieu.baerts@tessares.net" <matthieu.baerts@tessares.net>,
-        "aprout@ll.mit.edu" <aprout@ll.mit.edu>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "jtl@netflix.com" <jtl@netflix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "ncardwell@google.com" <ncardwell@google.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "ycheng@google.com" <ycheng@google.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20190824060351.3776-1-tim.froidcoeur@tessares.net>
- <400C4757-E7AD-4CCF-8077-79563EA869B1@gmail.com>
- <20190830232657.GL45416@MacBook-Pro-64.local>
- <20190830.192049.1447010488040109227.davem@davemloft.net>
- <F95AC9340317A84688A5F0DF0246F3F21AAAA8E1@dggeml532-mbs.china.huawei.com>
- <CAOj+RUsqTUF9fuetskRRw26Z=sBM-mELSMcV21Ch06007aP5yQ@mail.gmail.com>
- <F95AC9340317A84688A5F0DF0246F3F21AAB8F82@dggeml512-mbx.china.huawei.com>
- <CAOj+RUvXMaoVKzSeDab4oTn3p=-BJtuhgqwKDCUuhCQWHO7bgQ@mail.gmail.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <88936af6-4b98-c78f-930f-47e5d69c961d@huawei.com>
-Date:   Tue, 3 Sep 2019 16:55:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Tue, 3 Sep 2019 04:56:06 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32863 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfICI4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:56:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t11so1510389plo.0;
+        Tue, 03 Sep 2019 01:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NldgxnsZ6M2ztsQm0ZpSpTggTGNIlMKLrBp6UoMhx+E=;
+        b=uwjoZ5DxUlQpMUOpvblKZVWKf7iM9E5/PK19EJnQ9Jr7n5+VUpAbrANzt6Vi9a38ne
+         /WvIzf1xvYsQi5GPyQFBc6uQ1Hj7/YOTicfggebc6pVT7mT9DJYfEY8XMwsuCQjcWHb3
+         7vsqkHy8RlFRXRnxeuo9yOcAxupoi69101QWIEwhMatXqx/u0LBeVtP+j7aQThvr/O85
+         gkOcEdPDw6tM+8ALTrT7CCZxeB7ddVx1Qgtjrqoy0vGAtkPOyuciXV10kR3UphklRyM1
+         A6tCPSNPhZgyXvehgg+Xn5LYnrSzd52oBO8h5aTL9E+DWsuEJHTXAnTQVYV8BUz4cpgm
+         PVLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NldgxnsZ6M2ztsQm0ZpSpTggTGNIlMKLrBp6UoMhx+E=;
+        b=iqM1a70IAesDMGAjVmiMvsdMkvJkXbnpvTqV++taT4C+TOZguwZw7TJkK54PnJGnXe
+         DYYFOeVc0y9HdZEoyYIJF7TQV/LwQfnf4hDqnuCqiNxM/eKliZ/LhqKkDbcYgFFTZGG8
+         7WDV5KrwaK8+UO36D0IlaDSjqDCUfLtGXBLejLyaq62Xf9CLqzMxPssZLhpSj/zp3oj0
+         P5RmGznhw7z4+oFOwt0RfOPTli6nsgV6N4o0v2OK0vt0DsZ8FRtOXh1YqB04e1MD1h83
+         LKj6KPpEq4YAp4Vsq8isegnNoRfPOSPd5h38f0+c9Axe80bcUjMPfBYCtYuIqvBqXh7L
+         i+RA==
+X-Gm-Message-State: APjAAAWm+k9LRtFgCYlrauGb1C1JQHJik7n0T5bhZjZR1ck7bnxRvpQM
+        ZteEcFItFVE0gtmOCF75980=
+X-Google-Smtp-Source: APXvYqzoEgvsapMOq2ULpT8hsMWSnO/0WVaRR5ofPIghpYY2CrtPjm0jKaAbM+Ki97Pytd1DCyzqaA==
+X-Received: by 2002:a17:902:4303:: with SMTP id i3mr35681874pld.30.1567500965221;
+        Tue, 03 Sep 2019 01:56:05 -0700 (PDT)
+Received: from ins-4z32rhqw.localdomain ([49.51.38.96])
+        by smtp.googlemail.com with ESMTPSA id v43sm9464636pjb.1.2019.09.03.01.56.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 01:56:04 -0700 (PDT)
+From:   yuzhoujian <ufo19890607@gmail.com>
+To:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com,
+        arnaldo.melo@gmail.com, windyu@tencent.com,
+        adrian.hunter@intel.com, wangnan0@huawei.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@redhat.com
+Subject: [PATCH] Add input file_name support for perf sched {map|latency|replay|timehist}
+Date:   Tue,  3 Sep 2019 16:55:35 +0800
+Message-Id: <20190903085535.23913-1-ufo19890607@gmail.com>
+X-Mailer: git-send-email 2.23.0.37.g745f681
 MIME-Version: 1.0
-In-Reply-To: <CAOj+RUvXMaoVKzSeDab4oTn3p=-BJtuhgqwKDCUuhCQWHO7bgQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: YuZhoujian <windyu@tencent.com>
 
-On 2019/9/3 14:58, Tim Froidcoeur wrote:
-> Hi,
-> 
-> I also tried to reproduce this in a targeted way, and run into the
-> same difficulty as you: satisfying the first condition “
-> (sk->sk_wmem_queued >> 1) > limit “.
-> I will not have bandwidth the coming days to try and reproduce it in
-> this way. Maybe simply forcing a very small send buffer using sysctl
-> net.ipv4.tcp_wmem might even do the trick?
-> 
-> I suspect that the bug is easier to trigger with the MPTCP patch like
-> I did originally, due to the way this patch manages the tcp subflow
-> buffers (it can temporarily overfill the buffers, satisfying that
-> first condition more often).
-> 
-> another thing, the stacktrace you shared before seems caused by
-> another issue (corrupted socket?), it will not be solved by the patch
-> we submitted.
+Just add '-i' option for perf sched {map|latency|replay|timehist}
 
-The trace shows zero window probe message can be BUG_ON in skb_queue_prev,
-this is reproduced on our platform with syzkaller. It can be resolved by
-your fix patch.
-The thing I need to think is why the first condition can be satisfied?
-Eric, Do you have any comments to reproduce it as the first condition
-is hard to be true?
-(sk->sk_wmem_queued >> 1) > limit
+Signed-off-by: YuZhoujian <windyu@tencent.com>
+---
+ tools/perf/Documentation/perf-sched.txt | 7 +++++++
+ tools/perf/builtin-sched.c              | 4 ++++
+ 2 files changed, 11 insertions(+)
 
-> 
-> kind regards,
-> 
-> Tim
-> 
-> 
-> On Tue, Sep 3, 2019 at 5:22 AM maowenan <maowenan@huawei.com> wrote:
->>
->> Hi Tim,
->>
->>
->>
->> I try to reproduce it with packetdrill or user application, but I can’t.
->>
->> The first condition “ (sk->sk_wmem_queued >> 1) > limit “    can’t be satisfied,
->>
->> This condition is to avoid tiny SO_SNDBUF values set by user.
->>
->> It also adds the some room due to the fact that tcp_sendmsg()
->>
->> and tcp_sendpage() might overshoot sk_wmem_queued by about one full
->>
->> TSO skb (64KB size).
->>
->>
->>
->>         limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
->>
->>         if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
->>
->>                      skb != tcp_rtx_queue_head(sk) &&
->>
->>                      skb != tcp_rtx_queue_tail(sk))) {
->>
->>                 NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
->>
->>                 return -ENOMEM;
->>
->>         }
->>
->>
->>
->> Can you try to reproduce it with packetdrill or C socket application?
->>
->>
-> 
-> 
-> 
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 63f938b887dd..182c223d3d9b 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -80,6 +80,9 @@ OPTIONS
+ 
+ OPTIONS for 'perf sched map'
+ ----------------------------
++-i::
++--input=<file>::
++        Input file name. (default: perf.data unless stdin is a fifo)
+ 
+ --compact::
+ 	Show only CPUs with activity. Helps visualizing on high core
+@@ -96,6 +99,10 @@ OPTIONS for 'perf sched map'
+ 
+ OPTIONS for 'perf sched timehist'
+ ---------------------------------
++-i::
++--input=<file>::
++        Input file name. (default: perf.data unless stdin is a fifo)
++
+ -k::
+ --vmlinux=<file>::
+     vmlinux pathname
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 025151dcb651..8e51fbb88549 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3374,6 +3374,7 @@ int cmd_sched(int argc, const char **argv)
+ 	const struct option latency_options[] = {
+ 	OPT_STRING('s', "sort", &sched.sort_order, "key[,key2...]",
+ 		   "sort by key(s): runtime, switch, avg, max"),
++	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 	OPT_INTEGER('C', "CPU", &sched.profile_cpu,
+ 		    "CPU to profile on"),
+ 	OPT_BOOLEAN('p', "pids", &sched.skip_merge,
+@@ -3381,11 +3382,13 @@ int cmd_sched(int argc, const char **argv)
+ 	OPT_PARENT(sched_options)
+ 	};
+ 	const struct option replay_options[] = {
++	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
+ 		     "repeat the workload replay N times (-1: infinite)"),
+ 	OPT_PARENT(sched_options)
+ 	};
+ 	const struct option map_options[] = {
++	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 	OPT_BOOLEAN(0, "compact", &sched.map.comp,
+ 		    "map output in compact mode"),
+ 	OPT_STRING(0, "color-pids", &sched.map.color_pids_str, "pids",
+@@ -3397,6 +3400,7 @@ int cmd_sched(int argc, const char **argv)
+ 	OPT_PARENT(sched_options)
+ 	};
+ 	const struct option timehist_options[] = {
++	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+ 		   "file", "vmlinux pathname"),
+ 	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
+-- 
+2.23.0.37.g745f681
 
