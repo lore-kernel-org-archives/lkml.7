@@ -3,160 +3,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802BBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADB1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462BC22D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F7F22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="KkFpUOcR";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="pqeYtlD+"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BRXYASXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfICH1a (ORCPT
+        id S1727454AbfICH2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:27:30 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:62990 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbfICH1a (ORCPT
+        Tue, 3 Sep 2019 03:28:36 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44216 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfICH2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:27:30 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x837OKit022768;
-        Tue, 3 Sep 2019 00:27:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=Efk2J5MgOPmcY3/DVh3N65stgIi+/twqJ4GYsjYV5Jg=;
- b=KkFpUOcRMUnrt/ngZgaNpgqxhZ5xdkDfEALF/6gPPVFpCeakeR/DkjkR4p6uZY4E2Qxq
- A1ltPkP44xogoBT91+BTMKrlhxzIPXFle2ppSEk55lMuMe5PTpqEvyhklUMTv9+ZgpcZ
- 9QFUuTh6sM5J0SyBMPZKZZW6wkE7bbGPVIItXvd29w5B25snGGASLHqM4SuSKMsLdyyK
- /4VmzbYx5EFxyTYHX6YiSAS58YqJxjk6540ZSFXbJyjUQns75lwPf5JzYqvw6zkOl8AK
- b33EpvAhyD9c5oQ2SiUxquDfgO/gBwHJUDKRM3G8uiXewNlILBj02/qb1+6fckJ6Mdt/ TQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2uqp8p96ja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 00:27:10 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 3 Sep
- 2019 00:27:08 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.52) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 3 Sep 2019 00:27:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j+EiHUxCxY6W6jtD4ri6x4/zd9zloHRR1oqEK7EfRfynyKDVb2makzry+szVy+ueC2lz5wLtWRVYhiAaG+w81NJgkHLc3DSoDw072S5p2AiWzAcOzddpy7vMh4xG1vSJcmr2RyiUJaC0lgqtCht225TXiJROUogkGkyAbYc0XizUPMtDdGsfHsxKesKwsFNQ2p94xl42nlb4kLr7DUJ45fwG4hVYK91lkaEOnBYAweysMExBVfz6AGWnrPwr+9eq44WsYC+02N1lip2aa1MrH5LcYQpMx6DrxwLuQDapbI58KR2lRZ4zQ/FBaXDmiOirJseBJSeqr45lvjjm6dU5lA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Efk2J5MgOPmcY3/DVh3N65stgIi+/twqJ4GYsjYV5Jg=;
- b=DyF9eMEB3NuIt0Lyro26wWjFXcGoCrGvokIgUmtHJEa7gAffc4ahkp2s1ToUsdwcTiTwzNO3qi/6jMjvBDCB/0SsSa4hHtuMX+fKqqtKr00OSejNSn4AZCE95p2vzsaI6ECLphGI+9MZzU1gt8Wwpl2Kid4ZwNCIbwz+uYOrpOPkwGFlctRCipLSSwdE7I+Q5SSiKfGHvvr8K5//eJNAVtX8do654MvR1GT+uMeWfp6MsPABaCjNZpdsyvJyBsv68rFATJEpTSci2Wj+mzC6JMwKwcNufd+siqIxjVNK8u/30ZdMMSCVu9kTQ4EsojzUGl/udMOdNcPQdNdVH/D33w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Tue, 3 Sep 2019 03:28:35 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 21so8308350otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Efk2J5MgOPmcY3/DVh3N65stgIi+/twqJ4GYsjYV5Jg=;
- b=pqeYtlD+wDTvjxkR33bnLjFtVT1oQUypbnUgp73vJU+Vt4SG5tCrRt5j3ZfiuTQ6cgXeLjRmNleQW5kpaT71d1rdwTAp7wU20TBt9my0rlSPxdXe8Fz9nvs/XHL0nmYgQeBn3pR6QhsEKEQS+b4dSKF7CxnIrs81qcsVgiVRSWc=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3168.namprd18.prod.outlook.com (10.255.236.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.19; Tue, 3 Sep 2019 07:27:06 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2220.013; Tue, 3 Sep 2019
- 07:27:06 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Hanna Hawa <hhhawa@amazon.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Thread-Topic: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Thread-Index: AQHVYij8nGN4+uu+F0WgF+K1LGYI/g==
-Date:   Tue, 3 Sep 2019 07:27:06 +0000
-Message-ID: <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
- <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
-In-Reply-To: <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0179.eurprd05.prod.outlook.com
- (2603:10a6:3:f8::27) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24387d2d-d7e8-4781-0a36-08d730401f57
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3168;
-x-ms-traffictypediagnostic: MN2PR18MB3168:
-x-microsoft-antispam-prvs: <MN2PR18MB3168DFE3F625187F0A0E4D95D9B90@MN2PR18MB3168.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(346002)(376002)(396003)(136003)(366004)(47630400002)(189003)(199004)(316002)(54906003)(66066001)(76176011)(52116002)(6246003)(3846002)(6116002)(1076003)(4744005)(11346002)(25786009)(476003)(6436002)(53936002)(4326008)(5660300002)(81156014)(7416002)(6512007)(9686003)(71200400001)(71190400001)(486006)(446003)(86362001)(8676002)(478600001)(6486002)(66946007)(66446008)(64756008)(66556008)(66476007)(99286004)(6916009)(229853002)(26005)(6506007)(386003)(186003)(256004)(53546011)(14444005)(305945005)(7736002)(8936002)(81166006)(14454004)(102836004)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3168;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rOEEkeKENLz3+dkFgA9C7kvT3qMewZeGoNurtwaT3LUZIWY7OzApKWFwrX0hfzzlNQ8yi2uaSdDmDvKIIFoAzSBom5k6N38X6zbNp8zD2oEP0xmETIl5Ng6gt2LMjrXuMMmgA+LhUIa6oKM8YhuJFApv3pVYJiC8XoAOeQ1uFyON4w4IKAJNp8Gw/juf0ueeBktY8FcTQNoUsqzOg46SWDZ/8tSf1XLOCanol2EIQV0P3RWgFyA3oZdYtwNrEcT+/aWylzq4irMFGE+dQ7sRK6P8T0S9MXfzvDrVztSO4PZW7CpwUniPX7A3Xjte3QPu/4g3N3T4esEsQzRCF+Urt5AgEfuqsCNSUUlNQEj2jlZVFDZZZwBms5k/hIMF6aTu+m7DBdKnKfAS9nux5rToVaxHf+ZzeADu2jLRc3y6Q3Q=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3759893DBDA27647BD9141AB7D7966BA@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UdMoRPg0KlVqze0pTkNC9rfXaDd7uPSTe82szx43jMg=;
+        b=BRXYASXfXrSYdvQ7cHvdL8g1FGYY5yc7fn4k3rf1HqK5cdyf7DVE1ZRs2ggL6FBlZY
+         jhOxSfrYQhY9BD157Pi5jnSxIhZjG9EG4xisQBVknT3mt+l8TxsfMTbDpomdpXG0MF88
+         /Ul9+UZc5rqz3oUInM3tk4DRzAXTmO9p25Eds=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UdMoRPg0KlVqze0pTkNC9rfXaDd7uPSTe82szx43jMg=;
+        b=BSX1z3wEx9JMsfvTclVE85X+z7AAB3LElhYIqJtiaIgp6lQECeIooWHn1rQFipZ1fM
+         OYc7fS5qZPdLzpqTzuHl2MU9w238c3iAojz2BSj6LAfdfPpjewTNjV0v8qmj+aIc1f4f
+         GnrqNhQoqraNVjgmBHA2Vk+J+2dhSmnvjvx5PmZ0MuM+nysktt/9aUIqBFQiqbbVsDmG
+         1etAzKV8HVwnDZpNoE1kXyZdqABdF6S0QWSAXCUrlmmVF1f3ABRIhaLeaeYsh4E9rd18
+         pCbsEEyTXo0ZZ6zT3LeMz3DgKxvT5zDfPE9zy2JXiGv/dRIwYkkY1Lr7DSPS2BhNkpHL
+         7dNg==
+X-Gm-Message-State: APjAAAWX2kPC8/WqmNEkKYEnrBAFzpIZaiugx/t7FP1DB9JFQ+Gv0j9H
+        0sfRowwrJFeyjffpgabbxnVs+Eoy7I1NVqfw8OrhtA==
+X-Google-Smtp-Source: APXvYqxNdE/m5cDoeoduzif078Rn/h+XzpbDyvLbalFH6g7b9CtJip46QdskaojSElyMHAM5lUrtBDY5YQw43Yn2gis=
+X-Received: by 2002:a05:6830:1594:: with SMTP id i20mr1193992otr.188.1567495714412;
+ Tue, 03 Sep 2019 00:28:34 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24387d2d-d7e8-4781-0a36-08d730401f57
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 07:27:06.0811
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hAM0e5WQnxz0GZzJ//PbJzqrLLGu7Q8l4GexOaQO4iH8UAJw0uCYB4HXy8JJi9S97hIWsSqF9LxcNmNHov9s0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3168
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-03_01:2019-09-03,2019-09-03 signatures=0
+References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
+ <20190826201425.17547-4-daniel.vetter@ffwll.ch> <20190827225002.GB30700@ziepe.ca>
+ <CAKMK7uHKiLwXLHd1xThZVM1dH-oKrtpDZ=FxLBBwtY7XmJKgtA@mail.gmail.com>
+ <20190828184330.GD933@ziepe.ca> <CAKMK7uFJESH1XHTCqYoDb4iMfThxnib3Uz=RUcd7h=SS-TJWbg@mail.gmail.com>
+In-Reply-To: <CAKMK7uFJESH1XHTCqYoDb4iMfThxnib3Uz=RUcd7h=SS-TJWbg@mail.gmail.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Tue, 3 Sep 2019 09:28:23 +0200
+Message-ID: <CAKMK7uET7GL-nmRd_wxkxu0KsiYiSZcGTsSstcUpqaT=mKTbmg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] kernel.h: Add non_block_start/end()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.19 16:24:09, Hanna Hawa wrote:
-> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-> report L2 errors.
->=20
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  MAINTAINERS               |   6 ++
->  drivers/edac/Kconfig      |   8 ++
->  drivers/edac/Makefile     |   1 +
->  drivers/edac/al_l2_edac.c | 187 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 202 insertions(+)
->  create mode 100644 drivers/edac/al_l2_edac.c
+On Wed, Aug 28, 2019 at 8:56 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> On Wed, Aug 28, 2019 at 8:43 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > On Wed, Aug 28, 2019 at 08:33:13PM +0200, Daniel Vetter wrote:
+> > > On Wed, Aug 28, 2019 at 12:50 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> > > > > index 4fa360a13c1e..82f84cfe372f 100644
+> > > > > +++ b/include/linux/kernel.h
+> > > > > @@ -217,7 +217,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> > > > >   * might_sleep - annotation for functions that can sleep
+> > > > >   *
+> > > > >   * this macro will print a stack trace if it is executed in an atomic
+> > > > > - * context (spinlock, irq-handler, ...).
+> > > > > + * context (spinlock, irq-handler, ...). Additional sections where blocking is
+> > > > > + * not allowed can be annotated with non_block_start() and non_block_end()
+> > > > > + * pairs.
+> > > > >   *
+> > > > >   * This is a useful debugging help to be able to catch problems early and not
+> > > > >   * be bitten later when the calling function happens to sleep when it is not
+> > > > > @@ -233,6 +235,25 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> > > > >  # define cant_sleep() \
+> > > > >       do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
+> > > > >  # define sched_annotate_sleep()      (current->task_state_change = 0)
+> > > > > +/**
+> > > > > + * non_block_start - annotate the start of section where sleeping is prohibited
+> > > > > + *
+> > > > > + * This is on behalf of the oom reaper, specifically when it is calling the mmu
+> > > > > + * notifiers. The problem is that if the notifier were to block on, for example,
+> > > > > + * mutex_lock() and if the process which holds that mutex were to perform a
+> > > > > + * sleeping memory allocation, the oom reaper is now blocked on completion of
+> > > > > + * that memory allocation. Other blocking calls like wait_event() pose similar
+> > > > > + * issues.
+> > > > > + */
+> > > > > +# define non_block_start() \
+> > > > > +     do { current->non_block_count++; } while (0)
+> > > > > +/**
+> > > > > + * non_block_end - annotate the end of section where sleeping is prohibited
+> > > > > + *
+> > > > > + * Closes a section opened by non_block_start().
+> > > > > + */
+> > > > > +# define non_block_end() \
+> > > > > +     do { WARN_ON(current->non_block_count-- == 0); } while (0)
+> > > >
+> > > > check-patch does not like these, and I agree
+> > > >
+> > > > #101: FILE: include/linux/kernel.h:248:
+> > > > +# define non_block_start() \
+> > > > +       do { current->non_block_count++; } while (0)
+> > > >
+> > > > /tmp/tmp1spfxufy/0006-kernel-h-Add-non_block_start-end-.patch:108: WARNING: Single statement macros should not use a do {} while (0) loop
+> > > > #108: FILE: include/linux/kernel.h:255:
+> > > > +# define non_block_end() \
+> > > > +       do { WARN_ON(current->non_block_count-- == 0); } while (0)
+> > > >
+> > > > Please use a static inline?
+> > >
+> > > We need get_current() plus the task_struct, so this gets real messy
+> > > real fast. Not even sure which header this would fit in, or whether
+> > > I'd need to create a new one. You're insisting on this or respinning
+> > > with the do { } while (0) dropped ok.
+> >
+> > My prefernce is always a static inline, but if the headers are so
+> > twisty we need to use #define to solve a missing include, then I
+> > wouldn't insist on it.
+>
+> Cleanest would be a new header I guess, together with might_sleep().
+> But moving that is a bit much I think, there's almost 500 callers of
+> that one from a quick git grep
+>
+> > If dropping do while is the only change then I can edit it in..
+> > I think we have the acks now
+>
+> Yeah sounds simplest, thanks.
 
-From a brief look at it, it seems some of my comments from 2/4 apply
-here too. Please look through it.
+Hi Jason,
 
--Robert
+Do you expect me to resend now, or do you plan to do the patchwork
+appeasement when applying? I've seen you merged the other patches
+(thanks!), but not these two here.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
