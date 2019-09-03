@@ -2,108 +2,160 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AADC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6777C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16CB215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oCJ92zCv"
+	by mail.kernel.org (Postfix) with ESMTP id 9F48D23789
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567528126;
+	bh=LpJv25mrQFMkEnIS6c8cNfT3TaJ5OZwMwAlT3CcHnB8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zpbslYy6ZUo/FlauEnA87n1k5n4nG5wl2tfOn7vKWDzaldORZ0Mt5/TId/pGSphuJ
+	 mA+P5PA6ZgEE0RH9QGWgAPBCBcgBbYbj1gFLo8Dxf3ZxaPhzdfOC9b/weVtxZ3kpOy
+	 5v+NjAhsahBThXUDQmksbL/Qb+tWyRwpDEROS/6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbfICQ2l (ORCPT
+        id S1731155AbfICQ2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 3 Sep 2019 12:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730446AbfICQ2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 12:28:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36526 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfICQ2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A01EoZVAbENBU2ODnei5aZC/eSyCxIe7RviRDSpgglA=; b=oCJ92zCv0vaLqsiIF+BEQ5E5E
-        8tWg574OR1tXDNAdgxaEW9ZOtC9RgXU1YeUw55xOc80zTVRnxZCyUCNLfBkNAZiwoSCt+KyE7f7Kk
-        ECF8MrNiznXkAufY1RvmwEc4odtOEh9+oHbf3hsI4VKg4VwUYZq5xwAupL2R1uln6DSGhJXwYQuI8
-        RZQyCR8PGBPL7nxrArCSdqjcBVWN6LLgHZFUTqJMg7UzRJqLSd6mxYw8FwJFmVgpPJ2xIqwp5z5fm
-        /eE8MkNJ96Iu/HNE71eque6R66Ku7pz2Xo1iouPfCUsPb8CZ13tGOYrgSNMyfPJp/XL4BMK5TpA+i
-        lQqXK0fyg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5BfT-000149-Ek; Tue, 03 Sep 2019 16:28:31 +0000
-Date:   Tue, 3 Sep 2019 09:28:31 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>
-Subject: Re: [PATCH v5 1/2] mm: Allow the page cache to allocate large pages
-Message-ID: <20190903162831.GI29434@bombadil.infradead.org>
-References: <20190902092341.26712-1-william.kucharski@oracle.com>
- <20190902092341.26712-2-william.kucharski@oracle.com>
- <20190903115748.GS14028@dhcp22.suse.cz>
- <20190903121155.GD29434@bombadil.infradead.org>
- <20190903121952.GU14028@dhcp22.suse.cz>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62603215EA;
+        Tue,  3 Sep 2019 16:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567528120;
+        bh=LpJv25mrQFMkEnIS6c8cNfT3TaJ5OZwMwAlT3CcHnB8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2c97q563+pQ9/HaZyqgipSYIajeVE8ogi986H2x1DAMQBbykhJikvvtgk3GozM+9u
+         NQ1lIUlQVDMQm+lOc9TWFLKmbeTzaSy/m7ir0rTs9fwT6aSP4ZojuwtGyyjpzGRtt7
+         ZFR+1HD+k3KKnQy24vLxCUCiKduBnRk9/MHFnq6Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Shirish S <shirish.s@amd.com>, Louis Li <Ching-shih.Li@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 117/167] drm/amdgpu/{uvd,vcn}: fetch ring's read_ptr after alloc
+Date:   Tue,  3 Sep 2019 12:24:29 -0400
+Message-Id: <20190903162519.7136-117-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903121952.GU14028@dhcp22.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 02:19:52PM +0200, Michal Hocko wrote:
-> On Tue 03-09-19 05:11:55, Matthew Wilcox wrote:
-> > On Tue, Sep 03, 2019 at 01:57:48PM +0200, Michal Hocko wrote:
-> > > On Mon 02-09-19 03:23:40, William Kucharski wrote:
-> > > > Add an 'order' argument to __page_cache_alloc() and
-> > > > do_read_cache_page(). Ensure the allocated pages are compound pages.
-> > > 
-> > > Why do we need to touch all the existing callers and change them to use
-> > > order 0 when none is actually converted to a different order? This just
-> > > seem to add a lot of code churn without a good reason. If anything I
-> > > would simply add __page_cache_alloc_order and make __page_cache_alloc
-> > > call it with order 0 argument.
-> > 
-> > Patch 2/2 uses a non-zero order.
-> 
-> It is a new caller and it can use a new function right?
-> 
-> > I agree it's a lot of churn without
-> > good reason; that's why I tried to add GFP_ORDER flags a few months ago.
-> > Unfortunately, you didn't like that approach either.
-> 
-> Is there any future plan that all/most __page_cache_alloc will get a
-> non-zero order argument?
+From: Shirish S <shirish.s@amd.com>
 
-I'm not sure about "most".  It will certainly become more common, as
-far as I can tell.
+[ Upstream commit 517b91f4cde3043d77b2178548473e8545ef07cb ]
 
-> > > Also is it so much to ask callers to provide __GFP_COMP explicitly?
-> > 
-> > Yes, it's an unreasonable burden on the callers.
-> 
-> Care to exaplain why? __GFP_COMP tends to be used in the kernel quite
-> extensively.
+[What]
+readptr read always returns zero, since most likely
+these blocks are either power or clock gated.
 
-Most of the places which call this function get their gfp_t from
-mapping->gfp_mask.  If we only want to allocate a single page, we
-must not set __GFP_COMP.  If we want to allocate a large page, we must
-set __GFP_COMP.  Rather than require individual filesystems to concern
-themselves with this wart of the GFP interface, we can solve it in the
-page cache.
+[How]
+fetch rptr after amdgpu_ring_alloc() which informs
+the power management code that the block is about to be
+used and hence the gating is turned off.
+
+Signed-off-by: Louis Li <Ching-shih.Li@amd.com>
+Signed-off-by: Shirish S <shirish.s@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c | 5 ++++-
+ drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c   | 5 ++++-
+ drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c   | 5 ++++-
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
+index 400fc74bbae27..205e683fb9206 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
+@@ -431,7 +431,7 @@ int amdgpu_vcn_dec_ring_test_ib(struct amdgpu_ring *ring, long timeout)
+ int amdgpu_vcn_enc_ring_test_ring(struct amdgpu_ring *ring)
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+-	uint32_t rptr = amdgpu_ring_get_rptr(ring);
++	uint32_t rptr;
+ 	unsigned i;
+ 	int r;
+ 
+@@ -441,6 +441,9 @@ int amdgpu_vcn_enc_ring_test_ring(struct amdgpu_ring *ring)
+ 			  ring->idx, r);
+ 		return r;
+ 	}
++
++	rptr = amdgpu_ring_get_rptr(ring);
++
+ 	amdgpu_ring_write(ring, VCN_ENC_CMD_END);
+ 	amdgpu_ring_commit(ring);
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c b/drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c
+index d4070839ac809..80613a74df420 100644
+--- a/drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c
+@@ -170,7 +170,7 @@ static void uvd_v6_0_enc_ring_set_wptr(struct amdgpu_ring *ring)
+ static int uvd_v6_0_enc_ring_test_ring(struct amdgpu_ring *ring)
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+-	uint32_t rptr = amdgpu_ring_get_rptr(ring);
++	uint32_t rptr;
+ 	unsigned i;
+ 	int r;
+ 
+@@ -180,6 +180,9 @@ static int uvd_v6_0_enc_ring_test_ring(struct amdgpu_ring *ring)
+ 			  ring->idx, r);
+ 		return r;
+ 	}
++
++	rptr = amdgpu_ring_get_rptr(ring);
++
+ 	amdgpu_ring_write(ring, HEVC_ENC_CMD_END);
+ 	amdgpu_ring_commit(ring);
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
+index 057151b17b456..ce16b8329af04 100644
+--- a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
+@@ -175,7 +175,7 @@ static void uvd_v7_0_enc_ring_set_wptr(struct amdgpu_ring *ring)
+ static int uvd_v7_0_enc_ring_test_ring(struct amdgpu_ring *ring)
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+-	uint32_t rptr = amdgpu_ring_get_rptr(ring);
++	uint32_t rptr;
+ 	unsigned i;
+ 	int r;
+ 
+@@ -188,6 +188,9 @@ static int uvd_v7_0_enc_ring_test_ring(struct amdgpu_ring *ring)
+ 			  ring->me, ring->idx, r);
+ 		return r;
+ 	}
++
++	rptr = amdgpu_ring_get_rptr(ring);
++
+ 	amdgpu_ring_write(ring, HEVC_ENC_CMD_END);
+ 	amdgpu_ring_commit(ring);
+ 
+-- 
+2.20.1
 
