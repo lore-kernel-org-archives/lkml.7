@@ -2,165 +2,225 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E744AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E216C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C6820882
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD432173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="H33/MIEg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TV5VYm6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfICGhH (ORCPT
+        id S1726944AbfICGkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:37:07 -0400
-Received: from mail-eopbgr00081.outbound.protection.outlook.com ([40.107.0.81]:29548
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725878AbfICGhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:37:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RtudYmO8v+UPJxMaoAELM7/wwlgcdCh/ioIE2PAYCb9xbpwV/kllD1R0Xl3IG8d9rpyfvv7NnBjiSKhz7QrC7So66yxPyGD2QIC5XiZHDNhX21F8ZQWNCC12SM6JR14MIwj8KQfFM2ssdCdnekEQUCBHwBrjFVc0JoDxV5NyIUqUIG/6A8utfHqi2py0SiOVUR/W4Jk3un/9Us/8jpmbgd2i0/qaspQGWqZT7dD8ynEl4HnznJDg2CXmy7G1YatdzeWumij4PlZ8X/qAEe1/q0qi2ydxpbEBU42QdPlIEWakWfFXoiNduCqOFIRT6IlkvA0XzXrPB028yiDwFxIljA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NZhGOE9OrA4rJkPnM+TFObsmfrNy0UdJMrs+mrHKYBU=;
- b=m46A4SMtK4fYdMlpEM7M0ydKC3yqpoS2TbKOYjF5djGyXIwYMcIrwArCfCqySq4EJR2aN3rNxiZlC4Nv/UcjW4Nw10GPw6GSXnbJWlC1IUcu3sJjithSiTRZffz5sE3o4pnwjQFMmcEyHAfTgSPuM0iyULMQxY2Rnbdh5vzOyaDkU7vrrh3co2c4XhffqZuvDoxzV0owKnBgALCJ7yLU8wAt9PQdcWZBh1kZhBIJsxlJqvE2zbGpkU69TZ8nURlm2CD/bEN+6GzKkRg0x0WAOvhEuXrlHMYoSVLYwqCh5cQLDg1JNqcliBcsULQr605WM6WaW7PReFJZvXUIbq7Suw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NZhGOE9OrA4rJkPnM+TFObsmfrNy0UdJMrs+mrHKYBU=;
- b=H33/MIEgDY41Y1Jk/tE2cwKqlmq6kLKDefuBuJso4+bUTw0sNSi9qk7GmAnA9EpuXHTg9MM4WOBEJYF51rayomhnqU7moeicwgLXXA7MW7s+L7soLo7iNINDkMJrbpHegfwEQOj4LK7Ck4rbHaVlyvlTtz8weuLxHtb5KLtgsUs=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3914.eurprd04.prod.outlook.com (52.134.71.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Tue, 3 Sep 2019 06:37:00 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2199.021; Tue, 3 Sep 2019
- 06:37:00 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
-Thread-Topic: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
-Thread-Index: AQHVYfv+INaxBRtrokqtKaL9fDhNpqcZfq6AgAAAnFA=
-Date:   Tue, 3 Sep 2019 06:37:00 +0000
-Message-ID: <DB3PR0402MB391656FC3603B30300ADBF27F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
- <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
-In-Reply-To: <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3ca1df6-ca44-429e-a77a-08d730391fed
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3914;
-x-ms-traffictypediagnostic: DB3PR0402MB3914:|DB3PR0402MB3914:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB39140FB68264E1BE4ECAC4F9F5B90@DB3PR0402MB3914.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(136003)(39860400002)(189003)(199004)(478600001)(14454004)(256004)(5660300002)(86362001)(8676002)(33656002)(316002)(446003)(71190400001)(102836004)(186003)(52536014)(2201001)(7416002)(6506007)(26005)(66066001)(2501003)(53546011)(71200400001)(476003)(44832011)(486006)(11346002)(25786009)(55016002)(9686003)(74316002)(99286004)(229853002)(7696005)(76176011)(6116002)(3846002)(76116006)(7736002)(305945005)(66946007)(66556008)(81166006)(110136005)(81156014)(66476007)(66446008)(64756008)(8936002)(6436002)(53936002)(4326008)(6246003)(2906002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3914;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CZ/dRw4Ot/ZiZP0iRPwX40nfstkCoVd/j/HgATYQsyMZ/9uFTbl06ILwsiBbxQZO8jQtQ1/wQCqt2cbAAuwezHwq8jaR0td5EMcwdN8QMFawA1xtGLVNCbsRMoiBF8VEyx/04WfHt1ehl9qbbvHOkqqpNJM50vvVu7//2mH7PvJmQNSNUCPHe3BZWtWq0FB9N5ltP8OsZnulqvOE643q6OjWe9iIDyC4P2blJbbYGr/zr8twYMgTpyAuOPif0+Y3kYfk59E0EWMOFbH9X8TkJwR9Z4lWDOttgQmSW7zmO+2yNfPrJyM08Bq7Y9k3AF1T5IOAi2d2LtddYkl3lJR0S2vqxEwUnPlq59I/4IOEQRZCwgcylTf32FLpUZEw0dSRLugckcgNXc5KoPLBn8mZGf0amB5Dh+v6+GhGDr6EJMM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 3 Sep 2019 02:40:41 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39504 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfICGkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:40:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n2so15338558wmk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VhuVDySfmcvstN8741b2Ik1NxceAwBCvdqIveUGyu50=;
+        b=TV5VYm6JImCihhWcqRQnUWVX/pPDjVvbZVJrR2k8FwxM+wiABP++D9zgw68wlvsfu3
+         jccirv4jaV4WI3Cs6KdoY5XIzW6llFF6lIuIzlK1lODCaq3JMsI2fsOJ5/ZUIn6YoG2d
+         6/ZoWU1ur+0dvYOiBAjeFHb7u9osQ5pNVAzf0A7W+0f8QY2x9PNKZ7MT1WzZgf7iAaGi
+         m/X0kd8nQfes5XnVTjtjLfLNdg0Jg36u9uZMFSQH2qMLaCoVgowIilc+Cf0bvy0jSksc
+         clbPysLr7xo78AOXV2rcWwZG4bSQXFxZ3CtBYo/jg83b0rQVyhhHI2gYS80OjDC2xbDJ
+         6p6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VhuVDySfmcvstN8741b2Ik1NxceAwBCvdqIveUGyu50=;
+        b=SbF1Jo/cnLnzUA4zS/Cow/LzWzWfAJ/alO7bS0DQ3TzGQm8C8uOO3WlA6f2iUsLyIW
+         saOcmn/Y7uuTcJWIjsHsJ1q1nLTX9kuEbnMiF93V46MCtMesqGz4qRdofl9g6mepAVE0
+         w74Nb2SNEcNfBt3mb18j4O90y7oATmDepbMwi/dBrEvXFE4Tnnvw0e1RWEwIHZ+ERAA6
+         cvr2BIg9K8QReWYRYbBDQOYt8KEp/rgAiHq2yvbSqLwpZriYWEM/NkailXDsoWu82Ki1
+         o3unmwPj19nPBoJUGcjdQ4qD4mC8DO4I2VeGRvoRoubm5FiWROpszau6LtTdHP6O9AjR
+         +KAA==
+X-Gm-Message-State: APjAAAUWLgvia0MKVEv+D3fE/CUfiVm5S4LCja8H9McPQVgncGKYnhDh
+        r+6m9candM7OEC0kXN2rhSO3IA==
+X-Google-Smtp-Source: APXvYqwxZyLYOA4K4IIxmCZX+e8qo7Lu+nn1WkLudP4Hvji2QWEV0FpxrluywJ0JK2DP6HhDfYw/PQ==
+X-Received: by 2002:a05:600c:12:: with SMTP id g18mr27841464wmc.95.1567492837383;
+        Mon, 02 Sep 2019 23:40:37 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:ca2:9689:fa5d:1fea? ([2a01:e34:ed2f:f020:ca2:9689:fa5d:1fea])
+        by smtp.googlemail.com with ESMTPSA id v8sm34320256wra.79.2019.09.02.23.40.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 23:40:36 -0700 (PDT)
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+References: <20190827085344.30799-2-ming.lei@redhat.com>
+ <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
+ <20190827225827.GA5263@ming.t460p>
+ <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
+ <20190828110633.GC15524@ming.t460p>
+ <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de>
+ <20190828135054.GA23861@ming.t460p>
+ <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+ <20190903033001.GB23861@ming.t460p>
+ <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+ <20190903063125.GA21022@ming.t460p>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+Date:   Tue, 3 Sep 2019 08:40:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3ca1df6-ca44-429e-a77a-08d730391fed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 06:37:00.2542
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9SNMIp/kyqaD5b7kPCpFrXug03bODGhFklvFuIEtR7NwPWW/4RX80ZrW6HnIGrCwocBiJF2JyQu5+hHOeVQbsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3914
+In-Reply-To: <20190903063125.GA21022@ming.t460p>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIE9sZWtzaWoNCg0KPiBPbiAwMy4wOS4xOSAxNjowMywgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-ID4gTlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5z
-aWRlIGFzIHN5c3RlbQ0KPiA+IGNvbnRyb2xsZXIsIHRoZSBzeXN0ZW0gY29udHJvbGxlciBpcyBp
-biBjaGFyZ2Ugb2Ygc3lzdGVtIHBvd2VyLCBjbG9jaw0KPiA+IGFuZCBwb3dlciBrZXkgZXZlbnQg
-ZXRjLiBtYW5hZ2VtZW50LCBMaW51eCBrZXJuZWwgaGFzIHRvIGNvbW11bmljYXRlDQo+ID4gd2l0
-aCBzeXN0ZW0gY29udHJvbGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldCBwb3dl
-ciBrZXkNCj4gPiBldmVudCwgYWRkIGJpbmRpbmcgZG9jIGZvciBpLk1YIHN5c3RlbSBjb250cm9s
-bGVyIHBvd2VyIGtleSBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
-ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYxOg0K
-PiA+IAktIHJlbW92ZSAid2FrZXVwLXNvdXJjZSIgcHJvcGVydHksIGFzIGl0IGlzIE5PVCBuZWVk
-ZWQgZm9yIFNDVQ0KPiBpbnRlcnJ1cHQ7DQo+ID4gCS0gcmVtb3ZlICJzdGF0dXMiIGluIGV4YW1w
-bGUuDQo+ID4gLS0tDQo+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
-L2ZzbCxzY3UudHh0ICAgICAgICAgIHwgMTQNCj4gKysrKysrKysrKysrKysNCj4gPiAgIDEgZmls
-ZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4
-dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUv
-ZnNsLHNjdS50eHQNCj4gPiBpbmRleCBjMTQ5ZmFkLi5mOTNlMmU0IDEwMDY0NA0KPiA+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3Uu
-dHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVl
-c2NhbGUvZnNsLHNjdS50eHQNCj4gPiBAQCAtMTU3LDYgKzE1NywxNSBAQCBSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOg0KPiA+ICAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAgIC0gdGltZW91dC1zZWM6
-IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMuDQo+ID4NCj4gPiArUG93
-ZXIga2V5IGJpbmRpbmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQo+ID4gKy0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-PiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOiBzaG91
-bGQgYmU6DQo+ID4gKyAgICAgICAgICAgICAgImZzbCxpbXg4cXhwLXNjLXB3cmtleSINCj4gPiAr
-ICAgICAgICAgICAgICBmb2xsb3dlZCBieSAiZnNsLGlteC1zYy1wd3JrZXkiOw0KPiA+ICstIGxp
-bnV4LGtleWNvZGVzOiBTZWUNCj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lucHV0L2tleXMudHh0DQo+IA0KPiBsaW51eCxrZXljb2RlcyBpcyByZXF1aXJlZCBwYXJhbWV0
-ZXIuIFNvLCB0aGlzIGtheSBjYWIgYmUgYW55dGhpbmcuIFdoeSB0aGUNCj4gY29tcGF0aWJsZSBp
-cyBjYWxsZWQgcHdya2V5PyBQcm9iYWJseSBpdCBpcyBiZXR0ZXIgdG8gY2FsbCBpdCAiKi1zYy1r
-ZXkiDQoNClRoaXMga2V5IGlzIGtpbmQgb2Ygc3BlY2lhbCwgaXQgaXMgT04vT0ZGIGJ1dHRvbiB3
-aGljaCBpcyBkZXNpZ25lZCBmb3IgcG93ZXIga2V5DQpwdXJwb3NlLCBpdCBoYXMgSFcgZnVuY3Rp
-b24gc3VjaCBhcyBsb25nIHByZXNzaW5nIGl0IHdvdWxkIHNodXRkb3duIHRoZSBzeXN0ZW0gcG93
-ZXIsDQpzbyB3ZSBhbHdheXMgdXNlIGl0IGFzIHBvd2VyIGtleSwgTk9UIGdlbmVyYWwga2V5LCBk
-b2VzIGl0IG1ha2Ugc2Vuc2U/DQoNClRoYW5rcywNCkFuc29uLg0K
+On 03/09/2019 08:31, Ming Lei wrote:
+> Hi Daniel,
+> 
+> On Tue, Sep 03, 2019 at 07:59:39AM +0200, Daniel Lezcano wrote:
+>>
+>> Hi Ming Lei,
+>>
+>> On 03/09/2019 05:30, Ming Lei wrote:
+>>
+>> [ ... ]
+>>
+>>
+>>>>> 2) irq/timing doesn't cover softirq
+>>>>
+>>>> That's solvable, right?
+>>>
+>>> Yeah, we can extend irq/timing, but ugly for irq/timing, since irq/timing
+>>> focuses on hardirq predication, and softirq isn't involved in that
+>>> purpose.
+>>>
+>>>>  
+>>>>> Daniel, could you take a look and see if irq flood detection can be
+>>>>> implemented easily by irq/timing.c?
+>>>>
+>>>> I assume you can take a look as well, right?
+>>>
+>>> Yeah, I have looked at the code for a while, but I think that irq/timing
+>>> could become complicated unnecessarily for covering irq flood detection,
+>>> meantime it is much less efficient for detecting IRQ flood.
+>>
+>> In the series, there is nothing describing rigorously the problem (I can
+>> only guess) and why the proposed solution solves it.
+>>
+>> What is your definition of an 'irq flood'? A high irq load? An irq
+>> arriving while we are processing the previous one in the bottom halves?
+> 
+> So far, it means that handling interrupt & softirq takes all utilization
+> of one CPU, then processes can't be run on this CPU basically, usually
+> sort of CPU lockup warning will be triggered.
+
+It is a scheduler problem then ?
+
+>> The patch 2/4 description says "however IO completion is only done on
+>> one of these submission CPU cores". That describes the bottleneck and
+>> then the patch says "Add IRQF_RESCUE_THREAD to create one interrupt
+>> thread handler", what is the rational between the bottleneck (problem)
+>> and the irqf_rescue_thread (solution)?
+> 
+> The solution is to switch to handle this interrupt on the created rescue
+> irq thread context when irq flood is detected, and 'this interrupt' means
+> the interrupt requested with IRQF_RESCUE_THREAD.
+> 
+>>
+>> Is it really the solution to track the irq timings to detect a flood?
+> 
+> The solution tracks the time taken on running do_IRQ() for each CPU.
+
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
