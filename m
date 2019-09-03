@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C9CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFDAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF379215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87497215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528235;
-	bh=eDSMTHcpK8ENZugZPnl/ekUkYEnn0M31kzXWhMcwrno=;
+	s=default; t=1567528241;
+	bh=q4Y2kzB82rNvxd7A/88puPWBLD394Qg63gorAKZR084=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gf8iaGNsmNsC/pN9FAGTwvjtR561MHgp55MFrFvQ612F/TScoruDmd9onR6HrJgdJ
-	 eo2Hn+wSc+uiyRcdkb181l4DaASgl3WRHM7h0SfbSI9yNYIdGxUWveyPbo5S9jFNPl
-	 wTIASsMh/3kZi2TK+ZmspR/zPPffOlrfX2Gj57eI=
+	b=DbdL8kyxOz7aJPwylDkYIT4LxysBUWivoU2ZUJoqNaWdaqsBkQ2n4dfrSt0eiZqMZ
+	 V99DqsWsDoQhhdYbJ8trkH8gz30ILwE74jw7sqYBgeXBYBLJbWkAsQ1lwc3C7qq+R2
+	 kBI8e3iJ2oYWvUTH8A2dHqeDPuc+wyhK9fHS7bOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfICQad (ORCPT
+        id S1731098AbfICQak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:30:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbfICQ2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:53 -0400
+        id S1731186AbfICQ2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 915EA238D1;
-        Tue,  3 Sep 2019 16:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75FEB23789;
+        Tue,  3 Sep 2019 16:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528132;
-        bh=eDSMTHcpK8ENZugZPnl/ekUkYEnn0M31kzXWhMcwrno=;
+        s=default; t=1567528131;
+        bh=q4Y2kzB82rNvxd7A/88puPWBLD394Qg63gorAKZR084=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HfN0AI7ej2knUp4KgDhxoRotgfKaCab5By7F6IKfiogWczWfhw6m0GYZscIf4sY5E
-         GMuGjKS/fdcPdAKxLRmrymyKvG6uawQ0WtKRJFky53CGOpftdwCVbqqcJGehuVRHfV
-         NFQ+9WzdEtzRJcDAoerGZ7HHgECyXWl/Qkoyk9lQ=
+        b=yO0+zYbuv2h4CO87zleZ8yOGSIFR5f69v9ATYY37yBFE9pnKKfao4P3YUMrKMuvlo
+         Nnuk2xlbCSwMt4GdswPfC9tZqNFvwp6whhYpnO+OQoAA1Qj8Zy1//iINFH08KFBT+h
+         ojp03Qigxr1hH5YY4vO2EVb04FG7eZV1Ira2qDes=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 127/167] staging: wilc1000: fix error path cleanup in wilc_wlan_initialize()
-Date:   Tue,  3 Sep 2019 12:24:39 -0400
-Message-Id: <20190903162519.7136-127-sashal@kernel.org>
+        linux-integrity@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+Date:   Tue,  3 Sep 2019 12:24:38 -0400
+Message-Id: <20190903162519.7136-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,59 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Vadim Sukhomlinov <sukhomlinov@google.com>
 
-[ Upstream commit 6419f818ababebc1116fb2d0e220bd4fe835d0e3 ]
+[ Upstream commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 ]
 
-For the error path in wilc_wlan_initialize(), the resources are not
-cleanup in the correct order. Reverted the previous changes and use the
-correct order to free during error condition.
+TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+future TPM operations. TPM 1.2 behavior was different, future TPM
+operations weren't disabled, causing rare issues. This patch ensures
+that future TPM operations are disabled.
 
-Fixes: b46d68825c2d ("staging: wilc1000: remove COMPLEMENT_BOOT")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+[dianders: resolved merge conflicts with mainline]
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/linux_wlan.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/char/tpm/tpm-chip.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/linux_wlan.c b/drivers/staging/wilc1000/linux_wlan.c
-index 649caae2b6033..25798119426b3 100644
---- a/drivers/staging/wilc1000/linux_wlan.c
-+++ b/drivers/staging/wilc1000/linux_wlan.c
-@@ -649,17 +649,17 @@ static int wilc_wlan_initialize(struct net_device *dev, struct wilc_vif *vif)
- 			goto fail_locks;
- 		}
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 46caadca916a0..0b01eb7b14e53 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -187,12 +187,13 @@ static int tpm_class_shutdown(struct device *dev)
+ {
+ 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
  
--		if (wl->gpio_irq && init_irq(dev)) {
--			ret = -EIO;
--			goto fail_locks;
--		}
--
- 		ret = wlan_initialize_threads(dev);
- 		if (ret < 0) {
- 			ret = -EIO;
- 			goto fail_wilc_wlan;
- 		}
++	down_write(&chip->ops_sem);
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+-		down_write(&chip->ops_sem);
+ 		tpm2_shutdown(chip, TPM2_SU_CLEAR);
+ 		chip->ops = NULL;
+-		up_write(&chip->ops_sem);
+ 	}
++	chip->ops = NULL;
++	up_write(&chip->ops_sem);
  
-+		if (wl->gpio_irq && init_irq(dev)) {
-+			ret = -EIO;
-+			goto fail_threads;
-+		}
-+
- 		if (!wl->dev_irq_num &&
- 		    wl->hif_func->enable_interrupt &&
- 		    wl->hif_func->enable_interrupt(wl)) {
-@@ -715,7 +715,7 @@ static int wilc_wlan_initialize(struct net_device *dev, struct wilc_vif *vif)
- fail_irq_init:
- 		if (wl->dev_irq_num)
- 			deinit_irq(dev);
--
-+fail_threads:
- 		wlan_deinitialize_threads(dev);
- fail_wilc_wlan:
- 		wilc_wlan_cleanup(dev);
+ 	return 0;
+ }
 -- 
 2.20.1
 
