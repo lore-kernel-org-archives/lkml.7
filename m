@@ -2,155 +2,186 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D21C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A7BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02B0217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB56822DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567511075;
+	bh=GLV2PrI/w8WKtzeB6Jimizt3wNVcE7gXazlgmzVZ2VA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ot9qejurDbxTDhf0d0nu0uj9LD3ZuQ3V+qhTrvx048SWYO97u/cbcWB2MtuhAxamn
+	 I8RJVW4OKIs5keoDxC3BEccDQ1I/ZLhQA7RpVvBKrSHcMQS+nbRP2S9pq/k0nw9YE9
+	 hMGKFLT9F2lmJh/2/vscFuygwgL9GRnUGCw1XDPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfICLmx (ORCPT
+        id S1728925AbfICLof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:42:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35540 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 07:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbfICLmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:42:10 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        id S1726936AbfICLoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:44:34 -0400
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 16E004E4E6
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:42:10 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id x12so1279300wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:42:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mq6DklOvXBQpcnChGI+5PjZr8M6YoeohLU7OSViViJw=;
-        b=Cv8EaQufo+Da/jhXnT8X8DCx6aP8guZPBL5OQ9PtHeBlT+8CGNX048V1iFdvzuICtk
-         FxSt+XMa6Hah+QobDd5+xecTu++sf5jNCCCnwWH0Ok2jWf0WmKTdMkiHenyCO7WMmGNg
-         hEG5QfBKukH+0IFDFlOrOl+Vy6MBUx4A1nqUJaYqdXBmYy2nKTSaiYWmB6EWROhZbwqr
-         q+P/1hTRdrMe96DbeZmibB5z+vecTOq+jgrGqBT+CzyzrY/aFIMlg7YPpUWKm8ymS8dS
-         rFwk2odbPu6Cx14VsT5CezePVjSVtMTUOrHY1D1sShLcA2Hu/Y4DmBdZzC31Qd07yMz+
-         gaNA==
-X-Gm-Message-State: APjAAAU1w8U2JFxK+V6jmYf9N/KPiA49odgL3CYttMMKXfe3QWjfHfhO
-        5+hDD95xC2KaM9mA5t1E2bMlUNNcu5CywhB6nRj9wv3Pw6liLejc9MKCFRJcpaI1402CN+M1VyD
-        I82RyBaF8Ilr2enIuUYEUQGOv
-X-Received: by 2002:a1c:544e:: with SMTP id p14mr15475611wmi.72.1567510928431;
-        Tue, 03 Sep 2019 04:42:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzAd+VVNnldowkP9l4jOCMO8pjBOGYGrhwFwSOLXZizZO/tlwztV+AmVXjYo65zGv8LUNFz4Q==
-X-Received: by 2002:a1c:544e:: with SMTP id p14mr15475591wmi.72.1567510928273;
-        Tue, 03 Sep 2019 04:42:08 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id x6sm2087551wmf.38.2019.09.03.04.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:42:07 -0700 (PDT)
-From:   Miklos Szeredi <mszeredi@redhat.com>
-To:     virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v4 08/16] fuse: export fuse_dequeue_forget() function
-Date:   Tue,  3 Sep 2019 13:41:55 +0200
-Message-Id: <20190903114203.8278-3-mszeredi@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190903113640.7984-1-mszeredi@redhat.com>
-References: <20190903113640.7984-1-mszeredi@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B59E22087E;
+        Tue,  3 Sep 2019 11:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567511074;
+        bh=GLV2PrI/w8WKtzeB6Jimizt3wNVcE7gXazlgmzVZ2VA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EnqJXBD8dkyrwGsBAUhGPddErCfaZwlTLTUa5f+8glfQltP2ohwel9bhSzZha9Sqz
+         UgceN2Su+cXuY4948X2puyubqSotGIyYVxXsOb3AETqjK/xEyB0/ki14jvvmgJIeEu
+         WasyBWRwQcna6q44TUF//BKBUv32kZLtmNiLNK9I=
+Received: by mail-lj1-f179.google.com with SMTP id l20so1224256ljj.3;
+        Tue, 03 Sep 2019 04:44:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAUM8oSm9kQ99K2JLg0Cj1YCfl8fVd46N3YXPChGhrjaYogPMByH
+        9mii0dw+rtbsjsvoXfZhtblcKSi3L7l1/CGs+wA=
+X-Google-Smtp-Source: APXvYqyECBe/crmq4JV2MfBJDre5Qh7vIn7L4YZKge7PR+AYhXx56re52lOMKFQztCZLzQihgJt+s/Vw4EAIHMTM8ZU=
+X-Received: by 2002:a2e:99cc:: with SMTP id l12mr7148200ljj.5.1567511071966;
+ Tue, 03 Sep 2019 04:44:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
+ <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com> <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 3 Sep 2019 13:44:20 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcjF9nERQxDdSVBLsfc2V_M1_BPZ6iM6EXvEx4tdr3rDQ@mail.gmail.com>
+Message-ID: <CAJKOXPcjF9nERQxDdSVBLsfc2V_M1_BPZ6iM6EXvEx4tdr3rDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
+ to json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivek Goyal <vgoyal@redhat.com>
+On Tue, 3 Sep 2019 at 11:00, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Sep 3, 2019 at 8:47 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Tue, 3 Sep 2019 at 09:14, Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >
+> > > > Convert the Syscon reboot bindings to DT schema format using
+> > > > json-schema.
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
+> > > >  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++++++
+> > > >  2 files changed, 68 insertions(+), 30 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > >
+> > > > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..a583f3dc8ef4
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > > @@ -0,0 +1,68 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Generic SYSCON mapped register reset driver
+> > > > +
+> > > > +maintainers:
+> > > > +  - Sebastian Reichel <sre@kernel.org>
+> > > > +
+> > > > +description: |+
+> > > > +  This is a generic reset driver using syscon to map the reset register.
+> > > > +  The reset is generally performed with a write to the reset register
+> > > > +  defined by the register map pointed by syscon reference plus the offset
+> > > > +  with the value and mask defined in the reboot node.
+> > > > +  Default will be little endian mode, 32 bit access only.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: syscon-reboot
+> > > > +
+> > > > +  mask:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: Update only the register bits defined by the mask (32 bit).
+> > > > +    maxItems: 1
+> > >
+> > > Drop this as that is already defined for uint32.
+> > >
+> > > It also doesn't actually work. The $ref has to be under an 'allOf' if
+> > > you have additional schemas. A quirk of json-schema...
+> > >
+> > > > +
+> > > > +  offset:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: Offset in the register map for the reboot register (in bytes).
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  regmap:
+> > > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > > +    description: Phandle to the register map node.
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  value:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: The reset value written to the reboot register (32 bit access).
+> > > > +    maxItems: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - regmap
+> > > > +  - offset
+> > > > +
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        value:
+> > > > +          not:
+> > > > +            type: array
+> > >
+> > > I think you could make this a bit more readable with:
+> > >
+> > > if:
+> > >   not:
+> > >     required:
+> > >       - value
+> >
+> > I do not understand how does it work (value is not mentioned in the
+> > required fields so why checking of it?)... but it works fine.
+>
+> What's under required doesn't have to be listed as a property.
+>
+> > > However, if the tree is free of legacy usage, then you could just drop all this.
+> >
+> > One of them - mask or value - has to be provided.
+>
+> Or both, right?
+>
+> Actually, a better way to express it is probably this:
+>
+> oneOf:
+>   - required: [ value ]
+>   - required: [ mask ]
+>   - required: [ value, mask ]
 
-File systems like virtio-fs need to do not have to play directly with
-forget list data structures. There is a helper function use that instead.
+This does not work mask+value would be valid everywhere:
 
-Rename dequeue_forget() to fuse_dequeue_forget() and export it so that
-stacked filesystems can use it.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- fs/fuse/dev.c    | 13 +++++++------
- fs/fuse/fuse_i.h |  4 ++++
- 2 files changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 167f476fbe16..c0c30a225e78 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1185,9 +1185,9 @@ __releases(fiq->waitq.lock)
- 	return err ? err : reqsize;
- }
- 
--static struct fuse_forget_link *dequeue_forget(struct fuse_iqueue *fiq,
--					       unsigned max,
--					       unsigned *countp)
-+struct fuse_forget_link *fuse_dequeue_forget(struct fuse_iqueue *fiq,
-+					     unsigned int max,
-+					     unsigned int *countp)
- {
- 	struct fuse_forget_link *head = fiq->forget_list_head.next;
- 	struct fuse_forget_link **newhead = &head;
-@@ -1206,6 +1206,7 @@ static struct fuse_forget_link *dequeue_forget(struct fuse_iqueue *fiq,
- 
- 	return head;
- }
-+EXPORT_SYMBOL(fuse_dequeue_forget);
- 
- static int fuse_read_single_forget(struct fuse_iqueue *fiq,
- 				   struct fuse_copy_state *cs,
-@@ -1213,7 +1214,7 @@ static int fuse_read_single_forget(struct fuse_iqueue *fiq,
- __releases(fiq->waitq.lock)
- {
- 	int err;
--	struct fuse_forget_link *forget = dequeue_forget(fiq, 1, NULL);
-+	struct fuse_forget_link *forget = fuse_dequeue_forget(fiq, 1, NULL);
- 	struct fuse_forget_in arg = {
- 		.nlookup = forget->forget_one.nlookup,
- 	};
-@@ -1261,7 +1262,7 @@ __releases(fiq->waitq.lock)
- 	}
- 
- 	max_forgets = (nbytes - ih.len) / sizeof(struct fuse_forget_one);
--	head = dequeue_forget(fiq, max_forgets, &count);
-+	head = fuse_dequeue_forget(fiq, max_forgets, &count);
- 	spin_unlock(&fiq->waitq.lock);
- 
- 	arg.count = count;
-@@ -2249,7 +2250,7 @@ void fuse_abort_conn(struct fuse_conn *fc)
- 			clear_bit(FR_PENDING, &req->flags);
- 		list_splice_tail_init(&fiq->pending, &to_end);
- 		while (forget_pending(fiq))
--			kfree(dequeue_forget(fiq, 1, NULL));
-+			kfree(fuse_dequeue_forget(fiq, 1, NULL));
- 		wake_up_all_locked(&fiq->waitq);
- 		spin_unlock(&fiq->waitq.lock);
- 		kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 7e19c936ece8..6533be37873f 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -820,6 +820,10 @@ void fuse_queue_forget(struct fuse_conn *fc, struct fuse_forget_link *forget,
- 
- struct fuse_forget_link *fuse_alloc_forget(void);
- 
-+struct fuse_forget_link *fuse_dequeue_forget(struct fuse_iqueue *fiq,
-+					     unsigned int max,
-+					     unsigned int *countp);
-+
- /* Used by READDIRPLUS */
- void fuse_force_forget(struct file *file, u64 nodeid);
- 
--- 
-2.21.0
-
+arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: syscon-reboot:
+{'regmap': [[9]], 'mask': [[1]], '$nodename': ['syscon-reboot'],
+'value': [[1]], 'offset': [[1024]], 'compatible': ['syscon-reboot']}
+is valid under each of {'required': ['mask']}, {'required': ['value',
+'mask']}, {'required': ['value']}
