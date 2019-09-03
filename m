@@ -2,119 +2,160 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F575C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71387C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37718217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49AA6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuKXlPx3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mcKB7buJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfICHMx (ORCPT
+        id S1727602AbfICHNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:12:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44025 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfICHMw (ORCPT
+        Tue, 3 Sep 2019 03:13:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41356 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfICHNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:12:52 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y8so16157290wrn.10;
-        Tue, 03 Sep 2019 00:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0nREtTN95potLu4W2e5nNuzYPnZZK1vRcOjmxb5qt8k=;
-        b=GuKXlPx3GBaC6/0CpcczL7/+ySL6PYqohNeR9jse0yMlI+17sN+eI/Raj26KvtYxFc
-         rTTNTzo0mJx6u+6Xh2/NWh7eNfU+5ihvheFRNn+LQaj29cILcWuDJg8TRqQea4FkB/ZL
-         1u3pmOokfoytQN+uVg9Klcwbt8puWMNBcKcP0XOmX9p0ZvNtpXqu7DRXXMIelASqWbuc
-         dAgkOG8lTSn2rALzfAm0stvbwmXUv+A52bvu4CDeyEuKMVuCpBGXiyZfXxHCMuImAcXe
-         bR4Q7ABEi0PPS2wcSmOtfgXVOpgqO1vHfsch7jyfBPIgzIpn0gM8M7BXi053K5X3AS2b
-         v8Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0nREtTN95potLu4W2e5nNuzYPnZZK1vRcOjmxb5qt8k=;
-        b=Aze2Okk7llwzVVo6iHLlNnPD2rBS+dv8d3Wb4U8R+ArqDDXoNVCLzfSv+pYhxfMinU
-         LmWfr2yvrhtwr6OCZ1RJExz2km+o2saNlJeY2RU3zNLmCCamH1nMhc0t7856OW5Ef7cu
-         mPGvgwqi6Wxu5iAZjMT3hRM9+S1YHa0uaDAZ63NVJkdyuqejIp2ah+EQhas3SNa9vSG4
-         WeanCHFxMVpYtnDDJPlBd32yNjT/zdrUfGjrvpS6aVQVVs/nG7aAnve5dbEsA+drXZZ9
-         rfdGqU7R3Gm6oNItnMfp0e5R01xVbhQWJ1qcEOc9/CGOSRpEN5W7AaJfKYYi1DtDvFro
-         vgFQ==
-X-Gm-Message-State: APjAAAU5uwjWNM0glf7H/9Pov4q5B2eHTgEyU/fyca15auUANufLdBck
-        Ijp5bER4rlhfIM9FtyimUcHVfJvs
-X-Google-Smtp-Source: APXvYqzfWk6g6SoBPMwtQ2eo0rdkdMGUgpd52YcdCfxsIuGYU52KA26KDcqM3qZNXbPz7tOCgdyICg==
-X-Received: by 2002:adf:e452:: with SMTP id t18mr40790664wrm.0.1567494770075;
-        Tue, 03 Sep 2019 00:12:50 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f04:7c00:f018:f11c:b684:4652? (p200300EA8F047C00F018F11CB6844652.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:f018:f11c:b684:4652])
-        by smtp.googlemail.com with ESMTPSA id z189sm9155590wmc.25.2019.09.03.00.12.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 00:12:49 -0700 (PDT)
-Subject: Re: [PATCH net-next] r8152: modify rtl8152_set_speed function
-To:     Hayes Wang <hayeswang@realtek.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1394712342-15778-326-Taiwan-albertk@realtek.com>
- <280e6a3d-c6c3-ef32-a65d-19566190a1d3@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DAB41@RTITMBSVM03.realtek.com.tw>
- <aa9513ff-3cef-4b9f-ecbd-1310660a911c@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DACE1@RTITMBSVM03.realtek.com.tw>
- <56675c6b-c792-245e-54d0-eacd50e7a139@gmail.com>
- <0835B3720019904CB8F7AA43166CEEB2F18DAD2A@RTITMBSVM03.realtek.com.tw>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <32d490ae-70af-ba86-93de-be342a2a7e39@gmail.com>
-Date:   Tue, 3 Sep 2019 09:12:43 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 03:13:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zwxp+c+L0XcXiND/Up9AgQ7t+fEuUmdVocZXo3Qqe04=; b=mcKB7buJT5zHiUPtSCwf6iBTV
+        sYZoZUXwyH9dxpMxayzv/rQ36g5XchMKy7nNXoihi8g5EaKfANU0B61vKlk9LuYIf6C2UX1uvAl/Y
+        P6grJncNoAjvBnYNcGu0YsWl/wZMyKa3FFt06lbU3k5jwwXMPWd+2APOwAx3X9DgjJB2d7KGvfRzl
+        kiGulsFYXW8JPueD7pHuzSkqrsY2EDw+wCaFtLTuVNKEq49GNsFsXBT4YeXny3iEV0RlAtYTuaydW
+        5KodkX1NWMPgJac3SaB6mjuWvLc5/Dv07meiDh/q/KcmP46uBpHMEnJAoaspcpAZGhi52t7mZ5utL
+        AtRn2Z8zQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i52yC-0000Ay-5C; Tue, 03 Sep 2019 07:11:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33F863011DF;
+        Tue,  3 Sep 2019 09:10:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4468E2022F84F; Tue,  3 Sep 2019 09:11:11 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 09:11:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     dalias@libc.org, linux-sh@vger.kernel.org, catalin.marinas@arm.com,
+        dave.hansen@linux.intel.com, heiko.carstens@de.ibm.com,
+        linuxarm@huawei.com, jiaxun.yang@flygoat.com,
+        linux-kernel@vger.kernel.org, mwb@linux.vnet.ibm.com,
+        paulus@samba.org, hpa@zytor.com, sparclinux@vger.kernel.org,
+        chenhc@lemote.com, will@kernel.org, linux-s390@vger.kernel.org,
+        ysato@users.sourceforge.jp, mpe@ellerman.id.au, x86@kernel.org,
+        rppt@linux.ibm.com, borntraeger@de.ibm.com, dledford@redhat.com,
+        mingo@redhat.com, jeffrey.t.kirsher@intel.com,
+        benh@kernel.crashing.org, jhogan@kernel.org,
+        nfont@linux.vnet.ibm.com, mattst88@gmail.com, len.brown@intel.com,
+        gor@linux.ibm.com, anshuman.khandual@arm.com,
+        ink@jurassic.park.msu.ru, cai@lca.pw, luto@kernel.org,
+        tglx@linutronix.de, naveen.n.rao@linux.vnet.ibm.com,
+        linux-arm-kernel@lists.infradead.org, rth@twiddle.net,
+        axboe@kernel.dk, robin.murphy@arm.com, linux-mips@vger.kernel.org,
+        ralf@linux-mips.org, tbogendoerfer@suse.de, paul.burton@mips.com,
+        linux-alpha@vger.kernel.org, bp@alien8.de,
+        akpm@linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        davem@davemloft.net,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
+Message-ID: <20190903071111.GU2369@hirez.programming.kicks-ass.net>
+References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
+ <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
+ <20190831085539.GG2369@hirez.programming.kicks-ass.net>
+ <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
+ <20190831161247.GM2369@hirez.programming.kicks-ass.net>
+ <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
+ <20190902072542.GN2369@hirez.programming.kicks-ass.net>
+ <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
+ <20190902125644.GQ2369@hirez.programming.kicks-ass.net>
+ <1f48081c-c9d6-8f3e-9559-8b0bec98f125@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18DAD2A@RTITMBSVM03.realtek.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f48081c-c9d6-8f3e-9559-8b0bec98f125@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.2019 08:55, Hayes Wang wrote:
-> Heiner Kallweit [mailto:hkallweit1@gmail.com]
->> Sent: Tuesday, September 03, 2019 2:45 PM
-> [...]
->>> Besides, I have a question. I think I don't need rtl8152_set_speed()
->>> if I implement phylib. However, I need to record some information
->>> according to the settings of speed. For now, I do it in rtl8152_set_speed().
->>> Do you have any idea about how I should do it with phylib without
->>> rtl8152_set_speed()?
->>>
->> When saying "record some information", what kind of information?
+On Tue, Sep 03, 2019 at 02:19:04PM +0800, Yunsheng Lin wrote:
+> On 2019/9/2 20:56, Peter Zijlstra wrote:
+> > On Mon, Sep 02, 2019 at 08:25:24PM +0800, Yunsheng Lin wrote:
+> >> On 2019/9/2 15:25, Peter Zijlstra wrote:
+> >>> On Mon, Sep 02, 2019 at 01:46:51PM +0800, Yunsheng Lin wrote:
+> >>>> On 2019/9/1 0:12, Peter Zijlstra wrote:
+> >>>
+> >>>>> 1) because even it is not set, the device really does belong to a node.
+> >>>>> It is impossible a device will have magic uniform access to memory when
+> >>>>> CPUs cannot.
+> >>>>
+> >>>> So it means dev_to_node() will return either NUMA_NO_NODE or a
+> >>>> valid node id?
+> >>>
+> >>> NUMA_NO_NODE := -1, which is not a valid node number. It is also, like I
+> >>> said, not a valid device location on a NUMA system.
+> >>>
+> >>> Just because ACPI/BIOS is shit, doesn't mean the device doesn't have a
+> >>> node association. It just means we don't know and might have to guess.
+> >>
+> >> How do we guess the device's location when ACPI/BIOS does not set it?
+> > 
+> > See device_add(), it looks to the device's parent and on NO_NODE, puts
+> > it there.
+> > 
+> > Lacking any hints, just stick it to node0 and print a FW_BUG or
+> > something.
+> > 
+> >> It seems dev_to_node() does not do anything about that and leave the
+> >> job to the caller or whatever function that get called with its return
+> >> value, such as cpumask_of_node().
+> > 
+> > Well, dev_to_node() doesn't do anything; nor should it. It are the
+> > callers of set_dev_node() that should be taking care.
+> > 
+> > Also note how device_add() sets the device node to the parent device's
+> > node on NUMA_NO_NODE. Arguably we should change it to complain when it
+> > finds NUMA_NO_NODE and !parent.
 > 
-> Some of our chips support the feature of UPS. When satisfying certain
-> condition, the hw would recover the settings of speed. Therefore, I have
-> to record the settings of the speed, and set them to hw.
-> 
-Not knowing the UPS feature in detail:
-In net-next I changed the software "PHY speed-down" implementation to
-be more generic. It stores the old advertised settings in a new
-phy_device member adv_old, and restores them in phy_speed_up().
-Maybe what you need is similar.
+> Is it possible that the node id set by device_add() become invalid
+> if the node is offlined, then dev_to_node() may return a invalid
+> node id.
 
->> The speed itself is stored in struct phy_device, if you need to adjust
->> certain chip settings depending on negotiated speed, then you can do
->> this in a callback (parameter handler of phy_connect_direct).
->> See e.g. r8169_phylink_handler()
+In that case I would expect the device to go away too. Once the memory
+controller goes away, the PCI bus connected to it cannot continue to
+function.
+
+> From the comment in select_fallback_rq(), it seems that a node can
+> be offlined, not sure if node offline process has taken cared of that?
 > 
-> Thanks. I would study it.
-> 
-> Best Regards,
-> Hayes
-> 
-> 
-Heiner
+> 	/*
+>          * If the node that the CPU is on has been offlined, cpu_to_node()
+>          * will return -1. There is no CPU on the node, and we should
+>          * select the CPU on the other node.
+>          */
+
+Ugh, so I disagree with that notion. cpu_to_node() mapping should be
+fixed, you simply cannot change it after boot, too much stuff relies on
+it.
+
+Setting cpu_to_node to -1 on node offline is just wrong. But alas, it
+seems this is already so.
+
+> With the above assumption that a device is always on a valid node,
+> the node id returned from dev_to_node() can be safely passed to
+> cpumask_of_node() without any checking?
+
+
