@@ -2,206 +2,199 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0227AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE897C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C824922CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E3A22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfICKkD (ORCPT
+        id S1728663AbfICKuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:40:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49884 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726840AbfICKkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:40:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A71E6AD46;
-        Tue,  3 Sep 2019 10:40:00 +0000 (UTC)
-Subject: Re: [mainline][BUG][PPC][btrfs][bisected 00801a] kernel BUG at
- fs/btrfs/locking.c:71!
-To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     mpe <mpe@ellerman.id.au>, Brian King <brking@linux.vnet.ibm.com>,
-        chandan <chandan@linux.vnet.ibm.com>,
-        sachinp <sachinp@linux.vnet.ibm.com>,
-        David Sterba <dsterba@suse.com>, josef@toxicpanda.com,
-        linux-btrfs@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1567500907.5082.12.camel@abdul>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7139ac07-db63-b984-c416-d1c94337c9bf@suse.com>
-Date:   Tue, 3 Sep 2019 13:39:57 +0300
+        Tue, 3 Sep 2019 06:50:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49671 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727078AbfICKuT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:50:19 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1i56O5-0005Th-MY; Tue, 03 Sep 2019 12:50:13 +0200
+Subject: Re: [PATCH] ACPI: support for NXP i2c controller
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Chuanhua Han <chuanhua.han@nxp.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
+        Udit Kumar <udit.kumar@nxp.com>
+References: <20190711102601.20582-1-chuanhua.han@nxp.com>
+ <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <31e7c1bb-d153-5feb-0b86-946caca5206c@pengutronix.de>
+Date:   Tue, 3 Sep 2019 12:50:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1567500907.5082.12.camel@abdul>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+One more question,
+
+On 02.09.19 22:56, Rafael J. Wysocki wrote:
+> On Thu, Jul 11, 2019 at 12:35 PM Chuanhua Han <chuanhua.han@nxp.com> wrote:
+>>
+>> Enable NXP i2c controller to boot with ACPI
+>>
+>> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+>> Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
+>> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> 
+> Wolfram, any objections to this from the i2c side?
+> 
+>> ---
+>>   drivers/acpi/acpi_apd.c      |  6 ++++++
+>>   drivers/i2c/busses/i2c-imx.c | 15 +++++++++++++++
+>>   2 files changed, 21 insertions(+)
+>>
+>> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+>> index ff47317..cf8566c 100644
+>> --- a/drivers/acpi/acpi_apd.c
+>> +++ b/drivers/acpi/acpi_apd.c
+>> @@ -165,6 +165,11 @@ static const struct apd_device_desc thunderx2_i2c_desc = {
+>>          .fixed_clk_rate = 125000000,
+>>   };
+>>
+>> +static const struct apd_device_desc nxp_i2c_desc = {
+>> +       .setup = acpi_apd_setup,
+>> +       .fixed_clk_rate = 350000000,
+>> +};
+
+I'm not ACPI expert, so need here some help for understanding. Here is ACPI table for 
+NXP0001 id (found on the internet):
++  Device(I2C0) {
++    Name(_HID, "NXP0001")
++    Name(_UID, 0)
++    Name(_CRS, ResourceTemplate() {
++      Memory32Fixed(ReadWrite, I2C0_BASE, I2C_LEN)
++      Interrupt(ResourceConsumer, Level, ActiveHigh, Shared) { I2C0_IT }
++    }) // end of _CRS for i2c0 device
++    Name (_DSD, Package () {
++      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++      Package () {
++         Package () {"clock-frequency", DEFAULT_PLAT_FREQ}, //This is device specific 
+data, Need to see how to pass clk stuff
++      }
++    })
+
+Should kernel some how get proper clock-frequency from the ACPI? Or we still need to use 
+hard coded .fixed_clk_rate in the kernel?
 
 
-On 3.09.19 г. 11:55 ч., Abdul Haleem wrote:
-> Greeting's
+>>   static const struct apd_device_desc hip08_spi_desc = {
+>>          .setup = acpi_apd_setup,
+>>          .fixed_clk_rate = 250000000,
+>> @@ -238,6 +243,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+>>          { "HISI02A1", APD_ADDR(hip07_i2c_desc) },
+>>          { "HISI02A2", APD_ADDR(hip08_i2c_desc) },
+>>          { "HISI0173", APD_ADDR(hip08_spi_desc) },
+>> +       { "NXP0001", APD_ADDR(nxp_i2c_desc) },
+>>   #endif
+>>          { }
+>>   };
+>> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+>> index b1b8b93..99f9b96 100644
+>> --- a/drivers/i2c/busses/i2c-imx.c
+>> +++ b/drivers/i2c/busses/i2c-imx.c
+>> @@ -44,6 +44,7 @@
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/sched.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/acpi.h>
+>>
+>>   /* This will be the driver name the kernel reports */
+>>   #define DRIVER_NAME "imx-i2c"
+>> @@ -255,6 +256,12 @@ static const struct of_device_id i2c_imx_dt_ids[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(of, i2c_imx_dt_ids);
+>>
+>> +static const struct acpi_device_id i2c_imx_acpi_ids[] = {
+>> +       {"NXP0001", .driver_data = (kernel_ulong_t)&vf610_i2c_hwdata},
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, i2c_imx_acpi_ids);
+>> +
+>>   static inline int is_imx1_i2c(struct imx_i2c_struct *i2c_imx)
+>>   {
+>>          return i2c_imx->hwdata->devtype == IMX1_I2C;
+>> @@ -1052,6 +1059,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>>   {
+>>          const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
+>>                                                             &pdev->dev);
+>> +       const struct acpi_device_id *acpi_id =
+>> +                       acpi_match_device(i2c_imx_acpi_ids,
+>> +                                         &pdev->dev);
+>>          struct imx_i2c_struct *i2c_imx;
+>>          struct resource *res;
+>>          struct imxi2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+>> @@ -1079,6 +1089,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>>
+>>          if (of_id)
+>>                  i2c_imx->hwdata = of_id->data;
+>> +       else if (acpi_id)
+>> +               i2c_imx->hwdata = (struct imx_i2c_hwdata *)
+>> +                               acpi_id->driver_data;
+>>          else
+>>                  i2c_imx->hwdata = (struct imx_i2c_hwdata *)
+>>                                  platform_get_device_id(pdev)->driver_data;
+>> @@ -1091,6 +1104,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>>          i2c_imx->adapter.nr             = pdev->id;
+>>          i2c_imx->adapter.dev.of_node    = pdev->dev.of_node;
+>>          i2c_imx->base                   = base;
+>> +       ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev));
+>>
+>>          /* Get I2C clock */
+>>          i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
+>> @@ -1253,6 +1267,7 @@ static struct platform_driver i2c_imx_driver = {
+>>                  .name = DRIVER_NAME,
+>>                  .pm = &i2c_imx_pm_ops,
+>>                  .of_match_table = i2c_imx_dt_ids,
+>> +               .acpi_match_table = ACPI_PTR(i2c_imx_acpi_ids),
+>>          },
+>>          .id_table = imx_i2c_devtype,
+>>   };
+>> --
+>> 2.9.5
+>>
 > 
-> Mainline kernel panics with LTP/fs_fill-dir tests for btrfs file system on my P9 box running mainline kernel 5.3.0-rc5
-> 
-> BUG_ON was first introduced by below commit
-> 
-> commit 00801ae4bb2be5f5af46502ef239ac5f4b536094
-> Author: David Sterba <dsterba@suse.com>
-> Date:   Thu May 2 16:53:47 2019 +0200
-> 
->     btrfs: switch extent_buffer write_locks from atomic to int
->     
->     The write_locks is either 0 or 1 and always updated under the lock,
->     so we don't need the atomic_t semantics.
->     
->     Reviewed-by: Nikolay Borisov <nborisov@suse.com>
->     Signed-off-by: David Sterba <dsterba@suse.com>
-> 
-> diff --git a/fs/btrfs/locking.c b/fs/btrfs/locking.c
-> index 2706676279..98fccce420 100644
-> --- a/fs/btrfs/locking.c
-> +++ b/fs/btrfs/locking.c
-> @@ -58,17 +58,17 @@ static void btrfs_assert_tree_read_locked(struct
-> extent_buffer *eb)
->  
->  static void btrfs_assert_tree_write_locks_get(struct extent_buffer *eb)
->  {
-> -       atomic_inc(&eb->write_locks);
-> +       eb->write_locks++;
->  }
->  
->  static void btrfs_assert_tree_write_locks_put(struct extent_buffer *eb)
->  {
-> -       atomic_dec(&eb->write_locks);
-> +       eb->write_locks--;
->  }
->  
->  void btrfs_assert_tree_locked(struct extent_buffer *eb)
->  {
-> -       BUG_ON(!atomic_read(&eb->write_locks));
-> +       BUG_ON(!eb->write_locks);
->  }
->  
-> 
-> tests logs:
-> avocado-misc-tests/io/disk/ltp_fs.py:LtpFs.test_fs_run;fs_fill-dir-ext3-61cd:  [ 3376.022096] EXT4-fs (nvme0n1): mounting ext3 file system using the ext4 subsystem
-> EXT4-fs (nvme0n1): mounted filesystem with ordered data mode. Opts: (null)
-> EXT4-fs (loop1): mounting ext2 file system using the ext4 subsystem
-> EXT4-fs (loop1): mounted filesystem without journal. Opts: (null)
-> EXT4-fs (loop1): mounting ext3 file system using the ext4 subsystem
-> EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
-> EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
-> XFS (loop1): Mounting V5 Filesystem
-> XFS (loop1): Ending clean mount
-> XFS (loop1): Unmounting Filesystem
-> BTRFS: device fsid 7c08f81b-6642-4a06-9182-2884e80d56ee devid 1 transid 5 /dev/loop1
-> BTRFS info (device loop1): disk space caching is enabled
-> BTRFS info (device loop1): has skinny extents
-> BTRFS info (device loop1): enabling ssd optimizations
-> BTRFS info (device loop1): creating UUID tree
-> ------------[ cut here ]------------
-> kernel BUG at fs/btrfs/locking.c:71!
-> Oops: Exception in kernel mode, sig: 5 [#1]
-> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-> Dumping ftrace buffer:
->    (ftrace buffer empty)
-> Modules linked in: fuse(E) vfat(E) fat(E) btrfs(E) xor(E)
-> zstd_decompress(E) zstd_compress(E) raid6_pq(E) xfs(E) raid0(E)
-> linear(E) dm_round_robin(E) dm_queue_length(E) dm_service_time(E)
-> dm_multipath(E) loop(E) rpadlpar_io(E) rpaphp(E) lpfc(E) bnx2x(E)
-> xt_CHECKSUM(E) xt_MASQUERADE(E) tun(E) bridge(E) stp(E) llc(E) kvm_pr(E)
-> kvm(E) tcp_diag(E) udp_diag(E) inet_diag(E) unix_diag(E)
-> af_packet_diag(E) netlink_diag(E) ip6t_rpfilter(E) ipt_REJECT(E)
-> nf_reject_ipv4(E) ip6t_REJECT(E) nf_reject_ipv6(E) xt_conntrack(E)
-> ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E)
-> ip6table_mangle(E) ip6table_security(E) ip6table_raw(E) iptable_nat(E)
-> nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E)
-> iptable_mangle(E) iptable_security(E) iptable_raw(E) ebtable_filter(E)
-> ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) sunrpc(E)
-> raid10(E) xts(E) pseries_rng(E) vmx_crypto(E) sg(E) uio_pdrv_genirq(E)
-> uio(E) binfmt_misc(E) sch_fq_codel(E) ip_tables(E)
->  ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sd_mod(E) ibmvscsi(E)
-> scsi_transport_srp(E) ibmveth(E) nvmet_fc(E) nvmet(E) nvme_fc(E)
-> nvme_fabrics(E) scsi_transport_fc(E) mdio(E) libcrc32c(E) ptp(E)
-> pps_core(E) nvme(E) nvme_core(E) dm_mirror(E) dm_region_hash(E)
-> dm_log(E) dm_mod(E) [last unloaded: lpfc]
-> CPU: 14 PID: 1803 Comm: kworker/u32:8 Tainted: G            E     5.3.0-rc5-autotest-autotest #1
-> Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
-> NIP:  c00800000164dd70 LR: c00800000164df00 CTR: c000000000a817a0
-> REGS: c00000000260b5d0 TRAP: 0700   Tainted: G            E      (5.3.0-rc5-autotest-autotest)
-> MSR:  8000000102029033 <SF,VEC,EE,ME,IR,DR,RI,LE,TM[E]>  CR: 22444082  XER: 00000000
-> CFAR: c00800000164defc IRQMASK: 0
-> GPR00: c0080000015c55f4 c00000000260b860 c008000001703b00 c000000267a29af0
-> GPR04: 0000000000000000 0000000000000001 0000000000000000 0000000000000000
-> GPR08: 0000000000000000 0000000000000001 0000000000000000 0000000000000004
-> GPR12: 0000000000004000 c00000001ec58e00 0000000000000000 0000000000000000
-> GPR16: 0000000000010000 0000000000000004 0000000000000001 0000000000000001
-> GPR20: 0000000000000000 0000000000000001 000000003e0f83e1 c00000025a7cbef0
-> GPR24: c00000000260ba26 0000000040000000 c0000000014a26e8 0000000000000003
-> GPR28: 0000000000000004 c00000025f2010a0 c000000267a29af0 0000000000000000
-> NIP [c00800000164dd70] btrfs_assert_tree_locked+0x10/0x20 [btrfs]
-> LR [c00800000164df00] btrfs_set_lock_blocking_write+0x60/0x100 [btrfs]
-> Call Trace:
-> [c00000000260b860] [c00000000260b8e0] 0xc00000000260b8e0 (unreliable)
-> [c00000000260b890] [c0080000015c55f4] btrfs_set_path_blocking+0xb4/0xc0 [btrfs]
-> [c00000000260b8e0] [c0080000015cb808] btrfs_search_slot+0x8e8/0xb80 [btrfs]
 
-Can you provide the line numbers btrfs_search_slot+0x8e8/0xb80
-corresponds to?
+Kind regards,
+Oleksij Rempel
 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
