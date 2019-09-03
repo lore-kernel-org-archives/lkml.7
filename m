@@ -2,92 +2,153 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8409BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A21C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68410206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2BB22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WcjriP/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfICShS (ORCPT
+        id S1726377AbfICSm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:37:18 -0400
-Received: from sauhun.de ([88.99.104.3]:57116 "EHLO pokefinder.org"
+        Tue, 3 Sep 2019 14:42:26 -0400
+Received: from mout.web.de ([212.227.17.12]:41877 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfICShS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:37:18 -0400
-Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
-        by pokefinder.org (Postfix) with ESMTPSA id 498B52C4F3A;
-        Tue,  3 Sep 2019 20:37:16 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 20:37:15 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 0/3] hwmon: convert remaining drivers to
- i2c_new_dummy_device()
-Message-ID: <20190903183715.GO2171@ninjato>
-References: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
- <20190903183340.GA29077@roeck-us.net>
+        id S1726090AbfICSmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 14:42:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567536134;
+        bh=3IcwgWfePYuRvZdhAhTPFnsEeC4pHahDVAulfsv8+/s=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=WcjriP/9xdtN+GN4rVegSIynHSBCV0p8sPR6eapV3Mlv6QC95g2fyjFtQEfYyFFWz
+         SnQxwVZqqVQui/8sW3f+ZLQjdl8SqNtheyyleZwLxyihFsddVKXAVxhxkRmwyMJEQ3
+         XNs3hvKmR8QSanJYIaXjGjI03HwwC3uER8IXFSI0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.133.43]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M7KN0-1iPTxw1sCU-00x0fh; Tue, 03
+ Sep 2019 20:42:14 +0200
+To:     reiserfs-devel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] reiserfs: Delete an unnecessary check before brelse()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b3b79aaf-279b-4f5a-b9ee-3a38b74da98e@web.de>
+Date:   Tue, 3 Sep 2019 20:42:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p/1JFEOz/hVXxMAZ"
-Content-Disposition: inline
-In-Reply-To: <20190903183340.GA29077@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FgPz5Y25Kl9Ov+158itoVTDquuBdr4ympyzcpvUNQ4spL4AlCIx
+ BG5qoczVG+wURrQcLsE7+eNXxsHergrUCNmiidU6oL0Z9I+hOGBUec0vFimQTmr14UfoWq2
+ bg3S28/CYStye1RfD65q+/iYG/cmSZlUQIEnSBN303VNBJOC7GyYncWlRlbednRT409T5mg
+ 5FHj6SyfArd4XFSeKQOnQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+GrEmTzxDqY=:sKrY3r/LaEsNnh2ho5BYdX
+ /jSkeANyW8SfGxl+9FziAmBcU9BXF8p9PBHwB8TjDeWZF/gcEab+x5XHoYTQ/CJoQsv0WVRL7
+ +gMEjO8oBjS61JoCn8O1c6e9TZPrCJKXNox8YHxmo9u7O0cEjW+MJw+PgRZ9ym9TGkbMnCMP1
+ CeS6qwVhPQ64ADQXqMhL2Yq7Z9nUvsPw7ZdmhM2fJyTWKy9z2e1RIpDCpgq4Vg8MPzezFIHd0
+ k34G11NBl0XlW5bAxyWDqp1Qq9hCc3xns8lOLK0zI8IPkXWbsoj11AFrm60bIiiKmlue3h+iy
+ lt3dq3To3McvPxR7iRDMaXS2Bg3VydCgHSaSoj2XguRqBe73uPn57zbJgKMYgxlnac+Y/XbSB
+ d3mPsdkhUiH/Uk9YELCfX/eV9o86FkNIY3Xug0N5dBc5rb+esP27TODbRswU3P3P+vnVxG7Mj
+ JW1BLl4/nSh9378S0YMuij8v3E2rnoVmFhz+t/PvVoLlriayIiJnfBl9z8a64t/zOn15/pE5B
+ J88YpWh8lXvWYU/+73B5KWJ841dmYxp2RMxcAr9GWDw4NqxyXaBmIEOLT/cCWVclyMx5B5ezv
+ USG3FD9Vrkr+RcsTGcK5thAai1vmXgn9EY+7WRSCwbpLtZdmiZbZEnheqj7r/8MdYIPUqOFzV
+ ceHUxyQ0iRcdYQ3+DYYjbhnud5H8mdSVBwvxoi85nRp5q6vzO9B11Xe2AhlIqpYsA+MO/DgDQ
+ wf6IHtF1HXxqHcYuNQQfJTnN7L8aVpGzQcBSxGuTA3bHjsa64XHfJ1fsdnGSP9ydncRZ5pvif
+ d9sL46+hqqp9RvWixyCC84v5qzdyu3O+e4oWKphyq/0GQ55GtjeX+/KcGh3aL80/+h0iwM9YK
+ hmmIFOMedmxlbo7JPov5iixNWd9zVhPA0js3u3cs6abMBbpcPVQxhZVlq8HT2bbgDTbk4mx4M
+ obtRlICgUdgr+uWHZ/e4ROrJEszySK8h5VwvadF0RP3vU6NISI2L1S6Le2URUk1LkoNnNUMIp
+ VtfDyaH+H0aehGao4q32C7vCIueKQPGusN1Lr6KDWYvDf9/KFgNrDyAk3q2RI1UOEyEBIBmHJ
+ pBMTBCRh96dDyybzJtkesbZZbilkUo8OuUstxBMKUmAuHvDizetJzJz6yjcz1/6+a7VOQ2N1O
+ O59QvDLIgMWRQi2YqTLiwcJ6A5eWMXGbZhZzJ4nibl4iHCZA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 3 Sep 2019 20:00:16 +0200
 
---p/1JFEOz/hVXxMAZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The brelse() function tests whether its argument is NULL
+and then returns immediately.
+Thus the test around the call is not needed.
 
-On Tue, Sep 03, 2019 at 11:33:40AM -0700, Guenter Roeck wrote:
-> On Tue, Sep 03, 2019 at 08:12:53PM +0200, Wolfram Sang wrote:
-> > This series is part of a tree-wide movement to replace the I2C API call
-> > 'i2c_new_dummy' which returns NULL with its new counterpart returning an
-> > ERRPTR.
-> >=20
-> > This series fixes the remaining hwmon drivers which could not be
-> > converted by my cocci script. So, I did it manually, yet all drivers
-> > still follow the same pattern. Build tested by me and by buildbot. No
-> > tests on HW have been performed, so testing is appreciated.
-> >=20
-> I still have the previous version (with RFT) in my queue.
-> Question is what to do with it; I have not seen any test feedback.
-> I tend to just apply the series and wait for fallout.
-> Any objections ?
+This issue was detected by using the Coccinelle software.
 
-For the sake of the API conversion, I would appreciate this much. Of
-course, I'll be there if there is fallout. Thanks!
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/reiserfs/super.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
+index d69b4ac0ae2f..b412ef9a24a6 100644
+=2D-- a/fs/reiserfs/super.c
++++ b/fs/reiserfs/super.c
+@@ -2229,8 +2229,7 @@ static int reiserfs_fill_super(struct super_block *s=
+, void *data, int silent)
+ 	reiserfs_cancel_old_flush(s);
 
---p/1JFEOz/hVXxMAZ
-Content-Type: application/pgp-signature; name="signature.asc"
+ 	reiserfs_free_bitmap_cache(s);
+-	if (SB_BUFFER_WITH_SB(s))
+-		brelse(SB_BUFFER_WITH_SB(s));
++	brelse(SB_BUFFER_WITH_SB(s));
+ #ifdef CONFIG_QUOTA
+ 	{
+ 		int j;
+=2D-
+2.23.0
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1ustcACgkQFA3kzBSg
-Kba4HQ//ZbhI88LI65pmEOzqI17Im3yRIvfUmrJ1xXcJ6aFLcOWRSKEMY+gcdUCe
-OOQZNWypCj5qGnF/gvbPo5ibEJXNVBJLG6SAaAUyLv59fDbMCEnCZM9Sna2iuTvs
-hJDmWHqFGT6s9biAKdYaG3TGMIWUdWTg7yJsv0kAdEHYsYkPqdGfeNQIYuebeY/5
-uE4EQc7bBz+yWxDwr2D1VNjTYKY3zRLYCgjquHXe4cY5+vGa1sELS7lTqA07l00L
-87lVvDW3aVzFmPaPhp8JNDgFXq83inCc9ATpll21omgVspXH++M3s/3Vqr6vq2eJ
-HJd7Tp3ifxlPs+L9RoZOmhg1Mv8ZNSVkOb7KXv4jbBdlIeUE+nFdW6VC9oX7ACPZ
-MrNDVaKqwTdubAxOFvzLrB3UswT6EL5lDqoeNCbdbEqwN7gUdkp/6LpWvmTuVPHg
-tcxMBALOnLGopvtsRqTY+qinXzNEon45xUnYenfzRossTyAiAr4hXnbz+kEM6dfa
-BkXyODLEC7EAUst4d+EclC05mU0N1opZJ0fDNzQuwbEYLGxTb3NmaAA5OxSQycA/
-GWKdgg3OjcdbPy6siMhlEhoTec84TqfOaP1zs4hn8L6/u4NoaF0VNcKjj1EcgK1f
-MXYJfXNm5wQ/JOaVFKivfXzVr+vPql2KWD6eNXhLlc8GHJoBEwM=
-=sBPl
------END PGP SIGNATURE-----
-
---p/1JFEOz/hVXxMAZ--
