@@ -2,89 +2,117 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46373C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA342339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UQNXHCCB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H0DEDnV8"
+	by mail.kernel.org (Postfix) with ESMTP id 2032E2343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfICNiL (ORCPT
+        id S1729416AbfICNin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:38:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50560 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICNiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:38:11 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 56175607EB; Tue,  3 Sep 2019 13:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567517890;
-        bh=/IIAX28ybymPI/d9nKwEudqgSJsDn9fKIihspf4kSbQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=UQNXHCCBivXTF5pjjKKNDZTCKrDsTBiazTwFlALMM4qi6D21BIDoT4DWD8nLmlM+Q
-         zkKteZOhSII8aM73Cy3sGCPFOINWUzq8Uxc7dHCy1vFinf9R2rwUVmuLQJV77snEhw
-         CTYaOOSHSj0W/OK//lZvDgIqSDUPjFrQNLz0lJQU=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F5316025A;
-        Tue,  3 Sep 2019 13:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567517889;
-        bh=/IIAX28ybymPI/d9nKwEudqgSJsDn9fKIihspf4kSbQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=H0DEDnV8ysmtJNkTpNZokvcwULQFizARdxwrZ2svNKMYXuphsnYh7to4LLG0gVkjD
-         pgf5TOl4AnCmoibZ+yB1e4MEQFmmbIFzpMnn8Z1tx6vFM/cRDf9/C8/tX4ngfzt83o
-         SCcPnlO5s4JJVErc69CGK24BTLHM4P91OnKE3m/I=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F5316025A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 3 Sep 2019 09:38:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45138 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfICNin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:38:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8EBF5B633;
+        Tue,  3 Sep 2019 13:38:41 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 15:38:41 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Message-ID: <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-12-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] bcma: remove two unused variables
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190809085308.69748-1-yuehaibing@huawei.com>
-References: <20190809085308.69748-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <zajec5@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190903133810.56175607EB@smtp.codeaurora.org>
-Date:   Tue,  3 Sep 2019 13:38:10 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902083240.20367-12-sakari.ailus@linux.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
-
-> drivers/bcma/driver_mips.c:70:18: warning:
->  ipsflag_irq_shift defined but not used [-Wunused-const-variable=]
-> drivers/bcma/driver_mips.c:62:18: warning:
->  ipsflag_irq_mask defined but not used [-Wunused-const-variable=]
+On Mon 2019-09-02 11:32:40, Sakari Ailus wrote:
+> Add a test for the %pfw printk modifier using software nodes.
 > 
-> They are never used, so can be removed.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> index 944eb50f38625..9c6d716979fb1 100644
+> --- a/lib/test_printf.c
+> +++ b/lib/test_printf.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/gfp.h>
+>  #include <linux/mm.h>
+>  
+> +#include <linux/property.h>
+> +
+>  #include "../tools/testing/selftests/kselftest_module.h"
+>  
+>  #define BUF_SIZE 256
+> @@ -588,6 +590,40 @@ flags(void)
+>  	kfree(cmp_buffer);
+>  }
+>  
+> +static void __init fwnode_pointer(void)
+> +{
+> +	const struct software_node softnodes[] = {
+> +		{ .name = "first", },
+> +		{ .name = "second", .parent = &softnodes[0], },
+> +		{ .name = "third", .parent = &softnodes[1], },
+> +		{ NULL /* Guardian */ },
+> +	};
+> +	const char * const full_name = "/second/third";
+> +	const char * const full_name_second = "/second";
+> +	const char * const second_name = "second";
+> +	const char * const third_name = "third";
+> +	int rval;
+> +
+> +	rval = software_node_register_nodes(softnodes);
+> +	if (rval) {
+> +		pr_warn("cannot register softnodes; rval %d\n", rval);
+> +		return;
+> +	}
+> +
+> +	test(full_name_second, "%pfw",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
 
-Patch applied to wireless-drivers-next.git, thanks.
+"ARRAY_SIZE(softnodes) - 3" is quite cryptic.
+Is there any particular reason to use it instead of &softnodes[1] ?
 
-0a60e0aa495f bcma: remove two unused variables
+And is it expected that it does not print the "/first" parent?
 
--- 
-https://patchwork.kernel.org/patch/11085683/
+> +	test(full_name, "%pfw",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> +	test(full_name, "%pfwf",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> +	test(second_name, "%pfwP",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> +	test(third_name, "%pfwP",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> +
+> +	software_node_unregister_nodes(softnodes);
+> +}
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Anyway, thanks for the tests.
 
+Best Regards,
+Petr
