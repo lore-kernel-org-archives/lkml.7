@@ -2,186 +2,135 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFA6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09278C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CA72341F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE03D230F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfICUtU (ORCPT
+        id S1726924AbfICUva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:49:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47156 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 16:51:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18595 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbfICUtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 16:49:17 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 32A383082141;
-        Tue,  3 Sep 2019 20:49:17 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-34.bss.redhat.com [10.20.1.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6E5D1001B08;
-        Tue,  3 Sep 2019 20:49:15 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org
-Cc:     Juston Li <juston.li@intel.com>, Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 26/27] drm/dp_mst: Also print unhashed pointers for malloc/topology references
-Date:   Tue,  3 Sep 2019 16:46:04 -0400
-Message-Id: <20190903204645.25487-27-lyude@redhat.com>
-In-Reply-To: <20190903204645.25487-1-lyude@redhat.com>
-References: <20190903204645.25487-1-lyude@redhat.com>
+        id S1726440AbfICUv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:51:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 13:51:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,464,1559545200"; 
+   d="scan'208";a="187387320"
+Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
+  by orsmga006.jf.intel.com with ESMTP; 03 Sep 2019 13:51:28 -0700
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>, pv-drivers@vmware.com,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-4-thomas_os@shipmail.org>
+ <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
+ <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
+Date:   Tue, 3 Sep 2019 13:51:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 03 Sep 2019 20:49:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we only print mstb/port pointer addresses in our malloc and
-topology refcount functions using the hashed-by-default %p, but
-unfortunately if you're trying to debug a use-after-free error caused by
-a refcounting error then this really isn't terribly useful. On the other
-hand though, everything in the rest of the DP MST helpers uses hashed
-pointer values as well and probably isn't useful to convert to unhashed.
-So, let's just get the best of both worlds and print both the hashed and
-unhashed pointer in our malloc/topology refcount debugging output. This
-will hopefully make it a lot easier to figure out which port/mstb is
-causing KASAN to get upset.
+On 9/3/19 1:36 PM, Thomas Hellström (VMware) wrote:
+> So the question here should really be, can we determine already at mmap
+> time whether backing memory will be unencrypted and adjust the *real*
+> vma->vm_page_prot under the mmap_sem?
+> 
+> Possibly, but that requires populating the buffer with memory at mmap
+> time rather than at first fault time.
 
-Cc: Juston Li <juston.li@intel.com>
-Cc: Imre Deak <imre.deak@intel.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Harry Wentland <hwentlan@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 34 ++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+I'm not connecting the dots.
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 2fe24e366925..5b5c0b3b3c0e 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -1327,7 +1327,8 @@ static void
- drm_dp_mst_get_mstb_malloc(struct drm_dp_mst_branch *mstb)
- {
- 	kref_get(&mstb->malloc_kref);
--	DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->malloc_kref));
-+	DRM_DEBUG("mstb %p/%px (%d)\n",
-+		  mstb, mstb, kref_read(&mstb->malloc_kref));
- }
- 
- /**
-@@ -1344,7 +1345,8 @@ drm_dp_mst_get_mstb_malloc(struct drm_dp_mst_branch *mstb)
- static void
- drm_dp_mst_put_mstb_malloc(struct drm_dp_mst_branch *mstb)
- {
--	DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->malloc_kref) - 1);
-+	DRM_DEBUG("mstb %p/%px (%d)\n",
-+		  mstb, mstb, kref_read(&mstb->malloc_kref) - 1);
- 	kref_put(&mstb->malloc_kref, drm_dp_free_mst_branch_device);
- }
- 
-@@ -1379,7 +1381,8 @@ void
- drm_dp_mst_get_port_malloc(struct drm_dp_mst_port *port)
- {
- 	kref_get(&port->malloc_kref);
--	DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->malloc_kref));
-+	DRM_DEBUG("port %p/%px (%d)\n",
-+		  port, port, kref_read(&port->malloc_kref));
- }
- EXPORT_SYMBOL(drm_dp_mst_get_port_malloc);
- 
-@@ -1396,7 +1399,8 @@ EXPORT_SYMBOL(drm_dp_mst_get_port_malloc);
- void
- drm_dp_mst_put_port_malloc(struct drm_dp_mst_port *port)
- {
--	DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->malloc_kref) - 1);
-+	DRM_DEBUG("port %p/%px (%d)\n",
-+		  port, port, kref_read(&port->malloc_kref) - 1);
- 	kref_put(&port->malloc_kref, drm_dp_free_mst_port);
- }
- EXPORT_SYMBOL(drm_dp_mst_put_port_malloc);
-@@ -1447,8 +1451,8 @@ drm_dp_mst_topology_try_get_mstb(struct drm_dp_mst_branch *mstb)
- 	int ret = kref_get_unless_zero(&mstb->topology_kref);
- 
- 	if (ret)
--		DRM_DEBUG("mstb %p (%d)\n", mstb,
--			  kref_read(&mstb->topology_kref));
-+		DRM_DEBUG("mstb %p/%px (%d)\n",
-+			  mstb, mstb, kref_read(&mstb->topology_kref));
- 
- 	return ret;
- }
-@@ -1471,7 +1475,8 @@ static void drm_dp_mst_topology_get_mstb(struct drm_dp_mst_branch *mstb)
- {
- 	WARN_ON(kref_read(&mstb->topology_kref) == 0);
- 	kref_get(&mstb->topology_kref);
--	DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->topology_kref));
-+	DRM_DEBUG("mstb %p/%px (%d)\n",
-+		  mstb, mstb, kref_read(&mstb->topology_kref));
- }
- 
- /**
-@@ -1489,8 +1494,8 @@ static void drm_dp_mst_topology_get_mstb(struct drm_dp_mst_branch *mstb)
- static void
- drm_dp_mst_topology_put_mstb(struct drm_dp_mst_branch *mstb)
- {
--	DRM_DEBUG("mstb %p (%d)\n",
--		  mstb, kref_read(&mstb->topology_kref) - 1);
-+	DRM_DEBUG("mstb %p/%px (%d)\n",
-+		  mstb, mstb, kref_read(&mstb->topology_kref) - 1);
- 	kref_put(&mstb->topology_kref, drm_dp_destroy_mst_branch_device);
- }
- 
-@@ -1546,8 +1551,8 @@ drm_dp_mst_topology_try_get_port(struct drm_dp_mst_port *port)
- 	int ret = kref_get_unless_zero(&port->topology_kref);
- 
- 	if (ret)
--		DRM_DEBUG("port %p (%d)\n", port,
--			  kref_read(&port->topology_kref));
-+		DRM_DEBUG("port %p/%px (%d)\n",
-+			  port, port, kref_read(&port->topology_kref));
- 
- 	return ret;
- }
-@@ -1569,7 +1574,8 @@ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
- {
- 	WARN_ON(kref_read(&port->topology_kref) == 0);
- 	kref_get(&port->topology_kref);
--	DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->topology_kref));
-+	DRM_DEBUG("port %p/%px (%d)\n",
-+		  port, port, kref_read(&port->topology_kref));
- }
- 
- /**
-@@ -1585,8 +1591,8 @@ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
-  */
- static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
- {
--	DRM_DEBUG("port %p (%d)\n",
--		  port, kref_read(&port->topology_kref) - 1);
-+	DRM_DEBUG("port %p/%px (%d)\n",
-+		  port, port, kref_read(&port->topology_kref) - 1);
- 	kref_put(&port->topology_kref, drm_dp_destroy_port);
- }
- 
--- 
-2.21.0
+vma->vm_page_prot is used to create a VMA's PTEs regardless of if they
+are created at mmap() or fault time.  If we establish a good
+vma->vm_page_prot, can't we just use it forever for demand faults?
 
+Or, are you concerned that if an attempt is made to demand-fault page
+that's incompatible with vma->vm_page_prot that we have to SEGV?
+
+> And it still requires knowledge whether the device DMA is always
+> unencrypted (or if SEV is active).
+
+I may be getting mixed up on MKTME (the Intel memory encryption) and
+SEV.  Is SEV supported on all memory types?  Page cache, hugetlbfs,
+anonymous?  Or just anonymous?
