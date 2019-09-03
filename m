@@ -2,112 +2,68 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895C5C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFFEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7D622CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E36D21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbfICRxc convert rfc822-to-8bit (ORCPT
+        id S1730095AbfICR4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:53:32 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:60516 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbfICRxc (ORCPT
+        Tue, 3 Sep 2019 13:56:14 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:33200 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICR4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:53:32 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 445299E774F;
-        Tue,  3 Sep 2019 18:53:30 +0100 (BST)
-Date:   Tue, 3 Sep 2019 18:53:28 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 066/167] iio: adc: exynos-adc: Add S5PV210
- variant
-Message-ID: <20190903185328.74299c4d@archlinux>
-In-Reply-To: <20190903162519.7136-66-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
-        <20190903162519.7136-66-sashal@kernel.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 3 Sep 2019 13:56:13 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
+        id 1i5D2I-00046p-T4; Tue, 03 Sep 2019 17:56:11 +0000
+Date:   Tue, 3 Sep 2019 18:56:10 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
+ panic
+Message-ID: <20190903175610.GM1131@ZenIV.linux.org.uk>
+References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
+ <20190903123719.GF1131@ZenIV.linux.org.uk>
+ <20190903130456.GA9567@infradead.org>
+ <20190903134832.GH1131@ZenIV.linux.org.uk>
+ <20190903135024.GA8274@infradead.org>
+ <20190903135354.GI1131@ZenIV.linux.org.uk>
+ <20190903153930.GA2791@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903153930.GA2791@infradead.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  3 Sep 2019 12:23:38 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+On Tue, Sep 03, 2019 at 08:39:30AM -0700, Christoph Hellwig wrote:
 
-> From: Jonathan Bakker <xc-racer2@live.ca>
+> > There's much nastier situation than "new upstream kernel released,
+> > need to rebuild" - it's bisect in mainline trying to locate something...
 > 
-> [ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
-> 
-> S5PV210's ADC variant is almost the same as v1 except that it has 10
-> channels and doesn't require the pmu register
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> I really don't get the point.  And it's not like we've card about
+> this anywhere else.  And jumping wildly around with the numeric values
+> for constants will lead to bugs like the one you added and fixed again
+> and again.
 
-I have no particular objection to adding new IDs (which is more
-or less what this patch is), but I didn't know autosel was
-picking them up.  So a bit of surprise... If intentional
-then fine to apply to stable.
+The thing is, there are several groups - it's not as if all additions
+were guaranteed to be at the end.  So either we play with renumbering
+again and again, or we are back to the square one...
 
-> ---
->  drivers/iio/adc/exynos_adc.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index 4be29ed447559..41da522fc6735 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -115,6 +115,7 @@
->  #define MAX_ADC_V2_CHANNELS		10
->  #define MAX_ADC_V1_CHANNELS		8
->  #define MAX_EXYNOS3250_ADC_CHANNELS	2
-> +#define MAX_S5PV210_ADC_CHANNELS	10
->  
->  /* Bit definitions common for ADC_V1 and ADC_V2 */
->  #define ADC_CON_EN_START	(1u << 0)
-> @@ -282,6 +283,16 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
->  	.start_conv	= exynos_adc_v1_start_conv,
->  };
->  
-> +static const struct exynos_adc_data exynos_adc_s5pv210_data = {
-> +	.num_channels	= MAX_S5PV210_ADC_CHANNELS,
-> +	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
-> +
-> +	.init_hw	= exynos_adc_v1_init_hw,
-> +	.exit_hw	= exynos_adc_v1_exit_hw,
-> +	.clear_irq	= exynos_adc_v1_clear_irq,
-> +	.start_conv	= exynos_adc_v1_start_conv,
-> +};
-> +
->  static void exynos_adc_s3c2416_start_conv(struct exynos_adc *info,
->  					  unsigned long addr)
->  {
-> @@ -478,6 +489,9 @@ static const struct of_device_id exynos_adc_match[] = {
->  	}, {
->  		.compatible = "samsung,s3c6410-adc",
->  		.data = &exynos_adc_s3c64xx_data,
-> +	}, {
-> +		.compatible = "samsung,s5pv210-adc",
-> +		.data = &exynos_adc_s5pv210_data,
->  	}, {
->  		.compatible = "samsung,exynos-adc-v1",
->  		.data = &exynos_adc_v1_data,
+Is there any common trick that would allow to verify the lack of duplicates
+at the build time?
 
+Or we can reorder the list by constant value, with no grouping visible
+anywhere...
