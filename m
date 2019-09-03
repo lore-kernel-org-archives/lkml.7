@@ -2,199 +2,164 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0761EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECA9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D010922CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2E922CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfICIOO (ORCPT
+        id S1728109AbfICIP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:14:14 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:18446 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfICIOO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:14:14 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: BRsUDvl5TSXR8I1Tvk6+ZsNj4kGdNLerSJhcHH3iNyRmymJQoXbWjT3ZV8Cx/LmgnvA3EClsOw
- JVjD1tZAFYV9h5Rs3Lo0i5FULxmOUHOmKgPOst5tfPZbEjxm5Tmw7XMjaUaCfKfICsbxy6c39r
- irqSfxqPlQkXta+X4RSgBztBJJ7/zK9dp7uthII83Em41arZdJYbwdctrc6MKp7TtZnM/MtBSS
- t1dH8mysEhSy3Ij80CTBN3dkZSWeyixkDeCB2hE51mNkynnMut2691Rditz/DDU9lVbhPfd9E9
- Yug=
+        Tue, 3 Sep 2019 04:15:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32391 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbfICIP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:15:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 01:15:25 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="48978944"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Sep 2019 01:14:13 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 3 Sep 2019 01:14:12 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 3 Sep 2019 01:14:12 -0700
-Date:   Tue, 3 Sep 2019 10:14:12 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Ido Schimmel <idosch@idosch.org>
-CC:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
-        <andrew@lunn.ch>, <horatiu.vultur@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <ivecera@redhat.com>, <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190903081410.zpcdm2dzqrxyg43c@lx-anielsen.microsemi.net>
-References: <20190829193613.GA23259@splinter>
- <20190829.151201.940681219080864052.davem@davemloft.net>
- <20190830053940.GL2312@nanopsycho>
- <20190829.230233.287975311556641534.davem@davemloft.net>
- <20190830063624.GN2312@nanopsycho>
- <20190902174229.uur7r7duq4dvbnqq@lx-anielsen.microsemi.net>
- <20190903061324.GA6149@splinter>
+   d="scan'208";a="176512353"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.196.103]) ([10.239.196.103])
+  by orsmga008.jf.intel.com with ESMTP; 03 Sep 2019 01:15:24 -0700
+Subject: Re: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, mingo@redhat.com,
+        tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
+References: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
+ <1562947506.12920.0.camel@kernel.org>
+ <ac10cc35-96f4-7f67-a259-2398d3136417@linux.intel.com>
+ <20190812230403.01491479@oasis.local.home>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <5706f93f-201c-47d7-fe30-e68c2d668e21@linux.intel.com>
+Date:   Tue, 3 Sep 2019 16:15:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190903061324.GA6149@splinter>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190812230403.01491479@oasis.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ido,
+  Hi Steve,
 
-The 09/03/2019 09:13, Ido Schimmel wrote:
-> On Mon, Sep 02, 2019 at 07:42:31PM +0200, Allan W. Nielsen wrote:
-> > I have been reading through this thread several times and I still do not get it.
-> I kept thinking about this and I want to make sure that I correctly
-> understand the end result.
-So do I, and regardless of this being merged or not, I'm really happy that we
-have the discussion as there are clearly a need for synchronizing the meaning of
-promiscuity.
-
-One of the reasons why we started working on this patch was the comments we got
-when requesting comments on the "[PATCH] net: bridge: Allow bridge to join
-multicast groups" where we want to be able to setup mac-entries for L2 multicast
-MAC addresses. Here it is important for us to be able to control which ports a
-static configured multicast address needs to be forwarded to (including the
-CPU). When working on this patch it was pointed out that the interfaces are in
-promisc mode anyway (if member of a bridge, and if flooding and learning are
-enabled), and it therefore this optimization should not matter anyway.
-
-I found that this was a fair comment, and it has been on the list of things we
-wanted to "fix" for a long time.
-
-The optimization does matter to us, as we have until now worked around the issue
-by not implementing promisc mode.
-
-When debugging, it is very useful for us to be able to see all the traffic RXed
-on the interface, and to us it did make a lot of sense to "just" make promisc
-mode work like we was used to.
-
-But, this is for debugging, it is not the most important patch we have on the
-backlog, and I would therefore prefer finding a solution which we are all happy
-with.
-
-> With these patches applied I assume I will see the following traffic
-> when running tcpdump on one of the netdevs exposed by the ocelot driver:
+On 8/13/2019 11:04 AM, Steven Rostedt wrote:
+> On Tue, 13 Aug 2019 09:04:28 +0800
+> Xing Zhengjun <zhengjun.xing@linux.intel.com> wrote:
 > 
-> - Ingress: All
-> - Egress: Only locally generated traffic and traffic forwarded by the
->   kernel from interfaces not belonging to the ocelot driver
+>> Hi Steve,
+>>
+>>      Could you help to review? Thanks.
 > 
-> The above means I will not see any offloaded traffic transmitted by the
-> port. Is that correct?
-Correct - but maybe we should change this.
-
-In Ocelot and in LANxxxx (the part we are working on now), we can come pretty
-close. We can get the offloaded TX traffic to the CPU, but it will not be
-re-written (it will look like the ingress frame, which is not always the same as
-the egress frame, vlan tags an others may be re-written).
-
-In some of our chips we can actually do this (not Ocelot, and not the LANxxxx
-part we are working on now) after the frame as been re-written.
-
-> I see that the driver is setting 'offload_fwd_mark' for any traffic trapped
-> from bridged ports, which means the bridge will drop it before it traverses
-> the packet taps on egress.
-Correct.
-
-> Large parts of the discussion revolve around the fact that switch ports
-> are not any different than other ports. Dave wrote "Please stop
-> portraying switches as special in this regard" and Andrew wrote "[The
-> user] just wants tcpdump to work like on their desktop."
-And we are trying to get as close to this as practical possible, knowing that it
-may not be exactly the same.
-
-> But if anything, this discussion proves that switch ports are special in
-> this regard and that tcpdump will not work like on the desktop.
-I think it can come really close. Some drivers may be able to fix the TX issue
-you point out, others may not.
-
-> Beside the fact that I don't agree (but gave up) with the new
-> interpretation of promisc mode, I wonder if we're not asking for trouble
-> with this patchset. Users will see all offloaded traffic on ingress, but
-> none of it on egress. This is in contrast to the sever/desktop, where
-> Linux is much more dominant in comparison to switches (let alone hw
-> accelerated ones) and where all the traffic is visible through tcpdump.
-> I can already see myself having to explain this over and over again to
-> confused users.
+> Thanks for the ping. Yes, I'll take a look at it. I'll be pulling in a
+> lot of patches that have queued up.
 > 
-> Now, I understand that showing egress traffic is inherently difficult.
-> It means one of two things:
+> -- Steve
+
+Could you help to review? Thanks.
+
 > 
-> 1. We allow packets to be forwarded by both the software and the
-> hardware
-> 2. We trap all ingressing traffic from all the ports
-If the HW cannot copy the egress traffic to the CPU (which our HW cannot), then
-you need to do both. All ingress traffic needs to go to the CPU, you need to
-make all the forwarding decisions in the CPU, to figure out what traffic happens
-to go to the port you want to monitor.
+> 
+>>
+>> On 7/13/2019 12:05 AM, Tom Zanussi wrote:
+>>> Hi Zhengjun,
+>>>
+>>> On Fri, 2019-07-12 at 09:53 +0800, Zhengjun Xing wrote:
+>>>> Add "gfp_t" support in synthetic_events, then the "gfp_t" type
+>>>> parameter in some functions can be traced.
+>>>>
+>>>> Prints the gfp flags as hex in addition to the human-readable flag
+>>>> string.  Example output:
+>>>>
+>>>>     whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
+>>>> (GFP_ATOMIC|__GFP_ZERO)
+>>>>       rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
+>>>>       rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+>>>>
+>>>> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+>>>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>>>
+>>> Looks good to me, thanks!
+>>>
+>>> Tom
+>>>    
+>>>> ---
+>>>>    kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
+>>>>    1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/kernel/trace/trace_events_hist.c
+>>>> b/kernel/trace/trace_events_hist.c
+>>>> index ca6b0dff60c5..30f0f32aca62 100644
+>>>> --- a/kernel/trace/trace_events_hist.c
+>>>> +++ b/kernel/trace/trace_events_hist.c
+>>>> @@ -13,6 +13,10 @@
+>>>>    #include <linux/rculist.h>
+>>>>    #include <linux/tracefs.h>
+>>>>    
+>>>> +/* for gfp flag names */
+>>>> +#include <linux/trace_events.h>
+>>>> +#include <trace/events/mmflags.h>
+>>>> +
+>>>>    #include "tracing_map.h"
+>>>>    #include "trace.h"
+>>>>    #include "trace_dynevent.h"
+>>>> @@ -752,6 +756,8 @@ static int synth_field_size(char *type)
+>>>>    		size = sizeof(unsigned long);
+>>>>    	else if (strcmp(type, "pid_t") == 0)
+>>>>    		size = sizeof(pid_t);
+>>>> +	else if (strcmp(type, "gfp_t") == 0)
+>>>> +		size = sizeof(gfp_t);
+>>>>    	else if (synth_field_is_string(type))
+>>>>    		size = synth_field_string_size(type);
+>>>>    
+>>>> @@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
+>>>>    		fmt = "%lu";
+>>>>    	else if (strcmp(type, "pid_t") == 0)
+>>>>    		fmt = "%d";
+>>>> +	else if (strcmp(type, "gfp_t") == 0)
+>>>> +		fmt = "%x";
+>>>>    	else if (synth_field_is_string(type))
+>>>>    		fmt = "%s";
+>>>>    
+>>>> @@ -834,9 +842,20 @@ static enum print_line_t
+>>>> print_synth_event(struct trace_iterator *iter,
+>>>>    					 i == se->n_fields - 1 ? ""
+>>>> : " ");
+>>>>    			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+>>>>    		} else {
+>>>> +			struct trace_print_flags __flags[] = {
+>>>> +			    __def_gfpflag_names, {-1, NULL} };
+>>>> +
+>>>>    			trace_seq_printf(s, print_fmt, se-
+>>>>> fields[i]->name,
+>>>>    					 entry->fields[n_u64],
+>>>>    					 i == se->n_fields - 1 ? ""
+>>>> : " ");
+>>>> +
+>>>> +			if (strcmp(se->fields[i]->type, "gfp_t") ==
+>>>> 0) {
+>>>> +				trace_seq_puts(s, " (");
+>>>> +				trace_print_flags_seq(s, "|",
+>>>> +						      entry-
+>>>>> fields[n_u64],
+>>>> +						      __flags);
+>>>> +				trace_seq_putc(s, ')');
+>>>> +			}
+>>>>    			n_u64++;
+>>>>    		}
+>>>>    	}
+>>
+> 
 
-I really doubt this will work in real life. Too much traffic, and HW may make
-different forwarding decision that the SW (tc rules in HW but not in SW), which
-means that it will not be good for debugging anyway.
-
-> Both options can have devastating effects on the network and therefore
-> should not be triggered by a supposedly innocent invocation of tcpdump.
-Agree.
-
-> I again wonder if it would not be wiser to solve this by introducing two
-> new flags to tcpdump for ingress/egress (similar to -Q in/out) capturing
-> of offloaded traffic. The capturing of egress offloaded traffic can be
-> documented with the appropriate warnings.
-Not sure I agree, but I will try to spend some more time considering it.
-
-In the mean while, what TC action was it that Jiri suggestion we should use? The
-trap action is no good, and it prevents the forwarding in silicon, and I'm not
-aware of a "COPY-TO-CPU" action.
-
-> Anyway, I don't want to hold you up, I merely want to make sure that the
-> above (assuming it's correct) is considered before the patches are
-> applied.
-Sounds good, and thanks for all the time spend on reviewing and asking the
-critical questions.
-
-/Allan
-
+-- 
+Zhengjun Xing
