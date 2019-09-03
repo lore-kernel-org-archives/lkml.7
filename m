@@ -2,118 +2,109 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADBAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABBBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2446722CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DED22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naBgiF0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbfICQFD (ORCPT
+        id S1729891AbfICQF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:05:03 -0400
-Received: from gate.crashing.org ([63.228.1.57]:55972 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfICQFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:05:03 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x83G4HnT010981;
-        Tue, 3 Sep 2019 11:04:17 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x83G4F0O010980;
-        Tue, 3 Sep 2019 11:04:15 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Tue, 3 Sep 2019 11:04:15 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>, alastair@d-silva.org,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v2 3/6] powerpc: Convert flush_icache_range & friends to C
-Message-ID: <20190903160415.GA9749@gate.crashing.org>
-References: <20190903052407.16638-1-alastair@au1.ibm.com> <20190903052407.16638-4-alastair@au1.ibm.com> <20190903130430.GC31406@gate.crashing.org> <d268ee78-607e-5eb3-ed89-d5c07f672046@c-s.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Tue, 3 Sep 2019 12:05:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43324 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728854AbfICQF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:05:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so8075997pld.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tvXTRb5lTb+8B5XFSXnCmcD2ylzHPHyUlLmT6O6bjB8=;
+        b=naBgiF0A8QgRy89rtmqoTZomowJ9uK/5AjCwiOZkdqSavGAgTEtHUEvi3BuU+ZsR1r
+         Hk+/hBPe1mkmKr60NVAHnRmirg+F+2g+Kzua5FSmcqPhYpv/3jdJVV574ad54ITN73Rc
+         cTYQMsE1N2FSJTVX5MTKW99AZnjgQlaS+vTsRl5fu1l4kykTT6PaT8J+1a6TJMHCDLIA
+         JMj0TNF2mZ8XLf5nO/ABWSytNCpSpqefNx9kmcA5L2oAFj5jpP9ieWNMqzJxIxcCHUzE
+         efpooqpVNE6l5QYc5zJMJQfBNTkEIMiuEPVCz9952cFkjaKFBkEJQTdUdPiSugr3iMA/
+         +jjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tvXTRb5lTb+8B5XFSXnCmcD2ylzHPHyUlLmT6O6bjB8=;
+        b=XZuNuXUeInLwm9Df1dFCAJym0DQ6IA2OjVGKIeOPBPFXxM/+YrpoOUCnQ8oH35dOg2
+         9tC6SgwjjDSWHMtoPY83sYWSh9rMRsYGxO+JmnRIaWxlUQFas7kvJy7Z/GYMhKxeJPEX
+         t3wv0zDWe/jtJwI3X94bBZc4fTTi/K9w4cChwsoHlI1KIykXqpU4vhyoX+MTuWt6pG92
+         659XrgZxWPCHFZiDW+6BgA4cIxTMV6K+cf9YQsDH4c8TPXyOyTam9kUvWci4rk352G5n
+         UMPphVOeCKEM6g5/sAehDnHa1yLOF/MtkZh9tOLcT8f0pdEEiYnAbdyDidmC5VfVwvrG
+         T33g==
+X-Gm-Message-State: APjAAAX4Bwyyz46qq1R+LWM0k9/avC3xm4Njf1EZbrGUIRPnBArhtM0z
+        JO7iDHvCrd54H1YICYh9MQk=
+X-Google-Smtp-Source: APXvYqyG6ZxmJJmQ0MptfKqojMuF0K9Hu8/u4HROKumd5y2lXA1oHOH6rCFG98Ani34IiiGqmlRU+w==
+X-Received: by 2002:a17:902:7792:: with SMTP id o18mr19221994pll.73.1567526726698;
+        Tue, 03 Sep 2019 09:05:26 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
+        by smtp.gmail.com with ESMTPSA id t11sm18501567pgb.33.2019.09.03.09.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 09:05:26 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH 0/5] mm, slab: Make kmalloc_info[] contain all types of names
+Date:   Wed,  4 Sep 2019 00:04:25 +0800
+Message-Id: <20190903160430.1368-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d268ee78-607e-5eb3-ed89-d5c07f672046@c-s.fr>
-User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:28:09PM +0200, Christophe Leroy wrote:
-> Le 03/09/2019 à 15:04, Segher Boessenkool a écrit :
-> >On Tue, Sep 03, 2019 at 03:23:57PM +1000, Alastair D'Silva wrote:
-> >>+	asm volatile(
-> >>+		"   mtctr %2;"
-> >>+		"   mtmsr %3;"
-> >>+		"   isync;"
-> >>+		"0: dcbst   0, %0;"
-> >>+		"   addi    %0, %0, %4;"
-> >>+		"   bdnz    0b;"
-> >>+		"   sync;"
-> >>+		"   mtctr %2;"
-> >>+		"1: icbi    0, %1;"
-> >>+		"   addi    %1, %1, %4;"
-> >>+		"   bdnz    1b;"
-> >>+		"   sync;"
-> >>+		"   mtmsr %5;"
-> >>+		"   isync;"
-> >>+		: "+r" (loop1), "+r" (loop2)
-> >>+		: "r" (nb), "r" (msr), "i" (bytes), "r" (msr0)
-> >>+		: "ctr", "memory");
-> >
-> >This outputs as one huge assembler statement, all on one line.  That's
-> >going to be fun to read or debug.
-> 
-> Do you mean \n has to be added after the ; ?
+There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+and KMALLOC_DMA.
 
-Something like that.  There is no really satisfying way for doing huge
-inline asm, and maybe that is a good thing ;-)
+The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
+but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
+generated by kmalloc_cache_name().
 
-Often people write \n\t at the end of each line of inline asm.  This works
-pretty well (but then there are labels, oh joy).
+Patch1 predefines the names of all types of kmalloc to save
+the time spent dynamically generating names.
 
-> >loop1 and/or loop2 can be assigned the same register as msr0 or nb.  They
-> >need to be made earlyclobbers.  (msr is fine, all of its reads are before
-> >any writes to loop1 or loop2; and bytes is fine, it's not a register).
-> 
-> Can you explicit please ? Doesn't '+r' means that they are input and 
-> output at the same time ?
+The other 4 patches did some cleanup work.
 
-That is what + means, yes -- that this output is an input as well.  It is
-the same to write
+These changes make sense, and the time spent by new_kmalloc_cache()
+has been reduced by approximately 36.3%.
 
-  asm("mov %1,%0 ; mov %0,42" : "+r"(x), "=r"(y));
-or to write
-  asm("mov %1,%0 ; mov %0,42" : "=r"(x), "=r"(y) : "0"(x));
+                         Time spent by
+                         new_kmalloc_cache()
+5.3-rc7                       66264
+5.3-rc7+patch                 42188
 
-(So not "at the same time" as in "in the same machine instruction", but
-more loosely, as in "in the same inline asm statement").
+Pengfei Li (5):
+  mm, slab: Make kmalloc_info[] contain all types of names
+  mm, slab_common: Remove unused kmalloc_cache_name()
+  mm, slab: Remove unused kmalloc_size()
+  mm, slab_common: Make 'type' is enum kmalloc_cache_type
+  mm, slab_common: Make initializing KMALLOC_DMA start from 1
 
-> "to be made earlyclobbers", what does this means exactly ? How to do that ?
+ include/linux/slab.h |  20 ---------
+ mm/slab.c            |   7 +--
+ mm/slab.h            |   2 +-
+ mm/slab_common.c     | 101 +++++++++++++++++++++++--------------------
+ 4 files changed, 59 insertions(+), 71 deletions(-)
 
-You write &, like "+&r" in this case.  It means the machine code writes
-to this register before it has consumed all asm inputs (remember, GCC
-does not understand (or even parse!) the assembler string).
+-- 
+2.21.0
 
-So just
-
-		: "+&r" (loop1), "+&r" (loop2)
-
-will do.  (Why are they separate though?  It could just be one loop var).
-
-
-Segher
