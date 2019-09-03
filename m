@@ -2,132 +2,143 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC50C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F013FC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AA222CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jThrnTI1"
+	by mail.kernel.org (Postfix) with ESMTP id CAD8821897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567532169;
+	bh=8L6MrUIhUQP3KYCnRhkpd6vXbSiOhoutMR0zkv9mTa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=otaFghz36YeWg7eZXaxGvsaXrUXXqNBuqGIXKFUBd99AS+4EOF8UhcI0u9trycAIA
+	 W6GT7hJ7gCDXFeDSNzUiTg02lxSCrRu0EyarsGTd9PcRCw+Gajcp1K3FxMuV/QlxZp
+	 I9rH9wOaxyXwyjPqsCywivhLdMpcEitZTiwIqNME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfICRfp (ORCPT
+        id S1730249AbfICRgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:35:45 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44342 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbfICRfp (ORCPT
+        Tue, 3 Sep 2019 13:36:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35393 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfICRgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:35:45 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y4so6661713lfe.11;
-        Tue, 03 Sep 2019 10:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=gr53IVc3JA5Sk/mGY8n9aToom0+MDmiEkX0rAFXg2Qs=;
-        b=jThrnTI1adkHb2NnLZNGWoV5QmxQsAnWwmZ45pgUaNntyYwAsx4NHV9bZ91GtDbkgl
-         PwzUyUtaL0F9z08NEkgdUBNgRGsHtfUWaqXPMxo0eknlSdxWR1HMq7m2wnN8A1022G3R
-         G91UTEnJIWaUkZEGM4XhDN/5BsXP+9FTqgVszVlICNQEUWssprVkQmM+261I9eG4TzzA
-         Vl4XjtFqorr8dRRkeKSxdJnMlMK4FYCVgkjK29B4rzyeHkWe3eRPPDe7/6/pGbc34lHh
-         rzWzpV/XK3jEF8c5G2EeqHebqlfSRXprsrg3iuvCCo2WV9wS7RTye9LChKle5myUC4tQ
-         EALw==
+        Tue, 3 Sep 2019 13:36:08 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g7so18432567wrx.2;
+        Tue, 03 Sep 2019 10:36:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gr53IVc3JA5Sk/mGY8n9aToom0+MDmiEkX0rAFXg2Qs=;
-        b=foysadCkI13U6laySrIqZDbKTw5zK/y/TAEEQUI6Lx/tALjVUtMCwUXYoEDavGf+7k
-         JLTlnLS8nt09IAq8HptsDDTTb4dFN9Vi7roE8iMpW88uWbE31U9WpJcjnK5sHKeE0pzE
-         ETcla9W4wnOcqlfJVIIe96A9MbcI7LllSEwV91PofaKC4ljUi5heB01IdtjhR2m6K1mF
-         +HWCyN3NjQ8oYyvZNV/Gr7lzPdX2ZYP60ErWyPP47cVSdmRxvjsT8JjWzF7LsZEfLiTi
-         UQ0lUkwiR4TB7FDaKsGkmdNLmz6yDGhU42+vYK4iGpOJA9tJ/Dc9VvJJGFK0yLJML2ZM
-         /iIA==
-X-Gm-Message-State: APjAAAVSxHYgRNy9cPq5yUFt3sozFQLb3J9p1jsashBGi4hLPU0n0z3r
-        QA9beDRBs8EUA9wM6WS5xDHB0OvdWCg=
-X-Google-Smtp-Source: APXvYqwH7bU30wEfiaQVJdZxvYV4akQH27Kz2AfD8aW5WKvwlXpbmNaN5HGo8SiOwgj4tGRHCYaLMQ==
-X-Received: by 2002:ac2:4117:: with SMTP id b23mr6082542lfi.36.1567532142546;
-        Tue, 03 Sep 2019 10:35:42 -0700 (PDT)
-Received: from localhost (89-70-29-67.dynamic.chello.pl. [89.70.29.67])
-        by smtp.gmail.com with ESMTPSA id q26sm2939275lfd.53.2019.09.03.10.35.41
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JfMrJYtJUPzLOZJlIxda1cxv7oUuL2l1baMXS7bbp0s=;
+        b=RHj2pNdQbx1WkjJfXBBMSiIU7lBD2PcpWLVmOvlhshBYiu/90b2gYlh1aznI/gAPD3
+         28wvUWiXs87R276jWzckTXvPzVh81CFP/bsKomIHwLPAh0P69HNAVhcEwtpZ49bSpYNx
+         yQ9sCmpa624Na7B/HHmSQB0vmwtbpkjkZez3IA+Ql7dHCtHxFOHVzSymaHvV4j+/sE/2
+         eMEF7N9USHkvm5Jekwz4TTcvopZuicuZA51ZjI59IG9Y1A31ApBaKW4qsAin/Sr3pGs+
+         bpxzhrC1DyTdZcIptvOTRICbHBQudJN1PeovjrXRk04f70rmovch7xyHkf51wqcJNMM7
+         0QlA==
+X-Gm-Message-State: APjAAAUFNwUJs8Z7X/TKonku3YiUXfx89Io3Tl96KP/CG046L0rCpl7i
+        xxnh1ULPYravh3boHSPrgg==
+X-Google-Smtp-Source: APXvYqwjsnz+S9lBtDPoXYyxD6MTfdCRaRTuPMoDchk0+PjdoP/supGH8bYqjJm7RmtdOvcdQUXcwg==
+X-Received: by 2002:adf:dec8:: with SMTP id i8mr12957792wrn.286.1567532166433;
+        Tue, 03 Sep 2019 10:36:06 -0700 (PDT)
+Received: from localhost ([176.12.107.132])
+        by smtp.gmail.com with ESMTPSA id g26sm334411wmh.32.2019.09.03.10.36.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 10:35:41 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 19:35:10 +0200
-From:   Tomasz Duszynski <tduszyns@gmail.com>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: light: bh1750: Move static keyword to the front of
- declaration
-Message-ID: <20190903173510.GA9674@arch>
-References: <20190902113132.26658-1-kw@linux.com>
+        Tue, 03 Sep 2019 10:36:05 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 18:36:04 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, mark.rutland@arm.com,
+        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Message-ID: <20190903173604.GA18177@bogus>
+References: <20190903061853.19793-1-biwen.li@nxp.com>
+ <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190902113132.26658-1-kw@linux.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 01:31:32PM +0200, Krzysztof Wilczynski wrote:
-> Move the static keyword to the front of declaration of
-> bh1750_chip_info_tbl, and resolve the following compiler
-> warning that can be seen when building with warnings
-> enabled (W=3D1):
+On Tue, Sep 03, 2019 at 11:37:01AM +0200, Martin Fuzzey wrote:
+> On 03/09/2019 08:18, Biwen Li wrote:
+> > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > index 94adc1cf93d9..588f688b30d1 100644
+> > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > @@ -8,10 +8,39 @@ Required properties:
+> >   Optional properties:
+> >   - interrupts: IRQ line for the RTC (not implemented).
+> > +- interrupt-output-pin: The interrupt output pin must be
+> > +  "INTA" or "INTB", default value is "INTA"
+> > +
+> 
+> 
+> The hardware has 2 interrupt pins which can be mapped to various interrupt
+> sources (alarm1, alarm2, periodic, ...)
+> 
+> Currently the driver only supports alarm1.
+> 
+> It is even possible to use both pins for the same interrupt (eg if INTA were
+> wired to the SoC, INTB to a PMIC and both used for alarm...)
+> 
+> 
+> So maybe it would be better to have
+> 
+> alarm1-interrupt-output-pin: The interrupt output pin used for the alarm
+> function. Must be "INTA", "INTB" or "BOTH"
 
-Looks okay.
-Acked-by: Tomasz Duszynski <tduszyns@gmail.com>
+That's a property per source. 2 properties possible sources (either a 
+mask or list) would be my preference.
 
->
-> drivers/iio/light/bh1750.c:64:1: warning:
->   =E2=80=98static=E2=80=99 is not at beginning of declaration [-Wold-styl=
-e-declaration]
->
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
-> Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
->
->  drivers/iio/light/bh1750.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> index 28347df78cff..460c0013f1a9 100644
-> --- a/drivers/iio/light/bh1750.c
-> +++ b/drivers/iio/light/bh1750.c
-> @@ -42,7 +42,7 @@ struct bh1750_data {
->  	u16 mtreg;
->  };
->
-> -struct bh1750_chip_info {
-> +static const struct bh1750_chip_info {
->  	u16 mtreg_min;
->  	u16 mtreg_max;
->  	u16 mtreg_default;
-> @@ -59,9 +59,7 @@ struct bh1750_chip_info {
->
->  	u16 int_time_low_mask;
->  	u16 int_time_high_mask;
-> -}
-> -
-> -static const bh1750_chip_info_tbl[] =3D {
-> +} bh1750_chip_info_tbl[] =3D {
->  	[BH1710] =3D { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
->  	[BH1721] =3D { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
->  	[BH1750] =3D { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
-> --
-> 2.22.1
->
+Also, whatever you end up with needs a vendor prefix.
 
+> 
+> Then, if and when other types of interrupts are supported by the driver new
+> properties could be added for them.
+> 
+> 
+> 
+> > +- quartz-load-femtofarads: The internal capacitor to select for the quartz:
+> > +	PCF85263_QUARTZCAP_7pF		[0]
+> > +	PCF85263_QUARTZCAP_6pF		[1]
+> > +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
+> > +
+> 
+> 
+> The standard DT property "quartz-load-femtofarads" takes the real physical
+> value in femto Farads ie values should be 7000, 6000, 12500 without defines.
+
+I believe I said this on the last version.
+
+> 
+> 
+> > +- nxp,quartz-drive-strength: Drive strength for the quartz:
+> > +	PCF85263_QUARTZDRIVE_100ko	[0] DEFAULT
+> > +	PCF85263_QUARTZDRIVE_60ko	[1]
+> > +	PCF85263_QUARTZDRIVE_500ko	[2]
+> > +
+> 
+> 
+> Not sure about this.
+> 
+> Wouldn't it be better to either use a real impedence value in ohms (like
+> load property above, even though it is a vendor specific value) rather than
+> a define, or defines for "Low, Medium, High"?
+> 
+> 
+> Martin
+> 
+> 
