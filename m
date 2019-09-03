@@ -2,129 +2,132 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B7CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6591BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D2522CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:07:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lk8GTTVC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AdZp3F3X"
+	by mail.kernel.org (Postfix) with ESMTP id 3B00A21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567530523;
+	bh=2qGxsAY3niXX25H5ZCs+XwFEk5SyMC+WHkBGUXc32hg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cmwx76ebDEy5zy4Zlio/HT6ED6Mc/+9T2mlO9KkTD1yb8S08bYRyUzlSiIpmk5O+j
+	 EoqBD2rgvDhwOse+Qb8F4XWIJG1nm7QZoEo7xRg7rGmYtsdS8fzL12XekxIxKU248u
+	 sbhCl905aibkgQB+NvTDQO/l10PY7aMZDQEnZLhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbfICRH0 (ORCPT
+        id S1730112AbfICRIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:07:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47344 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729782AbfICRHZ (ORCPT
+        Tue, 3 Sep 2019 13:08:42 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43039 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728864AbfICRIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:07:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5023E6058E; Tue,  3 Sep 2019 17:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567530444;
-        bh=peIxQIYef8qNH4Y0hAECo3n1aQk635rjS9T/N1qw8Qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lk8GTTVCePAccxj7umHquCQcJqCXlhcFrz7egG+SqS6gbOiozQmbM1zvNGOn/pbgy
-         V7CtVbUT/XduG3uUC85ETQJeVwLwlQIDbUK8BpEexUzDaRJw/OoJfqcD0F9sq11SiN
-         9VKdVIYIzlI8vAFb3/CoxEw/PQm7t7urD32/aOV8=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E91F6058E;
-        Tue,  3 Sep 2019 17:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567530443;
-        bh=peIxQIYef8qNH4Y0hAECo3n1aQk635rjS9T/N1qw8Qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AdZp3F3XRKYI9lq5tqZh+gGJNM0LOdWJeYa5ape8yOGw8ip/o5QTU7dH8X4lqc3SV
-         pERJVQxC596mhGHWhaik9N1yOlwB1UAFKxb9QtFT8Y7FbfS8gGyk5MyeHJ27UDNNPo
-         kYa5ybxYZ2bR81qAi7BEUffp8MUcdSzqIcAFxeIU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E91F6058E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 3 Sep 2019 11:07:22 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, swboyd@chromium.org,
-        evgreen@chromium.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-Message-ID: <20190903170722.GA31716@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-6-ilina@codeaurora.org>
- <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
- <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
+        Tue, 3 Sep 2019 13:08:41 -0400
+Received: by mail-lj1-f196.google.com with SMTP id d5so5834285lja.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 10:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/jJDGkq8oBPM3T63/+UYh9pnVX7abLZtO0vT5E+2EmA=;
+        b=Iqzvar997Z68mEga73kvm0pCGRdq9rvqLMqMQ3fQlSs6OW0wCqHObv9P/HeFkStbvV
+         sDe56NXRgviwNNWr1F/TnU8PejR0lv6UIvY40yJGRgYP0xj/7oG9OjWgwrCjjkuZQ41Z
+         KHmfleHjtocIccea1MeWuqkAPz9fiIzyD6EFA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/jJDGkq8oBPM3T63/+UYh9pnVX7abLZtO0vT5E+2EmA=;
+        b=kXZ3j5ZPAUrJX/d0I2fzvYzGiyuazIDGKiEQnYr9XvzZ3a8RqgaQJQSoj51G4hcIpL
+         KUBer1VsZSf+R4zE5mhjDssxpLC1VobOkxjcGKG+3MpILo1EBergcjB9RxUG9N/mDkX3
+         mJU/MrvHBq38fNq4WU0tNXZbaahgy2t68fJ4ihcMeXmLPLcCVUZTAF5eJUZORnZYAlyR
+         CSnR1UAbm+tKNDXJXbQeYaT4TcnLZvblSR+7Uk9j7iZmQsGpCLIzAHpPzYlhttAClpew
+         E7Abl4Fh4WRZGwxOHfCIYgeUgVKRRyWsfPl8FWq8+l2d8fFUE6xwc1itb57pkUeaEv2E
+         Jpog==
+X-Gm-Message-State: APjAAAXw7v44EoKwu71ao3b6ktjXvqm74owLEwnrh5UY6J+FDno4BFwF
+        8/7RANrNsHhz+9nouJNdng5jam1zX7s=
+X-Google-Smtp-Source: APXvYqzho0QIYnH9f46cLAODNoCTKErvRAZUoiWFTFdSvSCWaONZXYw5IoWswzDCLlMDXxEo5CQs5A==
+X-Received: by 2002:a05:651c:20d:: with SMTP id y13mr15351066ljn.112.1567530519102;
+        Tue, 03 Sep 2019 10:08:39 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id z18sm3377440ljc.45.2019.09.03.10.08.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2019 10:08:38 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id a4so1775876ljk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 10:08:37 -0700 (PDT)
+X-Received: by 2002:a2e:3c14:: with SMTP id j20mr7261749lja.84.1567530517568;
+ Tue, 03 Sep 2019 10:08:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
+ <20190830160957.GC2634@redhat.com> <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org> <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org> <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org> <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
+ <20190903074117.GX2369@hirez.programming.kicks-ass.net> <20190903074718.GT2386@hirez.programming.kicks-ass.net>
+ <87k1apqqgk.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87k1apqqgk.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 3 Sep 2019 10:08:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
+Message-ID: <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
->On 02/09/2019 14:38, Rob Herring wrote:
->> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
->>> In addition to configuring the PDC, additional registers that interface
->>> the GIC have to be configured to match the GPIO type. The registers on
->>> some QCOM SoCs are access restricted, while on other SoCs are not. They
->>> SoCs with access restriction to these SPI registers need to be written
->>
->> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
->>
->>> from the firmware using the SCM interface. Add a flag to indicate if the
->>> register is to be written using SCM interface.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>> ---
->>>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
->>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> index 8e0797cb1487..852fcba98ea6 100644
->>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> @@ -50,15 +50,22 @@ Properties:
->>>  		    The second element is the GIC hwirq number for the PDC port.
->>>  		    The third element is the number of interrupts in sequence.
->>>
->>> +- qcom,scm-spi-cfg:
->>> +	Usage: optional
->>> +	Value type: <bool>
->>> +	Definition: Specifies if the SPI configuration registers have to be
->>> +		    written from the firmware.
->>> +
->>>  Example:
->>>
->>>  	pdc: interrupt-controller@b220000 {
->>>  		compatible = "qcom,sdm845-pdc";
->>> -		reg = <0xb220000 0x30000>;
->>> +		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
->>
->> There needs to be a description for reg updated. These aren't GIC
->> registers are they? Because those go in the GIC node.
+On Tue, Sep 3, 2019 at 9:45 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-They are not GIC registers. I will update this documentation.
+> So with a big fat comment explaining why it is safe we could potentially
+> use RCU_INIT_POINTER.  I currently don't see where the appropriate
+> barriers are so I can not write that comment or with a clear conscious
+> write the code to use RCU_INIT_POINTER instead of rcu_assign_pointer.
 
->This is completely insane. Why are the GIC registers configured as
->secure the first place, if they are expected to be in control of the
->non-secure?
-These are not GIC registers but located on the PDC interface to the GIC.
-They may or may not be secure access controlled, depending on the SoC.
+The only difference ends up being that RCU_INIT_POINTER() is just a
+store, while rcu_assign_pointer() uses a smp_store_release().
 
-Thanks,
-Lina
+(There is some build-time special case code to make
+rcu_assign_pointer(NULL) avoid the store_release, but that is
+irrelevant for this discussion).
+
+So from a memory ordering standpoint,
+RCU_INIT_POINTER-vs-rcu_assign_pointer doesn't change what pointer you
+get (on the other CPU that does the reading), but only whether the
+stores to behind the pointer have been ordered wrt the reading too.
+
+Which no existing case can care about, since it didn't use to have any
+ordering anyway before this patch series. The individual values read
+off the thread pointer had their own individual memory ordering rules
+(ie instead of making the _pointer_ be the serialization point, we
+have rules for how "p->on_cpu" is ordered wrt the rq lock etc).
+
+So one argument for just using RCU_INIT_POINTER is that it's the same
+ordering that we had before, and then it's up to any users of that
+pointer to order any accesses to any fields in 'struct task_struct'.
+
+Conversely, one argument for using rcu_assign_pointer() is that when
+we pair it with an RCU read, we get certain ordering guarantees
+automatically. So _if_ we have fields that change when a process is
+put on the run-queue, and the RCU users want to read those fields,
+then the release/acquire semantics might perform better than potential
+existing smp memory barriers we might have right now.
+
+                 Linus
