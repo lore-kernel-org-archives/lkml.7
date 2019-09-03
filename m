@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF383C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1B0C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877E62339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A342A2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528803;
-	bh=wwerqmC3bXh4Yc8fQeoW4IUNyVQ9Cmz2XuGCLkZv53M=;
+	s=default; t=1567528812;
+	bh=ZnpwUH/bPiEE4wslv4yPlhf2ZtPaAnT2HGWxhurSN98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vq0gY6V5ryKvbPrNJmHAJI9ZmffZK544wA9UO7tuDvWklR/tHrMLOmMDa0SbANH3y
-	 KjmOo46xft0KK1z6jCgJOrhT3X4usvSLK/gU74odR5RRSvi9H3QpjKCI377d3IRPU0
-	 5SZ2zGsBz6t5Fc5nNQAnMtLCNBGTxOXNAjx+wNEg=
+	b=LETAAv8+C8Xvfv58euSoRB0oOYZB+kxgrEFpajv/wqJg2ITxWuOO+V2NTnOU56tnY
+	 12rthWFzI9DpJmd2gnlMLFGiPl0SvHRCITZNiqzGGj588o3I/my23oAUM1vjy+2l/O
+	 8mhF1jAYaEQHXnUYK7XWDVb5Q+4KJr6nulMxUbOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbfICQjv (ORCPT
+        id S1730360AbfICQZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730389AbfICQZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:28 -0400
+        id S1730307AbfICQZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8A7D2343A;
-        Tue,  3 Sep 2019 16:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3490A2343A;
+        Tue,  3 Sep 2019 16:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527927;
-        bh=wwerqmC3bXh4Yc8fQeoW4IUNyVQ9Cmz2XuGCLkZv53M=;
+        s=default; t=1567527911;
+        bh=ZnpwUH/bPiEE4wslv4yPlhf2ZtPaAnT2HGWxhurSN98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4OzAUV2zqefL4HTF9sHrIicZgmhZa2xwebA4QB8yiD/b/4QxULp9ro2u9DXqUCFw
-         2xjLrVFBScUpeiPsZkLB2YySZ76CbIOq7+K6p9SjnC1Oju6bXv4dtTh4rJAVvEASct
-         ezvfU/hUI2qwgD8eqGVYGRz+0zc663CnReKMUeA0=
+        b=1+a3l8pYptK6lnQ+XfHUf+FPXUpOmv0zmCRn8M60zeClwUOwfj2ZdqUXaxvxEtpO1
+         km0lM/t5bUg80YDXDGk7QQWzlz8rBrtHf3rCYc4C5QEdJCR7/k3/Mx2jzgLmnmDNGh
+         9df/qUrFX7r4osWDGDUMS3TMBaP7h6Mi/+wkc4jI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 003/167] media: cec: remove cec-edid.c
-Date:   Tue,  3 Sep 2019 12:22:35 -0400
-Message-Id: <20190903162519.7136-3-sashal@kernel.org>
+Cc:     John Harrison <John.C.Harrison@Intel.com>,
+        "Robert M . Fosha" <robert.m.fosha@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 20/23] drm/i915: Support whitelist workarounds on all engines
+Date:   Tue,  3 Sep 2019 12:24:21 -0400
+Message-Id: <20190903162424.6877-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
+References: <20190903162424.6877-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,89 +62,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: John Harrison <John.C.Harrison@Intel.com>
 
-[ Upstream commit f94d463f1b7f83d465ed77521821583dbcdaa3c5 ]
+[ Upstream commit ebd2de47a19f1c17ae47f8331aae3cd436766663 ]
 
-Move cec_get_edid_phys_addr() to cec-adap.c. It's not worth keeping
-a separate source for this.
+Newer hardware requires setting up whitelists on engines other than
+render. So, extend the whitelist code to support all engines.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: <stable@vger.kernel.org>      # for v4.17 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: John Harrison <John.C.Harrison@Intel.com>
+Signed-off-by: Robert M. Fosha <robert.m.fosha@intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618010108.27499-3-John.C.Harrison@Intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/Makefile   |  2 +-
- drivers/media/cec/cec-adap.c | 13 +++++++++++++
- drivers/media/cec/cec-edid.c | 24 ------------------------
- 3 files changed, 14 insertions(+), 25 deletions(-)
- delete mode 100644 drivers/media/cec/cec-edid.c
+ drivers/gpu/drm/i915/intel_workarounds.c | 65 +++++++++++++++++-------
+ 1 file changed, 47 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/media/cec/Makefile b/drivers/media/cec/Makefile
-index 29a2ab9e77c5d..ad8677d8c8967 100644
---- a/drivers/media/cec/Makefile
-+++ b/drivers/media/cec/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--cec-objs := cec-core.o cec-adap.o cec-api.o cec-edid.o
-+cec-objs := cec-core.o cec-adap.o cec-api.o
- 
- ifeq ($(CONFIG_CEC_NOTIFIER),y)
-   cec-objs += cec-notifier.o
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index a7ea27d2aa8ef..4a15d53f659ec 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -62,6 +62,19 @@ static unsigned int cec_log_addr2dev(const struct cec_adapter *adap, u8 log_addr
- 	return adap->log_addrs.primary_device_type[i < 0 ? 0 : i];
+diff --git a/drivers/gpu/drm/i915/intel_workarounds.c b/drivers/gpu/drm/i915/intel_workarounds.c
+index 1db826b12774e..0b80fde927899 100644
+--- a/drivers/gpu/drm/i915/intel_workarounds.c
++++ b/drivers/gpu/drm/i915/intel_workarounds.c
+@@ -1012,48 +1012,79 @@ static void gen9_whitelist_build(struct i915_wa_list *w)
+ 	whitelist_reg(w, GEN8_HDC_CHICKEN1);
  }
  
-+u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
-+			   unsigned int *offset)
-+{
-+	unsigned int loc = cec_get_edid_spa_location(edid, size);
+-static void skl_whitelist_build(struct i915_wa_list *w)
++static void skl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
 +
-+	if (offset)
-+		*offset = loc;
-+	if (loc == 0)
-+		return CEC_PHYS_ADDR_INVALID;
-+	return (edid[loc] << 8) | edid[loc + 1];
-+}
-+EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
++	if (engine->class != RENDER_CLASS)
++		return;
 +
- /*
-  * Queue a new event for this filehandle. If ts == 0, then set it
-  * to the current time.
-diff --git a/drivers/media/cec/cec-edid.c b/drivers/media/cec/cec-edid.c
-deleted file mode 100644
-index e2f54eec08294..0000000000000
---- a/drivers/media/cec/cec-edid.c
-+++ /dev/null
-@@ -1,24 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * cec-edid - HDMI Consumer Electronics Control EDID & CEC helper functions
-- *
-- * Copyright 2016 Cisco Systems, Inc. and/or its affiliates. All rights reserved.
-- */
+ 	gen9_whitelist_build(w);
+ 
+ 	/* WaDisableLSQCROPERFforOCL:skl */
+ 	whitelist_reg(w, GEN8_L3SQCREG4);
+ }
+ 
+-static void bxt_whitelist_build(struct i915_wa_list *w)
++static void bxt_whitelist_build(struct intel_engine_cs *engine)
+ {
+-	gen9_whitelist_build(w);
++	if (engine->class != RENDER_CLASS)
++		return;
++
++	gen9_whitelist_build(&engine->whitelist);
+ }
+ 
+-static void kbl_whitelist_build(struct i915_wa_list *w)
++static void kbl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	gen9_whitelist_build(w);
+ 
+ 	/* WaDisableLSQCROPERFforOCL:kbl */
+ 	whitelist_reg(w, GEN8_L3SQCREG4);
+ }
+ 
+-static void glk_whitelist_build(struct i915_wa_list *w)
++static void glk_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	gen9_whitelist_build(w);
+ 
+ 	/* WA #0862: Userspace has to set "Barrier Mode" to avoid hangs. */
+ 	whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
+ }
+ 
+-static void cfl_whitelist_build(struct i915_wa_list *w)
++static void cfl_whitelist_build(struct intel_engine_cs *engine)
+ {
+-	gen9_whitelist_build(w);
++	if (engine->class != RENDER_CLASS)
++		return;
++
++	gen9_whitelist_build(&engine->whitelist);
+ }
+ 
+-static void cnl_whitelist_build(struct i915_wa_list *w)
++static void cnl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	/* WaEnablePreemptionGranularityControlByUMD:cnl */
+ 	whitelist_reg(w, GEN8_CS_CHICKEN1);
+ }
+ 
+-static void icl_whitelist_build(struct i915_wa_list *w)
++static void icl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	/* WaAllowUMDToModifyHalfSliceChicken7:icl */
+ 	whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
+ 
+@@ -1069,24 +1100,22 @@ void intel_engine_init_whitelist(struct intel_engine_cs *engine)
+ 	struct drm_i915_private *i915 = engine->i915;
+ 	struct i915_wa_list *w = &engine->whitelist;
+ 
+-	GEM_BUG_ON(engine->id != RCS0);
 -
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/types.h>
--#include <media/cec.h>
--
--u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
--			   unsigned int *offset)
--{
--	unsigned int loc = cec_get_edid_spa_location(edid, size);
--
--	if (offset)
--		*offset = loc;
--	if (loc == 0)
--		return CEC_PHYS_ADDR_INVALID;
--	return (edid[loc] << 8) | edid[loc + 1];
--}
--EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
+ 	wa_init_start(w, "whitelist");
+ 
+ 	if (IS_GEN(i915, 11))
+-		icl_whitelist_build(w);
++		icl_whitelist_build(engine);
+ 	else if (IS_CANNONLAKE(i915))
+-		cnl_whitelist_build(w);
++		cnl_whitelist_build(engine);
+ 	else if (IS_COFFEELAKE(i915))
+-		cfl_whitelist_build(w);
++		cfl_whitelist_build(engine);
+ 	else if (IS_GEMINILAKE(i915))
+-		glk_whitelist_build(w);
++		glk_whitelist_build(engine);
+ 	else if (IS_KABYLAKE(i915))
+-		kbl_whitelist_build(w);
++		kbl_whitelist_build(engine);
+ 	else if (IS_BROXTON(i915))
+-		bxt_whitelist_build(w);
++		bxt_whitelist_build(engine);
+ 	else if (IS_SKYLAKE(i915))
+-		skl_whitelist_build(w);
++		skl_whitelist_build(engine);
+ 	else if (INTEL_GEN(i915) <= 8)
+ 		return;
+ 	else
 -- 
 2.20.1
 
