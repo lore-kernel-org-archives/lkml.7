@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D634CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98120C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF544206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E71A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567511883;
-	bh=Z3h9T05PJl46FqOMJHSrX0SvpMfLiYQMca9NAhh9Pm8=;
+	s=default; t=1567511886;
+	bh=gqXxYA+eBCrq0ypyMekMW0x6jV3u4mVNZu4xiVm9QEs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=BHRaQ75C7QtYRoX/Q+otEbt2PzWgkTnKUPvp/YyuqRt+lnSTS6Pu9aJcjqoJaIXCv
-	 zmLxZY8NbxmZmQ7i32T3sPPHeh6NKSuHgDk3M8nhaZktKVJCFpiZKWShHJpQrM55lb
-	 KGb9J40VyVNjQEIhlZVzjCjDwfQ+VQG6wq58h75w=
+	b=jEWNcDeFcJo3oKrlP9K0GtupLoJoetKb7HHTfwUXo+Dpv+zP4wn3KEv6tTlePve8q
+	 mVtD/JLg6Ug/uRSQgEWdkrHSietnAEPRBvMijhoE4KW5J1Y1umq4NIrT6d6/qdn8Ks
+	 DWMVDt1gnCjBQjT8WbPOficFu6NIbQctxl9E1Ehw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfICL56 (ORCPT
+        id S1729094AbfICL6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:57:58 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53126 "EHLO
+        Tue, 3 Sep 2019 07:58:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53124 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbfICL54 (ORCPT
+        with ESMTP id S1729028AbfICL54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 07:57:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cgxtaWs//pWcWZQdK/XoplWjvgqpaZGkl5enIyRVTjU=; b=B3tLuBNEB1du
-        xHMinHE6b1SDBxOOXLbRMKvex5t9HBuTBpeXaU2gvU/W/0UPZOCtL7m41UYCxMURP3mP1EL3KtQBc
-        xdi0KEVOdwHWHQfTFHe4lYSwqgd7eNToJdLZkFSfSwGcwE5i/QBMQIrij3jijFIcBF48p3SK9nXte
-        edmqk=;
+        List-Archive; bh=9QLn3xYH8VzmqLxk4ywgpvBD9QB5GdBoT1g3gRW0UwQ=; b=EOZq1a5fl1ez
+        xqtGEXtdvhnxJelb6DzE22AzLPCO1FFEPIyXiN2GmIMAPLJ1R9CaHNoYuIDl6ATz4Qxhi2Eb01Fg+
+        Y6KhrK/hmi+smum782C8Pktkob8O6MGGCpZvrJwmwW3njStm1eOQSKxF8/oXQ9+awqmjC11dRPI9H
+        FAIsU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i57RV-0008M4-Qw; Tue, 03 Sep 2019 11:57:49 +0000
+        id 1i57RV-0008M0-IQ; Tue, 03 Sep 2019 11:57:49 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 44CAB2742D32; Tue,  3 Sep 2019 12:57:49 +0100 (BST)
+        id 11BF62742D3C; Tue,  3 Sep 2019 12:57:49 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Keiji Hayashibara <hayashibara.keiji@socionext.com>
 Cc:     broonie@kernel.org, hayashibara.keiji@socionext.com,
@@ -52,10 +52,10 @@ Cc:     broonie@kernel.org, hayashibara.keiji@socionext.com,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, masami.hiramatsu@linaro.org,
         yamada.masahiro@socionext.com
-Subject: Applied "spi: uniphier: fix wrong register overwrite" to the spi tree
-In-Reply-To: <1567488661-11428-2-git-send-email-hayashibara.keiji@socionext.com>
+Subject: Applied "spi: uniphier: remove unnecessary code" to the spi tree
+In-Reply-To: <1567488661-11428-3-git-send-email-hayashibara.keiji@socionext.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190903115749.44CAB2742D32@ypsilon.sirena.org.uk>
+Message-Id: <20190903115749.11BF62742D3C@ypsilon.sirena.org.uk>
 Date:   Tue,  3 Sep 2019 12:57:49 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: uniphier: fix wrong register overwrite
+   spi: uniphier: remove unnecessary code
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,33 +89,34 @@ to this mail.
 Thanks,
 Mark
 
-From 3c633f9dbd824b2f8e5e1a3c1fd533c1b2801be5 Mon Sep 17 00:00:00 2001
+From 151d0eafa4f59bbc7f8edfbefd5de2c97370d9b9 Mon Sep 17 00:00:00 2001
 From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Date: Tue, 3 Sep 2019 14:30:59 +0900
-Subject: [PATCH] spi: uniphier: fix wrong register overwrite
+Date: Tue, 3 Sep 2019 14:31:00 +0900
+Subject: [PATCH] spi: uniphier: remove unnecessary code
 
-When it changes the spi mode, the register is overwritten incorrectly.
-This commit fixes this register overwrite.
+This commit removed if() because priv->is_save_param is always true.
 
 Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Link: https://lore.kernel.org/r/1567488661-11428-2-git-send-email-hayashibara.keiji@socionext.com
+Link: https://lore.kernel.org/r/1567488661-11428-3-git-send-email-hayashibara.keiji@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-uniphier.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-uniphier.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
-index 5a6137fe172d..50f12fb20403 100644
+index c1e6f3245557..226f8508bff2 100644
 --- a/drivers/spi/spi-uniphier.c
 +++ b/drivers/spi/spi-uniphier.c
-@@ -214,6 +214,7 @@ static void uniphier_spi_setup_transfer(struct spi_device *spi,
- 	if (!priv->is_save_param || priv->mode != spi->mode) {
- 		uniphier_spi_set_mode(spi);
- 		priv->mode = spi->mode;
-+		priv->is_save_param = false;
+@@ -226,8 +226,7 @@ static void uniphier_spi_setup_transfer(struct spi_device *spi,
+ 		priv->speed_hz = t->speed_hz;
  	}
  
- 	if (!priv->is_save_param || priv->bits_per_word != t->bits_per_word) {
+-	if (!priv->is_save_param)
+-		priv->is_save_param = true;
++	priv->is_save_param = true;
+ 
+ 	/* reset FIFOs */
+ 	val = SSI_FC_TXFFL | SSI_FC_RXFFL;
 -- 
 2.20.1
 
