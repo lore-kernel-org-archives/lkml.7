@@ -3,141 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68577C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0A9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AB52087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEEC2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfICM0L (ORCPT
+        id S1728967AbfICM1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:26:11 -0400
-Received: from mx0b-00176a03.pphosted.com ([67.231.157.48]:3230 "EHLO
-        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726631AbfICM0L (ORCPT
+        Tue, 3 Sep 2019 08:27:34 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35196 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbfICM1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:26:11 -0400
-Received: from pps.filterd (m0048300.ppops.net [127.0.0.1])
-        by m0048300.ppops.net-00176a03. (8.16.0.27/8.16.0.27) with SMTP id x83C8PdG037956;
-        Tue, 3 Sep 2019 08:26:09 -0400
-From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-To:     Seunghun Han <kkamagui@gmail.com>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Thread-Topic: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping
- mechanism for supporting AMD's fTPM
-Thread-Index: AQHVXxlOrNmKX2KHXEaevQ/odv4D9acT5e0AgAAT9ID//79NoIAAcvSA///KVoCABgn4gP//4Hww
-Date:   Tue, 3 Sep 2019 12:26:00 +0000
-Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CF04@ALPMBAPA12.e2k.ad.ge.com>
-References: <20190830095639.4562-1-kkamagui@gmail.com>
- <20190830095639.4562-3-kkamagui@gmail.com> <20190830124334.GA10004@ziepe.ca>
- <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
- <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
- <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
-In-Reply-To: <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jTWpFeU5EY3pPVFV3WEdGd2NHUmhkR0ZjY205aGJXbHVaMXd3T1dRNE5E?=
- =?utf-8?B?bGlOaTB6TW1RekxUUmhOREF0T0RWbFpTMDJZamcwWW1FeU9XVXpOV0pjYlhO?=
- =?utf-8?B?bmMxeHRjMmN0Wm1JMFpEVmtZemt0WTJVME5TMHhNV1U1TFRobE16Z3RZVFJq?=
- =?utf-8?B?TTJZd1lqVTVPR0UyWEdGdFpTMTBaWE4wWEdaaU5HUTFaR05oTFdObE5EVXRN?=
- =?utf-8?B?VEZsT1MwNFpUTTRMV0UwWXpObU1HSTFPVGhoTm1KdlpIa3VkSGgwSWlCemVq?=
- =?utf-8?B?MGlNalE1TVNJZ2REMGlNVE15TVRFNU9EY3hOVGc1TURBNE1ETTVJaUJvUFNK?=
- =?utf-8?B?MmFEZFBjRUZRWldWRFdFSjZhbUZtWkhsNk1rMUdVazVqZUdjOUlpQnBaRDBp?=
- =?utf-8?B?SWlCaWJEMGlNQ0lnWW04OUlqRWlJR05wUFNKalFVRkJRVVZTU0ZVeFVsTlNW?=
- =?utf-8?B?VVpPUTJkVlFVRkZiME5CUVVOdVVYUlhPVlZ0VEZaQlpVZzVUbXgzUjBaVVNG?=
- =?utf-8?B?RTBaakF5V0VGWlZrMWtRVVJCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJTRUZCUVVGRVlVRlJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJVVUZDUVVGQlFVWjBSMlZSZDBGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VW8wUVVGQlFtNUJSMVZCV0hkQ2FrRkhPRUZpWjBKdFFVZHJRVnBCUW14QlJ6?=
- =?utf-8?B?UkJaRUZDY0VGSFJVRmlRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFXZEJRVUZCUVVGdVowRkJRVWRqUVZwUlFtWkJSMmRCWVZGQ2JrRkhaMEZp?=
- =?utf-8?B?UVVJMVFVZE5RV0ozUW5WQlIxbEJZVkZDYTBGSFZVRmlaMEl3UVVkclFWbFJR?=
- =?utf-8?B?bk5CUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJV?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVU5CUVVGQlFVRkRaVUZCUVVGYWQwSnNRVVk0UVdKblFu?=
- =?utf-8?B?WkJSelJCWTBGQ01VRkhTVUZpUVVKd1FVZE5RVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUWtGQlFVRkJRVUZCUVVGSlFVRkJRVUZCUVQwOUlpOCtQQzl0?=
- =?utf-8?B?WlhSaFBnPT0=?=
-x-dg-rorf: 
-x-originating-ip: [3.159.19.191]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 3 Sep 2019 08:27:34 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d26so8077815qkk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:27:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GhRwLyjUlW+c2hC8fBDr52ubKPgjR7IWnK8ss/n1sqc=;
+        b=LvYFP+0bzpv6FMzy/f6sUBjmP0k+BIXx+Ib9XdoPmYb/BEK8ORujseZLj+YpncJKCI
+         gfa1W305tBecC2VIj4PiKiLb8lc5GJS/DRYFoVb8zRp5MXa1iwI3ofrQYzuFeGYLQlnc
+         I9kK5I0ROiHLa6Tnt9kOc73E7P6YPmgpY4MgizyZKks3jimqThD6jo9sbWaYe6MeLwGo
+         XOD6+ki1WfqQguxpERIy3ebSvGoUaW/dGl9vP2CXRHHuZf7NhdNY+evmwYt06fdjiGCL
+         LdkUyHmKyCa/VTYN56q0RJZAw6K1nc2lssbhlGlOoP8oOe3FNRzaaBJ5frSqaXHdTVXu
+         1PXg==
+X-Gm-Message-State: APjAAAU5jA0RlFdYAyFYlijW0kLvt27fGmAWMt8YcIQoLbABOeSJSy8f
+        aagw7vwlS26CLeekFaf67mT4eJrp0S/c79by6Yo=
+X-Google-Smtp-Source: APXvYqzwVU2KcZM6MzMS/hjDxWHhc2k8jQTbk38dxVSSZJ8yySnydBQRREAwEmKpByufxBClRZAA0HL2G5RvXLyBaXM=
+X-Received: by 2002:a05:620a:b:: with SMTP id j11mr34016279qki.352.1567513653740;
+ Tue, 03 Sep 2019 05:27:33 -0700 (PDT)
 MIME-Version: 1.0
-Subject: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for supporting
- AMD's fTPM
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909030129
+References: <20190825203222.GA22800@piout.net>
+In-Reply-To: <20190825203222.GA22800@piout.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 3 Sep 2019 14:27:17 +0200
+Message-ID: <CAK8P3a0jKyOXD=5SokdMCOjOqN2Zmja3gC2eebgvk_fmxQ6dLA@mail.gmail.com>
+Subject: Re: [GIT PULL] ARM: at91: SoC for 5.4
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ID4gPiBGaXJzdCwgeW91IG9ubHkgZm9yY2UgdGhlIHJlbWFwIGlmIHRoZSBvdmVybGFwIGlz
-IHdpdGggTlZTLCBidXQgSQ0KPiA+ID4gPiBoYXZlIHN5c3RlbXMgd2hlcmUgdGhlIG92ZXJsYXAg
-aXMgd2l0aCBvdGhlciByZXNlcnZlZCByZWdpb25zLiBZb3UNCj4gPiA+ID4gc2hvdWxkIGZvcmNl
-IHRoZSByZW1hcCByZWdhcmRsZXNzLCBidXQgaWYgaXQgaXMgTlZTLCBncmFiIHRoZSBzcGFjZSBi
-YWNrDQo+ID4gPiA+IGZyb20gTlZTLg0KPiA+ID4NCj4gPiA+IEkgZGlkbid0IGtub3cgYWJvdXQg
-dGhhdC4gSSBqdXN0IGZvdW5kIHRoZSBjYXNlIGZyb20geW91ciB0aHJlYWQNCj4gPiA+IHRoYXQg
-QU1EIHN5c3RlbSBhc3NpZ25lZCBUUE0gcmVnaW9uIGludG8gdGhlIHJlc2VydmVkIGFyZWEuIEhv
-d2V2ZXIsDQo+ID4gPiBhcyBJIGtub3csIHRoZSByZXNlcnZlZCBhcmVhIGhhcyBubyBidXN5IGJp
-dCBzbyB0aGF0IFRQTSBDUkIgZHJpdmVyDQo+ID4gPiBjb3VsZCBhc3NpZ24gYnVmZmVyIHJlc291
-cmNlcyBpbiBpdC4gUmlnaHQ/IEluIG15IHZpZXcsIGlmIHlvdQ0KPiA+ID4gcGF0Y2hlZCB5b3Vy
-IFRQTSBkcml2ZXIgd2l0aCBteSBwYXRjaCBzZXJpZXMsIHRoZW4gaXQgY291bGQgd29yay4NCj4g
-PiA+IFdvdWxkIHlvdSBleHBsYWluIHdoYXQgaGFwcGVuZWQgaW4gVFBNIENSQiBkcml2ZXIgYW5k
-IHJlc2VydmVkIGFyZWE/DQo+ID4NCj4gPiBHb29kIHF1ZXN0aW9uLiBJJ2xsIHRyeSBpdCBvdXQg
-dGhpcyB3ZWVrZW5kLg0KPiANCj4gVGhhbmsgeW91IGZvciB5b3VyIGhlbHAuDQogDQpJIHRyaWVk
-IHlvdXIgcGF0Y2ggb3V0IG9uIG15IHN5c3RlbXMgd2l0aCBhICJyZXNlcnZlZCIgYnV0IG5vdCAi
-TlZTIg0KcmVnaW9uIGNvbmZsaWN0LCBhbmQgeW91IGFyZSBjb3JyZWN0IC0gdGhlIHJlZ2lvbiBp
-cyBub3QgYnVzeSwgYW5kDQp0aGUgZHJpdmVyIGlzIGFibGUgdG8gbWFwIHRoZSBidWZmZXJzIHdp
-dGggeW91ciBwYXRjaC4NCg0KPiBGaXJzdCBvZiBhbGwsIEkgbWlzdW5kZXJzdG9vZCB5b3VyIG1l
-c3NhZ2UuDQo+IEkgaGF2ZSB0byB0ZWxsIHlvdSBhYm91dCB0aGUgYnVmZmVyIHNpemUgZXhhY3Rs
-eS4gVGhlIGNvbW1hbmQgYW5kIHJlc3BvbnNlDQo+IGJ1ZmZlciBzaXplcyBpbiBBQ1BJIHRhYmxl
-IHdlcmUgMHgxMDAwIGFuZCB0aGlzIHdhcyA0Sywgbm90IDFLLiBUaGUgc2l6ZXMgaW4NCj4gdGhl
-IGNvbnRyb2wgcmVnaXN0ZXIgd2VyZSAweDQwMDAgYW5kIHRoaXMgd2FzIDE2SyAobGFyZ2UgYnVm
-ZmVyIHNpemUpLCBub3QgNEsuDQo+IEkgaGF2ZSBiZWVuIHVzaW5nIHRoZSBUUE0gZm9yIG15IHJl
-c2VhcmNoIGFuZCB0aGUgdHlwaWNhbCBjYXNlcyBsaWtlIGNyZWF0aW5nDQo+IHB1YmxpYy9wcml2
-YXRlIGtleXMsIGVuY3J5cHRpbmcvZGVjcnlwdGluZyBkYXRhLCBzZWFsaW5nL3Vuc2VhbGluZyBh
-IHNlY3JldGUsDQo+IGFuZCBnZXR0aW5nIHJhbmRvbSBudW1iZXJzIGFyZSBub3Qgb3ZlciA0SyBi
-dWZmZXIuIFNvLCBhcyB5b3Uga25vdywgSSB0aGluaw0KPiB0aGUgNEsgYnVmZmVyIGNhbiBoYW5k
-bGUgdGhlIG1vc3QgY2FzZXMgYW5kIHRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIG9mDQo+IGNy
-Yl9maXh1cF9jbWRfc2l6ZSgpIHdvcmtzIHdlbGwuIElmIHlvdSBjb25jZXJuIHRoZSBzcGVjaWZp
-YyBjYXNlIHRoYXQgdXNlcw0KPiBvdmVyIDRLIGJ1ZmZlciwgcGxlYXNlIGxldCBtZSBrbm93Lg0K
-DQpJIGhhdmUgcmVhZCBwb3N0aW5ncyBvZiBzb21lIHN5c3RlbXMgd2hlcmUgQUNQSSBzYXlzIDFL
-LCBidXQgaW4gYWxsIG9mIG15IGNhc2VzDQp0aGF0IEkgY2FuIHRlc3QsICB5b3UgYXJlIGNvcnJl
-Y3QgdGhhdCBBQ1BJIGlzIHNheWluZyA0SyBpbnN0ZWFkIG9mIHRoZSBkZXZpY2UncyAxNksuDQpJ
-IHRyaWVkIHJlYWxseSBoYXJkLCBidXQgY291bGRuJ3Qgc2VuZCBhbnkgdmFsaWQgcmVxdWVzdHMg
-b3ZlciA0SywgKEkgYmVsaWV2ZSB0aGF0J3MNCmFjdHVhbGx5IHRoZSBtYXggYnkgdGhlIHNwZWMp
-LCBhbmQgdGhlcmVmb3JlIG5ldmVyIHNhdyBhbnkgZmFpbHVyZXMgb24gbXkNCnN5c3RlbXMuIEkg
-dGhpbmsgdGhlIGRyaXZlciBiZWhhdmlvciBpcyB3cm9uZyBmb3IgdGhvc2Ugb3RoZXIgY2FzZXMs
-IGJ1dCBwZXJoYXBzDQp0aGlzIHNob3VsZCB3YWl0IHVudGlsIHNvbWVvbmUgY2FuIGdldCBhY2Nl
-c3MgYW5kIGRvIHRoZSB0ZXN0aW5nLg0KDQpTbyBJJ20gaGFwcHkgd2l0aCB5b3VyIHBhdGNoZXMs
-IG90aGVyIHRoYW4gd2hhdCBpcyBkZWNpZGVkIGZvciB0aGUgbnZzIGRyaXZlcg0KY29uZmxpY3Qu
-IEknbSB0ZXN0aW5nIHRoZW0gb24gc29tZSBwcm9kdWN0aW9uIHN5c3RlbXMsIGFuZCBoYXZlIHNl
-ZW4gbm8gb3RoZXINCmlzc3Vlcy4NCg0KZGF2ZQ0K
+On Sun, Aug 25, 2019 at 10:32 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> AT91 SoC for 5.4
+>
+>  - MAINTAINERS updates
+>  - a generated headers parallel build fix
+>
+> ----------------------------------------------------------------
+> Masahiro Yamada (1):
+>       ARM: at91: move platform-specific asm-offset.h to arch/arm/mach-at91
+>
+> Nicolas Ferre (3):
+>       MAINTAINERS: at91: Collect all pinctrl/gpio drivers in same entry
+>       MAINTAINERS: at91: remove the TC entry
+>       mailmap: map old company name to new one @microchip.com
+
+Pulled into arm/soc, thanks!
+
+     Arnd
