@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BFCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1092C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AAF23431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB6E2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528371;
-	bh=Fji4NL498Cai/n2scqddjx7OIjLIeml9W+vJebW82Co=;
+	s=default; t=1567528376;
+	bh=7HxUsZrCC2YuuEWP5G+vrf5uHsWvNtSyhSzk/oGK5fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uqRyBhUuI2otzQR7fv4xPRpx5+mwUEWEDjAAl+MepsKdWtVBhhD17E85YXkbpYh5I
-	 kyhWhqPK//JOEqe11DULIRKxvpaOw+TSVUdlczRrgl3VNVxlJqzAdQ0hCrmHRD79pn
-	 erSI4zfXy3NzO2MdxmtLuaxk71FzbcUaSO0X+tSk=
+	b=2Um2J4pvzvswoWICR57AxiDaJaZrl/fA5cJ1pEyP9vV2w/U6zJFV9uVvVPPZcP3Pi
+	 SF3HGk14OYPUwOD6qVESaWubViqhdmfAc2RgvA37C36g70A9rvATswWDHilp2LgbbE
+	 cO4pUfPlk6JO/nHwyPoz+g6HxKnp8OdjiWKgv4Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfICQct (ORCPT
+        id S1731138AbfICQcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:32:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:32:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731177AbfICQcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:32:09 -0400
+        id S1730333AbfICQcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:32:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 581DD238D1;
-        Tue,  3 Sep 2019 16:32:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E937B215EA;
+        Tue,  3 Sep 2019 16:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528329;
-        bh=Fji4NL498Cai/n2scqddjx7OIjLIeml9W+vJebW82Co=;
+        s=default; t=1567528326;
+        bh=7HxUsZrCC2YuuEWP5G+vrf5uHsWvNtSyhSzk/oGK5fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXeNJA8AZGeTky64S71tY/EYRbZ5Xln0fN09fQcxHi5FTAgT/7XURWeJ/gAKstG2W
-         V7+AYnyzdd9/uCyvVNlkGKZU0C7jR7WMzKgSP6n1VFxWtYJ9ri6cswg0gRk87+1FML
-         +0dHPePCeqGJcwDFlo3b/bnZt5fHaNMiGDx4MVjs=
+        b=2VdV5xGAgH8K9lIvrhSBy7fWVUQ0zuDHCoqzKDEwNnSXH93Yg8LjajSDjawEhkV7v
+         tL9qM8P+ppGxyzkjfhHn36txzDA7GZ8qSeyCMxnSEtBjGt/JZYWPzLdJWcFfIPWXom
+         EUovq4RZtyxHXn6KfEdv8Ez2pHmNZT262bw/Y5T8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 160/167] drm/i915/userptr: Acquire the page lock around set_page_dirty()
-Date:   Tue,  3 Sep 2019 12:25:12 -0400
-Message-Id: <20190903162519.7136-160-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 158/167] bcache: add comments for mutex_lock(&b->write_lock)
+Date:   Tue,  3 Sep 2019 12:25:10 -0400
+Message-Id: <20190903162519.7136-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,57 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit aa56a292ce623734ddd30f52d73f527d1f3529b5 ]
+[ Upstream commit 41508bb7d46b74dba631017e5a702a86caf1db8c ]
 
-set_page_dirty says:
+When accessing or modifying BTREE_NODE_dirty bit, it is not always
+necessary to acquire b->write_lock. In bch_btree_cache_free() and
+mca_reap() acquiring b->write_lock is necessary, and this patch adds
+comments to explain why mutex_lock(&b->write_lock) is necessary for
+checking or clearing BTREE_NODE_dirty bit there.
 
-	For pages with a mapping this should be done under the page lock
-	for the benefit of asynchronous memory errors who prefer a
-	consistent dirty state. This rule can be broken in some special
-	cases, but should be better not to.
-
-Under those rules, it is only safe for us to use the plain set_page_dirty
-calls for shmemfs/anonymous memory. Userptr may be used with real
-mappings and so needs to use the locked version (set_page_dirty_lock).
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
-Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
-References: 6dcc693bc57f ("ext4: warn when page is dirtied without buffers")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
-(cherry picked from commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_gem_userptr.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/md/bcache/btree.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/i915_gem_userptr.c b/drivers/gpu/drm/i915/i915_gem_userptr.c
-index 2c9b284036d10..e13ea2ecd669c 100644
---- a/drivers/gpu/drm/i915/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
-@@ -692,7 +692,15 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 8c80833e73a9a..e0468fd41b6ea 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -649,6 +649,11 @@ static int mca_reap(struct btree *b, unsigned int min_order, bool flush)
+ 		up(&b->io_mutex);
+ 	}
  
- 	for_each_sgt_page(page, sgt_iter, pages) {
- 		if (obj->mm.dirty)
--			set_page_dirty(page);
-+			/*
-+			 * As this may not be anonymous memory (e.g. shmem)
-+			 * but exist on a real mapping, we have to lock
-+			 * the page in order to dirty it -- holding
-+			 * the page reference is not sufficient to
-+			 * prevent the inode from being truncated.
-+			 * Play safe and take the lock.
-+			 */
-+			set_page_dirty_lock(page);
++	/*
++	 * BTREE_NODE_dirty might be cleared in btree_flush_btree() by
++	 * __bch_btree_node_write(). To avoid an extra flush, acquire
++	 * b->write_lock before checking BTREE_NODE_dirty bit.
++	 */
+ 	mutex_lock(&b->write_lock);
+ 	if (btree_node_dirty(b))
+ 		__bch_btree_node_write(b, &cl);
+@@ -772,6 +777,11 @@ void bch_btree_cache_free(struct cache_set *c)
+ 	while (!list_empty(&c->btree_cache)) {
+ 		b = list_first_entry(&c->btree_cache, struct btree, list);
  
- 		mark_page_accessed(page);
- 		put_page(page);
++		/*
++		 * This function is called by cache_set_free(), no I/O
++		 * request on cache now, it is unnecessary to acquire
++		 * b->write_lock before clearing BTREE_NODE_dirty anymore.
++		 */
+ 		if (btree_node_dirty(b)) {
+ 			btree_complete_write(b, btree_current_write(b));
+ 			clear_bit(BTREE_NODE_dirty, &b->flags);
 -- 
 2.20.1
 
