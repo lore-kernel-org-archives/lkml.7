@@ -2,208 +2,178 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE841C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8992C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F85217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC17122CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="mZqmbg8Y"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ecG/AhIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfICSdu (ORCPT
+        id S1726144AbfICSg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:33:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38542 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfICSds (ORCPT
+        Tue, 3 Sep 2019 14:36:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41840 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfICSg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:33:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l11so9726960wrx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:33:46 -0700 (PDT)
+        Tue, 3 Sep 2019 14:36:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id h4so10182433oih.8;
+        Tue, 03 Sep 2019 11:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pspeRXdO2j1HTYVZdDPL9GbMWHeSQdfOo4maF+TAMok=;
-        b=mZqmbg8YdNqm34eF30MUz6zRJpRyWQwWiHvgFGGDoIc5o/DLmk4lWlBvIxB1TWT5PS
-         SMt4UNMbxD+X9bDEnkCxLYHz4qaPKkrMwUm+PeqX4UVxc3VcYgI1SR68yWPae4NXD4bw
-         l9RXbjfoGnpmRzR7t+WyAURZLrH/cIILLenAF24VwIaGUxU+I60L6pSbHqpHOIWeoPJ5
-         DcFwJVx7j/RKZrHrAY0/4cW/mcvFR3TOQX8PDwkYZ9/f5P+GgDaI6FIn80XUnmSaT4hr
-         j7F8Ruoiw/0oC2VkRg8jarJnoUHkXyHekZKB/B4gW4s1JiN+KVyGrvWEDhJsOSbnYjk4
-         k9lg==
+         :cc;
+        bh=T2VRWo66x20ziRkQtuenm/5rg8hfUf+nTX3G0YKIS+U=;
+        b=ecG/AhIAPBvBlxBsQI7Vy5LqX498BLTyTA0A3M1RWA8ETRixzy9uOTJJMSRRLgQdj0
+         jTzEPSeh022QZtJMFxa3RzmpwSDbsjwga89Ev1JXaW4mcylerdXh8mTHDJTrYm4hyIU8
+         WtogIeIBZd4EluIiKgz7TZdV3afeBAt8ccvASXpLh61sPydMwxbkJSWqQbh0heKCM+nc
+         IvjVd0YeKOqNhQvHjDu/nF+UlfBR6QfoVop8W33K2qJ2hSOKNaAkT/okSqrdkor8txSz
+         TGPbFnkquiAgegchp+JRki6eTDkWyeL/O2qcT217t6G7smBKA2ECfNQ+7H2AuhTOu4Xa
+         02Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pspeRXdO2j1HTYVZdDPL9GbMWHeSQdfOo4maF+TAMok=;
-        b=QlM6nZVTdjVZFzGcbp0/MvmVWfq5lL8gISPbB470KE2VcpjtyIvZXIo99e1jBLA8Mo
-         MaWdlTUcSC4HtXQf9wV6H5xCWjNOYvshKgs9ba6aI7ahxBACgZbnRUHZY+Js/OzbLSI+
-         iDYHFQ2PBDjx31BmU7t0oJmj7RCZxepkm1TlFcFzUzCAIX25Mi9p38zjhhbXIarXB7ZX
-         UXqtAPcpHMy9w60q0SKQeMlQrHTOTLSbXqJsqNrOBrsiSWmSfabuMvuS7l68WLa0ZFFf
-         FzR+kYwlnBHQP/RuDPD624ke9757qHWTd8X0tSv0kOckE58uUhfnahX95ezCwX3qnrF6
-         sRWw==
-X-Gm-Message-State: APjAAAVCT93uZIYfbazdJjUvypVMuDlGKsPUcuUoiKgz0hGrtJofw0dZ
-        3TDKVx49Nfu6N5JlJnpIwZ4qqK3UNt6kMD2af4dNew==
-X-Google-Smtp-Source: APXvYqy/XvaP6187x664PfozZKvN1XpiK8C6lANO0NJPJjHlN8sofCs58c1EFb512gWlwYZ/ifV+D642d6Sk2TTlDno=
-X-Received: by 2002:a5d:6211:: with SMTP id y17mr3220387wru.35.1567535625608;
- Tue, 03 Sep 2019 11:33:45 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=T2VRWo66x20ziRkQtuenm/5rg8hfUf+nTX3G0YKIS+U=;
+        b=WwyrYOA9LxC/lG7o3WSRy8ePKLzKq1fLrggnCFpw1u6PwmD1qVEspFjJlaGrI0nF4y
+         8b5LliucyKA5Csx22H9kkZjlYTdRqXI0i6pdaUsrqdyzs3R9zN+vXKK3a+aIhB+n8yAO
+         SPSNdEZ57sLsfCKiC+0OdXe+fdptPoywOUl/uhB0yNKDuoeGwMIjlYjSE7ZEiDYmCyjF
+         cg+NcbY3VklMvnUNpD8UDATyGYHy42FNn4JOw9C7miCzhq8k25mmJ20T7JCMjBBnbwSt
+         N0BN50xdraXKcHrDWHFHaL+4Bjx0pPygD/HBtPM7PkWX/fHNIJ9w4SV1uHIlrCYXtv7Q
+         WLLw==
+X-Gm-Message-State: APjAAAVnJSXk9OqK35fPWgfSvdXQSelDinzWNaaSecSBZ3foJkKt6QjC
+        +yfOwrVRlQBO8Gl0YX8mKIOaoharKAFwRlyW3ws=
+X-Google-Smtp-Source: APXvYqwXHgzT+lzL2fT9fwPg1Jx1wQ6C8MNBf1l/b2B7LwgSanPdroFFaZVdRLi0xsCRUh8gSdD0obRiZpoEHi24N94=
+X-Received: by 2002:a05:6808:5cf:: with SMTP id d15mr546142oij.140.1567535787959;
+ Tue, 03 Sep 2019 11:36:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190903144632.26299-1-benjamin.tissoires@redhat.com>
-In-Reply-To: <20190903144632.26299-1-benjamin.tissoires@redhat.com>
-From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
-Date:   Tue, 3 Sep 2019 20:33:34 +0200
-Message-ID: <CAHxFc3SXM6hkbpTGZCsWOk70tByHE8af59ftOBwahY4fL0Sz=g@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: apple: Fix stuck function keys when using FN
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+ <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com> <CAFBinCBa9G+E+vjmQCGBx=zRG80ad1am_1TrNbAMvqKCQU38gw@mail.gmail.com>
+ <ee561743-d4bc-0aa4-ded7-bfa6bd3a509b@linux.intel.com> <4bab775a-0e39-a187-0791-40050feb7d67@linux.intel.com>
+In-Reply-To: <4bab775a-0e39-a187-0791-40050feb7d67@linux.intel.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 3 Sep 2019 20:36:16 +0200
+Message-ID: <CAFBinCCPbwQ+8S9kG_Z43j-ieOEeo3TcNH48tE5WebU94ec6tw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        hch@infradead.org, jingoohan1@gmail.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        qi-ming.wu@intel.com, kishon@ti.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+Hi Dilip,
 
-On Tue, 3 Sep 2019 at 16:46, Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
+On Tue, Sep 3, 2019 at 12:20 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
 >
-> From: Joao Moreno <mail@joaomoreno.com>
+> Hi Martin,
 >
-> This fixes an issue in which key down events for function keys would be
-> repeatedly emitted even after the user has raised the physical key. For
-> example, the driver fails to emit the F5 key up event when going through
-> the following steps:
-> - fnmode=3D1: hold FN, hold F5, release FN, release F5
-> - fnmode=3D2: hold F5, hold FN, release F5, release FN
+> On 8/29/2019 10:54 AM, Chuan Hua, Lei wrote:
 >
-> The repeated F5 key down events can be easily verified using xev.
 >
-> Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-> Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> ---
+> On 8/29/2019 3:36 AM, Martin Blumenstingl wrote:
 >
-> Hi Joao,
+> On Wed, Aug 28, 2019 at 5:35 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
+> [...]
 >
-> last chance to pull back :)
->
-> If you are still happy, I'll push this version
->
-> Cheers,
-> Benjamin
->
-
-Looks great. Thanks a bunch for your help!
-
-Cheers,
-Jo=C3=A3o
-
->  drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
->  1 file changed, 28 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-> index 81df62f48c4c..6ac8becc2372 100644
-> --- a/drivers/hid/hid-apple.c
-> +++ b/drivers/hid/hid-apple.c
-> @@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\=
-") and Command (\"Flag\")
->  struct apple_sc {
->         unsigned long quirks;
->         unsigned int fn_on;
-> -       DECLARE_BITMAP(pressed_fn, KEY_CNT);
->         DECLARE_BITMAP(pressed_numlock, KEY_CNT);
->  };
->
-> @@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hi=
-d, struct input_dev *input,
->  {
->         struct apple_sc *asc =3D hid_get_drvdata(hid);
->         const struct apple_key_translation *trans, *table;
-> +       bool do_translate;
-> +       u16 code =3D 0;
->
->         if (usage->code =3D=3D KEY_FN) {
->                 asc->fn_on =3D !!value;
-> @@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hi=
-d, struct input_dev *input,
->         }
->
->         if (fnmode) {
-> -               int do_translate;
-> -
->                 if (hid->product >=3D USB_DEVICE_ID_APPLE_WELLSPRING4_ANS=
-I &&
->                                 hid->product <=3D USB_DEVICE_ID_APPLE_WEL=
-LSPRING4A_JIS)
->                         table =3D macbookair_fn_keys;
-> @@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *=
-hid, struct input_dev *input,
->                 trans =3D apple_find_translation (table, usage->code);
->
->                 if (trans) {
-> -                       if (test_bit(usage->code, asc->pressed_fn))
-> -                               do_translate =3D 1;
-> -                       else if (trans->flags & APPLE_FLAG_FKEY)
-> -                               do_translate =3D (fnmode =3D=3D 2 && asc-=
->fn_on) ||
-> -                                       (fnmode =3D=3D 1 && !asc->fn_on);
-> -                       else
-> -                               do_translate =3D asc->fn_on;
-> -
-> -                       if (do_translate) {
-> -                               if (value)
-> -                                       set_bit(usage->code, asc->pressed=
-_fn);
-> -                               else
-> -                                       clear_bit(usage->code, asc->press=
-ed_fn);
-> -
-> -                               input_event(input, usage->type, trans->to=
-,
-> -                                               value);
-> -
-> -                               return 1;
-> +                       if (test_bit(trans->from, input->key))
-> +                               code =3D trans->from;
-> +                       else if (test_bit(trans->to, input->key))
-> +                               code =3D trans->to;
+> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+> +{
+> +    struct device *dev = lpp->pci->dev;
+> +    int ret = 0;
 > +
-> +                       if (!code) {
-> +                               if (trans->flags & APPLE_FLAG_FKEY) {
-> +                                       switch (fnmode) {
-> +                                       case 1:
-> +                                               do_translate =3D !asc->fn=
-_on;
-> +                                               break;
-> +                                       case 2:
-> +                                               do_translate =3D asc->fn_=
-on;
-> +                                               break;
-> +                                       default:
-> +                                               /* should never happen */
-> +                                               do_translate =3D false;
-> +                                       }
-> +                               } else {
-> +                                       do_translate =3D asc->fn_on;
-> +                               }
-> +
-> +                               code =3D do_translate ? trans->to : trans=
-->from;
->                         }
-> +
-> +                       input_event(input, usage->type, code, value);
-> +                       return 1;
->                 }
+> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +    if (IS_ERR(lpp->reset_gpio)) {
+> +            ret = PTR_ERR(lpp->reset_gpio);
+> +            if (ret != -EPROBE_DEFER)
+> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+> +            return ret;
+> +    }
+> +    /* Make initial reset last for 100ms */
+> +    msleep(100);
 >
->                 if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
-> --
-> 2.19.2
+> why is there lpp->rst_interval when you hardcode 100ms here?
 >
+> There are different purpose. rst_interval is purely for asserted reset
+> pulse.
+>
+> Here 100ms is to make sure the initial state keeps at least 100ms, then we
+> can reset.
+>
+> my interpretation is that it totally depends on the board design or
+> the bootloader setup.
+>
+> Partially, you are right. However, we should not add some dependency
+> here from
+> bootloader and board. rst_interval is just to make sure the pulse (low
+> active or high active)
+> lasts the specified the time.
+>
+> +Cc Kishon
+>
+> he recently added support for a GPIO reset line to the
+> pcie-cadence-host.c [0] and I believe he's also maintaining
+> pci-keystone.c which are both using a 100uS delay (instead of 100ms).
+> I don't know the PCIe spec so maybe Kishon can comment on the values
+> that should be used according to the spec.
+> if there's then a reason why values other than the ones from the spec
+> are needed then there should be a comment explaining why different
+> values are needed (what problem does it solve).
+>
+> spec doesn't guide this part. It is a board or SoC specific setting.
+> 100us also should work. spec only requirs reset duration should last
+> 100ms. The idea is that before reset assert and deassert, make sure the
+> default deassert status keeps some time. We take this value from
+> hardware suggestion long time back. We can reduce this value to 100us,
+> but we need to test on the board.
+>
+> OK. I don't know how other PCI controller drivers manage this. if the
+> PCI maintainers are happy with this then I am as well
+> maybe it's worth changing the comment to indicate that this delay was
+> suggested by the hardware team (so it's clear that this is not coming
+> from the PCI spec)
+>
+> Dilip will change to 100us delay and run the test. I also need to run some tests for old boards(XRX350/550/PRX300) to confirm this has no impact on function.
+>
+> I have tested 100us on the target and it is working fine.
+> Along with this change, i have validated below changes and test is successful.
+>     Enabling the A/B/C/D interrupts during the initialization instead of in map_irq()
+>     Calling dw_pcie_setup_rc() function during initialization.
+>
+> I will push these changes in the next patch version.
+great, thank you for working on simplifying the code!
+
+> And, regarding [1]:
+> I have checked the code for using regmap; Helper functions especially update_bits() cannot be avoided(it is required while configuring pcie RC registers too). and LGM is little endian.
+> Switching to regmap() is not bringing any gain.
+OK, if it doesn't help you for LGM then no need to switch to regmap now
+I can still do it afterwards when adding support for other SoCs
+
+> Regarding [2]:
+> PCIE_SPEED2STR() is quite different from the pcie_link_gen_to_str().
+> PCIE_SPEED2STR() expects a encoded value defined in pcie_link_speed[] array in probe.c, whereas pcie_link_gen_to_str() is a direct mapping to the register bits value.
+> pcie_link_gen_to_str() is pretty much simple and straight forward.
+>
+> And, any of the pcie controller drivers are using neither PCIE_SPEED2STR() nor pcie_link_speed[].
+OK, I see - thank you for following up
+the PCI maintainers need to decide whether pcie_link_status_show is
+acceptable (instead of using lspci) - that's the only place where
+pcie_link_gen_to_str is used
+
+
+Martin
