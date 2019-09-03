@@ -5,68 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A00FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E457C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127FF22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064052077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jsnj7bCT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKEgMIXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfICMMe (ORCPT
+        id S1729183AbfICMMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:12:34 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37682 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbfICMMd (ORCPT
+        Tue, 3 Sep 2019 08:12:54 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33363 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbfICMMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:12:33 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b10so2732214plr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:12:33 -0700 (PDT)
+        Tue, 3 Sep 2019 08:12:53 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so9049549pgn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q3vcDeYgPJsdSrUb0ggIiWukNA64mMJD0XGWnjg/m5w=;
-        b=Jsnj7bCTJgAj2+naXeGKqBEBfrzSftydpRJykvxu/UMk+hj4g4cLXpfGTEo88i4Nei
-         Kj3ooeHPaS4RH4ssI7WPCUkcZG926ecnZJ1O7KUPwKhG2zWee2tnSjmtjBMbFTC1gyad
-         wRJ0Vm3iTS5gPUTffIJGb5CplyBfnhKdsDrjdngpetzUreDs9DQDTlpsN4xui4tvE2jW
-         sXEsLULKn1v5LpMl1xwEf57irZPzGvH0fY5zSjt4kg/WE9QOtlyO7PoXtxFsiHNc/OjW
-         6DeD2+0mT1r7v28t4xUVv/LQF/sk+6CGL9E7ohQt1M8Mz9HtAEcptvls8wOkSrfUYW1u
-         QDug==
+        bh=i33E7WWdEboKNyevYA/anfEOPtDv0b8uFbanWM5nL2Q=;
+        b=fKEgMIXFMMLDYPfNa7kGOFe2d+pAkzLTqwc6hn9AUeGqgKxLcJKc4Pe24HMO9vPJhE
+         uxxRhILnRL+QBepPegjwj45ZNmeysyzznduRooz5DB8IJB4rxIa7xBbCP74YrFZDUfri
+         VK+taOhMbFZ7HILzZ9PbO79hhdU9PvTeNjR9tTLaUo5VEwgQLw2b6ju19ivGeeOYWhvv
+         q6C3SSTVo71T+VxXzGkLeGTBrqPnp5zG0BaITBsdGMnSmxs6Z9nuJ3pMdcEcn7HuglDy
+         GJDsSjpAT3GMK8Rq+E3kmHMfGQMLklQEylM/lVUe1xKz3NpZVlSE47Z8TjcsIGWVKBz2
+         kYpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q3vcDeYgPJsdSrUb0ggIiWukNA64mMJD0XGWnjg/m5w=;
-        b=X8ETaOLCbEnCQsIX0PDyPRLe4cDwGUy25TfLURh56ErV4Ft9361Yo3VcH2zlYMhty9
-         HWM70o3LgPoq/ERlxDHhn5a0NmxBNryy4m/5CT6cj8jjfXRQRWuViVrwtXLDgSYqqKky
-         PzrHxAxH0vEE7Zw2sT1+mcGaYA2jb6wFF/zsbkLBUVc2oMAuzBISI49GnrZ+3Kw+bCXa
-         ApLaCAlbFemiYpDgvhvWTg2eWl1uySe3FioSAZmw4H3+VBoSX09Cbzbf4yo9mpKxJXrW
-         g7QjYxCynvzitXBM/5tJxNPYhlsYbgkEec5fOUUyUpKMOwv+hfTJ22oSIdQ+bFop4zzJ
-         gmfw==
-X-Gm-Message-State: APjAAAUrazlmWCxbnSn1RHrccxl5JgZx/fiil9KSs3qxnfE9UBWDfeU7
-        VsyKCI+6EdzCvgmssHZrMPQUJmlkJZq1fTm6Rm33LQ==
-X-Google-Smtp-Source: APXvYqyEjpRzA4nWs7uWc4HqLVY9+TKblG/FrkxfNbniMr9ov/xw+Y4dun16ZkiPARCTyvyLUIqC12vwfTcxrh/33J0=
-X-Received: by 2002:a17:902:bb85:: with SMTP id m5mr761998pls.336.1567512752326;
- Tue, 03 Sep 2019 05:12:32 -0700 (PDT)
+        bh=i33E7WWdEboKNyevYA/anfEOPtDv0b8uFbanWM5nL2Q=;
+        b=pBEC0J99+cUMuRHTIGfa+t35K5qpdL1bZmch3mJg/kyK3ZCX7iJuvM3UzpXZw3i9Gs
+         fAZw5A7StmBsjV2g7sLP41Isa6iSmuS5g5k++CFOwqCbliVFbc8pb41vZYeaat8ZGhfr
+         mHosEK77sYgAL/qFrUpFApg3MOCFCE6t/dUkqKvy6zWdJ7AtEqINYyi4wYdImq+IqzMu
+         noQF9mPcv0GFr9wAByHcuLASAfIm3qAJOxjMUPuqrbcewlpZcFlfOt3qfMHiCmSK/Kyz
+         m/Fo2z/evQ+ceWKLiC9fsdRmpCysHytCDLiAI4I0SixWkMtJLAYSMzQQuFTR4edFlVMx
+         5waA==
+X-Gm-Message-State: APjAAAX0rbX9KD4/2ogEMj/6nJKPA9m3L7jfY/e+NSBFkOaVRTTBSEIj
+        GFF/krvqpx0zYXf2vegHp4wsJT3XgVe2mejbKyNjKA==
+X-Google-Smtp-Source: APXvYqyi103z0AEB0osS//f16WOxyZSwafnOdYF48RBS3SnYdJcg/hm0tFESDaFIBvNbYHZIVmoYtUK2PTaytGYAbTI=
+X-Received: by 2002:aa7:8bcc:: with SMTP id s12mr24728814pfd.93.1567512772555;
+ Tue, 03 Sep 2019 05:12:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000003c64c70591a4f141@google.com>
-In-Reply-To: <0000000000003c64c70591a4f141@google.com>
+References: <0000000000004070630591a4f124@google.com>
+In-Reply-To: <0000000000004070630591a4f124@google.com>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 3 Sep 2019 14:12:21 +0200
-Message-ID: <CAAeHK+yXq+RsFfVGomryRv2nDBTUqN_kbKB26e18GGwnAXkmbA@mail.gmail.com>
-Subject: Re: general protection fault in usb_autopm_put_interface
-To:     syzbot <syzbot+3b6d4df4497100308c69@syzkaller.appspotmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
+Date:   Tue, 3 Sep 2019 14:12:41 +0200
+Message-ID: <CAAeHK+x8NtDVnnzMgGZXfCdfvV7LwoZ9ZUuXnqSsHSDvn4JDHQ@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in usbhid_close
+To:     syzbot <syzbot+90b997df76897a013829@syzkaller.appspotmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         USB list <linux-usb@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuehaibing@huawei.com
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -74,7 +72,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, Sep 3, 2019 at 2:08 PM syzbot
-<syzbot+3b6d4df4497100308c69@syzkaller.appspotmail.com> wrote:
+<syzbot+90b997df76897a013829@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
@@ -82,41 +80,38 @@ On Tue, Sep 3, 2019 at 2:08 PM syzbot
 >
 > HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
 > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=165e551e600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=140a786c600000
 > kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3b6d4df4497100308c69
+> dashboard link: https://syzkaller.appspot.com/bug?extid=90b997df76897a013829
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
 > Unfortunately, I don't have any reproducer for this crash yet.
 >
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+3b6d4df4497100308c69@syzkaller.appspotmail.com
+> Reported-by: syzbot+90b997df76897a013829@syzkaller.appspotmail.com
 >
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN
-> CPU: 0 PID: 8426 Comm: syz-executor.3 Not tainted 5.3.0-rc5+ #28
+> ==================================================================
+> BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50
+> kernel/locking/lockdep.c:3753
+> Read of size 8 at addr ffff8881d34368a0 by task syz-executor.3/10760
+>
+> CPU: 0 PID: 10760 Comm: syz-executor.3 Not tainted 5.3.0-rc5+ #28
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 > Google 01/01/2011
-> RIP: 0010:usb_autopm_put_interface+0x23/0x90 drivers/usb/core/driver.c:1629
-> Code: 1f 84 00 00 00 00 00 55 53 48 89 fb 48 83 ec 08 e8 b2 fa ee fd 48 8d
-> 7b 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75
-> 42 48 8b 6b 70 e8 6e ec e0 fd 48 ba 00 00 00 00 00
-> RSP: 0018:ffff8881cf9e7d98 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff84633936
-> RDX: 000000000000000e RSI: ffffffff834edf2e RDI: 0000000000000070
-> RBP: ffff8881ca020000 R08: ffff8881c7ec0000 R09: ffffed10398ed3bb
-> R10: ffffed10398ed3ba R11: ffff8881cc769dd7 R12: 0000000000000000
-> R13: ffffffff89a84fe8 R14: 0000000000000246 R15: ffff8881c7e13718
-> FS:  0000555556d07940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2ff21000 CR3: 00000001d3e92000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 > Call Trace:
->   usbhid_power+0xb8/0xe0 drivers/hid/usbhid/hid-core.c:1238
->   hid_hw_power include/linux/hid.h:1038 [inline]
->   drop_ref.part.0+0xa5/0xe0 drivers/hid/hidraw.c:338
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
+>   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+>   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+>   _raw_spin_lock_irq+0x2d/0x40 kernel/locking/spinlock.c:167
+>   spin_lock_irq include/linux/spinlock.h:363 [inline]
+>   usbhid_close+0x51/0x210 drivers/hid/usbhid/hid-core.c:740
+>   hid_hw_close+0xa8/0xd0 drivers/hid/hid-core.c:2046
+>   drop_ref.part.0+0x32/0xe0 drivers/hid/hidraw.c:337
 >   drop_ref drivers/hid/hidraw.c:360 [inline]
 >   hidraw_release+0x34f/0x440 drivers/hid/hidraw.c:356
 >   __fput+0x2d7/0x840 fs/file_table.c:280
@@ -131,29 +126,29 @@ On Tue, Sep 3, 2019 at 2:08 PM syzbot
 > Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
 > 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
 > 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> RSP: 002b:00007ffd906f2400 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000413561
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+> RSP: 002b:00007ffc873b3300 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000413561
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
 > RBP: 0000000000000001 R08: 0000000055395a94 R09: 0000000055395a98
-> R10: 00007ffd906f24e0 R11: 0000000000000293 R12: 000000000075bf20
-> R13: 000000000006c6a9 R14: 0000000000764788 R15: ffffffffffffffff
-> Modules linked in:
-> ---[ end trace 4e657ab43d479d9c ]---
-> RIP: 0010:usb_autopm_put_interface+0x23/0x90 drivers/usb/core/driver.c:1629
-> Code: 1f 84 00 00 00 00 00 55 53 48 89 fb 48 83 ec 08 e8 b2 fa ee fd 48 8d
-> 7b 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75
-> 42 48 8b 6b 70 e8 6e ec e0 fd 48 ba 00 00 00 00 00
-> RSP: 0018:ffff8881cf9e7d98 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff84633936
-> RDX: 000000000000000e RSI: ffffffff834edf2e RDI: 0000000000000070
-> RBP: ffff8881ca020000 R08: ffff8881c7ec0000 R09: ffffed10398ed3bb
-> R10: ffffed10398ed3ba R11: ffff8881cc769dd7 R12: 0000000000000000
-> R13: ffffffff89a84fe8 R14: 0000000000000246 R15: ffff8881c7e13718
-> FS:  0000555556d07940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2ff21000 CR3: 00000001d3e92000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> R10: 00007ffc873b33e0 R11: 0000000000000293 R12: 000000000075bfc8
+> R13: 0000000000096f96 R14: 0000000000762460 R15: ffffffffffffffff
+>
+> The buggy address belongs to the page:
+> page:ffffea00074d0d80 refcount:0 mapcount:0 mapping:0000000000000000
+> index:0x0
+> flags: 0x200000000000000()
+> raw: 0200000000000000 0000000000000000 dead000000000122 0000000000000000
+> raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d3436780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ffff8881d3436800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > ffff8881d3436880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>                                 ^
+>   ffff8881d3436900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ffff8881d3436980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> ==================================================================
 >
 >
 > ---
