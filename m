@@ -2,106 +2,200 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA6DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D2EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC6621883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EFC21883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="AIRHruYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfICXij (ORCPT
+        id S1727109AbfICXmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 19:38:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39755 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfICXii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 19:38:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 16:38:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,464,1559545200"; 
-   d="scan'208";a="194516778"
-Received: from fyin-mobl.ccr.corp.intel.com (HELO [10.239.204.18]) ([10.239.204.18])
-  by orsmga002.jf.intel.com with ESMTP; 03 Sep 2019 16:38:37 -0700
-Subject: Re: About compiler memory barrier for atomic_set/atomic_read on x86
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, "He, Min" <min.he@intel.com>,
-        "Zhao, Yakui" <yakui.zhao@intel.com>
-References: <256e8ee2-a23c-28e9-3988-8b77307c001a@intel.com>
- <20190903140614.GR2349@hirez.programming.kicks-ass.net>
-From:   "Yin, Fengwei" <fengwei.yin@intel.com>
-Message-ID: <a9ea1348-b7cb-c589-1be4-51efadaf1271@intel.com>
-Date:   Wed, 4 Sep 2019 07:38:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 19:42:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44258 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfICXmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 19:42:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so6891924pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 16:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=d3Uvki+kfJgt1m0UONqlkiavQ6oLL7OnGA9HqPCX/bA=;
+        b=AIRHruYm217BkNNbELn4rzWRu2lVdGvFiEuUy9/LBzLsYWn7tEdN22R8Y7Ix3jRzU8
+         vi11fisWq8csSt4oXJS1lipZtvV1zI0lONGn1udWn9lzDMaQDTMGUVK4vRHDPXY3cGe+
+         f5BwJ5lmavFRl45vKN4vFDlQq5lLGETQewU3g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=d3Uvki+kfJgt1m0UONqlkiavQ6oLL7OnGA9HqPCX/bA=;
+        b=gtOIe72HZtDKCMWcXlQoRGfZNGDvWyJ2Jgp+RtRnyNNYiiMmd3RYs6EEznuFeaYwgE
+         6GoJq/jRGPwswZxprk7g/rUh9aaz0AGvsEljeI8ExasFdzi37Eerii0pg+4aWBCMgl/P
+         MlgTk21JLlNApy+W0bzgsUBgjUm4E7vhkzmZq+TCZ/NB8FqKcXdrzesM/QsTenPl5J7T
+         11AWOsbDutRnXZbuknrTr8Cl5vh9mlizKxrgGHu7uiO3lws5xNa/NVMMsNKFsVtA7Eug
+         IoICCzU92gM1Js0AdarwNtWnXU3EhAAhF8Mcc5eQ6vvCv7zefW3AMSknhEBMOtm8HtNf
+         Tdxw==
+X-Gm-Message-State: APjAAAXvFrgwKwo2RCIwnb50Azl1WFX0KS1agv8n1CgTFk4+SeHgcXVO
+        81TCO3s0T/u+36e5f9fKkuNY4A==
+X-Google-Smtp-Source: APXvYqxeNo3PMrJsRo3FgG7XCb00MrhJflwc1xD555RVHRItPittdp6EdRFQwCHwDzhPeLggQRWf8A==
+X-Received: by 2002:a17:90a:cb89:: with SMTP id a9mr1908300pju.93.1567554126677;
+        Tue, 03 Sep 2019 16:42:06 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id m24sm6976787pfa.37.2019.09.03.16.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 16:42:05 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     kasan-dev <kasan-dev@googlegroups.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>, gor@linux.ibm.com
+Subject: Re: [PATCH v7 5/5] kasan debug: track pages allocated for vmalloc shadow
+In-Reply-To: <CAAeHK+w_HKVh___E0j3hctt_efSPR3PwKuO5XNpf=w5obfYSSA@mail.gmail.com>
+References: <20190903145536.3390-1-dja@axtens.net> <20190903145536.3390-6-dja@axtens.net> <CAAeHK+w_HKVh___E0j3hctt_efSPR3PwKuO5XNpf=w5obfYSSA@mail.gmail.com>
+Date:   Wed, 04 Sep 2019 09:41:51 +1000
+Message-ID: <87ef0xt0ao.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <20190903140614.GR2349@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Andrey Konovalov <andreyknvl@google.com> writes:
 
-On 9/3/2019 10:06 PM, Peter Zijlstra wrote:
-> On Tue, Sep 03, 2019 at 09:23:41PM +0800, Yin, Fengwei wrote:
->> Hi Peter,
->> There is one question regarding following commit:
+> On Tue, Sep 3, 2019 at 4:56 PM Daniel Axtens <dja@axtens.net> wrote:
 >>
->> commit 69d927bba39517d0980462efc051875b7f4db185
->> Author: Peter Zijlstra <peterz@infradead.org>
->> Date:   Wed Apr 24 13:38:23 2019 +0200
+>> Provide the current number of vmalloc shadow pages in
+>> /sys/kernel/debug/kasan_vmalloc/shadow_pages.
+>
+> Maybe it makes sense to put this into /sys/kernel/debug/kasan/
+> (without _vmalloc) and name e.g. vmalloc_shadow_pages? In case we want
+> to expose more generic KASAN debugging info later.
+
+We certainly could. I just wonder if this patch is useful on an ongoing
+basis. I wrote it to validate my work on lazy freeing of shadow pages -
+which is why I included it - but I'm not sure it has much ongoing value
+beyond demonstrating that the freeing code works.
+
+If we think it's worth holding on to this patch, I can certainly adjust
+the paths.
+
+Regards,
+Daniel
+
+>
 >>
->>      x86/atomic: Fix smp_mb__{before,after}_atomic()
+>> Signed-off-by: Daniel Axtens <dja@axtens.net>
 >>
->>      Recent probing at the Linux Kernel Memory Model uncovered a
->>      'surprise'. Strongly ordered architectures where the atomic RmW
->>      primitive implies full memory ordering and
->>      smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
+>> ---
 >>
->> This change made atomic RmW operations include compiler barrier. And made
->> __smp_mb__before_atomic/__smp_mb__after_atomic not include compiler
->> barrier any more for x86.
+>> Merging this is probably overkill, but I leave it to the discretion
+>> of the broader community.
 >>
->> We face the issue to handle atomic_set/atomic_read which is mapped to
->> WRITE_ONCE/READ_ONCE on x86. These two functions don't include compiler
->> barrier actually (if operator size is less than 8 bytes).
+>> On v4 (no dynamic freeing), I saw the following approximate figures
+>> on my test VM:
 >>
->> Before the commit 69d927bba39517d0980462efc051875b7f4db185, we could use
->> __smp_mb__before_atomic/__smp_mb__after_atomic together with these two
->> functions to make sure the memory order. It can't work after the commit
->> 69d927bba39517d0980462efc051875b7f4db185. I am wandering whether
->> we should make atomic_set/atomic_read also include compiler memory
->> barrier on x86? Thanks.
-> 
-> No; using smp_mb__{before,after}_atomic() with atomic_{set,read}() is
-> _wrong_! And it is documented as such; see Documentation/atomic_t.txt.
-
-Thanks a lot for direct me to this doc. And yes, from this doc:
-    - smp_mb__{before,after}_atomic() only apply to the RMW atomic ops
-    - non-RMW operations are unordered;
-
-I checked the /Documentation/memory-barriers.txt too. In section
-"COMPILER BARRIER", "However, READ_ONCE() and WRITE_ONCE() can be
-thought of as weak forms of barrier() that affect only the specific
-accesses flagged by the READ_ONCE() or WRITE_ONCE()".
-
-For x86 READ_ONCE/WRITE_ONCE doesn't have compiler barrier if the
-operator size is less than 8 bytes. Should we update x86 code?
-
-So, if I use atomic_set/read, to prevent the compiler from moving memory
-access around, I should use compiler barrier explicitly. Right?
-
-Regards
-Yin, Fengwei
-
-> 
-
+>>  - fresh boot: 720
+>>  - after test_vmalloc: ~14000
+>>
+>> With v5 (lazy dynamic freeing):
+>>
+>>  - boot: ~490-500
+>>  - running modprobe test_vmalloc pushes the figures up to sometimes
+>>     as high as ~14000, but they drop down to ~560 after the test ends.
+>>     I'm not sure where the extra sixty pages are from, but running the
+>>     test repeately doesn't cause the number to keep growing, so I don't
+>>     think we're leaking.
+>>  - with vmap_stack, spawning tasks pushes the figure up to ~4200, then
+>>     some clearing kicks in and drops it down to previous levels again.
+>> ---
+>>  mm/kasan/common.c | 26 ++++++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>
+>> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+>> index e33cbab83309..e40854512417 100644
+>> --- a/mm/kasan/common.c
+>> +++ b/mm/kasan/common.c
+>> @@ -35,6 +35,7 @@
+>>  #include <linux/vmalloc.h>
+>>  #include <linux/bug.h>
+>>  #include <linux/uaccess.h>
+>> +#include <linux/debugfs.h>
+>>
+>>  #include <asm/tlbflush.h>
+>>
+>> @@ -750,6 +751,8 @@ core_initcall(kasan_memhotplug_init);
+>>  #endif
+>>
+>>  #ifdef CONFIG_KASAN_VMALLOC
+>> +static u64 vmalloc_shadow_pages;
+>> +
+>>  static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>>                                       void *unused)
+>>  {
+>> @@ -776,6 +779,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>>         if (likely(pte_none(*ptep))) {
+>>                 set_pte_at(&init_mm, addr, ptep, pte);
+>>                 page = 0;
+>> +               vmalloc_shadow_pages++;
+>>         }
+>>         spin_unlock(&init_mm.page_table_lock);
+>>         if (page)
+>> @@ -829,6 +833,7 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>>         if (likely(!pte_none(*ptep))) {
+>>                 pte_clear(&init_mm, addr, ptep);
+>>                 free_page(page);
+>> +               vmalloc_shadow_pages--;
+>>         }
+>>         spin_unlock(&init_mm.page_table_lock);
+>>
+>> @@ -947,4 +952,25 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
+>>                                        (unsigned long)shadow_end);
+>>         }
+>>  }
+>> +
+>> +static __init int kasan_init_vmalloc_debugfs(void)
+>> +{
+>> +       struct dentry *root, *count;
+>> +
+>> +       root = debugfs_create_dir("kasan_vmalloc", NULL);
+>> +       if (IS_ERR(root)) {
+>> +               if (PTR_ERR(root) == -ENODEV)
+>> +                       return 0;
+>> +               return PTR_ERR(root);
+>> +       }
+>> +
+>> +       count = debugfs_create_u64("shadow_pages", 0444, root,
+>> +                                  &vmalloc_shadow_pages);
+>> +
+>> +       if (IS_ERR(count))
+>> +               return PTR_ERR(root);
+>> +
+>> +       return 0;
+>> +}
+>> +late_initcall(kasan_init_vmalloc_debugfs);
+>>  #endif
+>> --
+>> 2.20.1
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+>> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20190903145536.3390-6-dja%40axtens.net.
