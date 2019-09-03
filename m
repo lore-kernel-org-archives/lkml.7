@@ -2,182 +2,212 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2F6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1855DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C476721897
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HJJ0bVOm"
+	by mail.kernel.org (Postfix) with ESMTP id E197821897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfICVIV (ORCPT
+        id S1726810AbfICVND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:08:21 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37037 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfICVIU (ORCPT
+        Tue, 3 Sep 2019 17:13:03 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:46948 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfICVNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:08:20 -0400
-Received: by mail-oi1-f196.google.com with SMTP id b25so14054128oib.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tlZOc2xNezEokqqZLK+BpwhUkP8lZ83mMuTnU9+ie8s=;
-        b=HJJ0bVOmeMpLAplyzftUKTzFjg2U3rb2WOISXl3iCdml/rfpIGCArjv/J0N2nmwbh0
-         TmkXgJ6nOiGv2z+t1RqsxVFJ76eFsYW6fqhEVORm6LEvumT/unSSU2e+rdxNMFkMpN+7
-         2LfXXOxgbO1FNsab2gxnVUthI1OW1+3XJKsx1dCrWqv26tH6gq16jhBzBA84VdJbNvIf
-         RvWkzJEGApTNnKjW1Tk2Vma5ePRseiJRGNje2e45NNMdAiQilSs+Qri94TyQJUcP+42j
-         2saHlfyg5qhh12LjvbK/oboWkxb4orKs5FW+9pnjOQ/hX4FszJ79OYxaiVxO93X4A7Uy
-         GSXQ==
+        Tue, 3 Sep 2019 17:13:02 -0400
+Received: by mail-io1-f69.google.com with SMTP id o3so10493253iom.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:13:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tlZOc2xNezEokqqZLK+BpwhUkP8lZ83mMuTnU9+ie8s=;
-        b=PDkyZTvStN8FTyZdujuRGY33zfX+2tzsYT0GgrqWJYbIK2vZlowyM/JLA7qDrLL9Xd
-         jKlNRUvfP/DKgdsdrD94JuP0+PIk5cBM6tLSrOoTnjsN5EgN5B8p3RUddsI2oPGRroSQ
-         PQzUq7nmR61Khq0NRg3DXSRBxJoSq6oYj322a8O0gWl02rBLEDqfKZENouZGjwPw6u2z
-         fpmWN6XdZGG1awa67criB//6TgNgxlXDqMfYQnNHrNuhncj3poWbd7YH1K4KXQ0gIE1n
-         k9PheuSHednqF1PhvKYUGexq3KMIRrM4F90uJmnhjNNjfuZrgvGpdnj14oSNeH2o98da
-         mn9g==
-X-Gm-Message-State: APjAAAUlilfvuac8dRwYlWafPuETldrLuPijS0ziQBCioG0HQIxOmHwk
-        tYJtZpNqcT/fWPoi8w0LqA0ak6+sUkGx2mYxzcwngA==
-X-Google-Smtp-Source: APXvYqx7vCcqY7JYSqJ7ruyJLsM5+4x6by5t5sMbC45cXVsxXe3O3v5ljDXh0T9jJ66uyg/z2WW2jKwk6p/Nm5eI8fA=
-X-Received: by 2002:aca:3a87:: with SMTP id h129mr1006349oia.4.1567544898133;
- Tue, 03 Sep 2019 14:08:18 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1WKGwcpaWquE3NyVH1G6d6wvJxvfHkoeVrMFiDnZFIo=;
+        b=OdJ4FEOiNcUMiSfS5OZufKVnuh1Wt7BmS05xEaVkwHFVnEhCobylK7d73mZI3UFWdN
+         7DIsHd6apF6yITR80FC9bDGKfk0+hIRUOZmEjAYPBU19TQsT017yT966CZMdgAP28aVo
+         x1nGhIaW5H8byC0Qd/JOp133FOGEA0C3unbEYP2rKO1TGd21pKpAvmKnfwJGGTLiVb00
+         AdBzOTzKDC3B+Jn+7FR/LQPhHRNpm6Ly5hZ0aoGlogV8zJgCJBGbJSVjTN3hQvGSlJam
+         kILm4hKinVmFoUifQ5932sbGJcDpePVXbmLesBPRj8ItXM78ONqp6y0fGJgCkPSk0t/n
+         mNVQ==
+X-Gm-Message-State: APjAAAXqKcd0soglYp7JPdxDARVZtTNeH2BuDvbisM2PdTDouA+/hqc+
+        RIQAMMTQelFVFhyxYfSAhSe1JeM9IVyf0ZV6TNX3Zw8RAU/i
+X-Google-Smtp-Source: APXvYqzi2rirV/nztYOLJlRgO8bFME++mdwnvIaTDpXKuCIw3SswPQpijqiahmKwtlY/rzexG5FGRfQ9/rIDKz77FQZInQGxmXy3
 MIME-Version: 1.0
-References: <20190822200030.141272-1-khazhy@google.com>
-In-Reply-To: <20190822200030.141272-1-khazhy@google.com>
-From:   Khazhismel Kumykov <khazhy@google.com>
-Date:   Tue, 3 Sep 2019 14:08:07 -0700
-Message-ID: <CACGdZYKPyBnJvZWY7+JiUoHZvzC+RWonbZ1PBKtpCXCa4BVa6w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] fuse: on 64-bit store time in d_fsdata directly
-To:     miklos@szeredi.hu
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shakeel Butt <shakeelb@google.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000dc0f680591ac7c71"
+X-Received: by 2002:a02:9a12:: with SMTP id b18mr4209405jal.70.1567545181433;
+ Tue, 03 Sep 2019 14:13:01 -0700 (PDT)
+Date:   Tue, 03 Sep 2019 14:13:01 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1909031654240.1859-100000@iolanthe.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b580440591ac8df5@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in usb_reset_and_verify_device
+From:   syzbot <syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com>
+To:     Thinh.Nguyen@synopsys.com, andreyknvl@google.com,
+        dianders@chromium.org, gregkh@linuxfoundation.org,
+        jflat@chromium.org, kai.heng.feng@canonical.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        malat@debian.org, mathias.nyman@linux.intel.com,
+        nsaenzjulienne@suse.de, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000dc0f680591ac7c71
-Content-Type: text/plain; charset="UTF-8"
+Hello,
 
-On Thu, Aug 22, 2019 at 1:00 PM Khazhismel Kumykov <khazhy@google.com> wrote:
->
-> Implements the optimization noted in f75fdf22b0a8 ("fuse: don't use
-> ->d_time"), as the additional memory can be significant. (In particular,
-> on SLAB configurations this 8-byte alloc becomes 32 bytes). Per-dentry,
-> this can consume significant memory.
->
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-> ---
->  fs/fuse/dir.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: slab-out-of-bounds Read in usb_reset_and_verify_device
 
-ping?
+usb 6-1: Using ep0 maxpacket: 16
+usb 6-1: BOS total length 54, descriptor 168
+usb 6-1: Old BOS ffff8881cd814f60  Len 0xa8
+usb 6-1: New BOS ffff8881cd257ae0  Len 0xa8
+==================================================================
+BUG: KASAN: slab-out-of-bounds in memcmp+0xa6/0xb0 lib/string.c:904
+Read of size 1 at addr ffff8881cd257c36 by task kworker/1:0/17
 
---000000000000dc0f680591ac7c71
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.0-rc5+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:612
+  memcmp+0xa6/0xb0 lib/string.c:904
+  memcmp include/linux/string.h:400 [inline]
+  descriptors_changed drivers/usb/core/hub.c:5579 [inline]
+  usb_reset_and_verify_device+0x5a8/0x1350 drivers/usb/core/hub.c:5736
+  usb_reset_device+0x4c1/0x920 drivers/usb/core/hub.c:5905
+  rt2x00usb_probe+0x53/0x7af  
+drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:806
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-MIIS5wYJKoZIhvcNAQcCoIIS2DCCEtQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghBNMIIEXDCCA0SgAwIBAgIOSBtqDm4P/739RPqw/wcwDQYJKoZIhvcNAQELBQAwZDELMAkGA1UE
-BhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExOjA4BgNVBAMTMUdsb2JhbFNpZ24gUGVy
-c29uYWxTaWduIFBhcnRuZXJzIENBIC0gU0hBMjU2IC0gRzIwHhcNMTYwNjE1MDAwMDAwWhcNMjEw
-NjE1MDAwMDAwWjBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEiMCAG
-A1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBALR23lKtjlZW/17kthzYcMHHKFgywfc4vLIjfq42NmMWbXkNUabIgS8KX4PnIFsTlD6F
-GO2fqnsTygvYPFBSMX4OCFtJXoikP2CQlEvO7WooyE94tqmqD+w0YtyP2IB5j4KvOIeNv1Gbnnes
-BIUWLFxs1ERvYDhmk+OrvW7Vd8ZfpRJj71Rb+QQsUpkyTySaqALXnyztTDp1L5d1bABJN/bJbEU3
-Hf5FLrANmognIu+Npty6GrA6p3yKELzTsilOFmYNWg7L838NS2JbFOndl+ce89gM36CW7vyhszi6
-6LqqzJL8MsmkP53GGhf11YMP9EkmawYouMDP/PwQYhIiUO0CAwEAAaOCASIwggEeMA4GA1UdDwEB
-/wQEAwIBBjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwEgYDVR0TAQH/BAgwBgEB/wIB
-ADAdBgNVHQ4EFgQUyzgSsMeZwHiSjLMhleb0JmLA4D8wHwYDVR0jBBgwFoAUJiSSix/TRK+xsBtt
-r+500ox4AAMwSwYDVR0fBEQwQjBAoD6gPIY6aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9ncy9n
-c3BlcnNvbmFsc2lnbnB0bnJzc2hhMmcyLmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIG
-CCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG
-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
-BQUHMAKGNGh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzaHZzbWltZWNhMS5j
-cnQwHQYDVR0OBBYEFKBLk14axMQMpZ/b8PKcFvP/M5dTMB8GA1UdIwQYMBaAFMs4ErDHmcB4koyz
-IZXm9CZiwOA/MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8v
-d3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMDsGA1UdHwQ0MDIwMKAuoCyGKmh0dHA6Ly9j
-cmwuZ2xvYmFsc2lnbi5jb20vZ3NodnNtaW1lY2ExLmNybDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4IBAQBKP0VRR9yRe7hRjO9f
-l8vyi9FFUHwUYhQNrCn759p3gcg02mxtS8zV2g/xgJuYRni5WstweUmeTAslWVGNcsYVUOn973Ep
-l/19VTDE1G3k+wvs3xY5+Y11hUzgDVsCvuicWAOWAmHgoKEd95uNI30HFT/XRIHAizSXG3uZTciq
-c77VPsnICGmrIQnD9UJGknakL8eyVDAcdO1FxpGiWmW1c2eTMf2mqOTrB+1+ixiDCV5Iq7vFY/vk
-/OjbOc2/RCcDlA6VNEeLUeSWQe59aQ+YiO1jrgnLn3fMgcE7o3t3Lah9K3fFRP8foYGcx8XOESWI
-zZM9o9E2BY7eSO1XYXxyMYICXjCCAloCAQEwXDBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xv
-YmFsU2lnbiBudi1zYTEiMCAGA1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMQIMTewG74t+
-Y00MjT2SMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDXTjFC5qnUa5hvoqlvwDxq
-0GWaTVym4W9r2f0RHDIwCTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEP
-Fw0xOTA5MDMyMTA4MThaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQB
-FjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglg
-hkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAitjUS5nnJ0YjaX/JdsIbn0yTVlLLC7phdG7JKYC/
-TW1L9URFHyzl+fBaz/Q9aRPCkdRD3YwPlvpzsSECwW61PM+7irbBiPn1WevGyOIOrzB3SMJGSeex
-wTMWbLt0LJ34SFaVLSHN6vM4HjwoiaMwq/YTed1znVTpv33l21oogBxEUSZiipxsl9O03X8cqagO
-MD6yoZSiBORn4SJBdpnhZNj7TyqnPrG2QHHnkTKaJ8Ju8WAPqeidVFVnFNzo5LOPiWVPpSe2zc7I
-EDBVeKW1dYXY6jnApZ5chOfic3j9orgzqF3Kf0dUHVtyygsCZlnW95GmdupPrlKypjNxMy5OMg==
---000000000000dc0f680591ac7c71--
+Allocated by task 17:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+  kmalloc include/linux/slab.h:557 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  usb_get_bos_descriptor+0x1e4/0x315 drivers/usb/core/config.c:955
+  hub_port_init+0x169a/0x2d30 drivers/usb/core/hub.c:4837
+  usb_reset_and_verify_device+0x3aa/0x1350 drivers/usb/core/hub.c:5720
+  usb_reset_device+0x4c1/0x920 drivers/usb/core/hub.c:5905
+  rt2x00usb_probe+0x53/0x7af  
+drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:806
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2190:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+  slab_free_hook mm/slub.c:1423 [inline]
+  slab_free_freelist_hook mm/slub.c:1474 [inline]
+  slab_free mm/slub.c:3016 [inline]
+  kfree+0xe4/0x2f0 mm/slub.c:3957
+  free_rb_tree_fname+0x7f/0xe0 fs/ext4/dir.c:404
+  ext4_htree_free_dir_info fs/ext4/dir.c:426 [inline]
+  ext4_release_dir+0x41/0x60 fs/ext4/dir.c:624
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881cd257c00
+  which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 54 bytes inside of
+  64-byte region [ffff8881cd257c00, ffff8881cd257c40)
+The buggy address belongs to the page:
+page:ffffea00073495c0 refcount:1 mapcount:0 mapping:ffff8881da003180  
+index:0xffff8881cd257f00
+flags: 0x200000000000200(slab)
+raw: 0200000000000200 ffffea00073442c0 0000001d0000001d ffff8881da003180
+raw: ffff8881cd257f00 00000000802a0028 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881cd257b00: 00 00 fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+  ffff8881cd257b80: fc fc fc fc fb fb fb fb fb fb fb fb fc fc fc fc
+> ffff8881cd257c00: 00 00 00 00 00 00 06 fc fc fc fc fc fb fb fb fb
+                                      ^
+  ffff8881cd257c80: fb fb fb fb fc fc fc fc fb fb fb fb fb fb fb fb
+  ffff8881cd257d00: fc fc fc fc 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+
+
+Tested on:
+
+commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=17cc619e600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=35f4d916c623118d576e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10b73476600000
+
