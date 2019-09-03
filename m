@@ -2,142 +2,217 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292A1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1DDC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED1322D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B9E22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567534417;
+	bh=gdp5nfVn2oePPyYBqBBwHEYwyqchiRuWWJXoAR0MnhU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=t91BgR+0EEb4rWsQdsvbyfdC3IV120W2tpnf9QeySmq006qZmDpRdGAYLC2Xxp52V
+	 oJE1cR218I7/qw8sfPQ1tyPACJVjtpzC5oHENSe45R86SIg6BEGHkYnkqOKcGXeMhO
+	 bUT3BWPQ15ngPa20/Oned1HORD+rJxgod9AgPhyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfICSNN (ORCPT
+        id S1730212AbfICSNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:13:13 -0400
-Received: from sauhun.de ([88.99.104.3]:56828 "EHLO pokefinder.org"
+        Tue, 3 Sep 2019 14:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbfICSNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:13:01 -0400
-Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
-        by pokefinder.org (Postfix) with ESMTPSA id 948AD2C4F33;
-        Tue,  3 Sep 2019 20:13:00 +0200 (CEST)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marc Hulsman <m.hulsman@tudelft.nl>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 1/3] hwmon: w83791d: convert to use devm_i2c_new_dummy_device
-Date:   Tue,  3 Sep 2019 20:12:54 +0200
-Message-Id: <20190903181256.13450-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
-References: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
+        id S1728113AbfICSNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 14:13:36 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA06822D6D;
+        Tue,  3 Sep 2019 18:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567534415;
+        bh=gdp5nfVn2oePPyYBqBBwHEYwyqchiRuWWJXoAR0MnhU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q9KwHX6pOyHlEtpst8uiDZ/AOSUCW2DYvo1Ytp2LpYg0NqW05V1wDUWzJLrb+D71n
+         wobZ4vV01SH1Rws8kMPt7q0fO7hlsJfzX6VY6Skuidap5W1lrFXSbiM5203Aaxev/M
+         FM8yohsdJN3CLnbDvG3f9MKs5pkq9jKkUMhLg94w=
+Date:   Tue, 3 Sep 2019 19:13:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH] iio: imu: st_lsm6dsx: replace underscore with hyphen in
+ device name
+Message-ID: <20190903191330.609ca6b0@archlinux>
+In-Reply-To: <75fde41c-5ae2-af96-c712-ab5009aa8214@puri.sm>
+References: <20190903051802.22716-1-martin.kepplinger@puri.sm>
+        <20190903134303.000008be@huawei.com>
+        <75fde41c-5ae2-af96-c712-ab5009aa8214@puri.sm>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And simplify the error handling.
+On Tue, 3 Sep 2019 14:51:56 +0200
+Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/hwmon/w83791d.c | 32 +++++++++-----------------------
- 1 file changed, 9 insertions(+), 23 deletions(-)
+> On 03.09.19 14:43, Jonathan Cameron wrote:
+> > +CC Greg as fix for a patch in my outstanding pull request.
+> > 
+> > On Tue, 3 Sep 2019 07:18:02 +0200
+> > Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+> >   
+> >> With the underscore character in the lsm9ds1_imu device name, we get the
+> >> following error below, so use a dash, just like the other device names do too.
+> >>
+> >> [    3.961399] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+> >> [    4.010581] Mem abort info:
+> >> [    4.013838]   ESR = 0x96000004
+> >> [    4.023602]   Exception class = DABT (current EL), IL = 32 bits
+> >> [    4.047993]   SET = 0, FnV = 0
+> >> [    4.052690]   EA = 0, S1PTW = 0
+> >> [    4.056015] Data abort info:
+> >> [    4.059020]   ISV = 0, ISS = 0x00000004
+> >> [    4.080106]   CM = 0, WnR = 0
+> >> [    4.085237] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e4f61000
+> >> [    4.092194] [0000000000000018] pgd=0000000000000000
+> >> [    4.097474] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> >> [    4.103286] Modules linked in: tcpci st_sensors st_lsm6dsx_i2c(+) tcpm st_lsm6dsx industrialio_triggered_buffer kfifo_buf vcnl4000 roles typec goodix snd_soc_sgtl5000 bq25890_charger snvs_pwrkey imx_sdma virt_dma qoriq_thermal imx2_wdt snd_soc_fsl_sai aes_ce_blk imx_pcm_dma crypto_simd watchdog crct10dif_ce ghash_ce sha2_ce snd_soc_simple_card snd_soc_gtm601 snd_soc_simple_card_utils sha1_ce snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore gpio_vibra usb_f_acm u_serial usb_f_rndis g_multi usb_f_mass_storage u_ether libcomposite ip_tables x_tables ipv6 nf_defrag_ipv6 xhci_plat_hcd xhci_hcd usbcore dwc3 ulpi udc_core usb_common phy_fsl_imx8mq_usb
+> >> [    4.105389] bq25890-charger 0-006b: Capacity for 3784000 is 86%
+> >> [    4.164061] CPU: 1 PID: 344 Comm: systemd-udevd Tainted: G        W         5.3.0-rc2-g24e3d989d49f-dirty #161
+> >> [    4.164063] Hardware name: Purism Librem 5 devkit (DT)
+> >> [    4.164067] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> >> [    4.164082] pc : st_lsm6dsx_i2c_probe+0x18/0x80 [st_lsm6dsx_i2c]
+> >> [    4.164093] lr : i2c_device_probe+0x1f0/0x2b8
+> >> [    4.164094] sp : ffff8000a499f970
+> >> [    4.164097] x29: ffff8000a499f970 x28: 0000000000000000
+> >> [    4.164100] x27: ffff000010b70000 x26: ffff8000a499fd68
+> >> [    4.164104] x25: ffff000010860000 x24: ffff000008a8b038
+> >> [    4.164108] x23: ffff000008a8b038 x22: ffff000008a8b000
+> >> [    4.164111] x21: ffff8000a55b2400 x20: ffff000008a89000
+> >> [    4.164115] x19: ffff8000a55b2400 x18: ffffffffffffffff
+> >> [    4.164118] x17: 0000000000000000 x16: 0000000000000000
+> >> [    4.164121] x15: 0000000000040000 x14: 00000000fffffff0
+> >> [    4.164125] x13: ffff000010b6c898 x12: 0000000000000030
+> >> [    4.164128] x11: 0000000000000000 x10: 0101010101010101
+> >> [    4.260542] x9 : fffffffffffffffc x8 : 0000000000000008
+> >> [    4.266073] x7 : 0000000000000004 x6 : 1e0e1a00f2ade4ef
+> >> [    4.271605] x5 : 6f642d72001a0e1e x4 : 8080808000000000
+> >> [    4.277136] x3 : 0000000000000000 x2 : ffff000008a8a000
+> >> [    4.282667] x1 : 0000000000000000 x0 : ffff8000a55b2400
+> >> [    4.288199] Call trace:
+> >> [    4.290753]  st_lsm6dsx_i2c_probe+0x18/0x80 [st_lsm6dsx_i2c]
+> >> [    4.296648]  i2c_device_probe+0x1f0/0x2b8
+> >> [    4.300825]  really_probe+0x168/0x368
+> >> [    4.304638]  driver_probe_device.part.2+0x10c/0x128
+> >> [    4.309716]  device_driver_attach+0x74/0xa0
+> >> [    4.314071]  __driver_attach+0x84/0x130
+> >> [    4.318065]  bus_for_each_dev+0x68/0xc8
+> >> [    4.322058]  driver_attach+0x20/0x28
+> >> [    4.325780]  bus_add_driver+0xd4/0x1f8
+> >> [    4.329683]  driver_register+0x60/0x110
+> >> [    4.333677]  i2c_register_driver+0x44/0x98
+> >> [    4.337944]  st_lsm6dsx_driver_init+0x1c/0x1000 [st_lsm6dsx_i2c]
+> >> [    4.344200]  do_one_initcall+0x58/0x1a8
+> >> [    4.348195]  do_init_module+0x54/0x1d4
+> >> [    4.352098]  load_module+0x1998/0x1c40
+> >> [    4.356001]  __se_sys_finit_module+0xc0/0xd8
+> >> [    4.360446]  __arm64_sys_finit_module+0x14/0x20
+> >> [    4.365166]  el0_svc_common.constprop.0+0xb0/0x168
+> >> [    4.370154]  el0_svc_handler+0x18/0x20
+> >> [    4.374056]  el0_svc+0x8/0xc
+> >> [    4.377059] Code: d2800003 910003fd a90153f3 aa0003f3 (f9400c34)
+> >> [    4.383406] ---[ end trace 6dfe010c028e3371 ]---
+> >>  
+> >   
+> >> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>  
+> > Fixes: a106864fd667 ("iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9ds1")
+> > 
+> > Thanks Martin.  This one is entirely my fault for messing up tweaking
+> > that naming.  I should have bounced the patch back for another round
+> > rather than thinking "it's trivial, what could possibly go wrong!"  
+> 
+> I wouldn't have thought but even your trivial change would probably have
+> deserved to be a separate commit. That would've saved time.
+True on this occaison, but the converse is that it is common for minor
+tweaks from last minute reviews to be rolled on applying in the interests of
+keeping the history clean.
 
-diff --git a/drivers/hwmon/w83791d.c b/drivers/hwmon/w83791d.c
-index 050ad4201691..aad8d4da5802 100644
---- a/drivers/hwmon/w83791d.c
-+++ b/drivers/hwmon/w83791d.c
-@@ -1260,7 +1260,7 @@ static int w83791d_detect_subclients(struct i2c_client *client)
- 	struct i2c_adapter *adapter = client->adapter;
- 	struct w83791d_data *data = i2c_get_clientdata(client);
- 	int address = client->addr;
--	int i, id, err;
-+	int i, id;
- 	u8 val;
- 
- 	id = i2c_adapter_id(adapter);
-@@ -1272,8 +1272,7 @@ static int w83791d_detect_subclients(struct i2c_client *client)
- 					"invalid subclient "
- 					"address %d; must be 0x48-0x4f\n",
- 					force_subclients[i]);
--				err = -ENODEV;
--				goto error_sc_0;
-+				return -ENODEV;
- 			}
- 		}
- 		w83791d_write(client, W83791D_REG_I2C_SUBADDR,
-@@ -1283,29 +1282,22 @@ static int w83791d_detect_subclients(struct i2c_client *client)
- 
- 	val = w83791d_read(client, W83791D_REG_I2C_SUBADDR);
- 	if (!(val & 0x08))
--		data->lm75[0] = i2c_new_dummy(adapter, 0x48 + (val & 0x7));
-+		data->lm75[0] = devm_i2c_new_dummy_device(&client->dev, adapter,
-+							  0x48 + (val & 0x7));
- 	if (!(val & 0x80)) {
--		if ((data->lm75[0] != NULL) &&
-+		if (!IS_ERR(data->lm75[0]) &&
- 				((val & 0x7) == ((val >> 4) & 0x7))) {
- 			dev_err(&client->dev,
- 				"duplicate addresses 0x%x, "
- 				"use force_subclient\n",
- 				data->lm75[0]->addr);
--			err = -ENODEV;
--			goto error_sc_1;
-+			return -ENODEV;
- 		}
--		data->lm75[1] = i2c_new_dummy(adapter,
--					      0x48 + ((val >> 4) & 0x7));
-+		data->lm75[1] = devm_i2c_new_dummy_device(&client->dev, adapter,
-+							  0x48 + ((val >> 4) & 0x7));
- 	}
- 
- 	return 0;
--
--/* Undo inits in case of errors */
--
--error_sc_1:
--	i2c_unregister_device(data->lm75[0]);
--error_sc_0:
--	return err;
- }
- 
- 
-@@ -1394,7 +1386,7 @@ static int w83791d_probe(struct i2c_client *client,
- 	/* Register sysfs hooks */
- 	err = sysfs_create_group(&client->dev.kobj, &w83791d_group);
- 	if (err)
--		goto error3;
-+		return err;
- 
- 	/* Check if pins of fan/pwm 4-5 are in use as GPIO */
- 	has_fanpwm45 = w83791d_read(client, W83791D_REG_GPIO) & 0x10;
-@@ -1419,9 +1411,6 @@ static int w83791d_probe(struct i2c_client *client,
- 		sysfs_remove_group(&client->dev.kobj, &w83791d_group_fanpwm45);
- error4:
- 	sysfs_remove_group(&client->dev.kobj, &w83791d_group);
--error3:
--	i2c_unregister_device(data->lm75[0]);
--	i2c_unregister_device(data->lm75[1]);
- 	return err;
- }
- 
-@@ -1432,9 +1421,6 @@ static int w83791d_remove(struct i2c_client *client)
- 	hwmon_device_unregister(data->hwmon_dev);
- 	sysfs_remove_group(&client->dev.kobj, &w83791d_group);
- 
--	i2c_unregister_device(data->lm75[0]);
--	i2c_unregister_device(data->lm75[1]);
--
- 	return 0;
- }
- 
--- 
-2.20.1
+Just to top that, given I needed to rebase that tree anyway to fix
+a missing sign off I've rolled your patch in a fixup for the original
+patch. So as far as the final history is concerned the issue never
+happened.
+
+Fingers crossed I haven't messed anything else up!
+
+Thanks,
+
+Jonathan
+
+> 
+> but np. worse things have happened. I'm glad to have it fixed. thanks
+> for the quick response.
+> 
+>                        martin
+> 
+> > 
+> > On basis Greg may prefer to pick this one directly:
+> > 
+> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Convenient lore.kernel.org link.
+> > 
+> > https://lore.kernel.org/linux-iio/20190903051802.22716-1-martin.kepplinger@puri.sm/T/#u
+> > 
+> > 
+> > If not I'll pick it up for first set of fixes post rc1.
+> > 
+> > As for the question below, I've not taken a look yet and certainly seems
+> > an odd result!
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> > 
+> > 
+> >   
+> >> ---
+> >>
+> >> While this patch fixes my (formerly already mentioned) issue, it's
+> >> a question actually: Why does is this underscore character a problem?
+> >>
+> >> thanks,
+> >>
+> >>                         martin
+> >>
+> >>
+> >>
+> >>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> >> index 5e3cd96b0059..80e42c7dbcbe 100644
+> >> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> >> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> >> @@ -24,7 +24,7 @@
+> >>  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
+> >>  #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
+> >>  #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
+> >> -#define ST_LSM9DS1_DEV_NAME	"lsm9ds1_imu"
+> >> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1-imu"
+> >>  
+> >>  enum st_lsm6dsx_hw_id {
+> >>  	ST_LSM6DS3_ID,  
+> > 
+> >   
+> 
 
