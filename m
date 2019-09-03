@@ -2,106 +2,116 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC84C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48677C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3C622CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C96820828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NYROjrDD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tw2YiN+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfICCia (ORCPT
+        id S1727113AbfICCjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 22:38:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47932 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfICCi3 (ORCPT
+        Mon, 2 Sep 2019 22:39:01 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38949 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfICCjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 22:38:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=//Ea53kN5rE79WQGkQIGYNCPvD/egheDqPPhkUd4fxw=; b=NYROjrDDbZMFrJbuXg65KL4yE
-        XY6uZgPHqEvyrXNqvhpZEMzIgtRuXkEsAHPihUjGXz6YkRmJEmSArhNQN3VbtoDvVAXfpAw+LCIl2
-        nl7lVpnSG/OWG7j26uNhfRw2piBo5OG5eo68Siz/A6Jdafzi1CtFb1ed1SNp6F7CWAejwXkHEvONy
-        eVQ/JcIql9XqPGnhYH8KM4ZuqhNojbLzWjdVJunbSEvjTsCrTm8sYaIZUbByUDjxTCglysouGtIJx
-        KX5uLNWoJxj4RhDU2eICUZ8saSMP5quSugoHuKgtX6m3CANHd4Ddwx7LzRsAVG+OBL90x1ljUnD0V
-        JQl5X+F+Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i4yi6-0000V9-R1; Tue, 03 Sep 2019 02:38:22 +0000
-Date:   Mon, 2 Sep 2019 19:38:22 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc:lock: remove reference to clever use of read-write
- lock
-Message-ID: <20190903023822.GB29434@bombadil.infradead.org>
-References: <20190831134116.25417-1-federico.vaga@vaga.pv.it>
- <2216492.xyESGPMPG3@pcbe13614>
- <20190902181010.GA35858@gmail.com>
- <4627860.yBeiQmOknq@harkonnen>
- <20190902142133.37e106af@lwn.net>
+        Mon, 2 Sep 2019 22:39:00 -0400
+Received: by mail-lf1-f68.google.com with SMTP id l11so11610985lfk.6;
+        Mon, 02 Sep 2019 19:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bypCdtkGCzTYBLw17U+HKNiJ2TPW1+aSuUx/xJPZIZo=;
+        b=Tw2YiN+HIU2vOIqjXQvLB1Aaa7OR8piST1fyAxnRATGJ7xPFti8tvGrk+Q1W2IfFwh
+         3is/D+npGDgCVdQZk8KI89Cjs03qBDMuqpAVhR3qD/Be2CZozOGXWYP9/jvB7cG8oMsy
+         GbynC5WW+g/omkxFMfkzATGJm9qsXdKbZOQkYg6aQjgrEpCDczgIO+Sb+egz6jrHvtku
+         H/cmrwxJ22Flcr0ha+YNU9ZYGDqCRkPIZ90JirjlV7Mkie/dqQePYO3CNN3UkcLszKyS
+         JtmmL/T2kErBT9Xi0cimYGOuKfbsuMEWvlf/Icz1yKur63PrmdWLqpXQXShH+bE1P4O+
+         4QLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bypCdtkGCzTYBLw17U+HKNiJ2TPW1+aSuUx/xJPZIZo=;
+        b=aQY4HZyLdI6Wkl1Ol+VY8CobOk0ExCOfbW1TrXEleIyARNdnsPI68e3jtqX1WgFRID
+         NkhfIa9YnestnnACioreRwC2341ZvgTNBDEvYga1Jiwnu0Muqnz1U8eI8bcWiACN1a5p
+         yK0UOfBbUb8WoJOKRLaSvpgn/hZE+dgELxgIhRTEjhE0MbP5M1mjQY4A1cqEYBrNvbR5
+         theyqNDY/mPYekrliimPB0rFD6nsj0STEl7nf2dkM2xWuvuKs4+Tbr2nag2WIGBQ9hlf
+         mdu430cmWWLJVbDYJjyWH2VI1QC1hScukKApU0EpBeYYHDGEpoX0WxNcgCPHZDcDRfs3
+         Fv8w==
+X-Gm-Message-State: APjAAAUVECIpGcmDIWYm2jb9OkDnd5BuvWfzxVDwzhsGocXnxO7iYvvo
+        +rY/37T/3TPKsPbvkDu+0nKS055ghmAsCzWiaYk=
+X-Google-Smtp-Source: APXvYqwGGeSGkPpuwW5dwm7rAyPowBBe7Ix/KIQ0UDaaZQ+Ir4C6sIN/uDqrUD6hZZwmSAh0xU9ocevalRVs66GAl1c=
+X-Received: by 2002:a19:f11c:: with SMTP id p28mr8434160lfh.44.1567478338404;
+ Mon, 02 Sep 2019 19:38:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902142133.37e106af@lwn.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com> <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 2 Sep 2019 23:38:54 -0300
+Message-ID: <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
+Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
+ controller power key support
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Fugang Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>, mripard@kernel.org,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        marcin.juszkiewicz@linaro.org, Stefan Agner <stefan@agner.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        yuehaibing@huawei.com, Thomas Gleixner <tglx@linutronix.de>,
+        ronald@innovation.ch, Marco Felsch <m.felsch@pengutronix.de>,
+        Ping Bai <ping.bai@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-input@vger.kernel.org, NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 02:21:33PM -0600, Jonathan Corbet wrote:
-> On Mon, 02 Sep 2019 21:19:24 +0200
-> Federico Vaga <federico.vaga@vaga.pv.it> wrote:
-> 
-> > > > I am not used to the mathematical English jargon. It make sense, but then
-> > > > I
-> > > > would replace it with "If and only if": for clarity.  
-> > > 
-> > > While it's used in a number of places and it's pretty common wording
-> > > overall in the literature, I agree that we should probably change this in
-> > > locking API user facing documentation.  
-> > 
-> > I would say not only in locking/. The argument is valid for the entire 
-> > Documentation/. I wait for Jon's opinion before proceeding.
-> 
-> I don't really have a problem with "iff"; it doesn't seem like *that*
-> obscure a term to me.  But if you want spell it out, I guess I don't have
-> a problem with that.  We can change it - iff you send a patch to do it :)
+Hi Anson,
 
-$ git grep -iwc iff Documentation
-Documentation/admin-guide/cgroup-v1/blkio-controller.rst:1
-Documentation/admin-guide/cgroup-v1/cgroups.rst:1
-Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst:2
-Documentation/admin-guide/cgroup-v2.rst:1
-Documentation/devicetree/bindings/media/st-rc.txt:2
-Documentation/devicetree/bindings/net/ibm,emac.txt:5
-Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt:1
-Documentation/driver-api/libata.rst:1
-Documentation/features/scripts/features-refresh.sh:1
-Documentation/filesystems/directory-locking:1
-Documentation/i2c/i2c-topology:3
-Documentation/ioctl/hdio.rst:1
-Documentation/locking/spinlocks.rst:1
-Documentation/locking/ww-mutex-design.rst:1
-Documentation/scsi/scsi_eh.txt:2
-Documentation/spi/spidev:2
-Documentation/trace/ring-buffer-design.txt:1
-Documentation/virt/kvm/api.txt:1
-Documentation/virt/kvm/halt-polling.txt:1
+On Mon, Sep 2, 2019 at 11:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-(29 total)
+> +       ret = input_register_device(input);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "failed to register input device\n");
+> +               return ret;
+> +       }
+> +
+> +       pdata->input = input;
+> +       platform_set_drvdata(pdev, pdata);
+> +
+> +       ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
+> +       if (ret) {
+> +               dev_warn(&pdev->dev, "enable scu group irq failed\n");
+> +               return ret;
 
-Of course that doesn't count any in kernel-doc.
+Better do a 'goto input_unregister' here instead and call
+input_unregister_device().
