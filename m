@@ -2,282 +2,310 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABB9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2205AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB5D21881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D834321881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kIYuXA48"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="mC+xMiAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfICJxj (ORCPT
+        id S1728610AbfICJxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:53:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54382 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfICJxi (ORCPT
+        Tue, 3 Sep 2019 05:53:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37973 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfICJxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:53:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k2so15951794wmj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:53:36 -0700 (PDT)
+        Tue, 3 Sep 2019 05:53:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l11so7925931wrx.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3svFEUFdlGRo7s6oU/gAKMoNrDtitSPWMnmTngxdf5A=;
-        b=kIYuXA48J8yijkoUvvwSReT8C7vDXIE1MLur0hYz+TkH/SXUuow+Z9RpdecahEHqfT
-         gfMPla1YRabYeDgUmmlkI8D2h8jprn/SfljLi+ALfCaC5DkQKMTAK0wMqVl6du0USNUP
-         8Q9gmtoY2VKhAzFr3dUpG6KeMi4nQnXYJ//3tyrry7WaQ5cA8e5yAWcsNuXjC2NU6cQ2
-         OY1QInnD6h/5eRALoJF5X41M/S+WlVJY7NPvflic7F82lpWhjVR8SpEYC2f2fKFbBKRK
-         V97d6ec4ppirWFT5oWkF04LkBSC7guAniEjV1TjuaQn/Ki9QMH3obFR5ePfsUn0aGeOl
-         gcVw==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MgXnM5PtLLeZR4goT8pEjOEmDwznieCs/oR5Oy3fuSo=;
+        b=mC+xMiASacXX5Uk14z3V94sf/GweT8FVxSnDjFgNxflc+SESaM+kJtWD7A4gHXeOVw
+         IS4nM7LmLSn0eMs4n6RyWTsiB5dYrRpod1s9zlnwBlH+SYDW3H6mAyUd+GskjPPjDYg/
+         aoy79/mGZRoMqacGUmZyfZu9zd/QaWVrWzZiQ1Td4pz7gcUbVI9Nbf6H8yf75QYrcLfg
+         JLcXAe8v45vL2Udit4uIwMGnC8Zr6LOuIgXi3uoKdum4/dJo114l4ya5YCY68jAKkQI0
+         d1yQcFMKTB+q4eWM05V/8lVB0V9eACtMUlJ9aPvcYN2H46Dk5vkMBJbteUZ871iJvfOF
+         O6RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3svFEUFdlGRo7s6oU/gAKMoNrDtitSPWMnmTngxdf5A=;
-        b=g2W4FTS3ZAG3/EbuCdI5ZYRO/7N2P+PBdVkKEno4l1zlfdFB1r65Rh/kQeAzlQ4IZE
-         wrZm+9YFU49BpIu68PTqpeAohVsuMIRiqO3o5d6aBU45raNlj5E7ljzpUAwZPNtc30fU
-         EzrAH0IAJDlv6sTqADHGxW0lNG+sjidZICUG9pCBaBnf7VS/RwPKill48Peun5Yad73q
-         pOta2b7ZX/N28QhEPbpN2FVonocN8rB2VrAxL/W8w+mOZkYaL2FYmk+bTiwKAjdjh+jF
-         cHF9BwvoTvxa5rj5hIbTRnAV6oFNB+C/tvp4qa0nqLJszZMr1gE8mp5Qp/ZSFj0qRGOI
-         pcWA==
-X-Gm-Message-State: APjAAAWJ/lqmHtT2kC1ruGZ11HSTX0uuuIwZPPZgJsOBlrzvA6LD9zK7
-        Fos2TNi+Z193HqDRBw0ZyGUTsw==
-X-Google-Smtp-Source: APXvYqyTtwuHZrhUbdBQZ7Or0d1HOtYQZHQdZrPahyeZ5TF7qNJyfrFtU4pNalcJKWCYtGBlnIJk7Q==
-X-Received: by 2002:a7b:c186:: with SMTP id y6mr13960388wmi.12.1567504414674;
-        Tue, 03 Sep 2019 02:53:34 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id r18sm20184350wrx.36.2019.09.03.02.53.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 02:53:34 -0700 (PDT)
-Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status
- setting
-To:     Cheng-Yi Chiang <cychiang@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     alsa-devel@alsa-project.org, tzungbi@chromium.org,
-        zhengxing@rock-chips.com, kuninori.morimoto.gx@renesas.com,
-        a.hajda@samsung.com, airlied@linux.ie, kuankuan.y@gmail.com,
-        jeffy.chen@rock-chips.com, dianders@chromium.org,
-        dri-devel@lists.freedesktop.org, cain.cai@rock-chips.com,
-        linux-rockchip@lists.infradead.org, eddie.cai@rock-chips.com,
-        Laurent.pinchart@ideasonboard.com, daniel@ffwll.ch,
-        Yakir Yang <ykk@rock-chips.com>, enric.balletbo@collabora.com,
-        dgreid@chromium.org, sam@ravnborg.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190903055103.134764-1-cychiang@chromium.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com>
-Date:   Tue, 3 Sep 2019 11:53:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MgXnM5PtLLeZR4goT8pEjOEmDwznieCs/oR5Oy3fuSo=;
+        b=CuUNmXQ8wB5v6cQZVcBJ03FdLKYp+qvJ6TJWrRAdCyfbf+XC2eSip56AxE7Hy0AEfs
+         +FkG8oKHX5RhVYRMK/a21k8cURIqJufzl7jMlu+SAt/MQBYalaR+Qdgm2YayQVGb3RQi
+         Y/cxLyjIIWfT1hzdXxmvUVtOHN8CgTxACJUDhCAJ8EgHqCp2M8aJhuWUOjr9u3KKgcUK
+         sjAutM//37dtA0/ygCyfER7y1bp0VGdmf4q290RjrtF34Qvmu8sNUrVw+VAPd1JSdXJc
+         Em75E72XwjV3lLPB+XiOMKZn5SmZS7f5ylbfG7FRkVUz5KHslQ7BJlXXkv2tzYY7z2Je
+         cVyg==
+X-Gm-Message-State: APjAAAWwkv5pJvwuxCQeyd28yABdYeUEUthgtDTr+FbWH9HqLduypwEJ
+        z6LKmHDXS28FoWz7w/koTuS6OX9saSnvzYQKYAkDOg==
+X-Google-Smtp-Source: APXvYqycePSqD+xZkUq3liN2M817pw47hXAQodFDEYagVeYhgTTX3a0PlLUiIzLP1hWxxrx++aWFnSwGmEJ5WYAkNl8=
+X-Received: by 2002:a5d:5444:: with SMTP id w4mr26076311wrv.180.1567504420046;
+ Tue, 03 Sep 2019 02:53:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190903055103.134764-1-cychiang@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190829135427.47808-1-anup.patel@wdc.com> <20190829135427.47808-20-anup.patel@wdc.com>
+In-Reply-To: <20190829135427.47808-20-anup.patel@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 3 Sep 2019 15:23:29 +0530
+Message-ID: <CAAhSdy2jd79-=bPN0gwm8iTg2BqzLgamTqO5TDXswPc29VPrCQ@mail.gmail.com>
+Subject: Re: [PATCH v6 19/21] RISC-V: KVM: Document RISC-V specific parts of
+ KVM API.
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
-> From: Yakir Yang <ykk@rock-chips.com>
-> 
-> When transmitting IEC60985 linear PCM audio, we configure the
-> Audio Sample Channel Status information of all the channel
-> status bits in the IEC60958 frame.
-> Refer to 60958-3 page 10 for frequency, original frequency, and
-> wordlength setting.
-> 
-> This fix the issue that audio does not come out on some monitors
-> (e.g. LG 22CV241)
-> 
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+On Thu, Aug 29, 2019 at 7:27 PM Anup Patel <Anup.Patel@wdc.com> wrote:
+>
+> Document RISC-V specific parts of the KVM API, such as:
+>  - The interrupt numbers passed to the KVM_INTERRUPT ioctl.
+>  - The states supported by the KVM_{GET,SET}_MP_STATE ioctls.
+>  - The registers supported by the KVM_{GET,SET}_ONE_REG interface
+>    and the encoding of those register ids.
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
 > ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 +++++++++++++++++++++++
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
->  2 files changed, 79 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index bd65d0479683..34d46e25d610 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk)
->  	return n;
->  }
->  
-> +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
-> +{
-> +	u8 aud_schnl_samplerate;
-> +	u8 aud_schnl_8;
+>  Documentation/virt/kvm/api.txt | 140 +++++++++++++++++++++++++++++++--
+>  1 file changed, 133 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+> index 2d067767b617..80c4ffad8bd7 100644
+> --- a/Documentation/virt/kvm/api.txt
+> +++ b/Documentation/virt/kvm/api.txt
+> @@ -471,7 +471,7 @@ struct kvm_translation {
+>  4.16 KVM_INTERRUPT
+>
+>  Capability: basic
+> -Architectures: x86, ppc, mips
+> +Architectures: x86, ppc, mips, riscv
+>  Type: vcpu ioctl
+>  Parameters: struct kvm_interrupt (in)
+>  Returns: 0 on success, negative on failure.
+> @@ -531,6 +531,22 @@ interrupt number dequeues the interrupt.
+>
+>  This is an asynchronous vcpu ioctl and can be invoked from any thread.
+>
+> +RISC-V:
 > +
-> +	/* These registers are on RK3288 using version 2.0a. */
-> +	if (hdmi->version != 0x200a)
-> +		return;
+> +Queues an external interrupt to be injected into the virutal CPU. This ioctl
+> +is overloaded with 2 different irq values:
+> +
+> +a) KVM_INTERRUPT_SET
+> +
+> +  This sets external interrupt for a virtual CPU and it will receive
+> +  once it is ready.
+> +
+> +b) KVM_INTERRUPT_UNSET
+> +
+> +  This clears pending external interrupt for a virtual CPU.
+> +
+> +This is an asynchronous vcpu ioctl and can be invoked from any thread.
+> +
+>
+>  4.17 KVM_DEBUG_GUEST
+>
+> @@ -1206,7 +1222,7 @@ for vm-wide capabilities.
+>  4.38 KVM_GET_MP_STATE
+>
+>  Capability: KVM_CAP_MP_STATE
+> -Architectures: x86, s390, arm, arm64
+> +Architectures: x86, s390, arm, arm64, riscv
+>  Type: vcpu ioctl
+>  Parameters: struct kvm_mp_state (out)
+>  Returns: 0 on success; -1 on error
+> @@ -1220,7 +1236,8 @@ uniprocessor guests).
+>
+>  Possible values are:
+>
+> - - KVM_MP_STATE_RUNNABLE:        the vcpu is currently running [x86,arm/arm64]
+> + - KVM_MP_STATE_RUNNABLE:        the vcpu is currently running
+> +                                 [x86,arm/arm64,riscv]
+>   - KVM_MP_STATE_UNINITIALIZED:   the vcpu is an application processor (AP)
+>                                   which has not yet received an INIT signal [x86]
+>   - KVM_MP_STATE_INIT_RECEIVED:   the vcpu has received an INIT signal, and is
+> @@ -1229,7 +1246,7 @@ Possible values are:
+>                                   is waiting for an interrupt [x86]
+>   - KVM_MP_STATE_SIPI_RECEIVED:   the vcpu has just received a SIPI (vector
+>                                   accessible via KVM_GET_VCPU_EVENTS) [x86]
+> - - KVM_MP_STATE_STOPPED:         the vcpu is stopped [s390,arm/arm64]
+> + - KVM_MP_STATE_STOPPED:         the vcpu is stopped [s390,arm/arm64,riscv]
+>   - KVM_MP_STATE_CHECK_STOP:      the vcpu is in a special error state [s390]
+>   - KVM_MP_STATE_OPERATING:       the vcpu is operating (running or halted)
+>                                   [s390]
+> @@ -1240,7 +1257,7 @@ On x86, this ioctl is only useful after KVM_CREATE_IRQCHIP. Without an
+>  in-kernel irqchip, the multiprocessing state must be maintained by userspace on
+>  these architectures.
+>
+> -For arm/arm64:
+> +For arm/arm64/riscv:
+>
+>  The only states that are valid are KVM_MP_STATE_STOPPED and
+>  KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
+> @@ -1248,7 +1265,7 @@ KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
+>  4.39 KVM_SET_MP_STATE
+>
+>  Capability: KVM_CAP_MP_STATE
+> -Architectures: x86, s390, arm, arm64
+> +Architectures: x86, s390, arm, arm64, riscv
+>  Type: vcpu ioctl
+>  Parameters: struct kvm_mp_state (in)
+>  Returns: 0 on success; -1 on error
+> @@ -1260,7 +1277,7 @@ On x86, this ioctl is only useful after KVM_CREATE_IRQCHIP. Without an
+>  in-kernel irqchip, the multiprocessing state must be maintained by userspace on
+>  these architectures.
+>
+> -For arm/arm64:
+> +For arm/arm64/riscv:
+>
+>  The only states that are valid are KVM_MP_STATE_STOPPED and
+>  KVM_MP_STATE_RUNNABLE which reflect if the vcpu should be paused or not.
+> @@ -2269,6 +2286,115 @@ following id bit patterns:
+>    0x7020 0000 0003 02 <0:3> <reg:5>
+>
+>
+> +RISC-V registers are mapped using the lower 32 bits. The upper 8 bits of
+> +that is the register group type.
+> +
+> +RISC-V config registers are meant for configuring a Guest VCPU and it has
+> +the following id bit patterns:
+> +  0x8020 0000 01 <index into the kvm_riscv_config struct:24> (32bit Host)
+> +  0x8030 0000 01 <index into the kvm_riscv_config struct:24> (64bit Host)
+> +
+> +Following are the RISC-V config registers:
+> +
+> +    Encoding            Register  Description
+> +------------------------------------------------------------------
+> +  0x80x0 0000 0100 0000 isa       ISA feature bitmap of Guest VCPU
+> +  0x80x0 0000 0100 0001 tbfreq    Time base frequency
+> +
+> +The isa config register can be read anytime but can only be written before
+> +a Guest VCPU runs. It will have ISA feature bits matching underlying host
+> +set by default. The tbfreq config register is a read-only register and it
+> +will return host timebase frequenc.
+> +
+> +RISC-V core registers represent the general excution state of a Guest VCPU
+> +and it has the following id bit patterns:
+> +  0x8020 0000 02 <index into the kvm_regs struct:24> (32bit Host)
+> +  0x8030 0000 02 <index into the kvm_regs struct:24> (64bit Host)
+> +
+> +Following are the RISC-V core registers:
+> +
+> +    Encoding            Register  Description
+> +------------------------------------------------------------------
+> +  0x80x0 0000 0200 0000 regs.pc   Program counter
+> +  0x80x0 0000 0200 0001 regs.ra   Return address
+> +  0x80x0 0000 0200 0002 regs.sp   Stack pointer
+> +  0x80x0 0000 0200 0003 regs.gp   Global pointer
+> +  0x80x0 0000 0200 0004 regs.tp   Task pointer
+> +  0x80x0 0000 0200 0005 regs.t0   Caller saved register 0
+> +  0x80x0 0000 0200 0006 regs.t1   Caller saved register 1
+> +  0x80x0 0000 0200 0007 regs.t2   Caller saved register 2
+> +  0x80x0 0000 0200 0008 regs.s0   Callee saved register 0
+> +  0x80x0 0000 0200 0009 regs.s1   Callee saved register 1
+> +  0x80x0 0000 0200 000a regs.a0   Function argument (or return value) 0
+> +  0x80x0 0000 0200 000b regs.a1   Function argument (or return value) 1
+> +  0x80x0 0000 0200 000c regs.a2   Function argument 2
+> +  0x80x0 0000 0200 000d regs.a3   Function argument 3
+> +  0x80x0 0000 0200 000e regs.a4   Function argument 4
+> +  0x80x0 0000 0200 000f regs.a5   Function argument 5
+> +  0x80x0 0000 0200 0010 regs.a6   Function argument 6
+> +  0x80x0 0000 0200 0011 regs.a7   Function argument 7
+> +  0x80x0 0000 0200 0012 regs.s2   Callee saved register 2
+> +  0x80x0 0000 0200 0013 regs.s3   Callee saved register 3
+> +  0x80x0 0000 0200 0014 regs.s4   Callee saved register 4
+> +  0x80x0 0000 0200 0015 regs.s5   Callee saved register 5
+> +  0x80x0 0000 0200 0016 regs.s6   Callee saved register 6
+> +  0x80x0 0000 0200 0017 regs.s7   Callee saved register 7
+> +  0x80x0 0000 0200 0018 regs.s8   Callee saved register 8
+> +  0x80x0 0000 0200 0019 regs.s9   Callee saved register 9
+> +  0x80x0 0000 0200 001a regs.s10  Callee saved register 10
+> +  0x80x0 0000 0200 001b regs.s11  Callee saved register 11
+> +  0x80x0 0000 0200 001c regs.t3   Caller saved register 3
+> +  0x80x0 0000 0200 001d regs.t4   Caller saved register 4
+> +  0x80x0 0000 0200 001e regs.t5   Caller saved register 5
+> +  0x80x0 0000 0200 001f regs.t6   Caller saved register 6
 
-Are these limited to the 2.0a version *in* RK3288, or 2.0a version on all
-SoCs ?
+I missed documenting "mode" register here. I will update it in v7.
+
+Regards,
+Anup
 
 > +
-> +	switch (hdmi->sample_rate) {
-> +	case 32000:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
-> +		break;
-> +	case 44100:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
-> +		break;
-> +	case 48000:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
-> +		break;
-> +	case 88200:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
-> +		break;
-> +	case 96000:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
-> +		break;
-> +	case 176400:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
-> +		break;
-> +	case 192000:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
-> +		break;
-> +	case 768000:
-> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
-> +		break;
-> +	default:
-> +		dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n",
-> +			 hdmi->sample_rate);
-> +		return;
-> +	}
+> +RISC-V csr registers represent the supervisor mode control/status registers
+> +of a Guest VCPU and it has the following id bit patterns:
+> +  0x8020 0000 03 <index into the kvm_sregs struct:24> (32bit Host)
+> +  0x8030 0000 03 <index into the kvm_sregs struct:24> (64bit Host)
 > +
-> +	/* set channel status register */
-> +	hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
-> +		  HDMI_FC_AUDSCHNLS7);
+> +Following are the RISC-V csr registers:
 > +
-> +	/*
-> +	 * Set original frequency to be the same as frequency.
-> +	 * Use one-complement value as stated in IEC60958-3 page 13.
-> +	 */
-> +	aud_schnl_8 = (~aud_schnl_samplerate) <<
-> +			HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
+> +    Encoding            Register  Description
+> +------------------------------------------------------------------
+> +  0x80x0 0000 0300 0000 sstatus   Supervisor status
+> +  0x80x0 0000 0300 0001 sie       Supervisor interrupt enable
+> +  0x80x0 0000 0300 0002 stvec     Supervisor trap vector base
+> +  0x80x0 0000 0300 0003 sscratch  Supervisor scratch register
+> +  0x80x0 0000 0300 0004 sepc      Supervisor exception program counter
+> +  0x80x0 0000 0300 0005 scause    Supervisor trap cause
+> +  0x80x0 0000 0300 0006 stval     Supervisor bad address or instruction
+> +  0x80x0 0000 0300 0007 sip       Supervisor interrupt pending
+> +  0x80x0 0000 0300 0008 satp      Supervisor address translation and protection
 > +
-> +	/* This means word length is 16 bit. Refer to IEC60958-3 page 12. */
-> +	aud_schnl_8 |= 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
+> +RISC-V F extension registers represent the single precision floating point
+> +state of a Guest VCPU and it has the following id bit patterns:
+> +  0x8020 0000 04 <index into the __riscv_f_ext_state struct:24>
 > +
-> +	hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
-> +}
+> +Following are the RISC-V F extension registers:
 > +
->  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
->  	unsigned long pixel_clk, unsigned int sample_rate)
->  {
-> @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
->  	hdmi->audio_cts = cts;
->  	hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
->  	spin_unlock_irq(&hdmi->audio_lock);
+> +    Encoding            Register  Description
+> +------------------------------------------------------------------
+> +  0x8020 0000 0400 0000 f[0]      Floating point register 0
+> +  ...
+> +  0x8020 0000 0400 001f f[31]     Floating point register 31
+> +  0x8020 0000 0400 0020 fcsr      Floating point control and status register
 > +
-> +	hdmi_set_schnl(hdmi);
->  }
->  
->  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> index 6988f12d89d9..619ebc1c8354 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> @@ -158,6 +158,17 @@
->  #define HDMI_FC_SPDDEVICEINF                    0x1062
->  #define HDMI_FC_AUDSCONF                        0x1063
->  #define HDMI_FC_AUDSSTAT                        0x1064
-> +#define HDMI_FC_AUDSV                           0x1065
-> +#define HDMI_FC_AUDSU                           0x1066
-> +#define HDMI_FC_AUDSCHNLS0                      0x1067
-> +#define HDMI_FC_AUDSCHNLS1                      0x1068
-> +#define HDMI_FC_AUDSCHNLS2                      0x1069
-> +#define HDMI_FC_AUDSCHNLS3                      0x106a
-> +#define HDMI_FC_AUDSCHNLS4                      0x106b
-> +#define HDMI_FC_AUDSCHNLS5                      0x106c
-> +#define HDMI_FC_AUDSCHNLS6                      0x106d
-> +#define HDMI_FC_AUDSCHNLS7                      0x106e
-> +#define HDMI_FC_AUDSCHNLS8                      0x106f
->  #define HDMI_FC_DATACH0FILL                     0x1070
->  #define HDMI_FC_DATACH1FILL                     0x1071
->  #define HDMI_FC_DATACH2FILL                     0x1072
-> @@ -706,6 +717,15 @@ enum {
->  /* HDMI_FC_AUDSCHNLS7 field values */
->  	HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
->  	HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
-> +	HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
->  
->  /* HDMI_FC_AUDSCHNLS8 field values */
->  	HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
-> 
-
+> +RISC-V D extension registers represent the double precision floating point
+> +state of a Guest VCPU and it has the following id bit patterns:
+> +  0x8020 0000 05 <index into the __riscv_d_ext_state struct:24> (fcsr)
+> +  0x8030 0000 05 <index into the __riscv_d_ext_state struct:24> (non-fcsr)
+> +
+> +Following are the RISC-V D extension registers:
+> +
+> +    Encoding            Register  Description
+> +------------------------------------------------------------------
+> +  0x8030 0000 0500 0000 f[0]      Floating point register 0
+> +  ...
+> +  0x8030 0000 0500 001f f[31]     Floating point register 31
+> +  0x8020 0000 0500 0020 fcsr      Floating point control and status register
+> +
+> +
+>  4.69 KVM_GET_ONE_REG
+>
+>  Capability: KVM_CAP_ONE_REG
+> --
+> 2.17.1
+>
