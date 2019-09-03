@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95291C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C23C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71703206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27BD216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfICMFL (ORCPT
+        id S1728994AbfICMGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:05:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50186 "EHLO huawei.com"
+        Tue, 3 Sep 2019 08:06:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5731 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726936AbfICMFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:05:11 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E4CCB86AD5A64D6FD21B;
-        Tue,  3 Sep 2019 20:05:08 +0800 (CST)
+        id S1726936AbfICMGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:06:47 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 419D8DE259044BDD655F;
+        Tue,  3 Sep 2019 20:06:45 +0800 (CST)
 Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
  (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
- 20:04:59 +0800
+ 20:06:35 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <gregkh@linuxfoundation.org>, <pawell@cadence.com>,
         <felipe.balbi@linux.intel.com>, <yuehaibing@huawei.com>
 CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] usb: cdns3: remove set but not used variable 'priv_dev'
-Date:   Tue, 3 Sep 2019 20:04:45 +0800
-Message-ID: <20190903120445.22204-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] usb: cdns3: Fix Wunused-but-set-variable warning
+Date:   Tue, 3 Sep 2019 20:06:15 +0800
+Message-ID: <20190903120615.19504-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -42,58 +42,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+drivers/usb/cdns3/ep0.c: In function cdns3_ep0_feature_handle_device:
+drivers/usb/cdns3/ep0.c:290:6: warning: variable wIndex set but not used [-Wunused-but-set-variable]
+drivers/usb/cdns3/ep0.c:289:6: warning: variable wValue set but not used [-Wunused-but-set-variable]
 
-drivers/usb/cdns3/gadget.c: In function '__cdns3_gadget_init':
-drivers/usb/cdns3/gadget.c:2665:23: warning:
- variable 'priv_dev' set but not used [-Wunused-but-set-variable]
-drivers/usb/cdns3/gadget.c: In function cdns3_start_all_request:
-drivers/usb/cdns3/gadget.c:357:24: warning:
- variable priv_req set but not used [-Wunused-but-set-variable]
-
-They are never used, so can be removed.
+wIndex is never used, so remove it.
+wValue should be use in the switch statement.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/usb/cdns3/gadget.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/usb/cdns3/ep0.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-index 3094ad6..ddac638 100644
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -354,13 +354,11 @@ enum usb_device_speed cdns3_get_speed(struct cdns3_device *priv_dev)
- static int cdns3_start_all_request(struct cdns3_device *priv_dev,
- 				   struct cdns3_endpoint *priv_ep)
- {
--	struct cdns3_request *priv_req;
- 	struct usb_request *request;
+diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+index e94f55d..44f652e8 100644
+--- a/drivers/usb/cdns3/ep0.c
++++ b/drivers/usb/cdns3/ep0.c
+@@ -287,15 +287,13 @@ static int cdns3_ep0_feature_handle_device(struct cdns3_device *priv_dev,
+ 	enum usb_device_speed speed;
  	int ret = 0;
+ 	u32 wValue;
+-	u32 wIndex;
+ 	u16 tmode;
  
- 	while (!list_empty(&priv_ep->deferred_req_list)) {
- 		request = cdns3_next_request(&priv_ep->deferred_req_list);
--		priv_req = to_cdns3_request(request);
+ 	wValue = le16_to_cpu(ctrl->wValue);
+-	wIndex = le16_to_cpu(ctrl->wIndex);
+ 	state = priv_dev->gadget.state;
+ 	speed = priv_dev->gadget.speed;
  
- 		ret = cdns3_ep_run_transfer(priv_ep, request);
- 		if (ret)
-@@ -2664,7 +2662,6 @@ static int cdns3_gadget_start(struct cdns3 *cdns)
- 
- static int __cdns3_gadget_init(struct cdns3 *cdns)
- {
--	struct cdns3_device *priv_dev;
- 	int ret = 0;
- 
- 	cdns3_drd_switch_gadget(cdns, 1);
-@@ -2674,8 +2671,6 @@ static int __cdns3_gadget_init(struct cdns3 *cdns)
- 	if (ret)
- 		return ret;
- 
--	priv_dev = cdns->gadget_dev;
--
- 	/*
- 	 * Because interrupt line can be shared with other components in
- 	 * driver it can't use IRQF_ONESHOT flag here.
+-	switch (ctrl->wValue) {
++	switch (wValue) {
+ 	case USB_DEVICE_REMOTE_WAKEUP:
+ 		priv_dev->wake_up_flag = !!set;
+ 		break;
 -- 
 2.7.4
 
