@@ -2,186 +2,144 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCADC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F44C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465F72077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567502373;
-	bh=Qnen7BxG+rvI3ZvNhgI2pciifS1DOuQEw8FOLb60nAs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n1brEHimYclTqYOgyZiSikkJrnUuIo+wGG5akI1ogdQMfVm+nsiD5iaeT7i/qSbpc
-	 SLO1NBDgoJ4al6jirF8wDTXuRb0Id11S5UvKQL924bqrzUx1cek2NY707rOPvx58+a
-	 y6apjgztwCT1V/gHQf5QV2d5CD3EuBwHDP58Q768=
+	by mail.kernel.org (Postfix) with ESMTP id 64DB222D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="lBWR0cDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfICJTc (ORCPT
+        id S1728587AbfICJTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728319AbfICJTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:19:32 -0400
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A2B2077B;
-        Tue,  3 Sep 2019 09:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567502370;
-        bh=Qnen7BxG+rvI3ZvNhgI2pciifS1DOuQEw8FOLb60nAs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MtriW0JWoXsYW3PWjukrGesB6K472bTvhGcRD3XXQYq9jJ+FCYl7gAzP4uOZS3Ztt
-         LNCSRFVIUYjnPlgv9tUKdNygw66/wjuy51xYKR6y/kkJaltsZU89ye4J4zBSHNBHWr
-         heteGWfiVkxWyvODH0x0pitgOgCFUUCWvYdKf+Js=
-Received: by mail-qk1-f179.google.com with SMTP id 4so15093664qki.6;
-        Tue, 03 Sep 2019 02:19:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAX8iBwQGhczVlY6b/KlBfjwr4QKlQEeWfTk8r+x1KEibJxSbvNJ
-        9S4HiVgOF5FkijZRJcPnrlJXsPSHVHtgLdiOAQ==
-X-Google-Smtp-Source: APXvYqy3rr1Xj2bmHgNTnZEvikZ6Jicx9X7Q7akZ0amHyvpETrw5+1Y8vSH5C7syM0R4dbi9pG4yl/m76pm7uRcSB8k=
-X-Received: by 2002:a37:682:: with SMTP id 124mr31949831qkg.393.1567502369930;
- Tue, 03 Sep 2019 02:19:29 -0700 (PDT)
+        Tue, 3 Sep 2019 05:19:45 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16682 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbfICJTp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:19:45 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8398BLd001712;
+        Tue, 3 Sep 2019 05:19:20 -0400
+Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2055.outbound.protection.outlook.com [104.47.41.55])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2uqjracjjj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 05:19:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jwjNTCSt33aSC2fqAVCMO96h1oD5PUpJFFprofFdkmtgVKlnUqBJdxhYNiZps72I+J6/UsHObgi1oJACOK6XFhKLdJfZf1PRVX/h/2ZGUj4pzXE3eN8lcugUMFm8wr76vnCdqs+FnCZpA6p7gjpq13n558J0z7ByPLOi7ejgLS+o/8VMSPQJFfWd1CN4gVvtmpRFgdR9MxkuZPuzkfZN8EKGWOXCutFLT4EHqI3b2o3pLvZcdtzhier9h43xrJZlpr9PhHcnXy76lkSy60Flx//di++ksfgJscJRRGQyIXq2V/TmjloK+/agJPZ9e7P3GSf4+By16l7OCNvrm6uVOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dBxbXDIOuQXSkj/V107YId0xpDme+WSzPVM0VbmN3TA=;
+ b=Va7nIOanZxixUaXr2xO8y5NwCsZ32s8nt0QenYBFFVxZjITyfDyEHBXSmI5lBD6XfuN/x4BEUOSyn4E93//5bZwmYoDSkOgpPPIk1UBuuRcS29wvBwM6hZYhl4ktNjfpRae2fDO5vtpHTvsCVG3tM1JVtbUo5I8RhixmgeItEBnVau8oItcigHsqOqOglmTKR2BNGjGL4t+UCS8ZmcCksh98fp+Mpzcmaljd+1f+pEk7U3WXVNT2Tp75G5pPZvACv7WI8aCxQjsqZfiwLu9O82MZg8NGF6WvwkkGkujE1liVAwCW4VBwni+1NCbGzD6ghNzFkZNrjkYZ5//qm/N7nA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=gmx.de smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dBxbXDIOuQXSkj/V107YId0xpDme+WSzPVM0VbmN3TA=;
+ b=lBWR0cDZv2y7/sPWL9ivsmrhtIguWPqWHfKYb42li6LNr2Z5Q4cxfvLRCxKGx0nG+lHVy6ts8D5NsJpGSxoP6CVpJ+r3XiHEFxUnrWa1kdqn7q38/fVqd9PjM6epdLH42HTEUp+5EKZwo+NdIFdvQLhFPPDFOd6wJfF3IWuqc6k=
+Received: from CY4PR03CA0105.namprd03.prod.outlook.com (2603:10b6:910:4d::46)
+ by MWHPR03MB3040.namprd03.prod.outlook.com (2603:10b6:300:11c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19; Tue, 3 Sep
+ 2019 09:19:17 +0000
+Received: from SN1NAM02FT043.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::207) by CY4PR03CA0105.outlook.office365.com
+ (2603:10b6:910:4d::46) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19 via Frontend
+ Transport; Tue, 3 Sep 2019 09:19:17 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ SN1NAM02FT043.mail.protection.outlook.com (10.152.72.184) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2220.16
+ via Frontend Transport; Tue, 3 Sep 2019 09:19:16 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x839JBd4003500
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 3 Sep 2019 02:19:11 -0700
+Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Tue, 3 Sep 2019
+ 05:19:15 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <stefan.popa@analog.com>
+Subject: [PATCH 3/3] iio: accel: adxl372: Make sure interrupts are disabled
+Date:   Tue, 3 Sep 2019 12:19:11 +0300
+Message-ID: <1567502351-10429-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190902033716.GA18092@bogus> <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
-In-Reply-To: <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 3 Sep 2019 10:19:18 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com>
-Message-ID: <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(346002)(396003)(2980300002)(199004)(189003)(476003)(2616005)(126002)(7636002)(5660300002)(54906003)(486006)(426003)(6916009)(356004)(6666004)(47776003)(107886003)(106002)(44832011)(36756003)(50226002)(316002)(305945005)(186003)(16586007)(70206006)(70586007)(4326008)(8676002)(48376002)(8936002)(4744005)(51416003)(246002)(7696005)(50466002)(26005)(478600001)(336012)(2906002)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR03MB3040;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e8c5e0a5-2d60-436c-c05a-08d7304fcb6f
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:MWHPR03MB3040;
+X-MS-TrafficTypeDiagnostic: MWHPR03MB3040:
+X-Microsoft-Antispam-PRVS: <MWHPR03MB30404310EB41E8C94BAD021F9DB90@MWHPR03MB3040.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-Forefront-PRVS: 01494FA7F7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: hqbR+Ld0FiLmVEqOnqs03e/QE8y936wpLLikWwrnijYZZyExkOSx2LqFI3uaJ3FoIT4lpBlpto+vHVfM7YEdzcMJ0ZMssEP15U3NPLd2OwC5NVPhAn25Oh/tDXhBTj2lIep3dWk8F5ZVWAKqLPeIIFh5DikMKQHCKZViP2WkPAb/TsnsgsvClffqesYhJ8h2jSo17W/SB+J/1qeXh2cX1w4zOLGbctyaJDQXMx1udZtBvfKIJwxeHKznwBb2lfAXJsVcf67g6CVgti6ljx7ZD6uSZhYU8c1QiBnXK14Zp16hVAQFH0crVl2na1VYfyVgKSWAzCSjykpHl5nEv59gssLqCPGwTvsFRZYsEPq+zYpHUp773TdRFbYuQ1tNB/qV0oYLJHaf7TT/wdTT5pCCzLkYZT6WmPY1K+ayDuZZKJQ=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2019 09:19:16.6429
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8c5e0a5-2d60-436c-c05a-08d7304fcb6f
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR03MB3040
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-03_01:2019-09-03,2019-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=651 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 adultscore=0 mlxscore=0 suspectscore=1
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909030097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> Hi Rob,
->
-> Thank you for review comments.
->
-> On 2/9/2019 9:38 PM, Rob Herring wrote:
-> > On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >>
-> >> Add a YAML schema to use the host controller driver with the
-> >> SDXC PHY on Intel's Lightning Mountain SoC.
-> >>
-> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >> ---
-> >>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
-> >>   .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
-> >>   2 files changed, 85 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >> new file mode 100644
-> >> index 000000000000..99647207b414
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >> @@ -0,0 +1,52 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
-> >> +
-> >> +maintainers:
-> >> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: "intel,syscon.yaml"
-> > You don't need this. It should be selected and applied by the compatible
-> > string matching.
-> Agreed, fix it in the next patch.
-> >> +
-> >> +description: Binding for SDXC PHY
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: intel,lgm-sdxc-phy
-> >> +
-> >> +  intel,syscon:
-> >> +    description: phandle to the sdxc through syscon
-> >> +
-> >> +  clocks:
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +    maxItems: 1
-> >> +
-> >> +  "#phy-cells":
-> >> +    const: 0
-> >> +
-> >> +required:
-> >> +  - "#phy-cells"
-> >> +  - compatible
-> >> +  - intel,syscon
-> >> +  - clocks
-> >> +  - clock-names
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    sdxc_phy: sdxc_phy {
-> >> +        compatible = "intel,lgm-sdxc-phy";
-> >> +        intel,syscon = <&sysconf>;
-> > Make this a child of the below node and then you don't need this.
-> >
-> > If there's a register address range associated with this, then add a reg
-> > property.
->
-> Thanks for comments,  I have defined herewith example
->
-> sysconf: chiptop@e0020000 {
->              compatible = "intel,syscon";
+This patch disables the adxl372 interrupts at setup. The interrupts
+should be enabled together with the iio buffer. Not doing this, might
+cause an unwanted interrupt to trigger without being able to properly
+clear it.
 
-Needs to be SoC specific value.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ drivers/iio/accel/adxl372.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->              reg = <0xe0020000 0x100>;
->
->              emmc_phy: emmc_phy {
->                  compatible = "intel,lgm-emmc-phy";
->                  intel,syscon = <&sysconf>;
+diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+index 72d3f45..77651f4 100644
+--- a/drivers/iio/accel/adxl372.c
++++ b/drivers/iio/accel/adxl372.c
+@@ -609,6 +609,10 @@ static int adxl372_setup(struct adxl372_state *st)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = adxl372_set_interrupts(st, 0, 0);
++	if (ret < 0)
++		return ret;
++
+ 	/* Set the mode of operation to full bandwidth measurement mode */
+ 	return adxl372_set_op_mode(st, ADXL372_FULL_BW_MEASUREMENT);
+ }
+-- 
+2.7.4
 
-This is redundant because you can just get the parent node.
-
-If there's a defined register range within the 'intel,syscon' block
-then define it here with 'reg'.
-
->                  clocks = <&emmc>;
->                  clock-names = "emmcclk";
->                  #phy-cells = <0>;
->             };
-> };
->
-> Is this way need to add right?
->
-> >> +        clocks = <&sdxc>;
-> >> +        clock-names = "sdxcclk";
-> >> +        #phy-cells = <0>;
-> >> +    };
-> >> +
-> >> +...
