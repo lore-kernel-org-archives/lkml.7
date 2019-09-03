@@ -2,186 +2,211 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003E3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD68C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78DB22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934D922CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfICLZp convert rfc822-to-8bit (ORCPT
+        id S1728915AbfICL0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:25:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44731 "EHLO ozlabs.org"
+        Tue, 3 Sep 2019 07:26:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58660 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727639AbfICLZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:25:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728843AbfICL0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:26:12 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46N4Pw6dvpz9sDB;
-        Tue,  3 Sep 2019 21:25:40 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] powerpc: Convert flush_icache_range & friends to C
-In-Reply-To: <44b8223d-52d9-e932-4bb7-b7590ea11a03@c-s.fr>
-References: <20190903052407.16638-1-alastair@au1.ibm.com> <20190903052407.16638-4-alastair@au1.ibm.com> <44b8223d-52d9-e932-4bb7-b7590ea11a03@c-s.fr>
-Date:   Tue, 03 Sep 2019 21:25:39 +1000
-Message-ID: <87muflr58s.fsf@mpe.ellerman.id.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id BFE204ACA5
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:26:11 +0000 (UTC)
+Received: by mail-qt1-f197.google.com with SMTP id l22so18607724qtq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:26:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IOX0AtYnR2nI5t+WDQ2xYckZJDNwaXlWmR5KjyvT8Nw=;
+        b=nWgsVb+vaRGqL9crQXIQX20QsBlgNpkulZEbjtA8KfGBKpWJOiA9HIe1uaEzBa/chR
+         LxSEQuL1y5Dn8S1cUQy7QhrmguN3Bu5y/uJzDRCCZKYiJlMb5K2jGe48hC+0SbeoaGMa
+         PSlXm23TQtS7PpL2ctCuaOiNDBhKXD8zsNlFwYjQxf7fLJZpAmGlGCU6QdUC+ejy9uDr
+         NQZxPMblYAYOjJFSjzaK5Yxla1A+x/dMFhqQ0vYG+5sUEh5N+On+tYhtxC8XQbluG67f
+         MJxI24ChkT5Tq9VqXS8PNN+BtDEbnWXE3VZNWz+vqVUkF4GzO2zoQPxObl2v4itZ2oDi
+         lJWQ==
+X-Gm-Message-State: APjAAAWm4lU9QyvbbsKvYZc0ks096lavr70aZrkY+CNRbbq8M/zwVZKy
+        hbTI0KmiNSIqY0fciwDo4owH6VZlY01pS64htwFbwOI5bq1t8TXPDUZ+4q1Sk4SC8QxSiVyc4/U
+        Gvc0dxWO6LgyFr2tIowfPPR2o
+X-Received: by 2002:a37:8c07:: with SMTP id o7mr33341284qkd.491.1567509970903;
+        Tue, 03 Sep 2019 04:26:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzxU+NQIhv1VCV7+v5/KcDRMJCp+h+HcWM24+Z7x7iUSGTu/fMAcyf8D/Ce7voo2gzYWGkeTg==
+X-Received: by 2002:a37:8c07:: with SMTP id o7mr33341256qkd.491.1567509970597;
+        Tue, 03 Sep 2019 04:26:10 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
+        by smtp.gmail.com with ESMTPSA id b192sm7710282qkg.39.2019.09.03.04.26.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 04:26:09 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 07:26:03 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     jasowang@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [RFC v3] vhost: introduce mdev based hardware vhost backend
+Message-ID: <20190903043704-mutt-send-email-mst@kernel.org>
+References: <20190828053712.26106-1-tiwei.bie@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828053712.26106-1-tiwei.bie@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Le 03/09/2019 à 07:23, Alastair D'Silva a écrit :
->> From: Alastair D'Silva <alastair@d-silva.org>
->> 
->> Similar to commit 22e9c88d486a
->> ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
->> this patch converts the following ASM symbols to C:
->>      flush_icache_range()
->>      __flush_dcache_icache()
->>      __flush_dcache_icache_phys()
->> 
->> This was done as we discovered a long-standing bug where the length of the
->> range was truncated due to using a 32 bit shift instead of a 64 bit one.
->> 
->> By converting these functions to C, it becomes easier to maintain.
->> 
->> flush_dcache_icache_phys() retains a critical assembler section as we must
->> ensure there are no memory accesses while the data MMU is disabled
->> (authored by Christophe Leroy). Since this has no external callers, it has
->> also been made static, allowing the compiler to inline it within
->> flush_dcache_icache_page().
->> 
->> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/include/asm/cache.h      |  26 ++---
->>   arch/powerpc/include/asm/cacheflush.h |  24 ++--
->>   arch/powerpc/kernel/misc_32.S         | 117 --------------------
->>   arch/powerpc/kernel/misc_64.S         | 102 -----------------
->>   arch/powerpc/mm/mem.c                 | 152 +++++++++++++++++++++++++-
->>   5 files changed, 173 insertions(+), 248 deletions(-)
->> 
->> diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
->> index f852d5cd746c..91c808c6738b 100644
->> --- a/arch/powerpc/include/asm/cache.h
->> +++ b/arch/powerpc/include/asm/cache.h
->> @@ -98,20 +98,7 @@ static inline u32 l1_icache_bytes(void)
->>   #endif
->>   #endif /* ! __ASSEMBLY__ */
->>   
->> -#if defined(__ASSEMBLY__)
->> -/*
->> - * For a snooping icache, we still need a dummy icbi to purge all the
->> - * prefetched instructions from the ifetch buffers. We also need a sync
->> - * before the icbi to order the the actual stores to memory that might
->> - * have modified instructions with the icbi.
->> - */
->> -#define PURGE_PREFETCHED_INS	\
->> -	sync;			\
->> -	icbi	0,r3;		\
->> -	sync;			\
->> -	isync
->> -
->> -#else
->> +#if !defined(__ASSEMBLY__)
->>   #define __read_mostly __attribute__((__section__(".data..read_mostly")))
->>   
->>   #ifdef CONFIG_PPC_BOOK3S_32
->> @@ -145,6 +132,17 @@ static inline void dcbst(void *addr)
->>   {
->>   	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
->>   }
->> +
->> +static inline void icbi(void *addr)
->> +{
->> +	__asm__ __volatile__ ("icbi 0, %0" : : "r"(addr) : "memory");
->
-> I think "__asm__ __volatile__" is deprecated. Use "asm volatile" instead.
+On Wed, Aug 28, 2019 at 01:37:12PM +0800, Tiwei Bie wrote:
+> Details about this can be found here:
+> 
+> https://lwn.net/Articles/750770/
+> 
+> What's new in this version
+> ==========================
+> 
+> There are three choices based on the discussion [1] in RFC v2:
+> 
+> > #1. We expose a VFIO device, so we can reuse the VFIO container/group
+> >     based DMA API and potentially reuse a lot of VFIO code in QEMU.
+> >
+> >     But in this case, we have two choices for the VFIO device interface
+> >     (i.e. the interface on top of VFIO device fd):
+> >
+> >     A) we may invent a new vhost protocol (as demonstrated by the code
+> >        in this RFC) on VFIO device fd to make it work in VFIO's way,
+> >        i.e. regions and irqs.
+> >
+> >     B) Or as you proposed, instead of inventing a new vhost protocol,
+> >        we can reuse most existing vhost ioctls on the VFIO device fd
+> >        directly. There should be no conflicts between the VFIO ioctls
+> >        (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
+> >
+> > #2. Instead of exposing a VFIO device, we may expose a VHOST device.
+> >     And we will introduce a new mdev driver vhost-mdev to do this.
+> >     It would be natural to reuse the existing kernel vhost interface
+> >     (ioctls) on it as much as possible. But we will need to invent
+> >     some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
+> >     choice, but it's too heavy and doesn't support vIOMMU by itself).
+> 
+> This version is more like a quick PoC to try Jason's proposal on
+> reusing vhost ioctls. And the second way (#1/B) in above three
+> choices was chosen in this version to demonstrate the idea quickly.
+> 
+> Now the userspace API looks like this:
+> 
+> - VFIO's container/group based IOMMU API is used to do the
+>   DMA programming.
+> 
+> - Vhost's existing ioctls are used to setup the device.
+> 
+> And the device will report device_api as "vfio-vhost".
+> 
+> Note that, there are dirty hacks in this version. If we decide to
+> go this way, some refactoring in vhost.c/vhost.h may be needed.
+> 
+> PS. The direct mapping of the notify registers isn't implemented
+>     in this version.
+> 
+> [1] https://lkml.org/lkml/2019/7/9/101
+> 
+> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
 
-Yes please.
+....
 
->> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
->> index 9191a66b3bc5..cd540123874d 100644
->> --- a/arch/powerpc/mm/mem.c
->> +++ b/arch/powerpc/mm/mem.c
->> @@ -321,6 +321,105 @@ void free_initmem(void)
->>   	free_initmem_default(POISON_FREE_INITMEM);
->>   }
->>   
->> +/*
->> + * Warning: This macro will perform an early return if the CPU has
->> + * a coherent icache. The intent is is call this early in function,
->> + * and handle the non-coherent icache variant afterwards.
->> + *
->> + * For a snooping icache, we still need a dummy icbi to purge all the
->> + * prefetched instructions from the ifetch buffers. We also need a sync
->> + * before the icbi to order the the actual stores to memory that might
->> + * have modified instructions with the icbi.
->> + */
->> +#define flush_coherent_icache_or_return(addr) {			\
->> +	if (cpu_has_feature(CPU_FTR_COHERENT_ICACHE)) {		\
->> +		mb(); /* sync */				\
->> +		icbi(addr);					\
->> +		mb(); /* sync */				\
->> +		isync();					\
->> +		return;						\
->> +	}							\
->> +}
->
-> I hate this kind of awful macro which kills code readability.
+> +long vhost_mdev_ioctl(struct mdev_device *mdev, unsigned int cmd,
+> +		      unsigned long arg)
+> +{
+> +	void __user *argp = (void __user *)arg;
+> +	struct vhost_mdev *vdpa;
+> +	unsigned long minsz;
+> +	int ret = 0;
+> +
+> +	if (!mdev)
+> +		return -EINVAL;
+> +
+> +	vdpa = mdev_get_drvdata(mdev);
+> +	if (!vdpa)
+> +		return -ENODEV;
+> +
+> +	switch (cmd) {
+> +	case VFIO_DEVICE_GET_INFO:
+> +	{
+> +		struct vfio_device_info info;
+> +
+> +		minsz = offsetofend(struct vfio_device_info, num_irqs);
+> +
+> +		if (copy_from_user(&info, (void __user *)arg, minsz)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		if (info.argsz < minsz) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		info.flags = VFIO_DEVICE_FLAGS_VHOST;
+> +		info.num_regions = 0;
+> +		info.num_irqs = 0;
+> +
+> +		if (copy_to_user((void __user *)arg, &info, minsz)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		break;
+> +	}
+> +	case VFIO_DEVICE_GET_REGION_INFO:
+> +	case VFIO_DEVICE_GET_IRQ_INFO:
+> +	case VFIO_DEVICE_SET_IRQS:
+> +	case VFIO_DEVICE_RESET:
+> +		ret = -EINVAL;
+> +		break;
+> +
+> +	case VHOST_MDEV_SET_STATE:
+> +		ret = vhost_set_state(vdpa, argp);
+> +		break;
+> +	case VHOST_GET_FEATURES:
+> +		ret = vhost_get_features(vdpa, argp);
+> +		break;
+> +	case VHOST_SET_FEATURES:
+> +		ret = vhost_set_features(vdpa, argp);
+> +		break;
+> +	case VHOST_GET_VRING_BASE:
+> +		ret = vhost_get_vring_base(vdpa, argp);
+> +		break;
+> +	default:
+> +		ret = vhost_dev_ioctl(&vdpa->dev, cmd, argp);
+> +		if (ret == -ENOIOCTLCMD)
+> +			ret = vhost_vring_ioctl(&vdpa->dev, cmd, argp);
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(vhost_mdev_ioctl);
 
-Yes I agree.
 
-> Please to something like
->
-> static bool flush_coherent_icache_or_return(unsigned long addr)
-> {
-> 	if (!cpu_has_feature(CPU_FTR_COHERENT_ICACHE))
-> 		return false;
->
-> 	mb(); /* sync */
-> 	icbi(addr);
-> 	mb(); /* sync */
-> 	isync();
-> 	return true;
-> }
->
-> then callers will do:
->
-> 	if (flush_coherent_icache_or_return(addr))
-> 		return;
+I don't have a problem with this approach. A small question:
+would it make sense to have two fds: send vhost ioctls
+on one and vfio ioctls on another?
+We can then pass vfio fd to the vhost fd with a
+SET_BACKEND ioctl.
 
-I don't think it needs the "_or_return" in the name.
+What do you think?
 
-eg, it can just be:
-
- 	if (flush_coherent_icache(addr))
-		return;
-
-
-Which reads fine I think, ie. flush the coherent icache, and if that
-succeeds return, else continue.
-
-cheers
+-- 
+MST
