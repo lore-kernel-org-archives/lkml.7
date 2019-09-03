@@ -2,126 +2,114 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CBEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E567DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5333122CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A3E22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 20:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfICUeJ (ORCPT
+        id S1726976AbfICUcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 16:34:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35548 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfICUcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 16:32:17 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+Received: from mx1.redhat.com ([209.132.183.28]:59922 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbfICUcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 16:32:16 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4504F81F11;
-        Tue,  3 Sep 2019 20:32:17 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 705B858569;
+        Tue,  3 Sep 2019 20:32:16 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-121-35.rdu2.redhat.com [10.10.121.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 24C6F19C78;
-        Tue,  3 Sep 2019 20:32:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDCD760BE2;
+        Tue,  3 Sep 2019 20:32:15 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 9046A20C2E; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
+        id 5E78420963; Tue,  3 Sep 2019 16:32:15 -0400 (EDT)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/26] nfs: stash nfs_subversion reference into nfs_mount_info
-Date:   Tue,  3 Sep 2019 16:31:57 -0400
-Message-Id: <20190903203215.9157-9-smayhew@redhat.com>
-In-Reply-To: <20190903203215.9157-1-smayhew@redhat.com>
-References: <20190903203215.9157-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 03 Sep 2019 20:32:17 +0000 (UTC)
+Subject: [PATCH v2 00/26] nfs: Mount API conversion
+Date:   Tue,  3 Sep 2019 16:31:49 -0400
+Message-Id: <20190903203215.9157-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 03 Sep 2019 20:32:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Hi Trond, Anna,
 
-That will allow to get rid of passing those references around in
-quite a few places.  Moreover, that will allow to merge xdev and
-remote file_system_type.
+Here's a set of patches that converts NFS to use the mount API.  Note that
+there are a lot of preliminary patches, some from David and some from Al.
+The final patch (the one that does the actual conversion) from the David's
+initial posting has been split into 4 separate patches, and the entire set
+has been rebased on top of v5.3-rc6.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfs/internal.h  | 1 +
- fs/nfs/namespace.c | 6 +++---
- fs/nfs/nfs4super.c | 1 +
- fs/nfs/super.c     | 1 +
- 4 files changed, 6 insertions(+), 3 deletions(-)
+-Scott
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index eeb54b45875c..0c42cf685d4b 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -150,6 +150,7 @@ struct nfs_mount_info {
- 	struct nfs_clone_mount *cloned;
- 	struct nfs_server *server;
- 	struct nfs_fh *mntfh;
-+	struct nfs_subversion *nfs_mod;
- };
- 
- extern int nfs_mount(struct nfs_mount_request *info);
-diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-index 7c78e6956639..0d0587ed7d94 100644
---- a/fs/nfs/namespace.c
-+++ b/fs/nfs/namespace.c
-@@ -233,8 +233,8 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry, struct nfs_fh *fh,
- 		.set_security = nfs_clone_sb_security,
- 		.cloned = &mountdata,
- 		.mntfh = fh,
-+		.nfs_mod = NFS_SB(sb)->nfs_client->cl_nfs_mod,
- 	};
--	struct nfs_subversion *nfs_mod = NFS_SB(sb)->nfs_client->cl_nfs_mod;
- 	struct nfs_server *server;
- 	struct vfsmount *mnt;
- 	char *page = (char *) __get_free_page(GFP_USER);
-@@ -243,8 +243,8 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry, struct nfs_fh *fh,
- 	if (page == NULL)
- 		return ERR_PTR(-ENOMEM);
- 
--	server = nfs_mod->rpc_ops->clone_server(NFS_SB(sb), fh,
--						fattr, authflavor);
-+	server = mount_info.nfs_mod->rpc_ops->clone_server(NFS_SB(sb), fh,
-+							   fattr, authflavor);
- 	if (IS_ERR(server))
- 		return ERR_CAST(server);
- 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 91ba1b6741dc..88d83cab8e9b 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -248,6 +248,7 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
- 		.fill_super = nfs_fill_super,
- 		.set_security = nfs_clone_sb_security,
- 		.cloned = data,
-+		.nfs_mod = &nfs_v4,
- 	};
- 	struct dentry *res;
- 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 7fc354207347..2a6b4e4b0a2d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2736,6 +2736,7 @@ struct dentry *nfs_fs_mount(struct file_system_type *fs_type,
- 		mntroot = ERR_CAST(nfs_mod);
- 		goto out;
- 	}
-+	mount_info.nfs_mod = nfs_mod;
- 
- 	mntroot = nfs_mod->rpc_ops->try_mount(flags, dev_name, &mount_info, nfs_mod);
- 
+Al Viro (15):
+  saner calling conventions for nfs_fs_mount_common()
+  nfs: stash server into struct nfs_mount_info
+  nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
+  nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+  nfs: don't bother setting/restoring export_path around
+    do_nfs_root_mount()
+  nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
+  nfs: lift setting mount_info from nfs_xdev_mount()
+  nfs: stash nfs_subversion reference into nfs_mount_info
+  nfs: don't bother passing nfs_subversion to ->try_mount() and
+    nfs_fs_mount_common()
+  nfs: merge xdev and remote file_system_type
+  nfs: unexport nfs_fs_mount_common()
+  nfs: don't pass nfs_subversion to ->create_server()
+  nfs: get rid of mount_info ->fill_super()
+  nfs_clone_sb_security(): simplify the check for server bogosity
+  nfs: get rid of ->set_security()
+
+David Howells (8):
+  NFS: Move mount parameterisation bits into their own file
+  NFS: Constify mount argument match tables
+  NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
+  NFS: Split nfs_parse_mount_options()
+  NFS: Deindent nfs_fs_context_parse_option()
+  NFS: Add a small buffer in nfs_fs_context to avoid string dup
+  NFS: Do some tidying of the parsing code
+  NFS: Add fs_context support.
+
+Scott Mayhew (3):
+  NFS: rename nfs_fs_context pointer arg in a few functions
+  NFS: Convert mount option parsing to use functionality from
+    fs_parser.h
+  NFS: Attach supplementary error information to fs_context.
+
+ fs/nfs/Makefile         |    2 +-
+ fs/nfs/client.c         |   80 +-
+ fs/nfs/fs_context.c     | 1423 ++++++++++++++++++++++++++++
+ fs/nfs/fscache.c        |    2 +-
+ fs/nfs/getroot.c        |   73 +-
+ fs/nfs/internal.h       |  132 +--
+ fs/nfs/namespace.c      |  144 +--
+ fs/nfs/nfs3_fs.h        |    2 +-
+ fs/nfs/nfs3client.c     |    6 +-
+ fs/nfs/nfs3proc.c       |    2 +-
+ fs/nfs/nfs4_fs.h        |    9 +-
+ fs/nfs/nfs4client.c     |   99 +-
+ fs/nfs/nfs4namespace.c  |  285 +++---
+ fs/nfs/nfs4proc.c       |    2 +-
+ fs/nfs/nfs4super.c      |  257 ++---
+ fs/nfs/proc.c           |    2 +-
+ fs/nfs/super.c          | 1962 ++++-----------------------------------
+ include/linux/nfs_xdr.h |    9 +-
+ 18 files changed, 2154 insertions(+), 2337 deletions(-)
+ create mode 100644 fs/nfs/fs_context.c
+
 -- 
 2.17.2
 
