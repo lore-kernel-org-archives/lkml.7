@@ -2,116 +2,144 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF7C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BEAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2477E217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CFD22DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="J5gQ0mfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbfICDIT (ORCPT
+        id S1725994AbfICDMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 23:08:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:39245 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725813AbfICDIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 23:08:18 -0400
-X-UUID: 5512fba9b63b4a1a9c449cfd92584e64-20190903
-X-UUID: 5512fba9b63b4a1a9c449cfd92584e64-20190903
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1278790854; Tue, 03 Sep 2019 11:08:12 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Sep 2019 11:08:07 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Sep 2019 11:08:07 +0800
-Message-ID: <1567480086.22890.21.camel@mtksdaap41>
-Subject: Re: [RFC v1] clk: core: support clocks that need to be enabled
- during re-parent
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
+        Mon, 2 Sep 2019 23:12:22 -0400
+Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:65001
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbfICDMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 23:12:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=al+Sn53UeKQZk9VLzdRnMdye9ZQpiSaTs1lq99uDCyeHMtM4Wot/CTp1DFufmpQEj06vRO82w2/QJU+VJhen9ZY+AA4LoN+5O6Zv33+0C+5BPJpMFe+YigZ19zOwKEtgAmPB+PmEYgcBCvtUiZZmv4sPe07f+6N62TkknwAI72lHg2LonwSB0gyWbFGexgz1jfmTWY6b0NXmwW2kBsoyYjaMjXJbk4l7DNdbZz/hsLTK3mD67fgnVfKXR2W6wA4jq+Dy0LzULfiF6d1VnNHekzGszrvVnjE6RKa6lL2NmpszffJJABh0zFcT3U03tLDnIvHmTFZtc1CrnS58hYbCTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Aljlc9VXvbdFHeIbT8N+MLdwfvYLNnBorBRhOCw5sw=;
+ b=aiLC7mnGXnCFfF1eRMdfX9VHZgau8wqQ+3zW9moSqDIOxjlkR9PXmDq5tEq6un34kLIRdvFXsEgxHj0vp8w97+Ab3DbiYWqjwTgo8yo93PkDW4MdS4JrhMokaEiGGvWlSQMEvNm0qXRJGLpn4MWlI5AOlXqCX2EZTiBjufNjP/I9JisAXnWHLF2C2eUBU0ADnUqUQZSnrKq1KuyQ3D9+KJF3r7NvxdWOoyHzCsyXjBTU4tyeDmcKG9CQoRGd6zZk5kGlQYu6q5SZuJGJw/otnZFk6D1fvYY6qs4H/Tw9TWhcYJmBxWHfT01tCzT1pCE48r0ueEv2/aemmT8QQEFPcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Aljlc9VXvbdFHeIbT8N+MLdwfvYLNnBorBRhOCw5sw=;
+ b=J5gQ0mfgn6eRQtFgY7OrH/5o/corjocPrueGhtO68d9SlvKxAqBXCuJjQE0JrJMH+bHH6P3p+uMG/YZvcW8ASfZWcdobWMhxFSywkQTFjcNjEWvRtueh8GTf1oFEuRhNWlwKFVH9v3x8mMzZB+rS2wDkVwEY1RMh0rpYVtWgxbU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3865.eurprd04.prod.outlook.com (52.134.73.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Tue, 3 Sep 2019 03:11:36 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2199.021; Tue, 3 Sep 2019
+ 03:11:36 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, Biao Huang <biao.huang@mediatek.com>
-Date:   Tue, 3 Sep 2019 11:08:06 +0800
-In-Reply-To: <20190626035246.4591A20659@mail.kernel.org>
-References: <1560138293-4163-1-git-send-email-weiyi.lu@mediatek.com>
-         <20190625221415.B0DC22086D@mail.kernel.org>
-         <1561511122.24282.10.camel@mtksdaap41>
-         <20190626035246.4591A20659@mail.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
+ controller power key support
+Thread-Topic: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
+ controller power key support
+Thread-Index: AQHVYfwAkBJd0uw8O0iWCkl8q7ZXAqcZPXwAgAAI/NA=
+Date:   Tue, 3 Sep 2019 03:11:35 +0000
+Message-ID: <DB3PR0402MB391636D31F486639FB8B3BA6F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+ <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
+In-Reply-To: <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c589e467-bde8-4e07-1d6c-08d7301c6e29
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3865;
+x-ms-traffictypediagnostic: DB3PR0402MB3865:|DB3PR0402MB3865:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3865AF11E8B7C6BEA3A58049F5B90@DB3PR0402MB3865.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 01494FA7F7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(7736002)(2906002)(7696005)(1411001)(25786009)(33656002)(3846002)(14454004)(6436002)(6116002)(478600001)(8676002)(81166006)(81156014)(5660300002)(99286004)(86362001)(229853002)(8936002)(305945005)(4744005)(316002)(66066001)(6916009)(74316002)(52536014)(54906003)(71190400001)(71200400001)(9686003)(53546011)(6506007)(102836004)(53936002)(66476007)(66556008)(64756008)(66446008)(76176011)(4326008)(55016002)(7416002)(66946007)(476003)(486006)(11346002)(446003)(6246003)(256004)(26005)(76116006)(186003)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3865;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /9Tx6X1ZMceFWHG3soSVtE64xxo3QgRGA7RxOTsR4NXOLB/ZFyuvmf2D4gHynn0Tn2m0v+yiV/iQgUO/yCOl/kyfXPysJRaxBChRVDoS379IWz1n5eTJGpZQCR3AfAv2qaLl/2um2O+tZN1FSarLo/Fj07lDJXRx7J3oZIv+ZpF91WjUMoVGOJbWosN1O5BtL9+tA6WXKzMPQuidSN1MepNShSLoNdl4JmqSg8Upj92NhVxeYMj/LpCEbwSieBBWrhbU4jAfe+RuISBjsDtmLYVI+6RAsbpSqRjCfoXe2wzdUbnDjiIGaC9kZJT9ZT4TQI1uxwvpvxFARMBqWVXGtF4Wpw5hmS2KQ45sxVGd/+7RRVp4cw4giHhjYwubMMlfacCbC1YocIihvY2nBDrVqgmvQ8fdTbGj9gcSqcJh4G0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c589e467-bde8-4e07-1d6c-08d7301c6e29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 03:11:35.9531
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e0igZZ8yYn/zyNgTozA60HccOUDKn28F0gnqb8JTeMkzffh+orPvPGJQ8UugIFgt7pfdJlXlfXQ7cWVSuAbI2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3865
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 20:52 -0700, Stephen Boyd wrote:
-> Quoting Weiyi Lu (2019-06-25 18:05:22)
-> > On Tue, 2019-06-25 at 15:14 -0700, Stephen Boyd wrote:
-> > > Quoting Weiyi Lu (2019-06-09 20:44:53)
-> > > > When using property assigned-clock-parents to assign parent clocks,
-> > > > core clocks might still be disabled during re-parent.
-> > > > Add flag 'CLK_OPS_CORE_ENABLE' for those clocks must be enabled
-> > > > during re-parent.
-> > > > 
-> > > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > > 
-> > > Can you further describe the scenario where this is a problem? Is it
-> > > some sort of clk that is enabled by default out of the bootloader and is
-> > > then configured to have an 'assigned-clock-parents' property to change
-> > > the parent, but that clk needs to be "enabled" so that the framework
-> > > turns on the parents for the parent switch?
-> > 
-> > When driver is built as module(.ko) and install at runtime after the
-> > whole initialization stage. Clk might already be turned off before
-> > configuring by assigned-clock-parents. For such clock design that need
-> > to have clock enabled during re-parent, the configuration of
-> > assigned-clock-parents might be failed. That's the problem we have now.
-> 
-> Great. Please put this sort of information in the commit text.
-> 
-
-OK, I'll do when sending next version.
-
-> > Do you have any suggestion for such usage of clocks? Many thanks.
-> > 
-> 
-> Ok, and in this case somehow CLK_OPS_PARENT_ENABLE flag doesn't work? Is
-> that because the clk itself doesn't do anything unless it's enabled?  I
-> seem to recall that we usually work around this by caching the state of
-> the clk parents or frequencies and then when the clk prepare or enable
-> op is called we actually write the hardware to change the state. There
-> are some qcom clks like this and we basically just use the hardware
-> itself to cache the state of the clk while it hasn't actually changed to
-> be at that rate, because the clk is not enabled yet.
-> 
-
-Hi Stephen,
-
-Will you recommend if we cache the state in the platform driver instead
-of the hardware itself and then change the state when clk enable op is
-called if we don't have such hardware design on MTK clocks?
-
-> The main concern is that we're having to turn on clks to make things
-> work, when it would be best to not turn on clks just so that register
-> writes actually make a difference to what the hardware does.
-> 
-
-In my view, it's a safe operation to enable clock shortly to make things
-work when its child clock is still disabled. What do you think?
-
+SGksIEZhYmlvDQoNCj4gT24gTW9uLCBTZXAgMiwgMjAxOSBhdCAxMTowNSBQTSBBbnNvbiBIdWFu
+ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+ICsgICAgICAgcmV0ID0g
+aW5wdXRfcmVnaXN0ZXJfZGV2aWNlKGlucHV0KTsNCj4gPiArICAgICAgIGlmIChyZXQgPCAwKSB7
+DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZWdp
+c3RlciBpbnB1dCBkZXZpY2VcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0K
+PiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHBkYXRhLT5pbnB1dCA9IGlucHV0Ow0K
+PiA+ICsgICAgICAgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcGRhdGEpOw0KPiA+ICsNCj4g
+PiArICAgICAgIHJldCA9IGlteF9zY3VfaXJxX2dyb3VwX2VuYWJsZShTQ19JUlFfR1JPVVBfV0FL
+RSwNCj4gU0NfSVJRX0JVVFRPTiwgdHJ1ZSk7DQo+ID4gKyAgICAgICBpZiAocmV0KSB7DQo+ID4g
+KyAgICAgICAgICAgICAgIGRldl93YXJuKCZwZGV2LT5kZXYsICJlbmFibGUgc2N1IGdyb3VwIGly
+cSBmYWlsZWRcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiANCj4gQmV0
+dGVyIGRvIGEgJ2dvdG8gaW5wdXRfdW5yZWdpc3RlcicgaGVyZSBpbnN0ZWFkIGFuZCBjYWxsDQo+
+IGlucHV0X3VucmVnaXN0ZXJfZGV2aWNlKCkuDQoNCkFncmVlZCwgd2lsbCBmaXggaW4gVjMgbGF0
+ZXIuDQoNClRoYW5rcywNCkFuc29uLg0K
