@@ -2,125 +2,86 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE50C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BDFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E4D22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lAcoMRpF"
+	by mail.kernel.org (Postfix) with ESMTP id BCF6E23717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfICQAw (ORCPT
+        id S1729557AbfICQDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:00:52 -0400
-Received: from mail.efficios.com ([167.114.142.138]:48798 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfICQAq (ORCPT
+        Tue, 3 Sep 2019 12:03:39 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:20703 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbfICQDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:00:46 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 654A42AD057;
-        Tue,  3 Sep 2019 12:00:45 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 7hkK1hRKA1wf; Tue,  3 Sep 2019 12:00:45 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D92F62AD048;
-        Tue,  3 Sep 2019 12:00:44 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D92F62AD048
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1567526444;
-        bh=Zqhr/+MbOuomokLdwjrVX2IWsufug4RaFYpEXDeAvVU=;
-        h=From:To:Date:Message-Id;
-        b=lAcoMRpFssL1+ZedFAhjlG+0Dnuw1I+PUEexxmpXS4NWGWnK7iBMJ9E0TZg4KrULa
-         Ef6ZZTtO4R2Oq5dPNhVrfyCJ0GX94Sv/9GY6xd4p0DuWYRcq1cSJ/K4g87OPuyMje+
-         fUQ3lYoG8myPqK0zZFP7SZT8MrCQRQalcQhFgPK+TuIQ02gz9vo5tzYSKd+tiGFDtl
-         03tnxT4ieaqfej+nGFdi8xlsVc0k3tdKvKFOSTQNmP1vbMyOp6x+LtUVmnbftWulfS
-         enMYlycYelXnC++/o+E/StSGSkhq7XM2Mb2r7y5ZSn6WPgpEHlxLbDkcvvUwjNLLyl
-         /wXGtEkHnVOrQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id oanwNV4MFyzd; Tue,  3 Sep 2019 12:00:44 -0400 (EDT)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 943BB2AD02B;
-        Tue,  3 Sep 2019 12:00:43 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [RFC PATCH 2/3] Fix: sched/membarrier: READ_ONCE p->mm in membarrier_global_expedited
-Date:   Tue,  3 Sep 2019 12:00:35 -0400
-Message-Id: <20190903160036.2400-3-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190903160036.2400-1-mathieu.desnoyers@efficios.com>
-References: <20190903160036.2400-1-mathieu.desnoyers@efficios.com>
+        Tue, 3 Sep 2019 12:03:39 -0400
+Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x83G3JSd025010;
+        Wed, 4 Sep 2019 01:03:19 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
+ Wed, 04 Sep 2019 01:03:19 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x83G3Ihr025006
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 4 Sep 2019 01:03:18 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH v2 1/3] ASoC: es8316: judge PCM rate at later timing
+To:     Mark Brown <broonie@kernel.org>
+Cc:     David Yang <yangxiaohua@everest-semi.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20190831162650.19822-1-katsuhiro@katsuster.net>
+ <20190902120248.GA5819@sirena.co.uk>
+ <1a3c5934-4731-d474-e9d5-795e8337b180@katsuster.net>
+ <20190903111138.GA6247@sirena.co.uk>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <c142c351-5559-b162-e68f-98cf86b039aa@katsuster.net>
+Date:   Wed, 4 Sep 2019 01:03:18 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190903111138.GA6247@sirena.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to the lack of READ_ONCE() on p->mm, this code can in fact turn into
-a NULL deref when we hit do_exit() around exit_mm(). The first p->mm
-read is before and sees !NULL, the second is after and does observe
-NULL, which triggers a null pointer dereference.
+Hello Mark,
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Chris Metcalf <cmetcalf@ezchip.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Kirill Tkhai <tkhai@yandex.ru>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/membarrier.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+On 2019/09/03 20:11, Mark Brown wrote:
+> On Tue, Sep 03, 2019 at 04:19:10AM +0900, Katsuhiro Suzuki wrote:
+>> On 2019/09/02 21:02, Mark Brown wrote:
+> 
+>>> The best way to handle this is to try to support both fixed and variable
+>>> clock rates, some other drivers do this by setting constraints based on
+>>> MCLK only if the MCLK has been set to a non-zero value.  They have the
+>>> machine drivers reset the clock rate to 0 when it goes idle so that no
+>>> constraints are applied then.  This means that if the machine has a
+> 
+>> In my understanding, fixed and variable clock both use set_sysclk() for
+>> telling their MCLK to codec driver. For fixed MCLK cases we need to
+>> apply constraint but for variable MCLK cases we should not set
+>> constraints at set_sysclk(). How can we identify these two cases...?
+> 
+> Like I say it's usually done by settingthe MCLK to 0 when not in use and
+> then not applying any constraints if there's no MCLK set.
+> 
 
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index aa8d75804108..02feb7c8da4f 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -72,12 +72,16 @@ static int membarrier_global_expedited(void)
- 
- 		rcu_read_lock();
- 		p = task_rcu_dereference(&cpu_rq(cpu)->curr);
--		if (p && p->mm && (atomic_read(&p->mm->membarrier_state) &
-+		if (p) {
-+			struct mm_struct *mm = READ_ONCE(p->mm);
-+
-+			if (mm && (atomic_read(&mm->membarrier_state) &
- 				   MEMBARRIER_STATE_GLOBAL_EXPEDITED)) {
--			if (!fallback)
--				__cpumask_set_cpu(cpu, tmpmask);
--			else
--				smp_call_function_single(cpu, ipi_mb, NULL, 1);
-+				if (!fallback)
-+					__cpumask_set_cpu(cpu, tmpmask);
-+				else
-+					smp_call_function_single(cpu, ipi_mb, NULL, 1);
-+			}
- 		}
- 		rcu_read_unlock();
- 	}
--- 
-2.17.1
+Ah... I understand. Current implementation refuses MCLK == 0.
+I'll change to accept MCLK == 0 for fixed clock users and send v3 patch.
 
+Best Regards,
+Katsuhiro Suzuki
