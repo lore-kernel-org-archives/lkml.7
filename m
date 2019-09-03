@@ -2,94 +2,173 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA3EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADB7C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD02722D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFA722D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfICOTB (ORCPT
+        id S1729533AbfICOTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:19:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46866 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 10:19:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:37846 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfICOTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:19:00 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 87477302C060;
-        Tue,  3 Sep 2019 14:19:00 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.226])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E858060CCE;
-        Tue,  3 Sep 2019 14:18:51 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 762BB220292; Tue,  3 Sep 2019 10:18:51 -0400 (EDT)
-Date:   Tue, 3 Sep 2019 10:18:51 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
- machines
-Message-ID: <20190903141851.GC10983@redhat.com>
-References: <20190821173742.24574-1-vgoyal@redhat.com>
- <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
- <20190903041507-mutt-send-email-mst@kernel.org>
- <20190903140752.GA10983@redhat.com>
- <20190903101001-mutt-send-email-mst@kernel.org>
+        id S1725782AbfICOTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:19:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B52FA337;
+        Tue,  3 Sep 2019 07:19:10 -0700 (PDT)
+Received: from [10.37.8.116] (unknown [10.37.8.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C2933F246;
+        Tue,  3 Sep 2019 07:19:08 -0700 (PDT)
+Subject: Re: [PATCH v2 3/8] mips: compat: vdso: Use legacy syscalls as
+ fallback
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "salyzyn@android.com" <salyzyn@android.com>,
+        "0x7f454c46@gmail.com" <0x7f454c46@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>
+References: <20190830135902.20861-1-vincenzo.frascino@arm.com>
+ <20190830135902.20861-4-vincenzo.frascino@arm.com>
+ <20190903134335.uxxf5kvp3afe7rfr@pburton-laptop>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <aef6a427-12af-a77e-994f-37c7a618377c@arm.com>
+Date:   Tue, 3 Sep 2019 15:20:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903101001-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 03 Sep 2019 14:19:00 +0000 (UTC)
+In-Reply-To: <20190903134335.uxxf5kvp3afe7rfr@pburton-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:12:16AM -0400, Michael S. Tsirkin wrote:
-> On Tue, Sep 03, 2019 at 10:07:52AM -0400, Vivek Goyal wrote:
-> > On Tue, Sep 03, 2019 at 04:31:38AM -0400, Michael S. Tsirkin wrote:
-> > 
-> > [..]
-> > > +	/* TODO lock */
-> > > give me pause.
-> > > 
-> > > Cleanup generally seems broken to me - what pauses the FS
-> > 
-> > I am looking into device removal aspect of it now. Thinking of adding
-> > a reference count to virtiofs device and possibly also a bit flag to
-> > indicate if device is still alive. That way, we should be able to cleanup
-> > device more gracefully.
+Hi Paul,
+
+thank you for your review.
+
+On 9/3/19 2:52 PM, Paul Burton wrote:
+> Hi Vincenzo,
 > 
-> Generally, the way to cleanup things is to first disconnect device from
-> linux so linux won't send new requests, wait for old ones to finish.
+> On Fri, Aug 30, 2019 at 02:58:57PM +0100, Vincenzo Frascino wrote:
+>> The generic VDSO implementation uses the Y2038 safe clock_gettime64() and
+>> clock_getres_time64() syscalls as fallback for 32bit VDSO. This breaks
+>> seccomp setups because these syscalls might be not (yet) allowed.
+>>
+>> Implement the 32bit variants which use the legacy syscalls and select the
+>> variant in the core library.
+>>
+>> The 64bit time variants are not removed because they are required for the
+>> time64 based vdso accessors.
+>>
+>> Cc: Paul Burton <paul.burton@mips.com>
+>> Fixes: 00b26474c2f1 ("lib/vdso: Provide generic VDSO implementation")
+>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> 
+> How would you like this to be applied? I'd be happy to apply this one to
+> mips-next, where commit 24640f233b46 ("mips: Add support for generic
+> vDSO") added the file being modified here. Otherwise:
+> 
+>     Acked-by: Paul Burton <paul.burton@mips.com>
+> 
 
-I was thinking of following.
+Please feel free to apply this to mips-next.
 
-- Set a flag on device to indicate device is dead and not queue new
-  requests. Device removal call can set this flag.
+Thanks,
+Vincenzo
 
-- Return errors when fs code tries to queue new request.
-
-- Drop device creation reference in device removal path. If device is
-  mounted at the time of removal, that reference will still be active
-  and device state will not be cleaned up in kernel yet.
-
-- User unmounts the fs, and that will drop last reference to device and
-  will lead to cleanup of in kernel state of the device.
-
-Does that sound reasonable.
-
-Vivek
+> Thanks,
+>     Paul
+> 
+>> ---
+>>  arch/mips/include/asm/vdso/gettimeofday.h | 45 +++++++++++++++++++++++
+>>  arch/mips/vdso/config-n32-o32-env.c       |  1 +
+>>  2 files changed, 46 insertions(+)
+>>
+>> diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
+>> index c59fe08b0347..e78462e8ca2e 100644
+>> --- a/arch/mips/include/asm/vdso/gettimeofday.h
+>> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
+>> @@ -105,6 +105,51 @@ static __always_inline int clock_getres_fallback(
+>>  	return error ? -ret : ret;
+>>  }
+>>  
+>> +#if _MIPS_SIM != _MIPS_SIM_ABI64
+>> +
+>> +#define VDSO_HAS_32BIT_FALLBACK	1
+>> +
+>> +static __always_inline long clock_gettime32_fallback(
+>> +					clockid_t _clkid,
+>> +					struct old_timespec32 *_ts)
+>> +{
+>> +	register struct old_timespec32 *ts asm("a1") = _ts;
+>> +	register clockid_t clkid asm("a0") = _clkid;
+>> +	register long ret asm("v0");
+>> +	register long nr asm("v0") = __NR_clock_gettime;
+>> +	register long error asm("a3");
+>> +
+>> +	asm volatile(
+>> +	"       syscall\n"
+>> +	: "=r" (ret), "=r" (error)
+>> +	: "r" (clkid), "r" (ts), "r" (nr)
+>> +	: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>> +	  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+>> +
+>> +	return error ? -ret : ret;
+>> +}
+>> +
+>> +static __always_inline int clock_getres32_fallback(
+>> +					clockid_t _clkid,
+>> +					struct old_timespec32 *_ts)
+>> +{
+>> +	register struct old_timespec32 *ts asm("a1") = _ts;
+>> +	register clockid_t clkid asm("a0") = _clkid;
+>> +	register long ret asm("v0");
+>> +	register long nr asm("v0") = __NR_clock_getres;
+>> +	register long error asm("a3");
+>> +
+>> +	asm volatile(
+>> +	"       syscall\n"
+>> +	: "=r" (ret), "=r" (error)
+>> +	: "r" (clkid), "r" (ts), "r" (nr)
+>> +	: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>> +	  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+>> +
+>> +	return error ? -ret : ret;
+>> +}
+>> +#endif
+>> +
+>>  #ifdef CONFIG_CSRC_R4K
+>>  
+>>  static __always_inline u64 read_r4k_count(void)
+>> diff --git a/arch/mips/vdso/config-n32-o32-env.c b/arch/mips/vdso/config-n32-o32-env.c
+>> index 7f8d957abd4a..0011a632aef2 100644
+>> --- a/arch/mips/vdso/config-n32-o32-env.c
+>> +++ b/arch/mips/vdso/config-n32-o32-env.c
+>> @@ -10,6 +10,7 @@
+>>   */
+>>  #undef CONFIG_64BIT
+>>  
+>> +#define BUILD_VDSO32
+>>  #define CONFIG_32BIT 1
+>>  #define CONFIG_GENERIC_ATOMIC64 1
+>>  #define BUILD_VDSO32_64
+>> -- 
+>> 2.23.0
+>>
