@@ -2,115 +2,186 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FA6C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924C4C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4E22173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5152721897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ys9Y1fQI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="hzUWKvrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfICFz6 (ORCPT
+        id S1726631AbfICF5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:55:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44529 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfICFz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:55:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 30so5028035wrk.11;
-        Mon, 02 Sep 2019 22:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X7sSiUySVZV9o7/lrwJkuFeTAt0kOUYd/2rnVcX4C8w=;
-        b=Ys9Y1fQIYN15V0apg8nw2x0mdkLG1gGNdLtlgz4yLuv9IaPS1KM1uIJ8JN37YtoltE
-         l8m2NDUGfIn0E5p4sarsomM9ekjwyWsHsGnAUD5wkCtuvsEbywJGCy1q+CDsMJrIYNCq
-         Lh6kM0IYyvOWZoWc62AfycTE0J7CU6MwvpmfPExJ7BjxJZGNPfCfYqfF59G8B/9AvTZV
-         IxhS+n5aKbC1rVX+jOnVOQvJG5nrFZnCbpYfYjlPcQmQYmtXkc4qvJlrFWSLocMFeqDg
-         WTRxJ1TqYC6NiivsiaabMgS91UanJWDR3VngBpHqlgCIHu81YQ49cfa6u1eu05K0Vh8g
-         F24Q==
+        Tue, 3 Sep 2019 01:57:32 -0400
+Received: from mx4.ucr.edu ([138.23.248.66]:63694 "EHLO mx4.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbfICF5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 01:57:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567490251; x=1599026251;
+  h=mime-version:references:in-reply-to:from:date:message-id:
+   subject:to:cc;
+  bh=QUJerUTXX9JAsklG4v6RV3thlgDGpzVUjBirsY+DGFc=;
+  b=hzUWKvrB+ucT24GNoLRzsr9PjzVOTNvrFdtcP8V0U8N1saR49aTtffp2
+   2JPmT4qMiG3FhWUKkYIbiq3j4mIDM9r+1M7reUDGfS/jOZj5YXUORuXln
+   +Mfrpu9SXynx54jAHX7yyUQtilUWCWfSj/HLfoinTxuKZiZDh3Y820pw0
+   5xJkagaBLJUUc6dsBbcKBMPqyLvqeDbGP321xqPKVI4o/EvHypV/L/iXu
+   uUwfzwGhhPeM94Yo5BAFi/J1/hjjz2QqOlyDFJ2Hs/6B8yM3Wm4VVHJJ8
+   mzM0jyetLEG8j3D1NsSVBPHSf8UAz1BFJhcQtgI9pTt2/FLiikcsdfBEf
+   Q==;
+IronPort-SDR: hCalSpmrxZRdmbqqSrd5jeI0eMtO+ePSaAMBo/+zpkFzuztlViOeGjC+JhqxbMoPz94OJVjroj
+ JRG6T462NU1tcSVFVZyKbFSO/lcjqLhW2pG6hw4JLI+UoFzYaCoK/gn6KH8/VdE8XHOl8ofNg8
+ fy8qDuWA9bBHOwhuF3tkxqUyDt0cZtncHreYv8vUnsSaaquKaVc6uT4nAr32q1LEydCMphmxoZ
+ xgNzDZPyR0+lkxvRDjGUSzTxyRN/fjl7uTExblvnCn1tVuncR9m01nFlhzxP9KKDSeMAzNMagf
+ J8E=
+IronPort-PHdr: =?us-ascii?q?9a23=3AthF4SxFC5XFK98+jD1cmHJ1GYnF86YWxBRYc79?=
+ =?us-ascii?q?8ds5kLTJ7zo8ywAkXT6L1XgUPTWs2DsrQY0rCQ6v+5EjVYud6oizMrSNR0TR?=
+ =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
+ =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vMhm6txjdu8sLjYdtN6o91g?=
+ =?us-ascii?q?fFqWZUdupLwm9lOUidlAvm6Meq+55j/SVQu/Y/+MNFTK73Yac2Q6FGATo/K2?=
+ =?us-ascii?q?w669HluhfFTQuU+3sTSX4WnQZSAwjE9x71QJH8uTbnu+Vn2SmaOcr2Ta0oWT?=
+ =?us-ascii?q?mn8qxmRgPkhDsBOjUk62zclNB+g7xHrxKgvxx/wpDbYIeJNPplY6jRecoWSX?=
+ =?us-ascii?q?ddUspNUiBMBJ63YYkSAOobJetXoIf9qFkOoxWwBgeiGf3hxSNTi3/qwaE3yf?=
+ =?us-ascii?q?gtHR3a0AEiGd8FrXTarM/yNKcXSe26zqjIzDTDb/NL3jf29YvHchA7rvGNQL?=
+ =?us-ascii?q?l9dsrQyEgvFwzfj1WctZDpMj2O2+QQr2eb9fBsWvyyhG46sgx8pCWkyMkrio?=
+ =?us-ascii?q?nMnI0Vy1bE+D1iz4YyIt24VEp7Yd+iEJdKqy6aMI52T8U/SG9roCY30qMKtY?=
+ =?us-ascii?q?K/cSQQy5kqxwTTZ+Kbf4WL+B7vSeKcLDN+iXl4YrywnQyy/lKlyuDkU8m010?=
+ =?us-ascii?q?tFoTRdn9nXs3ANywTT6s+aSvth5kuh2SiA1wTU6uxcJEA7j6vbK5o4zr40lJ?=
+ =?us-ascii?q?ofrF3PHiHrlEjyiKKabEok+u+v6+ToZrXpuIWQOJNzigH7Kqgum8q/DvokMg?=
+ =?us-ascii?q?UWQWSX5eCx2Kfg8ED5WrlGkOE6n6rDvJzHIckWora1AwpP3YYi7xa/AS2m0N?=
+ =?us-ascii?q?MdnXQfLFNEeRKHgJLoO13SPPz1A+yyg0mwnzdx3fzJIKDuAojVInjZjLjhZa?=
+ =?us-ascii?q?p961JbyAcrydBf5pRUCqwOIf7qWU/+qsbYDhknPAyw2OvnFtp92Z0EWW6VAa?=
+ =?us-ascii?q?+WLrnSsVmW6eIrOeWMY5UVuDmuY8QistfqgG8wn1MHcOGD0J8Tb3a5VqBvJ0?=
+ =?us-ascii?q?iJaHzgmNpHG2oOug04TcTgj1qeVT9VIX21WvRvyCs8DdeXDJXDW4flsryI3W?=
+ =?us-ascii?q?/vD49Wb2EeUgukDHzyMYiIRqFfO2qpPsZ9n2lcBvCaQIg72ETr7Veixg=3D?=
+ =?us-ascii?q?=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EQAADL/21dgMfQVdFlGwEBAQEDAQE?=
+ =?us-ascii?q?BBwMBAQGBVQQBAQELAQGDA4EFKoQhg0qLQoIPk3aFJIF7AQgBAQEOGxQBAYQ?=
+ =?us-ascii?q?7AgICgm0jNgcOAgMIAQEFAQEBAQEGBAEBAhABAQkNCQgnhTcMQgEQAYFmKQG?=
+ =?us-ascii?q?BSywNZAEBAQMSEQRSEAsLDQICHwcCAiISAQUBHAYTIoMBggoFng2BAzyLJH8?=
+ =?us-ascii?q?zg3iEdQEIDIFDBhJ6KAGLd4IXg241PoQNg0KCWASBLgEBAY1EhxaWDQEGAoI?=
+ =?us-ascii?q?NFIZzhTyILBuCM4tTimAtkFSVVw8hgTYLgX8zGiV/BmeBToJOFxWDOopzIzC?=
+ =?us-ascii?q?GXIY4glQBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2EQAADL/21dgMfQVdFlGwEBAQEDAQEBBwMBAQGBVQQBA?=
+ =?us-ascii?q?QELAQGDA4EFKoQhg0qLQoIPk3aFJIF7AQgBAQEOGxQBAYQ7AgICgm0jNgcOA?=
+ =?us-ascii?q?gMIAQEFAQEBAQEGBAEBAhABAQkNCQgnhTcMQgEQAYFmKQGBSywNZAEBAQMSE?=
+ =?us-ascii?q?QRSEAsLDQICHwcCAiISAQUBHAYTIoMBggoFng2BAzyLJH8zg3iEdQEIDIFDB?=
+ =?us-ascii?q?hJ6KAGLd4IXg241PoQNg0KCWASBLgEBAY1EhxaWDQEGAoINFIZzhTyILBuCM?=
+ =?us-ascii?q?4tTimAtkFSVVw8hgTYLgX8zGiV/BmeBToJOFxWDOopzIzCGXIY4glQBAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
+   d="scan'208";a="74360963"
+Received: from mail-lj1-f199.google.com ([209.85.208.199])
+  by smtpmx4.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 22:57:28 -0700
+Received: by mail-lj1-f199.google.com with SMTP id s4so1393024ljs.15
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 22:57:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X7sSiUySVZV9o7/lrwJkuFeTAt0kOUYd/2rnVcX4C8w=;
-        b=HV/H5fVwvqyarnC0Db3tzlcei1DNHhlVyqhKn8ZMJByrzHgslNLUyk+PXeAD5k5a/u
-         PBih6leeV59wo0Hu+0eTRpGev+4JLhcH2Oihzs3pNLFk/cYvDSgEvb0pVydNb01Et/j8
-         5dO4ZDhOHN8hIcpijYIjY4nduuuFGHcGqLAuP3+7zHF4fmvXFDoiruOBzQx5nR0dwgT4
-         eCQN2N3rAOf8QJNZBBsMJ8nhhoXfbeuLR3MqX+onXXuHgQm+yUOZ0FnTfhu+E57Fkdru
-         S9Svew5Zqhp2KlX8iQt8qOBsnKBYmoY3JDKFBe1m0WCzIRubIydKmL2LuOLbroTTZ5Fa
-         y8Ww==
-X-Gm-Message-State: APjAAAVYq3PWSIzKMBUbm4QOTUDVeSG3kHBe+zDDfnhS9DcgFgUeUv/0
-        47QkaxDJdOGBvH2IWwB21vl6TS/m95s=
-X-Google-Smtp-Source: APXvYqyBhTmrTiKTpFKgVK1t14H6EtrLzraSNMVF6fR+NHY6gWzA/qnovaxj2pzBYW88+FhaukDwWQ==
-X-Received: by 2002:a5d:6602:: with SMTP id n2mr10555596wru.317.1567490155857;
-        Mon, 02 Sep 2019 22:55:55 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id a130sm7848265wmf.48.2019.09.02.22.55.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 22:55:55 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 22:55:53 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-Message-ID: <20190903055553.GC60296@archlinux-threadripper>
-References: <20190812023214.107817-1-natechancellor@gmail.com>
- <878srdv206.fsf@mpe.ellerman.id.au>
- <20190828175322.GA121833@archlinux-threadripper>
- <CAKwvOdmXbYrR6n-cxKt3XxkE4Lmj0sSoZBUtHVb0V2LTUFHmug@mail.gmail.com>
- <20190828184529.GC127646@archlinux-threadripper>
- <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N1RORfpQlqn9qnf8gs9wti52uT3aQVT/Fl4fUvQUgpM=;
+        b=iJuSVX7+9yep980rpMgowTlPbHOuR6mr1yPVfwy1unmuxJNzvK+rUjP3JrHNlhzsw3
+         pm/waDMcg46jEm151Ctbmup452ZCNXhxpj2cIo8MLGAczRljVtaYwMEuSCmsixwZ/Qd6
+         9WtFeaJ/oVGciWOJ1axuyPXlcP7qsCiKUJqNaJPDXGIjGLvua+N2/f6IopCIoKJT/hhK
+         St6bCfxse9HBCjv8pNy70mDp0SZ67kHLMOC+K+V9TyhD/picIygX/cNU1H6RU1xnist1
+         56SZRzKG7wgAVUNfkExculkm07s9UHq3yXzvl/IG/8kUCk2oI81GtAD7S6GKxFrAHdjB
+         yWdg==
+X-Gm-Message-State: APjAAAX5QbK2oyVZrr+uoU9uwOtk8t6ZX4eaqvkuVOAHC2t4Q756VgtE
+        0LJy7wIX1N8KGhFQO4msYZOQ0NLubZgzIIya+0awImFPPKL1LtdqW0ckLe4APJMUlx/DP6C0a2F
+        buev9J18PX3cNARa6bObgLbv2rUpp+9inr+6rjL8jDw==
+X-Received: by 2002:a19:2d19:: with SMTP id k25mr20634535lfj.76.1567490246795;
+        Mon, 02 Sep 2019 22:57:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyndhnhLpzhxkkkI6SThvTHdicVJOY9S3srLCaTZ/slSZSfLXjzDiqoXFXkBq6IPvvMjvo5t4Ex9aWEKpXwgNw=
+X-Received: by 2002:a19:2d19:: with SMTP id k25mr20634522lfj.76.1567490246602;
+ Mon, 02 Sep 2019 22:57:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190902222946.20548-1-yzhai003@ucr.edu> <20190902223650.GJ21922@piout.net>
+In-Reply-To: <20190902223650.GJ21922@piout.net>
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Mon, 2 Sep 2019 22:56:48 -0700
+Message-ID: <CABvMjLRjeXAmhBwfZZPbmxdENq=FP9rR0Ld=T3veGXF6cjptxA@mail.gmail.com>
+Subject: Re: [PATCH] clocksource: atmel-st: Variable sr in at91rm9200_timer_interrupt()
+ could be uninitialized
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Chengyu Song <csong@cs.ucr.edu>, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 09:59:48AM +0000, David Laight wrote:
-> From: Nathan Chancellor
-> > Sent: 28 August 2019 19:45
-> ...
-> > However, I think that -fno-builtin-* would be appropriate here because
-> > we are providing our own setjmp implementation, meaning clang should not
-> > be trying to do anything with the builtin implementation like building a
-> > declaration for it.
-> 
-> Isn't implementing setjmp impossible unless you tell the compiler that
-> you function is 'setjmp-like' ?
+In function regmap_read(),  there're two places which could make the read fail.
 
-No idea, PowerPC is the only architecture that does such a thing.
+First, if "reg" and  "map->reg_stride" are not aligned, then remap_read() will
+return -EINVAL without initialize variable "val".
 
-https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/tree/arch/powerpc/kernel/misc.S#n43
+Second, _regmap_read() could also fail and return error code if "val" is not
+initialized. The caller remap_read() returns the same error code, but
+at91rm9200_timer_interrupt() does not use this information.
 
-Goes back all the way to before git history (all the way to ppc64's
-addition actually):
+On Mon, Sep 2, 2019 at 3:37 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 02/09/2019 15:29:46-0700, Yizhuo wrote:
+> > Inside function at91rm9200_timer_interrupt(), variable sr could
+> > be uninitialized if regmap_read() fails. However, sr is used
+>
+> Could you elaborate on how this could fail?
+>
+> > to decide the control flow later in the if statement, which is
+> > potentially unsafe. We could check the return value of
+> > regmap_read() and print an error here.
+> >
+> > Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+> > ---
+> >  drivers/clocksource/timer-atmel-st.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clocksource/timer-atmel-st.c b/drivers/clocksource/timer-atmel-st.c
+> > index ab0aabfae5f0..061a3f27847e 100644
+> > --- a/drivers/clocksource/timer-atmel-st.c
+> > +++ b/drivers/clocksource/timer-atmel-st.c
+> > @@ -48,8 +48,14 @@ static inline unsigned long read_CRTR(void)
+> >  static irqreturn_t at91rm9200_timer_interrupt(int irq, void *dev_id)
+> >  {
+> >       u32 sr;
+> > +     int ret;
+> > +
+> > +     ret = regmap_read(regmap_st, AT91_ST_SR, &sr);
+> > +     if (ret) {
+> > +             pr_err("Fail to read AT91_ST_SR.\n");
+> > +             return ret;
+> > +     }
+> >
+> > -     regmap_read(regmap_st, AT91_ST_SR, &sr);
+> >       sr &= irqmask;
+> >
+> >       /*
+> > --
+> > 2.17.1
+> >
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=61542216fa90397a2e70c46583edf26bc81994df
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/arch/ppc64/xmon/setjmp.c?id=5f12b0bff93831620218e8ed3970903ecb7861ce
 
-I would just like this warning fixed given that PowerPC builds with
--Werror by default so it is causing a build failure in our CI.
+-- 
+Kind Regards,
 
-Cheers,
-Nathan
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
