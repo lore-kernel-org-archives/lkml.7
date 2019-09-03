@@ -6,86 +6,85 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666FCC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E77C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7A621881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BBC21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfICFZU (ORCPT
+        id S1726731AbfICFZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:25:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726555AbfICFZT (ORCPT
+        Tue, 3 Sep 2019 01:25:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19750 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726180AbfICFZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:25:19 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x835N0WI018936
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 01:25:18 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uscgkftx5-1
+        Tue, 3 Sep 2019 01:25:27 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x835MTpK139489
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 01:25:26 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2usgmfj4tx-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:25:18 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:25:25 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Sep 2019 06:25:16 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 3 Sep 2019 06:25:23 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Sep 2019 06:25:12 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x835PB6X3670192
+        Tue, 3 Sep 2019 06:25:18 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x835PHYL50266230
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 05:25:11 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B66E11C04A;
-        Tue,  3 Sep 2019 05:25:11 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1688511C04C;
-        Tue,  3 Sep 2019 05:25:11 +0000 (GMT)
+        Tue, 3 Sep 2019 05:25:18 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8B5542047;
+        Tue,  3 Sep 2019 05:25:17 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D18E42041;
+        Tue,  3 Sep 2019 05:25:17 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Sep 2019 05:25:11 +0000 (GMT)
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Sep 2019 05:25:17 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id D1DCAA00EC;
-        Tue,  3 Sep 2019 15:25:09 +1000 (AEST)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3BADAA00EC;
+        Tue,  3 Sep 2019 15:25:16 +1000 (AEST)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Qian Cai <cai@lca.pw>, Nicholas Piggin <npiggin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
         Allison Randal <allison@lohutok.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
         David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] powerpc: Chunk calls to flush_dcache_range in arch_*_memory
-Date:   Tue,  3 Sep 2019 15:23:58 +1000
+Subject: [PATCH v2 5/6] powerpc: Remove 'extern' from func prototypes in cache headers
+Date:   Tue,  3 Sep 2019 15:23:59 +1000
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190903052407.16638-1-alastair@au1.ibm.com>
 References: <20190903052407.16638-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19090305-0020-0000-0000-00000366F243
+x-cbid: 19090305-0012-0000-0000-00000345F042
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090305-0021-0000-0000-000021BC5945
-Message-Id: <20190903052407.16638-5-alastair@au1.ibm.com>
+x-cbparentid: 19090305-0013-0000-0000-000021803CA6
+Message-Id: <20190903052407.16638-6-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=833 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1909030060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -94,72 +93,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-When presented with large amounts of memory being hotplugged
-(in my test case, ~890GB), the call to flush_dcache_range takes
-a while (~50 seconds), triggering RCU stalls.
-
-This patch breaks up the call into 1GB chunks, calling
-cond_resched() inbetween to allow the scheduler to run.
+The 'extern' keyword does not value-add for function prototypes.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- arch/powerpc/mm/mem.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/cache.h      | 8 ++++----
+ arch/powerpc/include/asm/cacheflush.h | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index cd540123874d..854aaea2c6ae 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -104,11 +104,14 @@ int __weak remove_section_mapping(unsigned long start, unsigned long end)
- 	return -ENODEV;
- }
+diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+index 91c808c6738b..54fffdf5a6ec 100644
+--- a/arch/powerpc/include/asm/cache.h
++++ b/arch/powerpc/include/asm/cache.h
+@@ -102,10 +102,10 @@ static inline u32 l1_icache_bytes(void)
+ #define __read_mostly __attribute__((__section__(".data..read_mostly")))
  
-+#define FLUSH_CHUNK_SIZE SZ_1G
-+
- int __ref arch_add_memory(int nid, u64 start, u64 size,
- 			struct mhp_restrictions *restrictions)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	u64 i;
- 	int rc;
+ #ifdef CONFIG_PPC_BOOK3S_32
+-extern long _get_L2CR(void);
+-extern long _get_L3CR(void);
+-extern void _set_L2CR(unsigned long);
+-extern void _set_L3CR(unsigned long);
++long _get_L2CR(void);
++long _get_L3CR(void);
++void _set_L2CR(unsigned long val);
++void _set_L3CR(unsigned long val);
+ #else
+ #define _get_L2CR()	0L
+ #define _get_L3CR()	0L
+diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+index 4a1c9f0200e1..fa10dc19206c 100644
+--- a/arch/powerpc/include/asm/cacheflush.h
++++ b/arch/powerpc/include/asm/cacheflush.h
+@@ -38,15 +38,15 @@ static inline void flush_cache_vmap(unsigned long start, unsigned long end) { }
+ #endif
  
- 	resize_hpt_for_hotplug(memblock_phys_mem_size());
-@@ -120,7 +123,12 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- 			start, start + size, rc);
- 		return -EFAULT;
- 	}
--	flush_dcache_range(start, start + size);
-+
-+	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
-+		flush_dcache_range(start + i,
-+				   min(start + size, start + i + FLUSH_CHUNK_SIZE));
-+		cond_resched();
-+	}
+ #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+-extern void flush_dcache_page(struct page *page);
++void flush_dcache_page(struct page *page);
+ #define flush_dcache_mmap_lock(mapping)		do { } while (0)
+ #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
  
- 	return __add_pages(nid, start_pfn, nr_pages, restrictions);
- }
-@@ -131,13 +139,19 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	struct page *page = pfn_to_page(start_pfn) + vmem_altmap_offset(altmap);
-+	u64 i;
- 	int ret;
+ void flush_icache_range(unsigned long start, unsigned long stop);
+-extern void flush_icache_user_range(struct vm_area_struct *vma,
++void flush_icache_user_range(struct vm_area_struct *vma,
+ 				    struct page *page, unsigned long addr,
+ 				    int len);
+-extern void flush_dcache_icache_page(struct page *page);
++void flush_dcache_icache_page(struct page *page);
+ void __flush_dcache_icache(void *page);
  
- 	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
- 
- 	/* Remove htab bolted mappings for this section of memory */
- 	start = (unsigned long)__va(start);
--	flush_dcache_range(start, start + size);
-+	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
-+		flush_dcache_range(start + i,
-+				   min(start + size, start + i + FLUSH_CHUNK_SIZE));
-+		cond_resched();
-+	}
-+
- 	ret = remove_section_mapping(start, start + size);
- 	WARN_ON_ONCE(ret);
- 
+ /**
 -- 
 2.21.0
 
