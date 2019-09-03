@@ -2,104 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B24C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19B1C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7E320820
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:42:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4LfdsP/"
+	by mail.kernel.org (Postfix) with ESMTP id C7948208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567539818;
+	bh=siTmQhPkETqtbp5xDiGVSXlWmbm3jkAo5QqPaZswdwk=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=LhvPovSqQAQVWzY8xhw7NpQ4cV+dR4JN2CB60NPeY8CZfxYDZxCGuAlffAfZtF4KW
+	 0lCNFaQI7CGt2rDl+Cb5XdlXmGD6SLskryjbOokLZ8L3eUIWnzIoszF+Qi6rDky49y
+	 zWOb5WLhGZ/UWESJ2gY97hnubbee/7i8DUSCWlp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfICTmo (ORCPT
+        id S1726490AbfICTni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:42:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47872 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfICTmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:42:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tVoaFtSBwMjg9JqoG7kA7ufj+6zbx8emytRxQ3/Jfdc=; b=L4LfdsP/khhXQ0mvp66GynXRm
-        Sd1nw9eDpmNka4+ABbNKHNNGsWeO2RUnNXXvQWUsdcWmuVIm6+HzncBNj4Dqfwt1IkcyaSENU3D8H
-        wFP2pcLfmN4ZR4/604bycJnHtBUlM5llWHAwKbyFKGAV3yEKGI96ArFipqKcYg5nisT7GfKjMnFz+
-        +8Y0lHg5ASFGdhIhns+MOKGm3ydmNKxkHtBXaz2cIo96E2ijRblI3MDazEI+y5/4vECf+QZoIARiq
-        ApQ4eb6h54vBnEujSV8ZiwW/gveQYFT9MlVOYI4JfpKLJm6cs8aXhUuMuIR6y9jkeXXj0vES15Xyi
-        r0UriEqIw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5Eh3-0006Y3-Q0; Tue, 03 Sep 2019 19:42:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 3 Sep 2019 15:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfICTnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:43:37 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D74E430116F;
-        Tue,  3 Sep 2019 21:41:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0306C20977765; Tue,  3 Sep 2019 21:42:18 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 21:42:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
-Message-ID: <20190903194218.GU2349@hirez.programming.kicks-ass.net>
-References: <20190902134003.GA14770@redhat.com>
- <87tv9uiq9r.fsf@x220.int.ebiederm.org>
- <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
- <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
- <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
- <20190903074117.GX2369@hirez.programming.kicks-ass.net>
- <20190903074718.GT2386@hirez.programming.kicks-ass.net>
- <87k1apqqgk.fsf@x220.int.ebiederm.org>
- <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
- <874l1tp7st.fsf@x220.int.ebiederm.org>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 701C02087E;
+        Tue,  3 Sep 2019 19:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567539816;
+        bh=siTmQhPkETqtbp5xDiGVSXlWmbm3jkAo5QqPaZswdwk=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=ftd/sdeH/M6lJzdqOq62eLGH9vEdeGeIY6gCxaTCsad8bcSKQ3l6DcvwdyyGereNS
+         iveyAkOm/u8ZHgtLYM3G6eewK6WQ6XJnNU9T2SYEJ2cgRrUlagtGYQK3K/aj2PcpFm
+         bgmmvk0tLXnQpZCOGb7YsMYOyuvl33mfNlTR0MtE=
+Date:   Tue, 3 Sep 2019 15:43:35 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
+ to prevent future TPM operations
+Message-ID: <20190903194335.GG5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-126-sashal@kernel.org>
+ <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
+ <20190903165346.hwqlrin77cmzjiti@cantor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <874l1tp7st.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20190903165346.hwqlrin77cmzjiti@cantor>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:13:22PM -0500, Eric W. Biederman wrote:
+On Tue, Sep 03, 2019 at 09:53:46AM -0700, Jerry Snitselaar wrote:
+>On Tue Sep 03 19, Doug Anderson wrote:
+>>Hi,
+>>
+>>On Tue, Sep 3, 2019 at 9:28 AM Sasha Levin <sashal@kernel.org> wrote:
+>>>
+>>>From: Vadim Sukhomlinov <sukhomlinov@google.com>
+>>>
+>>>[ Upstream commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 ]
+>>>
+>>>TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+>>>future TPM operations. TPM 1.2 behavior was different, future TPM
+>>>operations weren't disabled, causing rare issues. This patch ensures
+>>>that future TPM operations are disabled.
+>>>
+>>>Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+>>>Cc: stable@vger.kernel.org
+>>>Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+>>>[dianders: resolved merge conflicts with mainline]
+>>>Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>>Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>>---
+>>> drivers/char/tpm/tpm-chip.c | 5 +++--
+>>> 1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>>Jarkko: did you deal with the issues that came up in response to my
+>>post?  Are you happy with this going into 4.19 stable at this point?
+>>I notice this has your Signed-off-by so maybe?
+>>
+>
+>I think that is just the signed-off-by chain coming from the upstream patch.
+>Jarkko mentioned getting to the backports after Linux Plumbers, which is next week.
 
-> I think this is where I am looking a things differently than you and
-> Peter.  Why does it have to be ___schedule() that changes the value
-> in the task_struct?  Why can't it be something else that changes the
-> value and then proceeds to call schedule()?
+Right. I gave a go at backporting a few patches and this happens to be
+one of them. It will be a while before it goes in a stable tree
+(probably way after after LPC).
 
-If you call schedule() you will pass through plenty that already implies
-smp_mb() before writing the ->curr pointer. If you care about that case,
-adding RELEASE semantics to that store gains you absolutely nothing
-except a marginally slower kernel.
-
-> If we use RCU_INIT_POINTER if there was something that changed
-> task_struct and then called schedule() what ensures that a remote cpu
-> that has a stale copy of task_struct cached will update it's cache
-> after following the new value rq->curr?  Don't we need
-> rcu_assign_pointer to get that guarantee?
-
-That whole construct doesn't really make sense: one it is very rare to
-change task_struct content for !current tasks (and if we do, it must be
-with atomic ops, because then there can be concurrency), secondly when
-calling schedule() there is no guarantee on what @next will be.
-
+--
+Thanks,
+Sasha
