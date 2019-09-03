@@ -2,193 +2,147 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F5AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D95C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDABD2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567506870;
-	bh=hptEnLPHuH30TwmUN0YADeJBNKeIbZ4C9q8fPG5LnOI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EV26qLuv0ibCuqFmTQlAaV/tAquJ5TbD0LROgal4puMq2UYTLKR1j5SrB6qplcCv9
-	 z3FSsX7zTuCciLr0lcOy2XP9M3rixtKYLAFF/aJzI7yIIYkK1lvFojSMO8t3Ege+7y
-	 YpXwsdCSZp11aAk/W6w0ofUphjo6qANJXdknrGxU=
+	by mail.kernel.org (Postfix) with ESMTP id 35EBE217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:36:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Nw2gFNkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfICKea (ORCPT
+        id S1728771AbfICKgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfICKe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:34:29 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 3 Sep 2019 06:36:01 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:57250 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727077AbfICKf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:35:59 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F5322D6D;
-        Tue,  3 Sep 2019 10:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567506868;
-        bh=hptEnLPHuH30TwmUN0YADeJBNKeIbZ4C9q8fPG5LnOI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P8gMUP3mOTh+x/n5rjAdPdIv3JqWqM7gpfd6mKlV+wayBfTlMzcMwJNo2BTDxXyqa
-         SdHvfzG9+5poUJXXVDEsJ6hlHJAOZfK3c89sD1ALfTf1mk8b12rF4pxNQTLmM4/VsY
-         KLUMd725nc4wCgTfcPx4fqW1nFRqbnBS6pql7pqY=
-Received: by mail-qk1-f182.google.com with SMTP id s18so4280761qkj.3;
-        Tue, 03 Sep 2019 03:34:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAUFPP0S4ccnqxcJX+CfPT3ZnirUXuJKsOTKO+UmY/RxOi+ab5Pl
-        SDoH4Hjrvld2jzS4xHSuTeUdayNKwI34slkTFg==
-X-Google-Smtp-Source: APXvYqy/wDpCQldglZhQIwwac8erR9ogXJI6jQq+VxbfwZS3PcAb20qYGTM2Kk1Wv4zRF23m6EeaT4rkCagdzKQ0HCg=
-X-Received: by 2002:ae9:e212:: with SMTP id c18mr27120739qkc.254.1567506867330;
- Tue, 03 Sep 2019 03:34:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190902033716.GA18092@bogus> <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
- <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com> <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
-In-Reply-To: <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 3 Sep 2019 11:34:16 +0100
-X-Gmail-Original-Message-ID: <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
-Message-ID: <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7111CC0C4A;
+        Tue,  3 Sep 2019 10:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567506958; bh=hzEcIxH9OkYzQ2wF2QX+ihkL5mVW4n1QxZ4evCVUErM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=Nw2gFNkDwaEHAvmWI6x6vWdrQ+2sCSutk1yItj7eStLFz29/9Aic6KJrZmXntJ1tS
+         dP3psLh3BYBZZEBjrxf4cYyDhPh7IJVP26+yVDfRZpnF84y99v+xq+s5svc3tHIg5d
+         6lVvgWuL2plWUz0CtnqXlAMw7Hh5lEC8t81i41PSUBh3vobRVvkri8D1ftjdBzGJUZ
+         B4259R+uU+Rce3JpnM8YD99d9OorlOjGwYsUENqlG92tENtxU5rEyoP+cWYPobyZ6O
+         BkJDKq67/4lPPH+D6U7f/AqfPQUvXp1JpIC4Q6aJ0VNd5upXvux1kJeQTx+S8GLQuC
+         w1Gr53HDwUwmA==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id CD0EEA0069;
+        Tue,  3 Sep 2019 10:35:56 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id B455F3C0D7;
+        Tue,  3 Sep 2019 12:35:56 +0200 (CEST)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i3c@lists.infradead.org
+Cc:     bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        pgaj@cadence.com, Joao.Pinto@synopsys.com,
+        Vitor Soares <Vitor.Soares@synopsys.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2 2/5] i3c: master: make sure ->boardinfo is initialized in add_i3c_dev_locked()
+Date:   Tue,  3 Sep 2019 12:35:51 +0200
+Message-Id: <d8db2c6d6ebb5c1dc577593b353847bd312fd6c0.1567437955.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1567437955.git.vitor.soares@synopsys.com>
+References: <cover.1567437955.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1567437955.git.vitor.soares@synopsys.com>
+References: <cover.1567437955.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 11:08 AM Ramuthevar, Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> Hi Rob,
->
->   Thank you so much for prompt reply.
->
-> On 3/9/2019 5:19 PM, Rob Herring wrote:
-> > On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >> Hi Rob,
-> >>
-> >> Thank you for review comments.
-> >>
-> >> On 2/9/2019 9:38 PM, Rob Herring wrote:
-> >>> On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> >>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >>>>
-> >>>> Add a YAML schema to use the host controller driver with the
-> >>>> SDXC PHY on Intel's Lightning Mountain SoC.
-> >>>>
-> >>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >>>> ---
-> >>>>    .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
-> >>>>    .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
-> >>>>    2 files changed, 85 insertions(+)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..99647207b414
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >>>> @@ -0,0 +1,52 @@
-> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >>>> +
-> >>>> +allOf:
-> >>>> +  - $ref: "intel,syscon.yaml"
-> >>> You don't need this. It should be selected and applied by the compatible
-> >>> string matching.
-> >> Agreed, fix it in the next patch.
-> >>>> +
-> >>>> +description: Binding for SDXC PHY
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    const: intel,lgm-sdxc-phy
-> >>>> +
-> >>>> +  intel,syscon:
-> >>>> +    description: phandle to the sdxc through syscon
-> >>>> +
-> >>>> +  clocks:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  clock-names:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  "#phy-cells":
-> >>>> +    const: 0
-> >>>> +
-> >>>> +required:
-> >>>> +  - "#phy-cells"
-> >>>> +  - compatible
-> >>>> +  - intel,syscon
-> >>>> +  - clocks
-> >>>> +  - clock-names
-> >>>> +
-> >>>> +additionalProperties: false
-> >>>> +
-> >>>> +examples:
-> >>>> +  - |
-> >>>> +    sdxc_phy: sdxc_phy {
-> >>>> +        compatible = "intel,lgm-sdxc-phy";
-> >>>> +        intel,syscon = <&sysconf>;
-> >>> Make this a child of the below node and then you don't need this.
-> >>>
-> >>> If there's a register address range associated with this, then add a reg
-> >>> property.
-> >> Thanks for comments,  I have defined herewith example
-> >>
-> >> sysconf: chiptop@e0020000 {
-> >>               compatible = "intel,syscon";
-> > Needs to be SoC specific value.
-> Agreed! it should be "intel, lgm-syscon"
-> >>               reg = <0xe0020000 0x100>;
-> >>
-> >>               emmc_phy: emmc_phy {
-> >>                   compatible = "intel,lgm-emmc-phy";
-> >>                   intel,syscon = <&sysconf>;
-> > This is redundant because you can just get the parent node.
-> >
-> > If there's a defined register range within the 'intel,syscon' block
-> > then define it here with 'reg'.
->
-> Agreed!, avoided redundant
->
-> sysconf: chiptop@e0020000 {
->              compatible = "intel,lgm-syscon";
->              emmc_phy: emmc_phy {
->                  compatible = "intel,lgm-emmc-phy";
->                  reg = <0xe0020000 0x100>;
+The newdev->boardinfo assignment was missing in
+i3c_master_add_i3c_dev_locked() and hence the ->of_node info isn't
+propagated to  i3c_dev_desc.
 
-This is the same addresses you had for the parent, so that doesn't
-seem right. The parent should have the entire range and then the child
-nodes only the addresses for their functions. However, if the
-registers are all interleaved then you can really put 'reg' in the
-child nodes and just have it only in the parent. We don't want to have
-overlapping addresses in DT.
+Fix this by trying to initialize device i3c_dev_boardinfo if available.
 
-Rob
+Cc: <stable@vger.kernel.org>
+Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+---
+Changes in v2:
+  - Change commit message
+  - Change i3c_master_search_i3c_boardinfo(newdev) to
+  i3c_master_init_i3c_dev_boardinfo(newdev)
+  - Add fixes, stable tags
+
+ drivers/i3c/master.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 586e34f..9fb99bc 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -1798,6 +1798,22 @@ i3c_master_search_i3c_dev_duplicate(struct i3c_dev_desc *refdev)
+ 	return NULL;
+ }
+ 
++static void i3c_master_init_i3c_dev_boardinfo(struct i3c_dev_desc *dev)
++{
++	struct i3c_master_controller *master = i3c_dev_get_master(dev);
++	struct i3c_dev_boardinfo *boardinfo;
++
++	if (dev->boardinfo)
++		return;
++
++	list_for_each_entry(boardinfo, &master->boardinfo.i3c, node) {
++		if (dev->info.pid == boardinfo->pid) {
++			dev->boardinfo = boardinfo;
++			return;
++		}
++	}
++}
++
+ /**
+  * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
+  * @master: master used to send frames on the bus
+@@ -1818,8 +1834,9 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+ 				  u8 addr)
+ {
+ 	struct i3c_device_info info = { .dyn_addr = addr };
+-	struct i3c_dev_desc *newdev, *olddev;
+ 	u8 old_dyn_addr = addr, expected_dyn_addr;
++	enum i3c_addr_slot_status addrstatus;
++	struct i3c_dev_desc *newdev, *olddev;
+ 	struct i3c_ibi_setup ibireq = { };
+ 	bool enable_ibi = false;
+ 	int ret;
+@@ -1878,6 +1895,8 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+ 	if (ret)
+ 		goto err_detach_dev;
+ 
++	i3c_master_init_i3c_dev_boardinfo(newdev);
++
+ 	/*
+ 	 * Depending on our previous state, the expected dynamic address might
+ 	 * differ:
+@@ -1895,7 +1914,11 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+ 	else
+ 		expected_dyn_addr = newdev->info.dyn_addr;
+ 
+-	if (newdev->info.dyn_addr != expected_dyn_addr) {
++	addrstatus = i3c_bus_get_addr_slot_status(&master->bus,
++						  expected_dyn_addr);
++
++	if (newdev->info.dyn_addr != expected_dyn_addr &&
++	    addrstatus == I3C_ADDR_SLOT_FREE) {
+ 		/*
+ 		 * Try to apply the expected dynamic address. If it fails, keep
+ 		 * the address assigned by the master.
+-- 
+2.7.4
+
