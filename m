@@ -2,109 +2,111 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C431CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68833C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B2023431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAA623431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfICOMW (ORCPT
+        id S1729451AbfICOMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:12:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55056 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728679AbfICOMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:12:22 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C18888306
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 14:12:22 +0000 (UTC)
-Received: by mail-qt1-f197.google.com with SMTP id 91so19072770qtf.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:12:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B2BfNzrm+hR7i1mNls3IhAz7GlKTxZk9pYPgMdNVli0=;
-        b=OAkBlASR7HAFosydcHoXUyWHAF9WLnornvUM9Pe+gBRWqFnD7V/j8SLltC8v+6lI3A
-         lRWqpFoN/Gmz04eLbQRO5dFqmzb4fTgqF6ghbotFPt04rLGND9zyiiDvp1ecdpdqDRSw
-         L7HASAmdB4ty3moNmg68TKd2xVptZjkGRGMDVbsH//4ranZBsCd9V9AbAj6sLIogtN5e
-         uSIhJbYbsM1YXrT6+Iv3eB3K8osed7nbtgQbvsET7ZIPz9J/n++LikOre7ndnenXL4VY
-         vPQn5HIQMXnAc3EJyrWCQog2AVLQRLpraH8u4PfyLAgz8juGhndJrGxVVNM++zPJz2Zu
-         1XFg==
-X-Gm-Message-State: APjAAAUopbkDdycRzH/nDpaJmJHpPKvLFqcd/IJKYXzkhrmSSZ6Wkie1
-        fOIEaRJcdlI7dJ6Oh2qQMq3UQEFWSatKN4KGhMPjY5WA/FKOm+QcMlIRouZjiBxSuwDems6/fmY
-        mObyuF/sCddTQIgt36MdqBwkP
-X-Received: by 2002:ac8:19c7:: with SMTP id s7mr23669445qtk.392.1567519941737;
-        Tue, 03 Sep 2019 07:12:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwZD7QC/GbljRGHZ9kQkhQ8TANJQbERaI507U8NcnTvw54YKl5HRSRH5iHvxe2JtdirsGcbnA==
-X-Received: by 2002:ac8:19c7:: with SMTP id s7mr23669437qtk.392.1567519941605;
-        Tue, 03 Sep 2019 07:12:21 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
-        by smtp.gmail.com with ESMTPSA id b123sm8764984qkf.85.2019.09.03.07.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 07:12:20 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 10:12:16 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
- machines
-Message-ID: <20190903101001-mutt-send-email-mst@kernel.org>
-References: <20190821173742.24574-1-vgoyal@redhat.com>
- <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
- <20190903041507-mutt-send-email-mst@kernel.org>
- <20190903140752.GA10983@redhat.com>
+        Tue, 3 Sep 2019 10:12:31 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:29666 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728679AbfICOMb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:12:31 -0400
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x83AwDuw025168;
+        Tue, 3 Sep 2019 14:12:00 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2us2qw1dk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 14:12:00 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 664528D;
+        Tue,  3 Sep 2019 14:12:00 +0000 (UTC)
+Received: from [16.116.163.9] (unknown [16.116.163.9])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 6552846;
+        Tue,  3 Sep 2019 14:11:58 +0000 (UTC)
+Subject: Re: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903001815.893030884@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903064914.GA9914@infradead.org>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
+Date:   Tue, 3 Sep 2019 07:12:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903140752.GA10983@redhat.com>
+In-Reply-To: <20190903064914.GA9914@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-02_04:2019-08-29,2019-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 spamscore=0 impostorscore=0 mlxlogscore=680 adultscore=0
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909020138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:07:52AM -0400, Vivek Goyal wrote:
-> On Tue, Sep 03, 2019 at 04:31:38AM -0400, Michael S. Tsirkin wrote:
-> 
-> [..]
-> > +	/* TODO lock */
-> > give me pause.
-> > 
-> > Cleanup generally seems broken to me - what pauses the FS
-> 
-> I am looking into device removal aspect of it now. Thinking of adding
-> a reference count to virtiofs device and possibly also a bit flag to
-> indicate if device is still alive. That way, we should be able to cleanup
-> device more gracefully.
-
-Generally, the way to cleanup things is to first disconnect device from
-linux so linux won't send new requests, wait for old ones to finish.
 
 
+On 9/2/2019 11:49 PM, Christoph Hellwig wrote:
+>>   static inline bool is_early_uv_system(void)
+>>   {
+>>   	return !((efi.uv_systab == EFI_INVALID_TABLE_ADDR) || !efi.uv_systab);
+> 
+> No need for the inner braces here.
+> 
+> But woudn't this be nicer as:
+> 
+> 	return efi.uv_systab != EFI_INVALID_TABLE_ADDR && efi.uv_systab;
+> 
+> anyway?
 
+Yes, good catch.  It somehow evolved to this but your suggestion is
+much more clear.
+> 
+>> +#define is_uv_hubless _is_uv_hubless
+> 
+> Why the weird macro indirection?
+> 
+>> -static inline int is_uv_hubless(void)	{ return 0; }
+>> +static inline int _is_uv_hubless(int uv) { return 0; }
+>> +#define is_uv_hubless _is_uv_hubless
+> 
+> And here again.
+> 
 
-> > 
-> > What about the rest of TODOs in that file?
-> 
-> I will also take a closer look at TODOs now. Better device cleanup path
-> might get rid of some of them. Some of them might not be valid anymore.
-> 
-> > 
-> > use of usleep is hacky - can't we do better e.g. with a
-> > completion?
-> 
-> Agreed.
-> 
-> Thanks
-> Vivek
+Sorry, I should have explained this better.  The problem arises because
+we have a number of UV specific kernel modules that support multiple
+distributions.  And with back porting to earlier distros we cannot
+rely on the KERNEL_VERSION macro to define whether the source is being
+built for an earlier kernel.  So this allows an ifdef on the function
+name to discover if the kernel is before or after these changes.
+
+The primary motivation is to avoid referencing the hub structures
+when there aren't any, thus avoiding any NULL dereferences.  (Similar
+to patch 8/8.)
