@@ -2,89 +2,85 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888DFC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A432339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gXA92M+q"
+	by mail.kernel.org (Postfix) with ESMTP id 615F62339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfICQdg (ORCPT
+        id S1731366AbfICQdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:33:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38984 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730823AbfICQdc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E7M5OHCPCFGvSidMPlknkuDvFUT36qFbZFw1uswvZFM=; b=gXA92M+qRj1oJOmfHj6Hbgihwb
-        cXmqRb2s7gGx0C3dDRwlGKMVyI6YboNSetcl7skx30OYn1TxPXw1SYH1oVICQI+ywmWooxbiZ7GMF
-        QJg1x4zpoXkD7fjvz5f5bU9LLFTSO4JXBhcAt+N2PBRJBPrl76Ifgm7fAL5ZUIe8cfQ0el5gFkSqS
-        6hUqq3sLNdf68QBmQPzxIA1u1VMnfMiyGe9mCq8q/wPxumMAvikntDCAkUnnoku6Te9C4D1SdlDu9
-        ZA9J1RytDuqMtBsvyAbh0aQOBCUoe5358UC5SYyR9PqdJHoSR6tVDOGYCGzmS99eScsOwkm+2z9cO
-        HKkGg5rA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5BkJ-0003C9-U1; Tue, 03 Sep 2019 16:33:31 +0000
-Date:   Tue, 3 Sep 2019 09:33:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     =?utf-8?B?0JDQvdC00YDQtdC5INCb0LXQvtC90YfQuNC60L7Qsg==?= 
-        <andreil499@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andrei Leonchikov <andreil499@gmail.com>
-Subject: Re: [PATCH 1/1] Fix ARI enabling for a NVME devices
-Message-ID: <20190903163331.GA32703@infradead.org>
-References: <20190903125315.10349-1-andreil499@gmail.com>
- <20190903131416.GA26756@infradead.org>
- <CA+kE0xQ+z4f8xQ=8oRVcTMC-VsU5dyqVUWxuDamTy59_HTYOeg@mail.gmail.com>
+        Tue, 3 Sep 2019 12:33:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59971 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730658AbfICQdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:33:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:33:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
+   d="scan'208";a="173263755"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 03 Sep 2019 09:33:32 -0700
+Date:   Tue, 3 Sep 2019 09:33:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: kvm: fix return description of KVM_SET_MSRS
+Message-ID: <20190903163332.GF10768@linux.intel.com>
+References: <20190902101214.77833-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+kE0xQ+z4f8xQ=8oRVcTMC-VsU5dyqVUWxuDamTy59_HTYOeg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190902101214.77833-1-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding back the Cc list]
+On Mon, Sep 02, 2019 at 06:12:14PM +0800, Xiaoyao Li wrote:
 
-On Tue, Sep 03, 2019 at 07:24:15PM +0300, Андрей Леончиков wrote:
-> All drives has ARI capability, but everywhere the PCI_EXP_DEVCAP2_ARI
-> in the DEVCAP2 register is reset (see NVMe specification, bit 5).
-> At the same time, when the device is initialized, the DEVSAP register is
-> requested and this bit is checked. And if it is reset, ARI will never turn
-> on.
-> Because of this, it will be impossible to correctly initialize more than 8
-> functions per interface (1 physical and 7 virtual).
-> At the moment we are developing a disk, one of the requirements for
-> which is the correct operation of up to 128 virtual functions on one
-> interface.
-> During testing of this device, this behavior was noticed.
+It may seem silly, but a proper changelog would be helpful even here,
+e.g. to explain how and when a positive return value can diverge from the
+number of MSRs specific in struct kvm_msrs.
 
-Looking at the PCIe spec this bit actually means "ARI forwarding
-supported" and isn't the actual ARI support.  And the PCIe spec says
-about that:
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>  Documentation/virt/kvm/api.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+> index 2d067767b617..a2efc19e0f4e 100644
+> --- a/Documentation/virt/kvm/api.txt
+> +++ b/Documentation/virt/kvm/api.txt
+> @@ -586,7 +586,7 @@ Capability: basic
+>  Architectures: x86
+>  Type: vcpu ioctl
+>  Parameters: struct kvm_msrs (in)
+> -Returns: 0 on success, -1 on error
+> +Returns: number of msrs successfully set, -1 on error
 
-"Applicable only to Switch
-Downstream Ports and Root Ports; must be 0b for other
-Function types. This bit must be set to 1b if a Switch
-Downstream Port or Root Port supports this optional capability.
-See Section 6.13 for additional details."
+Similar to the changelong comment, it'd be helpful to elaborate on the
+positive return value, e.g.:
 
-So I don't see how we'd ever see this bit set on an actual NVMe device.
+  Returns: number of msrs successfully set (see below), -1 on error
 
-And yes, the name for our define is a little misnamed.
+and then something in the free form text explaining how the ioctl stops
+processing MSRs if setting an MSR fails.
+
+>  Writes model-specific registers to the vcpu.  See KVM_GET_MSRS for the
+>  data structures.
+> -- 
+> 2.19.1
+> 
