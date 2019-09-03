@@ -2,68 +2,144 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFFEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FACC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E36D21881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE07206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VIsu3iuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbfICR4O (ORCPT
+        id S1730127AbfICR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:56:14 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33200 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICR4N (ORCPT
+        Tue, 3 Sep 2019 13:58:31 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49252 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728010AbfICR6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:56:13 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i5D2I-00046p-T4; Tue, 03 Sep 2019 17:56:11 +0000
-Date:   Tue, 3 Sep 2019 18:56:10 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Message-ID: <20190903175610.GM1131@ZenIV.linux.org.uk>
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
- <20190903123719.GF1131@ZenIV.linux.org.uk>
- <20190903130456.GA9567@infradead.org>
- <20190903134832.GH1131@ZenIV.linux.org.uk>
- <20190903135024.GA8274@infradead.org>
- <20190903135354.GI1131@ZenIV.linux.org.uk>
- <20190903153930.GA2791@infradead.org>
+        Tue, 3 Sep 2019 13:58:31 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83HsfZH111420;
+        Tue, 3 Sep 2019 17:58:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=2CQvjcjn8S5qepJOVui7TagmqoVkFQxOyG/LeHJ4jns=;
+ b=VIsu3iuVv3V2Rp/MY04+TEmNsQFl9ZZIxerTVvvOODw0AwKdlACPaGmAriaj5jWMBm7l
+ cmsiNjxTyXAmhw9W9qJPqdALaf9wz6lloMeD3NcSoMsTiwv+A/tkftb5CE8iRbG1LC0u
+ rCQny2Pp3b9WmLoct6jngYegMfAgh+Th8mu8lpUhb174FHU8QHqTUyaF1zZL0gh2++C0
+ +Z+OZvxhLZVp0XwqvakZrbD+eTfuGDHQqXqBjpcMZAxGr/M/lCFpIsbVD13Ez+TbrmFI
+ AWtSYUqk2UhJbQzyDWHlwyl78ImjmPY+z0FQ0RnjHlNd9FaaAaT47S+fe7Q3+14n7HtZ dA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2usvvu82gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 17:58:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83Hw9Ni128598;
+        Tue, 3 Sep 2019 17:58:14 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2usu50v2q3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 17:58:13 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x83Hvfix000347;
+        Tue, 3 Sep 2019 17:57:41 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Sep 2019 10:57:41 -0700
+Subject: Re: [PATCH v3 0/6] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ limits
+To:     Michal Hocko <mhocko@kernel.org>,
+        Mina Almasry <almasrymina@google.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+References: <20190826233240.11524-1-almasrymina@google.com>
+ <20190828112340.GB7466@dhcp22.suse.cz>
+ <CAHS8izPPhPoqh-J9LJ40NJUCbgTFS60oZNuDSHmgtMQiYw72RA@mail.gmail.com>
+ <20190829071807.GR28313@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <cb7ebcce-05c5-3384-5632-2bbac9995c15@oracle.com>
+Date:   Tue, 3 Sep 2019 10:57:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903153930.GA2791@infradead.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190829071807.GR28313@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909030180
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909030180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:39:30AM -0700, Christoph Hellwig wrote:
-
-> > There's much nastier situation than "new upstream kernel released,
-> > need to rebuild" - it's bisect in mainline trying to locate something...
+On 8/29/19 12:18 AM, Michal Hocko wrote:
+> [Cc cgroups maintainers]
 > 
-> I really don't get the point.  And it's not like we've card about
-> this anywhere else.  And jumping wildly around with the numeric values
-> for constants will lead to bugs like the one you added and fixed again
-> and again.
+> On Wed 28-08-19 10:58:00, Mina Almasry wrote:
+>> On Wed, Aug 28, 2019 at 4:23 AM Michal Hocko <mhocko@kernel.org> wrote:
+>>>
+>>> On Mon 26-08-19 16:32:34, Mina Almasry wrote:
+>>>>  mm/hugetlb.c                                  | 493 ++++++++++++------
+>>>>  mm/hugetlb_cgroup.c                           | 187 +++++--
+>>>
+>>> This is a lot of changes to an already subtle code which hugetlb
+>>> reservations undoubly are.
+>>
+>> For what it's worth, I think this patch series is a net decrease in
+>> the complexity of the reservation code, especially the region_*
+>> functions, which is where a lot of the complexity lies. I removed the
+>> race between region_del and region_{add|chg}, refactored the main
+>> logic into smaller code, moved common code to helpers and deleted the
+>> duplicates, and finally added lots of comments to the hard to
+>> understand pieces. I hope that when folks review the changes they will
+>> see that! :)
+> 
+> Post those improvements as standalone patches and sell them as
+> improvements. We can talk about the net additional complexity of the
+> controller much easier then.
 
-The thing is, there are several groups - it's not as if all additions
-were guaranteed to be at the end.  So either we play with renumbering
-again and again, or we are back to the square one...
+All such changes appear to be in patch 4 of this series.  The commit message
+says "region_add() and region_chg() are heavily refactored to in this commit
+to make the code easier to understand and remove duplication.".  However, the
+modifications were also added to accommodate the new cgroup reservation
+accounting.  I think it would be helpful to explain why the existing code does
+not work with the new accounting.  For example, one change is because
+"existing code coalesces resv_map entries for shared mappings.  new cgroup
+accounting requires that resv_map entries be kept separate for proper
+uncharging."
 
-Is there any common trick that would allow to verify the lack of duplicates
-at the build time?
+I am starting to review the changes, but it would help if there was a high
+level description.  I also like Michal's idea of calling out the region_*
+changes separately.  If not a standalone patch, at least the first patch of
+the series.  This new code will be exercised even if cgroup reservation
+accounting not enabled, so it is very important than no subtle regressions
+be introduced.
 
-Or we can reorder the list by constant value, with no grouping visible
-anywhere...
+-- 
+Mike Kravetz
