@@ -2,137 +2,88 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD85C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438F6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5389E22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567498931;
-	bh=3/JPGZ4D3hGv1VMXcX2nDpmVDwHoIw8Nh10e4io2B8Y=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=LpH+RqPldVgTl2e91P0JVNykevIbyHgz52TTlLu35Nm76rLPNklaLGgvBz7VTOId2
-	 +yittsJykFnUcc5LlJBkHWKZ/eJldxJOKWlNhFjDSJFk8DEwg67gCK0vdBSRrNRJUp
-	 vBQUA00pM4OaGAs4s8mhhjC7y8W2arBv8Ty6DX6I=
+	by mail.kernel.org (Postfix) with ESMTP id 1D56F2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfICIWK (ORCPT
+        id S1728088AbfICIXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:22:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:33864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfICIWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:22:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0694028;
-        Tue,  3 Sep 2019 01:22:09 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F12E03F246;
-        Tue,  3 Sep 2019 01:22:03 -0700 (PDT)
-Subject: Re: [PATCH] irqdomain: Add the missing assignment of domain->fwnode
- for named fwnode
-To:     Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>
-References: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <4acd6871-ca66-b45d-50b8-8609eee0e488@kernel.org>
-Date:   Tue, 3 Sep 2019 09:22:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 04:23:12 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58488 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbfICIXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:23:12 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 709F1B0D7378A76946CA;
+        Tue,  3 Sep 2019 16:23:10 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
+ 16:23:00 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bhelgaas@google.com>, <hch@infradead.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] PCI: Don't use GFP_KERNEL for kstrbdup in resource_alignment_store
+Date:   Tue, 3 Sep 2019 16:22:29 +0800
+Message-ID: <20190903082229.21488-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190831124932.18759-1-yuehaibing@huawei.com>
+References: <20190831124932.18759-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dexuan,
+When allocating memory, the GFP_KERNEL cannot be used during the
+spin_lock period. It may cause scheduling when holding spin_lock.
 
-On 03/09/2019 00:14, Dexuan Cui wrote:
-> 
-> Recently device pass-through stops working for Linux VM running on Hyper-V.
-> 
-> git-bisect shows the regression is caused by the recent commit
-> 467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
-> is that the commit d59f6617eef0 forgets to set the domain->fwnode for
-> IRQCHIP_FWNODE_NAMED*, and as a result:
-> 
-> 1. The domain->fwnode remains to be NULL.
-> 
-> 2. irq_find_matching_fwspec() returns NULL since "h->fwnode == fwnode" is
-> false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
-> msi_domain to NULL.
-> 
-> 3. When the device is added onto the root bus, the device's dev->msi_domain
-> is set to NULL in pci_set_msi_domain().
-> 
-> 4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
-> calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
-> arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
-> actually pci_msi_setup_msi_irqs() is supposed to call
-> msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
-> hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
-> hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
-> the device driver can not receive any interrupt.
-> 
-> Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
-> Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-based one")
-> Reported-by: Lili Deng <v-lide@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> Note: the commit 467a3bb97432 ("PCI: hv: Allocate a named fwnode ...") has not
-> gone in Linus's tree yet (the commit is in linux-next for a while), so the commit ID
-> in the changelog can change when it goes in Linus's tree.
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: move alloc out of spinlock
+---
+ drivers/pci/pci.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-This branch is supposed to be stable, and I try to only apply fixes to
-it. This normally ensures that commit IDs are the same once they land in
-Linus' tree.
-
-> This patch works in my test, but I'm not 100% sure this is the right fix. 
-> 
-> Looking forward to your comment!
-> 
->  kernel/irq/irqdomain.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index e7bbab149750..132672b74e4b 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -149,6 +149,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
->  		switch (fwid->type) {
->  		case IRQCHIP_FWNODE_NAMED:
->  		case IRQCHIP_FWNODE_NAMED_ID:
-> +			domain->fwnode = fwnode;
->  			domain->name = kstrdup(fwid->name, GFP_KERNEL);
->  			if (!domain->name) {
->  				kfree(domain);
-> 
-
-Looks absolutely correct to me, thanks for fixing it. I've applied it on
-top of irqchip-next.
-
-Thanks,
-
-	M.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e353..a3d5920 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6145,14 +6145,17 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+ static ssize_t resource_alignment_store(struct bus_type *bus,
+ 					const char *buf, size_t count)
+ {
+-	spin_lock(&resource_alignment_lock);
++	char *param = kstrndup(buf, count, GFP_KERNEL);
+ 
+-	kfree(resource_alignment_param);
+-	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
++	if (!param)
++		return -ENOMEM;
+ 
++	spin_lock(&resource_alignment_lock);
++	kfree(resource_alignment_param);
++	resource_alignment_param = param;
+ 	spin_unlock(&resource_alignment_lock);
+ 
+-	return resource_alignment_param ? count : -ENOMEM;
++	return count;
+ }
+ 
+ static BUS_ATTR_RW(resource_alignment);
 -- 
-Jazz is not dead, it just smells funny...
+2.7.4
+
+
