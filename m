@@ -2,107 +2,117 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9083C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990CFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDE32341F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527380;
-	bh=osMQ0BnESRREx6z7OgLkTg8p3NdmWL/CptITbHFuliw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=bRgQ8MC3+ijfFxFQYO76LugM4+FyRu6z4HwAlumndymTowsT4ZcGz8s7dU6mnX4W9
-	 Z5Su4ulJRqyN4G3Y4kCkhE6sCnezcxSgLf14JxnqUCXHqtqf6qjYk2J3CPJRzghRDd
-	 2lN+E1HmIqbCvyyeSs55y8fK8jPhl8lCNFcoNWyc=
+	by mail.kernel.org (Postfix) with ESMTP id 7A8F322CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfICQQT (ORCPT
+        id S1729964AbfICQQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:16:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:39972 "EHLO foss.arm.com"
+        Tue, 3 Sep 2019 12:16:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:44742 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfICQQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:16:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADC9B360;
-        Tue,  3 Sep 2019 09:16:18 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A960A3F246;
-        Tue,  3 Sep 2019 09:16:17 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     John Garry <john.garry@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
-Date:   Tue, 3 Sep 2019 17:16:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728571AbfICQQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:16:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:16:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
+   d="scan'208";a="184805065"
+Received: from vkuppusa-mobl2.ger.corp.intel.com ([10.252.39.67])
+  by orsmga003.jf.intel.com with ESMTP; 03 Sep 2019 09:16:50 -0700
+Message-ID: <3f3ce42707f09eded801ff8543be6aee6ef35cf8.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism
+ for supporting AMD's fTPM
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Seunghun Han <kkamagui@gmail.com>,
+        "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 03 Sep 2019 19:16:49 +0300
+In-Reply-To: <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
+References: <20190830095639.4562-1-kkamagui@gmail.com>
+         <20190830095639.4562-3-kkamagui@gmail.com>
+         <20190830124334.GA10004@ziepe.ca>
+         <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
+         <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
+         <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2-1 
 MIME-Version: 1.0
-In-Reply-To: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
-
-On 03/09/2019 15:09, John Garry wrote:
-> Hi Marc, Bjorn, Thomas,
+On Tue, 2019-09-03 at 18:56 +0900, Seunghun Han wrote:
+> Thank you for your notification. I am sorry. I missed it and
+> misunderstood Jarkko's idea. So, I would like to invite Matthew
+> Garrett to this thread and attach my opinion on that. The problem is
+> that command and response buffers are in ACPI NVS area. ACPI NVS area
+> is saved and restored by drivers/acpi/nvs.c during hibernation, so
+> command and response buffers in ACPI NVS are also handled by nvs.c
+> file. However, TPM CRB driver uses the buffers to control a TPM
+> device, therefore, something may break.
 > 
-> We've come across a conflict with the kernel/pci msi code and GIC ITS 
-> driver on our arm64 system, whereby we can't unbind and re-bind a PCI 
-> device driver under special conditions. I'll explain...
+> I agree on that point. To remove uncertainty and find the solution,
+> I read the threads we discussed and did research about two points, 1)
+> the race condition and 2) the unexpected behavior of the TPM device.
 > 
-> Our PCI device support 32 MSIs. The driver attempts to allocate msi 
-> vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For 
-> our test we make nr_cpus = 1 (just anything less than 16).
-
-Just to confirm: this PCI device is requiring Multi-MSI, right? As
-opposed to MSI-X?
-
-> We find that the pci/kernel msi code gives us 17 vectors, but the GIC 
-> ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem 
-> then occurs when unbinding the driver in its_irq_domain_free() call, 
-> where we only clear bits for 17 vectors. So if we unbind the driver and 
-> then attempt to bind again, it fails.
-
-Is this device, by any chance, sharing its requested-id with another
-device? By being behind a bridge of some sort? There is some code to
-deal with it, but I'm not sure it has ever been verified in anger...
-
-> Where the fault lies, I can't say. Maybe the kernel msi code should 
-> always give power of 2 vectors - as I understand, the PCI spec mandates 
-> this. Or maybe the GIC ITS driver has a problem in the free path, as 
-> above. Or maybe the PCI driver should not be allowed to request !power 
-> of 2 min/max vectors.
+> 1) The race condition concern comes from unknowing buffer access order
+> while hibernation.
+> If nvs.c and TPM CRB driver access the buffers concurrently, the race
+> condition occurs. Then, we can't know the contents of the buffers
+> deterministically, and it may occur the failure of TPM device.
+> However, hibernation_snapshot() function calls dpm_suspend() and
+> suspend_nvs_save() in order when the system enters into hibernation.
+> It also calls suspend_nvs_restore() and dpm_resume() in order when the
+> system exits from hibernation. So, no race condition occurs while
+> hibernation, and we always guarantee the contents of buffers as we
+> expect.
 > 
-> Opinion?
+> 2) The unexpected behavior of the TPM device.
+> If nvs.c saves and restores the contents of the TPM CRB buffers while
+> hibernation, it may occur the unexpected behavior of the TPM device
+> because the buffers are used to control the TPM device. When the
+> system entered into hibernation, suspend_nvs_save() saved the command
+> and response buffers, and they had the last command and response data.
+> After exiting from hibernation, suspend_nvs_restore() restored the
+> last command and response data into the buffers and nothing happened.
+> I realized that they were just buffers. If we want to send a command
+> to the TPM device, we have to set the CRB_START_INVOKE bit to a
+> control_start register of a control area. The control area was not in
+> the ACPI NVS area, so it was not affected by nvs.c file. We can
+> guarantee the behavior of the TPM device.
+> 
+> Because of these two reasons, I agreed on Jarkko's idea in
+> https://lkml.org/lkml/2019/8/29/962 . It seems that removing or
+> changing regions described in the ACPI table is not natural after
+> setup. In my view, saving and restoring buffers was OK like other NVS
+> areas were expected because the buffers were in ACPI NVS area.
+> 
+> So, I made and sent this patch series. I would like to solve this
+> AMD's fTPM problem because I have been doing research on TPM and this
+> problem is critical for me (as you know fTPM doesn't work). If you
+> have any other concern or advice on the patch I made, please let me
+> know.
 
-My hunch is that it is an ITS driver bug: the PCI layer is allowed to
-give any number of MSIs to an endpoint driver, as long as they match the
-requirements of the allocation for Multi-MSI. That's the responsibility
-of the ITS driver. If unbind/bind fails, it means that somehow we've
-missed the freeing of the LPIs, which isn't good.
+Please take time to edit your responses. Nobody will read that properly
+because it is way too exhausting. A long prose only indicates unclear
+thoughts in the end. If you know what you are doing, you can put things
+into nutshell only in few senteces.
 
-Is the device common enough that I can try and reproduce the issue? If
-there's a Linux driver somewhere, I can always hack something in
-emulation and find out...
+/Jarkko
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
