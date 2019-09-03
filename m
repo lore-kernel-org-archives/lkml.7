@@ -2,68 +2,67 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6778C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D9AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB5B217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25F723401
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4AVnwpG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UPU7L+KP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfICG7h (ORCPT
+        id S1727625AbfICHA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:59:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40871 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfICG7h (ORCPT
+        Tue, 3 Sep 2019 03:00:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41912 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfICHA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:59:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so8590533pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:59:37 -0700 (PDT)
+        Tue, 3 Sep 2019 03:00:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so8585521pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Qa2NPAU3nUxhMhka8HdV81hTcVfR5ad6LZDKEEK+E8I=;
-        b=Z4AVnwpG4rHHCb7eTykmNN4YGIgNaMlnQTD+N+iPSXwRNBG+coPsaxg9Nwq3x3Wkte
-         JCHjLySZ867EN8Z2AeH8mah4+X/bfHodXgETIrb6E8bFU1qOSlzBzdGA8su+8NqyXJ7K
-         /3jFMSUF+Ifu0X4x6KC8cd0sWy/R5HQfish+yqAxdg6g9mILJfKfcYRmZoaR6kqKl2NE
-         OAxL+RStVT3/50mXjXBmVm15Ds7yLg6B6JGku8l830FhcL2s/SO460iHPmeT6QEDd3hk
-         UsjMoNdmj54+trhaGlxTcXQjdM4m3hp2R+nCJCBGUvoipZrokyX7GzGL3xTvz9OMoDDD
-         uabg==
+        bh=a26K1G4II4kSTCpPaGf8xIGxYORQ0ipUth+fFd+YiK8=;
+        b=UPU7L+KPhHP8odNhmO413net+8H+PjG3HBOL/x+TlXWTBUfqXIFOLxkNVDYSLJ2XLe
+         k9CtHzOGplSirS4CWcPWtl842R/pPk47Eop6wdsFo4tN1YtN3GJAZLlVR/fZYhF2EQe5
+         p6tuFG2kTLwUv2RGrYI5KUNKLA2OGq9RhwJdUPsO75BHOU/1VVqp2+JHXBuFskppDtTb
+         PqRtJF0EHcewXECVEwFz14qPujJgvMSCAc0VEIYb8oW8Uya94HLV3S8J2nhymFrGPd7k
+         5uz187MHG68fKQRwD8q1XQEUZ0EEGwVFqS1SWgmrXpEvrSMWIbOM0dRM4rypz/N2QO+7
+         fKCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Qa2NPAU3nUxhMhka8HdV81hTcVfR5ad6LZDKEEK+E8I=;
-        b=OIxTg3H7Bytr3ELIiqndDP2mDyWLIFFkXALHLrwMolMxH98px7sXqUoNFg6pgK3CYE
-         n4CFIgZZXutqo3VOgLZRcSSpSz8k69d92NHPSwA8LYSpSoJuYk4ayNPYmEkanISMe6Jy
-         7C98Ak7mkq4luMPMVphPVQHF2LOkH55kA+xWKHcoie4d/9xr/oOAIVYzAyZ/Zjv8mUO4
-         +eSqU+ate0ZspxV9EmzfCHOftxNxyvJ/yr8NDPRO0CqW0/KphZexwAmFXPlrrrDWhd5r
-         euNvRnoghtyP4pN10Q9+1HzVdCmaqmxzd+cm9PjkU/82sl+/pGXc/H9UaEx5TqIbtL8n
-         AV4w==
-X-Gm-Message-State: APjAAAWM+IBIWq3qxLc2VDVceDCmECl32qtmZeHir6zR/S6RX60yWJLZ
-        cog1sbH3au9pdL15TxPqI0wYnA==
-X-Google-Smtp-Source: APXvYqy06dfUmL6YeJyX0gzRHXOV+gw16shOwg0WfImzMkX6z1TQmab0bN6NRdoWpCgaaX3XisBOAw==
-X-Received: by 2002:a63:8dc9:: with SMTP id z192mr28152038pgd.151.1567493976851;
-        Mon, 02 Sep 2019 23:59:36 -0700 (PDT)
+        bh=a26K1G4II4kSTCpPaGf8xIGxYORQ0ipUth+fFd+YiK8=;
+        b=tZyYMmQv0bUL3ETjcTO3l0V9N5sY7P7MTa7FdN5dfX8IflK0rkgt94Uu8ohRzKPbm8
+         dp9D6OxptfPjgWQhxg9TW9mPpywpDWHDijc5s7XVeoaB+3HBucCgfLiTleBvdRrK2Ecm
+         DmO2+J0V47gvqYjn+Nvk0XKNWk1CQ9TT1et0cZEq4pSS/EyiKoP9gNtCi5qLdy6D+vH2
+         MKtFnUrEKOl57Lc+caVNofA9da3k8G1i0LQUBnYgsDd+hOAxCcq0CAz+gY9V9UlRQFf8
+         uLSZAD6baW9xExykQTS52XMPSlm3LKW/HEzw5ZFPY7Gpp94D3YYfDYon2Xj/qLAmXFmz
+         jSrg==
+X-Gm-Message-State: APjAAAX7H5n9aG2OppUOdsvNigWuR6BcVya4e9Bs7mea9HxgmN4EZmKh
+        BCMQPc78/kazKnYrtRCX+a78wJBG9AHyzQ==
+X-Google-Smtp-Source: APXvYqymysOYUOCz8E4NKrZC4xIqdnSdzUBf34OpeOICcOfXYKfVlxK0NwEJqCB3TAzP2fUb9Xdx0g==
+X-Received: by 2002:a17:90a:32c8:: with SMTP id l66mr16676286pjb.44.1567494025517;
+        Tue, 03 Sep 2019 00:00:25 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id b18sm18820190pfi.160.2019.09.02.23.59.33
+        by smtp.gmail.com with ESMTPSA id t12sm13376138pfe.58.2019.09.03.00.00.22
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 02 Sep 2019 23:59:36 -0700 (PDT)
+        Tue, 03 Sep 2019 00:00:25 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, linus.walleij@linaro.org,
-        natechancellor@gmail.com
-Cc:     linux-gpio@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 5/8] pinctrl: sprd: Use define directive for sprd_pinconf_params values
-Date:   Tue,  3 Sep 2019 14:59:11 +0800
-Message-Id: <8c7e95c293e81412a1dadc3c4376bafb45fefeeb.1567492316.git.baolin.wang@linaro.org>
+To:     stable@vger.kernel.org, sre@kernel.org
+Cc:     david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
+        baolin.wang@linaro.org, orsonzhai@gmail.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.14.y 6/8] power: supply: sysfs: ratelimit property read error message
+Date:   Tue,  3 Sep 2019 14:59:59 +0800
+Message-Id: <582e968f59d6ece6de33c3e4f3d65c5e4a198fa1.1567492316.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1567492316.git.baolin.wang@linaro.org>
 References: <cover.1567492316.git.baolin.wang@linaro.org>
@@ -72,53 +71,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: David Lechner <david@lechnology.com>
 
-Clang warns when one enumerated type is implicitly converted to another:
+This adds rate limiting to the message that is printed when reading a
+power supply property via sysfs returns an error. This will prevent
+userspace applications from unintentionally dDOSing the system by
+continuously reading a property that returns an error.
 
-drivers/pinctrl/sprd/pinctrl-sprd.c:845:19: warning: implicit conversion
-from enumeration type 'enum sprd_pinconf_params' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
-        ~                ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/sprd/pinctrl-sprd.c:846:22: warning: implicit conversion
-from enumeration type 'enum sprd_pinconf_params' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
-        ~                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/138
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/pinctrl/sprd/pinctrl-sprd.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/power/supply/power_supply_sysfs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index 6352991..83958bd 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -159,10 +159,8 @@ struct sprd_pinctrl {
- 	struct sprd_pinctrl_soc_info *info;
- };
- 
--enum sprd_pinconf_params {
--	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
--	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
--};
-+#define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
-+#define SPRD_PIN_CONFIG_SLEEP_MODE	(PIN_CONFIG_END + 2)
- 
- static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
- 				       const char *name)
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index eb5dc74..2ccaf4f 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -91,7 +91,8 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 				dev_dbg(dev, "driver has no data for `%s' property\n",
+ 					attr->attr.name);
+ 			else if (ret != -ENODEV && ret != -EAGAIN)
+-				dev_err(dev, "driver failed to report `%s' property: %zd\n",
++				dev_err_ratelimited(dev,
++					"driver failed to report `%s' property: %zd\n",
+ 					attr->attr.name, ret);
+ 			return ret;
+ 		}
 -- 
 1.7.9.5
 
