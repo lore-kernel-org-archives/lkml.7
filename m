@@ -2,236 +2,192 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E32C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C90421881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD7022CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:55:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NO88nIyk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="syOytE7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfICDxQ (ORCPT
+        id S1726267AbfICDzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 23:53:16 -0400
-Received: from mail-eopbgr50041.outbound.protection.outlook.com ([40.107.5.41]:47450
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbfICDxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 23:53:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HwMIW3aXmLKy+ylkC7qO53deeIqcx9WGqWmk6zfwzuDuEKfTpZPkgv1wgcO0l/5rD6RQfUZO94PlkoiQhnLG+qwxHT2xaD0f1oREpTkql84/mE3K/gVvQ5/wrz8WlR83Wgs5XbseY/lV8JevJxS00tKYq9lzsW2mfXIDQNcsRxsufqIsrRvwAtjcw7YEcuQoljzJd1+Vs3s5jtqBT/Bp5mRgMthu7k17uO8K5u5a42Ne5ZQRoR0YTEkH093/KmqZ4CBb/js+G/0vBXhNNm9pl8f1g/z2uANckrhlRSfYRejmHgHQclvqmCgbIPY5VH+JvlKBrdoQL1YeoL1k0W+Ldg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sf6+LwRqV6sey/uQTzAY9iQSu87mQAHDP05mlKFSonk=;
- b=VP5M9DpHapINwxbOwX63LbB3qEyBG6neMPGBT0v6MPZMDELWOjo8J4PfTQl9oFg8gcKHQsdNciCk9kTiPtFj7TW+v6Jod3K2l6GkRPZeW7K07eQKsFQa3YsJ6Hq+hHqH8Luj9zbbydkgeYbcqns7m0P9ecTKCOPOlWzkATKsQ9E0Zm4Nls2XelVDFGjqexOm5AtYW2XfPo/nF6exGIuCpHQSY6He0lGArADckocekaAtm/wrgvc6RiHY9dGLYgedAMSYonUSrQkHadvKWd1AvWZqOK2b55VXQ+18+YWa5PvjkYXrI6s/7eDCspoBf3SUeAu6sLUO3IaKSTuI3o8VXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sf6+LwRqV6sey/uQTzAY9iQSu87mQAHDP05mlKFSonk=;
- b=NO88nIykHZB678mSN38h/PWYnKTXCuyzdn8jmt98oH0foinxSc1mW4k2FlhqgzFJu/XPKQ/hUL6Hq0y6XwMaLisV0F3nAIdWKPWToCdtsH0aIM4IQ7+equGixMDi9XWSoByNzYSrkglPKowGCC3Lmsf6yjRs9XQ7DZyEsmD6JFQ=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB4161.eurprd05.prod.outlook.com (52.134.91.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Tue, 3 Sep 2019 03:53:09 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2220.022; Tue, 3 Sep 2019
- 03:53:09 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 5/6] mdev: Update sysfs documentation
-Thread-Topic: [PATCH v2 5/6] mdev: Update sysfs documentation
-Thread-Index: AQHVXlukaBbEcdZ2I0ipQhJUiMmPLacTpf+AgAADNNCABNHVAIAA3UqQ
-Date:   Tue, 3 Sep 2019 03:53:09 +0000
-Message-ID: <AM0PR05MB4866F561B753094BE0824411D1B90@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190829111904.16042-1-parav@mellanox.com>
-        <20190829111904.16042-6-parav@mellanox.com>
-        <20190830144927.7961193e.cohuck@redhat.com>
-        <AM0PR05MB4866372C521F59491838C8E4D1BD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190902163658.51fc48d2.cohuck@redhat.com>
-In-Reply-To: <20190902163658.51fc48d2.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e844a223-3403-4940-0435-08d730223c85
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4161;
-x-ms-traffictypediagnostic: AM0PR05MB4161:|AM0PR05MB4161:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB416149D81F2AE745EE276BF1D1B90@AM0PR05MB4161.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(13464003)(189003)(199004)(6916009)(71190400001)(71200400001)(66066001)(53936002)(11346002)(52536014)(486006)(15650500001)(476003)(6436002)(6246003)(5660300002)(446003)(6116002)(14444005)(256004)(55016002)(55236004)(86362001)(76116006)(102836004)(478600001)(26005)(66556008)(66476007)(64756008)(66446008)(9686003)(53546011)(6506007)(74316002)(316002)(3846002)(186003)(9456002)(99286004)(2906002)(8936002)(7736002)(76176011)(305945005)(33656002)(229853002)(54906003)(4326008)(8676002)(66946007)(7696005)(25786009)(81166006)(81156014)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4161;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vnToOFCyiwEhldOus2W3oQ1QvrEHbojTtyrl/sGbu8IbmoXcdLjSJJL1UQEPbEtojAlbRz4tu2/PQZbAGse0ti7tshTSQxq2KNVaC7aMkBSpGuPyPaiO6C3IVqbaVTcD0UfWq8MFqygJUJ/r3Z3d/ccFwjrRMtzLB2m9B448dfw3jzgikKnZ5W9VQp7FWbUfe+PDyQ7rx+YuBEu42HAoafhSlqrVs3KdJlo+184iGcRCtqJUJ3fUX5EMl+0kWpmTQCt++6v05wbvAzp/RwIXH8zTv3WHtMM2ZEwKZw8LGOJQww60QNmBOTDKNrwY3nrnsvG90Q/VlRXt44Ft4+CxIdcOuGKXrhxGNoZVrWZM5WsciRW+2lwoWAy57p/j3Uqwbebv06R9TE9jsj+vKIpbBuYnWR9bDnkPOmHerzcXVVI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e844a223-3403-4940-0435-08d730223c85
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 03:53:09.7416
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HbS5Ke6weJVEdcSVZXP8G80ClH5XJKKQqgBW1rd5QsA+s/2vWwZx26Ok7S6V/NdJAqY5A/Afh0c/IKs2GVH0eQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4161
+        Mon, 2 Sep 2019 23:55:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38530 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfICDzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 23:55:03 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d10so3792744pgo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 20:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=L/Ylww4xlUThxeTDdjn9aGKgbvbOPz27jtSswl52ZqI=;
+        b=syOytE7Z9tJHwn1wsEtJ+hWykOXtCwEqInp70AFKkSJnDD8cu3UoXeRNpzzTjjh0Yk
+         Uu3HeK+xXmdb6gBc/tjxHDIM5KAB4ioB4hiVRLcsg4SwVe+00ylaE7Bn0GVlsBICme7p
+         TX87GJUTwtm5zT4JUt7hdIbEieCOvGRt3vJWLiAnmGDATcreCTVJA9xVbx7oVJxnz3ny
+         HoozRHqBQ/KC5Q64ZDiXftawkJoyeaDxMOB9zPfwAeMwTc/Caje0JhR+h2HtJjJpupqg
+         oMfudjhENWIvp0agkl62UOqU4YEtl9ovP2vKLpUfWedTOTM7cMqnPTaNfwA8DvEL+5l2
+         NQnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=L/Ylww4xlUThxeTDdjn9aGKgbvbOPz27jtSswl52ZqI=;
+        b=exTWBPZF/oneSwl59QrwsMjltQNyNOyUJaIV3Mu2ZNqfdtJCmHGV9NMe9aU5bcIYHE
+         992sfh56FAuZ7fy8ptbE6f9R+8ztI0MwVFMRCkTWyuAWFiygIYPUBRP6JMI3mxv7TaQP
+         5/Xqs6EPslJwLc1TUi7pQNk3Q9xTGmWlsV2wmPboSyRD0DW6xyP9SCMgnvcXYow85DN9
+         DeayahQm6p8xqYguyVRe1oKzJywHnO4EO5yGOT6S0bORU3ohc/UeufQ0YK99GcSyhmOU
+         WS4Xfa6d/kun7kVogB+fG4oSaqL4MUthy0xpEWm5fU9/J2h7w8628KHM9cDfonVM7FhM
+         mk0A==
+X-Gm-Message-State: APjAAAX54ISD3Mbdj/W9to09MlaRbYh4wMJAxnFgS4dcFPqL8mXy7kgc
+        l4/JfUPvet1vjxq0ZKIZET69TQ==
+X-Google-Smtp-Source: APXvYqzI2d82S8ib2l+6cTXqTZCZPHujRgDijaeP5i2M7M1KNF7dffpDtFhMujXccIXKh/nBZE2wSg==
+X-Received: by 2002:aa7:9117:: with SMTP id 23mr14656447pfh.94.1567482902071;
+        Mon, 02 Sep 2019 20:55:02 -0700 (PDT)
+Received: from localhost.localdomain ([240e:362:47f:ba00:a424:c9b7:932a:4fc2])
+        by smtp.gmail.com with ESMTPSA id j7sm6826356pfi.96.2019.09.02.20.53.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Sep 2019 20:55:01 -0700 (PDT)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/2] Add uacce module for Accelerator
+Date:   Tue,  3 Sep 2019 11:52:56 +0800
+Message-Id: <1567482778-5700-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+provide Shared Virtual Addressing (SVA) between accelerators and processes.
+So accelerator can access any data structure of the main cpu.
+This differs from the data sharing between cpu and io device, which share
+data content rather than address.
+Because of unified address, hardware and user space of process can share
+the same virtual address in the communication.
+
+Uacce is intended to be used with Jean Philippe Brucker's SVA
+patchset[1], which enables IO side page fault and PASID support. 
+We have keep verifying with Jean's sva/current [2]
+We also keep verifying with Eric's SMMUv3 Nested Stage patch [3]
+
+This series and related zip & qm driver
+https://github.com/Linaro/linux-kernel-warpdrive/tree/5.3-rc1-warpdrive-v3
+
+The library and user application:
+https://github.com/Linaro/warpdrive/tree/wdprd-v1-upstream
+
+References:
+[1] http://jpbrucker.net/sva/
+[2] http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/current
+[3] https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
+
+Change History:
+v3:
+Recommended by Greg, use sturct uacce_device instead of struct uacce,
+and use struct *cdev in struct uacce_device, as a result, 
+cdev can be released by itself when refcount decreased to 0.
+So the two structures are decoupled and self-maintained by themsleves.
+Also add dev.release for put_device.
+
+v2:
+Address comments from Greg and Jonathan
+Modify interface uacce_register
+Drop noiommu mode first
+
+v1:
+1. Rebase to 5.3-rc1
+2. Build on iommu interface
+3. Verifying with Jean's sva and Eric's nested mode iommu.
+4. User library has developed a lot: support zlib, openssl etc.
+5. Move to misc first
+
+RFC3:
+https://lkml.org/lkml/2018/11/12/1951
+
+RFC2:
+https://lwn.net/Articles/763990/
 
 
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Monday, September 2, 2019 8:07 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> linux-kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH v2 5/6] mdev: Update sysfs documentation
->=20
-> On Fri, 30 Aug 2019 13:10:17 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > > -----Original Message-----
-> > > From: Cornelia Huck <cohuck@redhat.com>
-> > > Sent: Friday, August 30, 2019 6:19 PM
-> > > To: Parav Pandit <parav@mellanox.com>
-> > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > Subject: Re: [PATCH v2 5/6] mdev: Update sysfs documentation
-> > >
-> > > On Thu, 29 Aug 2019 06:19:03 -0500
-> > > Parav Pandit <parav@mellanox.com> wrote:
-> > >
-> > > > Updated documentation for optional read only sysfs attribute.
-> > >
-> > > I'd probably merge this into the patch introducing the attribute.
-> > >
-> > Ok. I will spin v3.
-> >
-> > > >
-> > > > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > > > ---
-> > > >  Documentation/driver-api/vfio-mediated-device.rst | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/driver-api/vfio-mediated-device.rst
-> > > > b/Documentation/driver-api/vfio-mediated-device.rst
-> > > > index 25eb7d5b834b..0ab03d3f5629 100644
-> > > > --- a/Documentation/driver-api/vfio-mediated-device.rst
-> > > > +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> > > > @@ -270,6 +270,7 @@ Directories and Files Under the sysfs for Each
-> > > > mdev
-> > > Device
-> > > >           |--- remove
-> > > >           |--- mdev_type {link to its type}
-> > > >           |--- vendor-specific-attributes [optional]
-> > > > +         |--- alias [optional]
-> > >
-> > > "optional" implies "not always present" to me, not "might return a
-> > > read error if not available". Don't know if there's a better way to
-> > > tag this? Or make it really optional? :)
-> >
-> > May be write it as,
-> >
-> > alias [ optional when requested by parent ]
->=20
-> I'm not sure what 'optional when requested' is supposed to mean...
-> maybe something like 'content optional' or so?
->=20
-> >
-> > >
-> > > >
-> > > >  * remove (write only)
-> > > >
-> > > > @@ -281,6 +282,10 @@ Example::
-> > > >
-> > > >  	# echo 1 > /sys/bus/mdev/devices/$mdev_UUID/remove
-> > > >
-> > > > +* alias (read only)
-> > > > +Whenever a parent requested to generate an alias, each mdev is
-> > > > +assigned a unique alias by the mdev core. This file shows the
-> > > > +alias of the
-> > > mdev device.
-> > >
-> > > It's not really the parent, but the vendor driver requesting this,
-> > > right? Also,
-> > At mdev level, it only knows parent->ops structure, whether parent is
-> registered by vendor driver or something else.
->=20
-> Who else is supposed to create the mdev device?
-If you nitpick the language what is the vendor id for sample mttty driver?
-Mtty is not a 'vendor driver' per say.
+Background of why Uacce:
+Von Neumann processor is not good at general data manipulation.
+It is designed for control-bound rather than data-bound application.
+The latter need less control path facility and more/specific ALUs.
+So there are more and more heterogeneous processors, such as
+encryption/decryption accelerators, TPUs, or
+EDGE (Explicated Data Graph Execution) processors, introduced to gain
+better performance or power efficiency for particular applications
+these days.
 
->=20
-> >
-> > > "each mdev" is a bit ambiguous,
-> > It is in context of the parent. Sentence is not starting with "each mde=
-v".
-> > But may be more verbosely written as,
-> >
-> > Whenever a parent requested to generate an alias, Each mdev device of
-> > such parent is assigned unique alias by the mdev core. This file shows =
-the
-> alias of the mdev device.
->=20
-> I'd really leave the parent out of this: this seems more like an
-> implementation detail. It's more that alias may either contain an alias, =
-or
-> return a read error if no alias has been generated. Who requested the ali=
-as
-> to be generated is probably not really of interest to the userspace reade=
-r.
->
+There are generally two ways to make use of these heterogeneous processors:
 
-The documentation is for user and developer both.
-It is not the right claim that 'only user care' for this.
-Otherwise all the .ko diagrams and API description etc doesn't make any sen=
-se to the user.
+The first is to make them co-processors, just like FPU.
+This is good for some application but it has its own cons:
+It changes the ISA set permanently.
+You must save all state elements when the process is switched out.
+But most data-bound processors have a huge set of state elements.
+It makes the kernel scheduler more complex.
 
-For user it doesn't matter whether alias length is provided by 'vendor driv=
-er' or 'registered parent'.
-This note on who should specify the alias length is mainly for the develope=
-rs.
-=20
-> >
-> > > created via that driver. Lastly, if we stick with the "returns an
-> > > error if not implemented" approach, that should also be mentioned
-> here.
-> > Ok. Will spin v3 to describe it.
-> >
-> > >
-> > > > +
-> > > >  Mediated device Hot plug
-> > > >  ------------------------
-> > > >
-> >
+The second is Accelerator.
+It is taken as a IO device from the CPU's point of view
+(but it need not to be physically). The process, running on CPU,
+hold a context of the accelerator and send instructions to it as if
+it calls a function or thread running with FPU.
+The context is bound with the processor itself.
+So the state elements remain in the hardware context until
+the context is released.
+
+We believe this is the core feature of an "Accelerator" vs. Co-processor
+or other heterogeneous processors.
+
+The intention of Uacce is to provide the basic facility to backup
+this scenario. Its first step is to make sure the accelerator and process
+can share the same address space. So the accelerator ISA can directly
+address any data structure of the main CPU.
+This differs from the data sharing between CPU and IO device,
+which share data content rather than address.
+So it is different comparing to the other DMA libraries.
+
+In the future, we may add more facility to support linking accelerator
+library to the main application, or managing the accelerator context as
+special thread.
+But no matter how, this can be a solid start point for new processor
+to be used as an "accelerator" as this is the essential requirement.
+
+
+Kenneth Lee (2):
+  uacce: Add documents for uacce
+  uacce: add uacce driver
+
+ Documentation/ABI/testing/sysfs-driver-uacce |   47 ++
+ Documentation/misc-devices/uacce.rst         |  309 ++++++++
+ drivers/misc/Kconfig                         |    1 +
+ drivers/misc/Makefile                        |    1 +
+ drivers/misc/uacce/Kconfig                   |   13 +
+ drivers/misc/uacce/Makefile                  |    2 +
+ drivers/misc/uacce/uacce.c                   | 1094 ++++++++++++++++++++++++++
+ include/linux/uacce.h                        |  172 ++++
+ include/uapi/misc/uacce.h                    |   39 +
+ 9 files changed, 1678 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-uacce
+ create mode 100644 Documentation/misc-devices/uacce.rst
+ create mode 100644 drivers/misc/uacce/Kconfig
+ create mode 100644 drivers/misc/uacce/Makefile
+ create mode 100644 drivers/misc/uacce/uacce.c
+ create mode 100644 include/linux/uacce.h
+ create mode 100644 include/uapi/misc/uacce.h
+
+-- 
+2.7.4
 
