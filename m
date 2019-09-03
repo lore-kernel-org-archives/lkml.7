@@ -2,78 +2,141 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118E2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63954C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A1D22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1E923878
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bur85jcX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="pYCKyU6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbfICQTX (ORCPT
+        id S1730016AbfICQUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:19:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34218 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbfICQTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:19:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=z5XTZr7KAHvUQ4zGXGR/ag1TGXf5dCpTr/unRHYAJ7g=; b=Bur85jcXN6qdZR7BAaREK0n9B
-        zf3aQl5Asp9yOMHp8LiA/lGecRINQL1AtQC2NakcoqnpxdzqWH6YOveapcPtu90WSEaAR1JOIVq40
-        GvSqYZueFIGopfL35Usck7GGsNEn2j/h/k/M07Tu8yufkvEOsVQ5CBbaGm+vYuxllWwfN12me2hob
-        M7OqeqSL5c0QhdGvA0qHdv7wJn9CcsAGaw0pETuU2f3MMuCp6KB4qRZk+M9iAvAxij+LZXXK/I8oV
-        un3lg4mEomBDYDv1UPuLbSYXpVLU0SospuZYymNEqy5HSSeCXNxA9LsQWxKAiSDa5FZSgVJo4M50F
-        OP3qp4+SQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5BWX-00068r-Tm; Tue, 03 Sep 2019 16:19:17 +0000
-Date:   Tue, 3 Sep 2019 09:19:17 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 8/8] x86/platform/uv: Account for UV Hubless in
- is_uvX_hub Ops
-Message-ID: <20190903161917.GA23281@infradead.org>
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903001816.705097213@stormcage.eag.rdlabs.hpecorp.net>
+        Tue, 3 Sep 2019 12:20:48 -0400
+Received: from mx1.ucr.edu ([138.23.248.2]:47112 "EHLO mx1.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727810AbfICQUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:20:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1567527880; x=1599063880;
+  h=mime-version:references:in-reply-to:from:date:message-id:
+   subject:to:cc;
+  bh=fqzeaPksMJyuHnHhwPB08U08NUH0VZXfjpzcE6LlaeI=;
+  b=pYCKyU6j4lczzybrTU7ZeKDOi6iCmaB7rGNo9V25ELF1hP8dr+nifnPl
+   b9fXo9VkrwB7NdF9011pFsssSGlPU6DNA8JRDb1cL5hNiGX5wAuDtYj5d
+   FOLOKETcpcsV2K1KHjSygfe6zA6BgMPdzHwnct5EIkZP7+OY7TNpGW7HN
+   wqaseaKrPchsp4oRs3fdvg1Uxa/be+zJKJl8hkUqnHvsOC4AH2wlHC160
+   lRHojSaAEj9P7goStCafPwpms7aDnTyUP/0dvAKqZZ2K6j+ieH3L3gb3P
+   KpNOf/Kd3Ucn6JoTkUV8Y41LxC5U8DDYi1e2g5L7a4BcXminT8uVBFBLD
+   A==;
+IronPort-SDR: W7oc2YKfGT8DGKS2pRxMuJdQ1wo2qIvJ8KfGlUdlDaoNWfcQHLxsLOYenQMrgOnc3MNzg5lBKd
+ AY1Fg/v/9W2Mh4SQjoYJcGmUip1vvVetKrhrFqNbk70se0xxzL1G9E4x4Yrw2PqrGo1TNbhqPW
+ H5TTFvkOP9JzwGtCS+y+FSnoOeReqlv56ZEDXh5SWLlawdJYDNX1x2MAgs8S3636xZgLc4vljJ
+ bWlG6iUhWb3drJGHGFt5HP9WQJJb9kHrMGYRLZkaaps/+KkuaAYUcO0Iy2qSOpjHsOrP9EylhW
+ nLk=
+IronPort-PHdr: =?us-ascii?q?9a23=3AZGGjIRNgvzvghh1VIZQl6mtUPXoX/o7sNwtQ0K?=
+ =?us-ascii?q?IMzox0LfvyrarrMEGX3/hxlliBBdydt6sezbOJ6Ou+CSQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagf79+Ngi6oAffu8UZgIZvKbs6xw?=
+ =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
+ =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
+ =?us-ascii?q?mu87tnRRn1gyocKTU37H/YhdBxjKJDoRKuuRp/w5LPYIqIMPZyZ77Rcc8GSW?=
+ =?us-ascii?q?ZEWMtaSi5PDZ6mb4YXAOUBM+RXoYnzqVUNsBWwGxWjCfjzyjNUnHL6wbE23/?=
+ =?us-ascii?q?gjHAzAwQcuH8gOsHPRrNjtNqgSUOG0zKnVzTXEcvhZ2jf955LJchs8pvyNXb?=
+ =?us-ascii?q?NxccrLxkkuCw/JkludpJf4PzyJzOQBqXaU4Pd9Ve+2jWMstgJ/oiC3y8sylo?=
+ =?us-ascii?q?XEgpgZx1PE+Clj3oo5Od61RFRmbdOgFJZdsTyROZFsTcM4WW5ovT43yrgBuZ?=
+ =?us-ascii?q?GmYicH0I8nxxvDa/yfdIiI/w7jWP6RIThmgHJlf6qyhxOo/kihzu3wT8200F?=
+ =?us-ascii?q?RXoiZcnNnAq3QA2hjJ5siITft9+Uih2TKR2AzJ9u5EJkU0mbLaK54n3LEwio?=
+ =?us-ascii?q?IevVrfEiLygkn7j6+bel869uS06OnreKjqq5uYOoNsjwHxKKUumsixAeQiNQ?=
+ =?us-ascii?q?gOWnCW+OS91b3j50L5QalGguE4n6TCrZDVOd4bqrSnDABIz4Yv8wy/ACu+0N?=
+ =?us-ascii?q?QEgXkHK0pIeBaGj4jvJlHPL+n0DfShjFS2ljdk2fTGM6b/ApXCMHfDiq3tfb?=
+ =?us-ascii?q?Vj5E5Gzgo809Rf64hTCrEbL/KgEnP24fnRFBxxGRaz3OCvXN9n0YQYWG+nAa?=
+ =?us-ascii?q?KDNq7W91iS6bR8DfOLYdokuST9Nv9t1f7njDdtiE0ddKjxhcA/dXuiWPlqPh?=
+ =?us-ascii?q?PKMjLXnt4dHDJS7UIFR+vwhQjHCGYLag=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HfAQCqgmddgMfQVdFlHQEBBQEHBQG?=
+ =?us-ascii?q?BZ4QKKoQhjwiCD5N0hx8BCAEBAQ4vAQGEPwKCWSM4EwIDCAEBBQEBAQEBBgQ?=
+ =?us-ascii?q?BAQIQAQEJDQkIJ4VDgjopAYJoAQEBAxIRVhALCwMKAgIfBwICIhIBBQEcBhM?=
+ =?us-ascii?q?ihQudPIEDPIskgTKIaQEIDIFJEnooi3eCF4QjPodPglgEgS4BAQGUTpYFAQY?=
+ =?us-ascii?q?CAYIMFIwoiCkbmF0tphAPIYFGgXozGiV/BmeBToJ6ji0iMI9dAQE?=
+X-IPAS-Result: =?us-ascii?q?A2HfAQCqgmddgMfQVdFlHQEBBQEHBQGBZ4QKKoQhjwiCD?=
+ =?us-ascii?q?5N0hx8BCAEBAQ4vAQGEPwKCWSM4EwIDCAEBBQEBAQEBBgQBAQIQAQEJDQkIJ?=
+ =?us-ascii?q?4VDgjopAYJoAQEBAxIRVhALCwMKAgIfBwICIhIBBQEcBhMihQudPIEDPIskg?=
+ =?us-ascii?q?TKIaQEIDIFJEnooi3eCF4QjPodPglgEgS4BAQGUTpYFAQYCAYIMFIwoiCkbm?=
+ =?us-ascii?q?F0tphAPIYFGgXozGiV/BmeBToJ6ji0iMI9dAQE?=
+X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
+   d="scan'208";a="5595090"
+Received: from mail-lj1-f199.google.com ([209.85.208.199])
+  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:24:39 -0700
+Received: by mail-lj1-f199.google.com with SMTP id j11so311658ljh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:20:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tQBG7+8qdXREwgshOpRDeqr7yPzRJ4NO6awYIAZEeC0=;
+        b=gC8ppE9IdU+LF7CGfeV2B4np2ULYHygUUcSyJJykoIyjOD82JPWZ2Zp7bklMLCwXum
+         ieAYxFTFRMGo0wuMbQW2qhXsXYh2rLVkJPLefs9Kk452cdNkOI8A7tnYoCyY4zLhkWO2
+         Mn5tOtcUentyv6PTPcqc5L6NxbMxz+ZRTZDoOLMFro3+YLKSsnu8nuK2am2yU7CRLyzk
+         DdMSpngRGooR7zXmzN+Mkui3mbsX/PlWSAXvDpIsZPEAs2c00NTK0xYfuD+xeTcPgAVI
+         DURIEKmpH/fag1AvFnVlHF9/cZzwGbYlsy3e9KxrsIx1D7/2iqsWe3+O9W9ce7QIfT1A
+         c2eg==
+X-Gm-Message-State: APjAAAVgHaX1wBLVNbFfMzSIEPTZefkUutShWJH387PYVbgSgRFUWB51
+        qqAHnd8RY8qrAS9AGc/YxamcsNQqrYSdtKqp46JAGB4p6u8QPQeJTJavulTxO10g/fYyYzSEClS
+        ESifd1q1NsdUlZvXBE+/X4bX0mwphBHiVE4C6R0EVMw==
+X-Received: by 2002:a19:4347:: with SMTP id m7mr20404400lfj.146.1567527644640;
+        Tue, 03 Sep 2019 09:20:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxxRS1mmFYV744cbn211ZoqJN/iMCMCNinPRyOyq5wx4V6dEjWLfbi84RindB0KLwdwauiqEicmSQIs3+PaiPI=
+X-Received: by 2002:a19:4347:: with SMTP id m7mr20404391lfj.146.1567527644441;
+ Tue, 03 Sep 2019 09:20:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903001816.705097213@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190902221047.20189-1-yzhai003@ucr.edu> <20190903112558.GB6247@sirena.co.uk>
+In-Reply-To: <20190903112558.GB6247@sirena.co.uk>
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Tue, 3 Sep 2019 09:21:14 -0700
+Message-ID: <CABvMjLT=WzpzPY+15nyOL9NVkyMzpQNyK+6w_cjde11vJiLBfA@mail.gmail.com>
+Subject: Re: [PATCH] regulator: pfuze100-regulator: Variable "val" in
+ pfuze100_regulator_probe() could be uninitialized
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Chengyu Song <csong@cs.ucr.edu>, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 07:18:23PM -0500, Mike Travis wrote:
-> +#ifdef	UV1_HUB_IS_SUPPORTED
+Thanks Mark, I will send a new patch and check the return value instead.
 
-All these ifdefs are dead code, please just remove them.
+On Tue, Sep 3, 2019 at 4:26 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, Sep 02, 2019 at 03:10:47PM -0700, Yizhuo wrote:
+> > In function pfuze100_regulator_probe(), variable "val" could be
+> > initialized if regmap_read() fails. However, "val" is used to
+> > decide the control flow later in the if statement, which is
+> > potentially unsafe.
+>
+> >               struct regulator_desc *desc;
+> > -             int val;
+> > +             int val = 0;
+>
+> This just unconditionally assings a value to this variable which will
+> stop any warnings but there's no analysis explaining why this is a good
+> fix - are we actually forgetting to check something we should be
+> checking, are we sure that this is the correct value to use?
 
-Also it seems like at least the various mmr macros just check
-for a specific version, I think you are much better off just
-using a switch statement for the possible revisions there.
 
-> +		return (uv_hub_info->hub_revision == UV4A_HUB_REVISION_BASE);
 
-And none of these braces are required.
+-- 
+Kind Regards,
+
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
