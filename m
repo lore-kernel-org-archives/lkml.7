@@ -2,237 +2,164 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEB1C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D78C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C630217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567508612;
-	bh=dSw60VTrT8ZizL2EKH0X+I5o/zpqz+2te5KeeEekHbI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CHJq6KAL4UnqiaZmNVK7iE+AxcfBfv8l/QlE6wpBF1/VPIIa4dOeLt9YNao6gvKJv
-	 jyPK/S41Z+q4mD5P1i4qmdrSz+uIC+X2cbclxt3w8YUzuxEL8KvAOQEEZtsRt8BqLz
-	 NX1GoUx9CfvKrSRLVeacNlNFm2nGWZNOdpgqklMg=
+	by mail.kernel.org (Postfix) with ESMTP id 525EE217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbfICLDb (ORCPT
+        id S1728838AbfICLDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbfICLDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:03:31 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C3B323431;
-        Tue,  3 Sep 2019 11:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567508609;
-        bh=dSw60VTrT8ZizL2EKH0X+I5o/zpqz+2te5KeeEekHbI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uzTd6T4U+Tkd4n8KJZfUZ9olVCK+fqZXolNXxUwUJrBUsir3ogtElmBagVAL/4uYZ
-         F+78m8TgdsRpaQrVlJ1p8t97yLZ/YqboZ6I8dOjTUL309wm6v7TlnTdmrWHoSTMQx5
-         wHd/On3QCQvzFpIIPLu+hqpW/AQ6m0/EiPPoBwr8=
-Received: by mail-lj1-f180.google.com with SMTP id e17so4563943ljf.13;
-        Tue, 03 Sep 2019 04:03:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAWRikgdLAcFYwGBDCHgwZZ7AZyhxQKgZEcXFXv9afwOz2Iwl1HG
-        7HcSu3//Y7W0odc5qzKJRGvrEjgU4blrxG7AgLI=
-X-Google-Smtp-Source: APXvYqyxHRs9YFFhl8+XZLTud4OWgRTCDnadBxI1NInauI7nndzlvmqFXuAOtRIDnpazy3S3n5w09bq4y/zI/IQu5B8=
-X-Received: by 2002:a2e:9b13:: with SMTP id u19mr19855964lji.40.1567508607223;
- Tue, 03 Sep 2019 04:03:27 -0700 (PDT)
+        Tue, 3 Sep 2019 07:03:36 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58973 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727639AbfICLDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:03:32 -0400
+Received: from [109.168.11.45] (port=42494 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1i56at-003rql-Gm; Tue, 03 Sep 2019 13:03:27 +0200
+Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
+ deserializer
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Peter Rosin <peda@axentia.se>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-4-luca@lucaceresoli.net> <20190902204841.GB7253@kunai>
+ <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
+ <20190903093455.GD1020@kunai>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <f3640020-0291-f837-8639-c3ba39800ead@lucaceresoli.net>
+Date:   Tue, 3 Sep 2019 13:03:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
- <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com> <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 3 Sep 2019 13:03:15 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
-Message-ID: <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, notify@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190903093455.GD1020@kunai>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 10:25, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Sep 3, 2019 at 8:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > >
-> > > > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> > > > format using json-schema.
-> > > >
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
-> > > >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
-> > > >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
-> > > >  2 files changed, 93 insertions(+), 72 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > >
-> > >
-> > > > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..818c6f3488ef
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > > @@ -0,0 +1,93 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> > > > +
-> > > > +maintainers:
-> > > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    items:
-> > > > +      - enum:
-> > > > +          - samsung,exynos3250-pmu
-> > > > +          - samsung,exynos4210-pmu
-> > > > +          - samsung,exynos4412-pmu
-> > > > +          - samsung,exynos5250-pmu
-> > > > +          - samsung,exynos5260-pmu
-> > > > +          - samsung,exynos5410-pmu
-> > > > +          - samsung,exynos5420-pmu
-> > > > +          - samsung,exynos5433-pmu
-> > > > +          - samsung,exynos7-pmu
-> > > > +      - const: syscon
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  '#clock-cells':
-> > > > +    const: 1
-> > > > +
-> > > > +  clock-names:
-> > > > +    description:
-> > > > +      list of clock names for particular CLKOUT mux inputs
-> > > > +    # TODO: what is the maximum number of elements (mux inputs)?
-> > > > +    minItems: 1
-> > > > +    maxItems: 32
-> > > > +    items:
-> > > > +      - enum:
-> > >
-> > > This isn't correct as you are only defining possible names for the
-> > > first item. Drop the '-' (making items a schema instead of a list) and
-> > > then it applies to all. However, doing that will cause a meta-schema
-> > > error which I need to fix to allow. Or if there's a small set of
-> > > possibilities of number of inputs, you can list them under a 'oneOf'
-> > > list.
-> >
-> > Mhmm, I cannot test it or I have an error in the schema. if I
-> > understand correctly, this would be:
-> >
-> >   clock-names:
-> >     description:
-> >       List of clock names for particular CLKOUT mux inputs
-> >     minItems: 1
-> >     maxItems: 16
-> >     items:
-> >       clkout0
-> >       clkout1
-> >       clkout2
-> >       clkout3
-> >       clkout4
-> >       clkout5
-> >       clkout6
-> >       clkout7
-> >       clkout8
-> >       clkout9
-> >       clkout10
-> >       clkout11
-> >       clkout12
-> >       clkout13
-> >       clkout14
-> >       clkout15
-> >       clkout16
-> >
-> > Now it produces the error "ignoring, error in schema 'items'" but
-> > maybe it is expected with current meta-schema?
->
-> 'make dt_binding_check' will give more detailed errors.
->
-> Are the inputs always contiguous 0-N? If so, you want:
->
-> items:
->   - const: clkout0
->   - const: clkout1
->   - const: clkout2
->   ...
->
-> If you want to express any number and order of strings is valid, then you need:
->
-> items:
->   enum:
->     - clkout0
->     - clkout1
->     - clkout2
->
-> Doing that is discouraged for bindings though. Currently, it will
-> generate an error from the meta-schema, but we could change that.
+Hi Wolfram,
 
-It's the second case. The inputs are not contiguous. Examples:
+On 03/09/19 11:34, Wolfram Sang wrote:
+> 
+>> Not if you define enough addresses in the pool. E.g. the DS90UB954
+>> hardware can have 8 aliases per port, so if you have (n_ports * 8)
+>> addresses in the pool the problem is solved.
+> 
+> And then you plug-in somewhere another board with another need for ATR
+> and you are out of addresses.
 
-system-controller {
-    compatible = "samsung,exynos3250-pmu", "syscon";
-    clock-names = "clkout8";
-    clocks = <&cmu CLK_FIN_PLL>;
-}
+Now I got what you mean: the aliases in a pool are reserved to an ATR
+and not available to another ATR. What about hoisting the pool one level
+up in DT, to the adapter where the ATRs are connected?
 
-system-controller {
-    compatible = "samsung,exynos4412-pmu", "syscon";
-    clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
-                  "clkout4", "clkout8", "clkout9";
-    clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
-             <&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
-             <&clock CLK_OUT_CPU>, <&clock CLK_XXTI>, <&clock CLK_XUSBXTI>;
-}
+>>> And another add-on module with
+>>> non-repogrammable devices may occupy addresses from the defined pool
+>>> above.
+>>
+>> You mean a new device on the local (SoC-to-ATR) bus? Well, it could as
+>> well occupy a non-described address that the ATR has already picked as
+>> an alias.
+> 
+> Nope, I mean a seperate add-on which has a hardcoded I2C address on the
+> bus of the ATR parent. Then this hardcoded address needs to be removed
+> from the pool if it is in the wrong range.
 
-The bindings never required any specific ordering. Also the driver
-just go through all indices and parses them.
+As I understand it, we are referring to the same use case:
 
-Your second syntax fails:
-Documentation/devicetree/bindings/arm/samsung/pmu.yaml:
-properties:clock-names:items: {'enum': ['clkout0', 'clkout1',
-'clkout2', 'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7',
-'clkout8', 'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13',
-'clkout14', 'clkout15', 'clkout16']} is not of type 'array'
+.---------------.       .-----.   .-------------------.
+| adapter (SoC) |---+---| ATR |---| remote slave 0x10 |
+'---------------'   |   '-----'   '-------------------'
+                    |
+              .----------.
+              | device X |
+              '----------'
 
-Best regards,
-Krzysztof
+Here device X with hard-coded address 0x20 is plugged in at runtime.
+
+As you say it, if 0x20 is in the ATR pool we have a problem.
+
+But even without an explicit pool, initially 0x20 is unused and the ATR
+can use it for remote slave 0x10. Then at some point device X is
+connected, and suddenly 0x20 conflicts.
+
+To a limited extend the explicit pool could help if the list of possible
+addons is known: one can put in the pool only address that will never
+appear in addons.
+
+Hey, wait, the no-pool solution could have a way to handle this
+conflict. When device X is connected, the adapter can look for a new
+alias (0x21), call the i2c_atr_deconfigure_hw() and i2c_atr_setup_hw()
+callbacks to stop using 0x20 and start using 0x21. Doesn't look very
+lovely, but may be worth considering.
+
+>>> I am not perfectly happy with the assumption that all undescribed
+>>> addresses are automatically free. That also might need DTS updates to
+>>> describe all clients properly. But this change only needs to be done
+>>> once, and it will improve the description of the hardware.
+>>
+>> Right, but I still suspect some users won't do their homework and
+>> discover address conflicts at runtime, maybe months later, in a painful
+>> way. Also a chip might be undocumented on a given board, so they could
+>> do their homework and still have problems.
+> 
+> Yes, we probably need a binding to mark an address as used even though
+> we don't know the device or don't have a driver for it.
+> 
+> Don't get me wrong, I know what you mean. One of my boards has a client
+> soldered in a way so that it is still in debug mode. That means it
+> listens to addresses 0x03-0x07 to provide debug information. Took me a
+> while to find out what is happening there.
+> 
+> But still, 'i2cdetect' showed all of these.
+> 
+>> Despite my comments, I'm not strongly against your proposal. To me it
+>> doesn't seem to solve any problem, while it does introduce some degree
+>> of risk. Could you elaborate more on but what benefit it introduces?
+> 
+> I'd think the risk of running out of defined addresses is somewhere
+> equal to running into (after a while) an unexpectedly used address.
+> I like the fix for the latter better because describing what is on the
+> bus is more helpful and generic than updating the pool-property every
+> time you need it. Plus, as mentioned above, other add-on hardware may
+> disturb your pool allocation.
+> 
+> I expect this topic to be one of the discussion points of the BoF.
+
+Definitely.  And having a list of use cases would help a lot IMO. I had
+never considered the use case described above, for example.
+
+Thanks,
+-- 
+Luca
