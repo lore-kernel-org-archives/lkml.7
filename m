@@ -2,139 +2,84 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ACCC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA15FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34832343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567519644;
-	bh=ILgzKV/BAHkb2QyjWgpo1XspwECJBh+lYg4WsMle8bQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SLIXjzn0LhJlmKlUN3To7SVHmC980LjQVPwo/gHh55HmTSpuUTWL/uRhqGDHoMNkW
-	 ybeuGUrci2COv9wr51KKcMHii1yopxB7A8UccAu2mMrthYMedq/VXVawCQm3VPsggo
-	 kJSLV4kZehImzwZjLTTG4r7HAELJuQ45XFMbIwqU=
+	by mail.kernel.org (Postfix) with ESMTP id A7DF223431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfICOHY (ORCPT
+        id S1729432AbfICOIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51936 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 10:08:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41158 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfICOHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:07:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727107AbfICOIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:08:02 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF05D23431;
-        Tue,  3 Sep 2019 14:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567519642;
-        bh=ILgzKV/BAHkb2QyjWgpo1XspwECJBh+lYg4WsMle8bQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xlGj+2evrF1h0zvBIa8N3bQL6cxJBZMdk2MG1tQU+CuADY+vDhA0cnkdhPT6IG5PZ
-         hjKLSbJu5eRrQEP/3tk8EYslv0RL85O29WYCu/356Ma9/IL+CoF61epccZ5YNWW/O6
-         JPf34jGXxQbXOUkFoozfzJUqDgVBbmn4bE4wt4Wc=
-Date:   Tue, 3 Sep 2019 16:07:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-Message-ID: <20190903140719.GA9506@kroah.com>
-References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
- <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com>
- <20190902181207.GA18577@kroah.com>
- <1cd468a3-b6e5-a93b-739a-f30288318356@gmail.com>
- <20190902190843.GB25019@kroah.com>
- <CAC5umyjTJSMdKMtZbF8Uxky6nOrAHesTHmZRV5VA1uPwX2rtxA@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 26B66C05AA52;
+        Tue,  3 Sep 2019 14:08:02 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F2EB60C18;
+        Tue,  3 Sep 2019 14:07:52 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 0D019220292; Tue,  3 Sep 2019 10:07:52 -0400 (EDT)
+Date:   Tue, 3 Sep 2019 10:07:52 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
+ machines
+Message-ID: <20190903140752.GA10983@redhat.com>
+References: <20190821173742.24574-1-vgoyal@redhat.com>
+ <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
+ <20190903041507-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umyjTJSMdKMtZbF8Uxky6nOrAHesTHmZRV5VA1uPwX2rtxA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190903041507-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 03 Sep 2019 14:08:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:55:40PM +0900, Akinobu Mita wrote:
-> 2019年9月3日(火) 4:08 Greg KH <gregkh@linuxfoundation.org>:
-> >
-> > On Mon, Sep 02, 2019 at 08:47:02PM +0200, Jacek Anaszewski wrote:
-> > > On 9/2/19 8:12 PM, Greg KH wrote:
-> > > > On Sun, Sep 01, 2019 at 06:53:34PM +0200, Jacek Anaszewski wrote:
-> > > >> Hi Akinobu,
-> > > >>
-> > > >> Thank you for the patch.
-> > > >>
-> > > >> I have one nit below but in general it looks good to me.
-> > > >> I've tested it with 2000 mtd triggers (~14kB file size)
-> > > >> and it worked flawlessly.
-> > > >>
-> > > >> Still, I would like to have ack from Greg for it.
-> > > >>
-> > > >> Adding Greg on Cc.
-> > > >>
-> > > >> On 8/29/19 4:49 PM, Akinobu Mita wrote:
-> > > >>> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> > > >>> However, the size of this file is limited to PAGE_SIZE because of the
-> > > >>> limitation for sysfs attribute.
-> > > >>>
-> > > >>> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> > > >>> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-> > > >>> and which trigger is currently activated.
-> > > >>>
-> > > >>> This converts /sys/class/leds/<led>/trigger to bin attribute and removes
-> > > >>> the PAGE_SIZE limitation.
-> > > >
-> > > > But this is NOT a binary file.  A sysfs binary file is used for when the
-> > > > kernel passes data to or from hardware without any parsing of the data
-> > > > by the kernel.
-> > > >
-> > > > You are not doing that here, you are abusing the "one value per file"
-> > > > rule of sysfs so much that you are forced to work around the limitation
-> > > > it put in place on purpose to keep you from doing stuff like this.
-> > > >
-> > > > Please fix this "correctly" by creating a new api that works properly
-> > > > and just live with the fact that this file will never work correctly and
-> > > > move everyone to use the new api instead.
-> > > >
-> > > > Don't keep on abusing the interface by workarounds like this, it is not
-> > > > ok.
-> > >
-> > > In the message [0] you pledged to give us exception for that, provided
-> > > it will be properly documented in the code. I suppose you now object
-> > > because the patch does not meet that condition.
-> >
-> > Well, I honestly don't remember writing that email, but it was 5 months
-> > and many thousands of emails ago :)
-> >
-> > Also, you all didn't document the heck out of this.  So no, I really do
-> > not want to see this patch accepted as-is.
-> >
-> > > Provided that will be fixed, can we count on your ack for the
-> > > implementation of the solution you proposed? :-)
-> >
-> > Let's see the patch that actually implements what I suggested first :)
+On Tue, Sep 03, 2019 at 04:31:38AM -0400, Michael S. Tsirkin wrote:
+
+[..]
+> +	/* TODO lock */
+> give me pause.
 > 
-> I'd propose introducing a new procfs file (/proc/led-triggers) and new
-> /sys/class/leds/<led>/current-trigger api.
+> Cleanup generally seems broken to me - what pauses the FS
+
+I am looking into device removal aspect of it now. Thinking of adding
+a reference count to virtiofs device and possibly also a bit flag to
+indicate if device is still alive. That way, we should be able to cleanup
+device more gracefully.
+
 > 
-> Reading /proc/led-triggers file shows all available triggers.
-> This violates "one value per file", but it's a procfs file.
+> What about the rest of TODOs in that file?
 
-No, procfs files are ONLY for process-related things.  Don't keep the
-insanity of this file format by just moving it out of sysfs and into
-procfs :)
+I will also take a closer look at TODOs now. Better device cleanup path
+might get rid of some of them. Some of them might not be valid anymore.
 
-thanks,
+> 
+> use of usleep is hacky - can't we do better e.g. with a
+> completion?
 
-greg k-h
+Agreed.
+
+Thanks
+Vivek
