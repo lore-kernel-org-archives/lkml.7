@@ -2,90 +2,102 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40618C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B327C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131B423431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eu4SuX4X";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n4N6oMCI"
+	by mail.kernel.org (Postfix) with ESMTP id 62A5F2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfICNg1 (ORCPT
+        id S1729246AbfICNhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:36:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48834 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfICNg1 (ORCPT
+        Tue, 3 Sep 2019 09:37:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46342 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727941AbfICNhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:36:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DD0A3605A2; Tue,  3 Sep 2019 13:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567517785;
-        bh=T4+qthdIa+JdtJ1JZNw78DDAC6sdnSeXsq52RWos8i8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=eu4SuX4XJTg98x2tGFMxG20wx4cFDttZSQzpbJg3b6Wn1pO346QTjqcrRO3rxZxjJ
-         KUYy1H6vDhwFTMKl0B4xb+w+mEmMtbryFE88MC7ogW7bf+f5yHdmFPpt1cYRe74B2z
-         rybsJ5EqkOjXuBHzp4eS6OSoZAUib3VzPelsncUA=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB942602CA;
-        Tue,  3 Sep 2019 13:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567517785;
-        bh=T4+qthdIa+JdtJ1JZNw78DDAC6sdnSeXsq52RWos8i8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=n4N6oMCI7ZAh48ltOR5O3mymXNlUO4JcKKK99is1xAel8K0RsIq0Mrj8yLzJLlctL
-         gr79ARrs4bsck8Od+R9MUGVVnLj3WhaC/HwYmQDERP7t4fOGClJUggt0H4bnpZwlcL
-         JLPn0o7Fm41sqbVjRi0Q1rqaTvhu3NZvjQHeQhwQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CB942602CA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtw88: remove redundant assignment to pointer
- debugfs_topdir
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190822113728.25494-1-colin.king@canonical.com>
-References: <20190822113728.25494-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190903133625.DD0A3605A2@smtp.codeaurora.org>
-Date:   Tue,  3 Sep 2019 13:36:25 +0000 (UTC)
+        Tue, 3 Sep 2019 09:37:37 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83DbaDG046431
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 09:37:37 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2usnvdqytj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:37:05 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 3 Sep 2019 14:36:43 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Sep 2019 14:36:41 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83Dad3F32768276
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 13:36:39 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B661A4054;
+        Tue,  3 Sep 2019 13:36:39 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E555A405F;
+        Tue,  3 Sep 2019 13:36:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Sep 2019 13:36:39 +0000 (GMT)
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
+Date:   Tue,  3 Sep 2019 15:36:18 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19090313-0016-0000-0000-000002A62061
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090313-0017-0000-0000-000033068869
+Message-Id: <20190903133618.9122-1-pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+The intention seems to be to warn once when we don't wait enough for the
+reset to complete. Let's use the right retry counter to accomplish that
+semantic.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Pointer debugfs_topdir is initialized to a value that is never read
-> and it is re-assigned later. The initialization is redundant and can
-> be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-9f7d65fb3935 rtw88: remove redundant assignment to pointer debugfs_topdir
-
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 0604b49a4d32..5c0f53c6dde7 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+ 				msleep(20);
+ 				status = ap_tapq(apqn, NULL);
+ 			}
+-			WARN_ON_ONCE(retry <= 0);
++			WARN_ON_ONCE(retry2 <= 0);
+ 			return 0;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
 -- 
-https://patchwork.kernel.org/patch/11109159/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.17.1
 
