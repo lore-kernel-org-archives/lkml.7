@@ -2,247 +2,282 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D5FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABB9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED5922D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB5D21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="taVd6utE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kIYuXA48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfICJtw (ORCPT
+        id S1728541AbfICJxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:49:52 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16788 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbfICJtw (ORCPT
+        Tue, 3 Sep 2019 05:53:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54382 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfICJxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:49:52 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x839f35N006869;
-        Tue, 3 Sep 2019 11:49:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=qAPgp0EL893ZaRTISydhUDXeZQ3+/E80TJjDmAJXx5Q=;
- b=taVd6utEbIlSPk9e7arumd8UuD3ssEO0SJK3MH5YmXM9d014PMtOZ8akkZexU97nSoBW
- qCY0RtB1BO/hT3GCsV/w0W2yB2GJDXSBJjPAXmX/VJxXLiBmMqtwSy5OsAFGlzbinslj
- pYrgzpjQYvWOqMFAnRoxKotHeh46F0pulaADwR9ICuu1cszefzmtvEXZqHyVby/yvaw8
- /amMaZEeVAi4eYRsZPqkmBYQMf8dE0eimPs238Km9db/PAIw6Dqnx2X0oW4RXlMs3g9Y
- q5V91LXy4lOoaZVTUjyIN9GkiM5gN/PwApPElwjzUwcDqWMKMHecdImkDzn07l8NZ5sk Nw== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2uqenv1y63-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 03 Sep 2019 11:49:32 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9D29223;
-        Tue,  3 Sep 2019 09:49:28 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EFD722C2A0B;
-        Tue,  3 Sep 2019 11:49:27 +0200 (CEST)
-Received: from [10.48.0.131] (10.75.127.45) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Sep
- 2019 11:49:27 +0200
-Subject: Re: [PATCH v5 1/2] rpmsg: core: add API to get message length
-To:     Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        xiang xiao <xiaoxiang781216@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-References: <1567005566-10986-1-git-send-email-arnaud.pouliquen@st.com>
- <1567005566-10986-2-git-send-email-arnaud.pouliquen@st.com>
- <7dc4d1cf-4f15-19ab-b8dd-424175f2a11a@ti.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Message-ID: <f6f2ad3e-123a-268b-2586-544752c54db7@st.com>
-Date:   Tue, 3 Sep 2019 11:49:26 +0200
+        Tue, 3 Sep 2019 05:53:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k2so15951794wmj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3svFEUFdlGRo7s6oU/gAKMoNrDtitSPWMnmTngxdf5A=;
+        b=kIYuXA48J8yijkoUvvwSReT8C7vDXIE1MLur0hYz+TkH/SXUuow+Z9RpdecahEHqfT
+         gfMPla1YRabYeDgUmmlkI8D2h8jprn/SfljLi+ALfCaC5DkQKMTAK0wMqVl6du0USNUP
+         8Q9gmtoY2VKhAzFr3dUpG6KeMi4nQnXYJ//3tyrry7WaQ5cA8e5yAWcsNuXjC2NU6cQ2
+         OY1QInnD6h/5eRALoJF5X41M/S+WlVJY7NPvflic7F82lpWhjVR8SpEYC2f2fKFbBKRK
+         V97d6ec4ppirWFT5oWkF04LkBSC7guAniEjV1TjuaQn/Ki9QMH3obFR5ePfsUn0aGeOl
+         gcVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3svFEUFdlGRo7s6oU/gAKMoNrDtitSPWMnmTngxdf5A=;
+        b=g2W4FTS3ZAG3/EbuCdI5ZYRO/7N2P+PBdVkKEno4l1zlfdFB1r65Rh/kQeAzlQ4IZE
+         wrZm+9YFU49BpIu68PTqpeAohVsuMIRiqO3o5d6aBU45raNlj5E7ljzpUAwZPNtc30fU
+         EzrAH0IAJDlv6sTqADHGxW0lNG+sjidZICUG9pCBaBnf7VS/RwPKill48Peun5Yad73q
+         pOta2b7ZX/N28QhEPbpN2FVonocN8rB2VrAxL/W8w+mOZkYaL2FYmk+bTiwKAjdjh+jF
+         cHF9BwvoTvxa5rj5hIbTRnAV6oFNB+C/tvp4qa0nqLJszZMr1gE8mp5Qp/ZSFj0qRGOI
+         pcWA==
+X-Gm-Message-State: APjAAAWJ/lqmHtT2kC1ruGZ11HSTX0uuuIwZPPZgJsOBlrzvA6LD9zK7
+        Fos2TNi+Z193HqDRBw0ZyGUTsw==
+X-Google-Smtp-Source: APXvYqyTtwuHZrhUbdBQZ7Or0d1HOtYQZHQdZrPahyeZ5TF7qNJyfrFtU4pNalcJKWCYtGBlnIJk7Q==
+X-Received: by 2002:a7b:c186:: with SMTP id y6mr13960388wmi.12.1567504414674;
+        Tue, 03 Sep 2019 02:53:34 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id r18sm20184350wrx.36.2019.09.03.02.53.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 02:53:34 -0700 (PDT)
+Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status
+ setting
+To:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     alsa-devel@alsa-project.org, tzungbi@chromium.org,
+        zhengxing@rock-chips.com, kuninori.morimoto.gx@renesas.com,
+        a.hajda@samsung.com, airlied@linux.ie, kuankuan.y@gmail.com,
+        jeffy.chen@rock-chips.com, dianders@chromium.org,
+        dri-devel@lists.freedesktop.org, cain.cai@rock-chips.com,
+        linux-rockchip@lists.infradead.org, eddie.cai@rock-chips.com,
+        Laurent.pinchart@ideasonboard.com, daniel@ffwll.ch,
+        Yakir Yang <ykk@rock-chips.com>, enric.balletbo@collabora.com,
+        dgreid@chromium.org, sam@ravnborg.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190903055103.134764-1-cychiang@chromium.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com>
+Date:   Tue, 3 Sep 2019 11:53:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <7dc4d1cf-4f15-19ab-b8dd-424175f2a11a@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190903055103.134764-1-cychiang@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-03_01:2019-09-03,2019-09-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Suman
+Hi,
 
-On 8/29/19 12:34 AM, Suman Anna wrote:
-> Hi Arnaud,
+On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
+> From: Yakir Yang <ykk@rock-chips.com>
 > 
-> On 8/28/19 10:19 AM, Arnaud Pouliquen wrote:
->> Return the rpmsg buffer size for sending message, so rpmsg users
->> can split a long message in several sub rpmsg buffers.
+> When transmitting IEC60985 linear PCM audio, we configure the
+> Audio Sample Channel Status information of all the channel
+> status bits in the IEC60958 frame.
+> Refer to 60958-3 page 10 for frequency, original frequency, and
+> wordlength setting.
 > 
-> Thanks for the patch, I also have a need for the same to be able to
-> compute permissible payload size. Minor comments below.
+> This fix the issue that audio does not come out on some monitors
+> (e.g. LG 22CV241)
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 +++++++++++++++++++++++
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
+>  2 files changed, 79 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index bd65d0479683..34d46e25d610 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk)
+>  	return n;
+>  }
+>  
+> +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
+> +{
+> +	u8 aud_schnl_samplerate;
+> +	u8 aud_schnl_8;
+> +
+> +	/* These registers are on RK3288 using version 2.0a. */
+> +	if (hdmi->version != 0x200a)
+> +		return;
 
-Thanks for your review. i will update it ASAP. Then if you need it and 
-ack it, i suppose that we could request Bjorn to integrate it in a first 
-step, if the rpmsg tty driver has not a level of quality sufficient to 
-be accepted...
+Are these limited to the 2.0a version *in* RK3288, or 2.0a version on all
+SoCs ?
 
-Regards
-Arnaud
+> +
+> +	switch (hdmi->sample_rate) {
+> +	case 32000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
+> +		break;
+> +	case 44100:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
+> +		break;
+> +	case 48000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
+> +		break;
+> +	case 88200:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
+> +		break;
+> +	case 96000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
+> +		break;
+> +	case 176400:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
+> +		break;
+> +	case 192000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
+> +		break;
+> +	case 768000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
+> +		break;
+> +	default:
+> +		dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n",
+> +			 hdmi->sample_rate);
+> +		return;
+> +	}
+> +
+> +	/* set channel status register */
+> +	hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
+> +		  HDMI_FC_AUDSCHNLS7);
+> +
+> +	/*
+> +	 * Set original frequency to be the same as frequency.
+> +	 * Use one-complement value as stated in IEC60958-3 page 13.
+> +	 */
+> +	aud_schnl_8 = (~aud_schnl_samplerate) <<
+> +			HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
+> +
+> +	/* This means word length is 16 bit. Refer to IEC60958-3 page 12. */
+> +	aud_schnl_8 |= 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
+> +
+> +	hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
+> +}
+> +
+>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
+>  	unsigned long pixel_clk, unsigned int sample_rate)
+>  {
+> @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
+>  	hdmi->audio_cts = cts;
+>  	hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
+>  	spin_unlock_irq(&hdmi->audio_lock);
+> +
+> +	hdmi_set_schnl(hdmi);
+>  }
+>  
+>  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> index 6988f12d89d9..619ebc1c8354 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> @@ -158,6 +158,17 @@
+>  #define HDMI_FC_SPDDEVICEINF                    0x1062
+>  #define HDMI_FC_AUDSCONF                        0x1063
+>  #define HDMI_FC_AUDSSTAT                        0x1064
+> +#define HDMI_FC_AUDSV                           0x1065
+> +#define HDMI_FC_AUDSU                           0x1066
+> +#define HDMI_FC_AUDSCHNLS0                      0x1067
+> +#define HDMI_FC_AUDSCHNLS1                      0x1068
+> +#define HDMI_FC_AUDSCHNLS2                      0x1069
+> +#define HDMI_FC_AUDSCHNLS3                      0x106a
+> +#define HDMI_FC_AUDSCHNLS4                      0x106b
+> +#define HDMI_FC_AUDSCHNLS5                      0x106c
+> +#define HDMI_FC_AUDSCHNLS6                      0x106d
+> +#define HDMI_FC_AUDSCHNLS7                      0x106e
+> +#define HDMI_FC_AUDSCHNLS8                      0x106f
+>  #define HDMI_FC_DATACH0FILL                     0x1070
+>  #define HDMI_FC_DATACH1FILL                     0x1071
+>  #define HDMI_FC_DATACH2FILL                     0x1072
+> @@ -706,6 +717,15 @@ enum {
+>  /* HDMI_FC_AUDSCHNLS7 field values */
+>  	HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
+>  	HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
+>  
+>  /* HDMI_FC_AUDSCHNLS8 field values */
+>  	HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
 > 
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->> V4 to V5 :
->>    - rename rpmsg_get_buf_payload_size to rpmsg_get_mtu
->>
->>   drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
->>   drivers/rpmsg/rpmsg_internal.h   |  2 ++
->>   drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
->>   include/linux/rpmsg.h            | 10 ++++++++++
->>   4 files changed, 43 insertions(+)
->>
->> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
->> index 8122807db380..daca2e24fc71 100644
->> --- a/drivers/rpmsg/rpmsg_core.c
->> +++ b/drivers/rpmsg/rpmsg_core.c
->> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->>   }
->>   EXPORT_SYMBOL(rpmsg_trysend_offchannel);
->>   
->> +/**
->> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
->> + * @ept: the rpmsg endpoint
->> + *
->> + * This function returns maximum buffer size available for a single message.
->> + *
->> + * Return: the maximum transmission size on success and an appropriate error
->> + * value on failure.
->> + */
->> +
->> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
->> +{
->> +	if (WARN_ON(!ept))
->> +		return -EINVAL;
->> +	if (!ept->ops->get_buf_mtu)
-> 
-> How about calling the ops just get_mtu or rename the function to follow
-> the ops name, like all the others.
-> 
->> +		return -ENXIO;
-> 
-> Perhaps ENOTSUPP or EOPNOTSUPP.
-> 
->> +
->> +	return ept->ops->get_buf_mtu(ept);
->> +}
->> +EXPORT_SYMBOL(rpmsg_get_mtu);
->> +
->>   /*
->>    * match an rpmsg channel with a channel info struct.
->>    * this is used to make sure we're not creating rpmsg devices for channels
->> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
->> index 0d791c30b7ea..645c402569ac 100644
->> --- a/drivers/rpmsg/rpmsg_internal.h
->> +++ b/drivers/rpmsg/rpmsg_internal.h
->> @@ -46,6 +46,7 @@ struct rpmsg_device_ops {
->>    * @trysend:		see @rpmsg_trysend(), required
->>    * @trysendto:		see @rpmsg_trysendto(), optional
->>    * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
->> + * @get_buf_payload_size: see @rpmsg_get_buf_payload_size(), optional
-> 
-> Missed updating the kerneldoc to the new name.
-> 
->>    *
->>    * Indirection table for the operations that a rpmsg backend should implement.
->>    * In addition to @destroy_ept, the backend must at least implement @send and
->> @@ -65,6 +66,7 @@ struct rpmsg_endpoint_ops {
->>   			     void *data, int len);
->>   	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
->>   			     poll_table *wait);
->> +	ssize_t (*get_buf_mtu)(struct rpmsg_endpoint *ept);
->>   };
->>   
->>   int rpmsg_register_device(struct rpmsg_device *rpdev);
->> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
->> index e757f0038a1c..f80b1ad23e7e 100644
->> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
->> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
->> @@ -178,6 +178,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
->>   				  int len, u32 dst);
->>   static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
->>   					   u32 dst, void *data, int len);
->> +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept);
-> 
-> Minor nit, virtio_rpmsg_ prefix similar to all the other ops.
-> 
-> regards
-> Suman
-> 
->>   
->>   static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
->>   	.destroy_ept = virtio_rpmsg_destroy_ept,
->> @@ -187,6 +188,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
->>   	.trysend = virtio_rpmsg_trysend,
->>   	.trysendto = virtio_rpmsg_trysendto,
->>   	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
->> +	.get_buf_mtu = virtio_get_buf_mtu,
->>   };
->>   
->>   /**
->> @@ -702,6 +704,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
->>   	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
->>   }
->>   
->> +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept)
->> +{
->> +	struct rpmsg_device *rpdev = ept->rpdev;
->> +	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
->> +
->> +	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
->> +}
->> +
->>   static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
->>   			     struct rpmsg_hdr *msg, unsigned int len)
->>   {
->> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
->> index 9fe156d1c018..9d638bf2bdce 100644
->> --- a/include/linux/rpmsg.h
->> +++ b/include/linux/rpmsg.h
->> @@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->>   __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
->>   			poll_table *wait);
->>   
->> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
->> +
->>   #else
->>   
->>   static inline int register_rpmsg_device(struct rpmsg_device *dev)
->> @@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
->>   	return 0;
->>   }
->>   
->> +static ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
->> +{
->> +	/* This shouldn't be possible */
->> +	WARN_ON(1);
->> +
->> +	return -ENXIO;
->> +}
->> +
->>   #endif /* IS_ENABLED(CONFIG_RPMSG) */
->>   
->>   /* use a macro to avoid include chaining to get THIS_MODULE */
->>
-> 
+
