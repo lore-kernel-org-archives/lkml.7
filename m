@@ -2,51 +2,37 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_ALL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50063C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308E12339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5472339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfICQxp (ORCPT
+        id S1730184AbfICQyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:53:45 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:18167 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729557AbfICQxo (ORCPT
+        Tue, 3 Sep 2019 12:54:17 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:55545 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730119AbfICQyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:53:44 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x83GrQpe037061;
-        Wed, 4 Sep 2019 01:53:26 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
- Wed, 04 Sep 2019 01:53:26 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
-Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x83GrNwn037038
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 4 Sep 2019 01:53:26 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Mark Brown <broonie@kernel.org>,
-        David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH v3 4/4] ASoC: es8316: add DT-bindings
-Date:   Wed,  4 Sep 2019 01:53:22 +0900
-Message-Id: <20190903165322.20791-4-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190903165322.20791-1-katsuhiro@katsuster.net>
-References: <20190903165322.20791-1-katsuhiro@katsuster.net>
+        Tue, 3 Sep 2019 12:54:17 -0400
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id 5248C3A32A; Tue,  3 Sep 2019 18:54:12 +0200 (CEST)
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Subject: [PATCH] staging: exfat: fix spelling errors in comments
+Date:   Tue,  3 Sep 2019 18:54:08 +0200
+Message-Id: <20190903165408.16010-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,40 +40,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds missing DT-bindings document for Everest ES8316.
+Fixes checkpatch.pl warnings:
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+  CHECK: 'consistancy' may be misspelled - perhaps 'consistency'?
+  CHECK: 'stuct' may be misspelled - perhaps 'struct'?
+
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 ---
- .../bindings/sound/everest,es8316.txt         | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.txt
+ drivers/staging/exfat/exfat_core.c  | 2 +-
+ drivers/staging/exfat/exfat_super.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.txt b/Documentation/devicetree/bindings/sound/everest,es8316.txt
-new file mode 100644
-index 000000000000..aefcff9c48a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/everest,es8316.txt
-@@ -0,0 +1,20 @@
-+Everest ES8316 audio CODEC
-+
-+This device supports both I2C and SPI.
-+
-+Required properties:
-+
-+  - compatible  : should be "everest,es8316"
-+  - reg : the I2C address of the device for I2C
-+  - clocks : a list of phandle, should contain entries for clock-names
-+  - clock-names : should include as follows:
-+         "mclk" : master clock (MCLK) of the device
-+
-+Example:
-+
-+es8316: codec@11 {
-+	compatible = "everest,es8316";
-+	reg = <0x11>;
-+	clocks = <&clks 10>;
-+	clock-names = "mclk";
-+};
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index 46b9f4455da1..67e43499d522 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -1754,7 +1754,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 	while (num_entries) {
+ 		/*
+ 		 * instead of copying whole sector, we will check every entry.
+-		 * this will provide minimum stablity and consistancy.
++		 * this will provide minimum stablity and consistency.
+ 		 */
+ 		entry_type = p_fs->fs_func->get_entry_type(ep);
+ 
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 881cd85cf677..56d673ecb70c 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -480,7 +480,7 @@ static int ffsMountVol(struct super_block *sb)
+ 		goto out;
+ 	}
+ 
+-	/* fill fs_stuct */
++	/* fill fs_struct */
+ 	for (i = 0; i < 53; i++)
+ 		if (p_pbr->bpb[i])
+ 			break;
 -- 
-2.23.0.rc1
+2.20.1
 
