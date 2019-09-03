@@ -2,88 +2,207 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438F6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D04C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D56F2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0B2216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567499118;
+	bh=f3ZXaegcsrrqhqRDRKGqx4s4cVnRArE7RmypILYd+g8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m0faVrXwp5eaxOOp9VoPc7JlL1IDpDzLQ+MZxVXEsHxHJxp+PV4AHxUOVqMrXYCe5
+	 XX8FFU+2tli2Xr/a6wY2VpOqMJlb1zw1uwO2wqds0KFkkHFyH2rehtz8BiTk1Zj+rP
+	 QyIWTMpitc0DfpmgAFib8Tp0+9g8bDcIglNTVKM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfICIXM (ORCPT
+        id S1728186AbfICIZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:23:12 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58488 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726631AbfICIXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:23:12 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 709F1B0D7378A76946CA;
-        Tue,  3 Sep 2019 16:23:10 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
- 16:23:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bhelgaas@google.com>, <hch@infradead.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] PCI: Don't use GFP_KERNEL for kstrbdup in resource_alignment_store
-Date:   Tue, 3 Sep 2019 16:22:29 +0800
-Message-ID: <20190903082229.21488-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190831124932.18759-1-yuehaibing@huawei.com>
-References: <20190831124932.18759-1-yuehaibing@huawei.com>
+        Tue, 3 Sep 2019 04:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbfICIZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:25:17 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4ACB23402;
+        Tue,  3 Sep 2019 08:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567499115;
+        bh=f3ZXaegcsrrqhqRDRKGqx4s4cVnRArE7RmypILYd+g8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wabHV1k5dEyrX/7adpcLxEwW1MB7sdRxtSAl/Q+ixCo+poiVeI7wlb7c8pmEkomba
+         VUBXX9c9bK4EcJ2Rh1xAjjOW6eeil29NeZmenL+Lv7/KjHckb3WHRxEYYillGkJ9G9
+         qLA7PMTnlMqUtaKofcpPZkOnAPIPUWPD0G9OlK5o=
+Received: by mail-qt1-f174.google.com with SMTP id k10so8458253qth.2;
+        Tue, 03 Sep 2019 01:25:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAXXEucNZGmWiG31cCd8kIkK9e5dmFN6bGl74op4stTEi8jdKATy
+        z+vlJ7//HqgK0Y0xgKL4g/H5E7AvPNScXdbolw==
+X-Google-Smtp-Source: APXvYqwIM9DiXxim6rM127j/POM2TKvL5qYklc3Bu+DdP6aV4fnCf6MCR6CZRi7sMcNn4eza859i00dqzSkL7gf1mNo=
+X-Received: by 2002:ac8:28b6:: with SMTP id i51mr8990758qti.143.1567499114797;
+ Tue, 03 Sep 2019 01:25:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
+ <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com> <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
+In-Reply-To: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Sep 2019 09:25:03 +0100
+X-Gmail-Original-Message-ID: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
+Message-ID: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
+Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
+ to json-schema
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, notify@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When allocating memory, the GFP_KERNEL cannot be used during the
-spin_lock period. It may cause scheduling when holding spin_lock.
+On Tue, Sep 3, 2019 at 8:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
+> > > format using json-schema.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
+> > >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
+> > >  2 files changed, 93 insertions(+), 72 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> >
+> >
+> > > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > > new file mode 100644
+> > > index 000000000000..818c6f3488ef
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > > @@ -0,0 +1,93 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Samsung Exynos SoC series Power Management Unit (PMU)
+> > > +
+> > > +maintainers:
+> > > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +          - samsung,exynos3250-pmu
+> > > +          - samsung,exynos4210-pmu
+> > > +          - samsung,exynos4412-pmu
+> > > +          - samsung,exynos5250-pmu
+> > > +          - samsung,exynos5260-pmu
+> > > +          - samsung,exynos5410-pmu
+> > > +          - samsung,exynos5420-pmu
+> > > +          - samsung,exynos5433-pmu
+> > > +          - samsung,exynos7-pmu
+> > > +      - const: syscon
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  '#clock-cells':
+> > > +    const: 1
+> > > +
+> > > +  clock-names:
+> > > +    description:
+> > > +      list of clock names for particular CLKOUT mux inputs
+> > > +    # TODO: what is the maximum number of elements (mux inputs)?
+> > > +    minItems: 1
+> > > +    maxItems: 32
+> > > +    items:
+> > > +      - enum:
+> >
+> > This isn't correct as you are only defining possible names for the
+> > first item. Drop the '-' (making items a schema instead of a list) and
+> > then it applies to all. However, doing that will cause a meta-schema
+> > error which I need to fix to allow. Or if there's a small set of
+> > possibilities of number of inputs, you can list them under a 'oneOf'
+> > list.
+>
+> Mhmm, I cannot test it or I have an error in the schema. if I
+> understand correctly, this would be:
+>
+>   clock-names:
+>     description:
+>       List of clock names for particular CLKOUT mux inputs
+>     minItems: 1
+>     maxItems: 16
+>     items:
+>       clkout0
+>       clkout1
+>       clkout2
+>       clkout3
+>       clkout4
+>       clkout5
+>       clkout6
+>       clkout7
+>       clkout8
+>       clkout9
+>       clkout10
+>       clkout11
+>       clkout12
+>       clkout13
+>       clkout14
+>       clkout15
+>       clkout16
+>
+> Now it produces the error "ignoring, error in schema 'items'" but
+> maybe it is expected with current meta-schema?
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: move alloc out of spinlock
----
- drivers/pci/pci.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+'make dt_binding_check' will give more detailed errors.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 484e353..a3d5920 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6145,14 +6145,17 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
- static ssize_t resource_alignment_store(struct bus_type *bus,
- 					const char *buf, size_t count)
- {
--	spin_lock(&resource_alignment_lock);
-+	char *param = kstrndup(buf, count, GFP_KERNEL);
- 
--	kfree(resource_alignment_param);
--	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-+	if (!param)
-+		return -ENOMEM;
- 
-+	spin_lock(&resource_alignment_lock);
-+	kfree(resource_alignment_param);
-+	resource_alignment_param = param;
- 	spin_unlock(&resource_alignment_lock);
- 
--	return resource_alignment_param ? count : -ENOMEM;
-+	return count;
- }
- 
- static BUS_ATTR_RW(resource_alignment);
--- 
-2.7.4
+Are the inputs always contiguous 0-N? If so, you want:
 
+items:
+  - const: clkout0
+  - const: clkout1
+  - const: clkout2
+  ...
 
+If you want to express any number and order of strings is valid, then you need:
+
+items:
+  enum:
+    - clkout0
+    - clkout1
+    - clkout2
+
+Doing that is discouraged for bindings though. Currently, it will
+generate an error from the meta-schema, but we could change that.
+
+Rob
