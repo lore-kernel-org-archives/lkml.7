@@ -2,171 +2,106 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C6EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E10C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C16A2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567532930;
-	bh=2uD++TBraCQkPObAZLDBJSUyD8SNOUu4nKap+J4/iFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yU7jwKPIvJ6hC6nhps+QTxPYD1/QGXF6FA4o2S8PpmSlcxHQKzJ/oywfbbaYnfZMz
-	 doV2P1IFJH93TJd/x9fFZPE/ECZn0onImasThlvSMZdyaF7SDoGo/dfWpWUqQr8nun
-	 60P8CWOd07a3fp1YeaiIp60iV0/A47968rUKZZww=
+	by mail.kernel.org (Postfix) with ESMTP id 2EE3821881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfICRst (ORCPT
+        id S1729953AbfICRwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:48:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38456 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfICRst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:48:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o184so454609wme.3;
-        Tue, 03 Sep 2019 10:48:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WxydxVU2CFhWd0QEZ7Dd4XKp/p4c1U4sKS90L0qSlNM=;
-        b=fNo9/JTji/ZWhxc4b/MqAsCMKbFZCAXiK+GboO+RfDmR9hWvzXCMWpt30FYPgUMCBf
-         x5cNSil1QzKGFENXmDFegZFVOjdxNInsb5u5+NTuQpdbdK2vd+vjyft0Al8YbWUQ+EI7
-         H9B1244sWceQSFPZy0O22lhnxudrdhi5g8FyaEgKO472W822uiD1Il3ri8g8Ca6m+ItF
-         kmoUPtsr9yFhXVIg95Lb+vLDm2hJsbNidNadFxkr8hbCpEWEh4bT8uiIbKhxFAuCmUsC
-         s7rX/ULitc+/GlFMUcgACg1BxzaqNzeOPjmU+VWe0OfSCDhrVqz9fYJbJ9SBfCFlERX5
-         N0xA==
-X-Gm-Message-State: APjAAAVduPZ7pxX/vO4cl9fNVkpgOGN22uLq6cDL9+QD+bwTtLe0C1bV
-        ZkvueHEfKweflD4Bmibl/DadtV/BtQ==
-X-Google-Smtp-Source: APXvYqwKKZxGa3P7rOKwJCnEa107FksH8qZoSDy9XKQWNeIR+1mSDDCxud+EJcVbOMGJguXrzvC05Q==
-X-Received: by 2002:a1c:1d8d:: with SMTP id d135mr635821wmd.7.1567532926783;
-        Tue, 03 Sep 2019 10:48:46 -0700 (PDT)
-Received: from localhost ([176.12.107.132])
-        by smtp.gmail.com with ESMTPSA id n12sm162415wmc.24.2019.09.03.10.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 10:48:46 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 18:48:44 +0100
-From:   Rob Herring <robh@kernel.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add binding for IT6505.
-Message-ID: <20190903174844.GA4044@bogus>
-References: <1567507915-9844-1-git-send-email-allen.chen@ite.com.tw>
- <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
+        Tue, 3 Sep 2019 13:52:21 -0400
+Received: from sauhun.de ([88.99.104.3]:56570 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728967AbfICRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 13:52:21 -0400
+Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
+        by pokefinder.org (Postfix) with ESMTPSA id 434A72C4F2F;
+        Tue,  3 Sep 2019 19:52:19 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 19:52:18 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: cht-wc: drop check because i2c_unregister_device()
+ is NULL safe
+Message-ID: <20190903175218.GE2171@ninjato>
+References: <20190820153441.7693-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zaRBsRFn0XYhEU69"
 Content-Disposition: inline
-In-Reply-To: <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <20190820153441.7693-1-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:51:53PM +0800, allen wrote:
-> From: Allen Chen <allen.chen@ite.com.tw>
-> 
-> Add a DT binding documentation for IT6505.
-> 
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> 
+
+--zaRBsRFn0XYhEU69
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Aug 20, 2019 at 05:34:40PM +0200, Wolfram Sang wrote:
+> No need to check the argument of i2c_unregister_device() because the
+> function itself does it.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
-> Comments in v1 would be addressed later in v3.
-> ---
->  .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
 
-This won't apply. Base your patches on current (latest -rc) kernels.
+Hans, are you OK with this change?
 
-We've moved to a DT schema format. Minimally vendor-prefixes.txt will 
-have to change. It's also preferred for display bridges.
+> Build tested only, buildbot is happy, too.
+>=20
+> Please apply to your tree.
+>=20
+>  drivers/i2c/busses/i2c-cht-wc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht=
+-wc.c
+> index 66af44bfa67d..3e2608a65c06 100644
+> --- a/drivers/i2c/busses/i2c-cht-wc.c
+> +++ b/drivers/i2c/busses/i2c-cht-wc.c
+> @@ -363,8 +363,7 @@ static int cht_wc_i2c_adap_i2c_remove(struct platform=
+_device *pdev)
+>  {
+>  	struct cht_wc_i2c_adap *adap =3D platform_get_drvdata(pdev);
+> =20
+> -	if (adap->client)
+> -		i2c_unregister_device(adap->client);
+> +	i2c_unregister_device(adap->client);
+>  	i2c_del_adapter(&adap->adapter);
+>  	irq_domain_remove(adap->irq_domain);
+> =20
+> --=20
+> 2.20.1
+>=20
 
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-> new file mode 100644
-> index 0000000..c3506ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-> @@ -0,0 +1,30 @@
-> +iTE it6505 DP bridge bindings
-> +
-> +Required properties:
-> +        - compatible: "ite,it6505"
-> +        - reg: i2c address of the bridge
-> +        - ovdd-supply: I/O voltage
-> +        - pwr18-supply: Core voltage
-> +        - interrupts: interrupt specifier of INT pin
-> +        - reset-gpios: gpio specifier of RESET pin
-> +
-> +Example:
-> +	it6505dptx: it6505dptx@5c {
+--zaRBsRFn0XYhEU69
+Content-Type: application/pgp-signature; name="signature.asc"
 
-dp-bridge@5c
+-----BEGIN PGP SIGNATURE-----
 
-> +                compatible = "ite,it6505";
-> +                status = "okay";
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uqFIACgkQFA3kzBSg
+KbYEShAAn8nHT+tj4NkyfQNhwUjViQWeCDdZadCW/I2GsqpDBmOx7e4StF2KhDD6
+Qz1G1zUAiV+wLVgnfengL0a2RZrt/7bMEqA5dDOtzHbV4K5CCziGLGdlS5r3YuLm
+pkkRiET8q2ArMmfFoyWtmRrmIjzFKmBrDO+hwxmurkqWZm7vrjAbSvL7R7GJ2HCR
+gx1NdXCLfRRTEaLZoJlLS3JRIRthWgTUvIbkgcbF+DxUzjcHqHe7EMiWIOEQlOAs
+dlk5p14R+fiNL4K8i8Y2JLS/8iAcmTJHjvMu+BjX2fSUQZB3yAnhwOT7iWqUaYdH
+fgK1s8Me6+/BRjmA3sjOg+0I37aw33C0etNJ5+SxlUiosWRQrMU8aipo4MLgTFfN
+waGi/4KWZkxI3lheqS7rq3FyBPrdkwfURNG03GC4FeKZ7W1IMQLUm+8L0h04u72z
+s8Tf7YusuEvboTnegieKtj2yU3lVGpHW6mvjM5c+76TKQQOw9AxtvpadpF+DXVYg
+Pzbz9pRH2mnQ2nd6VQKSBW3W9aYsjOWUeVbcXiJOFb59KQm5BniyuUY5sgsK/9V5
+aIQb7ElFsFKfxjDIVQg9w0N85bMv3KFebqy44M0htvN68A2653aQjXKk4lO5WO8G
+zMsOoib97DRmWzpqi/3zGiQI/yiXdES+yrT7Uyu0YdxqGO/59vA=
+=dUSq
+-----END PGP SIGNATURE-----
 
-Don't show status in examples.
-
-> +                interrupt-parent = <&pio>;
-
-And interrupt-parent.
-
-> +                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-> +                reg = <0x5c>;
-> +                pinctrl-names = "default";
-> +                pinctrl-0 = <&it6505_pins>;
-> +                ovdd-supply = <&mt6358_vsim1_reg>;
-> +                pwr18-supply = <&it6505_pp18_reg>;
-> +                reset-gpios = <&pio 179 1>;
-> +                hpd-gpios = <&pio 9 0>;
-
-This goes in a connector node.
-
-> +                extcon = <&usbc_extcon>;
-
-extcon is deprecated. Drop or use the usb-connector binding.
-
-Plus this is not documented above.
-
-> +                port {
-
-Need to list what each port is. You're going to need an output port too 
-for a dp-connector or usb-c connector.
-
-> +                        it6505_in: endpoint {
-> +                                remote-endpoint = <&dpi_out>;
-> +                        };
-> +                };
-> +        };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2c3fc51..c088646 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -184,6 +184,7 @@ iom	Iomega Corporation
->  isee	ISEE 2007 S.L.
->  isil	Intersil
->  issi	Integrated Silicon Solutions Inc.
-> +ite	iTE Tech. Inc.
->  itead	ITEAD Intelligent Systems Co.Ltd
->  iwave  iWave Systems Technologies Pvt. Ltd.
->  jdi	Japan Display Inc.
-> -- 
-> 1.9.1
-> 
+--zaRBsRFn0XYhEU69--
