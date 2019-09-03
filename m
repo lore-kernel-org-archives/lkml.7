@@ -2,71 +2,79 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8F4C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273E8C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6D22073F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C4D20882
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567540160;
+	bh=HAGOtl8SPG8pETUP9XU4SnDqczahEFprNicQCkAJysA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dNjR4ljYm8dYkTy3jeC9L9Qibk61BZifFSPO2GLQtkcRNPX7WZsDsrhphtXrxfjd4
+	 tVBfF52JcSnUP4IKfP0UP/cjj4jA+ekPYXDuvoxWpiuM06lNhmMCakodMDZF+gOKdZ
+	 ZNK6CzJ8BWNsLtVQqcMlU570w1aZFIWIVQDQ8ljE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfICTsQ (ORCPT
+        id S1726508AbfICTtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:48:16 -0400
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:43564 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725962AbfICTsQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:48:16 -0400
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1i5Emf-0004Va-9c; Tue, 03 Sep 2019 21:48:09 +0200
-Date:   Tue, 3 Sep 2019 21:48:09 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Florian Westphal <fw@strlen.de>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 1/2] netfilter: Terminate rule eval if protocol=IPv6
- and ipv6 module is disabled
-Message-ID: <20190903194809.GD13660@breakpoint.cc>
-References: <20190830181354.26279-1-leonardo@linux.ibm.com>
- <20190830181354.26279-2-leonardo@linux.ibm.com>
- <20190830205802.GS20113@breakpoint.cc>
- <99e3ef9c5ead1c95df697d49ab9cc83a95b0ac7c.camel@linux.ibm.com>
- <20190903164948.kuvtpy7viqhcmp77@salvia>
- <20190903170550.GA13660@breakpoint.cc>
- <20190903193155.v74ws47zcn6zrwpr@salvia>
+        Tue, 3 Sep 2019 15:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbfICTtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:49:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA2D20882;
+        Tue,  3 Sep 2019 19:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567540158;
+        bh=HAGOtl8SPG8pETUP9XU4SnDqczahEFprNicQCkAJysA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qWLUXKHde2suG63juiMAr7g5T0QCuZhAX7vkDmkKlvZadIQ8/iuX9mmtjgLf8v+0X
+         vf8P4ZkI3SKdzsEnIzfTl9lR02VPe31h6WGzRgmkyv2Id83Uz7cLcrU2yfYX6GQ6Nc
+         XMNghrUbnCD/enXKXkW4lYMwzjoT1F/6wMGA07sw=
+Date:   Tue, 3 Sep 2019 21:48:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] interconnect changes for 5.4
+Message-ID: <20190903194852.GB13390@kroah.com>
+References: <97f47b2a-7aee-ab4b-7510-43c509db982a@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903193155.v74ws47zcn6zrwpr@salvia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <97f47b2a-7aee-ab4b-7510-43c509db982a@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> > > I was expecting we could find a way to handle this from br_netfilter
-> > > alone itself.
-> > 
-> > We can't because we support ipv6 fib lookups from the netdev family
-> > as well.
-> > 
-> > Alternative is to auto-accept ipv6 packets from the nf_tables eval loop,
-> > but I think its worse.
+On Fri, Aug 23, 2019 at 06:14:19PM +0300, Georgi Djakov wrote:
+> Hi Greg,
 > 
-> Could we add a restriction for nf_tables + br_netfilter + !ipv6. I
-> mean, if this is an IPv6 packet, nf_tables is on and IPv6 module if
-> off, then drop this packet?
+> This is a pull request with interconnect patches for the 5.4 merge window.
+> The patches have been for a while in linux-next without reported issues. The
+> details are in the signed tag. Please consider pulling into char-misc-next.
+> 
+> Thanks,
+> Georgi
+> 
+> The following changes since commit d45331b00ddb179e291766617259261c112db872:
+> 
+>   Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.4-rc1
 
-We could do that from nft_do_chain_netdev().
+Pulled and pushed out, thanks.
+
+greg k-h
