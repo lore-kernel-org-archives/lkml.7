@@ -2,104 +2,97 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6869C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D13EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747A5230F2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290BD2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CQp9btUD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHTJjC9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfICFhW (ORCPT
+        id S1726586AbfICFhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:37:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:50253 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfICFhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:37:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mwgz304Xz9sDB;
-        Tue,  3 Sep 2019 15:37:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567489039;
-        bh=w2qxb/Sy3tUOG8PCSjAokLxDpGJoDSR4BWpfSvlbetI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CQp9btUDrpbrM1BnGpNTYBwTDy1EZESCOA4T2Cv/2/+acHLFoGY39/rdf7hb4A8oX
-         I7qO9JHVKHX7M29h6OsmEa3F09NxCODi0+vVdYG2lnmfLWVpdcNYviMkMH3v1D8FDe
-         Be5YyYDhj9tVK+qhCx32fT2raTrltJHIj4gTGHTJ9alarudQMu4leMDetCzPJqNWBL
-         PvO18xw4HdO7iLRrq4331B2KifGT5MlkJpq0jTLsOzz2R7B676s8rKaTB8iJDC6vtr
-         LqiHXaO/kKOg/8sBJo+YO8fSQwJuAMQSR1CePADV1/Y3Z8SmJCGT0YGbKWwC1zSr0Z
-         yR38H/0KlmRUw==
-Date:   Tue, 3 Sep 2019 15:37:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guillaume Gardet <guillaume.gardet@arm.com>
-Subject: linux-next: manual merge of the devicetree tree with the
- samsung-krzk tree
-Message-ID: <20190903153718.14b7a5e7@canb.auug.org.au>
+        Tue, 3 Sep 2019 01:37:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38524 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfICFhk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 01:37:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so16567691wme.3;
+        Mon, 02 Sep 2019 22:37:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dHZB7av9ACZZKXwGXky8ptXmiuaPwp7UFQYgxLaFadk=;
+        b=ZHTJjC9mcxUyZllM3u90Dq/A9Yw5Ml0cRRfAWmttvW3PhUNPkzfuRj+UJHiRIKyB/u
+         pAJ2ZeFHTPoZNBEr4Y+DqpB/My5LeV69caKE2dozG5WuweRwPxubEDLwjKtnXZa2OzDP
+         o7EbjQxqtpZYs9NyIgRxzFBO0XK4rwzZLF5ZNwEwmLUVrh7Fj/X+fCgCEOd79v/ur7ht
+         W/1XrenehgzYcmw5h14CuA9YIeF1vaw4GVKXihhVjcECQSn4eMyRRFeLD3ERW+0NJhll
+         b6D3L+sYxr2DIPo2nw7cg95QyReGQcfJMA9a5bvNzTGkK6kgsix6BjJIPgot68XIfCon
+         z2iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dHZB7av9ACZZKXwGXky8ptXmiuaPwp7UFQYgxLaFadk=;
+        b=DouWJIz5GZiUBOa8nLIueVHyvw6mKeBHS4+X6YYnpEcy+bqI7IS6TfKC24tIILUc3X
+         4ZrSMRYN5uUUn3aZJftcPfcSPoM6sfwaKFYYVNWJUGpFhX2tQMROW3zR9tSJhC58v554
+         cUVkLUfpWfwZrpTg4U+9bW0sTUH6GZMfjKzqqmUgK+O9m79fef/Rb9KDrWT1tQrV6SAu
+         EouY6GR+oQ8F0cMASt1lTMj0i48FnCtbTvfbjdaOWbQjwz2dONLHvSMCSQenVfO5RvCm
+         GhNpB4/eaqtA7AClfftOFmJQZuMNuBZx6lWXSAQO1J8JNzC05qv/wseIlh8jwtB6hkkr
+         b9aA==
+X-Gm-Message-State: APjAAAXSfhoJaHDMWTKsWcPC99s2E3iHHsQTyVC3u4U8TuBP2OJ/S/82
+        6GeMSyNt+XQ3ed/STXWxAlw=
+X-Google-Smtp-Source: APXvYqy4lgkFGkl7Qf9buQYgHWfd2Vr+qRY5+MNXkk3jPv4O/wnCd+JJv5RYYpR6k0I+LpcLG5gKBQ==
+X-Received: by 2002:a7b:cf0a:: with SMTP id l10mr8284178wmg.4.1567489057760;
+        Mon, 02 Sep 2019 22:37:37 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id f24sm16833876wmc.25.2019.09.02.22.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 22:37:37 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 22:37:35 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to
+ KBUILD_EXTRA_WARN
+Message-ID: <20190903053735.GA56603@archlinux-threadripper>
+References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
+ <20190831162555.31887-2-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/RqZ7B3jqbL7dCxB30Rif/Pp";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831162555.31887-2-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/RqZ7B3jqbL7dCxB30Rif/Pp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Sep 01, 2019 at 01:25:55AM +0900, Masahiro Yamada wrote:
+> KBUILD_ENABLE_EXTRA_GCC_CHECKS started as a switch to add extra warning
+> options for GCC, but now it is a historical misnomer since we use it
+> also for Clang, DTC, and even kernel-doc.
+> 
+> Rename it to more sensible, and shorter KBUILD_EXTRA_WARN.
+> 
+> For the backward compatibility, KBUILD_ENABLE_EXTRA_GCC_CHECKS is still
+> supported (but not advertised in the documentation).
+> 
+> I also fixed up 'make help', and updated the documentation.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Hi all,
-
-Today's linux-next merge of the devicetree tree got a conflict in:
-
-  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-
-between commit:
-
-  5833f5a5daf3 ("dt-bindings: gpu: mali: Add Samsung exynos5250 compatible")
-
-from the samsung-krzk tree and commit:
-
-  553cedf60056 ("dt-bindings: Convert Arm Mali Midgard GPU to DT schema")
-
-from the devicetree tree.
-
-I fixed it up (I just removed the txt file, some fixup will be requide for
-the new yaml file) and can carry the fix as necessary. This is now fixed
-as far as linux-next is concerned, but any non trivial conflicts should
-be mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/RqZ7B3jqbL7dCxB30Rif/Pp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1t/A4ACgkQAVBC80lX
-0GyQ0gf/XygfGSv3zzO6U7Sn2FwEZVlhLXfXh2k6n1bjF1XKXyE0gTHUOjrJp3Z3
-nQnf8t2clU7LnjVzJXUwpTmB02aZxmo3EcYk9K/f9mxlj083tLAgZ9WMWBbbrnAC
-WSNEF+dz5MgNVwVl2y4ihZUh+8T/R9VJMj6d9sfZ6NYEyYQ7z08Gjz9z94XIirR6
-WnPt0/Fwgb3ArP2sQF1XAdjUYlpl5G2hLlvqyd6gjOPVCPpOmc6lWDGE9UKtnxt3
-I38jZkolLuQ0RRNdSkhz3DZTxrnFfgQLz6wPSm6Rms7YKZnNIOXwMXYAxLjmMO22
-vLrFDXDTiBf97nuNZC63qQHewcELjg==
-=fXpN
------END PGP SIGNATURE-----
-
---Sig_/RqZ7B3jqbL7dCxB30Rif/Pp--
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
