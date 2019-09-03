@@ -2,101 +2,133 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F14C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C005C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFAE7208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="btqI5faI"
+	by mail.kernel.org (Postfix) with ESMTP id 30BF6216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567512738;
+	bh=YG82gTiuuy+0hjDFZwdVihvNtCRA+nbPq+TJHRMwA8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N2kZS2zl4M9tN/gnjGnFqagwnBzFaeqADfqVwhDw/9OHaTpUUpXZBrF4D8tA4HBBl
+	 R5Z17lYwcDt+8LZCckCbw22sZ8ZsgZcKo//odQo8WfmrOQQKs+bD6WTS47WOnMkQgJ
+	 VQXFwfv/l4Yf14ZWkkwoHMrm9C2l3z1L9GFmBgG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfICML5 (ORCPT
+        id S1729154AbfICMMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:11:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfICML4 (ORCPT
+        Tue, 3 Sep 2019 08:12:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48960 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfICMMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:11:56 -0400
+        Tue, 3 Sep 2019 08:12:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8EXrYd4RsH6BhIOlTTrp7nSzyNrjaXwYb7WWqgrRr9Y=; b=btqI5faIUT1LIYYiY9J4zINYa
-        3jWPSYkalrJbyjVLIJldORJvZuDJ/zHsD1VvNmD4bdXCqkmlPA4w9XGItTEClgoh6M0RckxISoiqc
-        r6niZXlB+7EoS7c6IyPny4ucc7gVTb6eTxrg3fmqRSKg4G66qRDSNmqNUpvZeEfnB4R9iTozEskz7
-        bbPH5Fa24IlPi9kjfXG3Rie8eQNOoIZB8hkVd/YqYDz9+EBL80/FVfoKcColNHXuUdCBjstZufBB2
-        hDA2QJyO9yDtah+GC7XcO8XZu47qpuo3x42WciEpEIuFH5lChFZiUVRS6iWB9ohV6ANbP//yvJxUm
-        bozNI4a2g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i57f9-0002ll-Km; Tue, 03 Sep 2019 12:11:55 +0000
-Date:   Tue, 3 Sep 2019 05:11:55 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>
-Subject: Re: [PATCH v5 1/2] mm: Allow the page cache to allocate large pages
-Message-ID: <20190903121155.GD29434@bombadil.infradead.org>
-References: <20190902092341.26712-1-william.kucharski@oracle.com>
- <20190902092341.26712-2-william.kucharski@oracle.com>
- <20190903115748.GS14028@dhcp22.suse.cz>
+         bh=YG82gTiuuy+0hjDFZwdVihvNtCRA+nbPq+TJHRMwA8g=; b=QVtX35MHWtQ5hElB6gtdpxIeU
+        s3sh1krACvGd+5yXcOHzgxtF3q5KhaCK6CHRslv8J4WZBfYIA9FOce5sdI9Km0OcParWy3oQYWzDW
+        4n7VnCclDWNi8eRH1SEtNr574EwlCS5JoO5lnRGzQIYZGJpOEMT7GGAYxubJqgiQ0EjzI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i57fP-0008VC-Na; Tue, 03 Sep 2019 12:12:11 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D972B2742D32; Tue,  3 Sep 2019 13:12:10 +0100 (BST)
+Date:   Tue, 3 Sep 2019 13:12:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Ben Whitten <ben.whitten@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, nandor.han@vaisala.com
+Subject: Re: [PATCH] regmap: fix writes to non incrementing registers
+Message-ID: <20190903121210.GA7916@sirena.co.uk>
+References: <20190813212251.12316-1-ben.whitten@gmail.com>
+ <20190814100115.GF4640@sirena.co.uk>
+ <CAF3==iuZvCnmAg9hqs8ivHw0wHaUQEf8k9U8=KTekMMjdyyEKg@mail.gmail.com>
+ <20190814161938.GI4640@sirena.co.uk>
+ <CAF3==ivJycGpSpSy3Y9cL7kNf27=kZmETpb-v0=L7BNd1ZPJtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
 Content-Disposition: inline
-In-Reply-To: <20190903115748.GS14028@dhcp22.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAF3==ivJycGpSpSy3Y9cL7kNf27=kZmETpb-v0=L7BNd1ZPJtg@mail.gmail.com>
+X-Cookie: You will pass away very quickly.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:57:48PM +0200, Michal Hocko wrote:
-> On Mon 02-09-19 03:23:40, William Kucharski wrote:
-> > Add an 'order' argument to __page_cache_alloc() and
-> > do_read_cache_page(). Ensure the allocated pages are compound pages.
-> 
-> Why do we need to touch all the existing callers and change them to use
-> order 0 when none is actually converted to a different order? This just
-> seem to add a lot of code churn without a good reason. If anything I
-> would simply add __page_cache_alloc_order and make __page_cache_alloc
-> call it with order 0 argument.
 
-Patch 2/2 uses a non-zero order.  I agree it's a lot of churn without
-good reason; that's why I tried to add GFP_ORDER flags a few months ago.
-Unfortunately, you didn't like that approach either.
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Also is it so much to ask callers to provide __GFP_COMP explicitly?
+On Tue, Sep 03, 2019 at 10:42:59AM +0100, Ben Whitten wrote:
 
-Yes, it's an unreasonable burden on the callers.  Those that pass 0 will
-have the test optimised away by the compiler (for the non-NUMA case).
-For the NUMA case, passing zero is going to be only a couple of extra
-instructions to not set the GFP_COMP flag.
+> You mentioned that we likely have breakage elsewhere, I believe that
+> regmap_noinc_write probably shouldn't ever have been calling
+> _regmap_raw_write.
 
-> >  #ifdef CONFIG_NUMA
-> > -extern struct page *__page_cache_alloc(gfp_t gfp);
-> > +extern struct page *__page_cache_alloc(gfp_t gfp, unsigned int order);
-> >  #else
-> > -static inline struct page *__page_cache_alloc(gfp_t gfp)
-> > +static inline struct page *__page_cache_alloc(gfp_t gfp, unsigned int order)
-> >  {
-> > -	return alloc_pages(gfp, 0);
-> > +	if (order > 0)
-> > +		gfp |= __GFP_COMP;
-> > +	return alloc_pages(gfp, order);
-> >  }
-> >  #endif
+> Whilst regmap_noinc_read calls _regmap_raw_read, this function doesn't
+> do any massage and just calls map->bus->read after selecting a page.
+> regmap_raw_write on the other hand is meant for writing blocks to
+> register ranges as these added checks show, and does split work based
+> on page length etc.
+> This splitting up is something that shouldn't apply to the FIFO as it's a
+> deep register.
 
+This just means that we need to take care of nonincrementing registers
+in there, we don't want to end up with too many different places where
+we might have to handle formatting since that leads to duplication.
+It's about marshalling for physical I/O, it's a bit misnamed at this
+point but nonincrementing registers definitely fit in there for me.
+
+> I modified regmap_noinc_write to be much more like the raw_read
+> internals, just select page then attempt a map->bus->gather_write,
+> falling back to linearising if that's not supported.
+> This approach worked at getting writing working into the FIFO.
+
+Modify raw_write() to handle this instead, it is a mirror of the read
+side it's just that writes are more complicated since there's more
+things that could happen as you're discovering here.
+
+> So I would propose that there are two 'Fixes:' patches here, one
+> enhancing the checking when writing a register range to ensure you
+> don't stumble into a noinc register.
+
+Yes.
+
+> And one to fix noinc_writes to send data directly to the bus once the
+> page is selected with no splitting up as you would a range.
+
+Push that into raw_write(), it just needs to special case when the first
+register in a block is non-incrementing in the page selection logic (add
+a !nonincrmenting in the while loop I think).
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1uWJoACgkQJNaLcl1U
+h9DPtgf/QDJZEpN/oh11BWf2OipytBVamOF1yMTPyALBAHdYTihwHFTrO7gWAbg4
+V+3wRiHEpEAjudpyqt+YnTxKEt3MJm2mqfMRcVuZah/FfXFOa3SEuJeBhi8fjWdE
+568d9++vG2mRlrCgqcPFZBI3VhMpifwmfiHC/r3auNIDGWhSBr1gG1T31NemVsd7
+XCvOjkHGRU7SowtC5VQ75w/LKmCYzDHzGo52sCh+RCPb5BlAJF9PCHeQ6np0SDvn
+0ptOHJVJZsLu1MxcR8BP+bNKDIsO5N/Fnbop9ed95wW9tIYP2M0XAA3T75UXkVpR
+gy2roGuCXQgZIs4QtdZ/vfJO3aQOSw==
+=YiAn
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
