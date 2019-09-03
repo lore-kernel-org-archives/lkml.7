@@ -2,147 +2,104 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965C1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B24C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6766020820
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7E320820
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:42:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="QnIp1fDJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4LfdsP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfICTj0 (ORCPT
+        id S1726192AbfICTmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:39:26 -0400
-Received: from mail-pl1-f178.google.com ([209.85.214.178]:41344 "EHLO
-        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfICTj0 (ORCPT
+        Tue, 3 Sep 2019 15:42:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47872 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfICTmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:39:26 -0400
-Received: by mail-pl1-f178.google.com with SMTP id m9so8364409pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 12:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=QAQYaagWiERgEYSt1jNIKS0am0ErrH6wjeHanHKKcNA=;
-        b=QnIp1fDJqRyOldM1ryAsqsjNuHJDfJOz/B4BUmyCJSUWJ9wWmohNEdu3NxYyY/DuZe
-         rTJMdMtTpe4cEwX1dydMuRurKyHrAXveBl2A0JQQRGceUD3GTESJqRXNAV9l2ZTgSQe5
-         nOMp9PuLYr4Ohd8KrvHFSEUawsxVOjgE0nLA1oiM8lqgvQilYcJfNR8YThDI8g1KT0JE
-         7zImba+MRo+jjlDqOgTE0a+GcS7jLHr1BVLxzkngixW8z2HFeneyuqY5JrM+QQG+uQ4s
-         cEa5NPlQYLCAyQ7LUAH0GMhXUefMO5F1t7utrIXqF9SGvMBRf9LBB9iE6EwgooP1bFfw
-         NhDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=QAQYaagWiERgEYSt1jNIKS0am0ErrH6wjeHanHKKcNA=;
-        b=uIBur4e/2B1BIlhTIglw3ZEa3oThWv5Ha3JAvYZoU4T5iX2sRELmzZ5j04mEsVbT7F
-         mAgTpr0pHrRk7wZ4mqQOj/7vbu9BWRxvWcJ6BQ1kDEfFdClxQnWU3mRdT0x83cgMJ9Nr
-         H8p7Q9Sl+Z1t1mu1mc750D6ewauqgHIBR18a02NQmpOqLy42IZEi0mwrJ56+Lru1ZsO9
-         6LIoW0xg6UuUxbCJDdeGqn+ApJMVYy7iO/EL1j7QbkdOs90rFRYGwGB7d2imj8FLdZ3L
-         FkQp0t4NOXyM1lTyYvsO670v+TczTQDghN8pzLlOWz9yYmUtCfn1xkBHjmg2TAbkknts
-         iO1w==
-X-Gm-Message-State: APjAAAWyMbP1o9nCQC5Zh3n00Q0+Scq5zIe1XxwxAGRBb94FOnSU8ZiA
-        Q6HKraAitE1rLN6OEt7AFD39QzJacQ0epA==
-X-Google-Smtp-Source: APXvYqxR1S4PXbktbKlWF4DEU/EpC0EIS87sVhV8IF3uV2Yvg3XVAykHNL7FMjzXLbRJxXRNUhKzKA==
-X-Received: by 2002:a17:902:830a:: with SMTP id bd10mr34936684plb.230.1567539565224;
-        Tue, 03 Sep 2019 12:39:25 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id a134sm15364871pfa.162.2019.09.03.12.39.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 12:39:24 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <82F89AEA-994B-44B5-93E7-CD339E4F78F6@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_112DDE64-E949-4D04-98BE-2EFD8AB64FF8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: "beyond 2038" warnings from loopback mount is noisy
-Date:   Tue, 3 Sep 2019 13:39:16 -0600
-In-Reply-To: <1567534549.5576.62.camel@lca.pw>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-To:     Qian Cai <cai@lca.pw>
-References: <1567523922.5576.57.camel@lca.pw>
- <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
- <CABeXuvq7n+ZW7-HOiur+cyQXBjYKKWw1nRgFTJXTBZ9JNusPeg@mail.gmail.com>
- <1567534549.5576.62.camel@lca.pw>
-X-Mailer: Apple Mail (2.3273)
+        Tue, 3 Sep 2019 15:42:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tVoaFtSBwMjg9JqoG7kA7ufj+6zbx8emytRxQ3/Jfdc=; b=L4LfdsP/khhXQ0mvp66GynXRm
+        Sd1nw9eDpmNka4+ABbNKHNNGsWeO2RUnNXXvQWUsdcWmuVIm6+HzncBNj4Dqfwt1IkcyaSENU3D8H
+        wFP2pcLfmN4ZR4/604bycJnHtBUlM5llWHAwKbyFKGAV3yEKGI96ArFipqKcYg5nisT7GfKjMnFz+
+        +8Y0lHg5ASFGdhIhns+MOKGm3ydmNKxkHtBXaz2cIo96E2ijRblI3MDazEI+y5/4vECf+QZoIARiq
+        ApQ4eb6h54vBnEujSV8ZiwW/gveQYFT9MlVOYI4JfpKLJm6cs8aXhUuMuIR6y9jkeXXj0vES15Xyi
+        r0UriEqIw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5Eh3-0006Y3-Q0; Tue, 03 Sep 2019 19:42:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D74E430116F;
+        Tue,  3 Sep 2019 21:41:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0306C20977765; Tue,  3 Sep 2019 21:42:18 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 21:42:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
+Message-ID: <20190903194218.GU2349@hirez.programming.kicks-ass.net>
+References: <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
+ <20190903074117.GX2369@hirez.programming.kicks-ass.net>
+ <20190903074718.GT2386@hirez.programming.kicks-ass.net>
+ <87k1apqqgk.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
+ <874l1tp7st.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874l1tp7st.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 03, 2019 at 01:13:22PM -0500, Eric W. Biederman wrote:
 
---Apple-Mail=_112DDE64-E949-4D04-98BE-2EFD8AB64FF8
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+> I think this is where I am looking a things differently than you and
+> Peter.  Why does it have to be ___schedule() that changes the value
+> in the task_struct?  Why can't it be something else that changes the
+> value and then proceeds to call schedule()?
 
-On Sep 3, 2019, at 12:15 PM, Qian Cai <cai@lca.pw> wrote:
-> 
-> On Tue, 2019-09-03 at 09:36 -0700, Deepa Dinamani wrote:
->> We might also want to consider updating the file system the LTP is
->> being run on here.
-> 
-> It simply format (mkfs.ext4) a loop back device on ext4 with the kernel.
-> 
-> CONFIG_EXT4_FS=m
-> # CONFIG_EXT4_USE_FOR_EXT2 is not set
-> # CONFIG_EXT4_FS_POSIX_ACL is not set
-> # CONFIG_EXT4_FS_SECURITY is not set
-> # CONFIG_EXT4_DEBUG is not set
-> 
-> using e2fsprogs-1.44.6. Do you mean people now need to update the kernel to
-> enable additional config to avoid the spam of warnings now?
+If you call schedule() you will pass through plenty that already implies
+smp_mb() before writing the ->curr pointer. If you care about that case,
+adding RELEASE semantics to that store gains you absolutely nothing
+except a marginally slower kernel.
 
-Strange.  The defaults for mkfs.ext4 _should_ default to use options that
-allow enough space for the extra timestamps.
+> If we use RCU_INIT_POINTER if there was something that changed
+> task_struct and then called schedule() what ensures that a remote cpu
+> that has a stale copy of task_struct cached will update it's cache
+> after following the new value rq->curr?  Don't we need
+> rcu_assign_pointer to get that guarantee?
 
-Can you please provide "dumpe2fs -h" output for your filesystem, and the
-formatting options that you used when creating this filesystem.
+That whole construct doesn't really make sense: one it is very rare to
+change task_struct content for !current tasks (and if we do, it must be
+with atomic ops, because then there can be concurrency), secondly when
+calling schedule() there is no guarantee on what @next will be.
 
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_112DDE64-E949-4D04-98BE-2EFD8AB64FF8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl1uwWQACgkQcqXauRfM
-H+AIug/9GlnFvkS1eOwspAuQldeaS7e8chBl6B4F/KG73KautsnCZJv6Qfp9GCuL
-TpR0AP7CvHKmW+RlOMtURO+LxtWq1Uu4iVqcu4M+SQ53h7e6tLUxjaS+x6In+upw
-3UgJ/x6cM+PoIS7fxKCqkd9kyuZUNxXdiISAqRfzq1g7Ty7CyyGLWI+alaq+txQ6
-nTxtGYbyZNDbg9Es4hGmu6VO0B4OxIWBHdIiEzJiWcmMcybFmDsbOQpuGHqCUQ4C
-8u0/eL+5HSpzvuRo9KttGFU9Y27gdAsMvSQ6uwvbQUgNpIRW/Q7iSkbIS8s/+hnk
-9Z4i4DHAOqRNJMYTH3uOQhXj0zvYDg/OkTledfMr4UKwOfUuOPqwAgeBukEjdIvn
-rX6TB7xggDzkg0YMtqSzj6N/g7m1VoKAujv9hezZs3cSNsnxc1x+m3LmUMhmnrZD
-S/Ye+PKYARl/+F1yaWe5Ws8OKp/ITfA0c7uHGebTqOG/GolZThYMbSH0/vi4k84F
-pOxdS33XZ9NE3RQSntTVFrvZ0NK0mAVNmCSea03JlNW1PamF3jfDMoLr+/0jP4Dx
-z+TA3tLFxFUYVgScGNyVI3k/X1imI14UUOSCsmWycfgUUTldMD/xcgyNAHqp9a0R
-vCC3ZqAaAJ9k2dnKeUhlNeO2PjA1+nsrvfG495J2ds4fpjEiYUg=
-=usX9
------END PGP SIGNATURE-----
-
---Apple-Mail=_112DDE64-E949-4D04-98BE-2EFD8AB64FF8--
