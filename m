@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B854C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9740FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A5A23789
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6390623431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528024;
-	bh=U8Q/brz7/SXnxP9IztjpaNyjAEnLVU06LFBDqXK0GF0=;
+	s=default; t=1567528027;
+	bh=9OwpUQxQjkGWdwWltlQKTGXWR2s8Zhgbq2LrY6GIs8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yPrUjeoHNVcEGEeZOvFOzU4WtwFk4DTCqcTTXL52YTLsKr0QaCyn7cwmm9wZvIX1F
-	 QYXnAwjgTgDZIrb4GtBXQx3ogEKdbNzlXVZwGMaPOjn6CU6Q8ijJYsl+GlIQOY+cEb
-	 go/NwDfNBmGPbJpzVvKYdMWNtfvYiOAPXKVqdJds=
+	b=UpKbYxHqfwuvIL0iHBbezwplh4eEjMPus5QDPkXnwzk421oczPf8aKRmJ4ehDMzKs
+	 iGXR9tfn32D2VmSWvbc/TSVp5G3em9vukKjiENt8ryzk3OEBpwERB+pwHbyw6WzZ7l
+	 e0SUMLg7ZA+RckiLjZTSXMXX9uCLl3fzLO1VcBPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbfICQ1D (ORCPT
+        id S1730777AbfICQ1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730739AbfICQ05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:57 -0400
+        id S1730255AbfICQ07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 490CF23431;
-        Tue,  3 Sep 2019 16:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3BAC23789;
+        Tue,  3 Sep 2019 16:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528016;
-        bh=U8Q/brz7/SXnxP9IztjpaNyjAEnLVU06LFBDqXK0GF0=;
+        s=default; t=1567528018;
+        bh=9OwpUQxQjkGWdwWltlQKTGXWR2s8Zhgbq2LrY6GIs8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jw3vXNMqZPJLgD/bnNxDtJDWhSWwWVFunfwErW1UOyO0Pp2ODOuV1OD1e0a/0CHZ3
-         Qthyq1NpPaMsysDR/MauQmVQ+ctjXpjolJSSNqz7CdpbQBT0epV3W7CrhQ6Dw7CSzR
-         XLY+YtvKi0GAHvdxBGJGoR+SuNTz1x5FtsYB+5Qg=
+        b=fyOSwxYQEt2hgOKtpyC+6/ihBkeqCj/Fts1aHJ1hyv6PzsJsb0IPWqy0VWgMHgLjQ
+         ZvFd3d/jaQy4V7ml+OyELnRw+mV9W992rhmntfL2X9BEbF6FAL8FRrKje5+tKrBvI5
+         U/kizBk4jC8S4lgGC9vHzdOyyRSE1yc68nch+IJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 054/167] IB/uverbs: Fix OOPs upon device disassociation
-Date:   Tue,  3 Sep 2019 12:23:26 -0400
-Message-Id: <20190903162519.7136-54-sashal@kernel.org>
+Cc:     Dmitry Voytik <voytikd@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 055/167] arm64: dts: rockchip: enable usb-host regulators at boot on rk3328-rock64
+Date:   Tue,  3 Sep 2019 12:23:27 -0400
+Message-Id: <20190903162519.7136-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,101 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Dmitry Voytik <voytikd@gmail.com>
 
-[ Upstream commit 425784aa5b029eeb80498c73a68f62c3ad1d3b3f ]
+[ Upstream commit 26e2d7b03ea7ff254bf78305aa44dda62e70b78e ]
 
-The async_file might be freed before the disassociation has been ended,
-causing qp shutdown to use after free on it.
+After commit ef05bcb60c1a, boot from USB drives is broken.
+Fix this problem by enabling usb-host regulators during boot time.
 
-Since uverbs_destroy_ufile_hw is not a fence, it returns if a
-disassociation is ongoing in another thread. It has to be written this way
-to avoid deadlock. However this means that the ufile FD close cannot
-destroy anything that may still be used by an active kref, such as the the
-async_file.
-
-To fix that move the kref_put() to be in ib_uverbs_release_file().
-
- BUG: unable to handle kernel paging request at ffffffffba682787
- PGD bc80e067 P4D bc80e067 PUD bc80f063 PMD 1313df163 PTE 80000000bc682061
- Oops: 0003 [#1] SMP PTI
- CPU: 1 PID: 32410 Comm: bash Tainted: G           OE 4.20.0-rc6+ #3
- Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
- RIP: 0010:__pv_queued_spin_lock_slowpath+0x1b3/0x2a0
- Code: 98 83 e2 60 49 89 df 48 8b 04 c5 80 18 72 ba 48 8d
-		ba 80 32 02 00 ba 00 80 00 00 4c 8d 65 14 41 bd 01 00 00 00 48 01 c7 85
-		d2 <48> 89 2f 48 89 fb 74 14 8b 45 08 85 c0 75 42 84 d2 74 6b f3 90 83
- RSP: 0018:ffffc1bbc064fb58 EFLAGS: 00010006
- RAX: ffffffffba65f4e7 RBX: ffff9f209c656c00 RCX: 0000000000000001
- RDX: 0000000000008000 RSI: 0000000000000000 RDI: ffffffffba682787
- RBP: ffff9f217bb23280 R08: 0000000000000001 R09: 0000000000000000
- R10: ffff9f209d2c7800 R11: ffffffffffffffe8 R12: ffff9f217bb23294
- R13: 0000000000000001 R14: 0000000000000000 R15: ffff9f209c656c00
- FS:  00007fac55aad740(0000) GS:ffff9f217bb00000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: ffffffffba682787 CR3: 000000012f8e0000 CR4: 00000000000006e0
- Call Trace:
-  _raw_spin_lock_irq+0x27/0x30
-  ib_uverbs_release_uevent+0x1e/0xa0 [ib_uverbs]
-  uverbs_free_qp+0x7e/0x90 [ib_uverbs]
-  destroy_hw_idr_uobject+0x1c/0x50 [ib_uverbs]
-  uverbs_destroy_uobject+0x2e/0x180 [ib_uverbs]
-  __uverbs_cleanup_ufile+0x73/0x90 [ib_uverbs]
-  uverbs_destroy_ufile_hw+0x5d/0x120 [ib_uverbs]
-  ib_uverbs_remove_one+0xea/0x240 [ib_uverbs]
-  ib_unregister_device+0xfb/0x200 [ib_core]
-  mlx5_ib_remove+0x51/0xe0 [mlx5_ib]
-  mlx5_remove_device+0xc1/0xd0 [mlx5_core]
-  mlx5_unregister_device+0x3d/0xb0 [mlx5_core]
-  remove_one+0x2a/0x90 [mlx5_core]
-  pci_device_remove+0x3b/0xc0
-  device_release_driver_internal+0x16d/0x240
-  unbind_store+0xb2/0x100
-  kernfs_fop_write+0x102/0x180
-  __vfs_write+0x36/0x1a0
-  ? __alloc_fd+0xa9/0x170
-  ? set_close_on_exec+0x49/0x70
-  vfs_write+0xad/0x1a0
-  ksys_write+0x52/0xc0
-  do_syscall_64+0x5b/0x180
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0033:0x7fac551aac60
-
-Cc: <stable@vger.kernel.org> # 4.2
-Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: ef05bcb60c1a ("arm64: dts: rockchip: fix vcc_host1_5v pin assign on rk3328-rock64")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Voytik <voytikd@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/uverbs_main.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 50152c1b10045..357de3b4fdddf 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -265,6 +265,9 @@ void ib_uverbs_release_file(struct kref *ref)
- 	if (atomic_dec_and_test(&file->device->refcount))
- 		ib_uverbs_comp_dev(file->device);
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index c142169a58fc5..e9147e35b7396 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -40,6 +40,7 @@
+ 		pinctrl-0 = <&usb30_host_drv>;
+ 		regulator-name = "vcc_host_5v";
+ 		regulator-always-on;
++		regulator-boot-on;
+ 		vin-supply = <&vcc_sys>;
+ 	};
  
-+	if (file->async_file)
-+		kref_put(&file->async_file->ref,
-+			 ib_uverbs_release_async_event_file);
- 	kobject_put(&file->device->kobj);
- 	kfree(file);
- }
-@@ -915,10 +918,6 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
- 	}
- 	mutex_unlock(&file->device->lists_mutex);
+@@ -50,6 +51,7 @@
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
+ 		regulator-always-on;
++		regulator-boot-on;
+ 		vin-supply = <&vcc_sys>;
+ 	};
  
--	if (file->async_file)
--		kref_put(&file->async_file->ref,
--			 ib_uverbs_release_async_event_file);
--
- 	kref_put(&file->ref, ib_uverbs_release_file);
- 
- 	return 0;
 -- 
 2.20.1
 
